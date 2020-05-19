@@ -8,6 +8,7 @@ export class PicaNavigatePanel extends BasePanel {
   private mShopBtn: Phaser.GameObjects.Image;
   private mBagBtn: Phaser.GameObjects.Image;
   private mFamilyBtn: Phaser.GameObjects.Image;
+  private mPlayerBtn: Phaser.GameObjects.Image;
   private mCloseBtn: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -37,6 +38,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mShopBtn.on("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
+    this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
@@ -46,6 +48,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mShopBtn.off("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
+    this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -65,8 +68,9 @@ export class PicaNavigatePanel extends BasePanel {
     this.mShopBtn = this.createImage(this.key, "shop_btn.png").setInteractive();
     this.mBagBtn = this.createImage(this.key, "bag_btn.png").setInteractive();
     this.mFamilyBtn = this.createImage(this.key, "family_btn.png").setInteractive();
+    this.mPlayerBtn = this.createImage(this.key, "family_btn.png").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn.png").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn];
+    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn,this.mPlayerBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
@@ -101,6 +105,9 @@ export class PicaNavigatePanel extends BasePanel {
 
   private onShowFamilyHandler() {
     this.emit("showPanel", "");
+  }
+  private onShowPlayerHandler() {
+    this.emit("showPanel", "CharacterInfo");
   }
   private onCloseHandler() {
     this.emit("close");

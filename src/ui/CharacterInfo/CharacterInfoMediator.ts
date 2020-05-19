@@ -19,7 +19,7 @@ export class CharacterInfoMediator extends BaseMediator {
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.mShow) {
+        if (this.mView) {
             return;
         }
         if (!this.mView) {

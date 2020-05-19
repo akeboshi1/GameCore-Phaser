@@ -7,6 +7,9 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
     protected mNingBg: NinePatch;
     protected mKey: string;
     protected mFrame: string;
+    protected mFrame_nrmal: string;
+    protected mFrame_down: string;
+    protected mFrame_over: string;
     protected btnData: any;
     private mScene: Phaser.Scene;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, config?: IPatchesConfig, data?: any) {
@@ -14,8 +17,9 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
         this.mScene = scene;
         this.mKey = key;
         this.mFrame = frame ? frame : "__BASE";
+        this.initFrame();
         this.setSize(width, height);
-        this.mNingBg = new NinePatch(this.scene, 0, 0, width, height, key, this.mFrame + "_normal", config);
+        this.mNingBg = new NinePatch(this.scene, 0, 0, width, height, key, this.mFrame_nrmal, config);
         this.add(this.mNingBg);
         if (data) {
             this.btnData = data;
@@ -80,6 +84,14 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
         super.destroy(fromScene);
     }
 
+    public setFrameNormal(normal: string, down?: string, over?: string) {
+        this.mFrame_nrmal = normal;
+        this.mFrame_down = (down ? down : normal);
+        this.mFrame_over = (over ? over : normal);
+        this.changeNormal();
+        return this;
+    }
+
     // public setState(val: string) {
     // }
 
@@ -91,22 +103,12 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
 
     public changeDown() {
         // this.scale = 0.9;
-        const frame = this.mFrame ? this.mFrame : this.mKey;
-        let down = `${frame}_down`;
-        if (!this.isExists(down)) {
-            down = `${frame}_normal`;
-        }
-        this.setFrame(down);
+        this.setFrame(this.mFrame_down);
     }
 
     protected changeOver() {
         // this.setTexture()
-        const frame = this.mFrame ? this.mFrame : this.mKey;
-        let over = `${frame}_over`;
-        if (!this.isExists(over)) {
-            over = `${frame}_normal`;
-        }
-        this.setFrame(over);
+        this.setFrame(this.mFrame_over);
     }
 
     protected isExists(frame: string) {
@@ -141,5 +143,20 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
             repeat: 0,
         });
         this.scaleX = this.scaleY = 1;
+    }
+
+    private initFrame() {
+        const frame = this.mFrame ? this.mFrame : this.mKey;
+        this.mFrame_nrmal = `${frame}_normal`;
+        let down = `${frame}_down`;
+        if (!this.isExists(down)) {
+            down = `${frame}_normal`;
+        }
+        this.mFrame_down = down;
+        let over = `${frame}_over`;
+        if (!this.isExists(over)) {
+            over = `${frame}_normal`;
+        }
+        this.mFrame_over = over;
     }
 }

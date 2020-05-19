@@ -55,7 +55,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
         this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
-        this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr, h / 2 + 180 * this.dpr);
+        this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
         this.content.setInteractive();
     }
 
@@ -79,12 +79,12 @@ export default class CharacterInfoPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on("pointerup", this.OnClosePanel, this);
+        this.closeBtn.on("Tap", this.OnClosePanel, this);
     }
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off("pointerup", this.OnClosePanel, this);
+        this.closeBtn.off("Tap", this.OnClosePanel, this);
     }
 
     preload() {
@@ -99,7 +99,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.setSize(w, h);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
-        this.content.setSize(w, h);
+        this.content.setSize(this.bg.width, this.bg.height);
         this.mainContent = this.scene.make.container(undefined, false);
         this.mainContent.setSize(this.bg.width, this.bg.height);
         const posY = -this.bg.height * 0.5 + 43 * this.dpr;
@@ -107,13 +107,13 @@ export default class CharacterInfoPanel extends BasePanel {
         this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n.t("player_info.title"), style: { font: mfont, blod: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.labelText.setStroke("#8F4300", 1);
         this.closeBtn = new Button(this.scene, this.commonkey, "close");
-        this.closeBtn.setPosition(this.bg.width * 0.5 - this.dpr * 5, posY + this.dpr * 5);
+        this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
         this.likeBtn = new Button(this.scene, this.key, "praise_bef", "999");
         this.likeBtn.setPosition(this.bg.width * 0.5 - 10 * this.dpr, posY + 50 * this.dpr);
         this.avatar = new DragonbonesDisplay(this.scene, undefined);
-        this.avatar.scale = this.dpr * 3;
-        this.avatar.x = w >> 1;
-        this.avatar.y = h >> 1 + 70 * this.dpr;
+        this.avatar.scale = this.dpr * 2;
+        this.avatar.x = 0;
+        this.avatar.y = -50 * this.dpr;
         this.avatar.once("initialized", () => {
             this.avatar.play({ animationName: "idle", flip: false });
         });
@@ -121,7 +121,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
         const nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr);
         const nickOffsetY = 30 * this.dpr;
-        const fontSize = Math.round(13 * this.dpr) + "px";
+        const fontSize = Math.round(13 * this.dpr);
         this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
@@ -152,7 +152,7 @@ export default class CharacterInfoPanel extends BasePanel {
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
-
+        this.addFriendBtn.setFrameNormal("button_g");
         this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 112 * this.dpr, 40 * this.dpr, this.commonkey, "yellow_btn_down", i18n.t("player_info.private_chat"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
@@ -173,12 +173,12 @@ export default class CharacterInfoPanel extends BasePanel {
 
         this.mCategeoriesCon = this.scene.make.container(undefined, false);
         this.mCategeoriesCon.x = w * 0.5;
-        this.mCategeoriesCon.y = h * 0.5 + 40 * this.dpr * zoom;
-        this.mCategeoriesCon.height = 41 * this.dpr;
+        this.mCategeoriesCon.y = h * 0.5 + 62 * this.dpr * zoom;
+        this.mCategeoriesCon.height = 41 * this.dpr * zoom;
         this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
             x: this.mCategeoriesCon.x - bottomWidth / 2,
             y: this.mCategeoriesCon.y,
-            clickX: w / 2 - 6 * this.dpr,
+            clickX: w / 2,
             clickY: this.mCategeoriesCon.y - 20 * zoom,
             width: bottomWidth + 10 * this.dpr * zoom,
             height: this.mCategeoriesCon.height,
@@ -200,7 +200,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const capH = (propFrame.height + 2 * this.dpr) * zoom;
         const tableConfig: GridTableConfig = {
             x: w / 2,
-            y: h * 0.5 + 145 * this.dpr * this.scale,
+            y: h * 0.5 + 145 * this.dpr * zoom,
             table: {
                 width: this.bottomCon.width - 10 * this.dpr * zoom,
                 height: 190 * this.dpr * zoom,
@@ -213,7 +213,7 @@ export default class CharacterInfoPanel extends BasePanel {
             },
             scrollMode: 1,
             clamplChildOY: false,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene,
                     item = cell.item;
@@ -234,13 +234,12 @@ export default class CharacterInfoPanel extends BasePanel {
                 this.onSelectItemHandler(cell);
             }
         });
-        this.editorPanel = new CharacterEditorPanel(this.scene, w * 0.5, h * 0.5, w, h, this.key, this.dpr, zoom);
         this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn, this.tradeBtn]);
-        this.content.add(this.bg);
         this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon]);
+        this.mainContent.add(this.avatar);
+        this.content.add(this.bg);
         this.content.add(this.mainContent);
         this.add(this.content);
-        this.add(this.avatar);
         this.add(this.mCategeoriesCon);
         this.add(this.mGrideTable.table);
         this.nickEditor.on("Tap", this.onEditorHandler, this);
@@ -259,18 +258,19 @@ export default class CharacterInfoPanel extends BasePanel {
         const nexExp = data.level.nextLevelExp;
         const cid = data.id;
         const levle = data.level.level;
+        const spaceOffset = this.getspaceStr(1 * this.dpr);
         this.avatar.load(new DragonbonesModel({
             id: 0,
-            avatar: data.currentAvatar
+            avatar: data.currentAvatar.avatar
         }));
-        this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + current_title);
+        this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + spaceOffset + current_title);
         this.likeBtn.setText(data.like + "");
         this.lvText.text = "Lv" + levle + "";
         const subArr: any[] = [data.lifeSkills, data.badges];
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
-            this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + nickname);
-            this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(3 * this.dpr) + exp + "/" + nexExp);
-            this.lvCon.setPosition(this.idText.x + 70 * this.dpr, this.idText.y);
+            this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
+            this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(7 * this.dpr) + exp + "/" + nexExp);
+            this.lvCon.setPosition(this.idText.x + 60 * this.dpr, this.idText.y);
             this.likeBtn.setFrame("praise_aft");
             subArr.push(data.titles);
             this.addFriendBtn.visible = false;
@@ -278,8 +278,8 @@ export default class CharacterInfoPanel extends BasePanel {
             this.tradeBtn.visible = false;
         } else {
             const remark = (data.remark ? data.remark : "备注好友昵称");
-            this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + nickname + ` (${remark})`);
-            this.idText.setText(this.getRichLabel("ID") + " " + cid);
+            this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname + ` (${remark})`);
+            this.idText.setText(this.getRichLabel("ID") + spaceOffset + cid);
             this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
             subArr.push(data.avatar);
@@ -290,10 +290,6 @@ export default class CharacterInfoPanel extends BasePanel {
         this.setSubCategory(subArr);
     }
 
-    destroy() {
-
-    }
-
     private OnClosePanel() {
         this.emit("hide");
     }
@@ -301,7 +297,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title")];
         const len = datas.length;
-        const h = 41 * this.dpr;
+        const h = 41 * this.dpr * this.scale;
         const conWidth = this.bottomCon.width;
         const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
@@ -311,10 +307,10 @@ export default class CharacterInfoPanel extends BasePanel {
         const items = [];
         for (let i = 0; i < len; i++) {
             const item = new Button(this.scene, this.key, "title_normal", "title_select", subNames[i]);
-            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i - 6 * this.dpr;
+            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
             item.y = 0;
             items.push(item);
-            item.setTextStyle({ color: "#996600", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT });
+            item.setTextStyle({ color: "#2B4BB5", fontSize: 12 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
             this.mCategeoriesCon.add(item);
             this.mCategoryScroll.setInteractiveObject(item);
             item.disInteractive();
@@ -327,8 +323,12 @@ export default class CharacterInfoPanel extends BasePanel {
     }
     private onSelectSubCategoryHandler(obj: Button) {
         Logger.getInstance().log(obj);
-        if (this.curSelectCategeory) this.curSelectCategeory.changeNormal();
+        if (this.curSelectCategeory) {
+            this.curSelectCategeory.changeNormal();
+            this.curSelectCategeory.setTextColor("#2B4BB5");
+        }
         obj.changeDown();
+        obj.setTextColor("#996600");
         this.curSelectCategeory = obj;
         const datas = obj.getData("subData");
         if (datas)
@@ -350,7 +350,10 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private onEditorHandler() {
-        this.add(this.editorPanel);
+        const w = 247 * this.dpr;
+        const h = this.content.height;
+        if (!this.editorPanel) this.editorPanel = new CharacterEditorPanel(this.scene, 0, 0, w, h, this.key, this.dpr);
+        this.content.add(this.editorPanel);
         this.editorPanel.visible = true;
         this.editorPanel.on("editorHide", this.onEditorPanelHideHandler, this);
         this.setMainUIVisible(false);
@@ -372,6 +375,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mainContent.visible = true;
         this.remove(this.editorPanel);
         this.editorPanel.off("editorHide", this.onEditorPanelHideHandler, this);
+        this.editorPanel.destroy();
         this.setMainUIVisible(true);
     }
 
@@ -383,8 +387,8 @@ export default class CharacterInfoPanel extends BasePanel {
 
     }
 
-    private getRichLabel(text: string, color = "#0062BB") {
-        const label = `[color=#0062BB][b]${text}:  [/b][/color]`;
+    private getRichLabel(text: string, color = "#2B4BB5") {
+        const label = `[stroke=${color}][color=${color}]${text}:[/color][/stroke]`;
         return label;
     }
     private getspaceStr(num: number) {
