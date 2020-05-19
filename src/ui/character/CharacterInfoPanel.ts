@@ -124,19 +124,23 @@ export default class CharacterInfoPanel extends BasePanel {
         const nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr * zoom);
         const nickOffsetY = 30 * this.dpr * zoom;
         const fontSize = Math.round(13 * this.dpr) + "px";
-        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY).setOrigin(0, 0.5).setFontSize(fontSize);
+        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY,{})
+            .setStroke("#ffffff", 2).setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
         this.nickEditor.setPosition(-nickPosX - 30 * this.dpr * zoom, nickPosY);
         const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr * this.scale, key: this.key, frame: "splitters" });
-        this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY).setFontSize(fontSize).setOrigin(0, 0.5);
+        this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
+            .setStroke("#ffffff", 2).setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
         const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr * this.scale, key: this.key, frame: "splitters" });
-        this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY * 2).setFontSize(fontSize).setOrigin(0, 0.5);
+        this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY * 2)
+            .setStroke("#ffffff", 2).setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
         const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr * this.scale, key: this.key, frame: "splitters" });
         const lvbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "level_bg" });
         this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.lvCon = this.scene.make.container(undefined, false);
         this.lvCon.setSize(lvbg.width, lvbg.height);
         this.lvCon.add([lvbg, this.lvText]);
+
         const bottomWidth = 234 * this.dpr * zoom;
         const bottomHeight = 195 * this.dpr * zoom;
         this.bottomCon = this.scene.make.container(undefined, false).setSize(bottomWidth, bottomHeight);
@@ -262,7 +266,7 @@ export default class CharacterInfoPanel extends BasePanel {
         }));
         this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + current_title);
         this.likeBtn.setText(data.like + "");
-        this.lvText.text = levle + "";
+        this.lvText.text = "Lv" + levle + "";
         const subArr: any[] = [data.lifeSkills, data.badges];
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + nickname);
@@ -382,7 +386,7 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private getRichLabel(text: string, color = "#0062BB") {
-        const label = `[color=blue]${text}:  [/color]`;
+        const label = `[stroke=#0062BB][color=#0062BB]${text}:  [/color][/stroke]`;
         return label;
     }
     private getspaceStr(num: number) {
