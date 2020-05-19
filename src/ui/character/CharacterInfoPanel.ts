@@ -1,11 +1,9 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { NinePatch } from "../components/nine.patch";
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { BBCodeText, Button } from "../../../lib/rexui/lib/ui/ui-components";
-import { Player } from "../../rooms/player/player";
 import { i18n } from "../../i18n";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
@@ -17,30 +15,31 @@ import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
 import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { CharacterEditorPanel } from "./CharacterEditorPanel";
-
+import Text = Phaser.GameObjects.Text;
+import Container = Phaser.GameObjects.Container;
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
     private bg: Phaser.GameObjects.Image;
-    private labelText: Phaser.GameObjects.Text;
+    private labelText: Text;
     private closeBtn: Button;
     private avatar: DragonbonesDisplay;
-    private content: Phaser.GameObjects.Container;
-    private mainContent: Phaser.GameObjects.Container;
-    private lvCon: Phaser.GameObjects.Container;
-    private lvText: Phaser.GameObjects.Text;
+    private content: Container;
+    private mainContent: Container;
+    private lvCon: Container;
+    private lvText: Text;
     private nickName: BBCodeText;
     private idText: BBCodeText;
     private titleName: BBCodeText;
     private likeBtn: Button;
     private nickEditor: Button;
-    private bottomCon: Phaser.GameObjects.Container;
+    private bottomCon: Container;
     private bottombg: Phaser.GameObjects.Graphics;
     private addFriendBtn: NinePatchButton;
     private tradeBtn: NinePatchButton;
     private privaCharBtn: NinePatchButton;
     private mCategoryScroll: GameScroller;
-    private mCategeoriesCon: Phaser.GameObjects.Container;
+    private mCategeoriesCon: Container;
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
     private curSelectCategeory: Button;
@@ -124,15 +123,15 @@ export default class CharacterInfoPanel extends BasePanel {
         const nickOffsetY = 30 * this.dpr;
         const fontSize = Math.round(13 * this.dpr) + "px";
         this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
-            .setStroke("#ffffff", 2).setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
+            .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
         this.nickEditor.setPosition(-nickPosX - 30 * this.dpr, nickPosY);
         const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
         this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
-            .setStroke("#ffffff", 2).setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
+            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
         const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr, key: this.key, frame: "splitters" });
         this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY * 2)
-            .setStroke("#ffffff", 2).setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
+            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
         const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr, key: this.key, frame: "splitters" });
         const lvbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "level_bg" });
         this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
@@ -385,7 +384,7 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private getRichLabel(text: string, color = "#0062BB") {
-        const label = `[stroke=#0062BB][color=#0062BB]${text}:  [/color][/stroke]`;
+        const label = `[color=#0062BB][b]${text}:  [/b][/color]`;
         return label;
     }
     private getspaceStr(num: number) {
@@ -397,10 +396,10 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 }
 
-export class CharacterOwnerItem extends Phaser.GameObjects.Container {
+export class CharacterOwnerItem extends Container {
     public itemData: any;
-    private nameText: Phaser.GameObjects.Text;
-    private lvText: Phaser.GameObjects.Text;
+    private nameText: Text;
+    private lvText: Text;
     private icon: DynamicImage;
     private progressBar: ProgressBar;
     private dpr: number = 0;
