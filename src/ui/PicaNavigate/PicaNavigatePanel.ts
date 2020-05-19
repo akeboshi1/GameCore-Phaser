@@ -17,10 +17,10 @@ export class PicaNavigatePanel extends BasePanel {
 
   resize(w: number, h: number) {
     this.setSize(w, h);
-    const width = this.scene.cameras.main.width;
+    const zoom = this.scale;
+    const width = this.scene.cameras.main.width / zoom;
     const height = this.scene.cameras.main.height;
     const frame = this.scene.textures.getFrame(this.key, "bg.png");
-    const zoom = this.scale;
     const scaleRatio = width / frame.width * this.dpr;
     this.mBackground.scaleX = scaleRatio;
     this.mBackground.x = width / 2;
@@ -74,7 +74,8 @@ export class PicaNavigatePanel extends BasePanel {
     for (let i = 0; i < list.length; i++) {
       list[i].x = i * 50 * this.dpr - list[i].width / 2;
     }
-    this.resize(this.mScene.cameras.main.width / this.scale, this.mBackground.height);
+    const zoom = this.scale;
+    this.resize(this.mBackground.width * zoom, this.mBackground.height * zoom);
     super.init();
   }
 

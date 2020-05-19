@@ -50,4 +50,5 @@ export interface WorldService {
     loadSceneConfig(sceneId: string): Promise<any>;
 
     playSound(config: ISoundConfig);
+    showLoading();
 }

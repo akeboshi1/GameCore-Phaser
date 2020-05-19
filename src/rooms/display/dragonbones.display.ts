@@ -6,6 +6,7 @@ import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
 import { Logger } from "../../utils/log";
+import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -887,7 +888,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     private onSoundEventHandler(event: dragonBones.EventObject) {
-        Logger.getInstance().log("sound event: ", event.name);
+        // Logger.getInstance().log("sound event: ", event.name);
+        if (event.name) {
+            this.mRoomService.world.playSound({
+                field: SoundField.Element,
+                key: event.name,
+            });
+        }
     }
 
     set dragonBonesName(val: string) {

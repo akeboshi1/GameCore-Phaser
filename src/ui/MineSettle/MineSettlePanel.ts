@@ -86,6 +86,8 @@ export class MineSettlePanel extends BasePanel {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                cellOriginX: 0,
+                cellOriginY: 0
             },
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             clamplChildOY: false,

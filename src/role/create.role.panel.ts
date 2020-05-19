@@ -67,9 +67,10 @@ export class CreateRolePanel extends BasePanel {
     // this.mBackground.y = 60 + (this.mBackground.height >> 1);
 
     // const scale = this.scene.cameras.main.height / 1920;
-    const width = this.scene.cameras.main.width;
-    const height = this.scene.cameras.main.height;
-    const centerX = this.scene.cameras.main.centerX;
+    const scale = this.scale;
+    const width = this.scene.cameras.main.width / scale;
+    const height = this.scene.cameras.main.height / scale;
+    const centerX = this.scene.cameras.main.centerX / scale;
     // this.setScale(scale);
 
     // this.mBackground.setScale(scale);

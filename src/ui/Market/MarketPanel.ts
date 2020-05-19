@@ -35,7 +35,6 @@ export class MarketPanel extends BasePanel {
     super(scene, world);
     this.mSubTabs = [];
     this.mTabs = [];
-    this.scale = 1;
   }
 
   public addListen() {
@@ -261,7 +260,9 @@ export class MarketPanel extends BasePanel {
         height: capH,
         cellWidth: capW,
         cellHeight: capH,
-        reuseCellContainer: true
+        reuseCellContainer: true,
+        cellOriginX: 0,
+        cellOriginY: 0,
       },
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
@@ -302,7 +303,9 @@ export class MarketPanel extends BasePanel {
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
-        mask: false
+        // mask: false,
+        cellOriginX: 0,
+        cellOriginY: 0
       },
       scrollMode: 1,
       clamplChildOY: false,

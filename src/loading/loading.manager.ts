@@ -8,8 +8,8 @@ export interface IAsset {
 }
 
 export interface ILoadingManager {
-    start();
-    addAsset(asset: IAsset);
+    start(): Promise<any>;
+    addAssets(asset: IAsset[]): Promise<any>;
 }
 
 export class LoadingManager {
@@ -25,18 +25,33 @@ export class LoadingManager {
 
     async start(callBack?: Function) {
         const sceneManager = this.game.scene;
-        if (sceneManager && !sceneManager.isActive(LoadingScene.name)) {
-            sceneManager.start(LoadingScene.name, (scene: Phaser.Scene) => {
-               return this.startup(scene);
-           });
+        if (!sceneManager) {
+            return Promise.reject("start faild. SceneManager does not exist");
+        }
+        if (!sceneManager.getScene(LoadingScene.name)) {
+            sceneManager.add(LoadingScene.name, LoadingScene);
+        }
+        if (sceneManager.isActive(LoadingScene.name)) {
+            return Promise.resolve();
+        } else {
+            sceneManager.start(LoadingScene.name, {
+                world: this.world,
+                callBack: (scene: Phaser.Scene) => {
+                    this.scene = scene;
+                    return Promise.resolve();
+                }
+            });
         }
     }
 
-    addAsset(asset: IAsset) {
-        this.mResources.push(asset);
-        if (this.mLoading) {
+    async addAssets(assets: IAsset[]) {
+        if (!this.scene) {
+            return Promise.reject();
+        }
+        for (const asset of assets) {
             this.loadAsset(asset);
         }
+        return this.startup(this.scene);
     }
 
     async startup(scene: Phaser.Scene) {
@@ -44,6 +59,7 @@ export class LoadingManager {
 
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
             this.mLoading = false;
+            // this.game.scene.remove(LoadingScene.name);
             return Promise.resolve();
         });
         for (const asset of this.mResources) {
@@ -57,15 +73,13 @@ export class LoadingManager {
         if (this.mResources) {
             this.mResources = [];
         }
-    }
-
-    private onCompleteHandler() {
-
+        this.scene = undefined;
     }
 
     private loadAsset(asset: IAsset) {
-        if (this.scene.load[asset.type]) {
-            this.scene.load[asset.type](asset.key, asset.source);
+        const type = this.getLoadType(asset.type);
+        if (this.scene.load[type]) {
+            this.scene.load[type](asset.key, asset.source);
         }
     }
 
@@ -74,5 +88,12 @@ export class LoadingManager {
             return;
         }
         return this.world.game;
+    }
+
+    private getLoadType(fileType: string): string {
+        if (fileType === "mp3" || fileType === "wmv" || fileType === "ogg") {
+            return "audio";
+        }
+        return fileType;
     }
 }

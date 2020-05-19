@@ -4,7 +4,7 @@ import { PlayerManager } from "./player/player.manager";
 import { LayerManager } from "./layer/layer.manager";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { ConnectionService } from "../net/connection.service";
-import { op_client, op_def, op_virtual_world, op_gameconfig_01 } from "pixelpai_proto";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { ICameraService, CamerasManager } from "./cameras/cameras.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
@@ -172,11 +172,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         };
         this.mMap = new Map(this.mWorld);
         this.mMap.setMapInfo(data);
-        if (!this.mWorld.game.scene.getScene(LoadingScene.name))
-            this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
-        this.mWorld.game.scene.start(LoadingScene.name, {
-            world: this.world,
-            room: this,
+        // if (!this.mWorld.game.scene.getScene(LoadingScene.name))
+        //     this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
+        // this.mWorld.game.scene.start(LoadingScene.name, {
+        //     world: this.world,
+        //     room: this,
+        // });
+        this.world.showLoading().then(() => {
+            this.completeLoad();
         });
 
         this.mCameraService = new CamerasManager(this);
@@ -248,12 +251,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     // const close = new BackgroundManager(this, "close", this.mCameraService);
         // }
         // this.addSkyBox();
-        const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
-        this.world.playSound({
-            urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
-            field: SoundField.Element,
-            soundConfig: { loop: true },
-        });
+        // const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
+        // this.world.playSound({
+        //     urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
+        //     field: SoundField.Element,
+        //     soundConfig: { loop: true },
+        // });
 
         const scenerys = this.world.elementStorage.getScenerys();
         if (scenerys) {

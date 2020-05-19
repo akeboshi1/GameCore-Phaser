@@ -13,7 +13,7 @@ export enum SoundField {
 
 export interface ISoundConfig {
     key?: string;
-    urls: string | string[];
+    urls?: string | string[];
     field?: SoundField;
     soundConfig?: Phaser.Types.Sound.SoundConfig;
 }
@@ -57,6 +57,7 @@ export class SoundManager extends PacketHandler {
             sound = new Sound(this.mScene);
             this.mSoundMap.set(field, sound);
         }
+        // sound.play(key);
         sound.play(key, config.urls, config.soundConfig);
     }
 
@@ -166,6 +167,9 @@ class Sound {
         if (this.scene.cache.audio.exists(key)) {
             this.startPlay();
         } else {
+            if (!urls) {
+                return;
+            }
             this.scene.load.once(`filecomplete-audio-${key}`, this.onSoundCompleteHandler, this);
             this.scene.load.audio(key, urls);
             this.scene.load.start();
