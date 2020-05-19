@@ -18,7 +18,6 @@ export class MineSettlePanel extends BasePanel {
     private titleName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setInteractive();
     }
 
     resize(w: number, h: number) {
@@ -38,12 +37,26 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width / this.scale * zoom, height / this.scale * zoom);
         this.mPropGrid.refreshPos(width >> 1, this.bg.y - 5 * this.dpr * zoom);
-        this.setSize(width, height);
+        this.setSize(width * this.scale * this.scale, height * this.scale * this.scale);
     }
 
     show(param?: any) {
-        super.show(param);
+        this.mShowData = param;
         this.refreshData();
+        if (this.mPreLoad) return;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShow) return;
+        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        } else {
+            this.mShow = true;
+        }
+        this.setInteractive();
+        this.addListen();
     }
 
     addListen() {

@@ -47,14 +47,16 @@ export default class CharacterInfoPanel extends BasePanel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
-    resize(w: number, h: number) {
-        super.resize(w, h);
+    resize(width: number, height: number) {
+        const w: number = this.scene.cameras.main.width / this.scale;
+        const h: number = this.scene.cameras.main.height / this.scale;
+        super.resize(width, height);
         this.bottombg.clear();
         this.bottombg.fillStyle(0x6AE2FF, 1);
         this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
         this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
-        this.mGrideTable.refreshPos(w / 2, h * 0.5 + 145 * this.dpr * this.scale);
+        this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr, h / 2 + 180 * this.dpr);
         this.content.setInteractive();
     }
 
@@ -98,7 +100,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.setSize(w, h);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
-        this.content.setSize(this.bg.width, this.bg.height);
+        this.content.setSize(w, h);
         this.mainContent = this.scene.make.container(undefined, false);
         this.mainContent.setSize(this.bg.width, this.bg.height);
         const posY = -this.bg.height * 0.5 + 43 * this.dpr;
@@ -172,14 +174,14 @@ export default class CharacterInfoPanel extends BasePanel {
 
         this.mCategeoriesCon = this.scene.make.container(undefined, false);
         this.mCategeoriesCon.x = w * 0.5;
-        this.mCategeoriesCon.y = h * 0.5 + 56 * this.dpr * zoom;
-        this.mCategeoriesCon.height = 41 * this.dpr * zoom;
+        this.mCategeoriesCon.y = h * 0.5 + 40 * this.dpr * zoom;
+        this.mCategeoriesCon.height = 41 * this.dpr;
         this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
             x: this.mCategeoriesCon.x - bottomWidth / 2,
             y: this.mCategeoriesCon.y,
-            clickX: w / 2,
-            clickY: this.mCategeoriesCon.y,
-            width: bottomWidth,
+            clickX: w / 2 - 6 * this.dpr,
+            clickY: this.mCategeoriesCon.y - 20 * zoom,
+            width: bottomWidth + 10 * this.dpr * zoom,
             height: this.mCategeoriesCon.height,
             value: -1,
             scrollMode: 1,
@@ -201,8 +203,8 @@ export default class CharacterInfoPanel extends BasePanel {
             x: w / 2,
             y: h * 0.5 + 145 * this.dpr * this.scale,
             table: {
-                width: this.bottomCon.width,
-                height: 170 * this.dpr * zoom,
+                width: this.bottomCon.width - 10 * this.dpr * zoom,
+                height: 190 * this.dpr * zoom,
                 columns: 3,
                 cellWidth: capW,
                 cellHeight: capH,
@@ -212,7 +214,7 @@ export default class CharacterInfoPanel extends BasePanel {
             },
             scrollMode: 1,
             clamplChildOY: false,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene,
                     item = cell.item;
@@ -300,7 +302,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title")];
         const len = datas.length;
-        const h = 41 * this.dpr * this.scale;
+        const h = 41 * this.dpr;
         const conWidth = this.bottomCon.width;
         const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
@@ -310,10 +312,10 @@ export default class CharacterInfoPanel extends BasePanel {
         const items = [];
         for (let i = 0; i < len; i++) {
             const item = new Button(this.scene, this.key, "title_normal", "title_select", subNames[i]);
-            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
+            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i - 6 * this.dpr;
             item.y = 0;
             items.push(item);
-            item.setTextStyle({ color: "#996600", fontSize: 12 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
+            item.setTextStyle({ color: "#996600", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT });
             this.mCategeoriesCon.add(item);
             this.mCategoryScroll.setInteractiveObject(item);
             item.disInteractive();
