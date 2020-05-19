@@ -45,6 +45,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private curSelectCategeory: Button;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.scale = 1;
     }
     resize(width: number, height: number) {
         const w: number = this.scene.cameras.main.width / this.scale;
@@ -93,8 +94,8 @@ export default class CharacterInfoPanel extends BasePanel {
         super.preload();
     }
     init() {
-        const w = this.screenWidth;
-        const h = this.screenHeight;
+        const w = this.scene.cameras.main.width;
+        const h = this.scene.cameras.main.height;
         const zoom = this.scale;
         this.setSize(w, h);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
@@ -177,7 +178,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mCategeoriesCon.height = 41 * this.dpr * zoom;
         this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
             x: this.mCategeoriesCon.x - bottomWidth / 2,
-            y: this.mCategeoriesCon.y,
+            y: this.mCategeoriesCon.y - this.mCategeoriesCon.height / 2,
             clickX: w / 2,
             clickY: this.mCategeoriesCon.y - 20 * zoom,
             width: bottomWidth + 10 * this.dpr * zoom,
@@ -196,24 +197,25 @@ export default class CharacterInfoPanel extends BasePanel {
             }
         });
         const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
-        const capW = (propFrame.width + 5 * this.dpr) * zoom;
-        const capH = (propFrame.height + 2 * this.dpr) * zoom;
+        const capW = propFrame.width + 5 * this.dpr * zoom;
+        const capH = propFrame.height + 2 * this.dpr * zoom;
         const tableConfig: GridTableConfig = {
             x: w / 2,
             y: h * 0.5 + 145 * this.dpr * zoom,
             table: {
-                width: this.bottomCon.width - 10 * this.dpr * zoom,
-                height: 190 * this.dpr * zoom,
+                width: (this.bottomCon.width - 10 * this.dpr) * zoom,
+                height: 170 * this.dpr * zoom,
                 columns: 3,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                // cellOriginX:0,
-                // cellOriginY:0,
+                cellPadX: 24 * this.dpr * zoom
+                // cellOriginX:0.5,
+                // cellOriginY:0.5,
             },
             scrollMode: 1,
             clamplChildOY: false,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene,
                     item = cell.item;
@@ -290,6 +292,12 @@ export default class CharacterInfoPanel extends BasePanel {
         this.setSubCategory(subArr);
     }
 
+    public destroy() {
+        this.mGrideTable.destroy();
+        this.mCategoryScroll.destroy();
+        super.destroy();
+    }
+
     private OnClosePanel() {
         this.emit("hide");
     }
@@ -333,7 +341,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const datas = obj.getData("subData");
         if (datas)
             this.mGrideTable.setItems(datas);
-        this.mGrideTable.refreshPos(this.mGrideTable.x, this.mGrideTable.y, 0, 0);
+        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 170 * this.dpr * this.scale, 0, 0);
     }
 
     private refreshPos(value) {
