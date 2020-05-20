@@ -15,6 +15,13 @@ export class ActivityPanel extends BasePanel {
         this.setSize(w, h);
     }
 
+    show(param?: any) {
+        if (this.mInitialized) {
+            this.setInteractive();
+        }
+        super.show(param);
+    }
+
     protected preload() {
         this.addAtlas(this.key, "activity/activity.png", "activity/activity.json");
         super.preload();

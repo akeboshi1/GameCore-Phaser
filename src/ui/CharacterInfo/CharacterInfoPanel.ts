@@ -8,7 +8,6 @@ import { i18n } from "../../i18n";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { Url, ResUtils } from "../../utils/resUtil";
 import { Logger } from "../../utils/log";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
@@ -423,8 +422,8 @@ export class CharacterOwnerItem extends Container {
         this.nameText = this.scene.make.text({ x: 6 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.lvText = this.scene.make.text({ x: 6 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.progressBar = new ProgressBar(this.scene, {
-            x: 0,
-            y: 0,
+            x: 48 * dpr / 2,
+            y: 15 * dpr,
             width: 41 * dpr,
             height: 4 * dpr,
             background: {
@@ -433,10 +432,10 @@ export class CharacterOwnerItem extends Container {
                 width: 41 * dpr,
                 height: 4 * dpr,
                 config: {
-                    top: 10 * dpr,
-                    left: 10 * dpr,
-                    right: 10 * dpr,
-                    bottom: 10 * dpr,
+                    top: 2 * dpr,
+                    left: 4 * dpr,
+                    right: 4 * dpr,
+                    bottom: 2 * dpr,
                 },
                 key,
                 frame: "slider_bg"
@@ -447,15 +446,15 @@ export class CharacterOwnerItem extends Container {
                 width: 41 * dpr,
                 height: 4 * dpr,
                 config: {
-                    top: 10 * dpr,
-                    left: 10 * dpr,
-                    right: 10 * dpr,
-                    bottom: 10 * dpr,
+                    top: 2 * dpr,
+                    left: 4 * dpr,
+                    right: 4 * dpr,
+                    bottom: 2 * dpr,
                 },
                 key,
                 frame: "slider_rate"
             },
-            textConfig: undefined,
+            dpr
         });
         this.icon = new DynamicImage(this.scene, -bg.width * 0.5 + 22 * dpr, 0);
         this.add([bg, this.icon, this.nameText, this.lvText, this.progressBar]);
@@ -463,6 +462,7 @@ export class CharacterOwnerItem extends Container {
         this.dpr = dpr;
         this.zoom = zoom;
         this.key = key;
+        this.progressBar.setProgress(40, 100);
     }
 
     public setItemData(data, isOwner: boolean = true) {
