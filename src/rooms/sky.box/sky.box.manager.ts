@@ -1,8 +1,7 @@
 import { BlockManager } from "./block.manager";
 import { IRoomService } from "../room";
-import { IScenery, Scenery } from "./scenery";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { IScenery } from "./scenery";
+import { PacketHandler } from "net-socket-packet";
 
 export interface ISkyBoxConfig {
   key: string;
@@ -48,24 +47,4 @@ export class SkyBoxManager extends PacketHandler {
     }
     this.mScenetys.forEach((scenery: BlockManager) => scenery.destroy());
   }
-
-  // private initCamera() {
-  //   const camera = this.mScene.cameras.main;
-
-  //   if (this.mCameras) {
-  //     const main = this.mCameras.camera;
-  //     const imageWidth = this.mScenety.width;
-  //     const imageHeight = this.mScenety.height;
-  //     const size = this.mRoom.roomSize;
-  //     if (imageWidth > size.sceneWidth) {
-  //       // main.setBounds(0, 0, imageWidth, imageHeight);
-  //     }
-  //     const bound = main.getBounds();
-  //     camera.setBounds(bound.x, bound.y, bound.width, bound.height);
-  //     // camera.setPosition((size.sceneWidth - imageWidth >> 1) * this.mWorld.scaleRatio, (size.sceneHeight - imageHeight >> 1) * this.mWorld.scaleRatio);
-  //     // camera.setScroll(main.scrollX , main.scrollY);
-  //     this.mCameras.addCamera(camera);
-  //   }
-  // }
-
 }

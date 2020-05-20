@@ -3,43 +3,37 @@ import "dragonBones";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "phaser";
-import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
-import { ConnectionService } from "../net/connection.service";
+import { IConnectListener, SocketConnection, SocketConnectionError, ConnectionService, ServerAddress } from "../net";
 import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
 import { LoadingScene } from "../scenes/loading";
-import { Logger } from "../utils/log";
-import { RoomManager } from "../rooms/room.manager";
-import { ServerAddress } from "../net/address";
+import { Size, Logger, Tool, load } from "../utils";
+import { IRoomManager, IRoomService, RoomManager } from "../rooms";
 import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
-import { Size } from "../utils/size";
-import { IRoomService } from "../rooms/room";
 import { MainUIScene } from "../scenes/main.ui";
 import { JoyStickManager } from "./joystick.manager";
-import { GameMain, ILauncherConfig } from "../../launcher";
+import { GameMain, ILauncherConfig } from "../launcher";
 import { ElementStorage, IElementStorage } from "./element.storage";
-import { load } from "../utils/http";
 import { Url, ResUtils } from "../utils/resUtil";
 import { Lite, Capsule, PaletteNode, MossNode } from "game-capsule";
-import { UiManager } from "../ui/ui.manager";
-import NinePatchPlugin from "../../lib/rexui/lib/plugins/ninepatch-plugin.js";
-import InputTextPlugin from "../../lib/rexui/lib/plugins/inputtext-plugin.js";
-import BBCodeTextPlugin from "../../lib/rexui/lib/plugins/bbcodetext-plugin.js";
-import ButtonPlugin from "../../lib/rexui/lib/plugins/button-plugin.js";
-import UIPlugin from "../../lib/rexui/lib/ui/ui-plugin.js";
+import { UiManager } from "../ui";
+// import NinePatchPlugin from "../../lib/rexui/lib/plugins/ninepatch-plugin.js";
+// import InputTextPlugin from "../../lib/rexui/lib/plugins/inputtext-plugin.js";
+// import BBCodeTextPlugin from "../../lib/rexui/lib/plugins/bbcodetext-plugin.js";
+// import ButtonPlugin from "../../lib/rexui/lib/plugins/button-plugin.js";
+// import UIPlugin from "../../lib/rexui/lib/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
 import { LoginScene } from "../scenes/login";
 import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import { HttpService } from "../net/http.service";
+import { HttpService } from "../net";
 import { GamePauseScene } from "../scenes/gamepause";
 import { EditScene } from "../scenes/edit";
 import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
 import * as path from "path";
-import { Tool } from "../utils/tool";
 import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 // The World act as the global Phaser.World instance;
@@ -51,7 +45,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mMoveStyle: number = 1;
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
-    private mRoomMamager: RoomManager;
+    private mRoomMamager: IRoomManager;
     private mMouseManager: MouseManager;
     private mElementStorage: IElementStorage;
     private mUiManager: UiManager;
@@ -335,7 +329,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mGame;
     }
 
-    get roomManager(): RoomManager | undefined {
+    get roomManager(): IRoomManager | undefined {
         return this.mRoomMamager;
     }
 
@@ -742,38 +736,38 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             dom: {
                 createContainer: true,
             },
-            plugins: {
-                global: [
-                    {
-                        key: "rexButton",
-                        plugin: ButtonPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexNinePatchPlugin",
-                        plugin: NinePatchPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexInputText",
-                        plugin: InputTextPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexBBCodeTextPlugin",
-                        plugin: BBCodeTextPlugin,
-                        start: true,
-                    },
-                ],
-                scene: [
-                    {
-                        key: "DragonBones",
-                        plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
-                        mapping: "dragonbone",
-                    },
-                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
-                ],
-            },
+            // plugins: {
+            //     global: [
+            //         {
+            //             key: "rexButton",
+            //             plugin: ButtonPlugin,
+            //             start: true,
+            //         },
+            //         {
+            //             key: "rexNinePatchPlugin",
+            //             plugin: NinePatchPlugin,
+            //             start: true,
+            //         },
+            //         {
+            //             key: "rexInputText",
+            //             plugin: InputTextPlugin,
+            //             start: true,
+            //         },
+            //         {
+            //             key: "rexBBCodeTextPlugin",
+            //             plugin: BBCodeTextPlugin,
+            //             start: true,
+            //         },
+            //     ],
+            //     scene: [
+            //         {
+            //             key: "DragonBones",
+            //             plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
+            //             mapping: "dragonbone",
+            //         },
+            //         { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
+            //     ],
+            // },
             render: {
                 pixelArt: false,
                 roundPixels: true,

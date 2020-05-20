@@ -1,34 +1,35 @@
-import { WorldService } from "../game/world.service";
-import { ConnectionService } from "../net/connection.service";
+import { WorldService } from "../game";
+import { ConnectionService } from "../net";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
-import { NoticeMediator } from "./Notice/NoticeMediator";
-import { BagMediator } from "./bag/bagView/bagMediator";
-import { FriendMediator } from "./friend/friend.mediator";
-import { RankMediator } from "./Rank/RankMediator";
-import { Size } from "../utils/size";
-import { RightMediator } from "./baseView/rightGroup/right.mediator";
-import { LeftMediator } from "./baseView/leftGroup/left.mediator";
-import { BottomMediator } from "./baseView/bottomGroup/bottom.mediator";
-import { BagGroupMediator } from "./baseView/bagGroup/bag.group.mediator";
-import { TopMenuMediator } from "./baseView/top.menu/top.menu.mediator";
-import { MessageType } from "../const/MessageType";
-import { InputTextFactory } from "./components/inputTextFactory";
-import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
-import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
-import { ActivityMediator } from "./Activity/ActivityMediator";
-import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
-import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
-import { MineCarMediator } from "./MineCar/MineCarMediator";
-import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
-import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
+// import { NoticeMediator } from "./Notice/NoticeMediator";
+// import { BagMediator } from "./bag/bagView/bagMediator";
+// import { FriendMediator } from "./friend/friend.mediator";
+// import { RankMediator } from "./Rank/RankMediator";
+import { Size } from "../utils";
+// import { RightMediator } from "./baseView/rightGroup/right.mediator";
+// import { LeftMediator } from "./baseView/leftGroup/left.mediator";
+// import { BottomMediator } from "./baseView/bottomGroup/bottom.mediator";
+// import { BagGroupMediator } from "./baseView/bagGroup/bag.group.mediator";
+// import { TopMenuMediator } from "./baseView/top.menu/top.menu.mediator";
+// import { MessageType } from "../const/MessageType";
+// import { InputTextFactory } from "./components/inputTextFactory";
+// import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
+// import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
+// import { ActivityMediator } from "./Activity/ActivityMediator";
+// import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
+// import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
+// import { MineCarMediator } from "./MineCar/MineCarMediator";
+// import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
+// import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
-import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
-import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
-import { NpcDialogueMediator } from "./NpcDialogue/NpcDialogueMediator";
-import { CharacterInfoMediator } from "./character/CharacterInfoMediator";
+import { InputTextFactory } from "./components/inputTextFactory";
+import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
+import { MessageType } from "../const/MessageType";
+// import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
+// import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -42,7 +43,7 @@ import { CharacterInfoMediator } from "./character/CharacterInfoMediator";
 export class UiManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
-    private mMedMap: Map<UIMediatorType, BaseMediator>;
+    private mMedMap: Map<UIMediatorType, any>;
     private mUILayerManager: ILayerManager;
     private mCache: any[] = [];
     private mNoneUIMap: Map<string, any> = new Map();
@@ -55,8 +56,8 @@ export class UiManager extends PacketHandler {
     private mCacheUI: Function;
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
-    private mInputTextFactory: InputTextFactory;
-    private interBubbleMgr: InteractiveBubbleManager;
+    private mInputTextFactory: any;
+    private interBubbleMgr: any;
     constructor(private worldService: WorldService) {
         super();
         this.mConnect = worldService.connection;
@@ -117,33 +118,19 @@ export class UiManager extends PacketHandler {
             this.mMedMap = new Map();
             // ============场景中固定显示ui
             if (this.worldService.game.device.os.desktop) {
-                this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
+                // this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
             } else {
-                // this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
-                // this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));
-                // this.mMedMap.set(TopMediator.NAME, new TopMediator(this.worldService, scene));
-                // this.mMedMap.set(RightMediator.NAME, new RightMediator(this.worldService, scene));
-                this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
-                this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
-                this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
-                this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
-                this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
-                // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, this.worldService));
+                // this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
+                // this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
+                // this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
+                // this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
+                // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             }
-            // this.mMedMap.set(UBaseMediatorType.MainUBaseMediator, new MainUBaseMediator(this.worldService, scene));
-            this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
+            // this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
             if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
-            this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
-            this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
-            this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
-            // this.mMedMap.set(CharacterInfoMediator.name, new CharacterInfoMediator(this.mUILayerManager, scene, this.worldService));
-            // this.mMedMap.set(NpcDialogueMediator.name, new NpcDialogueMediator(this.mUILayerManager,scene, this.worldService));
-            // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
-            // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
-            // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
-            // this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
-            // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
-            // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
+            // this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
             for (const tmp of this.mCache) {
                 const ui = tmp[0];
                 this.showMed(ui.name, ui);
@@ -152,36 +139,36 @@ export class UiManager extends PacketHandler {
         }
         // TOOD 通过统一的方法创建打开
         this.mMedMap.forEach((mediator: any, key: string) => {
-            let map: Map<string, any>;
-            const deskBoo: boolean = this.worldService.game.device.os.desktop ? true : false;
-            switch (key) {
-                case LeftMediator.NAME:
-                case RightMediator.NAME:
-                case BottomMediator.NAME:
-                    map = this.mSceneUIMap;
-                    break;
-                // case TopMediator.NAME:
-                //     if (deskBoo) {
-                //         map = this.mSceneUIMap;
-                //     }
-                //     break;
-                case BagGroupMediator.NAME:
-                    if (deskBoo) {
-                        map = this.mSceneUIMap;
-                    }
-                    break;
-                case UIMediatorType.ChatMediator:
-                    if (deskBoo) {
-                        map = this.mSceneUIMap;
-                    }
-                    break;
-                case RankMediator.NAME:
-                    if (deskBoo) {
-                        map = this.mSceneUIMap;
-                    }
-                    break;
-            }
-            if (map) map.set(key, mediator);
+            // let map: Map<string, any>;
+            // const deskBoo: boolean = this.worldService.game.device.os.desktop ? true : false;
+            // switch (key) {
+            //     case LeftMediator.NAME:
+            //     case RightMediator.NAME:
+            //     case BottomMediator.NAME:
+            //         map = this.mSceneUIMap;
+            //         break;
+            //     // case TopMediator.NAME:
+            //     //     if (deskBoo) {
+            //     //         map = this.mSceneUIMap;
+            //     //     }
+            //     //     break;
+            //     case BagGroupMediator.NAME:
+            //         if (deskBoo) {
+            //             map = this.mSceneUIMap;
+            //         }
+            //         break;
+            //     case UIMediatorType.ChatMediator:
+            //         if (deskBoo) {
+            //             map = this.mSceneUIMap;
+            //         }
+            //         break;
+            //     case RankMediator.NAME:
+            //         if (deskBoo) {
+            //             map = this.mSceneUIMap;
+            //         }
+            //         break;
+            // }
+            // if (map) map.set(key, mediator);
             if (mediator.isSceneUI()) {
                 mediator.show();
             }
@@ -199,8 +186,8 @@ export class UiManager extends PacketHandler {
         }
         // const topMenu = new TopMenuMediator(this.mScene, this.worldService);
         // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
-        this.mMedMap.set(DecorateControlMediator.NAME, new DecorateControlMediator(this.mUILayerManager, this.mScene, this.worldService));
-        this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
+        // this.mMedMap.set(DecorateControlMediator.NAME, new DecorateControlMediator(this.mUILayerManager, this.mScene, this.worldService));
+        // this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
         // this.mMedMap.set(TopMenuMediator.name, topMenu);
         // topMenu.addItem({
         //     key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
@@ -211,17 +198,17 @@ export class UiManager extends PacketHandler {
 
     public resize(width: number, height: number) {
         if (this.mMedMap) {
-            this.mMedMap.forEach((mediator: BaseMediator) => {
-                if (mediator.isShow) mediator.resize();
-            });
+            // this.mMedMap.forEach((mediator: BaseMediator) => {
+            //     if (mediator.isShow) mediator.resize();
+            // });
         }
     }
 
-    public setMediator(value: string, mediator: BaseMediator) {
+    public setMediator(value: string, mediator: any) {
         this.mMedMap.set(value, mediator);
     }
 
-    public getMediator(type: string): BaseMediator | undefined {
+    public getMediator(type: string): any | undefined {
         if (!this.mMedMap) return;
         return this.mMedMap.get(type);
     }
@@ -230,7 +217,7 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        this.mMedMap.forEach((med: BaseMediator) => med.destroy());
+        this.mMedMap.forEach((med: any) => med.destroy());
         this.mMedMap.clear();
         this.mMedMap = null;
     }
@@ -243,109 +230,109 @@ export class UiManager extends PacketHandler {
     }
 
     public baseFaceResize() {
-        const bottomMed = this.getMediator(BottomMediator.NAME);
-        const rightMed = this.getMediator(RightMediator.NAME);
-        const leftMed = this.getMediator(LeftMediator.NAME);
-        // const topMed = this.getMediator(TopMediator.NAME);
-        if (rightMed && rightMed.getView()) rightMed.getView().resize(0, 0);
-        if (leftMed && leftMed.getView()) leftMed.getView().resize(0, 0);
-        if (bottomMed && bottomMed.getView()) bottomMed.getView().resize(0, 0);
-        // if (topMed && topMed.getView()) topMed.getView().resize(0, 0);
+        // const bottomMed = this.getMediator(BottomMediator.NAME);
+        // const rightMed = this.getMediator(RightMediator.NAME);
+        // const leftMed = this.getMediator(LeftMediator.NAME);
+        // // const topMed = this.getMediator(TopMediator.NAME);
+        // if (rightMed && rightMed.getView()) rightMed.getView().resize(0, 0);
+        // if (leftMed && leftMed.getView()) leftMed.getView().resize(0, 0);
+        // if (bottomMed && bottomMed.getView()) bottomMed.getView().resize(0, 0);
+        // // if (topMed && topMed.getView()) topMed.getView().resize(0, 0);
     }
 
     public baseFaceTween(show: boolean) {
         // if (!this.worldService.game.device.os.desktop) {
         //     (this.worldService.inputManager as JoyStickManager).tweenExpand(show);
         // }
-        const rightMed = this.getMediator(RightMediator.NAME);
-        const leftMed = this.getMediator(LeftMediator.NAME);
-        const bottomMed = this.getMediator(BottomMediator.NAME);
-        // const topMed = this.getMediator(TopMediator.NAME);
-        if (rightMed && rightMed.getView()) rightMed.getView().tweenExpand(show);
-        if (leftMed && leftMed.getView()) leftMed.getView().tweenExpand(show);
-        if (bottomMed && bottomMed.getView()) bottomMed.getView().tweenExpand(show);
-        // if (topMed && topMed.getView()) topMed.getView().tweenExpand(show);
+        // const rightMed = this.getMediator(RightMediator.NAME);
+        // const leftMed = this.getMediator(LeftMediator.NAME);
+        // const bottomMed = this.getMediator(BottomMediator.NAME);
+        // // const topMed = this.getMediator(TopMediator.NAME);
+        // if (rightMed && rightMed.getView()) rightMed.getView().tweenExpand(show);
+        // if (leftMed && leftMed.getView()) leftMed.getView().tweenExpand(show);
+        // if (bottomMed && bottomMed.getView()) bottomMed.getView().tweenExpand(show);
+        // // if (topMed && topMed.getView()) topMed.getView().tweenExpand(show);
     }
 
     public checkUIState(medName: string, show: boolean) {
-        const mediator = this.mMedMap.get(medName);
-        if (!mediator) return;
-        const uiType: number = mediator.UIType;
-        const deskBoo: boolean = this.worldService.game.device.os.desktop;
-        let map: Map<string, any>;
-        switch (uiType) {
-            case UIType.None:
-                map = this.mNoneUIMap;
-                break;
-            case UIType.Scene:
-                map = this.mSceneUIMap;
-                break;
-            case UIType.Normal:
-                map = this.mNormalUIMap;
-                // pc端场景ui无需收进，但是功能ui可以共存，需要调整位置
-                if (deskBoo) {
-                    this.checkNormalUITween(show, medName);
-                } else {
-                    this.checkBaseUImap(show);
-                }
-                break;
-            case UIType.Monopoly:
-                map = this.mMonopolyUIMap;
-                this.checkBaseUImap(show);
-                this.checkNormalUImap(show);
-                this.chekcTipUImap(show);
-                break;
-            case UIType.Tips:
-                map = this.mTipUIMap;
-                break;
-            case UIType.Pop:
-                map = this.mPopUIMap;
-                break;
-            case UIType.Activity:
-                map = this.mActivityUIMap;
-                break;
-        }
-        map.set(medName, mediator);
+        // const mediator = this.mMedMap.get(medName);
+        // if (!mediator) return;
+        // const uiType: number = mediator.UIType;
+        // const deskBoo: boolean = this.worldService.game.device.os.desktop;
+        // let map: Map<string, any>;
+        // switch (uiType) {
+        //     case UIType.None:
+        //         map = this.mNoneUIMap;
+        //         break;
+        //     case UIType.Scene:
+        //         map = this.mSceneUIMap;
+        //         break;
+        //     case UIType.Normal:
+        //         map = this.mNormalUIMap;
+        //         // pc端场景ui无需收进，但是功能ui可以共存，需要调整位置
+        //         if (deskBoo) {
+        //             this.checkNormalUITween(show, medName);
+        //         } else {
+        //             this.checkBaseUImap(show);
+        //         }
+        //         break;
+        //     case UIType.Monopoly:
+        //         map = this.mMonopolyUIMap;
+        //         this.checkBaseUImap(show);
+        //         this.checkNormalUImap(show);
+        //         this.chekcTipUImap(show);
+        //         break;
+        //     case UIType.Tips:
+        //         map = this.mTipUIMap;
+        //         break;
+        //     case UIType.Pop:
+        //         map = this.mPopUIMap;
+        //         break;
+        //     case UIType.Activity:
+        //         map = this.mActivityUIMap;
+        //         break;
+        // }
+        // map.set(medName, mediator);
     }
 
     public showMed(type: string, ...param: any[]) {
-        if (!this.mMedMap) {
-            this.mCache.push(param);
-            return;
-        }
-        if (type === "MessageBox") {
-            type = "PicaMessageBox";
-        }
-        const className: string = type + "Mediator";
-        let mediator: BaseMediator = this.mMedMap.get(className);
-        if (!mediator) {
-            const path: string = `./${type}/${type}Mediator`;
-            const ns: any = require(`./${type}/${className}`);
-            mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
-            if (!mediator) {
-                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-                return;
-            }
-            this.mMedMap.set(type + "Mediator", mediator);
-            // mediator.setName(type);
-        }
-        // if (mediator.showing) return;
-        if (param) mediator.setParam(param);
-        // if (className === "RankMediator") {
-        //     if (!this.worldService.game.device.os.desktop) {
-        //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
-        //         if (med) {
-        //             if (!med.isShow()) {
-        //                 med.preRefreshBtn(className);
-        //             } else {
-        //                 med.refreshBtn(className, true);
-        //             }
-        //         }
+        // if (!this.mMedMap) {
+        //     this.mCache.push(param);
+        //     return;
+        // }
+        // if (type === "MessageBox") {
+        //     type = "PicaMessageBox";
+        // }
+        // const className: string = type + "Mediator";
+        // let mediator: BaseMediator = this.mMedMap.get(className);
+        // if (!mediator) {
+        //     const path: string = `./${type}/${type}Mediator`;
+        //     const ns: any = require(`./${type}/${className}`);
+        //     mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
+        //     if (!mediator) {
+        //         // Logger.getInstance().error(`error ${type} no panel can show!!!`);
         //         return;
         //     }
+        //     this.mMedMap.set(type + "Mediator", mediator);
+        //     // mediator.setName(type);
         // }
-        this.checkUIState(className, false);
-        mediator.show(param);
+        // // if (mediator.showing) return;
+        // if (param) mediator.setParam(param);
+        // // if (className === "RankMediator") {
+        // //     if (!this.worldService.game.device.os.desktop) {
+        // //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
+        // //         if (med) {
+        // //             if (!med.isShow()) {
+        // //                 med.preRefreshBtn(className);
+        // //             } else {
+        // //                 med.refreshBtn(className, true);
+        // //             }
+        // //         }
+        // //         return;
+        // //     }
+        // // }
+        // this.checkUIState(className, false);
+        // mediator.show(param);
     }
 
     private handleShowUI(packet: PBpacket): void {
@@ -364,30 +351,30 @@ export class UiManager extends PacketHandler {
     }
 
     private onEnableEditMode(packet: PBpacket) {
-        let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.NAME);
-        if (!topMenu) {
-            topMenu = new TopMenuMediator(this.mScene, this.worldService);
-            this.mMedMap.set(TopMenuMediator.NAME, topMenu);
-        }
-        topMenu.addItem({
-            key: "Turn_Btn_Top", name: "EnterDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
-            iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
-        });
+        // let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.NAME);
+        // if (!topMenu) {
+        //     topMenu = new TopMenuMediator(this.mScene, this.worldService);
+        //     this.mMedMap.set(TopMenuMediator.NAME, topMenu);
+        // }
+        // topMenu.addItem({
+        //     key: "Turn_Btn_Top", name: "EnterDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+        //     iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        // });
     }
 
     private onEnableMarket() {
         if (!this.mMedMap) {
             return;
         }
-        let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.NAME);
-        if (!topMenu) {
-            topMenu = new TopMenuMediator(this.mScene, this.worldService);
-            this.mMedMap.set(TopMenuMediator.NAME, topMenu);
-        }
-        topMenu.addItem({
-            key: "Turn_Btn_Top", name: "Market", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
-            iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
-        });
+        // let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.NAME);
+        // if (!topMenu) {
+        //     topMenu = new TopMenuMediator(this.mScene, this.worldService);
+        //     this.mMedMap.set(TopMenuMediator.NAME, topMenu);
+        // }
+        // topMenu.addItem({
+        //     key: "Turn_Btn_Top", name: "Market", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+        //     iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        // });
     }
 
     private checkBaseUImap(show: boolean) {
@@ -461,7 +448,7 @@ export class UiManager extends PacketHandler {
             return;
         }
         const name: string = `${type}Mediator`;
-        const mediator: BaseMediator = this.mMedMap.get(name);
+        const mediator: any = this.mMedMap.get(name);
         if (!mediator) {
             // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
@@ -478,7 +465,7 @@ export class UiManager extends PacketHandler {
             type = "PicaMessageBox";
         }
         const medName: string = `${type}Mediator`;
-        const mediator: BaseMediator = this.mMedMap.get(medName);
+        const mediator: any = this.mMedMap.get(medName);
         if (!mediator) {
             // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
@@ -502,7 +489,7 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        this.mMedMap.forEach((med: BaseMediator) => {
+        this.mMedMap.forEach((med: any) => {
             if (med.isSceneUI()) {
                 med.show();
             }
@@ -513,7 +500,7 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        this.mMedMap.forEach((med: BaseMediator) => med.hide());
+        this.mMedMap.forEach((med: any) => med.hide());
     }
 
     private openMineSettle(packge: PBpacket) {

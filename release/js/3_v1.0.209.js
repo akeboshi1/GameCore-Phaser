@@ -1,6 +1,6 @@
 (this["webpackJsonpTooqingCore"] = this["webpackJsonpTooqingCore"] || []).push([[3],{
 
-/***/ 424:
+/***/ 200:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,13 +16,13 @@ exports.BagMediator = BagMediator;
 
 /***/ }),
 
-/***/ 434:
+/***/ 207:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BagMediator_1 = __webpack_require__(424);
+const BagMediator_1 = __webpack_require__(200);
 class Template {
     constructor() {
     }

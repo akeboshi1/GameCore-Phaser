@@ -1,5 +1,4 @@
-import { IElementManager } from "../element/element.manager";
-import { ISprite } from "../element/sprite";
+import { IElementManager, ISprite, PlayerState, MoveData } from "../element";
 import { IRoomService } from "../room";
 import { InputListener } from "../../game/input.service";
 import { PBpacket } from "net-socket-packet";
@@ -9,8 +8,7 @@ import { Bag } from "./bag/bag";
 import { Interactive } from "./interactive/interactive";
 import { Friend } from "./friend/friend";
 import { PlayerModel } from "./player.model";
-import { PlayerState } from "../element/element";
-import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
+// import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己
@@ -98,8 +96,9 @@ export class Actor extends Player implements InputListener {
 
     public startMove() {
         super.startMove();
-        const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
-        if (med) med.hide();
+        // TODO modular
+        // const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
+        // if (med) med.hide();
     }
 
     public stopMove() {
@@ -202,7 +201,6 @@ export class Actor extends Player implements InputListener {
         // }
         // this.mMovePath.strokePath();
         // this.mRoom.addToSurface(<any> this.mMovePath);
-
     }
 
     set model(val: ISprite) {
@@ -245,7 +243,7 @@ export class Actor extends Player implements InputListener {
         this.mMoveTime = val;
     }
 
-    get moveData() {
+    get moveData(): MoveData {
         return this.mMoveData;
     }
 }

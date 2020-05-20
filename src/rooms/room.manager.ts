@@ -1,22 +1,25 @@
-import { WorldService } from "../game/world.service";
-import { ConnectionService } from "../net/connection.service";
+import { WorldService } from "../game";
+import { ConnectionService } from "../net";
 import { Room, IRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
 import { EditorRoom } from "./editor.room";
 import { DecorateRoom } from "./decorate.room";
-import { Tool } from "../utils/tool";
 import { Lite } from "game-capsule";
 export interface IRoomManager {
     readonly world: WorldService | undefined;
 
-    readonly currentRoom: IRoomService | undefined;
+    readonly currentRoom: Room | undefined;
 
     readonly connection: ConnectionService | undefined;
 
     addPackListener();
     removePackListener();
+    resize(width: number, height: number);
+    onFocus();
+    onBlur();
+    destroy();
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {

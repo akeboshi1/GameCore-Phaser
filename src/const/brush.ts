@@ -1,11 +1,4 @@
-import {op_client, op_def} from "pixelpai_proto";
-import {FramesModel, IFramesModel} from "../rooms/display/frames.model";
-import {Animation} from "../rooms/display/animation";
-import {Pos} from "../utils/pos";
 import {EditorRoomService} from "../rooms/editor.room";
-import {Logger} from "../utils/log";
-import {ISprite, Sprite} from "../rooms/element/sprite";
-import {IDragonbonesModel} from "../rooms/display/dragonbones.model";
 
 export enum BrushEnum {
     MOVE = "move",

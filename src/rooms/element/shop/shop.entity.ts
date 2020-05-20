@@ -1,7 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IEntity } from "../../entity";
 import { ConnectionService } from "../../../net/connection.service";
-import { ShopModel } from "./shop.model";
 import { WorldService } from "../../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { MessageType } from "../../../const/MessageType";
@@ -10,12 +9,10 @@ export class ShopEntity extends PacketHandler implements IEntity {
     public static NAME: string = "ShopModel";
     private mConnect: ConnectionService;
     private mInitialize: boolean = false;
-    private mShopModel: ShopModel;
     constructor(private mWorld: WorldService) {
         super();
         this.mConnect = this.mWorld.connection;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE, this.handlerQueryPackage);
-        this.mShopModel = new ShopModel();
     }
 
     public initialize(): boolean {
@@ -32,7 +29,6 @@ export class ShopEntity extends PacketHandler implements IEntity {
 
     public destroy() {
         this.unRegister();
-        this.mShopModel = null;
         this.mInitialize = false;
         this.mConnect = null;
     }

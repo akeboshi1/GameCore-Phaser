@@ -2,11 +2,13 @@
     "name": "game-core",
     "version": "1.0.209",
     "main": "release/js/tooqing.js",
+    "types": "dist/types/index.d.ts",
     "scripts": {
         "dev": "webpack-dev-server --mode development",
-        "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
+        "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress && yarn dts",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
-        "ver": "genversion version.js"
+        "ver": "genversion version.js",
+        "dts": "dts-bundle --configJson dts-bundle.json && rimraf types"
     },
     "repository": "git@code.apowo.com:PixelPai/game-core.git",
     "author": "Seven <seven@apowo.com>",
@@ -17,10 +19,12 @@
         "config": "^3.2.2",
         "config-webpack": "^1.0.4",
         "copy-webpack-plugin": "^5.0.4",
+        "dts-bundle": "^0.7.3",
         "expose-loader": "^0.7.5",
         "file-loader": "^4.2.0",
         "genversion": "^2.2.0",
         "html-webpack-plugin": "^3.2.0",
+        "rimraf": "^3.0.2",
         "tern": "^0.24.1",
         "terser-webpack-plugin": "^2.1.3",
         "ts-loader": "^6.0.4",

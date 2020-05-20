@@ -1,4 +1,5 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "node",
@@ -8,11 +9,11 @@
       "webworker",
       "dom"
     ],
-    "declaration": false,
-    "sourceMap": true,
+    "removeComments": true,
+    "declaration": true,
+    "outDir": "types",
     "typeRoots": [
       "node_modules/@types"
     ]
   },
-  "exclude": ["node_modules"]
 }

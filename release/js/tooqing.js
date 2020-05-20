@@ -46,14 +46,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		1: 0
+/******/ 		0: 0
 /******/ 	};
 /******/
 /******/
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "js/" + ({"0":"game","2":"vendors~game"}[chunkId]||chunkId) + "_v1.0.209.js"
+/******/ 		return __webpack_require__.p + "js/" + ({}[chunkId]||chunkId) + "_v1.0.209.js"
 /******/ 	}
 /******/
 /******/ 	// The require function
@@ -226,11 +226,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Launcher", function() { return Launcher; });
 /* harmony import */ var _version__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
 /* harmony import */ var _version__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_version__WEBPACK_IMPORTED_MODULE_0__);
-// 加载器：
-// 1. 在这里接受外部传入的参数并转换为World可以接受的参数
-// 2. 做设备兼容
 
-var Launcher = /** @class */ (function () {
+var Launcher = (function () {
     function Launcher(config) {
         var _this = this;
         this.minWidth = 1280;
@@ -244,7 +241,6 @@ var Launcher = /** @class */ (function () {
             server_addr: undefined,
             game_id: "5e9a7dace87abc390c4b1b73",
             virtual_world_id: "65541",
-            // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
             width: this.minWidth,
             height: this.minHeight,
             screenWidth: this.minWidth,
@@ -259,7 +255,7 @@ var Launcher = /** @class */ (function () {
             Object.assign(this.mConfig, config);
         }
         this.intervalId = setInterval(function () {
-            var xhr = new XMLHttpRequest(); // TODO
+            var xhr = new XMLHttpRequest();
             xhr.open("GET", "./package.json", true);
             xhr.addEventListener("load", function () {
                 var manifest = JSON.parse(xhr.response);
@@ -272,8 +268,8 @@ var Launcher = /** @class */ (function () {
                 }
             });
             xhr.send(null);
-        }, 4 * 60 * 60 * 1000 /* ms */);
-        Promise.all(/* import() | game */[__webpack_require__.e(2), __webpack_require__.e(0)]).then(__webpack_require__.bind(null, 2)).then(function (game) {
+        }, 4 * 60 * 60 * 1000);
+        Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(2)]).then(__webpack_require__.bind(null, 2)).then(function (game) {
             _this.world = new game.World(_this.config, _this.mCompleteFunc);
             if (config.isEditor) {
                 _this.world.createGame();
@@ -341,11 +337,6 @@ var Launcher = /** @class */ (function () {
         if (ui_scale)
             this.mConfig.ui_scale = ui_scale;
         this.world.resize(width, height);
-        // if (width < height) {
-        //     this.world.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
-        // } else {
-        //     this.world.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
-        // }
     };
     Launcher.prototype.onOrientationChange = function (orientation, width, height) {
         if (!this.world)

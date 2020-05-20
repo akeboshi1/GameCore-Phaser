@@ -5,8 +5,7 @@ import { WorldService } from "./world.service";
 import { IRoomService, Room } from "../rooms/room";
 import { MessageType } from "../const/MessageType";
 import { FramesDisplay } from "../rooms/display/frames.display";
-import { Element } from "../rooms/element/element";
-import { Logger } from "../utils/log";
+import { Element } from "../rooms/element";
 
 export enum MouseEvent {
     RightMouseDown = 1,

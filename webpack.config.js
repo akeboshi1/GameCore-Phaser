@@ -12,7 +12,7 @@ const appVer = require("./version");
 
 const config = {
     entry: {
-        tooqing: path.join(__dirname, "./launcher.ts"),
+        tooqing: path.join(__dirname, "./src/launcher.ts"),
     },
     output: {
         path: path.resolve(__dirname, "dist"),

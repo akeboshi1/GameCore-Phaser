@@ -5,7 +5,7 @@ import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
