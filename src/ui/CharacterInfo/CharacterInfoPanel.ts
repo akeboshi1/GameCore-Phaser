@@ -376,6 +376,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.remove(this.editorPanel);
         this.editorPanel.off("editorHide", this.onEditorPanelHideHandler, this);
         this.editorPanel.destroy();
+        this.editorPanel = null;
         this.setMainUIVisible(true);
     }
 
