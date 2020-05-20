@@ -471,7 +471,7 @@ export class CharacterOwnerItem extends Container {
         this.dpr = dpr;
         this.zoom = zoom;
         this.key = key;
-        this.progressBar.setProgress(40, 100);
+        // this.progressBar.setProgress(40, 100);
     }
 
     public setItemData(data, isOwner: boolean = true) {
