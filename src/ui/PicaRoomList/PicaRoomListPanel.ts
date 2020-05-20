@@ -308,6 +308,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       if (this.mPlayerRoom.roomList) this.setScrollInteractive(this.mPlayerRoom.roomList);
       this.mHeight += hei;
       this.refreshPos();
+      this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
   }
 
@@ -453,6 +454,7 @@ class MyRoomDelegate extends RoomDelegate {
       if (this.mMyHistory.roomList) this.setScrollInteractive(this.mMyHistory.roomList);
       this.mHeight += hei;
       this.refreshPos();
+      this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
   }
 
