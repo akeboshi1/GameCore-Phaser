@@ -8,6 +8,8 @@ export class PicaNavigatePanel extends BasePanel {
   private mShopBtn: Phaser.GameObjects.Image;
   private mBagBtn: Phaser.GameObjects.Image;
   private mFamilyBtn: Phaser.GameObjects.Image;
+  private mGoHomeBtn: Phaser.GameObjects.Image;
+  private mPlayerBtn: Phaser.GameObjects.Image;
   private mCloseBtn: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -20,7 +22,7 @@ export class PicaNavigatePanel extends BasePanel {
     const zoom = this.scale;
     const width = this.scene.cameras.main.width / zoom;
     const height = this.scene.cameras.main.height;
-    const frame = this.scene.textures.getFrame(this.key, "bg.png");
+    const frame = this.scene.textures.getFrame(this.key, "bg");
     const scaleRatio = width / frame.width * this.dpr;
     this.mBackground.scaleX = scaleRatio;
     this.mBackground.x = width / 2;
@@ -37,6 +39,8 @@ export class PicaNavigatePanel extends BasePanel {
     this.mShopBtn.on("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
+    this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
+    this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
@@ -46,6 +50,8 @@ export class PicaNavigatePanel extends BasePanel {
     this.mShopBtn.off("pointerup", this.onShowShopHandler, this);
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
+    this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
+    this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -59,14 +65,16 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   protected init() {
-    this.mBackground = this.createImage(this.key, "bg.png");
+    this.mBackground = this.createImage(this.key, "bg");
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-    this.mMapBtn = this.createImage(this.key, "map_btn.png").setInteractive();
-    this.mShopBtn = this.createImage(this.key, "shop_btn.png").setInteractive();
-    this.mBagBtn = this.createImage(this.key, "bag_btn.png").setInteractive();
-    this.mFamilyBtn = this.createImage(this.key, "family_btn.png").setInteractive();
-    this.mCloseBtn = this.createImage(this.key, "close_btn.png").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn];
+    this.mMapBtn = this.createImage(this.key, "map_btn").setInteractive();
+    this.mShopBtn = this.createImage(this.key, "shop_btn").setInteractive();
+    this.mBagBtn = this.createImage(this.key, "bag_btn").setInteractive();
+    this.mFamilyBtn = this.createImage(this.key, "family_btn").setInteractive();
+    this.mGoHomeBtn = this.createImage(this.key, "home_btn").setInteractive();
+    this.mPlayerBtn = this.createImage(this.key, "family_btn").setInteractive();
+    this.mCloseBtn = this.createImage(this.key, "close_btn").setInteractive();
+    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn,this.mGoHomeBtn, this.mPlayerBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
@@ -101,6 +109,12 @@ export class PicaNavigatePanel extends BasePanel {
 
   private onShowFamilyHandler() {
     this.emit("showPanel", "");
+  }
+  private onShowGoHomeHandler() {
+    this.emit("showPanel", "CharacterInfo");
+  }
+  private onShowPlayerHandler() {
+    this.emit("showPanel", "CharacterInfo");
   }
   private onCloseHandler() {
     this.emit("close");

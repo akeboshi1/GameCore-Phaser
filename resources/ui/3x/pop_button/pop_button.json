@@ -1,0 +1,75 @@
+{
+	"frames": {
+		"minebag_bg": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 368,
+				"h": 118
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 368,
+				"h": 118
+			},
+			"sourceSize": {
+				"w": 368,
+				"h": 118
+			}
+		},
+		"minecar": {
+			"frame": {
+				"x": 1,
+				"y": 121,
+				"w": 138,
+				"h": 136
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 138,
+				"h": 136
+			},
+			"sourceSize": {
+				"w": 138,
+				"h": 136
+			}
+		},
+		"text_minebag": {
+			"frame": {
+				"x": 141,
+				"y": 121,
+				"w": 82,
+				"h": 45
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 82,
+				"h": 45
+			},
+			"sourceSize": {
+				"w": 82,
+				"h": 45
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet",
+		"format": "RGBA8888",
+		"size": {
+			"w": 370,
+			"h": 258
+		},
+		"scale": "1"
+	}
+}

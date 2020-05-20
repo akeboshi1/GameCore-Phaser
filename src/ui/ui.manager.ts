@@ -27,8 +27,6 @@ import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
-import { NpcDialogueMediator } from "./NpcDialogue/NpcDialogueMediator";
-import { CharacterInfoMediator } from "./character/CharacterInfoMediator";
 
 // export const enum UIType {
 //     NoneUIType,

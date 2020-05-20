@@ -19,7 +19,7 @@ export class CharacterInfoMediator extends BaseMediator {
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.mShow) {
+        if (this.mView) {
             return;
         }
         if (!this.mView) {
@@ -65,7 +65,7 @@ export class CharacterInfoMediator extends BaseMediator {
 
     private testOwnerData() {
         const player = this.world.roomManager.currentRoom.playerManager.actor;
-        const owner = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO();
+        const owner = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO();
         owner.id = player.id;
         owner.cid = "5524121555";
         owner.like = 652;
