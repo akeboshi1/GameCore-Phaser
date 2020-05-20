@@ -10,7 +10,7 @@ export class ActivityPanel extends BasePanel {
     resize(w: number, h: number) {
         const width = this.scene.cameras.main.width / this.scale;
         const height = this.scene.cameras.main.height / this.scale;
-        this.x = width - 40 * this.dpr;
+        this.x = width - 15 * this.dpr;
         this.y = 150 * this.dpr;
         this.setSize(w, h);
     }
@@ -28,10 +28,10 @@ export class ActivityPanel extends BasePanel {
     }
 
     protected init() {
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
             const img = this.scene.make.image({
                 key: this.key,
-                frame: `icon_${i + 1}.png`
+                frame: `icon_${i + 1}`
             }, false);
             // img.y = i * 50 * this.dpr;
             this.add(img);
@@ -41,12 +41,13 @@ export class ActivityPanel extends BasePanel {
         const subList = this.list;
         subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.height);
         const margin = mainMenuW / (subList.length - 1);
+        const offsetY: number = 20 * this.dpr;
         let tmpWid: number = 0;
         let tmpHei: number = 0;
         for (let i = 1; i < subList.length; i++) {
             const preButton = <Phaser.GameObjects.Image>subList[i - 1];
             const button = <Phaser.GameObjects.Image>subList[i];
-            button.y = preButton.height + preButton.y + margin;
+            button.y = preButton.height + preButton.y + margin + offsetY;
             tmpHei += button.y;
             tmpWid = button.width;
         }

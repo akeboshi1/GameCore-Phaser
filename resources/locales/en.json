@@ -39,8 +39,16 @@
     "option_live": "Living",
     "option_badge": "Badge",
     "option_title": "Title",
-    "add_friend": "添加好友",
-    "tade_btn": "交易",
-    "private_chat": "私聊"
+    "add_friend": "Add Friend",
+    "tade_btn": "Trade",
+    "private_chat": "Private Chat",
+    "edit_profile": "Edit Profile",
+    "user_name": "User Name",
+    "input_nickname": "Please input a nickname",
+    "constellation":"Constellation",
+    "birthday":"Birthday",
+    "city":"City",
+    "signature":"Signature",
+    "input_signature":"Fill in personality signature to get others attention!"
   }
 }
