@@ -96,9 +96,7 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
     // }
 
     public changeNormal() {
-        const frame = this.mFrame ? this.mFrame : this.mKey;
-        const normal = `${frame}_normal`;
-        this.setFrame(normal);
+        this.setFrame(this.mFrame_nrmal);
     }
 
     public changeDown() {

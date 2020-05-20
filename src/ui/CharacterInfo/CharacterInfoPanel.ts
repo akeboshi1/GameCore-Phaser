@@ -51,9 +51,6 @@ export default class CharacterInfoPanel extends BasePanel {
         const w: number = this.scene.cameras.main.width / this.scale;
         const h: number = this.scene.cameras.main.height / this.scale;
         super.resize(width, height);
-        this.bottombg.clear();
-        this.bottombg.fillStyle(0x6AE2FF, 1);
-        this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
         this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
         this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
@@ -97,7 +94,6 @@ export default class CharacterInfoPanel extends BasePanel {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
         const zoom = this.scale;
-        this.setSize(w, h);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(this.bg.width, this.bg.height);
@@ -105,12 +101,14 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mainContent.setSize(this.bg.width, this.bg.height);
         const posY = -this.bg.height * 0.5 + 43 * this.dpr;
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
-        this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n.t("player_info.title"), style: { font: mfont, blod: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
+        this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n.t("player_info.title"), style: { font: mfont, bold: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.labelText.setStroke("#8F4300", 1);
         this.closeBtn = new Button(this.scene, this.commonkey, "close");
         this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
-        this.likeBtn = new Button(this.scene, this.key, "praise_bef", "999");
-        this.likeBtn.setPosition(this.bg.width * 0.5 - 10 * this.dpr, posY + 50 * this.dpr);
+        this.likeBtn = new Button(this.scene, this.key, "praise_bef", "praise_bef", "999");
+        this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT });
+        this.likeBtn.text.setOrigin(0,0.5).x += 10 * this.dpr;
+        this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
         this.avatar = new DragonbonesDisplay(this.scene, undefined);
         this.avatar.scale = this.dpr * 2;
         this.avatar.x = 0;
@@ -126,7 +124,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
-        this.nickEditor.setPosition(-nickPosX - 30 * this.dpr, nickPosY);
+        this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY);
         const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
         this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
             .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
@@ -145,23 +143,23 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottomCon = this.scene.make.container(undefined, false).setSize(bottomWidth, bottomHeight);
         this.bottomCon.setPosition(0, (this.mainContent.height - bottomHeight) * 0.5 - 30 * this.dpr);
         this.bottombg = this.scene.make.graphics(undefined, false);
-        const bottomBtnPosx = -this.bottomCon.width * 0.5 + 10 * this.dpr;
-        const bottomBtnPosy = this.bottomCon.height - 19 * this.dpr;
-        this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 112 * this.dpr, 40 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
+        const bottomBtnPosx = - 60 * this.dpr;
+        const bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
+        this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
         this.addFriendBtn.setFrameNormal("button_g");
-        this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 112 * this.dpr, 40 * this.dpr, this.commonkey, "yellow_btn_down", i18n.t("player_info.private_chat"), {
+        this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
 
-        this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 112 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn_normal", i18n.t("player_info.tade_btn"), {
+        this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -267,6 +265,8 @@ export default class CharacterInfoPanel extends BasePanel {
         }));
         this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + spaceOffset + current_title);
         this.likeBtn.setText(data.like + "");
+        const likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
+        this.likeBtn.x = likeposx - 20 * this.dpr;
         this.lvText.text = "Lv" + levle + "";
         const subArr: any[] = [data.lifeSkills, data.badges];
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
@@ -278,16 +278,24 @@ export default class CharacterInfoPanel extends BasePanel {
             this.addFriendBtn.visible = false;
             this.privaCharBtn.visible = false;
             this.tradeBtn.visible = false;
+            this.bottombg.clear();
+            this.bottombg.fillStyle(0x6AE2FF, 1);
+            this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
+            this.mGrideTable.setColumnCount(3);
         } else {
             const remark = (data.remark ? data.remark : "备注好友昵称");
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname + ` (${remark})`);
-            this.idText.setText(this.getRichLabel("ID") + spaceOffset + cid);
+            this.idText.setText(this.getRichLabel("I   D") + spaceOffset + cid);
             this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
             subArr.push(data.avatar);
             this.addFriendBtn.visible = !data.friend;
             this.privaCharBtn.visible = data.friend;
             this.tradeBtn.visible = true;
+            this.bottombg.clear();
+            this.bottombg.fillStyle(0x6AE2FF, 1);
+            this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
+            this.mGrideTable.setColumnCount(2);
         }
         this.setSubCategory(subArr);
     }
@@ -318,7 +326,7 @@ export default class CharacterInfoPanel extends BasePanel {
             item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
             item.y = 0;
             items.push(item);
-            item.setTextStyle({ color: "#2B4BB5", fontSize: 12 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
+            item.setTextStyle({ color: "#2B4BB5", bold: true, fontSize: 14 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
             this.mCategeoriesCon.add(item);
             this.mCategoryScroll.setInteractiveObject(item);
             item.disInteractive();
@@ -434,10 +442,10 @@ export class CharacterOwnerItem extends Container {
                 width: 41 * dpr,
                 height: 4 * dpr,
                 config: {
-                    top: 10 * dpr,
-                    left: 10 * dpr,
-                    right: 10 * dpr,
-                    bottom: 10 * dpr,
+                    top: 2 * dpr,
+                    left: 4 * dpr,
+                    right: 4 * dpr,
+                    bottom: 2 * dpr,
                 },
                 key,
                 frame: "slider_bg"
@@ -448,10 +456,10 @@ export class CharacterOwnerItem extends Container {
                 width: 41 * dpr,
                 height: 4 * dpr,
                 config: {
-                    top: 10 * dpr,
-                    left: 10 * dpr,
-                    right: 10 * dpr,
-                    bottom: 10 * dpr,
+                    top: 2 * dpr,
+                    left: 4 * dpr,
+                    right: 4 * dpr,
+                    bottom: 2 * dpr,
                 },
                 key,
                 frame: "slider_rate"
