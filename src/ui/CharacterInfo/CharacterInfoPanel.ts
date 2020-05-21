@@ -106,7 +106,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
         this.likeBtn = new Button(this.scene, this.key, "praise_bef", "praise_bef", "999");
         this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT });
-        this.likeBtn.text.setOrigin(0,0.5).x += 10 * this.dpr;
+        this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
         this.avatar = new DragonbonesDisplay(this.scene, undefined);
         this.avatar.scale = this.dpr * 2;
@@ -164,28 +164,36 @@ export default class CharacterInfoPanel extends BasePanel {
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
-
+        this.mCategeoriesCon = this.scene.make.container(undefined, false);
+        this.mCategeoriesCon.setSize(bottomWidth, 41 * this.dpr);
+        this.mCategeoriesCon.x = 0; // w - this.mCategeoriesCon.width >> 1;
+        this.mCategeoriesCon.y = h * 0.5 + 62 * this.dpr * zoom;
         this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
         this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
-
-        this.mCategeoriesCon = this.scene.make.container(undefined, false);
-        this.mCategeoriesCon.x = w * 0.5;
-        this.mCategeoriesCon.y = h * 0.5 + 62 * this.dpr * zoom;
-        this.mCategeoriesCon.height = 41 * this.dpr * zoom;
+        this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn, this.tradeBtn]);
+        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon]);
+        this.mainContent.add(this.avatar);
+        this.content.add(this.bg);
+        this.content.add(this.mainContent);
+        this.add(this.content);
+        this.add(this.mCategeoriesCon);
         this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
-            x: this.mCategeoriesCon.x - bottomWidth / 2,
+            x: w - this.mCategeoriesCon.width >> 1,
             y: this.mCategeoriesCon.y - this.mCategeoriesCon.height / 2,
-            clickX: w / 2,
-            clickY: this.mCategeoriesCon.y - 20 * zoom,
-            width: bottomWidth + 10 * this.dpr * zoom,
+            clickX: w >> 1,
+            clickY: this.mCategeoriesCon.y,
+            width: bottomWidth + 2 * this.dpr * zoom,
             height: this.mCategeoriesCon.height,
-            value: -1,
-            scrollMode: 1,
-            bounds: [
-                - bottomWidth / 2,
-                bottomWidth / 2
-            ],
+            value: 0,
+            orientation: 1,
+            // 下面的边界偏移主要是为了用于，非全屏模式下的滚动，利用偏移，将滚动范围从全屏幕两边减去对应的数值，达到滚动显示正确效果
+            boundPad0: w - bottomWidth + 108 * this.dpr * zoom,
+            boundPad1: w - bottomWidth + 10 * this.dpr * zoom,
+            // bounds: [
+            //     - bottomWidth / 2,
+            //     bottomWidth / 2
+            // ],
             valuechangeCallback: (newValue) => {
                 this.refreshPos(newValue);
             },
@@ -233,13 +241,6 @@ export default class CharacterInfoPanel extends BasePanel {
                 this.onSelectItemHandler(cell);
             }
         });
-        this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn, this.tradeBtn]);
-        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon]);
-        this.mainContent.add(this.avatar);
-        this.content.add(this.bg);
-        this.content.add(this.mainContent);
-        this.add(this.content);
-        this.add(this.mCategeoriesCon);
         this.add(this.mGrideTable.table);
         this.nickEditor.on("Tap", this.onEditorHandler, this);
         this.privaCharBtn.on("Tap", this.onPrivateChatHandler, this);
@@ -312,13 +313,11 @@ export default class CharacterInfoPanel extends BasePanel {
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title")];
         const len = datas.length;
-        const h = 41 * this.dpr * this.scale;
-        const conWidth = this.bottomCon.width;
+        const w = this.scene.cameras.main.width;
+        const zoom = this.mWorld.uiScale;
         const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
-        const allLen = (itemWidth + offsetx) * len - offsetx;
-        this.mCategeoriesCon.setSize(allLen, h);
-        const scrollOffsetX = allLen - conWidth;
+        let totalWid: number = 0;
         const items = [];
         for (let i = 0; i < len; i++) {
             const item = new Button(this.scene, this.key, "title_normal", "title_select", subNames[i]);
@@ -331,13 +330,17 @@ export default class CharacterInfoPanel extends BasePanel {
             item.disInteractive();
             item.removeListen();
             item.setData("subData", datas[i]);
+            totalWid += item.x;
         }
-        this.mCategoryScroll.setValue(0);
-        this.mCategoryScroll.resize(conWidth, h, -scrollOffsetX, 0);
+        totalWid = totalWid < this.bottomCon.width ? this.bottomCon.width : totalWid;
+        // 设植完毕后需刷新滚动范围
+        this.mCategoryScroll.refreshBound(totalWid);
+        // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
+        this.mCategoryScroll.setValue(w - this.mCategeoriesCon.width);
         this.onSelectSubCategoryHandler(items[0]);
     }
     private onSelectSubCategoryHandler(obj: Button) {
-        Logger.getInstance().log(obj);
+        // Logger.getInstance().log(obj);
         if (this.curSelectCategeory) {
             this.curSelectCategeory.changeNormal();
             this.curSelectCategeory.setTextColor("#2B4BB5");
@@ -352,13 +355,12 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private refreshPos(value) {
+        const zoom = this.mWorld.uiScale;
         const w = this.scene.cameras.main.width;
-        const conWidth = this.bottomCon.width;
-        const conOffsetX = (w - conWidth) / 2;
-        const allLen = this.mCategeoriesCon.width;
-        const isScroll = (allLen > conWidth ? true : false);
-        this.mCategeoriesCon.x = (isScroll ? value + conOffsetX : (w - allLen) / 2);
-        Logger.getInstance().log(value);
+        const conOffsetX = (w - this.mCategeoriesCon.width) / 2;
+        // 滚动容器的位置只能靠滚动事件来控制，否则移动会有跳动
+        this.mCategeoriesCon.x = value - conOffsetX;
+        // Logger.getInstance().log("value:" + value + "," + "conX" + this.mCategeoriesCon.x);
     }
     private onSelectItemHandler(item) {
 

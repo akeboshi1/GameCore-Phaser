@@ -359,12 +359,14 @@ export class FurniBagPanel extends BasePanel {
       clickY: this.mCategeoriesContainer.y + 41 * this.dpr * zoom / 2,
       width: this.mWorld.getSize().width,
       height: 41 * this.dpr * zoom,
+      boundPad0: this.scene.cameras.main.width / 2 + 30 * this.dpr * zoom,
+      boundPad1: this.scene.cameras.main.width / 2 + 30 * this.dpr * zoom,
       value: w / 2,
-      scrollMode: 1,
-      bounds: [
-        -w / 2,
-        w / 2
-      ],
+      orientation: 1,
+      // bounds: [
+      //   -w / 2,
+      //   w / 2
+      // ],
       valuechangeCallback: (newValue) => {
         this.refreshPos(newValue);
       },
@@ -400,7 +402,6 @@ export class FurniBagPanel extends BasePanel {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
           this.add(cellContainer);
         }
-        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         cellContainer.setProp(item);
         if (this.mSelectItem === null) this.mSelectItem = cellContainer;
@@ -417,7 +418,6 @@ export class FurniBagPanel extends BasePanel {
         this.onSelectItemHandler(cell);
       }
     });
-    // this.add(this.mPropGrid);
     this.add(this.mPropGrid.table);
     this.resize(0, 0);
     super.init();
@@ -635,7 +635,7 @@ export class FurniBagPanel extends BasePanel {
     const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
     const offset = 10 * this.dpr * zoom;
-    const w = this.mWorld.getSize().width;
+    const w = this.mScene.cameras.main.width;
     let tmpW: number = offset;
     for (let i = 0; i < list.length; i++) {
       const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>list[i];
@@ -660,7 +660,8 @@ export class FurniBagPanel extends BasePanel {
       pad1 = 30 * this.dpr * zoom - inputWid;
     }
     const updateWid: number = tmpW;
-    this.mCategoryScroll.resize(tmpW, h, -updateWid / 2 + pad0, updateWid / 2 + pad1);
+    this.mCategoryScroll.refreshBound();
+    // this.mCategoryScroll.resize(tmpW, h, -updateWid / 2 + pad0, updateWid / 2 + pad1);
     // this.mCategoryScroll.resize(updateWid, h);
   }
 
