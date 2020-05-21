@@ -8,8 +8,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
-import { Time } from "phaser";
-export class PopButtonPanel extends BasePanel {
+export class CutInMenuPanel extends BasePanel {
     private key: string = "mine_settle";
     private rightPopButton: RightPopContainer;
     private mapPop: Map<any, any> = new Map();
@@ -51,7 +50,7 @@ export class PopButtonPanel extends BasePanel {
     }
 
     preload() {
-        this.addAtlas(this.key, "pop_button/pop_button.png", "pop_button/pop_button.json");
+        this.addAtlas(this.key, "cutInmenu/cutInmenu.png", "cutInmenu/cutInmenu.json");
         super.preload();
     }
 

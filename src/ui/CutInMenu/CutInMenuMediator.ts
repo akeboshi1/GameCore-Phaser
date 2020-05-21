@@ -1,15 +1,15 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
-import { PopButtonPanel } from "./PopButtonPanel";
 import { op_client } from "pixelpai_proto";
-import { PopButton } from "./PopButton";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { CutInMenu } from "./CutInMenu";
+import { CutInMenuPanel } from "./CutInMenuPanel";
 
-export class PopButtonMediator extends BaseMediator {
+export class CutInMenuMediator extends BaseMediator {
     private scene: Phaser.Scene;
     private world: WorldService;
     private layerMgr: ILayerManager;
-    private popButton: PopButton;
+    private cutInMenu: CutInMenu;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.scene = scene;
@@ -22,12 +22,12 @@ export class PopButtonMediator extends BaseMediator {
             return;
         }
         if (!this.mView) {
-            this.mView = new PopButtonPanel(this.scene, this.world);
+            this.mView = new CutInMenuPanel(this.scene, this.world);
             this.mView.on("hide", this.onHideView, this);
         }
-        if (!this.popButton) {
-            this.popButton = new PopButton(this.world);
-            this.popButton.register();
+        if (!this.cutInMenu) {
+            this.cutInMenu = new CutInMenu(this.world);
+            this.cutInMenu.register();
         }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show();
@@ -38,9 +38,9 @@ export class PopButtonMediator extends BaseMediator {
     }
 
     destroy() {
-        if (this.popButton) {
-            this.popButton.destroy();
-            this.popButton = undefined;
+        if (this.cutInMenu) {
+            this.cutInMenu.destroy();
+            this.cutInMenu = undefined;
         }
         if (this.mView) {
             this.mView.hide();

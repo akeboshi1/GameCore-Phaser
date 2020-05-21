@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 
-export class PopButton extends PacketHandler {
+export class CutInMenu extends PacketHandler {
     private readonly world: WorldService;
     private mEvent: Phaser.Events.EventEmitter;
     constructor(world: WorldService) {

@@ -106,7 +106,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
         this.likeBtn = new Button(this.scene, this.key, "praise_bef", "praise_bef", "999");
         this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT });
-        this.likeBtn.text.setOrigin(0,0.5).x += 10 * this.dpr;
+        this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
         this.avatar = new DragonbonesDisplay(this.scene, undefined);
         this.avatar.scale = this.dpr * 2;
@@ -177,7 +177,7 @@ export default class CharacterInfoPanel extends BasePanel {
             x: this.mCategeoriesCon.x - bottomWidth / 2,
             y: this.mCategeoriesCon.y - this.mCategeoriesCon.height / 2,
             clickX: w / 2,
-            clickY: this.mCategeoriesCon.y - 20 * zoom,
+            clickY: this.mCategeoriesCon.y - 10 * this.dpr * zoom,
             width: bottomWidth + 10 * this.dpr * zoom,
             height: this.mCategeoriesCon.height,
             value: -1,
@@ -415,8 +415,7 @@ export default class CharacterInfoPanel extends BasePanel {
         return str;
     }
 }
-
-export class CharacterOwnerItem extends Container {
+class CharacterOwnerItem extends Container {
     public itemData: any;
     private nameText: Text;
     private lvText: Text;
@@ -463,7 +462,7 @@ export class CharacterOwnerItem extends Container {
                 key,
                 frame: "slider_rate"
             },
-            dpr
+            textConfig: undefined
         });
         this.icon = new DynamicImage(this.scene, -bg.width * 0.5 + 22 * dpr, 0);
         this.add([bg, this.icon, this.nameText, this.lvText, this.progressBar]);
@@ -474,7 +473,7 @@ export class CharacterOwnerItem extends Container {
         this.progressBar.setProgress(40, 100);
     }
 
-    public setItemData(data, isOwner: boolean = true) {
+    public setItemData(data, isOwner: boolean = false) {
         this.itemData = data;
         this.nameText.text = data.name;
         const posY = (isOwner ? -16 * this.dpr * this.zoom : -11 * this.dpr * this.zoom);
