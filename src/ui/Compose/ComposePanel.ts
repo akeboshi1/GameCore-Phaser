@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { op_client, op_gameconfig } from "pixelpai_proto";
+import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { NinePatch } from "../components/nine.patch";
 import { NinePatchButton } from "../components/ninepatch.button";
@@ -9,6 +9,11 @@ import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
+import { DynamicImage } from "../components/dynamic.image";
+import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
+import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -18,6 +23,8 @@ export class ComposePanel extends BasePanel {
     private materialCon: Phaser.GameObjects.Container;
     private materialGameScroll: GameScroller;
     private materialItemsCon: Phaser.GameObjects.Container;
+    private mGrideTable: GameGridTable;
+    private mSelectItem: ComposeItem;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -56,6 +63,7 @@ export class ComposePanel extends BasePanel {
 
     preload() {
         this.addAtlas(this.key, "compose/compose.png", "compose/compose.json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.common + ".png", UIAtlasName.common + ".json");
         super.preload();
     }
 
@@ -74,7 +82,7 @@ export class ComposePanel extends BasePanel {
         this.mDetailBubble.x = -width * 0.5;
         this.mDetailBubble.y = height * 0.5 - 60 * this.dpr;
         this.content.add(this.mDetailBubble);
-        const composeBtn = new NinePatchButton(this.scene, width * 0.5 - 60 * this.dpr, height * 0.5 - 60 * this.dpr, 106 * this.dpr, 40 * this.dpr, this.key, "yellow_btn", "制作", {
+        const composeBtn = new NinePatchButton(this.scene, width * 0.5 - 60 * this.dpr, height * 0.5 - 60 * this.dpr, 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "制作", {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -104,28 +112,68 @@ export class ComposePanel extends BasePanel {
         const materialLine2 = this.scene.make.image({ x: 10 * this.dpr, y: materialTitle.y, key: this.key, frame: "sourcelist_title_1" });
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2]);
         this.materialItemsCon = this.scene.make.container(undefined, false);
+        this.add(this.materialItemsCon);
         this.materialItemsCon.setPosition(0, height * 0.5 - 40 * this.dpr);
+        this.materialItemsCon.setSize(width, 50 * this.dpr);
         const zoom = this.scale;
-        // this.materialGameScroll = new GameScroller(this.scene, this.materialItemsCon, {
-        //     x: this.materialItemsCon.x - materialConWdith / 2,
-        //     y: this.materialItemsCon.y - this.materialItemsCon.height / 2,
-        //     clickX: width / 2,
-        //     clickY: this.materialItemsCon.y - 20 * zoom,
-        //     width: bottomWidth + 10 * this.dpr * zoom,
-        //     height: this.mCategeoriesCon.height,
-        //     value: -1,
-        //     scrollMode: 1,
-        //     bounds: [
-        //         - bottomWidth / 2,
-        //         bottomWidth / 2
-        //     ],
-        //     valuechangeCallback: (newValue) => {
-        //         this.refreshPos(newValue);
-        //     },
-        //     cellupCallBack: (gameobject) => {
-        //         this.onSelectSubCategoryHandler(gameobject);
-        //     }
-        // });
+        this.materialGameScroll = new GameScroller(this.scene, this.materialItemsCon, {
+            x: this.materialItemsCon.x - materialConWdith / 2,
+            y: this.materialItemsCon.y - this.materialItemsCon.height / 2,
+            clickX: width / 2,
+            clickY: this.materialItemsCon.y - 20 * zoom,
+            width: this.materialItemsCon.width + 10 * this.dpr * zoom,
+            height: this.materialItemsCon.height,
+            value: -1,
+            scrollMode: 1,
+            bounds: [
+                - width / 2,
+                width / 2
+            ],
+            valuechangeCallback: (newValue) => {
+                this.refreshPos(newValue);
+            },
+            cellupCallBack: (gameobject) => {
+                this.onMaterialItemHandler(gameobject);
+            }
+        });
+        const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
+        const capW = propFrame.width + 5 * this.dpr * zoom;
+        const capH = propFrame.height + 2 * this.dpr * zoom;
+        const tableConfig: GridTableConfig = {
+            x: width / 2,
+            y: height * 0.5 + 145 * this.dpr * zoom,
+            table: {
+                width: (width - 10 * this.dpr) * zoom,
+                height: 175 * this.dpr * zoom,
+                columns: 3,
+                cellWidth: capW,
+                cellHeight: capH,
+                reuseCellContainer: true,
+                cellPadX: 24 * this.dpr * zoom
+            },
+            scrollMode: 1,
+            clamplChildOY: false,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            createCellContainerCallback: (cell, cellContainer) => {
+                const scene = cell.scene,
+                    item = cell.item;
+                if (cellContainer === null) {
+                    cellContainer = new ComposeItem(scene, this.key, this.dpr, zoom);
+                    this.add(cellContainer);
+                }
+                // cellContainer.setSize(width, height);
+                cellContainer.setItemData(item);
+                return cellContainer;
+            },
+        };
+        this.mGrideTable = new GameGridTable(this.scene, tableConfig);
+        this.mGrideTable.layout();
+        this.mGrideTable.on("cellTap", (cell) => {
+            if (cell) {
+                this.onSelectItemHandler(cell);
+            }
+        });
+        this.add(this.mGrideTable.table);
         this.resize(width, height);
         super.init();
     }
@@ -134,6 +182,71 @@ export class ComposePanel extends BasePanel {
         super.destroy();
     }
 
+    public setComposeData(datas: op_pkt_def.IPKT_Skill[]) {
+        this.mGrideTable.setItems(datas);
+    }
+
+    public setComposeDetialData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
+        this.mDetailBubble.setDetailData(data.productName, data.productDes);
+        this.setDetailDisplay(data);
+        this.setMaterialItems(data.materials);
+    }
+
+    private setDetailDisplay(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
+        const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+        resData.animations = data.productAnimations;
+        resData.display = data.productDisplay;
+        resData.avatar = data.productAvatar;
+        if (resData.display) {
+            this.mDetailDisplay.loadDisplay(resData);
+        } else if (resData.avatar) {
+            this.mDetailDisplay.loadAvatar(resData);
+        } else {
+            // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
+        }
+    }
+
+    private onSelectItemHandler(item: ComposeItem) {
+        const data = item.itemData;
+        this.emit("reqformula", data.id);
+        item.select = true;
+        if (this.mSelectItem) this.mSelectItem.select = false;
+        this.mSelectItem = item;
+    }
+    private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
+        const len = datas.length;
+        const width = this.screenWidth;
+        const height = this.materialItemsCon.height;
+        const zoom = this.scale;
+        const offsetx = 0 * this.dpr;
+        const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
+        const allLen = (itemWidth + offsetx) * len - offsetx;
+        this.materialItemsCon.width = allLen;
+        const scrollOffsetX = allLen - width;
+        const items = [];
+        for (let i = 0; i < len; i++) {
+            const item = new ComposeMaterialItem(this.scene, this.key, this.dpr, zoom);
+            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
+            item.y = 0;
+            items.push(item);
+            item.setItemData(datas[i]);
+            this.materialItemsCon.add(item);
+            this.materialGameScroll.setInteractiveObject(item);
+            item.setData("itemData", datas[i]);
+        }
+        this.materialGameScroll.setValue(0);
+        this.materialGameScroll.resize(width, height, -scrollOffsetX, 0);
+    }
+    private refreshPos(value: number) {
+        const width = this.screenWidth;
+        const conWidth = this.materialItemsCon.width;
+        const conOffsetX = (width - conWidth) / 2;
+        this.materialItemsCon.x = value + conOffsetX;
+    }
+
+    private onMaterialItemHandler(item: ComposeMaterialItem) {
+
+    }
 }
 
 class DetailBubble extends Phaser.GameObjects.Container {
@@ -177,19 +290,10 @@ class DetailBubble extends Phaser.GameObjects.Container {
         this.add([this.mDetailBubble, this.mItemName, this.mDesText]);
         this.setSize(bubbleW, bubbleH);
     }
-    setProp(prop: op_client.ICountablePackageItem): this {
-        this.mItemName.setText(prop.shortName || prop.name);
-        let posY = 9 * this.dpr;
-        const offsetY = 21 * this.dpr;
-        if (prop.des) {
-            posY += offsetY;
-            this.mDesText.setText(prop.des);
-            this.mDesText.y = posY;
-        } else {
-            this.mDesText.setText("");
-        }
+    setDetailData(name: string, des: string) {
+        this.mItemName.setText(name);
+        this.mDesText.setText(des);
         this.resize();
-        return this;
     }
 
     private resize(w?: number, h?: number) {
@@ -208,62 +312,123 @@ class DetailBubble extends Phaser.GameObjects.Container {
 }
 
 class ComposeItem extends Phaser.GameObjects.Container {
+    public itemData: op_pkt_def.PKT_Skill;
     private readonly dpr: number;
     private readonly key: string;
-    private minecarBtn: Button;
-    private teximg: Phaser.GameObjects.Image;
-    private clickHandler: Handler;
-    private popData: any;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
+    private readonly zoom: number;
+    private bg: Phaser.GameObjects.Image;
+    private itemIcon: DynamicImage;
+    private newIcon: Phaser.GameObjects.Image;
+    private newText: Phaser.GameObjects.Text;
+    private qualityIcon: Phaser.GameObjects.Image;
+    private qualityTex: Phaser.GameObjects.Text;
+    private qualifiedIcon: Phaser.GameObjects.Image;
+    private lockbg: Phaser.GameObjects.Image;
+    private lockIcon: Phaser.GameObjects.Image;
+    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
-        const minecarbg = this.scene.make.image({ key: this.key, frame: "minebag_bg" });
-        this.minecarBtn = new Button(this.scene, this.key, "minecar", "minecar");
-        this.minecarBtn.setPosition(-12 * dpr, -this.minecarBtn.height * 0.5);
-        this.teximg = this.scene.make.image({ key: this.key, frame: "text_minebag" });
-        this.teximg.setPosition(this.minecarBtn.x, 2 * dpr);
-        this.add([minecarbg, this.minecarBtn, this.teximg]);
-        this.minecarBtn.on("Tap", this.onClickHandler, this);
-        this.setSize(minecarbg.width, minecarbg.height);
+        this.zoom = zoom;
+        this.bg = this.scene.make.image({ key: this.key, frame: "bprint_bg_1" });
+        this.setSize(this.bg.width, this.bg.height);
+        this.itemIcon = new DynamicImage(this.scene, 0, 0);
+        this.newIcon = this.scene.make.image({ key: this.key, frame: "tag_new" });
+        this.newText = this.scene.make.text({
+            x: 7 * this.dpr,
+            y: 9 * this.dpr,
+            text: "N",
+            style: {
+                fontSize: 12 * this.dpr * zoom,
+                fontFamily: Font.DEFULT_FONT,
+                color: "#ffffff",
+                align: "center"
+            }
+        });
+        this.qualityIcon = this.scene.make.image({ key: this.key, frame: "tag_rank_a" });
+        this.qualityTex = this.scene.make.text({
+            x: 7 * this.dpr,
+            y: 9 * this.dpr,
+            text: "A",
+            style: {
+                fontSize: 12 * this.dpr * zoom,
+                fontFamily: Font.DEFULT_FONT,
+                color: "#ffffff",
+                align: "center"
+            }
+        });
+        this.qualifiedIcon = this.scene.make.image({ key: this.key, frame: "tag_ready" });
+        this.lockbg = this.scene.make.image({ key: this.key, frame: "bprint_mask" });
+        this.lockIcon = this.scene.make.image({ key: this.key, frame: "lock" });
+        this.add([this.bg, this.itemIcon, this.newIcon, this.newText, this.qualityIcon, this.qualityTex, this.qualifiedIcon, this.lockbg, this.lockIcon]);
     }
-    public setClickHandler(handler: Handler) {
-        this.clickHandler = handler;
+
+    public setItemData(data: op_pkt_def.PKT_Skill) {
+        this.itemData = data;
+        this.qualityTex.text = data.quality;
+        this.qualifiedIcon.visible = data.qualified;
+        this.lockbg.visible = data.active;
+        this.lockIcon.visible = data.active;
+        this.setQualityTexture(data.quality);
+        if (data.display) this.setItemIcon(data.display);
+        this.select = false;
     }
-    public setPopData(data: any) {
-        this.popData = data;
+
+    public set select(value: boolean) {
+        if (value)
+            this.bg.setFrame("bprint_bg_2");
+        else this.bg.setFrame("bprint_bg_1");
     }
-    private onClickHandler() {
-        if (this.clickHandler) this.clickHandler.runWith(this.popData);
+
+    private setItemIcon(display: op_gameconfig.IDisplay) {
+        const url = Url.getOsdRes(display.texturePath);
+        this.itemIcon.load(url, this, () => {
+            this.itemIcon.scale = this.dpr * this.zoom;
+            const x = -this.width * 0.5 + 18 * this.dpr * this.zoom;
+            this.itemIcon.setPosition(x, 0);
+        });
+    }
+
+    private setQualityTexture(quality: string) {
+        if (quality === "A") this.qualityIcon.setFrame("tag_rank_a");
+        else if (quality === "B") this.qualityIcon.setFrame("tag_rank_b");
+        else if (quality === "C") this.qualityIcon.setFrame("tag_rank_c");
     }
 }
 class ComposeMaterialItem extends Phaser.GameObjects.Container {
+    public itemData: op_client.ICountablePackageItem;
     private readonly dpr: number;
     private readonly key: string;
-    private minecarBtn: Button;
-    private teximg: Phaser.GameObjects.Image;
-    private clickHandler: Handler;
-    private popData: any;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
+    private readonly zoom: number;
+    private itemIcon: DynamicImage;
+    private itemCount: BBCodeText;
+    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
-        const minecarbg = this.scene.make.image({ key: this.key, frame: "minebag_bg" });
-        this.minecarBtn = new Button(this.scene, this.key, "minecar", "minecar");
-        this.minecarBtn.setPosition(-12 * dpr, -this.minecarBtn.height * 0.5);
-        this.teximg = this.scene.make.image({ key: this.key, frame: "text_minebag" });
-        this.teximg.setPosition(this.minecarBtn.x, 2 * dpr);
-        this.add([minecarbg, this.minecarBtn, this.teximg]);
-        this.minecarBtn.on("Tap", this.onClickHandler, this);
-        this.setSize(minecarbg.width, minecarbg.height);
+        this.zoom = zoom;
+        const bg = this.scene.make.image({ key: this.key, frame: "source_bg" });
+        this.itemIcon = new DynamicImage(scene, 0, 0);
+        this.itemCount = new BBCodeText(this.scene, 0, 0, {})
+            .setOrigin(0, 0.5).setFontSize(10 * dpr).setFontFamily(Font.DEFULT_FONT);
+        this.add([bg, this.itemIcon, this.itemCount]);
+        this.setSize(bg.width, bg.height);
     }
-    public setClickHandler(handler: Handler) {
-        this.clickHandler = handler;
+    public setItemData(data: op_client.ICountablePackageItem) {
+        this.itemData = data;
+        this.itemCount.text = this.getCountText(data.count, data.neededCount);
+        // this.itemIcon.setTexture();
+        // const url = Url.getOsdRes(data.display.texturePath);
+        // this.itemIcon.load(url, this, () => {
+        //     this.itemIcon.scale = this.dpr * this.zoom;
+        //     const x = -this.width * 0.5 + 18 * this.dpr * this.zoom;
+        //     this.itemIcon.setPosition(x, 0);
+        // });
     }
-    public setPopData(data: any) {
-        this.popData = data;
-    }
-    private onClickHandler() {
-        if (this.clickHandler) this.clickHandler.runWith(this.popData);
+
+    private getCountText(count: number, needcount: number) {
+        const color = (count >= needcount ? "#ffffff" : "#ff00000");
+        const text = `[stroke=${color}][color=${color}]${count}:[/color][/stroke]/` + needcount;
+        return text;
     }
 }
