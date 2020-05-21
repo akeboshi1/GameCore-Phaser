@@ -168,6 +168,7 @@ export class Element extends BlockObject implements IElement {
     protected mAi: AI;
     protected mOffsetY: number = undefined;
     protected mQueueAnimations: AnimationQueue[];
+    protected mMoving: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -407,6 +408,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public stopMove() {
+        this.mMoving = false;
         if (!this.mDisplay) {
             // Logger.getInstance().error(`can't stopMove, display does not exist`);
             return;
@@ -424,6 +426,9 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setPosition(p: Pos) {
+        if (this.mMoving) {
+            this.stopMove();
+        }
         if (this.mDisplay && p) {
             this.mDisplay.setPosition(p.x, p.y, p.z);
             this.mModel.setPosition(p.x, p.y);
@@ -713,11 +718,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onMoveStart() {
-        if (this.mDisplay) this.mDisplay.emit("startMove", this.scene);
+        this.mMoving = true;
     }
 
     protected onMoveComplete() {
-        if (this.mDisplay) this.mDisplay.emit("endMove", this.scene);
         // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
         this.stopMove();
     }

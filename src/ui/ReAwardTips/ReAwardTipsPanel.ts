@@ -91,10 +91,10 @@ class AwardItem extends Phaser.GameObjects.Container {
         this.mImage = new DynamicImage(this.scene, 0, 0);
         this.mImage.setScale(dpr);
         this.mImage.setOrigin(0.5, 1);
-        this.mImage.y = this.mBg.height * dpr / 2;
+        this.mImage.y = this.mBg.height * zoom / 2;
 
         this.mLabel = this.scene.make.text({
-            x: (this.mBg.width * zoom) / 2 - 8 * this.mScaleRatio,
+            x: this.mBg.width * this.originX - 6 * this.mScaleRatio,
             style: {
                 fontFamily: Font.DEFULT_FONT,
                 fontSize: 11 * this.mScaleRatio,

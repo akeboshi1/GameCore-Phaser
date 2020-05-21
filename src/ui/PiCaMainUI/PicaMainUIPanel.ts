@@ -266,7 +266,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number, world: WorldService) {
         super(scene);
 
-        const width = world.getSize().width;
+        const width = world.getSize().width / scale;
         let frame = this.scene.textures.getFrame(key, "exp_bg");
         this.setSize(width, frame.height);
         const progressW = this.width;
