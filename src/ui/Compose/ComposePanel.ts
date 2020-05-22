@@ -259,7 +259,7 @@ export class ComposePanel extends BasePanel {
             this.materialItemsCon.add(item);
             this.materialGameScroll.setInteractiveObject(item);
             item.setData("itemData", datas[i]);
-            totalWid += item.width;
+            totalWid += item.width * 1.5;
         }
         this.materialGameScroll.refreshBound(totalWid);
         // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
