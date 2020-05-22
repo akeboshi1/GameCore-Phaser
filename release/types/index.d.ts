@@ -84,6 +84,7 @@ declare module 'game-core/launcher' {
         updateMoss(moss: MossNode): void;
         destroy(): void;
     }
+    export { BasicPlugin } from "game-core/plugins";
     export class Launcher {
         get config(): ILauncherConfig;
         static start(config?: ILauncherConfig): Launcher;

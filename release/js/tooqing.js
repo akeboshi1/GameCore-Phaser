@@ -222,15 +222,48 @@ module.exports = '1.0.211'
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Launcher", function() { return Launcher; });
-/* harmony import */ var _version__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-/* harmony import */ var _version__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_version__WEBPACK_IMPORTED_MODULE_0__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "BasicPlugin", function() { return /* reexport */ BasicPlugin; });
+__webpack_require__.d(__webpack_exports__, "Launcher", function() { return /* binding */ launcher_Launcher; });
+
+// EXTERNAL MODULE: ./version.js
+var version = __webpack_require__(0);
+
+// CONCATENATED MODULE: ./src/plugins/basic.plugin.ts
+var BasicPlugin = /** @class */ (function () {
+    function BasicPlugin() {
+    }
+    BasicPlugin.prototype.init = function (worldService) {
+        this.mWorld = worldService;
+    };
+    BasicPlugin.prototype.preUpdate = function (time, delta) { };
+    BasicPlugin.prototype.update = function (time, delta) { };
+    BasicPlugin.prototype.postUpdate = function (time, delta) { };
+    BasicPlugin.prototype.destroy = function () { };
+    Object.defineProperty(BasicPlugin.prototype, "world", {
+        get: function () {
+            return this.mWorld;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return BasicPlugin;
+}());
+
+
+// CONCATENATED MODULE: ./src/plugins/index.ts
+
+
+// CONCATENATED MODULE: ./src/launcher.ts
 // 加载器：
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-var Launcher = /** @class */ (function () {
+
+var launcher_Launcher = /** @class */ (function () {
     function Launcher(config) {
         var _this = this;
         this.minWidth = 1280;
@@ -264,7 +297,7 @@ var Launcher = /** @class */ (function () {
             xhr.addEventListener("load", function () {
                 var manifest = JSON.parse(xhr.response);
                 var newVersion = manifest.version;
-                if (_version__WEBPACK_IMPORTED_MODULE_0__["version"] !== newVersion) {
+                if (version["version"] !== newVersion) {
                     var result = confirm("检测到新版本，是否刷新更新到最新版？");
                     if (result && _this.mReload) {
                         _this.mReload();
@@ -273,7 +306,7 @@ var Launcher = /** @class */ (function () {
             });
             xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
-        Promise.all(/* import() | game */[__webpack_require__.e(2), __webpack_require__.e(0)]).then(__webpack_require__.bind(null, 2)).then(function (game) {
+        Promise.all(/* import() | game */[__webpack_require__.e(2), __webpack_require__.e(0)]).then(__webpack_require__.bind(null, 204)).then(function (game) {
             _this.world = new game.World(_this.config, _this.mCompleteFunc);
             if (config.isEditor) {
                 _this.world.createGame();

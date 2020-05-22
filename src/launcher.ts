@@ -50,6 +50,8 @@ export interface GameMain {
     destroy(): void;
 }
 
+export { BasicPlugin } from "./plugins";
+
 export class Launcher {
     get config(): ILauncherConfig {
         return this.mConfig;
