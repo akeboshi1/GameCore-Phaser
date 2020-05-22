@@ -45,10 +45,15 @@
     "edit_profile": "Edit Profile",
     "user_name": "User Name",
     "input_nickname": "Please input a nickname",
-    "constellation":"Constellation",
-    "birthday":"Birthday",
-    "city":"City",
-    "signature":"Signature",
-    "input_signature":"Fill in personality signature to get others attention!"
+    "constellation": "Constellation",
+    "birthday": "Birthday",
+    "city": "City",
+    "signature": "Signature",
+    "input_signature": "Fill in personality signature to get others attention!"
+  },
+  "compose": {
+    "title": "Manufacture",
+    "make": "make",
+    "needMaterials": "Materials required for synthesis"
   }
 }

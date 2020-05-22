@@ -74,7 +74,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mGoHomeBtn = this.createImage(this.key, "home_btn").setInteractive();
     this.mPlayerBtn = this.createImage(this.key, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn,this.mGoHomeBtn, this.mPlayerBtn];
+    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn, this.mGoHomeBtn, this.mPlayerBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
@@ -111,7 +111,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.emit("showPanel", "");
   }
   private onShowGoHomeHandler() {
-    this.emit("showPanel", "CharacterInfo");
+    this.emit("showPanel", "Compose");
   }
   private onShowPlayerHandler() {
     this.emit("showPanel", "CharacterInfo");

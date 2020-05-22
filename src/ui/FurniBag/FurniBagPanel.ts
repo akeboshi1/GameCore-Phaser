@@ -68,7 +68,6 @@ export class FurniBagPanel extends BasePanel {
     this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
-
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);

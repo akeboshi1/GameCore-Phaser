@@ -14,6 +14,7 @@ import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableCo
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { i18n } from "../../i18n";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -32,6 +33,9 @@ export class ComposePanel extends BasePanel {
 
     resize(width: number, height: number) {
         super.resize(width, height);
+        this.content.x = width * 0.5;
+        this.content.y = height * 0.5;
+        this.mGrideTable.refreshPos(width * 0.5 + 10 * this.dpr, height - 66 * this.dpr);
         this.setSize(width, height);
     }
 
@@ -70,52 +74,72 @@ export class ComposePanel extends BasePanel {
     init() {
         const width = this.screenWidth;
         const height = this.screenHeight;
+        const zoom = this.scale;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(width, height);
         this.add(this.content);
+        const bggraphics = this.scene.make.graphics(undefined, false);
+        bggraphics.clear();
+        bggraphics.fillGradientStyle(0x7062EC, 0x7062EC, 0xCC99F5, 0xCC99F5);
+        bggraphics.fillRect(-width * 0.5, -height * 0.5, width * zoom, height * zoom);
         const bg = this.scene.make.image({ key: this.key, frame: "main_bg" });
-        this.content.add(bg);
+        bg.y = -height * 0.5 + bg.height * 0.5;
+        this.content.add([bggraphics, bg]);
+        const mfont = `bold ${17 * this.dpr}px Source Han Sans`;
+        const titleBg = this.scene.make.image({ key: this.key, frame: "title_bg" });
+        titleBg.y = -height * 0.5 + 23 * this.dpr;
+        const titleTex = this.scene.make.text({ x: 0, y: titleBg.y, text: i18n.t("compose.title"), style: { font: mfont, bold: true, color: "#8B5603", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
+        this.content.add([titleBg, titleTex]);
+        const backBtn = new Button(this.scene, UIAtlasKey.commonKey, "back_arrow", "back_arrow");
+        backBtn.setPosition(-width * 0.5 + 20 * this.dpr, -height * 0.5 + 30 * this.dpr);
+        backBtn.on("Tap", this.onBackHandler, this);
+        this.content.add(backBtn);
+
         this.mDetailDisplay = new DetailDisplay(this.scene);
         this.mDetailDisplay.y = -30 * this.dpr;
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;
-        this.mDetailBubble.y = height * 0.5 - 60 * this.dpr;
+        this.mDetailBubble.y = height * 0.5 - 300 * this.dpr;
         this.content.add(this.mDetailBubble);
-        const composeBtn = new NinePatchButton(this.scene, width * 0.5 - 60 * this.dpr, height * 0.5 - 60 * this.dpr, 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "制作", {
+        const makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 268 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
-        this.content.add(composeBtn);
+        makeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
+        this.content.add(makeBtn);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
         this.materialCon = this.scene.make.container(undefined, false).setSize(materialConWdith, materialConHeight);
         this.content.add(this.materialCon);
-        this.materialCon.setPosition(0, height * 0.5 - 50 * this.dpr);
+        this.materialCon.setPosition(0, height * 0.5 - 230 * this.dpr);
         const materialbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "sourcelist_bg" });
         const materialTitle = this.scene.make.text({
             x: 0,
-            y: -materialConHeight * 0.5 + 8 * this.dpr,
-            text: "合成所需材料",
+            y: -materialConHeight * 0.5 + 15 * this.dpr,
+            text: i18n.t("compose.needMaterials"),
             style: {
                 color: "#ffffff",
-                fontSize: 10 * this.dpr,
+                fontSize: 13 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
                 wordWrap: {
                     width: 90 * this.dpr,
                     useAdvancedWrap: true
                 }
             }
-        }, false);
+        }, false).setOrigin(0.5);
         const materialLine = this.scene.make.image({ x: -10 * this.dpr, y: materialTitle.y, key: this.key, frame: "sourcelist_title_1" });
         const materialLine2 = this.scene.make.image({ x: 10 * this.dpr, y: materialTitle.y, key: this.key, frame: "sourcelist_title_1" });
-        this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2]);
+        const linePosx = -materialTitle.width * 0.5 - materialLine.width * 0.5 - 10 * this.dpr;
+        materialLine.setPosition(linePosx, materialTitle.y);
+        materialLine2.setPosition(-linePosx, materialTitle.y).rotation = -Math.PI;
+        const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 18 * this.dpr, key: this.key, frame: "separator" });
+        this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
         this.materialItemsCon = this.scene.make.container(undefined, false);
         this.add(this.materialItemsCon);
-        this.materialItemsCon.setPosition(0, height * 0.5 - 40 * this.dpr);
+        this.materialItemsCon.setPosition(0, height- 230 * this.dpr);
         this.materialItemsCon.setSize(width, 50 * this.dpr);
-        const zoom = this.scale;
         this.materialGameScroll = new GameScroller(this.scene, this.materialItemsCon, {
             x: this.materialItemsCon.x - materialConWdith / 2,
             y: this.materialItemsCon.y - this.materialItemsCon.height / 2,
@@ -137,19 +161,19 @@ export class ComposePanel extends BasePanel {
             }
         });
         const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
-        const capW = propFrame.width + 5 * this.dpr * zoom;
-        const capH = propFrame.height + 2 * this.dpr * zoom;
+        const capW = propFrame.width + 10 * this.dpr * zoom;
+        const capH = propFrame.height + 12 * this.dpr * zoom;
         const tableConfig: GridTableConfig = {
-            x: width / 2,
-            y: height * 0.5 + 145 * this.dpr * zoom,
+            x: width * zoom / 2,
+            y: height * zoom * 0.5 + 145 * this.dpr * zoom,
             table: {
-                width: (width - 10 * this.dpr) * zoom,
+                width: width * zoom,
                 height: 175 * this.dpr * zoom,
-                columns: 3,
+                columns: 2,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                cellPadX: 24 * this.dpr * zoom
+                cellPadX: 24 * this.dpr * zoom,
             },
             scrollMode: 1,
             clamplChildOY: false,
@@ -176,6 +200,7 @@ export class ComposePanel extends BasePanel {
         this.add(this.mGrideTable.table);
         this.resize(width, height);
         super.init();
+        this.setComposeData(this.mShowData.skills);
     }
 
     destroy() {
@@ -246,6 +271,9 @@ export class ComposePanel extends BasePanel {
 
     private onMaterialItemHandler(item: ComposeMaterialItem) {
 
+    }
+    private onBackHandler() {
+        this.emit("hide");
     }
 }
 

@@ -10,6 +10,8 @@ export class ComposeMediator extends BaseMediator {
     private world: WorldService;
     private layerMgr: ILayerManager;
     private compose: Compose;
+    private tsetskills = [];
+    private testDateils = [];
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.scene = scene;
@@ -35,7 +37,11 @@ export class ComposeMediator extends BaseMediator {
         this.layerMgr.addToUILayer(this.mView);
         if (this.mParam && this.mParam.length > 0)
             this.onComposePacket(this.mParam[0]);
-        this.mView.show();
+        this.getTestDeitals();
+        const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS();
+        content.skills = this.tsetskills;
+        this.mView.show(content);
+
     }
 
     isSceneUI() {
@@ -60,7 +66,12 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private onReqFormulaDetial(id: string) {
-        this.compose.onReqFormulaDetail(id);
+        //  this.compose.onReqFormulaDetail(id);
+        this.testDateils.forEach((value) => {
+            if (value.id === id) {
+                this.onRetFormulaDetial(value);
+            }
+        });
     }
     private onReqUseFormula(id: string) {
         this.compose.onReqUseFormula(id);
@@ -75,13 +86,36 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private getTestData() {
+        const items = [];
         for (let i = 0; i < 20; i++) {
             const skill = new op_pkt_def.PKT_Skill();
-            skill.id = "123123" + i;
+            skill.id = "1" + i;
             skill.name = "蓝图" + i;
-            skill.quality = "A";
+            skill.quality = (i % 3 === 0 ? "A" : (i % 2 === 0 ? "B" : "C"));
             skill.active = (i % 6 === 0 ? false : true);
-            skill.qualified = (i % 8 === 0 ? false : true);   
+            skill.qualified = (i % 8 === 0 ? false : true);
+            items.push(skill);
+        }
+        return items;
+    }
+
+    private getTestDeitals() {
+        const items = this.getTestData();
+        this.tsetskills = items;
+        for (const skill of items) {
+            const ditem = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA();
+            ditem.id = skill.id;
+            ditem.productName = "蓝图" + skill.id;
+            ditem.productDes = "这是一段道具的有关描述巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉";
+            ditem.materials = [];
+            const mcount = Math.floor(Math.random() * 8);
+            for (let i = 0; i < mcount; i++) {
+                const mitem = new op_client.CountablePackageItem();
+                mitem.count = mcount;
+                mitem.neededCount = (skill.qualified ? mitem.count - 10 : mitem.count - 10);
+                ditem.materials.push(mitem);
+            }
+            this.testDateils.push(ditem);
         }
     }
 
