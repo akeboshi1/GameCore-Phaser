@@ -35,6 +35,7 @@ export class MarketPanel extends BasePanel {
     super(scene, world);
     this.mSubTabs = [];
     this.mTabs = [];
+    this.scale = 1;
   }
 
   public addListen() {

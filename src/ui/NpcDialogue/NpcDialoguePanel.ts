@@ -17,9 +17,9 @@ export class NpcDialoguePanel extends BasePanel {
         super(scene, world);
     }
     resize(w: number, h: number) {
-        const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height;
         const zoom = this.mWorld.uiScale;
+        const width = this.scene.cameras.main.width / zoom;
+        const height = this.scene.cameras.main.height / zoom;
         const cheight = 177 * this.dpr * zoom;
         super.resize(width, height);
         this.x = width / 2;
@@ -34,8 +34,8 @@ export class NpcDialoguePanel extends BasePanel {
     }
     init() {
         const zoom = this.mWorld.uiScale;
-        const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height;
+        const width = this.scene.cameras.main.width / zoom;
+        const height = this.scene.cameras.main.height / zoom;
         const cheight = 177 * this.dpr * zoom;
         this.content = this.scene.make.container({ x: 0 * this.dpr * zoom, y: (height - cheight) / 2, width, height: cheight }, false);
         this.content.setSize(width, cheight);
@@ -72,7 +72,7 @@ export class NpcDialoguePanel extends BasePanel {
     }
 
     public layoutItem(arr: string[]) {
-        arr = ["聊天", "购买物品","威威"];
+        arr = ["聊天", "购买物品", "威威"];
         const len = arr.length;
         const scaleRadio = (len > 4 ? 2 : 1);
         const zoom = this.mWorld.uiScale;

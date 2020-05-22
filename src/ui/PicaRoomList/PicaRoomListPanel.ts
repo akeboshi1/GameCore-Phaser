@@ -22,12 +22,11 @@ export class PicaRoomListPanel extends BasePanel {
   private mScroller: GameScroller;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    // this.scale = 1;
+    this.scale = 1;
   }
 
   resize(w: number, h: number) {
     const scale = this.scale;
-    const zoom = this.mWorld.uiScale;
     const width = this.scene.cameras.main.width / scale;
     const height = this.scene.cameras.main.height / scale;
     const centerX = this.scene.cameras.main.centerX / scale;
@@ -150,10 +149,11 @@ export class PicaRoomListPanel extends BasePanel {
       clickY: 0,
       width: w,
       height: h,
-      bounds: [
-        this.y,
-        this.y - h - 100 * this.dpr + (350 * this.dpr / 2)
-      ],
+      boundPad0: - 25 * this.dpr * zoom,
+      // bounds: [
+      //   this.y,
+      //   this.y - h - 100 * this.dpr + (350 * this.dpr / 2)
+      // ],
       value: this.y,
       valuechangeCallback: (newValue) => {
         this.mRoomContainer.y = newValue - this.y - h / 2;
@@ -309,6 +309,8 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       if (this.mPlayerRoom.roomList) this.setScrollInteractive(this.mPlayerRoom.roomList);
       this.mHeight += hei;
       this.refreshPos();
+      this.mScroller.refreshBound(this.mHeight);
+      this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
   }
 
@@ -333,19 +335,19 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
         }
       }
     }
-    const zoom: number = this.mWorld.uiScale;
-    const baseHei: number = 362 * this.mDpr;
-    let topY: number = this.mContainer.parentContainer.y;
-    Logger.getInstance().log(this.mContainer.height);
-    let bottomY: number = 0;
-    if (this.mHeight > baseHei) {
-      topY = topY;
-      bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
-    } else {
-      topY = topY;
-      bottomY = topY;
-    }
-    this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
+    // const zoom: number = this.mWorld.uiScale;
+    // const baseHei: number = 362 * this.mDpr;
+    // let topY: number = this.mContainer.parentContainer.y;
+    // Logger.getInstance().log(this.mContainer.height);
+    // let bottomY: number = 0;
+    // if (this.mHeight > baseHei) {
+    //   topY = topY;
+    //   bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
+    // } else {
+    //   topY = topY;
+    //   bottomY = topY;
+    // }
+    // this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 
   protected onEnterRoomHandler(room) {
@@ -422,18 +424,18 @@ class MyRoomDelegate extends RoomDelegate {
         if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
       }
     }
-    const zoom: number = this.mWorld.uiScale;
-    const baseHei: number = 362 * this.mDpr;
-    let topY: number = this.mContainer.parentContainer.y;
-    let bottomY: number = 0;
-    if (this.mHeight > baseHei) {
-      topY = topY;
-      bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
-    } else {
-      topY = topY;
-      bottomY = topY;
-    }
-    this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
+    // const zoom: number = this.mWorld.uiScale;
+    // const baseHei: number = 362 * this.mDpr;
+    // let topY: number = this.mContainer.parentContainer.y;
+    // let bottomY: number = 0;
+    // if (this.mHeight > baseHei) {
+    //   topY = topY;
+    //   bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
+    // } else {
+    //   topY = topY;
+    //   bottomY = topY;
+    // }
+    // this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 
   protected init() {
@@ -454,6 +456,8 @@ class MyRoomDelegate extends RoomDelegate {
       if (this.mMyHistory.roomList) this.setScrollInteractive(this.mMyHistory.roomList);
       this.mHeight += hei;
       this.refreshPos();
+      this.mScroller.refreshBound(this.mHeight);
+      this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
   }
 

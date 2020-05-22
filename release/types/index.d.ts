@@ -1266,6 +1266,7 @@ declare module 'game-core/rooms/element/element' {
         protected mAi: AI;
         protected mOffsetY: number;
         protected mQueueAnimations: AnimationQueue[];
+        protected mMoving: boolean;
         constructor(sprite: ISprite, mElementManager: IElementManager);
         load(displayInfo: IFramesModel | IDragonbonesModel): void;
         setModel(model: ISprite): void;

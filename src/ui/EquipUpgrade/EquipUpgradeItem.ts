@@ -290,7 +290,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         this.index = index;
         const url = Url.getOsdRes(data.display.texturePath);
         this.equipIcon.load(url, this, () => {
-            this.equipIcon.scale = this.dpr * 0.55 * this.zoom;
+            this.equipIcon.scale = this.dpr * this.zoom;
             // const x = this.equipIcon.width * 0.5 + 18 * this.dpr * this.zoom;
             // const y = this.equipIcon.height * 0.5 + 15 * this.dpr * this.zoom;
             // this.equipIcon.setPosition(x, y);
