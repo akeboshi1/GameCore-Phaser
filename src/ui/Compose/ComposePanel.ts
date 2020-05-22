@@ -138,21 +138,23 @@ export class ComposePanel extends BasePanel {
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
         this.materialItemsCon = this.scene.make.container(undefined, false);
         this.add(this.materialItemsCon);
-        this.materialItemsCon.setPosition(0, height- 230 * this.dpr);
+        this.materialItemsCon.setPosition(width * 0.5, height - 230 * this.dpr);
         this.materialItemsCon.setSize(width, 50 * this.dpr);
         this.materialGameScroll = new GameScroller(this.scene, this.materialItemsCon, {
             x: this.materialItemsCon.x - materialConWdith / 2,
-            y: this.materialItemsCon.y - this.materialItemsCon.height / 2,
+            y: this.materialItemsCon.y,
             clickX: width / 2,
-            clickY: this.materialItemsCon.y - 20 * zoom,
-            width: this.materialItemsCon.width + 10 * this.dpr * zoom,
+            clickY: this.materialItemsCon.y,
+            width: this.materialItemsCon.width,
             height: this.materialItemsCon.height,
             value: -1,
-            scrollMode: 1,
-            bounds: [
-                - width / 2,
-                width / 2
-            ],
+            orientation: 1,
+            // bounds: [
+            //     - width / 2,
+            //     width / 2
+            // ],
+            boundPad0: -this.scene.cameras.main.width,
+            boundPad1: this.scene.cameras.main.width,
             valuechangeCallback: (newValue) => {
                 this.refreshPos(newValue);
             },
@@ -187,6 +189,7 @@ export class ComposePanel extends BasePanel {
                 }
                 // cellContainer.setSize(width, height);
                 cellContainer.setItemData(item);
+                if (!this.mSelectItem) this.onSelectItemHandler(cellContainer);
                 return cellContainer;
             },
         };
@@ -240,15 +243,13 @@ export class ComposePanel extends BasePanel {
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
-        const width = this.screenWidth;
+        const width = this.scene.cameras.main.width;
         const height = this.materialItemsCon.height;
         const zoom = this.scale;
         const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
-        const allLen = (itemWidth + offsetx) * len - offsetx;
-        this.materialItemsCon.width = allLen;
-        const scrollOffsetX = allLen - width;
         const items = [];
+        let totalWid: number = 0;
         for (let i = 0; i < len; i++) {
             const item = new ComposeMaterialItem(this.scene, this.key, this.dpr, zoom);
             item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
@@ -258,9 +259,11 @@ export class ComposePanel extends BasePanel {
             this.materialItemsCon.add(item);
             this.materialGameScroll.setInteractiveObject(item);
             item.setData("itemData", datas[i]);
+            totalWid += item.x;
         }
-        this.materialGameScroll.setValue(0);
-        this.materialGameScroll.resize(width, height, -scrollOffsetX, 0);
+        this.materialGameScroll.refreshBound(totalWid);
+        // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
+        this.materialGameScroll.setValue(width - this.materialItemsCon.width);
     }
     private refreshPos(value: number) {
         const width = this.screenWidth;

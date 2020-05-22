@@ -39,6 +39,14 @@ export class CutInMenu extends PacketHandler {
         this.mEvent.destroy();
     }
 
+    reqRightButton(uiid: number, btnid: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = packet.content;
+        content.uiId = uiid;
+        content.componentId = btnid;
+        this.connection.send(packet);
+    }
+
     get connection(): ConnectionService {
         if (this.world) {
             return this.world.connection;

@@ -91,13 +91,14 @@ export class CutInMenuPanel extends BasePanel {
             this.rightPopButton.visible = false;
             this.mapPop.delete(this.rightPopButton);
             this.rightPopButton.x = posx;
+            this.emit("hide");
         }, 8000);
         this.mapPop.set(this.rightPopButton, timeID);
     }
 
     private onRightClickHandler() {
-        const uiManager = this.world.uiManager;
-        uiManager.showMed("MineCar");
+        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
+        this.emit("rightButton", data.id, data.button[0].node.id);
     }
 
 }

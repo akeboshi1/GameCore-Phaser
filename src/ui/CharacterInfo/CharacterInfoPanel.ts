@@ -311,7 +311,8 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private setSubCategory(datas: any[]) {
-        const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title")];
+        const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title")];
+        datas= datas.concat(datas);
         const len = datas.length;
         const w = this.scene.cameras.main.width;
         const zoom = this.mWorld.uiScale;
