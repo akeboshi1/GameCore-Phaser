@@ -73,7 +73,7 @@ export class FurniBagPanel extends BasePanel {
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
-    this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
+    this.mCategeoriesContainer.setSize(width * zoom, 43 * this.dpr * zoom);
     this.mCategeoriesContainer.y = this.mShelfContainer.y;
     this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
 
@@ -122,7 +122,8 @@ export class FurniBagPanel extends BasePanel {
     this.mCategeoriesContainer.add(seachBtn);
     this.mCategoryScroll.setInteractiveObject(seachBtn);
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW + 10 * this.dpr * zoom, 0);
+      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, 0, 0);
+      item.x = i * capW + 10 * this.dpr * zoom;
       item.y = capH - item.text.height >> 1;
       item.setData("item", subcategorys[i]);
       this.mCategeoriesContainer.add(item);
@@ -633,7 +634,7 @@ export class FurniBagPanel extends BasePanel {
     const zoom = this.mWorld.uiScale;
     const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
-    const offset = 10 * this.dpr * zoom;
+    const offset = 30 * this.dpr * zoom;
     const w = this.mScene.cameras.main.width;
     let tmpW: number = offset;
     for (let i = 0; i < list.length; i++) {
@@ -646,20 +647,21 @@ export class FurniBagPanel extends BasePanel {
       }
       tmpW += this.scrollItemWidth;
     }
-    const inputWid: number = inputBoo ? 30 * this.dpr * zoom : 0;
-    let pad0: number = 0;
-    let pad1: number = 1;
+    const inputWid: number = inputBoo ? 65 * this.dpr * zoom : 0;
+    // let pad0: number = 0;
+    // let pad1: number = 1;
     if (tmpW > w) {
-      tmpW = tmpW;
-      pad0 = 75 * this.dpr * zoom + inputWid;
-      pad1 = -180 * this.dpr * zoom - inputWid;
+      tmpW = tmpW + inputWid;
+      // pad0 = 75 * this.dpr * zoom + inputWid;
+      // pad1 = -180 * this.dpr * zoom - inputWid;
     } else {
-      tmpW = w;
-      pad0 = 410 * this.dpr * zoom + inputWid;
-      pad1 = 30 * this.dpr * zoom - inputWid;
+      tmpW = w + inputWid;
+      // pad0 = 410 * this.dpr * zoom + inputWid;
+      // pad1 = 30 * this.dpr * zoom - inputWid;
     }
     const updateWid: number = tmpW;
-    this.mCategoryScroll.refreshBound();
+    this.mCategoryScroll.refreshBound(updateWid);
+    // this.mCategoryScroll.setValue(updateWid / 2);
     // this.mCategoryScroll.resize(tmpW, h, -updateWid / 2 + pad0, updateWid / 2 + pad1);
     // this.mCategoryScroll.resize(updateWid, h);
   }

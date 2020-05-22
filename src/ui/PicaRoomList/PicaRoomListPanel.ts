@@ -335,18 +335,18 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
         }
       }
     }
-    const zoom: number = this.mWorld.uiScale;
-    const baseHei: number = 362 * this.mDpr;
-    let topY: number = this.mContainer.parentContainer.y;
-    Logger.getInstance().log(this.mContainer.height);
-    let bottomY: number = 0;
-    if (this.mHeight > baseHei) {
-      topY = topY;
-      bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
-    } else {
-      topY = topY;
-      bottomY = topY;
-    }
+    // const zoom: number = this.mWorld.uiScale;
+    // const baseHei: number = 362 * this.mDpr;
+    // let topY: number = this.mContainer.parentContainer.y;
+    // Logger.getInstance().log(this.mContainer.height);
+    // let bottomY: number = 0;
+    // if (this.mHeight > baseHei) {
+    //   topY = topY;
+    //   bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
+    // } else {
+    //   topY = topY;
+    //   bottomY = topY;
+    // }
     // this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 
@@ -424,17 +424,17 @@ class MyRoomDelegate extends RoomDelegate {
         if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
       }
     }
-    const zoom: number = this.mWorld.uiScale;
-    const baseHei: number = 362 * this.mDpr;
-    let topY: number = this.mContainer.parentContainer.y;
-    let bottomY: number = 0;
-    if (this.mHeight > baseHei) {
-      topY = topY;
-      bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
-    } else {
-      topY = topY;
-      bottomY = topY;
-    }
+    // const zoom: number = this.mWorld.uiScale;
+    // const baseHei: number = 362 * this.mDpr;
+    // let topY: number = this.mContainer.parentContainer.y;
+    // let bottomY: number = 0;
+    // if (this.mHeight > baseHei) {
+    //   topY = topY;
+    //   bottomY = topY - this.mHeight + baseHei - 25 * this.mDpr * zoom;
+    // } else {
+    //   topY = topY;
+    //   bottomY = topY;
+    // }
     // this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 

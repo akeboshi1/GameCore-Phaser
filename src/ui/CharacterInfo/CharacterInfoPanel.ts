@@ -202,12 +202,13 @@ export default class CharacterInfoPanel extends BasePanel {
             value: 0,
             orientation: 1,
             // 下面的边界偏移主要是为了用于，非全屏模式下的滚动，利用偏移，将滚动范围从全屏幕两边减去对应的数值，达到滚动显示正确效果
-            boundPad0: w - bottomWidth + 108 * this.dpr * zoom,
-            boundPad1: w - bottomWidth + 10 * this.dpr * zoom,
+            // boundPad0: w - bottomWidth,
+            //  boundPad1: w - bottomWidth + 10 * this.dpr * zoom,
             // bounds: [
             //     - bottomWidth / 2,
             //     bottomWidth / 2
             // ],
+            basePoint: new Phaser.Geom.Point(w - bottomWidth, h - bottomHeight),
             valuechangeCallback: (newValue) => {
                 this.refreshPos(newValue);
             },
@@ -327,6 +328,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title")];
         datas = datas.concat(datas);
+        datas= datas.concat(datas);
         const len = datas.length;
         const w = this.scene.cameras.main.width;
         const zoom = this.mWorld.uiScale;
@@ -345,10 +347,11 @@ export default class CharacterInfoPanel extends BasePanel {
             item.disInteractive();
             item.removeListen();
             item.setData("subData", datas[i]);
-            totalWid += item.x;
+            totalWid += item.width * 1.25;
             this.testScrll.addItem(item);
         }
-        totalWid = totalWid < this.bottomCon.width ? this.bottomCon.width : totalWid;
+        totalWid = totalWid < this.mCategeoriesCon.width ? this.mCategeoriesCon.width : totalWid;
+        Logger.getInstance().log("---" + totalWid);
         // 设植完毕后需刷新滚动范围
         this.mCategoryScroll.refreshBound(totalWid);
         // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
@@ -377,7 +380,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const conOffsetX = (w - this.mCategeoriesCon.width) / 2;
         // 滚动容器的位置只能靠滚动事件来控制，否则移动会有跳动
         this.mCategeoriesCon.x = value - conOffsetX;
-        // Logger.getInstance().log("value:" + value + "," + "conX" + this.mCategeoriesCon.x);
+        Logger.getInstance().log("value:" + value + "///" + "conX" + this.mCategeoriesCon.x);
     }
     private onSelectItemHandler(item) {
 
