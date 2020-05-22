@@ -16,6 +16,7 @@ import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
+import { GameScrollerTest } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -38,6 +39,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private tradeBtn: NinePatchButton;
     private privaCharBtn: NinePatchButton;
     private mCategoryScroll: GameScroller;
+    private testScrll: GameScrollerTest;
     private mCategeoriesCon: Container;
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
@@ -178,6 +180,18 @@ export default class CharacterInfoPanel extends BasePanel {
         this.content.add(this.mainContent);
         this.add(this.content);
         this.add(this.mCategeoriesCon);
+        this.testScrll = new GameScrollerTest(this.scene, {
+            x: this.screenWidth * 0.5,
+            y: this.mCategeoriesCon.y - 200 * this.dpr,
+            width: bottomWidth + 2 * this.dpr,
+            height: this.mCategeoriesCon.height,
+            zoom: this.scale,
+            orientation: 1,
+            cellupCallBack: (gameobject) => {
+                this.onSelectSubCategoryHandler(gameobject);
+            }
+        });
+        // this.add(this.testScrll);
         this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
             x: w - this.mCategeoriesCon.width >> 1,
             y: this.mCategeoriesCon.y - this.mCategeoriesCon.height / 2,
@@ -312,7 +326,7 @@ export default class CharacterInfoPanel extends BasePanel {
 
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title")];
-        datas= datas.concat(datas);
+        datas = datas.concat(datas);
         const len = datas.length;
         const w = this.scene.cameras.main.width;
         const zoom = this.mWorld.uiScale;
@@ -332,6 +346,7 @@ export default class CharacterInfoPanel extends BasePanel {
             item.removeListen();
             item.setData("subData", datas[i]);
             totalWid += item.x;
+            this.testScrll.addItem(item);
         }
         totalWid = totalWid < this.bottomCon.width ? this.bottomCon.width : totalWid;
         // 设植完毕后需刷新滚动范围
@@ -339,6 +354,7 @@ export default class CharacterInfoPanel extends BasePanel {
         // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
         this.mCategoryScroll.setValue(w - this.mCategeoriesCon.width);
         this.onSelectSubCategoryHandler(items[0]);
+        this.testScrll.Sort();
     }
     private onSelectSubCategoryHandler(obj: Button) {
         // Logger.getInstance().log(obj);

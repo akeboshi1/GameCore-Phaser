@@ -15,6 +15,7 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
+import { GameScrollerTest } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -26,6 +27,7 @@ export class ComposePanel extends BasePanel {
     private materialItemsCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
     private mSelectItem: ComposeItem;
+    private testScrll: GameScrollerTest;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -140,6 +142,19 @@ export class ComposePanel extends BasePanel {
         this.add(this.materialItemsCon);
         this.materialItemsCon.setPosition(width * 0.5, height - 230 * this.dpr);
         this.materialItemsCon.setSize(width, 50 * this.dpr);
+        this.testScrll = new GameScrollerTest(this.scene, {
+            x: this.materialItemsCon.x+20*this.dpr,
+            y: this.materialItemsCon.y - 200,
+            width: this.materialItemsCon.width - 50 * this.dpr * zoom,
+            height: this.materialItemsCon.height,
+            zoom: this.scale,
+            orientation: 1,
+            valuechangeCallback: undefined,
+            cellupCallBack: (gameobject) => {
+                this.onMaterialItemHandler(gameobject);
+            }
+        });
+        this.add(this.testScrll);
         this.materialGameScroll = new GameScroller(this.scene, this.materialItemsCon, {
             x: this.materialItemsCon.x - materialConWdith / 2,
             y: this.materialItemsCon.y,
@@ -153,8 +168,8 @@ export class ComposePanel extends BasePanel {
             //     - width / 2,
             //     width / 2
             // ],
-            boundPad0: -this.scene.cameras.main.width,
-            boundPad1: this.scene.cameras.main.width,
+            // boundPad0: -this.scene.cameras.main.width,
+            // boundPad1: this.scene.cameras.main.width,
             valuechangeCallback: (newValue) => {
                 this.refreshPos(newValue);
             },
@@ -249,7 +264,6 @@ export class ComposePanel extends BasePanel {
         const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
-        let totalWid: number = 0;
         for (let i = 0; i < len; i++) {
             const item = new ComposeMaterialItem(this.scene, this.key, this.dpr, zoom);
             item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
@@ -259,11 +273,12 @@ export class ComposePanel extends BasePanel {
             this.materialItemsCon.add(item);
             this.materialGameScroll.setInteractiveObject(item);
             item.setData("itemData", datas[i]);
-            totalWid += item.x;
+            this.testScrll.addItem(item);
         }
-        this.materialGameScroll.refreshBound(totalWid);
+        this.materialGameScroll.refreshBound();
         // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
         this.materialGameScroll.setValue(width - this.materialItemsCon.width);
+        this.testScrll.Sort();
     }
     private refreshPos(value: number) {
         const width = this.screenWidth;
