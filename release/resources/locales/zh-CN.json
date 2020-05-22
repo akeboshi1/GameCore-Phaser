@@ -43,6 +43,20 @@
     "option_title": "称号",
     "add_friend": "添加好友",
     "tade_btn": "交易",
-    "private_chat": "私聊"
+    "private_chat": "私聊",
+    "edit_profile": "编辑资料",
+    "user_name": "用 户 名",
+    "input_nickname": "请输入用户昵称",
+    "constellation": "星   座",
+    "birthday": "生   日",
+    "city": "地   区",
+    "signature": "个性签名",
+    "input_signature": "填写个性签名获得别人关注哦！",
+    "save": "保存"
+  },
+  "compose": {
+    "title": "制造",
+    "make": "制作",
+    "needMaterials": "合成所需材料"
   }
 }
