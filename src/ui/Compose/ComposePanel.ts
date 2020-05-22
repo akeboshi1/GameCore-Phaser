@@ -153,8 +153,8 @@ export class ComposePanel extends BasePanel {
             //     - width / 2,
             //     width / 2
             // ],
-            boundPad0: -this.scene.cameras.main.width,
-            boundPad1: this.scene.cameras.main.width,
+            // boundPad0: -this.scene.cameras.main.width,
+            // boundPad1: this.scene.cameras.main.width,
             valuechangeCallback: (newValue) => {
                 this.refreshPos(newValue);
             },
@@ -259,7 +259,7 @@ export class ComposePanel extends BasePanel {
             this.materialItemsCon.add(item);
             this.materialGameScroll.setInteractiveObject(item);
             item.setData("itemData", datas[i]);
-            totalWid += item.x;
+            totalWid += item.width;
         }
         this.materialGameScroll.refreshBound(totalWid);
         // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
