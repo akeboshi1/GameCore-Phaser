@@ -102,11 +102,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         this.mCameraService = new CamerasManager(this);
 
-        if (!this.world.game.scene.getScene(LoadingScene.name))
-            this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
-        this.world.game.scene.start(LoadingScene.name, {
-            world: this.world,
-            room: this
+        // if (!this.world.game.scene.getScene(LoadingScene.name))
+        //     this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
+        // this.world.game.scene.start(LoadingScene.name, {
+        //     world: this.world,
+        //     room: this
+        // });
+        this.world.showLoading().then(() => {
+            this.completeLoad();
         });
     }
 
