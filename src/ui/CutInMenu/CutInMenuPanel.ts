@@ -9,7 +9,7 @@ import { Url } from "../../utils/resUtil";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
 export class CutInMenuPanel extends BasePanel {
-    private key: string = "mine_settle";
+    private key: string = "cutinmenupanel";
     private rightPopButton: RightPopContainer;
     private mapPop: Map<any, any> = new Map();
     private world: WorldService;
