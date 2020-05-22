@@ -38,19 +38,16 @@ export default class CharacterInfoPanel extends BasePanel {
     private addFriendBtn: NinePatchButton;
     private tradeBtn: NinePatchButton;
     private privaCharBtn: NinePatchButton;
-    private mCategoryScroll: GameScroller;
-    private testScrll: GameScrollerTest;
-    private mCategeoriesCon: Container;
+    private mCategoryScroll: GameScrollerTest;
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
     private curSelectCategeory: Button;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
     }
     resize(width: number, height: number) {
-        const w: number = this.scene.cameras.main.width / this.scale;
-        const h: number = this.scene.cameras.main.height / this.scale;
+        const w: number = this.screenWidth;
+        const h: number = this.screenHeight;
         super.resize(width, height);
         this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
@@ -92,8 +89,6 @@ export default class CharacterInfoPanel extends BasePanel {
         super.preload();
     }
     init() {
-        const w = this.scene.cameras.main.width;
-        const h = this.scene.cameras.main.height;
         const zoom = this.scale;
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
@@ -166,10 +161,6 @@ export default class CharacterInfoPanel extends BasePanel {
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
-        this.mCategeoriesCon = this.scene.make.container(undefined, false);
-        this.mCategeoriesCon.setSize(bottomWidth, 41 * this.dpr);
-        this.mCategeoriesCon.x = 0; // w - this.mCategeoriesCon.width >> 1;
-        this.mCategeoriesCon.y = h * 0.5 + 62 * this.dpr * zoom;
         this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
         this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
@@ -179,43 +170,21 @@ export default class CharacterInfoPanel extends BasePanel {
         this.content.add(this.bg);
         this.content.add(this.mainContent);
         this.add(this.content);
-        this.add(this.mCategeoriesCon);
-        this.testScrll = new GameScrollerTest(this.scene, {
+        const w = this.scene.cameras.main.width;
+        const h = this.scene.cameras.main.height;
+        this.mCategoryScroll = new GameScrollerTest(this.scene, {
             x: this.screenWidth * 0.5,
-            y: this.mCategeoriesCon.y - 200 * this.dpr,
-            width: bottomWidth + 2 * this.dpr,
-            height: this.mCategeoriesCon.height,
+            y: this.screenHeight * 0.5 + 62 * this.dpr * zoom,
+            width: bottomWidth,
+            height: 41 * this.dpr,
             zoom: this.scale,
             orientation: 1,
             cellupCallBack: (gameobject) => {
                 this.onSelectSubCategoryHandler(gameobject);
             }
         });
-        // this.add(this.testScrll);
-        this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesCon, {
-            x: w - this.mCategeoriesCon.width >> 1,
-            y: this.mCategeoriesCon.y - this.mCategeoriesCon.height / 2,
-            clickX: w >> 1,
-            clickY: this.mCategeoriesCon.y,
-            width: bottomWidth + 2 * this.dpr * zoom,
-            height: this.mCategeoriesCon.height,
-            value: 0,
-            orientation: 1,
-            // 下面的边界偏移主要是为了用于，非全屏模式下的滚动，利用偏移，将滚动范围从全屏幕两边减去对应的数值，达到滚动显示正确效果
-            // boundPad0: w - bottomWidth,
-            //  boundPad1: w - bottomWidth + 10 * this.dpr * zoom,
-            // bounds: [
-            //     - bottomWidth / 2,
-            //     bottomWidth / 2
-            // ],
-            basePoint: new Phaser.Geom.Point(w - bottomWidth, h - bottomHeight),
-            valuechangeCallback: (newValue) => {
-                this.refreshPos(newValue);
-            },
-            cellupCallBack: (gameobject) => {
-                this.onSelectSubCategoryHandler(gameobject);
-            }
-        });
+        this.add(this.mCategoryScroll);
+
         const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
         const capW = propFrame.width + 5 * this.dpr * zoom;
         const capH = propFrame.height + 2 * this.dpr * zoom;
@@ -327,37 +296,25 @@ export default class CharacterInfoPanel extends BasePanel {
 
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title")];
-        datas = datas.concat(datas);
-        datas= datas.concat(datas);
         const len = datas.length;
-        const w = this.scene.cameras.main.width;
-        const zoom = this.mWorld.uiScale;
-        const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
-        let totalWid: number = 0;
         const items = [];
         for (let i = 0; i < len; i++) {
             const item = new Button(this.scene, this.key, "title_normal", "title_select", subNames[i]);
-            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
-            item.y = 0;
+            item.width = itemWidth;
+            item.height = 41 * this.dpr;
             items.push(item);
             item.setTextStyle({ color: "#2B4BB5", bold: true, fontSize: 14 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
-            this.mCategeoriesCon.add(item);
-            this.mCategoryScroll.setInteractiveObject(item);
             item.disInteractive();
             item.removeListen();
             item.setData("subData", datas[i]);
-            totalWid += item.width * 1.25;
-            this.testScrll.addItem(item);
+            this.mCategoryScroll.addItem(item);
         }
-        totalWid = totalWid < this.mCategeoriesCon.width ? this.mCategeoriesCon.width : totalWid;
-        Logger.getInstance().log("---" + totalWid);
-        // 设植完毕后需刷新滚动范围
-        this.mCategoryScroll.refreshBound(totalWid);
-        // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
-        this.mCategoryScroll.setValue(w - this.mCategeoriesCon.width);
+        if (items.length <= 3) this.mCategoryScroll.setAlign(1);
+        else {
+            this.mCategoryScroll.setAlign(0);
+        }
         this.onSelectSubCategoryHandler(items[0]);
-        this.testScrll.Sort();
     }
     private onSelectSubCategoryHandler(obj: Button) {
         // Logger.getInstance().log(obj);
@@ -371,17 +328,9 @@ export default class CharacterInfoPanel extends BasePanel {
         const datas = obj.getData("subData");
         if (datas)
             this.mGrideTable.setItems(datas);
-        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 170 * this.dpr * this.scale, 0, 0);
+        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 160 * this.dpr * this.scale, 0, 0);
     }
 
-    private refreshPos(value) {
-        const zoom = this.mWorld.uiScale;
-        const w = this.scene.cameras.main.width;
-        const conOffsetX = (w - this.mCategeoriesCon.width) / 2;
-        // 滚动容器的位置只能靠滚动事件来控制，否则移动会有跳动
-        this.mCategeoriesCon.x = value - conOffsetX;
-        Logger.getInstance().log("value:" + value + "///" + "conX" + this.mCategeoriesCon.x);
-    }
     private onSelectItemHandler(item) {
 
     }
@@ -419,7 +368,7 @@ export default class CharacterInfoPanel extends BasePanel {
 
     private setMainUIVisible(value) {
         this.avatar.visible = value;
-        this.mCategeoriesCon.visible = value;
+        this.mCategoryScroll.visible = value;
         this.mGrideTable.table.visible = value;
         this.mainContent.visible = value;
 

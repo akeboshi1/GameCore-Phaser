@@ -23,11 +23,9 @@ export class ComposePanel extends BasePanel {
     private mDetailDisplay: DetailDisplay;
     private mDetailBubble: DetailBubble;
     private materialCon: Phaser.GameObjects.Container;
-    private materialGameScroll: GameScroller;
-    private materialItemsCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
     private mSelectItem: ComposeItem;
-    private testScrll: GameScrollerTest;
+    private materialGameScroll: GameScrollerTest;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -102,9 +100,9 @@ export class ComposePanel extends BasePanel {
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;
-        this.mDetailBubble.y = height * 0.5 - 300 * this.dpr;
+        this.mDetailBubble.y = height * 0.5 - 380 * this.dpr;
         this.content.add(this.mDetailBubble);
-        const makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 268 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
+        const makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -138,45 +136,20 @@ export class ComposePanel extends BasePanel {
         materialLine2.setPosition(-linePosx, materialTitle.y).rotation = -Math.PI;
         const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 18 * this.dpr, key: this.key, frame: "separator" });
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
-        this.materialItemsCon = this.scene.make.container(undefined, false);
-        this.add(this.materialItemsCon);
-        this.materialItemsCon.setPosition(width * 0.5, height - 230 * this.dpr);
-        this.materialItemsCon.setSize(width, 50 * this.dpr);
-        this.testScrll = new GameScrollerTest(this.scene, {
-            x: this.materialItemsCon.x+20*this.dpr,
-            y: this.materialItemsCon.y - 200,
-            width: this.materialItemsCon.width - 50 * this.dpr * zoom,
-            height: this.materialItemsCon.height,
+        this.materialGameScroll = new GameScrollerTest(this.scene, {
+            x: width * 0.5,
+            y: height - 210 * this.dpr,
+            width,
+            height: 50 * this.dpr,
             zoom: this.scale,
+            align: 2,
             orientation: 1,
             valuechangeCallback: undefined,
             cellupCallBack: (gameobject) => {
                 this.onMaterialItemHandler(gameobject);
             }
         });
-        this.add(this.testScrll);
-        this.materialGameScroll = new GameScroller(this.scene, this.materialItemsCon, {
-            x: this.materialItemsCon.x - materialConWdith / 2,
-            y: this.materialItemsCon.y,
-            clickX: width / 2,
-            clickY: this.materialItemsCon.y,
-            width: this.materialItemsCon.width,
-            height: this.materialItemsCon.height,
-            value: -1,
-            orientation: 1,
-            // bounds: [
-            //     - width / 2,
-            //     width / 2
-            // ],
-            // boundPad0: -this.scene.cameras.main.width,
-            // boundPad1: this.scene.cameras.main.width,
-            valuechangeCallback: (newValue) => {
-                this.refreshPos(newValue);
-            },
-            cellupCallBack: (gameobject) => {
-                this.onMaterialItemHandler(gameobject);
-            }
-        });
+        this.add(this.materialGameScroll);
         const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
         const capW = propFrame.width + 10 * this.dpr * zoom;
         const capH = propFrame.height + 12 * this.dpr * zoom;
@@ -258,33 +231,18 @@ export class ComposePanel extends BasePanel {
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
-        const width = this.scene.cameras.main.width;
-        const height = this.materialItemsCon.height;
         const zoom = this.scale;
-        const offsetx = 0 * this.dpr;
-        const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
+        this.materialGameScroll.clearItems();
         for (let i = 0; i < len; i++) {
             const item = new ComposeMaterialItem(this.scene, this.key, this.dpr, zoom);
-            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
             item.y = 0;
             items.push(item);
             item.setItemData(datas[i]);
-            this.materialItemsCon.add(item);
-            this.materialGameScroll.setInteractiveObject(item);
             item.setData("itemData", datas[i]);
-            this.testScrll.addItem(item);
+            this.materialGameScroll.addItem(item);
         }
-        this.materialGameScroll.refreshBound();
-        // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
-        this.materialGameScroll.setValue(width - this.materialItemsCon.width);
-        this.testScrll.Sort();
-    }
-    private refreshPos(value: number) {
-        const width = this.screenWidth;
-        const conWidth = this.materialItemsCon.width;
-        const conOffsetX = (width - conWidth) / 2;
-        this.materialItemsCon.x = value + conOffsetX;
+        this.materialGameScroll.Sort();
     }
 
     private onMaterialItemHandler(item: ComposeMaterialItem) {
@@ -300,12 +258,12 @@ class DetailBubble extends Phaser.GameObjects.Container {
     private mItemName: Phaser.GameObjects.Text;
     private mDesText: Phaser.GameObjects.Text;
     private dpr: number;
-    constructor(scene: Phaser.Scene, dpr: number, zoom: number = 1) {
+    constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.mDetailBubble = this.scene.make.graphics(undefined, false);
-        const bubbleW = 100 * dpr * zoom;
-        const bubbleH = 96 * dpr * zoom;
+        const bubbleW = 198 * dpr;
+        const bubbleH = 96 * dpr;
         this.mDetailBubble = this.scene.make.graphics(undefined, false);
         this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
         this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
@@ -314,21 +272,21 @@ class DetailBubble extends Phaser.GameObjects.Container {
             y: 9 * this.dpr,
             text: "道具名称道具名称",
             style: {
-                fontSize: 12 * this.dpr * zoom,
+                fontSize: 12 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
-                color: "#FFFF00",
+                color: "#8C55E1",
                 align: "center"
             }
         });
         this.mDesText = this.scene.make.text({
             x: 8 * dpr,
-            y: 66 * dpr,
+            y: 30 * dpr,
             style: {
-                color: "#32347b",
-                fontSize: 10 * dpr * zoom,
+                color: "#ffffff",
+                fontSize: 10 * dpr,
                 fontFamily: Font.DEFULT_FONT,
                 wordWrap: {
-                    width: 90 * dpr,
+                    width: 180 * dpr,
                     useAdvancedWrap: true
                 }
             }
