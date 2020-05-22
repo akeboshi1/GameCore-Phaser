@@ -149,10 +149,11 @@ export class PicaRoomListPanel extends BasePanel {
       clickY: 0,
       width: w,
       height: h,
-      bounds: [
-        this.y,
-        this.y - h - 100 * this.dpr + (350 * this.dpr / 2)
-      ],
+      boundPad0: - 25 * this.dpr * zoom,
+      // bounds: [
+      //   this.y,
+      //   this.y - h - 100 * this.dpr + (350 * this.dpr / 2)
+      // ],
       value: this.y,
       valuechangeCallback: (newValue) => {
         this.mRoomContainer.y = newValue - this.y - h / 2;
@@ -308,6 +309,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       if (this.mPlayerRoom.roomList) this.setScrollInteractive(this.mPlayerRoom.roomList);
       this.mHeight += hei;
       this.refreshPos();
+      this.mScroller.refreshBound(this.mHeight);
       this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
   }
@@ -345,7 +347,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       topY = topY;
       bottomY = topY;
     }
-    this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
+    // this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 
   protected onEnterRoomHandler(room) {
@@ -433,7 +435,7 @@ class MyRoomDelegate extends RoomDelegate {
       topY = topY;
       bottomY = topY;
     }
-    this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
+    // this.mScroller.resize(this.mScroller.width, this.mHeight, topY, bottomY);
   }
 
   protected init() {
@@ -454,6 +456,7 @@ class MyRoomDelegate extends RoomDelegate {
       if (this.mMyHistory.roomList) this.setScrollInteractive(this.mMyHistory.roomList);
       this.mHeight += hei;
       this.refreshPos();
+      this.mScroller.refreshBound(this.mHeight);
       this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
   }
