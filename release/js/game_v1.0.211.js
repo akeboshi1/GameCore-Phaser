@@ -50940,6 +50940,7 @@ var decorate_room_DecorateRoom = /** @class */ (function (_super) {
         return _this;
     }
     DecorateRoom.prototype.enter = function (room) {
+        var _this = this;
         // this.mID = room.id;
         this.mID = room.id;
         var rows = room.rows, cols = room.cols, tileWidth = room.tileWidth, tileHeight = room.tileHeight;
@@ -50968,11 +50969,14 @@ var decorate_room_DecorateRoom = /** @class */ (function (_super) {
             this.mMap[i] = new Array(cols).fill(0);
         }
         this.mCameraService = new cameras_manager["a" /* CamerasManager */](this);
-        if (!this.world.game.scene.getScene(loading["a" /* LoadingScene */].name))
-            this.world.game.scene.add(loading["a" /* LoadingScene */].name, loading["a" /* LoadingScene */], false);
-        this.world.game.scene.start(loading["a" /* LoadingScene */].name, {
-            world: this.world,
-            room: this
+        // if (!this.world.game.scene.getScene(LoadingScene.name))
+        //     this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
+        // this.world.game.scene.start(LoadingScene.name, {
+        //     world: this.world,
+        //     room: this
+        // });
+        this.world.showLoading().then(function () {
+            _this.completeLoad();
         });
     };
     DecorateRoom.prototype.addBlockObject = function (object) {
