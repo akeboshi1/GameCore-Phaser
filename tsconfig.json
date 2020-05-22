@@ -9,7 +9,6 @@
       "webworker",
       "dom"
     ],
-    "removeComments": true,
     "declaration": true,
     "outDir": "types",
     "typeRoots": [

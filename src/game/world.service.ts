@@ -27,6 +27,7 @@ export interface WorldService {
     readonly scaleRatio: number;
     readonly uiRatio: number;
     readonly account: Account;
+    readonly modulePath: string;
     readonly emitter: Phaser.Events.EventEmitter;
 
     reconnect();

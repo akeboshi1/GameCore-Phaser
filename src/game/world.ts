@@ -95,6 +95,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (config.height === undefined) {
             config.height = window.innerHeight;
         }
+        if (config.modulePath === undefined) {
+            config.modulePath = CONFIG.modulePath || "";
+        }
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
         const scaleW = config.width / this.DEFAULT_WIDTH;
@@ -371,6 +374,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get account(): Account {
         return this.mAccount;
+    }
+
+    get modulePath(): string {
+        return this.mConfig.modulePath;
     }
 
     public enableClick() {
@@ -736,7 +743,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             dom: {
                 createContainer: true,
             },
-            // plugins: {
+            plugins: {
             //     global: [
             //         {
             //             key: "rexButton",
@@ -759,15 +766,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             //             start: true,
             //         },
             //     ],
-            //     scene: [
-            //         {
-            //             key: "DragonBones",
-            //             plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
-            //             mapping: "dragonbone",
-            //         },
+                scene: [
+                    {
+                        key: "DragonBones",
+                        plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
+                        mapping: "dragonbone",
+                    },
             //         { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
-            //     ],
-            // },
+                ],
+            },
             render: {
                 pixelArt: false,
                 roundPixels: true,
