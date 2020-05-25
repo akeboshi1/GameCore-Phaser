@@ -637,7 +637,7 @@ class CategorieButton extends TabButton {
     super(scene, key, frame, downFrame, text);
     this.disInteractive();
     this.removeListen();
-    this.mBackground.setOrigin(0);
+    (this.mBackground as Phaser.GameObjects.Image).setOrigin(0);
     if (this.mText) {
       this.mText.setPosition(this.mBackground.width / 2, this.mBackground.height / 2);
     }
