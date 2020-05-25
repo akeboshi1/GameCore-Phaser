@@ -5,7 +5,6 @@ import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { BBCodeText, Button } from "../../../lib/rexui/lib/ui/ui-components";
 import { i18n } from "../../i18n";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Logger } from "../../utils/log";
@@ -16,7 +15,7 @@ import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
-import { GameScrollerTest } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -38,16 +37,17 @@ export default class CharacterInfoPanel extends BasePanel {
     private addFriendBtn: NinePatchButton;
     private tradeBtn: NinePatchButton;
     private privaCharBtn: NinePatchButton;
-    private mCategoryScroll: GameScrollerTest;
+    private mCategoryScroll: GameScroller;
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
     private curSelectCategeory: Button;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.scale = 1;
     }
     resize(width: number, height: number) {
-        const w: number = this.screenWidth;
-        const h: number = this.screenHeight;
+        const w: number = this.scene.cameras.main.width;
+        const h: number = this.scene.cameras.main.height;
         super.resize(width, height);
         this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
@@ -170,11 +170,23 @@ export default class CharacterInfoPanel extends BasePanel {
         this.content.add(this.bg);
         this.content.add(this.mainContent);
         this.add(this.content);
+        // this.testScrll = new GameScroller(this.scene, {
+        //     x: this.screenWidth * 0.5,
+        //     y: this.mCategeoriesCon.y - 200 * this.dpr,
+        //     width: bottomWidth + 2 * this.dpr,
+        //     height: this.mCategeoriesCon.height,
+        //     zoom: this.scale,
+        //     orientation: 1,
+        //     cellupCallBack: (gameobject) => {
+        //         this.onSelectSubCategoryHandler(gameobject);
+        //     }
+        // });
+        // this.add(this.testScrll);
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
-        this.mCategoryScroll = new GameScrollerTest(this.scene, {
-            x: this.screenWidth * 0.5,
-            y: this.screenHeight * 0.5 + 62 * this.dpr * zoom,
+        this.mCategoryScroll = new GameScroller(this.scene, {
+            x: w * 0.5,
+            y: h * 0.5 + 62 * this.dpr * zoom,
             width: bottomWidth,
             height: 41 * this.dpr,
             zoom: this.scale,
@@ -184,7 +196,6 @@ export default class CharacterInfoPanel extends BasePanel {
             }
         });
         this.add(this.mCategoryScroll);
-
         const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
         const capW = propFrame.width + 5 * this.dpr * zoom;
         const capH = propFrame.height + 2 * this.dpr * zoom;
@@ -296,7 +307,10 @@ export default class CharacterInfoPanel extends BasePanel {
 
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title")];
+        datas = datas.concat(datas);
+        datas = datas.concat(datas);
         const len = datas.length;
+        const offsetx = 0 * this.dpr;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
         for (let i = 0; i < len; i++) {
@@ -310,11 +324,8 @@ export default class CharacterInfoPanel extends BasePanel {
             item.setData("subData", datas[i]);
             this.mCategoryScroll.addItem(item);
         }
-        if (items.length <= 3) this.mCategoryScroll.setAlign(1);
-        else {
-            this.mCategoryScroll.setAlign(0);
-        }
         this.onSelectSubCategoryHandler(items[0]);
+        this.mCategoryScroll.Sort();
     }
     private onSelectSubCategoryHandler(obj: Button) {
         // Logger.getInstance().log(obj);
@@ -328,7 +339,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const datas = obj.getData("subData");
         if (datas)
             this.mGrideTable.setItems(datas);
-        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 160 * this.dpr * this.scale, 0, 0);
+        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 170 * this.dpr * this.scale, 0, 0);
     }
 
     private onSelectItemHandler(item) {

@@ -10,8 +10,8 @@ export class ActivityPanel extends BasePanel {
     resize(w: number, h: number) {
         const width = this.scene.cameras.main.width / this.scale;
         const height = this.scene.cameras.main.height / this.scale;
-        this.x = width - 15 * this.dpr;
-        this.y = 150 * this.dpr;
+        this.x = width - 15 * this.dpr*this.scale;
+        this.y = 150 * this.dpr*this.scale;
         this.setSize(w, h);
     }
 

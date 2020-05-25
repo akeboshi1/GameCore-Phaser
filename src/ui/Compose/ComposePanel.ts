@@ -2,20 +2,17 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
-import { NinePatch } from "../components/nine.patch";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { Handler } from "../../Handler/Handler";
 import { DetailDisplay } from "../Market/DetailDisplay";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { DynamicImage } from "../components/dynamic.image";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
-import { GameScrollerTest } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -25,7 +22,7 @@ export class ComposePanel extends BasePanel {
     private materialCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
     private mSelectItem: ComposeItem;
-    private materialGameScroll: GameScrollerTest;
+    private materialGameScroll: GameScroller;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -72,8 +69,8 @@ export class ComposePanel extends BasePanel {
     }
 
     init() {
-        const width = this.screenWidth;
-        const height = this.screenHeight;
+        const width = this.scene.cameras.main.width;
+        const height = this.scene.cameras.main.height;
         const zoom = this.scale;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(width, height);
@@ -136,11 +133,28 @@ export class ComposePanel extends BasePanel {
         materialLine2.setPosition(-linePosx, materialTitle.y).rotation = -Math.PI;
         const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 18 * this.dpr, key: this.key, frame: "separator" });
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
-        this.materialGameScroll = new GameScrollerTest(this.scene, {
-            x: width * 0.5,
-            y: height - 210 * this.dpr,
-            width,
-            height: 50 * this.dpr,
+        // this.materialItemsCon = this.scene.make.container(undefined, false);
+        // this.add(this.materialItemsCon);
+        // this.materialItemsCon.setPosition(width * 0.5, height - 230 * this.dpr);
+        // this.materialItemsCon.setSize(width, 50 * this.dpr);
+        // this.materialGameScroll = new GameScroller(this.scene, {
+        //     x: this.materialItemsCon.x+20*this.dpr,
+        //     y: this.materialItemsCon.y - 200,
+        //     width: this.materialItemsCon.width - 50 * this.dpr * zoom,
+        //     height: this.materialItemsCon.height,
+        //     zoom: this.scale,
+        //     orientation: 1,
+        //     valuechangeCallback: undefined,
+        //     cellupCallBack: (gameobject) => {
+        //         this.onMaterialItemHandler(gameobject);
+        //     }
+        // });
+        // this.add(this.testScrll);
+        this.materialGameScroll = new GameScroller(this.scene, {
+            x: width * 0.5 + 20 * this.dpr * zoom,
+            y: height - 230 * this.dpr * zoom - 200,
+            width: width - 50 * this.dpr * zoom,
+            height: 50 * this.dpr * zoom,
             zoom: this.scale,
             align: 2,
             orientation: 1,
@@ -231,6 +245,8 @@ export class ComposePanel extends BasePanel {
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
+        const width = this.scene.cameras.main.width;
+        const height = 50 * this.dpr * this.scale;
         const zoom = this.scale;
         const items = [];
         this.materialGameScroll.clearItems();
@@ -242,7 +258,16 @@ export class ComposePanel extends BasePanel {
             item.setData("itemData", datas[i]);
             this.materialGameScroll.addItem(item);
         }
+        // this.materialGameScroll.refreshBound();
+        // // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
+        // this.materialGameScroll.setValue(width - this.materialItemsCon.width);
         this.materialGameScroll.Sort();
+    }
+    private refreshPos(value: number) {
+        const width = this.scene.cameras.main.width;
+        const conWidth = width;
+        const conOffsetX = (width - conWidth) / 2;
+        this.materialGameScroll.updateScrollPos(value + conOffsetX);
     }
 
     private onMaterialItemHandler(item: ComposeMaterialItem) {

@@ -4,7 +4,7 @@ import { Font } from "../../utils/font";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
+import { BaseScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 import { Logger } from "../../utils/log";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
@@ -19,7 +19,7 @@ export class PicaRoomListPanel extends BasePanel {
   private mMyRoomDele: MyRoomDelegate;
   private mSeachBtn: Phaser.GameObjects.Image;
   private mRoomContainer: Phaser.GameObjects.Container;
-  private mScroller: GameScroller;
+  private mScroller: BaseScroller;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -164,7 +164,7 @@ export class PicaRoomListPanel extends BasePanel {
         Logger.getInstance().log(gameobject.roomData().name);
       }
     };
-    this.mScroller = new GameScroller(this.scene, this.mRoomContainer, config);
+    this.mScroller = new BaseScroller(this.scene, this.mRoomContainer, config);
     this.add([this.mRoomDeleBtn, this.mMyRoomDeleBtn, this.mCloseBtn]);
     checkbox.selectIndex(0);
   }
@@ -229,7 +229,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   protected mChildPad: number = 0;
   protected mScene: Phaser.Scene;
   protected mDpr: number = 1;
-  protected mScroller: GameScroller;
+  protected mScroller: BaseScroller;
   protected activity: Phaser.GameObjects.Image;
   protected mContainer: Phaser.GameObjects.Container;
   protected mKey: string;
@@ -238,7 +238,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   protected mContent;
   private mPopularityRoom: PopularRoomZoon;
   private mPlayerRoom: RoomZoon;
-  constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, scene: Phaser.Scene, world: WorldService, key: string, dpr: number = 1) {
+  constructor(container: Phaser.GameObjects.Container, scroller: BaseScroller, scene: Phaser.Scene, world: WorldService, key: string, dpr: number = 1) {
     super();
     this.mDpr = dpr;
     this.mWorld = world;
@@ -365,7 +365,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
 class MyRoomDelegate extends RoomDelegate {
   private mMyRoom: MyRoomZoon;
   private mMyHistory: RoomZoon;
-  constructor(container: Phaser.GameObjects.Container, scroller: GameScroller, world: WorldService, scene: Phaser.Scene, key: string, dpr: number = 1) {
+  constructor(container: Phaser.GameObjects.Container, scroller: BaseScroller, world: WorldService, scene: Phaser.Scene, key: string, dpr: number = 1) {
     super(container, scroller, scene, world, key, dpr);
   }
 
