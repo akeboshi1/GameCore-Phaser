@@ -25,7 +25,9 @@
     "Props": "Prop",
     "decorate": "Decorations",
     "sold": "Sold",
-    "use": "Use"
+    "use": "Use",
+    "save": "Save",
+    "reset": "Reset"
   },
   "common": {
     "cancel": "Cancel",
