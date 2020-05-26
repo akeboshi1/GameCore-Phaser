@@ -88,11 +88,11 @@ export class FurniBagPanel extends BasePanel {
     this.sellBtn.x = this.mAdd.x - this.sellBtn.width - 10 * this.dpr;
     this.sellBtn.y = this.mAdd.y;
 
-    this.saveBtn.x = this.mAdd.x;
-    this.saveBtn.y = this.mAdd.y;
+    this.resetBtn.x = this.mAdd.x + 25 * this.dpr;
+    this.resetBtn.y = this.mAdd.y;
 
-    this.resetBtn.x = this.mAdd.x;
-    this.resetBtn.y = this.saveBtn.y - this.saveBtn.height - 10 * this.dpr;
+    this.saveBtn.x = this.resetBtn.x - (this.saveBtn.width + this.resetBtn.width) / 2 - 10 * this.dpr;
+    this.saveBtn.y = this.resetBtn.y;
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
@@ -260,8 +260,9 @@ export class FurniBagPanel extends BasePanel {
     this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), "#FFFFFF");
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), "#996600");
     this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.save"), "#996600");
-    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY - btnHeight - 5 * this.dpr * zoom, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.reset"), "#996600");
-
+    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY - btnHeight - 5 * this.dpr * zoom, 40 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn");
+    const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
+    this.resetBtn.add(reseticon);
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
@@ -388,7 +389,7 @@ export class FurniBagPanel extends BasePanel {
     super.init();
   }
 
-  private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text: string, color: string) {
+  private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
     const zoom = this.scale;
     const btn = new NinePatchButton(this.scene, x, y, width, height, key, frame, text, {
       left: 12 * this.dpr * zoom,
@@ -396,12 +397,15 @@ export class FurniBagPanel extends BasePanel {
       right: 12 * this.dpr * zoom,
       bottom: 12 * this.dpr * zoom
     });
-    btn.setTextStyle({
-      color,
-      fontSize: 16 * this.dpr * zoom,
-      fontFamily: Font.DEFULT_FONT
-    });
-    btn.setFontStyle("bold");
+    if (text) {
+      btn.setTextStyle({
+        color,
+        fontSize: 16 * this.dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      });
+      btn.setFontStyle("bold");
+    }
+
     return btn;
   }
 
@@ -494,8 +498,6 @@ export class FurniBagPanel extends BasePanel {
   private onTopCategoryHandler(item: Button) {
     const categoryType = item.getData("data");
     const width = this.scaleWidth;
-    let btnPosX = width - this.sellBtn.width / 2 - 10 * this.dpr;
-    let btnPosY = this.mShelfContainer.y - this.sellBtn.height / 2 - 9 * this.dpr;
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
@@ -504,24 +506,18 @@ export class FurniBagPanel extends BasePanel {
         this.useBtn.visible = false;
         this.saveBtn.visible = false;
         this.resetBtn.visible = false;
-        btnPosX -= this.sellBtn.width + 10 * this.dpr;
-        this.sellBtn.setPosition(btnPosX, btnPosY);
       } else if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
-        this.sellBtn.visible = true;
+        this.sellBtn.visible = false;
         this.saveBtn.visible = true;
         this.resetBtn.visible = true;
         this.useBtn.visible = false;
         this.mAdd.visible = false;
-        btnPosY -= (this.sellBtn.height + 10 * this.dpr) * 2;
-        this.sellBtn.setPosition(btnPosX, btnPosY);
       } else {
         this.sellBtn.visible = true;
         this.useBtn.visible = true;
         this.mAdd.visible = false;
         this.saveBtn.visible = false;
         this.resetBtn.visible = false;
-        btnPosX -= this.sellBtn.width + 10 * this.dpr;
-        this.sellBtn.setPosition(btnPosX, btnPosY);
       }
     }
     this.layoutTopBtn(item);

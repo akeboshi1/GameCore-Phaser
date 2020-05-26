@@ -443,7 +443,7 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
 
     private getCountText(count: number, needcount: number) {
         const color = (count >= needcount ? "#ffffff" : "#ff0000");
-        const text = `[stroke=${color}][color=${color}]${count}:[/color][/stroke]/` + needcount;
+        const text = `[stroke=${color}][color=${color}]${count}[/color][/stroke]/` + needcount;
         return text;
     }
 }
