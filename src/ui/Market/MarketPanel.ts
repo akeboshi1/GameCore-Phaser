@@ -105,18 +105,24 @@ export class MarketPanel extends BasePanel {
       w = frame.width;
       h = frame.height;
     }
-    const config = {
+    const config1 = {
       left: 10 * this.dpr,
       top: 13 * this.dpr,
       right: w - 2 - 10 * this.dpr,
       bottom: h - 2 - 13 * this.dpr
+    };
+    const config0 = {
+      left: 10 * this.dpr,
+      top: 13 * this.dpr,
+      right: w - 2 - 10 * this.dpr,
+      bottom: h- 2 - 4 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
     const zoom = this.mWorld.uiScale;
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, config);
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0, config1]);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
