@@ -113,10 +113,10 @@ export class MarketPanel extends BasePanel {
       bottom: h - 2 - 13 * this.dpr
     };
     const config0 = {
-      left: 10 * this.dpr,
-      top: 13 * this.dpr,
-      right: w - 2 - 10 * this.dpr,
-      bottom: h- 2 - 4 * this.dpr
+      left: 8 * this.dpr,
+      top: 12 * this.dpr,
+      right: 8 * this.dpr,
+      bottom: 2 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
     const zoom = this.mWorld.uiScale;

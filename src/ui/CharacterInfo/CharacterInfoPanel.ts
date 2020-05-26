@@ -441,6 +441,7 @@ class CharacterOwnerItem extends Container {
                 key,
                 frame: "slider_rate"
             },
+            dpr,
             textConfig: undefined
         });
         this.icon = new DynamicImage(this.scene, -bg.width * 0.5 + 22 * dpr, 0);
@@ -449,7 +450,7 @@ class CharacterOwnerItem extends Container {
         this.dpr = dpr;
         this.zoom = zoom;
         this.key = key;
-        this.progressBar.setProgress(40, 100);
+       // this.progressBar.setProgress(40, 100);
     }
 
     public setItemData(data, isOwner: boolean = false) {

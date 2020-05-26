@@ -16,6 +16,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.mDisplay = content;
     if (this.mDragonboneDisplay) {
       this.mDragonboneDisplay.destroy();
+      this.mDragonboneDisplay = undefined;
     }
     if (content.display) {
       const display = content.display;
