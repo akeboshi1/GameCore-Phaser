@@ -249,10 +249,12 @@ export default class CharacterInfoPanel extends BasePanel {
         const cid = data.id;
         const levle = data.level.level;
         const spaceOffset = this.getspaceStr(1 * this.dpr);
-        this.avatar.load(new DragonbonesModel({
-            id: 0,
-            avatar: data.currentAvatar.avatar
-        }));
+        if (this.avatar) {
+            this.avatar.load(new DragonbonesModel({
+                id: 0,
+                avatar: data.currentAvatar.avatar
+            }));
+        }
         this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + spaceOffset + current_title);
         this.likeBtn.setText(data.like + "");
         const likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
@@ -441,6 +443,7 @@ class CharacterOwnerItem extends Container {
                 key,
                 frame: "slider_rate"
             },
+            dpr,
             textConfig: undefined
         });
         this.icon = new DynamicImage(this.scene, -bg.width * 0.5 + 22 * dpr, 0);
