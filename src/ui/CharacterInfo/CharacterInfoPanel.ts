@@ -16,6 +16,7 @@ import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { Url } from "../../utils/resUtil";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -41,6 +42,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
     private curSelectCategeory: Button;
+    private isOwner: boolean = true;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.scale = 1;
@@ -215,7 +217,7 @@ export default class CharacterInfoPanel extends BasePanel {
                 }
                 // cellContainer.setSize(width, height);
                 cellContainer.setData({ item });
-                cellContainer.setItemData(item);
+                cellContainer.setItemData(item, this.isOwner);
                 return cellContainer;
             },
         };
@@ -233,8 +235,12 @@ export default class CharacterInfoPanel extends BasePanel {
         this.tradeBtn.on("Tap", this.onTradingHandler, this);
         this.resize(w, h);
         super.init();
+        this.reqPlayerInfo();
     }
 
+    reqPlayerInfo() {
+        this.emit("queryOwnerInfo");
+    }
     public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         const nickname = data.nickname;
         const current_title = data.currentTitle;
@@ -266,6 +272,7 @@ export default class CharacterInfoPanel extends BasePanel {
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
             this.mGrideTable.setColumnCount(3);
+            this.isOwner = true;
         } else {
             const remark = (data.remark ? data.remark : "备注好友昵称");
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname + ` (${remark})`);
@@ -280,6 +287,7 @@ export default class CharacterInfoPanel extends BasePanel {
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
             this.mGrideTable.setColumnCount(2);
+            this.isOwner = false;
         }
         this.setSubCategory(subArr);
     }
@@ -398,8 +406,8 @@ class CharacterOwnerItem extends Container {
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
         super(scene, x, y);
         const bg = this.scene.make.image({ x: 0, y: 0, key, frame: "skill_bg" });
-        this.nameText = this.scene.make.text({ x: 6 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.lvText = this.scene.make.text({ x: 6 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.nameText = this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.lvText = this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.progressBar = new ProgressBar(this.scene, {
             x: 48 * dpr / 2,
             y: 15 * dpr,
@@ -441,7 +449,7 @@ class CharacterOwnerItem extends Container {
         this.dpr = dpr;
         this.zoom = zoom;
         this.key = key;
-        // this.progressBar.setProgress(40, 100);
+        this.progressBar.setProgress(40, 100);
     }
 
     public setItemData(data, isOwner: boolean = false) {
@@ -452,6 +460,7 @@ class CharacterOwnerItem extends Container {
         const cheight = 10 * this.dpr * this.zoom;
         this.nameText.y = posY + cheight * 0.5;
         this.icon.setTexture(this.key, "test_skillicon");
+        const width = this.icon.width;
         if (data.level) {
             this.lvText.text = data.level.level;
             this.lvText.y = posY + offsetY;
@@ -461,12 +470,12 @@ class CharacterOwnerItem extends Container {
             this.progressBar.visible = false;
             this.lvText.visible = false;
         }
-        // const url = Url.getOsdRes(data.display.texturePath);
-        // this.icon.load(url, this, () => {
-        //     this.icon.scale = this.dpr * this.zoom;
-        //     const x = -this.width * 0.5 + 18 * this.dpr * this.zoom;
-        //     this.icon.setPosition(x, 0);
-        // });
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.icon.load(url, this, () => {
+            this.icon.scale = this.dpr * this.zoom;
+            const x = -this.width * 0.5 + width * 0.5 + 6 * this.dpr * this.zoom;
+            this.icon.setPosition(x, 0);
+        });
 
     }
 }

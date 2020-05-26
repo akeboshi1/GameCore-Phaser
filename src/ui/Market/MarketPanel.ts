@@ -10,6 +10,7 @@ import { Font } from "../../utils/font";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
+import { Logger } from "../../utils/log";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
@@ -141,7 +142,7 @@ export class MarketPanel extends BasePanel {
     this.mSubCategorisScroll.layout();
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
-
+    Logger.getInstance().log(this.mTabs[0].getWorldTransformMatrix());
     group.selectIndex(0);
     // for (const category of categorys) {
     //   const btn = new NinePatchButton(this.scene, )
