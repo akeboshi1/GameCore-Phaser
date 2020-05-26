@@ -34,13 +34,11 @@ export class BasePanel extends Panel {
         }
     }
 
-    protected get screenWidth() {
-        this.scale = (this.mWorld?this.mWorld.uiScale:1);
+    protected get scaleWidth() {
         const width = this.scene.cameras.main.width / this.scale;
         return width;
     }
-    protected get screenHeight() {
-        this.scale = (this.mWorld?this.mWorld.uiScale:1);
+    protected get scaleHeight() {
         const height = this.scene.cameras.main.height / this.scale;
         return height;
     }

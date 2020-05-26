@@ -35,7 +35,7 @@ export class ComposePanel extends BasePanel {
         super.resize(width, height);
         this.content.x = width * 0.5;
         this.content.y = height * 0.5;
-        this.mGrideTable.refreshPos(width * 0.5 + 10 * this.dpr, height - 66 * this.dpr);
+        this.mGrideTable.refreshPos(width * 0.5 + 10 * this.dpr, height - 70 * this.dpr);
         this.setSize(width, height);
     }
 
@@ -72,8 +72,8 @@ export class ComposePanel extends BasePanel {
     }
 
     init() {
-        const width = this.screenWidth;
-        const height = this.screenHeight;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
         const zoom = this.scale;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(width, height);
@@ -117,7 +117,7 @@ export class ComposePanel extends BasePanel {
         const materialbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "sourcelist_bg" });
         const materialTitle = this.scene.make.text({
             x: 0,
-            y: -materialConHeight * 0.5 + 15 * this.dpr,
+            y: -materialConHeight * 0.5 + 12 * this.dpr,
             text: i18n.t("compose.needMaterials"),
             style: {
                 color: "#ffffff",
@@ -134,13 +134,13 @@ export class ComposePanel extends BasePanel {
         const linePosx = -materialTitle.width * 0.5 - materialLine.width * 0.5 - 10 * this.dpr;
         materialLine.setPosition(linePosx, materialTitle.y);
         materialLine2.setPosition(-linePosx, materialTitle.y).rotation = -Math.PI;
-        const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 18 * this.dpr, key: this.key, frame: "separator" });
+        const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 12 * this.dpr, key: this.key, frame: "separator" });
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
         this.materialGameScroll = new GameScrollerTest(this.scene, {
             x: width * 0.5,
-            y: height - 210 * this.dpr,
+            y: height - 220 * this.dpr,
             width,
-            height: 50 * this.dpr,
+            height: 70 * this.dpr,
             zoom: this.scale,
             align: 2,
             orientation: 1,
@@ -158,12 +158,13 @@ export class ComposePanel extends BasePanel {
             y: height * zoom * 0.5 + 145 * this.dpr * zoom,
             table: {
                 width: width * zoom,
-                height: 175 * this.dpr * zoom,
+                height: 190 * this.dpr * zoom,
                 columns: 2,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                cellPadX: 24 * this.dpr * zoom,
+                cellPadX: 40 * this.dpr * zoom,
+                zoom: this.scale
             },
             scrollMode: 1,
             clamplChildOY: false,
@@ -337,31 +338,36 @@ class ComposeItem extends Phaser.GameObjects.Container {
         this.bg = this.scene.make.image({ key: this.key, frame: "bprint_bg_1" });
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(this.scene, 0, 0);
+        const width = this.width;
+        const height = this.height;
         this.newIcon = this.scene.make.image({ key: this.key, frame: "tag_new" });
+        this.newIcon.setPosition(-width * 0.5 + 3 * dpr, -height * 0.5 + 3 * dpr);
         this.newText = this.scene.make.text({
-            x: 7 * this.dpr,
-            y: 9 * this.dpr,
+            x: this.newIcon.x,
+            y: this.newIcon.y,
             text: "N",
             style: {
-                fontSize: 12 * this.dpr * zoom,
+                fontSize: 11 * this.dpr * zoom,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#ffffff",
                 align: "center"
             }
-        });
+        }).setOrigin(0.5);
         this.qualityIcon = this.scene.make.image({ key: this.key, frame: "tag_rank_a" });
+        this.qualityIcon.setPosition(-width * 0.5 + this.qualityIcon.width * 0.5 - 2 * dpr, height * 0.5 - this.qualityIcon.height * 0.5);
         this.qualityTex = this.scene.make.text({
-            x: 7 * this.dpr,
-            y: 9 * this.dpr,
+            x: this.qualityIcon.x,
+            y: this.qualityIcon.y,
             text: "A",
             style: {
-                fontSize: 12 * this.dpr * zoom,
+                fontSize: 11 * this.dpr * zoom,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#ffffff",
                 align: "center"
             }
-        });
+        }).setOrigin(0.5);
         this.qualifiedIcon = this.scene.make.image({ key: this.key, frame: "tag_ready" });
+        this.qualifiedIcon.setOrigin(1).setPosition(width * 0.5 - 3 * dpr, height * 0.5 - 3 * dpr);
         this.lockbg = this.scene.make.image({ key: this.key, frame: "bprint_mask" });
         this.lockIcon = this.scene.make.image({ key: this.key, frame: "lock" });
         this.add([this.bg, this.itemIcon, this.newIcon, this.newText, this.qualityIcon, this.qualityTex, this.qualifiedIcon, this.lockbg, this.lockIcon]);
@@ -369,10 +375,15 @@ class ComposeItem extends Phaser.GameObjects.Container {
 
     public setItemData(data: op_pkt_def.PKT_Skill) {
         this.itemData = data;
+        const active = data.active;
+        this.newIcon.visible = active;
+        this.newText.visible = active;
+        this.qualityIcon.visible = active;
+        this.qualityTex.visible = active;
         this.qualityTex.text = data.quality;
-        this.qualifiedIcon.visible = data.qualified;
-        this.lockbg.visible = data.active;
-        this.lockIcon.visible = data.active;
+        this.qualifiedIcon.visible = active && data.qualified;
+        this.lockbg.visible = !data.active;
+        this.lockIcon.visible = !data.active;
         this.setQualityTexture(data.quality);
         if (data.display) this.setItemIcon(data.display);
         this.select = false;
@@ -414,9 +425,10 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
         const bg = this.scene.make.image({ key: this.key, frame: "source_bg" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemCount = new BBCodeText(this.scene, 0, 0, {})
-            .setOrigin(0, 0.5).setFontSize(10 * dpr).setFontFamily(Font.DEFULT_FONT);
+            .setOrigin(0.5).setFontSize(11 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add([bg, this.itemIcon, this.itemCount]);
         this.setSize(bg.width, bg.height);
+        this.itemCount.y = this.height * 0.5;
     }
     public setItemData(data: op_client.ICountablePackageItem) {
         this.itemData = data;
@@ -431,7 +443,7 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
     }
 
     private getCountText(count: number, needcount: number) {
-        const color = (count >= needcount ? "#ffffff" : "#ff00000");
+        const color = (count >= needcount ? "#ffffff" : "#ff0000");
         const text = `[stroke=${color}][color=${color}]${count}:[/color][/stroke]/` + needcount;
         return text;
     }

@@ -3,20 +3,19 @@ import { WorldService } from "../../game/world.service";
 import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
-import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mTIle: Phaser.GameObjects.Text;
-  private mTabs: NinePatchButton[];
+  private mTabs: NinePatchTabButton[];
   private mSubTabs: TextButton[];
   private mSelectedCategories: Phaser.GameObjects.GameObject;
   private mSelectedSubCategories: Phaser.GameObjects.GameObject;
@@ -117,7 +116,7 @@ export class MarketPanel extends BasePanel {
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new TabButton(this.scene, i * 80 * this.dpr * zoom + capW / 2, capH / 2, capW, capH, this.key, "categories", categorys[i].category.value, config);
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, config);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
@@ -125,6 +124,8 @@ export class MarketPanel extends BasePanel {
       });
       this.mTabs[i] = btn;
       btn.setData("category", categorys[i]);
+      btn.x = i * 80 * this.dpr * zoom + capW / 2;
+      btn.y = capH / 2;
       // this.add(btn);
     }
     this.mCategoriesContainer.setSize(this.mTabs.length * capW, capH);

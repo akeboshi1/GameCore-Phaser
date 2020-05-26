@@ -2,7 +2,7 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { FurniBagPanel } from "./FurniBagPanel";
 import { FurniBag } from "./FurniBag";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class FurniBagMediator extends BaseMediator {
@@ -34,6 +34,7 @@ export class FurniBagMediator extends BaseMediator {
             this.mFurniBag.on("packageCategory", this.onPackageCategoryHandler, this);
             this.mFurniBag.on("queryPackage", this.onQueryPackageHandler, this);
             this.mFurniBag.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+            this.mFurniBag.on("queryResetAvatar", this.onResetAvatar, this);
         }
         if (!this.mView) {
             this.mView = new FurniBagPanel(this.scene, this.world, this.mScneType);
@@ -44,6 +45,8 @@ export class FurniBagMediator extends BaseMediator {
             this.mView.on("seachPackage", this.onSeachPackageHandler, this);
             this.mView.on("addFurniToScene", this.onAddFurniHandler, this);
             this.mView.on("sellProps", this.onSellPropsHandler, this);
+            this.mView.on("querySaveAvatar", this.onQuerySaveAvatar, this);
+            this.mView.on("queryResetAvatar", this.onQueryResetAvatar, this);
         }
         this.mView.show();
         this.layerManager.addToUILayer(this.mView);
@@ -99,6 +102,13 @@ export class FurniBagMediator extends BaseMediator {
         this.mFurniBag.queryCommodityResource(prop.id);
     }
 
+    private onQuerySaveAvatar(avatar: op_gameconfig.Avatar) {
+        this.mFurniBag.querySaveAvatar(avatar);
+    }
+
+    private onQueryResetAvatar(avatar: op_gameconfig.Avatar) {
+        this.mFurniBag.queryResetAvatar(avatar);
+    }
     private onSeachPackageHandler(query: string, categories: string) {
         this.mFurniBag.seachPackage(query, categories);
     }
@@ -114,5 +124,8 @@ export class FurniBagMediator extends BaseMediator {
 
     private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
         this.mFurniBag.sellProps(prop, count, category);
+    }
+    private onResetAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
+        this.mView.resetAvatar(content);
     }
 }

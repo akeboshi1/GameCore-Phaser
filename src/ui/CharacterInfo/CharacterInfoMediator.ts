@@ -33,7 +33,8 @@ export class CharacterInfoMediator extends BaseMediator {
             this.characterInfo.register();
         }
         this.layerMgr.addToUILayer(this.mView);
-        this.mView.show(this.testOwnerData());
+        this.mView.show();
+        this.characterInfo.queryPlayerInfo();
     }
 
     isSceneUI() {

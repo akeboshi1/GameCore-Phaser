@@ -108,11 +108,11 @@ export class ComposeMediator extends BaseMediator {
             ditem.productName = "蓝图" + skill.id;
             ditem.productDes = "这是一段道具的有关描述巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉";
             ditem.materials = [];
-            const mcount = Math.floor(Math.random() * 8);
+            const mcount = 8 + Math.floor(Math.random() * 8);
             for (let i = 0; i < mcount; i++) {
                 const mitem = new op_client.CountablePackageItem();
                 mitem.count = mcount;
-                mitem.neededCount = (skill.qualified ? mitem.count - 10 : mitem.count - 10);
+                mitem.neededCount = (skill.qualified ? mitem.count - 2 : mitem.count + 2);
                 ditem.materials.push(mitem);
             }
             this.testDateils.push(ditem);

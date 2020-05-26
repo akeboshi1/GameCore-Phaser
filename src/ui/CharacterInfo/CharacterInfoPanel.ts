@@ -44,10 +44,11 @@ export default class CharacterInfoPanel extends BasePanel {
     private curSelectCategeory: Button;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.scale = 1;
     }
     resize(width: number, height: number) {
-        const w: number = this.screenWidth;
-        const h: number = this.screenHeight;
+        const w: number = this.scaleWidth;
+        const h: number = this.scaleHeight;
         super.resize(width, height);
         this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
@@ -105,6 +106,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT });
         this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
+        this.likeBtn.visible = false;
         this.avatar = new DragonbonesDisplay(this.scene, undefined);
         this.avatar.scale = this.dpr * 2;
         this.avatar.x = 0;
@@ -120,7 +122,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
-        this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY);
+        this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
         const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
         this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
             .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
@@ -173,8 +175,8 @@ export default class CharacterInfoPanel extends BasePanel {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
         this.mCategoryScroll = new GameScrollerTest(this.scene, {
-            x: this.screenWidth * 0.5,
-            y: this.screenHeight * 0.5 + 62 * this.dpr * zoom,
+            x: this.scaleWidth * 0.5,
+            y: this.scaleHeight * 0.5 + 62 * this.dpr * zoom,
             width: bottomWidth,
             height: 41 * this.dpr,
             zoom: this.scale,
@@ -193,7 +195,7 @@ export default class CharacterInfoPanel extends BasePanel {
             y: h * 0.5 + 145 * this.dpr * zoom,
             table: {
                 width: (this.bottomCon.width - 10 * this.dpr) * zoom,
-                height: 170 * this.dpr * zoom,
+                height: 200 * this.dpr * zoom,
                 columns: 3,
                 cellWidth: capW,
                 cellHeight: capH,
@@ -232,7 +234,6 @@ export default class CharacterInfoPanel extends BasePanel {
         this.tradeBtn.on("Tap", this.onTradingHandler, this);
         this.resize(w, h);
         super.init();
-        this.setPlayerData(this.mShowData);
     }
 
     public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
@@ -255,8 +256,8 @@ export default class CharacterInfoPanel extends BasePanel {
         const subArr: any[] = [data.lifeSkills, data.badges];
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
-            this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(7 * this.dpr) + exp + "/" + nexExp);
-            this.lvCon.setPosition(this.idText.x + 60 * this.dpr, this.idText.y);
+            this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(20) + exp + "/" + nexExp);
+            this.lvCon.setPosition(this.idText.x + 58 * this.dpr, this.idText.y);
             this.likeBtn.setFrame("praise_aft");
             subArr.push(data.titles);
             this.addFriendBtn.visible = false;
@@ -296,7 +297,7 @@ export default class CharacterInfoPanel extends BasePanel {
 
     private setSubCategory(datas: any[]) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title")];
-        const len = datas.length;
+        const len = 1;// datas.length;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
         for (let i = 0; i < len; i++) {
@@ -328,7 +329,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const datas = obj.getData("subData");
         if (datas)
             this.mGrideTable.setItems(datas);
-        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 160 * this.dpr * this.scale, 0, 0);
+        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 185 * this.dpr * this.scale, 0, 0);
     }
 
     private onSelectItemHandler(item) {
