@@ -10,6 +10,7 @@ export interface IAsset {
 export interface ILoadingManager {
     start(): Promise<any>;
     addAssets(asset: IAsset[]): Promise<any>;
+    destroy();
 }
 
 export class LoadingManager {
@@ -73,7 +74,6 @@ export class LoadingManager {
         if (this.mResources) {
             this.mResources = [];
         }
-        this.scene = undefined;
     }
 
     private loadAsset(asset: IAsset) {

@@ -202,7 +202,7 @@ var World = /** @class */ (function (_super) {
         // this.mCharacterManager.register();
         _this.mRoomMamager.addPackListener();
         _this.mUiManager.addPackListener();
-        var gateway = _this.mConfig.server_addr || Object({"host":"gdev.tooqing.com","port":11100,"secure":true});
+        var gateway = _this.mConfig.server_addr || Object({"host":"172.18.0.103","port":12100,"secure":false});
         if (gateway) {
             // connect to game server.
             _this.mConnection.startConnect(gateway);
@@ -613,7 +613,7 @@ var World = /** @class */ (function (_super) {
                         this.mConfig.game_id = gameId;
                         this.mConfig.virtual_world_id = worldId;
                         this.mConnection.addPacketListener(this);
-                        gateway = this.mConfig.server_addr || Object({"host":"gdev.tooqing.com","port":11100,"secure":true});
+                        gateway = this.mConfig.server_addr || Object({"host":"172.18.0.103","port":12100,"secure":false});
                         if (gateway) {
                             // connect to game server.
                             this.mConnection.startConnect(gateway);
@@ -656,6 +656,7 @@ var World = /** @class */ (function (_super) {
                 _this.roomManager.destroy();
                 _this.uiManager.destroy();
                 _this.mElementStorage.destroy();
+                _this.mLoadingManager.destroy();
                 _this.mGame.events.once(Phaser.Core.Events.DESTROY, function () {
                     _this.mGame = undefined;
                     resolve();
@@ -1010,15 +1011,15 @@ var resUtil_Url = /** @class */ (function () {
     }
     Url.getRes = function (value) {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
-        if (Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"gdev.tooqing.com","port":11100,"secure":true}),"game_id":"5cd8cf04cbcbf91a0afc3f96.5e410ba50681ad5557b4d6e9","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT) {
-            return Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"gdev.tooqing.com","port":11100,"secure":true}),"game_id":"5cd8cf04cbcbf91a0afc3f96.5e410ba50681ad5557b4d6e9","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT
+        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT) {
+            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT
                 + value;
         }
         return Url.RES_PATH + value;
     };
     Url.getUIRes = function (dpr, value) {
-        if (Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"gdev.tooqing.com","port":11100,"secure":true}),"game_id":"5cd8cf04cbcbf91a0afc3f96.5e410ba50681ad5557b4d6e9","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT) {
-            return Object({"debug":true,"api_root":"https://api-dev.tooqing.com/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"gdev.tooqing.com","port":11100,"secure":true}),"game_id":"5cd8cf04cbcbf91a0afc3f96.5e410ba50681ad5557b4d6e9","virtual_world_id":"0"}).BUNDLE_RESOURCES_ROOT
+        if (Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT) {
+            return Object({"debug":true,"api_root":"http://172.18.0.100:17170/","osd":"https://osd.tooqing.com/","gateway":Object({"host":"172.18.0.103","port":12100,"secure":false}),"game_id":"5e9a7dace87abc390c4b1b73","virtual_world_id":"65541"}).BUNDLE_RESOURCES_ROOT
                 + dpr + "x" + value;
         }
         return Url.RESUI_PATH + (dpr + "x/" + value);
@@ -8335,6 +8336,7 @@ var DetailDisplay = /** @class */ (function (_super) {
         this.mDisplay = content;
         if (this.mDragonboneDisplay) {
             this.mDragonboneDisplay.destroy();
+            this.mDragonboneDisplay = undefined;
         }
         if (content.display) {
             var display = content.display;
@@ -41899,8 +41901,8 @@ var CharacterInfoPanel_CharacterOwnerItem = /** @class */ (function (_super) {
         _this.dpr = dpr;
         _this.zoom = zoom;
         _this.key = key;
-        _this.progressBar.setProgress(40, 100);
         return _this;
+        // this.progressBar.setProgress(40, 100);
     }
     CharacterOwnerItem.prototype.setItemData = function (data, isOwner) {
         var _this = this;
@@ -69986,7 +69988,7 @@ var Connection = /** @class */ (function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/59b3cff4dc0130e6498c.networker.js");
+  return new Worker(__webpack_require__.p + "js/608d38860e7b6cef245d.networker.js");
 };
 
 /***/ }),
@@ -69994,7 +69996,7 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/6feba49d4b5cad711b39.heartbeatworker.js");
+  return new Worker(__webpack_require__.p + "js/5a774caeab6217187f4e.heartbeatworker.js");
 };
 
 /***/ }),
@@ -71206,7 +71208,7 @@ function checkIsFriend(uids) {
             "X-Pixelpai-TK": ""
         }
     };
-    return fetch("https://api-dev.tooqing.com/" + "/user/check_followed", data);
+    return fetch("http://172.18.0.100:17170/" + "/user/check_followed", data);
 }
 function get(input, init) {
     return fetch(input, init);
@@ -72885,7 +72887,7 @@ var HttpService = /** @class */ (function () {
      * @param password
      */
     HttpService.prototype.login = function (account, password) {
-        return fetch("" + "https://api-dev.tooqing.com/" + "account/signin", {
+        return fetch("" + "http://172.18.0.100:17170/" + "account/signin", {
             body: JSON.stringify({ account: account, password: password }),
             method: "POST",
             headers: {
@@ -72898,7 +72900,7 @@ var HttpService = /** @class */ (function () {
      * @param name
      */
     HttpService.prototype.requestPhoneCode = function (phone) {
-        return fetch("" + "https://api-dev.tooqing.com/" + "account/sms_code", {
+        return fetch("" + "http://172.18.0.100:17170/" + "account/sms_code", {
             body: JSON.stringify({ phone: phone }),
             method: "POST",
             headers: {
@@ -72907,7 +72909,7 @@ var HttpService = /** @class */ (function () {
         }).then(function (response) { return response.json(); });
     };
     HttpService.prototype.loginByPhoneCode = function (phone, code) {
-        return fetch("" + "https://api-dev.tooqing.com/" + "account/phone_signin", {
+        return fetch("" + "http://172.18.0.100:17170/" + "account/phone_signin", {
             body: JSON.stringify({ phone: phone, code: code }),
             method: "POST",
             headers: {
@@ -72916,7 +72918,7 @@ var HttpService = /** @class */ (function () {
         }).then(function (response) { return response.json(); });
     };
     HttpService.prototype.quickLogin = function () {
-        return fetch("" + "https://api-dev.tooqing.com/" + "account/quick_signin", {
+        return fetch("" + "http://172.18.0.100:17170/" + "account/quick_signin", {
             method: "POST",
         }).then(function (response) { return response.json(); });
     };
@@ -72957,7 +72959,7 @@ var HttpService = /** @class */ (function () {
                 "X-Pixelpai-TK": account.accountData.token
             }
         };
-        return fetch("" + "https://api-dev.tooqing.com/" + uri, data).then(function (response) { return response.json(); });
+        return fetch("" + "http://172.18.0.100:17170/" + uri, data).then(function (response) { return response.json(); });
     };
     HttpService.prototype.get = function (uri) {
         var account = this.mWorld.account;
@@ -72973,7 +72975,7 @@ var HttpService = /** @class */ (function () {
                 "X-Pixelpai-TK": account.accountData.token
             }
         };
-        return fetch("" + "https://api-dev.tooqing.com/" + uri, data).then(function (response) { return response.json(); });
+        return fetch("" + "http://172.18.0.100:17170/" + uri, data).then(function (response) { return response.json(); });
     };
     return HttpService;
 }());
@@ -73424,7 +73426,6 @@ var LoadingManager = /** @class */ (function () {
         if (this.mResources) {
             this.mResources = [];
         }
-        this.scene = undefined;
     };
     LoadingManager.prototype.loadAsset = function (asset) {
         var type = this.getLoadType(asset.type);
