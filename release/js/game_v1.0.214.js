@@ -69988,7 +69988,7 @@ var Connection = /** @class */ (function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/608d38860e7b6cef245d.networker.js");
+  return new Worker(__webpack_require__.p + "js/a27d999c43d1561b5b37.networker.js");
 };
 
 /***/ }),
@@ -69996,7 +69996,7 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "js/5a774caeab6217187f4e.heartbeatworker.js");
+  return new Worker(__webpack_require__.p + "js/13e870c6eff351e291e3.heartbeatworker.js");
 };
 
 /***/ }),
@@ -73378,6 +73378,9 @@ var LoadingManager = /** @class */ (function () {
                         world: this.world,
                         callBack: function (scene) {
                             _this.scene = scene;
+                            if (_this.mResources.length > 0) {
+                                return _this.addAssets(_this.mResources);
+                            }
                             return Promise.resolve();
                         }
                     });
@@ -73409,6 +73412,7 @@ var LoadingManager = /** @class */ (function () {
                 this.scene = scene;
                 this.scene.load.once(Phaser.Loader.Events.COMPLETE, function () {
                     _this.mLoading = false;
+                    _this.mResources = [];
                     // this.game.scene.remove(LoadingScene.name);
                     return Promise.resolve();
                 });
@@ -73426,6 +73430,7 @@ var LoadingManager = /** @class */ (function () {
         if (this.mResources) {
             this.mResources = [];
         }
+        this.scene = undefined;
     };
     LoadingManager.prototype.loadAsset = function (asset) {
         var type = this.getLoadType(asset.type);

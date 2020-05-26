@@ -39,6 +39,9 @@ export class LoadingManager {
                 world: this.world,
                 callBack: (scene: Phaser.Scene) => {
                     this.scene = scene;
+                    if (this.mResources.length > 0) {
+                        return this.addAssets(this.mResources);
+                    }
                     return Promise.resolve();
                 }
             });
@@ -60,6 +63,7 @@ export class LoadingManager {
 
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
             this.mLoading = false;
+            this.mResources = [];
             // this.game.scene.remove(LoadingScene.name);
             return Promise.resolve();
         });
@@ -74,6 +78,7 @@ export class LoadingManager {
         if (this.mResources) {
             this.mResources = [];
         }
+        this.scene = undefined;
     }
 
     private loadAsset(asset: IAsset) {
