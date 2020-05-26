@@ -6,6 +6,10 @@ import { version } from "./version";
 import { ServerAddress } from "./src/net/address";
 import { ConnectionService } from "./src/net/connection.service";
 import { Capsule, PaletteNode, MossNode } from "game-capsule";
+import { EditorLauncher, EditorCanvasType } from "./src/editor/editor.launcher";
+import { ElementEditorEmitType, ElementEditorBrushType } from "./src/editor/canvas/element/element.editor.canvas";
+import { Logger } from "./src/utils/log";
+import { load } from "./src/utils/http";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -57,6 +61,31 @@ export class Launcher {
 
     public static start(config?: ILauncherConfig): Launcher {
         return new this(config);
+    }
+
+    public static DeserializeNode(buffer) {
+        const capsule = new Capsule();
+        capsule.deserialize(buffer);
+
+        return capsule;
+    }
+
+    public static startElementEditor(config) {
+        const canvas = EditorLauncher.CreateCanvas(EditorCanvasType.Element, config);
+        let loadCount = 0;
+        canvas.on(ElementEditorEmitType.Resource_Loaded, (success: boolean, msg: string) => {
+            Logger.getInstance().log("loadCount", loadCount);
+            if (success && loadCount === 0) {
+                loadCount++;
+                // canvas.deserializeDisplay().then((val) => {
+                //     Logger.getInstance().log("deserializeDisplay", val);
+                //     canvas.generateSpriteSheet(val).then((spriteSheet) => {
+                //         Logger.getInstance().log("generateSpriteSheet", spriteSheet);
+                //     });
+                // });
+                canvas.reloadDisplayNode();
+            }
+        });
     }
 
     readonly minWidth = 1280;
@@ -186,3 +215,5 @@ export class Launcher {
         if (this.world) this.world.destroy();
     }
 }
+
+export * from "./src/editor"
