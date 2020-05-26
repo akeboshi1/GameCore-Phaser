@@ -1,12 +1,13 @@
 {
     "name": "game-core",
     "version": "1.0.211",
-    "main": "release/js/tooqing.js",
+    "main": "release/js/index.js",
     "types": "release/types/index.d.ts",
     "scripts": {
         "dev": "webpack-dev-server --mode development && yarn rm:dts",
         "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress && yarn dts",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
+        "build:core": "webpack --config webpack.core.config.js",
         "ver": "genversion version.js",
         "dts": "dts-bundle --configJson dts-bundle.json && yarn rm:dts",
         "rm:dts": "rimraf types"

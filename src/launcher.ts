@@ -50,8 +50,6 @@ export interface GameMain {
     destroy(): void;
 }
 
-export { BasicPlugin } from "./plugins";
-
 export class Launcher {
     get config(): ILauncherConfig {
         return this.mConfig;
@@ -109,13 +107,17 @@ export class Launcher {
             xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./game/world").then((game) => {
-            this.world = new game.World(this.config, this.mCompleteFunc);
+        // @ts-ignore
+        // import(/* webpackIgnore: true */ "/js/index.js").then((game) => {
+        //     this.world = new game.World(this.config, this.mCompleteFunc);
 
-            if (config.isEditor) {
-                this.world.createGame();
-            }
-            this.disableClick();
+        //     if (config.isEditor) {
+        //         this.world.createGame();
+        //     }
+        //     this.disableClick();
+        // });
+        this.loadModule("/js/index.js").then((game) => {
+            this.world = new game.World(this.config, this.mCompleteFunc);
         });
     }
 
@@ -186,5 +188,19 @@ export class Launcher {
     public destroy(): void {
         if (this.intervalId) clearInterval(this.intervalId);
         if (this.world) this.world.destroy();
+    }
+
+    private async loadModule(url: string) {
+        const toExport = {};
+        window.exports = toExport;
+        window.module = { exports: toExport } as any;
+        const esm = await import(/* webpackIgnore: true */ url);
+        const esmKeys = Object.keys(esm);
+        if (esmKeys.length === 1 && esmKeys[0] === "default") return esm.default;
+        if (esmKeys.length) return esm;
+        const exported = window.module.exports;
+        delete window.exports;
+        delete window.module;
+        return exported;
     }
 }

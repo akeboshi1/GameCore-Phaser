@@ -265,8 +265,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.loadModule("https://unpkg.com/jquery").then((module) => {
         //     Logger.getInstance().log(module);
         // });
-        this.loadModule("http://localhost:3000/dist/index.min.js").then(({ Template }) => {
-            const plugin = new Template();
+        this.loadModule("http://localhost:3000/dist/index.min.js").then((module) => {
+            const m = module.default ? module.default : module;
+            const plugin = new m();
             plugin.init(this.world);
         });
     }

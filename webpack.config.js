@@ -12,6 +12,7 @@ const appVer = require("./version");
 
 const config = {
     entry: {
+        index: path.join(__dirname, "./src/index.ts"),
         tooqing: path.join(__dirname, "./src/launcher.ts"),
     },
     output: {
@@ -19,7 +20,6 @@ const config = {
         filename: "js/[name].js",
         chunkFilename: `js/[name]_v${appVer}.js`,
         libraryTarget: "umd",
-        globalObject: "this",
         library: "TooqingCore",
     },
     module: {
