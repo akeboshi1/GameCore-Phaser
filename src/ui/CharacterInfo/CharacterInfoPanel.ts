@@ -5,7 +5,6 @@ import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { BBCodeText, Button } from "../../../lib/rexui/lib/ui/ui-components";
 import { i18n } from "../../i18n";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Logger } from "../../utils/log";
@@ -16,7 +15,7 @@ import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
-import { GameScrollerTest } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -38,7 +37,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private addFriendBtn: NinePatchButton;
     private tradeBtn: NinePatchButton;
     private privaCharBtn: NinePatchButton;
-    private mCategoryScroll: GameScrollerTest;
+    private mCategoryScroll: GameScroller;
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
     private curSelectCategeory: Button;
@@ -174,7 +173,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.add(this.content);
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
-        this.mCategoryScroll = new GameScrollerTest(this.scene, {
+        this.mCategoryScroll = new GameScroller(this.scene, {
             x: this.scaleWidth * 0.5,
             y: this.scaleHeight * 0.5 + 62 * this.dpr * zoom,
             width: bottomWidth,

@@ -27,8 +27,6 @@ export class FurniBagPanel extends BasePanel {
   private mBackground: Phaser.GameObjects.Graphics;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mShelfContainer: Phaser.GameObjects.Container;
-  //  private mCategeoriesContainer: Phaser.GameObjects.Container;
-  // private mPropsContainer: Phaser.GameObjects.Container;
   private mDetailDisplay: DetailDisplay;
   private mAdd: NinePatchButton;
   private mBg: Phaser.GameObjects.Image;
@@ -75,11 +73,6 @@ export class FurniBagPanel extends BasePanel {
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
-    // this.mCategeoriesContainer.setSize(width * zoom, 43 * this.dpr * zoom);
-    // this.mCategeoriesContainer.y = this.mShelfContainer.y;
-    // this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
-
-    // this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
 
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.height / 2 + 10 * this.dpr * zoom;
@@ -117,13 +110,9 @@ export class FurniBagPanel extends BasePanel {
     const capH = 41 * this.dpr * zoom;
     this.scrollItemWidth = capW;
     const items = [];
-    this.mCategoryScroll.clearItems();
     if (this.mSeachInput.parentContainer)
       this.closeSeach(null);
-    // for (const item of this.mCategeoriesContainer.list) {
-    //   item.destroy();
-    // }
-    // this.mCategeoriesContainer.list.length = 0;
+    this.mCategoryScroll.clearItems();
     const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
     seachBtn.setData("item", { key: this.seachKey, value: "搜索" });
     seachBtn.y = capH - 40 * this.dpr * zoom;
@@ -133,7 +122,6 @@ export class FurniBagPanel extends BasePanel {
       item.x = i * capW;
       item.y = capH - item.text.height - 40 * this.dpr * zoom >> 1;
       item.setData("item", subcategorys[i]);
-      // this.mCategeoriesContainer.add(item);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);
 
@@ -415,16 +403,6 @@ export class FurniBagPanel extends BasePanel {
     });
     btn.setFontStyle("bold");
     return btn;
-  }
-
-  private refreshPos(value: number) {
-    if (!this.scene) {
-      return;
-    }
-    const zoom: number = this.mWorld.uiScale;
-    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
-    this.mCategeoriesContainer.x = value - w / 2;
   }
 
   private setSelectedItem(prop: op_client.ICountablePackageItem) {

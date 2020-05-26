@@ -8,14 +8,13 @@ import { Url } from "../../utils/resUtil";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
 import { DetailDisplay } from "../Market/DetailDisplay";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { DynamicImage } from "../components/dynamic.image";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
-import { GameScrollerTest } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -25,7 +24,7 @@ export class ComposePanel extends BasePanel {
     private materialCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
     private mSelectItem: ComposeItem;
-    private materialGameScroll: GameScrollerTest;
+    private materialGameScroll: GameScroller;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -136,7 +135,7 @@ export class ComposePanel extends BasePanel {
         materialLine2.setPosition(-linePosx, materialTitle.y).rotation = -Math.PI;
         const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 12 * this.dpr, key: this.key, frame: "separator" });
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
-        this.materialGameScroll = new GameScrollerTest(this.scene, {
+        this.materialGameScroll = new GameScroller(this.scene, {
             x: width * 0.5,
             y: height - 220 * this.dpr,
             width,
