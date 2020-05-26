@@ -43,9 +43,11 @@ export class NinePatchButton extends Phaser.GameObjects.Container implements IBu
     public set enable(value) {
         if (value) {
             this.mNingBg.clearTint();
+            this.mLabel.clearTint();
             this.setInteractive();
         } else {
             this.mNingBg.setTintFill(0x666666);
+            this.mLabel.setTintFill(0x777777);
             this.removeInteractive();
         }
     }

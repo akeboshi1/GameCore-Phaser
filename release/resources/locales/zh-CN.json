@@ -27,7 +27,9 @@
     "Props": "道具",
     "decorate": "装饰",
     "sold": "售出",
-    "use": "使用"
+    "use": "使用",
+    "save": "保存",
+    "reset": "还原"
   },
   "common": {
     "cancel": "取消",

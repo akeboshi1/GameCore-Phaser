@@ -3,20 +3,20 @@ import { WorldService } from "../../game/world.service";
 import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
-import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
+import { Logger } from "../../utils/log";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mTIle: Phaser.GameObjects.Text;
-  private mTabs: NinePatchButton[];
+  private mTabs: NinePatchTabButton[];
   private mSubTabs: TextButton[];
   private mSelectedCategories: Phaser.GameObjects.GameObject;
   private mSelectedSubCategories: Phaser.GameObjects.GameObject;
@@ -106,18 +106,24 @@ export class MarketPanel extends BasePanel {
       w = frame.width;
       h = frame.height;
     }
-    const config = {
+    const config1 = {
       left: 10 * this.dpr,
       top: 13 * this.dpr,
       right: w - 2 - 10 * this.dpr,
       bottom: h - 2 - 13 * this.dpr
+    };
+    const config0 = {
+      left: 0 * this.dpr,
+      top: 0 * this.dpr,
+      right: w - 2 - 20 * this.dpr,
+      bottom: h - 2
     };
     const group: CheckboxGroup = new CheckboxGroup();
     const zoom = this.mWorld.uiScale;
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new TabButton(this.scene, i * 80 * this.dpr * zoom + capW / 2, capH / 2, capW, capH, this.key, "categories", categorys[i].category.value, config);
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0, config1], this.dpr, this.scale);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
@@ -125,6 +131,8 @@ export class MarketPanel extends BasePanel {
       });
       this.mTabs[i] = btn;
       btn.setData("category", categorys[i]);
+      btn.x = i * 80 * this.dpr * zoom + capW / 2;
+      btn.y = capH / 2;
       // this.add(btn);
     }
     this.mCategoriesContainer.setSize(this.mTabs.length * capW, capH);
@@ -140,7 +148,7 @@ export class MarketPanel extends BasePanel {
     this.mSubCategorisScroll.layout();
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
-
+    Logger.getInstance().log(this.mTabs[0].getWorldTransformMatrix());
     group.selectIndex(0);
     // for (const category of categorys) {
     //   const btn = new NinePatchButton(this.scene, )

@@ -1426,6 +1426,7 @@ declare module 'game-core/loading/loading.manager' {
     export interface ILoadingManager {
         start(): Promise<any>;
         addAssets(asset: IAsset[]): Promise<any>;
+        destroy(): any;
     }
     export class LoadingManager {
         constructor(world: WorldService);

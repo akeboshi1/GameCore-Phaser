@@ -20,7 +20,7 @@ const config = {
         filename: "js/[name].js",
         chunkFilename: `js/[name]_v${appVer}.js`,
         libraryTarget: "umd",
-        library: "TooqingCore",
+        library: "game-core",
     },
     module: {
         rules: [

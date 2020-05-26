@@ -8,14 +8,13 @@ import { Url } from "../../utils/resUtil";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
 import { DetailDisplay } from "../Market/DetailDisplay";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { DynamicImage } from "../components/dynamic.image";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
-import { GameScrollerTest } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -23,11 +22,9 @@ export class ComposePanel extends BasePanel {
     private mDetailDisplay: DetailDisplay;
     private mDetailBubble: DetailBubble;
     private materialCon: Phaser.GameObjects.Container;
-    private materialGameScroll: GameScroller;
-    private materialItemsCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
     private mSelectItem: ComposeItem;
-    private testScrll: GameScrollerTest;
+    private materialGameScroll: GameScroller;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -37,7 +34,7 @@ export class ComposePanel extends BasePanel {
         super.resize(width, height);
         this.content.x = width * 0.5;
         this.content.y = height * 0.5;
-        this.mGrideTable.refreshPos(width * 0.5 + 10 * this.dpr, height - 66 * this.dpr);
+        this.mGrideTable.refreshPos(width * 0.5 + 10 * this.dpr, height - 70 * this.dpr);
         this.setSize(width, height);
     }
 
@@ -74,8 +71,8 @@ export class ComposePanel extends BasePanel {
     }
 
     init() {
-        const width = this.screenWidth;
-        const height = this.screenHeight;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
         const zoom = this.scale;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(width, height);
@@ -102,9 +99,9 @@ export class ComposePanel extends BasePanel {
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;
-        this.mDetailBubble.y = height * 0.5 - 300 * this.dpr;
+        this.mDetailBubble.y = height * 0.5 - 380 * this.dpr;
         this.content.add(this.mDetailBubble);
-        const makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 268 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
+        const makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -119,7 +116,7 @@ export class ComposePanel extends BasePanel {
         const materialbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "sourcelist_bg" });
         const materialTitle = this.scene.make.text({
             x: 0,
-            y: -materialConHeight * 0.5 + 15 * this.dpr,
+            y: -materialConHeight * 0.5 + 12 * this.dpr,
             text: i18n.t("compose.needMaterials"),
             style: {
                 color: "#ffffff",
@@ -136,47 +133,22 @@ export class ComposePanel extends BasePanel {
         const linePosx = -materialTitle.width * 0.5 - materialLine.width * 0.5 - 10 * this.dpr;
         materialLine.setPosition(linePosx, materialTitle.y);
         materialLine2.setPosition(-linePosx, materialTitle.y).rotation = -Math.PI;
-        const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 18 * this.dpr, key: this.key, frame: "separator" });
+        const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 12 * this.dpr, key: this.key, frame: "separator" });
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
-        this.materialItemsCon = this.scene.make.container(undefined, false);
-        this.add(this.materialItemsCon);
-        this.materialItemsCon.setPosition(width * 0.5, height - 230 * this.dpr);
-        this.materialItemsCon.setSize(width, 50 * this.dpr);
-        this.testScrll = new GameScrollerTest(this.scene, {
-            x: this.materialItemsCon.x+20*this.dpr,
-            y: this.materialItemsCon.y - 200,
-            width: this.materialItemsCon.width - 50 * this.dpr * zoom,
-            height: this.materialItemsCon.height,
+        this.materialGameScroll = new GameScroller(this.scene, {
+            x: width * 0.5,
+            y: height - 220 * this.dpr,
+            width,
+            height: 70 * this.dpr,
             zoom: this.scale,
+            align: 2,
             orientation: 1,
             valuechangeCallback: undefined,
             cellupCallBack: (gameobject) => {
                 this.onMaterialItemHandler(gameobject);
             }
         });
-        this.add(this.testScrll);
-        this.materialGameScroll = new GameScroller(this.scene, this.materialItemsCon, {
-            x: this.materialItemsCon.x - materialConWdith / 2,
-            y: this.materialItemsCon.y,
-            clickX: width / 2,
-            clickY: this.materialItemsCon.y,
-            width: this.materialItemsCon.width,
-            height: this.materialItemsCon.height,
-            value: -1,
-            orientation: 1,
-            // bounds: [
-            //     - width / 2,
-            //     width / 2
-            // ],
-            // boundPad0: -this.scene.cameras.main.width,
-            // boundPad1: this.scene.cameras.main.width,
-            valuechangeCallback: (newValue) => {
-                this.refreshPos(newValue);
-            },
-            cellupCallBack: (gameobject) => {
-                this.onMaterialItemHandler(gameobject);
-            }
-        });
+        this.add(this.materialGameScroll);
         const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
         const capW = propFrame.width + 10 * this.dpr * zoom;
         const capH = propFrame.height + 12 * this.dpr * zoom;
@@ -185,12 +157,13 @@ export class ComposePanel extends BasePanel {
             y: height * zoom * 0.5 + 145 * this.dpr * zoom,
             table: {
                 width: width * zoom,
-                height: 175 * this.dpr * zoom,
+                height: 190 * this.dpr * zoom,
                 columns: 2,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                cellPadX: 24 * this.dpr * zoom,
+                cellPadX: 40 * this.dpr * zoom,
+                zoom: this.scale
             },
             scrollMode: 1,
             clamplChildOY: false,
@@ -258,33 +231,18 @@ export class ComposePanel extends BasePanel {
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
-        const width = this.scene.cameras.main.width;
-        const height = this.materialItemsCon.height;
         const zoom = this.scale;
-        const offsetx = 0 * this.dpr;
-        const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
+        this.materialGameScroll.clearItems();
         for (let i = 0; i < len; i++) {
             const item = new ComposeMaterialItem(this.scene, this.key, this.dpr, zoom);
-            item.x = itemWidth * 0.5 + (itemWidth + offsetx) * i;
             item.y = 0;
             items.push(item);
             item.setItemData(datas[i]);
-            this.materialItemsCon.add(item);
-            this.materialGameScroll.setInteractiveObject(item);
             item.setData("itemData", datas[i]);
-            this.testScrll.addItem(item);
+            this.materialGameScroll.addItem(item);
         }
-        this.materialGameScroll.refreshBound();
-        // 刷新滚动范围后，需要把scroller调整到父容器的0点位置，后续会将它写到scroller中
-        this.materialGameScroll.setValue(width - this.materialItemsCon.width);
-        this.testScrll.Sort();
-    }
-    private refreshPos(value: number) {
-        const width = this.screenWidth;
-        const conWidth = this.materialItemsCon.width;
-        const conOffsetX = (width - conWidth) / 2;
-        this.materialItemsCon.x = value + conOffsetX;
+        this.materialGameScroll.Sort();
     }
 
     private onMaterialItemHandler(item: ComposeMaterialItem) {
@@ -300,12 +258,12 @@ class DetailBubble extends Phaser.GameObjects.Container {
     private mItemName: Phaser.GameObjects.Text;
     private mDesText: Phaser.GameObjects.Text;
     private dpr: number;
-    constructor(scene: Phaser.Scene, dpr: number, zoom: number = 1) {
+    constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.mDetailBubble = this.scene.make.graphics(undefined, false);
-        const bubbleW = 100 * dpr * zoom;
-        const bubbleH = 96 * dpr * zoom;
+        const bubbleW = 198 * dpr;
+        const bubbleH = 96 * dpr;
         this.mDetailBubble = this.scene.make.graphics(undefined, false);
         this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
         this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
@@ -314,21 +272,21 @@ class DetailBubble extends Phaser.GameObjects.Container {
             y: 9 * this.dpr,
             text: "道具名称道具名称",
             style: {
-                fontSize: 12 * this.dpr * zoom,
+                fontSize: 12 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
-                color: "#FFFF00",
+                color: "#8C55E1",
                 align: "center"
             }
         });
         this.mDesText = this.scene.make.text({
             x: 8 * dpr,
-            y: 66 * dpr,
+            y: 30 * dpr,
             style: {
-                color: "#32347b",
-                fontSize: 10 * dpr * zoom,
+                color: "#ffffff",
+                fontSize: 10 * dpr,
                 fontFamily: Font.DEFULT_FONT,
                 wordWrap: {
-                    width: 90 * dpr,
+                    width: 180 * dpr,
                     useAdvancedWrap: true
                 }
             }
@@ -379,31 +337,36 @@ class ComposeItem extends Phaser.GameObjects.Container {
         this.bg = this.scene.make.image({ key: this.key, frame: "bprint_bg_1" });
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(this.scene, 0, 0);
+        const width = this.width;
+        const height = this.height;
         this.newIcon = this.scene.make.image({ key: this.key, frame: "tag_new" });
+        this.newIcon.setPosition(-width * 0.5 + 3 * dpr, -height * 0.5 + 3 * dpr);
         this.newText = this.scene.make.text({
-            x: 7 * this.dpr,
-            y: 9 * this.dpr,
+            x: this.newIcon.x,
+            y: this.newIcon.y,
             text: "N",
             style: {
-                fontSize: 12 * this.dpr * zoom,
+                fontSize: 11 * this.dpr * zoom,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#ffffff",
                 align: "center"
             }
-        });
+        }).setOrigin(0.5);
         this.qualityIcon = this.scene.make.image({ key: this.key, frame: "tag_rank_a" });
+        this.qualityIcon.setPosition(-width * 0.5 + this.qualityIcon.width * 0.5 - 2 * dpr, height * 0.5 - this.qualityIcon.height * 0.5);
         this.qualityTex = this.scene.make.text({
-            x: 7 * this.dpr,
-            y: 9 * this.dpr,
+            x: this.qualityIcon.x,
+            y: this.qualityIcon.y,
             text: "A",
             style: {
-                fontSize: 12 * this.dpr * zoom,
+                fontSize: 11 * this.dpr * zoom,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#ffffff",
                 align: "center"
             }
-        });
+        }).setOrigin(0.5);
         this.qualifiedIcon = this.scene.make.image({ key: this.key, frame: "tag_ready" });
+        this.qualifiedIcon.setOrigin(1).setPosition(width * 0.5 - 3 * dpr, height * 0.5 - 3 * dpr);
         this.lockbg = this.scene.make.image({ key: this.key, frame: "bprint_mask" });
         this.lockIcon = this.scene.make.image({ key: this.key, frame: "lock" });
         this.add([this.bg, this.itemIcon, this.newIcon, this.newText, this.qualityIcon, this.qualityTex, this.qualifiedIcon, this.lockbg, this.lockIcon]);
@@ -411,10 +374,15 @@ class ComposeItem extends Phaser.GameObjects.Container {
 
     public setItemData(data: op_pkt_def.PKT_Skill) {
         this.itemData = data;
+        const active = data.active;
+        this.newIcon.visible = active;
+        this.newText.visible = active;
+        this.qualityIcon.visible = active;
+        this.qualityTex.visible = active;
         this.qualityTex.text = data.quality;
-        this.qualifiedIcon.visible = data.qualified;
-        this.lockbg.visible = data.active;
-        this.lockIcon.visible = data.active;
+        this.qualifiedIcon.visible = active && data.qualified;
+        this.lockbg.visible = !data.active;
+        this.lockIcon.visible = !data.active;
         this.setQualityTexture(data.quality);
         if (data.display) this.setItemIcon(data.display);
         this.select = false;
@@ -456,9 +424,10 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
         const bg = this.scene.make.image({ key: this.key, frame: "source_bg" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemCount = new BBCodeText(this.scene, 0, 0, {})
-            .setOrigin(0, 0.5).setFontSize(10 * dpr).setFontFamily(Font.DEFULT_FONT);
+            .setOrigin(0.5).setFontSize(11 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add([bg, this.itemIcon, this.itemCount]);
         this.setSize(bg.width, bg.height);
+        this.itemCount.y = this.height * 0.5;
     }
     public setItemData(data: op_client.ICountablePackageItem) {
         this.itemData = data;
@@ -473,7 +442,7 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
     }
 
     private getCountText(count: number, needcount: number) {
-        const color = (count >= needcount ? "#ffffff" : "#ff00000");
+        const color = (count >= needcount ? "#ffffff" : "#ff0000");
         const text = `[stroke=${color}][color=${color}]${count}:[/color][/stroke]/` + needcount;
         return text;
     }

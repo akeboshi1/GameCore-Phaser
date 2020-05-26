@@ -25,6 +25,7 @@ export class CharacterInfoMediator extends BaseMediator {
         if (!this.mView) {
             this.mView = new CharacterInfoPanel(this.scene, this.world);
             this.mView.on("hide", this.onHidePanel, this);
+            this.mView.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
         }
         if (!this.characterInfo) {
             this.characterInfo = new CharacterInfo(this.world);
@@ -33,7 +34,7 @@ export class CharacterInfoMediator extends BaseMediator {
             this.characterInfo.register();
         }
         this.layerMgr.addToUILayer(this.mView);
-        this.mView.show(this.testOwnerData());
+        this.mView.show();
     }
 
     isSceneUI() {
@@ -63,9 +64,13 @@ export class CharacterInfoMediator extends BaseMediator {
         this.mView.setPlayerData(content);
     }
 
+    private onQueryOwnerInfo() {
+        this.characterInfo.queryPlayerInfo();
+    }
+
     private testOwnerData() {
         const player = this.world.roomManager.currentRoom.playerManager.actor;
-        const owner = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO();
+        const owner = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO();
         owner.id = player.id;
         owner.cid = "5524121555";
         owner.like = 652;

@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../net/connection.service";
-import { op_client, op_virtual_world, op_def, op_gameconfig } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { WorldService } from "../../game/world.service";
 
 export class FurniBag extends PacketHandler {
@@ -22,6 +22,7 @@ export class FurniBag extends PacketHandler {
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE, this.onQueryMarketPackage);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE, this.onQueryCommodityResultHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE, this.onQueryEditPackage);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR, this.onQueryResetAvatar);
     }
   }
 
@@ -95,6 +96,17 @@ export class FurniBag extends PacketHandler {
     content.totalPrice.price *= count;
     this.connection.send(packet);
   }
+  querySaveAvatar(avatar: op_gameconfig.Avatar) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR = packet.content;
+    content.avatar = avatar;
+    this.connection.send(packet);
+  }
+
+  queryResetAvatar(avatar: op_gameconfig.Avatar) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_RESET_AVATAR);
+    this.connection.send(packet);
+  }
 
   destroy() {
     this.unregister();
@@ -126,7 +138,10 @@ export class FurniBag extends PacketHandler {
   private onQueryCommodityResultHandler(packet: PBpacket) {
     this.mEvent.emit("queryCommodityResource", packet.content);
   }
-
+  private onQueryResetAvatar(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR = packet.content;
+    this.mEvent.emit("queryResetAvatar", content);
+  }
   private queryMarketPackage(key: string, queryString?: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
@@ -148,7 +163,6 @@ export class FurniBag extends PacketHandler {
     content.queryString = queryString;
     this.connection.send(packet);
   }
-
   get connection(): ConnectionService {
     if (this.world) {
       return this.world.connection;

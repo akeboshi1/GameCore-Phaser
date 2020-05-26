@@ -9,7 +9,7 @@ import { Url } from "../../utils/resUtil";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
 export class CutInMenuPanel extends BasePanel {
-    private key: string = "mine_settle";
+    private key: string = "cutinmenupanel";
     private rightPopButton: RightPopContainer;
     private mapPop: Map<any, any> = new Map();
     private world: WorldService;
@@ -37,7 +37,6 @@ export class CutInMenuPanel extends BasePanel {
         } else {
             this.mShow = true;
         }
-        this.setInteractive();
         this.addListen();
     }
 
@@ -55,8 +54,8 @@ export class CutInMenuPanel extends BasePanel {
     }
 
     init() {
-        const width = this.screenWidth;
-        const height = this.screenHeight;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
         this.rightPopButton = new RightPopContainer(this.scene, this.key, this.dpr);
         const posx = width + this.rightPopButton.width * 0.5;
         this.rightPopButton.setPosition(posx, height * 0.5);
@@ -72,7 +71,7 @@ export class CutInMenuPanel extends BasePanel {
     }
 
     public openRightPopUI() {
-        const width = this.screenWidth;
+        const width = this.scaleWidth;
         const posx = width + this.rightPopButton.width * 0.5;
         if (this.mapPop.has(this.rightPopButton)) {
             const timeid = this.mapPop.get(this.rightPopButton);

@@ -108,13 +108,13 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowFamilyHandler() {
-    this.emit("showPanel", "");
+    this.emit("showPanel", "CharacterInfo");
   }
   private onShowGoHomeHandler() {
     this.emit("showPanel", "Compose");
   }
   private onShowPlayerHandler() {
-    this.emit("showPanel", "CharacterInfo");
+   // this.emit("showPanel", "CharacterInfo");
   }
   private onCloseHandler() {
     this.emit("close");
