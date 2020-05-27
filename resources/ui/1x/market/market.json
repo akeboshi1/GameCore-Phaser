@@ -64,46 +64,46 @@
 			"frame": {
 				"x": 170,
 				"y": 1,
-				"w": 24,
-				"h": 18
+				"w": 18,
+				"h": 14
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 24,
-				"h": 18
+				"w": 18,
+				"h": 14
 			},
 			"sourceSize": {
-				"w": 24,
-				"h": 18
+				"w": 18,
+				"h": 14
 			}
 		},
 		"categories_normal": {
 			"frame": {
-				"x": 170,
-				"y": 21,
-				"w": 24,
-				"h": 17
+				"x": 190,
+				"y": 1,
+				"w": 18,
+				"h": 14
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 24,
-				"h": 17
+				"w": 18,
+				"h": 14
 			},
 			"sourceSize": {
-				"w": 24,
-				"h": 17
+				"w": 18,
+				"h": 14
 			}
 		},
 		"increase.png": {
 			"frame": {
 				"x": 170,
-				"y": 40,
+				"y": 17,
 				"w": 27,
 				"h": 28
 			},
@@ -142,7 +142,7 @@
 		},
 		"item_border.png": {
 			"frame": {
-				"x": 199,
+				"x": 210,
 				"y": 1,
 				"w": 55,
 				"h": 55
@@ -163,7 +163,7 @@
 		"price_bg.png": {
 			"frame": {
 				"x": 170,
-				"y": 70,
+				"y": 58,
 				"w": 105,
 				"h": 20
 			},
@@ -183,7 +183,7 @@
 		"price_border.png": {
 			"frame": {
 				"x": 170,
-				"y": 92,
+				"y": 80,
 				"w": 59,
 				"h": 19
 			},
@@ -203,7 +203,7 @@
 		"reduce.png": {
 			"frame": {
 				"x": 231,
-				"y": 92,
+				"y": 80,
 				"w": 29,
 				"h": 30
 			},
@@ -223,7 +223,7 @@
 		"tip_red.png": {
 			"frame": {
 				"x": 170,
-				"y": 124,
+				"y": 112,
 				"w": 21,
 				"h": 23
 			},
@@ -242,8 +242,8 @@
 		},
 		"tuding_icon.png": {
 			"frame": {
-				"x": 256,
-				"y": 1,
+				"x": 1,
+				"y": 58,
 				"w": 15,
 				"h": 16
 			},
@@ -263,7 +263,7 @@
 		"yellow_button_down": {
 			"frame": {
 				"x": 193,
-				"y": 124,
+				"y": 112,
 				"w": 33,
 				"h": 33
 			},
@@ -283,7 +283,7 @@
 		"yellow_button_normal": {
 			"frame": {
 				"x": 228,
-				"y": 124,
+				"y": 112,
 				"w": 33,
 				"h": 33
 			},
@@ -303,7 +303,7 @@
 		"yellow_button_over": {
 			"frame": {
 				"x": 193,
-				"y": 159,
+				"y": 147,
 				"w": 33,
 				"h": 33
 			},
