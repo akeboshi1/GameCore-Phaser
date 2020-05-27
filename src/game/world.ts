@@ -467,12 +467,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public async createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this._newGame();
-        if (!this.mGame.scene.getScene(MainUIScene.name)) {
-            this.mGame.scene.add(MainUIScene.name, MainUIScene);
-        }
-        if (!this.mGame.scene.getScene(EditScene.name)) {
-            this.mGame.scene.add(EditScene.name, EditScene);
-        }
+        // if (!this.mGame.scene.getScene(MainUIScene.name)) {
+        //     this.mGame.scene.add(MainUIScene.name, MainUIScene);
+        // }
+        // if (!this.mGame.scene.getScene(EditScene.name)) {
+        //     this.mGame.scene.add(EditScene.name, EditScene);
+        // }
         // this.mGame.scene.add(PlayScene.name, PlayScene);
         // this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);

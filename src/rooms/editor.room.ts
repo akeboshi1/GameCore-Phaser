@@ -98,7 +98,8 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mCameraService = new EditorCamerasManager(this);
         this.displayObjectPool = new DisplayObjectPool();
 
-        this.mWorld.game.scene.start(EditScene.name, { room: this });
+        // this.mWorld.game.scene.start(EditScene.name, { room: this });
+        this.mWorld.game.scene.add(EditScene.name, EditScene, true, { room: this });
     }
 
     public startPlay() {
