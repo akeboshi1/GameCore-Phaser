@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"back_arrow.png": {
+		"back_arrow": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,7 +20,7 @@
 				"h": 27
 			}
 		},
-		"bg.png": {
+		"bg": {
 			"frame": {
 				"x": 18,
 				"y": 1,
@@ -40,7 +40,7 @@
 				"h": 149
 			}
 		},
-		"border.png": {
+		"border": {
 			"frame": {
 				"x": 1,
 				"y": 152,
@@ -64,7 +64,7 @@
 			"frame": {
 				"x": 170,
 				"y": 1,
-				"w": 18,
+				"w": 20,
 				"h": 14
 			},
 			"rotated": false,
@@ -72,19 +72,19 @@
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 18,
+				"w": 20,
 				"h": 14
 			},
 			"sourceSize": {
-				"w": 18,
+				"w": 20,
 				"h": 14
 			}
 		},
 		"categories_normal": {
 			"frame": {
-				"x": 190,
+				"x": 192,
 				"y": 1,
-				"w": 18,
+				"w": 20,
 				"h": 14
 			},
 			"rotated": false,
@@ -92,15 +92,15 @@
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 18,
+				"w": 20,
 				"h": 14
 			},
 			"sourceSize": {
-				"w": 18,
+				"w": 20,
 				"h": 14
 			}
 		},
-		"increase.png": {
+		"increase": {
 			"frame": {
 				"x": 170,
 				"y": 17,
@@ -120,7 +120,7 @@
 				"h": 28
 			}
 		},
-		"input_bg.png": {
+		"input_bg": {
 			"frame": {
 				"x": 134,
 				"y": 152,
@@ -140,9 +140,9 @@
 				"h": 34
 			}
 		},
-		"item_border.png": {
+		"item_border": {
 			"frame": {
-				"x": 210,
+				"x": 214,
 				"y": 1,
 				"w": 55,
 				"h": 55
@@ -160,7 +160,7 @@
 				"h": 55
 			}
 		},
-		"price_bg.png": {
+		"price_bg": {
 			"frame": {
 				"x": 170,
 				"y": 58,
@@ -180,7 +180,7 @@
 				"h": 20
 			}
 		},
-		"price_border.png": {
+		"price_border": {
 			"frame": {
 				"x": 170,
 				"y": 80,
@@ -200,7 +200,7 @@
 				"h": 19
 			}
 		},
-		"reduce.png": {
+		"reduce": {
 			"frame": {
 				"x": 231,
 				"y": 80,
@@ -220,7 +220,7 @@
 				"h": 30
 			}
 		},
-		"tip_red.png": {
+		"tip_red": {
 			"frame": {
 				"x": 170,
 				"y": 112,
@@ -240,7 +240,7 @@
 				"h": 23
 			}
 		},
-		"tuding_icon.png": {
+		"tuding_icon": {
 			"frame": {
 				"x": 1,
 				"y": 58,
@@ -324,7 +324,7 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
 			"w": 276,

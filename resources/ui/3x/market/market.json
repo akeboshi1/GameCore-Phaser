@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"back_arrow.png": {
+		"back_arrow": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,7 +20,7 @@
 				"h": 79
 			}
 		},
-		"bg.png": {
+		"bg": {
 			"frame": {
 				"x": 49,
 				"y": 1,
@@ -40,7 +40,7 @@
 				"h": 447
 			}
 		},
-		"border.png": {
+		"border": {
 			"frame": {
 				"x": 1,
 				"y": 450,
@@ -64,7 +64,7 @@
 			"frame": {
 				"x": 498,
 				"y": 1,
-				"w": 54,
+				"w": 60,
 				"h": 41
 			},
 			"rotated": false,
@@ -72,19 +72,19 @@
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 54,
+				"w": 60,
 				"h": 41
 			},
 			"sourceSize": {
-				"w": 54,
+				"w": 60,
 				"h": 41
 			}
 		},
 		"categories_normal": {
 			"frame": {
-				"x": 554,
+				"x": 560,
 				"y": 1,
-				"w": 54,
+				"w": 60,
 				"h": 41
 			},
 			"rotated": false,
@@ -92,15 +92,15 @@
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 54,
+				"w": 60,
 				"h": 41
 			},
 			"sourceSize": {
-				"w": 54,
+				"w": 60,
 				"h": 41
 			}
 		},
-		"increase.png": {
+		"increase": {
 			"frame": {
 				"x": 498,
 				"y": 44,
@@ -120,7 +120,7 @@
 				"h": 91
 			}
 		},
-		"input_bg.png": {
+		"input_bg": {
 			"frame": {
 				"x": 394,
 				"y": 450,
@@ -140,9 +140,9 @@
 				"h": 97
 			}
 		},
-		"item_border.png": {
+		"item_border": {
 			"frame": {
-				"x": 610,
+				"x": 622,
 				"y": 1,
 				"w": 163,
 				"h": 163
@@ -160,7 +160,7 @@
 				"h": 163
 			}
 		},
-		"price_bg.png": {
+		"price_bg": {
 			"frame": {
 				"x": 394,
 				"y": 549,
@@ -180,7 +180,7 @@
 				"h": 59
 			}
 		},
-		"price_border.png": {
+		"price_border": {
 			"frame": {
 				"x": 498,
 				"y": 166,
@@ -200,7 +200,7 @@
 				"h": 56
 			}
 		},
-		"reduce.png": {
+		"reduce": {
 			"frame": {
 				"x": 677,
 				"y": 166,
@@ -220,7 +220,7 @@
 				"h": 91
 			}
 		},
-		"tip_red.png": {
+		"tip_red": {
 			"frame": {
 				"x": 498,
 				"y": 259,
@@ -240,24 +240,24 @@
 				"h": 69
 			}
 		},
-		"tuding_icon.png": {
+		"tuding_icon": {
 			"frame": {
 				"x": 1,
 				"y": 166,
-				"w": 43,
-				"h": 46
+				"w": 46,
+				"h": 49
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 43,
-				"h": 46
+				"w": 46,
+				"h": 49
 			},
 			"sourceSize": {
-				"w": 43,
-				"h": 46
+				"w": 46,
+				"h": 49
 			}
 		},
 		"yellow_button_down": {
@@ -324,10 +324,10 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 774,
+			"w": 786,
 			"h": 632
 		},
 		"scale": "1"
