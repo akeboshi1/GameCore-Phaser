@@ -14,10 +14,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
 
   loadDisplay(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
     this.mDisplay = content;
-    if (this.mDragonboneDisplay) {
-      this.mDragonboneDisplay.destroy();
-      this.mDragonboneDisplay = undefined;
-    }
+    this.destroyDragon();
     if (content.display) {
       const display = content.display;
       if (this.scene.textures.exists(display.texturePath)) {
@@ -30,26 +27,32 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
   }
 
-  loadAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
+  loadAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE, scale: number = 1, offset?: Phaser.Geom.Point) {
     if (!this.mDragonboneDisplay) {
       this.mDragonboneDisplay = new DragonbonesDisplay(this.scene, undefined);
+      if (offset) {
+        this.mDragonboneDisplay.x += offset.x;
+        this.mDragonboneDisplay.y += offset.y;
+      }
     }
     if (this.mImage) {
       this.remove(this.mImage);
     }
+    this.mDragonboneDisplay.once("initialized", () => {
+      this.mDragonboneDisplay.play({ animationName: "idle", flip: false });
+    });
     this.mDragonboneDisplay.load(new DragonbonesModel({
       id: 0,
       avatar: content.avatar
     }));
+    this.mDragonboneDisplay.scale = scale;
     this.add(this.mDragonboneDisplay);
   }
 
   loadUrl(url: string) {
     this.mUrl = url;
     if (this.mDisplay) this.mDisplay = null;
-    if (this.mDragonboneDisplay) {
-      this.mDragonboneDisplay.destroy();
-    }
+    this.destroyDragon();
     if (this.scene.textures.exists(url)) {
       this.onCompleteHandler();
     } else {
@@ -60,6 +63,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
 
   setTexture(key: string, frame?: string) {
+    this.destroyDragon();
     if (!this.mImage) {
       this.mImage = this.scene.make.image({
         key,
@@ -102,5 +106,11 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.add(this.mImage);
     this.emit("show", this.mImage);
+  }
+  private destroyDragon() {
+    if (this.mDragonboneDisplay) {
+      this.mDragonboneDisplay.destroy();
+      this.mDragonboneDisplay = undefined;
+    }
   }
 }
