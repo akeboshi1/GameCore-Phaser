@@ -191,7 +191,8 @@ export class ComposePanel extends BasePanel {
         this.add(this.mGrideTable.table);
         this.resize(width, height);
         super.init();
-        this.setComposeData(this.mShowData.skills);
+        if (this.mShowData)
+            this.setComposeData(this.mShowData.skills);
     }
 
     destroy() {
@@ -398,8 +399,7 @@ class ComposeItem extends Phaser.GameObjects.Container {
         const url = Url.getOsdRes(display.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.scale = this.dpr * this.zoom;
-            const x = -this.width * 0.5 + 18 * this.dpr * this.zoom;
-            this.itemIcon.setPosition(x, 0);
+            this.itemIcon.setPosition(0, 0);
         });
     }
 
@@ -432,13 +432,12 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
     public setItemData(data: op_client.ICountablePackageItem) {
         this.itemData = data;
         this.itemCount.text = this.getCountText(data.count, data.neededCount);
-        // this.itemIcon.setTexture();
-        // const url = Url.getOsdRes(data.display.texturePath);
-        // this.itemIcon.load(url, this, () => {
-        //     this.itemIcon.scale = this.dpr * this.zoom;
-        //     const x = -this.width * 0.5 + 18 * this.dpr * this.zoom;
-        //     this.itemIcon.setPosition(x, 0);
-        // });
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.itemIcon.load(url, this, () => {
+            this.itemIcon.scale = this.dpr * this.zoom;
+            const x = -this.width * 0.5 + 18 * this.dpr * this.zoom;
+            this.itemIcon.setPosition(x, 0);
+        });
     }
 
     private getCountText(count: number, needcount: number) {

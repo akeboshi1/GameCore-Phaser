@@ -260,6 +260,26 @@
 				"h": 47
 			}
 		},
+		"selected": {
+			"frame": {
+				"x": 687,
+				"y": 83,
+				"w": 24,
+				"h": 24
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 24,
+				"h": 24
+			},
+			"sourceSize": {
+				"w": 24,
+				"h": 24
+			}
+		},
 		"sell_bg": {
 			"frame": {
 				"x": 1340,
