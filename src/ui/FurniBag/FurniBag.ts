@@ -96,10 +96,10 @@ export class FurniBag extends PacketHandler {
     content.totalPrice.price *= count;
     this.connection.send(packet);
   }
-  querySaveAvatar(avatar: op_gameconfig.Avatar) {
+  querySaveAvatar(avatarids: string[]) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR = packet.content;
-    content.avatar = avatar;
+    content.avatarItemIds = avatarids;
     this.connection.send(packet);
   }
 
