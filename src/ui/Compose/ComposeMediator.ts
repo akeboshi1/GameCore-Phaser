@@ -55,12 +55,7 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private onReqFormulaDetial(id: string) {
-        //  this.compose.onReqFormulaDetail(id);
-        this.testDateils.forEach((value) => {
-            if (value.id === id) {
-                this.onRetFormulaDetial(value);
-            }
-        });
+        this.compose.onReqFormulaDetail(id);
     }
     private onReqUseFormula(id: string) {
         this.compose.onReqUseFormula(id);

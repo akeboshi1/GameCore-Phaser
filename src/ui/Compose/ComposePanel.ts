@@ -25,6 +25,11 @@ export class ComposePanel extends BasePanel {
     private mGrideTable: GameGridTable;
     private mSelectItem: ComposeItem;
     private materialGameScroll: GameScroller;
+    private makeBtn: NinePatchButton;
+    private materialTipsCon: Phaser.GameObjects.Container;
+    private materialTipsName: Phaser.GameObjects.Text;
+    private materialTipsDes: Phaser.GameObjects.Text;
+    private tipsbg: NinePatch;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -58,6 +63,7 @@ export class ComposePanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
+        this.scene.input.on("pointerup", this.onInputPointUp, this);
     }
 
     removeListen() {
@@ -95,20 +101,22 @@ export class ComposePanel extends BasePanel {
         this.content.add(backBtn);
 
         this.mDetailDisplay = new DetailDisplay(this.scene);
-        this.mDetailDisplay.y = -30 * this.dpr;
+        this.mDetailDisplay.y = -150 * this.dpr;
+        this.mDetailDisplay.scale = this.dpr * 2;
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;
         this.mDetailBubble.y = height * 0.5 - 380 * this.dpr;
         this.content.add(this.mDetailBubble);
-        const makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
+        this.makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
-        makeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
-        this.content.add(makeBtn);
+        this.makeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
+        this.makeBtn.on("click", this.onMakeHandler, this);
+        this.content.add(this.makeBtn);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
         this.materialCon = this.scene.make.container(undefined, false).setSize(materialConWdith, materialConHeight);
         this.content.add(this.materialCon);
@@ -144,11 +152,60 @@ export class ComposePanel extends BasePanel {
             align: 2,
             orientation: 1,
             valuechangeCallback: undefined,
-            cellupCallBack: (gameobject) => {
+            celldownCallBack: (gameobject) => {
+                this.materialTipsCon.visible = true;
                 this.onMaterialItemHandler(gameobject);
+            },
+            cellupCallBack: (gameobject) => {
+                this.materialTipsCon.visible = false;
             }
         });
         this.add(this.materialGameScroll);
+        this.materialTipsCon = this.scene.make.container(undefined, false).setPosition(0, -20 * this.dpr);
+        this.materialTipsCon.visible = false;
+        this.materialCon.add(this.materialTipsCon);
+        const tipsWidth = 109 * this.dpr;
+        const tipsHeight = 42 * this.dpr;
+        const tipsbg = new NinePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", {
+            left: 20 * this.dpr,
+            top: 20 * this.dpr,
+            right: 20 * this.dpr,
+            bottom: 20 * this.dpr
+        });
+        tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);
+        this.tipsbg = tipsbg;
+        const tipsArrow = this.scene.make.image({ key: this.key, frame: "tips_arrow" });
+        const tipsName = this.scene.make.text({
+            x: 0,
+            y: -materialConHeight * 0.5 + 12 * this.dpr,
+            text: "蓝矿石",
+            style: {
+                color: "#844ED5",
+                fontSize: 13 * this.dpr,
+                fontFamily: Font.DEFULT_FONT,
+                wordWrap: {
+                    width: 90 * this.dpr,
+                    useAdvancedWrap: true
+                }
+            }
+        }, false).setOrigin(0, 0.5).setPosition(-19 * this.dpr, -tipsHeight + 10 * this.dpr);
+        this.materialTipsName = tipsName;
+        const tipsText = this.scene.make.text({
+            x: 0,
+            y: -materialConHeight * 0.5 + 12 * this.dpr,
+            text: "的肌肤委屈饿换热器我和佛前",
+            style: {
+                color: "#333333",
+                fontSize: 13 * this.dpr,
+                fontFamily: Font.DEFULT_FONT,
+                wordWrap: {
+                    width: 100 * this.dpr,
+                    useAdvancedWrap: true
+                }
+            }
+        }, false).setOrigin(0).setPosition(-19 * this.dpr, -tipsHeight + 20 * this.dpr);
+        this.materialTipsDes = tipsText;
+        this.materialTipsCon.add([tipsbg, tipsName, tipsText, tipsArrow]);
         const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
         const capW = propFrame.width + 10 * this.dpr * zoom;
         const capH = propFrame.height + 12 * this.dpr * zoom;
@@ -177,7 +234,10 @@ export class ComposePanel extends BasePanel {
                 }
                 // cellContainer.setSize(width, height);
                 cellContainer.setItemData(item);
-                if (!this.mSelectItem) this.onSelectItemHandler(cellContainer);
+                if (this.mSelectItem)
+                    if (item && item.id === this.mSelectItem.itemData.id) {
+                        cellContainer.select = true;
+                    }
                 return cellContainer;
             },
         };
@@ -201,6 +261,8 @@ export class ComposePanel extends BasePanel {
 
     public setComposeData(datas: op_pkt_def.IPKT_Skill[]) {
         this.mGrideTable.setItems(datas);
+        const cell = this.mGrideTable.getCell(0);
+        this.onSelectItemHandler(cell.container);
     }
 
     public setComposeDetialData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
@@ -229,6 +291,7 @@ export class ComposePanel extends BasePanel {
         item.select = true;
         if (this.mSelectItem) this.mSelectItem.select = false;
         this.mSelectItem = item;
+        this.makeBtn.enable = data.active && data.qualified;
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
@@ -247,7 +310,25 @@ export class ComposePanel extends BasePanel {
     }
 
     private onMaterialItemHandler(item: ComposeMaterialItem) {
+        const pos = item.getWorldTransformMatrix();
+        this.materialTipsCon.x = pos.tx - this.scaleWidth * 0.5;
+        this.materialTipsName.text = item.itemData.name;
+        this.materialTipsDes.text = item.itemData.source;
+        const tipsHeight = this.materialTipsName.height + this.materialTipsDes.height + 20 * this.dpr;
+        const tipsWidth = this.tipsbg.width;
+        this.tipsbg.resize(tipsWidth, tipsHeight);
+        this.tipsbg.y = -this.tipsbg.height * 0.5;
+        this.materialTipsName.y = -tipsHeight + 15 * this.dpr;
+        this.materialTipsDes.y = -tipsHeight + 25 * this.dpr;
+    }
 
+    private onMakeHandler() {
+        if (this.mSelectItem)
+            this.emit("reqUseFormula", this.mSelectItem.itemData.id);
+    }
+
+    private onInputPointUp() {
+        this.materialTipsCon.visible = false;
     }
     private onBackHandler() {
         this.emit("hide");
@@ -435,8 +516,7 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
         const url = Url.getOsdRes(data.display.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.scale = this.dpr * this.zoom;
-            const x = -this.width * 0.5 + 18 * this.dpr * this.zoom;
-            this.itemIcon.setPosition(x, 0);
+            this.itemIcon.setPosition(0, 0);
         });
     }
 

@@ -102,8 +102,8 @@ export class FurniBagMediator extends BaseMediator {
         this.mFurniBag.queryCommodityResource(prop.id);
     }
 
-    private onQuerySaveAvatar(avatar: op_gameconfig.Avatar) {
-        this.mFurniBag.querySaveAvatar(avatar);
+    private onQuerySaveAvatar(avatarids: string[]) {
+        this.mFurniBag.querySaveAvatar(avatarids);
     }
 
     private onQueryResetAvatar(avatar: op_gameconfig.Avatar) {

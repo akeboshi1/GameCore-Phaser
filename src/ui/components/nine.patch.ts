@@ -89,7 +89,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
     }
 
     public set tint(value: number) {
-        this.each((patch: Phaser.GameObjects.Image) => patch.setTint(value));
+        this.each((patch: Phaser.GameObjects.Image) => patch.setTintFill(value));
         this.internalTint = value;
     }
 
@@ -99,6 +99,8 @@ export class NinePatch extends Phaser.GameObjects.Container {
 
     public clearTint() {
         this.each((patch: Phaser.GameObjects.Image) => patch.clearTint());
+        this.internalTint = undefined;
+        this.tintFill = false;
     }
 
     private createPatches(): void {
@@ -163,7 +165,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
                 patchImg.displayWidth = this.finalXs[xi + 1] - this.finalXs[xi];
                 patchImg.displayHeight = this.finalYs[yi + 1] - this.finalYs[yi];
                 this.add(patchImg);
-                patchImg.setTint(this.internalTint);
+                if (this.internalTint) patchImg.setTint(this.internalTint);
                 patchImg.tintFill = tintFill;
                 ++patchIndex;
                 // info.push({ x: patchImg.x, y: patchImg.y, w: patchImg.width, h: patchImg.height, s: patchImg.scale, sx: patchImg.scaleX, sy: patchImg.scaleY });
