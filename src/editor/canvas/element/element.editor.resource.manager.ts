@@ -16,7 +16,6 @@ export const SPRITE_SHEET_KEY: string = "ELEMENT_EDITOR_SPRITE_SHEET_KEY";
 export const IMAGE_BLANK_KEY: string = "blank";
 
 export default class ElementEditorResourceManager {
-
     private mElementNode: ElementNode;
     private mScene: Phaser.Scene;
     private mEmitter: Phaser.Events.EventEmitter;
@@ -108,31 +107,57 @@ export default class ElementEditorResourceManager {
                 packer.padding = 2;
                 for (const image of images) {
                     // if (image.name === this.IMAGE_BLANK_KEY) continue;
-                    const bmd = this.mScene.make.image({ key: image.name }, false).setOrigin(0, 0);
-                    packer.add(bmd.width, bmd.height, { name: image.name });
+                    // const bmd = this.mScene.make.image({ key: image.name }, false).setOrigin(0, 0);
+                    // packer.add(bmd.width, bmd.height, { name: image.name });
+
+                    const f = this.mScene.textures.getFrame(image.name, "__BASE");
+                    packer.add(f.width, f.height, { name: image.name });
                 }
 
                 const { width, height } = packer.bins[0];
-                const rt = this.mScene.make.renderTexture({ width, height }, false);
+
+                const canvas = this.mScene.textures.createCanvas("GenerateSpriteSheet", width, height);
                 packer.bins.forEach((bin) => {
                     bin.rects.forEach((rect) => {
-                        rt.drawFrame(rect.data.name, "__BASE", rect.x, rect.y);
+                        canvas.drawFrame(rect.data.name, "__BASE", rect.x, rect.y);
                         atlas.addFrame(this.getFrame(rect));
-                    }, this);
-                });
-                // WebGLSnapshot方法中对于定位像素的写法存在问题，需要y+1
-                rt.snapshotArea(0, 1, width, height, (img: HTMLImageElement) => {
-                    resolve({ url: img.src, json: atlas.toString() });
-                    Logger.getInstance().log("generate sprite sheet: ", img.src, atlas.toString());
-                    rt.destroy();
-
-                    // remove imgs
-                    images.forEach((one) => {
-                        if (this.mScene.textures.exists(one.name)) {
-                            this.mScene.textures.remove(one.name);
-                        }
                     });
-                }, "image/png", 1);
+                });
+
+                const url = canvas.canvas.toDataURL("image/png", 1);
+                resolve({ url, json: atlas.toString() });
+                Logger.getInstance().log("generate sprite sheet: ", url, atlas.toString());
+                canvas.destroy();
+                // remove imgs
+                images.forEach((one) => {
+                    if (this.mScene.textures.exists(one.name)) {
+                        this.mScene.textures.remove(one.name);
+                        this.mScene.textures.removeKey(one.name);
+                    }
+                });
+
+                // const rt = this.mScene.make.renderTexture({ width, height }, false);
+                // rt.setPipeline(this.GENERATESPRITESHEETPIPELINE);
+                // rt.setBlendMode(Phaser.BlendModes.SKIP_CHECK);
+                // packer.bins.forEach((bin) => {
+                //     bin.rects.forEach((rect) => {
+                //         rt.drawFrame(rect.data.name, "__BASE", rect.x, rect.y);
+                //         atlas.addFrame(this.getFrame(rect));
+                //     }, this);
+                // });
+                // // WebGLSnapshot方法中对于定位像素的写法存在问题，需要y+1
+                // rt.snapshotArea(0, 1, width, height, (img: HTMLImageElement) => {
+                //     resolve({ url: img.src, json: atlas.toString() });
+                //     Logger.getInstance().log("generate sprite sheet: ", img.src, atlas.toString());
+                //     rt.destroy();
+
+                //     // remove imgs
+                //     images.forEach((one) => {
+                //         if (this.mScene.textures.exists(one.name)) {
+                //             this.mScene.textures.remove(one.name);
+                //         }
+                //     });
+                // }, "image/png", 1);
 
                 // remove listener
                 this.mScene.textures.off("onload", onLoadFunc, this, false);
@@ -153,23 +178,36 @@ export default class ElementEditorResourceManager {
                 const frames = atlasTexture.frames;
                 const frameNames = atlasTexture.getFrameNames(false);
                 let frame: Phaser.Textures.Frame = null;
-                const snapshots: Array<Promise<IImage>> = [];
+                // const snapshots: Array<Promise<IImage>> = [];
+                const imgs = [];
                 for (const frameName of frameNames) {
                     frame = frames[frameName];
-                    const rt = this.mScene.make.renderTexture({ width: frame.width, height: frame.height }, false);
-                    rt.drawFrame(SPRITE_SHEET_KEY, frameName);
-                    snapshots.push(new Promise<IImage>((oneResolve) => {
-                        // WebGLSnapshot方法中对于定位像素的写法存在问题，需要y+1
-                        rt.snapshotArea(0, 1, frame.width, frame.height, (img: HTMLImageElement) => {
-                            oneResolve({
-                                name: frameName,
-                                url: img.src
-                            });
-                            // rt.destroy();
-                        }, "image/png", 1);
-                    }));
+
+                    const canvas = this.mScene.textures.createCanvas("DeserializeSpriteSheet", frame.width, frame.height);
+                    canvas.drawFrame(SPRITE_SHEET_KEY, frameName);
+                    const url = canvas.canvas.toDataURL("image/png", 1);
+                    imgs.push({ name: frameName, url });
+                    canvas.destroy();
+
+                    // const rt = this.mScene.make.renderTexture({ width: frame.width, height: frame.height }, false);
+                    // rt.setPipeline(this.GENERATESPRITESHEETPIPELINE);
+                    // rt.setBlendMode(Phaser.BlendModes.SKIP_CHECK);
+                    // rt.drawFrame(SPRITE_SHEET_KEY, frameName);
+                    // snapshots.push(new Promise<IImage>((oneResolve) => {
+                    //     // WebGLSnapshot方法中对于定位像素的写法存在问题，需要y+1
+                    //     rt.snapshotArea(0, 1, frame.width, frame.height, (img: HTMLImageElement) => {
+                    //         oneResolve({
+                    //             name: frameName,
+                    //             url: img.src
+                    //         });
+                    //         // rt.destroy();
+                    //     }, "image/png", 1);
+                    // }));
                 }
-                Promise.all(snapshots).then((values) => { resolve(values); });
+                // Promise.all(snapshots).then((values) => { resolve(values); });
+
+                resolve(imgs);
+                Logger.getInstance().log("deserialize sprite sheet: ", imgs);
             }
         });
     }
