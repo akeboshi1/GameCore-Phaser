@@ -334,7 +334,7 @@ var Tool = /** @class */ (function () {
 
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
-var BaseUI = __webpack_require__(125);
+var BaseUI = __webpack_require__(124);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/panel/Panel.ts
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -869,7 +869,7 @@ var SetValue = function (target, keys, value) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NinePatch", function() { return NinePatch; });
-/* harmony import */ var _patches_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(217);
+/* harmony import */ var _patches_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(218);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1488,7 +1488,7 @@ var UIType;
 var Text = __webpack_require__(384);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/textstyle/TextStyle.js + 1 modules
-var TextStyle = __webpack_require__(332);
+var TextStyle = __webpack_require__(333);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/bbcodetext/Parser.js
 
@@ -1827,10 +1827,10 @@ __webpack_require__.d(__webpack_exports__, "c", function() { return /* binding *
 __webpack_require__.d(__webpack_exports__, "b", function() { return /* binding */ element_Element; });
 
 // EXTERNAL MODULE: ./src/rooms/display/dragonbones.display.ts + 1 modules
-var dragonbones_display = __webpack_require__(191);
+var dragonbones_display = __webpack_require__(192);
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.display.ts
-var frames_display = __webpack_require__(160);
+var frames_display = __webpack_require__(161);
 
 // EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
 var protocols = __webpack_require__(2);
@@ -3278,16 +3278,15 @@ const ElementEvents = {
 /* harmony default export */ var inputtext_InputText = __webpack_exports__["a"] = (InputText_InputText);
 
 /***/ }),
-/* 119 */,
-/* 120 */
+/* 119 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ButtonState; });
 /* unused harmony export ButtonSoundKey */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Button; });
-/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(125);
-/* harmony import */ var _interface_event_MouseEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
+/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(124);
+/* harmony import */ var _interface_event_MouseEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(211);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3485,6 +3484,7 @@ var Button = /** @class */ (function (_super) {
 
 
 /***/ }),
+/* 120 */,
 /* 121 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3684,10 +3684,10 @@ var UIMediatorType = /** @class */ (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Sprite; });
 /* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(111);
-/* harmony import */ var _display_dragonbones_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(161);
+/* harmony import */ var _display_dragonbones_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(162);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _display_frames_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(162);
+/* harmony import */ var _display_frames_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(163);
 /* harmony import */ var _display_animation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(204);
 /* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(203);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(0);
@@ -4187,34 +4187,6 @@ var Sprite = /** @class */ (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return initLocales; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return i18n; });
-/* harmony import */ var i18next__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(435);
-/* harmony import */ var i18next_xhr_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(423);
-/* harmony import */ var i18next_browser_languagedetector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(424);
-
-
-
-function initLocales(path) {
-    return i18next__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]
-        .use(i18next_xhr_backend__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"])
-        .use(i18next_browser_languagedetector__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"])
-        .init({
-        fallbackLng: "en",
-        backend: {
-            loadPath: path,
-            crossDomain: true
-        }
-    });
-}
-var i18n = i18next__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"];
-
-
-/***/ }),
-/* 125 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BaseUI; });
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4411,13 +4383,41 @@ var BaseUI = /** @class */ (function (_super) {
 
 
 /***/ }),
+/* 125 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return initLocales; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return i18n; });
+/* harmony import */ var i18next__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(435);
+/* harmony import */ var i18next_xhr_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(423);
+/* harmony import */ var i18next_browser_languagedetector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(424);
+
+
+
+function initLocales(path) {
+    return i18next__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]
+        .use(i18next_xhr_backend__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"])
+        .use(i18next_browser_languagedetector__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"])
+        .init({
+        fallbackLng: "en",
+        backend: {
+            loadPath: path,
+            crossDomain: true
+        }
+    });
+}
+var i18n = i18next__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"];
+
+
+/***/ }),
 /* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/basesizer/BaseSizer.js + 31 modules
-var BaseSizer = __webpack_require__(186);
+var BaseSizer = __webpack_require__(187);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/size/GetDisplaySize.js
 var GetDisplaySize = __webpack_require__(112);
@@ -4766,7 +4766,7 @@ var LayoutInitChild = function () {
     _layoutInit: _layoutInit,
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetBoundsConfig.js
-var GetBoundsConfig = __webpack_require__(216);
+var GetBoundsConfig = __webpack_require__(217);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/OrientationConst.js
 /* harmony default export */ var OrientationConst = ({
@@ -4780,7 +4780,7 @@ var GetBoundsConfig = __webpack_require__(216);
     'top-to-bottom': 1
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/AlignConst.js
-var AlignConst = __webpack_require__(214);
+var AlignConst = __webpack_require__(215);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/Space.js
 var Space = function (scene) {
@@ -4958,10 +4958,10 @@ const PROPORTIONMODE = {
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(320);
+var Scrollable = __webpack_require__(321);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/textblock/TextBlock.js + 11 modules
-var TextBlock = __webpack_require__(187);
+var TextBlock = __webpack_require__(188);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/textarea/InjectProperties.js
 var InjectProperties = function(textBlock) {
@@ -5234,7 +5234,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagMediator", function() { return BagMediator; });
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(110);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0);
-/* harmony import */ var _bagPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(226);
+/* harmony import */ var _bagPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(227);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(118);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
@@ -5400,7 +5400,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(103);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(104);
-/* harmony import */ var _tips_toolTip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(170);
+/* harmony import */ var _tips_toolTip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(171);
 
 
 
@@ -5679,7 +5679,7 @@ var BaseFaceMediator = /** @class */ (function (_super) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GameGridTable; });
-/* harmony import */ var _GridTable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(185);
+/* harmony import */ var _GridTable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(186);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -7194,7 +7194,7 @@ var CONST = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return Show; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Hide; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return IsShown; });
-/* harmony import */ var _GetSizerConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(213);
+/* harmony import */ var _GetSizerConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(214);
 
 
 var Show = function (gameObject) {
@@ -7232,8 +7232,8 @@ var _hide = function (gameObject, hidden) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DetailDisplay", function() { return DetailDisplay; });
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(104);
-/* harmony import */ var _rooms_display_dragonbones_display__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(191);
-/* harmony import */ var _rooms_display_dragonbones_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(161);
+/* harmony import */ var _rooms_display_dragonbones_display__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(192);
+/* harmony import */ var _rooms_display_dragonbones_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(162);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -7514,7 +7514,7 @@ var LoadingScene = /** @class */ (function (_super) {
 /* harmony import */ var _ui_components_dynamic_sprite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(199);
 /* harmony import */ var _ui_components_dynamic_image__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(113);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(104);
-/* harmony import */ var _editor_reference_area__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(338);
+/* harmony import */ var _editor_reference_area__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(339);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -7798,10 +7798,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(0);
-/* harmony import */ var _chatPanel_pc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(212);
-/* harmony import */ var _mobile_chatPanel_mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(220);
+/* harmony import */ var _chatPanel_pc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(213);
+/* harmony import */ var _mobile_chatPanel_mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(221);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(106);
-/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(221);
+/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(222);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -8141,7 +8141,7 @@ var WaitComplete = function (eventEmitter) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _GetSizerConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(213);
+/* harmony import */ var _GetSizerConfig_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(214);
 
 
 var GetParentSizer = function (gameObject) {
@@ -8381,7 +8381,7 @@ var Tool = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RankMediator", function() { return RankMediator; });
-/* harmony import */ var _RankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(228);
+/* harmony import */ var _RankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(229);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -8618,6 +8618,223 @@ class Stack {
 
 /***/ }),
 /* 159 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ NineSlicePatch_NineSlicePatch; });
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/interface/baseUI/Patches.config.ts
+var normalizePatchesConfig = function (config) {
+    config.bottom = (config.bottom !== undefined) ? config.bottom : config.top;
+    config.left = (config.left !== undefined) ? config.left : config.top;
+    config.right = (config.right !== undefined) ? config.right : config.left;
+    return config;
+};
+var resetPatchesConfig = function (config) {
+    config.top = 0;
+    config.bottom = 0;
+    config.left = 0;
+    config.right = 0;
+    return config;
+};
+
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
+var BaseUI = __webpack_require__(124);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/ninepatch/NineSlicePatch.ts
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var GetValue = Phaser.Utils.Objects.GetValue;
+var NineSlicePatch_NineSlicePatch = /** @class */ (function (_super) {
+    __extends(NineSlicePatch, _super);
+    function NineSlicePatch(scene, x, y, width, height, key, frame, config, dpr, scale) {
+        var _this = _super.call(this, scene) || this;
+        _this.dpr = dpr || 1;
+        _this.scale = scale || 1;
+        _this.patchesConfig = { top: 0, left: 0, right: 0, bottom: 0 };
+        _this.setConfig(config);
+        _this.setSize(width, height);
+        _this.setTexture(key, frame);
+        return _this;
+    }
+    NineSlicePatch.prototype.resize = function (width, height) {
+        width = Math.round(width);
+        height = Math.round(height);
+        if (!this.patchesConfig) {
+            return this;
+        }
+        if (this.width === width && this.height === height) {
+            return this;
+        }
+        // width = Math.max(width, this.patchesConfig.left + this.patchesConfig.right);
+        // height = Math.max(height, this.patchesConfig.top + this.patchesConfig.bottom);
+        this.setSize(width, height);
+        this.drawPatches();
+        return;
+    };
+    NineSlicePatch.prototype.getConfig = function () {
+        return this.patchesConfig;
+    };
+    NineSlicePatch.prototype.setConfig = function (config) {
+        Object.assign(this.patchesConfig, config);
+        this.patchesConfig.top = Math.round(this.patchesConfig.top);
+        if (this.patchesConfig.right)
+            this.patchesConfig.right = Math.round(this.patchesConfig.right);
+        if (this.patchesConfig.bottom)
+            this.patchesConfig.bottom = Math.round(this.patchesConfig.bottom);
+        if (this.patchesConfig.left)
+            this.patchesConfig.left = Math.round(this.patchesConfig.left);
+        normalizePatchesConfig(config);
+    };
+    NineSlicePatch.prototype.setTexture = function (key, frame) {
+        this.originTexture = this.scene.textures.get(key);
+        this.setFrame(frame);
+        return this;
+    };
+    NineSlicePatch.prototype.setFrame = function (frame) {
+        this.originFrame = this.originTexture.frames[frame] || this.originTexture.frames[NineSlicePatch.__BASE];
+        this.createPatches();
+        this.drawPatches();
+        return this;
+    };
+    NineSlicePatch.prototype.setSize = function (width, height) {
+        this.width = width;
+        this.height = height;
+        _super.prototype.setSize.call(this, width, height);
+        var right = this.width - this.patchesConfig.right > 0 ? this.width - this.patchesConfig.right : this.patchesConfig.right;
+        var bottom = this.height - this.patchesConfig.bottom > 0 ? this.height - this.patchesConfig.bottom : this.patchesConfig.right;
+        this.finalXs = [0, this.patchesConfig.left, right, this.width];
+        this.finalYs = [0, this.patchesConfig.top, bottom, this.height];
+        return this;
+    };
+    NineSlicePatch.prototype.setTint = function (tint) {
+        this.tint = tint;
+        return this;
+    };
+    NineSlicePatch.prototype.setTintFill = function (tint) {
+        this.tint = tint;
+        this.tintFill = true;
+        return this;
+    };
+    Object.defineProperty(NineSlicePatch.prototype, "tintFill", {
+        get: function () {
+            return this.first && this.first.tintFill;
+        },
+        set: function (value) {
+            this.each(function (patch) { return patch.tintFill = value; });
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(NineSlicePatch.prototype, "tint", {
+        set: function (value) {
+            this.each(function (patch) { return patch.setTint(value); });
+            this.internalTint = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(NineSlicePatch.prototype, "isTinted", {
+        get: function () {
+            return this.first && this.first.isTinted;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    NineSlicePatch.prototype.clearTint = function () {
+        this.each(function (patch) { return patch.clearTint(); });
+        this.internalTint = undefined;
+        this.tintFill = false;
+    };
+    NineSlicePatch.prototype.createPatches = function () {
+        // The positions we want from the base texture
+        // 保存有x轴和y轴9宫坐标信息，如果存在坐标信息相同，则表示某一部分的图片尺寸为0，需要查看原因
+        var textureXs = [0, this.patchesConfig.left, this.originFrame.width - this.patchesConfig.right, this.originFrame.width];
+        var textureYs = [0, this.patchesConfig.top, this.originFrame.height - this.patchesConfig.bottom, this.originFrame.height];
+        var patchIndex = 0;
+        for (var yi = 0; yi < 3; yi++) {
+            for (var xi = 0; xi < 3; xi++) {
+                this.createPatchFrame(this.getPatchNameByIndex(patchIndex), textureXs[xi], // x
+                textureYs[yi], // y
+                textureXs[xi + 1] - textureXs[xi], // width
+                textureYs[yi + 1] - textureYs[yi] // height
+                );
+                ++patchIndex;
+            }
+        }
+    };
+    NineSlicePatch.prototype.drawPatches = function () {
+        var tintFill = this.tintFill;
+        this.removeAll(true);
+        var patchIndex = 0;
+        for (var yi = 0; yi < 3; yi++) {
+            // 当缩放后的尺寸小于初始尺寸，中间缩放部分肯定为0，则对1，2两行不做处理
+            if (this.height < this.patchesConfig.bottom + this.patchesConfig.top && yi === 1) {
+                continue;
+            }
+            for (var xi = 0; xi < 3; xi++) {
+                // 当缩放后的尺寸小于初始尺寸，中间缩放部分肯定为0，则对1，2两列不做处理
+                if (this.width < this.patchesConfig.left + this.patchesConfig.right && xi === 1) {
+                    continue;
+                }
+                var patch = this.originTexture.frames[this.getPatchNameByIndex(patchIndex)];
+                var patchImg = new Phaser.GameObjects.Image(this.scene, 0, 0, patch.texture.key, patch.name);
+                patchImg.setOrigin(0);
+                patchImg.setPosition(this.finalXs[xi] - this.width * this.originX, this.finalYs[yi] - this.height * this.originY);
+                var widScale = (this.finalXs[xi + 1] - this.finalXs[xi]) / patch.width;
+                var heiScale = (this.finalYs[yi + 1] - this.finalYs[yi]) / patch.height;
+                // 如果缩放后尺寸小于某一部分尺寸，则用当前部分对应计算做缩放，现在处理小于单边尺寸的逻辑是，只用左边和上边做比较处理，当缩放尺寸小于单边尺寸，则只会显示左边和上边的切片资源
+                // 九宫不应该出现缩放尺寸小于单边或者左+右，上+下的情况，以上操作只是为了实现需求
+                if (patch.width > this.width)
+                    widScale = this.width / patch.width;
+                if (patch.height > this.height)
+                    heiScale = this.height / patch.height;
+                patchImg.setScale(widScale, heiScale);
+                this.add(patchImg);
+                if (this.internalTint)
+                    patchImg.setTint(this.internalTint);
+                patchImg.tintFill = tintFill;
+                ++patchIndex;
+            }
+        }
+    };
+    NineSlicePatch.prototype.createPatchFrame = function (patch, x, y, width, height) {
+        if (this.originTexture.frames.hasOwnProperty(patch)) {
+            return;
+        }
+        this.originTexture.add(patch, this.originFrame.sourceIndex, this.originFrame.cutX + x, this.originFrame.cutY + y, width, height);
+    };
+    NineSlicePatch.prototype.getPatchNameByIndex = function (index) {
+        return this.originFrame.name + "|" + NineSlicePatch.patches[index];
+    };
+    NineSlicePatch.prototype.calculScale = function (num0, num1) {
+        return (num1 * num0) / (2 * num1 * (num1 + num0));
+    };
+    NineSlicePatch.__BASE = "__BASE";
+    NineSlicePatch.patches = ["[0][0]", "[1][0]", "[2][0]", "[0][1]", "[1][1]", "[2][1]", "[0][2]", "[1][2]", "[2][2]"];
+    return NineSlicePatch;
+}(BaseUI["a" /* BaseUI */]));
+
+
+
+/***/ }),
+/* 160 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8953,7 +9170,7 @@ var ElementManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9289,7 +9506,7 @@ var FramesDisplay = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9353,7 +9570,7 @@ var DragonbonesModel = /** @class */ (function () {
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9572,7 +9789,7 @@ var FramesModel = /** @class */ (function () {
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9581,7 +9798,7 @@ var FramesModel = /** @class */ (function () {
 /* harmony default export */ __webpack_exports__["a"] = (_plugins_gameobjects_containerlite_ContainerLite_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9631,7 +9848,7 @@ var globRect = undefined;
 /* harmony default export */ __webpack_exports__["a"] = (IsPointerInBounds);
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9650,7 +9867,7 @@ var GetTopmostSizer = function (gameObject) {
 /* harmony default export */ __webpack_exports__["a"] = (GetTopmostSizer);
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9672,7 +9889,7 @@ var GetScrollMode = function (config, key) {
 /* harmony default export */ __webpack_exports__["a"] = (GetScrollMode);
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9765,7 +9982,7 @@ const SHAPEMODE = {
 /* harmony default export */ __webpack_exports__["a"] = (DefaultMask);
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9819,7 +10036,7 @@ var CheckButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9860,7 +10077,7 @@ var BaseChatPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9971,13 +10188,13 @@ var ToolTip = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FriendMediator", function() { return FriendMediator; });
-/* harmony import */ var _friend_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(227);
+/* harmony import */ var _friend_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(228);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -10041,7 +10258,7 @@ var FriendMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10194,14 +10411,14 @@ var BasicRankPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RightMediator", function() { return RightMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(133);
-/* harmony import */ var _right_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(229);
+/* harmony import */ var _right_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(230);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(110);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -10262,14 +10479,14 @@ var RightMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BottomMediator", function() { return BottomMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(133);
-/* harmony import */ var _bottom_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(230);
+/* harmony import */ var _bottom_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(231);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -10305,14 +10522,14 @@ var BottomMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementStorageMediator", function() { return ElementStorageMediator; });
-/* harmony import */ var _ElementStoragePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(231);
-/* harmony import */ var _ElementStorate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(233);
+/* harmony import */ var _ElementStoragePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
+/* harmony import */ var _ElementStorate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(234);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(110);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(103);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_3__);
@@ -10438,7 +10655,7 @@ var ElementStorageMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10665,7 +10882,7 @@ var RadioItemRender = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10884,15 +11101,15 @@ var InputTextField = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaChatMediator", function() { return PicaChatMediator; });
-/* harmony import */ var _PicaChatPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(248);
-/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(180);
-/* harmony import */ var _PicaChat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(250);
+/* harmony import */ var _PicaChatPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(249);
+/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(181);
+/* harmony import */ var _PicaChat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(251);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -10988,7 +11205,7 @@ var PicaChatMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11044,14 +11261,14 @@ var InputPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaNavigateMediator", function() { return PicaNavigateMediator; });
-/* harmony import */ var _PicaNavigatePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(249);
-/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(178);
+/* harmony import */ var _PicaNavigatePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(250);
+/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(179);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -11125,13 +11342,13 @@ var PicaNavigateMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabButton; });
-/* harmony import */ var _button_Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(120);
-/* harmony import */ var _interface_event_MouseEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
+/* harmony import */ var _button_Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(119);
+/* harmony import */ var _interface_event_MouseEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(211);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -11210,7 +11427,7 @@ var TabButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11223,13 +11440,13 @@ var TabButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DebugLoggerMediator", function() { return DebugLoggerMediator; });
-/* harmony import */ var _DebugLoggerPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(282);
+/* harmony import */ var _DebugLoggerPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(283);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -11290,7 +11507,7 @@ var DebugLoggerMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11369,16 +11586,16 @@ var TextButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/scrollable/Scrollable.js + 4 modules
-var Scrollable = __webpack_require__(320);
+var Scrollable = __webpack_require__(321);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
-var GetScrollMode = __webpack_require__(166);
+var GetScrollMode = __webpack_require__(167);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/containerlite/ContainerLite.js + 13 modules
 var ContainerLite = __webpack_require__(383);
@@ -11388,10 +11605,10 @@ var GetValue = __webpack_require__(346);
 var GetValue_default = /*#__PURE__*/__webpack_require__.n(GetValue);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clear.js
-var Clear = __webpack_require__(219);
+var Clear = __webpack_require__(220);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clone.js
-var Clone = __webpack_require__(218);
+var Clone = __webpack_require__(219);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/utils/data/DataMethods.js
 
@@ -11990,13 +12207,13 @@ class Table_Table {
 
 /* harmony default export */ var gridtable_Table = (Table_Table);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
-var DefaultMask = __webpack_require__(167);
+var DefaultMask = __webpack_require__(168);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/size/ResizeGameObject.js
 var ResizeGameObject = __webpack_require__(130);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/MaskToGameObject.js
-var MaskToGameObject = __webpack_require__(254);
+var MaskToGameObject = __webpack_require__(255);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/gridtable/methods/SetTableOY.js
 var SetTableOY = function (oy) {
@@ -12913,7 +13130,7 @@ var TableOnCellVisible = function (table) {
 }
 /* harmony default export */ var gridtable_TableOnCellVisible = (TableOnCellVisible);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/button/Button.js
-var Button = __webpack_require__(255);
+var Button = __webpack_require__(256);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/EmitCellEvent.js
 var EmitCellEvent = function (eventEmitter, eventName, table, x, y) {
@@ -12981,7 +13198,7 @@ var OnOut = function () {
 
 /* harmony default export */ var input_OverCell = (OverCell);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tap/Tap.js + 1 modules
-var Tap = __webpack_require__(193);
+var Tap = __webpack_require__(194);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/TapCell.js
 
@@ -13001,7 +13218,7 @@ var TapCell = function (table, tableConfig) {
 
 /* harmony default export */ var input_TapCell = (TapCell);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/press/Press.js + 1 modules
-var Press = __webpack_require__(194);
+var Press = __webpack_require__(195);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/input/PressCell.js
 
@@ -13219,16 +13436,16 @@ Object.assign(gridtable_GridTable_GridTable.prototype, methods);
 
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/container/Container.js
-var Container = __webpack_require__(163);
+var Container = __webpack_require__(164);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetSizerConfig.js
-var GetSizerConfig = __webpack_require__(213);
+var GetSizerConfig = __webpack_require__(214);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/defaultbounds/GetDefaultBounds.js
 var GetDefaultBounds = __webpack_require__(343);
@@ -13250,7 +13467,7 @@ var PushIntoBounds = function (bounds) {
 
 /* harmony default export */ var basesizer_PushIntoBounds = (PushIntoBounds);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/AlignConst.js
-var AlignConst = __webpack_require__(214);
+var AlignConst = __webpack_require__(215);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/actions/GlobZone.js
 var GlobZone = __webpack_require__(150);
@@ -13675,7 +13892,7 @@ var SetAnchor = function (config) {
 
 /* harmony default export */ var basesizer_SetAnchor = (SetAnchor);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/tween/TweenBase.js
-var TweenBase = __webpack_require__(215);
+var TweenBase = __webpack_require__(216);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/behaviors/scale/Scale.js
 
@@ -14178,7 +14395,7 @@ const FadeMethods_GetValue = Phaser.Utils.Objects.GetValue;
     }
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/input/IsPointerInBounds.js
-var IsPointerInBounds = __webpack_require__(164);
+var IsPointerInBounds = __webpack_require__(165);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/IsInTouching.js
 
@@ -14196,7 +14413,7 @@ var GetParentSizer = __webpack_require__(153);
     return Object(GetParentSizer["a" /* default */])(this);
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetTopmostSizer.js
-var GetTopmostSizer = __webpack_require__(165);
+var GetTopmostSizer = __webpack_require__(166);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/basesizer/GetTopmostSizer.js
 
@@ -14511,16 +14728,16 @@ Object.assign(
 /* harmony default export */ var BaseSizer = __webpack_exports__["a"] = (BaseSizer_Base);
 
 /***/ }),
-/* 187 */
+/* 188 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/basesizer/BaseSizer.js + 31 modules
-var BaseSizer = __webpack_require__(186);
+var BaseSizer = __webpack_require__(187);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetBoundsConfig.js
-var GetBoundsConfig = __webpack_require__(216);
+var GetBoundsConfig = __webpack_require__(217);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/utils/text/IsTextGameObject.js
 const TextKlass = Phaser.GameObjects.Text;
@@ -14531,7 +14748,7 @@ var IsTextGameObject = function (gameObject) {
 
 /* harmony default export */ var text_IsTextGameObject = (IsTextGameObject);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
-var DefaultMask = __webpack_require__(167);
+var DefaultMask = __webpack_require__(168);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/textblock/SetTextObject.js
 
@@ -14963,7 +15180,7 @@ Object.assign(
 /* harmony default export */ var textblock_TextBlock = __webpack_exports__["a"] = (TextBlock_TextBlock);
 
 /***/ }),
-/* 188 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15364,7 +15581,7 @@ Object.assign(
 /* harmony default export */ var slider_Slider = __webpack_exports__["a"] = (Slider_Slider);
 
 /***/ }),
-/* 189 */
+/* 190 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15373,7 +15590,7 @@ Object.assign(
 var Sizer = __webpack_require__(126);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/button/Button.js
-var Button = __webpack_require__(255);
+var Button = __webpack_require__(256);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/buttons/ButtonSetInteractive.js
 
@@ -15687,16 +15904,16 @@ Object.assign(
 /* harmony default export */ var buttons_Buttons = __webpack_exports__["a"] = (Buttons_Buttons);
 
 /***/ }),
-/* 190 */
+/* 191 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/basesizer/BaseSizer.js + 31 modules
-var BaseSizer = __webpack_require__(186);
+var BaseSizer = __webpack_require__(187);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
-var DefaultMask = __webpack_require__(167);
+var DefaultMask = __webpack_require__(168);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollableblock/SetChild.js
 
@@ -15816,7 +16033,7 @@ var ResetChildPosition = function () {
 var ResizeGameObject = __webpack_require__(130);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/MaskToGameObject.js
-var MaskToGameObject = __webpack_require__(254);
+var MaskToGameObject = __webpack_require__(255);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollableblock/Layout.js
 
@@ -16077,7 +16294,7 @@ Object.assign(
 /* harmony default export */ var scrollableblock_ScrollableBlock = __webpack_exports__["a"] = (ScrollableBlock_ScrollableBlock);
 
 /***/ }),
-/* 191 */
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16976,7 +17193,7 @@ var dragonbones_display_DragonbonesDisplay = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 192 */
+/* 193 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17077,7 +17294,7 @@ var main_ui_MainUIScene = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/cameras/play.camera.ts
-var play_camera = __webpack_require__(341);
+var play_camera = __webpack_require__(342);
 
 // CONCATENATED MODULE: ./src/scenes/play.ts
 var play_extends = (undefined && undefined.__extends) || (function () {
@@ -17158,13 +17375,13 @@ var play_PlayScene = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 193 */
+/* 194 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/gestures/onepointertracer/OnePointerTracer.js + 1 modules
-var OnePointerTracer = __webpack_require__(195);
+var OnePointerTracer = __webpack_require__(196);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/fsm.js + 1 modules
 var fsm = __webpack_require__(137);
@@ -17367,13 +17584,13 @@ const RECOGNIZED = 'RECOGNIZED';
 /* harmony default export */ var ui_tap_Tap = __webpack_exports__["a"] = (tap_Tap);
 
 /***/ }),
-/* 194 */
+/* 195 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/gestures/onepointertracer/OnePointerTracer.js + 1 modules
-var OnePointerTracer = __webpack_require__(195);
+var OnePointerTracer = __webpack_require__(196);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/fsm.js + 1 modules
 var fsm = __webpack_require__(137);
@@ -17490,7 +17707,7 @@ const RECOGNIZED = 'RECOGNIZED';
 /* harmony default export */ var ui_press_Press = __webpack_exports__["a"] = (press_Press);
 
 /***/ }),
-/* 195 */
+/* 196 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17844,223 +18061,6 @@ const TOUCH1 = 1;
 const IDLE = 'IDLE';
 
 /* harmony default export */ var onepointertracer_OnePointerTracer = __webpack_exports__["a"] = (OnePointerTracer_OnePointerTracer);
-
-/***/ }),
-/* 196 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ NineSlicePatch_NineSlicePatch; });
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/interface/baseUI/Patches.config.ts
-var normalizePatchesConfig = function (config) {
-    config.bottom = (config.bottom !== undefined) ? config.bottom : config.top;
-    config.left = (config.left !== undefined) ? config.left : config.top;
-    config.right = (config.right !== undefined) ? config.right : config.left;
-    return config;
-};
-var resetPatchesConfig = function (config) {
-    config.top = 0;
-    config.bottom = 0;
-    config.left = 0;
-    config.right = 0;
-    return config;
-};
-
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
-var BaseUI = __webpack_require__(125);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/ninepatch/NineSlicePatch.ts
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-var GetValue = Phaser.Utils.Objects.GetValue;
-var NineSlicePatch_NineSlicePatch = /** @class */ (function (_super) {
-    __extends(NineSlicePatch, _super);
-    function NineSlicePatch(scene, x, y, width, height, key, frame, config, dpr, scale) {
-        var _this = _super.call(this, scene) || this;
-        _this.dpr = dpr || 1;
-        _this.scale = scale || 1;
-        _this.patchesConfig = { top: 0, left: 0, right: 0, bottom: 0 };
-        _this.setConfig(config);
-        _this.setSize(width, height);
-        _this.setTexture(key, frame);
-        return _this;
-    }
-    NineSlicePatch.prototype.resize = function (width, height) {
-        width = Math.round(width);
-        height = Math.round(height);
-        if (!this.patchesConfig) {
-            return this;
-        }
-        if (this.width === width && this.height === height) {
-            return this;
-        }
-        // width = Math.max(width, this.patchesConfig.left + this.patchesConfig.right);
-        // height = Math.max(height, this.patchesConfig.top + this.patchesConfig.bottom);
-        this.setSize(width, height);
-        this.drawPatches();
-        return;
-    };
-    NineSlicePatch.prototype.getConfig = function () {
-        return this.patchesConfig;
-    };
-    NineSlicePatch.prototype.setConfig = function (config) {
-        Object.assign(this.patchesConfig, config);
-        this.patchesConfig.top = Math.round(this.patchesConfig.top);
-        if (this.patchesConfig.right)
-            this.patchesConfig.right = Math.round(this.patchesConfig.right);
-        if (this.patchesConfig.bottom)
-            this.patchesConfig.bottom = Math.round(this.patchesConfig.bottom);
-        if (this.patchesConfig.left)
-            this.patchesConfig.left = Math.round(this.patchesConfig.left);
-        normalizePatchesConfig(config);
-    };
-    NineSlicePatch.prototype.setTexture = function (key, frame) {
-        this.originTexture = this.scene.textures.get(key);
-        this.setFrame(frame);
-        return this;
-    };
-    NineSlicePatch.prototype.setFrame = function (frame) {
-        this.originFrame = this.originTexture.frames[frame] || this.originTexture.frames[NineSlicePatch.__BASE];
-        this.createPatches();
-        this.drawPatches();
-        return this;
-    };
-    NineSlicePatch.prototype.setSize = function (width, height) {
-        this.width = width;
-        this.height = height;
-        _super.prototype.setSize.call(this, width, height);
-        var right = this.width - this.patchesConfig.right > 0 ? this.width - this.patchesConfig.right : this.patchesConfig.right;
-        var bottom = this.height - this.patchesConfig.bottom > 0 ? this.height - this.patchesConfig.bottom : this.patchesConfig.right;
-        this.finalXs = [0, this.patchesConfig.left, right, this.width];
-        this.finalYs = [0, this.patchesConfig.top, bottom, this.height];
-        return this;
-    };
-    NineSlicePatch.prototype.setTint = function (tint) {
-        this.tint = tint;
-        return this;
-    };
-    NineSlicePatch.prototype.setTintFill = function (tint) {
-        this.tint = tint;
-        this.tintFill = true;
-        return this;
-    };
-    Object.defineProperty(NineSlicePatch.prototype, "tintFill", {
-        get: function () {
-            return this.first && this.first.tintFill;
-        },
-        set: function (value) {
-            this.each(function (patch) { return patch.tintFill = value; });
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(NineSlicePatch.prototype, "tint", {
-        set: function (value) {
-            this.each(function (patch) { return patch.setTint(value); });
-            this.internalTint = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(NineSlicePatch.prototype, "isTinted", {
-        get: function () {
-            return this.first && this.first.isTinted;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    NineSlicePatch.prototype.clearTint = function () {
-        this.each(function (patch) { return patch.clearTint(); });
-        this.internalTint = undefined;
-        this.tintFill = false;
-    };
-    NineSlicePatch.prototype.createPatches = function () {
-        // The positions we want from the base texture
-        // 保存有x轴和y轴9宫坐标信息，如果存在坐标信息相同，则表示某一部分的图片尺寸为0，需要查看原因
-        var textureXs = [0, this.patchesConfig.left, this.originFrame.width - this.patchesConfig.right, this.originFrame.width];
-        var textureYs = [0, this.patchesConfig.top, this.originFrame.height - this.patchesConfig.bottom, this.originFrame.height];
-        var patchIndex = 0;
-        for (var yi = 0; yi < 3; yi++) {
-            for (var xi = 0; xi < 3; xi++) {
-                this.createPatchFrame(this.getPatchNameByIndex(patchIndex), textureXs[xi], // x
-                textureYs[yi], // y
-                textureXs[xi + 1] - textureXs[xi], // width
-                textureYs[yi + 1] - textureYs[yi] // height
-                );
-                ++patchIndex;
-            }
-        }
-    };
-    NineSlicePatch.prototype.drawPatches = function () {
-        var tintFill = this.tintFill;
-        this.removeAll(true);
-        var patchIndex = 0;
-        for (var yi = 0; yi < 3; yi++) {
-            // 当缩放后的尺寸小于初始尺寸，中间缩放部分肯定为0，则对1，2两行不做处理
-            if (this.height < this.patchesConfig.bottom + this.patchesConfig.top && yi === 1) {
-                continue;
-            }
-            for (var xi = 0; xi < 3; xi++) {
-                // 当缩放后的尺寸小于初始尺寸，中间缩放部分肯定为0，则对1，2两列不做处理
-                if (this.width < this.patchesConfig.left + this.patchesConfig.right && xi === 1) {
-                    continue;
-                }
-                var patch = this.originTexture.frames[this.getPatchNameByIndex(patchIndex)];
-                var patchImg = new Phaser.GameObjects.Image(this.scene, 0, 0, patch.texture.key, patch.name);
-                patchImg.setOrigin(0);
-                patchImg.setPosition(this.finalXs[xi] - this.width * this.originX, this.finalYs[yi] - this.height * this.originY);
-                var widScale = (this.finalXs[xi + 1] - this.finalXs[xi]) / patch.width;
-                var heiScale = (this.finalYs[yi + 1] - this.finalYs[yi]) / patch.height;
-                // 如果缩放后尺寸小于某一部分尺寸，则用当前部分对应计算做缩放，现在处理小于单边尺寸的逻辑是，只用左边和上边做比较处理，当缩放尺寸小于单边尺寸，则只会显示左边和上边的切片资源
-                // 九宫不应该出现缩放尺寸小于单边或者左+右，上+下的情况，以上操作只是为了实现需求
-                if (patch.width > this.width)
-                    widScale = this.width / patch.width;
-                if (patch.height > this.height)
-                    heiScale = this.height / patch.height;
-                patchImg.setScale(widScale, heiScale);
-                this.add(patchImg);
-                if (this.internalTint)
-                    patchImg.setTint(this.internalTint);
-                patchImg.tintFill = tintFill;
-                ++patchIndex;
-            }
-        }
-    };
-    NineSlicePatch.prototype.createPatchFrame = function (patch, x, y, width, height) {
-        if (this.originTexture.frames.hasOwnProperty(patch)) {
-            return;
-        }
-        this.originTexture.add(patch, this.originFrame.sourceIndex, this.originFrame.cutX + x, this.originFrame.cutY + y, width, height);
-    };
-    NineSlicePatch.prototype.getPatchNameByIndex = function (index) {
-        return this.originFrame.name + "|" + NineSlicePatch.patches[index];
-    };
-    NineSlicePatch.prototype.calculScale = function (num0, num1) {
-        return (num1 * num0) / (2 * num1 * (num1 + num0));
-    };
-    NineSlicePatch.__BASE = "__BASE";
-    NineSlicePatch.patches = ["[0][0]", "[1][0]", "[2][0]", "[0][1]", "[1][1]", "[2][1]", "[0][2]", "[1][2]", "[2][2]"];
-    return NineSlicePatch;
-}(BaseUI["a" /* BaseUI */]));
-
-
 
 /***/ }),
 /* 197 */,
@@ -18819,7 +18819,7 @@ var ControlFPanel = /** @class */ (function (_super) {
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _terrain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(340);
+/* harmony import */ var _terrain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(341);
 /* harmony import */ var _element_sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(123);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -19113,7 +19113,7 @@ var TerrainManager = /** @class */ (function (_super) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TerrainDisplay; });
-/* harmony import */ var _frames_display__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(160);
+/* harmony import */ var _frames_display__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(161);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19306,7 +19306,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_position45__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(139);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(110);
 /* harmony import */ var _rooms_element_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(117);
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(120);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(119);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19945,6 +19945,30 @@ var MoveMenu = /** @class */ (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CoreUI; });
+var CoreUI;
+(function (CoreUI) {
+    var MouseEvent;
+    (function (MouseEvent) {
+        MouseEvent["Click"] = "click";
+        MouseEvent["Up"] = "Up";
+        MouseEvent["Down"] = "Down";
+        MouseEvent["Hold"] = "Hold";
+        MouseEvent["Tap"] = "Tap";
+        MouseEvent["Move"] = "Move";
+        MouseEvent["Over"] = "Over";
+        MouseEvent["Out"] = "Out";
+        MouseEvent["DragStart"] = "DragStart";
+        MouseEvent["DragStop"] = "DragStop";
+    })(MouseEvent = CoreUI.MouseEvent || (CoreUI.MouseEvent = {}));
+})(CoreUI || (CoreUI = {}));
+
+
+/***/ }),
+/* 212 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UiManager", function() { return UiManager; });
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(103);
@@ -19952,28 +19976,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(149);
-/* harmony import */ var _layer_manager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(222);
-/* harmony import */ var _Notice_NoticeMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(223);
+/* harmony import */ var _layer_manager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(223);
+/* harmony import */ var _Notice_NoticeMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(224);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(131);
-/* harmony import */ var _friend_friend_mediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(171);
+/* harmony import */ var _friend_friend_mediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(172);
 /* harmony import */ var _Rank_RankMediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(156);
-/* harmony import */ var _baseView_rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(173);
-/* harmony import */ var _baseView_leftGroup_left_mediator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(234);
-/* harmony import */ var _baseView_bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(174);
-/* harmony import */ var _baseView_bagGroup_bag_group_mediator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(237);
-/* harmony import */ var _baseView_top_menu_top_menu_mediator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(239);
+/* harmony import */ var _baseView_rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(174);
+/* harmony import */ var _baseView_leftGroup_left_mediator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(235);
+/* harmony import */ var _baseView_bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(175);
+/* harmony import */ var _baseView_bagGroup_bag_group_mediator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(238);
+/* harmony import */ var _baseView_top_menu_top_menu_mediator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(240);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(110);
-/* harmony import */ var _components_inputTextFactory__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(177);
-/* harmony import */ var _DecorateControl_DecorateControlMediator__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(241);
-/* harmony import */ var _PiCaMainUI_PicaMainUIMediator__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(243);
-/* harmony import */ var _Activity_ActivityMediator__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(246);
-/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(178);
-/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(180);
-/* harmony import */ var _MineCar_MineCarMediator__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(251);
-/* harmony import */ var _Bubble_interactivebubble_manager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(257);
+/* harmony import */ var _components_inputTextFactory__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(178);
+/* harmony import */ var _DecorateControl_DecorateControlMediator__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(242);
+/* harmony import */ var _PiCaMainUI_PicaMainUIMediator__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(244);
+/* harmony import */ var _Activity_ActivityMediator__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(247);
+/* harmony import */ var _PicaChat_PicaChatMediator__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(179);
+/* harmony import */ var _PicaNavigate_PicaNavigateMediator__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(181);
+/* harmony import */ var _MineCar_MineCarMediator__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(252);
+/* harmony import */ var _Bubble_interactivebubble_manager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(258);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(122);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(115);
-/* harmony import */ var _ReAwardTips_ReAwardTipsMediator__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(259);
+/* harmony import */ var _ReAwardTips_ReAwardTipsMediator__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(260);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20516,7 +20540,7 @@ var UiManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20527,10 +20551,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(118);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(114);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(104);
-/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(168);
+/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(169);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(116);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(109);
-/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(169);
+/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(170);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20802,7 +20826,7 @@ var ChatPanelPC = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20815,7 +20839,7 @@ var GetSizerConfig = function (gameObject) {
 /* harmony default export */ __webpack_exports__["a"] = (GetSizerConfig);
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20839,7 +20863,7 @@ const ALIGN = Phaser.Display.Align;
 });
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20953,7 +20977,7 @@ Object.assign(
 /* harmony default export */ __webpack_exports__["a"] = (TweenBase);
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20978,7 +21002,7 @@ var GetBoundsConfig = function (config, out) {
 /* harmony default export */ __webpack_exports__["a"] = (GetBoundsConfig);
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20994,11 +21018,11 @@ var normalizePatchesConfig = function (config) {
 
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _Clear_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(219);
+/* harmony import */ var _Clear_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(220);
 
 
 /**
@@ -21034,7 +21058,7 @@ var Clone = function (obj, out) {
 
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21050,13 +21074,13 @@ var Clear = function (obj) {
 /* harmony default export */ __webpack_exports__["a"] = (Clear);
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChatPanelMobile", function() { return ChatPanelMobile; });
-/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(169);
+/* harmony import */ var _base_chat_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(170);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(127);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(118);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(104);
@@ -21419,7 +21443,7 @@ var ChatPanelMobile = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21495,7 +21519,7 @@ var Chat = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21581,16 +21605,16 @@ var LayerManager = /** @class */ (function () {
 
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoticeMediator", function() { return NoticeMediator; });
-/* harmony import */ var _NoticePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(224);
+/* harmony import */ var _NoticePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(225);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(110);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
-/* harmony import */ var _Notice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(225);
+/* harmony import */ var _Notice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(226);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -21694,7 +21718,7 @@ var NoticeMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21841,7 +21865,7 @@ var NoticePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21914,7 +21938,7 @@ var Notice = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22290,7 +22314,7 @@ var BagPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22305,7 +22329,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23);
 /* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(phaser__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(121);
-/* harmony import */ var _friend_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(171);
+/* harmony import */ var _friend_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(172);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(122);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -22695,13 +22719,13 @@ var FriendItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RankPanel", function() { return RankPanel; });
-/* harmony import */ var _BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(172);
+/* harmony import */ var _BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(173);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(121);
 /* harmony import */ var _RankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(156);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(122);
@@ -22868,7 +22892,7 @@ var RankPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22883,7 +22907,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(103);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(131);
-/* harmony import */ var _bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(174);
+/* harmony import */ var _bottomGroup_bottom_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(175);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23098,7 +23122,7 @@ var RightBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23109,10 +23133,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icon_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(121);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(122);
 /* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(149);
-/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(168);
+/* harmony import */ var _components_check_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(169);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(131);
-/* harmony import */ var _rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(173);
-/* harmony import */ var _ElementStorage_ElementStorageMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(175);
+/* harmony import */ var _rightGroup_right_mediator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(174);
+/* harmony import */ var _ElementStorage_ElementStorageMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(176);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23424,7 +23448,7 @@ var BottomBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23435,8 +23459,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(104);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(118);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
-/* harmony import */ var _item_Item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(232);
-/* harmony import */ var _ElementStorageMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(175);
+/* harmony import */ var _item_Item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(233);
+/* harmony import */ var _ElementStorageMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(176);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23773,7 +23797,7 @@ var ElementStoragePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23869,7 +23893,7 @@ var Item = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 233 */
+/* 234 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23967,14 +23991,14 @@ var ElementStorage = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 234 */
+/* 235 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LeftMediator", function() { return LeftMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(133);
-/* harmony import */ var _left_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(235);
+/* harmony import */ var _left_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(236);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24010,7 +24034,7 @@ var LeftMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 235 */
+/* 236 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24018,7 +24042,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LeftBtnGroup", function() { return LeftBtnGroup; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
-/* harmony import */ var _icon_select_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(236);
+/* harmony import */ var _icon_select_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(237);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24117,7 +24141,7 @@ var LeftBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 236 */
+/* 237 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24233,7 +24257,7 @@ var IconSelectBtn = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 237 */
+/* 238 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24241,7 +24265,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagGroupMediator", function() { return BagGroupMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(133);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(110);
-/* harmony import */ var _bag_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(238);
+/* harmony import */ var _bag_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(239);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -24334,7 +24358,7 @@ var BagGroupMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 238 */
+/* 239 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24342,7 +24366,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BagGroup", function() { return BagGroup; });
 /* harmony import */ var _bag_item_slot__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(132);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
-/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(176);
+/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(177);
 /* harmony import */ var _chat_chat_mediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(149);
 /* harmony import */ var _bag_bagView_bagMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(131);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(105);
@@ -24601,14 +24625,14 @@ var BagGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 239 */
+/* 240 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TopMenuMediator", function() { return TopMenuMediator; });
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(110);
-/* harmony import */ var _top_menu_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(240);
+/* harmony import */ var _top_menu_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(241);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(103);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2);
@@ -24707,7 +24731,7 @@ var TopMenuMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 240 */
+/* 241 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24833,13 +24857,13 @@ var TopMenuContainer = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 241 */
+/* 242 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DecorateControlMediator", function() { return DecorateControlMediator; });
-/* harmony import */ var _DecorateControlPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(242);
+/* harmony import */ var _DecorateControlPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(243);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(103);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
@@ -24985,7 +25009,7 @@ var DecorateControlMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 242 */
+/* 243 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25127,15 +25151,15 @@ var DecorateControlPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 243 */
+/* 244 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaMainUIMediator", function() { return PicaMainUIMediator; });
-/* harmony import */ var _PicaMainUIPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(244);
+/* harmony import */ var _PicaMainUIPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(245);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
-/* harmony import */ var _PicaMainUI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(245);
+/* harmony import */ var _PicaMainUI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(246);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -25196,7 +25220,7 @@ var PicaMainUIMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 244 */
+/* 245 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25604,7 +25628,7 @@ var ProgressBar = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 245 */
+/* 246 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25687,13 +25711,13 @@ var PicaMainUI = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 246 */
+/* 247 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActivityMediator", function() { return ActivityMediator; });
-/* harmony import */ var _ActivityPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(247);
+/* harmony import */ var _ActivityPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(248);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(115);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -25742,7 +25766,7 @@ var ActivityMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 247 */
+/* 248 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25821,7 +25845,7 @@ var ActivityPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25831,7 +25855,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(127);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(116);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(107);
-/* harmony import */ var _components_input_panel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(179);
+/* harmony import */ var _components_input_panel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(180);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -26081,7 +26105,7 @@ var PicaChatPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 249 */
+/* 250 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26208,7 +26232,7 @@ var PicaNavigatePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 250 */
+/* 251 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26289,14 +26313,14 @@ var PicaChat = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 251 */
+/* 252 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MineCarMediator", function() { return MineCarMediator; });
-/* harmony import */ var _MineCarPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(252);
-/* harmony import */ var _MineCar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(256);
+/* harmony import */ var _MineCarPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(253);
+/* harmony import */ var _MineCar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(257);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -26377,7 +26401,7 @@ var MineCarMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 252 */
+/* 253 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26387,10 +26411,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(113);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(105);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(104);
-/* harmony import */ var _components_alert_view__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(253);
+/* harmony import */ var _components_alert_view__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(254);
 /* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(134);
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(120);
-/* harmony import */ var _lib_rexui_lib_ui_tab_TabButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(181);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(119);
+/* harmony import */ var _lib_rexui_lib_ui_tab_TabButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(182);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -26982,7 +27006,7 @@ var CategorieButton = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 253 */
+/* 254 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26991,7 +27015,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(107);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(116);
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(120);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(119);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27107,7 +27131,7 @@ var AlertView = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27117,7 +27141,7 @@ var MaskToGameObject = function (mask) {
 /* harmony default export */ __webpack_exports__["a"] = (MaskToGameObject);
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27286,7 +27310,7 @@ const CLICKMODE = {
 /* harmony default export */ __webpack_exports__["a"] = (Button);
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27369,7 +27393,7 @@ var MineCar = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27380,10 +27404,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _interactionbubble_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(258);
+/* harmony import */ var _interactionbubble_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(259);
 /* harmony import */ var _Handler_Handler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(140);
 /* harmony import */ var _utils_pos__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(111);
-/* harmony import */ var _scenes_play__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(192);
+/* harmony import */ var _scenes_play__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(193);
 /* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(155);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(104);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -27549,14 +27573,14 @@ var InteractiveBubbleManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InteractionBubbleContainer", function() { return InteractionBubbleContainer; });
-/* harmony import */ var _interactionbubble__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(323);
-/* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(125);
+/* harmony import */ var _interactionbubble__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(324);
+/* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(124);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27623,15 +27647,15 @@ var InteractionBubbleContainer = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReAwardTipsMediator", function() { return ReAwardTipsMediator; });
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(106);
-/* harmony import */ var _ReAwardTip__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(260);
-/* harmony import */ var _ReAwardTipsPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(261);
+/* harmony import */ var _ReAwardTip__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(261);
+/* harmony import */ var _ReAwardTipsPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(262);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27684,7 +27708,7 @@ var ReAwardTipsMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27757,7 +27781,7 @@ var ReAwardTips = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27944,17 +27968,17 @@ var AwardItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CharacterEditorPanel", function() { return CharacterEditorPanel; });
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(120);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(119);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_inputtext_InputText__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(118);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(107);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(114);
-/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(124);
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(125);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -28071,10 +28095,10 @@ var CharacterEditorPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 263 */,
 /* 264 */,
 /* 265 */,
-/* 266 */
+/* 266 */,
+/* 267 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28158,7 +28182,7 @@ var CharacterInfo = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28167,7 +28191,7 @@ var CharacterInfo = /** @class */ (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (_plugins_gameobjects_shape_roundrectangle_RoundRectangle_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 
 /***/ }),
-/* 268 */
+/* 269 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28176,7 +28200,7 @@ var CharacterInfo = /** @class */ (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 
 /***/ }),
-/* 269 */
+/* 270 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28185,13 +28209,13 @@ var CharacterInfo = /** @class */ (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (_plugins_gameobjects_canvas_Canvas_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 
 /***/ }),
-/* 270 */
+/* 271 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _utils_scrollable_Scrollable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(320);
-/* harmony import */ var _utils_GetScrollMode_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(166);
-/* harmony import */ var _scrollableblock_ScrollableBlock_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(190);
+/* harmony import */ var _utils_scrollable_Scrollable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(321);
+/* harmony import */ var _utils_GetScrollMode_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(167);
+/* harmony import */ var _scrollableblock_ScrollableBlock_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(191);
 
 
 
@@ -28243,7 +28267,7 @@ class ScrollablePanel extends _utils_scrollable_Scrollable_js__WEBPACK_IMPORTED_
 /* harmony default export */ __webpack_exports__["a"] = (ScrollablePanel);
 
 /***/ }),
-/* 271 */
+/* 272 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28261,14 +28285,14 @@ var Edit = function (gameObject, config, onCloseCallback) {
 /* harmony default export */ __webpack_exports__["a"] = (Edit);
 
 /***/ }),
-/* 272 */
+/* 273 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export ScrollerEvent */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GameScroller; });
-/* harmony import */ var _plugins_input_scroller_Scroller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(319);
-/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(125);
+/* harmony import */ var _plugins_input_scroller_Scroller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(320);
+/* harmony import */ var _baseUI_BaseUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(124);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -28675,7 +28699,7 @@ var GameScroller = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 273 */
+/* 274 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28987,13 +29011,13 @@ var ConstraintType;
 
 
 /***/ }),
-/* 274 */
+/* 275 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComponentRankMediator", function() { return ComponentRankMediator; });
-/* harmony import */ var _ComponentRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(275);
+/* harmony import */ var _ComponentRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(276);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -29075,15 +29099,15 @@ var ComponentRankMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 275 */
+/* 276 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComponentRankPanel", function() { return ComponentRankPanel; });
-/* harmony import */ var _Rank_BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(172);
+/* harmony import */ var _Rank_BasicRankPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(173);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
-/* harmony import */ var _ComponentRankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(274);
+/* harmony import */ var _ComponentRankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(275);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -29159,7 +29183,7 @@ var ComponentRankPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 276 */
+/* 277 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29246,7 +29270,7 @@ var Compose = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 277 */
+/* 278 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29259,14 +29283,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(109);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(104);
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(120);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(119);
 /* harmony import */ var _Market_DetailDisplay__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(145);
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(113);
 /* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(134);
 /* harmony import */ var _lib_rexui_lib_ui_ui_components__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(390);
-/* harmony import */ var _ui_atals_name__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(278);
-/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(124);
-/* harmony import */ var _lib_rexui_lib_ui_scroller_GameScroller__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(272);
+/* harmony import */ var _ui_atals_name__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(279);
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(125);
+/* harmony import */ var _lib_rexui_lib_ui_scroller_GameScroller__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(273);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -29782,7 +29806,7 @@ var ComposeMaterialItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 278 */
+/* 279 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29806,7 +29830,7 @@ var UIAtlasKey = /** @class */ (function () {
 
 
 /***/ }),
-/* 279 */
+/* 280 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29911,7 +29935,7 @@ var CutInPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 280 */
+/* 281 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29989,14 +30013,14 @@ var CutInMenu = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 281 */
+/* 282 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CutInMenuPanel", function() { return CutInMenuPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(120);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(119);
 /* harmony import */ var _Handler_Handler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(140);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -30138,7 +30162,7 @@ var RightPopContainer = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 282 */
+/* 283 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30147,7 +30171,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(0);
-/* harmony import */ var _DebugLoggerMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(183);
+/* harmony import */ var _DebugLoggerMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(184);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(121);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(122);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(107);
@@ -30329,7 +30353,7 @@ var DebugLogger = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 283 */
+/* 284 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30416,7 +30440,7 @@ var EquipUpgrade = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 284 */
+/* 285 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30729,6 +30753,8 @@ var EquipItemCell = /** @class */ (function (_super) {
             else
                 bgName = "equipbg1";
         }
+        if (this.itemData.selected)
+            bgName = "equipbg2";
         this.bg.setTexture(this.key, bgName);
     };
     EquipItemCell.prototype.setChildPosition = function () {
@@ -30766,14 +30792,14 @@ var EquipItemCell = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 285 */
+/* 286 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(107);
-/* harmony import */ var _EquipUpgradeItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(284);
+/* harmony import */ var _EquipUpgradeItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(285);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(109);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -30989,7 +31015,7 @@ var EquipUpgradePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 286 */
+/* 287 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31171,7 +31197,7 @@ var FurniBag = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 287 */
+/* 288 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31179,22 +31205,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FurniBagPanel", function() { return FurniBagPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(114);
-/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(124);
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(125);
 /* harmony import */ var _Market_DetailDisplay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(145);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(107);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(113);
-/* harmony import */ var _Market_TextButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(184);
+/* harmony import */ var _Market_TextButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(185);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(104);
-/* harmony import */ var _components_input_panel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(179);
+/* harmony import */ var _components_input_panel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(180);
 /* harmony import */ var _components_checkbox_group__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(157);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(109);
 /* harmony import */ var _Handler_Handler__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(140);
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(120);
-/* harmony import */ var _lib_rexui_lib_ui_tab_TabButton__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(181);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(119);
+/* harmony import */ var _lib_rexui_lib_ui_tab_TabButton__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(182);
 /* harmony import */ var _lib_rexui_lib_ui_gridtable_GameGridTable__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(134);
-/* harmony import */ var _lib_rexui_lib_ui_scroller_GameScroller__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(272);
+/* harmony import */ var _lib_rexui_lib_ui_scroller_GameScroller__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(273);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -31331,7 +31357,7 @@ var FurniBagPanel = /** @class */ (function (_super) {
             for (var key in avatar) {
                 if (avatar.hasOwnProperty(key)) {
                     var element = avatar[key];
-                    if (element && !content.avatar[key])
+                    if (element)
                         content.avatar[key] = element;
                 }
             }
@@ -31341,7 +31367,7 @@ var FurniBagPanel = /** @class */ (function (_super) {
                 for (var key in dataAvatar) {
                     if (dataAvatar.hasOwnProperty(key)) {
                         var element = dataAvatar[key];
-                        if (element && !content.avatar[key])
+                        if (element)
                             content.avatar[key] = element;
                     }
                 }
@@ -31590,7 +31616,7 @@ var FurniBagPanel = /** @class */ (function (_super) {
             for (var _i = 0, _a = this.mSelectedItemData; _i < _a.length; _i++) {
                 var item = _a[_i];
                 var avatar = item.avatar;
-                if (this.isContainObject(avatar, dataAvatar)) {
+                if (this.isContainProperty(avatar, dataAvatar)) {
                     var index = this.mSelectedItemData.indexOf(item);
                     this.mSelectedItemData.splice(index, 1);
                     break;
@@ -31598,6 +31624,18 @@ var FurniBagPanel = /** @class */ (function (_super) {
             }
             this.mSelectedItemData.push(data);
         }
+    };
+    FurniBagPanel.prototype.isContainProperty = function (obj, obj1) {
+        var canreplace = true;
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (!obj1.hasOwnProperty(key)) {
+                    canreplace = false;
+                    break;
+                }
+            }
+        }
+        return canreplace;
     };
     FurniBagPanel.prototype.isContainObject = function (obj, obj1) {
         if (!obj && !obj1)
@@ -32144,6 +32182,7 @@ var Item = /** @class */ (function (_super) {
             // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
             this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
             this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
+            this.mPropImage.setDisplaySize(45 * this.dpr, 45 * this.dpr);
             if (texture) {
                 texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
             }
@@ -32335,7 +32374,7 @@ var ItemsPopPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 288 */
+/* 289 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32349,7 +32388,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(104);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(136);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(107);
-/* harmony import */ var _InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(289);
+/* harmony import */ var _InfoPanelMediator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(290);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -32577,14 +32616,14 @@ var InfoPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 289 */
+/* 290 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InfoPanelMediator", function() { return InfoPanelMediator; });
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(110);
-/* harmony import */ var _InfoPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(288);
+/* harmony import */ var _InfoPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(289);
 /* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(155);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -32666,7 +32705,7 @@ var InfoPanelMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 290 */
+/* 291 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32675,11 +32714,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(109);
-/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(176);
+/* harmony import */ var _components_radio__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(177);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_text_bbcodetext_BBCodeText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(116);
-/* harmony import */ var _InteractivePanelMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(291);
+/* harmony import */ var _InteractivePanelMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(292);
 /* harmony import */ var _lib_rexui_lib_ui_textarea_TextArea__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(127);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -33188,13 +33227,13 @@ var InteractivePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 291 */
+/* 292 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InteractivePanelMediator", function() { return InteractivePanelMediator; });
-/* harmony import */ var _InteractivePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(290);
+/* harmony import */ var _InteractivePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(291);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -33276,7 +33315,7 @@ var InteractivePanelMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 292 */
+/* 293 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33461,14 +33500,14 @@ var ItemDetail = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 293 */
+/* 294 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemPopCardPanel", function() { return ItemPopCardPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
-/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(124);
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(125);
 /* harmony import */ var copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(425);
 /* harmony import */ var copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(copy_text_to_clipboard__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _Market_DetailDisplay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(145);
@@ -33707,17 +33746,17 @@ var ItemPopCardPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 294 */
+/* 295 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementDetail", function() { return ElementDetail; });
-/* harmony import */ var _NumberCounter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(295);
+/* harmony import */ var _NumberCounter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(296);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(114);
-/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(124);
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(125);
 /* harmony import */ var _DetailDisplay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(145);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(107);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -33990,13 +34029,13 @@ var ElementDetail = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 295 */
+/* 296 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NumberCounter", function() { return NumberCounter; });
-/* harmony import */ var _components_label_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(296);
+/* harmony import */ var _components_label_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(297);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -34159,7 +34198,7 @@ var NumberCounter = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 296 */
+/* 297 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34278,7 +34317,7 @@ var LabelInput = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 297 */
+/* 298 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34390,7 +34429,7 @@ var Market = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 298 */
+/* 299 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34508,7 +34547,7 @@ var MarketItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 299 */
+/* 300 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34642,7 +34681,7 @@ var MessageBoxView = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 300 */
+/* 301 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34721,7 +34760,7 @@ var MineSettle = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 301 */
+/* 302 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34973,7 +35012,7 @@ var MineSettleItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 302 */
+/* 303 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35040,7 +35079,7 @@ var NpcDialogue = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 303 */
+/* 304 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35049,7 +35088,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _components_dynamic_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(113);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(107);
-/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(120);
+/* harmony import */ var _lib_rexui_lib_ui_button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(119);
 /* harmony import */ var _Handler_Handler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(140);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -35216,7 +35255,7 @@ var NpcDialogueItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 304 */
+/* 305 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35367,7 +35406,7 @@ var PicaMessageBoxPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 305 */
+/* 306 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35473,7 +35512,7 @@ var PicaNoticePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 306 */
+/* 307 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35569,7 +35608,7 @@ var RoomList = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 307 */
+/* 308 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35580,7 +35619,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ShopPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(308);
+/* harmony import */ var _ShopPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(309);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -35742,7 +35781,7 @@ var ShopMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 308 */
+/* 309 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35750,8 +35789,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ShopPanel", function() { return ShopPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
-/* harmony import */ var _shop_itemSlot__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(331);
-/* harmony import */ var _ShopMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(307);
+/* harmony import */ var _shop_itemSlot__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(332);
+/* harmony import */ var _ShopMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(308);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(109);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(121);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(122);
@@ -35956,13 +35995,13 @@ var ShopPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 309 */
+/* 310 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserInfoMediator", function() { return UserInfoMediator; });
-/* harmony import */ var _UserInfoPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(310);
+/* harmony import */ var _UserInfoPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(311);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(110);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -36044,7 +36083,7 @@ var UserInfoMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 310 */
+/* 311 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36056,7 +36095,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_rexui_lib_plugins_gameobjects_ninepatch_NinePatch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(136);
 /* harmony import */ var _utils_font__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(107);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(114);
-/* harmony import */ var _UserInfoMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(309);
+/* harmony import */ var _UserInfoMediator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(310);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -36277,7 +36316,7 @@ var UserInfoPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 311 */
+/* 312 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36369,7 +36408,7 @@ var MenuItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 312 */
+/* 313 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36377,7 +36416,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserMenuPanel", function() { return UserMenuPanel; });
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
-/* harmony import */ var _MenuItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(311);
+/* harmony import */ var _MenuItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(312);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(109);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -36559,7 +36598,7 @@ var UserMenuPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 313 */
+/* 314 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36631,13 +36670,13 @@ var PopUpTextUI = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 314 */
+/* 315 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StorageMediator", function() { return StorageMediator; });
-/* harmony import */ var _storagePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(315);
+/* harmony import */ var _storagePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(316);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 /* harmony import */ var _lib_rexui_lib_ui_interface_baseUI_UIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(115);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -36707,7 +36746,7 @@ var StorageMediator = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 315 */
+/* 316 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36717,7 +36756,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
 /* harmony import */ var _baseView_icon_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(121);
 /* harmony import */ var _components_nine_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(109);
-/* harmony import */ var _storageMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(314);
+/* harmony import */ var _storageMediator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(315);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(122);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(105);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -36841,7 +36880,7 @@ var StoragePanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 316 */
+/* 317 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36850,7 +36889,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BasePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(105);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(104);
 /* harmony import */ var _icon_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(121);
-/* harmony import */ var _DebugLogger_DebugLoggerMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(183);
+/* harmony import */ var _DebugLogger_DebugLoggerMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(184);
 /* harmony import */ var _ui_mediatorType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(122);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -37110,13 +37149,13 @@ var TopBtnGroup = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 317 */
+/* 318 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/basesizer/BaseSizer.js + 31 modules
-var BaseSizer = __webpack_require__(186);
+var BaseSizer = __webpack_require__(187);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/size/GetDisplaySize.js
 var GetDisplaySize = __webpack_require__(112);
@@ -37382,10 +37421,10 @@ var LayoutInitChild = function () {
     _layoutInit: _layoutInit,
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetBoundsConfig.js
-var GetBoundsConfig = __webpack_require__(216);
+var GetBoundsConfig = __webpack_require__(217);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/AlignConst.js
-var AlignConst = __webpack_require__(214);
+var AlignConst = __webpack_require__(215);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridsizer/GridSizer.js
 
@@ -37591,13 +37630,13 @@ Object.assign(
 /* harmony default export */ var gridsizer_GridSizer = __webpack_exports__["a"] = (GridSizer_GridSizer);
 
 /***/ }),
-/* 318 */
+/* 319 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/buttons/Buttons.js + 6 modules
-var Buttons = __webpack_require__(189);
+var Buttons = __webpack_require__(190);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/menu/ExpandSubMenu.js
 var ExpandSubMenu = function (parentButton, items) {
@@ -37890,7 +37929,7 @@ Object.assign(
 /* harmony default export */ var menu_Menu = __webpack_exports__["a"] = (Menu_Menu);
 
 /***/ }),
-/* 319 */
+/* 320 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38675,7 +38714,7 @@ const ORIENTATIONMODE = {
 /* harmony default export */ var scroller_Scroller = __webpack_exports__["a"] = (Scroller_Scroller);
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38684,13 +38723,13 @@ const ORIENTATIONMODE = {
 var Sizer = __webpack_require__(126);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetScrollMode.js
-var GetScrollMode = __webpack_require__(166);
+var GetScrollMode = __webpack_require__(167);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/slider/Slider.js + 9 modules
-var Slider = __webpack_require__(188);
+var Slider = __webpack_require__(189);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/scroller/Scroller.js + 5 modules
-var Scroller = __webpack_require__(319);
+var Scroller = __webpack_require__(320);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/scroller.js
 
@@ -39064,7 +39103,7 @@ Object.assign(
 /* harmony default export */ var scrollable_Scrollable = __webpack_exports__["a"] = (Scrollable_Scrollable);
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39236,13 +39275,13 @@ const RECOGNIZED = 'RECOGNIZED';
 /* harmony default export */ var ui_rotate_Rotate = __webpack_exports__["a"] = (rotate_Rotate);
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/tween/TweenBase.js
-var TweenBase = __webpack_require__(215);
+var TweenBase = __webpack_require__(216);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/behaviors/flip/GetFaceUpdatingCallback.js
 const IsPlainObject = Phaser.Utils.Objects.IsPlainObject;
@@ -39424,7 +39463,7 @@ const FACEMODE = {
 /* harmony default export */ var ui_flip_Flip = __webpack_exports__["a"] = (flip);
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39629,7 +39668,835 @@ var interactionbubble_InteractionBubble = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 324 */
+/* 325 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXTERNAL MODULE: ./src/ui/components/BasePanel.ts + 2 modules
+var BasePanel = __webpack_require__(105);
+
+// EXTERNAL MODULE: ./src/utils/font.ts
+var font = __webpack_require__(107);
+
+// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
+var protocols = __webpack_require__(2);
+
+// EXTERNAL MODULE: ./src/ui/components/dynamic.image.ts
+var dynamic_image = __webpack_require__(113);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/ui-components.ts + 2 modules
+var ui_components = __webpack_require__(390);
+
+// EXTERNAL MODULE: ./src/i18n.ts
+var i18n = __webpack_require__(125);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GameGridTable.ts
+var GameGridTable = __webpack_require__(134);
+
+// EXTERNAL MODULE: ./src/rooms/display/dragonbones.display.ts + 1 modules
+var dragonbones_display = __webpack_require__(192);
+
+// EXTERNAL MODULE: ./src/rooms/display/dragonbones.model.ts
+var dragonbones_model = __webpack_require__(162);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/ninepatch/NineSlicePatch.ts + 1 modules
+var NineSlicePatch = __webpack_require__(159);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
+var BaseUI = __webpack_require__(124);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/progressbar/ProgressBar.ts
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var ProgressBarEvent;
+(function (ProgressBarEvent) {
+    ProgressBarEvent["tweenStart"] = "tweenStart";
+    ProgressBarEvent["tweenComplete"] = "tweenComplete";
+    ProgressBarEvent["tweenUpdate"] = "tweenUpdate";
+})(ProgressBarEvent || (ProgressBarEvent = {}));
+var GetValue = Phaser.Utils.Objects.GetValue;
+var ProgressBar_ProgressBar = /** @class */ (function (_super) {
+    __extends(ProgressBar, _super);
+    function ProgressBar(scene, config) {
+        var _this = _super.call(this, scene) || this;
+        _this.mConfig = config;
+        var posX = config.x;
+        var posY = config.y;
+        _this.width = config.width;
+        _this.height = config.height;
+        _this.setPosition(posX, posY);
+        _this.setSize(_this.width, _this.height);
+        _this.dpr = GetValue(config, "dpr", 1);
+        _this.scale = GetValue(config, "scale", 1);
+        var bgSkinData = config.background;
+        var barSkinData = config.bar;
+        _this.mBgSkin = new NineSlicePatch["a" /* NineSlicePatch */](scene, bgSkinData.x, bgSkinData.y, bgSkinData.width, bgSkinData.height, bgSkinData.key, bgSkinData.frame, bgSkinData.config, _this.dpr, _this.scale);
+        _this.mBarSkin = new NineSlicePatch["a" /* NineSlicePatch */](scene, barSkinData.x, barSkinData.y, barSkinData.width, barSkinData.height, barSkinData.key, barSkinData.frame, barSkinData.config, _this.dpr, _this.scale);
+        // 按钮文本
+        var textconfig = {};
+        _this.mText = scene.make.text({
+            style: Object.assign(textconfig, config.textConfig)
+        }, false);
+        _this.barWid = barSkinData.width;
+        var hei = _this.mBarSkin.height;
+        _this.mBarMaskGraphics = _this.scene.make.graphics(undefined, false);
+        _this.mBarMaskGraphics.fillStyle(0, 1);
+        _this.mBarMaskGraphics.beginPath();
+        _this.mBarMaskGraphics.fillRect(0, 0, 10, hei);
+        _this.mBarMaskGraphics.setPosition(-_this.barWid / 2, -hei / 2);
+        // this.mBarSkin.mask = this.mBarMaskGraphics.createGeometryMask();
+        _this.add([_this.mBgSkin, _this.mBarSkin, _this.mText]);
+        _this.disInteractive();
+        return _this;
+    }
+    ProgressBar.prototype.setProgress = function (curVal, maxVal) {
+        this.curWid = (curVal / maxVal) * this.barWid;
+        var hei = this.mBarSkin.height;
+        this.mBarSkin.resize(this.curWid, hei);
+        this.mBarSkin.x = -this.barWid / 2 + this.curWid / 2;
+        // this.mBarMaskGraphics.clear();
+        // this.mBarMaskGraphics.fillRect(0, 0, this.curWid, hei);
+        // this.mBarMaskGraphics.setPosition(-this.barWid / 2, -hei / 2);
+        // if (this.mTween) {
+        //     this.mTween.stop();
+        //     this.mTween.remove();
+        // }
+        // this.mTween = this.scene.tweens.add({
+        //     targets: this.mBarMaskGraphics,
+        //     duration: 1000,
+        //     ease: "Linear",
+        //     scaleX: { value: curVal / maxVal },
+        //     onStart: () => {
+        //         this.onTweenStart();
+        //     },
+        //     onComplete: (tween, targets, element) => {
+        //         this.onTweenComplete();
+        //     },
+        //     onUpdate: (tween, targets, element) => {
+        //         this.onTweenUpdate();
+        //     },
+        //     onCompleteParams: [this]
+        // });
+    };
+    ProgressBar.prototype.setText = function (val) {
+        if (this.mText) {
+            this.mText.text = val;
+            if (!this.mText.parentContainer)
+                this.add(this.mText);
+        }
+    };
+    ProgressBar.prototype.destory = function () {
+        // if (this.mTween) {
+        //     this.mTween.stop();
+        //     this.mTween.remove();
+        //     this.mTween = null;
+        // }
+        _super.prototype.destroy.call(this);
+    };
+    return ProgressBar;
+}(BaseUI["a" /* BaseUI */]));
+
+
+// EXTERNAL MODULE: ./src/ui/CharacterInfo/CharacterEditorPanel.ts
+var CharacterEditorPanel = __webpack_require__(263);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/scroller/GameScroller.ts
+var GameScroller = __webpack_require__(273);
+
+// EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
+var resUtil = __webpack_require__(104);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/interface/event/MouseEvent.ts
+var MouseEvent = __webpack_require__(211);
+
+// EXTERNAL MODULE: ./lib/rexui/lib/ui/button/Button.ts
+var Button = __webpack_require__(119);
+
+// CONCATENATED MODULE: ./lib/rexui/lib/ui/button/NineSliceButton.ts
+var NineSliceButton_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+var NineSliceButton_NineSliceButton = /** @class */ (function (_super) {
+    NineSliceButton_extends(NineSliceButton, _super);
+    function NineSliceButton(scene, x, y, width, height, key, frame, text, config, music, data) {
+        var _this = _super.call(this, scene, x, y) || this;
+        _this.mIsMove = false;
+        _this.mDownTime = 0;
+        _this.mPressDelay = 1000;
+        _this.mFrame = frame ? frame : "__BASE";
+        _this.initFrame();
+        _this.setSize(width, height);
+        _this.mNingBg = new NineSlicePatch["a" /* NineSlicePatch */](_this.scene, 0, 0, width, height, key, _this.mFrame_nrmal, config);
+        _this.add(_this.mNingBg);
+        if (data) {
+            _this.btnData = data;
+        }
+        _this.soundGroup = {
+            up: {
+                key: "click",
+            }
+        };
+        Object.assign(_this.soundGroup, music);
+        _this.mLabel = _this.scene.make.text(undefined, false)
+            .setOrigin(0.5, 0.5)
+            .setSize(_this.width, _this.height)
+            .setAlign("center")
+            .setText(text);
+        _this.add(_this.mLabel);
+        _this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+        _this.addListen();
+        return _this;
+    }
+    Object.defineProperty(NineSliceButton.prototype, "enable", {
+        set: function (value) {
+            if (value) {
+                this.mNingBg.clearTint();
+                this.mLabel.clearTint();
+                this.setInteractive();
+            }
+            else {
+                this.mNingBg.setTintFill(0x666666);
+                this.mLabel.setTintFill(0x777777);
+                this.removeInteractive();
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    NineSliceButton.prototype.getBtnData = function () {
+        return this.btnData;
+    };
+    NineSliceButton.prototype.setText = function (text) {
+        this.mLabel.setText(text);
+    };
+    NineSliceButton.prototype.getText = function () {
+        return this.mLabel.text;
+    };
+    NineSliceButton.prototype.setTextStyle = function (style) {
+        this.mLabel.setStyle(style);
+    };
+    NineSliceButton.prototype.setFontStyle = function (val) {
+        this.mLabel.setFontStyle(val);
+    };
+    NineSliceButton.prototype.setTextOffset = function (x, y) {
+        this.mLabel.setPosition(x, y);
+    };
+    NineSliceButton.prototype.setFrame = function (frame) {
+        this.mNingBg.setFrame(frame);
+        return this;
+    };
+    NineSliceButton.prototype.destroy = function () {
+        if (this.mLabel)
+            this.mLabel.destroy();
+        _super.prototype.destroy.call(this);
+    };
+    NineSliceButton.prototype.setFrameNormal = function (normal, down, over) {
+        this.mFrame_nrmal = normal;
+        this.mFrame_down = (down ? down : normal);
+        this.mFrame_over = (over ? over : normal);
+        this.changeNormal();
+        return this;
+    };
+    NineSliceButton.prototype.changeNormal = function () {
+        this.setFrame(this.mFrame_nrmal);
+    };
+    NineSliceButton.prototype.changeDown = function () {
+        // this.scale = 0.9;
+        this.setFrame(this.mFrame_down);
+    };
+    NineSliceButton.prototype.addListen = function () {
+        this.removeListen();
+        this.on("pointerdown", this.onPointerDownHandler, this);
+        this.on("pointerup", this.onPointerUpHandler, this);
+        this.on("pointermove", this.onPointerMoveHandler, this);
+    };
+    NineSliceButton.prototype.removeListen = function () {
+        this.off("pointerdown", this.onPointerDownHandler, this);
+        this.off("pointerup", this.onPointerUpHandler, this);
+        this.off("pointermove", this.onPointerMoveHandler, this);
+    };
+    NineSliceButton.prototype.isExists = function (frame) {
+        var originTexture = this.scene.textures.get(this.mKey);
+        if (originTexture && originTexture.has(frame))
+            return true;
+        return false;
+    };
+    NineSliceButton.prototype.onPointerMoveHandler = function (pointer) {
+        if (this.soundGroup && this.soundGroup.move)
+            this.playSound(this.soundGroup.move);
+        if (!this.interactiveBoo)
+            return;
+        this.mIsMove = true;
+        this.emit(MouseEvent["a" /* CoreUI */].MouseEvent.Move);
+    };
+    NineSliceButton.prototype.onPointerUpHandler = function (pointer) {
+        if (!this.interactiveBoo) {
+            if (this.soundGroup && this.soundGroup.disabled)
+                this.playSound(this.soundGroup.disabled);
+            return;
+        }
+        this.buttonStateChange(Button["b" /* ButtonState */].Normal);
+        if (!this.mIsMove || (Date.now() - this.mDownTime > this.mPressTime)) {
+            if (Math.abs(pointer.downX - pointer.upX) < 30 && Math.abs(pointer.downY - pointer.upY) < 30) {
+                if (this.soundGroup && this.soundGroup.up)
+                    this.playSound(this.soundGroup.up);
+                this.emit(MouseEvent["a" /* CoreUI */].MouseEvent.Tap, pointer, this);
+            }
+        }
+        clearTimeout(this.mPressDelay);
+        this.mIsMove = false;
+        this.mDownTime = 0;
+    };
+    NineSliceButton.prototype.onPointerDownHandler = function (pointer) {
+        this.changeDown();
+    };
+    NineSliceButton.prototype.buttonStateChange = function (state) {
+        switch (state) {
+            case Button["b" /* ButtonState */].Normal:
+                this.changeNormal();
+                break;
+            case Button["b" /* ButtonState */].Over:
+                break;
+            case Button["b" /* ButtonState */].Select:
+                this.changeDown();
+                break;
+            case Button["b" /* ButtonState */].Disable:
+                break;
+        }
+    };
+    Object.defineProperty(NineSliceButton.prototype, "label", {
+        get: function () {
+            return this.mLabel;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    NineSliceButton.prototype.scaleHandler = function () {
+        this.mScene.tweens.add({
+            targets: this,
+            duration: 50,
+            ease: "Linear",
+            props: {
+                scaleX: { value: .5 },
+                scaleY: { value: .5 },
+            },
+            yoyo: true,
+            repeat: 0,
+        });
+        this.scaleX = this.scaleY = 1;
+    };
+    NineSliceButton.prototype.initFrame = function () {
+        var frame = this.mFrame ? this.mFrame : this.mKey;
+        this.mFrame_nrmal = frame + "_normal";
+        var down = frame + "_down";
+        if (!this.isExists(down)) {
+            down = frame + "_normal";
+        }
+        this.mFrame_down = down;
+        var over = frame + "_over";
+        if (!this.isExists(over)) {
+            over = frame + "_normal";
+        }
+        this.mFrame_over = over;
+    };
+    return NineSliceButton;
+}(BaseUI["a" /* BaseUI */]));
+
+
+// CONCATENATED MODULE: ./src/ui/CharacterInfo/CharacterInfoPanel.ts
+var CharacterInfoPanel_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+
+
+
+
+
+
+var Container = Phaser.GameObjects.Container;
+
+
+
+var CharacterInfoPanel_CharacterInfoPanel = /** @class */ (function (_super) {
+    CharacterInfoPanel_extends(CharacterInfoPanel, _super);
+    function CharacterInfoPanel(scene, world) {
+        var _this = _super.call(this, scene, world) || this;
+        _this.key = "player_info";
+        _this.commonkey = "common_key";
+        _this.isOwner = true;
+        _this.scale = 1;
+        return _this;
+    }
+    CharacterInfoPanel.prototype.resize = function (width, height) {
+        var w = this.scaleWidth;
+        var h = this.scaleHeight;
+        _super.prototype.resize.call(this, width, height);
+        this.content.setPosition(w / 2, h / 2);
+        this.setSize(w, h);
+        this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
+        this.content.setInteractive();
+    };
+    CharacterInfoPanel.prototype.show = function (param) {
+        this.mShowData = param;
+        if (this.mPreLoad)
+            return;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShow)
+            return;
+        if (this.soundGroup && this.soundGroup.open)
+            this.playSound(this.soundGroup.open);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        }
+        else {
+            this.mShow = true;
+        }
+        this.setInteractive();
+        this.addListen();
+    };
+    CharacterInfoPanel.prototype.addListen = function () {
+        if (!this.mInitialized)
+            return;
+        this.closeBtn.on("Tap", this.OnClosePanel, this);
+    };
+    CharacterInfoPanel.prototype.removeListen = function () {
+        if (!this.mInitialized)
+            return;
+        this.closeBtn.off("Tap", this.OnClosePanel, this);
+    };
+    CharacterInfoPanel.prototype.preload = function () {
+        this.addAtlas(this.key, "player_info/player_info.png", "player_info/player_info.json");
+        this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
+        _super.prototype.preload.call(this);
+    };
+    CharacterInfoPanel.prototype.init = function () {
+        var _this = this;
+        var zoom = this.scale;
+        this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
+        this.content = this.scene.make.container(undefined, false);
+        this.content.setSize(this.bg.width, this.bg.height);
+        this.mainContent = this.scene.make.container(undefined, false);
+        this.mainContent.setSize(this.bg.width, this.bg.height);
+        var posY = -this.bg.height * 0.5 + 43 * this.dpr;
+        var mfont = "bold " + 15 * this.dpr + "px Source Han Sans";
+        this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n["a" /* i18n */].t("player_info.title"), style: { font: mfont, bold: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0.5, 0);
+        this.labelText.setStroke("#8F4300", 1);
+        this.closeBtn = new ui_components["b" /* Button */](this.scene, this.commonkey, "close");
+        this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
+        this.likeBtn = new ui_components["b" /* Button */](this.scene, this.key, "praise_bef", "praise_bef", "999");
+        this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT });
+        this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
+        this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
+        this.likeBtn.visible = false;
+        this.avatar = new dragonbones_display["a" /* DragonbonesDisplay */](this.scene, undefined);
+        this.avatar.scale = this.dpr * 2;
+        this.avatar.x = 0;
+        this.avatar.y = -50 * this.dpr;
+        this.avatar.once("initialized", function () {
+            _this.avatar.play({ animationName: "idle", flip: false });
+        });
+        var nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
+        var nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr);
+        var nickOffsetY = 30 * this.dpr;
+        var fontSize = Math.round(13 * this.dpr);
+        this.nickName = new ui_components["a" /* BBCodeText */](this.scene, nickPosX, nickPosY, {})
+            .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(font["a" /* Font */].DEFULT_FONT);
+        this.nickEditor = new ui_components["b" /* Button */](this.scene, this.key, "edit", "edit");
+        this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
+        var line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
+        this.idText = new ui_components["a" /* BBCodeText */](this.scene, nickPosX, nickPosY + nickOffsetY)
+            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(font["a" /* Font */].DEFULT_FONT);
+        var line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr, key: this.key, frame: "splitters" });
+        this.titleName = new ui_components["a" /* BBCodeText */](this.scene, nickPosX, nickPosY + nickOffsetY * 2)
+            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(font["a" /* Font */].DEFULT_FONT);
+        var line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr, key: this.key, frame: "splitters" });
+        var lvbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "level_bg" });
+        this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize: fontSize, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.lvCon = this.scene.make.container(undefined, false);
+        this.lvCon.setSize(lvbg.width, lvbg.height);
+        this.lvCon.add([lvbg, this.lvText]);
+        var bottomWidth = 234 * this.dpr;
+        var bottomHeight = 195 * this.dpr;
+        this.bottomCon = this.scene.make.container(undefined, false).setSize(bottomWidth, bottomHeight);
+        this.bottomCon.setPosition(0, (this.mainContent.height - bottomHeight) * 0.5 - 30 * this.dpr);
+        this.bottombg = this.scene.make.graphics(undefined, false);
+        var bottomBtnPosx = -60 * this.dpr;
+        var bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
+        this.addFriendBtn = new NineSliceButton_NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n["a" /* i18n */].t("player_info.add_friend"), {
+            left: 12 * this.dpr,
+            top: 12 * this.dpr,
+            right: 12 * this.dpr,
+            bottom: 12 * this.dpr
+        });
+        this.addFriendBtn.setFrameNormal("button_g");
+        this.privaCharBtn = new NineSliceButton_NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n["a" /* i18n */].t("player_info.private_chat"), {
+            left: 12 * this.dpr,
+            top: 12 * this.dpr,
+            right: 12 * this.dpr,
+            bottom: 12 * this.dpr
+        });
+        this.tradeBtn = new NineSliceButton_NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n["a" /* i18n */].t("player_info.tade_btn"), {
+            left: 12 * this.dpr,
+            top: 12 * this.dpr,
+            right: 12 * this.dpr,
+            bottom: 12 * this.dpr
+        });
+        this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
+        this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
+        this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
+        this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn, this.tradeBtn]);
+        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon]);
+        this.mainContent.add(this.avatar);
+        this.content.add(this.bg);
+        this.content.add(this.mainContent);
+        this.add(this.content);
+        var w = this.scene.cameras.main.width;
+        var h = this.scene.cameras.main.height;
+        this.mCategoryScroll = new GameScroller["a" /* GameScroller */](this.scene, {
+            x: this.scaleWidth * 0.5,
+            y: this.scaleHeight * 0.5 + 62 * this.dpr * zoom,
+            width: bottomWidth,
+            height: 41 * this.dpr,
+            zoom: this.scale,
+            orientation: 1,
+            cellupCallBack: function (gameobject) {
+                _this.onSelectSubCategoryHandler(gameobject);
+            }
+        });
+        this.add(this.mCategoryScroll);
+        var propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
+        var capW = propFrame.width + 5 * this.dpr * zoom;
+        var capH = propFrame.height + 2 * this.dpr * zoom;
+        var tableConfig = {
+            x: w / 2,
+            y: h * 0.5 + 145 * this.dpr * zoom,
+            table: {
+                width: (this.bottomCon.width - 10 * this.dpr) * zoom,
+                height: 200 * this.dpr * zoom,
+                columns: 3,
+                cellWidth: capW,
+                cellHeight: capH,
+                reuseCellContainer: true,
+                cellPadX: 24 * this.dpr * zoom
+                // cellOriginX:0.5,
+                // cellOriginY:0.5,
+            },
+            scrollMode: 1,
+            clamplChildOY: false,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            createCellContainerCallback: function (cell, cellContainer) {
+                var scene = cell.scene, item = cell.item;
+                if (cellContainer === null) {
+                    cellContainer = new CharacterInfoPanel_CharacterOwnerItem(scene, 0, 0, _this.key, _this.dpr, zoom);
+                    _this.add(cellContainer);
+                }
+                // cellContainer.setSize(width, height);
+                cellContainer.setData({ item: item });
+                cellContainer.setItemData(item, _this.isOwner);
+                return cellContainer;
+            },
+        };
+        this.mGrideTable = new GameGridTable["a" /* GameGridTable */](this.scene, tableConfig);
+        this.mGrideTable.layout();
+        this.mGrideTable.on("cellTap", function (cell) {
+            if (cell) {
+                _this.onSelectItemHandler(cell);
+            }
+        });
+        this.add(this.mGrideTable.table);
+        this.nickEditor.on("Tap", this.onEditorHandler, this);
+        this.privaCharBtn.on("Tap", this.onPrivateChatHandler, this);
+        this.addFriendBtn.on("Tap", this.onAddFriendHandler, this);
+        this.tradeBtn.on("Tap", this.onTradingHandler, this);
+        this.resize(w, h);
+        _super.prototype.init.call(this);
+        this.reqPlayerInfo();
+    };
+    CharacterInfoPanel.prototype.reqPlayerInfo = function () {
+        this.emit("queryOwnerInfo");
+    };
+    CharacterInfoPanel.prototype.setPlayerData = function (data) {
+        var nickname = data.nickname;
+        var current_title = data.currentTitle;
+        var exp = data.level.currentLevelExp;
+        var nexExp = data.level.nextLevelExp;
+        var cid = data.id;
+        var levle = data.level.level;
+        var spaceOffset = this.getspaceStr(1 * this.dpr);
+        if (this.avatar) {
+            this.avatar.load(new dragonbones_model["a" /* DragonbonesModel */]({
+                id: 0,
+                avatar: data.currentAvatar.avatar
+            }));
+        }
+        this.titleName.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.player_title")) + spaceOffset + current_title);
+        this.likeBtn.setText(data.like + "");
+        var likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
+        this.likeBtn.x = likeposx - 20 * this.dpr;
+        this.lvText.text = "Lv" + levle + "";
+        var subArr = [data.lifeSkills, data.badges];
+        if (data instanceof protocols["op_client"].OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
+            this.nickName.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.nick_name")) + spaceOffset + nickname);
+            this.idText.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.player_lv")) + this.getspaceStr(20) + exp + "/" + nexExp);
+            this.lvCon.setPosition(this.idText.x + 58 * this.dpr, this.idText.y);
+            this.likeBtn.setFrame("praise_aft");
+            subArr.push(data.titles);
+            this.addFriendBtn.visible = false;
+            this.privaCharBtn.visible = false;
+            this.tradeBtn.visible = false;
+            this.bottombg.clear();
+            this.bottombg.fillStyle(0x6AE2FF, 1);
+            this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
+            this.mGrideTable.setColumnCount(3);
+            this.isOwner = true;
+        }
+        else {
+            var remark = (data.remark ? data.remark : "备注好友昵称");
+            this.nickName.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.nick_name")) + spaceOffset + nickname + (" (" + remark + ")"));
+            this.idText.setText(this.getRichLabel("I   D") + spaceOffset + cid);
+            this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
+            this.likeBtn.setFrame("praise_bef");
+            subArr.push(data.avatar);
+            this.addFriendBtn.visible = !data.friend;
+            this.privaCharBtn.visible = data.friend;
+            this.tradeBtn.visible = true;
+            this.bottombg.clear();
+            this.bottombg.fillStyle(0x6AE2FF, 1);
+            this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
+            this.mGrideTable.setColumnCount(2);
+            this.isOwner = false;
+        }
+        this.setSubCategory(subArr);
+    };
+    CharacterInfoPanel.prototype.destroy = function () {
+        this.mGrideTable.destroy();
+        this.mCategoryScroll.destroy();
+        _super.prototype.destroy.call(this);
+    };
+    CharacterInfoPanel.prototype.OnClosePanel = function () {
+        this.emit("hide");
+    };
+    CharacterInfoPanel.prototype.setSubCategory = function (datas) {
+        var subNames = [i18n["a" /* i18n */].t("player_info.option_live"), i18n["a" /* i18n */].t("player_info.option_badge"), i18n["a" /* i18n */].t("player_info.option_title"), i18n["a" /* i18n */].t("player_info.option_title"), i18n["a" /* i18n */].t("player_info.option_title")];
+        var len = 1; // datas.length;
+        var itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
+        var items = [];
+        for (var i = 0; i < len; i++) {
+            var item = new ui_components["b" /* Button */](this.scene, this.key, "title_normal", "title_select", subNames[i]);
+            item.width = itemWidth;
+            item.height = 41 * this.dpr;
+            items.push(item);
+            item.setTextStyle({ color: "#2B4BB5", bold: true, fontSize: 14 * this.dpr * this.scale, fontFamily: font["a" /* Font */].DEFULT_FONT });
+            item.disInteractive();
+            item.removeListen();
+            item.setData("subData", datas[i]);
+            this.mCategoryScroll.addItem(item);
+        }
+        if (items.length <= 3)
+            this.mCategoryScroll.setAlign(1);
+        else {
+            this.mCategoryScroll.setAlign(0);
+        }
+        this.onSelectSubCategoryHandler(items[0]);
+    };
+    CharacterInfoPanel.prototype.onSelectSubCategoryHandler = function (obj) {
+        // Logger.getInstance().log(obj);
+        if (this.curSelectCategeory) {
+            this.curSelectCategeory.changeNormal();
+            this.curSelectCategeory.setTextColor("#2B4BB5");
+        }
+        obj.changeDown();
+        obj.setTextColor("#996600");
+        this.curSelectCategeory = obj;
+        var datas = obj.getData("subData");
+        if (datas)
+            this.mGrideTable.setItems(datas);
+        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 185 * this.dpr * this.scale, 0, 0);
+    };
+    CharacterInfoPanel.prototype.onSelectItemHandler = function (item) {
+    };
+    CharacterInfoPanel.prototype.onEditorHandler = function () {
+        var w = 247 * this.dpr;
+        var h = this.content.height;
+        if (!this.editorPanel)
+            this.editorPanel = new CharacterEditorPanel["CharacterEditorPanel"](this.scene, 0, 0, w, h, this.key, this.dpr);
+        this.content.add(this.editorPanel);
+        this.editorPanel.visible = true;
+        this.editorPanel.on("editorHide", this.onEditorPanelHideHandler, this);
+        this.setMainUIVisible(false);
+    };
+    CharacterInfoPanel.prototype.onAddFriendHandler = function () {
+    };
+    CharacterInfoPanel.prototype.onTradingHandler = function () {
+    };
+    CharacterInfoPanel.prototype.onPrivateChatHandler = function () {
+    };
+    CharacterInfoPanel.prototype.onEditorPanelHideHandler = function () {
+        this.mainContent.visible = true;
+        this.remove(this.editorPanel);
+        this.editorPanel.off("editorHide", this.onEditorPanelHideHandler, this);
+        this.editorPanel.destroy();
+        this.editorPanel = null;
+        this.setMainUIVisible(true);
+    };
+    CharacterInfoPanel.prototype.setMainUIVisible = function (value) {
+        this.avatar.visible = value;
+        this.mCategoryScroll.visible = value;
+        this.mGrideTable.table.visible = value;
+        this.mainContent.visible = value;
+    };
+    CharacterInfoPanel.prototype.getRichLabel = function (text, color) {
+        if (color === void 0) { color = "#2B4BB5"; }
+        var label = "[stroke=" + color + "][color=" + color + "]" + text + ":[/color][/stroke]";
+        return label;
+    };
+    CharacterInfoPanel.prototype.getspaceStr = function (num) {
+        var str = "";
+        for (var i = 0; i < num; i++) {
+            str += " ";
+        }
+        return str;
+    };
+    return CharacterInfoPanel;
+}(BasePanel["BasePanel"]));
+/* harmony default export */ var CharacterInfo_CharacterInfoPanel = __webpack_exports__["default"] = (CharacterInfoPanel_CharacterInfoPanel);
+var CharacterInfoPanel_CharacterOwnerItem = /** @class */ (function (_super) {
+    CharacterInfoPanel_extends(CharacterOwnerItem, _super);
+    function CharacterOwnerItem(scene, x, y, key, dpr, zoom) {
+        if (zoom === void 0) { zoom = 1; }
+        var _this = _super.call(this, scene, x, y) || this;
+        _this.dpr = 0;
+        _this.zoom = 0;
+        var bg = _this.scene.make.image({ x: 0, y: 0, key: key, frame: "skill_bg" });
+        _this.nameText = _this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0, 0.5);
+        _this.lvText = _this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0, 0.5);
+        _this.progressBar = new ProgressBar_ProgressBar(_this.scene, {
+            x: 48 * dpr / 2,
+            y: 15 * dpr,
+            width: 41 * dpr,
+            height: 4 * dpr,
+            background: {
+                x: 0,
+                y: 0,
+                width: 41 * dpr,
+                height: 4 * dpr,
+                config: {
+                    top: 1 * dpr,
+                    left: 2 * dpr,
+                    right: 2 * dpr,
+                    bottom: 1 * dpr,
+                },
+                key: key,
+                frame: "slider_bg"
+            },
+            bar: {
+                x: 0,
+                y: 0,
+                width: 41 * dpr,
+                height: 4 * dpr,
+                config: {
+                    top: 1 * dpr,
+                    left: 2 * dpr,
+                    right: 2 * dpr,
+                    bottom: 1 * dpr,
+                },
+                key: key,
+                frame: "slider_rate"
+            },
+            dpr: dpr,
+            textConfig: undefined
+        });
+        _this.icon = new dynamic_image["DynamicImage"](_this.scene, -bg.width * 0.5 + 22 * dpr, 0);
+        _this.add([bg, _this.icon, _this.nameText, _this.lvText, _this.progressBar]);
+        _this.setSize(bg.width, bg.height);
+        _this.dpr = dpr;
+        _this.zoom = zoom;
+        _this.key = key;
+        return _this;
+        // this.progressBar.setProgress(1, 100);
+    }
+    CharacterOwnerItem.prototype.setItemData = function (data, isOwner) {
+        var _this = this;
+        if (isOwner === void 0) { isOwner = false; }
+        this.itemData = data;
+        this.nameText.text = data.name;
+        var posY = (isOwner ? -16 * this.dpr * this.zoom : -11 * this.dpr * this.zoom);
+        var offsetY = (isOwner ? 20 * this.dpr * this.zoom : 25 * this.dpr * this.zoom);
+        var cheight = 10 * this.dpr * this.zoom;
+        this.nameText.y = posY + cheight * 0.5;
+        this.icon.setTexture(this.key, "test_skillicon");
+        var width = this.icon.width;
+        if (data.level) {
+            this.lvText.text = data.level.level;
+            this.lvText.y = posY + offsetY;
+            this.progressBar.setProgress(data.level.currentLevelExp, data.level.nextLevelExp);
+            this.progressBar.visible = isOwner;
+        }
+        else {
+            this.progressBar.visible = false;
+            this.lvText.visible = false;
+        }
+        var url = resUtil["h" /* Url */].getOsdRes(data.display.texturePath);
+        this.icon.load(url, this, function () {
+            _this.icon.scale = _this.dpr * _this.zoom;
+            var x = -_this.width * 0.5 + width * 0.5 + 6 * _this.dpr * _this.zoom;
+            _this.icon.setPosition(x, 0);
+        });
+    };
+    return CharacterOwnerItem;
+}(Container));
+
+
+/***/ }),
+/* 326 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39638,7 +40505,7 @@ var interactionbubble_InteractionBubble = /** @class */ (function (_super) {
 var Text = __webpack_require__(384);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/textstyle/TextStyle.js + 1 modules
-var TextStyle = __webpack_require__(332);
+var TextStyle = __webpack_require__(333);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/tagtext/Parser.js
 
@@ -39969,7 +40836,7 @@ class TagText_TagText extends Text["a" /* default */] {
 /* harmony default export */ var ui_tagtext_TagText = __webpack_exports__["a"] = (tagtext_TagText);
 
 /***/ }),
-/* 325 */
+/* 327 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40225,7 +41092,7 @@ var layer_manager_LayerManager = /** @class */ (function () {
 
 
 /***/ }),
-/* 326 */
+/* 328 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40531,627 +41398,7 @@ var cameras_manager_CamerasManager = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 327 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./src/ui/components/BasePanel.ts + 2 modules
-var BasePanel = __webpack_require__(105);
-
-// EXTERNAL MODULE: ./src/utils/font.ts
-var font = __webpack_require__(107);
-
-// EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
-var protocols = __webpack_require__(2);
-
-// EXTERNAL MODULE: ./src/ui/components/dynamic.image.ts
-var dynamic_image = __webpack_require__(113);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/ui-components.ts + 2 modules
-var ui_components = __webpack_require__(390);
-
-// EXTERNAL MODULE: ./src/i18n.ts
-var i18n = __webpack_require__(124);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GameGridTable.ts
-var GameGridTable = __webpack_require__(134);
-
-// EXTERNAL MODULE: ./src/ui/components/ninepatch.button.ts
-var ninepatch_button = __webpack_require__(114);
-
-// EXTERNAL MODULE: ./src/rooms/display/dragonbones.display.ts + 1 modules
-var dragonbones_display = __webpack_require__(191);
-
-// EXTERNAL MODULE: ./src/rooms/display/dragonbones.model.ts
-var dragonbones_model = __webpack_require__(161);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/ninepatch/NineSlicePatch.ts + 1 modules
-var NineSlicePatch = __webpack_require__(196);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
-var BaseUI = __webpack_require__(125);
-
-// CONCATENATED MODULE: ./lib/rexui/lib/ui/progressbar/ProgressBar.ts
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-var ProgressBarEvent;
-(function (ProgressBarEvent) {
-    ProgressBarEvent["tweenStart"] = "tweenStart";
-    ProgressBarEvent["tweenComplete"] = "tweenComplete";
-    ProgressBarEvent["tweenUpdate"] = "tweenUpdate";
-})(ProgressBarEvent || (ProgressBarEvent = {}));
-var GetValue = Phaser.Utils.Objects.GetValue;
-var ProgressBar_ProgressBar = /** @class */ (function (_super) {
-    __extends(ProgressBar, _super);
-    function ProgressBar(scene, config) {
-        var _this = _super.call(this, scene) || this;
-        _this.mConfig = config;
-        var posX = config.x;
-        var posY = config.y;
-        _this.width = config.width;
-        _this.height = config.height;
-        _this.setPosition(posX, posY);
-        _this.setSize(_this.width, _this.height);
-        _this.dpr = GetValue(config, "dpr", 1);
-        _this.scale = GetValue(config, "scale", 1);
-        var bgSkinData = config.background;
-        var barSkinData = config.bar;
-        _this.mBgSkin = new NineSlicePatch["a" /* NineSlicePatch */](scene, bgSkinData.x, bgSkinData.y, bgSkinData.width, bgSkinData.height, bgSkinData.key, bgSkinData.frame, bgSkinData.config, _this.dpr, _this.scale);
-        _this.mBarSkin = new NineSlicePatch["a" /* NineSlicePatch */](scene, barSkinData.x, barSkinData.y, barSkinData.width, barSkinData.height, barSkinData.key, barSkinData.frame, barSkinData.config, _this.dpr, _this.scale);
-        // 按钮文本
-        var textconfig = {};
-        _this.mText = scene.make.text({
-            style: Object.assign(textconfig, config.textConfig)
-        }, false);
-        _this.barWid = barSkinData.width;
-        var hei = _this.mBarSkin.height;
-        _this.mBarMaskGraphics = _this.scene.make.graphics(undefined, false);
-        _this.mBarMaskGraphics.fillStyle(0, 1);
-        _this.mBarMaskGraphics.beginPath();
-        _this.mBarMaskGraphics.fillRect(0, 0, 10, hei);
-        _this.mBarMaskGraphics.setPosition(-_this.barWid / 2, -hei / 2);
-        // this.mBarSkin.mask = this.mBarMaskGraphics.createGeometryMask();
-        _this.add([_this.mBgSkin, _this.mBarSkin, _this.mText]);
-        _this.disInteractive();
-        return _this;
-    }
-    ProgressBar.prototype.setProgress = function (curVal, maxVal) {
-        this.curWid = (curVal / maxVal) * this.barWid;
-        var hei = this.mBarSkin.height;
-        this.mBarSkin.resize(this.curWid, hei);
-        this.mBarSkin.x = -this.barWid / 2 + this.curWid / 2;
-        // this.mBarMaskGraphics.clear();
-        // this.mBarMaskGraphics.fillRect(0, 0, this.curWid, hei);
-        // this.mBarMaskGraphics.setPosition(-this.barWid / 2, -hei / 2);
-        // if (this.mTween) {
-        //     this.mTween.stop();
-        //     this.mTween.remove();
-        // }
-        // this.mTween = this.scene.tweens.add({
-        //     targets: this.mBarMaskGraphics,
-        //     duration: 1000,
-        //     ease: "Linear",
-        //     scaleX: { value: curVal / maxVal },
-        //     onStart: () => {
-        //         this.onTweenStart();
-        //     },
-        //     onComplete: (tween, targets, element) => {
-        //         this.onTweenComplete();
-        //     },
-        //     onUpdate: (tween, targets, element) => {
-        //         this.onTweenUpdate();
-        //     },
-        //     onCompleteParams: [this]
-        // });
-    };
-    ProgressBar.prototype.setText = function (val) {
-        if (this.mText) {
-            this.mText.text = val;
-            if (!this.mText.parentContainer)
-                this.add(this.mText);
-        }
-    };
-    ProgressBar.prototype.destory = function () {
-        // if (this.mTween) {
-        //     this.mTween.stop();
-        //     this.mTween.remove();
-        //     this.mTween = null;
-        // }
-        _super.prototype.destroy.call(this);
-    };
-    return ProgressBar;
-}(BaseUI["a" /* BaseUI */]));
-
-
-// EXTERNAL MODULE: ./src/ui/CharacterInfo/CharacterEditorPanel.ts
-var CharacterEditorPanel = __webpack_require__(262);
-
-// EXTERNAL MODULE: ./lib/rexui/lib/ui/scroller/GameScroller.ts
-var GameScroller = __webpack_require__(272);
-
-// EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
-var resUtil = __webpack_require__(104);
-
-// CONCATENATED MODULE: ./src/ui/CharacterInfo/CharacterInfoPanel.ts
-var CharacterInfoPanel_extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-
-
-
-
-
-
-
-
-var Container = Phaser.GameObjects.Container;
-
-
-var CharacterInfoPanel_CharacterInfoPanel = /** @class */ (function (_super) {
-    CharacterInfoPanel_extends(CharacterInfoPanel, _super);
-    function CharacterInfoPanel(scene, world) {
-        var _this = _super.call(this, scene, world) || this;
-        _this.key = "player_info";
-        _this.commonkey = "common_key";
-        _this.isOwner = true;
-        _this.scale = 1;
-        return _this;
-    }
-    CharacterInfoPanel.prototype.resize = function (width, height) {
-        var w = this.scaleWidth;
-        var h = this.scaleHeight;
-        _super.prototype.resize.call(this, width, height);
-        this.content.setPosition(w / 2, h / 2);
-        this.setSize(w, h);
-        this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
-        this.content.setInteractive();
-    };
-    CharacterInfoPanel.prototype.show = function (param) {
-        this.mShowData = param;
-        if (this.mPreLoad)
-            return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow)
-            return;
-        if (this.soundGroup && this.soundGroup.open)
-            this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        }
-        else {
-            this.mShow = true;
-        }
-        this.setInteractive();
-        this.addListen();
-    };
-    CharacterInfoPanel.prototype.addListen = function () {
-        if (!this.mInitialized)
-            return;
-        this.closeBtn.on("Tap", this.OnClosePanel, this);
-    };
-    CharacterInfoPanel.prototype.removeListen = function () {
-        if (!this.mInitialized)
-            return;
-        this.closeBtn.off("Tap", this.OnClosePanel, this);
-    };
-    CharacterInfoPanel.prototype.preload = function () {
-        this.addAtlas(this.key, "player_info/player_info.png", "player_info/player_info.json");
-        this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
-        _super.prototype.preload.call(this);
-    };
-    CharacterInfoPanel.prototype.init = function () {
-        var _this = this;
-        var zoom = this.scale;
-        this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
-        this.content = this.scene.make.container(undefined, false);
-        this.content.setSize(this.bg.width, this.bg.height);
-        this.mainContent = this.scene.make.container(undefined, false);
-        this.mainContent.setSize(this.bg.width, this.bg.height);
-        var posY = -this.bg.height * 0.5 + 43 * this.dpr;
-        var mfont = "bold " + 15 * this.dpr + "px Source Han Sans";
-        this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n["a" /* i18n */].t("player_info.title"), style: { font: mfont, bold: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0.5, 0);
-        this.labelText.setStroke("#8F4300", 1);
-        this.closeBtn = new ui_components["b" /* Button */](this.scene, this.commonkey, "close");
-        this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
-        this.likeBtn = new ui_components["b" /* Button */](this.scene, this.key, "praise_bef", "praise_bef", "999");
-        this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: font["a" /* Font */].DEFULT_FONT });
-        this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
-        this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
-        this.likeBtn.visible = false;
-        this.avatar = new dragonbones_display["a" /* DragonbonesDisplay */](this.scene, undefined);
-        this.avatar.scale = this.dpr * 2;
-        this.avatar.x = 0;
-        this.avatar.y = -50 * this.dpr;
-        this.avatar.once("initialized", function () {
-            _this.avatar.play({ animationName: "idle", flip: false });
-        });
-        var nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
-        var nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr);
-        var nickOffsetY = 30 * this.dpr;
-        var fontSize = Math.round(13 * this.dpr);
-        this.nickName = new ui_components["a" /* BBCodeText */](this.scene, nickPosX, nickPosY, {})
-            .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(font["a" /* Font */].DEFULT_FONT);
-        this.nickEditor = new ui_components["b" /* Button */](this.scene, this.key, "edit", "edit");
-        this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
-        var line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
-        this.idText = new ui_components["a" /* BBCodeText */](this.scene, nickPosX, nickPosY + nickOffsetY)
-            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(font["a" /* Font */].DEFULT_FONT);
-        var line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr, key: this.key, frame: "splitters" });
-        this.titleName = new ui_components["a" /* BBCodeText */](this.scene, nickPosX, nickPosY + nickOffsetY * 2)
-            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(font["a" /* Font */].DEFULT_FONT);
-        var line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr, key: this.key, frame: "splitters" });
-        var lvbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "level_bg" });
-        this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize: fontSize, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0.5, 0.5);
-        this.lvCon = this.scene.make.container(undefined, false);
-        this.lvCon.setSize(lvbg.width, lvbg.height);
-        this.lvCon.add([lvbg, this.lvText]);
-        var bottomWidth = 234 * this.dpr;
-        var bottomHeight = 195 * this.dpr;
-        this.bottomCon = this.scene.make.container(undefined, false).setSize(bottomWidth, bottomHeight);
-        this.bottomCon.setPosition(0, (this.mainContent.height - bottomHeight) * 0.5 - 30 * this.dpr);
-        this.bottombg = this.scene.make.graphics(undefined, false);
-        var bottomBtnPosx = -60 * this.dpr;
-        var bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
-        this.addFriendBtn = new ninepatch_button["NinePatchButton"](this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n["a" /* i18n */].t("player_info.add_friend"), {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
-        this.addFriendBtn.setFrameNormal("button_g");
-        this.privaCharBtn = new ninepatch_button["NinePatchButton"](this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n["a" /* i18n */].t("player_info.private_chat"), {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
-        this.tradeBtn = new ninepatch_button["NinePatchButton"](this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n["a" /* i18n */].t("player_info.tade_btn"), {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
-        this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
-        this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
-        this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
-        this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn, this.tradeBtn]);
-        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon]);
-        this.mainContent.add(this.avatar);
-        this.content.add(this.bg);
-        this.content.add(this.mainContent);
-        this.add(this.content);
-        var w = this.scene.cameras.main.width;
-        var h = this.scene.cameras.main.height;
-        this.mCategoryScroll = new GameScroller["a" /* GameScroller */](this.scene, {
-            x: this.scaleWidth * 0.5,
-            y: this.scaleHeight * 0.5 + 62 * this.dpr * zoom,
-            width: bottomWidth,
-            height: 41 * this.dpr,
-            zoom: this.scale,
-            orientation: 1,
-            cellupCallBack: function (gameobject) {
-                _this.onSelectSubCategoryHandler(gameobject);
-            }
-        });
-        this.add(this.mCategoryScroll);
-        var propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
-        var capW = propFrame.width + 5 * this.dpr * zoom;
-        var capH = propFrame.height + 2 * this.dpr * zoom;
-        var tableConfig = {
-            x: w / 2,
-            y: h * 0.5 + 145 * this.dpr * zoom,
-            table: {
-                width: (this.bottomCon.width - 10 * this.dpr) * zoom,
-                height: 200 * this.dpr * zoom,
-                columns: 3,
-                cellWidth: capW,
-                cellHeight: capH,
-                reuseCellContainer: true,
-                cellPadX: 24 * this.dpr * zoom
-                // cellOriginX:0.5,
-                // cellOriginY:0.5,
-            },
-            scrollMode: 1,
-            clamplChildOY: false,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
-            createCellContainerCallback: function (cell, cellContainer) {
-                var scene = cell.scene, item = cell.item;
-                if (cellContainer === null) {
-                    cellContainer = new CharacterInfoPanel_CharacterOwnerItem(scene, 0, 0, _this.key, _this.dpr, zoom);
-                    _this.add(cellContainer);
-                }
-                // cellContainer.setSize(width, height);
-                cellContainer.setData({ item: item });
-                cellContainer.setItemData(item, _this.isOwner);
-                return cellContainer;
-            },
-        };
-        this.mGrideTable = new GameGridTable["a" /* GameGridTable */](this.scene, tableConfig);
-        this.mGrideTable.layout();
-        this.mGrideTable.on("cellTap", function (cell) {
-            if (cell) {
-                _this.onSelectItemHandler(cell);
-            }
-        });
-        this.add(this.mGrideTable.table);
-        this.nickEditor.on("Tap", this.onEditorHandler, this);
-        this.privaCharBtn.on("Tap", this.onPrivateChatHandler, this);
-        this.addFriendBtn.on("Tap", this.onAddFriendHandler, this);
-        this.tradeBtn.on("Tap", this.onTradingHandler, this);
-        this.resize(w, h);
-        _super.prototype.init.call(this);
-        this.reqPlayerInfo();
-    };
-    CharacterInfoPanel.prototype.reqPlayerInfo = function () {
-        this.emit("queryOwnerInfo");
-    };
-    CharacterInfoPanel.prototype.setPlayerData = function (data) {
-        var nickname = data.nickname;
-        var current_title = data.currentTitle;
-        var exp = data.level.currentLevelExp;
-        var nexExp = data.level.nextLevelExp;
-        var cid = data.id;
-        var levle = data.level.level;
-        var spaceOffset = this.getspaceStr(1 * this.dpr);
-        if (this.avatar) {
-            this.avatar.load(new dragonbones_model["a" /* DragonbonesModel */]({
-                id: 0,
-                avatar: data.currentAvatar.avatar
-            }));
-        }
-        this.titleName.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.player_title")) + spaceOffset + current_title);
-        this.likeBtn.setText(data.like + "");
-        var likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
-        this.likeBtn.x = likeposx - 20 * this.dpr;
-        this.lvText.text = "Lv" + levle + "";
-        var subArr = [data.lifeSkills, data.badges];
-        if (data instanceof protocols["op_client"].OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
-            this.nickName.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.nick_name")) + spaceOffset + nickname);
-            this.idText.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.player_lv")) + this.getspaceStr(20) + exp + "/" + nexExp);
-            this.lvCon.setPosition(this.idText.x + 58 * this.dpr, this.idText.y);
-            this.likeBtn.setFrame("praise_aft");
-            subArr.push(data.titles);
-            this.addFriendBtn.visible = false;
-            this.privaCharBtn.visible = false;
-            this.tradeBtn.visible = false;
-            this.bottombg.clear();
-            this.bottombg.fillStyle(0x6AE2FF, 1);
-            this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
-            this.mGrideTable.setColumnCount(3);
-            this.isOwner = true;
-        }
-        else {
-            var remark = (data.remark ? data.remark : "备注好友昵称");
-            this.nickName.setText(this.getRichLabel(i18n["a" /* i18n */].t("player_info.nick_name")) + spaceOffset + nickname + (" (" + remark + ")"));
-            this.idText.setText(this.getRichLabel("I   D") + spaceOffset + cid);
-            this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
-            this.likeBtn.setFrame("praise_bef");
-            subArr.push(data.avatar);
-            this.addFriendBtn.visible = !data.friend;
-            this.privaCharBtn.visible = data.friend;
-            this.tradeBtn.visible = true;
-            this.bottombg.clear();
-            this.bottombg.fillStyle(0x6AE2FF, 1);
-            this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
-            this.mGrideTable.setColumnCount(2);
-            this.isOwner = false;
-        }
-        this.setSubCategory(subArr);
-    };
-    CharacterInfoPanel.prototype.destroy = function () {
-        this.mGrideTable.destroy();
-        this.mCategoryScroll.destroy();
-        _super.prototype.destroy.call(this);
-    };
-    CharacterInfoPanel.prototype.OnClosePanel = function () {
-        this.emit("hide");
-    };
-    CharacterInfoPanel.prototype.setSubCategory = function (datas) {
-        var subNames = [i18n["a" /* i18n */].t("player_info.option_live"), i18n["a" /* i18n */].t("player_info.option_badge"), i18n["a" /* i18n */].t("player_info.option_title"), i18n["a" /* i18n */].t("player_info.option_title"), i18n["a" /* i18n */].t("player_info.option_title")];
-        var len = 1; // datas.length;
-        var itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
-        var items = [];
-        for (var i = 0; i < len; i++) {
-            var item = new ui_components["b" /* Button */](this.scene, this.key, "title_normal", "title_select", subNames[i]);
-            item.width = itemWidth;
-            item.height = 41 * this.dpr;
-            items.push(item);
-            item.setTextStyle({ color: "#2B4BB5", bold: true, fontSize: 14 * this.dpr * this.scale, fontFamily: font["a" /* Font */].DEFULT_FONT });
-            item.disInteractive();
-            item.removeListen();
-            item.setData("subData", datas[i]);
-            this.mCategoryScroll.addItem(item);
-        }
-        if (items.length <= 3)
-            this.mCategoryScroll.setAlign(1);
-        else {
-            this.mCategoryScroll.setAlign(0);
-        }
-        this.onSelectSubCategoryHandler(items[0]);
-    };
-    CharacterInfoPanel.prototype.onSelectSubCategoryHandler = function (obj) {
-        // Logger.getInstance().log(obj);
-        if (this.curSelectCategeory) {
-            this.curSelectCategeory.changeNormal();
-            this.curSelectCategeory.setTextColor("#2B4BB5");
-        }
-        obj.changeDown();
-        obj.setTextColor("#996600");
-        this.curSelectCategeory = obj;
-        var datas = obj.getData("subData");
-        if (datas)
-            this.mGrideTable.setItems(datas);
-        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 185 * this.dpr * this.scale, 0, 0);
-    };
-    CharacterInfoPanel.prototype.onSelectItemHandler = function (item) {
-    };
-    CharacterInfoPanel.prototype.onEditorHandler = function () {
-        var w = 247 * this.dpr;
-        var h = this.content.height;
-        if (!this.editorPanel)
-            this.editorPanel = new CharacterEditorPanel["CharacterEditorPanel"](this.scene, 0, 0, w, h, this.key, this.dpr);
-        this.content.add(this.editorPanel);
-        this.editorPanel.visible = true;
-        this.editorPanel.on("editorHide", this.onEditorPanelHideHandler, this);
-        this.setMainUIVisible(false);
-    };
-    CharacterInfoPanel.prototype.onAddFriendHandler = function () {
-    };
-    CharacterInfoPanel.prototype.onTradingHandler = function () {
-    };
-    CharacterInfoPanel.prototype.onPrivateChatHandler = function () {
-    };
-    CharacterInfoPanel.prototype.onEditorPanelHideHandler = function () {
-        this.mainContent.visible = true;
-        this.remove(this.editorPanel);
-        this.editorPanel.off("editorHide", this.onEditorPanelHideHandler, this);
-        this.editorPanel.destroy();
-        this.editorPanel = null;
-        this.setMainUIVisible(true);
-    };
-    CharacterInfoPanel.prototype.setMainUIVisible = function (value) {
-        this.avatar.visible = value;
-        this.mCategoryScroll.visible = value;
-        this.mGrideTable.table.visible = value;
-        this.mainContent.visible = value;
-    };
-    CharacterInfoPanel.prototype.getRichLabel = function (text, color) {
-        if (color === void 0) { color = "#2B4BB5"; }
-        var label = "[stroke=" + color + "][color=" + color + "]" + text + ":[/color][/stroke]";
-        return label;
-    };
-    CharacterInfoPanel.prototype.getspaceStr = function (num) {
-        var str = "";
-        for (var i = 0; i < num; i++) {
-            str += " ";
-        }
-        return str;
-    };
-    return CharacterInfoPanel;
-}(BasePanel["BasePanel"]));
-/* harmony default export */ var CharacterInfo_CharacterInfoPanel = __webpack_exports__["default"] = (CharacterInfoPanel_CharacterInfoPanel);
-var CharacterInfoPanel_CharacterOwnerItem = /** @class */ (function (_super) {
-    CharacterInfoPanel_extends(CharacterOwnerItem, _super);
-    function CharacterOwnerItem(scene, x, y, key, dpr, zoom) {
-        if (zoom === void 0) { zoom = 1; }
-        var _this = _super.call(this, scene, x, y) || this;
-        _this.dpr = 0;
-        _this.zoom = 0;
-        var bg = _this.scene.make.image({ x: 0, y: 0, key: key, frame: "skill_bg" });
-        _this.nameText = _this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0, 0.5);
-        _this.lvText = _this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: font["a" /* Font */].DEFULT_FONT } }).setOrigin(0, 0.5);
-        _this.progressBar = new ProgressBar_ProgressBar(_this.scene, {
-            x: 48 * dpr / 2,
-            y: 15 * dpr,
-            width: 41 * dpr,
-            height: 4 * dpr,
-            background: {
-                x: 0,
-                y: 0,
-                width: 41 * dpr,
-                height: 4 * dpr,
-                config: {
-                    top: 1 * dpr,
-                    left: 2 * dpr,
-                    right: 2 * dpr,
-                    bottom: 1 * dpr,
-                },
-                key: key,
-                frame: "slider_bg"
-            },
-            bar: {
-                x: 0,
-                y: 0,
-                width: 41 * dpr,
-                height: 4 * dpr,
-                config: {
-                    top: 1 * dpr,
-                    left: 2 * dpr,
-                    right: 2 * dpr,
-                    bottom: 1 * dpr,
-                },
-                key: key,
-                frame: "slider_rate"
-            },
-            dpr: dpr,
-            textConfig: undefined
-        });
-        _this.icon = new dynamic_image["DynamicImage"](_this.scene, -bg.width * 0.5 + 22 * dpr, 0);
-        _this.add([bg, _this.icon, _this.nameText, _this.lvText, _this.progressBar]);
-        _this.setSize(bg.width, bg.height);
-        _this.dpr = dpr;
-        _this.zoom = zoom;
-        _this.key = key;
-        return _this;
-        // this.progressBar.setProgress(1, 100);
-    }
-    CharacterOwnerItem.prototype.setItemData = function (data, isOwner) {
-        var _this = this;
-        if (isOwner === void 0) { isOwner = false; }
-        this.itemData = data;
-        this.nameText.text = data.name;
-        var posY = (isOwner ? -16 * this.dpr * this.zoom : -11 * this.dpr * this.zoom);
-        var offsetY = (isOwner ? 20 * this.dpr * this.zoom : 25 * this.dpr * this.zoom);
-        var cheight = 10 * this.dpr * this.zoom;
-        this.nameText.y = posY + cheight * 0.5;
-        this.icon.setTexture(this.key, "test_skillicon");
-        var width = this.icon.width;
-        if (data.level) {
-            this.lvText.text = data.level.level;
-            this.lvText.y = posY + offsetY;
-            this.progressBar.setProgress(data.level.currentLevelExp, data.level.nextLevelExp);
-            this.progressBar.visible = isOwner;
-        }
-        else {
-            this.progressBar.visible = false;
-            this.lvText.visible = false;
-        }
-        var url = resUtil["h" /* Url */].getOsdRes(data.display.texturePath);
-        this.icon.load(url, this, function () {
-            _this.icon.scale = _this.dpr * _this.zoom;
-            var x = -_this.width * 0.5 + width * 0.5 + 6 * _this.dpr * _this.zoom;
-            _this.icon.setPosition(x, 0);
-        });
-    };
-    return CharacterOwnerItem;
-}(Container));
-
-
-/***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -41160,7 +41407,7 @@ var CharacterInfoPanel_CharacterOwnerItem = /** @class */ (function (_super) {
 var Sizer = __webpack_require__(126);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/mask/DefaultMask.js
-var DefaultMask = __webpack_require__(167);
+var DefaultMask = __webpack_require__(168);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/utils/AddChildMask.js
 
@@ -41385,7 +41632,7 @@ Object.assign(
 /* harmony default export */ var label_Label = __webpack_exports__["a"] = (Label_Label);
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -41399,19 +41646,19 @@ __webpack_require__.d(__webpack_exports__, "MarketPanel", function() { return /*
 var BasePanel = __webpack_require__(105);
 
 // EXTERNAL MODULE: ./src/ui/Market/ElementDetail.ts
-var ElementDetail = __webpack_require__(294);
+var ElementDetail = __webpack_require__(295);
 
 // EXTERNAL MODULE: ./src/i18n.ts
-var i18n = __webpack_require__(124);
+var i18n = __webpack_require__(125);
 
 // EXTERNAL MODULE: ./src/ui/components/checkbox.group.ts
 var checkbox_group = __webpack_require__(157);
 
 // EXTERNAL MODULE: ./src/ui/Market/TextButton.ts
-var TextButton = __webpack_require__(184);
+var TextButton = __webpack_require__(185);
 
 // EXTERNAL MODULE: ./src/ui/Market/item.ts
-var Market_item = __webpack_require__(298);
+var Market_item = __webpack_require__(299);
 
 // EXTERNAL MODULE: ./src/utils/font.ts
 var font = __webpack_require__(107);
@@ -41420,10 +41667,10 @@ var font = __webpack_require__(107);
 var GameGridTable = __webpack_require__(134);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/ninepatch/NineSlicePatch.ts + 1 modules
-var NineSlicePatch = __webpack_require__(196);
+var NineSlicePatch = __webpack_require__(159);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tab/TabButton.ts
-var TabButton = __webpack_require__(181);
+var TabButton = __webpack_require__(182);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/tab/NinePatchTabButton.ts
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -41898,7 +42145,7 @@ var MarketPanel_MarketPanel = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -41920,16 +42167,16 @@ var font = __webpack_require__(107);
 var checkbox_group = __webpack_require__(157);
 
 // EXTERNAL MODULE: ./src/i18n.ts
-var i18n = __webpack_require__(124);
+var i18n = __webpack_require__(125);
 
 // EXTERNAL MODULE: ./node_modules/pixelpai_proto/protocols.js
 var protocols = __webpack_require__(2);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/scroller/Scroller.js + 5 modules
-var Scroller = __webpack_require__(319);
+var Scroller = __webpack_require__(320);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
-var BaseUI = __webpack_require__(125);
+var BaseUI = __webpack_require__(124);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/size/ResizeGameObject.js
 var ResizeGameObject = __webpack_require__(130);
@@ -42283,10 +42530,10 @@ var Scroller_BaseScroller = /** @class */ (function (_super) {
 var log = __webpack_require__(0);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/button/Button.ts
-var Button = __webpack_require__(120);
+var Button = __webpack_require__(119);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tab/TabButton.ts
-var TabButton = __webpack_require__(181);
+var TabButton = __webpack_require__(182);
 
 // CONCATENATED MODULE: ./src/ui/PicaRoomList/PicaRoomListPanel.ts
 var PicaRoomListPanel_extends = (undefined && undefined.__extends) || (function () {
@@ -43133,7 +43380,7 @@ var PopularRoomItem = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43177,7 +43424,7 @@ var res_const_UI;
 var dynamic_image = __webpack_require__(113);
 
 // EXTERNAL MODULE: ./src/ui/tips/toolTip.ts
-var toolTip = __webpack_require__(170);
+var toolTip = __webpack_require__(171);
 
 // EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
 var dist = __webpack_require__(103);
@@ -43318,7 +43565,7 @@ var shop_itemSlot_ShopItemSlot = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44007,12 +44254,12 @@ const WRAPMODE = {
 /* harmony default export */ var textstyle_TextStyle = __webpack_exports__["a"] = (TextStyle_TextStyle);
 
 /***/ }),
-/* 333 */,
 /* 334 */,
 /* 335 */,
 /* 336 */,
 /* 337 */,
-/* 338 */
+/* 338 */,
+/* 339 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44100,8 +44347,8 @@ var ReferenceArea = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 339 */,
-/* 340 */
+/* 340 */,
+/* 341 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44337,7 +44584,7 @@ var Terrain = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44468,30 +44715,6 @@ var PlayCamera = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 342 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CoreUI; });
-var CoreUI;
-(function (CoreUI) {
-    var MouseEvent;
-    (function (MouseEvent) {
-        MouseEvent["Click"] = "click";
-        MouseEvent["Up"] = "Up";
-        MouseEvent["Down"] = "Down";
-        MouseEvent["Hold"] = "Hold";
-        MouseEvent["Tap"] = "Tap";
-        MouseEvent["Move"] = "Move";
-        MouseEvent["Over"] = "Over";
-        MouseEvent["Out"] = "Out";
-        MouseEvent["DragStart"] = "DragStart";
-        MouseEvent["DragStop"] = "DragStop";
-    })(MouseEvent = CoreUI.MouseEvent || (CoreUI.MouseEvent = {}));
-})(CoreUI || (CoreUI = {}));
-
-
-/***/ }),
 /* 343 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -44611,7 +44834,7 @@ module.exports = GetValue;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _utils_mask_MaskToGameObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(254);
+/* harmony import */ var _utils_mask_MaskToGameObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(255);
 
 
 const Intersects = Phaser.Geom.Intersects.RectangleToRectangle;
@@ -44715,8 +44938,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
-/* harmony import */ var _CharacterInfoPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(327);
-/* harmony import */ var _CharacterInfo__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(266);
+/* harmony import */ var _CharacterInfoPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(325);
+/* harmony import */ var _CharacterInfo__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(267);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -44898,7 +45121,7 @@ const BuildGameObject = Phaser.GameObjects.BuildGameObject;
 
 "use strict";
 /* harmony import */ var _utils_eventemitter_EventEmitterMethods_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(129);
-/* harmony import */ var _utils_object_Clear_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(219);
+/* harmony import */ var _utils_object_Clear_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
 
 
 
@@ -45288,7 +45511,7 @@ var GraphicsProgressBar = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrollRect", function() { return ScrollRect; });
-/* harmony import */ var _GridLayoutGroup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(273);
+/* harmony import */ var _GridLayoutGroup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(274);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -45342,10 +45565,10 @@ var ScrollRect = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComposeMediator", function() { return ComposeMediator; });
-/* harmony import */ var _ComposePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(277);
+/* harmony import */ var _ComposePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(278);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Compose__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(276);
+/* harmony import */ var _Compose__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(277);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -45464,7 +45687,7 @@ var ComposeMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CutInMediator", function() { return CutInMediator; });
-/* harmony import */ var _CutInPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(279);
+/* harmony import */ var _CutInPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(280);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -45518,8 +45741,8 @@ var CutInMediator = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CutInMenuMediator", function() { return CutInMenuMediator; });
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(106);
-/* harmony import */ var _CutInMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(280);
-/* harmony import */ var _CutInMenuPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(281);
+/* harmony import */ var _CutInMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(281);
+/* harmony import */ var _CutInMenuPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(282);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -45610,8 +45833,8 @@ var DragManager = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EquipUpgradeMediator", function() { return EquipUpgradeMediator; });
-/* harmony import */ var _EquipUpgradePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(285);
-/* harmony import */ var _EquipUpgrade__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(283);
+/* harmony import */ var _EquipUpgradePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(286);
+/* harmony import */ var _EquipUpgrade__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(284);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -45707,8 +45930,8 @@ var EquipUpgradeMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FurniBagMediator", function() { return FurniBagMediator; });
-/* harmony import */ var _FurniBagPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(287);
-/* harmony import */ var _FurniBag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(286);
+/* harmony import */ var _FurniBagPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(288);
+/* harmony import */ var _FurniBag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(287);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(106);
@@ -45848,7 +46071,7 @@ var FurniBagMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemDetailMediator", function() { return ItemDetailMediator; });
-/* harmony import */ var _ItemDetail__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(292);
+/* harmony import */ var _ItemDetail__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(293);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(103);
@@ -45940,7 +46163,7 @@ var ItemDetailMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemPopCardMediator", function() { return ItemPopCardMediator; });
-/* harmony import */ var _ItemPopCardPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(293);
+/* harmony import */ var _ItemPopCardPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(294);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -45993,8 +46216,8 @@ var ItemPopCardMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MarketMediator", function() { return MarketMediator; });
-/* harmony import */ var _MarketPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(329);
-/* harmony import */ var _Market__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(297);
+/* harmony import */ var _MarketPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(330);
+/* harmony import */ var _Market__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(298);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(110);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -46100,7 +46323,7 @@ var MarketMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MessageBoxMediator", function() { return MessageBoxMediator; });
-/* harmony import */ var _MessageBoxView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(299);
+/* harmony import */ var _MessageBoxView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(300);
 /* harmony import */ var _components_ninepatch_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(114);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
@@ -46196,8 +46419,8 @@ var MessageBoxMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MineSettleMediator", function() { return MineSettleMediator; });
-/* harmony import */ var _MineSettlePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(301);
-/* harmony import */ var _MineSettle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(300);
+/* harmony import */ var _MineSettlePanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(302);
+/* harmony import */ var _MineSettle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(301);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -46277,8 +46500,8 @@ var MineSettleMediator = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NpcDialogueMediator", function() { return NpcDialogueMediator; });
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(106);
-/* harmony import */ var _NpcDialogue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(302);
-/* harmony import */ var _NpcDialoguePanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(303);
+/* harmony import */ var _NpcDialogue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(303);
+/* harmony import */ var _NpcDialoguePanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(304);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -46343,7 +46566,7 @@ var NpcDialogueMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaMessageBoxMediator", function() { return PicaMessageBoxMediator; });
-/* harmony import */ var _PicaMessageBoxPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(304);
+/* harmony import */ var _PicaMessageBoxPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(305);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(103);
@@ -46415,7 +46638,7 @@ var PicaMessageBoxMediator = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaNoticeMediator", function() { return PicaNoticeMediator; });
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(106);
-/* harmony import */ var _PicaNoticePanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(305);
+/* harmony import */ var _PicaNoticePanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(306);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -46467,8 +46690,8 @@ var PicaNoticeMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PicaRoomListMediator", function() { return PicaRoomListMediator; });
-/* harmony import */ var _PicaRoomListPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(330);
-/* harmony import */ var _RoomList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(306);
+/* harmony import */ var _PicaRoomListPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(331);
+/* harmony import */ var _RoomList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(307);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(0);
 /* harmony import */ var _lib_rexui_lib_ui_baseUI_BaseMediator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(106);
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -46579,7 +46802,7 @@ var PicaRoomListMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserMenuMediator", function() { return UserMenuMediator; });
-/* harmony import */ var _UserMenuPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(312);
+/* harmony import */ var _UserMenuPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(313);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(103);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
@@ -46729,7 +46952,7 @@ var UserMenuMediator = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TopMediator", function() { return TopMediator; });
 /* harmony import */ var _baseFace_mediator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(133);
-/* harmony import */ var _top_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(316);
+/* harmony import */ var _top_btn_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(317);
 /* harmony import */ var _Rank_RankMediator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(156);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(103);
 /* harmony import */ var net_socket_packet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(net_socket_packet__WEBPACK_IMPORTED_MODULE_3__);
@@ -46888,7 +47111,7 @@ var TopMediator = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InputPanel", function() { return InputPanel; });
-/* harmony import */ var _inputTextFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(177);
+/* harmony import */ var _inputTextFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(178);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -47950,7 +48173,7 @@ if (true) {
 
 });
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/textstyle/TextStyle.js + 1 modules
-var TextStyle = __webpack_require__(332);
+var TextStyle = __webpack_require__(333);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/canvastext/DrawMethods.js
 /* harmony default export */ var DrawMethods = ({
@@ -48219,7 +48442,7 @@ class Pen {
 
 /* harmony default export */ var penmanger_Pen = (Pen);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/Clone.js
-var Clone = __webpack_require__(218);
+var Clone = __webpack_require__(219);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/gameobjects/text/textbase/penmanger/PenManager.js
 
@@ -49967,10 +50190,10 @@ __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding *
 var viewblock_manager = __webpack_require__(391);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/cameras.manager.ts + 1 modules
-var cameras_manager = __webpack_require__(326);
+var cameras_manager = __webpack_require__(328);
 
 // EXTERNAL MODULE: ./src/rooms/layer/layer.manager.ts + 1 modules
-var layer_manager = __webpack_require__(325);
+var layer_manager = __webpack_require__(327);
 
 // EXTERNAL MODULE: ./src/utils/position45.ts
 var position45 = __webpack_require__(139);
@@ -49988,7 +50211,7 @@ var dist = __webpack_require__(103);
 var loading = __webpack_require__(147);
 
 // EXTERNAL MODULE: ./src/scenes/play.ts + 1 modules
-var play = __webpack_require__(192);
+var play = __webpack_require__(193);
 
 // EXTERNAL MODULE: ./src/utils/log.ts
 var log = __webpack_require__(0);
@@ -50000,7 +50223,7 @@ var display_object = __webpack_require__(148);
 var terrain_display = __webpack_require__(208);
 
 // EXTERNAL MODULE: ./src/rooms/element/element.manager.ts
-var element_manager = __webpack_require__(159);
+var element_manager = __webpack_require__(160);
 
 // EXTERNAL MODULE: ./src/rooms/element/sprite.ts
 var element_sprite = __webpack_require__(123);
@@ -50256,7 +50479,7 @@ var decorate_terrain_manager_DecorateTerrainManager = /** @class */ (function (_
 
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.model.ts
-var frames_model = __webpack_require__(162);
+var frames_model = __webpack_require__(163);
 
 // EXTERNAL MODULE: ./src/rooms/display/animation.ts
 var display_animation = __webpack_require__(204);
@@ -51183,7 +51406,7 @@ var decorate_room_DecorateRoom = /** @class */ (function (_super) {
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/gestures/onepointertracer/OnePointerTracer.js + 1 modules
-var OnePointerTracer = __webpack_require__(195);
+var OnePointerTracer = __webpack_require__(196);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/fsm.js + 1 modules
 var fsm = __webpack_require__(137);
@@ -52081,46 +52304,46 @@ __webpack_require__.d(__webpack_exports__, "b", function() { return /* reexport 
 var phaser_js_exposed = __webpack_require__(23);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/roundrectangle/RoundRectangle.js
-var RoundRectangle = __webpack_require__(267);
+var RoundRectangle = __webpack_require__(268);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/bbcodetext/BBCodeText.js
-var BBCodeText = __webpack_require__(268);
+var BBCodeText = __webpack_require__(269);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tagtext/TagText.js + 2 modules
-var TagText = __webpack_require__(324);
+var TagText = __webpack_require__(326);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/container/Container.js
-var Container = __webpack_require__(163);
+var Container = __webpack_require__(164);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/canvas/Canvas.js
-var Canvas = __webpack_require__(269);
+var Canvas = __webpack_require__(270);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/ninepatch/NineSlicePatch.ts + 1 modules
-var NineSlicePatch = __webpack_require__(196);
+var NineSlicePatch = __webpack_require__(159);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/sizer/Sizer.js + 11 modules
 var Sizer = __webpack_require__(126);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/gridsizer/GridSizer.js + 8 modules
-var GridSizer = __webpack_require__(317);
+var GridSizer = __webpack_require__(318);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/label/Label.js + 1 modules
-var Label = __webpack_require__(328);
+var Label = __webpack_require__(329);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/buttons/Buttons.js + 6 modules
-var Buttons = __webpack_require__(189);
+var Buttons = __webpack_require__(190);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/button/Button.ts
-var Button = __webpack_require__(120);
+var Button = __webpack_require__(119);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/slider/Slider.js + 9 modules
-var Slider = __webpack_require__(188);
+var Slider = __webpack_require__(189);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GridTable.js + 31 modules
-var GridTable = __webpack_require__(185);
+var GridTable = __webpack_require__(186);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/menu/Menu.js + 8 modules
-var Menu = __webpack_require__(318);
+var Menu = __webpack_require__(319);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/gameobjects/text/bbcodetext/Factory.js
 var Factory = __webpack_require__(350);
@@ -52223,46 +52446,46 @@ var TextBox_TextBox = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/textblock/TextBlock.js + 11 modules
-var TextBlock = __webpack_require__(187);
+var TextBlock = __webpack_require__(188);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/textarea/TextArea.js + 3 modules
 var TextArea = __webpack_require__(127);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/scrollableblock/ScrollableBlock.js + 6 modules
-var ScrollableBlock = __webpack_require__(190);
+var ScrollableBlock = __webpack_require__(191);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/scrollablepanel/ScrollablePanel.js
-var ScrollablePanel = __webpack_require__(270);
+var ScrollablePanel = __webpack_require__(271);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tap/Tap.js + 1 modules
-var Tap = __webpack_require__(193);
+var Tap = __webpack_require__(194);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/press/Press.js + 1 modules
-var Press = __webpack_require__(194);
+var Press = __webpack_require__(195);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/rotate/Rotate.js + 3 modules
-var Rotate = __webpack_require__(321);
+var Rotate = __webpack_require__(322);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/flip/Flip.js + 3 modules
-var Flip = __webpack_require__(322);
+var Flip = __webpack_require__(323);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetParentSizer.js
 var GetParentSizer = __webpack_require__(153);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetTopmostSizer.js
-var GetTopmostSizer = __webpack_require__(165);
+var GetTopmostSizer = __webpack_require__(166);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/input/IsPointerInBounds.js
-var IsPointerInBounds = __webpack_require__(164);
+var IsPointerInBounds = __webpack_require__(165);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/Hide.js
 var Hide = __webpack_require__(144);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/behaviors/textedit/Edit.js
-var Edit = __webpack_require__(271);
+var Edit = __webpack_require__(272);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/WaitEvent.js
-var WaitEvent = __webpack_require__(182);
+var WaitEvent = __webpack_require__(183);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/ui-components.ts
 
@@ -53050,7 +53273,7 @@ var KeyBoardManager = /** @class */ (function (_super) {
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _const_MessageType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(110);
-/* harmony import */ var _rooms_display_frames_display__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(160);
+/* harmony import */ var _rooms_display_frames_display__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(161);
 /* harmony import */ var _rooms_element_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(117);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -53651,7 +53874,7 @@ var JoyStick = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ElementStorage; });
-/* harmony import */ var _rooms_display_frames_model__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(162);
+/* harmony import */ var _rooms_display_frames_model__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(163);
 /* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 /* harmony import */ var pixelpai_proto__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pixelpai_proto__WEBPACK_IMPORTED_MODULE_2__);
@@ -55092,212 +55315,212 @@ module.exports = TextCanvasRenderer;
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Activity/ActivityMediator": 246,
-	"./Activity/ActivityMediator.ts": 246,
-	"./Activity/ActivityPanel": 247,
-	"./Activity/ActivityPanel.ts": 247,
-	"./Bubble/interactionbubble": 323,
-	"./Bubble/interactionbubble.container": 258,
-	"./Bubble/interactionbubble.container.ts": 258,
-	"./Bubble/interactionbubble.ts": 323,
-	"./Bubble/interactivebubble.manager": 257,
-	"./Bubble/interactivebubble.manager.ts": 257,
-	"./CharacterInfo/CharacterEditorPanel": 262,
-	"./CharacterInfo/CharacterEditorPanel.ts": 262,
-	"./CharacterInfo/CharacterInfo": 266,
-	"./CharacterInfo/CharacterInfo.ts": 266,
+	"./Activity/ActivityMediator": 247,
+	"./Activity/ActivityMediator.ts": 247,
+	"./Activity/ActivityPanel": 248,
+	"./Activity/ActivityPanel.ts": 248,
+	"./Bubble/interactionbubble": 324,
+	"./Bubble/interactionbubble.container": 259,
+	"./Bubble/interactionbubble.container.ts": 259,
+	"./Bubble/interactionbubble.ts": 324,
+	"./Bubble/interactivebubble.manager": 258,
+	"./Bubble/interactivebubble.manager.ts": 258,
+	"./CharacterInfo/CharacterEditorPanel": 263,
+	"./CharacterInfo/CharacterEditorPanel.ts": 263,
+	"./CharacterInfo/CharacterInfo": 267,
+	"./CharacterInfo/CharacterInfo.ts": 267,
 	"./CharacterInfo/CharacterInfoMediator": 349,
 	"./CharacterInfo/CharacterInfoMediator.ts": 349,
-	"./CharacterInfo/CharacterInfoPanel": 327,
-	"./CharacterInfo/CharacterInfoPanel.ts": 327,
+	"./CharacterInfo/CharacterInfoPanel": 325,
+	"./CharacterInfo/CharacterInfoPanel.ts": 325,
 	"./CharacterInfo/GraphicsProgressBar": 353,
 	"./CharacterInfo/GraphicsProgressBar.ts": 353,
-	"./CharacterInfo/GridLayoutGroup": 273,
-	"./CharacterInfo/GridLayoutGroup.ts": 273,
+	"./CharacterInfo/GridLayoutGroup": 274,
+	"./CharacterInfo/GridLayoutGroup.ts": 274,
 	"./CharacterInfo/ScrollRect": 354,
 	"./CharacterInfo/ScrollRect.ts": 354,
-	"./ComponentRank/ComponentRankMediator": 274,
-	"./ComponentRank/ComponentRankMediator.ts": 274,
-	"./ComponentRank/ComponentRankPanel": 275,
-	"./ComponentRank/ComponentRankPanel.ts": 275,
-	"./Compose/Compose": 276,
-	"./Compose/Compose.ts": 276,
+	"./ComponentRank/ComponentRankMediator": 275,
+	"./ComponentRank/ComponentRankMediator.ts": 275,
+	"./ComponentRank/ComponentRankPanel": 276,
+	"./ComponentRank/ComponentRankPanel.ts": 276,
+	"./Compose/Compose": 277,
+	"./Compose/Compose.ts": 277,
 	"./Compose/ComposeMediator": 355,
 	"./Compose/ComposeMediator.ts": 355,
-	"./Compose/ComposePanel": 277,
-	"./Compose/ComposePanel.ts": 277,
+	"./Compose/ComposePanel": 278,
+	"./Compose/ComposePanel.ts": 278,
 	"./ControlF/ControlFMediator": 205,
 	"./ControlF/ControlFMediator.ts": 205,
 	"./ControlF/ControlFPanel": 206,
 	"./ControlF/ControlFPanel.ts": 206,
 	"./CutIn/CutInMediator": 356,
 	"./CutIn/CutInMediator.ts": 356,
-	"./CutIn/CutInPanel": 279,
-	"./CutIn/CutInPanel.ts": 279,
-	"./CutInMenu/CutInMenu": 280,
-	"./CutInMenu/CutInMenu.ts": 280,
+	"./CutIn/CutInPanel": 280,
+	"./CutIn/CutInPanel.ts": 280,
+	"./CutInMenu/CutInMenu": 281,
+	"./CutInMenu/CutInMenu.ts": 281,
 	"./CutInMenu/CutInMenuMediator": 357,
 	"./CutInMenu/CutInMenuMediator.ts": 357,
-	"./CutInMenu/CutInMenuPanel": 281,
-	"./CutInMenu/CutInMenuPanel.ts": 281,
-	"./DebugLogger/DebugLoggerMediator": 183,
-	"./DebugLogger/DebugLoggerMediator.ts": 183,
-	"./DebugLogger/DebugLoggerPanel": 282,
-	"./DebugLogger/DebugLoggerPanel.ts": 282,
-	"./DecorateControl/DecorateControlMediator": 241,
-	"./DecorateControl/DecorateControlMediator.ts": 241,
-	"./DecorateControl/DecorateControlPanel": 242,
-	"./DecorateControl/DecorateControlPanel.ts": 242,
+	"./CutInMenu/CutInMenuPanel": 282,
+	"./CutInMenu/CutInMenuPanel.ts": 282,
+	"./DebugLogger/DebugLoggerMediator": 184,
+	"./DebugLogger/DebugLoggerMediator.ts": 184,
+	"./DebugLogger/DebugLoggerPanel": 283,
+	"./DebugLogger/DebugLoggerPanel.ts": 283,
+	"./DecorateControl/DecorateControlMediator": 242,
+	"./DecorateControl/DecorateControlMediator.ts": 242,
+	"./DecorateControl/DecorateControlPanel": 243,
+	"./DecorateControl/DecorateControlPanel.ts": 243,
 	"./ElementStorage/DragManager": 358,
 	"./ElementStorage/DragManager.ts": 358,
-	"./ElementStorage/ElementStorageMediator": 175,
-	"./ElementStorage/ElementStorageMediator.ts": 175,
-	"./ElementStorage/ElementStoragePanel": 231,
-	"./ElementStorage/ElementStoragePanel.ts": 231,
-	"./ElementStorage/ElementStorate": 233,
-	"./ElementStorage/ElementStorate.ts": 233,
-	"./ElementStorage/item/Item": 232,
-	"./ElementStorage/item/Item.ts": 232,
-	"./EquipUpgrade/EquipUpgrade": 283,
-	"./EquipUpgrade/EquipUpgrade.ts": 283,
-	"./EquipUpgrade/EquipUpgradeItem": 284,
-	"./EquipUpgrade/EquipUpgradeItem.ts": 284,
+	"./ElementStorage/ElementStorageMediator": 176,
+	"./ElementStorage/ElementStorageMediator.ts": 176,
+	"./ElementStorage/ElementStoragePanel": 232,
+	"./ElementStorage/ElementStoragePanel.ts": 232,
+	"./ElementStorage/ElementStorate": 234,
+	"./ElementStorage/ElementStorate.ts": 234,
+	"./ElementStorage/item/Item": 233,
+	"./ElementStorage/item/Item.ts": 233,
+	"./EquipUpgrade/EquipUpgrade": 284,
+	"./EquipUpgrade/EquipUpgrade.ts": 284,
+	"./EquipUpgrade/EquipUpgradeItem": 285,
+	"./EquipUpgrade/EquipUpgradeItem.ts": 285,
 	"./EquipUpgrade/EquipUpgradeMediator": 359,
 	"./EquipUpgrade/EquipUpgradeMediator.ts": 359,
-	"./EquipUpgrade/EquipUpgradePanel": 285,
-	"./EquipUpgrade/EquipUpgradePanel.ts": 285,
-	"./FurniBag/FurniBag": 286,
-	"./FurniBag/FurniBag.ts": 286,
+	"./EquipUpgrade/EquipUpgradePanel": 286,
+	"./EquipUpgrade/EquipUpgradePanel.ts": 286,
+	"./FurniBag/FurniBag": 287,
+	"./FurniBag/FurniBag.ts": 287,
 	"./FurniBag/FurniBagMediator": 360,
 	"./FurniBag/FurniBagMediator.ts": 360,
-	"./FurniBag/FurniBagPanel": 287,
-	"./FurniBag/FurniBagPanel.ts": 287,
-	"./InfoPanel/InfoPanel": 288,
-	"./InfoPanel/InfoPanel.ts": 288,
-	"./InfoPanel/InfoPanelMediator": 289,
-	"./InfoPanel/InfoPanelMediator.ts": 289,
-	"./InteractivePanel/InteractivePanel": 290,
-	"./InteractivePanel/InteractivePanel.ts": 290,
-	"./InteractivePanel/InteractivePanelMediator": 291,
-	"./InteractivePanel/InteractivePanelMediator.ts": 291,
-	"./ItemDetail/ItemDetail": 292,
-	"./ItemDetail/ItemDetail.ts": 292,
+	"./FurniBag/FurniBagPanel": 288,
+	"./FurniBag/FurniBagPanel.ts": 288,
+	"./InfoPanel/InfoPanel": 289,
+	"./InfoPanel/InfoPanel.ts": 289,
+	"./InfoPanel/InfoPanelMediator": 290,
+	"./InfoPanel/InfoPanelMediator.ts": 290,
+	"./InteractivePanel/InteractivePanel": 291,
+	"./InteractivePanel/InteractivePanel.ts": 291,
+	"./InteractivePanel/InteractivePanelMediator": 292,
+	"./InteractivePanel/InteractivePanelMediator.ts": 292,
+	"./ItemDetail/ItemDetail": 293,
+	"./ItemDetail/ItemDetail.ts": 293,
 	"./ItemDetail/ItemDetailMediator": 361,
 	"./ItemDetail/ItemDetailMediator.ts": 361,
 	"./ItemPopCard/ItemPopCardMediator": 362,
 	"./ItemPopCard/ItemPopCardMediator.ts": 362,
-	"./ItemPopCard/ItemPopCardPanel": 293,
-	"./ItemPopCard/ItemPopCardPanel.ts": 293,
+	"./ItemPopCard/ItemPopCardPanel": 294,
+	"./ItemPopCard/ItemPopCardPanel.ts": 294,
 	"./Market/DetailDisplay": 145,
 	"./Market/DetailDisplay.ts": 145,
-	"./Market/ElementDetail": 294,
-	"./Market/ElementDetail.ts": 294,
-	"./Market/Market": 297,
-	"./Market/Market.ts": 297,
+	"./Market/ElementDetail": 295,
+	"./Market/ElementDetail.ts": 295,
+	"./Market/Market": 298,
+	"./Market/Market.ts": 298,
 	"./Market/MarketMediator": 363,
 	"./Market/MarketMediator.ts": 363,
-	"./Market/MarketPanel": 329,
-	"./Market/MarketPanel.ts": 329,
-	"./Market/NumberCounter": 295,
-	"./Market/NumberCounter.ts": 295,
-	"./Market/TextButton": 184,
-	"./Market/TextButton.ts": 184,
-	"./Market/item": 298,
-	"./Market/item.ts": 298,
+	"./Market/MarketPanel": 330,
+	"./Market/MarketPanel.ts": 330,
+	"./Market/NumberCounter": 296,
+	"./Market/NumberCounter.ts": 296,
+	"./Market/TextButton": 185,
+	"./Market/TextButton.ts": 185,
+	"./Market/item": 299,
+	"./Market/item.ts": 299,
 	"./MessageBox/MessageBoxMediator": 364,
 	"./MessageBox/MessageBoxMediator.ts": 364,
-	"./MessageBox/MessageBoxView": 299,
-	"./MessageBox/MessageBoxView.ts": 299,
-	"./MineCar/MineCar": 256,
-	"./MineCar/MineCar.ts": 256,
-	"./MineCar/MineCarMediator": 251,
-	"./MineCar/MineCarMediator.ts": 251,
-	"./MineCar/MineCarPanel": 252,
-	"./MineCar/MineCarPanel.ts": 252,
-	"./MineSettle/MineSettle": 300,
-	"./MineSettle/MineSettle.ts": 300,
+	"./MessageBox/MessageBoxView": 300,
+	"./MessageBox/MessageBoxView.ts": 300,
+	"./MineCar/MineCar": 257,
+	"./MineCar/MineCar.ts": 257,
+	"./MineCar/MineCarMediator": 252,
+	"./MineCar/MineCarMediator.ts": 252,
+	"./MineCar/MineCarPanel": 253,
+	"./MineCar/MineCarPanel.ts": 253,
+	"./MineSettle/MineSettle": 301,
+	"./MineSettle/MineSettle.ts": 301,
 	"./MineSettle/MineSettleMediator": 365,
 	"./MineSettle/MineSettleMediator.ts": 365,
-	"./MineSettle/MineSettlePanel": 301,
-	"./MineSettle/MineSettlePanel.ts": 301,
-	"./Notice/Notice": 225,
-	"./Notice/Notice.ts": 225,
-	"./Notice/NoticeMediator": 223,
-	"./Notice/NoticeMediator.ts": 223,
-	"./Notice/NoticePanel": 224,
-	"./Notice/NoticePanel.ts": 224,
-	"./NpcDialogue/NpcDialogue": 302,
-	"./NpcDialogue/NpcDialogue.ts": 302,
+	"./MineSettle/MineSettlePanel": 302,
+	"./MineSettle/MineSettlePanel.ts": 302,
+	"./Notice/Notice": 226,
+	"./Notice/Notice.ts": 226,
+	"./Notice/NoticeMediator": 224,
+	"./Notice/NoticeMediator.ts": 224,
+	"./Notice/NoticePanel": 225,
+	"./Notice/NoticePanel.ts": 225,
+	"./NpcDialogue/NpcDialogue": 303,
+	"./NpcDialogue/NpcDialogue.ts": 303,
 	"./NpcDialogue/NpcDialogueMediator": 366,
 	"./NpcDialogue/NpcDialogueMediator.ts": 366,
-	"./NpcDialogue/NpcDialoguePanel": 303,
-	"./NpcDialogue/NpcDialoguePanel.ts": 303,
-	"./PiCaMainUI/PicaMainUI": 245,
-	"./PiCaMainUI/PicaMainUI.ts": 245,
-	"./PiCaMainUI/PicaMainUIMediator": 243,
-	"./PiCaMainUI/PicaMainUIMediator.ts": 243,
-	"./PiCaMainUI/PicaMainUIPanel": 244,
-	"./PiCaMainUI/PicaMainUIPanel.ts": 244,
-	"./PicaChat/PicaChat": 250,
-	"./PicaChat/PicaChat.ts": 250,
-	"./PicaChat/PicaChatMediator": 178,
-	"./PicaChat/PicaChatMediator.ts": 178,
-	"./PicaChat/PicaChatPanel": 248,
-	"./PicaChat/PicaChatPanel.ts": 248,
+	"./NpcDialogue/NpcDialoguePanel": 304,
+	"./NpcDialogue/NpcDialoguePanel.ts": 304,
+	"./PiCaMainUI/PicaMainUI": 246,
+	"./PiCaMainUI/PicaMainUI.ts": 246,
+	"./PiCaMainUI/PicaMainUIMediator": 244,
+	"./PiCaMainUI/PicaMainUIMediator.ts": 244,
+	"./PiCaMainUI/PicaMainUIPanel": 245,
+	"./PiCaMainUI/PicaMainUIPanel.ts": 245,
+	"./PicaChat/PicaChat": 251,
+	"./PicaChat/PicaChat.ts": 251,
+	"./PicaChat/PicaChatMediator": 179,
+	"./PicaChat/PicaChatMediator.ts": 179,
+	"./PicaChat/PicaChatPanel": 249,
+	"./PicaChat/PicaChatPanel.ts": 249,
 	"./PicaMessageBox/PicaMessageBoxMediator": 367,
 	"./PicaMessageBox/PicaMessageBoxMediator.ts": 367,
-	"./PicaMessageBox/PicaMessageBoxPanel": 304,
-	"./PicaMessageBox/PicaMessageBoxPanel.ts": 304,
-	"./PicaNavigate/PicaNavigateMediator": 180,
-	"./PicaNavigate/PicaNavigateMediator.ts": 180,
-	"./PicaNavigate/PicaNavigatePanel": 249,
-	"./PicaNavigate/PicaNavigatePanel.ts": 249,
+	"./PicaMessageBox/PicaMessageBoxPanel": 305,
+	"./PicaMessageBox/PicaMessageBoxPanel.ts": 305,
+	"./PicaNavigate/PicaNavigateMediator": 181,
+	"./PicaNavigate/PicaNavigateMediator.ts": 181,
+	"./PicaNavigate/PicaNavigatePanel": 250,
+	"./PicaNavigate/PicaNavigatePanel.ts": 250,
 	"./PicaNotice/PicaNoticeMediator": 368,
 	"./PicaNotice/PicaNoticeMediator.ts": 368,
-	"./PicaNotice/PicaNoticePanel": 305,
-	"./PicaNotice/PicaNoticePanel.ts": 305,
+	"./PicaNotice/PicaNoticePanel": 306,
+	"./PicaNotice/PicaNoticePanel.ts": 306,
 	"./PicaRoomList/PicaRoomListMediator": 369,
 	"./PicaRoomList/PicaRoomListMediator.ts": 369,
-	"./PicaRoomList/PicaRoomListPanel": 330,
-	"./PicaRoomList/PicaRoomListPanel.ts": 330,
-	"./PicaRoomList/RoomList": 306,
-	"./PicaRoomList/RoomList.ts": 306,
-	"./Rank/BasicRankPanel": 172,
-	"./Rank/BasicRankPanel.ts": 172,
+	"./PicaRoomList/PicaRoomListPanel": 331,
+	"./PicaRoomList/PicaRoomListPanel.ts": 331,
+	"./PicaRoomList/RoomList": 307,
+	"./PicaRoomList/RoomList.ts": 307,
+	"./Rank/BasicRankPanel": 173,
+	"./Rank/BasicRankPanel.ts": 173,
 	"./Rank/RankMediator": 156,
 	"./Rank/RankMediator.ts": 156,
-	"./Rank/RankPanel": 228,
-	"./Rank/RankPanel.ts": 228,
-	"./ReAwardTips/ReAwardTip": 260,
-	"./ReAwardTips/ReAwardTip.ts": 260,
-	"./ReAwardTips/ReAwardTipsMediator": 259,
-	"./ReAwardTips/ReAwardTipsMediator.ts": 259,
-	"./ReAwardTips/ReAwardTipsPanel": 261,
-	"./ReAwardTips/ReAwardTipsPanel.ts": 261,
-	"./Shop/ShopMediator": 307,
-	"./Shop/ShopMediator.ts": 307,
-	"./Shop/ShopPanel": 308,
-	"./Shop/ShopPanel.ts": 308,
-	"./Shop/shop.itemSlot": 331,
-	"./Shop/shop.itemSlot.ts": 331,
-	"./UserInfo/UserInfoMediator": 309,
-	"./UserInfo/UserInfoMediator.ts": 309,
-	"./UserInfo/UserInfoPanel": 310,
-	"./UserInfo/UserInfoPanel.ts": 310,
-	"./UserMenu/MenuItem": 311,
-	"./UserMenu/MenuItem.ts": 311,
+	"./Rank/RankPanel": 229,
+	"./Rank/RankPanel.ts": 229,
+	"./ReAwardTips/ReAwardTip": 261,
+	"./ReAwardTips/ReAwardTip.ts": 261,
+	"./ReAwardTips/ReAwardTipsMediator": 260,
+	"./ReAwardTips/ReAwardTipsMediator.ts": 260,
+	"./ReAwardTips/ReAwardTipsPanel": 262,
+	"./ReAwardTips/ReAwardTipsPanel.ts": 262,
+	"./Shop/ShopMediator": 308,
+	"./Shop/ShopMediator.ts": 308,
+	"./Shop/ShopPanel": 309,
+	"./Shop/ShopPanel.ts": 309,
+	"./Shop/shop.itemSlot": 332,
+	"./Shop/shop.itemSlot.ts": 332,
+	"./UserInfo/UserInfoMediator": 310,
+	"./UserInfo/UserInfoMediator.ts": 310,
+	"./UserInfo/UserInfoPanel": 311,
+	"./UserInfo/UserInfoPanel.ts": 311,
+	"./UserMenu/MenuItem": 312,
+	"./UserMenu/MenuItem.ts": 312,
 	"./UserMenu/UserMenuMediator": 370,
 	"./UserMenu/UserMenuMediator.ts": 370,
-	"./UserMenu/UserMenuPanel": 312,
-	"./UserMenu/UserMenuPanel.ts": 312,
-	"./alert/PopUpTextUI": 313,
-	"./alert/PopUpTextUI.ts": 313,
+	"./UserMenu/UserMenuPanel": 313,
+	"./UserMenu/UserMenuPanel.ts": 313,
+	"./alert/PopUpTextUI": 314,
+	"./alert/PopUpTextUI.ts": 314,
 	"./bag/IListItemRender": 371,
 	"./bag/IListItemRender.ts": 371,
 	"./bag/bagView/bagMediator": 131,
 	"./bag/bagView/bagMediator.ts": 131,
-	"./bag/bagView/bagPanel": 226,
-	"./bag/bagView/bagPanel.ts": 226,
+	"./bag/bagView/bagPanel": 227,
+	"./bag/bagView/bagPanel.ts": 227,
 	"./bag/basebag": 372,
 	"./bag/basebag.ts": 372,
 	"./bag/baseitem": 373,
@@ -55310,58 +55533,58 @@ var map = {
 	"./bag/idropable.ts": 375,
 	"./bag/item.slot": 132,
 	"./bag/item.slot.ts": 132,
-	"./bag/storage/storageMediator": 314,
-	"./bag/storage/storageMediator.ts": 314,
-	"./bag/storage/storagePanel": 315,
-	"./bag/storage/storagePanel.ts": 315,
-	"./baseView/bagGroup/bag.group": 238,
-	"./baseView/bagGroup/bag.group.mediator": 237,
-	"./baseView/bagGroup/bag.group.mediator.ts": 237,
-	"./baseView/bagGroup/bag.group.ts": 238,
+	"./bag/storage/storageMediator": 315,
+	"./bag/storage/storageMediator.ts": 315,
+	"./bag/storage/storagePanel": 316,
+	"./bag/storage/storagePanel.ts": 316,
+	"./baseView/bagGroup/bag.group": 239,
+	"./baseView/bagGroup/bag.group.mediator": 238,
+	"./baseView/bagGroup/bag.group.mediator.ts": 238,
+	"./baseView/bagGroup/bag.group.ts": 239,
 	"./baseView/baseFace.mediator": 133,
 	"./baseView/baseFace.mediator.ts": 133,
-	"./baseView/bottomGroup/bottom.btn.group": 230,
-	"./baseView/bottomGroup/bottom.btn.group.ts": 230,
-	"./baseView/bottomGroup/bottom.mediator": 174,
-	"./baseView/bottomGroup/bottom.mediator.ts": 174,
+	"./baseView/bottomGroup/bottom.btn.group": 231,
+	"./baseView/bottomGroup/bottom.btn.group.ts": 231,
+	"./baseView/bottomGroup/bottom.mediator": 175,
+	"./baseView/bottomGroup/bottom.mediator.ts": 175,
 	"./baseView/icon.btn": 121,
 	"./baseView/icon.btn.ts": 121,
-	"./baseView/icon.select.btn": 236,
-	"./baseView/icon.select.btn.ts": 236,
-	"./baseView/leftGroup/left.btn.group": 235,
-	"./baseView/leftGroup/left.btn.group.ts": 235,
-	"./baseView/leftGroup/left.mediator": 234,
-	"./baseView/leftGroup/left.mediator.ts": 234,
-	"./baseView/rightGroup/right.btn.group": 229,
-	"./baseView/rightGroup/right.btn.group.ts": 229,
-	"./baseView/rightGroup/right.mediator": 173,
-	"./baseView/rightGroup/right.mediator.ts": 173,
-	"./baseView/top.menu/top.menu.container": 240,
-	"./baseView/top.menu/top.menu.container.ts": 240,
-	"./baseView/top.menu/top.menu.mediator": 239,
-	"./baseView/top.menu/top.menu.mediator.ts": 239,
-	"./baseView/topGroup/top.btn.group": 316,
-	"./baseView/topGroup/top.btn.group.ts": 316,
+	"./baseView/icon.select.btn": 237,
+	"./baseView/icon.select.btn.ts": 237,
+	"./baseView/leftGroup/left.btn.group": 236,
+	"./baseView/leftGroup/left.btn.group.ts": 236,
+	"./baseView/leftGroup/left.mediator": 235,
+	"./baseView/leftGroup/left.mediator.ts": 235,
+	"./baseView/rightGroup/right.btn.group": 230,
+	"./baseView/rightGroup/right.btn.group.ts": 230,
+	"./baseView/rightGroup/right.mediator": 174,
+	"./baseView/rightGroup/right.mediator.ts": 174,
+	"./baseView/top.menu/top.menu.container": 241,
+	"./baseView/top.menu/top.menu.container.ts": 241,
+	"./baseView/top.menu/top.menu.mediator": 240,
+	"./baseView/top.menu/top.menu.mediator.ts": 240,
+	"./baseView/topGroup/top.btn.group": 317,
+	"./baseView/topGroup/top.btn.group.ts": 317,
 	"./baseView/topGroup/top.mediator": 376,
 	"./baseView/topGroup/top.mediator.ts": 376,
-	"./chat/Chat": 221,
-	"./chat/Chat.ts": 221,
-	"./chat/base.chat.panel": 169,
-	"./chat/base.chat.panel.ts": 169,
+	"./chat/Chat": 222,
+	"./chat/Chat.ts": 222,
+	"./chat/base.chat.panel": 170,
+	"./chat/base.chat.panel.ts": 170,
 	"./chat/chat.mediator": 149,
 	"./chat/chat.mediator.ts": 149,
-	"./chat/chatPanel.pc": 212,
-	"./chat/chatPanel.pc.ts": 212,
+	"./chat/chatPanel.pc": 213,
+	"./chat/chatPanel.pc.ts": 213,
 	"./chat/message": 377,
 	"./chat/message.ts": 377,
-	"./chat/mobile/chatPanel.mobile": 220,
-	"./chat/mobile/chatPanel.mobile.ts": 220,
+	"./chat/mobile/chatPanel.mobile": 221,
+	"./chat/mobile/chatPanel.mobile.ts": 221,
 	"./components/BasePanel": 105,
 	"./components/BasePanel.ts": 105,
-	"./components/alert.view": 253,
-	"./components/alert.view.ts": 253,
-	"./components/check.button": 168,
-	"./components/check.button.ts": 168,
+	"./components/alert.view": 254,
+	"./components/alert.view.ts": 254,
+	"./components/check.button": 169,
+	"./components/check.button.ts": 169,
 	"./components/checkbox.group": 157,
 	"./components/checkbox.group.ts": 157,
 	"./components/dynamic.image": 113,
@@ -55370,46 +55593,46 @@ var map = {
 	"./components/dynamic.ninepatch.ts": 201,
 	"./components/dynamic.sprite": 199,
 	"./components/dynamic.sprite.ts": 199,
-	"./components/input.panel": 179,
-	"./components/input.panel.ts": 179,
+	"./components/input.panel": 180,
+	"./components/input.panel.ts": 180,
 	"./components/inputPanel": 378,
 	"./components/inputPanel.ts": 378,
-	"./components/inputTextFactory": 177,
-	"./components/inputTextFactory.ts": 177,
-	"./components/label.input": 296,
-	"./components/label.input.ts": 296,
+	"./components/inputTextFactory": 178,
+	"./components/inputTextFactory.ts": 178,
+	"./components/label.input": 297,
+	"./components/label.input.ts": 297,
 	"./components/message.box": 379,
 	"./components/message.box.ts": 379,
 	"./components/nine.patch": 109,
 	"./components/nine.patch.ts": 109,
 	"./components/ninepatch.button": 114,
 	"./components/ninepatch.button.ts": 114,
-	"./components/patches.config": 217,
-	"./components/patches.config.ts": 217,
-	"./components/radio": 176,
-	"./components/radio.ts": 176,
+	"./components/patches.config": 218,
+	"./components/patches.config.ts": 218,
+	"./components/radio": 177,
+	"./components/radio.ts": 177,
 	"./components/tab.button": 380,
 	"./components/tab.button.ts": 380,
 	"./decorate/decorate.manager": 209,
 	"./decorate/decorate.manager.ts": 209,
 	"./decorate/decorate.panel": 210,
 	"./decorate/decorate.panel.ts": 210,
-	"./friend/friend.mediator": 171,
-	"./friend/friend.mediator.ts": 171,
-	"./friend/friend.panel": 227,
-	"./friend/friend.panel.ts": 227,
-	"./layer.manager": 222,
-	"./layer.manager.ts": 222,
+	"./friend/friend.mediator": 172,
+	"./friend/friend.mediator.ts": 172,
+	"./friend/friend.panel": 228,
+	"./friend/friend.panel.ts": 228,
+	"./layer.manager": 223,
+	"./layer.manager.ts": 223,
 	"./loadview": 381,
 	"./loadview.ts": 381,
 	"./tips/itoolTip": 382,
 	"./tips/itoolTip.ts": 382,
-	"./tips/toolTip": 170,
-	"./tips/toolTip.ts": 170,
-	"./ui.atals.name": 278,
-	"./ui.atals.name.ts": 278,
-	"./ui.manager": 211,
-	"./ui.manager.ts": 211,
+	"./tips/toolTip": 171,
+	"./tips/toolTip.ts": 171,
+	"./ui.atals.name": 279,
+	"./ui.atals.name.ts": 279,
+	"./ui.manager": 212,
+	"./ui.manager.ts": 212,
 	"./ui.mediatorType": 122,
 	"./ui.mediatorType.ts": 122
 };
@@ -56120,7 +56343,7 @@ var LoadingManager = /** @class */ (function () {
 __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ room_manager_RoomManager; });
 
 // EXTERNAL MODULE: ./src/rooms/element/element.manager.ts
-var element_manager = __webpack_require__(159);
+var element_manager = __webpack_require__(160);
 
 // EXTERNAL MODULE: ./node_modules/net-socket-packet/dist/index.js
 var dist = __webpack_require__(103);
@@ -57222,7 +57445,7 @@ var player_manager_PlayerManager = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/layer/layer.manager.ts + 1 modules
-var layer_manager = __webpack_require__(325);
+var layer_manager = __webpack_require__(327);
 
 // EXTERNAL MODULE: ./src/rooms/terrain/terrain.manager.ts
 var terrain_manager = __webpack_require__(207);
@@ -57231,10 +57454,10 @@ var terrain_manager = __webpack_require__(207);
 var position45 = __webpack_require__(139);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/cameras.manager.ts + 1 modules
-var cameras_manager = __webpack_require__(326);
+var cameras_manager = __webpack_require__(328);
 
 // EXTERNAL MODULE: ./src/scenes/play.ts + 1 modules
-var play = __webpack_require__(192);
+var play = __webpack_require__(193);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/viewblock.manager.ts + 1 modules
 var viewblock_manager = __webpack_require__(391);
@@ -57243,7 +57466,7 @@ var viewblock_manager = __webpack_require__(391);
 var loading = __webpack_require__(147);
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.model.ts
-var frames_model = __webpack_require__(162);
+var frames_model = __webpack_require__(163);
 
 // CONCATENATED MODULE: ./src/rooms/map/map.model.ts
 
@@ -57492,7 +57715,7 @@ var map_Map = /** @class */ (function (_super) {
 var display_object = __webpack_require__(148);
 
 // EXTERNAL MODULE: ./src/rooms/editor/reference.area.ts
-var reference_area = __webpack_require__(338);
+var reference_area = __webpack_require__(339);
 
 // EXTERNAL MODULE: ./src/utils/resUtil.ts + 1 modules
 var resUtil = __webpack_require__(104);
@@ -58042,7 +58265,7 @@ var dynamic_image = __webpack_require__(113);
 var basic_scene = __webpack_require__(128);
 
 // EXTERNAL MODULE: ./src/rooms/cameras/play.camera.ts
-var play_camera = __webpack_require__(341);
+var play_camera = __webpack_require__(342);
 
 // CONCATENATED MODULE: ./src/scenes/sky.box.ts
 var sky_box_extends = (undefined && undefined.__extends) || (function () {
@@ -58753,6 +58976,8 @@ var room_Room = /** @class */ (function (_super) {
     };
     Room.prototype.startLoad = function () { };
     Room.prototype.completeLoad = function () {
+        if (this.mWorld.game.scene.getScene(play["a" /* PlayScene */].name))
+            return;
         this.mWorld.game.scene.add(play["a" /* PlayScene */].name, play["a" /* PlayScene */], true, {
             room: this,
         });
@@ -59330,7 +59555,7 @@ var EditScene = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/display/frames.display.ts
-var frames_display = __webpack_require__(160);
+var frames_display = __webpack_require__(161);
 
 // CONCATENATED MODULE: ./src/rooms/editor/mouse.follow.ts
 var mouse_follow_extends = (undefined && undefined.__extends) || (function () {
@@ -60543,7 +60768,7 @@ var editor_moss_manager_EditorMossManager = /** @class */ (function (_super) {
 
 
 // EXTERNAL MODULE: ./src/rooms/terrain/terrain.ts
-var terrain_terrain = __webpack_require__(340);
+var terrain_terrain = __webpack_require__(341);
 
 // CONCATENATED MODULE: ./src/rooms/display-object.pool.ts
 
@@ -61558,7 +61783,7 @@ class ObjectFactory {
 };
 /* harmony default export */ var ui_ObjectFactory = (ObjectFactory);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/roundrectangle/RoundRectangle.js
-var RoundRectangle = __webpack_require__(267);
+var RoundRectangle = __webpack_require__(268);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/object/SetValue.js
 var SetValue = __webpack_require__(108);
@@ -61578,7 +61803,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.RoundRectangle', Roun
 
 /* harmony default export */ var Factory = (RoundRectangle["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/bbcodetext/BBCodeText.js
-var BBCodeText = __webpack_require__(268);
+var BBCodeText = __webpack_require__(269);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/bbcodetext/Factory.js
 
@@ -61595,7 +61820,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.BBCodeText', BBCodeTe
 
 /* harmony default export */ var bbcodetext_Factory = (BBCodeText["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tagtext/TagText.js + 2 modules
-var TagText = __webpack_require__(324);
+var TagText = __webpack_require__(326);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/tagtext/Factory.js
 
@@ -61612,7 +61837,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.TagText', TagText["a"
 
 /* harmony default export */ var tagtext_Factory = (TagText["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/container/Container.js
-var Container = __webpack_require__(163);
+var Container = __webpack_require__(164);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/container/Factory.js
 
@@ -61629,7 +61854,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Container', Container
 
 /* harmony default export */ var container_Factory = (Container["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/canvas/Canvas.js
-var Canvas = __webpack_require__(269);
+var Canvas = __webpack_require__(270);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/canvas/Factory.js
 
@@ -61766,7 +61991,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Sizer', Sizer["a" /* 
 
 /* harmony default export */ var sizer_Factory = (Sizer["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/gridsizer/GridSizer.js + 8 modules
-var GridSizer = __webpack_require__(317);
+var GridSizer = __webpack_require__(318);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridsizer/Factory.js
 
@@ -61783,7 +62008,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.GridSizer', GridSizer
 
 /* harmony default export */ var gridsizer_Factory = (GridSizer["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/label/Label.js + 1 modules
-var Label = __webpack_require__(328);
+var Label = __webpack_require__(329);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/label/Factory.js
 
@@ -61800,7 +62025,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Label', Label["a" /* 
 
 /* harmony default export */ var label_Factory = (Label["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/buttons/Buttons.js + 6 modules
-var Buttons = __webpack_require__(189);
+var Buttons = __webpack_require__(190);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/buttons/Factory.js
 
@@ -61817,7 +62042,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Buttons', Buttons["a"
 
 /* harmony default export */ var buttons_Factory = (Buttons["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/slider/Slider.js + 9 modules
-var Slider = __webpack_require__(188);
+var Slider = __webpack_require__(189);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/slider/Factory.js
 
@@ -61834,7 +62059,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Slider', Slider["a" /
 
 /* harmony default export */ var slider_Factory = (Slider["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/gridtable/GridTable.js + 31 modules
-var GridTable = __webpack_require__(185);
+var GridTable = __webpack_require__(186);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/gridtable/Factory.js
 
@@ -61851,7 +62076,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.GridTable', GridTable
 
 /* harmony default export */ var gridtable_Factory = (GridTable["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/menu/Menu.js + 8 modules
-var Menu = __webpack_require__(318);
+var Menu = __webpack_require__(319);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/menu/Factory.js
 
@@ -61868,7 +62093,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Menu', Menu["a" /* de
 
 /* harmony default export */ var menu_Factory = (Menu["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/textblock/TextBlock.js + 11 modules
-var TextBlock = __webpack_require__(187);
+var TextBlock = __webpack_require__(188);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/textblock/Factory.js
 
@@ -61901,7 +62126,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.TextArea', TextArea["
 
 /* harmony default export */ var textarea_Factory = (TextArea["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/scrollableblock/ScrollableBlock.js + 6 modules
-var ScrollableBlock = __webpack_require__(190);
+var ScrollableBlock = __webpack_require__(191);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollableblock/Factory.js
 
@@ -61918,7 +62143,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.ScrollableBlock', Scr
 
 /* harmony default export */ var scrollableblock_Factory = (ScrollableBlock["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/scrollablepanel/ScrollablePanel.js
-var ScrollablePanel = __webpack_require__(270);
+var ScrollablePanel = __webpack_require__(271);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/scrollablepanel/Factory.js
 
@@ -61935,7 +62160,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.ScrollablePanel', Scr
 
 /* harmony default export */ var scrollablepanel_Factory = (ScrollablePanel["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/tap/Tap.js + 1 modules
-var Tap = __webpack_require__(193);
+var Tap = __webpack_require__(194);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/system/IsGameObject.js
 var IsGameObject = __webpack_require__(151);
@@ -61958,7 +62183,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Tap', Tap["a" /* defa
 
 /* harmony default export */ var tap_Factory = (Tap["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/press/Press.js + 1 modules
-var Press = __webpack_require__(194);
+var Press = __webpack_require__(195);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/press/Factory.js
 
@@ -61998,7 +62223,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Swipe', Swipe["a" /* 
 
 /* harmony default export */ var swipe_Factory = (Swipe["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/gestures/onepointertracer/OnePointerTracer.js + 1 modules
-var OnePointerTracer = __webpack_require__(195);
+var OnePointerTracer = __webpack_require__(196);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/fsm.js + 1 modules
 var fsm = __webpack_require__(137);
@@ -62229,7 +62454,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Pinch', ui_pinch_Pinc
 
 /* harmony default export */ var pinch_Factory = (ui_pinch_Pinch);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/rotate/Rotate.js + 3 modules
-var Rotate = __webpack_require__(321);
+var Rotate = __webpack_require__(322);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/rotate/Factory.js
 
@@ -62244,7 +62469,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Rotate', Rotate["a" /
 
 /* harmony default export */ var rotate_Factory = (Rotate["a" /* default */]);
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/flip/Flip.js + 3 modules
-var Flip = __webpack_require__(322);
+var Flip = __webpack_require__(323);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/flip/Factory.js
 
@@ -62262,19 +62487,19 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.UI.Flip', Flip["a" /* de
 var GetParentSizer = __webpack_require__(153);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/GetTopmostSizer.js
-var GetTopmostSizer = __webpack_require__(165);
+var GetTopmostSizer = __webpack_require__(166);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/utils/input/IsPointerInBounds.js
-var IsPointerInBounds = __webpack_require__(164);
+var IsPointerInBounds = __webpack_require__(165);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/Hide.js
 var Hide = __webpack_require__(144);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/behaviors/textedit/Edit.js
-var Edit = __webpack_require__(271);
+var Edit = __webpack_require__(272);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/utils/WaitEvent.js
-var WaitEvent = __webpack_require__(182);
+var WaitEvent = __webpack_require__(183);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/ui-plugin.js
 
@@ -62422,10 +62647,10 @@ var InputText = __webpack_require__(118);
 var nine_patch = __webpack_require__(109);
 
 // EXTERNAL MODULE: ./src/rooms/display/dragonbones.display.ts + 1 modules
-var dragonbones_display = __webpack_require__(191);
+var dragonbones_display = __webpack_require__(192);
 
 // EXTERNAL MODULE: ./src/rooms/display/dragonbones.model.ts
-var dragonbones_model = __webpack_require__(161);
+var dragonbones_model = __webpack_require__(162);
 
 // EXTERNAL MODULE: ./src/utils/font.ts
 var font = __webpack_require__(107);
@@ -62971,7 +63196,7 @@ Object(SetValue["a" /* default */])(window, 'RexPlugins.GameObjects.InputText', 
 "use strict";
 
 // EXTERNAL MODULE: ./lib/rexui/lib/plugins/input/button/Button.js
-var Button = __webpack_require__(255);
+var Button = __webpack_require__(256);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/plugins/button.js
 
@@ -63011,7 +63236,7 @@ __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding *
 var InputText = __webpack_require__(118);
 
 // EXTERNAL MODULE: ./src/ui/alert/PopUpTextUI.ts
-var PopUpTextUI = __webpack_require__(313);
+var PopUpTextUI = __webpack_require__(314);
 
 // EXTERNAL MODULE: ./src/utils/log.ts
 var log = __webpack_require__(0);
@@ -63023,7 +63248,7 @@ var utils_size = __webpack_require__(198);
 var basic_scene = __webpack_require__(128);
 
 // EXTERNAL MODULE: ./lib/rexui/lib/ui/baseUI/BaseUI.ts
-var BaseUI = __webpack_require__(125);
+var BaseUI = __webpack_require__(124);
 
 // CONCATENATED MODULE: ./lib/rexui/lib/ui/combobox/Combobox.ts
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -63982,7 +64207,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_resUtil__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(104);
 /* harmony import */ var game_capsule__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(25);
 /* harmony import */ var game_capsule__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(game_capsule__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var _ui_ui_manager__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(211);
+/* harmony import */ var _ui_ui_manager__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(212);
 /* harmony import */ var _lib_rexui_lib_plugins_ninepatch_plugin_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(437);
 /* harmony import */ var _lib_rexui_lib_plugins_inputtext_plugin_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(438);
 /* harmony import */ var _lib_rexui_lib_plugins_bbcodetext_plugin_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(426);
@@ -63994,7 +64219,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scenes_gamepause__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(429);
 /* harmony import */ var _rooms_clock__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(441);
 /* harmony import */ var _role_role_manager__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(436);
-/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(124);
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(125);
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(10);
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_28___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_28__);
 /* harmony import */ var _utils_tool__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(155);

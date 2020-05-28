@@ -17,7 +17,7 @@ exports.Buffer = buffer_1.Buffer;
 
 /***/ }),
 
-/***/ 119:
+/***/ 120:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -171,7 +171,7 @@ exports.compareToEquals = compareToEquals;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 var Dictionary = /** @class */ (function () {
     /**
      * Creates an empty dictionary.
@@ -355,7 +355,7 @@ exports.default = Dictionary;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 /**
  * Returns the position of the first occurrence of the specified item
  * within the specified array.4
@@ -531,7 +531,7 @@ exports.forEach = forEach;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 var arrays = __webpack_require__(146);
 var LinkedList = /** @class */ (function () {
     /**
@@ -913,7 +913,7 @@ exports.default = LinkedList;
 
 /***/ }),
 
-/***/ 263:
+/***/ 264:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -936,7 +936,7 @@ function _typeof(obj) {
 
 /***/ }),
 
-/***/ 264:
+/***/ 265:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -949,7 +949,7 @@ function _classCallCheck(instance, Constructor) {
 
 /***/ }),
 
-/***/ 265:
+/***/ 266:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -972,13 +972,13 @@ function _createClass(Constructor, protoProps, staticProps) {
 
 /***/ }),
 
-/***/ 333:
+/***/ 334:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 var arrays = __webpack_require__(146);
 var Dictionary_1 = __webpack_require__(138);
 var Set = /** @class */ (function () {
@@ -1148,14 +1148,14 @@ exports.default = Set;
 
 /***/ }),
 
-/***/ 334:
+/***/ 335:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
-var Queue_1 = __webpack_require__(335);
+var util = __webpack_require__(120);
+var Queue_1 = __webpack_require__(336);
 /**
  * General binary search tree implementation.
  *
@@ -1571,7 +1571,7 @@ exports.default = BSTreeKV;
 
 /***/ }),
 
-/***/ 335:
+/***/ 336:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1686,13 +1686,13 @@ exports.default = Queue;
 
 /***/ }),
 
-/***/ 336:
+/***/ 337:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var collections = __webpack_require__(119);
+var collections = __webpack_require__(120);
 var arrays = __webpack_require__(146);
 var Heap = /** @class */ (function () {
     /**
@@ -1920,7 +1920,7 @@ exports.default = Heap;
 
 /***/ }),
 
-/***/ 337:
+/***/ 338:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1937,7 +1937,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Dictionary_1 = __webpack_require__(138);
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 var FactoryDictionary = /** @class */ (function (_super) {
     __extends(FactoryDictionary, _super);
     /**
@@ -2009,7 +2009,7 @@ exports.default = FactoryDictionary;
 
 /***/ }),
 
-/***/ 339:
+/***/ 340:
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3013,11 +3013,11 @@ var Bag_1 = __webpack_require__(394);
 exports.Bag = Bag_1.default;
 var BSTree_1 = __webpack_require__(395);
 exports.BSTree = BSTree_1.default;
-var BSTreeKV_1 = __webpack_require__(334);
+var BSTreeKV_1 = __webpack_require__(335);
 exports.BSTreeKV = BSTreeKV_1.default;
 var Dictionary_1 = __webpack_require__(138);
 exports.Dictionary = Dictionary_1.default;
-var Heap_1 = __webpack_require__(336);
+var Heap_1 = __webpack_require__(337);
 exports.Heap = Heap_1.default;
 var LinkedDictionary_1 = __webpack_require__(396);
 exports.LinkedDictionary = LinkedDictionary_1.default;
@@ -3025,21 +3025,21 @@ var LinkedList_1 = __webpack_require__(197);
 exports.LinkedList = LinkedList_1.default;
 var MultiDictionary_1 = __webpack_require__(397);
 exports.MultiDictionary = MultiDictionary_1.default;
-var FactoryDictionary_1 = __webpack_require__(337);
+var FactoryDictionary_1 = __webpack_require__(338);
 exports.FactoryDictionary = FactoryDictionary_1.default;
-var FactoryDictionary_2 = __webpack_require__(337);
+var FactoryDictionary_2 = __webpack_require__(338);
 exports.DefaultDictionary = FactoryDictionary_2.default;
-var Queue_1 = __webpack_require__(335);
+var Queue_1 = __webpack_require__(336);
 exports.Queue = Queue_1.default;
 var PriorityQueue_1 = __webpack_require__(398);
 exports.PriorityQueue = PriorityQueue_1.default;
-var Set_1 = __webpack_require__(333);
+var Set_1 = __webpack_require__(334);
 exports.Set = Set_1.default;
 var Stack_1 = __webpack_require__(399);
 exports.Stack = Stack_1.default;
 var MultiRootTree_1 = __webpack_require__(400);
 exports.MultiRootTree = MultiRootTree_1.default;
-var _util = __webpack_require__(119);
+var _util = __webpack_require__(120);
 exports.util = _util;
 //# sourceMappingURL=index.js.map
 
@@ -3051,9 +3051,9 @@ exports.util = _util;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 var Dictionary_1 = __webpack_require__(138);
-var Set_1 = __webpack_require__(333);
+var Set_1 = __webpack_require__(334);
 var Bag = /** @class */ (function () {
     /**
      * Creates an empty bag.
@@ -3253,7 +3253,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var BSTreeKV_1 = __webpack_require__(334);
+var BSTreeKV_1 = __webpack_require__(335);
 /**
  * Special-case of the binary search tree in which the search key is equal to the element type.
  * This definition is suitable when the element type can not be split between what defines its order
@@ -3298,7 +3298,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Dictionary_1 = __webpack_require__(138);
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 /**
  * This class is used by the LinkedDictionary Internally
  * Has to be a class, not an interface, because it needs to have
@@ -3536,7 +3536,7 @@ exports.default = LinkedDictionary;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
+var util = __webpack_require__(120);
 var Dictionary_1 = __webpack_require__(138);
 var arrays = __webpack_require__(146);
 var MultiDictionary = /** @class */ (function () {
@@ -3712,8 +3712,8 @@ exports.default = MultiDictionary;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = __webpack_require__(119);
-var Heap_1 = __webpack_require__(336);
+var util = __webpack_require__(120);
+var Heap_1 = __webpack_require__(337);
 var PriorityQueue = /** @class */ (function () {
     /**
      * Creates an empty priority queue.
@@ -4682,7 +4682,7 @@ exports.PBpacket = PBpacket;
 
 /* global self */
 
-var Rusha = __webpack_require__(339)
+var Rusha = __webpack_require__(340)
 var rushaWorkerSha1 = __webpack_require__(406)
 
 var rusha = new Rusha()
@@ -4763,7 +4763,7 @@ module.exports.sync = sha1sync
 /***/ 406:
 /***/ (function(module, exports, __webpack_require__) {
 
-var Rusha = __webpack_require__(339)
+var Rusha = __webpack_require__(340)
 
 var worker
 var nextTaskId
@@ -4804,10 +4804,10 @@ module.exports = sha1
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(264);
-/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(265);
+/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(265);
+/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(266);
 /* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(348);
-/* harmony import */ var _babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(263);
+/* harmony import */ var _babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(264);
 
 
 
@@ -5026,8 +5026,8 @@ Backend.type = 'backend';
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(264);
-/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(265);
+/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(265);
+/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(266);
 
 
 
@@ -5457,7 +5457,7 @@ module.exports.default = copyTextToClipboard;
 "use strict";
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js
-var esm_typeof = __webpack_require__(263);
+var esm_typeof = __webpack_require__(264);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
 var defineProperty = __webpack_require__(348);
@@ -5483,10 +5483,10 @@ function _objectSpread(target) {
   return target;
 }
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
-var classCallCheck = __webpack_require__(264);
+var classCallCheck = __webpack_require__(265);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createClass.js
-var createClass = __webpack_require__(265);
+var createClass = __webpack_require__(266);
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
 function _assertThisInitialized(self) {
