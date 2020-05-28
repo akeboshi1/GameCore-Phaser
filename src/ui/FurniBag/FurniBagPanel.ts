@@ -4,7 +4,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { Font } from "../../utils/font";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
@@ -17,6 +17,7 @@ import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { IAvatar } from "../../rooms/display/dragonbones.model";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -47,8 +48,7 @@ export class FurniBagPanel extends BasePanel {
   private mEnableEdit: boolean = false;
   private mInputBoo: boolean = false;
   private categoryType: op_def.EditModePackageCategory;
-  private mSelectedItemData: op_client.ICountablePackageItem;
-  private mSelectedItem: Item;
+  private mSelectedItemData: op_client.ICountablePackageItem[] = [];
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
@@ -134,7 +134,6 @@ export class FurniBagPanel extends BasePanel {
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
-    this.mSelectedItem = null;
     if (!props) {
       return;
     }
@@ -143,6 +142,12 @@ export class FurniBagPanel extends BasePanel {
       props = props.concat(new Array(24 - len));
     }
     this.mPropGrid.setItems(props);
+    // if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+    //   const cell = this.mPropGrid.getCell(0);
+    //   this.onSelectItemHandler(cell.container);
+    // }
+    const cell = this.mPropGrid.getCell(0);
+    this.onSelectItemHandler(cell.container);
   }
 
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
@@ -154,13 +159,20 @@ export class FurniBagPanel extends BasePanel {
       for (const key in avatar) {
         if (avatar.hasOwnProperty(key)) {
           const element = avatar[key];
-          if (element && !content.avatar[key]) content.avatar[key] = element;
+          if (element) content.avatar[key] = element;
+        }
+      }
+      for (const item of this.mSelectedItemData) {
+        const dataAvatar = item.avatar;
+        for (const key in dataAvatar) {
+          if (dataAvatar.hasOwnProperty(key)) {
+            const element = dataAvatar[key];
+            if (element) content.avatar[key] = element;
+          }
         }
       }
       const offset = new Phaser.Geom.Point(0, 40 * 2);
       this.mDetailDisplay.loadAvatar(content, 2, offset);
-    } else {
-      // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
     }
   }
 
@@ -361,13 +373,13 @@ export class FurniBagPanel extends BasePanel {
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);
-
-        if (!this.mSelectedItemData) {
-          this.onSelectItemHandler(cellContainer);
-        } else {
-          if (item && item.id === this.mSelectedItemData.id) {
+        if (item) {
+          if (this.isSelectedItemData(item))
             cellContainer.isSelect = true;
-          }
+          if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+            cellContainer.isEquip = true;
+          } else cellContainer.isEquip = false;
+
         }
         return cellContainer;
       },
@@ -404,9 +416,73 @@ export class FurniBagPanel extends BasePanel {
     return btn;
   }
 
+  private replaceSelectItem(data: op_client.ICountablePackageItem) {
+    if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      this.mSelectedItemData.length = 0;
+      this.mSelectedItemData.push(data);
+    } else {
+      const dataAvatar = data.avatar;
+      for (const item of this.mSelectedItemData) {
+        const avatar = item.avatar;
+        if (this.isContainProperty(avatar, dataAvatar)) {
+          const index = this.mSelectedItemData.indexOf(item);
+          this.mSelectedItemData.splice(index, 1);
+          break;
+        }
+      }
+      this.mSelectedItemData.push(data);
+    }
+  }
+
+  private isContainProperty(obj: any, obj1: any) {
+    let canreplace = true;
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (!obj1.hasOwnProperty(key)) {
+          canreplace = false;
+          break;
+        }
+      }
+    }
+    return canreplace;
+  }
+
+  private isContainObject(obj: any, obj1: any) {
+    if (!obj && !obj1) return true;
+    if (typeof obj !== typeof obj1) return false;
+    if (typeof obj === "object") {
+      let canreplace = true;
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          if (obj1.hasOwnProperty(key)) {
+            const value = obj1[key];
+            if (!this.isContainObject(value, obj[key])) {
+              canreplace = false;
+              break;
+            }
+          } else {
+            canreplace = false;
+            break;
+          }
+        }
+      }
+      return canreplace;
+    } else {
+      if (obj === obj1) return true;
+      else return false;
+    }
+
+  }
+
+  private isSelectedItemData(data: op_client.ICountablePackageItem) {
+    for (const temp of this.mSelectedItemData) {
+      if (temp.indexId === data.indexId) {
+        return true;
+      }
+    }
+    return false;
+  }
   private setSelectedItem(prop: op_client.ICountablePackageItem) {
-    // const url = Url.getOsdRes(prop.display.texturePath);
-    // this.mDetailDisplay.loadUrl(url);
     this.emit("queryPropResource", prop);
     this.mDetailBubble.setProp(prop);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
@@ -416,6 +492,9 @@ export class FurniBagPanel extends BasePanel {
     if (this.categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
       this.saveBtn.enable = true;
       this.resetBtn.enable = true;
+    } else {
+      const url = Url.getOsdRes(prop.display.texturePath);
+      this.mDetailDisplay.loadUrl(url);
     }
 
   }
@@ -467,13 +546,11 @@ export class FurniBagPanel extends BasePanel {
   private onSelectItemHandler(cell: Item) {
     const item: op_client.ICountablePackageItem = cell.getData("item");
     if (item) {
-      if (this.mSelectedItem) this.mSelectedItem.isSelect = false;
-      this.mSelectedItem = cell;
-      this.mSelectedItem.isSelect = true;
-      this.mSelectedItemData = item;
+      this.replaceSelectItem(item);
       this.setSelectedItem(item);
+      this.mPropGrid.refresh();
     } else {
-      if (!this.mSelectedItemData) {
+      if (this.mSelectedItemData.length === 0) {
         this.sellBtn.enable = false;
         this.useBtn.enable = false;
         this.mAdd.enable = false;
@@ -495,13 +572,13 @@ export class FurniBagPanel extends BasePanel {
     if (!this.mSelectedItemData) {
       return;
     }
-    this.emit("addFurniToScene", this.mSelectedItemData.id);
+    this.emit("addFurniToScene", this.mSelectedItemData[0].id);
   }
 
   private onTopCategoryHandler(item: Button) {
     const categoryType = item.getData("data");
     const width = this.scaleWidth;
-    this.mSelectedItemData = null;
+    this.mSelectedItemData.length = 0;
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
@@ -568,22 +645,27 @@ export class FurniBagPanel extends BasePanel {
 
   private onSellBtnHandler() {
     this.popItemsPopPanle();
-    if (this.mSelectedItemData)
-      this.itemPopPanel.setProp(this.mSelectedItemData, 0, this.categoryType, new Handler(this, this.onSellPropsHandler));
+    if (this.mSelectedItemData.length > 0)
+      this.itemPopPanel.setProp(this.mSelectedItemData[0], 0, this.categoryType, new Handler(this, this.onSellPropsHandler));
   }
 
   private onUseBtnHandler() {
     this.popItemsPopPanle();
-    if (this.mSelectedItemData)
-      this.itemPopPanel.setProp(this.mSelectedItemData, 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
+    if (this.mSelectedItemData.length > 0)
+      this.itemPopPanel.setProp(this.mSelectedItemData[0], 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
   }
   private onSaveBtnHandler() {
-    if (this.mSelectedItemData)
-      this.emit("querySaveAvatar", this.mSelectedItemData);
+    if (this.mSelectedItemData.length > 0) {
+      const idsArr = [];
+      for (const item of this.mSelectedItemData) {
+        idsArr.push(item.id);
+      }
+      this.emit("querySaveAvatar", idsArr);
+    }
   }
 
   private onResetBtnHandler() {
-    if (this.mSelectedItemData)
+    if (this.mSelectedItemData.length > 0)
       this.emit("queryResetAvatar");
   }
   private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
@@ -814,7 +896,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     let posY = 9 * this.dpr;
     const offsetY = 21 * this.dpr;
     // this.mDesText.setText(prop.des);
-    if (prop.sellingPrice) {
+    if (prop.tradable) {
       posY += offsetY;
       this.mPriceText.y = posY;
       this.mPriceText.setText(`可售卖：${prop.sellingPrice.price}`);
@@ -861,6 +943,7 @@ class Item extends Phaser.GameObjects.Container {
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
   private selectbg: Phaser.GameObjects.Image;
+  private selectIcon: Phaser.GameObjects.Image;
   private dpr: number;
   private zoom: number;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
@@ -871,26 +954,29 @@ class Item extends Phaser.GameObjects.Container {
       key,
       frame: "grid_bg"
     }, false).setOrigin(0).setScale(zoom);
-
+    this.setSize(background.width, background.height);
     this.selectbg = scene.make.image({
       key,
       frame: "grid_choose"
     }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
-
+    this.selectIcon = scene.make.image({
+      key,
+      frame: "selected"
+    }, false).setOrigin(1).setScale(zoom).setPosition(this.width, this.height);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
     this.mPropImage.scale = dpr * zoom;
 
     this.mCounter = scene.make.text({
-      x: background.width - 4 * dpr,
-      y: background.height + 2 * dpr,
+      x: this.width - 4 * dpr,
+      y: this.height + 2 * dpr,
       style: {
         fontSize: 12 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
-    this.add([background, this.selectbg]);
+    this.add([background, this.selectbg, this.selectIcon]);
     this.isSelect = false;
-    this.setSize(background.width, background.height);
+    this.isEquip = false;
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
     // this.on("pointerup", this.onSelectedHandler, this);
   }
@@ -921,6 +1007,7 @@ class Item extends Phaser.GameObjects.Container {
       // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
       this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
       this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
+      this.mPropImage.setDisplaySize(45 * this.dpr, 45 * this.dpr);
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
@@ -929,6 +1016,10 @@ class Item extends Phaser.GameObjects.Container {
 
   public set isSelect(value) {
     this.selectbg.visible = value;
+  }
+
+  public set isEquip(value) {
+    this.selectIcon.visible = value;
   }
 
   private onSelectedHandler() {

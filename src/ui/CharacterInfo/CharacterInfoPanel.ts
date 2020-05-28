@@ -17,6 +17,7 @@ import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { Url } from "../../utils/resUtil";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -35,9 +36,9 @@ export default class CharacterInfoPanel extends BasePanel {
     private nickEditor: Button;
     private bottomCon: Container;
     private bottombg: Phaser.GameObjects.Graphics;
-    private addFriendBtn: NinePatchButton;
-    private tradeBtn: NinePatchButton;
-    private privaCharBtn: NinePatchButton;
+    private addFriendBtn: NineSliceButton;
+    private tradeBtn: NineSliceButton;
+    private privaCharBtn: NineSliceButton;
     private mCategoryScroll: GameScroller;
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
@@ -144,21 +145,21 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottombg = this.scene.make.graphics(undefined, false);
         const bottomBtnPosx = - 60 * this.dpr;
         const bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
-        this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
+        this.addFriendBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
         this.addFriendBtn.setFrameNormal("button_g");
-        this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), {
+        this.privaCharBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
 
-        this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), {
+        this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,

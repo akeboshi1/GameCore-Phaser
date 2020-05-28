@@ -36,7 +36,7 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width / this.scale * zoom, height / this.scale * zoom);
-        this.mPropGrid.refreshPos(width >> 1, this.bg.y - 5 * this.dpr * zoom);
+        this.mPropGrid.refreshPos((this.scene.cameras.main.width*zoom) >> 1, this.bg.y - 5 * this.dpr * zoom);
         this.setSize(width * this.scale * this.scale, height * this.scale * this.scale);
     }
 
