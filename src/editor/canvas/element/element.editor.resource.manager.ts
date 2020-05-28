@@ -91,7 +91,7 @@ export default class ElementEditorResourceManager {
                 return;
             }
 
-            const _imgs = images.splice(0);
+            const _imgs = [].concat(images);
             const onLoadFunc = () => {
                 let allLoaded = true;
                 _imgs.forEach((img) => {
