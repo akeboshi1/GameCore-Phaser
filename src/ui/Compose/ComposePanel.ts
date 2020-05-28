@@ -106,7 +106,7 @@ export class ComposePanel extends BasePanel {
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;
-        this.mDetailBubble.y = height * 0.5 - 380 * this.dpr;
+        this.mDetailBubble.y = height * 0.5 - 360 * this.dpr;
         this.content.add(this.mDetailBubble);
         this.makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
             left: 12 * this.dpr,

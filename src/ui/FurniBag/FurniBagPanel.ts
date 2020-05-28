@@ -896,7 +896,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     let posY = 9 * this.dpr;
     const offsetY = 21 * this.dpr;
     // this.mDesText.setText(prop.des);
-    if (prop.tradable) {
+    if (prop.recyclable) {
       posY += offsetY;
       this.mPriceText.y = posY;
       this.mPriceText.setText(`可售卖：${prop.sellingPrice.price}`);
@@ -904,6 +904,9 @@ class DetailBubble extends Phaser.GameObjects.Container {
       posY += offsetY;
       this.mPriceText.y = posY;
       this.mPriceText.setText(`不可交易`);
+    }
+    if (prop.tradable) {
+      this.mPriceText.setText(`可交易`);
     }
     if (prop.source) {
       this.mSource.setText(`来源： ${prop.source}`);
@@ -1007,7 +1010,8 @@ class Item extends Phaser.GameObjects.Container {
       // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
       this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
       this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
-      this.mPropImage.setDisplaySize(45 * this.dpr, 45 * this.dpr);
+      this.mPropImage.displayHeight = 45 * this.dpr;
+      this.mPropImage.scaleX = this.mPropImage.scaleY;
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
