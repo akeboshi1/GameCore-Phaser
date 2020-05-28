@@ -233,4 +233,4 @@ export class Launcher {
     }
 }
 
-export * from "./editor";
+export * from ".";

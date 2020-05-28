@@ -4,47 +4,47 @@
 //   ../../net-socket-packet
 //   ../../pixelpai_proto
 //   ../../game-capsule/lib/configobjects/scene
-//   ../../game-capsule/lib/configobjects/animations
 //   ../../phaser
 //   ../../events
 //   ../../buffer
+//   ../../game-capsule/lib/configobjects/animations
 //   ../../game-capsule/lib/helpers
 
-declare module 'game-core' {
-    export * from "game-core/game";
-    export * from "game-core/utils";
-    export * from "game-core/rooms";
-    export * from "game-core/plugins";
-    export { GameMain, ILauncherConfig } from "game-core/launcher";
+declare module 'tooqingcore' {
+    export * from "tooqingcore/game";
+    export * from "tooqingcore/utils";
+    export * from "tooqingcore/rooms";
+    export * from "tooqingcore/plugins";
+    export { GameMain, ILauncherConfig } from "tooqingcore/launcher";
 }
 
-declare module 'game-core/game' {
-    export { WorldService } from "game-core/game/world.service";
-    export { World } from "game-core/game/world";
+declare module 'tooqingcore/game' {
+    export { WorldService } from "tooqingcore/game/world.service";
+    export { World } from "tooqingcore/game/world";
 }
 
-declare module 'game-core/utils' {
-    export { Pos } from "game-core/utils/pos";
-    export { Tool } from "game-core/utils/tool";
-    export { IPosition45Obj, Position45 } from "game-core/utils/position45";
-    export { log, error, Logger } from "game-core/utils/log";
-    export { Size } from "game-core/utils/size";
-    export { load } from "game-core/utils/http";
+declare module 'tooqingcore/utils' {
+    export { Pos } from "tooqingcore/utils/pos";
+    export { Tool } from "tooqingcore/utils/tool";
+    export { IPosition45Obj, Position45 } from "tooqingcore/utils/position45";
+    export { log, error, Logger } from "tooqingcore/utils/log";
+    export { Size } from "tooqingcore/utils/size";
+    export { load } from "tooqingcore/utils/http";
 }
 
-declare module 'game-core/rooms' {
-    export { IRoomService } from "game-core/rooms/room";
-    export { ISkyBoxConfig } from "game-core/rooms/sky.box";
-    export { Clock } from "game-core/rooms/clock";
-    export { IRoomManager, RoomManager } from "game-core/rooms/room.manager";
+declare module 'tooqingcore/rooms' {
+    export { IRoomService } from "tooqingcore/rooms/room";
+    export { ISkyBoxConfig } from "tooqingcore/rooms/sky.box";
+    export { Clock } from "tooqingcore/rooms/clock";
+    export { IRoomManager, RoomManager } from "tooqingcore/rooms/room.manager";
 }
 
-declare module 'game-core/plugins' {
-    export { BasicPlugin } from "game-core/plugins/basic.plugin";
+declare module 'tooqingcore/plugins' {
+    export { BasicPlugin } from "tooqingcore/plugins/basic.plugin";
 }
 
-declare module 'game-core/launcher' {
-    import { ServerAddress, ConnectionService } from "game-core/net";
+declare module 'tooqingcore/launcher' {
+    import { ServerAddress, ConnectionService } from "tooqingcore/net";
     import { Capsule, PaletteNode, MossNode } from "game-capsule";
     export interface ILauncherConfig {
         auth_token: string;
@@ -108,19 +108,19 @@ declare module 'game-core/launcher' {
         onOrientationChange(orientation: number, width: number, height: number): void;
         destroy(): void;
     }
-    export * from "game-core/editor";
+    export * from "tooqingcore/";
 }
 
-declare module 'game-core/game/world.service' {
-    import { IRoomManager, IRoomService, Clock } from "game-core/rooms";
-    import { Size } from "game-core/utils";
-    import { UiManager } from "game-core/ui";
-    import { InputManager } from "game-core/game/input.service";
-    import { Account } from "game-core/game/account";
-    import { HttpService } from "game-core/net";
-    import { MouseManager } from "game-core/game/mouse.manager";
-    import { ConnectionService } from "game-core/net";
-    import { ISoundConfig } from "game-core/game/sound.manager";
+declare module 'tooqingcore/game/world.service' {
+    import { IRoomManager, IRoomService, Clock } from "tooqingcore/rooms";
+    import { Size } from "tooqingcore/utils";
+    import { UiManager } from "tooqingcore/ui";
+    import { InputManager } from "tooqingcore/game/input.service";
+    import { Account } from "tooqingcore/game/account";
+    import { HttpService } from "tooqingcore/net";
+    import { MouseManager } from "tooqingcore/game/mouse.manager";
+    import { ConnectionService } from "tooqingcore/net";
+    import { ISoundConfig } from "tooqingcore/game/sound.manager";
     export interface WorldService {
         connection: ConnectionService;
         clock: Clock;
@@ -157,25 +157,25 @@ declare module 'game-core/game/world.service' {
     }
 }
 
-declare module 'game-core/game/world' {
+declare module 'tooqingcore/game/world' {
     import "phaser";
     import "dragonBones";
-    import { WorldService } from "game-core/game/world.service";
+    import { WorldService } from "tooqingcore/game/world.service";
     import { PacketHandler, PBpacket } from "net-socket-packet";
-    import { IConnectListener, SocketConnection, SocketConnectionError, ConnectionService } from "game-core/net";
+    import { IConnectListener, SocketConnection, SocketConnectionError, ConnectionService } from "tooqingcore/net";
     import { op_def } from "pixelpai_proto";
-    import { Size } from "game-core/utils";
-    import { IRoomManager, IRoomService } from "game-core/rooms";
-    import { MouseManager } from "game-core/game/mouse.manager";
-    import { GameMain, ILauncherConfig } from "game-core/launcher";
-    import { IElementStorage } from "game-core/game/element.storage";
+    import { Size } from "tooqingcore/utils";
+    import { IRoomManager, IRoomService } from "tooqingcore/rooms";
+    import { MouseManager } from "tooqingcore/game/mouse.manager";
+    import { GameMain, ILauncherConfig } from "tooqingcore/launcher";
+    import { IElementStorage } from "tooqingcore/game/element.storage";
     import { Lite, Capsule, PaletteNode, MossNode } from "game-capsule";
-    import { UiManager } from "game-core/ui";
-    import { InputManager } from "game-core/game/input.service";
-    import { Account } from "game-core/game/account";
-    import { HttpService } from "game-core/net";
-    import { Clock, ClockReadyListener } from "game-core/rooms/clock";
-    import { ISoundConfig } from "game-core/game/sound.manager";
+    import { UiManager } from "tooqingcore/ui";
+    import { InputManager } from "tooqingcore/game/input.service";
+    import { Account } from "tooqingcore/game/account";
+    import { HttpService } from "tooqingcore/net";
+    import { Clock, ClockReadyListener } from "tooqingcore/rooms/clock";
+    import { ISoundConfig } from "tooqingcore/game/sound.manager";
     export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
             static SCALE_CHANGE: string;
             constructor(config: ILauncherConfig, callBack?: Function);
@@ -236,7 +236,7 @@ declare module 'game-core/game/world' {
     }
 }
 
-declare module 'game-core/utils/pos' {
+declare module 'tooqingcore/utils/pos' {
     export class Pos {
         x: number;
         y: number;
@@ -251,8 +251,8 @@ declare module 'game-core/utils/pos' {
     }
 }
 
-declare module 'game-core/utils/tool' {
-    import { Pos } from "game-core/utils/pos";
+declare module 'tooqingcore/utils/tool' {
+    import { Pos } from "tooqingcore/utils/pos";
     export class Tool {
             /**
                 * scene之间坐标转换
@@ -275,8 +275,8 @@ declare module 'game-core/utils/tool' {
     }
 }
 
-declare module 'game-core/utils/position45' {
-    import { Pos } from "game-core/utils/pos";
+declare module 'tooqingcore/utils/position45' {
+    import { Pos } from "tooqingcore/utils/pos";
     export interface IPosition45Obj {
         readonly cols: number;
         readonly rows: number;
@@ -292,7 +292,7 @@ declare module 'game-core/utils/position45' {
     }
 }
 
-declare module 'game-core/utils/log' {
+declare module 'tooqingcore/utils/log' {
     export class Logger {
         constructor();
         static getInstance(): Logger;
@@ -309,40 +309,40 @@ declare module 'game-core/utils/log' {
     export function error(message: any, ...optionalParams: any[]): void;
 }
 
-declare module 'game-core/utils/size' {
+declare module 'tooqingcore/utils/size' {
     export class Size extends Phaser.Structs.Size {
         constructor(width?: number, height?: number);
     }
 }
 
-declare module 'game-core/utils/http' {
+declare module 'tooqingcore/utils/http' {
     export function load(path: string, responseType: XMLHttpRequestResponseType): Promise<any>;
     export function checkIsFriend(uids: number[]): Promise<Response>;
 }
 
-declare module 'game-core/rooms/room' {
-    import { IRoomManager } from "game-core/rooms/room.manager";
-    import { ElementManager } from "game-core/rooms/element/element.manager";
-    import { PlayerManager } from "game-core/rooms/player/player.manager";
-    import { LayerManager } from "game-core/rooms/layer/layer.manager";
-    import { TerrainManager } from "game-core/rooms/terrain/terrain.manager";
-    import { ConnectionService } from "game-core/net";
+declare module 'tooqingcore/rooms/room' {
+    import { IRoomManager } from "tooqingcore/rooms/room.manager";
+    import { ElementManager } from "tooqingcore/rooms/element/element.manager";
+    import { PlayerManager } from "tooqingcore/rooms/player/player.manager";
+    import { LayerManager } from "tooqingcore/rooms/layer/layer.manager";
+    import { TerrainManager } from "tooqingcore/rooms/terrain/terrain.manager";
+    import { ConnectionService } from "tooqingcore/net";
     import { op_client, op_def } from "pixelpai_proto";
-    import { IPosition45Obj } from "game-core/utils";
-    import { ICameraService } from "game-core/rooms/cameras/cameras.manager";
+    import { IPosition45Obj } from "tooqingcore/utils";
+    import { ICameraService } from "tooqingcore/rooms/cameras/cameras.manager";
     import { PacketHandler } from "net-socket-packet";
-    import { WorldService } from "game-core/game";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { ViewblockService } from "game-core/rooms/cameras/viewblock.manager";
-    import { Pos } from "game-core/utils/pos";
-    import { ClockReadyListener } from "game-core/rooms/clock";
+    import { WorldService } from "tooqingcore/game";
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { ViewblockService } from "tooqingcore/rooms/cameras/viewblock.manager";
+    import { Pos } from "tooqingcore/utils/pos";
+    import { ClockReadyListener } from "tooqingcore/rooms/clock";
     import IActor = op_client.IActor;
-    import { Map } from "game-core/rooms/map/map";
-    import { IBlockObject } from "game-core/rooms/cameras/block.object";
-    import { WallManager } from "game-core/rooms/wall/wall.manager";
-    import { SkyBoxManager, IScenery } from "game-core/rooms/sky.box";
-    import { GroupManager } from "game-core/rooms/group/GroupManager";
-    import { FrameManager } from "game-core/rooms/element/frame.manager";
+    import { Map } from "tooqingcore/rooms/map/map";
+    import { IBlockObject } from "tooqingcore/rooms/cameras/block.object";
+    import { WallManager } from "tooqingcore/rooms/wall/wall.manager";
+    import { SkyBoxManager, IScenery } from "tooqingcore/rooms/sky.box";
+    import { GroupManager } from "tooqingcore/rooms/group/GroupManager";
+    import { FrameManager } from "tooqingcore/rooms/element/frame.manager";
     export interface SpriteAddCompletedListener {
         onFullPacketReceived(sprite_t: op_def.NodeType): void;
     }
@@ -461,14 +461,14 @@ declare module 'game-core/rooms/room' {
     }
 }
 
-declare module 'game-core/rooms/sky.box' {
-    export { ISkyBoxConfig, SkyBoxManager } from "game-core/rooms/sky.box/sky.box.manager";
-    export { IScenery } from "game-core/rooms/sky.box/scenery";
+declare module 'tooqingcore/rooms/sky.box' {
+    export { ISkyBoxConfig, SkyBoxManager } from "tooqingcore/rooms/sky.box/sky.box.manager";
+    export { IScenery } from "tooqingcore/rooms/sky.box/scenery";
 }
 
-declare module 'game-core/rooms/clock' {
+declare module 'tooqingcore/rooms/clock' {
     import { PacketHandler } from "net-socket-packet";
-    import { ConnectionService } from "game-core/net/connection.service";
+    import { ConnectionService } from "tooqingcore/net/connection.service";
     export interface ClockReadyListener {
         onClockReady(): void;
     }
@@ -487,10 +487,10 @@ declare module 'game-core/rooms/clock' {
     }
 }
 
-declare module 'game-core/rooms/room.manager' {
-    import { WorldService } from "game-core/game";
-    import { ConnectionService } from "game-core/net";
-    import { Room, IRoomService } from "game-core/rooms/room";
+declare module 'tooqingcore/rooms/room.manager' {
+    import { WorldService } from "tooqingcore/game";
+    import { ConnectionService } from "tooqingcore/net";
+    import { Room, IRoomService } from "tooqingcore/rooms/room";
     import { PacketHandler } from "net-socket-packet";
     export interface IRoomManager {
         readonly world: WorldService | undefined;
@@ -522,8 +522,8 @@ declare module 'game-core/rooms/room.manager' {
     }
 }
 
-declare module 'game-core/plugins/basic.plugin' {
-    import { WorldService } from "game-core/game";
+declare module 'tooqingcore/plugins/basic.plugin' {
+    import { WorldService } from "tooqingcore/game";
     export class BasicPlugin {
         protected mWorld: WorldService;
         init(worldService: WorldService): void;
@@ -535,25 +535,27 @@ declare module 'game-core/plugins/basic.plugin' {
     }
 }
 
-declare module 'game-core/net' {
-    export { ConnectionService } from "game-core/net/connection.service";
-    export { HttpService } from "game-core/net/http.service";
-    export { IConnectListener, SocketConnection, SocketConnectionError } from "game-core/net/socket";
-    export { ServerAddress } from "game-core/net/address";
+declare module 'tooqingcore/net' {
+    export { ConnectionService } from "tooqingcore/net/connection.service";
+    export { HttpService } from "tooqingcore/net/http.service";
+    export { IConnectListener, SocketConnection, SocketConnectionError } from "tooqingcore/net/socket";
+    export { ServerAddress } from "tooqingcore/net/address";
 }
 
-declare module 'game-core/editor' {
-    import "phaser";
-    export { EditorLauncher, EditorCanvasType } from "game-core/editor/editor.launcher";
-    export { ElementEditorCanvas, ElementEditorEmitType, ElementEditorBrushType } from "game-core/editor/canvas/element/element.editor.canvas";
+declare module 'tooqingcore/' {
+    export * from "tooqingcore/game";
+    export * from "tooqingcore/utils";
+    export * from "tooqingcore/rooms";
+    export * from "tooqingcore/plugins";
+    export { GameMain, ILauncherConfig } from "tooqingcore/launcher";
 }
 
-declare module 'game-core/ui' {
-    export { UiManager } from "game-core/ui/ui.manager";
+declare module 'tooqingcore/ui' {
+    export { UiManager } from "tooqingcore/ui/ui.manager";
 }
 
-declare module 'game-core/game/input.service' {
-    import { IRoomService } from "game-core/rooms/room";
+declare module 'tooqingcore/game/input.service' {
+    import { IRoomService } from "tooqingcore/rooms/room";
     export interface InputManager {
         enable: boolean;
         addListener(l: InputListener): any;
@@ -572,7 +574,7 @@ declare module 'game-core/game/input.service' {
     }
 }
 
-declare module 'game-core/game/account' {
+declare module 'tooqingcore/game/account' {
     export interface IAccountData {
         token: string;
         expire: number;
@@ -585,10 +587,10 @@ declare module 'game-core/game/account' {
     }
 }
 
-declare module 'game-core/game/mouse.manager' {
+declare module 'tooqingcore/game/mouse.manager' {
     import { PacketHandler } from "net-socket-packet";
-    import { WorldService } from "game-core/game/world.service";
-    import { IRoomService } from "game-core/rooms/room";
+    import { WorldService } from "tooqingcore/game/world.service";
+    import { IRoomService } from "tooqingcore/rooms/room";
     export enum MouseEvent {
         RightMouseDown = 1,
         RightMouseUp = 2,
@@ -616,9 +618,9 @@ declare module 'game-core/game/mouse.manager' {
     }
 }
 
-declare module 'game-core/game/sound.manager' {
-    import { IRoomService } from "game-core/rooms/room";
-    import { WorldService } from "game-core/game/world.service";
+declare module 'tooqingcore/game/sound.manager' {
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { WorldService } from "tooqingcore/game/world.service";
     import { PacketHandler } from "net-socket-packet";
     export enum SoundField {
         Background = 0,
@@ -645,13 +647,13 @@ declare module 'game-core/game/sound.manager' {
     }
 }
 
-declare module 'game-core/game/element.storage' {
-    import { FramesModel, IFramesModel } from "game-core/rooms/display/frames.model";
-    import { DragonbonesModel, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+declare module 'tooqingcore/game/element.storage' {
+    import { FramesModel, IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { DragonbonesModel, IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
     import { Lite, PaletteNode, TerrainCollectionNode, MossNode, AssetsNode } from "game-capsule";
     import { MossCollectionNode } from "game-capsule/lib/configobjects/scene";
-    import { IScenery } from "game-core/rooms/sky.box/scenery";
-    import { IAsset } from "game-core/loading/loading.manager";
+    import { IScenery } from "tooqingcore/rooms/sky.box/scenery";
+    import { IAsset } from "tooqingcore/loading/loading.manager";
     export interface IElementStorage {
         setGameConfig(gameConfig: Lite): any;
         updatePalette(palette: PaletteNode): any;
@@ -691,15 +693,15 @@ declare module 'game-core/game/element.storage' {
     }
 }
 
-declare module 'game-core/rooms/element/element.manager' {
+declare module 'tooqingcore/rooms/element/element.manager' {
     import { PacketHandler, PBpacket } from "net-socket-packet";
     import { op_def } from "pixelpai_proto";
-    import { ConnectionService } from "game-core/net/connection.service";
-    import { Element, IElement } from "game-core/rooms/element/element";
-    import { IRoomService } from "game-core/rooms/room";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { ConnectionService } from "tooqingcore/net/connection.service";
+    import { Element, IElement } from "tooqingcore/rooms/element/element";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { ISprite } from "tooqingcore/rooms/element/sprite";
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
     export interface IElementManager {
         hasAddComplete: boolean;
         readonly connection: ConnectionService | undefined;
@@ -749,16 +751,16 @@ declare module 'game-core/rooms/element/element.manager' {
     }
 }
 
-declare module 'game-core/rooms/player/player.manager' {
-    import { IElementManager } from "game-core/rooms/element/element.manager";
+declare module 'tooqingcore/rooms/player/player.manager' {
+    import { IElementManager } from "tooqingcore/rooms/element/element.manager";
     import { PacketHandler } from "net-socket-packet";
     import { op_client, op_gameconfig } from "pixelpai_proto";
-    import { ConnectionService } from "game-core/net/connection.service";
-    import { IRoomService, Room } from "game-core/rooms/room";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { Player } from "game-core/rooms/player/player";
-    import { IElement } from "game-core/rooms/element/element";
-    import { Actor } from "game-core/rooms/player/Actor";
+    import { ConnectionService } from "tooqingcore/net/connection.service";
+    import { IRoomService, Room } from "tooqingcore/rooms/room";
+    import { ISprite } from "tooqingcore/rooms/element/sprite";
+    import { Player } from "tooqingcore/rooms/player/player";
+    import { IElement } from "tooqingcore/rooms/element/element";
+    import { Actor } from "tooqingcore/rooms/player/Actor";
     export class PlayerManager extends PacketHandler implements IElementManager {
         hasAddComplete: boolean;
         constructor(mRoom: Room);
@@ -784,10 +786,10 @@ declare module 'game-core/rooms/player/player.manager' {
     }
 }
 
-declare module 'game-core/rooms/layer/layer.manager' {
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IRoomService } from "game-core/rooms/room";
-    import { GridLayer } from "game-core/rooms/layer/grid.layer";
+declare module 'tooqingcore/rooms/layer/layer.manager' {
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { GridLayer } from "tooqingcore/rooms/layer/grid.layer";
     export class LayerManager {
             /**
                 * 背景层1(用于鼠标点击移动)
@@ -846,17 +848,17 @@ declare module 'game-core/rooms/layer/layer.manager' {
     }
 }
 
-declare module 'game-core/rooms/terrain/terrain.manager' {
+declare module 'tooqingcore/rooms/terrain/terrain.manager' {
     import { PacketHandler, PBpacket } from "net-socket-packet";
-    import { ConnectionService } from "game-core/net/connection.service";
-    import { Terrain } from "game-core/rooms/terrain/terrain";
-    import { IRoomService, SpriteAddCompletedListener } from "game-core/rooms/room";
-    import { IElementManager } from "game-core/rooms/element/element.manager";
-    import { IElementStorage } from "game-core/game/element.storage";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { IElement } from "game-core/rooms/element/element";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { ConnectionService } from "tooqingcore/net/connection.service";
+    import { Terrain } from "tooqingcore/rooms/terrain/terrain";
+    import { IRoomService, SpriteAddCompletedListener } from "tooqingcore/rooms/room";
+    import { IElementManager } from "tooqingcore/rooms/element/element.manager";
+    import { IElementStorage } from "tooqingcore/game/element.storage";
+    import { ISprite } from "tooqingcore/rooms/element/sprite";
+    import { IElement } from "tooqingcore/rooms/element/element";
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
     export class TerrainManager extends PacketHandler implements IElementManager {
         protected mRoom: IRoomService;
         hasAddComplete: boolean;
@@ -891,11 +893,11 @@ declare module 'game-core/rooms/terrain/terrain.manager' {
     }
 }
 
-declare module 'game-core/rooms/cameras/cameras.manager' {
+declare module 'tooqingcore/rooms/cameras/cameras.manager' {
     import { PacketHandler } from "net-socket-packet";
-    import { IRoomService } from "game-core/rooms/room";
-    import { ConnectionService } from "game-core/net/connection.service";
-    import { Rectangle45 } from "game-core/utils/rectangle45";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { ConnectionService } from "tooqingcore/net/connection.service";
+    import { Rectangle45 } from "tooqingcore/utils/rectangle45";
     export interface ICameraService {
         camera: Phaser.Cameras.Scene2D.Camera | undefined;
         moving: boolean;
@@ -954,13 +956,13 @@ declare module 'game-core/rooms/cameras/cameras.manager' {
     }
 }
 
-declare module 'game-core/rooms/display/element.display' {
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { DisplayField } from "game-core/rooms/display/frames.display";
+declare module 'tooqingcore/rooms/display/element.display' {
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
+    import { DisplayField } from "tooqingcore/rooms/display/frames.display";
     import { op_def } from "pixelpai_proto";
-    import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/sprite";
+    import { IElement } from "tooqingcore/rooms/element/element";
+    import { AnimationData } from "tooqingcore/rooms/element/sprite";
     export interface ElementDisplay extends Phaser.GameObjects.Container {
         readonly baseLoc: Phaser.Geom.Point;
         readonly element: IElement;
@@ -982,10 +984,10 @@ declare module 'game-core/rooms/display/element.display' {
     }
 }
 
-declare module 'game-core/rooms/cameras/viewblock.manager' {
-    import { ICameraService } from "game-core/rooms/cameras/cameras.manager";
-    import { IPosition45Obj } from "game-core/utils/position45";
-    import { IBlockObject } from "game-core/rooms/cameras/block.object";
+declare module 'tooqingcore/rooms/cameras/viewblock.manager' {
+    import { ICameraService } from "tooqingcore/rooms/cameras/cameras.manager";
+    import { IPosition45Obj } from "tooqingcore/utils/position45";
+    import { IBlockObject } from "tooqingcore/rooms/cameras/block.object";
     export interface ViewblockService {
         update(time: number, delta: number): void;
         int(size: IPosition45Obj): void;
@@ -1005,12 +1007,12 @@ declare module 'game-core/rooms/cameras/viewblock.manager' {
     }
 }
 
-declare module 'game-core/rooms/map/map' {
-    import { WorldService } from "game-core/game/world.service";
+declare module 'tooqingcore/rooms/map/map' {
+    import { WorldService } from "tooqingcore/game/world.service";
     import { op_client, op_gameconfig } from "pixelpai_proto";
-    import { MapModel } from "game-core/rooms/map/map.model";
+    import { MapModel } from "tooqingcore/rooms/map/map.model";
     import { PacketHandler } from "net-socket-packet";
-    import { IEntity } from "game-core/rooms/entity";
+    import { IEntity } from "tooqingcore/rooms/entity";
     export class Map extends PacketHandler implements IEntity {
         static NAME: string;
         constructor(mWorld: WorldService);
@@ -1025,12 +1027,12 @@ declare module 'game-core/rooms/map/map' {
     }
 }
 
-declare module 'game-core/rooms/cameras/block.object' {
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { InputEnable } from "game-core/rooms/element/element";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { Pos } from "game-core/utils/pos";
-    import { IRoomService } from "game-core/rooms/room";
+declare module 'tooqingcore/rooms/cameras/block.object' {
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { InputEnable } from "tooqingcore/rooms/element/element";
+    import { ISprite } from "tooqingcore/rooms/element/sprite";
+    import { Pos } from "tooqingcore/utils/pos";
+    import { IRoomService } from "tooqingcore/rooms/room";
     export interface IBlockObject {
         readonly id: number;
         getPosition(): Pos;
@@ -1067,9 +1069,9 @@ declare module 'game-core/rooms/cameras/block.object' {
     }
 }
 
-declare module 'game-core/rooms/wall/wall.manager' {
-    import { IRoomService } from "game-core/rooms/room";
-    import { Direction } from "game-core/rooms/wall/wall";
+declare module 'tooqingcore/rooms/wall/wall.manager' {
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { Direction } from "tooqingcore/rooms/wall/wall";
     import { PacketHandler } from "net-socket-packet";
     export class WallManager extends PacketHandler {
         protected mRoom: IRoomService;
@@ -1079,10 +1081,10 @@ declare module 'game-core/rooms/wall/wall.manager' {
     }
 }
 
-declare module 'game-core/rooms/group/GroupManager' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
-    import { IGroup } from "game-core/rooms/group/IGroup";
-    import { IRoomService } from "game-core/rooms/room";
+declare module 'tooqingcore/rooms/group/GroupManager' {
+    import { IDispose } from "tooqingcore/rooms/action/IDispose";
+    import { IGroup } from "tooqingcore/rooms/group/IGroup";
+    import { IRoomService } from "tooqingcore/rooms/room";
     export class GroupManager implements IDispose {
         protected map: Map<any, IGroup[]>;
         constructor(room: IRoomService);
@@ -1100,8 +1102,8 @@ declare module 'game-core/rooms/group/GroupManager' {
     }
 }
 
-declare module 'game-core/rooms/element/frame.manager' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
+declare module 'tooqingcore/rooms/element/frame.manager' {
+    import { IDispose } from "tooqingcore/rooms/action/IDispose";
     export class FrameManager implements IDispose {
         add(caller: any, method: Function, args?: any[]): void;
         remove(caller: any, method: Function): void;
@@ -1111,10 +1113,10 @@ declare module 'game-core/rooms/element/frame.manager' {
     }
 }
 
-declare module 'game-core/rooms/sky.box/sky.box.manager' {
-    import { BlockManager } from "game-core/rooms/sky.box/block.manager";
-    import { IRoomService } from "game-core/rooms/room";
-    import { IScenery } from "game-core/rooms/sky.box/scenery";
+declare module 'tooqingcore/rooms/sky.box/sky.box.manager' {
+    import { BlockManager } from "tooqingcore/rooms/sky.box/block.manager";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { IScenery } from "tooqingcore/rooms/sky.box/scenery";
     import { PacketHandler } from "net-socket-packet";
     export interface ISkyBoxConfig {
         key: string;
@@ -1134,7 +1136,7 @@ declare module 'game-core/rooms/sky.box/sky.box.manager' {
     }
 }
 
-declare module 'game-core/rooms/sky.box/scenery' {
+declare module 'tooqingcore/rooms/sky.box/scenery' {
     import { op_def, op_client } from "pixelpai_proto";
     export interface IScenery {
         readonly id: number;
@@ -1163,8 +1165,8 @@ declare module 'game-core/rooms/sky.box/scenery' {
     }
 }
 
-declare module 'game-core/net/connection.service' {
-    import { ServerAddress } from "game-core/net/address";
+declare module 'tooqingcore/net/connection.service' {
+    import { ServerAddress } from "tooqingcore/net/address";
     import { PacketHandler, PBpacket } from "net-socket-packet";
     export interface ConnectionService {
         startConnect(addr: ServerAddress, keepalive?: boolean): void;
@@ -1177,8 +1179,8 @@ declare module 'game-core/net/connection.service' {
     }
 }
 
-declare module 'game-core/net/http.service' {
-    import { WorldService } from "game-core/game/world.service";
+declare module 'tooqingcore/net/http.service' {
+    import { WorldService } from "tooqingcore/game/world.service";
     export class HttpService {
             constructor(mWorld: WorldService);
             /**
@@ -1227,9 +1229,9 @@ declare module 'game-core/net/http.service' {
     }
 }
 
-declare module 'game-core/net/socket' {
-    import { ServerAddress } from "game-core/net/address";
-    import { WSWrapper } from "game-core/net/transport/websocket";
+declare module 'tooqingcore/net/socket' {
+    import { ServerAddress } from "tooqingcore/net/address";
+    import { WSWrapper } from "tooqingcore/net/transport/websocket";
     export interface IConnectListener {
         onConnected(connection?: SocketConnection): void;
         onDisConnected(connection?: SocketConnection): void;
@@ -1253,7 +1255,7 @@ declare module 'game-core/net/socket' {
     }
 }
 
-declare module 'game-core/net/address' {
+declare module 'tooqingcore/net/address' {
     export interface ServerAddress {
         readonly host: string;
         readonly port: number;
@@ -1261,70 +1263,11 @@ declare module 'game-core/net/address' {
     }
 }
 
-declare module 'game-core/editor/editor.launcher' {
-    import "phaser";
-    import "dragonBones";
-    import { IEditorCanvasConfig } from "game-core/editor/canvas/editor.canvas";
-    import { ElementEditorCanvas } from "game-core/editor/canvas/element/element.editor.canvas";
-    export enum EditorCanvasType {
-        Element = 0
-    }
-    export class EditorLauncher {
-        static CreateCanvas(type: EditorCanvasType, config: IEditorCanvasConfig): ElementEditorCanvas;
-    }
-}
-
-declare module 'game-core/editor/canvas/element/element.editor.canvas' {
-    import { EditorCanvas, IEditorCanvasConfig } from "game-core/editor/canvas/editor.canvas";
-    import { ElementNode } from "game-capsule";
-    import { IImage } from "game-capsule/lib/configobjects/animations";
-    export enum ElementEditorBrushType {
-        Drag = 0,
-        Walkable = 1,
-        Collision = 2,
-        Interactive = 3
-    }
-    export enum ElementEditorEmitType {
-        Resource_Loaded = "resourceLoaded",
-        Active_Animation_Layer = "activeAnimationLayer",
-        Active_Mount_Layer = "activeMountLayer",
-        Update_Frame_Sumb = "updateFrameSumb"
-    }
-    export class ElementEditorCanvas extends EditorCanvas {
-        mData: ElementNode;
-        constructor(config: IEditorCanvasConfig);
-        destroy(): void;
-        getScene(): Phaser.Scene;
-        onSceneCreated(): void;
-        onSceneDestroy(): void;
-        on(event: ElementEditorEmitType, fn: Function, context?: any): void;
-        off(event: ElementEditorEmitType, fn?: Function, context?: any, once?: boolean): void;
-        deserializeDisplay(): Promise<IImage[]>;
-        generateSpriteSheet(images: IImage[]): Promise<{
-            url: string;
-            json: string;
-        }>;
-        reloadDisplayNode(): void;
-        changeAnimationData(animationDataId: number): void;
-        selectFrame(frameIndex: number): void;
-        playAnimation(): void;
-        stopAnimation(): void;
-        changeBrush(mode: ElementEditorBrushType): void;
-        selectAnimationLayer(layerIndexs: number[]): void;
-        selectMountLayer(mountPointIndex?: number): void;
-        updateDepth(): void;
-        updateAnimationLayer(): void;
-        toggleMountPointAnimationPlay(playerAnimationName: string, mountPointIndex?: number): void;
-        updateMountLayer(): void;
-        generateThumbnail(): Promise<string>;
-    }
-}
-
-declare module 'game-core/ui/ui.manager' {
-    import { WorldService } from "game-core/game";
+declare module 'tooqingcore/ui/ui.manager' {
+    import { WorldService } from "tooqingcore/game";
     import { PacketHandler } from "net-socket-packet";
-    import { ILayerManager } from "game-core/ui/layer.manager";
-    import { InputTextFactory } from "game-core/ui/components/inputTextFactory";
+    import { ILayerManager } from "tooqingcore/ui/layer.manager";
+    import { InputTextFactory } from "tooqingcore/ui/components/inputTextFactory";
     export class UiManager extends PacketHandler {
         constructor(worldService: WorldService);
         getInputTextFactory(): InputTextFactory;
@@ -1346,12 +1289,12 @@ declare module 'game-core/ui/ui.manager' {
     }
 }
 
-declare module 'game-core/rooms/display/frames.model' {
+declare module 'tooqingcore/rooms/display/frames.model' {
     import { op_gameconfig, op_def } from "pixelpai_proto";
-    import { IAnimationData } from "game-core/rooms/display/animation";
-    import { Sprite } from "game-core/rooms/element/sprite";
-    import { Direction } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/sprite";
+    import { IAnimationData } from "tooqingcore/rooms/display/animation";
+    import { Sprite } from "tooqingcore/rooms/element/sprite";
+    import { Direction } from "tooqingcore/rooms/element/element";
+    import { AnimationData } from "tooqingcore/rooms/element/sprite";
     export interface IFramesModel {
         readonly discriminator: string;
         readonly gene: string | undefined;
@@ -1414,10 +1357,10 @@ declare module 'game-core/rooms/display/frames.model' {
     }
 }
 
-declare module 'game-core/rooms/display/dragonbones.model' {
+declare module 'tooqingcore/rooms/display/dragonbones.model' {
     import { op_def } from "pixelpai_proto";
-    import { AnimationData } from "game-core/rooms/element/sprite";
-    import { Direction } from "game-core/rooms/element/element";
+    import { AnimationData } from "tooqingcore/rooms/element/sprite";
+    import { Direction } from "tooqingcore/rooms/element/element";
     export interface IDragonbonesModel {
         readonly discriminator: string;
         id: number;
@@ -1484,8 +1427,8 @@ declare module 'game-core/rooms/display/dragonbones.model' {
     }
 }
 
-declare module 'game-core/loading/loading.manager' {
-    import { WorldService } from "game-core/game/world.service";
+declare module 'tooqingcore/loading/loading.manager' {
+    import { WorldService } from "tooqingcore/game/world.service";
     export interface IAsset {
         type: string;
         key: string;
@@ -1506,21 +1449,21 @@ declare module 'game-core/loading/loading.manager' {
     }
 }
 
-declare module 'game-core/rooms/element/element' {
-    import { IElementManager, ElementManager } from "game-core/rooms/element/element.manager";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IRoomService } from "game-core/rooms/room";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+declare module 'tooqingcore/rooms/element/element' {
+    import { IElementManager, ElementManager } from "tooqingcore/rooms/element/element.manager";
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
     import { op_client } from "pixelpai_proto";
     import { Tweens } from "phaser";
-    import { Pos } from "game-core/utils/pos";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { BlockObject } from "game-core/rooms/cameras/block.object";
-    import { BubbleContainer } from "game-core/rooms/bubble/bubble.container";
-    import { ShopEntity } from "game-core/rooms/element/shop/shop.entity";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
-    import { AI } from "game-core/rooms/action/AI";
+    import { Pos } from "tooqingcore/utils/pos";
+    import { ISprite } from "tooqingcore/rooms/element/sprite";
+    import { BlockObject } from "tooqingcore/rooms/cameras/block.object";
+    import { BubbleContainer } from "tooqingcore/rooms/bubble/bubble.container";
+    import { ShopEntity } from "tooqingcore/rooms/element/shop/shop.entity";
+    import { DisplayObject } from "tooqingcore/rooms/display/display.object";
+    import { AI } from "tooqingcore/rooms/action/AI";
     export enum PlayerState {
         IDLE = "idle",
         WALK = "walk",
@@ -1667,11 +1610,11 @@ declare module 'game-core/rooms/element/element' {
     }
 }
 
-declare module 'game-core/rooms/element/sprite' {
-    import { Pos } from "game-core/utils/pos";
-    import { IAvatar, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+declare module 'tooqingcore/rooms/element/sprite' {
+    import { Pos } from "tooqingcore/utils/pos";
+    import { IAvatar, IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
     import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
     import NodeType = op_def.NodeType;
     export interface ISprite {
         readonly id: number;
@@ -1795,11 +1738,11 @@ declare module 'game-core/rooms/element/sprite' {
     }
 }
 
-declare module 'game-core/rooms/player/player' {
-    import { Element, MovePath, IElementManager } from "game-core/rooms/element";
+declare module 'tooqingcore/rooms/player/player' {
+    import { Element, MovePath, IElementManager } from "tooqingcore/rooms/element";
     import { op_client } from "pixelpai_proto";
-    import { ISprite } from "game-core/rooms/element";
-    import { Pos } from "game-core/utils/pos";
+    import { ISprite } from "tooqingcore/rooms/element";
+    import { Pos } from "tooqingcore/utils/pos";
     export class Player extends Element {
         protected mElementManager: IElementManager;
         protected nodeType: number;
@@ -1822,14 +1765,14 @@ declare module 'game-core/rooms/player/player' {
     }
 }
 
-declare module 'game-core/rooms/player/Actor' {
-    import { IElementManager, ISprite, MoveData } from "game-core/rooms/element";
-    import { InputListener } from "game-core/game/input.service";
+declare module 'tooqingcore/rooms/player/Actor' {
+    import { IElementManager, ISprite, MoveData } from "tooqingcore/rooms/element";
+    import { InputListener } from "tooqingcore/game/input.service";
     import { op_client, op_gameconfig } from "pixelpai_proto";
-    import { Player } from "game-core/rooms/player/player";
-    import { Bag } from "game-core/rooms/player/bag/bag";
-    import { Interactive } from "game-core/rooms/player/interactive/interactive";
-    import { Friend } from "game-core/rooms/player/friend/friend";
+    import { Player } from "tooqingcore/rooms/player/player";
+    import { Bag } from "tooqingcore/rooms/player/bag/bag";
+    import { Interactive } from "tooqingcore/rooms/player/interactive/interactive";
+    import { Friend } from "tooqingcore/rooms/player/friend/friend";
     export class Actor extends Player implements InputListener {
         protected mElementManager: IElementManager;
         readonly GameObject: Phaser.GameObjects.GameObject;
@@ -1860,26 +1803,26 @@ declare module 'game-core/rooms/player/Actor' {
     }
 }
 
-declare module 'game-core/rooms/layer/grid.layer' {
-    import { IRoomService } from "game-core/rooms/room";
+declare module 'tooqingcore/rooms/layer/grid.layer' {
+    import { IRoomService } from "tooqingcore/rooms/room";
     export class GridLayer extends Phaser.GameObjects.Graphics {
         constructor(scene: Phaser.Scene);
         draw(room: IRoomService): void;
     }
 }
 
-declare module 'game-core/rooms/terrain/terrain' {
-    import { IElement } from "game-core/rooms/element/element";
-    import { IElementManager } from "game-core/rooms/element/element.manager";
-    import { Pos } from "game-core/utils/pos";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IRoomService } from "game-core/rooms/room";
-    import { TerrainDisplay } from "game-core/rooms/display/terrain.display";
-    import { BlockObject } from "game-core/rooms/cameras/block.object";
+declare module 'tooqingcore/rooms/terrain/terrain' {
+    import { IElement } from "tooqingcore/rooms/element/element";
+    import { IElementManager } from "tooqingcore/rooms/element/element.manager";
+    import { Pos } from "tooqingcore/utils/pos";
+    import { ISprite } from "tooqingcore/rooms/element/sprite";
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { TerrainDisplay } from "tooqingcore/rooms/display/terrain.display";
+    import { BlockObject } from "tooqingcore/rooms/cameras/block.object";
     import { op_client } from "pixelpai_proto";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
+    import { DisplayObject } from "tooqingcore/rooms/display/display.object";
     export class Terrain extends BlockObject implements IElement {
         protected mElementManager: IElementManager;
         protected mId: number;
@@ -1917,7 +1860,7 @@ declare module 'game-core/rooms/terrain/terrain' {
     }
 }
 
-declare module 'game-core/utils/rectangle45' {
+declare module 'tooqingcore/utils/rectangle45' {
     import Rectangle = Phaser.Geom.Rectangle;
     export class Rectangle45 extends Rectangle {
         row: number;
@@ -1928,10 +1871,10 @@ declare module 'game-core/utils/rectangle45' {
     }
 }
 
-declare module 'game-core/rooms/display/frames.display' {
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
-    import { AnimationData } from "game-core/rooms/element/sprite";
+declare module 'tooqingcore/rooms/display/frames.display' {
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { DisplayObject } from "tooqingcore/rooms/display/display.object";
+    import { AnimationData } from "tooqingcore/rooms/element/sprite";
     export enum DisplayField {
         BACKEND = 1,
         STAGE = 2,
@@ -1962,8 +1905,8 @@ declare module 'game-core/rooms/display/frames.display' {
     }
 }
 
-declare module 'game-core/rooms/map/map.model' {
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
+declare module 'tooqingcore/rooms/map/map.model' {
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
     import { op_client, op_gameconfig } from "pixelpai_proto";
     export class MapModel {
             mapId: number;
@@ -2000,18 +1943,18 @@ declare module 'game-core/rooms/map/map.model' {
     }
 }
 
-declare module 'game-core/rooms/entity' {
+declare module 'tooqingcore/rooms/entity' {
     export interface IEntity {
         destroy(): any;
     }
 }
 
-declare module 'game-core/rooms/wall/wall' {
-    import { BlockObject } from "game-core/rooms/cameras/block.object";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IRoomService } from "game-core/rooms/room";
-    import { WallDisplay } from "game-core/rooms/display/wall.display";
-    import { Pos } from "game-core/utils/pos";
+declare module 'tooqingcore/rooms/wall/wall' {
+    import { BlockObject } from "tooqingcore/rooms/cameras/block.object";
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { WallDisplay } from "tooqingcore/rooms/display/wall.display";
+    import { Pos } from "tooqingcore/utils/pos";
     export enum Direction {
         UP = "up",
         LEFT = "left",
@@ -2033,16 +1976,16 @@ declare module 'game-core/rooms/wall/wall' {
     }
 }
 
-declare module 'game-core/rooms/action/IDispose' {
+declare module 'tooqingcore/rooms/action/IDispose' {
     export interface IDispose {
         destroy(): any;
     }
 }
 
-declare module 'game-core/rooms/group/IGroup' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
-    import { HandlerDispatcher } from "game-core/Handler/HandlerDispatcher";
-    import { GroupType } from "game-core/rooms/group/GroupManager";
+declare module 'tooqingcore/rooms/group/IGroup' {
+    import { IDispose } from "tooqingcore/rooms/action/IDispose";
+    import { HandlerDispatcher } from "tooqingcore/Handler/HandlerDispatcher";
+    import { GroupType } from "tooqingcore/rooms/group/GroupManager";
     export interface IGroup extends IDispose {
         owner: any;
         childs: any[];
@@ -2058,10 +2001,10 @@ declare module 'game-core/rooms/group/IGroup' {
     }
 }
 
-declare module 'game-core/rooms/sky.box/block.manager' {
-    import { WorldService } from "game-core/game/world.service";
-    import { IScenery } from "game-core/rooms/sky.box/scenery";
-    import { IRoomService } from "game-core/rooms/room";
+declare module 'tooqingcore/rooms/sky.box/block.manager' {
+    import { WorldService } from "tooqingcore/game/world.service";
+    import { IScenery } from "tooqingcore/rooms/sky.box/scenery";
+    import { IRoomService } from "tooqingcore/rooms/room";
     export interface IBlockManager {
         readonly world: WorldService;
         startPlay(scene: Phaser.Scene): any;
@@ -2080,7 +2023,7 @@ declare module 'game-core/rooms/sky.box/block.manager' {
     }
 }
 
-declare module 'game-core/net/transport/websocket' {
+declare module 'tooqingcore/net/transport/websocket' {
     import { EventEmitter } from "events";
     import { Buffer } from "buffer/";
     enum ReadyState {
@@ -2111,26 +2054,7 @@ declare module 'game-core/net/transport/websocket' {
     export {};
 }
 
-declare module 'game-core/editor/canvas/editor.canvas' {
-    import { IRectangle } from "game-capsule/lib/helpers";
-    export interface IEditorCanvasConfig {
-        width: number;
-        height: number;
-        node: {};
-        LOCAL_HOME_PATH: string;
-        parent?: string;
-    }
-    export class EditorCanvas {
-        protected mGame: Phaser.Game | undefined;
-        protected mConfig: IEditorCanvasConfig;
-        protected mEmitter: Phaser.Events.EventEmitter;
-        constructor(config: IEditorCanvasConfig);
-        resize(bounds: IRectangle): void;
-        destroy(): void;
-    }
-}
-
-declare module 'game-core/ui/layer.manager' {
+declare module 'tooqingcore/ui/layer.manager' {
     export interface ILayerManager {
         readonly interactive: Phaser.GameObjects.Container;
         readonly scene: Phaser.Scene;
@@ -2157,8 +2081,8 @@ declare module 'game-core/ui/layer.manager' {
     }
 }
 
-declare module 'game-core/ui/components/inputTextFactory' {
-    import { WorldService } from "game-core/game/world.service";
+declare module 'tooqingcore/ui/components/inputTextFactory' {
+    import { WorldService } from "tooqingcore/game/world.service";
     export class InputTextFactory {
         constructor(world: WorldService);
         getInputText(scene: Phaser.Scene, style?: any): InputTextField;
@@ -2181,7 +2105,7 @@ declare module 'game-core/ui/components/inputTextFactory' {
     }
 }
 
-declare module 'game-core/rooms/display/animation' {
+declare module 'tooqingcore/rooms/display/animation' {
     import { AnimationDataNode } from "game-capsule/lib/configobjects/animations";
     import { op_gameconfig, op_def } from "pixelpai_proto";
     import { IPoint } from "game-capsule/lib/helpers";
@@ -2223,7 +2147,7 @@ declare module 'game-core/rooms/display/animation' {
     }
 }
 
-declare module 'game-core/rooms/bubble/bubble.container' {
+declare module 'tooqingcore/rooms/bubble/bubble.container' {
     import { op_client } from "pixelpai_proto";
     export class BubbleContainer extends Phaser.GameObjects.Container {
         constructor(scene: Phaser.Scene, scale: number);
@@ -2234,10 +2158,10 @@ declare module 'game-core/rooms/bubble/bubble.container' {
     }
 }
 
-declare module 'game-core/rooms/element/shop/shop.entity' {
+declare module 'tooqingcore/rooms/element/shop/shop.entity' {
     import { PacketHandler } from "net-socket-packet";
-    import { IEntity } from "game-core/rooms/entity";
-    import { WorldService } from "game-core/game/world.service";
+    import { IEntity } from "tooqingcore/rooms/entity";
+    import { WorldService } from "tooqingcore/game/world.service";
     export class ShopEntity extends PacketHandler implements IEntity {
         static NAME: string;
         constructor(mWorld: WorldService);
@@ -2248,17 +2172,17 @@ declare module 'game-core/rooms/element/shop/shop.entity' {
     }
 }
 
-declare module 'game-core/rooms/display/display.object' {
-    import { DynamicSprite } from "game-core/ui/components/dynamic.sprite";
-    import { DynamicImage } from "game-core/ui/components/dynamic.image";
+declare module 'tooqingcore/rooms/display/display.object' {
+    import { DynamicSprite } from "tooqingcore/ui/components/dynamic.sprite";
+    import { DynamicImage } from "tooqingcore/ui/components/dynamic.image";
     import { op_def } from "pixelpai_proto";
-    import { ReferenceArea } from "game-core/rooms/editor/reference.area";
-    import { IRoomService } from "game-core/rooms/room";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/sprite";
+    import { ReferenceArea } from "tooqingcore/rooms/editor/reference.area";
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
+    import { IElement } from "tooqingcore/rooms/element/element";
+    import { AnimationData } from "tooqingcore/rooms/element/sprite";
     export enum DisplayField {
         BACKEND = 1,
         STAGE = 2,
@@ -2316,9 +2240,9 @@ declare module 'game-core/rooms/display/display.object' {
     }
 }
 
-declare module 'game-core/rooms/action/AI' {
-    import { AIAction } from "game-core/rooms/action/AIAction";
-    import { Element } from "game-core/rooms/element/element";
+declare module 'tooqingcore/rooms/action/AI' {
+    import { AIAction } from "tooqingcore/rooms/action/AIAction";
+    import { Element } from "tooqingcore/rooms/element/element";
     export class AI extends AIAction {
         constructor(owner: Element);
         execute(): void;
@@ -2329,17 +2253,17 @@ declare module 'game-core/rooms/action/AI' {
     }
 }
 
-declare module 'game-core/rooms/element' {
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { IElementManager } from "game-core/rooms/element/element.manager";
-    export * from "game-core/rooms/element/element";
+declare module 'tooqingcore/rooms/element' {
+    import { ISprite } from "tooqingcore/rooms/element/sprite";
+    import { IElementManager } from "tooqingcore/rooms/element/element.manager";
+    export * from "tooqingcore/rooms/element/element";
     export { ISprite, IElementManager };
 }
 
-declare module 'game-core/rooms/player/bag/bag' {
+declare module 'tooqingcore/rooms/player/bag/bag' {
     import { PacketHandler } from "net-socket-packet";
-    import { WorldService } from "game-core/game/world.service";
-    import { IEntity } from "game-core/rooms/entity";
+    import { WorldService } from "tooqingcore/game/world.service";
+    import { IEntity } from "tooqingcore/rooms/entity";
     export class Bag extends PacketHandler implements IEntity {
         constructor(mWorld: WorldService);
         initialize(): boolean;
@@ -2350,10 +2274,10 @@ declare module 'game-core/rooms/player/bag/bag' {
     }
 }
 
-declare module 'game-core/rooms/player/interactive/interactive' {
+declare module 'tooqingcore/rooms/player/interactive/interactive' {
     import { PacketHandler } from "net-socket-packet";
-    import { IEntity } from "game-core/rooms/entity";
-    import { WorldService } from "game-core/game/world.service";
+    import { IEntity } from "tooqingcore/rooms/entity";
+    import { WorldService } from "tooqingcore/game/world.service";
     export class Interactive extends PacketHandler implements IEntity {
         constructor(mWorld: WorldService);
         initialize(): boolean;
@@ -2364,8 +2288,8 @@ declare module 'game-core/rooms/player/interactive/interactive' {
     }
 }
 
-declare module 'game-core/rooms/player/friend/friend' {
-    import { WorldService } from "game-core/game/world.service";
+declare module 'tooqingcore/rooms/player/friend/friend' {
+    import { WorldService } from "tooqingcore/game/world.service";
     export class Friend {
         constructor(world: WorldService);
         requestFriend(callBack?: Function): void;
@@ -2373,22 +2297,22 @@ declare module 'game-core/rooms/player/friend/friend' {
     }
 }
 
-declare module 'game-core/rooms/display/terrain.display' {
-    import { FramesDisplay } from "game-core/rooms/display/frames.display";
+declare module 'tooqingcore/rooms/display/terrain.display' {
+    import { FramesDisplay } from "tooqingcore/rooms/display/frames.display";
     export class TerrainDisplay extends FramesDisplay {
         showRefernceArea(): void;
     }
 }
 
-declare module 'game-core/rooms/display/wall.display' {
-    import { IRoomService } from "game-core/rooms/room";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { AnimationData } from "game-core/rooms/element/sprite";
+declare module 'tooqingcore/rooms/display/wall.display' {
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { ElementDisplay } from "tooqingcore/rooms/display/element.display";
+    import { IFramesModel } from "tooqingcore/rooms/display/frames.model";
+    import { IDragonbonesModel } from "tooqingcore/rooms/display/dragonbones.model";
+    import { AnimationData } from "tooqingcore/rooms/element/sprite";
     import { op_def } from "pixelpai_proto";
-    import { IElement } from "game-core/rooms/element/element";
-    import { Direction } from "game-core/rooms/wall/wall";
+    import { IElement } from "tooqingcore/rooms/element/element";
+    import { Direction } from "tooqingcore/rooms/wall/wall";
     export class WallDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
         protected readonly roomService: IRoomService;
         constructor(scene: Phaser.Scene, roomService: IRoomService);
@@ -2413,8 +2337,8 @@ declare module 'game-core/rooms/display/wall.display' {
     }
 }
 
-declare module 'game-core/Handler/HandlerDispatcher' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
+declare module 'tooqingcore/Handler/HandlerDispatcher' {
+    import { IDispose } from "tooqingcore/rooms/action/IDispose";
     export class HandlerDispatcher implements IDispose {
         hasListener(type: string): Boolean;
         emitter(type: string, data?: any): Boolean;
@@ -2426,7 +2350,7 @@ declare module 'game-core/Handler/HandlerDispatcher' {
     }
 }
 
-declare module 'game-core/ui/components/dynamic.sprite' {
+declare module 'tooqingcore/ui/components/dynamic.sprite' {
     export class DynamicSprite extends Phaser.GameObjects.Sprite {
         constructor(scene: Phaser.Scene, x: number, y: number);
         load(textureURL: string, atlasURL: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function): void;
@@ -2434,7 +2358,7 @@ declare module 'game-core/ui/components/dynamic.sprite' {
     }
 }
 
-declare module 'game-core/ui/components/dynamic.image' {
+declare module 'tooqingcore/ui/components/dynamic.image' {
     export class DynamicImage extends Phaser.GameObjects.Image {
         constructor(scene: Phaser.Scene, x: number, y: number);
         load(value: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function): void;
@@ -2444,9 +2368,9 @@ declare module 'game-core/ui/components/dynamic.image' {
     }
 }
 
-declare module 'game-core/rooms/editor/reference.area' {
-    import { IRoomService } from "game-core/rooms/room";
-    import { IPosition45Obj } from "game-core/utils/position45";
+declare module 'tooqingcore/rooms/editor/reference.area' {
+    import { IRoomService } from "tooqingcore/rooms/room";
+    import { IPosition45Obj } from "tooqingcore/utils/position45";
     export class ReferenceArea extends Phaser.GameObjects.Graphics {
         constructor(scene: Phaser.Scene, mRoomService: IRoomService);
         draw(area: number[][], origin: Phaser.Geom.Point): void;
@@ -2455,10 +2379,10 @@ declare module 'game-core/rooms/editor/reference.area' {
     }
 }
 
-declare module 'game-core/rooms/action/AIAction' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
-    import { Element } from "game-core/rooms/element/element";
-    import { ActionGroup } from "game-core/rooms/action/ActionGroup";
+declare module 'tooqingcore/rooms/action/AIAction' {
+    import { IDispose } from "tooqingcore/rooms/action/IDispose";
+    import { Element } from "tooqingcore/rooms/element/element";
+    import { ActionGroup } from "tooqingcore/rooms/action/ActionGroup";
     export abstract class AIAction implements IDispose {
         owner: Element;
         group: ActionGroup;
@@ -2470,10 +2394,10 @@ declare module 'game-core/rooms/action/AIAction' {
     }
 }
 
-declare module 'game-core/rooms/action/ActionGroup' {
-    import { AIAction } from "game-core/rooms/action/AIAction";
-    import { Handler } from "game-core/Handler/Handler";
-    import { IDispose } from "game-core/rooms/action/IDispose";
+declare module 'tooqingcore/rooms/action/ActionGroup' {
+    import { AIAction } from "tooqingcore/rooms/action/AIAction";
+    import { Handler } from "tooqingcore/Handler/Handler";
+    import { IDispose } from "tooqingcore/rooms/action/IDispose";
     export class ActionGroup implements IDispose {
         list: AIAction[];
         current: AIAction;
@@ -2491,7 +2415,7 @@ declare module 'game-core/rooms/action/ActionGroup' {
     }
 }
 
-declare module 'game-core/Handler/Handler' {
+declare module 'tooqingcore/Handler/Handler' {
     export class Handler {
             /**
                 * 从对象池内创建一个Handler，默认会执行一次并立即回收，如果不需要自动回收，设置once参数为false。

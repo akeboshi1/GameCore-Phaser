@@ -266,24 +266,29 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     Logger.getInstance().log(module);
         // });
         this.loadModule("http://localhost:3000/dist/index.min.js").then((module) => {
-            const m = module.default ? module.default : module;
-            const plugin = new m();
-            plugin.init(this.world);
+            // const m = module.default ? module.default : module;
+            // Logger.getInstance().log(window["template"].start());
+            // const m = window["template"].start();
+            // const plugin = new m();
+            // plugin.init(this.world);
+            const m = window["template"].start();
+            m.init(this.world);
         });
     }
 
     public async loadModule(url: string) {
-        const toExport = {};
-        window.exports = toExport;
-        window.module = { exports: toExport } as any;
+        // const toExport = {};
+        // window.exports = toExport;
+        // window.module = { exports: toExport } as any;
         const esm = await import(/* webpackIgnore: true */ url);
-        const esmKeys = Object.keys(esm);
-        if (esmKeys.length === 1 && esmKeys[0] === "default") return esm.default;
-        if (esmKeys.length) return esm;
-        const exported = window.module.exports;
-        delete window.exports;
-        delete window.module;
-        return exported;
+        return esm;
+        // const esmKeys = Object.keys(esm);
+        // if (esmKeys.length === 1 && esmKeys[0] === "default") return esm.default;
+        // if (esmKeys.length) return esm;
+        // const exported = window.module.exports;
+        // delete window.exports;
+        // delete window.module;
+        // return exported;
     }
 
     public pause() {

@@ -1,5 +1,5 @@
 {
-    "name": "game-core",
+    "name": "tooqingcore",
     "version": "1.0.216",
     "main": "release/js/index.js",
     "types": "release/types/index.d.ts",
