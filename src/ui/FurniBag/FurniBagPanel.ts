@@ -155,7 +155,7 @@ export class FurniBagPanel extends BasePanel {
       for (const key in avatar) {
         if (avatar.hasOwnProperty(key)) {
           const element = avatar[key];
-          if (element && !content.avatar[key]) content.avatar[key] = element;
+          if (element) content.avatar[key] = element;
         }
       }
       for (const item of this.mSelectedItemData) {
@@ -163,7 +163,7 @@ export class FurniBagPanel extends BasePanel {
         for (const key in dataAvatar) {
           if (dataAvatar.hasOwnProperty(key)) {
             const element = dataAvatar[key];
-            if (element && !content.avatar[key]) content.avatar[key] = element;
+            if (element) content.avatar[key] = element;
           }
         }
       }
@@ -420,7 +420,7 @@ export class FurniBagPanel extends BasePanel {
       const dataAvatar = data.avatar;
       for (const item of this.mSelectedItemData) {
         const avatar = item.avatar;
-        if (this.isContainObject(avatar, dataAvatar)) {
+        if (this.isContainProperty(avatar, dataAvatar)) {
           const index = this.mSelectedItemData.indexOf(item);
           this.mSelectedItemData.splice(index, 1);
           break;
@@ -428,6 +428,19 @@ export class FurniBagPanel extends BasePanel {
       }
       this.mSelectedItemData.push(data);
     }
+  }
+
+  private isContainProperty(obj: any, obj1: any) {
+    let canreplace = true;
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (!obj1.hasOwnProperty(key)) {
+          canreplace = false;
+          break;
+        }
+      }
+    }
+    return canreplace;
   }
 
   private isContainObject(obj: any, obj1: any) {
@@ -985,6 +998,7 @@ class Item extends Phaser.GameObjects.Container {
       // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
       this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
       this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
+      this.mPropImage.setDisplaySize(45 * this.dpr, 45 * this.dpr);
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
