@@ -141,7 +141,11 @@ export class FurniBagPanel extends BasePanel {
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
-    this.mPropGrid.setItems(props);
+    // this.mPropGrid.setItems(props);
+    // if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+    //   const cell = this.mPropGrid.getCell(0);
+    //   this.onSelectItemHandler(cell.container);
+    // }
     const cell = this.mPropGrid.getCell(0);
     this.onSelectItemHandler(cell.container);
   }
@@ -651,8 +655,13 @@ export class FurniBagPanel extends BasePanel {
       this.itemPopPanel.setProp(this.mSelectedItemData[0], 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
   }
   private onSaveBtnHandler() {
-    if (this.mSelectedItemData.length > 0)
-      this.emit("querySaveAvatar", this.mSelectedItemData);
+    if (this.mSelectedItemData.length > 0) {
+      const idsArr = [];
+      for (const item of this.mSelectedItemData) {
+        idsArr.push(item.id);
+      }
+      this.emit("querySaveAvatar", idsArr);
+    }
   }
 
   private onResetBtnHandler() {
@@ -953,7 +962,7 @@ class Item extends Phaser.GameObjects.Container {
     this.selectIcon = scene.make.image({
       key,
       frame: "selected"
-    }, false).setOrigin(1).setScale(zoom).setPosition(this.width * 0.5, this.height * 0.5);
+    }, false).setOrigin(1).setScale(zoom).setPosition(this.width, this.height);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
     this.mPropImage.scale = dpr * zoom;
 
