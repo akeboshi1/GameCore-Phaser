@@ -1,6 +1,5 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { Font } from "../../utils/font";
@@ -18,6 +17,7 @@ import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableCo
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { IAvatar } from "../../rooms/display/dragonbones.model";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -29,17 +29,17 @@ export class FurniBagPanel extends BasePanel {
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mShelfContainer: Phaser.GameObjects.Container;
   private mDetailDisplay: DetailDisplay;
-  private mAdd: NinePatchButton;
+  private mAdd: NineSliceButton;
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: op_def.IStrPair;
   private mPropGrid: GameGridTable;
   private mCategoryScroll: GameScroller;
-  private sellBtn: NinePatchButton;
-  private useBtn: NinePatchButton;
-  private saveBtn: NinePatchButton;
-  private resetBtn: NinePatchButton;
+  private sellBtn: NineSliceButton;
+  private useBtn: NineSliceButton;
+  private saveBtn: NineSliceButton;
+  private resetBtn: NineSliceButton;
   private topBtns: TabButton[] = [];
 
   private mDetailBubble: DetailBubble;
@@ -398,7 +398,7 @@ export class FurniBagPanel extends BasePanel {
 
   private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
     const zoom = this.scale;
-    const btn = new NinePatchButton(this.scene, x, y, width, height, key, frame, text, {
+    const btn = new NineSliceButton(this.scene, x, y, width, height, key, frame, text, this.dpr, this.scale, {
       left: 12 * this.dpr * zoom,
       top: 12 * this.dpr * zoom,
       right: 12 * this.dpr * zoom,
@@ -1115,13 +1115,13 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
 
     const bottomOffsetY = bg.height * 0.5 - 50 * dpr * zoom;
     const bottomOffsetX = -66 * dpr * zoom;
-    const cancelBtn = new NinePatchButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n.t("common.cancel"), {
+    const cancelBtn = new NineSliceButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n.t("common.cancel"), dpr, zoom, {
       left: 12 * dpr * zoom,
       top: 12 * dpr * zoom,
       right: 12 * dpr * zoom,
       bottom: 12 * dpr * zoom
     });
-    const confirmBtn = new NinePatchButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n.t("common.confirm"), {
+    const confirmBtn = new NineSliceButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n.t("common.confirm"), dpr, zoom, {
       left: 12 * dpr * zoom,
       top: 12 * dpr * zoom,
       right: 12 * dpr * zoom,

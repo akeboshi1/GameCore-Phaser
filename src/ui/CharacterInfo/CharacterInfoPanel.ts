@@ -8,7 +8,6 @@ import { i18n } from "../../i18n";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Logger } from "../../utils/log";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
 import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
@@ -17,7 +16,9 @@ import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { Url } from "../../utils/resUtil";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+// import { NinePatchButton } from "../../../lib/rexui/lib/ui/button/NinePatchButton";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { NinePatchButton } from "../components/ninepatch.button";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -36,9 +37,9 @@ export default class CharacterInfoPanel extends BasePanel {
     private nickEditor: Button;
     private bottomCon: Container;
     private bottombg: Phaser.GameObjects.Graphics;
-    private addFriendBtn: NineSliceButton;
-    private tradeBtn: NineSliceButton;
-    private privaCharBtn: NineSliceButton;
+    private addFriendBtn: NinePatchButton;
+    private tradeBtn: NinePatchButton;
+    private privaCharBtn: NinePatchButton;
     private mCategoryScroll: GameScroller;
     private mGrideTable: GameGridTable;
     private editorPanel: CharacterEditorPanel;
@@ -78,12 +79,20 @@ export default class CharacterInfoPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on("Tap", this.OnClosePanel, this);
+        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.nickEditor.on(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
+        this.privaCharBtn.on(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
+        this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
+        this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
     }
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off("Tap", this.OnClosePanel, this);
+        this.closeBtn.off(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.nickEditor.off(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
+        this.privaCharBtn.off(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
+        this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
+        this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
     }
 
     preload() {
@@ -145,21 +154,21 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottombg = this.scene.make.graphics(undefined, false);
         const bottomBtnPosx = - 60 * this.dpr;
         const bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
-        this.addFriendBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
+        this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
         this.addFriendBtn.setFrameNormal("button_g");
-        this.privaCharBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), {
+        this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
 
-        this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), {
+        this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -230,10 +239,6 @@ export default class CharacterInfoPanel extends BasePanel {
             }
         });
         this.add(this.mGrideTable.table);
-        this.nickEditor.on("Tap", this.onEditorHandler, this);
-        this.privaCharBtn.on("Tap", this.onPrivateChatHandler, this);
-        this.addFriendBtn.on("Tap", this.onAddFriendHandler, this);
-        this.tradeBtn.on("Tap", this.onTradingHandler, this);
         this.resize(w, h);
         super.init();
         this.reqPlayerInfo();

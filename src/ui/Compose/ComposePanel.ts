@@ -3,10 +3,8 @@ import { Font } from "../../utils/font";
 import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { NinePatch } from "../components/nine.patch";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { Handler } from "../../Handler/Handler";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { DynamicImage } from "../components/dynamic.image";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
@@ -15,6 +13,8 @@ import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -25,7 +25,7 @@ export class ComposePanel extends BasePanel {
     private mGrideTable: GameGridTable;
     private mSelectItem: ComposeItem;
     private materialGameScroll: GameScroller;
-    private makeBtn: NinePatchButton;
+    private makeBtn: NineSliceButton;
     private materialTipsCon: Phaser.GameObjects.Container;
     private materialTipsName: Phaser.GameObjects.Text;
     private materialTipsDes: Phaser.GameObjects.Text;
@@ -64,10 +64,13 @@ export class ComposePanel extends BasePanel {
     addListen() {
         if (!this.mInitialized) return;
         this.scene.input.on("pointerup", this.onInputPointUp, this);
+        this.makeBtn.on(CoreUI.MouseEvent.Tap, this.onMakeHandler, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
+        this.scene.input.off("pointerup", this.onInputPointUp, this);
+        this.makeBtn.off(CoreUI.MouseEvent.Tap, this.onMakeHandler, this);
     }
 
     preload() {
@@ -108,14 +111,14 @@ export class ComposePanel extends BasePanel {
         this.mDetailBubble.x = -width * 0.5;
         this.mDetailBubble.y = height * 0.5 - 360 * this.dpr;
         this.content.add(this.mDetailBubble);
-        this.makeBtn = new NinePatchButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), {
+        this.makeBtn = new NineSliceButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), this.dpr, this.scale, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
         this.makeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
-        this.makeBtn.on("click", this.onMakeHandler, this);
+        // this.makeBtn.on("click", this.onMakeHandler, this);
         this.content.add(this.makeBtn);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
         this.materialCon = this.scene.make.container(undefined, false).setSize(materialConWdith, materialConHeight);
