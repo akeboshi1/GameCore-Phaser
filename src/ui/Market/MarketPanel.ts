@@ -106,24 +106,18 @@ export class MarketPanel extends BasePanel {
       w = frame.width;
       h = frame.height;
     }
-    const config1 = {
-      left: 10 * this.dpr,
-      top: 13 * this.dpr,
-      right: w - 2 - 10 * this.dpr,
-      bottom: h - 2 - 13 * this.dpr
-    };
     const config0 = {
-      left: 0 * this.dpr,
-      top: 0 * this.dpr,
-      right: w - 2 - 20 * this.dpr,
-      bottom: h - 2
+      left: w / 2 + 2 * this.dpr,
+      top: 12 * this.dpr,
+      right: w / 2 - 4 * this.dpr,
+      bottom: 2 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
     const zoom = this.mWorld.uiScale;
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0, config1], this.dpr, this.scale);
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], this.dpr, this.scale);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
@@ -189,7 +183,7 @@ export class MarketPanel extends BasePanel {
   }
 
   protected preload() {
-    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market.png"), Url.getUIRes(this.dpr, "market/market.json"));
+    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market"), Url.getUIRes(this.dpr, "market/market.json"));
     this.addAtlas(this.key, "market/market.png", "market/market.json");
     super.preload();
   }
@@ -210,7 +204,7 @@ export class MarketPanel extends BasePanel {
       y: h
     }, false).setSize(w, 290 * this.dpr * zoom);
 
-    const frame = this.scene.textures.getFrame(this.key, "bg.png");
+    const frame = this.scene.textures.getFrame(this.key, "bg");
     const countW = Math.ceil(w / (frame.width * zoom));
     const countH = Math.ceil((h - this.mShelfContainer.height + frame.height * zoom) / (frame.height * zoom));
     for (let i = 0; i < countW; i++) {
@@ -219,7 +213,7 @@ export class MarketPanel extends BasePanel {
           x: i * frame.width * zoom,
           y: j * frame.height * zoom,
           key: this.key,
-          frame: "bg.png"
+          frame: "bg"
         }, false).setScale(zoom);
         this.add(bg);
       }
@@ -229,7 +223,7 @@ export class MarketPanel extends BasePanel {
 
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
-      frame: "back_arrow.png",
+      frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
     }).setInteractive().setScale(zoom);
@@ -298,7 +292,7 @@ export class MarketPanel extends BasePanel {
     });
     this.add(this.mSubCategorisScroll.table);
 
-    const propFrame = this.scene.textures.getFrame(this.key, "border.png");
+    const propFrame = this.scene.textures.getFrame(this.key, "border");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;
     const propGridConfig: GridTableConfig = {

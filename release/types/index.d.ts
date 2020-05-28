@@ -4,10 +4,10 @@
 //   ../../net-socket-packet
 //   ../../pixelpai_proto
 //   ../../game-capsule/lib/configobjects/scene
+//   ../../game-capsule/lib/configobjects/animations
 //   ../../phaser
 //   ../../events
 //   ../../buffer
-//   ../../game-capsule/lib/configobjects/animations
 //   ../../game-capsule/lib/helpers
 
 declare module 'game-core' {
@@ -88,6 +88,8 @@ declare module 'game-core/launcher' {
     export class Launcher {
         get config(): ILauncherConfig;
         static start(config?: ILauncherConfig): Launcher;
+        static DeserializeNode(buffer: any): Capsule;
+        static startElementEditor(config: any): void;
         readonly minWidth = 1280;
         readonly minHeight = 720;
         readonly maxWidth = 1920;
@@ -106,6 +108,7 @@ declare module 'game-core/launcher' {
         onOrientationChange(orientation: number, width: number, height: number): void;
         destroy(): void;
     }
+    export * from "game-core/editor";
 }
 
 declare module 'game-core/game/world.service' {
@@ -537,6 +540,12 @@ declare module 'game-core/net' {
     export { HttpService } from "game-core/net/http.service";
     export { IConnectListener, SocketConnection, SocketConnectionError } from "game-core/net/socket";
     export { ServerAddress } from "game-core/net/address";
+}
+
+declare module 'game-core/editor' {
+    import "phaser";
+    export { EditorLauncher, EditorCanvasType } from "game-core/editor/editor.launcher";
+    export { ElementEditorCanvas, ElementEditorEmitType, ElementEditorBrushType } from "game-core/editor/canvas/element/element.editor.canvas";
 }
 
 declare module 'game-core/ui' {
@@ -1249,6 +1258,65 @@ declare module 'game-core/net/address' {
         readonly host: string;
         readonly port: number;
         readonly secure?: boolean;
+    }
+}
+
+declare module 'game-core/editor/editor.launcher' {
+    import "phaser";
+    import "dragonBones";
+    import { IEditorCanvasConfig } from "game-core/editor/canvas/editor.canvas";
+    import { ElementEditorCanvas } from "game-core/editor/canvas/element/element.editor.canvas";
+    export enum EditorCanvasType {
+        Element = 0
+    }
+    export class EditorLauncher {
+        static CreateCanvas(type: EditorCanvasType, config: IEditorCanvasConfig): ElementEditorCanvas;
+    }
+}
+
+declare module 'game-core/editor/canvas/element/element.editor.canvas' {
+    import { EditorCanvas, IEditorCanvasConfig } from "game-core/editor/canvas/editor.canvas";
+    import { ElementNode } from "game-capsule";
+    import { IImage } from "game-capsule/lib/configobjects/animations";
+    export enum ElementEditorBrushType {
+        Drag = 0,
+        Walkable = 1,
+        Collision = 2,
+        Interactive = 3
+    }
+    export enum ElementEditorEmitType {
+        Resource_Loaded = "resourceLoaded",
+        Active_Animation_Layer = "activeAnimationLayer",
+        Active_Mount_Layer = "activeMountLayer",
+        Update_Frame_Sumb = "updateFrameSumb"
+    }
+    export class ElementEditorCanvas extends EditorCanvas {
+        mData: ElementNode;
+        constructor(config: IEditorCanvasConfig);
+        destroy(): void;
+        getScene(): Phaser.Scene;
+        onSceneCreated(): void;
+        onSceneDestroy(): void;
+        on(event: ElementEditorEmitType, fn: Function, context?: any): void;
+        off(event: ElementEditorEmitType, fn?: Function, context?: any, once?: boolean): void;
+        deserializeDisplay(): Promise<IImage[]>;
+        generateSpriteSheet(images: IImage[]): Promise<{
+            url: string;
+            json: string;
+        }>;
+        reloadDisplayNode(): void;
+        changeAnimationData(animationDataId: number): void;
+        selectFrame(frameIndex: number): void;
+        playAnimation(): void;
+        stopAnimation(): void;
+        changeBrush(mode: ElementEditorBrushType): void;
+        selectAnimationLayer(layerIndexs: number[]): void;
+        selectMountLayer(mountPointIndex?: number): void;
+        updateDepth(): void;
+        updateAnimationLayer(): void;
+        toggleMountPointAnimationPlay(playerAnimationName: string, mountPointIndex?: number): void;
+        updateMountLayer(): void;
+        generateThumbnail(): Promise<string>;
     }
 }
 
@@ -2041,6 +2109,25 @@ declare module 'game-core/net/transport/websocket' {
         destroy(): void;
     }
     export {};
+}
+
+declare module 'game-core/editor/canvas/editor.canvas' {
+    import { IRectangle } from "game-capsule/lib/helpers";
+    export interface IEditorCanvasConfig {
+        width: number;
+        height: number;
+        node: {};
+        LOCAL_HOME_PATH: string;
+        parent?: string;
+    }
+    export class EditorCanvas {
+        protected mGame: Phaser.Game | undefined;
+        protected mConfig: IEditorCanvasConfig;
+        protected mEmitter: Phaser.Events.EventEmitter;
+        constructor(config: IEditorCanvasConfig);
+        resize(bounds: IRectangle): void;
+        destroy(): void;
+    }
 }
 
 declare module 'game-core/ui/layer.manager' {

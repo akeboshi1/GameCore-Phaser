@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.213",
+    "version": "1.0.216",
     "main": "release/js/index.js",
     "types": "release/types/index.d.ts",
     "scripts": {
@@ -46,6 +46,7 @@
         "i18next": "^19.0.3",
         "i18next-browser-languagedetector": "^4.0.1",
         "i18next-xhr-backend": "^3.2.2",
+        "maxrects-packer": "^2.6.0",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "phaser": "^3.22.0",
         "simple-sha1": "^3.0.1"

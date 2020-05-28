@@ -215,15 +215,13 @@ export class CreateRolePanel extends BasePanel {
     }, false).setVisible(false);
     this.add([this.mErrorBg, this.mError]);
 
-    this.dragonbones = new DragonbonesDisplay(this.scene, undefined);
+    this.dragonbones = new DragonbonesDisplay(this.scene, undefined, undefined, true);
     this.dragonbones.scale = this.dpr * 3;
     this.dragonbones.x = size.width >> 1;
     this.dragonbones.y = this.mNextPageBtn.y + 70 * this.dpr;
     // this.dragonbones.y = 286 * this.dpr;
     // this.dragonbones.play("idle");
-    this.dragonbones.once("initialized", () => {
-      this.dragonbones.play({ animationName: "idle", flip: false });
-    });
+    this.dragonbones.on("initialized", this.loadDragonbonesComplete, this);
     this.add(this.dragonbones);
 
     this.setPageNum(0);
@@ -256,6 +254,9 @@ export class CreateRolePanel extends BasePanel {
 
   destroy() {
     if (this.scene) this.scene.scale.off("resize", this.onResize, this);
+    if (this.dragonbones) {
+      this.dragonbones.off("initialized", this.loadDragonbonesComplete, this);
+    }
     super.destroy();
   }
 
@@ -298,5 +299,9 @@ export class CreateRolePanel extends BasePanel {
 
   private onResize(gameSize) {
     this.resize(gameSize.width, gameSize.height);
+  }
+
+  private loadDragonbonesComplete() {
+    this.dragonbones.play({ animationName: "idle", flip: false });
   }
 }

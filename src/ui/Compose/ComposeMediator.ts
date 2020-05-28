@@ -35,12 +35,7 @@ export class ComposeMediator extends BaseMediator {
             this.compose.register();
         }
         this.layerMgr.addToUILayer(this.mView);
-        if (this.mParam && this.mParam.length > 0)
-            this.onComposePacket(this.mParam[0]);
-        this.getTestDeitals();
-        const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS();
-        content.skills = this.tsetskills;
-        this.mView.show(content);
+        this.mView.show(this.mParam[0]);
 
     }
 
@@ -57,12 +52,6 @@ export class ComposeMediator extends BaseMediator {
             this.mView.hide();
             this.mView = undefined;
         }
-    }
-    private onComposePacket(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS) {
-        const panel = this.mView as ComposePanel;
-        if (!panel) return;
-        panel.setData("composeData", content);
-        panel.setComposeData(content.skills);
     }
 
     private onReqFormulaDetial(id: string) {

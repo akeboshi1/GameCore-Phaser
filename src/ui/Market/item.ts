@@ -19,14 +19,14 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.dpr = dpr;
     this.mBackground = this.scene.make.image({
       key: "market",
-      frame: "border.png"
+      frame: "border"
     }, false).setOrigin(0).setScale(zoom);
 
     this.mBorder = this.scene.make.image({
       x: 3 * dpr * zoom,
       y: 3 * dpr * zoom,
       key: "market",
-      frame: "item_border.png"
+      frame: "item_border"
     }, false).setOrigin(0).setScale(zoom);
     // this.mBorder.x = -42 * this.dpr;
     // this.mBorder.x = -this.mBackground.width / 2 + this.mBorder.width / 2 + (this.mBackground.height - this.mBorder.height / 2);
@@ -49,7 +49,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       y: 34 * this.dpr * zoom,
       // y: 17 * this.dpr,
       key: "market",
-      frame: "price_border.png"
+      frame: "price_border"
     }, false).setOrigin(0).setScale(zoom);
     // priceBg.y = this.mBorder.y + this.mBorder.displayHeight / 2 - priceBg.displayHeight / 2;
 
@@ -58,7 +58,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       y: 35 * this.dpr * zoom,
       // y: 17 * this.dpr,
       key: "market",
-      frame: "tuding_icon.png"
+      frame: "tuding_icon"
     }, false).setOrigin(0).setScale(zoom);
     // this.mCoinIcon.y = priceBg.y;
 
@@ -76,7 +76,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
     this.mTagIcon = this.scene.make.image({
       key: "market",
-      frame: "tip_red.png",
+      frame: "tip_red",
       x: -86 * this.dpr,
       y: -34 * this.dpr
     }, false).setOrigin(0).setScale(zoom);

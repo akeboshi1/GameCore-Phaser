@@ -421,10 +421,10 @@ class CharacterOwnerItem extends Container {
                 width: 41 * dpr,
                 height: 4 * dpr,
                 config: {
-                    top: 2 * dpr,
-                    left: 4 * dpr,
-                    right: 4 * dpr,
-                    bottom: 2 * dpr,
+                    top: 1 * dpr,
+                    left: 2 * dpr,
+                    right: 2 * dpr,
+                    bottom: 1 * dpr,
                 },
                 key,
                 frame: "slider_bg"
@@ -435,10 +435,10 @@ class CharacterOwnerItem extends Container {
                 width: 41 * dpr,
                 height: 4 * dpr,
                 config: {
-                    top: 2 * dpr,
-                    left: 4 * dpr,
-                    right: 4 * dpr,
-                    bottom: 2 * dpr,
+                    top: 1 * dpr,
+                    left: 2 * dpr,
+                    right: 2 * dpr,
+                    bottom: 1 * dpr,
                 },
                 key,
                 frame: "slider_rate"
@@ -452,7 +452,7 @@ class CharacterOwnerItem extends Container {
         this.dpr = dpr;
         this.zoom = zoom;
         this.key = key;
-       // this.progressBar.setProgress(40, 100);
+        // this.progressBar.setProgress(1, 100);
     }
 
     public setItemData(data, isOwner: boolean = false) {
