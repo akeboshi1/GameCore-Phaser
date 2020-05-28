@@ -91,9 +91,10 @@ export default class ElementEditorResourceManager {
                 return;
             }
 
+            const _imgs = images.splice(0);
             const onLoadFunc = () => {
                 let allLoaded = true;
-                images.forEach((img) => {
+                _imgs.forEach((img) => {
                     // if (img.name === this.IMAGE_BLANK_KEY) return;
                     if (!this.mScene.textures.exists(img.name)) {
                         allLoaded = false;
@@ -105,7 +106,7 @@ export default class ElementEditorResourceManager {
                 const atlas = new Atlas();
                 const packer = new MaxRectsPacker();
                 packer.padding = 2;
-                for (const image of images) {
+                for (const image of _imgs) {
                     // if (image.name === this.IMAGE_BLANK_KEY) continue;
                     // const bmd = this.mScene.make.image({ key: image.name }, false).setOrigin(0, 0);
                     // packer.add(bmd.width, bmd.height, { name: image.name });
@@ -127,7 +128,7 @@ export default class ElementEditorResourceManager {
                 const url = canvas.canvas.toDataURL("image/png", 1);
                 canvas.destroy();
                 // remove imgs
-                images.forEach((one) => {
+                _imgs.forEach((one) => {
                     if (this.mScene.textures.exists(one.name)) {
                         this.mScene.textures.remove(one.name);
                         this.mScene.textures.removeKey(one.name);
