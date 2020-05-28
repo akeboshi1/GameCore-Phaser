@@ -37,7 +37,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     // this.mBackground = this.scene.make.image({
     //   x: this.scene.cameras.main.width >> 1,
     //   key: this.key,
-    //   frame: "bg.png"
+    //   frame: "bg"
     // });
     // this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
 
@@ -69,7 +69,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     // this.mNickNameBg = this.scene.make.image({
     //   key: this.key,
-    //   frame: "name_bg.png"
+    //   frame: "name_bg"
     // }, false);
     // this.mNickNameContainer.setSize(this.mNickNameBg.width, this.mNickNameBg.height);
 
@@ -88,7 +88,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mPriceIcon = this.scene.make.image({
       x: -78,
       key: this.key,
-      frame: "tuding_icon.png"
+      frame: "tuding_icon"
     }, false).setScale(uiScale);
     this.mPriceText = this.scene.make.text({
       x: 0,
@@ -100,7 +100,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
     const priceBg = this.scene.make.image({
       key: this.key,
-      frame: "price_bg.png"
+      frame: "price_bg"
     }).setScale(uiScale);
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
@@ -217,7 +217,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mNickName.setText(prop.shortName || prop.name);
     this.mDesText.setText(prop.des);
     if (prop.price && prop.price.length > 0) {
-      this.mPriceIcon.setTexture(this.key, "tuding_icon.png");
+      this.mPriceIcon.setTexture(this.key, "tuding_icon");
       this.updatePrice(prop.price[0].price.toString());
     } else {
       this.mPriceText.setText("");

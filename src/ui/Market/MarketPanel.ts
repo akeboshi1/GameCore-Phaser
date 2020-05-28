@@ -183,7 +183,7 @@ export class MarketPanel extends BasePanel {
   }
 
   protected preload() {
-    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market.png"), Url.getUIRes(this.dpr, "market/market.json"));
+    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market"), Url.getUIRes(this.dpr, "market/market.json"));
     this.addAtlas(this.key, "market/market.png", "market/market.json");
     super.preload();
   }
@@ -204,7 +204,7 @@ export class MarketPanel extends BasePanel {
       y: h
     }, false).setSize(w, 290 * this.dpr * zoom);
 
-    const frame = this.scene.textures.getFrame(this.key, "bg.png");
+    const frame = this.scene.textures.getFrame(this.key, "bg");
     const countW = Math.ceil(w / (frame.width * zoom));
     const countH = Math.ceil((h - this.mShelfContainer.height + frame.height * zoom) / (frame.height * zoom));
     for (let i = 0; i < countW; i++) {
@@ -213,7 +213,7 @@ export class MarketPanel extends BasePanel {
           x: i * frame.width * zoom,
           y: j * frame.height * zoom,
           key: this.key,
-          frame: "bg.png"
+          frame: "bg"
         }, false).setScale(zoom);
         this.add(bg);
       }
@@ -223,7 +223,7 @@ export class MarketPanel extends BasePanel {
 
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
-      frame: "back_arrow.png",
+      frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
     }).setInteractive().setScale(zoom);
@@ -292,7 +292,7 @@ export class MarketPanel extends BasePanel {
     });
     this.add(this.mSubCategorisScroll.table);
 
-    const propFrame = this.scene.textures.getFrame(this.key, "border.png");
+    const propFrame = this.scene.textures.getFrame(this.key, "border");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;
     const propGridConfig: GridTableConfig = {
