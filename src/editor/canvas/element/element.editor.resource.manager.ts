@@ -125,8 +125,6 @@ export default class ElementEditorResourceManager {
                 });
 
                 const url = canvas.canvas.toDataURL("image/png", 1);
-                resolve({ url, json: atlas.toString() });
-                Logger.getInstance().log("generate sprite sheet: ", url, atlas.toString());
                 canvas.destroy();
                 // remove imgs
                 images.forEach((one) => {
@@ -135,6 +133,9 @@ export default class ElementEditorResourceManager {
                         this.mScene.textures.removeKey(one.name);
                     }
                 });
+
+                Logger.getInstance().log("generate sprite sheet: ", url, atlas.toString());
+                resolve({ url, json: atlas.toString() });
 
                 // const rt = this.mScene.make.renderTexture({ width, height }, false);
                 // rt.setPipeline(this.GENERATESPRITESHEETPIPELINE);
@@ -206,8 +207,8 @@ export default class ElementEditorResourceManager {
                 }
                 // Promise.all(snapshots).then((values) => { resolve(values); });
 
-                resolve(imgs);
                 Logger.getInstance().log("deserialize sprite sheet: ", imgs);
+                resolve(imgs);
             }
         });
     }
