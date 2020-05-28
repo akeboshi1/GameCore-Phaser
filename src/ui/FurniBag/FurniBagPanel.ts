@@ -141,7 +141,7 @@ export class FurniBagPanel extends BasePanel {
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
-    // this.mPropGrid.setItems(props);
+    this.mPropGrid.setItems(props);
     // if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
     //   const cell = this.mPropGrid.getCell(0);
     //   this.onSelectItemHandler(cell.container);
