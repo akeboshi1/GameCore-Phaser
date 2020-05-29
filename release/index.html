@@ -21,7 +21,7 @@
             margin-right: auto;
         }
     </style>
-<script type="text/javascript" src="js/index.js"></script><script type="text/javascript" src="js/tooqing.js"></script></head>
+<script type="text/javascript" src="js/tooqing.js"></script></head>
 
 <body>
     <!-- <input type="file" id="files" name="files[]" /> -->
@@ -61,7 +61,7 @@
     </script> -->
     <script>
         window.addEventListener('load', (event) => {
-            const launcher = tooqingcore.Launcher;
+            const launcher = TooqingLauncher.Launcher;
             const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
             app.registerReload(window.reload);
             app.registerComplete(() => {

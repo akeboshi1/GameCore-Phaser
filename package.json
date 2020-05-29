@@ -1,13 +1,15 @@
 {
-    "name": "tooqingcore",
+    "name": "game-core",
     "version": "1.0.216",
     "main": "release/js/index.js",
     "types": "release/types/index.d.ts",
     "scripts": {
-        "dev": "webpack-dev-server --mode development && yarn rm:dts",
-        "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress && yarn dts",
+        "dev": "rimraf dist && yarn dev:core && webpack-dev-server --mode development && yarn rm:dts",
+        "build": "rimraf release && yarn ver && yarn build:core && yarn build:launcher && yarn dts",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
-        "build:core": "webpack --config webpack.core.config.js",
+        "build:launcher": "node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
+        "dev:core": "webpack --config webpack.core.config.js",
+        "build:core": "webpack --config webpack.core.config.js --mode=production --output-path=./release --progress",
         "ver": "genversion version.js",
         "dts": "dts-bundle --configJson dts-bundle.json && yarn rm:dts",
         "rm:dts": "rimraf types"
@@ -17,7 +19,6 @@
     "license": "MIT",
     "devDependencies": {
         "@types/chance": "^1.0.7",
-        "clean-webpack-plugin": "^3.0.0",
         "config": "^3.2.2",
         "config-webpack": "^1.0.4",
         "copy-webpack-plugin": "^5.0.4",

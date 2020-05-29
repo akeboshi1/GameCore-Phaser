@@ -1,44 +1,33 @@
 const path = require("path");
 const webpack = require("webpack");
 const pathToPhaser = path.join(__dirname, "/node_modules/phaser");
-const phaser = path.join(pathToPhaser, "dist/phaser.js");
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TSLintPlugin = require("tslint-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const appVer = require("./version");
 
 const config = {
     entry: {
-        index: path.join(__dirname, "./src/index.ts"),
         tooqing: path.join(__dirname, "./src/launcher.ts"),
     },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "js/[name].js",
-        chunkFilename: `js/[name]_v${appVer}.js`,
         libraryTarget: "umd",
         globalObject: "this",
-        library: "tooqingcore",
+        library: "TooqingLauncher",
     },
     module: {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", exclude: "/node_modules/" },
-            { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
-            { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
         ],
     },
     resolve: {
-        extensions: [".ts", ".js"],
-        alias: {
-            phaser: phaser,
-            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-        },
+        extensions: [".ts", ".js"]
     },
     optimization: {
-        minimize: false,
+        minimize: true,
         minimizer: [
             new TerserPlugin({
                 sourceMap: true,
@@ -61,14 +50,7 @@ const config = {
         ],
     },
     plugins: [
-        new CleanWebpackPlugin({
-            verbose: true,
-            // Automatically remove all unused webpack assets on rebuild
-            // default: true
-            cleanStaleWebpackAssets: false,
-        }),
         new ConfigWebpackPlugin(),
-        new CopyWebpackPlugin([{ from: "**/*", to: "resources", force: true, context: "resources" }]),
         new HtmlWebpackPlugin({
             inject: "head",
             title: "图轻播放器",

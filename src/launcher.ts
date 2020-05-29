@@ -2,12 +2,8 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-import { version } from "../version";
+import * as version from "../version";
 import { ServerAddress, ConnectionService } from "./net";
-import { Capsule, PaletteNode, MossNode } from "game-capsule";
-import { EditorLauncher, EditorCanvasType } from "./editor/editor.launcher";
-import { ElementEditorEmitType } from "./editor/canvas/element/element.editor.canvas";
-import { Logger } from "./utils/log";
 
 export interface ILauncherConfig {
     auth_token: string;
@@ -45,10 +41,10 @@ export interface GameMain {
     startFullscreen(): void;
     stopFullscreen(): void;
     createGame(): void;
-    setGameConfig(config: Capsule): void;
-    updatePalette(palette: PaletteNode): void;
+    setGameConfig(config): void;
+    updatePalette(palette): void;
 
-    updateMoss(moss: MossNode): void;
+    updateMoss(moss): void;
 
     destroy(): void;
 }
@@ -63,28 +59,28 @@ export class Launcher {
     }
 
     public static DeserializeNode(buffer) {
-        const capsule = new Capsule();
-        capsule.deserialize(buffer);
+        // const capsule = new Capsule();
+        // capsule.deserialize(buffer);
 
-        return capsule;
+        // return capsule;
     }
 
     public static startElementEditor(config) {
-        const canvas = EditorLauncher.CreateCanvas(EditorCanvasType.Element, config);
-        let loadCount = 0;
-        canvas.on(ElementEditorEmitType.Resource_Loaded, (success: boolean, msg: string) => {
-            Logger.getInstance().log("loadCount", loadCount);
-            if (success && loadCount === 0) {
-                loadCount++;
-                // canvas.deserializeDisplay().then((val) => {
-                //     Logger.getInstance().log("deserializeDisplay", val);
-                //     canvas.generateSpriteSheet(val).then((spriteSheet) => {
-                //         Logger.getInstance().log("generateSpriteSheet", spriteSheet);
-                //     });
-                // });
-                canvas.reloadDisplayNode();
-            }
-        });
+        // const canvas = EditorLauncher.CreateCanvas(EditorCanvasType.Element, config);
+        // let loadCount = 0;
+        // canvas.on(ElementEditorEmitType.Resource_Loaded, (success: boolean, msg: string) => {
+        //     Logger.getInstance().log("loadCount", loadCount);
+        //     if (success && loadCount === 0) {
+        //         loadCount++;
+        //         // canvas.deserializeDisplay().then((val) => {
+        //         //     Logger.getInstance().log("deserializeDisplay", val);
+        //         //     canvas.generateSpriteSheet(val).then((spriteSheet) => {
+        //         //         Logger.getInstance().log("generateSpriteSheet", spriteSheet);
+        //         //     });
+        //         // });
+        //         canvas.reloadDisplayNode();
+        //     }
+        // });
     }
 
     readonly minWidth = 1280;
@@ -135,17 +131,18 @@ export class Launcher {
             xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        // @ts-ignore
-        // import(/* webpackIgnore: true */ "/js/index.js").then((game) => {
-        //     this.world = new game.World(this.config, this.mCompleteFunc);
+        const gameModule = `./index_v${version}.js`;
+        import(/* webpackIgnore: true */ gameModule).then((game) => {
+            const module = window["game-core"];
+            if (!module) {
+                return;
+            }
+            this.world = new module.World(this.config, this.mCompleteFunc);
 
-        //     if (config.isEditor) {
-        //         this.world.createGame();
-        //     }
-        //     this.disableClick();
-        // });
-        this.loadModule("/js/index.js").then((game) => {
-            this.world = new game.World(this.config, this.mCompleteFunc);
+            if (config.isEditor) {
+                this.world.createGame();
+            }
+            this.disableClick();
         });
     }
 
@@ -174,17 +171,17 @@ export class Launcher {
         this.world.stopFullscreen();
     }
 
-    public setGameConfig(config: Capsule) {
+    public setGameConfig(config) {
         if (!this.world) return;
         this.world.setGameConfig(config);
     }
 
-    public updatePalette(palette: PaletteNode) {
+    public updatePalette(palette) {
         if (!this.world) return;
         this.world.updatePalette(palette);
     }
 
-    public updateMoss(moss: MossNode) {
+    public updateMoss(moss) {
         if (!this.world) return;
         this.world.updateMoss(moss);
     }
@@ -217,20 +214,4 @@ export class Launcher {
         if (this.intervalId) clearInterval(this.intervalId);
         if (this.world) this.world.destroy();
     }
-
-    private async loadModule(url: string) {
-        const toExport = {};
-        window.exports = toExport;
-        window.module = { exports: toExport } as any;
-        const esm = await import(/* webpackIgnore: true */ url);
-        const esmKeys = Object.keys(esm);
-        if (esmKeys.length === 1 && esmKeys[0] === "default") return esm.default;
-        if (esmKeys.length) return esm;
-        const exported = window.module.exports;
-        delete window.exports;
-        delete window.module;
-        return exported;
-    }
 }
-
-export * from ".";

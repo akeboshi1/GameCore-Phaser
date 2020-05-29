@@ -29,7 +29,6 @@ import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { HttpService } from "../net";
 import { GamePauseScene } from "../scenes/gamepause";
-import { EditScene } from "../scenes/edit";
 import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
