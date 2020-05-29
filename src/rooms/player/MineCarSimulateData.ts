@@ -79,26 +79,26 @@ export class MineCarSimulateData {
         sprite.point3f.x = 825; sprite.point3f.y = 352.5; sprite.currentAnimationName = "idle";
         sprite.direction = op_def.Direction.LOWER_LEFT;
         sprite.nickname = "破旧矿车"; sprite.opacity = 100;
-        sprite.animations = [
-            {
-                id: 0, name: "walk", frameRate: 5, walkableArea: "",
-                collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-60,-97", frameName: [
-                    "1_1.png", "1_2.png", "1_3.png", "1_4.png", "1_5.png", "1_6.png", "1_7.png", "1_8.png", "1_9.png", "1_10.png", "1_11.png", "1_12.png"]
-            },
-            {
-                id: 0, name: "walk_1", frameRate: 5, walkableArea: "",
-                collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-60,-97", frameName: [
-                    "3_1.png", "3_2.png", "3_3.png", "3_4.png", "3_5.png", "3_6.png", "3_7.png", "3_8.png", "3_9.png", "3_10.png", "3_11.png", "3_12.png"]
-            },
-            {
-                id: 0, name: "idle", frameRate: 5, walkableArea: "0",
-                collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-56,-97", frameName: ["1_1.png"]
-            },
-            {
-                id: 0, name: "idle_1", frameRate: 5, walkableArea: "0",
-                collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-59,-97", frameName: ["3_1.png"]
-            },
-        ];
+        // sprite.animations = [
+        //     {
+        //         id: 0, name: "walk", frameRate: 5, walkableArea: "",
+        //         collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-60,-97", frameName: [
+        //             "1_1.png", "1_2.png", "1_3.png", "1_4.png", "1_5.png", "1_6.png", "1_7.png", "1_8.png", "1_9.png", "1_10.png", "1_11.png", "1_12.png"]
+        //     },
+        //     {
+        //         id: 0, name: "walk_1", frameRate: 5, walkableArea: "",
+        //         collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-60,-97", frameName: [
+        //             "3_1.png", "3_2.png", "3_3.png", "3_4.png", "3_5.png", "3_6.png", "3_7.png", "3_8.png", "3_9.png", "3_10.png", "3_11.png", "3_12.png"]
+        //     },
+        //     {
+        //         id: 0, name: "idle", frameRate: 5, walkableArea: "0",
+        //         collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-56,-97", frameName: ["1_1.png"]
+        //     },
+        //     {
+        //         id: 0, name: "idle_1", frameRate: 5, walkableArea: "0",
+        //         collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-59,-97", frameName: ["3_1.png"]
+        //     },
+        // ];
         sprite.display = {
             dataPath: "pixelpai/ElementNode/5eb3c210f81bf42ecdbee104/2/5eb3c210f81bf42ecdbee104.json",
             texturePath: "pixelpai/ElementNode/5eb3c210f81bf42ecdbee104/2/5eb3c210f81bf42ecdbee104.png"
@@ -120,28 +120,28 @@ export class MineCarSimulateData {
         sprite.point3f.x = 765; sprite.point3f.y = 322.5; sprite.currentAnimationName = "idle";
         sprite.direction = op_def.Direction.LOWER_LEFT;
         sprite.nickname = "木制矿车"; sprite.opacity = 100;
-        sprite.animations = [
-            {
-                id: 0, name: "walk_1", frameRate: 5, walkableArea: "",
-                collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-58,-95", frameName: [
-                    "1_1.png", "1_2.png", "1_3.png", "1_4.png", "1_5.png", "1_6.png", "1_7.png", "1_8.png", "1_9.png", "1_10.png", "1_11.png", "1_12.png"
-                ]
-            },
-            {
-                id: 0, name: "idle", frameRate: 5, walkableArea: "0",
-                collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-60,-96", frameName: ["3_1.png"]
-            },
-            {
-                id: 0, name: "idle_1", frameRate: 5, walkableArea: "0",
-                collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-58,-95", frameName: ["1_1.png"]
-            },
-            {
-                id: 0, name: "walk", frameRate: 5, walkableArea: "",
-                collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-58,-95", frameName: [
-                    "3_1.png", "3_2.png", "3_3.png", "3_4.png", "3_5.png", "3_6.png", "3_7.png", "3_8.png", "3_9.png", "3_10.png", "3_11.png", "3_12.png"
-                ]
-            }
-        ];
+        // sprite.animations = [
+        //     {
+        //         id: 0, name: "walk_1", frameRate: 5, walkableArea: "",
+        //         collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-58,-95", frameName: [
+        //             "1_1.png", "1_2.png", "1_3.png", "1_4.png", "1_5.png", "1_6.png", "1_7.png", "1_8.png", "1_9.png", "1_10.png", "1_11.png", "1_12.png"
+        //         ]
+        //     },
+        //     {
+        //         id: 0, name: "idle", frameRate: 5, walkableArea: "0",
+        //         collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-60,-96", frameName: ["3_1.png"]
+        //     },
+        //     {
+        //         id: 0, name: "idle_1", frameRate: 5, walkableArea: "0",
+        //         collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-58,-95", frameName: ["1_1.png"]
+        //     },
+        //     {
+        //         id: 0, name: "walk", frameRate: 5, walkableArea: "",
+        //         collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-58,-95", frameName: [
+        //             "3_1.png", "3_2.png", "3_3.png", "3_4.png", "3_5.png", "3_6.png", "3_7.png", "3_8.png", "3_9.png", "3_10.png", "3_11.png", "3_12.png"
+        //         ]
+        //     }
+        // ];
         sprite.display = {
             dataPath: "pixelpai/ElementNode/5eb3c33b5f1dd72ee6411d36/1/5eb3c33b5f1dd72ee6411d36.json",
             texturePath: "pixelpai/ElementNode/5eb3c33b5f1dd72ee6411d36/1/5eb3c33b5f1dd72ee6411d36.png"
@@ -163,28 +163,28 @@ export class MineCarSimulateData {
         sprite.point3f.x = 690; sprite.point3f.y = 300; sprite.currentAnimationName = "idle";
         sprite.direction = op_def.Direction.LOWER_LEFT;
         sprite.nickname = "铁甲矿车"; sprite.opacity = 100;
-        sprite.animations = [
-            {
-                id: 0, name: "idle", frameRate: 5, walkableArea: "0",
-                collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-52,-102", frameName: ["1_1.png"]
-            },
-            {
-                id: 0, name: "walk_1", frameRate: 5, walkableArea: "",
-                collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-54,-103", frameName: [
-                    "3_1.png", "3_2.png", "3_3.png", "3_4.png", "3_5.png", "3_6.png", "3_7.png", "3_8.png", "3_9.png", "3_10.png", "3_11.png", "3_12.png"
-                ]
-            },
-            {
-                id: 0, name: "idle_1", frameRate: 5, walkableArea: "0",
-                collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-54,-103", frameName: ["3_1.png"]
-            },
-            {
-                id: 0, name: "walk", frameRate: 5, walkableArea: "",
-                collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-54,-103", frameName: [
-                    "1_1.png", "1_2.png", "1_3.png", "1_4.png", "1_5.png", "1_6.png", "1_7.png", "1_8.png", "1_9.png", "1_10.png", "1_11.png", "1_12.png"
-                ]
-            }
-        ];
+        // sprite.animations = [
+        //     {
+        //         id: 0, name: "idle", frameRate: 5, walkableArea: "0",
+        //         collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-52,-102", frameName: ["1_1.png"]
+        //     },
+        //     {
+        //         id: 0, name: "walk_1", frameRate: 5, walkableArea: "",
+        //         collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-54,-103", frameName: [
+        //             "3_1.png", "3_2.png", "3_3.png", "3_4.png", "3_5.png", "3_6.png", "3_7.png", "3_8.png", "3_9.png", "3_10.png", "3_11.png", "3_12.png"
+        //         ]
+        //     },
+        //     {
+        //         id: 0, name: "idle_1", frameRate: 5, walkableArea: "0",
+        //         collisionArea: "0", loop: true, originPoint: [0, 0], baseLoc: "-54,-103", frameName: ["3_1.png"]
+        //     },
+        //     {
+        //         id: 0, name: "walk", frameRate: 5, walkableArea: "",
+        //         collisionArea: "", loop: true, originPoint: [0, 0], baseLoc: "-54,-103", frameName: [
+        //             "1_1.png", "1_2.png", "1_3.png", "1_4.png", "1_5.png", "1_6.png", "1_7.png", "1_8.png", "1_9.png", "1_10.png", "1_11.png", "1_12.png"
+        //         ]
+        //     }
+        // ];
         sprite.display = {
             dataPath: "pixelpai/ElementNode/5eb3c45cd465882ebccba05c/3/5eb3c45cd465882ebccba05c.json",
             texturePath: "pixelpai/ElementNode/5eb3c45cd465882ebccba05c/3/5eb3c45cd465882ebccba05c.png"

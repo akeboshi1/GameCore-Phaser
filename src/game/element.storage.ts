@@ -9,7 +9,6 @@ import {
     SceneNode,
     AnimationDataNode,
     MossNode,
-    SceneryNode,
     AssetsNode,
 } from "game-capsule";
 import { Logger } from "../utils/log";
@@ -85,7 +84,7 @@ export class ElementStorage implements IElementStorage {
                     const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
-                        anis.push(new Animation(ani));
+                        anis.push(new Animation(ani.createProtocolObject()));
                     }
                     displayModel = new FramesModel({
                         id: obj.id,
@@ -123,7 +122,7 @@ export class ElementStorage implements IElementStorage {
                         defaultAnimationName: terrainPalette.animations.defaultAnimationName,
                         display: terrainPalette.animations.display,
                         animationData: terrainPalette.animations.animationData.map(
-                            (ani: AnimationDataNode) => new Animation(ani)
+                            (ani: AnimationDataNode) => new Animation(ani.createProtocolObject())
                         ),
                     },
                 });
@@ -145,7 +144,7 @@ export class ElementStorage implements IElementStorage {
                         defaultAnimationName: elementMoss.animations.defaultAnimationName,
                         display: elementMoss.animations.display,
                         animationData: elementMoss.animations.animationData.map(
-                            (ani: AnimationDataNode) => new Animation(ani)
+                            (ani: AnimationDataNode) => new Animation(ani.createProtocolObject())
                         ),
                     },
                 });
@@ -184,7 +183,7 @@ export class ElementStorage implements IElementStorage {
                     const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
-                        anis.push(new Animation(ani));
+                        anis.push(new Animation(ani.createProtocolObject()));
                     }
                     displayModel = new FramesModel({
                         id: obj.id,
