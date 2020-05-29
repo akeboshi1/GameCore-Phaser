@@ -91,7 +91,7 @@ export default class ElementEditorResourceManager {
                 return;
             }
 
-            const _imgs = images.splice(0);
+            const _imgs = [].concat(images);
             const onLoadFunc = () => {
                 let allLoaded = true;
                 _imgs.forEach((img) => {
@@ -162,7 +162,8 @@ export default class ElementEditorResourceManager {
                 // }, "image/png", 1);
 
                 // remove listener
-                this.mScene.textures.off("onload", onLoadFunc, this, false);
+                // this.mScene.textures.off("onload", onLoadFunc, this, false);
+                this.mScene.textures.removeAllListeners("onload");
             };
             this.mScene.textures.on("onload", onLoadFunc);
         });
