@@ -50,7 +50,7 @@ export class LoadingManager {
 
     async addAssets(assets: IAsset[]) {
         if (!this.scene) {
-            return Promise.reject();
+            return;
         }
         for (const asset of assets) {
             this.loadAsset(asset);

@@ -28,17 +28,12 @@ export class Animation implements IAnimationData {
     protected mWalkableArea: number[][];
     protected mOriginPoint: Phaser.Geom.Point;
     protected mInteractiveArea: IPoint[];
+    protected mLayer: op_gameconfig_01.IAnimationLayer[];
+    protected mMountLayer: op_gameconfig_01.IAnimationMountLayer;
 
     constructor(ani: op_gameconfig_01.IAnimationData) {
-        let tmpBaseLoc = null;
-        if (typeof ani.baseLoc === "string") {
-            tmpBaseLoc = ani.baseLoc.split(",");
-        }
-        // else {
-        //     tmpBaseLoc = [ani.baseLoc.x, ani.baseLoc.y];
-        // }
+        const tmpBaseLoc = ani.baseLoc.split(",");
         this.mID = ani.node.id;
-        // this.mBaseLoc = tmpBaseLoc;
         this.mName = ani.node.name;
         this.mFrameName = ani.frameName;
         if (!ani.frameName || this.mFrameName.length < 1) {
@@ -74,6 +69,8 @@ export class Animation implements IAnimationData {
         }
         // this.mInteractiveArea = [{x: 0, y: 0}];
         this.mInteractiveArea = ani.interactiveArea;
+        this.mLayer = ani.layer;
+        this.mMountLayer = ani.mountLayer;
     }
 
     toClient(): op_gameconfig_01.IAnimationData {
@@ -93,6 +90,8 @@ export class Animation implements IAnimationData {
         ani.walkableArea = this.arrayToString(this.mWalkableArea, ",", "&");
         ani.collisionArea = this.arrayToString(this.mCollisionArea, ",", "&");
         ani.interactiveArea = this.mInteractiveArea;
+        ani.layer = this.mLayer;
+        ani.mountLayer = this.mMountLayer;
         return ani;
     }
 
