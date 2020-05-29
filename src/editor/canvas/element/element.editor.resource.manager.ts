@@ -162,7 +162,8 @@ export default class ElementEditorResourceManager {
                 // }, "image/png", 1);
 
                 // remove listener
-                this.mScene.textures.off("onload", onLoadFunc, this, false);
+                // this.mScene.textures.off("onload", onLoadFunc, this, false);
+                this.mScene.textures.removeAllListeners("onload");
             };
             this.mScene.textures.on("onload", onLoadFunc);
         });
