@@ -5813,7 +5813,7 @@ var GameGridTable = /** @class */ (function (_super) {
         return this;
     };
     GameGridTable.prototype.getCells = function () {
-        return this.mGridTable.cells;
+        return this.mGridTable.getCells();
     };
     GameGridTable.prototype.getCell = function (cellIdx) {
         return this.mGridTable.getCell(cellIdx, true);
@@ -14724,7 +14724,7 @@ class gridtable_GridTable_GridTable extends Scrollable["a" /* default */] {
 
     getCells() {
         const table = this.getElement("table");
-        return table.cells;
+        return table.table.cells;
     }
 
     getCell(cellIdx) {
@@ -31349,12 +31349,39 @@ var FurniBagPanel = /** @class */ (function (_super) {
             props = props.concat(new Array(24 - len));
         }
         this.mPropGrid.setItems(props);
-        // if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
-        //   const cell = this.mPropGrid.getCell(0);
-        //   this.onSelectItemHandler(cell.container);
-        // }
-        var cell = this.mPropGrid.getCell(0);
-        this.onSelectItemHandler(cell.container);
+        if (this.categoryType !== pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+            var cell = this.mPropGrid.getCell(0);
+            this.onSelectItemHandler(cell.container);
+        }
+        else {
+            if (this.mSelectedItemData.length === 0) {
+                var cells = this.mPropGrid.getCells();
+                for (var _i = 0, cells_1 = cells; _i < cells_1.length; _i++) {
+                    var cell = cells_1[_i];
+                    if (cell) {
+                        var item = cell.container.getData("item");
+                        if (item && item.rightSubscript === pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__["op_pkt_def"].PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+                            this.onSelectItemHandler(cell.container);
+                        }
+                    }
+                }
+            }
+        }
+    };
+    FurniBagPanel.prototype.displayAvatar = function () {
+        var content = new pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__["op_client"].OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+        content.avatar = new pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__["op_gameconfig"].Avatar();
+        var player = this.mWorld.roomManager.currentRoom.playerManager.actor;
+        var avatar = player.model.avatar;
+        for (var key in avatar) {
+            if (avatar.hasOwnProperty(key)) {
+                var element = avatar[key];
+                if (element)
+                    content.avatar[key] = element;
+            }
+        }
+        var offset = new Phaser.Geom.Point(0, 40 * 2);
+        this.mDetailDisplay.loadAvatar(content, 2, offset);
     };
     FurniBagPanel.prototype.setSelectedResource = function (content) {
         if (content.display) {
@@ -31582,6 +31609,10 @@ var FurniBagPanel = /** @class */ (function (_super) {
                     }
                     else
                         cellContainer.isEquip = false;
+                }
+                else {
+                    cellContainer.isSelect = false;
+                    cellContainer.isEquip = false;
                 }
                 return cellContainer;
             },
@@ -31845,6 +31876,9 @@ var FurniBagPanel = /** @class */ (function (_super) {
     FurniBagPanel.prototype.onSelectedCategory = function (categoryType) {
         this.categoryType = categoryType;
         this.emit("getCategories", categoryType);
+        if (categoryType === pixelpai_proto__WEBPACK_IMPORTED_MODULE_4__["op_def"].EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+            this.displayAvatar();
+        }
     };
     FurniBagPanel.prototype.onSellBtnHandler = function () {
         this.popItemsPopPanle();
@@ -32327,8 +32361,8 @@ var ItemsPopPanel = /** @class */ (function (_super) {
         _this.add([_this.blackBg, bg, titlebg, _this.titleName, _this.itemName, iconBg, _this.icon, _this.priceBg, _this.pricText, countBg, _this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
         minusBtn.on("Tap", _this.onMinusBtnHandler, _this);
         addBtn.on("Tap", _this.onAddBtnHandler, _this);
-        cancelBtn.on("click", _this.onCancelBtnHandler, _this);
-        confirmBtn.on("click", _this.onConfirmBtnHandler, _this);
+        cancelBtn.on("Tap", _this.onCancelBtnHandler, _this);
+        confirmBtn.on("Tap", _this.onConfirmBtnHandler, _this);
         return _this;
     }
     ItemsPopPanel.prototype.setProp = function (prop, stated, category, handler) {
