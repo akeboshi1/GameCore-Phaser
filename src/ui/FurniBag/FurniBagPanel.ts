@@ -449,13 +449,17 @@ export class FurniBagPanel extends BasePanel {
       this.mSelectedItemData.push(data);
     } else {
       const dataAvatar = data.avatar;
+      const removeArr = [];
       for (const item of this.mSelectedItemData) {
         const avatar = item.avatar;
         if (this.isContainProperty(avatar, dataAvatar)) {
           const index = this.mSelectedItemData.indexOf(item);
-          this.mSelectedItemData.splice(index, 1);
-          break;
+          removeArr.push(item);
         }
+      }
+      for (const item of removeArr) {
+        const index = this.mSelectedItemData.indexOf(item);
+        this.mSelectedItemData.splice(index, 1);
       }
       this.mSelectedItemData.push(data);
     }
