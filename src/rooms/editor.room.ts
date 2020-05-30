@@ -6,7 +6,6 @@ import { Logger } from "../utils/log";
 import { Brush, BrushEnum } from "../const/brush";
 import { IRoomService, Room } from "./room";
 import { LayerManager } from "./layer/layer.manager";
-import { ViewblockManager } from "./cameras/viewblock.manager";
 import { EditScene } from "../scenes/edit";
 import { MouseFollow } from "./editor/mouse.follow";
 import { FramesDisplay } from "./display/frames.display";
@@ -17,11 +16,9 @@ import { Pos } from "../utils/pos";
 import { EditorElementManager } from "./element/editor.element.manager";
 import { EditorTerrainManager } from "./terrain/editor.terrain.manager";
 import { ElementDisplay } from "./display/element.display";
-import { DragonbonesDisplay } from "./display/dragonbones.display";
 import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 import { EditorMossManager } from "./element/editor.moss.manager";
 import { DisplayObjectPool } from "./display-object.pool";
-import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { EditorSkyBoxManager } from "./sky.box/editor.sky.box.manager";
 
 export interface EditorRoomService extends IRoomService {
