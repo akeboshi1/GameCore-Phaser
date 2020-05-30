@@ -107,6 +107,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/json-schema@^7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.4.tgz#38fd73ddfd9b55abb1e1b2ed578cb55bd7b7d339"
+  integrity sha512-8+KAKzEvSUdeo+kmqnKrqgeE+LcA0tjYWFY7RPProVYwnqDjukzO+3b6dLD56rYX5TdWejnEOLJYOIeh4CXKuA==
+
 "@types/long@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
@@ -118,9 +123,9 @@
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
 "@types/node@*":
-  version "14.0.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.5.tgz#3d03acd3b3414cf67faf999aed11682ed121f22b"
-  integrity sha512-90hiq6/VqtQgX8Sp0EzeIsv3r+ellbGj4URKj5j30tLlZvRUpnAe9YbYnjl3pJM93GyXU0tghHhvXHq+5rnCKA==
+  version "14.0.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.6.tgz#f9e178b2da31a4b0ec60b64649e244c31ce18daf"
+  integrity sha512-FbNmu4F67d3oZMWBV6Y4MaPER+0EpE9eIYf2yaHhCWovc1dlXCZkqGX4NLHfVVr6umt20TNBdRzrNJIzIKfdbw==
 
 "@types/node@^13.7.0":
   version "13.13.9"
@@ -154,9 +159,9 @@
     source-map "^0.6.1"
 
 "@types/webpack@^4.4.31":
-  version "4.41.13"
-  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.41.13.tgz#988d114c8913d039b8a0e0502a7fe4f1f84f3d5e"
-  integrity sha512-RYmIHOWSxnTTa765N6jJBVE45pd2SYNblEYshVDduLw6RhocazNmRzE5/ytvBD8IkDMH6DI+bcrqxh8NILimBA==
+  version "4.41.14"
+  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.41.14.tgz#39e3a429a4cc7dedaf79d0558f2912a101c9a2de"
+  integrity sha512-IRnPKux2B7Qip/cUgen5gUh68fxk9Ao0ovKkkSUNPu+6Zub30pjqk9qFG2xZQUBcpIyLte1QfiYBpyAMwuN7Pw==
   dependencies:
     "@types/anymatch" "*"
     "@types/node" "*"
@@ -363,7 +368,7 @@ ajv-keywords@^3.1.0, ajv-keywords@^3.4.1:
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.4.1.tgz#ef916e271c64ac12171fd8384eaae6b2345854da"
   integrity sha512-RO1ibKvd27e6FEShVFfPALuHI3WjSVNeK5FIsmme/LYRNxjKuNj+Dt7bucLa6NdSv3JcVTyMlm9kGR84z1XpaQ==
 
-ajv@^6.1.0, ajv@^6.10.2, ajv@^6.12.0:
+ajv@^6.1.0, ajv@^6.10.2, ajv@^6.12.2:
   version "6.12.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.2.tgz#c629c5eced17baf314437918d2da88c99d5958cd"
   integrity sha512-k+V+hzjm5q/Mr8ef/1Y9goCmlsK4I6Sm74teeyGvFk1XrOsbsKLjEdrvny42CZ+a8sXbk8KWpY/bDwS+FLL2UQ==
@@ -1939,8 +1944,8 @@ function-bind@^1.1.1:
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
-  version "1.2.132"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#cae9f8ff48a3999d3dd0caf5932e7b073c98b9ed"
+  version "1.2.133"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#d1b20d47aca4942f2d56363f0a803858af5a23d4"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
@@ -3539,8 +3544,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.231"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#1397a2e53acf402f91cab8818f9196e7c6d3aecb"
+  version "1.0.234"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#7808f7bfb3384304039daf175250eaf0c9655ec5"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -3953,11 +3958,12 @@ schema-utils@^1.0.0:
     ajv-keywords "^3.1.0"
 
 schema-utils@^2.5.0, schema-utils@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.6.6.tgz#299fe6bd4a3365dc23d99fd446caff8f1d6c330c"
-  integrity sha512-wHutF/WPSbIi9x6ctjGGk2Hvl0VOz5l3EKEuKbjPlB30mKZUzb9A5k9yEXRX3pwyqVLPvpfZZEllaFq/M718hA==
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.7.0.tgz#17151f76d8eae67fbbf77960c33c676ad9f4efc7"
+  integrity sha512-0ilKFI6QQF5nxDZLFn2dMjvc4hjg/Wkg7rHd3jK6/A4a1Hl9VFdQWvgB1UMGoU94pad1P/8N7fMcEnLnSiju8A==
   dependencies:
-    ajv "^6.12.0"
+    "@types/json-schema" "^7.0.4"
+    ajv "^6.12.2"
     ajv-keywords "^3.4.1"
 
 select-hose@^2.0.0:

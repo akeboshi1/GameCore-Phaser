@@ -23,6 +23,7 @@ export class FurniBag extends PacketHandler {
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE, this.onQueryCommodityResultHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE, this.onQueryEditPackage);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR, this.onQueryResetAvatar);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID, this.onRetDressAvatarItemIDS);
     }
   }
 
@@ -108,6 +109,11 @@ export class FurniBag extends PacketHandler {
     this.connection.send(packet);
   }
 
+  queryDressAvatarItemIDs() {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CURRENT_DRESS_AVATAR_ITEM_ID);
+    this.connection.send(packet);
+  }
+
   destroy() {
     this.unregister();
     this.mEvent.destroy();
@@ -162,6 +168,10 @@ export class FurniBag extends PacketHandler {
     content.subcategory = key;
     content.queryString = queryString;
     this.connection.send(packet);
+  }
+  private onRetDressAvatarItemIDS(packet: PBpacket) {
+    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;
+    this.mEvent.emit("avatarIDs", content);
   }
   get connection(): ConnectionService {
     if (this.world) {

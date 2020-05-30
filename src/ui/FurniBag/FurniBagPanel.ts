@@ -49,6 +49,7 @@ export class FurniBagPanel extends BasePanel {
   private mInputBoo: boolean = false;
   private categoryType: op_def.EditModePackageCategory;
   private mSelectedItemData: op_client.ICountablePackageItem[] = [];
+  private dressAvatarIDS: string[];
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
@@ -147,17 +148,19 @@ export class FurniBagPanel extends BasePanel {
       this.onSelectItemHandler(cell.container);
     } else {
       if (this.mSelectedItemData.length === 0) {
-        const cells = this.mPropGrid.getCells();
-        for (const cell of cells) {
-          if (cell) {
-            const item: op_client.ICountablePackageItem = cell.container.getData("item");
-            if (item && item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-              this.onSelectItemHandler(cell.container);
-            }
+        for (const prop of props) {
+          if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+            this.mSelectedItemData.push(prop);
           }
         }
+        this.updateAvatarItems();
       }
     }
+  }
+
+  public setDressAvatarIds(ids: string[]) {
+    this.dressAvatarIDS = ids;
+    this.updateAvatarItems();
   }
 
   public displayAvatar() {
@@ -443,6 +446,22 @@ export class FurniBagPanel extends BasePanel {
     return btn;
   }
 
+  private updateAvatarItems() {
+    if (this.dressAvatarIDS && this.mSelectedItemData.length > 0) {
+      this.mSelectedItemData.length = 0;
+      const cells = this.mPropGrid.getCells();
+      for (const id of this.dressAvatarIDS) {
+        for (const cell of cells) {
+          if (cell) {
+            const item: op_client.ICountablePackageItem = cell.container.getData("item");
+            if (item && id === item.id && item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+              this.onSelectItemHandler(cell.container);
+            }
+          }
+        }
+      }
+    }
+  }
   private replaceSelectItem(data: op_client.ICountablePackageItem) {
     if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
       this.mSelectedItemData.length = 0;
@@ -671,10 +690,11 @@ export class FurniBagPanel extends BasePanel {
 
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
-    this.emit("getCategories", categoryType);
     if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
       this.displayAvatar();
+      this.emit("queryDressAvatarIDS");
     }
+    this.emit("getCategories", categoryType);
   }
 
   private onSellBtnHandler() {
