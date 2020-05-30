@@ -1,7 +1,5 @@
-import {AnimationDataNode} from "game-capsule/lib/configobjects/animations";
-import { op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
+import { op_gameconfig_01, op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule/lib/helpers";
-import { Logger } from "../../utils/log";
 export interface IAnimationData {
     name: string;
     frameName: string[];
@@ -13,11 +11,14 @@ export interface IAnimationData {
     originPoint: Phaser.Geom.Point;
 
     readonly interactiveArea?: op_def.IPBPoint2i[];
+    readonly layer: op_gameconfig_01.IAnimationLayer[];
+    readonly mountLayer: op_gameconfig_01.IAnimationMountLayer;
 
-    toClient(): op_gameconfig_01.IAnimationData;
+    createProtocolObject(): op_gameconfig_01.IAnimationData;
 }
 
 export class Animation implements IAnimationData {
+    protected mNode: op_gameconfig_01.INode;
     protected mID: number;
     protected mBaseLoc: Phaser.Geom.Point;
     protected mFrameName: string[];
@@ -33,6 +34,7 @@ export class Animation implements IAnimationData {
 
     constructor(ani: op_gameconfig_01.IAnimationData) {
         const tmpBaseLoc = ani.baseLoc.split(",");
+        this.mNode = ani.node;
         this.mID = ani.node.id;
         this.mName = ani.node.name;
         this.mFrameName = ani.frameName;
@@ -73,13 +75,9 @@ export class Animation implements IAnimationData {
         this.mMountLayer = ani.mountLayer;
     }
 
-    toClient(): op_gameconfig_01.IAnimationData {
+    createProtocolObject(): op_gameconfig_01.IAnimationData {
         const ani = op_gameconfig_01.AnimationData.create();
-        const node = op_gameconfig_01.Node.create();
-        node.id = this.id;
-        node.name = this.name;
-        node.type = op_def.NodeType.AnimationDataType;
-        ani.node = node;
+        ani.node = this.mNode;
         ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
         ani.node.name = this.name;
         ani.loop = this.loop;
@@ -155,5 +153,19 @@ export class Animation implements IAnimationData {
 
     get interactiveArea(): op_def.IPBPoint2i[] {
         return this.mInteractiveArea;
+    }
+
+    get layer() {
+        if (this.mLayer.length > 0) {
+            return this.mLayer;
+        }
+        return [{
+            frameName: this.mFrameName,
+            offsetLoc: this.mBaseLoc
+        }];
+    }
+
+    get mountLayer() {
+        return this.mMountLayer;
     }
 }

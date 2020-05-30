@@ -88,10 +88,10 @@ export class FramesModel implements IFramesModel {
         return this.mGen;
     }
 
-    public toClient(): op_gameconfig_01.IAnimationData[] {
+    public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
         const anis: op_gameconfig_01.IAnimationData[] = [];
         this.animations.forEach((ani: IAnimationData) => {
-            anis.push(ani.toClient());
+            anis.push(ani.createProtocolObject());
         }, this);
         return anis;
     }
@@ -158,7 +158,7 @@ export class FramesModel implements IFramesModel {
             point3f.z = z;
         }
         spr.point3f = point3f;
-        spr.animations = this.toClient();
+        spr.animations = this.createProtocolObject();
         if (dir) {
             spr.direction = dir;
         }
