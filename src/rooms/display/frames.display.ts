@@ -24,12 +24,8 @@ export class FramesDisplay extends DisplayObject {
     protected mHasAnimation: boolean = false;
     protected mScaleTween: Phaser.Tweens.Tween;
     protected mActionName: AnimationData;
+    protected mDisplays: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image[];
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
-    public setPosition(x?: number, y?: number, z?: number): this {
-        super.setPosition(x, y, z);
-        this.setDepth(this.x + this.baseLoc.x + this.y + this.baseLoc.y);
-        return this;
-    }
 
     public load(displayInfo: IFramesModel, field?: DisplayField) {
         field = !field ? DisplayField.STAGE : field;
