@@ -216,3 +216,4 @@ export class Launcher {
     }
 }
 
+export * from "./src/editor"// 待launcher模块分离后  这行代码写在game-core中
