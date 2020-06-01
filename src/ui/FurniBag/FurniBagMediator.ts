@@ -132,7 +132,7 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     private onDressAvatarIDS(ids: string[]) {
-
+        this.mView.setDressAvatarIds(ids);
     }
 
     private queryDressAvatarIDS() {

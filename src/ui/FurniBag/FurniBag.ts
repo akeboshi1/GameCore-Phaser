@@ -171,7 +171,7 @@ export class FurniBag extends PacketHandler {
   }
   private onRetDressAvatarItemIDS(packet: PBpacket) {
     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;
-    this.mEvent.emit("avatarIDs", content);
+    this.mEvent.emit("avatarIDs", content.avatarItemIds);
   }
   get connection(): ConnectionService {
     if (this.world) {
