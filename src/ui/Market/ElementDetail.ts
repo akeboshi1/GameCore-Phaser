@@ -155,7 +155,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mBuyBtn.x = width - this.mBuyBtn.displayWidth / 2 - 10 * this.dpr * this.uiScale;
     this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.displayHeight / 2 - 12 * this.dpr * this.uiScale;
 
-    const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 -  17 * this.dpr * this.uiScale;
+    const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 - 17 * this.dpr * this.uiScale;
     // if (counterX < this.mCounter.displayWidth / 2 + 10) {
     //   counterX = this.mCounter.displayWidth / 2 + 10;
     // }
@@ -163,7 +163,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter.y = this.mBuyBtn.y;
 
     this.mDetailBubbleContainer.x = 10 * this.dpr;
-    const endW = width -  (width - this.mCounter.x) - this.mCounter.width / 2;
+    const endW = width - (width - this.mCounter.x) - this.mCounter.width / 2;
     if (this.mDetailBubbleContainer.displayWidth + this.mDetailBubbleContainer.x + 10 * this.dpr > endW) {
       const bubbleW = endW - 16 * this.dpr * this.uiScale;
       this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr * this.uiScale, true);
@@ -235,7 +235,16 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     if (content.display) {
       this.mDetailDisplay.loadDisplay(content);
     } else if (content.avatar) {
-      this.mDetailDisplay.loadAvatar(content);
+      const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
+      const avatar = player.model.avatar;
+      for (const key in avatar) {
+        if (avatar.hasOwnProperty(key)) {
+          const element = avatar[key];
+          if (element && !content.avatar[key]) content.avatar[key] = element;
+        }
+      }
+      const offset = new Phaser.Geom.Point(0, 35 * 2);
+      this.mDetailDisplay.loadAvatar(content, 2, offset);
     } else {
       this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
     }
