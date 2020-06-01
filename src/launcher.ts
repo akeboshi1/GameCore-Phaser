@@ -9,7 +9,7 @@ export interface ILauncherConfig {
     auth_token: string;
     token_expire: string | null;
     token_fingerprint: string;
-    server_addr: ServerAddress | undefined;
+    server_addr: any | undefined;
     game_id: string;
     virtual_world_id: string;
     ui_scale?: number;
@@ -24,7 +24,7 @@ export interface ILauncherConfig {
     readonly baseWidth: number;
     readonly baseHeight: number;
     readonly game_created?: Function;
-    readonly connection?: ConnectionService;
+    readonly connection?: any;
     readonly isEditor?: boolean;
     readonly osd?: string;
     readonly closeGame: Function;

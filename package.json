@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.216",
+    "version": "1.0.122",
     "main": "release/js/index.js",
     "types": "release/types/index.d.ts",
     "scripts": {

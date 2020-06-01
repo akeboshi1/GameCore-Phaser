@@ -15,7 +15,7 @@ export class Compose extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE, this.onRetFormulaDetial);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA, this.onRetFormulaDetial);
         }
     }
 

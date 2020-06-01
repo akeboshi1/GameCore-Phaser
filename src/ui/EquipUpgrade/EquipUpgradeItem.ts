@@ -306,6 +306,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
             if (this.isUnlock) bgName = "equipbg2";
             else bgName = "equipbg1";
         }
+        if (this.itemData.selected) bgName = "equipbg2";
         this.bg.setTexture(this.key, bgName);
     }
 

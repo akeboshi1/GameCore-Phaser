@@ -11,7 +11,6 @@ import { Size, Logger, Tool, load } from "../utils";
 import { IRoomManager, IRoomService, RoomManager } from "../rooms";
 import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
-import { MainUIScene } from "../scenes/main.ui";
 import { JoyStickManager } from "./joystick.manager";
 import { GameMain, ILauncherConfig } from "../launcher";
 import { ElementStorage, IElementStorage } from "./element.storage";

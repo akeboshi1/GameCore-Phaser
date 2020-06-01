@@ -8,7 +8,6 @@ import { i18n } from "../../i18n";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Logger } from "../../utils/log";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
 import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
@@ -17,6 +16,9 @@ import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { Url } from "../../utils/resUtil";
+// import { NinePatchButton } from "../../../lib/rexui/lib/ui/button/NinePatchButton";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { NinePatchButton } from "../components/ninepatch.button";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -77,12 +79,20 @@ export default class CharacterInfoPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on("Tap", this.OnClosePanel, this);
+        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.nickEditor.on(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
+        this.privaCharBtn.on(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
+        this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
+        this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
     }
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off("Tap", this.OnClosePanel, this);
+        this.closeBtn.off(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.nickEditor.off(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
+        this.privaCharBtn.off(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
+        this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
+        this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
     }
 
     preload() {
@@ -229,10 +239,6 @@ export default class CharacterInfoPanel extends BasePanel {
             }
         });
         this.add(this.mGrideTable.table);
-        this.nickEditor.on("Tap", this.onEditorHandler, this);
-        this.privaCharBtn.on("Tap", this.onPrivateChatHandler, this);
-        this.addFriendBtn.on("Tap", this.onAddFriendHandler, this);
-        this.tradeBtn.on("Tap", this.onTradingHandler, this);
         this.resize(w, h);
         super.init();
         this.reqPlayerInfo();

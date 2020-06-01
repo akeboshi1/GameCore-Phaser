@@ -23,6 +23,7 @@ export class FurniBag extends PacketHandler {
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE, this.onQueryCommodityResultHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE, this.onQueryEditPackage);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR, this.onQueryResetAvatar);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID, this.onRetDressAvatarItemIDS);
     }
   }
 
@@ -96,15 +97,20 @@ export class FurniBag extends PacketHandler {
     content.totalPrice.price *= count;
     this.connection.send(packet);
   }
-  querySaveAvatar(avatar: op_gameconfig.Avatar) {
+  querySaveAvatar(avatarids: string[]) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR = packet.content;
-    content.avatar = avatar;
+    content.avatarItemIds = avatarids;
     this.connection.send(packet);
   }
 
   queryResetAvatar(avatar: op_gameconfig.Avatar) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_RESET_AVATAR);
+    this.connection.send(packet);
+  }
+
+  queryDressAvatarItemIDs() {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CURRENT_DRESS_AVATAR_ITEM_ID);
     this.connection.send(packet);
   }
 
@@ -162,6 +168,10 @@ export class FurniBag extends PacketHandler {
     content.subcategory = key;
     content.queryString = queryString;
     this.connection.send(packet);
+  }
+  private onRetDressAvatarItemIDS(packet: PBpacket) {
+    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;
+    this.mEvent.emit("avatarIDs", content.avatarItemIds);
   }
   get connection(): ConnectionService {
     if (this.world) {

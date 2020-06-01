@@ -195,6 +195,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public startLoad() { }
 
     public completeLoad() {
+        if (this.mWorld.game.scene.getScene(PlayScene.name)) return;
         this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
             room: this,
         });

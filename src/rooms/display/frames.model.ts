@@ -1,9 +1,9 @@
-import { op_gameconfig, op_def, op_client } from "pixelpai_proto";
+import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import * as sha1 from "simple-sha1";
 import { Animation, IAnimationData } from "./animation";
 import Helpers from "../../utils/helpers";
-import { ISprite, Sprite } from "../element/sprite";
+import { Sprite } from "../element/sprite";
 import { Direction } from "../element/element";
 import { AnimationData } from "../element/sprite";
 
@@ -88,10 +88,10 @@ export class FramesModel implements IFramesModel {
         return this.mGen;
     }
 
-    public toClient(): op_gameconfig.IAnimation[] {
-        const anis: op_gameconfig.IAnimation[] = [];
+    public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
+        const anis: op_gameconfig_01.IAnimationData[] = [];
         this.animations.forEach((ani: IAnimationData) => {
-            anis.push(ani.toClient());
+            anis.push(ani.createProtocolObject());
         }, this);
         return anis;
     }
@@ -158,7 +158,7 @@ export class FramesModel implements IFramesModel {
             point3f.z = z;
         }
         spr.point3f = point3f;
-        spr.animations = this.toClient();
+        spr.animations = this.createProtocolObject();
         if (dir) {
             spr.direction = dir;
         }

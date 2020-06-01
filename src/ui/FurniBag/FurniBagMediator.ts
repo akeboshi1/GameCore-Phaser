@@ -35,6 +35,7 @@ export class FurniBagMediator extends BaseMediator {
             this.mFurniBag.on("queryPackage", this.onQueryPackageHandler, this);
             this.mFurniBag.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
             this.mFurniBag.on("queryResetAvatar", this.onResetAvatar, this);
+            this.mFurniBag.on("avatarIDs", this.onDressAvatarIDS, this);
         }
         if (!this.mView) {
             this.mView = new FurniBagPanel(this.scene, this.world, this.mScneType);
@@ -47,6 +48,7 @@ export class FurniBagMediator extends BaseMediator {
             this.mView.on("sellProps", this.onSellPropsHandler, this);
             this.mView.on("querySaveAvatar", this.onQuerySaveAvatar, this);
             this.mView.on("queryResetAvatar", this.onQueryResetAvatar, this);
+            this.mView.on("queryDressAvatarIDS", this.queryDressAvatarIDS, this);
         }
         this.mView.show();
         this.layerManager.addToUILayer(this.mView);
@@ -102,8 +104,8 @@ export class FurniBagMediator extends BaseMediator {
         this.mFurniBag.queryCommodityResource(prop.id);
     }
 
-    private onQuerySaveAvatar(avatar: op_gameconfig.Avatar) {
-        this.mFurniBag.querySaveAvatar(avatar);
+    private onQuerySaveAvatar(avatarids: string[]) {
+        this.mFurniBag.querySaveAvatar(avatarids);
     }
 
     private onQueryResetAvatar(avatar: op_gameconfig.Avatar) {
@@ -127,5 +129,13 @@ export class FurniBagMediator extends BaseMediator {
     }
     private onResetAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
         this.mView.resetAvatar(content);
+    }
+
+    private onDressAvatarIDS(ids: string[]) {
+        this.mView.setDressAvatarIds(ids);
+    }
+
+    private queryDressAvatarIDS() {
+        this.mFurniBag.queryDressAvatarItemIDs();
     }
 }

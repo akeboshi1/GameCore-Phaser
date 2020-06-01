@@ -1,7 +1,5 @@
-import {AnimationDataNode} from "game-capsule/lib/configobjects/animations";
-import { op_gameconfig, op_def } from "pixelpai_proto";
+import { op_gameconfig_01, op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule/lib/helpers";
-import { Logger } from "../../utils/log";
 export interface IAnimationData {
     name: string;
     frameName: string[];
@@ -13,11 +11,14 @@ export interface IAnimationData {
     originPoint: Phaser.Geom.Point;
 
     readonly interactiveArea?: op_def.IPBPoint2i[];
+    readonly layer: op_gameconfig_01.IAnimationLayer[];
+    readonly mountLayer: op_gameconfig_01.IAnimationMountLayer;
 
-    toClient(): op_gameconfig.IAnimation;
+    createProtocolObject(): op_gameconfig_01.IAnimationData;
 }
 
 export class Animation implements IAnimationData {
+    protected mNode: op_gameconfig_01.INode;
     protected mID: number;
     protected mBaseLoc: Phaser.Geom.Point;
     protected mFrameName: string[];
@@ -28,17 +29,14 @@ export class Animation implements IAnimationData {
     protected mWalkableArea: number[][];
     protected mOriginPoint: Phaser.Geom.Point;
     protected mInteractiveArea: IPoint[];
+    protected mLayer: op_gameconfig_01.IAnimationLayer[];
+    protected mMountLayer: op_gameconfig_01.IAnimationMountLayer;
 
-    constructor(ani: AnimationDataNode | op_gameconfig.IAnimation) {
-        let tmpBaseLoc = null;
-        if (typeof ani.baseLoc === "string") {
-            tmpBaseLoc = ani.baseLoc.split(",");
-        } else {
-            tmpBaseLoc = [ani.baseLoc.x, ani.baseLoc.y];
-        }
-        this.mID = ani.id;
-        this.mBaseLoc = tmpBaseLoc;
-        this.mName = ani.name;
+    constructor(ani: op_gameconfig_01.IAnimationData) {
+        const tmpBaseLoc = ani.baseLoc.split(",");
+        this.mNode = ani.node;
+        this.mID = ani.node.id;
+        this.mName = ani.node.name;
         this.mFrameName = ani.frameName;
         if (!ani.frameName || this.mFrameName.length < 1) {
             // Logger.getInstance().fatal(`Animation: ${ani.id} frames is invalid`);
@@ -59,11 +57,7 @@ export class Animation implements IAnimationData {
         this.mFrameRate = ani.frameRate;
         this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         const origin = ani.originPoint;
-        if (Array.isArray(origin)) {
-            this.mOriginPoint = new Phaser.Geom.Point(origin[0], origin[1]);
-        } else {
-            this.mOriginPoint = new Phaser.Geom.Point(origin.x, origin.y);
-        }
+        this.mOriginPoint = new Phaser.Geom.Point(origin[0], origin[1]);
         if (typeof ani.collisionArea === "string") {
             this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
         } else {
@@ -77,13 +71,15 @@ export class Animation implements IAnimationData {
         }
         // this.mInteractiveArea = [{x: 0, y: 0}];
         this.mInteractiveArea = ani.interactiveArea;
+        this.mLayer = ani.layer;
+        this.mMountLayer = ani.mountLayer;
     }
 
-    toClient(): op_gameconfig.IAnimation {
-        const ani = op_gameconfig.Animation.create();
-        ani.id = this.id;
+    createProtocolObject(): op_gameconfig_01.IAnimationData {
+        const ani = op_gameconfig_01.AnimationData.create();
+        ani.node = this.mNode;
         ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
-        ani.name = this.name;
+        ani.node.name = this.name;
         ani.loop = this.loop;
         ani.frameRate = this.frameRate;
         ani.frameName = this.frameName;
@@ -92,6 +88,8 @@ export class Animation implements IAnimationData {
         ani.walkableArea = this.arrayToString(this.mWalkableArea, ",", "&");
         ani.collisionArea = this.arrayToString(this.mCollisionArea, ",", "&");
         ani.interactiveArea = this.mInteractiveArea;
+        ani.layer = this.mLayer;
+        ani.mountLayer = this.mMountLayer;
         return ani;
     }
 
@@ -155,5 +153,19 @@ export class Animation implements IAnimationData {
 
     get interactiveArea(): op_def.IPBPoint2i[] {
         return this.mInteractiveArea;
+    }
+
+    get layer() {
+        if (this.mLayer.length > 0) {
+            return this.mLayer;
+        }
+        return [{
+            frameName: this.mFrameName,
+            offsetLoc: this.mBaseLoc
+        }];
+    }
+
+    get mountLayer() {
+        return this.mMountLayer;
     }
 }

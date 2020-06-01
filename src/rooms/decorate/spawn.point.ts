@@ -1,8 +1,5 @@
-import { Element } from "../element/element";
-import { ISprite, Sprite, AnimationData, AnimationQueue } from "../element/sprite";
-import { IElementManager } from "../element/element.manager";
-import { SlotInfo } from "../player/slot.info";
-import { op_gameconfig, op_def, op_client } from "pixelpai_proto";
+import { ISprite, AnimationData, AnimationQueue } from "../element/sprite";
+import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import { IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
 import { Pos } from "../../utils/pos";
 import { IFramesModel, FramesModel } from "../display/frames.model";
@@ -73,7 +70,7 @@ export class SpawnPoint implements ISprite {
         throw new Error("Method not implemented.");
     }
 
-    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string) {
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
         throw new Error("Method not implemented.");
     }
 
@@ -94,10 +91,10 @@ export class SpawnPoint implements ISprite {
         return display;
     }
 
-    get animation(): op_gameconfig.IAnimation {
-        const animation = op_gameconfig.Animation.create();
-        animation.id = 10000;
-        animation.name = "idle";
+    get animation(): op_gameconfig_01.IAnimationData {
+        const animation = op_gameconfig_01.AnimationData.create();
+        // animation.id = 10000;
+        // animation.name = "idle";
         animation.frameRate = 5;
         animation.collisionArea = "1,1&1,1";
         animation.loop = true;

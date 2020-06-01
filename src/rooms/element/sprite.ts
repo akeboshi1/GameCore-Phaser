@@ -1,9 +1,8 @@
 import { Pos } from "../../utils/pos";
 import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-import { SlotInfo } from "../player/slot.info";
+import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
 import { FramesModel, IFramesModel } from "../display/frames.model";
-import { Animation, IAnimationData } from "../display/animation";
+import { Animation } from "../display/animation";
 import Helpers from "../../utils/helpers";
 import NodeType = op_def.NodeType;
 import { Logger } from "../../utils/log";
@@ -36,7 +35,7 @@ export interface ISprite {
 
     newID();
     updateAvatar(avatar: op_gameconfig.IAvatar);
-    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string);
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
     setAnimationName(name: string, playTimes?: number): AnimationData;
     setAnimationQueue(queue: AnimationQueue[]);
@@ -144,7 +143,7 @@ export class Sprite implements ISprite {
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<FramesModel>this.displayInfo).toClient();
+            sprite.animations = (<FramesModel>this.displayInfo).createProtocolObject();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
@@ -189,7 +188,7 @@ export class Sprite implements ISprite {
         this.mDisplayInfo = new DragonbonesModel(this);
     }
 
-    public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string) {
+    public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
         if (!display || !animations) {
             return;
         }
