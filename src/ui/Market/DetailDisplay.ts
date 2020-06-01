@@ -69,6 +69,8 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         key,
         frame
       }, false);
+    } else {
+      this.mImage.setTexture(key, frame);
     }
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.add(this.mImage);
