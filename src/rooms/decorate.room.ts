@@ -356,6 +356,17 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mMap[cols][rows] = type;
     }
 
+    public getElement(id: number): IElement {
+        let ele = null;
+        if (this.mElementManager) {
+            ele = this.elementManager.get(id);
+        }
+        if (!ele && this.mTerrainManager) {
+            ele = this.mTerrainManager.get(id);
+        }
+        return ele;
+    }
+
     private addPointerMoveHandler() {
         if (!this.mScene) return;
         this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);

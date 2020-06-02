@@ -5,7 +5,7 @@ import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Tweens } from "phaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
@@ -75,13 +75,19 @@ export interface IElement {
 
     scaleTween();
 
-    toSprite(): op_client.ISprite;
-
     turn();
 
     setAlpha(val: number);
 
     setQueue(queue: op_client.IChangeAnimation[]);
+
+    mount(ele: IElement): this;
+
+    unmount(): this;
+
+    addMount(ele: IElement, index?: number): this;
+
+    removeMount(ele: IElement): this;
 }
 
 export interface MoveData {
@@ -169,6 +175,8 @@ export class Element extends BlockObject implements IElement {
     protected mOffsetY: number = undefined;
     protected mQueueAnimations: AnimationQueue[];
     protected mMoving: boolean = false;
+    protected mRootMount: IElement;
+    protected mMounts: IElement[];
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -208,6 +216,9 @@ export class Element extends BlockObject implements IElement {
             this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
             this.mShopEntity.register();
         }
+        if (model.mountSprites && model.mountSprites.length > 0) {
+            this.updateMounth(model.mountSprites);
+        }
     }
 
     public updateModel(model: op_client.ISprite) {
@@ -233,6 +244,11 @@ export class Element extends BlockObject implements IElement {
         }
         if (model.hasOwnProperty("direction")) {
             this.setDirection(model.direction);
+        }
+        if (model.hasOwnProperty("mountSprites")) {
+            const mounts = model.mountSprites;
+            this.mergeMounth(mounts);
+            this.updateMounth(mounts);
         }
     }
 
@@ -425,6 +441,23 @@ export class Element extends BlockObject implements IElement {
         this.changeState(PlayerState.IDLE);
     }
 
+    public getPosition() {
+        let pos: Pos;
+        if (!this.mDisplay) {
+            pos = new Pos(0, 0);
+        }
+        if (this.mRootMount) {
+            pos = this.mRootMount.getPosition();
+            pos.x += this.mDisplay.x;
+            pos.y += this.mDisplay.y;
+            pos.z += this.mDisplay.z;
+        } else {
+            pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
+        }
+
+        return pos;
+    }
+
     public setPosition(p: Pos) {
         if (this.mMoving) {
             this.stopMove();
@@ -477,18 +510,6 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public toSprite(): op_client.ISprite {
-        const sprite = op_client.Sprite.create();
-        sprite.id = this.id;
-        if (this.mDisplay) {
-            sprite.point3f = op_def.PBPoint3f.create();
-            sprite.point3f.x = this.mDisplay.x;
-            sprite.point3f.y = this.mDisplay.y;
-            sprite.point3f.z = this.mDisplay.z;
-        }
-        return sprite;
-    }
-
     public turn(): void {
         if (!this.mModel) {
             return;
@@ -502,6 +523,37 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mDisplay.setAlpha(val);
+    }
+
+    public mount(root: IElement) {
+        this.mRootMount = root;
+        return this;
+    }
+
+    public unmount() {
+        this.mRootMount = null;
+        this.addDisplay();
+        return this;
+    }
+
+    public addMount(ele: IElement, index: number) {
+        if (!this.mMounts) this.mMounts = [];
+        ele.mount(this);
+        (<FramesDisplay> this.mDisplay).mount(ele.getDisplay(), index);
+        if (this.mMounts.indexOf(ele) === -1) {
+            this.mMounts.push(ele);
+        }
+        return this;
+    }
+
+    public removeMount(ele: IElement) {
+        ele.unmount();
+        if (!this.mMounts) return this;
+        const index = this.mMounts.indexOf(ele);
+        if (index > -1) {
+            this.mMounts.splice(index, 1);
+        }
+        return this;
     }
 
     // public setConcomitant(ele: Element, isFollow: boolean = true) {
@@ -681,7 +733,7 @@ export class Element extends BlockObject implements IElement {
 
     protected setDepth(depth: number) {
         if (this.mDisplay) {
-            this.mDisplay.setDepth(depth);
+            // this.mDisplay.setDepth(depth);
             if (!this.roomService) {
                 throw new Error("roomService is undefined");
             }
@@ -729,14 +781,14 @@ export class Element extends BlockObject implements IElement {
     protected onMoving() {
         const now = this.roomService.now();
         if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            let depth = 0;
-            if (this.model && this.model.pos) {
-                depth = this.model.pos.depth ? this.model.pos.depth : 0;
-            }
-            this.setDepth(depth);
+            // let depth = 0;
+            // if (this.model && this.model.pos) {
+            //     depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            // }
+            this.setDepth(0);
             this.mMoveData.tweenLastUpdate = now;
             this.updateBubble();
-            if (this.mDisplay) this.mDisplay.emit("posChange", this.scene);
+            // if (this.mDisplay) this.mDisplay.emit("posChange", this.scene);
             if (this.mBlockable) {
                 this.roomService.updateBlockObject(this);
                 // this.roomService.addBlockObject()
@@ -781,5 +833,33 @@ export class Element extends BlockObject implements IElement {
             direction = 1;
         }
         return direction;
+    }
+
+    protected mergeMounth(mounts: number[]) {
+        const oldMounts = this.mModel.mountSprites || [];
+        const room = this.mRoomService;
+        for (const id of oldMounts) {
+            if (mounts.indexOf(id) === -1) {
+                const ele = room.getElement(id);
+                if (ele) {
+                    this.removeMount(ele);
+                }
+            }
+        }
+    }
+
+    protected updateMounth(mounts: number[]) {
+        const room = this.mRoomService;
+        if (mounts.length > 0) {
+            for (let i = 0; i < mounts.length; i++) {
+                const ele = room.getElement(mounts[i]);
+                if (ele) {
+                    this.addMount(ele, i);
+                }
+            }
+            // const playerManager = this.mElementManager.roomService;
+        }
+
+        this.mModel.mountSprites = mounts;
     }
 }

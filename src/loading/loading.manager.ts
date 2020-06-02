@@ -52,6 +52,9 @@ export class LoadingManager {
         if (!this.scene) {
             return;
         }
+        if (!assets) {
+            return;
+        }
         for (const asset of assets) {
             this.loadAsset(asset);
         }
