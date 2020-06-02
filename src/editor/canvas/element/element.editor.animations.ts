@@ -435,15 +435,16 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
     }
 
     private onDragHandler(pointer, gameObject, dragX, dragY) {
+        const delta = { x: 0, y: 0 };
         this.mSelectedGameObjects.forEach((element) => {
             if (element === gameObject) {
-                element.x = dragX;
-                element.y = dragY;
-            } else {
-                const delta = { x: (element.x - gameObject.x), y: (element.y - gameObject.y) };
-                element.x = dragX + delta.x;
-                element.y = dragY + delta.y;
+                delta.x = dragX - element.x;
+                delta.y = dragY - element.y;
             }
+        });
+        this.mSelectedGameObjects.forEach((element) => {
+            element.x = element.x + delta.x;
+            element.y = element.y + delta.y;
         });
     }
 

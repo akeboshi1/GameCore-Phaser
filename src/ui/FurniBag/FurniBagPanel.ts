@@ -144,6 +144,7 @@ export class FurniBagPanel extends BasePanel {
     }
     this.mPropGrid.setItems(props);
     if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      this.mSelectedItemData.length = 0;
       const cell = this.mPropGrid.getCell(0);
       this.onSelectItemHandler(cell.container);
     } else {
@@ -629,6 +630,8 @@ export class FurniBagPanel extends BasePanel {
     const categoryType = item.getData("data");
     const width = this.scaleWidth;
     this.mSelectedItemData.length = 0;
+    // this.mDetailDisplay.setTexture(this.key, "ghost");
+    // this.mDetailDisplay.setNearest();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
