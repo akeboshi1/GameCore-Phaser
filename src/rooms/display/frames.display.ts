@@ -54,7 +54,6 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public play(animation: AnimationData, field?: DisplayField) {
-        this.mActionName = animation;
         if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
@@ -70,30 +69,39 @@ export class FramesDisplay extends DisplayObject {
             this.remove(this.mMountContainer);
         }
         this.mDisplays = [];
+        this.mHasAnimation = false;
         const layer = ani.layer;
         for (let i = 0; i < layer.length; i++) {
-            const { frameName, offsetLoc } = layer[i];
             let display;
+            const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_${animation.animationName}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, ani);
                 display = this.scene.make.sprite(undefined, false);
                 this.mDisplays.push(display);
                 display.play(key);
+                this.mHasAnimation = true;
             } else {
                 display = this.scene.make.image(undefined, false);
                 display.setTexture(data.gene, frameName[0]);
                 this.mDisplays.push(display);
             }
+            display.scaleX = animation.flip ? -1 : 1;
             display.x = offsetLoc.x + display.width * 0.5;
             display.y = offsetLoc.y + display.height * 0.5;
-            this.initBaseLoc(DisplayField.STAGE, animation.animationName);
-            this.setInteractive();
             this.add(display);
+        }
+        // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
+        this.initBaseLoc(DisplayField.STAGE, animation.animationName);
+        // }
+        this.emit("updateAnimation");
+        if (this.mDisplays.length > 0) {
+            this.mDisplays[0].on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
         }
         if (this.mMountContainer && ani.mountLayer) {
             this.addAt(this.mMountContainer, ani.mountLayer.index);
         }
+        this.mActionName = animation;
     }
 
     // public play(animation: AnimationData, field?: DisplayField) {
@@ -135,8 +143,7 @@ export class FramesDisplay extends DisplayObject {
         const data = this.mDisplayDatas.get(DisplayField.STAGE);
         if (!data) return;
         const ani = data.getAnimations(this.mActionName.animationName);
-        const { frameVisible, index, mountPoint } = ani.mountLayer;
-        // display.visible = frameVisible;
+        const { index, mountPoint } = ani.mountLayer;
         if (targetIndex === undefined) targetIndex = 0;
         display.x = mountPoint[targetIndex].x;
         display.y = mountPoint[targetIndex].y;
@@ -179,22 +186,21 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public scaleTween() {
-        const display = this.mSprites.get(DisplayField.STAGE);
-        if (!display) {
+        if (this.mMountContainer && this.mMountContainer.list.length > 0) {
             return;
         }
         if (this.mScaleTween) {
             return;
         }
-        const tmp = display.scale;
+        const tmp = this.scale;
         this.mScaleTween = this.scene.tweens.add({
-            targets: display,
+            targets: this,
             duration: 100,
             scale: tmp * 1.25,
             yoyo: true,
             repeat: 0,
             onComplete: () => {
-                display.scale = 1;
+                this.scale = 1;
                 if (this.mScaleTween) {
                     // this.mScaleTween.destroy();
                     this.mScaleTween = undefined;
@@ -209,9 +215,6 @@ export class FramesDisplay extends DisplayObject {
         dropZone?: boolean
     ): this {
         // super.setInteractive(shape, callback, dropZone);
-        // this.mSprites.forEach((sprite) => {
-        //     sprite.setInteractive({ pixelPerfect: true });
-        // });
         this.mDisplays.forEach((display) => {
             display.setInteractive({ pixelPerfect: true });
         });
@@ -220,7 +223,7 @@ export class FramesDisplay extends DisplayObject {
 
     public disableInteractive(): this {
         // super.disableInteractive();
-        this.mSprites.forEach((sprite) => {
+        this.mDisplays.forEach((sprite) => {
             sprite.disableInteractive();
         });
         return this;

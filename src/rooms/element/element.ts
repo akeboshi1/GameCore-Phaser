@@ -430,6 +430,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mMoveData && this.mMoveData.posPath) {
+            this.mModel.setPosition(this.mDisplay.x, this.mDisplay.y);
             // delete this.mMoveData.destPos;
             delete this.mMoveData.posPath;
             if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
@@ -444,7 +445,7 @@ export class Element extends BlockObject implements IElement {
     public getPosition() {
         let pos: Pos;
         if (!this.mDisplay) {
-            pos = new Pos(0, 0);
+            return new Pos(0, 0);
         }
         if (this.mRootMount) {
             pos = this.mRootMount.getPosition();
@@ -531,8 +532,13 @@ export class Element extends BlockObject implements IElement {
     }
 
     public unmount() {
-        this.mRootMount = null;
-        this.addDisplay();
+        if (this.mRootMount && this.mDisplay) {
+            const pos = this.mRootMount.getPosition();
+            pos.x += this.mDisplay.x;
+            pos.y += this.mDisplay.y;
+            this.addDisplay();
+            this.mRootMount = null;
+        }
         return this;
     }
 
@@ -713,6 +719,7 @@ export class Element extends BlockObject implements IElement {
             this.createDisplay();
         }
         this.mDisplay.once("initialized", this.onDisplayReady, this);
+        this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
         this.mDisplay.load(this.mDisplayInfo);
     }
 
@@ -747,7 +754,6 @@ export class Element extends BlockObject implements IElement {
 
     protected onDisplayReady() {
         if (this.mDisplay) {
-            this.setInputEnable(this.mInputEnable);
             this.mDisplay.play(this.model.currentAnimation);
             let depth = 0;
             if (this.model && this.model.pos) {
@@ -755,6 +761,12 @@ export class Element extends BlockObject implements IElement {
             }
             this.setDepth(depth);
             // this.mDisplay.showRefernceArea();
+        }
+    }
+
+    protected onUpdateAnimationHandler() {
+        if (this.mDisplay) {
+            this.setInputEnable(this.mInputEnable);
         }
     }
 
