@@ -549,7 +549,9 @@ export class Element extends BlockObject implements IElement {
     public addMount(ele: IElement, index: number) {
         if (!this.mMounts) this.mMounts = [];
         ele.mount(this);
-        (<FramesDisplay> this.mDisplay).mount(ele.getDisplay(), index);
+        if (this.mDisplay) {
+            this.mDisplay.mount(ele.getDisplay(), index);
+        }
         if (this.mMounts.indexOf(ele) === -1) {
             this.mMounts.push(ele);
         }
@@ -559,6 +561,9 @@ export class Element extends BlockObject implements IElement {
     public removeMount(ele: IElement) {
         ele.unmount();
         if (!this.mMounts) return this;
+        if (this.mDisplay) {
+            this.mDisplay.unmount(ele.getDisplay());
+        }
         const index = this.mMounts.indexOf(ele);
         if (index > -1) {
             this.mMounts.splice(index, 1);

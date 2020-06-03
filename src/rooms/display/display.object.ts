@@ -72,6 +72,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     play(animationName: AnimationData, field?: DisplayField) {
     }
 
+    mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }
+
+    unmount(ele: Phaser.GameObjects.Container) { }
+
     public destroy(fromScene?: boolean): void {
         if (this.mFlagContainer) {
             if (this.mNickname) {
