@@ -215,3 +215,5 @@ export class Launcher {
         if (this.world) this.world.destroy();
     }
 }
+
+export * from "./src/editor"// 待launcher模块分离后  这行代码写在game-core中

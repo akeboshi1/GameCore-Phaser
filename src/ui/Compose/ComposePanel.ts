@@ -92,6 +92,7 @@ export class ComposePanel extends BasePanel {
         bggraphics.fillRect(-width * 0.5, -height * 0.5, width * zoom, height * zoom);
         const bg = this.scene.make.image({ key: this.key, frame: "main_bg" });
         bg.y = -height * 0.5 + bg.height * 0.5;
+        bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
         this.content.add([bggraphics, bg]);
         const mfont = `bold ${17 * this.dpr}px Source Han Sans`;
         const titleBg = this.scene.make.image({ key: this.key, frame: "title_bg" });

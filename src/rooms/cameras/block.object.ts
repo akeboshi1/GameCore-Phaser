@@ -147,6 +147,12 @@ export abstract class BlockObject implements IBlockObject {
         }
     }
 
+    protected removeFromBlock() {
+        if (this.mBlockable) {
+            this.mRoomService.removeBlockObject(this);
+        }
+    }
+
     protected updateBlock() {
         if (this.mBlockable) {
             this.mRoomService.updateBlockObject(this);

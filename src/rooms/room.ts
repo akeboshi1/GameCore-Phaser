@@ -17,7 +17,7 @@ import { LoadingScene } from "../scenes/loading";
 import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Map } from "./map/map";
-import { Element } from "./element/element";
+import { Element, IElement } from "./element/element";
 import { IBlockObject } from "./cameras/block.object";
 import { Size } from "../utils/size";
 import { MessageType } from "../const/MessageType";
@@ -93,6 +93,8 @@ export interface IRoomService {
     addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]);
 
     addMouseListen();
+
+    getElement(id: number): IElement;
 
     update(time: number, delta: number): void;
 
@@ -359,6 +361,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public addMouseListen() {
         this.layerManager.addMouseListen();
+    }
+
+    public getElement(id: number): IElement {
+        let ele = null;
+        if (this.mPlayerManager) {
+            ele = this.mPlayerManager.get(id);
+        }
+        if (!ele && this.mElementManager) {
+            ele = this.elementManager.get(id);
+        }
+        return ele;
     }
 
     public moveable(pos: Pos): boolean {
