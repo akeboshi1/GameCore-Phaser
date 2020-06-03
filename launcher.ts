@@ -215,4 +215,3 @@ export class Launcher {
         if (this.world) this.world.destroy();
     }
 }
-

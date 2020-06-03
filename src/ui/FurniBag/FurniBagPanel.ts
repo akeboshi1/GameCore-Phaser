@@ -601,7 +601,7 @@ export class FurniBagPanel extends BasePanel {
       this.setSelectedItem(item);
       this.mPropGrid.refresh();
     } else {
-      if (this.mSelectedItemData.length === 0) {
+      if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR && this.mSelectedItemData.length === 0) {
         this.sellBtn.enable = false;
         this.useBtn.enable = false;
         this.mAdd.enable = false;

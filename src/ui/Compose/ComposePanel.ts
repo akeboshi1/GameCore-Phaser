@@ -488,9 +488,11 @@ class ComposeItem extends Phaser.GameObjects.Container {
     }
 
     private setQualityTexture(quality: string) {
+        this.qualityIcon.visible = true;
         if (quality === "A") this.qualityIcon.setFrame("tag_rank_a");
         else if (quality === "B") this.qualityIcon.setFrame("tag_rank_b");
         else if (quality === "C") this.qualityIcon.setFrame("tag_rank_c");
+        else this.qualityIcon.visible = false;
     }
 }
 class ComposeMaterialItem extends Phaser.GameObjects.Container {
