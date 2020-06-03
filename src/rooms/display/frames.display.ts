@@ -23,7 +23,6 @@ export class FramesDisplay extends DisplayObject {
     >();
     protected mHasAnimation: boolean = false;
     protected mScaleTween: Phaser.Tweens.Tween;
-    protected mActionName: AnimationData;
     protected mDisplays: Phaser.GameObjects.Sprite[] | Phaser.GameObjects.Image[] = [];
     protected mMountContainer: Phaser.GameObjects.Container;
     // private mAnimations: Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>> = new Map<DisplayField, Map<string, Phaser.Types.Animations.Animation>>();
@@ -37,6 +36,7 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         this.mDisplayDatas.set(field, data);
+        this.setData("id", data.id);
         if (this.scene.textures.exists(data.gene)) {
             this.onLoadCompleted(field);
         } else {
@@ -87,12 +87,17 @@ export class FramesDisplay extends DisplayObject {
                 this.mDisplays.push(display);
             }
             display.scaleX = animation.flip ? -1 : 1;
-            display.x = offsetLoc.x + display.width * 0.5;
-            display.y = offsetLoc.y + display.height * 0.5;
+            let x = offsetLoc.x;
+            const y = offsetLoc.y;
+            if (animation.flip) {
+                x = (0 - (display.width + x));
+            }
+            display.x = x + display.width * 0.5;
+            display.y = y + display.height * 0.5;
             this.add(display);
         }
         // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
-        this.initBaseLoc(DisplayField.STAGE, animation.animationName);
+        this.initBaseLoc(DisplayField.STAGE, animation);
         // }
         this.emit("updateAnimation");
         if (this.mDisplays.length > 0) {
@@ -101,6 +106,7 @@ export class FramesDisplay extends DisplayObject {
         if (this.mMountContainer && ani.mountLayer) {
             this.addAt(this.mMountContainer, ani.mountLayer.index);
         }
+
         this.mActionName = animation;
     }
 
@@ -277,15 +283,6 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    private makeAnimations(field: DisplayField) {
-        // const data: IFramesModel = this.mDisplayDatas.get(field);
-        // if (!data) return;
-        // const animations = Array.from(data.animations.values());
-        // for (const ani of animations) {
-        //     this.makeAnimation(field, ani);
-        // }
-    }
-
     private makeAnimation(gen: string, key: string, frameName: string[], animation: IAnimationData) {
         const { loop } = animation;
         if (this.scene.anims.exists(key)) {
@@ -305,80 +302,22 @@ export class FramesDisplay extends DisplayObject {
         this.scene.anims.create(config);
     }
 
-    // private makeAnimation(field: DisplayField, animation: IAnimationData) {
-    //     const data: IFramesModel = this.mDisplayDatas.get(field);
-    //     if (!animation || !data || !data.gene) return;
-    //     if (animation.frameName.length <= 1) return;
-    //     // Didn't find a good way to create an animation with frame names without a pattern.
-    //     const frames = [];
-    //     const layer = animation.layer;
-    //     for (let i = 0; i < layer.length; i++) {
-    //         layer.forEach((frame) => {
-    //             frames.push({ key: data.gene, frame });
-    //         });
-    //         const key = `${data.gene}_${animation.name}_${i}`;
-    //         const config: Phaser.Types.Animations.Animation = {
-    //             key,
-    //             frames,
-    //             frameRate: animation.frameRate,
-    //             repeat: animation.loop ? -1 : 0,
-    //         };
-    //         this.scene.anims.create(config);
-    //     }
-    //     // animation.frameName.forEach((frame) => {
-    //     //     frames.push({ key: data.gene, frame });
-    //     // });
-    //     // const key = `${data.gene}_${animation.name}`;
-    //     // const config: Phaser.Types.Animations.Animation = {
-    //     //     key,
-    //     //     frames,
-    //     //     frameRate: animation.frameRate,
-    //     //     repeat: animation.loop ? -1 : 0,
-    //     // };
-
-    //     this.mHasAnimation = true;
-    //     // this.scene.anims.create(config);
-    // }
-
-    private initBaseLoc(field: DisplayField, aniName: string) {
+    private initBaseLoc(field: DisplayField, playAnimation: AnimationData) {
         const data: IFramesModel = this.mDisplayDatas.get(field);
         const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
-        if (!sprite || !data || !data.animations) return;
-        const animations = data.getAnimations(aniName);
-        if (!animations) return;
-        this.mBaseLoc = animations.baseLoc;
-        this.mCollisionArea = animations.collisionArea;
-        this.mOriginPoint = animations.originPoint;
+        if (this.mDisplays.length < 1 || !data || !data.animations) return;
+        // const animations = data.getAnimations(aniName);
+        // if (!animations) return;
+        // this.mBaseLoc = animations.baseLoc;
+        const { animationName, flip } = playAnimation;
+        this.mCollisionArea = data.getCollisionArea(animationName, flip);
+        this.mOriginPoint = data.getOriginPoint(animationName, flip);
         // sprite.x = this.baseLoc.x + sprite.width / 2;
         // sprite.y = this.baseLoc.y + sprite.height / 2;
-    }
 
-    private createDisplay(field: DisplayField) {
-        const data: IFramesModel = this.mDisplayDatas.get(field);
-        if (!data || !data.gene) return;
-        let sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
-        // Create Sprite
-        if (!sprite) {
-            if (this.mHasAnimation) {
-                sprite = this.scene.make.sprite(undefined, false);
-            } else {
-                sprite = this.scene.make.image(undefined, false);
-                // sprite.setTexture(data.gene);
-            }
-            this.mSprites.set(field, sprite);
+        if (this.mReferenceArea) {
+            this.showRefernceArea();
         }
-        this.play({ animationName: data.animationName, flip: false }, field);
-        sprite.x = this.baseLoc.x + sprite.width / 2;
-        sprite.y = this.baseLoc.y + sprite.height / 2;
-        if (this.mAntial) {
-            sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-        }
-        this.addAt(sprite, field);
-        // sprite.setInteractive({ pixelPerfect: true });
-        this.setData("id", data.id);
-
-        // this.mSprites.set(field, sprite);
-        this.emit("initialized", this);
     }
 
     private onAnimationRepeatHander() {

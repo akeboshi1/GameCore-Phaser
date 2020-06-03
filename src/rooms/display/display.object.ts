@@ -38,6 +38,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
+    protected mActionName: AnimationData;
     constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
         super(scene);
         this.mElement = element;
@@ -69,17 +70,6 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     }
 
     play(animationName: AnimationData, field?: DisplayField) {
-    }
-
-    public setDirection(val: number) {
-        if (this.mDirection !== val) {
-            this.mDirection = val;
-            if (val === 5 || val === 7) {
-                this.scaleX = -1;
-            } else {
-                this.scaleX = 1;
-            }
-        }
     }
 
     public destroy(fromScene?: boolean): void {
