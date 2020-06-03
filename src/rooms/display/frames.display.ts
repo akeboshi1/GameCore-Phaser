@@ -141,6 +141,9 @@ export class FramesDisplay extends DisplayObject {
 
     public mount(display: Phaser.GameObjects.Container, targetIndex?: number) {
         if (!display) return;
+        if (this.mDisplays.length <= 0) {
+            return;
+        }
         const data = this.mDisplayDatas.get(DisplayField.STAGE);
         if (!data) return;
         const ani = data.getAnimations(this.mActionName.animationName);

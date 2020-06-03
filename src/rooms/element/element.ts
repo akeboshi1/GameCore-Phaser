@@ -528,6 +528,7 @@ export class Element extends BlockObject implements IElement {
 
     public mount(root: IElement) {
         this.mRootMount = root;
+        this.removeFromBlock();
         if (this.mMoving) {
             this.stopMove();
         }
@@ -539,8 +540,8 @@ export class Element extends BlockObject implements IElement {
             const pos = this.mRootMount.getPosition();
             pos.x += this.mDisplay.x;
             pos.y += this.mDisplay.y;
-            this.addDisplay();
             this.mRootMount = null;
+            this.addToBlock();
         }
         return this;
     }
@@ -758,6 +759,9 @@ export class Element extends BlockObject implements IElement {
     protected onDisplayReady() {
         if (this.mDisplay) {
             this.mDisplay.play(this.model.currentAnimation);
+            if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
+                this.updateMounth(this.mModel.mountSprites);
+            }
             let depth = 0;
             if (this.model && this.model.pos) {
                 depth = this.model.pos.depth ? this.model.pos.depth : 0;
