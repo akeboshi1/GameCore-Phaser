@@ -176,6 +176,7 @@ export class Terrain extends BlockObject implements IElement {
     protected onInitializedHandler() {
         if (this.mDisplay) {
             // this.mDisplay.setInteractive();
+            this.mDisplay.play(this.model.currentAnimation);
         }
     }
 
