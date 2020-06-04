@@ -15,6 +15,7 @@ import { i18n } from "../../i18n";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { AlertView } from "../components/alert.view";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -23,16 +24,18 @@ export class ComposePanel extends BasePanel {
     private mDetailBubble: DetailBubble;
     private materialCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
-    private mSelectItem: ComposeItem;
+    private mSelectItemData: op_pkt_def.IPKT_Skill;
     private materialGameScroll: GameScroller;
     private makeBtn: NineSliceButton;
     private materialTipsCon: Phaser.GameObjects.Container;
     private materialTipsName: Phaser.GameObjects.Text;
     private materialTipsDes: Phaser.GameObjects.Text;
     private tipsbg: NinePatch;
+    private alertView: AlertView;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
+        this.scale = 1;
     }
 
     resize(width: number, height: number) {
@@ -93,6 +96,7 @@ export class ComposePanel extends BasePanel {
         const bg = this.scene.make.image({ key: this.key, frame: "main_bg" });
         bg.y = -height * 0.5 + bg.height * 0.5;
         bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+        bg.displayWidth = width;
         this.content.add([bggraphics, bg]);
         const mfont = `bold ${17 * this.dpr}px Source Han Sans`;
         const titleBg = this.scene.make.image({ key: this.key, frame: "title_bg" });
@@ -126,6 +130,7 @@ export class ComposePanel extends BasePanel {
         this.content.add(this.materialCon);
         this.materialCon.setPosition(0, height * 0.5 - 230 * this.dpr);
         const materialbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "sourcelist_bg" });
+        materialbg.displayWidth = width;
         const materialTitle = this.scene.make.text({
             x: 0,
             y: -materialConHeight * 0.5 + 12 * this.dpr,
@@ -238,10 +243,8 @@ export class ComposePanel extends BasePanel {
                 }
                 // cellContainer.setSize(width, height);
                 cellContainer.setItemData(item);
-                if (this.mSelectItem)
-                    if (item && item.id === this.mSelectItem.itemData.id) {
-                        cellContainer.select = true;
-                    }
+                if (item && this.mSelectItemData && item.id === this.mSelectItemData.id)
+                    cellContainer.select = true;
                 return cellContainer;
             },
         };
@@ -261,6 +264,7 @@ export class ComposePanel extends BasePanel {
 
     destroy() {
         super.destroy();
+        if (this.alertView) this.alertView.destroy();
     }
 
     public setComposeData(datas: op_pkt_def.IPKT_Skill[]) {
@@ -293,9 +297,9 @@ export class ComposePanel extends BasePanel {
         const data = item.itemData;
         this.emit("reqformula", data.id);
         item.select = true;
-        if (this.mSelectItem) this.mSelectItem.select = false;
-        this.mSelectItem = item;
+        this.mSelectItemData = item.itemData;
         this.makeBtn.enable = data.active && data.qualified;
+        this.mGrideTable.refresh();
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
@@ -327,8 +331,17 @@ export class ComposePanel extends BasePanel {
     }
 
     private onMakeHandler() {
-        if (this.mSelectItem)
-            this.emit("reqUseFormula", this.mSelectItem.itemData.id);
+        if (!this.alertView) this.alertView = new AlertView(this.scene, this.mWorld);
+        if (this.mSelectItemData) {
+            this.alertView.show({
+                text: `您确定要合成${this.mSelectItemData.name}吗？`,
+                title: i18n.t("compose.synthesis"),
+                oy: 302 * this.dpr * this.mWorld.uiScale,
+                callback: () => {
+                    this.emit("reqUseFormula", this.mSelectItemData.id);
+                },
+            });
+        }
     }
 
     private onInputPointUp() {

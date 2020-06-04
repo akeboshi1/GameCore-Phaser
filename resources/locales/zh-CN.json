@@ -59,6 +59,7 @@
   "compose": {
     "title": "制造",
     "make": "制作",
-    "needMaterials": "合成所需材料"
+    "needMaterials": "合成所需材料",
+    "synthesis": "合成"
   }
 }

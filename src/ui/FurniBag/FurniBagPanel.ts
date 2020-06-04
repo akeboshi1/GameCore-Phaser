@@ -328,9 +328,7 @@ export class FurniBagPanel extends BasePanel {
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
     }
-    // if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
-    //   this.add(this.mAdd);
-    // }
+
     const topCapW = 67 * this.dpr * zoom;
     const topCapH = 30 * this.dpr * zoom;
     const topPosY = 30 * this.dpr * zoom;
@@ -340,12 +338,11 @@ export class FurniBagPanel extends BasePanel {
       color: "#FFFFFF"
     };
     this.topCheckBox = new CheckboxGroup();
-    const topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
-    const topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
-    if (!this.mEnableEdit) {
-      // const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
-      // topCategorys.splice(index, 1);
-      // topBtnTexts.splice(index, 1);
+    let topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
+    let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
+    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
+      topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE];
+      topBtnTexts = [i18n.t("furni_bag.furni")];
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
     for (const key in topCategorys) {
@@ -371,7 +368,6 @@ export class FurniBagPanel extends BasePanel {
     } else {
       this.topCheckBox.selectIndex(0);
     }
-
     const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
@@ -783,22 +779,9 @@ export class FurniBagPanel extends BasePanel {
       }
       tmpW += item.width;
     }
-    // let pad0: number = 0;
-    // let pad1: number = 1;
-    // if (tmpW > w) {
-    //   tmpW = tmpW + inputWid;
-    // pad0 = 75 * this.dpr * zoom + inputWid;
-    // pad1 = -180 * this.dpr * zoom - inputWid;
-    // } else {
-    //   tmpW = w + inputWid;
-    // pad0 = 410 * this.dpr * zoom + inputWid;
-    // pad1 = 30 * this.dpr * zoom - inputWid;
-    // }
-    // const updateWid: number = tmpW;
+
     this.mCategoryScroll.setAlign();
-    // this.mCategoryScroll.setValue(updateWid / 2);
-    // this.mCategoryScroll.resize(tmpW, h, -updateWid / 2 + pad0, updateWid / 2 + pad1);
-    // this.mCategoryScroll.resize(updateWid, h);
+
   }
 
   get enableEdit() {

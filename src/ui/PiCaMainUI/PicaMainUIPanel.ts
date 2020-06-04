@@ -4,6 +4,7 @@ import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
 import { Handler } from "../../Handler/Handler";
+import { TextToolTips } from "../tips/TextToolTip";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -15,6 +16,7 @@ export class PicaMainUIPanel extends BasePanel {
     private mStrengthValue: ProgressValue;
     private mExpProgress: ExpProgress;
     private playerIcon: Phaser.GameObjects.Image;
+    private textToolTip: TextToolTips;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
     }
@@ -153,7 +155,10 @@ export class PicaMainUIPanel extends BasePanel {
         // healthValue.setValue(200, 1000);
 
         this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
+        this.textToolTip = new TextToolTips(this.scene, this.key, "tips_bg", this.dpr, this.scale);
         this.add(this.mExpProgress);
+        this.add(this.textToolTip);
+        this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
         this.resize(w, h);
         super.init();
     }
@@ -166,7 +171,12 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     private onStrengthHandler() {
-        Logger.getInstance().log("onStrengthHandler");
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
+        const energy = this.showData.energy;
+        const text = "当前精力值" + `${energy.currentValue}/${energy.max}\n` + "精力不满时，每15分钟恢复1点";
+        this.textToolTip.setTextData(text, 3000);
+        this.textToolTip.setPosition(120 * this.dpr, 80 * this.dpr);
     }
 }
 

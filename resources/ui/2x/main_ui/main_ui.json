@@ -242,8 +242,8 @@
 		},
 		"strength_icon": {
 			"frame": {
-				"x": 234,
-				"y": 1,
+				"x": 73,
+				"y": 200,
 				"w": 30,
 				"h": 39
 			},
@@ -262,8 +262,8 @@
 		},
 		"strength_progress": {
 			"frame": {
-				"x": 238,
-				"y": 42,
+				"x": 105,
+				"y": 200,
 				"w": 33,
 				"h": 17
 			},
@@ -279,6 +279,26 @@
 				"w": 33,
 				"h": 17
 			}
+		},
+		"tips_bg": {
+			"frame": {
+				"x": 238,
+				"y": 1,
+				"w": 217,
+				"h": 83
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 217,
+				"h": 83
+			},
+			"sourceSize": {
+				"w": 217,
+				"h": 83
+			}
 		}
 	},
 	"meta": {
@@ -287,8 +307,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 272,
-			"h": 200
+			"w": 456,
+			"h": 240
 		},
 		"scale": "1"
 	}

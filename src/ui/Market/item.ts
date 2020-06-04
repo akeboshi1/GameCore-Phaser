@@ -63,15 +63,15 @@ export class MarketItem extends Phaser.GameObjects.Container {
     // this.mCoinIcon.y = priceBg.y;
 
     this.mPriceText = this.scene.make.text({
-      x: 67 * this.dpr * zoom,
-      y: 38 * this.dpr * zoom,
+      x: 92 * this.dpr * zoom,
+      y: 44 * this.dpr * zoom,
       // y: 12 * this.dpr,
       style: {
         fontSize: 14 * this.dpr * zoom,
         fontFamily: Font.DEFULT_FONT,
         color: "#996600"
       }
-    });
+    }).setOrigin(0.5);
     // this.mPriceText.y = this.mCoinIcon.y + this.mPriceText.displayHeight / 2;
 
     this.mTagIcon = this.scene.make.image({
