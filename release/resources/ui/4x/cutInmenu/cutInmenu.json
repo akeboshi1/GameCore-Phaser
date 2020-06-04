@@ -1,8 +1,28 @@
 {
 	"frames": {
-		"minebag_bg": {
+		"arow": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 23,
+				"h": 41
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 23,
+				"h": 41
+			},
+			"sourceSize": {
+				"w": 23,
+				"h": 41
+			}
+		},
+		"minebag_bg": {
+			"frame": {
+				"x": 26,
 				"y": 1,
 				"w": 491,
 				"h": 157
@@ -20,10 +40,30 @@
 				"h": 157
 			}
 		},
-		"minecar": {
+		"minebag_bg_brth": {
 			"frame": {
 				"x": 1,
 				"y": 160,
+				"w": 565,
+				"h": 233
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 565,
+				"h": 233
+			},
+			"sourceSize": {
+				"w": 565,
+				"h": 233
+			}
+		},
+		"minecar": {
+			"frame": {
+				"x": 568,
+				"y": 1,
 				"w": 184,
 				"h": 181
 			},
@@ -42,8 +82,8 @@
 		},
 		"text_minebag": {
 			"frame": {
-				"x": 187,
-				"y": 160,
+				"x": 568,
+				"y": 184,
 				"w": 109,
 				"h": 60
 			},
@@ -67,8 +107,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 493,
-			"h": 342
+			"w": 753,
+			"h": 394
 		},
 		"scale": "1"
 	}

@@ -56,6 +56,11 @@
   "compose": {
     "title": "Manufacture",
     "make": "make",
-    "needMaterials": "Materials required for synthesis"
+    "needMaterials": "Materials required for synthesis",
+    "synthesis": "Synthesis"
+  },
+  "minesettle": {
+    "settle": "Settle",
+    "savebag":"SaveToBag"
   }
 }
