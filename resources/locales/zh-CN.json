@@ -61,5 +61,9 @@
     "make": "制作",
     "needMaterials": "合成所需材料",
     "synthesis": "合成"
+  },
+  "minesettle": {
+    "settle": "获得物品",
+    "savebag":"存入背包"
   }
 }

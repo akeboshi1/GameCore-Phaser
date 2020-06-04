@@ -42,4 +42,12 @@ export class BasePanel extends Panel {
         const height = this.scene.cameras.main.height / this.scale;
         return height;
     }
+    protected get cameraWidth() {
+        const width = this.scene.cameras.main.width;
+        return width;
+    }
+    protected get cameraHeight() {
+        const height = this.scene.cameras.main.height;
+        return height;
+    }
 }
