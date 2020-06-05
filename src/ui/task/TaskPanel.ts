@@ -18,7 +18,7 @@ export class TaskPanel extends BasePanel {
     private titlebg: Phaser.GameObjects.Image;
     private tilteName: Phaser.GameObjects.Text;
     private closeBtn: Phaser.GameObjects.Image;
-    private optionBtn: Phaser.GameObjects.Text;;
+    private optionBtn: Phaser.GameObjects.Text;
     private optionArrow: Phaser.GameObjects.Image;
     private optionCon: Phaser.GameObjects.Container;
     private mGameScroll: GameScroller;
