@@ -208,6 +208,24 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
         this.updatePlay();
     }
 
+    public updateOffsetLoc(idx: number) {
+        const display = this.mDisplays.get(idx);
+        if (!display) {
+            return;
+        }
+        if (!this.mAnimationData) {
+            return;
+        }
+        const data = this.mAnimationData.layerDict.get(idx);
+        if (!data) {
+            return;
+        }
+        const originPos = this.mGrids.getAnchor90Point();
+        const baseLoc = data.offsetLoc || { x: 0, y: 0 };
+        display.x = originPos.x + baseLoc.x;
+        display.y = originPos.y + baseLoc.y;
+    }
+
     public generateThumbnail(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             if (!this.mAnimationData) {
