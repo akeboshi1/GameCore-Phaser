@@ -145,6 +145,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH,
                     this.onMovePathHandler
                 );
+                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             }
         }
     }
@@ -629,6 +630,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         const pos = content.targetPos;
         this.addFillEffect({ x: pos.x, y: pos.y }, status);
+    }
+
+    private onCameraFollowHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
+        const target = this.getElement(content.id);
+        Logger.getInstance().log("follow: ", target);
+        if (target) {
+            this.mCameraService.startFollow(target.getDisplay());
+        } else {
+            this.mCameraService.stopFollow();
+        }
     }
 
     private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {
