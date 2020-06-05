@@ -1,15 +1,9 @@
 import { IFramesModel } from "./frames.model";
 import { Logger } from "../../utils/log";
-import { DisplayObject } from "./display.object";
+import { DisplayObject, DisplayField } from "./display.object";
 import { IAnimationData } from "./animation";
 import { Url } from "../../utils/resUtil";
 import { AnimationData } from "../element/sprite";
-
-export enum DisplayField {
-    BACKEND = 1,
-    STAGE,
-    FRONTEND,
-}
 
 /**
  * 序列帧显示对象
@@ -66,7 +60,7 @@ export class FramesDisplay extends DisplayObject {
             if (sprite instanceof Phaser.GameObjects.Sprite) {
                 sprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
                 if (ani.frameName.length > 1) {
-                    sprite.play(`${data.gene}_${animation.animationName}`,);
+                    sprite.play(`${data.gene}_${animation.animationName}`);
                     // if (animation.playTimes !== undefined) {
                     //     sprite.anims.setRepeat(animation.playTimes);
                     if (animation.playingQueue && animation.playingQueue.complete) {
