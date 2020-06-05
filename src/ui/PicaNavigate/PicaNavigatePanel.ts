@@ -113,14 +113,14 @@ export class PicaNavigatePanel extends BasePanel {
     this.emit("showPanel", "CharacterInfo");
   }
   private onShowGoHomeHandler() {
-    this.alertView.show({
-      text: `您确定要回家吗？`,
-      title: "",
-      oy: 302 * this.dpr * this.mWorld.uiScale,
-      callback: () => {
-        this.emit("goHome");
-      },
-    });
+    // this.alertView.show({
+    //   text: `您确定要回家吗？`,
+    //   title: "",
+    //   oy: 302 * this.dpr * this.mWorld.uiScale,
+    //   callback: () => {
+    //     this.emit("goHome");
+    //   },
+    // });
     this.emit("goHome");
   }
   private onShowPlayerHandler() {
