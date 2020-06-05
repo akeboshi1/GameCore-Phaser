@@ -127,7 +127,8 @@ export class PicaMessageBoxPanel extends BasePanel {
     // this.mText.y = -this.mHeight / 2 + 10;
     this.add([background, title, this.mTitleLabel, this.mText, this.mButtonContaier]);
     super.init();
-    this.resize(0, 0);
+    this.resize(width, height);
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
   private onClickHandler(pointer, gameobject) {

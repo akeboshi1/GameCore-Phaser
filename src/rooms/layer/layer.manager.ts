@@ -188,28 +188,11 @@ export class LayerManager {
                 if (depthA > depthB) {
                     return 1;
                 }
-                const leftA: number = displayA.getWorldTransformMatrix().tx - displayA.width * displayA.originX;
-                const rightA: number = displayA.getWorldTransformMatrix().tx + displayA.width * (1 - displayA.originX);
-                const leftB: number = displayB.getWorldTransformMatrix().tx - displayB.width * displayB.originX;
-                const rightB: number = displayB.getWorldTransformMatrix().tx + displayB.width * (1 - displayB.originX);
-                const topA: number = displayA.getWorldTransformMatrix().ty - displayA.height * displayA.originY;
-                const bottomA: number = displayA.getWorldTransformMatrix().ty + displayA.height * (1 - displayA.originY);
-                const topB: number = displayB.getWorldTransformMatrix().ty - displayB.height * displayB.originY;
-                const bottomB: number = displayB.getWorldTransformMatrix().ty + displayB.height * (1 - displayB.originY);
-
-                if ((rightB < leftA && topB < bottomA) || (bottomB < topA && leftB < rightA)) {
+                // ---------------根据角度判断深度
+                const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
+                if (angle * (180 * Math.PI) >= 70) {
                     return 1;
                 }
-                if ((leftB > rightA && bottomB > topA)
-                    || (rightB > leftA && topB > bottomA)) {
-                    return -1;
-                }
-                // ---------------根据角度判断深度
-                // const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
-                // if (angle * (180 * Math.PI) >= 70) {
-                //     return 1;
-                // }
-
                 // if (displayA.sortY > displayB.sortY) {
                 //     return 1;
                 // }
