@@ -55,7 +55,6 @@ export interface IRoomService {
     readonly scene: Phaser.Scene | undefined;
 
     readonly connection: ConnectionService | undefined;
-
     now(): number;
 
     startLoad();
@@ -122,6 +121,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
+    protected mMods: string[];
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -541,6 +541,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get sceneType(): op_def.SceneTypeEnum {
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
+    }
+
+    get mods(): string[] {
+        return this.mMods;
     }
 
     private onPressElementHandler(pointer, gameObject) {

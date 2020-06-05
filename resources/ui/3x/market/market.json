@@ -160,6 +160,46 @@
 				"h": 163
 			}
 		},
+		"iv_coin": {
+			"frame": {
+				"x": 498,
+				"y": 166,
+				"w": 48,
+				"h": 51
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 48,
+				"h": 51
+			},
+			"sourceSize": {
+				"w": 48,
+				"h": 51
+			}
+		},
+		"iv_diamond": {
+			"frame": {
+				"x": 548,
+				"y": 166,
+				"w": 48,
+				"h": 51
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 48,
+				"h": 51
+			},
+			"sourceSize": {
+				"w": 48,
+				"h": 51
+			}
+		},
 		"price_bg": {
 			"frame": {
 				"x": 394,
@@ -182,7 +222,7 @@
 		},
 		"price_border": {
 			"frame": {
-				"x": 498,
+				"x": 598,
 				"y": 166,
 				"w": 177,
 				"h": 56
@@ -202,8 +242,8 @@
 		},
 		"reduce": {
 			"frame": {
-				"x": 677,
-				"y": 166,
+				"x": 498,
+				"y": 224,
 				"w": 88,
 				"h": 91
 			},
@@ -222,8 +262,8 @@
 		},
 		"tip_red": {
 			"frame": {
-				"x": 498,
-				"y": 259,
+				"x": 588,
+				"y": 224,
 				"w": 62,
 				"h": 69
 			},
@@ -238,32 +278,12 @@
 			"sourceSize": {
 				"w": 62,
 				"h": 69
-			}
-		},
-		"tuding_icon": {
-			"frame": {
-				"x": 1,
-				"y": 166,
-				"w": 46,
-				"h": 49
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 46,
-				"h": 49
-			},
-			"sourceSize": {
-				"w": 46,
-				"h": 49
 			}
 		},
 		"yellow_button_down": {
 			"frame": {
-				"x": 562,
-				"y": 259,
+				"x": 652,
+				"y": 224,
 				"w": 96,
 				"h": 93
 			},
@@ -282,8 +302,8 @@
 		},
 		"yellow_button_normal": {
 			"frame": {
-				"x": 660,
-				"y": 259,
+				"x": 498,
+				"y": 319,
 				"w": 96,
 				"h": 93
 			},
@@ -302,8 +322,8 @@
 		},
 		"yellow_button_over": {
 			"frame": {
-				"x": 498,
-				"y": 354,
+				"x": 596,
+				"y": 319,
 				"w": 96,
 				"h": 93
 			},

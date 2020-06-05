@@ -160,9 +160,49 @@
 				"h": 217
 			}
 		},
-		"price_bg": {
+		"iv_coin": {
 			"frame": {
 				"x": 663,
+				"y": 220,
+				"w": 65,
+				"h": 69
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 65,
+				"h": 69
+			},
+			"sourceSize": {
+				"w": 65,
+				"h": 69
+			}
+		},
+		"iv_diamond": {
+			"frame": {
+				"x": 730,
+				"y": 220,
+				"w": 65,
+				"h": 69
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 65,
+				"h": 69
+			},
+			"sourceSize": {
+				"w": 65,
+				"h": 69
+			}
+		},
+		"price_bg": {
+			"frame": {
+				"x": 797,
 				"y": 220,
 				"w": 210,
 				"h": 40
@@ -182,8 +222,8 @@
 		},
 		"price_border": {
 			"frame": {
-				"x": 875,
-				"y": 220,
+				"x": 797,
+				"y": 262,
 				"w": 177,
 				"h": 56
 			},
@@ -203,7 +243,7 @@
 		"reduce": {
 			"frame": {
 				"x": 663,
-				"y": 278,
+				"y": 320,
 				"w": 118,
 				"h": 122
 			},
@@ -222,8 +262,8 @@
 		},
 		"tip_red": {
 			"frame": {
-				"x": 783,
-				"y": 278,
+				"x": 976,
+				"y": 262,
 				"w": 83,
 				"h": 92
 			},
@@ -238,32 +278,12 @@
 			"sourceSize": {
 				"w": 83,
 				"h": 92
-			}
-		},
-		"tuding_icon": {
-			"frame": {
-				"x": 1,
-				"y": 220,
-				"w": 61,
-				"h": 65
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 61,
-				"h": 65
-			},
-			"sourceSize": {
-				"w": 61,
-				"h": 65
 			}
 		},
 		"yellow_button_down": {
 			"frame": {
-				"x": 868,
-				"y": 278,
+				"x": 783,
+				"y": 320,
 				"w": 171,
 				"h": 147
 			},
@@ -282,8 +302,8 @@
 		},
 		"yellow_button_normal": {
 			"frame": {
-				"x": 663,
-				"y": 427,
+				"x": 751,
+				"y": 469,
 				"w": 171,
 				"h": 147
 			},
@@ -302,8 +322,8 @@
 		},
 		"yellow_button_over": {
 			"frame": {
-				"x": 836,
-				"y": 427,
+				"x": 751,
+				"y": 618,
 				"w": 171,
 				"h": 147
 			},
@@ -327,7 +347,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1053,
+			"w": 1060,
 			"h": 841
 		},
 		"scale": "1"

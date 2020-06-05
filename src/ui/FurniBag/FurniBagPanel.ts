@@ -175,8 +175,8 @@ export class FurniBagPanel extends BasePanel {
         if (element) content.avatar[key] = element;
       }
     }
-    const offset = new Phaser.Geom.Point(0, 40 * 2);
-    this.mDetailDisplay.loadAvatar(content, 2, offset);
+    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 1.5, offset);
   }
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
     if (content.display) {
@@ -199,16 +199,16 @@ export class FurniBagPanel extends BasePanel {
           }
         }
       }
-      const offset = new Phaser.Geom.Point(0, 40 * 2);
-      this.mDetailDisplay.loadAvatar(content, 2, offset);
+      const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
+      this.mDetailDisplay.loadAvatar(content, 1.5, offset);
     }
   }
 
   public resetAvatar(avatar: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
     content.avatar = avatar.avatar;
-    const offset = new Phaser.Geom.Point(0, 40 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, this.dpr, offset);
+    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 1.5, offset);
   }
 
   public addListen() {

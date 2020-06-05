@@ -1,6 +1,6 @@
 import { op_def, op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { Url } from "../../utils/resUtil";
+import { Url, Coin } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
 
 export class MarketItem extends Phaser.GameObjects.Container {
@@ -95,6 +95,8 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mPropImage.y = this.mBorder.y + this.mBorder.displayHeight / 2;
     this.mNickName.setText(content.shortName || content.name);
     this.mPriceText.setText(content.price[0].price.toString());
+    const coinIcon = Coin.getIcon(content.price[0].coinType);
+    this.mCoinIcon.setFrame(coinIcon);
   }
 
   private onPropLoadComplete() {
