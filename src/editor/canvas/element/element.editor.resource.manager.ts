@@ -62,10 +62,10 @@ export default class ElementEditorResourceManager {
         this.mScene.load.addListener(Phaser.Loader.Events.COMPLETE, this.imageLoaded, this);
         this.mScene.load.atlas(
             SPRITE_SHEET_KEY,
-            path.join(WEB_HOME_PATH, val.texturePath),// this.mLocalHomePath WEB_HOME_PATH
-            path.join(WEB_HOME_PATH, val.dataPath)// this.mLocalHomePath WEB_HOME_PATH
+            path.join(this.mLocalHomePath, val.texturePath),// this.mLocalHomePath WEB_HOME_PATH
+            path.join(this.mLocalHomePath, val.dataPath)// this.mLocalHomePath WEB_HOME_PATH
         ).on("loaderror", this.imageLoadError, this);
-        Logger.getInstance().log("loadResources ", path.join(WEB_HOME_PATH, val.texturePath));
+        Logger.getInstance().log("loadResources ", path.join(this.mLocalHomePath, val.texturePath));
         this.mScene.load.start();
     }
 
