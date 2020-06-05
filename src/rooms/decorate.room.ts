@@ -194,7 +194,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mLayerManager = new LayerManager(this);
-        this.mLayerManager.drawGrid(this);
+        // this.mLayerManager.drawGrid(this);
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);

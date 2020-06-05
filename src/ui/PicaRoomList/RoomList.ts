@@ -43,6 +43,9 @@ export class RoomList extends PacketHandler {
 
   sendGetRoomList() {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_ROOM_LIST);
+    const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_ROOM_LIST = packet.content;
+    content.page = 1;
+    content.perPage = 30;
     this.connection.send(packet);
   }
 

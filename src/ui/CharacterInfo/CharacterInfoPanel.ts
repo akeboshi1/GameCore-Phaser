@@ -57,7 +57,6 @@ export default class CharacterInfoPanel extends BasePanel {
         this.setSize(w, h);
         this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
         this.content.setInteractive();
-        this.setInteractive();
     }
 
     public show(param?: any) {
@@ -119,7 +118,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
         this.likeBtn.visible = false;
-        this.avatar = new DragonbonesDisplay(this.scene, undefined);
+        this.avatar = new DragonbonesDisplay(this.scene, undefined, undefined, true);
         this.avatar.scale = this.dpr * 1.5;
         this.avatar.x = 0;
         this.avatar.y = -80 * this.dpr;

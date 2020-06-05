@@ -29,7 +29,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
 
   loadAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE, scale: number = 1, offset?: Phaser.Geom.Point) {
     if (!this.mDragonboneDisplay) {
-      this.mDragonboneDisplay = new DragonbonesDisplay(this.scene, undefined);
+      this.mDragonboneDisplay = new DragonbonesDisplay(this.scene, undefined, undefined, true);
       if (offset) {
         this.mDragonboneDisplay.x += offset.x;
         this.mDragonboneDisplay.y += offset.y;
