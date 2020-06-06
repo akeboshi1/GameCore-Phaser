@@ -580,7 +580,7 @@ export class FurniBagPanel extends BasePanel {
           this.closeSeach(gameobject);
         }
         this.mSelectedCategeories = category;
-        this.emit("queryPackage", category.key);
+        this.queryPackege();
       }
       this.mPreCategoryBtn = gameobject;
     }
@@ -588,6 +588,12 @@ export class FurniBagPanel extends BasePanel {
 
   private onCloseHandler() {
     this.emit("close");
+  }
+
+  private queryPackege() {
+    if (this.mSelectedCategeories) {
+      this.emit("queryPackage", this.mSelectedCategeories.key);
+    }
   }
 
   private onSelectItemHandler(cell: Item) {
@@ -714,6 +720,7 @@ export class FurniBagPanel extends BasePanel {
         idsArr.push(item.id);
       }
       this.emit("querySaveAvatar", idsArr);
+      this.queryPackege();
     }
   }
 
