@@ -225,6 +225,14 @@ export class ElementEditorCanvas extends EditorCanvas {
         this.mAnimations.updateMountDisplay();
     }
 
+    public updateOffsetLoc(layerIndexs: number) {
+        if (!this.mAnimations) {
+            Logger.getInstance().error(this.ERROR_UNINITED);
+            return;
+        }
+        this.mAnimations.updateOffsetLoc(layerIndexs);
+    }
+
     // 生成缩略图
     public generateThumbnail(): Promise<string> {
         if (!this.mAnimations) {

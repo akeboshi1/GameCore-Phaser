@@ -29,6 +29,7 @@ export class MineCarPanel extends BasePanel {
   private mPreSelectedCategorie: CategorieButton;
   private mBg: Phaser.GameObjects.Image;
   private carIcon: Phaser.GameObjects.Image;
+  private mBackGround: Phaser.GameObjects.Graphics;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -41,6 +42,9 @@ export class MineCarPanel extends BasePanel {
     super.resize(width, height);
     const zoom = this.mWorld.uiScale;
     this.setSize(w, h);
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(0, 0, w, h);
     this.mBg.x = w / 2;
     this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr * zoom;
     this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
@@ -118,7 +122,11 @@ export class MineCarPanel extends BasePanel {
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScale;
-
+    this.mBackGround = this.scene.make.graphics(undefined, false);
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(0, 0, w, h);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
     this.mBg = this.scene.make
       .image({
         key: this.key,
@@ -284,7 +292,7 @@ export class MineCarPanel extends BasePanel {
     });
     // this.add(this.mPanel);
     this.add([
-      // this.mMask,
+      this.mBackGround,
       this.mBg,
       this.carIcon,
       this.mCounter,
