@@ -821,10 +821,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                     const part: string = obj.slot.replace("$", obj.dir.toString());
                     if (part === slotKey) {
                         const texture = this.scene.textures.get(partName);
-                        // if (this.mAntial) {
-                        //     // 用于设置边缘抗锯齿
-                        //     texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                        // }
+                        if (this.mAntial) {
+                            // 用于设置边缘抗锯齿
+                            texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                        }
                         if (dragonBonesTexture.frames[frameName]) {
                             this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
                             break;
@@ -838,10 +838,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             } else {
                 const drawTextureKey = loadArr[1] + "_png";
                 const drawTexture = this.scene.game.textures.get(drawTextureKey);
-                // if (this.mAntial) {
-                //     // 用于设置边缘抗锯齿
-                //     drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                // }
+                if (this.mAntial) {
+                    // 用于设置边缘抗锯齿
+                    drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                }
                 this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
             }
         }

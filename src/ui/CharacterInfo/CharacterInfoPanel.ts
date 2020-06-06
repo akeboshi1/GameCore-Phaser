@@ -130,7 +130,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
         this.likeBtn.visible = false;
         this.avatar = new DragonbonesDisplay(this.scene, undefined, undefined, true);
-        this.avatar.scale = this.dpr * 1.5;
+        this.avatar.scale = this.dpr *1.5;
         this.avatar.x = 0;
         this.avatar.y = -80 * this.dpr;
         this.avatar.once("initialized", () => {

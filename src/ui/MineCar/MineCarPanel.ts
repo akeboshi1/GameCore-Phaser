@@ -478,27 +478,28 @@ class PackageItem extends Phaser.GameObjects.Container {
     this.mSelectedIcon.x = border.width * zoom - 2 * dpr - (this.mSelectedIcon.width * zoom) / 2;
     this.mSelectedIcon.y = 2 * dpr + (this.mSelectedIcon.height * zoom) / 2;
     this.add(border);
+    this.add([this.mItemImage, this.mCounter, this.mSelectedIcon]);
   }
 
   setProp(data: IPackageItem) {
     this.mItem = data;
     const packageItem = data.item;
     if (!data || !packageItem) {
-      this.remove([this.mItemImage, this.mCounter, this.mSelectedIcon]);
+      this.mItemImage.visible = false;
+      this.mCounter.visible = false;
+      this.mSelectedIcon.visible = false;
       return;
     }
     if (this.mItem) {
       this.mItemImage.load(Url.getOsdRes(packageItem.display.texturePath), this, this.onLoadCompleteHandler);
-      this.add(this.mItemImage);
+      this.mItemImage.visible = true;
       if (packageItem.count > 1) {
         this.mCounter.setText(packageItem.count.toString());
-        this.add(this.mCounter);
-      }
-      if (this.mItem.selectVisible) {
-        this.add(this.mSelectedIcon);
+        this.mCounter.visible = true;
       } else {
-        this.remove(this.mSelectedIcon);
+        this.mCounter.visible = false;
       }
+      this.mSelectedIcon.visible = (this.mItem.selectVisible ? true : false);
       this.setSelected();
     }
   }
