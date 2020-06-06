@@ -45,6 +45,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private editorPanel: CharacterEditorPanel;
     private curSelectCategeory: Button;
     private isOwner: boolean = true;
+    private mBackGround: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.scale = 1;
@@ -53,8 +54,11 @@ export default class CharacterInfoPanel extends BasePanel {
         const w: number = this.scaleWidth;
         const h: number = this.scaleHeight;
         super.resize(width, height);
-        this.content.setPosition(w / 2, h / 2);
         this.setSize(w, h);
+        this.mBackGround.clear();
+        this.mBackGround.fillStyle(0x6AE2FF, 0);
+        this.mBackGround.fillRect(0, 0, w, h);
+        this.content.setPosition(w / 2, h / 2);
         this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
         this.content.setInteractive();
     }
@@ -102,6 +106,13 @@ export default class CharacterInfoPanel extends BasePanel {
     }
     init() {
         const zoom = this.scale;
+        const wid: number = this.scene.cameras.main.width;
+        const hei: number = this.scene.cameras.main.height;
+        this.mBackGround = this.scene.make.graphics(undefined, false);
+        this.mBackGround.clear();
+        this.mBackGround.fillStyle(0x6AE2FF, 0);
+        this.mBackGround.fillRect(0, 0, wid * zoom, hei * zoom);
+        this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(this.bg.width, this.bg.height);
@@ -119,7 +130,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
         this.likeBtn.visible = false;
         this.avatar = new DragonbonesDisplay(this.scene, undefined, undefined, true);
-        this.avatar.scale = this.dpr * 1.5;
+        this.avatar.scale = this.dpr *2;
         this.avatar.x = 0;
         this.avatar.y = -80 * this.dpr;
         this.avatar.once("initialized", () => {
@@ -182,7 +193,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mainContent.add(this.avatar);
         this.content.add(this.bg);
         this.content.add(this.mainContent);
-        this.add(this.content);
+        this.add([this.mBackGround, this.content]);
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
         this.mCategoryScroll = new GameScroller(this.scene, {

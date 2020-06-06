@@ -78,6 +78,10 @@ export default class EquipUpgradePanel extends BasePanel {
         const h = this.scene.cameras.main.height / this.scale;
         this.setSize(w, h);
         this.blackBg = this.scene.make.graphics(undefined, false);
+        this.blackBg.clear();
+        this.blackBg.fillStyle(0, 0.5);
+        this.blackBg.fillRoundedRect(0, 0, w, h);
+        this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
         this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
             left: 40,
             top: 40,
