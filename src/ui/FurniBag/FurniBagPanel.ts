@@ -457,6 +457,9 @@ export class FurniBagPanel extends BasePanel {
           }
         }
       }
+    } else {
+      this.mDetailBubble.setProp(null);
+      this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     }
   }
   private replaceSelectItem(data: op_client.ICountablePackageItem) {
@@ -531,8 +534,6 @@ export class FurniBagPanel extends BasePanel {
   }
   private setSelectedItem(prop: op_client.ICountablePackageItem) {
     this.emit("queryPropResource", prop);
-    this.mDetailBubble.setProp(prop);
-    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     this.sellBtn.enable = prop.recyclable;
     this.useBtn.enable = prop.executable;
     this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
@@ -592,6 +593,8 @@ export class FurniBagPanel extends BasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: op_client.ICountablePackageItem = cell.getData("item");
+    this.mDetailBubble.setProp(item);
+    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
       this.replaceSelectItem(item);
       this.setSelectedItem(item);
@@ -932,43 +935,54 @@ class DetailBubble extends Phaser.GameObjects.Container {
   }
 
   setProp(prop: op_client.ICountablePackageItem): this {
-    this.mNickName.setText(prop.shortName || prop.name);
-    let posY = 9 * this.dpr;
-    const offsetY = 21 * this.dpr;
-    // this.mDesText.setText(prop.des);
-    if (prop.recyclable) {
-      posY += offsetY;
-      this.mPriceText.y = posY;
-      this.mPriceText.setText(`可售卖：${prop.sellingPrice.price}`);
+    if (!prop) {
+      this.mNickName.setText("背包里空空如也");
+      this.mPriceText.text = "";
+      this.mSource.text = "";
+      this.mDesText.text = "";
+      this.resize();
     } else {
-      posY += offsetY;
-      this.mPriceText.y = posY;
-      this.mPriceText.setText(`不可交易`);
+      this.mNickName.setText(prop.shortName || prop.name);
+      let posY = 9 * this.dpr;
+      const offsetY = 21 * this.dpr;
+      // this.mDesText.setText(prop.des);
+      if (prop.recyclable) {
+        posY += offsetY;
+        this.mPriceText.y = posY;
+        this.mPriceText.setText(`可售出：${prop.sellingPrice.price} 银币`);
+      } else {
+        posY += offsetY;
+        this.mPriceText.y = posY;
+        this.mPriceText.setText(`不可售出`);
+      }
+      // if (prop.tradable) {
+      //   this.mPriceText.setText(`可交易`);
+      // }
+      if (prop.source) {
+        this.mSource.setText(`来源： ${prop.source}`);
+        posY += offsetY;
+        this.mSource.y = posY;
+      } else {
+        this.mSource.setText("");
+      }
+      const offset = 15 * this.dpr;
+      const width = this.getMaxWidth(offset);
+      if (prop.des) {
+        posY += offsetY;
+        this.mDesText.setWordWrapWidth(width - offset, true);
+        this.mDesText.setText(prop.des);
+        this.mDesText.y = posY;
+      } else {
+        this.mDesText.setText("");
+      }
+      this.resize(width);
     }
-    if (prop.tradable) {
-      this.mPriceText.setText(`可交易`);
-    }
-    if (prop.source) {
-      this.mSource.setText(`来源： ${prop.source}`);
-      posY += offsetY;
-      this.mSource.y = posY;
-    } else {
-      this.mSource.setText("");
-    }
-    if (prop.des) {
-      posY += offsetY;
-      this.mDesText.setText(prop.des);
-      this.mDesText.y = posY;
-    } else {
-      this.mDesText.setText("");
-    }
-    this.resize();
     return this;
   }
 
   private resize(w?: number, h?: number) {
     if (w === undefined) w = this.width;
-    const bubbleH = this.mDesText.height + 60 * this.dpr;
+    const bubbleH = this.mDesText.height + 80 * this.dpr;
     if (w === this.width && bubbleH === this.height) {
       return;
     }
@@ -978,6 +992,17 @@ class DetailBubble extends Phaser.GameObjects.Container {
 
     this.setSize(w, bubbleH);
     // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
+  }
+
+  private getMaxWidth(offset: number = 0) {
+    const width = 100 * this.dpr;
+    let maxWidth = 0;
+    if (maxWidth < this.mNickName.width) maxWidth = this.mNickName.width;
+    if (maxWidth < this.mPriceText.width) maxWidth = this.mPriceText.width;
+    if (maxWidth < this.mSource.width) maxWidth = this.mSource.width;
+    if (width - maxWidth < offset) maxWidth += offset + ((maxWidth - width) >= 0 ? 0 : (maxWidth - width));
+    if (maxWidth < width) maxWidth = width;
+    return maxWidth;
   }
 }
 

@@ -22,6 +22,7 @@ export class TaskPanel extends BasePanel {
     private optionArrow: Phaser.GameObjects.Image;
     private optionCon: Phaser.GameObjects.Container;
     private mGameScroll: GameScroller;
+    private taskItems: TaskItem[] = [];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.scale = 1;
@@ -99,30 +100,30 @@ export class TaskPanel extends BasePanel {
         this.closeBtn.setInteractive();
         this.optionBtn = this.scene.make.text({ x: 0, y: posY, text: "全部", style: { color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         this.optionArrow = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "drop_down" });
-        // this.mGameScroll = new GameScroller(this.scene, {
-        //     x: width * 0.5,
-        //     y: height - 220 * this.dpr,
-        //     width,
-        //     height: 70 * this.dpr,
-        //     zoom: this.scale,
-        //     align: 2,
-        //     orientation: 1,
-        //     valuechangeCallback: undefined,
-        //     celldownCallBack: (gameobject) => {
-        //         this.materialTipsCon.visible = true;
-        //         this.onMaterialItemHandler(gameobject);
-        //     },
-        //     cellupCallBack: (gameobject) => {
-        //         this.materialTipsCon.visible = false;
-        //     }
-        // });
-        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
+        this.mGameScroll = new GameScroller(this.scene, {
+            x: 0,
+            y: 0,
+            width: bgwidth,
+            height: bgHeight,
+            zoom: this.scale,
+            align: 2,
+            orientation: 0,
+        });
+        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName, this.mGameScroll]);
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
         super.init();
+        this.setTaskDatas(null);
     }
 
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
         if (!this.mInitialized) return;
+
+        for (let i = 0; i < 10; i++) {
+            const item = new TaskItem(this.scene, this.key, this.dpr, this.scale);
+            this.mGameScroll.addItem(item);
+            this.taskItems.push(item);
+        }
+        this.mGameScroll.Sort();
     }
 
     destroy() {
