@@ -528,7 +528,7 @@ export class Element extends BlockObject implements IElement {
 
     public mount(root: IElement) {
         this.mRootMount = root;
-        this.removeFromBlock();
+        this.removeFromBlock(true);
         if (this.mMoving) {
             this.stopMove();
         }
