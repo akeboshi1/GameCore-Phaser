@@ -88,6 +88,8 @@ export class TaskPanel extends BasePanel {
             bottom: 40,
             right: 40,
         });
+        const bgwidth = this.bg.width;
+        const bgHeight = this.bg.height;
         const posY = -this.bg.height * 0.5;
         this.titlebg = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "title" });
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
@@ -95,24 +97,25 @@ export class TaskPanel extends BasePanel {
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
-        // this.optionBtn = new
-        //     this.mGameScroll = new GameScroller(this.scene, {
-        //         x: width * 0.5,
-        //         y: height - 220 * this.dpr,
-        //         width,
-        //         height: 70 * this.dpr,
-        //         zoom: this.scale,
-        //         align: 2,
-        //         orientation: 1,
-        //         valuechangeCallback: undefined,
-        //         celldownCallBack: (gameobject) => {
-        //             this.materialTipsCon.visible = true;
-        //             this.onMaterialItemHandler(gameobject);
-        //         },
-        //         cellupCallBack: (gameobject) => {
-        //             this.materialTipsCon.visible = false;
-        //         }
-        //     });
+        this.optionBtn = this.scene.make.text({ x: 0, y: posY, text: "全部", style: { color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } });
+        this.optionArrow = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "drop_down" });
+        // this.mGameScroll = new GameScroller(this.scene, {
+        //     x: width * 0.5,
+        //     y: height - 220 * this.dpr,
+        //     width,
+        //     height: 70 * this.dpr,
+        //     zoom: this.scale,
+        //     align: 2,
+        //     orientation: 1,
+        //     valuechangeCallback: undefined,
+        //     celldownCallBack: (gameobject) => {
+        //         this.materialTipsCon.visible = true;
+        //         this.onMaterialItemHandler(gameobject);
+        //     },
+        //     cellupCallBack: (gameobject) => {
+        //         this.materialTipsCon.visible = false;
+        //     }
+        // });
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
         this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
         super.init();
@@ -321,5 +324,42 @@ class TaskCell extends Phaser.GameObjects.Container {
         const frame = isTask ? "task_bg" : "reward_bg";
         this.bg.setTexture(this.key, frame);
 
+    }
+}
+
+class TaskOption extends Phaser.GameObjects.Container {
+    private bg: Phaser.GameObjects.Graphics;
+    private text: Phaser.GameObjects.Text;
+    private optionData: any;
+    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+        super(scene);
+        this.bg = scene.make.graphics(undefined, false);
+        this.text = scene.make.text({ x: 0, y: 0, text: "全部", style: { color: "#8F4300", fontSize: 15 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.bg.clear();
+        this.bg.fillStyle(0xffffff, 1);
+        // this.bg.fillRect(-this.x, -this.y, w, h);
+        this.add([this.bg, this.text]);
+    }
+
+    public setSize(width: number, height: number) {
+        super.setSize(width, height);
+        this.text.setPosition(-width * 0.5, 0);
+        this.changeNormal();
+        return this;
+    }
+    public setOptionData() {
+
+    }
+
+    public changeDown() {
+        this.bg.clear();
+        this.bg.fillStyle(0xffffff, 1);
+        this.bg.fillRect(-this.width * 0.5, -this.height, this.width, this.height);
+    }
+
+    public changeNormal() {
+        this.bg.clear();
+        this.bg.fillStyle(0x452342, 1);
+        this.bg.fillRect(-this.width * 0.5, -this.height, this.width, this.height);
     }
 }
