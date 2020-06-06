@@ -312,6 +312,8 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       this.mScroller.refreshBound(this.mHeight);
       this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
+    this.mScroller.refreshBound(this.activity.height);
+    this.mScroller.setValue(this.mContainer.parentContainer.y);
   }
 
   protected refreshPos() {
@@ -459,6 +461,8 @@ class MyRoomDelegate extends RoomDelegate {
       this.mScroller.refreshBound(this.mHeight);
       this.mScroller.setValue(this.mContainer.parentContainer.y);
     });
+    this.mScroller.refreshBound(this.activity.height);
+    this.mScroller.setValue(this.mContainer.parentContainer.y);
   }
 
   protected onEnterRoomHandler(room) {
