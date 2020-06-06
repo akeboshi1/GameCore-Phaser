@@ -176,7 +176,7 @@ export class FurniBagPanel extends BasePanel {
       }
     }
     const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, 1.5, offset);
+    this.mDetailDisplay.loadAvatar(content, 1.6, offset);
   }
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
     if (content.display) {
@@ -200,7 +200,7 @@ export class FurniBagPanel extends BasePanel {
         }
       }
       const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
-      this.mDetailDisplay.loadAvatar(content, 1.5, offset);
+      this.mDetailDisplay.loadAvatar(content, 1.6, offset);
     }
   }
 
@@ -208,7 +208,7 @@ export class FurniBagPanel extends BasePanel {
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
     content.avatar = avatar.avatar;
     const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, 1.5, offset);
+    this.mDetailDisplay.loadAvatar(content, 1.6, offset);
   }
 
   public addListen() {
@@ -298,7 +298,7 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
-    this.mDetailDisplay.scale = this.mWorld.scaleRatio * zoom;
+    this.mDetailDisplay.scale = this.dpr;
 
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr, zoom);
     this.mDetailBubble.x = 10 * this.dpr;

@@ -15,6 +15,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   loadDisplay(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
     this.mDisplay = content;
     this.destroyDragon();
+    if (!this.mImage) {
+      this.mImage = this.scene.make.image(undefined, false);
+    }
+    this.add(this.mImage);
     if (content.display) {
       const display = content.display;
       if (this.scene.textures.exists(display.texturePath)) {
@@ -53,6 +57,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.mUrl = url;
     if (this.mDisplay) this.mDisplay = null;
     this.destroyDragon();
+    if (!this.mImage) {
+      this.mImage = this.scene.make.image(undefined, false);
+    }
+    this.add(this.mImage);
     if (this.scene.textures.exists(url)) {
       this.onCompleteHandler();
     } else {
@@ -91,9 +99,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     if (!this.scene) {
       return;
     }
-    if (!this.mImage) {
-      this.mImage = this.scene.make.image(undefined, false);
-    }
     if (this.mDisplay) {
       const display = this.mDisplay.display;
       const ani = this.mDisplay.animations;
@@ -106,7 +111,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
     this.setNearest();
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
-    this.add(this.mImage);
     this.emit("show", this.mImage);
   }
   private destroyDragon() {
