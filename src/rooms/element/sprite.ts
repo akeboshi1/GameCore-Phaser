@@ -275,11 +275,11 @@ export class Sprite implements ISprite {
     }
 
     set direction(val: number) {
-        this.mDirection = val;
+        this.mDirection = val || 3;
         if (!this.mDisplayInfo) {
             return;
         }
-        this.setAnimationData(this.mCurrentAnimationName, val);
+        this.setAnimationData(this.mCurrentAnimationName, this.mDirection);
     }
 
     get nickname(): string {

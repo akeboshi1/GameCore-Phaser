@@ -101,6 +101,7 @@ export class DecorateTerrainManager extends TerrainManager {
       hasCollisionArea = false;
     }
     const pos = sprite.pos;
+    // terrain pos为60*30大格子
     pos.x *= 2;
     pos.y *= 2;
     let _x = 0;
