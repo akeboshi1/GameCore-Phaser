@@ -1,2 +1,2 @@
 export { ISkyBoxConfig, SkyBoxManager } from "./sky.box.manager";
-export { IScenery } from "./scenery";
+export { IScenery, Fit } from "./scenery";
