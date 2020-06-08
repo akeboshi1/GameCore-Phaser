@@ -164,25 +164,25 @@
 			"frame": {
 				"x": 333,
 				"y": 112,
-				"w": 34,
-				"h": 36
+				"w": 31,
+				"h": 33
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 34,
-				"h": 36
+				"w": 31,
+				"h": 33
 			},
 			"sourceSize": {
-				"w": 34,
-				"h": 36
+				"w": 31,
+				"h": 33
 			}
 		},
 		"iv_diamond": {
 			"frame": {
-				"x": 369,
+				"x": 366,
 				"y": 112,
 				"w": 34,
 				"h": 36
@@ -222,7 +222,7 @@
 		},
 		"price_border": {
 			"frame": {
-				"x": 405,
+				"x": 402,
 				"y": 112,
 				"w": 118,
 				"h": 37

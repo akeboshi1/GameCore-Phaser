@@ -6,6 +6,7 @@ import { Logger } from "../../utils/log";
 import { DetailDisplay } from "./DetailDisplay";
 import { Font } from "../../utils/font";
 import { WorldService } from "../../game/world.service";
+import { Coin } from "../../utils/resUtil";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;
@@ -88,7 +89,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mPriceIcon = this.scene.make.image({
       x: -78,
       key: this.key,
-      frame: "tuding_icon"
+      frame: "iv_coin"
     }, false).setScale(uiScale);
     this.mPriceText = this.scene.make.text({
       x: 0,
@@ -217,7 +218,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mNickName.setText(prop.shortName || prop.name);
     this.mDesText.setText(prop.des);
     if (prop.price && prop.price.length > 0) {
-      this.mPriceIcon.setTexture(this.key, "tuding_icon");
+      this.mPriceIcon.setTexture(this.key, Coin.getIcon(prop.price[0].coinType));
       this.updatePrice(prop.price[0].price.toString());
     } else {
       this.mPriceText.setText("");
