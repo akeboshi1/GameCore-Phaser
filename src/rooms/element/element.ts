@@ -537,6 +537,8 @@ export class Element extends BlockObject implements IElement {
 
     public unmount() {
         if (this.mRootMount && this.mDisplay) {
+            // 先移除避免人物瞬移
+            this.removeDisplay();
             const pos = this.mRootMount.getPosition();
             pos.x += this.mDisplay.x;
             pos.y += this.mDisplay.y;
