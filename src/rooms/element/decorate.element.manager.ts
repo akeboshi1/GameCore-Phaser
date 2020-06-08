@@ -5,6 +5,7 @@ import { DecorateRoomService } from "../decorate.room";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
 import NodeType = op_def.NodeType;
+import { Pos } from "../../utils/pos";
 
 export class DecorateElementManager extends ElementManager {
   protected mRoom: DecorateRoomService;
@@ -43,7 +44,7 @@ export class DecorateElementManager extends ElementManager {
         if (collisionArea[i][j] === 1 && (i >= walkArea.length || j >= walkArea[i].length || walkArea[i][j] === 0)) {
           col = pos.x + j - origin.y;
           if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-            this.mMap[row][col] = 0;
+            this.mMap[row][col] = 1;
           }
         }
       }
@@ -71,11 +72,30 @@ export class DecorateElementManager extends ElementManager {
         col = pos.x + j - origin.y;
         if (collisionArea[i][j] === 1) {
           if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-            this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = -1;
+            this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = 0;
           }
         }
       }
     }
+  }
+
+  public canPut(pos45: Pos, collisionArea: number[][], origin: Phaser.Geom.Point) {
+    let row = 0;
+    let col = 0;
+    const map = this.map;
+    for (let i = 0; i < collisionArea.length; i++) {
+      row = i + pos45.y - origin.y;
+      if (row >= map.length) {
+        return false;
+      }
+      for (let j = 0; j < collisionArea[i].length; j++) {
+        col = j + pos45.x - origin.x;
+        if (col >= map[i].length || map[row][col] === 1) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   protected _add(sprite: ISprite, addMap?: boolean): Element {
