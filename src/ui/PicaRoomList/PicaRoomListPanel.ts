@@ -20,6 +20,7 @@ export class PicaRoomListPanel extends BasePanel {
   private mSeachBtn: Phaser.GameObjects.Image;
   private mRoomContainer: Phaser.GameObjects.Container;
   private mScroller: BaseScroller;
+  private mBackGround: Phaser.GameObjects.Graphics;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -32,6 +33,10 @@ export class PicaRoomListPanel extends BasePanel {
     const centerX = this.scene.cameras.main.centerX / scale;
     this.x = width / 2;
     this.y = height / 2;
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(-this.x, -this.y, width, height);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
     super.resize(w, h);
   }
 
@@ -77,8 +82,14 @@ export class PicaRoomListPanel extends BasePanel {
       key: this.key,
       frame: "bg.png"
     }, false).setInteractive();
+    const wid: number = this.scene.cameras.main.width;
+    const hei: number = this.scene.cameras.main.height;
     this.setSize(background.width, background.height);
-
+    this.mBackGround = this.scene.make.graphics(undefined, false);
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(0, 0, wid * zoom, hei * zoom);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
       frame: "close_btn.png"
@@ -137,7 +148,7 @@ export class PicaRoomListPanel extends BasePanel {
       }
     }, false).setOrigin(0.5);
 
-    this.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText]);
+    this.add([this.mBackGround, background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText]);
     super.init();
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;
