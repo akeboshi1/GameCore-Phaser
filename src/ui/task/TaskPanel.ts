@@ -2,7 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
@@ -10,7 +10,6 @@ import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { Handler } from "../../Handler/Handler";
-import { TextButton } from "../Market/TextButton";
 export class TaskPanel extends BasePanel {
     private key = "task_ui";
     private blackBg: Phaser.GameObjects.Graphics;
@@ -23,27 +22,22 @@ export class TaskPanel extends BasePanel {
     private optionCon: Phaser.GameObjects.Container;
     private mGameScroll: GameScroller;
     private taskItems: TaskItem[] = [];
+    private content: Phaser.GameObjects.Container;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.scale = 1;
     }
-    resize(width: number, height: number) {
-        const w: number = this.scene.cameras.main.width / this.scale;
-        const h: number = this.scene.cameras.main.height / this.scale;
-        super.resize(width, height);
+    resize(width?: number, height?: number) {
+        const w: number = this.scaleWidth;
+        const h: number = this.scaleHeight;
+        super.resize(w, h);
         this.setSize(w, h);
-        this.bg.x = w / 2;
-        this.bg.y = h / 2;
-        this.tilteName.x = this.bg.x;
-        this.tilteName.y = this.bg.y - this.bg.height / 2;
-        this.titlebg.x = this.bg.x;
-        this.titlebg.y = this.bg.y - this.bg.height / 2;
-        this.closeBtn.x = this.bg.x + this.bg.width / 2 - 10 * this.dpr * this.scale;
-        this.closeBtn.y = this.bg.y - this.bg.height / 2 + 10 * this.dpr * this.scale;
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
         this.blackBg.fillRoundedRect(-this.x, -this.y, w, h);
-        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
+        this.content.x = w * 0.5;
+        this.content.y = h * 0.5;
+        this.mGameScroll.refreshMask();
     }
 
     public show(param?: any) {
@@ -74,16 +68,20 @@ export class TaskPanel extends BasePanel {
     }
 
     preload() {
-        this.addAtlas(this.key, "equip_upgrade/mine_eqpm.png", "equip_upgrade/mine_eqpm.json");
+        this.addAtlas(this.key, "task/task.png", "task/task.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.common + ".png", UIAtlasName.common + ".json");
         super.preload();
     }
     init() {
-        const w = this.scaleWidth;
-        const h = this.scaleHeight;
-        this.setSize(w, h);
+        this.setSize(this.scaleWidth, this.scaleWidth);
         this.blackBg = this.scene.make.graphics(undefined, false);
-        this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, UIAtlasKey.commonKey, "bg", {
+        this.add(this.blackBg);
+        const conWdith = 300 * this.dpr;
+        const conHeight = 418 * this.dpr;
+        this.content = this.scene.make.container(undefined, false);
+        this.content.setSize(conWdith, conHeight);
+        this.add(this.content);
+        this.bg = new NinePatch(this.scene, 0, 0, conWdith, conHeight, UIAtlasKey.commonKey, "bg", {
             left: 40,
             top: 40,
             bottom: 40,
@@ -98,32 +96,82 @@ export class TaskPanel extends BasePanel {
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
+        const optionWidth = 253 * this.dpr;
+        const optionHeight = 26 * this.dpr;
         this.optionBtn = this.scene.make.text({ x: 0, y: posY, text: "全部", style: { color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } });
+        this.optionBtn.setInteractive();
+        this.optionBtn.on("pointerup", this.onOpenOptionHandler, this);
         this.optionArrow = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "drop_down" });
+        this.optionCon = this.scene.make.container(undefined, false);
+        const optionLine = this.scene.make.graphics(undefined, false);
+        optionLine.clear();
+        optionLine.fillStyle(0, 1);
+        optionLine.fillRect(-optionWidth * 0.5, -1, optionWidth, 2);
+        this.optionCon.add(optionLine);
         this.mGameScroll = new GameScroller(this.scene, {
             x: 0,
             y: 0,
             width: bgwidth,
-            height: bgHeight,
+            height: bgHeight - 60 * this.dpr,
             zoom: this.scale,
             align: 2,
             orientation: 0,
+            space: 40 * this.dpr
         });
-        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName, this.mGameScroll]);
-        this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
+        this.content.add([this.bg, this.closeBtn, this.titlebg, this.tilteName, this.mGameScroll, this.optionCon]);
+        this.resize();
         super.init();
         this.setTaskDatas(null);
     }
 
-    setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
+    setTaskDatas(quests: op_client.PKT_Quest[]) {
         if (!this.mInitialized) return;
 
         for (let i = 0; i < 10; i++) {
             const item = new TaskItem(this.scene, this.key, this.dpr, this.scale);
             this.mGameScroll.addItem(item);
+            item.setHandler(new Handler(this, this.onExtendsHandler), new Handler(this, this.onFinishHandler));
             this.taskItems.push(item);
         }
         this.mGameScroll.Sort();
+    }
+
+    setTaskDetail(quest: op_client.PKT_Quest) {
+
+    }
+
+    setTaskOptions() {
+        const enumArr: op_pkt_def.PKT_Quest_Type[] = [];
+        const PKT_Quest_Type = op_pkt_def.PKT_Quest_Type;
+        for (const key in PKT_Quest_Type) {
+            if (!isNaN(Number(key))) {
+                const quest_Type: any = PKT_Quest_Type[key];
+                const questEnum: op_pkt_def.PKT_Quest_Type = quest_Type;
+                enumArr.push(questEnum);
+            }
+        }
+        const list = <TaskOption[]>this.optionCon.list;
+        for (const option of list) {
+            option.visible = false;
+        }
+
+        for (let i = 0; i < enumArr.length; i++) {
+            let option: TaskOption;
+            if (i < enumArr.length) {
+                option = list[i];
+            } else {
+                option = new TaskOption(this.scene, this.key, this.dpr, this.scale);
+                option.setOptionData(enumArr[i]);
+                option.setHandler(new Handler(this, this.onTaskOptionHandler));
+                list.push(option);
+            }
+        }
+        let value = 0;
+        const offsety = 10 * this.dpr;
+        for (const item of list) {
+            item.y = item.height * item.originY + value;
+            value += item.height + offsety;
+        }
     }
 
     destroy() {
@@ -136,6 +184,21 @@ export class TaskPanel extends BasePanel {
 
     private onFinishHandler() {
 
+    }
+
+    private onExtendsHandler() {
+
+    }
+
+    private onOpenOptionHandler() {
+        this.optionCon.visible = !this.optionCon.visible;
+    }
+
+    private onTaskOptionHandler(taskOption: TaskOption) {
+        const list = <TaskOption[]>this.optionCon.list;
+        for (const option of list) {
+            option.changeNormal();
+        }
     }
 }
 
@@ -161,8 +224,8 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.zoom = zoom;
         const width = 254 * dpr;
-        const height = 40 * dpr;
-        this.bg = new NinePatch(this.scene, 0, 0, width, height, UIAtlasKey.commonKey, "main_bg", {
+        const height = 45 * dpr;
+        this.bg = new NinePatch(this.scene, 0, 0, width, height, key, "main_bg", {
             left: 6 * dpr,
             top: 6 * dpr,
             bottom: 6 * dpr,
@@ -186,6 +249,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.openBtn.on("Tap", this.onOpenHandler, this);
         this.closeBtn.on("Tap", this.onCloseHandler, this);
         this.add([this.bg, this.headIcon, this.typeBg, this.typeTex, this.taskName, this.taskDes, this.finish, this.openBtn, this.closeBtn]);
+        this.setSize(width, height);
     }
 
     public setTaskData(data) {
@@ -329,17 +393,26 @@ class TaskCell extends Phaser.GameObjects.Container {
 }
 
 class TaskOption extends Phaser.GameObjects.Container {
+    public optionData: op_pkt_def.PKT_Quest_Type;
     private bg: Phaser.GameObjects.Graphics;
     private text: Phaser.GameObjects.Text;
-    private optionData: any;
+    private clickHandler: Handler;
     constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
         super(scene);
+        const width = 253 * dpr;
+        const height = 26 * dpr;
         this.bg = scene.make.graphics(undefined, false);
         this.text = scene.make.text({ x: 0, y: 0, text: "全部", style: { color: "#8F4300", fontSize: 15 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.bg.clear();
         this.bg.fillStyle(0xffffff, 1);
-        // this.bg.fillRect(-this.x, -this.y, w, h);
-        this.add([this.bg, this.text]);
+        const optionLine = this.scene.make.graphics(undefined, false);
+        optionLine.clear();
+        optionLine.fillStyle(0, 1);
+        optionLine.fillRect(-width * 0.5, height * 0.5, width, 2);
+        this.add([this.bg, this.text, optionLine]);
+        this.setSize(width, height);
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+        this.on("pointerup", this.onClickHandler, this);
     }
 
     public setSize(width: number, height: number) {
@@ -348,8 +421,8 @@ class TaskOption extends Phaser.GameObjects.Container {
         this.changeNormal();
         return this;
     }
-    public setOptionData() {
-
+    public setOptionData(data: op_pkt_def.PKT_Quest_Type) {
+        this.optionData = data;
     }
 
     public changeDown() {
@@ -362,5 +435,14 @@ class TaskOption extends Phaser.GameObjects.Container {
         this.bg.clear();
         this.bg.fillStyle(0x452342, 1);
         this.bg.fillRect(-this.width * 0.5, -this.height, this.width, this.height);
+    }
+
+    public setHandler(handler: Handler) {
+        this.clickHandler = handler;
+    }
+
+    private onClickHandler() {
+        if (this.clickHandler) this.clickHandler.runWith(this);
+        this.changeDown();
     }
 }
