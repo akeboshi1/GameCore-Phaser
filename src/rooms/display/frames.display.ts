@@ -113,7 +113,11 @@ export class FramesDisplay extends DisplayObject {
         }
         const { index, mountPoint } = this.mCurAnimation.mountLayer;
         if (targetIndex === undefined) targetIndex = 0;
-        display.x = mountPoint[targetIndex].x;
+        let { x } = mountPoint[targetIndex];
+        if (this.mActionName.flip) {
+            x = (this.spriteWidth * 0.5 + x);
+        }
+        display.x = x;
         display.y = mountPoint[targetIndex].y;
 
         if (!this.mMountContainer) {
