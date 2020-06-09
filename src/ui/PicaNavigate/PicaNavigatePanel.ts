@@ -53,7 +53,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-   // this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
+    // this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -74,10 +74,10 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn = this.createImage(this.key, "bag_btn").setInteractive();
     this.mFamilyBtn = this.createImage(this.key, "family_btn").setInteractive();
     this.mGoHomeBtn = this.createImage(this.key, "home_btn").setInteractive();
-   // this.mPlayerBtn = this.createImage(this.key, "family_btn").setInteractive();
+    // this.mPlayerBtn = this.createImage(this.key, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn").setInteractive();
     this.alertView = new AlertView(this.scene, this.mWorld);
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn, this.mGoHomeBtn];
+    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);

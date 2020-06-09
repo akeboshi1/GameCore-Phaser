@@ -70,11 +70,12 @@
     "title": "Equip"
   },
   "task": {
-    "title": "Task",
+    "title": "任务",
     "main_quest": "主线任务",
     "side_quest": "支线任务",
     "active_task": "活动任务",
     "daily_quest": "每日任务",
+    "all_task": "全部",
     "m": "主",
     "s": "支",
     "a": "活",
@@ -82,6 +83,7 @@
     "objective": "任务目标：",
     "rewards": "任务奖励：",
     "collect_materials": "收集物资：",
-    "submit_task": "提交任务"
+    "submit_task": "提交任务",
+    "task_quest": "任务要求："
   }
 }
