@@ -15,6 +15,8 @@ export class Task extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_LIST, this.onRetQuestList);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_DETAIL, this.onRetQuestDetail);
         }
     }
 

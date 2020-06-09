@@ -5,6 +5,7 @@ import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
 import { Handler } from "../../Handler/Handler";
 import { TextToolTips } from "../tips/TextToolTip";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -69,7 +70,12 @@ export class PicaMainUIPanel extends BasePanel {
         if (!this.mInitialized) {
             return;
         }
-        if (param.hasOwnProperty("level")) this.mExpProgress.setLv(param.level);
+
+        if (param.hasOwnProperty("level")) {
+            const level: op_pkt_def.PKT_Level = param.level;
+            const curExp = (level.currentLevelExp === undefined ? 0 : level.currentLevelExp);
+            this.mExpProgress.setLv(level.level, curExp / level.nextLevelExp);
+        }
         if (param.hasOwnProperty("coin")) this.mCoinValue.setText(param.coin.toString());
         if (param.hasOwnProperty("diamond")) this.mDiamondValue.setText(param.diamond.toString());
         if (param.hasOwnProperty("energy")) {
@@ -174,7 +180,7 @@ export class PicaMainUIPanel extends BasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         const energy = this.showData.energy;
-        const text = "当前精力值" + `${energy.currentValue}/${energy.max}\n` + "精力不满时，每15分钟恢复1点";
+        const text = "当前精力值" + `${energy.currentValue}/${energy.max}\n` + "精力不满时，每10分钟恢复1点";
         this.textToolTip.setTextData(text, 3000);
         this.textToolTip.setPosition(120 * this.dpr, 80 * this.dpr);
     }
@@ -337,10 +343,11 @@ class ExpProgress extends Phaser.GameObjects.Container {
         this.add([this.mProgressBar, this.mCurrentLv, this.mNextLv]);
     }
 
-    public setLv(val: number) {
+    public setLv(val: number, ratio: number) {
         this.mCurrentLv.setText(val.toString());
         this.mNextLv.setText((val + 1).toString());
         this.mNextLv.x = this.width - this.mNextLv.width;
+        this.mProgressBar.setRatio(ratio);
     }
 }
 

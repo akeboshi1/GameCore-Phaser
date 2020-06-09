@@ -1,5 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
+import { Handler } from "../../Handler/Handler";
+import { Logger } from "../../utils/log";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
@@ -12,7 +14,7 @@ export class ActivityPanel extends BasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.content.x = width - 20 * this.dpr;
-        this.content.y = 120 * this.dpr;
+        this.content.y = 90 * this.dpr;
         this.setSize(w, h);
     }
 
@@ -36,26 +38,32 @@ export class ActivityPanel extends BasePanel {
                 key: this.key,
                 frame: `icon_${i + 1}`
             }, false);
-            // img.y = i * 50 * this.dpr;
             this.content.add(img);
         }
 
-        let mainMenuW = 160 * this.dpr;
         const subList = this.content.list;
-        subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.height);
-        const margin = mainMenuW / (subList.length - 1);
         const offsetY: number = 15 * this.dpr;
         let tmpWid: number = 0;
-        let tmpHei: number = 0;
-        for (let i = 1; i < subList.length; i++) {
-            const preButton = <Phaser.GameObjects.Image>subList[i - 1];
+        let height: number = 0;
+        const handler = new Handler(this, this.onClickHandler);
+        for (let i = 0; i < subList.length; i++) {
             const button = <Phaser.GameObjects.Image>subList[i];
-            button.y = preButton.height + preButton.y + margin + offsetY;
-            tmpHei += button.y;
+            button.y = button.height * button.originY + height;
+            height += button.height + offsetY;
             tmpWid = button.width;
+            button.on("pointerup", () => {
+                handler.runWith(i + 1);
+            }, this);
+            button.setInteractive();
         }
-
-        this.resize(tmpWid, tmpHei);
+        this.resize(tmpWid, height);
         super.init();
+    }
+
+    private onClickHandler(name: number) {
+        Logger.getInstance().log(name);
+        if (name === 4) {
+            this.emit("showPanel", "Task");
+        }
     }
 }

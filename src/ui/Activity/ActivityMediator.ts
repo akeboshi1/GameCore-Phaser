@@ -19,6 +19,7 @@ export class ActivityMediator extends BaseMediator {
         }
         if (!this.mView) {
             this.mView = new ActivityPanel(this.scene, this.world);
+            this.mView.on("showPanel", this.onShowPanelHandler, this);
         }
         this.mView.show();
         this.layerManager.addToUILayer(this.mView);
@@ -27,4 +28,14 @@ export class ActivityMediator extends BaseMediator {
     isSceneUI() {
         return true;
     }
+
+    private onShowPanelHandler(panel: string, data?: any) {
+        if (!panel || !this.world) {
+          return;
+        }
+        const uiManager = this.world.uiManager;
+        if (data)
+          uiManager.showMed(panel, data);
+        else uiManager.showMed(panel);
+      }
 }

@@ -72,13 +72,15 @@
     "side_quest": "Side Quest",
     "active_task": "Active Task",
     "daily_quest": "Daily Quest",
+    "all_task": "All",
     "m": "M",
     "s": "S",
     "a": "A",
     "d": "D",
     "objective": "Objective",
     "rewards": "Rewards",
-    "collect_materials":"Collect Materials",
-    "submit_task":"Submit Task"
+    "collect_materials": "Collect Materials:",
+    "submit_task": "Submit Task",
+    "task_quest": "Task Quest:"
   }
 }
