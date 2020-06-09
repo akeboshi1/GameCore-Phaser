@@ -208,6 +208,24 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
         this.updatePlay();
     }
 
+    public updateOffsetLoc(idx: number) {
+        const display = this.mDisplays.get(idx);
+        if (!display) {
+            return;
+        }
+        if (!this.mAnimationData) {
+            return;
+        }
+        const data = this.mAnimationData.layerDict.get(idx);
+        if (!data) {
+            return;
+        }
+        const originPos = this.mGrids.getAnchor90Point();
+        const baseLoc = data.offsetLoc || { x: 0, y: 0 };
+        display.x = originPos.x + baseLoc.x;
+        display.y = originPos.y + baseLoc.y;
+    }
+
     public generateThumbnail(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             if (!this.mAnimationData) {
@@ -435,15 +453,16 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
     }
 
     private onDragHandler(pointer, gameObject, dragX, dragY) {
+        const delta = { x: 0, y: 0 };
         this.mSelectedGameObjects.forEach((element) => {
             if (element === gameObject) {
-                element.x = dragX;
-                element.y = dragY;
-            } else {
-                const delta = { x: (element.x - gameObject.x), y: (element.y - gameObject.y) };
-                element.x = dragX + delta.x;
-                element.y = dragY + delta.y;
+                delta.x = dragX - element.x;
+                delta.y = dragY - element.y;
             }
+        });
+        this.mSelectedGameObjects.forEach((element) => {
+            element.x = element.x + delta.x;
+            element.y = element.y + delta.y;
         });
     }
 

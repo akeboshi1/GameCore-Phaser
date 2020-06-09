@@ -91,17 +91,6 @@ export class Terrain extends BlockObject implements IElement {
 
     public showEffected() {}
 
-    public toSprite(): op_client.ISprite {
-        const sprite = op_client.Sprite.create();
-        sprite.id = this.id;
-        if (this.mDisplay) {
-            const pos45 = this.getPosition45();
-            this.mDisplay.x = pos45.x;
-            this.mDisplay.y = pos45.y;
-        }
-        return sprite;
-    }
-
     public turn() {}
 
     public setAlpha(val: number) {}
@@ -109,6 +98,22 @@ export class Terrain extends BlockObject implements IElement {
     public scaleTween() {}
 
     public setQueue() { }
+
+    public mount() {
+        return this;
+    }
+
+    public unmount() {
+        return this;
+    }
+
+    public addMount() {
+        return this;
+    }
+
+    public removeMount() {
+        return this;
+    }
 
     public destroy() {
         if (this.mBlockable && this.mDisplay) {
@@ -171,6 +176,7 @@ export class Terrain extends BlockObject implements IElement {
     protected onInitializedHandler() {
         if (this.mDisplay) {
             // this.mDisplay.setInteractive();
+            this.mDisplay.play(this.model.currentAnimation);
         }
     }
 

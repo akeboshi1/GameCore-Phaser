@@ -1,5 +1,5 @@
 import { HTTP_REGEX } from "../const/constants";
-
+import { op_def } from "pixelpai_proto";
 export class Url {
     static OSD_PATH = "";
     static RES_PATH: string = "";
@@ -231,5 +231,24 @@ export class TransparentButton {
             right: 4,
             bottom: 4
         };
+    }
+}
+
+export class Coin {
+    static getIcon(coinType: number) {
+        let res = "tuding_icon";
+        const type = <op_def.CoinType>coinType;
+        if (type === op_def.CoinType.COIN) {
+            res = "iv_coin";
+        } else if (type === op_def.CoinType.DIAMOND) {
+            res = "iv_diamond";
+        } else if (type === op_def.CoinType.GOLD_COIN) {
+            // res = "";
+        } else if (type === op_def.CoinType.QING_SONG_TANG) {
+            // res = "";
+        } else if (type === op_def.CoinType.TU_DING_COIN) {
+            // res = "";
+        }
+        return res;
     }
 }

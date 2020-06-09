@@ -144,6 +144,7 @@ export class FurniBagPanel extends BasePanel {
     }
     this.mPropGrid.setItems(props);
     if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      this.mSelectedItemData.length = 0;
       const cell = this.mPropGrid.getCell(0);
       this.onSelectItemHandler(cell.container);
     } else {
@@ -174,7 +175,7 @@ export class FurniBagPanel extends BasePanel {
         if (element) content.avatar[key] = element;
       }
     }
-    const offset = new Phaser.Geom.Point(0, 40 * 2);
+    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
     this.mDetailDisplay.loadAvatar(content, 2, offset);
   }
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
@@ -198,7 +199,7 @@ export class FurniBagPanel extends BasePanel {
           }
         }
       }
-      const offset = new Phaser.Geom.Point(0, 40 * 2);
+      const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
       this.mDetailDisplay.loadAvatar(content, 2, offset);
     }
   }
@@ -206,8 +207,8 @@ export class FurniBagPanel extends BasePanel {
   public resetAvatar(avatar: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
     content.avatar = avatar.avatar;
-    const offset = new Phaser.Geom.Point(0, 40 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, this.dpr, offset);
+    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 2, offset);
   }
 
   public addListen() {
@@ -297,7 +298,7 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
-    this.mDetailDisplay.scale = this.mWorld.scaleRatio * zoom;
+    this.mDetailDisplay.scale = this.dpr;
 
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr, zoom);
     this.mDetailBubble.x = 10 * this.dpr;
@@ -327,9 +328,7 @@ export class FurniBagPanel extends BasePanel {
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
     }
-    // if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
-    //   this.add(this.mAdd);
-    // }
+
     const topCapW = 67 * this.dpr * zoom;
     const topCapH = 30 * this.dpr * zoom;
     const topPosY = 30 * this.dpr * zoom;
@@ -339,12 +338,11 @@ export class FurniBagPanel extends BasePanel {
       color: "#FFFFFF"
     };
     this.topCheckBox = new CheckboxGroup();
-    const topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
-    const topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
-    if (!this.mEnableEdit) {
-      // const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
-      // topCategorys.splice(index, 1);
-      // topBtnTexts.splice(index, 1);
+    let topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
+    let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
+    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
+      topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE];
+      topBtnTexts = [i18n.t("furni_bag.furni")];
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
     for (const key in topCategorys) {
@@ -370,7 +368,6 @@ export class FurniBagPanel extends BasePanel {
     } else {
       this.topCheckBox.selectIndex(0);
     }
-
     const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
@@ -460,6 +457,9 @@ export class FurniBagPanel extends BasePanel {
           }
         }
       }
+    } else {
+      this.mDetailBubble.setProp(null);
+      this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     }
   }
   private replaceSelectItem(data: op_client.ICountablePackageItem) {
@@ -534,8 +534,6 @@ export class FurniBagPanel extends BasePanel {
   }
   private setSelectedItem(prop: op_client.ICountablePackageItem) {
     this.emit("queryPropResource", prop);
-    this.mDetailBubble.setProp(prop);
-    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     this.sellBtn.enable = prop.recyclable;
     this.useBtn.enable = prop.executable;
     this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
@@ -583,7 +581,7 @@ export class FurniBagPanel extends BasePanel {
           this.closeSeach(gameobject);
         }
         this.mSelectedCategeories = category;
-        this.emit("queryPackage", category.key);
+        this.queryPackege();
       }
       this.mPreCategoryBtn = gameobject;
     }
@@ -593,14 +591,22 @@ export class FurniBagPanel extends BasePanel {
     this.emit("close");
   }
 
+  private queryPackege() {
+    if (this.mSelectedCategeories) {
+      this.emit("queryPackage", this.mSelectedCategeories.key);
+    }
+  }
+
   private onSelectItemHandler(cell: Item) {
     const item: op_client.ICountablePackageItem = cell.getData("item");
+    this.mDetailBubble.setProp(item);
+    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
       this.replaceSelectItem(item);
       this.setSelectedItem(item);
       this.mPropGrid.refresh();
     } else {
-      if (this.mSelectedItemData.length === 0) {
+      if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR && this.mSelectedItemData.length === 0) {
         this.sellBtn.enable = false;
         this.useBtn.enable = false;
         this.mAdd.enable = false;
@@ -629,6 +635,8 @@ export class FurniBagPanel extends BasePanel {
     const categoryType = item.getData("data");
     const width = this.scaleWidth;
     this.mSelectedItemData.length = 0;
+    // this.mDetailDisplay.setTexture(this.key, "ghost");
+    // this.mDetailDisplay.setNearest();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
@@ -715,6 +723,7 @@ export class FurniBagPanel extends BasePanel {
         idsArr.push(item.id);
       }
       this.emit("querySaveAvatar", idsArr);
+      this.queryPackege();
     }
   }
 
@@ -780,22 +789,9 @@ export class FurniBagPanel extends BasePanel {
       }
       tmpW += item.width;
     }
-    // let pad0: number = 0;
-    // let pad1: number = 1;
-    // if (tmpW > w) {
-    //   tmpW = tmpW + inputWid;
-    // pad0 = 75 * this.dpr * zoom + inputWid;
-    // pad1 = -180 * this.dpr * zoom - inputWid;
-    // } else {
-    //   tmpW = w + inputWid;
-    // pad0 = 410 * this.dpr * zoom + inputWid;
-    // pad1 = 30 * this.dpr * zoom - inputWid;
-    // }
-    // const updateWid: number = tmpW;
+
     this.mCategoryScroll.setAlign();
-    // this.mCategoryScroll.setValue(updateWid / 2);
-    // this.mCategoryScroll.resize(tmpW, h, -updateWid / 2 + pad0, updateWid / 2 + pad1);
-    // this.mCategoryScroll.resize(updateWid, h);
+
   }
 
   get enableEdit() {
@@ -946,43 +942,54 @@ class DetailBubble extends Phaser.GameObjects.Container {
   }
 
   setProp(prop: op_client.ICountablePackageItem): this {
-    this.mNickName.setText(prop.shortName || prop.name);
-    let posY = 9 * this.dpr;
-    const offsetY = 21 * this.dpr;
-    // this.mDesText.setText(prop.des);
-    if (prop.recyclable) {
-      posY += offsetY;
-      this.mPriceText.y = posY;
-      this.mPriceText.setText(`可售卖：${prop.sellingPrice.price}`);
+    if (!prop) {
+      this.mNickName.setText("背包里空空如也");
+      this.mPriceText.text = "";
+      this.mSource.text = "";
+      this.mDesText.text = "";
+      this.resize();
     } else {
-      posY += offsetY;
-      this.mPriceText.y = posY;
-      this.mPriceText.setText(`不可交易`);
+      this.mNickName.setText(prop.shortName || prop.name);
+      let posY = 9 * this.dpr;
+      const offsetY = 21 * this.dpr;
+      // this.mDesText.setText(prop.des);
+      if (prop.recyclable) {
+        posY += offsetY;
+        this.mPriceText.y = posY;
+        this.mPriceText.setText(`可售出：${prop.sellingPrice.price} 银币`);
+      } else {
+        posY += offsetY;
+        this.mPriceText.y = posY;
+        this.mPriceText.setText(`不可售出`);
+      }
+      // if (prop.tradable) {
+      //   this.mPriceText.setText(`可交易`);
+      // }
+      if (prop.source) {
+        this.mSource.setText(`来源： ${prop.source}`);
+        posY += offsetY;
+        this.mSource.y = posY;
+      } else {
+        this.mSource.setText("");
+      }
+      const offset = 15 * this.dpr;
+      const width = this.getMaxWidth(offset);
+      if (prop.des) {
+        posY += offsetY;
+        this.mDesText.setWordWrapWidth(width - offset, true);
+        this.mDesText.setText(prop.des);
+        this.mDesText.y = posY;
+      } else {
+        this.mDesText.setText("");
+      }
+      this.resize(width);
     }
-    if (prop.tradable) {
-      this.mPriceText.setText(`可交易`);
-    }
-    if (prop.source) {
-      this.mSource.setText(`来源： ${prop.source}`);
-      posY += offsetY;
-      this.mSource.y = posY;
-    } else {
-      this.mSource.setText("");
-    }
-    if (prop.des) {
-      posY += offsetY;
-      this.mDesText.setText(prop.des);
-      this.mDesText.y = posY;
-    } else {
-      this.mDesText.setText("");
-    }
-    this.resize();
     return this;
   }
 
   private resize(w?: number, h?: number) {
     if (w === undefined) w = this.width;
-    const bubbleH = this.mDesText.height + 60 * this.dpr;
+    const bubbleH = this.mDesText.height + 80 * this.dpr;
     if (w === this.width && bubbleH === this.height) {
       return;
     }
@@ -992,6 +999,17 @@ class DetailBubble extends Phaser.GameObjects.Container {
 
     this.setSize(w, bubbleH);
     // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
+  }
+
+  private getMaxWidth(offset: number = 0) {
+    const width = 100 * this.dpr;
+    let maxWidth = 0;
+    if (maxWidth < this.mNickName.width) maxWidth = this.mNickName.width;
+    if (maxWidth < this.mPriceText.width) maxWidth = this.mPriceText.width;
+    if (maxWidth < this.mSource.width) maxWidth = this.mSource.width;
+    if (width - maxWidth < offset) maxWidth += offset + ((maxWidth - width) >= 0 ? 0 : (maxWidth - width));
+    if (maxWidth < width) maxWidth = width;
+    return maxWidth;
   }
 }
 

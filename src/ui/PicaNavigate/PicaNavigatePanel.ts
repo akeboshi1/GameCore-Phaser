@@ -1,6 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_def } from "pixelpai_proto";
+import { AlertView } from "../components/alert.view";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
   private mBackground: Phaser.GameObjects.Image;
@@ -11,6 +12,7 @@ export class PicaNavigatePanel extends BasePanel {
   private mGoHomeBtn: Phaser.GameObjects.Image;
   private mPlayerBtn: Phaser.GameObjects.Image;
   private mCloseBtn: Phaser.GameObjects.Image;
+  private alertView: AlertView;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
@@ -74,11 +76,11 @@ export class PicaNavigatePanel extends BasePanel {
     this.mGoHomeBtn = this.createImage(this.key, "home_btn").setInteractive();
     this.mPlayerBtn = this.createImage(this.key, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn, this.mGoHomeBtn, this.mPlayerBtn];
+    this.alertView = new AlertView(this.scene, this.mWorld);
+    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn, this.mGoHomeBtn,this.mPlayerBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
-
     for (let i = 0; i < list.length; i++) {
       list[i].x = i * 50 * this.dpr - list[i].width / 2;
     }
@@ -111,10 +113,18 @@ export class PicaNavigatePanel extends BasePanel {
     this.emit("showPanel", "CharacterInfo");
   }
   private onShowGoHomeHandler() {
-    this.emit("showPanel", "");
+    // this.alertView.show({
+    //   text: `您确定要回家吗？`,
+    //   title: "",
+    //   oy: 302 * this.dpr * this.mWorld.uiScale,
+    //   callback: () => {
+    //     this.emit("goHome");
+    //   },
+    // });
+    this.emit("goHome");
   }
   private onShowPlayerHandler() {
-    // this.emit("showPanel", "CharacterInfo");
+    this.emit("showPanel", "Task");
   }
   private onCloseHandler() {
     this.emit("close");

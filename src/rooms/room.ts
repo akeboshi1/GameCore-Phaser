@@ -17,7 +17,7 @@ import { LoadingScene } from "../scenes/loading";
 import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Map } from "./map/map";
-import { Element } from "./element";
+import { Element, IElement } from "./element";
 import { IBlockObject } from "./cameras/block.object";
 import { Size, Logger } from "../utils";
 import { MessageType } from "../const/MessageType";
@@ -52,7 +52,6 @@ export interface IRoomService {
     readonly scene: Phaser.Scene | undefined;
 
     readonly connection: ConnectionService | undefined;
-
     now(): number;
 
     startLoad();
@@ -91,6 +90,8 @@ export interface IRoomService {
 
     addMouseListen();
 
+    getElement(id: number): IElement;
+
     update(time: number, delta: number): void;
 
     destroy();
@@ -117,6 +118,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
+    protected mMods: string[];
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -140,6 +142,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH,
                     this.onMovePathHandler
                 );
+                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             }
         }
     }
@@ -380,6 +383,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.layerManager.addMouseListen();
     }
 
+    public getElement(id: number): IElement {
+        let ele = null;
+        if (this.mPlayerManager) {
+            ele = this.mPlayerManager.get(id);
+        }
+        if (!ele && this.mElementManager) {
+            ele = this.elementManager.get(id);
+        }
+        return ele;
+    }
+
     public moveable(pos: Pos): boolean {
         const pos45 = this.transformToMini45(pos);
         const map = this.mElementManager.map;
@@ -549,6 +563,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
     }
 
+    get mods(): string[] {
+        return this.mMods;
+    }
+
     private onPressElementHandler(pointer, gameObject) {
         if (!gameObject || !gameObject.parentContainer) {
             return;
@@ -631,6 +649,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         const pos = content.targetPos;
         this.addFillEffect({ x: pos.x, y: pos.y }, status);
+    }
+
+    private onCameraFollowHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
+        const target = this.getElement(content.id);
+        if (target) {
+            this.mCameraService.startFollow(target.getDisplay());
+        } else {
+            this.mCameraService.stopFollow();
+        }
     }
 
     private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {

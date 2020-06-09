@@ -47,15 +47,15 @@ export class UserMenuMediator extends BaseMediator {
     }
 
     show(param?: any): void {
-        if (this.mView && this.mView.isShow()) {
-            return;
-        }
-        this.mView = new UserMenuPanel(this.mScene, this.world);
-        this.mView.show(param[0]);
-        this.mLayerManager.addToUILayer(this.mView);
-        this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
-        this.mView.on("menuClick", this.onClickMenuHandler, this);
-        super.show(param);
+        // if (this.mView && this.mView.isShow()) {
+        //     return;
+        // }
+        // this.mView = new UserMenuPanel(this.mScene, this.world);
+        // this.mView.show(param[0]);
+        // this.mLayerManager.addToUILayer(this.mView);
+        // this.world.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);
+        // this.mView.on("menuClick", this.onClickMenuHandler, this);
+        // super.show(param);
         // this.mScene.input.on("pointerdown", this.onClosePanel, this);
     }
 

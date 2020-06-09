@@ -29,7 +29,7 @@ export class MarketPanel extends BasePanel {
   private mShelfBackground: Phaser.GameObjects.Graphics;
   private mSubCategorisScroll: GameGridTable;
   private mItems: MarketItem[];
-  private mPreSubCategoris: TextButton;
+  private mPreSubCategoris: op_def.IStrPair;
   private mPropGrid: GameGridTable;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -280,8 +280,10 @@ export class MarketPanel extends BasePanel {
         cellContainer.setText(item.value);
         // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
-        if (!this.mPreSubCategoris) {
-          this.onSelectSubCategoryHandler(cellContainer);
+        if (item && this.mPreSubCategoris && this.mPreSubCategoris.key === item.key) {
+          cellContainer.changeDown();
+        } else {
+          cellContainer.changeNormal();
         }
         return cellContainer;
       },
@@ -367,6 +369,8 @@ export class MarketPanel extends BasePanel {
       if (this.mSubCategorisScroll) {
         this.mSubCategorisScroll.setItems(subcategorys);
         this.mSubCategorisScroll.layout();
+        const cell = this.mSubCategorisScroll.getCell(0);
+        this.onSelectSubCategoryHandler(cell.container);
       }
     }
   }
@@ -386,13 +390,9 @@ export class MarketPanel extends BasePanel {
     if (!subCategories) {
       return;
     }
-    if (this.mPreSubCategoris) {
-      this.mPreSubCategoris.changeNormal();
-    }
-
     this.queryProp(categories.category.key, subCategories.key);
-    gameobject.changeDown();
-    this.mPreSubCategoris = gameobject;
+    this.mPreSubCategoris = subCategories;
+    this.mSubCategorisScroll.refresh();
   }
 
   private queryProp(category: string, subCategory: string) {

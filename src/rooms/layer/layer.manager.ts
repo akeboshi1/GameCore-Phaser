@@ -188,6 +188,7 @@ export class LayerManager {
                 if (depthA > depthB) {
                     return 1;
                 }
+                // ---------------根据角度判断深度
                 const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
                 if (angle * (180 * Math.PI) >= 70) {
                     return 1;

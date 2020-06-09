@@ -65,7 +65,7 @@ export default class ElementEditorResourceManager {
             path.join(this.mLocalHomePath, val.texturePath),// this.mLocalHomePath WEB_HOME_PATH
             path.join(this.mLocalHomePath, val.dataPath)// this.mLocalHomePath WEB_HOME_PATH
         ).on("loaderror", this.imageLoadError, this);
-        Logger.getInstance().log("loadResources ", path.join(WEB_HOME_PATH, val.texturePath));
+        Logger.getInstance().log("loadResources ", path.join(this.mLocalHomePath, val.texturePath));
         this.mScene.load.start();
     }
 

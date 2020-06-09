@@ -8,6 +8,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { i18n } from "../../i18n";
 export class MineSettlePanel extends BasePanel {
     private key: string = "mine_settle";
     private confirmBtn: NinePatchButton;
@@ -18,25 +19,25 @@ export class MineSettlePanel extends BasePanel {
     private titleName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.scale = 1;
     }
 
     resize(w: number, h: number) {
-        const width = this.scene.cameras.main.width / this.scale;
-        const height = this.scene.cameras.main.height / this.scale;
-        const zoom = this.mWorld.uiScale;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
         super.resize(width, height);
         this.bg.x = width / 2;
         this.bg.y = height / 2;
         this.titleimage.x = width / 2;
-        this.titleimage.y = this.bg.y - this.bg.displayHeight / 2 - 8 * this.dpr * zoom;
+        this.titleimage.y = this.bg.y - this.bg.displayHeight / 2 - 8 * this.dpr;
         this.confirmBtn.x = width / 2;
-        this.confirmBtn.y = this.bg.y + 100 * this.dpr * zoom;
+        this.confirmBtn.y = this.bg.y + 100 * this.dpr;
         this.titleName.x = width / 2;
-        this.titleName.y = this.titleimage.y + 32 * this.dpr * zoom;
+        this.titleName.y = this.titleimage.y + 32 * this.dpr;
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
-        this.blackGraphic.fillRect(0, 0, width / this.scale * zoom, height / this.scale * zoom);
-        this.mPropGrid.refreshPos((this.scene.cameras.main.width*zoom) >> 1, this.bg.y - 5 * this.dpr * zoom);
+        this.blackGraphic.fillRect(0, 0, width / this.scale, height / this.scale);
+        this.mPropGrid.refreshPos(width / 2, this.bg.y - 2 * this.dpr);
         this.setSize(width * this.scale * this.scale, height * this.scale * this.scale);
     }
 
@@ -75,32 +76,34 @@ export class MineSettlePanel extends BasePanel {
     }
 
     init() {
-        const zoom = this.mWorld.uiScale;
-        this.bg = new NinePatch(this.scene, 0, 0, 293 * this.dpr * zoom, 260 * this.dpr * zoom, this.key, "bg", {
+        const width = this.cameraWidth;
+        const height = this.cameraHeight;
+        this.bg = new NinePatch(this.scene, 0, 0, 293 * this.dpr, 260 * this.dpr, this.key, "bg", {
             left: 10,
             top: 10,
             right: 10,
             bottom: 10
         });
         this.blackGraphic = this.scene.make.graphics(undefined, false);
-        this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+        this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
+        const zoom = this.scale;
         const capW = (propFrame.width + 20 * this.dpr * zoom);
         const capH = (propFrame.height + 25 * this.dpr * zoom);
-        const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height;
         const config: GridTableConfig = {
             x: 0,
             y: 0,
             table: {
                 width: 280 * this.dpr * zoom,
-                height: 180 * this.dpr * zoom,
+                height: 160 * this.dpr * zoom,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
                 cellOriginX: 0,
-                cellOriginY: 0
+                cellOriginY: 0,
+                cellPadX: 18 * this.dpr * zoom,
+                zoom: this.scale
             },
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             clamplChildOY: false,
@@ -124,12 +127,12 @@ export class MineSettlePanel extends BasePanel {
                 this.onSelectItemHandler(data);
             }
         });
-        this.titleimage = this.scene.make.image({ x: 0, y: -this.bg.displayWidth * 0.5 - 10 * this.dpr * zoom, key: this.key, frame: "title" }, false);
+        this.titleimage = this.scene.make.image({ x: 0, y: -this.bg.displayWidth * 0.5 - 10 * this.dpr, key: this.key, frame: "title" }, false);
         this.titleName = this.scene.make.text({
-            x: 0, y: this.titleimage.y + 32 * this.dpr * zoom, text: "获得物品",
+            x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("minesettle.settle"),
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
-        this.confirmBtn = new NinePatchButton(this.scene, 0, 100 * this.dpr * zoom, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "button", "存入背包", {
+        this.confirmBtn = new NinePatchButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, this.key, "button", i18n.t("minesettle.savebag"), {
             left: 20,
             top: 20,
             right: 20,

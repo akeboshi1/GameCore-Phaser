@@ -5,6 +5,7 @@ import { EquipUpgradeItem } from "./EquipUpgradeItem";
 import { NinePatch } from "../components/nine.patch";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
+import { i18n } from "../../i18n";
 
 export default class EquipUpgradePanel extends BasePanel {
     private key = "equip_upgrade";
@@ -77,6 +78,10 @@ export default class EquipUpgradePanel extends BasePanel {
         const h = this.scene.cameras.main.height / this.scale;
         this.setSize(w, h);
         this.blackBg = this.scene.make.graphics(undefined, false);
+        this.blackBg.clear();
+        this.blackBg.fillStyle(0, 0.5);
+        this.blackBg.fillRoundedRect(0, 0, w, h);
+        this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
         this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
             left: 40,
             top: 40,
@@ -86,7 +91,7 @@ export default class EquipUpgradePanel extends BasePanel {
         const posY = -this.bg.height * 0.5;
         this.titlebg = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "titlebg" });
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
-        this.tilteName = this.scene.make.text({ x: 0, y: posY, text: "装备", style: { font: mfont, color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
+        this.tilteName = this.scene.make.text({ x: 0, y: posY, text: i18n.t("equipupgrade.title"), style: { font: mfont, color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: this.commonkey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
