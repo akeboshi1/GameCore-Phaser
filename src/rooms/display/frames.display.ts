@@ -1,15 +1,9 @@
 import { IFramesModel } from "./frames.model";
 import { Logger } from "../../utils/log";
-import { DisplayObject } from "./display.object";
+import { DisplayObject, DisplayField } from "./display.object";
 import { IAnimationData } from "./animation";
 import { Url } from "../../utils/resUtil";
 import { AnimationData } from "../element/sprite";
-
-export enum DisplayField {
-    BACKEND = 1,
-    STAGE,
-    FRONTEND,
-}
 
 /**
  * 序列帧显示对象
