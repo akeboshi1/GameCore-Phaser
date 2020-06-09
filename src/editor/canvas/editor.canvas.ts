@@ -19,7 +19,7 @@ export class EditorCanvas {
         this.mGame = new Phaser.Game({
             // width: config.width,
             // height: config.height,
-            parent: config.parent || "element-editor",
+            parent: config.parent,
             type: Phaser.AUTO,
             backgroundColor: "#464646",
             render: {

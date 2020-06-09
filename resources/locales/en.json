@@ -56,6 +56,29 @@
   "compose": {
     "title": "Manufacture",
     "make": "make",
-    "needMaterials": "Materials required for synthesis"
+    "needMaterials": "Materials required for synthesis",
+    "synthesis": "Synthesis"
+  },
+  "minesettle": {
+    "settle": "Settle",
+    "savebag": "SaveToBag"
+  },
+  "equipupgrade": {
+    "title": "装备"
+  },
+  "task": {
+    "title": "任务",
+    "main_quest": "Main Quest",
+    "side_quest": "Side Quest",
+    "active_task": "Active Task",
+    "daily_quest": "Daily Quest",
+    "m": "M",
+    "s": "S",
+    "a": "A",
+    "d": "D",
+    "objective": "Objective",
+    "rewards": "Rewards",
+    "collect_materials":"Collect Materials",
+    "submit_task":"Submit Task"
   }
 }

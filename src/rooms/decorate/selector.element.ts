@@ -1,10 +1,8 @@
-import { Element, IElement } from "../element/element";
+import { IElement } from "../element/element";
 import { DecorateManager } from "../../ui/decorate/decorate.manager";
 import { Pos } from "../../utils/pos";
 import { DecorateRoomService } from "../decorate.room";
 import { MessageType } from "../../const/MessageType";
-import { ISprite, Sprite } from "../element/sprite";
-import { IRoomService } from "../room";
 
 export class SelectorElement {
     private mScene: Phaser.Scene;
@@ -20,6 +18,7 @@ export class SelectorElement {
         const display = mElement.getDisplay();
         if (!display.collisionArea) {
             display.once("initialized", () => {
+                display.play(this.mElement.model.currentAnimation);
                 display.showRefernceArea();
             });
         } else {

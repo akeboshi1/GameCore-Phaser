@@ -32,6 +32,7 @@ export interface ISprite {
     bindID: number;
     sn: string;
     isMoss?: boolean;
+    mountSprites?: number[];
 
     newID();
     updateAvatar(avatar: op_gameconfig.IAvatar);
@@ -90,6 +91,8 @@ export class Sprite implements ISprite {
 
     protected mAnimationQueue: AnimationQueue[];
 
+    protected mMountSprites: number[];
+
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         this.mID = obj.id;
         if (obj.point3f) {
@@ -129,6 +132,8 @@ export class Sprite implements ISprite {
         if (obj.isMoss !== undefined) {
             this.isMoss = obj.isMoss;
         }
+
+        this.mMountSprites = obj.mountSprites;
     }
 
     public toSprite(): op_client.ISprite {
@@ -219,6 +224,10 @@ export class Sprite implements ISprite {
         this.mAnimationQueue = queue;
     }
 
+    public setMountSprites(ids: number[]) {
+        this.mMountSprites = ids;
+    }
+
     public updateAttr(attrs: op_def.IStrPair[]) {
         this.mAttrs = attrs;
     }
@@ -266,11 +275,11 @@ export class Sprite implements ISprite {
     }
 
     set direction(val: number) {
-        this.mDirection = val;
+        this.mDirection = val || 3;
         if (!this.mDisplayInfo) {
             return;
         }
-        this.setAnimationData(this.mCurrentAnimationName, val);
+        this.setAnimationData(this.mCurrentAnimationName, this.mDirection);
     }
 
     get nickname(): string {
@@ -384,6 +393,14 @@ export class Sprite implements ISprite {
             return true;
         }
         return false;
+    }
+
+    get mountSprites(): number[] {
+        return this.mMountSprites;
+    }
+
+    set mountSprites(ids: number[]) {
+        this.mMountSprites = ids;
     }
 
     get animationMap() {

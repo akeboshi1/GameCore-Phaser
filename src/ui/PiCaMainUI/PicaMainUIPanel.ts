@@ -3,6 +3,8 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { NinePatch } from "../components/nine.patch";
 import { Logger } from "../../utils/log";
+import { Handler } from "../../Handler/Handler";
+import { TextToolTips } from "../tips/TextToolTip";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -13,6 +15,8 @@ export class PicaMainUIPanel extends BasePanel {
     private mCounter: IconText;
     private mStrengthValue: ProgressValue;
     private mExpProgress: ExpProgress;
+    private playerIcon: Phaser.GameObjects.Image;
+    private textToolTip: TextToolTips;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
     }
@@ -80,7 +84,7 @@ export class PicaMainUIPanel extends BasePanel {
             this.mSceneName.setText(param.name);
             const bound = this.mSceneName.getBounds();
             this.mSceneName.setSize(bound.width, bound.height);
-            this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(this.mSceneName.width / 2, this.mSceneName.height / 2, this.mSceneName.width, this.mSceneName.height), Phaser.Geom.Rectangle.Contains);
+            this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(this.mSceneName.width / 2, 0, this.mSceneName.width, this.mSceneName.height), Phaser.Geom.Rectangle.Contains);
         }
         if (param.hasOwnProperty("ownerName")) {
             this.mSceneType.setText(param.ownerName);
@@ -117,7 +121,7 @@ export class PicaMainUIPanel extends BasePanel {
 
         const frame = this.scene.textures.getFrame(this.key, "strength_progress");
         this.mStrengthValue = new ProgressValue(this.scene, this.key, "strength_icon", this.dpr);
-        this.mStrengthValue.x = 50 * this.dpr;
+        this.mStrengthValue.x = 78 * this.dpr;
         this.mStrengthValue.y = 27 * this.dpr;
         const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress", {
             left: 8 * this.dpr,
@@ -127,9 +131,15 @@ export class PicaMainUIPanel extends BasePanel {
 
         });
         this.mStrengthValue.setProgress(ninePatch, this.scale);
+        this.playerIcon = this.scene.make.image({ key: this.key, frame: "head" });
+        this.playerIcon.x = -this.mStrengthValue.width * 0.5 - 18 * this.dpr;
+        this.mStrengthValue.add(this.playerIcon);
+        this.playerIcon.on("pointerup", this.onHeadHandler, this);
+        this.playerIcon.setInteractive();
         this.add(this.mStrengthValue);
         this.mStrengthValue.setValue(1000, 1000);
-
+        this.mStrengthValue.setInteractive();
+        this.mStrengthValue.on("pointerup", this.onStrengthHandler, this);
         // frame = this.scene.textures.getFrame(this.key, "health_progress");
         // const healthValue = new ProgressValue(this.scene, this.key, "health_con", this.dpr);
         // healthValue.x = 150 * this.dpr;
@@ -145,13 +155,28 @@ export class PicaMainUIPanel extends BasePanel {
         // healthValue.setValue(200, 1000);
 
         this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
+        this.textToolTip = new TextToolTips(this.scene, this.key, "tips_bg", this.dpr, this.scale);
         this.add(this.mExpProgress);
+        this.add(this.textToolTip);
+        this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
         this.resize(w, h);
         super.init();
     }
 
     private onEnterEditScene() {
         this.emit("enterEdit");
+    }
+    private onHeadHandler() {
+        this.emit("showPanel", "CharacterInfo");
+    }
+
+    private onStrengthHandler() {
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
+        const energy = this.showData.energy;
+        const text = "当前精力值" + `${energy.currentValue}/${energy.max}\n` + "精力不满时，每15分钟恢复1点";
+        this.textToolTip.setTextData(text, 3000);
+        this.textToolTip.setPosition(120 * this.dpr, 80 * this.dpr);
     }
 }
 
@@ -216,7 +241,7 @@ class IconText extends Phaser.GameObjects.Container {
 
         this.mText = scene.make.text({
             style: {
-                fontSize: 16 * dpr,
+                fontSize: 14 * dpr,
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0, 0.5);
@@ -242,6 +267,7 @@ class IconText extends Phaser.GameObjects.Container {
 class SceneName extends IconText {
     private mRightIcon: Phaser.GameObjects.Image;
     private mDpr: number;
+    private settingHandler: Handler;
     constructor(scene: Phaser.Scene, key: string, leftFrame: string, rightFrame: string, dpr: number = 1) {
         super(scene, key, leftFrame, dpr);
         this.mDpr = dpr;
@@ -251,8 +277,8 @@ class SceneName extends IconText {
             frame: rightFrame
         }, false);
         this.add(this.mRightIcon);
+        this.mRightIcon.y = -1 * dpr;
     }
-
     public setText(val: string) {
         super.setText(val);
         this.mRightIcon.x = this.mText.x + this.mText.width + this.mRightIcon.width / 2 + 2 * this.mDpr;
@@ -335,6 +361,11 @@ class ProgressValue extends ValueContainer {
         }
     }
 
+    setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any) {
+        shape = shape || new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
+        super.setInteractive(shape, Phaser.Geom.Rectangle.Contains);
+        return this;
+    }
     protected init(key: string, leftIcon: string, dpr: number) {
         const bg = this.scene.make.image({
             key,
@@ -374,6 +405,7 @@ class ProgressValue extends ValueContainer {
         this.mText.y = (this.height - this.mText.height) / 2;
         this.add([bg, this.mProgress, left, this.mText, this.mAddBtn]);
     }
+
 }
 
 class ProgressBar extends Phaser.GameObjects.Container {

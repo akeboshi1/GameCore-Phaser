@@ -267,6 +267,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
     protected mOffset: Phaser.Geom.Point;
     private mDisplay: FramesDisplay[];
     private mNodeType: op_def.NodeType;
+    private mSprite: ISprite;
     private mScaleRatio: number = 1;
     constructor(scene: Phaser.Scene, protected mRoomService: IRoomService) {
         super(scene);
@@ -277,6 +278,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
     setDisplay(sprite: ISprite, size: number) {
         this.clear();
         this.mDisplay = [];
+        this.mSprite = sprite;
         if (!sprite) {
             return;
         }
@@ -353,6 +355,9 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
 
     private onInitializedHandler(obj: FramesDisplay) {
         if (obj) {
+            if (this.mSprite) {
+                obj.play(this.mSprite.currentAnimation);
+            }
             if (this.mNodeType !== op_def.NodeType.TerrainNodeType) {
                 obj.showRefernceArea();
             }

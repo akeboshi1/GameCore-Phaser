@@ -23,6 +23,7 @@ export class PicaMainUIMediator extends BaseMediator {
         }
         if (!this.mView) {
             this.mView = new PicaMainUIPanel(this.scene, this.world);
+            this.mView.on("showPanel", this.onShowPanelHandler, this);
         }
         this.mView.show(param);
         this.mView.on("enterEdit", this.onEnterEditSceneHandler, this);
@@ -45,4 +46,14 @@ export class PicaMainUIMediator extends BaseMediator {
     private onUpdateHandler(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
         this.show(content);
     }
+
+    private onShowPanelHandler(panel: string, data?: any) {
+        if (!panel || !this.world) {
+          return;
+        }
+        const uiManager = this.world.uiManager;
+        if (data)
+          uiManager.showMed(panel, data);
+        else uiManager.showMed(panel);
+      }
 }

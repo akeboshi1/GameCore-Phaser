@@ -6,6 +6,7 @@ import { Logger } from "../../utils/log";
 import { DetailDisplay } from "./DetailDisplay";
 import { Font } from "../../utils/font";
 import { WorldService } from "../../game/world.service";
+import { Coin } from "../../utils/resUtil";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;
@@ -88,7 +89,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mPriceIcon = this.scene.make.image({
       x: -78,
       key: this.key,
-      frame: "tuding_icon"
+      frame: "iv_coin"
     }, false).setScale(uiScale);
     this.mPriceText = this.scene.make.text({
       x: 0,
@@ -155,7 +156,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mBuyBtn.x = width - this.mBuyBtn.displayWidth / 2 - 10 * this.dpr * this.uiScale;
     this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.displayHeight / 2 - 12 * this.dpr * this.uiScale;
 
-    const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 -  17 * this.dpr * this.uiScale;
+    const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 - 17 * this.dpr * this.uiScale;
     // if (counterX < this.mCounter.displayWidth / 2 + 10) {
     //   counterX = this.mCounter.displayWidth / 2 + 10;
     // }
@@ -163,7 +164,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter.y = this.mBuyBtn.y;
 
     this.mDetailBubbleContainer.x = 10 * this.dpr;
-    const endW = width -  (width - this.mCounter.x) - this.mCounter.width / 2;
+    const endW = width - (width - this.mCounter.x) - this.mCounter.width / 2;
     if (this.mDetailBubbleContainer.displayWidth + this.mDetailBubbleContainer.x + 10 * this.dpr > endW) {
       const bubbleW = endW - 16 * this.dpr * this.uiScale;
       this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr * this.uiScale, true);
@@ -217,7 +218,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mNickName.setText(prop.shortName || prop.name);
     this.mDesText.setText(prop.des);
     if (prop.price && prop.price.length > 0) {
-      this.mPriceIcon.setTexture(this.key, "tuding_icon");
+      this.mPriceIcon.setTexture(this.key, Coin.getIcon(prop.price[0].coinType));
       this.updatePrice(prop.price[0].price.toString());
     } else {
       this.mPriceText.setText("");
@@ -235,7 +236,16 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     if (content.display) {
       this.mDetailDisplay.loadDisplay(content);
     } else if (content.avatar) {
-      this.mDetailDisplay.loadAvatar(content);
+      const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
+      const avatar = player.model.avatar;
+      for (const key in avatar) {
+        if (avatar.hasOwnProperty(key)) {
+          const element = avatar[key];
+          if (element && !content.avatar[key]) content.avatar[key] = element;
+        }
+      }
+      const offset = new Phaser.Geom.Point(0, 35 * 2);
+      this.mDetailDisplay.loadAvatar(content, 2, offset);
     } else {
       this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
     }

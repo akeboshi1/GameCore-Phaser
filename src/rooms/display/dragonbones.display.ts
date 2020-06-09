@@ -5,7 +5,6 @@ import { DisplayObject } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
-import { Logger } from "../../utils/log";
 import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
 
 export enum AvatarSlotType {
@@ -82,7 +81,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     public mDisplayInfo: IDragonbonesModel | undefined;
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
-    protected mActionName: AnimationData;
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
     private mPreDirection: number;
@@ -840,10 +838,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             } else {
                 const drawTextureKey = loadArr[1] + "_png";
                 const drawTexture = this.scene.game.textures.get(drawTextureKey);
-                // if (this.mAntial) {
-                //     // 用于设置边缘抗锯齿
-                //     drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                // }
+                if (this.mAntial) {
+                    // 用于设置边缘抗锯齿
+                    drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                }
                 this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
             }
         }

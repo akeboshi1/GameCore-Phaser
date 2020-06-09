@@ -23,9 +23,8 @@ export class LoadingScene extends BasicScene {
     if (this.mWorld) {
       dpr = this.mWorld.uiRatio || 2;
     }
-    Logger.getInstance().log("has Texture: ", this.game.textures.exists("loading_bg"));
     if (this.game.device.os.desktop === false) {
-      this.load.image("loading_bg", Url.getUIRes(dpr, "loading/loading_bg.jpg"));
+      this.load.image("loading_bg", Url.getUIRes(dpr, "loading/loading_bg.jpeg"));
     }
     this.load.atlas("loading", Url.getUIRes(dpr, "loading/loading.png"), Url.getUIRes(dpr, "loading/loading.json"));
     this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");

@@ -29,6 +29,7 @@ export class MineCarPanel extends BasePanel {
   private mPreSelectedCategorie: CategorieButton;
   private mBg: Phaser.GameObjects.Image;
   private carIcon: Phaser.GameObjects.Image;
+  private mBackGround: Phaser.GameObjects.Graphics;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -41,6 +42,9 @@ export class MineCarPanel extends BasePanel {
     super.resize(width, height);
     const zoom = this.mWorld.uiScale;
     this.setSize(w, h);
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(0, 0, w, h);
     this.mBg.x = w / 2;
     this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr * zoom;
     this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
@@ -118,7 +122,11 @@ export class MineCarPanel extends BasePanel {
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScale;
-
+    this.mBackGround = this.scene.make.graphics(undefined, false);
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(0, 0, w, h);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
     this.mBg = this.scene.make
       .image({
         key: this.key,
@@ -284,7 +292,7 @@ export class MineCarPanel extends BasePanel {
     });
     // this.add(this.mPanel);
     this.add([
-      // this.mMask,
+      this.mBackGround,
       this.mBg,
       this.carIcon,
       this.mCounter,
@@ -470,27 +478,28 @@ class PackageItem extends Phaser.GameObjects.Container {
     this.mSelectedIcon.x = border.width * zoom - 2 * dpr - (this.mSelectedIcon.width * zoom) / 2;
     this.mSelectedIcon.y = 2 * dpr + (this.mSelectedIcon.height * zoom) / 2;
     this.add(border);
+    this.add([this.mItemImage, this.mCounter, this.mSelectedIcon]);
   }
 
   setProp(data: IPackageItem) {
     this.mItem = data;
     const packageItem = data.item;
     if (!data || !packageItem) {
-      this.remove([this.mItemImage, this.mCounter, this.mSelectedIcon]);
+      this.mItemImage.visible = false;
+      this.mCounter.visible = false;
+      this.mSelectedIcon.visible = false;
       return;
     }
     if (this.mItem) {
       this.mItemImage.load(Url.getOsdRes(packageItem.display.texturePath), this, this.onLoadCompleteHandler);
-      this.add(this.mItemImage);
+      this.mItemImage.visible = true;
       if (packageItem.count > 1) {
         this.mCounter.setText(packageItem.count.toString());
-        this.add(this.mCounter);
-      }
-      if (this.mItem.selectVisible) {
-        this.add(this.mSelectedIcon);
+        this.mCounter.visible = true;
       } else {
-        this.remove(this.mSelectedIcon);
+        this.mCounter.visible = false;
       }
+      this.mSelectedIcon.visible = (this.mItem.selectVisible ? true : false);
       this.setSelected();
     }
   }

@@ -100,24 +100,30 @@ export default class ElementEditorGrids extends Phaser.GameObjects.Container {
         if (this.mWalkableArea) {
             this.mWalkableArea.forEach((rows) => {
                 rows.forEach((element) => {
-                    element.clear();
-                    element.destroy();
+                    if (element) {
+                        element.clear();
+                        element.destroy();
+                    }
                 });
             });
         }
         if (this.mCollisionArea) {
             this.mCollisionArea.forEach((rows) => {
                 rows.forEach((element) => {
-                    element.clear();
-                    element.destroy();
+                    if (element) {
+                        element.clear();
+                        element.destroy();
+                    }
                 });
             });
         }
         if (this.mInteractiveArea) {
             this.mInteractiveArea.forEach((rows) => {
                 rows.forEach((element) => {
-                    element.clear();
-                    element.destroy();
+                    if (element) {
+                        element.clear();
+                        element.destroy();
+                    }
                 });
             });
         }

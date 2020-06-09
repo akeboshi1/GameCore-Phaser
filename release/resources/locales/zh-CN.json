@@ -59,6 +59,29 @@
   "compose": {
     "title": "制造",
     "make": "制作",
-    "needMaterials": "合成所需材料"
+    "needMaterials": "合成所需材料",
+    "synthesis": "合成"
+  },
+  "minesettle": {
+    "settle": "获得物品",
+    "savebag": "存入背包"
+  },
+  "equipupgrade": {
+    "title": "Equip"
+  },
+  "task": {
+    "title": "Task",
+    "main_quest": "主线任务",
+    "side_quest": "支线任务",
+    "active_task": "活动任务",
+    "daily_quest": "每日任务",
+    "m": "主",
+    "s": "支",
+    "a": "活",
+    "d": "日",
+    "objective": "任务目标：",
+    "rewards": "任务奖励：",
+    "collect_materials": "收集物资：",
+    "submit_task": "提交任务"
   }
 }
