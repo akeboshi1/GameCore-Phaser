@@ -248,3 +248,4 @@ yargs.d.ts
 webpack.config.js
 !/release/
 *.DS_Store
+/types/

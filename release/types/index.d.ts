@@ -5,10 +5,9 @@
 //   ../../game-capsule
 //   ../../game-capsule/lib/configobjects/scene
 //   ../../phaser
+//   ../../game-capsule/lib/helpers
 //   ../../events
 //   ../../buffer
-//   ../../game-capsule/lib/configobjects/animations
-//   ../../game-capsule/lib/helpers
 
 declare module 'game-core' {
     export * from "game-core/game";
@@ -16,6 +15,7 @@ declare module 'game-core' {
     export * from "game-core/rooms";
     export * from "game-core/plugins";
     export { GameMain, ILauncherConfig } from "game-core/launcher";
+    export { HandlerDispatcher } from "game-core/Handler/HandlerDispatcher";
 }
 
 declare module 'game-core/game' {
@@ -33,10 +33,18 @@ declare module 'game-core/utils' {
 }
 
 declare module 'game-core/rooms' {
-    export { IRoomService } from "game-core/rooms/room";
-    export { ISkyBoxConfig } from "game-core/rooms/sky.box";
+    export { IRoomService, SpriteAddCompletedListener } from "game-core/rooms/room";
+    export * from "game-core/rooms/sky.box";
     export { Clock } from "game-core/rooms/clock";
     export { IRoomManager, RoomManager } from "game-core/rooms/room.manager";
+    export * from "game-core/rooms/terrain";
+    export * from "game-core/rooms/element";
+    export * from "game-core/rooms/player";
+    export { WallManager } from "game-core/rooms/wall/wall.manager";
+    export { LayerManager } from "game-core/rooms/layer/layer.manager";
+    export * from "game-core/rooms/display";
+    export { GroupManager, GroupType } from "game-core/rooms/group/GroupManager";
+    export { IGroup } from "game-core/rooms/group/IGroup";
 }
 
 declare module 'game-core/plugins' {
@@ -44,12 +52,11 @@ declare module 'game-core/plugins' {
 }
 
 declare module 'game-core/launcher' {
-    import { ServerAddress, ConnectionService } from "game-core/net";
     export interface ILauncherConfig {
         auth_token: string;
         token_expire: string | null;
         token_fingerprint: string;
-        server_addr: ServerAddress | undefined;
+        server_addr: any | undefined;
         game_id: string;
         virtual_world_id: string;
         ui_scale?: number;
@@ -64,7 +71,7 @@ declare module 'game-core/launcher' {
         readonly baseWidth: number;
         readonly baseHeight: number;
         readonly game_created?: Function;
-        readonly connection?: ConnectionService;
+        readonly connection?: any;
         readonly isEditor?: boolean;
         readonly osd?: string;
         readonly closeGame: Function;
@@ -105,6 +112,19 @@ declare module 'game-core/launcher' {
         registerComplete(func: Function): void;
         onResize(width: number, height: number, ui_scale?: number): void;
         onOrientationChange(orientation: number, width: number, height: number): void;
+        destroy(): void;
+    }
+}
+
+declare module 'game-core/Handler/HandlerDispatcher' {
+    import { IDispose } from "game-core/rooms/action/IDispose";
+    export class HandlerDispatcher implements IDispose {
+        hasListener(type: string): Boolean;
+        emitter(type: string, data?: any): Boolean;
+        on(type: string, caller: any, listener: Function, args?: any[]): HandlerDispatcher;
+        once(type: string, caller: any, listener: Function, args?: any[]): HandlerDispatcher;
+        off(type: string, caller: any, listener: Function, onceOnly?: Boolean): HandlerDispatcher;
+        offAll(type?: string): HandlerDispatcher;
         destroy(): void;
     }
 }
@@ -336,6 +356,7 @@ declare module 'game-core/rooms/room' {
     import { ClockReadyListener } from "game-core/rooms/clock";
     import IActor = op_client.IActor;
     import { Map } from "game-core/rooms/map/map";
+    import { IElement } from "game-core/rooms/element";
     import { IBlockObject } from "game-core/rooms/cameras/block.object";
     import { WallManager } from "game-core/rooms/wall/wall.manager";
     import { SkyBoxManager, IScenery } from "game-core/rooms/sky.box";
@@ -379,6 +400,7 @@ declare module 'game-core/rooms/room' {
         addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]): any;
         addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]): any;
         addMouseListen(): any;
+        getElement(id: number): IElement;
         update(time: number, delta: number): void;
         destroy(): any;
     }
@@ -402,6 +424,7 @@ declare module 'game-core/rooms/room' {
         protected mBlocks: ViewblockService;
         protected mEnableEdit: boolean;
         protected mScaleRatio: number;
+        protected mMods: string[];
         constructor(manager: IRoomManager);
         enter(data: op_client.IScene): void;
         onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -426,6 +449,7 @@ declare module 'game-core/rooms/room' {
         transformToMini90(p: Pos): Pos;
         transformToMini45(p: Pos): Pos;
         addMouseListen(): void;
+        getElement(id: number): IElement;
         moveable(pos: Pos): boolean;
         update(time: number, delta: number): void;
         updateClock(time: number, delta: number): void;
@@ -456,12 +480,13 @@ declare module 'game-core/rooms/room' {
         get enableEdit(): boolean;
         get connection(): ConnectionService | undefined;
         get sceneType(): op_def.SceneTypeEnum;
+        get mods(): string[];
     }
 }
 
 declare module 'game-core/rooms/sky.box' {
     export { ISkyBoxConfig, SkyBoxManager } from "game-core/rooms/sky.box/sky.box.manager";
-    export { IScenery } from "game-core/rooms/sky.box/scenery";
+    export { IScenery, Fit } from "game-core/rooms/sky.box/scenery";
 }
 
 declare module 'game-core/rooms/clock' {
@@ -520,6 +545,151 @@ declare module 'game-core/rooms/room.manager' {
     }
 }
 
+declare module 'game-core/rooms/terrain' {
+    export { TerrainManager } from "game-core/rooms/terrain/terrain.manager";
+    export { Terrain } from "game-core/rooms/terrain/terrain";
+}
+
+declare module 'game-core/rooms/element' {
+    export { ISprite, AnimationData, AnimationQueue } from "game-core/rooms/element/sprite";
+    export { ElementManager, IElementManager } from "game-core/rooms/element/element.manager";
+    export * from "game-core/rooms/element/element";
+    export { FrameManager } from "game-core/rooms/element/frame.manager";
+}
+
+declare module 'game-core/rooms/player' {
+    export { PlayerManager } from "game-core/rooms/player/player.manager";
+    export { Actor } from "game-core/rooms/player/Actor";
+    export { Player } from "game-core/rooms/player/player";
+    export { Bag } from "game-core/rooms/player/bag/bag";
+    export { Friend } from "game-core/rooms/player/friend/friend";
+    export { Interactive } from "game-core/rooms/player/interactive/interactive";
+}
+
+declare module 'game-core/rooms/wall/wall.manager' {
+    import { IRoomService } from "game-core/rooms/room";
+    import { Direction } from "game-core/rooms/wall/wall";
+    import { PacketHandler } from "net-socket-packet";
+    export class WallManager extends PacketHandler {
+        protected mRoom: IRoomService;
+        constructor(mRoom: IRoomService);
+        destroy(): void;
+        protected _add(x: number, y: number, dir: Direction): void;
+    }
+}
+
+declare module 'game-core/rooms/layer/layer.manager' {
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IRoomService } from "game-core/rooms/room";
+    import { GridLayer } from "game-core/rooms/layer/grid.layer";
+    export class LayerManager {
+            /**
+                * 背景层1(用于鼠标点击移动)
+                */
+            protected mGroundClickLayer: Phaser.GameObjects.Container;
+            /**
+                * 背景层2
+                */
+            protected mUGroundLayer2: Phaser.GameObjects.Container;
+            /**
+                * 舞台地皮层（地块）
+                */
+            protected mGroundLayer: Phaser.GameObjects.Container;
+            /**
+                * 网格层
+                * 介于地皮和地表中间
+                */
+            protected mTileLayer: GridLayer;
+            /**
+                * 舞台地表层（包括角色，物件 ，特效等）
+                */
+            protected mSurfaceLayer: Phaser.GameObjects.Container;
+            protected mSurfaceInteractived: boolean;
+            /**
+                * 舞台大气层
+                */
+            protected mAtmosphere: Phaser.GameObjects.Container;
+            /**
+                * 场景中的ui，可能跟跟随物件或人物
+                */
+            protected mSceneUILayer: Phaser.GameObjects.Container;
+            /**
+                * ui层(该层不跟随相机移动)
+                */
+            protected mUILayer: Phaser.GameObjects.Container;
+            protected mMiddleLayer: Phaser.GameObjects.Container;
+            constructor(room: IRoomService);
+            addToGround(ele: ElementDisplay | ElementDisplay[], index?: number): void;
+            addToSurface(ele: ElementDisplay | ElementDisplay[]): void;
+            addToSceneToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]): void;
+            addToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]): void;
+            addToAtmosphere(child: Phaser.GameObjects.GameObject): void;
+            addToMiddle(child: Phaser.GameObjects.GameObject): void;
+            resize(width: number, height: number): void;
+            addMouseListen(): void;
+            sortSurface(): void;
+            changeScene(): void;
+            drawGrid(room: IRoomService): void;
+            setGridVisible(visible: boolean): void;
+            update(time: number, delta: number): void;
+            setSurfaceInteractive(val: boolean): void;
+            destroy(): void;
+            set depthSurfaceDirty(val: boolean);
+            set depthGroundDirty(val: boolean);
+            get layer(): Phaser.GameObjects.Container;
+    }
+}
+
+declare module 'game-core/rooms/display' {
+    export { IAnimationData } from "game-core/rooms/display/animation";
+    export { DisplayObject, DisplayField } from "game-core/rooms/display/display.object";
+    export { DragonbonesDisplay } from "game-core/rooms/display/dragonbones.display";
+    export * from "game-core/rooms/display/dragonbones.model";
+    export { FramesDisplay } from "game-core/rooms/display/frames.display";
+    export { FramesModel, IFramesModel } from "game-core/rooms/display/frames.model";
+    export { ElementDisplay } from "game-core/rooms/display/element.display";
+}
+
+declare module 'game-core/rooms/group/GroupManager' {
+    import { IDispose } from "game-core/rooms/action/IDispose";
+    import { IGroup } from "game-core/rooms/group/IGroup";
+    import { IRoomService } from "game-core/rooms/room";
+    export class GroupManager implements IDispose {
+        protected map: Map<any, IGroup[]>;
+        constructor(room: IRoomService);
+        createGroup<T extends IGroup>(owner: any, groupType: GroupType): T;
+        getGroup<T extends IGroup>(owner: any, groupType: GroupType): T;
+        hasGroup(owner: any, groupType: number): boolean;
+        destroy(): void;
+    }
+    export enum GroupType {
+        Follow = 1
+    }
+    export enum GroupEventType {
+        DEFAULT_TYPE = "DEFAULT_TYPE",
+        REPLACE_TYPE = "REPLACE_TYPE"
+    }
+}
+
+declare module 'game-core/rooms/group/IGroup' {
+    import { IDispose } from "game-core/rooms/action/IDispose";
+    import { HandlerDispatcher } from "game-core/Handler/HandlerDispatcher";
+    import { GroupType } from "game-core/rooms/group/GroupManager";
+    export interface IGroup extends IDispose {
+        owner: any;
+        childs: any[];
+        eventDisp: HandlerDispatcher;
+        data: any;
+        groupType: GroupType;
+        on(type: string, caller: any, method: Function, args: any[]): any;
+        off(type: string, caller: any, method: Function, args: any[]): any;
+        emitter(type: string, data?: any): any;
+        addChild(child: any): any;
+        removeChild(child: any): any;
+        replaceOwner(owner: any): any;
+    }
+}
+
 declare module 'game-core/plugins/basic.plugin' {
     import { WorldService } from "game-core/game";
     export class BasicPlugin {
@@ -533,11 +703,10 @@ declare module 'game-core/plugins/basic.plugin' {
     }
 }
 
-declare module 'game-core/net' {
-    export { ConnectionService } from "game-core/net/connection.service";
-    export { HttpService } from "game-core/net/http.service";
-    export { IConnectListener, SocketConnection, SocketConnectionError } from "game-core/net/socket";
-    export { ServerAddress } from "game-core/net/address";
+declare module 'game-core/rooms/action/IDispose' {
+    export interface IDispose {
+        destroy(): any;
+    }
 }
 
 declare module 'game-core/ui' {
@@ -575,6 +744,13 @@ declare module 'game-core/game/account' {
         setAccount(val: any): void;
         get accountData(): IAccountData | undefined;
     }
+}
+
+declare module 'game-core/net' {
+    export { ConnectionService } from "game-core/net/connection.service";
+    export { HttpService } from "game-core/net/http.service";
+    export { IConnectListener, SocketConnection, SocketConnectionError } from "game-core/net/socket";
+    export { ServerAddress } from "game-core/net/address";
 }
 
 declare module 'game-core/game/mouse.manager' {
@@ -776,68 +952,6 @@ declare module 'game-core/rooms/player/player.manager' {
     }
 }
 
-declare module 'game-core/rooms/layer/layer.manager' {
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IRoomService } from "game-core/rooms/room";
-    import { GridLayer } from "game-core/rooms/layer/grid.layer";
-    export class LayerManager {
-            /**
-                * 背景层1(用于鼠标点击移动)
-                */
-            protected mGroundClickLayer: Phaser.GameObjects.Container;
-            /**
-                * 背景层2
-                */
-            protected mUGroundLayer2: Phaser.GameObjects.Container;
-            /**
-                * 舞台地皮层（地块）
-                */
-            protected mGroundLayer: Phaser.GameObjects.Container;
-            /**
-                * 网格层
-                * 介于地皮和地表中间
-                */
-            protected mTileLayer: GridLayer;
-            /**
-                * 舞台地表层（包括角色，物件 ，特效等）
-                */
-            protected mSurfaceLayer: Phaser.GameObjects.Container;
-            protected mSurfaceInteractived: boolean;
-            /**
-                * 舞台大气层
-                */
-            protected mAtmosphere: Phaser.GameObjects.Container;
-            /**
-                * 场景中的ui，可能跟跟随物件或人物
-                */
-            protected mSceneUILayer: Phaser.GameObjects.Container;
-            /**
-                * ui层(该层不跟随相机移动)
-                */
-            protected mUILayer: Phaser.GameObjects.Container;
-            protected mMiddleLayer: Phaser.GameObjects.Container;
-            constructor(room: IRoomService);
-            addToGround(ele: ElementDisplay | ElementDisplay[], index?: number): void;
-            addToSurface(ele: ElementDisplay | ElementDisplay[]): void;
-            addToSceneToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]): void;
-            addToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]): void;
-            addToAtmosphere(child: Phaser.GameObjects.GameObject): void;
-            addToMiddle(child: Phaser.GameObjects.GameObject): void;
-            resize(width: number, height: number): void;
-            addMouseListen(): void;
-            sortSurface(): void;
-            changeScene(): void;
-            drawGrid(room: IRoomService): void;
-            setGridVisible(visible: boolean): void;
-            update(time: number, delta: number): void;
-            setSurfaceInteractive(val: boolean): void;
-            destroy(): void;
-            set depthSurfaceDirty(val: boolean);
-            set depthGroundDirty(val: boolean);
-            get layer(): Phaser.GameObjects.Container;
-    }
-}
-
 declare module 'game-core/rooms/terrain/terrain.manager' {
     import { PacketHandler, PBpacket } from "net-socket-packet";
     import { ConnectionService } from "game-core/net/connection.service";
@@ -949,10 +1063,10 @@ declare module 'game-core/rooms/cameras/cameras.manager' {
 declare module 'game-core/rooms/display/element.display' {
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { DisplayField } from "game-core/rooms/display/frames.display";
     import { op_def } from "pixelpai_proto";
     import { IElement } from "game-core/rooms/element/element";
     import { AnimationData } from "game-core/rooms/element/sprite";
+    import { DisplayField } from "game-core/rooms/display/display.object";
     export interface ElementDisplay extends Phaser.GameObjects.Container {
         readonly baseLoc: Phaser.Geom.Point;
         readonly element: IElement;
@@ -1054,41 +1168,9 @@ declare module 'game-core/rooms/cameras/block.object' {
         protected addDisplay(): void;
         protected removeDisplay(): void;
         protected addToBlock(): void;
+        protected removeFromBlock(remove?: boolean): void;
         protected updateBlock(): void;
         get id(): number;
-    }
-}
-
-declare module 'game-core/rooms/wall/wall.manager' {
-    import { IRoomService } from "game-core/rooms/room";
-    import { Direction } from "game-core/rooms/wall/wall";
-    import { PacketHandler } from "net-socket-packet";
-    export class WallManager extends PacketHandler {
-        protected mRoom: IRoomService;
-        constructor(mRoom: IRoomService);
-        destroy(): void;
-        protected _add(x: number, y: number, dir: Direction): void;
-    }
-}
-
-declare module 'game-core/rooms/group/GroupManager' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
-    import { IGroup } from "game-core/rooms/group/IGroup";
-    import { IRoomService } from "game-core/rooms/room";
-    export class GroupManager implements IDispose {
-        protected map: Map<any, IGroup[]>;
-        constructor(room: IRoomService);
-        createGroup<T extends IGroup>(owner: any, groupType: GroupType): T;
-        getGroup<T extends IGroup>(owner: any, groupType: GroupType): T;
-        hasGroup(owner: any, groupType: number): boolean;
-        destroy(): void;
-    }
-    export enum GroupType {
-        Follow = 1
-    }
-    export enum GroupEventType {
-        DEFAULT_TYPE = "DEFAULT_TYPE",
-        REPLACE_TYPE = "REPLACE_TYPE"
     }
 }
 
@@ -1166,6 +1248,917 @@ declare module 'game-core/net/connection.service' {
         removePacketListener(listener: PacketHandler): void;
         clearPacketListeners(): void;
         send(packet: PBpacket): void;
+    }
+}
+
+declare module 'game-core/rooms/terrain/terrain' {
+    import { IElement } from "game-core/rooms/element/element";
+    import { IElementManager } from "game-core/rooms/element/element.manager";
+    import { Pos } from "game-core/utils/pos";
+    import { ISprite } from "game-core/rooms/element/sprite";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IRoomService } from "game-core/rooms/room";
+    import { TerrainDisplay } from "game-core/rooms/display/terrain.display";
+    import { BlockObject } from "game-core/rooms/cameras/block.object";
+    import { op_client } from "pixelpai_proto";
+    import { DisplayObject } from "game-core/rooms/display/display.object";
+    export class Terrain extends BlockObject implements IElement {
+        protected mElementManager: IElementManager;
+        protected mId: number;
+        protected mDisplayInfo: IFramesModel;
+        protected mDisplay: TerrainDisplay | undefined;
+        protected mModel: ISprite;
+        constructor(sprite: ISprite, mElementManager: IElementManager);
+        setModel(val: ISprite): void;
+        updateModel(val: op_client.ISprite): void;
+        load(displayInfo: IFramesModel): void;
+        play(animationName: string): void;
+        setDirection(val: number): void;
+        getDirection(): number;
+        setPosition(p: Pos): void;
+        getDisplay(): DisplayObject;
+        showNickname(): void;
+        showEffected(): void;
+        turn(): void;
+        setAlpha(val: number): void;
+        scaleTween(): void;
+        setQueue(): void;
+        mount(): this;
+        unmount(): this;
+        addMount(): this;
+        removeMount(): this;
+        destroy(): void;
+        protected createDisplay(): ElementDisplay;
+        protected addDisplay(): void;
+        protected setDepth(): void;
+        protected onInitializedHandler(): void;
+        get id(): number;
+        get dir(): number;
+        get roomService(): IRoomService;
+        get model(): ISprite;
+        set model(val: ISprite);
+        get currentAnimationName(): string;
+        get scene(): Phaser.Scene;
+    }
+}
+
+declare module 'game-core/rooms/element/sprite' {
+    import { Pos } from "game-core/utils/pos";
+    import { IAvatar, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import NodeType = op_def.NodeType;
+    export interface ISprite {
+        readonly id: number;
+        readonly avatar: IAvatar;
+        readonly nickname: string;
+        readonly alpha: number;
+        readonly displayBadgeCards: op_def.IBadgeCard[];
+        readonly platformId: string;
+        readonly sceneId: number;
+        readonly nodeType: op_def.NodeType;
+        readonly currentAnimation: AnimationData;
+        readonly currentCollisionArea: number[][];
+        readonly currentWalkableArea: number[][];
+        readonly currentCollisionPoint: Phaser.Geom.Point;
+        readonly hasInteractive: boolean;
+        readonly attrs: op_def.IStrPair[];
+        readonly animationQueue: AnimationQueue[];
+        currentAnimationName: string;
+        displayInfo: IFramesModel | IDragonbonesModel;
+        direction: number;
+        pos: Pos;
+        bindID: number;
+        sn: string;
+        isMoss?: boolean;
+        mountSprites?: number[];
+        newID(): any;
+        updateAvatar(avatar: op_gameconfig.IAvatar): any;
+        updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): any;
+        setPosition(x: number, y: number): any;
+        setAnimationName(name: string, playTimes?: number): AnimationData;
+        setAnimationQueue(queue: AnimationQueue[]): any;
+        turn(): ISprite;
+        toSprite(): op_client.ISprite;
+    }
+    export interface AnimationData {
+        animationName: string;
+        flip: boolean;
+        playingQueue?: AnimationQueue;
+    }
+    export interface AnimationQueue {
+        name: string;
+        playTimes?: number;
+        playedTimes?: number;
+        complete?: Function;
+    }
+    export class Sprite implements ISprite {
+        protected mID: number;
+        protected mPos: Pos;
+        protected mAvatar: IAvatar;
+        protected mCurrentAnimationName: string;
+        protected mDirection: number;
+        protected mBindID: number;
+        protected mSn: string;
+        protected mAlpha: number;
+        protected mNickname: string;
+        protected mDisplayBadgeCards: op_def.IBadgeCard[];
+        protected mPackage: op_gameconfig.IPackage;
+        protected mSceneId: number;
+        protected mUuid: number;
+        protected mPlatformId: string;
+        protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+        protected mNodeType: NodeType;
+        protected mCurrentAnimation: AnimationData;
+        protected mCurrentCollisionArea: number[][];
+        protected mCurrentWalkableArea: number[][];
+        protected mCurrentCollisionPoint: Phaser.Geom.Point;
+        protected mVersion: string;
+        protected mIsMoss: boolean;
+        protected mRegisterAnimation: Map<string, string>;
+        protected _originWalkPoint: Phaser.Geom.Point;
+        protected _originCollisionPoint: Phaser.Geom.Point;
+        protected mAttrs: op_def.IStrPair[];
+        protected mAnimationQueue: AnimationQueue[];
+        protected mMountSprites: number[];
+        constructor(obj: op_client.ISprite, nodeType?: NodeType);
+        toSprite(): op_client.ISprite;
+        newID(): void;
+        setPosition(x: number, y: number): void;
+        turn(): ISprite;
+        updateAvatar(avatar: op_gameconfig.IAvatar): void;
+        updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
+        setAnimationQueue(queue: AnimationQueue[]): void;
+        setMountSprites(ids: number[]): void;
+        updateAttr(attrs: op_def.IStrPair[]): void;
+        setAnimationName(name: string): AnimationData;
+        get id(): number;
+        get pos(): Pos;
+        set pos(pos: Pos);
+        get avatar(): IAvatar;
+        get currentAnimationName(): string;
+        set currentAnimationName(animationName: string);
+        get direction(): number;
+        set direction(val: number);
+        get nickname(): string;
+        get bindID(): number;
+        set bindID(id: number);
+        get sn(): string;
+        set sn(value: string);
+        get alpha(): number;
+        get package(): op_gameconfig.IPackage;
+        set package(value: op_gameconfig.IPackage);
+        get sceneId(): number;
+        get uuid(): number;
+        get displayBadgeCards(): op_def.IBadgeCard[];
+        get platformId(): string;
+        get displayInfo(): IFramesModel | IDragonbonesModel;
+        set displayInfo(displayInfo: IFramesModel | IDragonbonesModel);
+        get isMoss(): boolean;
+        set isMoss(val: boolean);
+        get animationQueue(): AnimationQueue[];
+        get nodeType(): NodeType;
+        get currentAnimation(): AnimationData;
+        get currentCollisionArea(): number[][];
+        get currentWalkableArea(): number[][];
+        get currentCollisionPoint(): Phaser.Geom.Point;
+        get hasInteractive(): boolean;
+        get mountSprites(): number[];
+        set mountSprites(ids: number[]);
+        get animationMap(): Map<string, string>;
+        get originCollisionPoint(): Phaser.Geom.Point;
+        get originWalkPoint(): Phaser.Geom.Point;
+        get attrs(): op_def.IStrPair[];
+        setOriginCollisionPoint(value: number[] | null): void;
+        setOriginWalkPoint(value: number[] | null): void;
+        getInteracviveArea(): op_def.IPBPoint2i[];
+    }
+}
+
+declare module 'game-core/rooms/element/element' {
+    import { IElementManager, ElementManager } from "game-core/rooms/element/element.manager";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import { IRoomService } from "game-core/rooms/room";
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { op_client } from "pixelpai_proto";
+    import { Tweens } from "phaser";
+    import { Pos } from "game-core/utils/pos";
+    import { ISprite } from "game-core/rooms/element/sprite";
+    import { BlockObject } from "game-core/rooms/cameras/block.object";
+    import { BubbleContainer } from "game-core/rooms/bubble/bubble.container";
+    import { ShopEntity } from "game-core/rooms/element/shop/shop.entity";
+    import { DisplayObject } from "game-core/rooms/display/display.object";
+    import { AI } from "game-core/rooms/action/AI";
+    export enum PlayerState {
+        IDLE = "idle",
+        WALK = "walk",
+        RUN = "run",
+        ATTACK = "attack",
+        JUMP = "jump",
+        INJURED = "injured",
+        FAILED = "failed",
+        DANCE01 = "dance01",
+        DANCE02 = "dance02",
+        FISHING = "fishing",
+        GREET01 = "greet01",
+        SIT = "sit",
+        LIE = "lit",
+        EMOTION01 = "emotion01"
+    }
+    export enum Direction {
+        north = 0,
+        north_west = 1,
+        west = 2,
+        west_south = 3,
+        south = 4,
+        south_east = 5,
+        east = 6,
+        east_north = 7
+    }
+    export interface IElement {
+        readonly id: number;
+        readonly dir: number;
+        readonly roomService: IRoomService;
+        readonly scene: Phaser.Scene;
+        model: ISprite;
+        setModel(model: ISprite): any;
+        updateModel(model: op_client.ISprite): any;
+        play(animationName: string): void;
+        getDisplay(): DisplayObject;
+        setPosition(p: Pos): void;
+        getPosition(): Pos;
+        getPosition45(): Pos;
+        setDirection(val: number): void;
+        getDirection(): number;
+        showEffected(): any;
+        showNickname(): any;
+        scaleTween(): any;
+        turn(): any;
+        setAlpha(val: number): any;
+        setQueue(queue: op_client.IChangeAnimation[]): any;
+        mount(ele: IElement): this;
+        unmount(): this;
+        addMount(ele: IElement, index?: number): this;
+        removeMount(ele: IElement): this;
+    }
+    export interface MoveData {
+        destPos?: Pos;
+        posPath?: MovePath[];
+        arrivalTime?: number;
+        tweenAnim?: Tweens.Tween;
+        tweenLineAnim?: Tweens.Timeline;
+        tweenLastUpdate?: number;
+        onCompleteParams?: any;
+        onComplete?: Function;
+        step?: number;
+    }
+    export interface MovePath {
+        x: number;
+        y: number;
+        duration?: number;
+        onStartParams?: any;
+        onStart?: Function;
+        onComplete?: Function;
+    }
+    export interface AnimationQueue {
+        name: string;
+        playTimes?: number;
+        complete?: Function;
+    }
+    export enum InputEnable {
+        Diasble = 0,
+        Enable = 1,
+        Interactive = 2
+    }
+    export class Element extends BlockObject implements IElement {
+        protected mElementManager: IElementManager;
+        get dir(): number;
+        get roomService(): IRoomService;
+        get id(): number;
+        get model(): ISprite;
+        set model(val: ISprite);
+        get scene(): Phaser.Scene;
+        get ai(): AI;
+        get eleMgr(): ElementManager;
+        protected mId: number;
+        protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+        protected mDisplay: DisplayObject | undefined;
+        protected mBubble: BubbleContainer;
+        protected mAnimationName: string;
+        protected mMoveData: MoveData;
+        protected mCurState: string;
+        protected mShopEntity: ShopEntity;
+        protected mAi: AI;
+        protected mOffsetY: number;
+        protected mQueueAnimations: AnimationQueue[];
+        protected mMoving: boolean;
+        protected mRootMount: IElement;
+        protected mMounts: IElement[];
+        constructor(sprite: ISprite, mElementManager: IElementManager);
+        load(displayInfo: IFramesModel | IDragonbonesModel): void;
+        setModel(model: ISprite): void;
+        updateModel(model: op_client.ISprite): void;
+        scaleTween(): void;
+        play(animationName: string): void;
+        setQueue(animations: op_client.IChangeAnimation[]): void;
+        setDirection(val: number): void;
+        getDirection(): number;
+        changeState(val?: string): void;
+        getState(): string;
+        getRenderable(): boolean;
+        getDisplay(): DisplayObject;
+        move(moveData: op_client.IMoveData): void;
+        movePosition(pos: Pos, angel: number): void;
+        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
+        startMove(): void;
+        stopMove(): void;
+        getPosition(): Pos;
+        setPosition(p: Pos): void;
+        getRootPosition(): Pos;
+        showBubble(text: string, setting: op_client.IChat_Setting): void;
+        clearBubble(): void;
+        showNickName(): void;
+        showEffected(): void;
+        showNickname(): void;
+        turn(): void;
+        setAlpha(val: number): void;
+        mount(root: IElement): this;
+        unmount(): this;
+        addMount(ele: IElement, index: number): this;
+        removeMount(ele: IElement): this;
+        getDepth(): number;
+        destroy(): void;
+        protected _doMove(): void;
+        protected createDisplay(): ElementDisplay;
+        protected loadDisplayInfo(): void;
+        protected addDisplay(): void;
+        protected setDepth(depth: number): void;
+        protected onDisplayReady(): void;
+        protected onUpdateAnimationHandler(): void;
+        protected updateBubble(): void;
+        protected onMoveStart(): void;
+        protected onMoveComplete(): void;
+        protected onMoving(): void;
+        protected get offsetY(): number;
+        protected onCheckDirection(params: any): void;
+        protected calculateDirectionByAngle(angle: any): number;
+        protected mergeMounth(mounts: number[]): void;
+        protected updateMounth(mounts: number[]): void;
+    }
+}
+
+declare module 'game-core/rooms/player/Actor' {
+    import { IElementManager, ISprite, MoveData } from "game-core/rooms/element";
+    import { InputListener } from "game-core/game/input.service";
+    import { op_client, op_gameconfig } from "pixelpai_proto";
+    import { Player } from "game-core/rooms/player/player";
+    import { Bag } from "game-core/rooms/player/bag/bag";
+    import { Interactive } from "game-core/rooms/player/interactive/interactive";
+    import { Friend } from "game-core/rooms/player/friend/friend";
+    export class Actor extends Player implements InputListener {
+        protected mElementManager: IElementManager;
+        readonly GameObject: Phaser.GameObjects.GameObject;
+        protected mBag: Bag;
+        protected mFriend: Friend;
+        protected mInteractive: Interactive;
+        constructor(sprite: ISprite, mElementManager: IElementManager);
+        getBag(): Bag;
+        getFriend(): Friend;
+        getInteractive(): Interactive;
+        setRenderable(isRenderable: boolean): void;
+        destroy(): void;
+        downHandler(d: number, keyList: number[]): void;
+        upHandler(): void;
+        startMove(): void;
+        stopMove(): void;
+        move(moveData: op_client.IMoveData): void;
+        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
+        protected onMoveComplete(): void;
+        protected onMoving(): void;
+        protected addToBlock(): void;
+        set model(val: ISprite);
+        get model(): ISprite;
+        get package(): op_gameconfig.IPackage;
+        set package(value: op_gameconfig.IPackage);
+        set moveTime(val: number);
+        get moveData(): MoveData;
+    }
+}
+
+declare module 'game-core/rooms/player/player' {
+    import { Element, MovePath, IElementManager } from "game-core/rooms/element";
+    import { op_client } from "pixelpai_proto";
+    import { ISprite } from "game-core/rooms/element";
+    import { Pos } from "game-core/utils/pos";
+    export class Player extends Element {
+        protected mElementManager: IElementManager;
+        protected nodeType: number;
+        protected mOffsetY: number;
+        constructor(sprite: ISprite, mElementManager: IElementManager);
+        setModel(val: ISprite): void;
+        move(moveData: op_client.IMoveData): void;
+        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
+        setDirection(dir: number): void;
+        changeState(val?: string): void;
+        setPosition(pos: Pos): void;
+        getPosition(): Pos;
+        protected onCheckDirection(params: any): void;
+        protected onMoveStart(): void;
+        protected onMoveComplete(): void;
+        protected preMoveComplete(): void;
+        protected onMovePathPointComplete(params: any): void;
+        protected mMovePathPointFinished(path: MovePath): void;
+        protected get offsetY(): number;
+    }
+}
+
+declare module 'game-core/rooms/player/bag/bag' {
+    import { PacketHandler } from "net-socket-packet";
+    import { WorldService } from "game-core/game/world.service";
+    import { IEntity } from "game-core/rooms/entity";
+    export class Bag extends PacketHandler implements IEntity {
+        constructor(mWorld: WorldService);
+        initialize(): boolean;
+        register(): void;
+        unRegister(): void;
+        destroy(): void;
+        requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number): void;
+    }
+}
+
+declare module 'game-core/rooms/player/friend/friend' {
+    import { WorldService } from "game-core/game/world.service";
+    export class Friend {
+        constructor(world: WorldService);
+        requestFriend(callBack?: Function): void;
+        friendList(): any[];
+    }
+}
+
+declare module 'game-core/rooms/player/interactive/interactive' {
+    import { PacketHandler } from "net-socket-packet";
+    import { IEntity } from "game-core/rooms/entity";
+    import { WorldService } from "game-core/game/world.service";
+    export class Interactive extends PacketHandler implements IEntity {
+        constructor(mWorld: WorldService);
+        initialize(): boolean;
+        register(): void;
+        unRegister(): void;
+        destroy(): void;
+        requestTargetUI(uiId: any, id: any): void;
+    }
+}
+
+declare module 'game-core/rooms/wall/wall' {
+    import { BlockObject } from "game-core/rooms/cameras/block.object";
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IRoomService } from "game-core/rooms/room";
+    import { WallDisplay } from "game-core/rooms/display/wall.display";
+    import { Pos } from "game-core/utils/pos";
+    export enum Direction {
+        UP = "up",
+        LEFT = "left",
+        RIGHT = "right",
+        DOWN = "down"
+    }
+    export class Wall extends BlockObject {
+        protected mDisplay?: WallDisplay;
+        protected mDirection: Direction;
+        protected mPosition: Pos;
+        protected mID: number;
+        constructor(room: IRoomService, id: number, pos: Pos, dir: Direction);
+        setPosition(pos: Pos): void;
+        protected createDisplay(): ElementDisplay;
+        protected onInitializedHandler(): void;
+        protected addDisplay(): void;
+        protected setDepth(): void;
+        get id(): number;
+    }
+}
+
+declare module 'game-core/rooms/layer/grid.layer' {
+    import { IRoomService } from "game-core/rooms/room";
+    export class GridLayer extends Phaser.GameObjects.Graphics {
+        constructor(scene: Phaser.Scene);
+        draw(room: IRoomService): void;
+    }
+}
+
+declare module 'game-core/rooms/display/animation' {
+    import { op_gameconfig_01, op_def } from "pixelpai_proto";
+    import { IPoint } from "game-capsule/lib/helpers";
+    export interface IAnimationData {
+        name: string;
+        frameName: string[];
+        frameRate: number;
+        loop: boolean;
+        baseLoc: Phaser.Geom.Point;
+        collisionArea?: number[][];
+        walkableArea?: number[][];
+        originPoint: Phaser.Geom.Point;
+        readonly interactiveArea?: op_def.IPBPoint2i[];
+        readonly layer: op_gameconfig_01.IAnimationLayer[];
+        readonly mountLayer: op_gameconfig_01.IAnimationMountLayer;
+        createProtocolObject(): op_gameconfig_01.IAnimationData;
+    }
+    export class Animation implements IAnimationData {
+        protected mNode: op_gameconfig_01.INode;
+        protected mID: number;
+        protected mBaseLoc: Phaser.Geom.Point;
+        protected mFrameName: string[];
+        protected mFrameRate: number;
+        protected mLoop: boolean;
+        protected mName: string;
+        protected mCollisionArea: number[][];
+        protected mWalkableArea: number[][];
+        protected mOriginPoint: Phaser.Geom.Point;
+        protected mInteractiveArea: IPoint[];
+        protected mLayer: op_gameconfig_01.IAnimationLayer[];
+        protected mMountLayer: op_gameconfig_01.IAnimationMountLayer;
+        constructor(ani: op_gameconfig_01.IAnimationData);
+        createProtocolObject(): op_gameconfig_01.IAnimationData;
+        get baseLoc(): Phaser.Geom.Point;
+        get id(): number;
+        get frameName(): string[];
+        get frameRate(): number;
+        get loop(): boolean;
+        get name(): string;
+        get collisionArea(): number[][];
+        get walkableArea(): number[][];
+        get originPoint(): Phaser.Geom.Point;
+        get interactiveArea(): op_def.IPBPoint2i[];
+        get layer(): op_gameconfig_01.IAnimationLayer[];
+        get mountLayer(): op_gameconfig_01.IAnimationMountLayer;
+    }
+}
+
+declare module 'game-core/rooms/display/display.object' {
+    import { DynamicSprite } from "game-core/ui/components/dynamic.sprite";
+    import { DynamicImage } from "game-core/ui/components/dynamic.image";
+    import { op_def } from "pixelpai_proto";
+    import { ReferenceArea } from "game-core/rooms/editor/reference.area";
+    import { IRoomService } from "game-core/rooms/room";
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { IElement } from "game-core/rooms/element/element";
+    import { AnimationData } from "game-core/rooms/element/sprite";
+    export enum DisplayField {
+        BACKEND = 1,
+        STAGE = 2,
+        FRONTEND = 3,
+        FLAG = 4
+    }
+    export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {
+        /**
+          * 实际透明度，避免和tween混淆
+          */
+        protected mAlpha: number;
+        protected mBaseLoc: Phaser.Geom.Point;
+        protected mCollisionArea: number[][];
+        protected mOriginPoint: Phaser.Geom.Point;
+        protected mRoomService: IRoomService;
+        protected mFlagContainer: Phaser.GameObjects.Container;
+        protected mNickname: Phaser.GameObjects.Text;
+        protected mBadges: DynamicImage[];
+        protected mBackEffect: DynamicSprite;
+        protected mFrontEffect: DynamicSprite;
+        protected mReferenceArea: ReferenceArea;
+        protected mElement: IElement;
+        protected mChildMap: Map<string, any>;
+        protected mDirection: number;
+        protected mAntial: boolean;
+        protected mActionName: AnimationData;
+        constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial?: boolean);
+        changeAlpha(val?: number): void;
+        removeFromParent(): void;
+        fadeIn(callback?: () => void): void;
+        fadeOut(callback?: () => void): void;
+        load(data: IFramesModel | IDragonbonesModel, field?: DisplayField): void;
+        play(animationName: AnimationData, field?: DisplayField): void;
+        mount(ele: Phaser.GameObjects.Container, targetIndex?: number): void;
+        unmount(ele: Phaser.GameObjects.Container): void;
+        destroy(fromScene?: boolean): void;
+        showNickname(val: string): void;
+        setDisplayBadges(cards: op_def.IBadgeCard[]): void;
+        showRefernceArea(): void;
+        hideRefernceArea(): void;
+        scaleTween(): void;
+        showEffect(): void;
+        getElement(key: string): any;
+        protected addEffect(target: DynamicSprite, textureURL: string, atlasURL?: string, isBack?: boolean, framerate?: number, loop?: boolean, killComplete?: boolean): void;
+        protected layouFlag(offset?: number): void;
+        protected clearBadges(): void;
+        protected get flagContainer(): Phaser.GameObjects.Container;
+        protected addChildMap(key: string, display: Phaser.GameObjects.GameObject): void;
+        protected removeChildMap(key: string): void;
+        get baseLoc(): Phaser.Geom.Point;
+        get sortX(): number;
+        get sortY(): number;
+        get sortZ(): number;
+        get element(): IElement;
+        get collisionArea(): number[][];
+        get originPoint(): Phaser.Geom.Point;
+    }
+}
+
+declare module 'game-core/rooms/display/dragonbones.display' {
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { DisplayObject } from "game-core/rooms/display/display.object";
+    import { IRoomService } from "game-core/rooms/room";
+    import { IElement } from "game-core/rooms/element/element";
+    import { AnimationData } from "game-core/rooms/element/sprite";
+    export enum AvatarSlotType {
+            BodyCostDres = "body_cost_$_dres",
+            BodyCost = "body_cost_$",
+            BodyTail = "body_tail_$",
+            BodyWing = "body_wing_$",
+            BodyBase = "body_base_$",
+            BodySpec = "body_spec_$",
+            FlegSpec = "fleg_spec_$",
+            FlegBase = "fleg_base_$",
+            FlegCost = "fleg_cost_$",
+            BarmSpec = "barm_spec_$",
+            BarmBase = "barm_base_$",
+            BarmCost = "barm_cost_$",
+            WeapBarm = "weap_barm_$",
+            ShldBarm = "shld_barm_$",
+            BlegSpec = "bleg_spec_$",
+            BlegBase = "bleg_base_$",
+            BlegCost = "bleg_cost_$",
+            FarmSpec = "farm_spec_$",
+            FarmBase = "farm_base_$",
+            FarmCost = "farm_cost_$",
+            ShldFarm = "shld_farm_$",
+            WeapFarm = "weap_farm_$",
+            HeadSpec = "head_spec_$",
+            HeadMask = "head_mask_$",
+            HeadEyes = "head_eyes_$",
+            HeadBase = "head_base_$",
+            HeadHairBack = "head_hair_$_back",
+            HeadMous = "head_mous_$",
+            HeadHair = "head_hair_$",
+            HeadHats = "head_hats_$"
+    }
+    export enum AvatarPartType {
+            BarmBase = "barm_base_#_$",
+            BarmCost = "barm_cost_#_$",
+            BarmSpec = "barm_spec_#_$",
+            BlegBase = "bleg_base_#_$",
+            BlegCost = "bleg_cost_#_$",
+            BlegSpec = "bleg_spec_#_$",
+            BodyBase = "body_base_#_$",
+            BodyCost = "body_cost_#_$",
+            BodyCostDres = "body_cost_#_$_dres",
+            BodySpec = "body_spec_#_$",
+            BodyTail = "body_tail_#_$",
+            BodyWing = "body_wing_#_$",
+            FarmBase = "farm_base_#_$",
+            FarmCost = "farm_cost_#_$",
+            FarmSpec = "farm_spec_#_$",
+            FlegBase = "fleg_base_#_$",
+            FlegCost = "fleg_cost_#_$",
+            FlegSpec = "fleg_spec_#_$",
+            HeadBase = "head_base_#_$",
+            HeadEyes = "head_eyes_#_$",
+            HeadHair = "head_hair_#_$",
+            HeadHairBack = "head_hair_#_$_back",
+            HeadHats = "head_hats_#_$",
+            HeadMask = "head_mask_#_$",
+            HeadMous = "head_mous_#_$",
+            HeadSpec = "head_spec_#_$",
+            ShldFarm = "shld_farm_#_$",
+            WeapFarm = "weap_farm_#_$",
+            ShldBarm = "shld_barm_#_$",
+            WeapBarm = "weap_barm_#_$"
+    }
+    /**
+        * 龙骨显示对象
+        */
+    export class DragonbonesDisplay extends DisplayObject implements ElementDisplay {
+            mDisplayInfo: IDragonbonesModel | undefined;
+            protected mAnimationName: string;
+            protected mDragonbonesName: string;
+            protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
+            protected mFadeTween: Phaser.Tweens.Tween;
+            constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial?: boolean);
+            get spriteWidth(): number;
+            get spriteHeight(): number;
+            get GameObject(): DisplayObject;
+            changeAlpha(val?: number): void;
+            load(display: IDragonbonesModel): void;
+            getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined;
+            play(val: AnimationData): void;
+            fadeIn(callback?: () => void): void;
+            fadeOut(callback?: () => void): void;
+            destroy(): void;
+            protected buildDragbones(): void;
+            protected onLoadCompleteHandler(loader?: any, totalComplete?: number, totalFailed?: number): void;
+            set dragonBonesName(val: string);
+            get dragonBonesName(): string;
+    }
+}
+
+declare module 'game-core/rooms/display/dragonbones.model' {
+    import { op_def } from "pixelpai_proto";
+    import { AnimationData } from "game-core/rooms/element/sprite";
+    import { Direction } from "game-core/rooms/element/element";
+    export interface IDragonbonesModel {
+        readonly discriminator: string;
+        id: number;
+        avatarDir?: number;
+        avatar?: IAvatar;
+        animationName?: string;
+        destroy(): any;
+        getCollisionArea(aniName: string): number[][];
+        getWalkableArea(aniName: string): number[][];
+        getOriginPoint(aniName: string): Phaser.Geom.Point;
+        existAnimation(aniName: string): boolean;
+        getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
+        findAnimation(baseName: string, dir: Direction): AnimationData;
+    }
+    export interface IAvatar {
+        id: string;
+        dirable?: (number[] | null);
+        headBaseId?: (string | null);
+        headHairId?: (string | null);
+        headEyesId?: (string | null);
+        headBackId?: (string | null);
+        headMousId?: (string | null);
+        headHatsId?: (string | null);
+        headMaskId?: (string | null);
+        headSpecId?: (string | null);
+        bodyBaseId?: (string | null);
+        bodyCostId?: (string | null);
+        bodyDresId?: (string | null);
+        bodyTailId?: (string | null);
+        bodyWingId?: (string | null);
+        bodySpecId?: (string | null);
+        farmBaseId?: (string | null);
+        farmCostId?: (string | null);
+        farmShldId?: (string | null);
+        farmWeapId?: (string | null);
+        farmSpecId?: (string | null);
+        barmBaseId?: (string | null);
+        barmCostId?: (string | null);
+        barmShldId?: (string | null);
+        barmWeapId?: (string | null);
+        barmSpecId?: (string | null);
+        flegBaseId?: (string | null);
+        flegCostId?: (string | null);
+        flegSpecId?: (string | null);
+        blegBaseId?: (string | null);
+        blegCostId?: (string | null);
+        blegSpecId?: (string | null);
+        stalkerId?: (string | null);
+    }
+    export class DragonbonesModel implements IDragonbonesModel {
+        discriminator: string;
+        id: number;
+        avatarDir?: number;
+        avatar?: IAvatar;
+        constructor(data: any);
+        setInfo(val: any): void;
+        destroy(): void;
+        getCollisionArea(aniName: string): number[][];
+        getWalkableArea(): number[][];
+        getOriginPoint(aniName: any): Phaser.Geom.Point;
+        getInteractiveArea(): op_def.IPBPoint2i[];
+        existAnimation(aniName: string): boolean;
+        findAnimation(baseName: string, dir: Direction): AnimationData;
+    }
+}
+
+declare module 'game-core/rooms/display/frames.display' {
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import { DisplayObject, DisplayField } from "game-core/rooms/display/display.object";
+    import { IAnimationData } from "game-core/rooms/display/animation";
+    import { AnimationData } from "game-core/rooms/element/sprite";
+    /**
+      * 序列帧显示对象
+      */
+    export class FramesDisplay extends DisplayObject {
+        protected mFadeTween: Phaser.Tweens.Tween;
+        protected mDisplayDatas: Map<DisplayField, IFramesModel>;
+        protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>;
+        protected mScaleTween: Phaser.Tweens.Tween;
+        protected mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>;
+        protected mMountContainer: Phaser.GameObjects.Container;
+        protected mMainSprite: Phaser.GameObjects.Sprite;
+        protected mCurAnimation: IAnimationData;
+        protected mMountList: Phaser.GameObjects.Container[];
+        load(displayInfo: IFramesModel, field?: DisplayField): void;
+        play(animation: AnimationData, field?: DisplayField): void;
+        mount(display: Phaser.GameObjects.Container, targetIndex?: number): void;
+        unmount(display: Phaser.GameObjects.Container): void;
+        fadeIn(callback?: () => void): void;
+        fadeOut(callback?: () => void): void;
+        scaleTween(): void;
+        setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this;
+        disableInteractive(): this;
+        destroy(): void;
+        protected createDisplay(key: string, ani: IAnimationData): void;
+        protected clearFadeTween(): void;
+        protected clear(): void;
+        get spriteWidth(): number;
+        get spriteHeight(): number;
+    }
+}
+
+declare module 'game-core/rooms/display/frames.model' {
+    import { op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
+    import { IAnimationData } from "game-core/rooms/display/animation";
+    import { Sprite } from "game-core/rooms/element/sprite";
+    import { Direction } from "game-core/rooms/element/element";
+    import { AnimationData } from "game-core/rooms/element/sprite";
+    export interface IFramesModel {
+        readonly discriminator: string;
+        readonly gene: string | undefined;
+        id: number;
+        avatarDir?: number;
+        type?: string;
+        display?: IDisplay | null;
+        animations?: Map<string, IAnimationData>;
+        animationName: string;
+        package?: op_gameconfig.IPackage;
+        shops?: op_gameconfig.IShop[] | null;
+        getAnimations(name: string): IAnimationData;
+        existAnimation(aniName: string): boolean;
+        getCollisionArea(aniName: string, flip: boolean): number[][];
+        getWalkableArea(aniName: string, flip: boolean): number[][];
+        getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
+        getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
+        createSprite(properties: object): Sprite;
+        findAnimation(baseName: string, dir: Direction): AnimationData;
+        destroy(): any;
+    }
+    export interface IDisplay {
+        texturePath: string;
+        dataPath?: string;
+    }
+    export class FramesModel implements IFramesModel {
+        avatarDir?: number;
+        readonly discriminator: string;
+        id: number;
+        type: string;
+        display: IDisplay | null;
+        animations: Map<string, IAnimationData>;
+        animationName: string;
+        package: op_gameconfig.IPackage;
+        shops: op_gameconfig.IShop[];
+        protected mGen: string;
+        constructor(data: any);
+        setInfo(val: any): void;
+        getAnimationData(): Map<string, IAnimationData>;
+        existAnimation(aniName: string): boolean;
+        getAnimations(name: string): IAnimationData;
+        destroy(): void;
+        get gene(): string | undefined;
+        createProtocolObject(): op_gameconfig_01.IAnimationData[];
+        getCollisionArea(aniName: string, flip?: boolean): number[][];
+        getWalkableArea(aniName: string, flip?: boolean): number[][];
+        getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
+        getOriginPoint(aniName: any, flip?: boolean): Phaser.Geom.Point;
+        getDirable(): void;
+        createSprite(properties: {
+            nodeType: op_def.NodeType;
+            x: number;
+            y: number;
+            z: number;
+            id?: number;
+            dir?: number;
+            isMoss?: boolean;
+        }): Sprite;
+        findAnimation(baseName: string, dir: Direction): AnimationData;
+    }
+}
+
+declare module 'game-core/ui/ui.manager' {
+    import { WorldService } from "game-core/game";
+    import { PacketHandler } from "net-socket-packet";
+    import { ILayerManager } from "game-core/ui/layer.manager";
+    import { InputTextFactory } from "game-core/ui/components/inputTextFactory";
+    export class UiManager extends PacketHandler {
+        constructor(worldService: WorldService);
+        getInputTextFactory(): InputTextFactory;
+        addPackListener(): void;
+        removePackListener(): void;
+        getUILayerManager(): ILayerManager;
+        setScene(scene: Phaser.Scene): void;
+        showMainUI(): void;
+        showDecorateUI(): void;
+        resize(width: number, height: number): void;
+        setMediator(value: string, mediator: any): void;
+        getMediator(type: string): any | undefined;
+        clearMediator(): void;
+        destroy(): void;
+        baseFaceResize(): void;
+        baseFaceTween(show: boolean): void;
+        checkUIState(medName: string, show: boolean): void;
+        showMed(type: string, ...param: any[]): void;
     }
 }
 
@@ -1253,170 +2246,6 @@ declare module 'game-core/net/address' {
     }
 }
 
-declare module 'game-core/ui/ui.manager' {
-    import { WorldService } from "game-core/game";
-    import { PacketHandler } from "net-socket-packet";
-    import { ILayerManager } from "game-core/ui/layer.manager";
-    import { InputTextFactory } from "game-core/ui/components/inputTextFactory";
-    export class UiManager extends PacketHandler {
-        constructor(worldService: WorldService);
-        getInputTextFactory(): InputTextFactory;
-        addPackListener(): void;
-        removePackListener(): void;
-        getUILayerManager(): ILayerManager;
-        setScene(scene: Phaser.Scene): void;
-        showMainUI(): void;
-        showDecorateUI(): void;
-        resize(width: number, height: number): void;
-        setMediator(value: string, mediator: any): void;
-        getMediator(type: string): any | undefined;
-        clearMediator(): void;
-        destroy(): void;
-        baseFaceResize(): void;
-        baseFaceTween(show: boolean): void;
-        checkUIState(medName: string, show: boolean): void;
-        showMed(type: string, ...param: any[]): void;
-    }
-}
-
-declare module 'game-core/rooms/display/frames.model' {
-    import { op_gameconfig, op_def } from "pixelpai_proto";
-    import { IAnimationData } from "game-core/rooms/display/animation";
-    import { Sprite } from "game-core/rooms/element/sprite";
-    import { Direction } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/sprite";
-    export interface IFramesModel {
-        readonly discriminator: string;
-        readonly gene: string | undefined;
-        id: number;
-        avatarDir?: number;
-        type?: string;
-        display?: IDisplay | null;
-        animations?: Map<string, IAnimationData>;
-        animationName: string;
-        package?: op_gameconfig.IPackage;
-        shops?: op_gameconfig.IShop[] | null;
-        getAnimations(name: string): IAnimationData;
-        existAnimation(aniName: string): boolean;
-        getCollisionArea(aniName: string, flip: boolean): number[][];
-        getWalkableArea(aniName: string, flip: boolean): number[][];
-        getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
-        getOriginPoint(aniName: string, flip: boolean): Phaser.Geom.Point;
-        createSprite(properties: object): Sprite;
-        findAnimation(baseName: string, dir: Direction): AnimationData;
-        destroy(): any;
-    }
-    export interface IDisplay {
-        texturePath: string;
-        dataPath?: string;
-    }
-    export class FramesModel implements IFramesModel {
-        avatarDir?: number;
-        readonly discriminator: string;
-        id: number;
-        type: string;
-        display: IDisplay | null;
-        animations: Map<string, IAnimationData>;
-        animationName: string;
-        package: op_gameconfig.IPackage;
-        shops: op_gameconfig.IShop[];
-        protected mGen: string;
-        constructor(data: any);
-        setInfo(val: any): void;
-        getAnimationData(): Map<string, IAnimationData>;
-        existAnimation(aniName: string): boolean;
-        getAnimations(name: string): IAnimationData;
-        destroy(): void;
-        get gene(): string | undefined;
-        toClient(): op_gameconfig.IAnimation[];
-        getCollisionArea(aniName: string, flip?: boolean): number[][];
-        getWalkableArea(aniName: string, flip?: boolean): number[][];
-        getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
-        getOriginPoint(aniName: any, flip?: boolean): Phaser.Geom.Point;
-        getDirable(): void;
-        createSprite(properties: {
-            nodeType: op_def.NodeType;
-            x: number;
-            y: number;
-            z: number;
-            id?: number;
-            dir?: number;
-            isMoss?: boolean;
-        }): Sprite;
-        findAnimation(baseName: string, dir: Direction): AnimationData;
-    }
-}
-
-declare module 'game-core/rooms/display/dragonbones.model' {
-    import { op_def } from "pixelpai_proto";
-    import { AnimationData } from "game-core/rooms/element/sprite";
-    import { Direction } from "game-core/rooms/element/element";
-    export interface IDragonbonesModel {
-        readonly discriminator: string;
-        id: number;
-        avatarDir?: number;
-        avatar?: IAvatar;
-        animationName?: string;
-        destroy(): any;
-        getCollisionArea(aniName: string): number[][];
-        getWalkableArea(aniName: string): number[][];
-        getOriginPoint(aniName: string): Phaser.Geom.Point;
-        existAnimation(aniName: string): boolean;
-        getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
-        findAnimation(baseName: string, dir: Direction): AnimationData;
-    }
-    export interface IAvatar {
-        id: string;
-        dirable?: (number[] | null);
-        headBaseId?: (string | null);
-        headHairId?: (string | null);
-        headEyesId?: (string | null);
-        headBackId?: (string | null);
-        headMousId?: (string | null);
-        headHatsId?: (string | null);
-        headMaskId?: (string | null);
-        headSpecId?: (string | null);
-        bodyBaseId?: (string | null);
-        bodyCostId?: (string | null);
-        bodyDresId?: (string | null);
-        bodyTailId?: (string | null);
-        bodyWingId?: (string | null);
-        bodySpecId?: (string | null);
-        farmBaseId?: (string | null);
-        farmCostId?: (string | null);
-        farmShldId?: (string | null);
-        farmWeapId?: (string | null);
-        farmSpecId?: (string | null);
-        barmBaseId?: (string | null);
-        barmCostId?: (string | null);
-        barmShldId?: (string | null);
-        barmWeapId?: (string | null);
-        barmSpecId?: (string | null);
-        flegBaseId?: (string | null);
-        flegCostId?: (string | null);
-        flegSpecId?: (string | null);
-        blegBaseId?: (string | null);
-        blegCostId?: (string | null);
-        blegSpecId?: (string | null);
-        stalkerId?: (string | null);
-    }
-    export class DragonbonesModel implements IDragonbonesModel {
-        discriminator: string;
-        id: number;
-        avatarDir?: number;
-        avatar?: IAvatar;
-        constructor(data: any);
-        setInfo(val: any): void;
-        destroy(): void;
-        getCollisionArea(aniName: string): number[][];
-        getWalkableArea(): number[][];
-        getOriginPoint(aniName: any): Phaser.Geom.Point;
-        getInteractiveArea(): op_def.IPBPoint2i[];
-        existAnimation(aniName: string): boolean;
-        findAnimation(baseName: string, dir: Direction): AnimationData;
-    }
-}
-
 declare module 'game-core/loading/loading.manager' {
     import { WorldService } from "game-core/game/world.service";
     export interface IAsset {
@@ -1439,417 +2268,6 @@ declare module 'game-core/loading/loading.manager' {
     }
 }
 
-declare module 'game-core/rooms/element/element' {
-    import { IElementManager, ElementManager } from "game-core/rooms/element/element.manager";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IRoomService } from "game-core/rooms/room";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { op_client } from "pixelpai_proto";
-    import { Tweens } from "phaser";
-    import { Pos } from "game-core/utils/pos";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { BlockObject } from "game-core/rooms/cameras/block.object";
-    import { BubbleContainer } from "game-core/rooms/bubble/bubble.container";
-    import { ShopEntity } from "game-core/rooms/element/shop/shop.entity";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
-    import { AI } from "game-core/rooms/action/AI";
-    export enum PlayerState {
-        IDLE = "idle",
-        WALK = "walk",
-        RUN = "run",
-        ATTACK = "attack",
-        JUMP = "jump",
-        INJURED = "injured",
-        FAILED = "failed",
-        DANCE01 = "dance01",
-        DANCE02 = "dance02",
-        FISHING = "fishing",
-        GREET01 = "greet01",
-        SIT = "sit",
-        LIE = "lit",
-        EMOTION01 = "emotion01"
-    }
-    export enum Direction {
-        north = 0,
-        north_west = 1,
-        west = 2,
-        west_south = 3,
-        south = 4,
-        south_east = 5,
-        east = 6,
-        east_north = 7
-    }
-    export interface IElement {
-        readonly id: number;
-        readonly dir: number;
-        readonly roomService: IRoomService;
-        readonly scene: Phaser.Scene;
-        model: ISprite;
-        setModel(model: ISprite): any;
-        updateModel(model: op_client.ISprite): any;
-        play(animationName: string): void;
-        getDisplay(): DisplayObject;
-        setPosition(p: Pos): void;
-        getPosition(): Pos;
-        getPosition45(): Pos;
-        setDirection(val: number): void;
-        getDirection(): number;
-        showEffected(): any;
-        showNickname(): any;
-        scaleTween(): any;
-        toSprite(): op_client.ISprite;
-        turn(): any;
-        setAlpha(val: number): any;
-        setQueue(queue: op_client.IChangeAnimation[]): any;
-    }
-    export interface MoveData {
-        destPos?: Pos;
-        posPath?: MovePath[];
-        arrivalTime?: number;
-        tweenAnim?: Tweens.Tween;
-        tweenLineAnim?: Tweens.Timeline;
-        tweenLastUpdate?: number;
-        onCompleteParams?: any;
-        onComplete?: Function;
-        step?: number;
-    }
-    export interface MovePath {
-        x: number;
-        y: number;
-        duration?: number;
-        onStartParams?: any;
-        onStart?: Function;
-        onComplete?: Function;
-    }
-    export interface AnimationQueue {
-        name: string;
-        playTimes?: number;
-        complete?: Function;
-    }
-    export enum InputEnable {
-        Diasble = 0,
-        Enable = 1,
-        Interactive = 2
-    }
-    export class Element extends BlockObject implements IElement {
-        protected mElementManager: IElementManager;
-        get dir(): number;
-        get roomService(): IRoomService;
-        get id(): number;
-        get model(): ISprite;
-        set model(val: ISprite);
-        get scene(): Phaser.Scene;
-        get ai(): AI;
-        get eleMgr(): ElementManager;
-        protected mId: number;
-        protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-        protected mDisplay: DisplayObject | undefined;
-        protected mBubble: BubbleContainer;
-        protected mAnimationName: string;
-        protected mMoveData: MoveData;
-        protected mCurState: string;
-        protected mShopEntity: ShopEntity;
-        protected mAi: AI;
-        protected mOffsetY: number;
-        protected mQueueAnimations: AnimationQueue[];
-        protected mMoving: boolean;
-        constructor(sprite: ISprite, mElementManager: IElementManager);
-        load(displayInfo: IFramesModel | IDragonbonesModel): void;
-        setModel(model: ISprite): void;
-        updateModel(model: op_client.ISprite): void;
-        scaleTween(): void;
-        play(animationName: string): void;
-        setQueue(animations: op_client.IChangeAnimation[]): void;
-        setDirection(val: number): void;
-        getDirection(): number;
-        changeState(val?: string): void;
-        getState(): string;
-        getRenderable(): boolean;
-        getDisplay(): DisplayObject;
-        move(moveData: op_client.IMoveData): void;
-        movePosition(pos: Pos, angel: number): void;
-        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
-        startMove(): void;
-        stopMove(): void;
-        setPosition(p: Pos): void;
-        getRootPosition(): Pos;
-        showBubble(text: string, setting: op_client.IChat_Setting): void;
-        clearBubble(): void;
-        showNickName(): void;
-        showEffected(): void;
-        showNickname(): void;
-        toSprite(): op_client.ISprite;
-        turn(): void;
-        setAlpha(val: number): void;
-        getDepth(): number;
-        destroy(): void;
-        protected _doMove(): void;
-        protected createDisplay(): ElementDisplay;
-        protected loadDisplayInfo(): void;
-        protected addDisplay(): void;
-        protected setDepth(depth: number): void;
-        protected onDisplayReady(): void;
-        protected updateBubble(): void;
-        protected onMoveStart(): void;
-        protected onMoveComplete(): void;
-        protected onMoving(): void;
-        protected get offsetY(): number;
-        protected onCheckDirection(params: any): void;
-        protected calculateDirectionByAngle(angle: any): number;
-    }
-}
-
-declare module 'game-core/rooms/element/sprite' {
-    import { Pos } from "game-core/utils/pos";
-    import { IAvatar, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import NodeType = op_def.NodeType;
-    export interface ISprite {
-        readonly id: number;
-        readonly avatar: IAvatar;
-        readonly nickname: string;
-        readonly alpha: number;
-        readonly displayBadgeCards: op_def.IBadgeCard[];
-        readonly platformId: string;
-        readonly sceneId: number;
-        readonly nodeType: op_def.NodeType;
-        readonly currentAnimation: AnimationData;
-        readonly currentCollisionArea: number[][];
-        readonly currentWalkableArea: number[][];
-        readonly currentCollisionPoint: Phaser.Geom.Point;
-        readonly hasInteractive: boolean;
-        readonly attrs: op_def.IStrPair[];
-        readonly animationQueue: AnimationQueue[];
-        currentAnimationName: string;
-        displayInfo: IFramesModel | IDragonbonesModel;
-        direction: number;
-        pos: Pos;
-        bindID: number;
-        sn: string;
-        isMoss?: boolean;
-        newID(): any;
-        updateAvatar(avatar: op_gameconfig.IAvatar): any;
-        updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string): any;
-        setPosition(x: number, y: number): any;
-        setAnimationName(name: string, playTimes?: number): AnimationData;
-        setAnimationQueue(queue: AnimationQueue[]): any;
-        turn(): ISprite;
-        toSprite(): op_client.ISprite;
-    }
-    export interface AnimationData {
-        animationName: string;
-        flip: boolean;
-        playingQueue?: AnimationQueue;
-    }
-    export interface AnimationQueue {
-        name: string;
-        playTimes?: number;
-        playedTimes?: number;
-        complete?: Function;
-    }
-    export class Sprite implements ISprite {
-        protected mID: number;
-        protected mPos: Pos;
-        protected mAvatar: IAvatar;
-        protected mCurrentAnimationName: string;
-        protected mDirection: number;
-        protected mBindID: number;
-        protected mSn: string;
-        protected mAlpha: number;
-        protected mNickname: string;
-        protected mDisplayBadgeCards: op_def.IBadgeCard[];
-        protected mPackage: op_gameconfig.IPackage;
-        protected mSceneId: number;
-        protected mUuid: number;
-        protected mPlatformId: string;
-        protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-        protected mNodeType: NodeType;
-        protected mCurrentAnimation: AnimationData;
-        protected mCurrentCollisionArea: number[][];
-        protected mCurrentWalkableArea: number[][];
-        protected mCurrentCollisionPoint: Phaser.Geom.Point;
-        protected mVersion: string;
-        protected mIsMoss: boolean;
-        protected mRegisterAnimation: Map<string, string>;
-        protected _originWalkPoint: Phaser.Geom.Point;
-        protected _originCollisionPoint: Phaser.Geom.Point;
-        protected mAttrs: op_def.IStrPair[];
-        protected mAnimationQueue: AnimationQueue[];
-        constructor(obj: op_client.ISprite, nodeType?: NodeType);
-        toSprite(): op_client.ISprite;
-        newID(): void;
-        setPosition(x: number, y: number): void;
-        turn(): ISprite;
-        updateAvatar(avatar: op_gameconfig.IAvatar): void;
-        updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig.IAnimation[], defAnimation?: string): void;
-        setAnimationQueue(queue: AnimationQueue[]): void;
-        updateAttr(attrs: op_def.IStrPair[]): void;
-        setAnimationName(name: string): AnimationData;
-        get id(): number;
-        get pos(): Pos;
-        set pos(pos: Pos);
-        get avatar(): IAvatar;
-        get currentAnimationName(): string;
-        set currentAnimationName(animationName: string);
-        get direction(): number;
-        set direction(val: number);
-        get nickname(): string;
-        get bindID(): number;
-        set bindID(id: number);
-        get sn(): string;
-        set sn(value: string);
-        get alpha(): number;
-        get package(): op_gameconfig.IPackage;
-        set package(value: op_gameconfig.IPackage);
-        get sceneId(): number;
-        get uuid(): number;
-        get displayBadgeCards(): op_def.IBadgeCard[];
-        get platformId(): string;
-        get displayInfo(): IFramesModel | IDragonbonesModel;
-        set displayInfo(displayInfo: IFramesModel | IDragonbonesModel);
-        get isMoss(): boolean;
-        set isMoss(val: boolean);
-        get animationQueue(): AnimationQueue[];
-        get nodeType(): NodeType;
-        get currentAnimation(): AnimationData;
-        get currentCollisionArea(): number[][];
-        get currentWalkableArea(): number[][];
-        get currentCollisionPoint(): Phaser.Geom.Point;
-        get hasInteractive(): boolean;
-        get animationMap(): Map<string, string>;
-        get originCollisionPoint(): Phaser.Geom.Point;
-        get originWalkPoint(): Phaser.Geom.Point;
-        get attrs(): op_def.IStrPair[];
-        setOriginCollisionPoint(value: number[] | null): void;
-        setOriginWalkPoint(value: number[] | null): void;
-        getInteracviveArea(): op_def.IPBPoint2i[];
-    }
-}
-
-declare module 'game-core/rooms/player/player' {
-    import { Element, MovePath, IElementManager } from "game-core/rooms/element";
-    import { op_client } from "pixelpai_proto";
-    import { ISprite } from "game-core/rooms/element";
-    import { Pos } from "game-core/utils/pos";
-    export class Player extends Element {
-        protected mElementManager: IElementManager;
-        protected nodeType: number;
-        protected mOffsetY: number;
-        constructor(sprite: ISprite, mElementManager: IElementManager);
-        setModel(val: ISprite): void;
-        move(moveData: op_client.IMoveData): void;
-        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
-        setDirection(dir: number): void;
-        changeState(val?: string): void;
-        setPosition(pos: Pos): void;
-        getPosition(): Pos;
-        protected onCheckDirection(params: any): void;
-        protected onMoveStart(): void;
-        protected onMoveComplete(): void;
-        protected preMoveComplete(): void;
-        protected onMovePathPointComplete(params: any): void;
-        protected mMovePathPointFinished(path: MovePath): void;
-        protected get offsetY(): number;
-    }
-}
-
-declare module 'game-core/rooms/player/Actor' {
-    import { IElementManager, ISprite, MoveData } from "game-core/rooms/element";
-    import { InputListener } from "game-core/game/input.service";
-    import { op_client, op_gameconfig } from "pixelpai_proto";
-    import { Player } from "game-core/rooms/player/player";
-    import { Bag } from "game-core/rooms/player/bag/bag";
-    import { Interactive } from "game-core/rooms/player/interactive/interactive";
-    import { Friend } from "game-core/rooms/player/friend/friend";
-    export class Actor extends Player implements InputListener {
-        protected mElementManager: IElementManager;
-        readonly GameObject: Phaser.GameObjects.GameObject;
-        protected mBag: Bag;
-        protected mFriend: Friend;
-        protected mInteractive: Interactive;
-        constructor(sprite: ISprite, mElementManager: IElementManager);
-        getBag(): Bag;
-        getFriend(): Friend;
-        getInteractive(): Interactive;
-        setRenderable(isRenderable: boolean): void;
-        destroy(): void;
-        downHandler(d: number, keyList: number[]): void;
-        upHandler(): void;
-        startMove(): void;
-        stopMove(): void;
-        move(moveData: op_client.IMoveData): void;
-        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
-        protected onMoveComplete(): void;
-        protected onMoving(): void;
-        protected addToBlock(): void;
-        set model(val: ISprite);
-        get model(): ISprite;
-        get package(): op_gameconfig.IPackage;
-        set package(value: op_gameconfig.IPackage);
-        set moveTime(val: number);
-        get moveData(): MoveData;
-    }
-}
-
-declare module 'game-core/rooms/layer/grid.layer' {
-    import { IRoomService } from "game-core/rooms/room";
-    export class GridLayer extends Phaser.GameObjects.Graphics {
-        constructor(scene: Phaser.Scene);
-        draw(room: IRoomService): void;
-    }
-}
-
-declare module 'game-core/rooms/terrain/terrain' {
-    import { IElement } from "game-core/rooms/element/element";
-    import { IElementManager } from "game-core/rooms/element/element.manager";
-    import { Pos } from "game-core/utils/pos";
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IRoomService } from "game-core/rooms/room";
-    import { TerrainDisplay } from "game-core/rooms/display/terrain.display";
-    import { BlockObject } from "game-core/rooms/cameras/block.object";
-    import { op_client } from "pixelpai_proto";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
-    export class Terrain extends BlockObject implements IElement {
-        protected mElementManager: IElementManager;
-        protected mId: number;
-        protected mDisplayInfo: IFramesModel;
-        protected mDisplay: TerrainDisplay | undefined;
-        protected mModel: ISprite;
-        constructor(sprite: ISprite, mElementManager: IElementManager);
-        setModel(val: ISprite): void;
-        updateModel(val: op_client.ISprite): void;
-        load(displayInfo: IFramesModel): void;
-        play(animationName: string): void;
-        setDirection(val: number): void;
-        getDirection(): number;
-        setPosition(p: Pos): void;
-        getDisplay(): DisplayObject;
-        showNickname(): void;
-        showEffected(): void;
-        toSprite(): op_client.ISprite;
-        turn(): void;
-        setAlpha(val: number): void;
-        scaleTween(): void;
-        setQueue(): void;
-        destroy(): void;
-        protected createDisplay(): ElementDisplay;
-        protected addDisplay(): void;
-        protected setDepth(): void;
-        protected onInitializedHandler(): void;
-        get id(): number;
-        get dir(): number;
-        get roomService(): IRoomService;
-        get model(): ISprite;
-        set model(val: ISprite);
-        get currentAnimationName(): string;
-        get scene(): Phaser.Scene;
-    }
-}
-
 declare module 'game-core/utils/rectangle45' {
     import Rectangle = Phaser.Geom.Rectangle;
     export class Rectangle45 extends Rectangle {
@@ -1858,40 +2276,6 @@ declare module 'game-core/utils/rectangle45' {
         endRow: number;
         endCol: number;
         constructor(row: number, col: number, endRow: number, endCol: number);
-    }
-}
-
-declare module 'game-core/rooms/display/frames.display' {
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
-    import { AnimationData } from "game-core/rooms/element/sprite";
-    export enum DisplayField {
-        BACKEND = 1,
-        STAGE = 2,
-        FRONTEND = 3
-    }
-    /**
-      * 序列帧显示对象
-      */
-    export class FramesDisplay extends DisplayObject {
-        protected mFadeTween: Phaser.Tweens.Tween;
-        protected mDisplayDatas: Map<DisplayField, IFramesModel>;
-        protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>;
-        protected mHasAnimation: boolean;
-        protected mScaleTween: Phaser.Tweens.Tween;
-        protected mActionName: AnimationData;
-        setPosition(x?: number, y?: number, z?: number): this;
-        load(displayInfo: IFramesModel, field?: DisplayField): void;
-        play(animation: AnimationData, field?: DisplayField): void;
-        fadeIn(callback?: () => void): void;
-        fadeOut(callback?: () => void): void;
-        scaleTween(): void;
-        setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this;
-        disableInteractive(): this;
-        destroy(): void;
-        protected clearFadeTween(): void;
-        get spriteWidth(): number;
-        get spriteHeight(): number;
     }
 }
 
@@ -1939,58 +2323,6 @@ declare module 'game-core/rooms/entity' {
     }
 }
 
-declare module 'game-core/rooms/wall/wall' {
-    import { BlockObject } from "game-core/rooms/cameras/block.object";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IRoomService } from "game-core/rooms/room";
-    import { WallDisplay } from "game-core/rooms/display/wall.display";
-    import { Pos } from "game-core/utils/pos";
-    export enum Direction {
-        UP = "up",
-        LEFT = "left",
-        RIGHT = "right",
-        DOWN = "down"
-    }
-    export class Wall extends BlockObject {
-        protected mDisplay?: WallDisplay;
-        protected mDirection: Direction;
-        protected mPosition: Pos;
-        protected mID: number;
-        constructor(room: IRoomService, id: number, pos: Pos, dir: Direction);
-        setPosition(pos: Pos): void;
-        protected createDisplay(): ElementDisplay;
-        protected onInitializedHandler(): void;
-        protected addDisplay(): void;
-        protected setDepth(): void;
-        get id(): number;
-    }
-}
-
-declare module 'game-core/rooms/action/IDispose' {
-    export interface IDispose {
-        destroy(): any;
-    }
-}
-
-declare module 'game-core/rooms/group/IGroup' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
-    import { HandlerDispatcher } from "game-core/Handler/HandlerDispatcher";
-    import { GroupType } from "game-core/rooms/group/GroupManager";
-    export interface IGroup extends IDispose {
-        owner: any;
-        childs: any[];
-        eventDisp: HandlerDispatcher;
-        data: any;
-        groupType: GroupType;
-        on(type: string, caller: any, method: Function, args: any[]): any;
-        off(type: string, caller: any, method: Function, args: any[]): any;
-        emitter(type: string, data?: any): any;
-        addChild(child: any): any;
-        removeChild(child: any): any;
-        replaceOwner(owner: any): any;
-    }
-}
-
 declare module 'game-core/rooms/sky.box/block.manager' {
     import { WorldService } from "game-core/game/world.service";
     import { IScenery } from "game-core/rooms/sky.box/scenery";
@@ -2013,35 +2345,111 @@ declare module 'game-core/rooms/sky.box/block.manager' {
     }
 }
 
-declare module 'game-core/net/transport/websocket' {
-    import { EventEmitter } from "events";
-    import { Buffer } from "buffer/";
-    enum ReadyState {
-        CONNECTING = 0,
-        OPEN = 1,
-        CLOSING = 2,
-        CLOSED = 3
+declare module 'game-core/rooms/display/terrain.display' {
+    import { FramesDisplay } from "game-core/rooms/display/frames.display";
+    export class TerrainDisplay extends FramesDisplay {
+        showRefernceArea(): void;
     }
-    export class WSWrapper extends EventEmitter {
-        secure: boolean;
-        _host: string;
-        _port: number;
-        _connection: any;
-        _readyState: ReadyState;
-        _packets_q: Buffer[];
-        _writable: boolean;
-        _sent_count: number;
-        _auto_reconnect: boolean;
-        _force_close: boolean;
-        constructor();
-        constructor(host: string, port: number);
-        Open(): void;
-        Open(host: string, port: number): void;
-        Close(): void;
-        Send(packet: Buffer): void;
+}
+
+declare module 'game-core/rooms/bubble/bubble.container' {
+    import { op_client } from "pixelpai_proto";
+    export class BubbleContainer extends Phaser.GameObjects.Container {
+        constructor(scene: Phaser.Scene, scale: number);
+        addBubble(text: string, bubbleSetting: op_client.IChat_Setting): void;
+        updatePos(x: number, y: number): void;
+        destroy(fromScene?: boolean): void;
+        removeFormParent(): void;
+    }
+}
+
+declare module 'game-core/rooms/element/shop/shop.entity' {
+    import { PacketHandler } from "net-socket-packet";
+    import { IEntity } from "game-core/rooms/entity";
+    import { WorldService } from "game-core/game/world.service";
+    export class ShopEntity extends PacketHandler implements IEntity {
+        static NAME: string;
+        constructor(mWorld: WorldService);
+        initialize(): boolean;
+        register(): void;
+        unRegister(): void;
         destroy(): void;
     }
-    export {};
+}
+
+declare module 'game-core/rooms/action/AI' {
+    import { AIAction } from "game-core/rooms/action/AIAction";
+    import { Element } from "game-core/rooms/element/element";
+    export class AI extends AIAction {
+        constructor(owner: Element);
+        execute(): void;
+        nextAction(): void;
+        addAction(action: AIAction, isbreak?: boolean): void;
+        breakAction(): void;
+        destroy(): void;
+    }
+}
+
+declare module 'game-core/rooms/display/wall.display' {
+    import { IRoomService } from "game-core/rooms/room";
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { AnimationData } from "game-core/rooms/element/sprite";
+    import { op_def } from "pixelpai_proto";
+    import { IElement } from "game-core/rooms/element/element";
+    import { Direction } from "game-core/rooms/wall/wall";
+    export class WallDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
+        protected readonly roomService: IRoomService;
+        constructor(scene: Phaser.Scene, roomService: IRoomService);
+        loadDisplay(texture: string, data: string): void;
+        setDir(dir: Direction): void;
+        load(data: IFramesModel | IDragonbonesModel): void;
+        changeAlpha(val?: number): void;
+        play(animationName: AnimationData): void;
+        removeFromParent(): void;
+        fadeIn(callback?: () => void): void;
+        fadeOut(callback?: () => void): void;
+        showNickname(val: string): void;
+        setDisplayBadges(cards: op_def.IBadgeCard[]): void;
+        showRefernceArea(): void;
+        hideRefernceArea(): void;
+        showEffect(): void;
+        get sortX(): number;
+        get sortY(): number;
+        get sortZ(): number;
+        get baseLoc(): Phaser.Geom.Point;
+        get element(): IElement;
+    }
+}
+
+declare module 'game-core/ui/components/dynamic.sprite' {
+    export class DynamicSprite extends Phaser.GameObjects.Sprite {
+        constructor(scene: Phaser.Scene, x: number, y: number);
+        load(textureURL: string, atlasURL: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function): void;
+        destroy(fromScene?: boolean): void;
+    }
+}
+
+declare module 'game-core/ui/components/dynamic.image' {
+    export class DynamicImage extends Phaser.GameObjects.Image {
+        constructor(scene: Phaser.Scene, x: number, y: number);
+        load(value: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function): void;
+        destroy(fromScene?: boolean): void;
+        protected onLoadComplete(file?: string): void;
+        protected onLoadError(file: Phaser.Loader.File): void;
+    }
+}
+
+declare module 'game-core/rooms/editor/reference.area' {
+    import { IRoomService } from "game-core/rooms/room";
+    import { IPosition45Obj } from "game-core/utils/position45";
+    export class ReferenceArea extends Phaser.GameObjects.Graphics {
+        constructor(scene: Phaser.Scene, mRoomService: IRoomService);
+        draw(area: number[][], origin: Phaser.Geom.Point): void;
+        setPosition(x?: number, y?: number, z?: number, w?: number): this;
+        get size(): IPosition45Obj;
+    }
 }
 
 declare module 'game-core/ui/layer.manager' {
@@ -2095,278 +2503,35 @@ declare module 'game-core/ui/components/inputTextFactory' {
     }
 }
 
-declare module 'game-core/rooms/display/animation' {
-    import { AnimationDataNode } from "game-capsule/lib/configobjects/animations";
-    import { op_gameconfig, op_def } from "pixelpai_proto";
-    import { IPoint } from "game-capsule/lib/helpers";
-    export interface IAnimationData {
-        name: string;
-        frameName: string[];
-        frameRate: number;
-        loop: boolean;
-        baseLoc: Phaser.Geom.Point;
-        collisionArea?: number[][];
-        walkableArea?: number[][];
-        originPoint: Phaser.Geom.Point;
-        readonly interactiveArea?: op_def.IPBPoint2i[];
-        toClient(): op_gameconfig.IAnimation;
+declare module 'game-core/net/transport/websocket' {
+    import { EventEmitter } from "events";
+    import { Buffer } from "buffer/";
+    enum ReadyState {
+        CONNECTING = 0,
+        OPEN = 1,
+        CLOSING = 2,
+        CLOSED = 3
     }
-    export class Animation implements IAnimationData {
-        protected mID: number;
-        protected mBaseLoc: Phaser.Geom.Point;
-        protected mFrameName: string[];
-        protected mFrameRate: number;
-        protected mLoop: boolean;
-        protected mName: string;
-        protected mCollisionArea: number[][];
-        protected mWalkableArea: number[][];
-        protected mOriginPoint: Phaser.Geom.Point;
-        protected mInteractiveArea: IPoint[];
-        constructor(ani: AnimationDataNode | op_gameconfig.IAnimation);
-        toClient(): op_gameconfig.IAnimation;
-        get baseLoc(): Phaser.Geom.Point;
-        get id(): number;
-        get frameName(): string[];
-        get frameRate(): number;
-        get loop(): boolean;
-        get name(): string;
-        get collisionArea(): number[][];
-        get walkableArea(): number[][];
-        get originPoint(): Phaser.Geom.Point;
-        get interactiveArea(): op_def.IPBPoint2i[];
-    }
-}
-
-declare module 'game-core/rooms/bubble/bubble.container' {
-    import { op_client } from "pixelpai_proto";
-    export class BubbleContainer extends Phaser.GameObjects.Container {
-        constructor(scene: Phaser.Scene, scale: number);
-        addBubble(text: string, bubbleSetting: op_client.IChat_Setting): void;
-        updatePos(x: number, y: number): void;
-        destroy(fromScene?: boolean): void;
-        removeFormParent(): void;
-    }
-}
-
-declare module 'game-core/rooms/element/shop/shop.entity' {
-    import { PacketHandler } from "net-socket-packet";
-    import { IEntity } from "game-core/rooms/entity";
-    import { WorldService } from "game-core/game/world.service";
-    export class ShopEntity extends PacketHandler implements IEntity {
-        static NAME: string;
-        constructor(mWorld: WorldService);
-        initialize(): boolean;
-        register(): void;
-        unRegister(): void;
+    export class WSWrapper extends EventEmitter {
+        secure: boolean;
+        _host: string;
+        _port: number;
+        _connection: any;
+        _readyState: ReadyState;
+        _packets_q: Buffer[];
+        _writable: boolean;
+        _sent_count: number;
+        _auto_reconnect: boolean;
+        _force_close: boolean;
+        constructor();
+        constructor(host: string, port: number);
+        Open(): void;
+        Open(host: string, port: number): void;
+        Close(): void;
+        Send(packet: Buffer): void;
         destroy(): void;
     }
-}
-
-declare module 'game-core/rooms/display/display.object' {
-    import { DynamicSprite } from "game-core/ui/components/dynamic.sprite";
-    import { DynamicImage } from "game-core/ui/components/dynamic.image";
-    import { op_def } from "pixelpai_proto";
-    import { ReferenceArea } from "game-core/rooms/editor/reference.area";
-    import { IRoomService } from "game-core/rooms/room";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/sprite";
-    export enum DisplayField {
-        BACKEND = 1,
-        STAGE = 2,
-        FRONTEND = 3,
-        FLAG = 4
-    }
-    export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {
-        /**
-          * 实际透明度，避免和tween混淆
-          */
-        protected mAlpha: number;
-        protected mBaseLoc: Phaser.Geom.Point;
-        protected mCollisionArea: number[][];
-        protected mOriginPoint: Phaser.Geom.Point;
-        protected mRoomService: IRoomService;
-        protected mFlagContainer: Phaser.GameObjects.Container;
-        protected mNickname: Phaser.GameObjects.Text;
-        protected mBadges: DynamicImage[];
-        protected mBackEffect: DynamicSprite;
-        protected mFrontEffect: DynamicSprite;
-        protected mReferenceArea: ReferenceArea;
-        protected mElement: IElement;
-        protected mChildMap: Map<string, any>;
-        protected mDirection: number;
-        protected mAntial: boolean;
-        constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial?: boolean);
-        changeAlpha(val?: number): void;
-        removeFromParent(): void;
-        fadeIn(callback?: () => void): void;
-        fadeOut(callback?: () => void): void;
-        load(data: IFramesModel | IDragonbonesModel, field?: DisplayField): void;
-        play(animationName: AnimationData, field?: DisplayField): void;
-        setDirection(val: number): void;
-        destroy(fromScene?: boolean): void;
-        showNickname(val: string): void;
-        setDisplayBadges(cards: op_def.IBadgeCard[]): void;
-        showRefernceArea(): void;
-        hideRefernceArea(): void;
-        scaleTween(): void;
-        showEffect(): void;
-        getElement(key: string): any;
-        protected addEffect(target: DynamicSprite, textureURL: string, atlasURL?: string, isBack?: boolean, framerate?: number, loop?: boolean, killComplete?: boolean): void;
-        protected layouFlag(offset?: number): void;
-        protected clearBadges(): void;
-        protected get flagContainer(): Phaser.GameObjects.Container;
-        protected addChildMap(key: string, display: Phaser.GameObjects.GameObject): void;
-        protected removeChildMap(key: string): void;
-        get baseLoc(): Phaser.Geom.Point;
-        get sortX(): number;
-        get sortY(): number;
-        get sortZ(): number;
-        get element(): IElement;
-        get collisionArea(): number[][];
-        get originPoint(): Phaser.Geom.Point;
-    }
-}
-
-declare module 'game-core/rooms/action/AI' {
-    import { AIAction } from "game-core/rooms/action/AIAction";
-    import { Element } from "game-core/rooms/element/element";
-    export class AI extends AIAction {
-        constructor(owner: Element);
-        execute(): void;
-        nextAction(): void;
-        addAction(action: AIAction, isbreak?: boolean): void;
-        breakAction(): void;
-        destroy(): void;
-    }
-}
-
-declare module 'game-core/rooms/element' {
-    import { ISprite } from "game-core/rooms/element/sprite";
-    import { IElementManager } from "game-core/rooms/element/element.manager";
-    export * from "game-core/rooms/element/element";
-    export { ISprite, IElementManager };
-}
-
-declare module 'game-core/rooms/player/bag/bag' {
-    import { PacketHandler } from "net-socket-packet";
-    import { WorldService } from "game-core/game/world.service";
-    import { IEntity } from "game-core/rooms/entity";
-    export class Bag extends PacketHandler implements IEntity {
-        constructor(mWorld: WorldService);
-        initialize(): boolean;
-        register(): void;
-        unRegister(): void;
-        destroy(): void;
-        requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number): void;
-    }
-}
-
-declare module 'game-core/rooms/player/interactive/interactive' {
-    import { PacketHandler } from "net-socket-packet";
-    import { IEntity } from "game-core/rooms/entity";
-    import { WorldService } from "game-core/game/world.service";
-    export class Interactive extends PacketHandler implements IEntity {
-        constructor(mWorld: WorldService);
-        initialize(): boolean;
-        register(): void;
-        unRegister(): void;
-        destroy(): void;
-        requestTargetUI(uiId: any, id: any): void;
-    }
-}
-
-declare module 'game-core/rooms/player/friend/friend' {
-    import { WorldService } from "game-core/game/world.service";
-    export class Friend {
-        constructor(world: WorldService);
-        requestFriend(callBack?: Function): void;
-        friendList(): any[];
-    }
-}
-
-declare module 'game-core/rooms/display/terrain.display' {
-    import { FramesDisplay } from "game-core/rooms/display/frames.display";
-    export class TerrainDisplay extends FramesDisplay {
-        showRefernceArea(): void;
-    }
-}
-
-declare module 'game-core/rooms/display/wall.display' {
-    import { IRoomService } from "game-core/rooms/room";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { AnimationData } from "game-core/rooms/element/sprite";
-    import { op_def } from "pixelpai_proto";
-    import { IElement } from "game-core/rooms/element/element";
-    import { Direction } from "game-core/rooms/wall/wall";
-    export class WallDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
-        protected readonly roomService: IRoomService;
-        constructor(scene: Phaser.Scene, roomService: IRoomService);
-        loadDisplay(texture: string, data: string): void;
-        setDir(dir: Direction): void;
-        load(data: IFramesModel | IDragonbonesModel): void;
-        changeAlpha(val?: number): void;
-        play(animationName: AnimationData): void;
-        removeFromParent(): void;
-        fadeIn(callback?: () => void): void;
-        fadeOut(callback?: () => void): void;
-        showNickname(val: string): void;
-        setDisplayBadges(cards: op_def.IBadgeCard[]): void;
-        showRefernceArea(): void;
-        hideRefernceArea(): void;
-        showEffect(): void;
-        get sortX(): number;
-        get sortY(): number;
-        get sortZ(): number;
-        get baseLoc(): Phaser.Geom.Point;
-        get element(): IElement;
-    }
-}
-
-declare module 'game-core/Handler/HandlerDispatcher' {
-    import { IDispose } from "game-core/rooms/action/IDispose";
-    export class HandlerDispatcher implements IDispose {
-        hasListener(type: string): Boolean;
-        emitter(type: string, data?: any): Boolean;
-        on(type: string, caller: any, listener: Function, args?: any[]): HandlerDispatcher;
-        once(type: string, caller: any, listener: Function, args?: any[]): HandlerDispatcher;
-        off(type: string, caller: any, listener: Function, onceOnly?: Boolean): HandlerDispatcher;
-        offAll(type?: string): HandlerDispatcher;
-        destroy(): void;
-    }
-}
-
-declare module 'game-core/ui/components/dynamic.sprite' {
-    export class DynamicSprite extends Phaser.GameObjects.Sprite {
-        constructor(scene: Phaser.Scene, x: number, y: number);
-        load(textureURL: string, atlasURL: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function): void;
-        destroy(fromScene?: boolean): void;
-    }
-}
-
-declare module 'game-core/ui/components/dynamic.image' {
-    export class DynamicImage extends Phaser.GameObjects.Image {
-        constructor(scene: Phaser.Scene, x: number, y: number);
-        load(value: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function): void;
-        destroy(fromScene?: boolean): void;
-        protected onLoadComplete(file?: string): void;
-        protected onLoadError(file: Phaser.Loader.File): void;
-    }
-}
-
-declare module 'game-core/rooms/editor/reference.area' {
-    import { IRoomService } from "game-core/rooms/room";
-    import { IPosition45Obj } from "game-core/utils/position45";
-    export class ReferenceArea extends Phaser.GameObjects.Graphics {
-        constructor(scene: Phaser.Scene, mRoomService: IRoomService);
-        draw(area: number[][], origin: Phaser.Geom.Point): void;
-        setPosition(x?: number, y?: number, z?: number, w?: number): this;
-        get size(): IPosition45Obj;
-    }
+    export {};
 }
 
 declare module 'game-core/rooms/action/AIAction' {

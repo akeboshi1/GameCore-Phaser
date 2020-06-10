@@ -275,7 +275,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // const m = window["template"].start();
             // const plugin = new m();
             // plugin.init(this.world);
-            const m = window["template"].start();
+            Logger.getInstance().log(window["main-ui"]);
+            const m = new window["main-ui"].default();
             m.init(this.world);
         });
     }

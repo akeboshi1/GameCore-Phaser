@@ -82,7 +82,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConfig = config;
         // TODO 检测config内的必要参数如确实抛异常.
         if (!config.game_id) {
-            throw new Error(`Config.game_id is required.`);
+            config.game_id = CONFIG.game_id;
+            // throw new Error(`Config.game_id is required.`);
         }
         if (!config.devicePixelRatio) {
             config.devicePixelRatio = window.devicePixelRatio || 1;
