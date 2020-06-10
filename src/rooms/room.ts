@@ -266,34 +266,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
         }
 
-        // this.loadModule("https://unpkg.com/jquery").then((module) => {
-        //     Logger.getInstance().log(module);
-        // });
-        this.loadModule("http://localhost:3000/dist/index.min.js").then((module) => {
-            // const m = module.default ? module.default : module;
-            // Logger.getInstance().log(window["template"].start());
-            // const m = window["template"].start();
-            // const plugin = new m();
-            // plugin.init(this.world);
-            Logger.getInstance().log(window["main-ui"]);
-            const m = new window["main-ui"].default();
-            m.init(this.world);
+        this.mWorld.pluginManager.load("main-ui", "http://localhost:3000/dist/index.min.js").then((plugin) => {
+            Logger.getInstance().log(plugin);
         });
-    }
-
-    public async loadModule(url: string) {
-        // const toExport = {};
-        // window.exports = toExport;
-        // window.module = { exports: toExport } as any;
-        const esm = await import(/* webpackIgnore: true */ url);
-        return esm;
-        // const esmKeys = Object.keys(esm);
-        // if (esmKeys.length === 1 && esmKeys[0] === "default") return esm.default;
-        // if (esmKeys.length) return esm;
-        // const exported = window.module.exports;
-        // delete window.exports;
-        // delete window.module;
-        // return exported;
     }
 
     public pause() {
