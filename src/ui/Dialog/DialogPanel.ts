@@ -75,21 +75,21 @@ export class DialogPanel extends BasePanel {
         this.text = this.scene.make.text({
             x: -graphicWidth * 0.5 + 20 * this.dpr, y: -graphicHeight * 0.5 + 30 * this.dpr, text: "五七二五",
             style: { color: "#000000", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
-        }).setOrigin(0).setWordWrapWidth(graphicWidth - 35* this.dpr, true);
+        }).setOrigin(0).setWordWrapWidth(graphicWidth - 35 * this.dpr, true);
         const iconPosx = -width * 0.5 + 38 * this.dpr;
         const iconPosy = -cheight * 0.5 + 25 * this.dpr;
         this.npcIcon = new DynamicImage(this.scene, iconPosx, iconPosy - 20 * this.dpr);
-        const nameBg = this.scene.make.image({ x: iconPosx + 100 * this.dpr, y: iconPosy, key: this.key, frame: "name_bg" });
+        const nameBg = this.scene.make.image({ x: iconPosx + 135 * this.dpr, y: iconPosy, key: this.key, frame: "name_bg" });
         this.npcName = this.scene.make.text({
-            x: nameBg.x - (48 * this.dpr), y: nameBg.y, text: "尼古拉斯.赵二",
+            x: nameBg.x, y: nameBg.y, text: "尼古拉斯.赵二",
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
-        }).setOrigin(0, 0.5);
+        }).setOrigin(0.5);
 
         const closeBtn = new Button(this.scene, this.key, "close_1", "close_1");
         closeBtn.setPosition(width * 0.5 - 30 * this.dpr, -cheight * 0.5 + 10 * this.dpr);
         closeBtn.on("Tap", this.onCloseHandler, this);
         closeBtn.visible = false;
-        this.content.add([bg, whiteGraphic, this.text, this.npcIcon, nameBg, this.npcName, closeBtn]);
+        this.content.add([bg, this.npcIcon, whiteGraphic, this.text, nameBg, this.npcName, closeBtn]);
         bg.setInteractive();
         bg.on("pointerup", this.onNextDialogHandler, this);
         this.add(this.content);
@@ -135,10 +135,27 @@ export class DialogPanel extends BasePanel {
         if (data.text && data.text[1])
             this.npcName.text = data.text[1].text;
         if (data.display && data.display[0]) {
-            const url = Url.getOsdRes(data.display[0].texturePath);
+            const display = data.display[0];
+            const url = Url.getOsdRes(display.texturePath);
             this.npcIcon.load(url, this, () => {
-                this.npcIcon.displayWidth = 60 * this.dpr;
-                this.npcIcon.scaleY = this.npcIcon.scaleX;
+                const width = this.content.width;
+                const height = this.content.height;
+                const iconWidth = this.npcIcon.width;
+                const iconHeight = this.npcIcon.height;
+                let x = this.npcIcon.x;
+                const y = -height * 0.5 - 50 * this.dpr;
+                if (display.horizontal === op_def.HorizontalAlignment.HORIZONTAL_LEFT) {
+                    x = -width * 0.5 + iconWidth * 0.5;// + 20 * this.dpr;
+
+                } else if (display.horizontal === op_def.HorizontalAlignment.HORIZONTAL_CENTER) {
+                    x = 0;
+                } else if (display.horizontal === op_def.HorizontalAlignment.HORIZONTAL_RIGHT) {
+                    x = width * 0.5 - iconWidth * 0.5 - 20 * this.dpr;
+                }
+                //  this.npcIcon.displayWidth = 60 * this.dpr;
+                //  this.npcIcon.scaleY = this.npcIcon.scaleX;
+                this.npcIcon.x = x;
+                this.npcIcon.y = y;
             });
         }
         if (data.button && data.button.length > 0) {
