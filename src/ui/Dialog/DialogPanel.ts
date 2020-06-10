@@ -75,7 +75,7 @@ export class DialogPanel extends BasePanel {
         this.text = this.scene.make.text({
             x: -graphicWidth * 0.5 + 20 * this.dpr, y: -graphicHeight * 0.5 + 30 * this.dpr, text: "五七二五",
             style: { color: "#000000", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
-        }).setOrigin(0).setWordWrapWidth(graphicWidth, true);
+        }).setOrigin(0).setWordWrapWidth(graphicWidth - 35* this.dpr, true);
         const iconPosx = -width * 0.5 + 38 * this.dpr;
         const iconPosy = -cheight * 0.5 + 25 * this.dpr;
         this.npcIcon = new DynamicImage(this.scene, iconPosx, iconPosy - 20 * this.dpr);
@@ -88,6 +88,7 @@ export class DialogPanel extends BasePanel {
         const closeBtn = new Button(this.scene, this.key, "close_1", "close_1");
         closeBtn.setPosition(width * 0.5 - 30 * this.dpr, -cheight * 0.5 + 10 * this.dpr);
         closeBtn.on("Tap", this.onCloseHandler, this);
+        closeBtn.visible = false;
         this.content.add([bg, whiteGraphic, this.text, this.npcIcon, nameBg, this.npcName, closeBtn]);
         bg.setInteractive();
         bg.on("pointerup", this.onNextDialogHandler, this);
@@ -140,7 +141,7 @@ export class DialogPanel extends BasePanel {
                 this.npcIcon.scaleY = this.npcIcon.scaleX;
             });
         }
-        if (data.button) {
+        if (data.button && data.button.length > 0) {
             this.setLayoutItems(data.button);
             this.text.visible = false;
         } else {
