@@ -24,18 +24,27 @@ export class MarketMediator extends BaseMediator {
     if (this.mView && this.mView.isShow() || this.mShow) {
       return;
     }
-    this.mMarket = new Market(this.world);
-    this.mMarket.register();
-    this.mMarket.on("getMarketCategories", this.onCategoriesHandler, this);
-    this.mMarket.on("queryMarket", this.onQueryResuleHandler, this);
-    this.mMarket.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
-    this.mView = new MarketPanel(this.scene, this.world);
-    this.mView.on("getCategories", this.onGetCategoriesHandler, this);
-    this.mView.on("queryProp", this.onQueryPropHandler, this);
-    this.mView.on("buyItem", this.onBuyItemHandler, this);
-    this.mView.on("close", this.onCloseHandler, this);
-    this.mView.on("popItemCard", this.onPopItemCardHandler, this);
-    this.mView.on("queryPropResource", this.onQueryPropresouceHandler, this);
+    if (!this.mMarket) {
+      this.mMarket = new Market(this.world);
+      this.mMarket.register();
+      this.mMarket.on("getMarketCategories", this.onCategoriesHandler, this);
+      this.mMarket.on("queryMarket", this.onQueryResuleHandler, this);
+      this.mMarket.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+    }
+    if (!this.mView) {
+      this.mView = new MarketPanel(this.scene, this.world);
+      this.mView.on("getCategories", this.onGetCategoriesHandler, this);
+      this.mView.on("queryProp", this.onQueryPropHandler, this);
+      this.mView.on("buyItem", this.onBuyItemHandler, this);
+      this.mView.on("close", this.onCloseHandler, this);
+      this.mView.on("popItemCard", this.onPopItemCardHandler, this);
+      this.mView.on("queryPropResource", this.onQueryPropresouceHandler, this);
+    }
+    if (param && param[0]) {
+      this.mMarket.setMarketName(param[0].marketName);
+    } else {
+      this.mMarket.setMarketName("shop");
+    }
     this.mView.show();
     this.layerManager.addToUILayer(this.mView);
   }

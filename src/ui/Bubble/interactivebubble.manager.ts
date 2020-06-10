@@ -112,7 +112,7 @@ export class InteractiveBubbleManager extends PacketHandler {
             this.updateBublePos(ele, obj.scene);
         });
         this.mBubble.show = true;
-        this.uilayer.addToUILayer(this.mBubble);
+        this.uilayer.addToUILayer(this.mBubble, 0);
     }
 
     private updateBublePos(gameObject: any, scene: Phaser.Scene) {

@@ -42,6 +42,7 @@ export class TaskPanel extends BasePanel {
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
         this.mGameScroll.refreshMask();
+        this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     }
 
     public show(param?: any) {
@@ -300,7 +301,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.typeBg.setPosition(posx + this.typeBg.width * 0.5, posy + this.typeBg.height * 0.5 - 2 * dpr);
         this.typeTex = scene.make.text({ x: 0, y: 0, text: i18n.t("task.m"), style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         this.typeTex.setOrigin(0.5).setPosition(this.typeBg.x - 1 * dpr, this.typeBg.y);
-        this.taskName = scene.make.text({ x: this.headIcon.x + 20 * dpr, y: -9 * dpr, text: "获得两把钥匙", style: { color: "#ffffff", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.taskName = scene.make.text({ x: this.headIcon.x + 22 * dpr, y: -9 * dpr, text: "获得两把钥匙", style: { color: "#ffffff", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.taskDes = scene.make.text({ x: this.headIcon.x + 25 * dpr, y: 10 * dpr, text: "任务要求获得两把钥匙", style: { color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.finish = scene.make.image({ key, frame: "done" });
         this.finish.setPosition(width * 0.5 - 30 * dpr, 4 * dpr);
@@ -322,9 +323,10 @@ class TaskItem extends Phaser.GameObjects.Container {
         const typeTag = this.getQuestTypeTag(data.questType);
         this.typeBg.setFrame(typeTag[0]);
         this.typeTex.text = typeTag[1];
-        this.taskName.text = typeTag[2] + data.name;
+        this.setTextLimit(this.taskName, typeTag[2] + data.name,12);
         this.bg.setFrame(typeTag[3]);
-        this.taskDes.text = data.detail;
+        // this.taskDes.text = data.detail;
+        this.setTextLimit(this.taskDes, data.detail);
         this.taskDes.setColor(typeTag[4]);
         this.finish.visible = (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED);
     }
@@ -409,6 +411,21 @@ class TaskItem extends Phaser.GameObjects.Container {
             typeTag[4] = "#866107";
             typeTag[5] = "#F1D56C";
             return typeTag;
+        }
+    }
+
+    private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 15) {
+        if (content.length > limit) {
+            const maxWidth = 185 * this.dpr;
+            for (let i = 4; i < content.length; i++) {
+                let str = content.slice(0, i);
+                const width = text.setText(str).width;
+                if (width > maxWidth) {
+                    str += "...";
+                    text.setText(str);
+                    break;
+                }
+            }
         }
     }
 }
@@ -548,7 +565,7 @@ class TaskCell extends Phaser.GameObjects.Container {
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.countTex = new BBCodeText(this.scene, 0, 0, {})
-            .setOrigin(0.5).setFontSize(15 * dpr).setFontFamily(Font.DEFULT_FONT);
+            .setOrigin(0.5).setFontSize(12 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.countTex.setPosition(this.width * 0.5, this.height * 0.5 - 2 * dpr);
         this.add([this.bg, this.itemIcon, this.countTex]);
     }

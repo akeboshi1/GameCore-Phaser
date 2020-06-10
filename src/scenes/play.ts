@@ -11,7 +11,7 @@ export class PlayScene extends BasicScene {
         super(config || { key: PlayScene.name });
     }
 
-    public preload() {}
+    public preload() { }
 
     public init(data: any) {
         if (data) {

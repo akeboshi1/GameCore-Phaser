@@ -173,19 +173,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
+        if (this.mMap) this.mMap.destroy();
         this.mMap = new Map(this.mWorld);
         this.mMap.setMapInfo(data);
-        // if (!this.mWorld.game.scene.getScene(LoadingScene.name))
-        //     this.mWorld.game.scene.add(LoadingScene.name, LoadingScene);
-        // this.mWorld.game.scene.start(LoadingScene.name, {
-        //     world: this.world,
-        //     room: this,
-        // });
         this.world.showLoading().then(() => {
             this.completeLoad();
         });
-
-        this.mCameraService = new CamerasManager(this);
     }
 
     public onFullPacketReceived(sprite_t: op_def.NodeType): void {
@@ -201,7 +194,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public startLoad() { }
 
     public completeLoad() {
-        if (this.mWorld.game.scene.getScene(PlayScene.name)) return;
+        if (this.mWorld.game.scene.getScene(PlayScene.name)) {
+            const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+            if (loadingScene) loadingScene.sleep();
+            return;
+        }
         this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
             room: this,
         });
@@ -211,6 +208,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mLayManager) {
             this.layerManager.destroy();
         }
+        this.mCameraService = new CamerasManager(this);
         this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mTerrainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
@@ -268,12 +266,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addSkyBox(scenery);
             }
         }
-
-        import(/*  */ "../module/template/main.js").then(({ Template }) => {
-            const tmp = new Template();
-            tmp.init(this.world);
-            //   Logger.getInstance().log("module: ", Template);
-        });
     }
 
     public pause() {

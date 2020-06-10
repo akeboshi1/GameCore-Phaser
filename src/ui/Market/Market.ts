@@ -1,11 +1,12 @@
 import { WorldService } from "../../game/world.service";
 import { ConnectionService } from "../../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_virtual_world , op_def} from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 
 export class Market extends PacketHandler {
   private readonly world: WorldService;
   private mEvent: Phaser.Events.EventEmitter;
+  private market_name: string;
   constructor($world: WorldService) {
     super();
     this.world = $world;
@@ -36,11 +37,17 @@ export class Market extends PacketHandler {
     this.mEvent.off(event, fn, context);
   }
 
+  setMarketName(market_name: string) {
+    this.market_name = market_name;
+  }
+
   /**
    * 获取商品分类
    */
   getMarkCategories() {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES);
+    const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES = packet.content;
+    content.marketName = this.market_name;
     this.connection.send(packet);
   }
 
