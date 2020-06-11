@@ -29,11 +29,12 @@ export class DialogPanel extends BasePanel {
         this.setSize(width, height);
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
-        this.blackBg.fillRoundedRect(0, 0, width, height);
+        this.blackBg.fillRect(0, 0, width, height);
         this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         const frame = this.scene.textures.getFrame(this.key, "menu_bg_l");
         const scaleRatio = width / frame.width * this.dpr;
-        this.bg.scaleX = scaleRatio;
+        this.bg.scaleX = scaleRatio * 1.5;
+        this.bg.x = 0;
         this.bg.setInteractive();
         this.bg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
