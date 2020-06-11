@@ -26,16 +26,16 @@ export class ActivityMediator extends BaseMediator {
     }
 
     isSceneUI() {
-        return true;
+        return false;
     }
 
     private onShowPanelHandler(panel: string, data?: any) {
         if (!panel || !this.world) {
-          return;
+            return;
         }
         const uiManager = this.world.uiManager;
         if (data)
-          uiManager.showMed(panel, data);
+            uiManager.showMed(panel, data);
         else uiManager.showMed(panel);
-      }
+    }
 }

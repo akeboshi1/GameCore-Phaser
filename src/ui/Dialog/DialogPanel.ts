@@ -135,6 +135,7 @@ export class DialogPanel extends BasePanel {
         if (data.text && data.text[1])
             this.npcName.text = data.text[1].text;
         if (data.display && data.display[0]) {
+            this.npcIcon.visible = true;
             const display = data.display[0];
             const url = Url.getOsdRes(display.texturePath);
             this.npcIcon.load(url, this, () => {
@@ -157,6 +158,8 @@ export class DialogPanel extends BasePanel {
                 this.npcIcon.x = x;
                 this.npcIcon.y = y;
             });
+        } else {
+            this.npcIcon.visible = false;
         }
         if (data.button && data.button.length > 0) {
             this.setLayoutItems(data.button);

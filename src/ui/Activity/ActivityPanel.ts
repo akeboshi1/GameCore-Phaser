@@ -2,6 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Handler } from "../../Handler/Handler";
 import { Logger } from "../../utils/log";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
@@ -23,6 +24,20 @@ export class ActivityPanel extends BasePanel {
             this.setInteractive();
         }
         super.show(param);
+        this.checkUpdateActive();
+    }
+
+    updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+        if (!this.mInitialized) {
+            return;
+        }
+        if (active.name === "picachat.navigatebtn") {
+            const btn = <Phaser.GameObjects.Image>this.content.list[3];
+            btn.visible = active.visible;
+            if (!active.disabled) {
+                btn.setInteractive();
+            } else btn.removeInteractive();
+        }
     }
 
     protected preload() {
@@ -65,5 +80,14 @@ export class ActivityPanel extends BasePanel {
         if (name === 4) {
             this.emit("showPanel", "Task");
         }
+    }
+    private checkUpdateActive() {
+        const arr = this.mWorld.uiManager.getActiveUIData("ActivityPanel");
+        if (arr) {
+            for (const data of arr) {
+                this.updateActiveUI(data);
+            }
+        }
+
     }
 }

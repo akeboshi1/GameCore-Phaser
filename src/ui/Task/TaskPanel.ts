@@ -323,7 +323,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         const typeTag = this.getQuestTypeTag(data.questType);
         this.typeBg.setFrame(typeTag[0]);
         this.typeTex.text = typeTag[1];
-        this.setTextLimit(this.taskName, typeTag[2] + data.name,12);
+        this.setTextLimit(this.taskName, typeTag[2] + data.name, 12);
         this.bg.setFrame(typeTag[3]);
         // this.taskDes.text = data.detail;
         this.setTextLimit(this.taskDes, data.detail);
@@ -426,6 +426,8 @@ class TaskItem extends Phaser.GameObjects.Container {
                     break;
                 }
             }
+        } else {
+            text.setText(content);
         }
     }
 }

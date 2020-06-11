@@ -17,7 +17,10 @@ export class PicaMainUIPanel extends BasePanel {
     private mStrengthValue: ProgressValue;
     private mExpProgress: ExpProgress;
     private playerIcon: Phaser.GameObjects.Image;
+    private playerCon: Phaser.GameObjects.Container;
+    private roomCon: Phaser.GameObjects.Container;
     private textToolTip: TextToolTips;
+    private isSceneNameActive: boolean = false;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
     }
@@ -27,6 +30,7 @@ export class PicaMainUIPanel extends BasePanel {
         if (this.mInitialized) {
             this.setInteractive();
             this.update(param);
+            this.checkUpdateActive();
         }
     }
 
@@ -91,6 +95,7 @@ export class PicaMainUIPanel extends BasePanel {
             const bound = this.mSceneName.getBounds();
             this.mSceneName.setSize(bound.width, bound.height);
             this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(this.mSceneName.width / 2, 0, this.mSceneName.width, this.mSceneName.height), Phaser.Geom.Rectangle.Contains);
+            this.isSceneNameActive = true;
         }
         if (param.hasOwnProperty("ownerName")) {
             this.mSceneType.setText(param.ownerName);
@@ -101,29 +106,44 @@ export class PicaMainUIPanel extends BasePanel {
         }
     }
 
+    updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+        if (!this.mInitialized) {
+            return;
+        }
+        if (active.name === "mainui.playerinfo") {
+            this.playerCon.visible = active.visible;
+        }
+        if (active.name === "mainui.roominfo") {
+            this.roomCon.visible = active.visible;
+        }
+        if (active.name === "mainui.headbtn") {
+            this.playerIcon.visible = active.visible;
+            if (!active.disabled) {
+                this.playerIcon.setInteractive();
+            } else {
+                this.playerIcon.removeInteractive();
+            }
+        }
+        if (active.name === "mainui.entereditorbtn") {
+            this.mSceneName.visible = active.visible;
+            if (this.isSceneNameActive) {
+                if (!active.disabled) {
+                    this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(this.mSceneName.width / 2, 0, this.mSceneName.width, this.mSceneName.height), Phaser.Geom.Rectangle.Contains);
+                } else {
+                    this.mSceneName.removeInteractive();
+                }
+            }
+        }
+    }
     init() {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
+        this.playerCon = this.scene.make.container(undefined, false);
+        this.add(this.playerCon);
         this.mCoinValue = new ValueContainer(this.scene, this.key, "coin", this.dpr);
         this.mCoinValue.y = 28 * this.dpr;
         this.mDiamondValue = new ValueContainer(this.scene, this.key, "diamond", this.dpr);
         this.mDiamondValue.y = 68 * this.dpr;
-
-        this.mSceneName = new SceneName(this.scene, this.key, "room_icon", "setting_icon", this.dpr);
-        this.mSceneName.setText("");
-        this.mSceneName.x = 15 * this.dpr;
-        this.mSceneName.y = 55 * this.dpr;
-        this.mSceneType = new IconText(this.scene, this.key, "star_icon", this.dpr);
-        this.mSceneType.setText("");
-        this.mSceneType.x = 15 * this.dpr;
-        this.mSceneType.y = 80 * this.dpr;
-        this.mSceneType.setColor("#FFFF00");
-        this.mCounter = new IconText(this.scene, this.key, "counter_icon", this.dpr);
-        this.mCounter.setText("1人");
-        this.mCounter.x = 15 * this.dpr;
-        this.mCounter.y = 105 * this.dpr;
-        this.mCounter.setColor("#27f6ff");
-        this.add([this.mCoinValue, this.mDiamondValue, this.mSceneName, this.mSceneType, this.mCounter]);
 
         const frame = this.scene.textures.getFrame(this.key, "strength_progress");
         this.mStrengthValue = new ProgressValue(this.scene, this.key, "strength_icon", this.dpr);
@@ -142,10 +162,32 @@ export class PicaMainUIPanel extends BasePanel {
         this.mStrengthValue.add(this.playerIcon);
         this.playerIcon.on("pointerup", this.onHeadHandler, this);
         this.playerIcon.setInteractive();
-        this.add(this.mStrengthValue);
         this.mStrengthValue.setValue(1000, 1000);
         this.mStrengthValue.setInteractive();
         this.mStrengthValue.on("pointerup", this.onStrengthHandler, this);
+        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
+        this.textToolTip = new TextToolTips(this.scene, this.key, "tips_bg", this.dpr, this.scale);
+        this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
+        this.add([this.mExpProgress, this.mStrengthValue, this.mCoinValue, this.mDiamondValue, this.textToolTip]);
+
+        this.roomCon = this.scene.make.container(undefined, false);
+        this.add(this.roomCon);
+        this.mSceneName = new SceneName(this.scene, this.key, "room_icon", "setting_icon", this.dpr);
+        this.mSceneName.setText("");
+        this.mSceneName.x = 15 * this.dpr;
+        this.mSceneName.y = 55 * this.dpr;
+        this.mSceneType = new IconText(this.scene, this.key, "star_icon", this.dpr);
+        this.mSceneType.setText("");
+        this.mSceneType.x = 15 * this.dpr;
+        this.mSceneType.y = 80 * this.dpr;
+        this.mSceneType.setColor("#FFFF00");
+        this.mCounter = new IconText(this.scene, this.key, "counter_icon", this.dpr);
+        this.mCounter.setText("1人");
+        this.mCounter.x = 15 * this.dpr;
+        this.mCounter.y = 105 * this.dpr;
+        this.mCounter.setColor("#27f6ff");
+        this.roomCon.add([this.mSceneName, this.mSceneType, this.mCounter]);
+
         // frame = this.scene.textures.getFrame(this.key, "health_progress");
         // const healthValue = new ProgressValue(this.scene, this.key, "health_con", this.dpr);
         // healthValue.x = 150 * this.dpr;
@@ -160,11 +202,6 @@ export class PicaMainUIPanel extends BasePanel {
         // this.add(healthValue);
         // healthValue.setValue(200, 1000);
 
-        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
-        this.textToolTip = new TextToolTips(this.scene, this.key, "tips_bg", this.dpr, this.scale);
-        this.add(this.mExpProgress);
-        this.add(this.textToolTip);
-        this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
         this.resize(w, h);
         super.init();
     }
@@ -183,6 +220,15 @@ export class PicaMainUIPanel extends BasePanel {
         const text = "当前精力值" + `${energy.currentValue}/${energy.max}\n` + "精力不满时，每10分钟恢复1点";
         this.textToolTip.setTextData(text, 3000);
         this.textToolTip.setPosition(120 * this.dpr, 80 * this.dpr);
+    }
+    private checkUpdateActive() {
+        const arr = this.mWorld.uiManager.getActiveUIData("PicaMainUI");
+        if (arr) {
+            for (const data of arr) {
+                this.updateActiveUI(data);
+            }
+        }
+
     }
 }
 

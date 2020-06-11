@@ -1,7 +1,7 @@
 import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
 import { NoticeMediator } from "./Notice/NoticeMediator";
@@ -56,6 +56,7 @@ export class UiManager extends PacketHandler {
     private mShowuiList: any[] = [];
     private mInputTextFactory: InputTextFactory;
     private interBubbleMgr: InteractiveBubbleManager;
+    private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
     constructor(private worldService: WorldService) {
         super();
         this.mConnect = worldService.connection;
@@ -68,6 +69,7 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME, this.openMarketPanel);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onRefreshActiveUI);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
         this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
@@ -94,6 +96,19 @@ export class UiManager extends PacketHandler {
 
     public getUILayerManager(): ILayerManager {
         return this.mUILayerManager;
+    }
+
+    public getActiveUIData(name: string): op_pkt_def.IPKT_UI[] {
+        if (!this.mAtiveUIData) return null;
+        const arr: op_pkt_def.IPKT_UI[] = [];
+        for (const data of this.mAtiveUIData.ui) {
+            const tagName = data.name.split(".")[0];
+            const paneName = this.getPanelNameByActiveTag(tagName);
+            if (paneName === name) {
+                arr.push(data);
+            }
+        }
+        return arr;
     }
 
     public setScene(scene: Phaser.Scene) {
@@ -127,8 +142,6 @@ export class UiManager extends PacketHandler {
                 this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
-                this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
-                // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, this.worldService));
             }
             // this.mMedMap.set(UBaseMediatorType.MainUBaseMediator, new MainUBaseMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
@@ -534,5 +547,40 @@ export class UiManager extends PacketHandler {
     private openMarketPanel(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
         this.showMed("Market", content);
+    }
+    private onRefreshActiveUI(packge: PBpacket) {
+        this.mAtiveUIData = packge.content;
+        if (this.mAtiveUIData) {
+            for (const ui of this.mAtiveUIData.ui) {
+                const arr = ui.name.split(".");
+                const tagName = arr[0];
+                const panelName = this.getPanelNameByActiveTag(tagName);
+                if (panelName) {
+                    const mediator: BaseMediator = this.mMedMap.get(panelName);
+                    if (mediator && mediator.isShow()) {
+                        mediator.getView().updateActiveUI(ui);
+                    }
+                    if (arr.length === 1) {
+                        if (ui.visible) {
+                            this.showMed(panelName);
+                        } else
+                            this.hideMed(panelName);
+                    }
+                }
+            }
+        }
+    }
+    private getPanelNameByActiveTag(tag: string) {
+        switch (tag) {
+            case "mainui":
+                return "PicaMainUI";
+            case "activity":
+                return "Activity";
+            case "picachat":
+                return "PicaChat";
+            case "picanavigate":
+                return "PicaNavigate";
+        }
+        return null;
     }
 }

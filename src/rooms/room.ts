@@ -628,9 +628,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
         const target = this.getElement(content.id);
         if (target) {
-            this.mCameraService.startFollow(target.getDisplay());
+            if (this.mCameraService) this.mCameraService.startFollow(target.getDisplay());
         } else {
-            this.mCameraService.stopFollow();
+            if (this.mCameraService) this.mCameraService.stopFollow();
         }
     }
 
