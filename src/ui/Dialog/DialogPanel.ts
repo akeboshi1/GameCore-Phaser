@@ -15,6 +15,7 @@ export class DialogPanel extends BasePanel {
     private text: Phaser.GameObjects.Text;
     private blackBg: Phaser.GameObjects.Graphics;
     private listItems: NpcDialogueItem[] = [];
+    private bg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.scale = 1;
@@ -30,6 +31,11 @@ export class DialogPanel extends BasePanel {
         this.blackBg.fillStyle(0, 0.5);
         this.blackBg.fillRoundedRect(0, 0, width, height);
         this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+        const frame = this.scene.textures.getFrame(this.key, "menu_bg_l");
+        const scaleRatio = width / frame.width * this.dpr;
+        this.bg.scaleX = scaleRatio;
+        this.bg.setInteractive();
+        this.bg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
 
     preload() {
@@ -62,11 +68,11 @@ export class DialogPanel extends BasePanel {
         this.add(this.blackBg);
         this.content = this.scene.make.container({ x: 0 * this.dpr, y: (height - cheight) / 2, width, height: cheight }, false);
         this.content.setSize(width, cheight);
-        const bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "menu_bg_l" });
-        bg.scaleY = this.scale;
-        bg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-        bg.displayWidth = width;
-        bg.displayHeight = cheight;
+        this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "menu_bg_l" });
+        this.bg.scaleY = this.scale;
+        this.bg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.bg.displayWidth = width;
+        this.bg.displayHeight = cheight;
         const whiteGraphic = this.scene.make.graphics(undefined, false);
         const graphicWidth = width - 30 * this.dpr;
         const graphicHeight = 122 * this.dpr;
@@ -91,9 +97,9 @@ export class DialogPanel extends BasePanel {
         closeBtn.setPosition(width * 0.5 - 30 * this.dpr, -cheight * 0.5 + 10 * this.dpr);
         closeBtn.on("Tap", this.onCloseHandler, this);
         closeBtn.visible = false;
-        this.content.add([bg, this.npcIcon, whiteGraphic, this.text, nameBg, this.npcName, closeBtn]);
-        bg.setInteractive();
-        bg.on("pointerup", this.onNextDialogHandler, this);
+        this.content.add([this.bg, this.npcIcon, whiteGraphic, this.text, nameBg, this.npcName, closeBtn]);
+        this.bg.setInteractive();
+        this.bg.on("pointerup", this.onNextDialogHandler, this);
         this.add(this.content);
         this.resize(0, 0);
         super.init();
@@ -155,8 +161,8 @@ export class DialogPanel extends BasePanel {
                 } else if (display.horizontal === op_def.HorizontalAlignment.HORIZONTAL_RIGHT) {
                     x = width * 0.5 - iconWidth * 0.5 - 20 * this.dpr;
                 }
-                //  this.npcIcon.displayWidth = 60 * this.dpr;
-                //  this.npcIcon.scaleY = this.npcIcon.scaleX;
+                this.npcIcon.displayWidth = 212 * this.dpr;
+                this.npcIcon.scaleY = this.npcIcon.scaleX;
                 this.npcIcon.x = x;
                 this.npcIcon.y = y;
             });
