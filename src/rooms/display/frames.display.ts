@@ -115,7 +115,7 @@ export class FramesDisplay extends DisplayObject {
         if (targetIndex === undefined) targetIndex = 0;
         let { x } = mountPoint[targetIndex];
         if (this.mActionName.flip) {
-            x = (this.spriteWidth * 0.5 + x);
+            x = 0 - x;
         }
         display.x = x;
         display.y = mountPoint[targetIndex].y;
