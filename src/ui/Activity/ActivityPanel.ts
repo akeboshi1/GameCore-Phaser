@@ -31,7 +31,7 @@ export class ActivityPanel extends BasePanel {
         if (!this.mInitialized) {
             return;
         }
-        if (active.name === "picachat.navigatebtn") {
+        if (active.name === "activity.taskbtn") {
             const btn = <Phaser.GameObjects.Image>this.content.list[3];
             btn.visible = active.visible;
             if (!active.disabled) {
@@ -82,7 +82,7 @@ export class ActivityPanel extends BasePanel {
         }
     }
     private checkUpdateActive() {
-        const arr = this.mWorld.uiManager.getActiveUIData("ActivityPanel");
+        const arr = this.mWorld.uiManager.getActiveUIData("Activity");
         if (arr) {
             for (const data of arr) {
                 this.updateActiveUI(data);

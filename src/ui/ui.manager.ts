@@ -57,6 +57,7 @@ export class UiManager extends PacketHandler {
     private mInputTextFactory: InputTextFactory;
     private interBubbleMgr: InteractiveBubbleManager;
     private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
+    private mStackList: any[] = [];// 记录面板打开关闭先后顺序
     constructor(private worldService: WorldService) {
         super();
         this.mConnect = worldService.connection;
@@ -360,6 +361,8 @@ export class UiManager extends PacketHandler {
         // }
         this.checkUIState(className, false);
         mediator.show(param);
+        this.mStackList.unshift(className);
+        if (this.mStackList.length > 2) this.mStackList.splice(this.mStackList.length - 1, 1);
     }
 
     private handleShowUI(packet: PBpacket): void {
@@ -556,7 +559,7 @@ export class UiManager extends PacketHandler {
                 const tagName = arr[0];
                 const panelName = this.getPanelNameByActiveTag(tagName);
                 if (panelName) {
-                    const mediator: BaseMediator = this.mMedMap.get(panelName);
+                    const mediator: BaseMediator = this.mMedMap.get(panelName+"Mediator");
                     if (mediator && mediator.isShow()) {
                         mediator.getView().updateActiveUI(ui);
                     }

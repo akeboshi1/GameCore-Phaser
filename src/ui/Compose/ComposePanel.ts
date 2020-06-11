@@ -268,9 +268,11 @@ export class ComposePanel extends BasePanel {
     }
 
     public setComposeData(datas: op_pkt_def.IPKT_Skill[]) {
-        this.mGrideTable.setItems(datas);
-        const cell = this.mGrideTable.getCell(0);
-        this.onSelectItemHandler(cell.container);
+        if (datas && datas.length > 0) {
+            this.mGrideTable.setItems(datas);
+            const cell = this.mGrideTable.getCell(0);
+            this.onSelectItemHandler(cell.container);
+        }
     }
 
     public setComposeDetialData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {

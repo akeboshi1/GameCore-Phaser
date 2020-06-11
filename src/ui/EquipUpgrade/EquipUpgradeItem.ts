@@ -5,6 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatch } from "../components/nine.patch";
+import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -21,7 +22,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private diamondIcon: Phaser.GameObjects.Image;
     private costNum: Phaser.GameObjects.Text;
     private btnName: Phaser.GameObjects.Text;
-    private unlockCondition: Phaser.GameObjects.Text;
+    private unlockCondition: BBCodeText;
     private haveEquiped: boolean = false;
     private curEquipItem: EquipItemCell;
     private zoom: number;
@@ -79,10 +80,10 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.topbg.y += y;
         this.unlockbtn.x += x;
         this.unlockbtn.y += y;
-        this.costNum.x += x;
-        this.costNum.y += y;
-        this.diamondIcon.x += x;
-        this.diamondIcon.y += y;
+        // this.costNum.x += x;
+        // this.costNum.y += y;
+        // this.diamondIcon.x += x;
+        // this.diamondIcon.y += y;
         this.curEquipItem.x += x;
         this.curEquipItem.y += y;
         this.gridTable.refreshPos(x, y - 10 * this.dpr * this.zoom);
@@ -211,7 +212,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.penetrationText.text = data.buffDisplayNames[0];
         this.equipDes.text = data.description;
         this.equipName.text = data.name;
-        this.costNum.text = data.price + "";
         if (data.owned) this.unlockbtn.visible = false;
         else this.unlockbtn.visible = true;
         if (data.qualified) {
@@ -222,11 +222,14 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
             this.unlockCondition.text = data.conditionDisplayNames[0];
             this.unlockbtn.disableInteractive();
         }
-        if (data.price == null) {
+        if (data.price === null) {
             this.costNum.visible = false;
             this.diamondIcon.visible = false;
             this.btnName.setPosition(0, 0 * this.dpr);
         } else {
+            const costPrice = data.price.price;
+            const powValue = Math.pow(10, data.price.displayPrecision);
+            this.costNum.text = Math.floor(costPrice * powValue) / powValue + "";
             this.costNum.visible = true;
             this.diamondIcon.visible = true;
             this.btnName.setPosition(0, 6 * this.dpr);
@@ -238,7 +241,9 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     }
 
     private createBtn() {
-        this.unlockCondition = this.mScene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        // this.unlockCondition = this.mScene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.unlockCondition = new BBCodeText(this.mScene, 0, -26 * this.dpr, {})
+            .setOrigin(0.5).setFontSize(10 * this.dpr).setFontFamily(Font.DEFULT_FONT);
         this.unlockbtn = this.mScene.make.container(undefined, false);
         const btnBg = new NinePatch(this.mScene, 0, 0, 88 * this.dpr * this.zoom, 31 * this.dpr * this.zoom, this.commonKey, "yellow_btn_normal", {
             left: 12 * this.dpr * this.zoom,
