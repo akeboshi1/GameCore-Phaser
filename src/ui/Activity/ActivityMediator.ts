@@ -26,7 +26,7 @@ export class ActivityMediator extends BaseMediator {
     }
 
     isSceneUI() {
-        return false;
+        return true;
     }
 
     private onShowPanelHandler(panel: string, data?: any) {

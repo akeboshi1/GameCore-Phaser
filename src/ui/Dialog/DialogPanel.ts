@@ -29,6 +29,7 @@ export class DialogPanel extends BasePanel {
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
         this.blackBg.fillRoundedRect(0, 0, width, height);
+        this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     }
 
     preload() {
@@ -49,9 +50,9 @@ export class DialogPanel extends BasePanel {
         } else {
             this.mShow = true;
         }
+        this.setInteractive();
         this.addListen();
         this.setDialogData(this.mShowData[0]);
-        this.setInteractive();
     }
     init() {
         const width = this.scaleWidth;
