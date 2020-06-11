@@ -51,6 +51,7 @@ export class DialogPanel extends BasePanel {
         }
         this.addListen();
         this.setDialogData(this.mShowData[0]);
+        this.setInteractive();
     }
     init() {
         const width = this.scaleWidth;
