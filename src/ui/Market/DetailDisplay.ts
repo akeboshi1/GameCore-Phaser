@@ -25,7 +25,11 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         this.onCompleteHandler();
       } else {
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
-        this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
+        if (display.texturePath !== "" && display.dataPath !== "") {
+          this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
+        } else {
+          this.loadUrl(Url.getOsdRes(display.texturePath));
+        }
         this.scene.load.start();
       }
     }
