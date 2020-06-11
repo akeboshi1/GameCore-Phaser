@@ -57,6 +57,7 @@ export class Market extends PacketHandler {
     content.page = page;
     content.category = category;
     content.subcategory = subCategory;
+    content.marketName = this.market_name;
     this.connection.send(packet);
   }
 
@@ -64,6 +65,7 @@ export class Market extends PacketHandler {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES = packet.content;
     content.orderCommodities = commodities;
+    content.marketName = this.market_name;
     this.connection.send(packet);
   }
 
@@ -72,6 +74,7 @@ export class Market extends PacketHandler {
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_COMMODITY_RESOURCE = packet.content;
     content.id = id;
     content.category = category;
+    content.marketName = this.market_name;
     this.connection.send(packet);
   }
 
@@ -91,6 +94,7 @@ export class Market extends PacketHandler {
 
   private onQueryCommodityResultHandler(packet: PBpacket) {
     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE = packet.content;
+    packet.content.market_name = this.market_name;
     this.mEvent.emit("queryCommodityResource", packet.content);
   }
 
