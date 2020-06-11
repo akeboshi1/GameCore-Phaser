@@ -117,7 +117,7 @@ export class PicaMainUIPanel extends BasePanel {
             this.roomCon.visible = active.visible;
         }
         if (active.name === "mainui.headbtn") {
-            this.playerIcon.visible = active.visible;
+            // this.playerIcon.visible = active.visible;
             if (!active.disabled) {
                 this.playerIcon.setInteractive();
             } else {
@@ -166,9 +166,8 @@ export class PicaMainUIPanel extends BasePanel {
         this.mStrengthValue.setInteractive();
         this.mStrengthValue.on("pointerup", this.onStrengthHandler, this);
         this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
-        this.textToolTip = new TextToolTips(this.scene, this.key, "tips_bg", this.dpr, this.scale);
-        this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
-        this.add([this.mExpProgress, this.mStrengthValue, this.mCoinValue, this.mDiamondValue, this.textToolTip]);
+
+        this.playerCon.add([this.mExpProgress, this.mStrengthValue, this.mCoinValue, this.mDiamondValue]);
 
         this.roomCon = this.scene.make.container(undefined, false);
         this.add(this.roomCon);
@@ -186,7 +185,9 @@ export class PicaMainUIPanel extends BasePanel {
         this.mCounter.x = 15 * this.dpr;
         this.mCounter.y = 105 * this.dpr;
         this.mCounter.setColor("#27f6ff");
-        this.roomCon.add([this.mSceneName, this.mSceneType, this.mCounter]);
+        this.textToolTip = new TextToolTips(this.scene, this.key, "tips_bg", this.dpr, this.scale);
+        this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
+        this.roomCon.add([this.mSceneName, this.mSceneType, this.mCounter, this.textToolTip]);
 
         // frame = this.scene.textures.getFrame(this.key, "health_progress");
         // const healthValue = new ProgressValue(this.scene, this.key, "health_con", this.dpr);
@@ -277,6 +278,7 @@ class ValueContainer extends Phaser.GameObjects.Container {
         this.mText.x = this.width / 2 - 30 * dpr;
         this.mText.y = -(this.height - 12 * dpr) / 2;
         this.add([bg, left, this.mText, this.mAddBtn]);
+        this.mAddBtn.visible = false;
     }
 
 }
@@ -457,6 +459,7 @@ class ProgressValue extends ValueContainer {
         // this.mText.x = this.width / 2
         this.mText.y = (this.height - this.mText.height) / 2;
         this.add([bg, this.mProgress, left, this.mText, this.mAddBtn]);
+        this.mAddBtn.visible = false;
     }
 
 }

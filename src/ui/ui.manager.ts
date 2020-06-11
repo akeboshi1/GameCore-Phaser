@@ -71,7 +71,7 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME, this.openMarketPanel);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onRefreshActiveUI);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onActiveUIHandler);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
         this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
@@ -203,6 +203,9 @@ export class UiManager extends PacketHandler {
                 mediator.show();
             }
         });
+        if (this.mAtiveUIData) {
+            this.updateActiveUI(this.mAtiveUIData);
+        }
         if (this.mCache) {
             for (const tmp of this.mCache) {
                 const ui = tmp[0];
@@ -560,25 +563,29 @@ export class UiManager extends PacketHandler {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
         this.showMed("Market", content);
     }
-    private onRefreshActiveUI(packge: PBpacket) {
+    private onActiveUIHandler(packge: PBpacket) {
         this.mAtiveUIData = packge.content;
-        if (this.mAtiveUIData) {
-            for (const ui of this.mAtiveUIData.ui) {
-                const arr = ui.name.split(".");
-                const tagName = arr[0];
-                const panelName = this.getPanelNameByActiveTag(tagName);
-                if (panelName) {
-                    const mediator: BaseMediator = this.mMedMap.get(panelName + "Mediator");
-                    if (arr.length === 1) {
-                        if (ui.visible) {
-                            if (!mediator || !mediator.isShow())
-                                this.showMed(panelName);
-                        } else
-                            this.hideMed(panelName);
-                    } else {
-                        if (mediator && mediator.isShow()) {
-                            mediator.getView().updateActiveUI(ui);
-                        }
+        if (this.mAtiveUIData && this.mMedMap) {
+            this.updateActiveUI(this.mAtiveUIData);
+        }
+    }
+
+    private updateActiveUI(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
+        for (const ui of data.ui) {
+            const arr = ui.name.split(".");
+            const tagName = arr[0];
+            const panelName = this.getPanelNameByActiveTag(tagName);
+            if (panelName) {
+                const mediator: BaseMediator = this.mMedMap.get(panelName + "Mediator");
+                if (arr.length === 1) {
+                    if (ui.visible) {
+                        if (!mediator || !mediator.isShow())
+                            this.showMed(panelName);
+                    } else
+                        this.hideMed(panelName);
+                } else {
+                    if (mediator && mediator.isShow()) {
+                        mediator.getView().updateActiveUI(ui);
                     }
                 }
             }
