@@ -2,6 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_def } from "pixelpai_proto";
 import { AlertView } from "../components/alert.view";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
   private mBackground: Phaser.GameObjects.Image;
@@ -10,9 +11,7 @@ export class PicaNavigatePanel extends BasePanel {
   private mBagBtn: Phaser.GameObjects.Image;
   private mFamilyBtn: Phaser.GameObjects.Image;
   private mGoHomeBtn: Phaser.GameObjects.Image;
-  // private mPlayerBtn: Phaser.GameObjects.Image;
   private mCloseBtn: Phaser.GameObjects.Image;
-  private alertView: AlertView;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
@@ -61,6 +60,35 @@ export class PicaNavigatePanel extends BasePanel {
     this.mShow = false;
   }
 
+  show(param?: any) {
+    super.show(param);
+    this.checkUpdateActive();
+  }
+  updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+    if (!this.mInitialized) {
+      return;
+    }
+    if (active.name === "picanavigate.mapbtn") {
+      this.mMapBtn.visible = active.visible;
+      if (!active.disabled) this.mMapBtn.setInteractive();
+      else this.mMapBtn.removeInteractive();
+    }
+    if (active.name === "picanavigate.marketbtn") {
+      this.mShopBtn.visible = active.visible;
+      if (!active.disabled) this.mShopBtn.setInteractive();
+      else this.mShopBtn.removeInteractive();
+    }
+    if (active.name === "picanavigate.bagbtn") {
+      this.mBagBtn.visible = active.visible;
+      if (!active.disabled) this.mBagBtn.setInteractive();
+      else this.mBagBtn.removeInteractive();
+    }
+    if (active.name === "picanavigate.gohomebtn") {
+      this.mGoHomeBtn.visible = active.visible;
+      if (!active.disabled) this.mGoHomeBtn.setInteractive();
+      else this.mGoHomeBtn.removeInteractive();
+    }
+  }
   protected preload() {
     this.addAtlas(this.key, "pica_navigate/pica_navigate.png", "pica_navigate/pica_navigate.json");
     super.preload();
@@ -76,7 +104,6 @@ export class PicaNavigatePanel extends BasePanel {
     this.mGoHomeBtn = this.createImage(this.key, "home_btn").setInteractive();
     // this.mPlayerBtn = this.createImage(this.key, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn").setInteractive();
-    this.alertView = new AlertView(this.scene, this.mWorld);
     const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn];
     this.add([this.mBackground]);
     this.add(list);
@@ -113,14 +140,6 @@ export class PicaNavigatePanel extends BasePanel {
     this.emit("showPanel", "CharacterInfo");
   }
   private onShowGoHomeHandler() {
-    // this.alertView.show({
-    //   text: `您确定要回家吗？`,
-    //   title: "",
-    //   oy: 302 * this.dpr * this.mWorld.uiScale,
-    //   callback: () => {
-    //     this.emit("goHome");
-    //   },
-    // });
     this.emit("goHome");
   }
   private onShowPlayerHandler() {
@@ -129,4 +148,13 @@ export class PicaNavigatePanel extends BasePanel {
   private onCloseHandler() {
     this.emit("close");
   }
+  private checkUpdateActive() {
+    const arr = this.mWorld.uiManager.getActiveUIData("PicaNavigate");
+    if (arr) {
+        for (const data of arr) {
+            this.updateActiveUI(data);
+        }
+    }
+
+}
 }

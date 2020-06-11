@@ -4,6 +4,7 @@ import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { Font } from "../../utils/font";
 import { InputPanel } from "../components/input.panel";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 
 export class PicaChatPanel extends BasePanel {
     private readonly key: string = "pica_chat";
@@ -44,6 +45,7 @@ export class PicaChatPanel extends BasePanel {
         }
         this.setInteractive();
         this.addListen();
+        this.checkUpdateActive();
     }
 
     resize(w: number, h: number) {
@@ -113,6 +115,15 @@ export class PicaChatPanel extends BasePanel {
         this.mScrollBtn.off("drag", this.onDragHandler, this);
         this.mNavigateBtn.off("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
+    }
+
+    updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+        if (!this.mInitialized) {
+            return;
+        }
+        if (active.name === "picachat.navigatebtn") {
+            this.mNavigateBtn.visible = active.visible;
+        }
     }
 
     protected preload() {
@@ -283,5 +294,14 @@ export class PicaChatPanel extends BasePanel {
             return;
         }
         this.emit("chat", val);
+    }
+    private checkUpdateActive() {
+        const arr = this.mWorld.uiManager.getActiveUIData("PicaChat");
+        if (arr) {
+            for (const data of arr) {
+                this.updateActiveUI(data);
+            }
+        }
+
     }
 }
