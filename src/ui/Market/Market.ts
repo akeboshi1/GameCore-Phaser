@@ -55,6 +55,7 @@ export class Market extends PacketHandler {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY = packet.content;
     content.page = page;
+    content.perPage = 1000;
     content.category = category;
     content.subcategory = subCategory;
     content.marketName = this.market_name;

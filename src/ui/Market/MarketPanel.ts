@@ -163,6 +163,7 @@ export class MarketPanel extends BasePanel {
     // this.mPropContainer.add(this.mItems);
     this.mPropGrid.setItems(commodities);
     this.mPropGrid.layout();
+    this.mPropGrid.setT(0);
     if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
   }
 
