@@ -3,8 +3,9 @@ import { WorldService } from "../../game/world.service";
 import { PicaChatPanel } from "./PicaChatPanel";
 import { PicaNavigateMediator } from "../PicaNavigate/PicaNavigateMediator";
 import { PicaChat } from "./PicaChat";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { IElement } from "../../rooms/element/element";
 
 export class PicaChatMediator extends BaseMediator {
     public static NAME: string = "PicaChatMediator";
@@ -69,14 +70,30 @@ export class PicaChatMediator extends BaseMediator {
     }
 
     private onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {
-        if (!this.mView || !this.world || !this.world.roomManager || !this.world.roomManager.currentRoom) {
+        if (!this.mView) {
             return;
         }
-        const playerManager = this.world.roomManager.currentRoom.playerManager;
-        const player = playerManager.get(content.chatSenderid);
+        const player = this.getSpeaker(content.chatSenderid);
+        let speaker = "";
         if (player) {
-            this.mView.appendChat(`[color=#ffffff][当前]${player.model.nickname}: ${content.chatContext}[/color]\n`);
+            speaker = `${player.model.nickname}`;
+        } else {
+            if (content.chatSenderid) {
+                speaker = "神秘人";
+            }
         }
+        let color = "#ffffff";
+        if (content.chatSetting) {
+            color = content.chatSetting.textColor;
+        }
+        this.appendChat(`[color=${color}][${this.getChannel(content.chatChannel)}]${speaker}: ${content.chatContext}[/color]\n`);
+    }
+
+    private appendChat(chat: string) {
+        if (!this.mView) {
+            return;
+        }
+        this.mView.appendChat(chat);
     }
 
     private onSendChatHandler(val: string) {
@@ -87,5 +104,24 @@ export class PicaChatMediator extends BaseMediator {
             this.world.uiManager.showMed("DebugLogger");
         }
         this.mChat.sendMessage(val);
+    }
+
+    private getChannel(channel: op_def.ChatChannel) {
+        switch (channel) {
+            case op_def.ChatChannel.CurrentScene:
+                return "当前";
+            case op_def.ChatChannel.World:
+                return "世界";
+            default:
+                return "系统";
+        }
+    }
+
+    private getSpeaker(id: number): IElement {
+        if (id) {
+            if (!this.world || !this.world.roomManager || !this.world.roomManager.currentRoom) {
+                return this.world.roomManager.currentRoom.getElement(id);
+            }
+        }
     }
 }
