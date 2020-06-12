@@ -22,11 +22,11 @@ export class TopMenuContainer extends BasePanel {
     // this.scaleX = this.scaleY = this.mWorld.uiScale;
   }
 
-  show() {
+  show(param?: any) {
     if (this.mWorld) {
       this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
     }
-    super.show();
+    super.show(param);
   }
 
   hide() {

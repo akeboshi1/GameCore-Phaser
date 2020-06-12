@@ -3,7 +3,7 @@ import { NinePatch } from "../components/nine.patch";
 import { Background, Border, Url } from "../../utils/resUtil";
 import { Size } from "../../utils/size";
 import { WorldService } from "../../game/world.service";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { InputText } from "tooqingui";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Item } from "./item/Item";
 import { op_client } from "pixelpai_proto";

@@ -4,7 +4,6 @@ import { Font } from "../../utils/font";
 import { EquipUpgradeItem } from "./EquipUpgradeItem";
 import { NinePatch } from "../components/nine.patch";
 import { op_client } from "pixelpai_proto";
-import { Logger } from "../../utils/log";
 import { i18n } from "../../i18n";
 
 export default class EquipUpgradePanel extends BasePanel {

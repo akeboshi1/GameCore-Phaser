@@ -5,7 +5,7 @@ import { Logger } from "../../../utils/log";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { BagMediator } from "./bagMediator";
 import { NinePatch } from "../../components/nine.patch";
-import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { InputText } from "tooqingui";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
 import { IconBtn } from "../../baseView/icon.btn";
@@ -153,8 +153,7 @@ export class BagPanel extends BasePanel {
             color: "#808080"
         })
             .resize(txtBg.width, txtBg.height)
-            .setOrigin(0, 0)
-            .setStyle({ font: "bold 16px YaHei" });
+            .setOrigin(0, 0);
         this.mInputText.x = txtBg.x - txtBg.width / 2;
         this.mInputText.y = txtBg.y - txtBg.height / 2;
         this.mInputText.setText(this.mBaseStr);

@@ -2,8 +2,7 @@ import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { GridTableConfig, GameGridTable } from "tooqingui";
 import { NinePatch } from "../components/nine.patch";
 export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;

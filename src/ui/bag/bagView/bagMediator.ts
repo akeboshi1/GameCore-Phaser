@@ -6,7 +6,7 @@ import { IDropable } from "../idropable";
 import { op_gameconfig } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
-import InputText from "tooqingui";
+import { InputText, InputTextEvent } from "tooqingui";
 import { BaseMediator } from "tooqingui";
 import { UIType } from "tooqingui";
 

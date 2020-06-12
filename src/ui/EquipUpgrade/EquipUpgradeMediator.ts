@@ -3,7 +3,7 @@ import EquipUpgradePanel from "./EquipUpgradePanel";
 import { WorldService } from "../../game/world.service";
 import { EquipUpgrade } from "./EquipUpgrade";
 import { op_client } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class EquipUpgradeMediator extends BaseMediator {
     private scene: Phaser.Scene;

@@ -10,7 +10,7 @@ import { CheckButton } from "../../components/check.button";
 import { BagMediator } from "../../bag/bagView/bagMediator";
 import { RightMediator } from "../rightGroup/right.mediator";
 import { ElementStorageMediator } from "../../ElementStorage/ElementStorageMediator";
-import { BaseMediator } from "../../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 export class BottomBtnGroup extends BasePanel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;
