@@ -100,7 +100,7 @@ export class DialogPanel extends BasePanel {
         closeBtn.visible = false;
         this.content.add([this.bg, this.npcIcon, whiteGraphic, this.text, nameBg, this.npcName, closeBtn]);
         this.bg.setInteractive();
-        this.bg.on("pointerup", this.onNextDialogHandler, this);
+        this.bg.on("pointerdown", this.onNextDialogHandler, this);
         this.add(this.content);
         this.resize(0, 0);
         super.init();
