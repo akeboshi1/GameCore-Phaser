@@ -118,13 +118,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             room.enter(vw.scene);
             this.mCurRoom = room;
         } else {
-            if (this.mCurRoom) {
-                this.leaveScene(this.mCurRoom);
-            }
-
             // load this scene config in gameConfig
             this.world.loadSceneConfig(vw.scene.id.toString()).then((config: Lite) => {
                 this.world.elementStorage.setSceneConfig(config);
+                if (this.mCurRoom) {
+                    this.leaveScene(this.mCurRoom);
+                }
                 room = new Room(this);
                 this.mRooms.push(room);
                 room.addActor(vw.actor);
