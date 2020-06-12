@@ -43,6 +43,14 @@ export class PicaNavigateMediator extends BaseMediator {
     return false;
   }
 
+  destroy() {
+    if (this.picaNa) {
+      this.picaNa.destroy();
+      this.picaNa = undefined;
+    }
+    super.destroy();
+  }
+
   private onCloseHandler() {
     if (!this.world) {
       return;
@@ -51,10 +59,11 @@ export class PicaNavigateMediator extends BaseMediator {
     const mediator = uiManager.getMediator(PicaChatMediator.name);
     if (mediator) {
       mediator.show();
-      this.mView.hide();
-      (<PicaNavigatePanel>this.mView).removeListen();
-      this.layerManager.removeToUILayer(this.mView);
+      // this.mView.hide();
+      // (<PicaNavigatePanel>this.mView).removeListen();
+      // this.layerManager.removeToUILayer(this.mView);
     }
+    this.destroy();
   }
 
   private onShowPanelHandler(panel: string, data?: any) {

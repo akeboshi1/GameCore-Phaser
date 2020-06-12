@@ -43,7 +43,7 @@ export class PicaChatPanel extends BasePanel {
         } else {
             this.mShow = true;
         }
-        this.setInteractive();
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width * 2, this.height), Phaser.Geom.Rectangle.Contains);
         this.addListen();
         this.checkUpdateActive();
     }
@@ -86,11 +86,12 @@ export class PicaChatPanel extends BasePanel {
 
     public hide() {
         this.mShow = false;
+        this.removeInteractive();
     }
 
     public addListen() {
         if (!this.mInitialized || !this.interactiveBoo) return;
-        // this.mBackground.setInteractive();
+        //  this.mBackground.setInteractive();
         this.mChatBtn.setInteractive();
         this.mEmojiBtn.setInteractive();
         this.mScrollBtn.setInteractive();
