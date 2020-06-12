@@ -57,7 +57,6 @@ const config = {
         ],
     },
     plugins: [
-        new CopyWebpackPlugin([{ from: "**/*", to: "resources", force: true, context: "resources" }]),
         new HtmlWebpackPlugin({
             inject: "head",
             title: "图轻播放器",

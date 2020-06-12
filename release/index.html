@@ -21,7 +21,7 @@
             margin-right: auto;
         }
     </style>
-<script type="text/javascript" src="js/tooqing.js"></script></head>
+<script type="text/javascript" src="js/index_v1.0.216.js"></script></head>
 
 <body>
     <!-- <input type="file" id="files" name="files[]" /> -->
@@ -61,15 +61,22 @@
     </script> -->
     <script>
         window.addEventListener('load', (event) => {
-            const launcher = TooqingLauncher.Launcher;
-            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
-            app.registerReload(window.reload);
-            app.registerComplete(() => {
-                const loadingImg = document.getElementById('loading_img');
-                if (loadingImg) loadingImg.remove();
-                const loadingGif = document.getElementById('loading_gif');
-                if (loadingGif) loadingGif.remove();
-            })
+            // const launcher = TooqingLauncher.Launcher;
+            // const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
+            // app.registerReload(window.reload);
+            // app.registerComplete(() => {
+            //     const loadingImg = document.getElementById('loading_img');
+            //     if (loadingImg) loadingImg.remove();
+            //     const loadingGif = document.getElementById('loading_gif');
+            //     if (loadingGif) loadingGif.remove();
+            // })
+            const app = new window["game-core"].World({
+                width: window.innerWidth,
+                height: window.innerHeight,
+                screenWidth: window.innerWidth,
+                screenHeight: window.innerHeight,
+            });
+
             if (!window.navigator) {
                 // FR.Msg.alert("提示", "当前设备：移动端APP")
                 window.addEventListener("resize", (e) => {

@@ -34,6 +34,7 @@ import { initLocales } from "../i18n";
 import * as path from "path";
 import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
+import { PluginManager } from "../plugins";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -61,6 +62,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private gameConfigUrls: Map<string, string> = new Map();
     private gameConfigUrl: string = "";
     private mLoadingManager: ILoadingManager;
+    private mPluginManager: PluginManager;
 
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
@@ -135,6 +137,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+        this.mPluginManager = new PluginManager(this);
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
         // this.mCharacterManager.register();
@@ -349,6 +352,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get mouseManager(): MouseManager {
         return this.mMouseManager;
+    }
+
+    get pluginManager(): PluginManager {
+        return this.mPluginManager;
     }
 
     get inputManager(): InputManager | undefined {

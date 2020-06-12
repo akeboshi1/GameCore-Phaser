@@ -1,9 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { ActivityPanel } from "./ActivityPanel";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-
+import { UIType, BaseMediator } from "tooqingui";
 export class ActivityMediator extends BaseMediator {
     public static NAME: string = "ActivityMediator";
     private world: WorldService;

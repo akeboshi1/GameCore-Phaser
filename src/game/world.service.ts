@@ -10,6 +10,7 @@ import { HttpService } from "../net";
 import { MouseManager } from "./mouse.manager";
 import { ConnectionService } from "../net";
 import { ISoundConfig } from "./sound.manager";
+import { PluginManager } from "../plugins";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -29,6 +30,7 @@ export interface WorldService {
     readonly account: Account;
     readonly modulePath: string;
     readonly emitter: Phaser.Events.EventEmitter;
+    readonly pluginManager: PluginManager;
 
     reconnect();
     startHeartBeat();

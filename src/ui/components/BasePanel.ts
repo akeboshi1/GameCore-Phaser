@@ -1,7 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
-import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
-
+import { Panel } from "tooqingui";
 export class BasePanel extends Panel {
     protected mInitialized: boolean;
     protected mTweening: boolean = false;

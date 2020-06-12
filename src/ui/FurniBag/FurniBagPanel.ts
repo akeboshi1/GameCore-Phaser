@@ -18,6 +18,7 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { IAvatar } from "../../rooms/display/dragonbones.model";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import {ShopPanel} from "../Shop/ShopPanel";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";

@@ -1,6 +1,6 @@
 import { NinePatch } from "./nine.patch";
 import { IPatchesConfig } from "./patches.config";
-import { IButtonState } from "../../../lib/rexui/lib/ui/interface/button/IButtonState";
+import { IButtonState } from "tooqingui";
 
 export class NinePatchButton extends Phaser.GameObjects.Container implements IButtonState {
     protected mLabel: Phaser.GameObjects.Text;
