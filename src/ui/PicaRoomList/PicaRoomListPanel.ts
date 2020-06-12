@@ -30,13 +30,12 @@ export class PicaRoomListPanel extends BasePanel {
     const scale = this.scale;
     const width = this.scene.cameras.main.width / scale;
     const height = this.scene.cameras.main.height / scale;
-    const centerX = this.scene.cameras.main.centerX / scale;
     this.x = width / 2;
     this.y = height / 2;
     this.mBackGround.clear();
     this.mBackGround.fillStyle(0x6AE2FF, 0);
     this.mBackGround.fillRect(-this.x, -this.y, width, height);
-    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(-width * 0.5, -height * 0.5, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
     super.resize(w, h);
   }
 
@@ -86,10 +85,10 @@ export class PicaRoomListPanel extends BasePanel {
     const hei: number = this.scene.cameras.main.height;
     this.setSize(background.width, background.height);
     this.mBackGround = this.scene.make.graphics(undefined, false);
-    this.mBackGround.clear();
-    this.mBackGround.fillStyle(0x6AE2FF, 0);
-    this.mBackGround.fillRect(0, 0, wid * zoom, hei * zoom);
-    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+    // this.mBackGround.clear();
+    // this.mBackGround.fillStyle(0x6AE2FF, 0);
+    // this.mBackGround.fillRect(0, 0, wid * zoom, hei * zoom);
+    // this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
       frame: "close_btn.png"
