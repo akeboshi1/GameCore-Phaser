@@ -29,10 +29,9 @@ import { IPoint } from "game-capsule/lib/helpers";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
-import { SoundField } from "../game/sound.manager";
 import { GroupManager } from "./group/GroupManager";
 import { FrameManager } from "./element/frame.manager";
-import { Scenery, IScenery } from "./sky.box/scenery";
+import { IScenery } from "./sky.box/scenery";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
