@@ -120,8 +120,9 @@ export class PicaChatMediator extends BaseMediator {
     private getSpeaker(id: number): IElement {
         if (id) {
             if (!this.world || !this.world.roomManager || !this.world.roomManager.currentRoom) {
-                return this.world.roomManager.currentRoom.getElement(id);
+                return;
             }
+            return this.world.roomManager.currentRoom.getElement(id);
         }
     }
 }

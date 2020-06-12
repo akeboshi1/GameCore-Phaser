@@ -838,10 +838,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             } else {
                 const drawTextureKey = loadArr[1] + "_png";
                 const drawTexture = this.scene.game.textures.get(drawTextureKey);
-                if (this.mAntial) {
-                    // 用于设置边缘抗锯齿
-                    drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                }
+                // if (this.mAntial) {
+                //     // 用于设置边缘抗锯齿
+                //     drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                // }
                 this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
             }
         }
@@ -850,9 +850,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 if (this.scene.game.textures.exists(renderTextureKey))
                     this.scene.game.textures.removeKey(renderTextureKey);
                 const changeTexture: Phaser.Textures.Texture = this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
-                if (this.mAntial) {
-                    changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                }
+                // if (this.mAntial) {
+                //     changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                // }
                 this.mArmatureDisplay.armature.replacedTexture = changeTexture;
             }
         });
