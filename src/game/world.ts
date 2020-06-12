@@ -778,7 +778,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 ],
             },
             render: {
-                pixelArt: false,
+                pixelArt: true,
                 roundPixels: true,
             },
             scale: {
