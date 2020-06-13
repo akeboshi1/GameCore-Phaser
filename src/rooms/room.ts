@@ -413,6 +413,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mActorData) {
             this.mActorData = null;
         }
+        if (this.mCameraService) this.mCameraService.destroy();
     }
 
     public destroy() {

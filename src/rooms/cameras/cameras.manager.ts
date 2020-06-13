@@ -36,6 +36,8 @@ export interface ICameraService {
     syncCamera(): void;
     syncCameraScroll(): void;
 
+    destroy(): void;
+
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
@@ -227,6 +229,11 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             return;
         }
         this.setScroll(x * this.mRoomService.world.scaleRatio - this.mMain.width / 2, y * this.mRoomService.world.scaleRatio - this.mMain.height / 2);
+    }
+
+    public destroy() {
+        this.mMain = undefined;
+        this.mCameras = [];
     }
 
     private resetCameraSize(width: number, height: number) {

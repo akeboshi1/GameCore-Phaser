@@ -646,10 +646,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         if (this.mConfig && this.mConnection) {
             this.mAccount = new Account();
-            const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
-            if (!loadingScene) {
-                this.mGame.scene.add(LoadingScene.name, LoadingScene);
-            }
+            this.mLoadingManager.start();
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;
@@ -731,6 +728,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             return this.mGame;
         }
+        Logger.getInstance().log("dragonbones: ", dragonBones);
         this.gameConfig = {
             type: Phaser.AUTO,
             parent: this.mConfig.parent || "game",

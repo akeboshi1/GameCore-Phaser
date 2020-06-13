@@ -114,6 +114,7 @@ export class UiManager extends PacketHandler {
     }
 
     public setScene(scene: Phaser.Scene) {
+        this.clearCache();
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
         this.interBubbleMgr.setScene(scene);
@@ -266,6 +267,7 @@ export class UiManager extends PacketHandler {
         this.removePackListener();
         this.clearMediator();
         this.mMedMap = undefined;
+        this.clearCache();
         this.mScene = undefined;
     }
 
@@ -536,6 +538,11 @@ export class UiManager extends PacketHandler {
                 med.show();
             }
         });
+    }
+
+    private clearCache() {
+        this.mCacheUI = undefined;
+        this.mCache = [];
     }
 
     private closeAll() {
