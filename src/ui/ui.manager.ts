@@ -114,7 +114,6 @@ export class UiManager extends PacketHandler {
     }
 
     public setScene(scene: Phaser.Scene) {
-        this.clearCache();
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
         this.interBubbleMgr.setScene(scene);
