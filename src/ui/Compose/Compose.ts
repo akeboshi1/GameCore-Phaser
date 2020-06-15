@@ -16,6 +16,7 @@ export class Compose extends PacketHandler {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA, this.onRetFormulaDetial);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         }
     }
 
@@ -60,6 +61,10 @@ export class Compose extends PacketHandler {
     private onRetFormulaDetial(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA = packge.content;
         this.mEvent.emit("formulaDetial", content);
+    }
+    private openComposePanel(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
+        this.mEvent.emit("showopen", content);
     }
 
 }

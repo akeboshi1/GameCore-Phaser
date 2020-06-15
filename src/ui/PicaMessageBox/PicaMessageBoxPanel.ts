@@ -21,13 +21,19 @@ export class PicaMessageBoxPanel extends BasePanel {
     if (!this.mInitialized) {
       return;
     }
+    const data = param[0];
     this.mButtons = [];
-    if (param[0] && param[0].text && param[0].text[0]) {
-      this.mText.setText(param[0].text[0].text);
-      this.mText.x = -this.mText.width / 2;
-      this.mText.y = -this.mText.height;
+    if (data) {
+      if (data.text && data.text[0]) {
+        this.mText.setText(data.text[0].text);
+        this.mText.x = -this.mText.width / 2;
+        this.mText.y = -this.mText.height;
+      }
+      if (data.title) {
+        this.mTitleLabel.setText(data.title.text);
+      }
     }
-    const buttons = param[0].button;
+    const buttons = data.button;
     if (buttons) {
       const btnWid: number = 114 * this.dpr;
       const btnHei: number = 40 * this.dpr;

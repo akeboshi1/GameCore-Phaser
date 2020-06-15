@@ -16,6 +16,7 @@ export class EquipUpgrade extends PacketHandler {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_ACTIVE_EQUIPMENT, this.onActiveEquipmend);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openEquipUpgrade);
         }
     }
 
@@ -62,6 +63,10 @@ export class EquipUpgrade extends PacketHandler {
     private onActiveEquipmend(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_ACTIVE_EQUIPMENT = packge.content;
         this.mEvent.emit("activeEquip", content.mineEquipment);
+    }
+    private openEquipUpgrade(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL = packge.content;
+        this.mEvent.emit("showopen", content);
     }
 
 }

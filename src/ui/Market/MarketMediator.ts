@@ -18,19 +18,21 @@ export class MarketMediator extends BaseMediator {
     this.scene = $scene;
     this.world = world;
     this.layerManager = $layerManager;
-  }
-
-  show(param?: any) {
-    if (this.mView && this.mView.isShow() || this.mShow) {
-      return;
-    }
     if (!this.mMarket) {
       this.mMarket = new Market(this.world);
       this.mMarket.register();
       this.mMarket.on("getMarketCategories", this.onCategoriesHandler, this);
       this.mMarket.on("queryMarket", this.onQueryResuleHandler, this);
       this.mMarket.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+      this.mMarket.on("showopen", this.onShowOpenPanel, this);
     }
+  }
+
+  show(param?: any) {
+    if (this.mView && this.mView.isShow() || this.mShow) {
+      return;
+    }
+
     if (!this.mView) {
       this.mView = new MarketPanel(this.scene, this.world);
       this.mView.on("getCategories", this.onGetCategoriesHandler, this);
@@ -73,6 +75,11 @@ export class MarketMediator extends BaseMediator {
     this.mMarket.queryCommodityResource(prop.id, prop.category);
   }
 
+  private onShowOpenPanel(content: any) {
+    this.setParam([content]);
+    this.show();
+  }
+
   private onPopItemCardHandler(prop, display) {
     // const packet: PBpacket = new PBpacket(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI);
     // const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
@@ -95,12 +102,6 @@ export class MarketMediator extends BaseMediator {
   }
 
   private onCloseHandler() {
-    if (!this.mMarket) {
-      return;
-    }
-    this.mMarket.destroy();
-    this.mMarket = undefined;
-    this.mView.hide();
-    this.mView = undefined;
+    this.destroy();
   }
 }

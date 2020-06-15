@@ -10,17 +10,21 @@ export class ComposeMediator extends BaseMediator {
     private world: WorldService;
     private layerMgr: ILayerManager;
     private compose: Compose;
-    private tsetskills = [];
-    private testDateils = [];
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.scene = scene;
         this.layerMgr = layerMgr;
         this.world = worldService;
+        if (!this.compose) {
+            this.compose = new Compose(this.world);
+            this.compose.on("formulaDetial", this.onRetFormulaDetial, this);
+            this.compose.on("showopen", this.onShowPanel, this);
+            this.compose.register();
+        }
     }
 
     show() {
-        if (this.mView) {
+        if (this.mView && this.mView.isShow()) {
             return;
         }
         if (!this.mView) {
@@ -29,29 +33,13 @@ export class ComposeMediator extends BaseMediator {
             this.mView.on("reqformula", this.onReqFormulaDetial, this);
             this.mView.on("reqUseFormula", this.onReqUseFormula, this);
         }
-        if (!this.compose) {
-            this.compose = new Compose(this.world);
-            this.compose.on("formulaDetial", this.onRetFormulaDetial, this);
-            this.compose.register();
-        }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show(this.mParam[0]);
 
     }
 
-    isSceneUI() {
-        return true;
-    }
-
     destroy() {
-        if (this.compose) {
-            this.compose.destroy();
-            this.compose = undefined;
-        }
-        if (this.mView) {
-            this.mView.hide();
-            this.mView = undefined;
-        }
+      super.destroy();
     }
 
     private onReqFormulaDetial(id: string) {
@@ -69,38 +57,8 @@ export class ComposeMediator extends BaseMediator {
         this.destroy();
     }
 
-    private getTestData() {
-        const items = [];
-        for (let i = 0; i < 20; i++) {
-            const skill = new op_pkt_def.PKT_Skill();
-            skill.id = "1" + i;
-            skill.name = "蓝图" + i;
-            skill.quality = (i % 3 === 0 ? "A" : (i % 2 === 0 ? "B" : "C"));
-            skill.active = (i % 6 === 0 ? false : true);
-            skill.qualified = (i % 8 === 0 ? false : true);
-            items.push(skill);
-        }
-        return items;
+    private onShowPanel(content: any) {
+        this.setParam([content]);
+        this.show();
     }
-
-    private getTestDeitals() {
-        const items = this.getTestData();
-        this.tsetskills = items;
-        for (const skill of items) {
-            const ditem = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA();
-            ditem.id = skill.id;
-            ditem.productName = "蓝图" + skill.id;
-            ditem.productDes = "这是一段道具的有关描述巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉";
-            ditem.materials = [];
-            const mcount = 8 + Math.floor(Math.random() * 8);
-            for (let i = 0; i < mcount; i++) {
-                const mitem = new op_client.CountablePackageItem();
-                mitem.count = mcount;
-                mitem.neededCount = (skill.qualified ? mitem.count - 2 : mitem.count + 2);
-                ditem.materials.push(mitem);
-            }
-            this.testDateils.push(ditem);
-        }
-    }
-
 }

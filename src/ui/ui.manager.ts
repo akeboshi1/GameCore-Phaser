@@ -28,6 +28,9 @@ import { UIMediatorType } from "./ui.mediatorType";
 import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
 import { ComposeMediator } from "./Compose/ComposeMediator";
+import { MineSettleMediator } from "./MineSettle/MineSettleMediator";
+import { EquipUpgradeMediator } from "./EquipUpgrade/EquipUpgradeMediator";
+import { MarketMediator } from "./Market/MarketMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -66,11 +69,7 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_MARKET, this.onEnableMarket);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE, this.openMineSettle);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openEquipUpgrade);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME, this.openMarketPanel);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onActiveUIHandler);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
@@ -143,8 +142,12 @@ export class UiManager extends PacketHandler {
                 this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
-                this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
+                // this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(ComposeMediator.name, new ComposeMediator(this.mUILayerManager,scene, this.worldService));
+                this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(MarketMediator.name, new MarketMediator(this.mUILayerManager, scene, this.worldService));
             }
             // this.mMedMap.set(UBaseMediatorType.MainUBaseMediator, new MainUBaseMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
@@ -551,24 +554,6 @@ export class UiManager extends PacketHandler {
         this.mMedMap.forEach((med: BaseMediator) => med.hide());
     }
 
-    private openMineSettle(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE = packge.content;
-        this.showMed("MineSettle", content);
-    }
-
-    private openEquipUpgrade(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL = packge.content;
-        this.showMed("EquipUpgrade", content);
-    }
-    private openComposePanel(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
-        this.showMed("Compose", content);
-    }
-
-    private openMarketPanel(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
-        this.showMed("Market", content);
-    }
     private onActiveUIHandler(packge: PBpacket) {
         this.mAtiveUIData = packge.content;
         if (this.mAtiveUIData && this.mMedMap) {

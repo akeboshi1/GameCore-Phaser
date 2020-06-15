@@ -15,7 +15,7 @@ import { i18n } from "../../i18n";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { AlertView } from "../components/alert.view";
+import { Handler } from "../../Handler/Handler";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -31,7 +31,6 @@ export class ComposePanel extends BasePanel {
     private materialTipsName: Phaser.GameObjects.Text;
     private materialTipsDes: Phaser.GameObjects.Text;
     private tipsbg: NinePatch;
-    private alertView: AlertView;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
@@ -264,7 +263,6 @@ export class ComposePanel extends BasePanel {
 
     destroy() {
         super.destroy();
-        if (this.alertView) this.alertView.destroy();
     }
 
     public setComposeData(datas: op_pkt_def.IPKT_Skill[]) {
@@ -333,17 +331,32 @@ export class ComposePanel extends BasePanel {
     }
 
     private onMakeHandler() {
-        if (!this.alertView) this.alertView = new AlertView(this.scene, this.mWorld);
         if (this.mSelectItemData) {
-            this.alertView.show({
-                text: `您确定要合成${this.mSelectItemData.name}吗？`,
-                title: i18n.t("compose.synthesis"),
-                oy: 302 * this.dpr * this.mWorld.uiScale,
-                callback: () => {
-                    this.emit("reqUseFormula", this.mSelectItemData.id);
-                },
-            });
+            const content = {
+                text: [{
+                    text: `您确定要合成${this.mSelectItemData.name}吗？`
+                }],
+                title: [{
+                    text: i18n.t("compose.synthesis")
+                }],
+                button: [
+                    {
+                        text: i18n.t("common.confirm"),
+                        local: true,
+                        clickhandler: new Handler(this, () => {
+                            this.emit("reqUseFormula", this.mSelectItemData.id);
+                        })
+                    },
+                    {
+                        text: i18n.t("common.cancel"),
+                        local: true,
+                    }
+                ]
+            };
+            const uimanager = this.mWorld.uiManager;
+            uimanager.showMed("MessageBox", content);
         }
+
     }
 
     private onInputPointUp() {

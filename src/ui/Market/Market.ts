@@ -19,6 +19,8 @@ export class Market extends PacketHandler {
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES, this.onGetMarketCategoriesHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY, this.onQueryMarketHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE, this.onQueryCommodityResultHandler);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME, this.openMarketPanel);
+
     }
   }
 
@@ -98,6 +100,11 @@ export class Market extends PacketHandler {
     packet.content.market_name = this.market_name;
     this.mEvent.emit("queryCommodityResource", packet.content);
   }
+
+  private openMarketPanel(packge: PBpacket) {
+    const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
+    this.mEvent.emit("showopen", content);
+}
 
   get connection(): ConnectionService {
     if (this.world) {

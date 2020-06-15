@@ -4,6 +4,7 @@ import { PicaMessageBoxPanel } from "./PicaMessageBoxPanel";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { Sound } from "phaser";
 
 export class PicaMessageBoxMediator extends BaseMediator {
   private scene: Phaser.Scene;
@@ -33,18 +34,21 @@ export class PicaMessageBoxMediator extends BaseMediator {
 
   hide() {
     super.hide();
-    if (this.mView) {
-      this.mView.destroy();
-      this.mView = undefined;
-    }
+    super.destroy();
   }
 
   private onClickHandler(data) {
-    const param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mParam[0];
-    const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
-    content.uiId = param.id;
-    content.componentId = data.node.id;
-    this.world.connection.send(pkt);
+    if (data.local) {
+      if (data.clickhandler) data.clickhandler.run();
+      this.hide();
+    } else {
+      const param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mParam[0];
+      const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+      const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+      content.uiId = param.id;
+      content.componentId = data.node.id;
+      this.world.connection.send(pkt);
+    }
+
   }
 }
