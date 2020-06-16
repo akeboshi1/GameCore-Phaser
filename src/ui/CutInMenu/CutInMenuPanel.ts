@@ -58,7 +58,12 @@ export class CutInMenuPanel extends BasePanel {
         const height = this.scaleHeight;
         this.rightPopButton = new RightPopContainer(this.scene, width, this.key, this.dpr);
         const posx = width + this.rightPopButton.width * 0.5 - 15 * this.dpr;
-        this.rightPopButton.setPosition(posx, height * 0.5);
+        const bounds = this.getActivityBounds();
+        if (bounds) {
+            this.rightPopButton.setPosition(posx, bounds.bottom+this.rightPopButton.height);
+        } else {
+            this.rightPopButton.setPosition(posx, height * 0.5);
+        }
         this.rightPopButton.setClickHandler(new Handler(this, this.onRightClickHandler));
         this.add(this.rightPopButton);
         this.resize(width, height);
@@ -72,6 +77,13 @@ export class CutInMenuPanel extends BasePanel {
     private onRightClickHandler() {
         const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
         this.emit("rightButton", data.id, data.button[0].node.id);
+    }
+
+    private getActivityBounds() {
+        const mMediator = this.world.uiManager.getMediator("ActivityMediator");
+        let bounds: Phaser.Geom.Rectangle;
+        if (mMediator) bounds = mMediator.getView().getBounds();
+        return bounds;
     }
 
 }

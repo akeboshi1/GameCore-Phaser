@@ -85,7 +85,7 @@ export class FurniBagPanel extends BasePanel {
     this.useBtn.x = this.mAdd.x;
     this.useBtn.y = this.mAdd.y;
 
-    this.sellBtn.x = this.mAdd.x - this.sellBtn.width - 10 * this.dpr;
+    this.sellBtn.x = Math.floor(this.mAdd.x - this.sellBtn.width - 10 * this.dpr) ;
     this.sellBtn.y = this.mAdd.y;
 
     this.resetBtn.x = this.mAdd.x + 25 * this.dpr;

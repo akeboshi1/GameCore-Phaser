@@ -224,6 +224,14 @@ export class TaskPanel extends BasePanel {
     }
 
     private onExtendsHandler(isExtend: boolean, item: TaskItem) {
+        let height = 0;
+        if (this.curTaskItem) {
+            height = this.curTaskItem.height;
+            this.curTaskItem.setExtend(false, false);
+            height -= this.curTaskItem.height;
+            const value = this.mGameScroll.getValue()+height;
+         //   this.mGameScroll.setValue(value);
+        }
         this.curTaskItem = item;
         if (isExtend) {
             this.emit("questdetail", item.questData.id);
@@ -301,7 +309,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.typeBg.setPosition(posx + this.typeBg.width * 0.5, posy + this.typeBg.height * 0.5 - 2 * dpr);
         this.typeTex = scene.make.text({ x: 0, y: 0, text: i18n.t("task.m"), style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         this.typeTex.setOrigin(0.5).setPosition(this.typeBg.x - 1 * dpr, this.typeBg.y);
-        this.taskName = scene.make.text({ x: this.headIcon.x + 22 * dpr, y: -9 * dpr, text: "获得两把钥匙", style: { color: "#ffffff", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.taskName = scene.make.text({ x: this.headIcon.x + 20 * dpr, y: -9 * dpr, text: "获得两把钥匙", style: { color: "#ffffff", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.taskDes = scene.make.text({ x: this.headIcon.x + 25 * dpr, y: 10 * dpr, text: "任务要求获得两把钥匙", style: { color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.finish = scene.make.image({ key, frame: "done" });
         this.finish.setPosition(width * 0.5 - 30 * dpr, 4 * dpr);
@@ -341,11 +349,23 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.finishHandler = finish;
     }
 
-    public setExtend(isExtend: boolean) {
-        if (isExtend) this.onOpenHandler();
-        else this.onCloseHandler();
+    public setExtend(isExtend: boolean, haveCallBack: boolean = true) {
+        if (isExtend) {
+            if (haveCallBack)
+                this.onOpenHandler();
+            else this.openExtend();
+        } else {
+            if (haveCallBack)
+                this.onCloseHandler();
+            else this.closeExtend();
+        }
+
     }
     private onOpenHandler() {
+        this.openExtend();
+        if (this.extendHandler) this.extendHandler.runWith([true, this]);
+    }
+    private openExtend() {
         if (!this.extend) {
             this.extend = new TaskItemExtend(this.scene, this.key, this.dpr, this.zoom);
             this.extend.setFinishHandler(new Handler(this, this.onFinishHandler));
@@ -358,7 +378,6 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.extend.y = -this.height * 0.5 + this.content.height + this.extend.height * 0.5;
         this.openBtn.visible = false;
         this.closeBtn.visible = true;
-        if (this.extendHandler) this.extendHandler.runWith([true, this]);
     }
 
     private setExtendBtn(button: Button) {
@@ -377,12 +396,16 @@ class TaskItem extends Phaser.GameObjects.Container {
     }
 
     private onCloseHandler() {
+        this.closeExtend();
+        if (this.extendHandler) this.extendHandler.runWith([false, this]);
+    }
+
+    private closeExtend() {
         if (this.extend) this.extend.visible = false;
         this.height = this.content.height;
         this.content.y = 0;
         this.openBtn.visible = true;
         this.closeBtn.visible = false;
-        if (this.extendHandler) this.extendHandler.runWith([false, this]);
     }
 
     private getQuestTypeTag(questType: op_pkt_def.PKT_Quest_Type) {
@@ -416,7 +439,7 @@ class TaskItem extends Phaser.GameObjects.Container {
 
     private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 15) {
         if (content.length > limit) {
-            const maxWidth = 185 * this.dpr;
+            const maxWidth = 155 * this.dpr;
             for (let i = 4; i < content.length; i++) {
                 let str = content.slice(0, i);
                 const width = text.setText(str).width;
@@ -560,9 +583,11 @@ class TaskCell extends Phaser.GameObjects.Container {
     private itemIcon: DynamicImage;
     private countTex: BBCodeText;
     private key: string;
+    private dpr;
     constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
         super(scene);
         this.key = key;
+        this.dpr = dpr;
         this.bg = scene.make.image({ key, frame: "task_bg" });
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
@@ -577,6 +602,7 @@ class TaskCell extends Phaser.GameObjects.Container {
         this.bg.setTexture(this.key, frame);
         const url = Url.getOsdRes(itemData.display.texturePath);
         this.itemIcon.load(url, this, () => {
+            this.itemIcon.scale = this.dpr * 0.6;
         });
         if (!isTask) {
             this.countTex.text = `[stroke=#666666][color=#666666]${itemData.count}[/color][/stroke]/`;
