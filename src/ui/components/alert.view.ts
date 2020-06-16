@@ -77,7 +77,7 @@ export class AlertView extends BasePanel {
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mOkBtn.x = (bg.width - this.mOkBtn.displayWidth) / 2 +33 * this.dpr;
+        this.mOkBtn.x = -(bg.width - this.mOkBtn.displayWidth) / 2 + 38* this.dpr;
         this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
         this.mOkBtn.on("Tap", this.onOkHandler, this);
 
@@ -86,7 +86,7 @@ export class AlertView extends BasePanel {
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mCancelBtn.x = -(bg.width - this.mCancelBtn.displayWidth) / 2 - 33 * this.dpr;
+        this.mCancelBtn.x = (bg.width - this.mCancelBtn.displayWidth) / 2 - 38* this.dpr;
         this.mCancelBtn.y = this.mOkBtn.y;
         this.mCancelBtn.on("Tap", this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);
