@@ -160,6 +160,46 @@
 				"h": 139
 			}
 		},
+		"iv_coin": {
+			"frame": {
+				"x": 1,
+				"y": 142,
+				"w": 61,
+				"h": 65
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 61,
+				"h": 65
+			},
+			"sourceSize": {
+				"w": 61,
+				"h": 65
+			}
+		},
+		"iv_diamond": {
+			"frame": {
+				"x": 1380,
+				"y": 142,
+				"w": 65,
+				"h": 69
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 65,
+				"h": 69
+			},
+			"sourceSize": {
+				"w": 65,
+				"h": 69
+			}
+		},
 		"menu_bg": {
 			"frame": {
 				"x": 1732,
@@ -222,7 +262,7 @@
 		},
 		"next_button": {
 			"frame": {
-				"x": 1420,
+				"x": 1447,
 				"y": 142,
 				"w": 145,
 				"h": 149
@@ -262,8 +302,8 @@
 		},
 		"red_btn_normal": {
 			"frame": {
-				"x": 1567,
-				"y": 142,
+				"x": 1594,
+				"y": 228,
 				"w": 138,
 				"h": 138
 			},
@@ -282,8 +322,8 @@
 		},
 		"reduce": {
 			"frame": {
-				"x": 1567,
-				"y": 282,
+				"x": 1420,
+				"y": 368,
 				"w": 118,
 				"h": 122
 			},
@@ -320,30 +360,10 @@
 				"h": 109
 			}
 		},
-		"test_goldcoin": {
-			"frame": {
-				"x": 1,
-				"y": 142,
-				"w": 39,
-				"h": 39
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 39,
-				"h": 39
-			},
-			"sourceSize": {
-				"w": 39,
-				"h": 39
-			}
-		},
 		"yellow_btn_down": {
 			"frame": {
-				"x": 1399,
-				"y": 406,
+				"x": 1279,
+				"y": 692,
 				"w": 151,
 				"h": 148
 			},
@@ -362,8 +382,8 @@
 		},
 		"yellow_btn_normal": {
 			"frame": {
-				"x": 1552,
-				"y": 406,
+				"x": 1432,
+				"y": 692,
 				"w": 151,
 				"h": 148
 			},
@@ -382,8 +402,8 @@
 		},
 		"yellow_btn_over": {
 			"frame": {
-				"x": 1279,
-				"y": 556,
+				"x": 1585,
+				"y": 692,
 				"w": 151,
 				"h": 148
 			},

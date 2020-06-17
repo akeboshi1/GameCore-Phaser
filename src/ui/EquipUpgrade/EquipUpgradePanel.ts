@@ -6,6 +6,7 @@ import { NinePatch } from "../components/nine.patch";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { i18n } from "../../i18n";
+import { UIAtlasKey } from "../ui.atals.name";
 
 export default class EquipUpgradePanel extends BasePanel {
     private key = "equip_upgrade";
@@ -69,6 +70,7 @@ export default class EquipUpgradePanel extends BasePanel {
     }
 
     preload() {
+        this.commonkey = UIAtlasKey.commonKey;
         this.addAtlas(this.key, "equip_upgrade/mine_eqpm.png", "equip_upgrade/mine_eqpm.json");
         this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
         super.preload();

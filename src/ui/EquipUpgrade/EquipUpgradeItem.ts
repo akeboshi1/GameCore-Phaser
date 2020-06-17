@@ -1,16 +1,18 @@
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
-import { Url } from "../../utils/resUtil";
+import { Url, Coin } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatch } from "../components/nine.patch";
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import { UIAtlasKey } from "../ui.atals.name";
 export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
     private bottombg: Phaser.GameObjects.Image;
     private unlockbtn: Phaser.GameObjects.Container;
+    private unlockBg: NinePatch;
     private titleName: Phaser.GameObjects.Text;
     private equipName: Phaser.GameObjects.Text;
     private penetrationText: Phaser.GameObjects.Text;
@@ -217,10 +219,14 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         if (data.qualified) {
             this.unlockCondition.visible = false;
             this.unlockbtn.setInteractive();
+            this.unlockBg.clearTint();
+            this.costNum.setColor("#ffffff");
         } else if (!data.owned) {
             this.unlockCondition.visible = true;
             this.unlockCondition.text = data.conditionDisplayNames[0];
             this.unlockbtn.disableInteractive();
+            this.unlockBg.setTintFill(0x888888);
+            this.costNum.setColor("#999999");
         }
         if (data.price === null) {
             this.costNum.visible = false;
@@ -232,6 +238,8 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
             this.costNum.text = Math.floor(costPrice * powValue) / powValue + "";
             this.costNum.visible = true;
             this.diamondIcon.visible = true;
+            this.diamondIcon.setTexture(this.commonKey, Coin.getIcon(data.price.coinType));
+            this.diamondIcon.setDisplaySize(12 * this.dpr, 12* this.dpr);
             this.btnName.setPosition(0, 6 * this.dpr);
         }
         cell.setSelect(true);
@@ -251,9 +259,10 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
             right: 12 * this.dpr * this.zoom,
             bottom: 12 * this.dpr * this.zoom
         });
-        this.diamondIcon = this.mScene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
-        this.costNum = this.mScene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.btnName = this.mScene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.unlockBg = btnBg;
+        this.diamondIcon = this.mScene.make.image({ x: -13 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
+        this.costNum = this.mScene.make.text({ x: -2, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.btnName = this.mScene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 11* this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.costNum.setStroke("#ffffff", 1);
         this.btnName.setStroke("#8F4300", 1);
         this.unlockCondition.setStroke("#000000", 1);
