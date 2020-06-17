@@ -224,13 +224,8 @@ export class TaskPanel extends BasePanel {
     }
 
     private onExtendsHandler(isExtend: boolean, item: TaskItem) {
-        let height = 0;
         if (this.curTaskItem) {
-            height = this.curTaskItem.height;
             this.curTaskItem.setExtend(false, false);
-            height -= this.curTaskItem.height;
-            const value = this.mGameScroll.getValue()+height;
-         //   this.mGameScroll.setValue(value);
         }
         this.curTaskItem = item;
         if (isExtend) {
