@@ -364,6 +364,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
                     this.MOUNT_ARMATURE_KEY,
                     this.MOUNT_DRAGONBONES_KEY,
                 );
+                this.cleatArmatureUnusedSlots(arm);
                 this.mMountArmatureParent.add(arm);
                 this.mMountArmatures.push(arm);
 
@@ -767,6 +768,18 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
             const ac = a as Phaser.GameObjects.Container;
             const bc = b as Phaser.GameObjects.Container;
             return ac.depth - bc.depth;
+        });
+    }
+
+    private cleatArmatureUnusedSlots(armatureDisplay: dragonBones.phaser.display.ArmatureDisplay) {
+        armatureDisplay.armature.getSlots().forEach((slot) => {
+            if (slot) {
+                const visible: boolean = slot.name.includes("base") ||
+                    slot.name.includes("eyes") ||
+                    slot.name.includes("mous") ||
+                    (slot.name.includes("hair") && !slot.name.includes("back"));
+                slot.display.visible = visible;
+            }
         });
     }
 }
