@@ -77,7 +77,7 @@ export class MarketMediator extends BaseMediator {
 
   private onShowOpenPanel(content: any) {
     this.setParam([content]);
-    this.show();
+    this.show([content]);
   }
 
   private onPopItemCardHandler(prop, display) {
