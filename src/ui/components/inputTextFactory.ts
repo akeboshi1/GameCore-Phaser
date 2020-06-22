@@ -1,4 +1,4 @@
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { InputText } from "tooqingui";
 import { WorldService } from "../../game/world.service";
 import { MainUIScene } from "../../scenes/main.ui";
 export class InputTextFactory {
@@ -56,11 +56,11 @@ export class InputTextField extends Phaser.Events.EventEmitter {
     }
 
     public onBlur() {
-        this.mInputText.onBlur();
+        this.mInputText.setBlur();
     }
 
     public onFocus() {
-        this.mInputText.onFocus();
+        this.mInputText.setFocus();
     }
 
     public getText(): string {

@@ -1,4 +1,4 @@
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { Font } from "../../utils/font";
 
 export class TextToolTips extends Phaser.GameObjects.Container {
@@ -12,7 +12,7 @@ export class TextToolTips extends Phaser.GameObjects.Container {
         const tipsWidth = tempframe.width;
         const tipsHeight = tempframe.height;
         this.dpr = dpr;
-        this.bg = new NinePatch(this.scene, 0, 0, tipsWidth, tipsHeight, key, frame, {
+        this.bg = new NinePatch(this.scene, 0, 0, tipsWidth, tipsHeight, key, frame, undefined, undefined, {
             left: 20 * dpr,
             top: 20 * dpr,
             right: 20 * dpr,

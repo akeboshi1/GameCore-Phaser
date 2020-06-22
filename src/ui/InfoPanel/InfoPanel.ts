@@ -1,20 +1,16 @@
 import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../components/BasePanel";
 import { DynamicImage } from "../components/dynamic.image";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { TextArea, BBCodeText, NineSliceButton, GameScroller } from "tooqingui";
 import { op_client } from "pixelpai_proto";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { Url, Border, Background, BlueButton } from "../../utils/resUtil";
-import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
 import { Font } from "../../utils/font";
 import { InfoPanelMediator } from "./InfoPanelMediator";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 
 const GetValue = Phaser.Utils.Objects.GetValue;
 export class InfoPanel extends BasePanel {
     private mActor: DynamicImage;
-    private mCloseBtn: NinePatchButton;
+    private mCloseBtn: NineSliceButton;
     private mScroller: GameScroller;
     private mAttributesBBCodeText: BBCodeText;
     private mNameBBCodeText: BBCodeText;
@@ -26,12 +22,12 @@ export class InfoPanel extends BasePanel {
     }
 
     public addListen() {
-        if(!this.mInitialized)return;
+        if (!this.mInitialized) return;
         if (this.mCloseBtn) this.mCloseBtn.on("pointerup", this.closeHandler, this);
     }
 
     public removeListen() {
-        if(!this.mInitialized)return;
+        if (!this.mInitialized) return;
         if (this.mCloseBtn) this.mCloseBtn.off("pointerup", this.closeHandler, this);
     }
 
@@ -47,13 +43,13 @@ export class InfoPanel extends BasePanel {
         this.mNameTextArea.setMinSize(220 * this.dpr * scale, 222 * this.dpr * scale);
         this.mNameTextArea.setPosition(size.width / 2 + 60 * this.dpr * scale, size.height / 2 - 110 * this.dpr * scale);
         this.mNameTextArea.layout();
-        const textMask = this.mNameTextArea.childrenMap.text;
+        const textMask = (<any>this.mNameTextArea).childrenMap.text;
         textMask.x = -10 * this.dpr * scale;
         textMask.y = -200 * this.dpr * scale;
         this.mAttributesTextArea.setMinSize(360 * this.dpr * scale, 180 * this.dpr * scale);
         this.mAttributesTextArea.setPosition(size.width / 2 + 3 * this.dpr * scale, size.height / 2 + 95 * this.dpr * scale);
         this.mAttributesTextArea.layout();
-        const attributesMask = this.mAttributesTextArea.childrenMap.text;
+        const attributesMask = (<any>this.mAttributesTextArea).childrenMap.text;
         attributesMask.x = -this.width / 2 + 30 * this.dpr * scale;
         attributesMask.y = 5 * this.dpr * scale;
     }
@@ -131,20 +127,20 @@ export class InfoPanel extends BasePanel {
         const size = this.mWorld.getSize();
         const scale: number = this.mWorld.uiScale;
         this.setSize(400 * this.dpr * scale, 500 * this.dpr * scale);
-        const background = new NinePatch(this.scene, {
-            width: this.width,
-            height: this.height,
-            key: Background.getName(),
-            columns: Background.getColumns(),
-            rows: Background.getRows()
-        });
-        const border = new NinePatch(this.scene, {
-            width: this.width - 20 * this.dpr * scale,
-            height: this.height - 20 * this.dpr * scale,
-            key: Border.getName(),
-            columns: Border.getColumns(),
-            rows: Border.getRows()
-        });
+        // const background = new NinePatch(this.scene, {
+        //     width: this.width,
+        //     height: this.height,
+        //     key: Background.getName(),
+        //     columns: Background.getColumns(),
+        //     rows: Background.getRows()
+        // });
+        // const border = new NinePatch(this.scene, {
+        //     width: this.width - 20 * this.dpr * scale,
+        //     height: this.height - 20 * this.dpr * scale,
+        //     key: Border.getName(),
+        //     columns: Border.getColumns(),
+        //     rows: Border.getRows()
+        // });
 
         this.mNameBBCodeText = new BBCodeText(this.scene, 0, 0, "", {
             fontSize: 14 * this.dpr * scale + "px",
@@ -185,7 +181,7 @@ export class InfoPanel extends BasePanel {
         })
             .layout();
 
-        this.mCloseBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "", "关闭", BlueButton.getConfig());
+        this.mCloseBtn = new NineSliceButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), "", "关闭", this.dpr, this.scale, BlueButton.getConfig());
         this.mCloseBtn.x = 0;
         this.mCloseBtn.y = this.height - 100 * this.mWorld.uiRatio * scale >> 1;
         this.mCloseBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });
@@ -193,7 +189,7 @@ export class InfoPanel extends BasePanel {
         this.mActor = new DynamicImage(this.scene, 300, 125).setOrigin(0.5, 1);
         this.mActor.scale = 2;
         this.mWorld.uiManager.getMediator(InfoPanelMediator.NAME).resize();
-        this.add([background, border,
+        this.add([
             this.mNameBBCodeText, this.mAttributesBBCodeText, this.mCloseBtn, this.mActor]);
         // this.mAttributesTextArea, this.mAttributesBBCodeText,this.mNameTextArea, this.mNameTextArea,
         this.addListen();

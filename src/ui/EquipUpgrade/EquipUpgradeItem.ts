@@ -2,8 +2,7 @@ import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
-import { GridTableConfig, GameGridTable } from "tooqingui";
-import { NinePatch } from "../components/nine.patch";
+import { GridTableConfig, GameGridTable, NinePatch } from "tooqingui";
 export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -152,7 +151,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         const capH = (propFrame.height + 30 * this.dpr * this.zoom);
         this.cellWidth = capW;
         this.cellHeight = capH;
-        const config: GridTableConfig = {
+        const config = {
             scrollMode: 1,
             // background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
@@ -239,7 +238,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private createBtn() {
         this.unlockCondition = this.mScene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.unlockbtn = this.mScene.make.container(undefined, false);
-        const btnBg = new NinePatch(this.mScene, 0, 0, 88 * this.dpr * this.zoom, 31 * this.dpr * this.zoom, this.commonKey, "yellow_btn_normal", {
+        const btnBg = new NinePatch(this.mScene, 0, 0, 88 * this.dpr * this.zoom, 31 * this.dpr * this.zoom, this.commonKey, "yellow_btn_normal", undefined, undefined, {
             left: 12 * this.dpr * this.zoom,
             top: 12 * this.dpr * this.zoom,
             right: 12 * this.dpr * this.zoom,

@@ -1,6 +1,6 @@
 import { NumberCounter } from "./NumberCounter";
 import { op_client, op_def } from "pixelpai_proto";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { NineSliceButton } from "tooqingui";
 import { i18n } from "../../i18n";
 import { Logger } from "../../utils/log";
 import { DetailDisplay } from "./DetailDisplay";
@@ -11,7 +11,7 @@ import { Coin } from "../../utils/resUtil";
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;
   private mCounter: NumberCounter;
-  private mBuyBtn: NinePatchButton;
+  private mBuyBtn: NineSliceButton;
   private mPriceContainer: Phaser.GameObjects.Container;
   private mNickName: Phaser.GameObjects.Text;
   private mDetailBubbleContainer: Phaser.GameObjects.Container;
@@ -51,7 +51,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       w = frame.width;
       h = frame.height;
     }
-    this.mBuyBtn = new NinePatchButton(this.scene, 440, 700, 81 * this.dpr, 41 * this.dpr, this.key, "yellow_button", i18n.t("market.buy_button"), {
+    this.mBuyBtn = new NineSliceButton(this.scene, 440, 700, 81 * this.dpr, 41 * this.dpr, this.key, "yellow_button", i18n.t("market.buy_button"), this.dpr, this.scale, {
       left: 14 * this.dpr,
       top: 14 * this.dpr,
       right: w - 2 - 14 * this.dpr,

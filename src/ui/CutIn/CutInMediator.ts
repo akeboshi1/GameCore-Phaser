@@ -1,7 +1,7 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { CutInPanel } from "./CutInPanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class CutInMediator extends BaseMediator {
   private world: WorldService;

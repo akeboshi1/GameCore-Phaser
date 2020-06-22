@@ -13,7 +13,9 @@
     "sourceMap": false,
     "outDir": "types",
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "node_modules/tooqingui/types"
     ]
   },
+  "strict": false
 }

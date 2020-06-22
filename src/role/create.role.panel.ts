@@ -1,9 +1,7 @@
 import { BasePanel } from "../ui/components/BasePanel";
 import { WorldService } from "../game/world.service";
 import { ResUtils, Url } from "../utils/resUtil";
-import { NinePatchButton } from "../ui/components/ninepatch.button";
-import InputText from "../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { NinePatch } from "../ui/components/nine.patch";
+import { InputText, NineSliceButton, NinePatch } from "tooqingui";
 import { Logger } from "../utils/log";
 import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
@@ -16,7 +14,7 @@ export class CreateRolePanel extends BasePanel {
   private mFoot: Phaser.GameObjects.Image;
   private mBackgroundColor: Phaser.GameObjects.Graphics;
   private mBackground: Phaser.GameObjects.Image;
-  private mSubmit: NinePatchButton;
+  private mSubmit: NineSliceButton;
   private mInputTextBg: NinePatch;
   private inputText: InputText;
   private mPrePageBtn: Phaser.GameObjects.Image;
@@ -119,7 +117,7 @@ export class CreateRolePanel extends BasePanel {
     this.mBackgroundColor.fillRect(0, 0, size.width, size.height);
     this.addAt(this.mBackgroundColor, 0);
 
-    this.mInputTextBg = new NinePatch(this.scene, size.width >> 1, 350 * this.dpr, 255 * this.dpr, 50 * this.dpr, this.key, "input_bg.png", {
+    this.mInputTextBg = new NinePatch(this.scene, size.width >> 1, 350 * this.dpr, 255 * this.dpr, 50 * this.dpr, this.key, "input_bg.png", undefined, undefined, {
       left: 27 * this.dpr,
       top: 24 * this.dpr,
       right: 28 * this.dpr,
@@ -148,7 +146,7 @@ export class CreateRolePanel extends BasePanel {
       w = frame.width;
       h = frame.height;
     }
-    this.mSubmit = new NinePatchButton(this.scene, size.width >> 1, 445 * this.dpr, 202 * this.dpr, 55 * this.dpr, this.key, "submit_button", text, {
+    this.mSubmit = new NineSliceButton(this.scene, size.width >> 1, 445 * this.dpr, 202 * this.dpr, 55 * this.dpr, this.key, "submit_button", text, this.dpr, this.scale, {
       left: 19 * this.dpr,
       top: 20 * this.dpr,
       right: w - 2 - 19 * this.dpr,
@@ -216,7 +214,7 @@ export class CreateRolePanel extends BasePanel {
     this.add([this.mErrorBg, this.mError]);
 
     this.dragonbones = new DragonbonesDisplay(this.scene, undefined, undefined, true);
-    this.dragonbones.scale = this.dpr*2;
+    this.dragonbones.scale = this.dpr * 2;
     this.dragonbones.x = size.width >> 1;
     this.dragonbones.y = this.mNextPageBtn.y + 70 * this.dpr;
     // this.dragonbones.y = 286 * this.dpr;

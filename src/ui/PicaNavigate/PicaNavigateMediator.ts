@@ -2,7 +2,7 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { PicaNavigatePanel } from "./PicaNavigatePanel";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 import { PicaNavigate } from "./PicaNavigate";
 
 export class PicaNavigateMediator extends BaseMediator {

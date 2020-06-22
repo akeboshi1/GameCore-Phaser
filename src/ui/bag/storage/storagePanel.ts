@@ -3,7 +3,7 @@ import { Size } from "../../../utils/size";
 import { WorldService } from "../../../game/world.service";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { IconBtn } from "../../baseView/icon.btn";
-import { NinePatch } from "../../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { StorageMediator } from "./storageMediator";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { BasePanel } from "../../components/BasePanel";
@@ -50,10 +50,10 @@ export class StoragePanel extends BasePanel {
     protected init() {
         if (this.mInitialized) return;
         super.init();
-        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, undefined, undefined, Background.getConfig());
         this.addAt(this.mBg, 0);
         this.setSize(this.mBg.width, this.mBg.height);
-        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, Border.getConfig());
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.mBorder.x = this.mBg.x;
         this.mBorder.y = this.mBg.y + 10;
         this.addAt(this.mBorder, 1);

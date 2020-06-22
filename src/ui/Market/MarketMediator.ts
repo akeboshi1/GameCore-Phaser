@@ -5,7 +5,7 @@ import { Market } from "./Market";
 import { op_client, op_def } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { MessageType } from "../../const/MessageType";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class MarketMediator extends BaseMediator {
   protected mView: MarketPanel;

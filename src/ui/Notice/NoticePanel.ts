@@ -2,7 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { Border } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { Font } from "../../utils/font";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { WorldService } from "../../game/world.service";
 
 export class NoticePanel extends BasePanel {
@@ -94,7 +94,7 @@ export class NoticePanel extends BasePanel {
         //     columns: Border.getColumns(),
         //     rows: Border.getRows()
         // });
-        const background = new NinePatch(this.scene, 0, 0, 1200, 120, Border.getName(), null, Border.getConfig());
+        const background = new NinePatch(this.scene, 0, 0, 1200, 120, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.add(background);
 
         this.mContentText = this.scene.make.text({

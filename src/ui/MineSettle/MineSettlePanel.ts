@@ -3,15 +3,12 @@ import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
-import { NinePatch } from "../components/nine.patch";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { GameGridTable, NinePatch, NineSliceButton } from "tooqingui";
 import { i18n } from "../../i18n";
 export class MineSettlePanel extends BasePanel {
     private key: string = "mine_settle";
-    private confirmBtn: NinePatchButton;
+    private confirmBtn: NineSliceButton;
     private mPropGrid: GameGridTable;
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: NinePatch;
@@ -78,7 +75,7 @@ export class MineSettlePanel extends BasePanel {
     init() {
         const width = this.cameraWidth;
         const height = this.cameraHeight;
-        this.bg = new NinePatch(this.scene, 0, 0, 293 * this.dpr, 260 * this.dpr, this.key, "bg", {
+        this.bg = new NinePatch(this.scene, 0, 0, 293 * this.dpr, 260 * this.dpr, this.key, "bg", undefined, undefined, {
             left: 10,
             top: 10,
             right: 10,
@@ -90,7 +87,7 @@ export class MineSettlePanel extends BasePanel {
         const zoom = this.scale;
         const capW = (propFrame.width + 20 * this.dpr * zoom);
         const capH = (propFrame.height + 25 * this.dpr * zoom);
-        const config: GridTableConfig = {
+        const config = {
             x: 0,
             y: 0,
             table: {
@@ -132,7 +129,7 @@ export class MineSettlePanel extends BasePanel {
             x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("minesettle.settle"),
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
-        this.confirmBtn = new NinePatchButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, this.key, "button", i18n.t("minesettle.savebag"), {
+        this.confirmBtn = new NineSliceButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, this.key, "button", i18n.t("minesettle.savebag"), this.dpr, this.scale, {
             left: 20,
             top: 20,
             right: 20,

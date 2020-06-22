@@ -2,7 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { EquipUpgradeItem } from "./EquipUpgradeItem";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { op_client } from "pixelpai_proto";
 import { i18n } from "../../i18n";
 
@@ -81,7 +81,7 @@ export default class EquipUpgradePanel extends BasePanel {
         this.blackBg.fillStyle(0, 0.5);
         this.blackBg.fillRoundedRect(0, 0, w, h);
         this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
-        this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
+        this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", undefined, undefined, {
             left: 40,
             top: 40,
             bottom: 40,

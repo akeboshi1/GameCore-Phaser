@@ -3,9 +3,7 @@ import { ItemDetail } from "./ItemDetail";
 import { ILayerManager } from "../layer.manager";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { NinePatchButton } from "../components/ninepatch.button";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType, NineSliceButton } from "tooqingui";
 
 export class ItemDetailMediator extends BaseMediator {
     private world: WorldService;
@@ -56,12 +54,12 @@ export class ItemDetailMediator extends BaseMediator {
 
     private onBtnHandler(pointer, gameobject) {
         if (!gameobject) return;
-        if (gameobject instanceof NinePatchButton) {
+        if (gameobject instanceof NineSliceButton) {
             const param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mParam[0];
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
             const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
             content.uiId = param.id;
-            content.componentId = (gameobject as NinePatchButton).getBtnData().node.id;
+            content.componentId = (gameobject as NineSliceButton).getBtnData().node.id;
             this.world.connection.send(pkt);
         }
     }

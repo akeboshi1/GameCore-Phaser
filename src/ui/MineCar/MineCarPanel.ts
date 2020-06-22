@@ -6,10 +6,7 @@ import { BasePanel } from "../components/BasePanel";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
+import { GameGridTable, GridTableConfig, Button, TabButton } from "tooqingui";
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   // private mPanel: Phaser.GameObjects.Container;
@@ -208,7 +205,7 @@ export class MineCarPanel extends BasePanel {
     const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
     // this.cellHeight = capH;
     const gridW = 236 * this.dpr * zoom;
-    const propConfig: GridTableConfig = {
+    const propConfig = {
       x: -7 * this.dpr * zoom,
       y: -16 * this.dpr * zoom,
       table: {
@@ -248,7 +245,7 @@ export class MineCarPanel extends BasePanel {
     });
 
     const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png");
-    const categoryTableConfig: GridTableConfig = {
+    const categoryTableConfig = {
       x: -9 * this.dpr * zoom,
       y: -155 * this.dpr * zoom,
       table: {

@@ -4,11 +4,8 @@ import { Font } from "../../utils/font";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { BaseScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
-import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
+import { BaseScroller, ScrollerConfig, Button, TabButton } from "tooqingui";
 import { Logger } from "../../utils/log";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 
 export class PicaRoomListPanel extends BasePanel {
   private readonly key: string = "pica_roomlist";
@@ -153,7 +150,7 @@ export class PicaRoomListPanel extends BasePanel {
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;
     const h = this.mRoomContainer.height * this.scale;
-    const config: ScrollerConfig = {
+    const config = {
       x: this.x - w / 2,
       y: this.y - h / 2 - 20 * this.dpr * this.scale,
       clickX: 0,
@@ -175,7 +172,7 @@ export class PicaRoomListPanel extends BasePanel {
         Logger.getInstance().log(gameobject.roomData().name);
       }
     };
-    this.mScroller = new BaseScroller(this.scene, this.mRoomContainer, config);
+    this.mScroller = new BaseScroller(this.scene, config, this.mRoomContainer);
     this.add([this.mRoomDeleBtn, this.mMyRoomDeleBtn, this.mCloseBtn]);
     checkbox.selectIndex(0);
   }

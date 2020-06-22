@@ -1,15 +1,14 @@
-import { NinePatchButton } from "../components/ninepatch.button";
 import { IPatchesConfig } from "../components/patches.config";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch, NineSliceButton } from "tooqingui";
 import { Border } from "../../utils/resUtil";
 
-export class MenuItem extends NinePatchButton {
+export class MenuItem extends NineSliceButton {
     protected mMenus: MenuItem[];
     protected mChild: Phaser.GameObjects.Container;
     protected mArrow: Phaser.GameObjects.Image;
     protected mBackground: NinePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, text: string, config: IPatchesConfig) {
-        super(scene, x, y, width, height, key, "", text, config);
+        super(scene, x, y, width, height, key, "", text, 1, 1, config);
     }
 
     public appendItem(menu: MenuItem) {
@@ -22,7 +21,7 @@ export class MenuItem extends NinePatchButton {
                 key: "usermenu_arrow"
             });
             this.add(this.mArrow);
-            this.mBackground = new NinePatch(this.scene, 0, 0, 0, 0, Border.getName(), null, Border.getConfig());
+            this.mBackground = new NinePatch(this.scene, 0, 0, 0, 0, Border.getName(), null, undefined, undefined, Border.getConfig());
         }
 
         this.mChild.add(menu);
@@ -62,7 +61,7 @@ export class MenuItem extends NinePatchButton {
             this.mArrow.destroy(true);
             this.mArrow = null;
         }
-        super.destroy(fromScene);
+        super.destroy();
     }
 
     get menus(): MenuItem[] {

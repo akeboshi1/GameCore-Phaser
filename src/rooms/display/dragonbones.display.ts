@@ -5,7 +5,7 @@ import { DisplayObject } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
-import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
+import { SoundField } from "../../game/sound.manager";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",

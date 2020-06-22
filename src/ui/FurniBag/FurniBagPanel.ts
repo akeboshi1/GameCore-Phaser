@@ -9,16 +9,8 @@ import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { NinePatch } from "../components/nine.patch";
 import { Handler } from "../../Handler/Handler";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { IAvatar } from "../../rooms/display/dragonbones.model";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import {ShopPanel} from "../Shop/ShopPanel";
+import { Button, TabButton, GridTableConfig, GameGridTable, GameScroller, NineSliceButton, NinePatch } from "tooqingui";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -373,7 +365,7 @@ export class FurniBagPanel extends BasePanel {
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
     w = this.scene.cameras.main.width + 35 * this.dpr * zoom + inputWid;
-    const tableConfig: GridTableConfig = {
+    const tableConfig = {
       x: 0,
       y: 0,
       table: {
@@ -1120,7 +1112,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
 
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, commonKey: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
-    const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", {
+    const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", undefined, undefined, {
       top: 40,
       bottom: 40
     });

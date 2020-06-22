@@ -3,7 +3,7 @@ import { BlackButton, Border, TransparentButton, Url } from "../../utils/resUtil
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
 import { WorldService } from "../../game/world.service";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 
 export class UserMenuPanel extends BasePanel {
     private mBackground: NinePatch;
@@ -117,7 +117,7 @@ export class UserMenuPanel extends BasePanel {
     }
 
     protected init() {
-        this.mBackground = new NinePatch(this.scene, 0, 0, 70, 30, Border.getName(), null, Border.getConfig());
+        this.mBackground = new NinePatch(this.scene, 0, 0, 70, 30, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.add(this.mBackground);
         // this.mBackground.x = this.mBackground.width * this.mBackground.originX;
         // this.mBackground.y = this.mBackground.height * this.mBackground.originY;

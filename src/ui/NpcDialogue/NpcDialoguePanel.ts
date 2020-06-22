@@ -1,9 +1,8 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { NinePatch } from "../components/nine.patch";
 import { DynamicImage } from "../components/dynamic.image";
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { Button } from "tooqingui";
 import { Handler } from "../../Handler/Handler";
 
 export class NpcDialoguePanel extends BasePanel {

@@ -7,8 +7,6 @@ import { Radio } from "../../components/radio";
 import { ChatMediator } from "../../chat/chat.mediator";
 import { BagMediator } from "../../bag/bagView/bagMediator";
 import { BasePanel } from "../../components/BasePanel";
-import { Panel } from "../../../../lib/rexui/lib/ui/panel/Panel";
-
 /**
  * 主界面ui pc版本
  */

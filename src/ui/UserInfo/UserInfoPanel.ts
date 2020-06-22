@@ -1,19 +1,18 @@
 import { BasePanel } from "../components/BasePanel";
 import { DynamicImage } from "../components/dynamic.image";
 import { Background, Border, Url, BlueButton } from "../../utils/resUtil";
-import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client } from "pixelpai_proto";
 import { UserInfoMediator } from "./UserInfoMediator";
+import { NinePatch, NineSliceButton } from "tooqingui";
 
 export class UserInfoPanel extends BasePanel {
     private mActor: DynamicImage;
     private mBadgeImages: DynamicImage[] = [];
     private mNickName: Phaser.GameObjects.Text;
     private mLv: Phaser.GameObjects.Text;
-    private mFollwerBtn: NinePatchButton;
+    private mFollwerBtn: NineSliceButton;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
         this.mWorld = worldService;
@@ -86,7 +85,7 @@ export class UserInfoPanel extends BasePanel {
         }
 
         if (this.mFollwerBtn) {
-            this.mFollwerBtn.destroy(true);
+            this.mFollwerBtn.destroy();
             this.mFollwerBtn = null;
         }
 
@@ -103,23 +102,19 @@ export class UserInfoPanel extends BasePanel {
 
     protected init() {
         this.setSize(359, 199);
-        const background = new NinePatch(this.scene, {
-            width: 359,
-            height: 199,
-            key: Background.getName(),
-            columns: Background.getColumns(),
-            rows: Background.getRows()
-        }).setOrigin(0, 0);
+        const background = new NinePatch(this.scene, 0, 0,
+            359,
+            199,
+            Background.getName()
+        ).setOrigin(0, 0);
         this.add(background);
-        const border = new NinePatch(this.scene, {
-            x: 7,
-            y: 19,
-            width: 345,
-            height: 173,
-            key: Border.getName(),
-            columns: Border.getColumns(),
-            rows: Border.getRows()
-        }).setOrigin(0, 0);
+        const border = new NinePatch(this.scene,
+            7,
+            19,
+            345,
+            173,
+            Border.getName()
+        ).setOrigin(0, 0);
         this.add(border);
 
         const nickNameLabel = this.scene.make.text({
@@ -163,7 +158,7 @@ export class UserInfoPanel extends BasePanel {
         });
         this.add(this.mLv);
 
-        this.mFollwerBtn = new NinePatchButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), BlueButton.getName(), "关注", BlueButton.getConfig());
+        this.mFollwerBtn = new NineSliceButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), BlueButton.getName(), "关注", this.dpr, this.scale, BlueButton.getConfig());
         this.mFollwerBtn.x = 258 + (this.mFollwerBtn.width >> 1);
         this.mFollwerBtn.y = 145 + (this.mFollwerBtn.height >> 1);
         this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });

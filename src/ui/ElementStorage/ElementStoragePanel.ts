@@ -1,10 +1,8 @@
 import { BasePanel } from "../components/BasePanel";
-import { NinePatch } from "../components/nine.patch";
 import { Background, Border, Url } from "../../utils/resUtil";
 import { Size } from "../../utils/size";
 import { WorldService } from "../../game/world.service";
-import { InputText } from "tooqingui";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { InputText, NineSliceButton, NinePatch } from "tooqingui";
 import { Item } from "./item/Item";
 import { op_client } from "pixelpai_proto";
 import { ElementStorageMediator } from "./ElementStorageMediator";
@@ -13,7 +11,7 @@ export class ElementStoragePanel extends BasePanel {
     private mBackground: NinePatch;
     private mBorder: NinePatch;
     private mSearchInput: InputText;
-    private mDragBtn: NinePatchButton;
+    private mDragBtn: NineSliceButton;
     // private mTabs: NinePatchButton[];
     private mProps: Item[];
     private mExpaned: boolean = true;
@@ -215,8 +213,8 @@ export class ElementStoragePanel extends BasePanel {
     }
 
     protected init() {
-        this.mBackground = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, Background.getConfig());
-        this.mBorder = new NinePatch(this.scene, 7, 19, 655 >> 1, 847 >> 1, Border.getName(), null, Border.getConfig());
+        this.mBackground = new NinePatch(this.scene, 0, 0, this.width, this.height, Background.getName(), null, undefined, undefined, Background.getConfig());
+        this.mBorder = new NinePatch(this.scene, 7, 19, 655 >> 1, 847 >> 1, Border.getName(), null, undefined, undefined, Border.getConfig());
         // this.mBackground.setInteractive();
 
         // TODO 多语言配置
@@ -234,7 +232,7 @@ export class ElementStoragePanel extends BasePanel {
             bottom: 4
         };
 
-        this.mDragBtn = new NinePatchButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器", config);
+        this.mDragBtn = new NineSliceButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器",this.dpr,this.scale, config);
 
         // this.mTabs = [];
 

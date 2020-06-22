@@ -1,11 +1,9 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { MessageBoxView } from "./MessageBoxView";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType, NineSliceButton } from "tooqingui";
 
 export class MessageBoxMediator extends BaseMediator {
     private world: WorldService;
@@ -58,8 +56,8 @@ export class MessageBoxMediator extends BaseMediator {
 
     private onBtnHandler(pointer, gameobject) {
         if (!gameobject) return;
-        if (gameobject instanceof NinePatchButton) {
-            const btn = (gameobject as NinePatchButton).getBtnData();
+        if (gameobject instanceof NineSliceButton) {
+            const btn = (gameobject as NineSliceButton).getBtnData();
             if (!btn) {
                 return;
             }

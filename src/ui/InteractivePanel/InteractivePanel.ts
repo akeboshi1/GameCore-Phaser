@@ -2,14 +2,10 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { Url, Background, Border } from "../../utils/resUtil";
-import { NinePatch } from "../components/nine.patch";
 import { Radio } from "../components/radio";
 import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { ISelectCallItemdata } from "../../../lib/rexui/lib/ui/combobox/Combobox";
+import { TextArea, BaseMediator, BBCodeText, NinePatch } from "tooqingui";
 export class InteractivePanel extends BasePanel {
     private static baseWidth: number = 720;
     private static baseHeight: number = 720;
@@ -110,7 +106,7 @@ export class InteractivePanel extends BasePanel {
                     completeBack: () => {
                         this.radioComplete();
                     },
-                    clickCallBack: (itemShowData: ISelectCallItemdata) => {
+                    clickCallBack: (itemShowData: any) => {
                         if (!itemShowData || !med) return;
                         (med as InteractivePanelMediator).componentClick(itemShowData.data);
                     }
@@ -176,10 +172,10 @@ export class InteractivePanel extends BasePanel {
         if (this.mRadio) {
             this.add(this.mRadio);
         }
-        this.mTextArea.childrenMap.child.setMinSize(this.mBorder.width - 10 * this.dpr * zoom, this.mBorder.height - 3 * this.dpr * zoom);
+        (<any>this.mTextArea).childrenMap.child.setMinSize(this.mBorder.width - 10 * this.dpr * zoom, this.mBorder.height - 3 * this.dpr * zoom);
         this.mTextArea.layout();
         this.mTextArea.setPosition(width / 2, this.y + this.mDescCon.y);
-        const textMask = this.mTextArea.childrenMap.text;
+        const textMask = (<any>this.mTextArea).childrenMap.text;
         textMask.x = -this.mBorder.width >> 1;
         textMask.y = -this.mBorder.height / 2 + 20 * this.dpr;
         textMask.resize(this.mBorder.width, this.mDescTF.displayHeight + 2000);
@@ -252,9 +248,9 @@ export class InteractivePanel extends BasePanel {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         this.mNameCon = this.mScene.make.container(undefined, false);
         this.mDescCon = this.mScene.make.container(undefined, false);
-        this.mBg = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 1080, 320, Background.getName(), null, undefined, undefined, Background.getConfig());
         this.setSize(width, height);
-        this.mBorder = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, Border.getConfig());
+        this.mBorder = new NinePatch(this.scene, 0, 0, 1040, 280, Border.getName(), null, undefined, undefined, Border.getConfig());
 
         this.mLeftFaceIcon = this.mScene.make.image(undefined, false);
         this.mMidFaceIcon = this.mScene.make.image(undefined, false);

@@ -4,7 +4,7 @@ import { PicaChatPanel } from "./PicaChatPanel";
 import { PicaNavigateMediator } from "../PicaNavigate/PicaNavigateMediator";
 import { PicaChat } from "./PicaChat";
 import { op_client } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class PicaChatMediator extends BaseMediator {
     public static NAME: string = "PicaChatMediator";

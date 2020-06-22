@@ -2,7 +2,6 @@ import { BasePanel } from "../components/BasePanel";
 import { Border, Url, Background } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
-import { NinePatch } from "../components/nine.patch";
 import { IListItemComponent } from "../bag/IListItemRender";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
@@ -11,6 +10,7 @@ import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { IconBtn } from "../baseView/icon.btn";
 import { FriendMediator } from "./friend.mediator";
 import { UIMediatorType } from "../ui.mediatorType";
+import { NinePatch } from "tooqingui";
 export interface IFriendIcon {
     res: string;
     name: string;
@@ -157,7 +157,8 @@ export class FriendPanel extends BasePanel {
         this.mWorld.uiManager.getUILayerManager().addToToolTipsLayer(this);
         const size: Size = this.mWorld.getSize();
 
-        this.mBg = new NinePatch(this.scene, 0, 0, 600 / this.mWorld.uiScale, size.height * .5 * this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 600 / this.mWorld.uiScale, size.height * .5 * this.mWorld.uiScale, Border.getName(), undefined
+            , undefined, undefined, Border.getConfig());
         this.setSize(this.mBg.width, this.mBg.height);
         // this.addAt(this.mBg, 0);
         this.mTitleTxt = this.mScene.make.text(undefined, false);
@@ -181,7 +182,7 @@ export class FriendPanel extends BasePanel {
         const image = this.scene.make.image(undefined, false);
         image.setTexture((this.mWorld.roomManager.currentRoom.playerManager.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
         this.add(image);
-        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), undefined, undefined, undefined, Background.getConfig());
         this.addAt(this.mBg, 0);
         this.setSize(this.mBg.width, this.mBg.height);
         this.initFriendItem();
@@ -298,7 +299,7 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
         this.mScene = scene;
 
         const size: Size = this.mWorld.getSize();
-        this.mBg = new NinePatch(this.mScene, 0, 0, this.mPanel.width, 90, Border.getName(), null, Border.getConfig());
+        this.mBg = new NinePatch(this.mScene, 0, 0, this.mPanel.width, 90, Border.getName(), undefined, undefined, undefined, Border.getConfig());
         this.addAt(this.mBg, 0);
         this.setSize(this.mBg.width, this.mBg.height);
 
@@ -318,7 +319,7 @@ export class FriendItem extends Phaser.GameObjects.Container implements IListIte
             for (let i: number = 0; i < len; i++) {
                 const icon: Phaser.GameObjects.Image = this.mScene.make.image(undefined, false);
                 const iconCon: Phaser.GameObjects.Container = this.mScene.make.container(undefined, false);
-                const bg = new NinePatch(this.mScene, 0, 0, 60, 60, Border.getName(), null, Border.getConfig());
+                const bg = new NinePatch(this.mScene, 0, 0, 60, 60, Border.getName(), undefined, undefined, undefined, Border.getConfig());
                 const txt = this.mScene.make.text(undefined, false);
                 const friendIconData: IFriendIcon = iconResList[i];
                 txt.setText(friendIconData.name);

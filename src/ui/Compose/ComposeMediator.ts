@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { ComposePanel } from "./ComposePanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Compose } from "./Compose";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class ComposeMediator extends BaseMediator {
     private scene: Phaser.Scene;

@@ -3,11 +3,11 @@ import { Url, BlueButton } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { DragDropIcon } from "../bag/dragDropIcon";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { NineSliceButton } from "tooqingui";
 import { op_gameconfig_01 } from "pixelpai_proto";
 
 export class ItemDetail extends BasePanel {
-    private mBtnList: NinePatchButton[];
+    private mBtnList: NineSliceButton[];
     private mBtnWid: number = 100;
     private mBtnHei: number = 40;
     private mResStr: string;
@@ -22,7 +22,7 @@ export class ItemDetail extends BasePanel {
         super(scene, world);
     }
 
-    public getBtnList(): NinePatchButton[] {
+    public getBtnList(): NineSliceButton[] {
         return this.mBtnList;
     }
 
@@ -56,13 +56,13 @@ export class ItemDetail extends BasePanel {
 
         if (data.button.length > 0) {
             this.mBtnList = [];
-            let btn: NinePatchButton;
+            let btn: NineSliceButton;
             const len: number = data.button.length;
             let preY: number = 20;
             const preX: number = this.mWid + 50;
             for (let i: number = 0; i < len; i++) {
                 const btnData: op_gameconfig_01.IButton = data.button[i];
-                btn = new NinePatchButton(this.mScene, 0, 0, this.mBtnWid, this.mBtnHei, BlueButton.getName(), BlueButton.getName(), btnData.text, BlueButton.getConfig(), btnData);
+                btn = new NineSliceButton(this.mScene, 0, 0, this.mBtnWid, this.mBtnHei, BlueButton.getName(), BlueButton.getName(), btnData.text, this.dpr, this.scale, BlueButton.getConfig(), btnData);
                 this.mBtnList.push(btn);
                 btn.x = preX;
                 btn.y = preY;
@@ -102,7 +102,7 @@ export class ItemDetail extends BasePanel {
     public destroy() {
         if (this.mBtnList) {
             this.mBtnList.forEach((btn) => {
-                btn.destroy(true);
+                btn.destroy();
                 btn = null;
             });
             this.mBtnList = null;

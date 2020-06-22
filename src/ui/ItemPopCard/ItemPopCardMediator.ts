@@ -1,7 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { ItemPopCardPanel } from "./ItemPopCardPanel";
 import { ILayerManager } from "../layer.manager";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class ItemPopCardMediator extends BaseMediator {
   protected mView: ItemPopCardPanel;

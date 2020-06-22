@@ -1,7 +1,6 @@
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { Button, InputText, NineSlicePatch } from "tooqingui";
 import { Font } from "../../utils/font";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { NineSliceButton } from "tooqingui";
 import { i18n } from "../../i18n";
 export class CharacterEditorPanel extends Phaser.GameObjects.Container {
     private title: Phaser.GameObjects.Text;
@@ -56,7 +55,7 @@ export class CharacterEditorPanel extends Phaser.GameObjects.Container {
         }).setOrigin(0);
         this.add([signText, this.signInput]);
         const backBtn = new Button(this.scene, common_key, "back_arrow", "back_arrow");
-        const saveBtn = new NinePatchButton(this.scene, 0, height * 0.5 - 40 * dpr, 174 * this.dpr, 37 * this.dpr, common_key, "yellow_btn", this.geti18n("save"), {
+        const saveBtn = new NineSliceButton(this.scene, 0, height * 0.5 - 40 * dpr, 174 * this.dpr, 37 * this.dpr, common_key, "yellow_btn", this.geti18n("save"), this.dpr, this.scale, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,

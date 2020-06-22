@@ -4,10 +4,8 @@ import { NoticePanel } from "./NoticePanel";
 import { PBpacket } from "net-socket-packet";
 import { MessageType } from "../../const/MessageType";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator,UIType,Panel } from "tooqingui";
 import { Notice } from "./Notice";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
-import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
 
 export class NoticeMediator extends BaseMediator {
     public static NAME: string = "NoticeMediator";

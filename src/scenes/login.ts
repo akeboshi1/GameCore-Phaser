@@ -1,12 +1,10 @@
 import { ConnectionService } from "../net/connection.service";
-import InputText from "../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { InputText, IComboboxConfig, ComboBox } from "tooqingui";
 import { PopUpTextUI } from "../ui/alert/PopUpTextUI";
 import { WorldService } from "../game/world.service";
 import { Logger } from "../utils/log";
 import { Size } from "../utils/size";
 import { BasicScene } from "./basic.scene";
-import { ComboBox, ISelectCallItemdata } from "../../lib/rexui/lib/ui/combobox/Combobox";
-import { IComboboxConfig } from "../../lib/rexui/lib/ui/interface/combobox/IComboboxConfig";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {
@@ -180,7 +178,7 @@ export class LoginScene extends BasicScene {
         this.mtxt5.setFontFamily("YaHei");
         this.mtxt5.setText("发送");
 
-        const config: IComboboxConfig = {
+        const config  = {
             wid: 220,
             hei: 36,
             resKey: "login",
@@ -329,7 +327,7 @@ export class LoginScene extends BasicScene {
         Logger.getInstance().log(`width:${size.width}`);
     }
 
-    private changeID(data: ISelectCallItemdata) {
+    private changeID(data: any) {
         // Logger.debug("============combobox 123" + data.text);
     }
 

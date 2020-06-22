@@ -1,14 +1,12 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { NinePatch } from "../components/nine.patch";
 import { Font } from "../../utils/font";
-import { NinePatchButton } from "../components/ninepatch.button";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { BBCodeText, NinePatch, NineSliceButton } from "tooqingui";
 
 export class PicaMessageBoxPanel extends BasePanel {
   private key: string = "pica_message_box";
   private mTitleLabel: Phaser.GameObjects.Text;
-  private mButtons: NinePatchButton[];
+  private mButtons: NineSliceButton[];
   private mText: BBCodeText;
   private mButtonContaier: Phaser.GameObjects.Container;
   constructor(scene: Phaser.Scene, world: WorldService) {
@@ -47,7 +45,7 @@ export class PicaMessageBoxPanel extends BasePanel {
       let totalW = 0;
       for (let i = 0; i < buttons.length; i++) {
         const txt: string = buttons[i] ? buttons[i].text : "";
-        const btn = new NinePatchButton(this.mScene, 0, 0, btnWid, btnHei, this.key, i === 0 ? "yellow_btn" : "red_btn", buttons[i].text, config, buttons[i]);
+        const btn = new NineSliceButton(this.mScene, 0, 0, btnWid, btnHei, this.key, i === 0 ? "yellow_btn" : "red_btn", buttons[i].text, this.dpr, this.scale, config, buttons[i]);
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
           fontSize: 16 * this.dpr
@@ -87,7 +85,7 @@ export class PicaMessageBoxPanel extends BasePanel {
     this.add(border);
 
     const frame = this.scene.textures.getFrame(this.key, "bg");
-    const background = new NinePatch(this.scene, 0, 0, 286 * this.dpr, frame.height, this.key, "bg", {
+    const background = new NinePatch(this.scene, 0, 0, 286 * this.dpr, frame.height, this.key, "bg", undefined, undefined, {
       left: 22 * this.dpr,
       top: frame.height,
       right: 22 * this.dpr,
@@ -135,7 +133,7 @@ export class PicaMessageBoxPanel extends BasePanel {
     if (!gameobject) {
       return;
     }
-    const btn = (gameobject as NinePatchButton).getBtnData();
+    const btn = (gameobject as NineSliceButton).getBtnData();
     if (!btn) {
       return;
     }

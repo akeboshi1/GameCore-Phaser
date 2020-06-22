@@ -80,7 +80,7 @@
             if (!window.navigator) {
                 // FR.Msg.alert("提示", "当前设备：移动端APP")
                 window.addEventListener("resize", (e) => {
-                    app.onResize(window.innerWidth, window.innerHeight);
+                    // app.onResize(window.innerWidth, window.innerHeight);
                 });
             }
             else {
@@ -92,7 +92,7 @@
                 // }
                 // else {
                 window.addEventListener("resize", (e) => {
-                    app.onResize(window.innerWidth, window.innerHeight);
+                    // app.onResize(window.innerWidth, window.innerHeight);
                     // if (window.orientation) {
                     //     window.addEventListener('deviceorientation', (e) => {
                     //         // window.orientation === 0 为竖屏，1为横屏

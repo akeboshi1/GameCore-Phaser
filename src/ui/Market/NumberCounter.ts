@@ -1,4 +1,4 @@
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { InputText } from "tooqingui";
 import { LabelInput } from "../components/label.input";
 
 export class NumberCounter extends Phaser.GameObjects.Container {

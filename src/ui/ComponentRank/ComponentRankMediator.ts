@@ -2,9 +2,7 @@ import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { ComponentRankPanel } from "./ComponentRankPanel";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
-
+import { BaseMediator,UIType } from "tooqingui";
 export class ComponentRankMediator extends BaseMediator {
     public static NAME: string = "ComponentRankMediator";
     readonly world: WorldService;

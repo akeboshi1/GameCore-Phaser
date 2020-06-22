@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { MineCar } from "./MineCar";
 import { op_client } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class MineCarMediator extends BaseMediator {
   private mMineCar: MineCar;

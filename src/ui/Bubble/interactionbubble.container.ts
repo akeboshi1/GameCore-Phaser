@@ -1,12 +1,12 @@
 import { InteractionBubble } from "./interactionbubble";
 import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
-import { BaseUI } from "../../../lib/rexui/lib/ui/baseUI/BaseUI";
+import { BaseUI } from "tooqingui";
 export class InteractionBubbleContainer extends BaseUI {
     public id: number;
     private mBubble: InteractionBubble;
     constructor(scene: Phaser.Scene, dpr: number) {
-        super(scene);
+        super(scene, dpr);
     }
 
     public set show(value: boolean) {

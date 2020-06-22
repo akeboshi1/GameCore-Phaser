@@ -1,11 +1,11 @@
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
+import { InputText } from "tooqingui";
 import { Logger } from "../../utils/log";
 import { Font } from "../../utils/font";
 
 export class LabelInput extends Phaser.GameObjects.Container {
     private mLabel: Phaser.GameObjects.Text;
     private mInputText: InputText;
-    private mInputConfig: object;
+    private mInputConfig: any;
     constructor(scene: Phaser.Scene, config: any) {
         super(scene);
 
@@ -49,7 +49,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         if (this.mInputText) {
             this.mInputText.destroy();
         }
-        this.mInputText = new InputText(this.scene, Object.assign({}, this.mInputConfig));
+        this.mInputText = new InputText(this.scene, this.mInputConfig.x, this.mInputConfig.y, this.mInputConfig.width, this.mInputConfig.height, this.mInputConfig);
         this.mInputText.on("textchange", this.onTextChangeHandler, this);
         this.mInputText.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;

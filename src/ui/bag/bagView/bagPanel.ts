@@ -4,8 +4,7 @@ import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { BagMediator } from "./bagMediator";
-import { NinePatch } from "../../components/nine.patch";
-import { InputText } from "tooqingui";
+import { InputText, NinePatch } from "tooqingui";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
 import { IconBtn } from "../../baseView/icon.btn";
@@ -133,18 +132,18 @@ export class BagPanel extends BasePanel {
         let tmpX: number = 0;
         let tmpY: number = 0;
         // ================背包界面背景底
-        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, undefined, undefined, Background.getConfig());
         // this.mBg.x = size.width - this.width >> 1;
         // this.mBg.y = size.height - this.mBg.height >> 1;
         this.addAt(this.mBg, 0);
         this.setSize(this.mBg.width, this.mBg.height);
 
-        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, Border.getConfig());
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.mBorder.x = this.mBg.x;
         this.mBorder.y = this.mBg.y + 10;
         this.addAt(this.mBorder, 1);
 
-        const txtBg: NinePatch = new NinePatch(this.scene, this.mBorder.width / 4 + 5, -this.mBg.height / 2 + 65, this.mBorder.width / 2 - 40, 35, Border.getName(), null, Border.getConfig());
+        const txtBg: NinePatch = new NinePatch(this.scene, this.mBorder.width / 4 + 5, -this.mBg.height / 2 + 65, this.mBorder.width / 2 - 40, 35, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.add(txtBg);
 
         this.mInputText = new InputText(this.scene, 0, 0, 10, 10, {

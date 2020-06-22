@@ -1,14 +1,12 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { Url, Border, BlueButton } from "../../utils/resUtil";
 import { Size } from "../../utils/size";
-import { NinePatch } from "../components/nine.patch";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { BBCodeText, NinePatch, NineSliceButton } from "tooqingui";
 import { op_client } from "pixelpai_proto";
 export class MessageBoxView extends BasePanel {
     private mTxt: BBCodeText;
-    private mButtons: NinePatchButton[];
+    private mButtons: NineSliceButton[];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -43,7 +41,7 @@ export class MessageBoxView extends BasePanel {
             btnSp.y = this.mHeight - btnHei - 100;
             for (let i = 0; i < buttons.length; i++) {
                 const txt: string = buttons[i] ? buttons[i].text : "";
-                const btn = new NinePatchButton(this.mScene, 0, 0, btnWid, btnHei, "button_blue", "button_blue", buttons[i].text, BlueButton.getConfig(), buttons[i]);
+                const btn = new NineSliceButton(this.mScene, 0, 0, btnWid, btnHei, "button_blue", "button_blue", buttons[i].text, this.dpr, this.scale, BlueButton.getConfig(), buttons[i]);
                 btn.x = i * w + btnWid / 2;
                 this.mButtons.push(btn);
                 btnSp.add(btn);
@@ -62,7 +60,7 @@ export class MessageBoxView extends BasePanel {
         if (this.mButtons && this.mButtons.length > 0) {
             this.mButtons.forEach((btn) => {
                 if (!btn) return;
-                btn.destroy(true);
+                btn.destroy();
             });
             this.mButtons.length = 0;
             this.mButtons = [];
@@ -72,7 +70,7 @@ export class MessageBoxView extends BasePanel {
         super.destroy();
     }
 
-    public get buttons(): NinePatchButton[] {
+    public get buttons(): NineSliceButton[] {
         return this.mButtons;
     }
 
@@ -90,7 +88,7 @@ export class MessageBoxView extends BasePanel {
         this.mWidth = 300;
         this.mHeight = 200;
 
-        const border = new NinePatch(this.scene, 0, 0, this.mWidth, this.mHeight, Border.getName(), null, Border.getConfig());
+        const border = new NinePatch(this.scene, 0, 0, this.mWidth, this.mHeight, Border.getName(), null, undefined, undefined, Border.getConfig());
         border.x = 0;
         border.y = 0;
         this.add(border);

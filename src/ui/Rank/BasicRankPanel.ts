@@ -3,7 +3,7 @@ import { op_client } from "pixelpai_proto";
 import { Background, Border, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 
 export class BasicRankPanel extends BasePanel {
     protected mTitleLabel: Phaser.GameObjects.Text;
@@ -96,11 +96,11 @@ export class BasicRankPanel extends BasePanel {
     protected init() {
         if (this.mInitialized) return;
         this.setSize(328, 361);
-        this.mBackground = new NinePatch(this.scene, 0, 0, 328, 361, Background.getName(), null, Background.getConfig());
+        this.mBackground = new NinePatch(this.scene, 0, 0, 328, 361, Background.getName(), null, undefined, undefined, Background.getConfig());
         this.add(this.mBackground);
         this.mChildContainer = this.scene.make.container({}, false);
         this.add(this.mChildContainer);
-        const border = new NinePatch(this.scene, 0, 0, 315, 318, Border.getName(), null, Border.getConfig());
+        const border = new NinePatch(this.scene, 0, 0, 315, 318, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.mChildContainer.add(border);
         const titleIcon = this.scene.make.image({
             x: -this.width / 2 + 20,

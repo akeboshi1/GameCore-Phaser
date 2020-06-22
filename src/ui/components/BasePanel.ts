@@ -12,7 +12,6 @@ export class BasePanel extends Panel {
     protected dpr: number;
     protected mResources: Map<string, any>;
     protected mReLoadResources: Map<string, any>;
-    protected mReloadTimes: number = 0;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.mScene = scene;

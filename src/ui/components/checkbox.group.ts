@@ -1,18 +1,18 @@
 export { IButtonState } from "tooqingui";
 export class CheckboxGroup extends Phaser.Events.EventEmitter {
-  private mList: tooqingui.IButtonState[] = [];
-  private mPrevButton: tooqingui.IButtonState;
+  private mList: any[] = [];
+  private mPrevButton: any;
   constructor() {
     super();
   }
 
-  public appendItem(item: tooqingui.IButtonState): this {
+  public appendItem(item: any): this {
     this.mList.push(item);
     item.on("Tap", this.onGameObjectUpHandler, this);
     return this;
   }
 
-  public appendItemAll(items: tooqingui.IButtonState[]): this {
+  public appendItemAll(items: any[]): this {
     this.mList = this.mList.concat(items);
     for (const item of items) {
       item.on("Tap", this.onGameObjectUpHandler, this);
@@ -20,7 +20,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     return this;
   }
 
-  public removeItem(item: tooqingui.IButtonState): this {
+  public removeItem(item: any): this {
     this.mList = this.mList.filter((button) => button !== item);
     item.removeAllListeners();
     return this;
@@ -39,7 +39,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     return this;
   }
 
-  public select(item: tooqingui.IButtonState) {
+  public select(item: any) {
     if (this.mPrevButton === item) {
       return;
     }

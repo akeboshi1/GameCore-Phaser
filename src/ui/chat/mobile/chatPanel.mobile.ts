@@ -1,16 +1,12 @@
 import { BaseChatPanel } from "../base.chat.panel";
 import { WorldService } from "../../../game/world.service";
-import TextArea from "../../../../lib/rexui/lib/ui/textarea/TextArea.js";
-import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js";
+import { TextArea, InputText, BBCodeText, NinePatch, NineSliceButton } from "tooqingui";
 import { Url, Border, WhiteButton } from "../../../utils/resUtil";
-import { NinePatch } from "../../components/nine.patch";
-import BBCodeText from "../../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
-import { NinePatchButton } from "../../components/ninepatch.button";
 export class ChatPanelMobile extends BaseChatPanel {
     private mTextArea: TextArea;
     private mInputText: InputText;
     private mBorder: NinePatch;
-    private mSendBtn: NinePatchButton;
+    private mSendBtn: NineSliceButton;
     private mInputBg: NinePatch;
     private clickContainer: Phaser.GameObjects.Container;
     private arrow: Phaser.GameObjects.Image;
@@ -63,7 +59,7 @@ export class ChatPanelMobile extends BaseChatPanel {
                 },
             });
 
-            track = new NinePatchButton(this.scene, 0, 0, 4, 7, "track", "", "", {
+            track = new NineSliceButton(this.scene, 0, 0, 4, 7, "track", "", "", this.dpr, this.scale, {
                 left: 0,
                 top: 2,
                 right: 0,
@@ -71,7 +67,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             });
             // track.x = this.width / 2;
             // track.y = 8 * this.mWorld.uiScale;
-            thumb = new NinePatchButton(this.scene, 0, 0, 20, 35, "button", "", "", {
+            thumb = new NineSliceButton(this.scene, 0, 0, 20, 35, "button", "", "", this.dpr, this.scale, {
                 left: 4,
                 top: 4,
                 right: 4,
@@ -146,7 +142,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             // this.mTextArea.y = this.mTextArea.childrenMap.child.minHeight >> 1;
             this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
             this.clickContainer.y = -this.clickContainer.height >> 1;
-            const silder = this.mTextArea.getElement("slider");
+            const silder = (<any>this.mTextArea).getElement("slider");
             silder.y = this.height >> 1;
             this.clickContainer.rotation = Math.PI;
             this.arrow.rotation = Math.PI * 1.5;
@@ -154,7 +150,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         }
         this.mTextArea.layout();
         this.add(this.mTextArea);
-        this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
+        (<any>this.mTextArea).childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
         // this.mBorder = new NinePatch(this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;
@@ -237,7 +233,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         }
         this.setSize(this.width, this.height);
 
-        this.mBorder = new NinePatch(this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;
         this.addAt(this.mBorder, 0);
@@ -250,7 +246,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             },
         });
 
-        const track = new NinePatchButton(this.scene, 0, 0, 4, 7, "track", "", "", {
+        const track = new NineSliceButton(this.scene, 0, 0, 4, 7, "track", "", "", this.dpr, this.scale, {
             left: 0,
             top: 2,
             right: 0,
@@ -258,7 +254,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         });
         track.x = this.width / 2;
         track.y = 8 * this.mWorld.uiScale;
-        const thumb = new NinePatchButton(this.scene, 0, 0, 20, 35, "button", "", "", {
+        const thumb = new NineSliceButton(this.scene, 0, 0, 20, 35, "button", "", "", this.dpr, this.scale, {
             left: 4,
             top: 4,
             right: 4,
@@ -281,7 +277,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             .layout();
         this.add(this.mTextArea);
 
-        this.mInputBg = new NinePatch(this.scene, 0, 0, 340, 30, "chat_input_bg", null, { left: 4, top: 4, right: 4, bottom: 4 });
+        this.mInputBg = new NinePatch(this.scene, 0, 0, 340, 30, "chat_input_bg", null, undefined, undefined, { left: 4, top: 4, right: 4, bottom: 4 });
         this.add(this.mInputBg);
 
         this.mInputText = new InputText(this.scene, 0, 0, 10, 10, {
@@ -295,11 +291,11 @@ export class ChatPanelMobile extends BaseChatPanel {
             .on("focus", this.onFocusHandler, this)
             .on("blur", this.onBlurHandler, this);
 
-        this.mSendBtn = new NinePatchButton(this.scene, 0, 0, 60, 30, WhiteButton.getName(), "", "发送", WhiteButton.getConfig());
+        this.mSendBtn = new NineSliceButton(this.scene, 0, 0, 60, 30, WhiteButton.getName(), "", "发送", this.dpr, this.scale, WhiteButton.getConfig());
         this.add(this.mSendBtn);
 
         this.clickContainer = this.scene.make.container(undefined, false);
-        const btnBg = new NinePatch(this.scene, 0, 0, 53 / this.mWorld.uiScale, 30 / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
+        const btnBg = new NinePatch(this.scene, 0, 0, 53 / this.mWorld.uiScale, 30 / this.mWorld.uiScale, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.arrow = this.scene.make.image(undefined, false);
         this.arrow.setTexture("arrow");
         this.clickContainer.setSize(btnBg.width + 4, btnBg.height + 10);

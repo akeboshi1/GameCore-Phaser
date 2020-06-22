@@ -5,9 +5,7 @@ import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_pro
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../layer.manager";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
-
+import { BaseMediator,UIType } from "tooqingui";
 export class ShopMediator extends BaseMediator {
     public static NAME: string = "ShopMediator";
     private world: WorldService;

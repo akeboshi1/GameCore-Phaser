@@ -1,5 +1,6 @@
 import "phaser";
 import "dragonBones";
+import "tooqingui";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "phaser";
@@ -755,35 +756,35 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 createContainer: true,
             },
             plugins: {
-            //     global: [
-            //         {
-            //             key: "rexButton",
-            //             plugin: ButtonPlugin,
-            //             start: true,
-            //         },
-            //         {
-            //             key: "rexNinePatchPlugin",
-            //             plugin: NinePatchPlugin,
-            //             start: true,
-            //         },
-            //         {
-            //             key: "rexInputText",
-            //             plugin: InputTextPlugin,
-            //             start: true,
-            //         },
-            //         {
-            //             key: "rexBBCodeTextPlugin",
-            //             plugin: BBCodeTextPlugin,
-            //             start: true,
-            //         },
-            //     ],
+                //     global: [
+                //         {
+                //             key: "rexButton",
+                //             plugin: ButtonPlugin,
+                //             start: true,
+                //         },
+                //         {
+                //             key: "rexNinePatchPlugin",
+                //             plugin: NinePatchPlugin,
+                //             start: true,
+                //         },
+                //         {
+                //             key: "rexInputText",
+                //             plugin: InputTextPlugin,
+                //             start: true,
+                //         },
+                //         {
+                //             key: "rexBBCodeTextPlugin",
+                //             plugin: BBCodeTextPlugin,
+                //             start: true,
+                //         },
+                //     ],
                 scene: [
                     {
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone",
                     },
-            //         { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
+                    //         { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
                 ],
             },
             render: {

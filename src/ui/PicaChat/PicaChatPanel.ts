@@ -1,7 +1,6 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { TextArea, BBCodeText } from "tooqingui";
 import { Font } from "../../utils/font";
 import { InputPanel } from "../components/input.panel";
 
@@ -66,10 +65,10 @@ export class PicaChatPanel extends BasePanel {
 
         this.mScrollBtn.x = width - this.mScrollBtn.width / 2 - 2 * this.dpr * zoom;
 
-        this.mTextArea.childrenMap.child.setMinSize(w, (h - 16 * this.dpr) * zoom);
+        (<any>this.mTextArea).childrenMap.child.setMinSize(w, (h - 16 * this.dpr) * zoom);
         this.mTextArea.layout();
         this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr * zoom);
-        const textMask = this.mTextArea.childrenMap.text;
+        const textMask = (<any>this.mTextArea).childrenMap.text;
         textMask.y = 8 * this.dpr;
         this.mTextArea.scrollToBottom();
         super.resize(w, h);
@@ -93,7 +92,7 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.setInteractive();
         this.mScrollBtn.setInteractive();
         this.mNavigateBtn.setInteractive();
-        this.mTextArea.childrenMap.child.setInteractive();
+        (<any>this.mTextArea).childrenMap.child.setInteractive();
 
         this.mScrollBtn.on("drag", this.onDragHandler, this);
         this.scene.input.setDraggable(this.mScrollBtn, true);
@@ -108,7 +107,7 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.disableInteractive();
         this.mScrollBtn.disableInteractive();
         this.mNavigateBtn.disableInteractive();
-        this.mTextArea.childrenMap.child.disableInteractive();
+        (<any>this.mTextArea).childrenMap.child.disableInteractive();
 
         this.mScrollBtn.off("drag", this.onDragHandler, this);
         this.mNavigateBtn.off("pointerup", this.onShowNavigateHandler, this);

@@ -3,8 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
 import { op_client } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-
+import { BaseMediator } from "tooqingui";
 export class MineSettleMediator extends BaseMediator {
     private scene: Phaser.Scene;
     private world: WorldService;

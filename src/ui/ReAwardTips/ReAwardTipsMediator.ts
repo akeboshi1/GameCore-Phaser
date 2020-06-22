@@ -1,4 +1,4 @@
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 import { WorldService } from "../../game/world.service";
 import { ReAwardTips } from "./ReAwardTip";
 import { op_client } from "pixelpai_proto";
@@ -15,12 +15,12 @@ export class ReAwardTipsMediator extends BaseMediator {
 
     show(param: any) {
         if (this.mView) {
-            (<ReAwardTipsPanel> this.mView).appendAward(param);
+            (<ReAwardTipsPanel>this.mView).appendAward(param);
             return;
         }
         this.mView = new ReAwardTipsPanel(this.scene, this.world);
-        (<ReAwardTipsPanel> this.mView).appendAward(param);
-        super.show();
+        (<ReAwardTipsPanel>this.mView).appendAward(param);
+        super.show(param);
         this.world.uiManager.getUILayerManager().addToDialogLayer(this.mView);
     }
 

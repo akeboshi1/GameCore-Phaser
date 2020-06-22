@@ -1,18 +1,18 @@
-import NinePatch from "tooqingui";
-import {Url} from "../../utils/resUtil";
+import { NinePatch } from "tooqingui";
+import { Url } from "../../utils/resUtil";
 
 export class DynamicNinepatch {
     protected mUrl: string;
     protected mLoadCompleteCallBack?: Function;
     protected mLoadContext?: any;
     protected mImage: NinePatch;
-    protected mConfig: object;
+    protected mConfig: any;
     constructor(
         private mScene: Phaser.Scene,
         private mParent?: Phaser.GameObjects.Container) {
     }
 
-    public load(value: string, config: object, completeCallBack?: Function, loadContext?: any) {
+    public load(value: string, config: any, completeCallBack?: Function, loadContext?: any) {
         this.mLoadCompleteCallBack = completeCallBack;
         this.mLoadContext = loadContext;
         this.mConfig = config;
@@ -28,7 +28,14 @@ export class DynamicNinepatch {
     }
 
     private onLoadCompleteHandler() {
-        this.mImage = new NinePatch(this.mScene, this.mConfig);
+        const columns = this.mConfig.columns ? this.mConfig.columns.length : undefined;
+        const rows = this.mConfig.rows ? this.mConfig.rows.length : undefined;
+        let left = this.mConfig.columns ? this.mConfig.columns[0] : 0;
+        let right = this.mConfig.columns ? this.mConfig.columns[2] : 0;
+        let top = this.mConfig.rows ? this.mConfig.rows[0] : 0;
+        let bottom = this.mConfig.rows ? this.mConfig.rows[2] : 0;
+        this.mImage = new NinePatch(this.mScene, 0, 0, this.mConfig.width, this.mConfig.height, this.mConfig.key, undefined, columns, rows, { left, right, top, bottom }
+        );
         if (this.mLoadCompleteCallBack) {
             this.mLoadCompleteCallBack.call(this.mLoadContext, this.mImage);
             this.mLoadCompleteCallBack = null;

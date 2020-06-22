@@ -1,12 +1,7 @@
 import { WorldService } from "../../game/world.service";
-import RoundRectangle from "../../../lib/rexui/lib/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { TextArea, InputText, BBCodeText, RoundRectangle, NineSliceButton, NinePatch } from "tooqingui";
 import { Border, Url } from "../../utils/resUtil";
 import { CheckButton } from "../components/check.button";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
-import { NinePatch } from "../components/nine.patch";
 import { BaseChatPanel } from "./base.chat.panel";
 
 export class ChatPanelPC extends BaseChatPanel {
@@ -18,7 +13,7 @@ export class ChatPanelPC extends BaseChatPanel {
     private mPreHei: number = 0;
     private mPreWid: number = 0;
     private outPut: Phaser.GameObjects.Container;
-    private sendMsgBtn: NinePatchButton;
+    private sendMsgBtn: NineSliceButton;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -55,7 +50,7 @@ export class ChatPanelPC extends BaseChatPanel {
             // this.mTextArea.childrenMap.child.setMinSize(width, (h - 16 * this.dpr) * zoom);
             // this.mTextArea.layout();
             // this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr * zoom);
-            const textMask = this.mTextArea.childrenMap.text;
+            const textMask = (<any>this.mTextArea).childrenMap.text;
             textMask.y = size.height - this.height + 25 * this.dpr;
             this.mTextArea.scrollToBottom();
             // 每次resize更新textBlock中的textMask的位置
@@ -112,7 +107,7 @@ export class ChatPanelPC extends BaseChatPanel {
         this.mPreWid = size.width;
         this.setSize(464, 281);
 
-        const border = new NinePatch(this.scene, 0, 0, this.width, this.height, Border.getName(), null, Border.getConfig());
+        const border = new NinePatch(this.scene, 0, 0, this.width, this.height, Border.getName(), null, undefined, undefined, Border.getConfig());
         border.x = 4 * this.mWorld.uiScale + border.width * border.originX;
         border.y = size.height - 260 * this.mWorld.uiScale + border.height * border.originY;
         this.add(border);
@@ -123,7 +118,7 @@ export class ChatPanelPC extends BaseChatPanel {
         const background = new RoundRectangle(this.scene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         this.outPut.add(background);
 
-        const track = new NinePatchButton(this.scene, 0, 0, 4, 7, "track", "", "", {
+        const track = new NineSliceButton(this.scene, 0, 0, 4, 7, "track", "", "", this.dpr, this.scale, {
             left: 0,
             top: 2,
             right: 0,
@@ -142,7 +137,7 @@ export class ChatPanelPC extends BaseChatPanel {
         });
         this.outPut.add(text);
 
-        const thumb = new NinePatchButton(this.scene, 0, 0, 20, 35, "button", "", "", {
+        const thumb = new NineSliceButton(this.scene, 0, 0, 20, 35, "button", "", "", this.dpr, this.scale, {
             left: 4,
             top: 4,
             right: 4,
@@ -172,14 +167,14 @@ export class ChatPanelPC extends BaseChatPanel {
             .layout();
         this.outPut.add(this.mTextArea);
 
-        const tracks = this.mTextArea.getElement("child");
+        const tracks = (<any>this.mTextArea).getElement("child");
         if (tracks) {
             // tracks.x += 150;
         }
 
         const inputContainer = this.scene.make.container(undefined, false);
         this.add(inputContainer);
-        const inputBg = new NinePatch(this.scene, 0, 0, 370, 32, "chat_input_bg", null, { left: 4, top: 4, right: 4, bottom: 4 });
+        const inputBg = new NinePatch(this.scene, 0, 0, 370, 32, "chat_input_bg", null, undefined, undefined, { left: 4, top: 4, right: 4, bottom: 4 });
         inputBg.x = 8 * this.mWorld.uiScale + inputBg.width * inputBg.originX;
         inputBg.y = size.height - 46 * this.mWorld.uiScale + inputBg.height * inputBg.originY;
         inputContainer.add(inputBg);
@@ -196,7 +191,7 @@ export class ChatPanelPC extends BaseChatPanel {
         this.mInputText.y = size.height - 40 * this.mWorld.uiScale;
         inputContainer.add(this.mInputText);
 
-        this.sendMsgBtn = new NinePatchButton(this.scene, 0, 0, 60, 30, "button", "", "发送", {
+        this.sendMsgBtn = new NineSliceButton(this.scene, 0, 0, 60, 30, "button", "", "发送", this.dpr, this.scale, {
             left: 4,
             top: 4,
             right: 4,

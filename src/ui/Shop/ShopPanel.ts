@@ -5,7 +5,7 @@ import { ShopItemSlot } from "./shop.itemSlot";
 import { Size } from "../../utils/size";
 import { op_client } from "pixelpai_proto";
 import { ShopMediator } from "./ShopMediator";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { IconBtn } from "../baseView/icon.btn";
 import { UIMediatorType } from "../ui.mediatorType";
 
@@ -104,13 +104,13 @@ export class ShopPanel extends BasePanel {
 
     protected init() {
         const size: Size = this.mWorld.getSize();
-        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
+        this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, undefined, undefined, Background.getConfig());
         this.mBg.x = 0;
         this.mBg.y = 0;
         this.setSize(this.mBg.width, this.mBg.height);
         this.addAt(this.mBg, 0);
 
-        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, Border.getConfig());
+        this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, undefined, undefined, Border.getConfig());
         this.mBorder.x = this.mBg.x;
         this.mBorder.y = this.mBg.y + 10;
         this.addAt(this.mBorder, 1);

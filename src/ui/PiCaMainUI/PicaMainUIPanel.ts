@@ -1,7 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { Logger } from "../../utils/log";
 import { Handler } from "../../Handler/Handler";
 import { TextToolTips } from "../tips/TextToolTip";
@@ -123,7 +123,7 @@ export class PicaMainUIPanel extends BasePanel {
         this.mStrengthValue = new ProgressValue(this.scene, this.key, "strength_icon", this.dpr);
         this.mStrengthValue.x = 78 * this.dpr;
         this.mStrengthValue.y = 27 * this.dpr;
-        const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress", {
+        const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress", undefined, undefined, {
             left: 8 * this.dpr,
             top: 3 * this.dpr,
             right: frame.width - 2 - 8 * this.dpr,
@@ -299,7 +299,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
         const progressH = this.height;
         this.mProgressBar = new ProgressBar(scene, dpr);
         this.mProgressBar.setSize(this.width, this.height);
-        const bg = new NinePatch(this.scene, progressW / 2, progressH / 2, progressW, progressH, key, "exp_bg", {
+        const bg = new NinePatch(this.scene, progressW / 2, progressH / 2, progressW, progressH, key, "exp_bg", undefined, undefined, {
             left: 8 * dpr,
             top: 3 * dpr,
             right: frame.width - 2 - 8 * dpr,
@@ -308,7 +308,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
         this.mProgressBar.setBackground(bg);
 
         frame = this.scene.textures.getFrame(key, "exp_progress");
-        const progres = new NinePatch(this.scene, progressW / 2, progressH / 2, width, frame.height, key, "exp_progress", {
+        const progres = new NinePatch(this.scene, progressW / 2, progressH / 2, width, frame.height, key, "exp_progress", undefined, undefined, {
             left: 8 * dpr,
             top: 3 * dpr,
             right: frame.width - 2 - 10 * dpr,

@@ -2,19 +2,13 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { Url } from "../../utils/resUtil";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { Button, GridTableConfig, GameGridTable, BBCodeText, GameScroller, ClickEvent, NineSliceButton } from "tooqingui";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { DynamicImage } from "../components/dynamic.image";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { AlertView } from "../components/alert.view";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
@@ -67,13 +61,13 @@ export class ComposePanel extends BasePanel {
     addListen() {
         if (!this.mInitialized) return;
         this.scene.input.on("pointerup", this.onInputPointUp, this);
-        this.makeBtn.on(CoreUI.MouseEvent.Tap, this.onMakeHandler, this);
+        this.makeBtn.on(<any>(ClickEvent).Tap, this.onMakeHandler, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
         this.scene.input.off("pointerup", this.onInputPointUp, this);
-        this.makeBtn.off(CoreUI.MouseEvent.Tap, this.onMakeHandler, this);
+        this.makeBtn.off(<any>(ClickEvent).Tap, this.onMakeHandler, this);
     }
 
     preload() {
@@ -175,7 +169,7 @@ export class ComposePanel extends BasePanel {
         this.materialCon.add(this.materialTipsCon);
         const tipsWidth = 109 * this.dpr;
         const tipsHeight = 42 * this.dpr;
-        const tipsbg = new NinePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", {
+        const tipsbg = new NinePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", undefined, undefined, {
             left: 20 * this.dpr,
             top: 20 * this.dpr,
             right: 20 * this.dpr,
@@ -218,7 +212,7 @@ export class ComposePanel extends BasePanel {
         const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
         const capW = propFrame.width + 10 * this.dpr * zoom;
         const capH = propFrame.height + 12 * this.dpr * zoom;
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x: width * zoom / 2,
             y: height * zoom * 0.5 + 145 * this.dpr * zoom,
             table: {
@@ -523,7 +517,7 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
         this.zoom = zoom;
         const bg = this.scene.make.image({ key: this.key, frame: "source_bg" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.itemCount = new BBCodeText(this.scene, 0, 0, {})
+        this.itemCount = new BBCodeText(this.scene, 0, 0, "", {})
             .setOrigin(0.5).setFontSize(11 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add([bg, this.itemIcon, this.itemCount]);
         this.setSize(bg.width, bg.height);

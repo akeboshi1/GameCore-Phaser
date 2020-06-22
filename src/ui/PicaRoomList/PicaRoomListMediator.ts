@@ -5,7 +5,7 @@ import { RoomList } from "./RoomList";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "tooqingui";
 
 export class PicaRoomListMediator extends BaseMediator {
   protected mView: PicaRoomListPanel;

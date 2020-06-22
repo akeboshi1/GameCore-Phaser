@@ -1,14 +1,11 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { NinePatch } from "../components/nine.patch";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { Button, GameScroller, NineSliceButton, NinePatch } from "tooqingui";
 import { Handler } from "../../Handler/Handler";
 export class TaskPanel extends BasePanel {
     private key = "task_ui";
@@ -81,7 +78,7 @@ export class TaskPanel extends BasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWdith, conHeight);
         this.add(this.content);
-        this.bg = new NinePatch(this.scene, 0, 0, conWdith, conHeight, UIAtlasKey.commonKey, "bg", {
+        this.bg = new NinePatch(this.scene, 0, 0, conWdith, conHeight, UIAtlasKey.commonKey, "bg", undefined, undefined, {
             left: 40,
             top: 40,
             bottom: 40,
@@ -225,7 +222,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.zoom = zoom;
         const width = 254 * dpr;
         const height = 45 * dpr;
-        this.bg = new NinePatch(this.scene, 0, 0, width, height, key, "main_bg", {
+        this.bg = new NinePatch(this.scene, 0, 0, width, height, key, "main_bg", undefined, undefined, {
             left: 6 * dpr,
             top: 6 * dpr,
             bottom: 6 * dpr,
@@ -297,7 +294,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         const width = 240 * dpr;
         const height = 202 * dpr;
         this.dpr = dpr;
-        const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, key, "detail_bg", {
+        const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, key, "detail_bg", undefined, undefined, {
             left: 4,
             top: 4,
             right: 4,

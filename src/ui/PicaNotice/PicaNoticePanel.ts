@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../components/BasePanel";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { BBCodeText } from "tooqingui";
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
 
@@ -19,26 +19,26 @@ export class PicaNoticePanel extends BasePanel {
         if (param && param.length > 0) {
             const text = param[0].text;
             if (this.mContent) {
-              this.mContent.setText(text[0].text);
+                this.mContent.setText(text[0].text);
             }
 
             const width = this.scene.cameras.main.width;
             // this.view.alpha = 0;
             this.scene.tweens.timeline({
-              targets: this,
-              duration: 500,
-              tweens: [{
-                  y: `-=${20 * this.dpr}`,
-                  ease: "Bounce.easeOut",
-              }, {
-                delay: 2000,
-                y: `-=${20 * this.dpr}`,
-                ease: "Linear",
-                alpha: 0
-              }],
-              onComplete: () => {
-                this.emit("close");
-              }
+                targets: this,
+                duration: 500,
+                tweens: [{
+                    y: `-=${20 * this.dpr}`,
+                    ease: "Bounce.easeOut",
+                }, {
+                    delay: 2000,
+                    y: `-=${20 * this.dpr}`,
+                    ease: "Linear",
+                    alpha: 0
+                }],
+                onComplete: () => {
+                    this.emit("close");
+                }
             });
         }
     }

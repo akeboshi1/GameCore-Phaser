@@ -1,7 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { FriendPanel } from "./friend.panel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType } from "tooqingui";
 
 export class FriendMediator extends BaseMediator {
     public static NAME: string = "FriendMediator";
