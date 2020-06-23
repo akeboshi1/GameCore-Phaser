@@ -45,12 +45,17 @@ export class FramesDisplay extends DisplayObject {
             if (!display) {
                 Logger.getInstance().error("display is undefined");
             }
-            this.scene.load.atlas(data.gene, Url.OSD_PATH + display.texturePath, Url.OSD_PATH + display.dataPath);
-            // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
-            //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
-            // }, this);
-            this.scene.textures.on(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
-            this.scene.load.start();
+            if (display.texturePath === "" && display.dataPath === "") {
+                Logger.getInstance().error("动画资源报错：" , data);
+            } else {
+                this.scene.load.atlas(data.gene, Url.OSD_PATH + display.texturePath, Url.OSD_PATH + display.dataPath);
+                // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
+                //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
+                // }, this);
+                this.scene.textures.on(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
+                this.scene.load.start();
+            }
+
         }
     }
 
@@ -73,7 +78,7 @@ export class FramesDisplay extends DisplayObject {
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
                 display = this.scene.make.sprite(undefined, false).play(key);
                 if (!this.mMainSprite) {
-                    this.mMainSprite = <Phaser.GameObjects.Sprite> display;
+                    this.mMainSprite = <Phaser.GameObjects.Sprite>display;
                 }
             } else {
                 display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);

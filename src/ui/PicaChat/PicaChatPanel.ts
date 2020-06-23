@@ -62,7 +62,8 @@ export class PicaChatPanel extends BasePanel {
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
         this.mBackground.fillRect(0, 0, width, h);
-        // this.mBackground.setInteractive();
+        this.mBackground.disableInteractive();
+        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, h), Phaser.Geom.Rectangle.Contains);
         this.mNavigateBtn.x = width - this.mNavigateBtn.width / 2 - 2 * this.dpr * zoom;
         this.mNavigateBtn.y = this.height - this.mNavigateBtn.height / 2 - 5 * this.dpr * zoom;
 
@@ -106,7 +107,7 @@ export class PicaChatPanel extends BasePanel {
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.mBackground.disableInteractive();
+        // this.mBackground.disableInteractive();
         this.mChatBtn.disableInteractive();
         this.mEmojiBtn.disableInteractive();
         this.mScrollBtn.disableInteractive();
@@ -127,6 +128,11 @@ export class PicaChatPanel extends BasePanel {
         }
     }
 
+    public destroy() {
+        if (this.mBackground) this.mBackground.disableInteractive();
+        super.destroy();
+    }
+
     protected preload() {
         this.addAtlas(
             this.key,
@@ -140,6 +146,7 @@ export class PicaChatPanel extends BasePanel {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         this.mBackground = this.scene.make.graphics(undefined, false);
+        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, 200), Phaser.Geom.Rectangle.Contains);
         const zoom = this.scale;
         this.setSize(width, 135 * this.dpr);
 
