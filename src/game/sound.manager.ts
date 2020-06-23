@@ -35,10 +35,10 @@ export class SoundManager extends PacketHandler {
         }
     }
 
-    removePackListener() {
+    removePacketListener() {
         const connection = this.world.connection;
         if (connection) {
-            connection.removePackListener(this);
+            connection.removePacketListener(this);
         }
     }
 
@@ -139,7 +139,7 @@ export class SoundManager extends PacketHandler {
             this.mSoundMap.clear();
             this.mSoundMap = undefined;
         }
-        this.removePackListener();
+        this.removePacketListener();
     }
 
     private onPlaySoundHandler(packet: PBpacket) {
