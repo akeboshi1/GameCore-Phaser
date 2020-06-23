@@ -5,7 +5,7 @@ import { DetailDisplay } from "../Market/DetailDisplay";
 import { Font } from "../../utils/font";
 import { op_client, op_def, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { TextButton } from "../Market/TextButton";
+import { TextButton } from "../components/TextButton";
 import { Url } from "../../utils/resUtil";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";

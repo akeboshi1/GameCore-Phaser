@@ -1,0 +1,1 @@
+export { BaseFaceMediator } from "./baseFace.mediator";

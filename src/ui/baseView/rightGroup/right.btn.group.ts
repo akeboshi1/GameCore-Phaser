@@ -1,8 +1,8 @@
 import { BasePanel } from "../../components/BasePanel";
 import { WorldService } from "../../../game/world.service";
-import { IconBtn } from "../icon.btn";
+import { IconBtn } from "../../components/icon.btn";
 import { Size } from "../../../utils/size";
-import { ItemSlot } from "../../bag/item.slot";
+import { ItemSlot } from "../../components/item.slot";
 import { Url } from "../../../utils/resUtil";
 import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";

@@ -9,7 +9,7 @@ import { ElementDisplay } from "./element.display";
 import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
 import { IElement } from "../element/element";
-import { AnimationData } from "../element/sprite";
+import { AnimationData } from "../element/Sprite";
 
 export enum DisplayField {
     BACKEND = 1,

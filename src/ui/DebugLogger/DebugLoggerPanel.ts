@@ -4,7 +4,7 @@ import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
 import { Logger } from "../../utils/log";
 import { DebugLoggerMediator } from "./DebugLoggerMediator";
-import { IconBtn } from "../baseView/icon.btn";
+import { IconBtn } from "../components/icon.btn";
 import { UIMediatorType } from "../ui.mediatorType";
 import { Font } from "../../utils/font";
 

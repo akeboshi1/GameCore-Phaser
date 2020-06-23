@@ -24,7 +24,7 @@ export interface ISprite {
     readonly currentCollisionPoint: Phaser.Geom.Point;
     readonly hasInteractive: boolean;
     readonly attrs: op_def.IStrPair[];
-    readonly animationQueue: AnimationQueue[];
+    readonly animationQueue: SpriteAnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -39,7 +39,7 @@ export interface ISprite {
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
     setAnimationName(name: string, playTimes?: number): AnimationData;
-    setAnimationQueue(queue: AnimationQueue[]);
+    setAnimationQueue(queue: SpriteAnimationQueue[]);
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
@@ -47,10 +47,10 @@ export interface ISprite {
 export interface AnimationData {
     animationName: string;
     flip: boolean;
-    playingQueue?: AnimationQueue;
+    playingQueue?: SpriteAnimationQueue;
 }
 
-export interface AnimationQueue {
+export interface SpriteAnimationQueue {
     name: string;
     playTimes?: number;
     playedTimes?: number;
@@ -89,7 +89,7 @@ export class Sprite implements ISprite {
 
     protected mAttrs: op_def.IStrPair[];
 
-    protected mAnimationQueue: AnimationQueue[];
+    protected mAnimationQueue: SpriteAnimationQueue[];
 
     protected mMountSprites: number[];
 
@@ -220,7 +220,7 @@ export class Sprite implements ISprite {
         }
     }
 
-    public setAnimationQueue(queue: AnimationQueue[]) {
+    public setAnimationQueue(queue: SpriteAnimationQueue[]) {
         this.mAnimationQueue = queue;
     }
 
@@ -350,7 +350,7 @@ export class Sprite implements ISprite {
         this.mIsMoss = val;
     }
 
-    get animationQueue(): AnimationQueue[] {
+    get animationQueue(): SpriteAnimationQueue[] {
         return this.mAnimationQueue;
     }
 

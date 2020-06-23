@@ -1,7 +1,7 @@
 import { BasicRankPanel } from "./BasicRankPanel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
-import { IconBtn } from "../baseView/icon.btn";
+import { IconBtn } from "../components/icon.btn";
 import { Size } from "../../utils/size";
 import { RankMediator } from "./RankMediator";
 import { UIMediatorType } from "../ui.mediatorType";

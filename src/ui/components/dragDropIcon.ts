@@ -1,7 +1,7 @@
 import { IDropable } from "./idropable";
 import { IDragable } from "./idragable";
 import { ResUtils, Url } from "../../utils/resUtil";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "./dynamic.image";
 
 export class DragDropIcon extends Phaser.GameObjects.Container implements IDragable, IDropable {
     protected mDropType: number;

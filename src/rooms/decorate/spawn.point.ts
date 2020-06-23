@@ -1,4 +1,4 @@
-import { ISprite, AnimationData, AnimationQueue } from "../element/sprite";
+import { ISprite, AnimationData, SpriteAnimationQueue } from "../element/Sprite";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import { IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
 import { Pos } from "../../utils/pos";
@@ -26,7 +26,7 @@ export class SpawnPoint implements ISprite {
     bindID: number;
     sn: string;
     attrs: op_def.IStrPair[];
-    animationQueue: AnimationQueue[];
+    animationQueue: SpriteAnimationQueue[];
 
     constructor() {
         this.id = 100;

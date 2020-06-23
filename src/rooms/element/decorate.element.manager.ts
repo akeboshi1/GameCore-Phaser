@@ -1,5 +1,5 @@
 import { ElementManager } from "./element.manager";
-import { ISprite, Sprite } from "./sprite";
+import { ISprite, Sprite } from "./Sprite";
 import { Element, InputEnable } from "./element";
 import { DecorateRoomService } from "../decorate.room";
 import { PBpacket } from "net-socket-packet";

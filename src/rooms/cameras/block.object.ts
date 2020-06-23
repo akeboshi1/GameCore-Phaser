@@ -1,6 +1,6 @@
 import { ElementDisplay } from "../display/element.display";
 import { InputEnable } from "../element/element";
-import { ISprite } from "../element/sprite";
+import { ISprite } from "../element/Sprite";
 import { Pos } from "../../utils/pos";
 import { IRoomService } from "../room";
 

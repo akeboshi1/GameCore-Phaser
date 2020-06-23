@@ -3,7 +3,7 @@ import { Background, Border, Url } from "../../utils/resUtil";
 import { Size } from "../../utils/size";
 import { WorldService } from "../../game/world.service";
 import { InputText, NineSliceButton, NinePatch } from "tooqingui";
-import { Item } from "./item/Item";
+import { Item } from "../components/Item";
 import { op_client } from "pixelpai_proto";
 import { ElementStorageMediator } from "./ElementStorageMediator";
 

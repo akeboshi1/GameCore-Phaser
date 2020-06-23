@@ -2,7 +2,7 @@ import { BasePanel } from "../../components/BasePanel";
 import { WorldService } from "../../../game/world.service";
 import { Size } from "../../../utils/size";
 import { Url } from "../../../utils/resUtil";
-import { IconBtn, IBtnData } from "../icon.btn";
+import { IconBtn, IBtnData } from "../../components/icon.btn";
 import { DebugLoggerMediator } from "../../DebugLogger/DebugLoggerMediator";
 import { UIMediatorType } from "../../ui.mediatorType";
 

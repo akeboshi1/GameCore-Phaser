@@ -1,5 +1,5 @@
 import { WorldService } from "../../../game/world.service";
-import { ItemSlot } from "../item.slot";
+import { ItemSlot } from "../../components/item.slot";
 import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
 import { Url, Border, Background } from "../../../utils/resUtil";
@@ -7,7 +7,7 @@ import { BagMediator } from "./bagMediator";
 import { InputText, NinePatch } from "tooqingui";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
-import { IconBtn } from "../../baseView/icon.btn";
+import { IconBtn } from "../../components/icon.btn";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { BasePanel } from "../../components/BasePanel";
 export class BagPanel extends BasePanel {

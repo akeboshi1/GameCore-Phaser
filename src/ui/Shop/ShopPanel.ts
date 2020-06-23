@@ -6,7 +6,7 @@ import { Size } from "../../utils/size";
 import { op_client } from "pixelpai_proto";
 import { ShopMediator } from "./ShopMediator";
 import { NinePatch } from "tooqingui";
-import { IconBtn } from "../baseView/icon.btn";
+import { IconBtn } from "../components/icon.btn";
 import { UIMediatorType } from "../ui.mediatorType";
 
 export class ShopPanel extends BasePanel {

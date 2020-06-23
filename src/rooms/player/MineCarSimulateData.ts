@@ -1,5 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { Sprite, ISprite } from "../element/sprite";
+import { Sprite, ISprite } from "../element/Sprite";
 import { ElementManager } from "../element/element.manager";
 import { IRoomService, Room } from "../room";
 import { GroupType } from "../group/GroupManager";

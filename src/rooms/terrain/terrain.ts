@@ -2,7 +2,7 @@ import { IElement } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
-import { ISprite } from "../element/sprite";
+import { ISprite } from "../element/Sprite";
 import { IFramesModel } from "../display/frames.model";
 import { ElementDisplay } from "../display/element.display";
 import { IRoomService } from "../room";

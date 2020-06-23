@@ -3,7 +3,7 @@ import { MessageType } from "../../../const/MessageType";
 import { TopMenuContainer } from "./top.menu.container";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
-import { IBtnData } from "../icon.btn";
+import { IBtnData } from "../../components/icon.btn";
 import { BaseMediator } from "tooqingui";
 
 export class TopMenuMediator extends BaseMediator {

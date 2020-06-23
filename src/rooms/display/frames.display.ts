@@ -3,7 +3,7 @@ import { Logger } from "../../utils/log";
 import { DisplayObject, DisplayField } from "./display.object";
 import { IAnimationData } from "./animation";
 import { Url } from "../../utils/resUtil";
-import { AnimationData } from "../element/sprite";
+import { AnimationData } from "../element/Sprite";
 
 /**
  * 序列帧显示对象

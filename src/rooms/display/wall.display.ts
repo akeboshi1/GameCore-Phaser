@@ -2,7 +2,7 @@ import { IRoomService } from "../room";
 import { ElementDisplay } from "./element.display";
 import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
-import { AnimationData } from "../element/sprite";
+import { AnimationData } from "../element/Sprite";
 import { op_def } from "pixelpai_proto";
 import { IElement } from "../element/element";
 import { Direction } from "../wall/wall";

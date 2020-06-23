@@ -1,4 +1,4 @@
-export { ISprite, AnimationData, AnimationQueue } from "./sprite";
+export { ISprite, AnimationData, SpriteAnimationQueue } from "./Sprite";
 export { ElementManager, IElementManager } from "./element.manager";
 export * from "./element";
-export { FrameManager } from "./frame.manager";
+export { FrameManager } from "./FrameManager";

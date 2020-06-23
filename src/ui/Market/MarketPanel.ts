@@ -4,7 +4,7 @@ import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { TextButton } from "./TextButton";
+import { TextButton } from "../components/TextButton";
 import { MarketItem } from "./item";
 import { Font } from "../../utils/font";
 import { GameGridTable, GridTableConfig, NinePatchTabButton } from "tooqingui";

@@ -263,6 +263,8 @@
 
 /*! ../ui/inputText/InputText.js */
 
+/*! ../ui/interface/baseUI/UIType.js */
+
 /*! ../ui/textarea/AppendText.js */
 
 /*! ../ui/textarea/SetText.js */
@@ -718,8 +720,6 @@
 /*! exports provided: WaitEvent, WaitComplete */
 
 /*! exports provided: default */
-
-/*! exports provided: normalizePatchesConfig, resetPatchesConfig */
 
 /*! no static exports found */
 

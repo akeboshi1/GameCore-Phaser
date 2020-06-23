@@ -4,7 +4,7 @@ import { Size } from "../utils";
 // import { IElementStorage } from "./element.storage";
 import { UiManager } from "../ui";
 import { InputManager } from "./input.service";
-import { Account } from "./account";
+import { Account } from "./Account";
 import { HttpService } from "../net";
 // import { ILauncherConfig } from "../../launcher";
 import { MouseManager } from "./mouse.manager";

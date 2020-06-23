@@ -1,5 +1,5 @@
 import { WorldService } from "../../../game/world.service";
-import { ItemSlot } from "../../bag/item.slot";
+import { ItemSlot } from "../../components/item.slot";
 import { Size } from "../../../utils/size";
 import { op_gameconfig } from "pixelpai_proto";
 import { Url } from "../../../utils/resUtil";

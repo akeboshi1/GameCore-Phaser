@@ -5,7 +5,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { IRoomService, Room } from "../room";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
-import { ISprite, Sprite } from "../element/sprite";
+import { ISprite, Sprite } from "../element/Sprite";
 import { MessageType } from "../../const/MessageType";
 import { Player } from "./player";
 import { IElement } from "../element/element";

@@ -1,5 +1,5 @@
 import { TerrainManager } from "./terrain.manager";
-import { ISprite, Sprite } from "../element/sprite";
+import { ISprite, Sprite } from "../element/Sprite";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_editor } from "pixelpai_proto";
 import { IRoomService, SpriteAddCompletedListener } from "../room";

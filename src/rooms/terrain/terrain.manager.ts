@@ -5,7 +5,7 @@ import { Terrain } from "./terrain";
 import { IRoomService, SpriteAddCompletedListener } from "../room";
 import { IElementManager } from "../element/element.manager";
 import { IElementStorage } from "../../game/element.storage";
-import { ISprite, Sprite } from "../element/sprite";
+import { ISprite, Sprite } from "../element/Sprite";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";

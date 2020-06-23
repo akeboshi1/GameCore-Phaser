@@ -1,8 +1,8 @@
 import { MessageType } from "../../../const/MessageType";
 import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../utils/log";
-import { IDragable } from "../idragable";
-import { IDropable } from "../idropable";
+import { IDragable } from "../../components/idragable";
+import { IDropable } from "../../components/idropable";
 import { op_gameconfig } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";

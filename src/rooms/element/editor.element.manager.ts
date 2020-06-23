@@ -1,5 +1,5 @@
 import { ElementManager } from "./element.manager";
-import { ISprite, Sprite } from "./sprite";
+import { ISprite, Sprite } from "./Sprite";
 import { PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";

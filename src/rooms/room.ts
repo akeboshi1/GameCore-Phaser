@@ -14,7 +14,7 @@ import { ElementDisplay } from "./display/element.display";
 import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
 import { Pos } from "../utils/pos";
 import { LoadingScene } from "../scenes/loading";
-import { ClockReadyListener } from "./clock";
+import { ClockReadyListener } from "./Clock";
 import IActor = op_client.IActor;
 import { Map } from "./map/map";
 import { Element, IElement } from "./element";
@@ -29,7 +29,7 @@ import { IPoint } from "game-capsule/lib/helpers";
 import { WallManager } from "./wall/wall.manager";
 import { SkyBoxManager, IScenery } from "./sky.box";
 import { GroupManager } from "./group/GroupManager";
-import { FrameManager } from "./element/frame.manager";
+import { FrameManager } from "./element/FrameManager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }

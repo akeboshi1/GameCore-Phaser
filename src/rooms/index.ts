@@ -1,8 +1,8 @@
 export { IRoomService, SpriteAddCompletedListener } from "./room";
-export * from "./sky.box";
-export { Clock } from "./clock";
+export { ISkyBoxConfig, SkyBoxManager, IScenery, Fit, Scenery } from "./sky.box";
+export { ClockReadyListener, Clock } from "./Clock";
 export { IRoomManager, RoomManager } from "./room.manager";
-export * from "./terrain";
+export { TerrainManager, Terrain } from "./terrain";
 export * from "./element";
 export * from "./player";
 export { WallManager } from "./wall/wall.manager";
@@ -10,3 +10,5 @@ export { LayerManager } from "./layer/layer.manager";
 export * from "./display";
 export { GroupManager, GroupType } from "./group/GroupManager";
 export { IGroup } from "./group/IGroup";
+export { FrameManager } from "./element/FrameManager";
+export * from "./Animation";

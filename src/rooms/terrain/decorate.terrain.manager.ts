@@ -1,5 +1,5 @@
 import { TerrainManager } from "./terrain.manager";
-import { ISprite, Sprite } from "../element/sprite";
+import { ISprite, Sprite } from "../element/Sprite";
 import { Terrain } from "./terrain";
 import { DecorateRoomService } from "../decorate.room";
 import { IElement } from "../element/element";

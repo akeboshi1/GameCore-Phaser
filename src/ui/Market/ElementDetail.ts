@@ -1,4 +1,4 @@
-import { NumberCounter } from "./NumberCounter";
+import { NumberCounter } from "../components/NumberCounter";
 import { op_client, op_def } from "pixelpai_proto";
 import { NineSliceButton } from "tooqingui";
 import { i18n } from "../../i18n";

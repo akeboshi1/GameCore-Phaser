@@ -2,7 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { Url, BlueButton } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
-import { DragDropIcon } from "../bag/dragDropIcon";
+import { DragDropIcon } from "../components/dragDropIcon";
 import { NineSliceButton } from "tooqingui";
 import { op_gameconfig_01 } from "pixelpai_proto";
 

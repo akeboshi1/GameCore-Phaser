@@ -1,8 +1,8 @@
-import { ItemSlot } from "../item.slot";
+import { ItemSlot } from "../../components/item.slot";
 import { Size } from "../../../utils/size";
 import { WorldService } from "../../../game/world.service";
 import { Url, Border, Background } from "../../../utils/resUtil";
-import { IconBtn } from "../../baseView/icon.btn";
+import { IconBtn } from "../../components/icon.btn";
 import { NinePatch } from "tooqingui";
 import { StorageMediator } from "./storageMediator";
 import { UIMediatorType } from "../../ui.mediatorType";

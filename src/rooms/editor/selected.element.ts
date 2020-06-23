@@ -4,7 +4,7 @@ import { DynamicImage } from "../../ui/components/dynamic.image";
 import { LayerManager } from "../layer/layer.manager";
 import { Url } from "../../utils/resUtil";
 import { Logger } from "../../utils/log";
-import { ISprite } from "../element/sprite";
+import { ISprite } from "../element/Sprite";
 
 export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;

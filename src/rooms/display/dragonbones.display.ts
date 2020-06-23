@@ -4,7 +4,7 @@ import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
 import { DisplayObject } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
-import { AnimationData } from "../element/sprite";
+import { AnimationData } from "../element/Sprite";
 import { SoundField } from "../../game/sound.manager";
 
 export enum AvatarSlotType {

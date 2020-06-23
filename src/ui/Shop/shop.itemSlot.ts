@@ -1,6 +1,6 @@
-import { ItemSlot } from "../bag/item.slot";
+import { ItemSlot } from "../components/item.slot";
 import { WorldService } from "../../game/world.service";
-import { DragDropIcon } from "../bag/dragDropIcon";
+import { DragDropIcon } from "../components/dragDropIcon";
 import { op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { UI } from "../../const/res.const";
 import { Url } from "../../utils/resUtil";

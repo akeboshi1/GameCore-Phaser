@@ -1,6 +1,6 @@
-import { DynamicImage } from "../../components/dynamic.image";
+import { DynamicImage } from "./dynamic.image";
 import { op_client } from "pixelpai_proto";
-import { Url } from "../../../utils/resUtil";
+import { Url } from "../../utils/resUtil";
 
 export class Item extends Phaser.GameObjects.Container {
   private mCount: Phaser.GameObjects.Text;
