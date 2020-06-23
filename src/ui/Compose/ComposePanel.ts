@@ -108,7 +108,7 @@ export class ComposePanel extends BasePanel {
         this.content.add(backBtn);
 
         this.mDetailDisplay = new DetailDisplay(this.scene);
-        this.mDetailDisplay.y = -150 * this.dpr;
+        this.mDetailDisplay.y = -120 * this.dpr;
         this.mDetailDisplay.scale = this.dpr * 2;
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
