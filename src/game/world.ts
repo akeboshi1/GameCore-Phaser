@@ -143,6 +143,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
+        this.mSoundManager.addPackListener();
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
@@ -795,6 +796,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
+        if (this.mSoundManager) this.mSoundManager.addPackListener();
         if (this.mElementStorage) {
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }

@@ -19,14 +19,26 @@ export interface ISoundConfig {
 }
 
 export class SoundManager extends PacketHandler {
+    private readonly world: WorldService;
     private mScene: Phaser.Scene;
     private mSoundMap: Map<SoundField, Sound>;
     constructor(world: WorldService) {
         super();
-        const connection = world.connection;
+        this.world = world;
+    }
+
+    addPackListener() {
+        const connection = this.world.connection;
         if (connection) {
             connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL, this.onPlaySoundHandler);
+        }
+    }
+
+    removePackListener() {
+        const connection = this.world.connection;
+        if (connection) {
+            connection.removePackListener(this);
         }
     }
 
@@ -127,6 +139,7 @@ export class SoundManager extends PacketHandler {
             this.mSoundMap.clear();
             this.mSoundMap = undefined;
         }
+        this.removePackListener();
     }
 
     private onPlaySoundHandler(packet: PBpacket) {
