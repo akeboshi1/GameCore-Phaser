@@ -1,0 +1,84 @@
+{
+  "market": {
+    "title": "Market",
+    "buy_button": "Buy"
+  },
+  "item": {
+    "source": "source: ",
+    "copy_suc": "copy {{name}} succeed",
+    "name": "name",
+    "des": "description"
+  },
+  "room_list": {
+    "player_room": "Player Room",
+    "popularity_room": "Popularity Room",
+    "my_room": "My Room",
+    "my_history": "My history",
+    "password": "Password",
+    "close": "Close",
+    "visit": "Visit",
+    "my": "My"
+  },
+  "furni_bag": {
+    "add": "Add",
+    "furni": "Furniture",
+    "Props": "Prop",
+    "decorate": "Decorations",
+    "sold": "Sold",
+    "use": "Use",
+    "save": "Save",
+    "reset": "Reset"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "player_info": {
+    "title": "Player Info",
+    "nick_name": "Nickname",
+    "player_lv": "Lv",
+    "player_title": "Title",
+    "option_live": "Living",
+    "option_badge": "Badge",
+    "option_title": "Title",
+    "add_friend": "Add Friend",
+    "tade_btn": "Trade",
+    "private_chat": "Private Chat",
+    "edit_profile": "Edit Profile",
+    "user_name": "User Name",
+    "input_nickname": "Please input a nickname",
+    "constellation": "Constellation",
+    "birthday": "Birthday",
+    "city": "City",
+    "signature": "Signature",
+    "input_signature": "Fill in personality signature to get others attention!"
+  },
+  "compose": {
+    "title": "Manufacture",
+    "make": "make",
+    "needMaterials": "Materials required for synthesis",
+    "synthesis": "Synthesis"
+  },
+  "minesettle": {
+    "settle": "Settle",
+    "savebag": "SaveToBag"
+  },
+  "equipupgrade": {
+    "title": "装备"
+  },
+  "task": {
+    "title": "任务",
+    "main_quest": "Main Quest",
+    "side_quest": "Side Quest",
+    "active_task": "Active Task",
+    "daily_quest": "Daily Quest",
+    "m": "M",
+    "s": "S",
+    "a": "A",
+    "d": "D",
+    "objective": "Objective",
+    "rewards": "Rewards",
+    "collect_materials":"Collect Materials",
+    "submit_task":"Submit Task"
+  }
+}

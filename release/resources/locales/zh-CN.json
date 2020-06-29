@@ -1,0 +1,87 @@
+{
+  "market": {
+    "title": "商城",
+    "buy_button": "购 买"
+  },
+  "item": {
+    "source": "来源：",
+    "copy_suc": "复制{{name}}成功",
+    "name": "名字",
+    "des": "描述"
+  },
+  "room_list": {
+    "player_room": "玩家房间",
+    "popularity_room": "人气房间",
+    "my_room": "我的房间",
+    "my_history": "我的足迹",
+    "password": "密码",
+    "close": "关闭",
+    "visit": "访 问",
+    "my": "我 的",
+    "seach": "探索",
+    "room": "房间"
+  },
+  "furni_bag": {
+    "add": "放 置",
+    "furni": "家具",
+    "Props": "道具",
+    "decorate": "装扮",
+    "sold": "售出",
+    "use": "使用",
+    "save": "保存",
+    "reset": "还原"
+  },
+  "common": {
+    "cancel": "取消",
+    "confirm": "确定"
+  },
+  "player_info": {
+    "title": "信息详情",
+    "nick_name": "昵称",
+    "player_lv": "等级",
+    "player_title": "称号",
+    "option_live": "生活",
+    "option_badge": "徽章",
+    "option_title": "称号",
+    "add_friend": "添加好友",
+    "tade_btn": "交易",
+    "private_chat": "私聊",
+    "edit_profile": "编辑资料",
+    "user_name": "用 户 名",
+    "input_nickname": "请输入用户昵称",
+    "constellation": "星   座",
+    "birthday": "生   日",
+    "city": "地   区",
+    "signature": "个性签名",
+    "input_signature": "填写个性签名获得别人关注哦！",
+    "save": "保存"
+  },
+  "compose": {
+    "title": "制造",
+    "make": "制作",
+    "needMaterials": "合成所需材料",
+    "synthesis": "合成"
+  },
+  "minesettle": {
+    "settle": "获得物品",
+    "savebag": "存入背包"
+  },
+  "equipupgrade": {
+    "title": "Equip"
+  },
+  "task": {
+    "title": "Task",
+    "main_quest": "主线任务",
+    "side_quest": "支线任务",
+    "active_task": "活动任务",
+    "daily_quest": "每日任务",
+    "m": "主",
+    "s": "支",
+    "a": "活",
+    "d": "日",
+    "objective": "任务目标：",
+    "rewards": "任务奖励：",
+    "collect_materials": "收集物资：",
+    "submit_task": "提交任务"
+  }
+}

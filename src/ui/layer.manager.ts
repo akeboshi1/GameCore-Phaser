@@ -1,4 +1,3 @@
-import {Logger} from "../utils/log";
 
 export interface ILayerManager {
     readonly interactive: Phaser.GameObjects.Container;

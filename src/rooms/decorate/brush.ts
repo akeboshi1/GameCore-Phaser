@@ -1,9 +1,9 @@
 import {op_client} from "pixelpai_proto";
 import {DecorateRoom} from "../decorate.room";
-import { LayerManager } from "../layer/layer.manager";
+import { RoomLayerManager } from "../layer/room.layer.manager";
 
 export class Brush {
-    private mLayerManager: LayerManager;
+    private mLayerManager: RoomLayerManager;
     constructor(private mScene: Phaser.Scene, private mRoomService: DecorateRoom) {
         this.mLayerManager = this.mRoomService.layerManager;
     }

@@ -1,7 +1,7 @@
 import { FramesDisplay } from "../display/frames.display";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { DynamicImage } from "../../ui/components/dynamic.image";
-import { LayerManager } from "../layer/layer.manager";
+import { RoomLayerManager } from "../layer/room.layer.manager";
 import { Url } from "../../utils/resUtil";
 import { Logger } from "../../utils/log";
 import { ISprite } from "../element/Sprite";
@@ -12,7 +12,7 @@ export class SelectedElement {
     private mSelecting: boolean;
     private mSprite: ISprite;
     private mDisplayHeight: number = 0;
-    constructor(private mScene: Phaser.Scene, private mLayerManager: LayerManager) {
+    constructor(private mScene: Phaser.Scene, private mLayerManager: RoomLayerManager) {
         this.mEffecte = new DynamicImage(this.mScene, 0, 0);
         this.mEffecte.load(Url.getRes("ui/editor/selectFlag.png"));
     }

@@ -1,7 +1,7 @@
 import { IRoomManager } from "./room.manager";
 import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.manager";
-import { LayerManager } from "./layer/layer.manager";
+import { RoomLayerManager } from "./layer/room.layer.manager";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { ConnectionService } from "../net";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
@@ -39,7 +39,7 @@ export interface IRoomService {
     readonly terrainManager: TerrainManager;
     readonly elementManager: ElementManager;
     readonly playerManager: PlayerManager;
-    readonly layerManager: LayerManager;
+    readonly layerManager: RoomLayerManager;
     readonly cameraService: ICameraService;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
@@ -107,7 +107,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mElementManager: ElementManager;
     protected mPlayerManager: PlayerManager;
     protected mWallManager: WallManager;
-    protected mLayManager: LayerManager;
+    protected mLayManager: RoomLayerManager;
     protected mGroupManager: GroupManager;
     protected mFrameManager: FrameManager;
     protected mSkyboxManager: SkyBoxManager;
@@ -214,7 +214,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mPlayerManager = new PlayerManager(this);
         this.mWallManager = new WallManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
-        this.mLayManager = new LayerManager(this);
+        this.mLayManager = new RoomLayerManager(this);
         this.mGroupManager = new GroupManager(this);
         this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
@@ -266,12 +266,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
         }
 
-        this.mWorld.pluginManager.load("picatown-core", `http://localhost:3001/dist/index.min.js`).then((plugin) => {
+        this.mWorld.pluginManager.load("picatown-core", `http://localhost:8081/js/picatown.min.js`).then((plugin) => {
             Logger.getInstance().log(plugin);
         })
-        .then(() => {
-            return this.mWorld.pluginManager.load("main-ui", `http://localhost:3000/dist/index.min.js`);
-        });
+            .then(() => {
+                return this.mWorld.pluginManager.load("main-ui", `http://localhost:8081/js/picatown.min.js`);
+            });
     }
 
     public pause() {
@@ -398,6 +398,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.layerManager) this.layerManager.update(time, delta);
         if (this.elementManager) this.elementManager.update(time, delta);
         if (this.mFrameManager) this.frameManager.update(time, delta);
+        if (this.mWorld.pluginManager) this.mWorld.pluginManager.update(time, delta);
     }
 
     public updateClock(time: number, delta: number) {
@@ -492,7 +493,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mMap;
     }
 
-    get layerManager(): LayerManager {
+    get layerManager(): RoomLayerManager {
         return this.mLayManager || undefined;
     }
 

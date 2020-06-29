@@ -5,7 +5,7 @@ import { op_client, op_def, op_editor, op_virtual_world } from "pixelpai_proto";
 import { Logger } from "../utils/log";
 import { Brush, BrushEnum } from "../const/brush";
 import { IRoomService, Room } from "./room";
-import { LayerManager } from "./layer/layer.manager";
+import { RoomLayerManager } from "./layer/room.layer.manager";
 import { EditScene } from "../scenes/edit";
 import { MouseFollow } from "./editor/mouse.follow";
 import { FramesDisplay } from "./display/frames.display";
@@ -101,7 +101,7 @@ export class EditorRoom extends Room implements EditorRoomService {
 
     public startPlay() {
         this.mScene = this.mWorld.game.scene.getScene(EditScene.name);
-        this.mLayManager = new LayerManager(this);
+        this.mLayManager = new RoomLayerManager(this);
         this.mLayManager.drawGrid(this);
         const camera = this.scene.cameras.main;
         this.mCameraService.camera = camera;

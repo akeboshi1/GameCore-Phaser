@@ -1,0 +1,255 @@
+{
+    "meta": {
+        "app": "Adobe Flash CS6",
+        "version": "12.0.0.481",
+        "image": "login.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 474,
+            "h": 668
+        },
+        "scale": "1"
+    },
+    "frames": {
+        "login_inputBg": {
+            "frame": {
+                "x": 668,
+                "y": 106,
+                "w": 111,
+                "h": 36
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 111,
+                "h": 36
+            },
+            "sourceSize": {
+                "w": 111,
+                "h": 36
+            }
+        },
+        "login_inputLong": {
+            "frame": {
+                "x": 668,
+                "y": 68,
+                "w": 220,
+                "h": 36
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 220,
+                "h": 36
+            },
+            "sourceSize": {
+                "w": 220,
+                "h": 36
+            }
+        },
+        "login_loginBgBig": {
+            "frame": {
+                "x": 279,
+                "y": 0,
+                "w": 387,
+                "h": 214
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 387,
+                "h": 214
+            },
+            "sourceSize": {
+                "w": 387,
+                "h": 214
+            }
+        },
+        "login_loginBtn": {
+            "frame": {
+                "x": 890,
+                "y": 68,
+                "w": 89,
+                "h": 89
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 89,
+                "h": 89
+            },
+            "sourceSize": {
+                "w": 89,
+                "h": 89
+            }
+        },
+        "login_logo": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 277,
+                "h": 315
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 277,
+                "h": 315
+            },
+            "sourceSize": {
+                "w": 277,
+                "h": 315
+            }
+        },
+        "login_quickBtn": {
+            "frame": {
+                "x": 781,
+                "y": 106,
+                "w": 89,
+                "h": 36
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 89,
+                "h": 36
+            },
+            "sourceSize": {
+                "w": 89,
+                "h": 36
+            }
+        },
+        "login_quickLoginBg": {
+            "frame": {
+                "x": 279,
+                "y": 216,
+                "w": 387,
+                "h": 164
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 387,
+                "h": 164
+            },
+            "sourceSize": {
+                "w": 387,
+                "h": 164
+            }
+        },
+        "login_sendBtn": {
+            "frame": {
+                "x": 888,
+                "y": 159,
+                "w": 89,
+                "h": 36
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 89,
+                "h": 36
+            },
+            "sourceSize": {
+                "w": 89,
+                "h": 36
+            }
+        },
+        "login_tabSelect": {
+            "frame": {
+                "x": 778,
+                "y": 144,
+                "w": 108,
+                "h": 31
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 108,
+                "h": 31
+            },
+            "sourceSize": {
+                "w": 108,
+                "h": 31
+            }
+        },
+        "login_tabUnSelect": {
+            "frame": {
+                "x": 668,
+                "y": 144,
+                "w": 108,
+                "h": 31
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 108,
+                "h": 31
+            },
+            "sourceSize": {
+                "w": 108,
+                "h": 31
+            }
+        },
+        "login_downArrow": {
+            "frame": {
+                "x": 998,
+                "y": 0,
+                "w": 10,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 10,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 10,
+                "h": 6
+            }
+        },
+        "login_infoBg": {
+            "frame": {
+                "x": 668,
+                "y": 0,
+                "w": 328,
+                "h": 66
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 328,
+                "h": 66
+            },
+            "sourceSize": {
+                "w": 328,
+                "h": 66
+            }
+        }
+    }
+}

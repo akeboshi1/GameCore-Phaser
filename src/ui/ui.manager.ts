@@ -1,5 +1,5 @@
-import { WorldService } from "../game";
-import { ConnectionService } from "../net";
+import { WorldService } from "../game/world.service";
+import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { ChatMediator } from "./chat/chat.mediator";
@@ -28,6 +28,7 @@ import { UIMediatorType } from "./ui.mediatorType";
 import { InputTextFactory } from "./components/inputTextFactory";
 import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
 import { MessageType } from "../const/MessageType";
+import { BaseMediator } from "tooqingui";
 // import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 // import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
 
@@ -46,6 +47,7 @@ export class UiManager extends PacketHandler {
     private mMedMap: Map<UIMediatorType, any>;
     private mUILayerManager: ILayerManager;
     private mCache: any[] = [];
+    private mModuleCache: any[] = [];
     private mNoneUIMap: Map<string, any> = new Map();
     private mSceneUIMap: Map<string, any> = new Map();
     private mNormalUIMap: Map<string, any> = new Map();
@@ -69,7 +71,6 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openEquipUpgrade);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
-
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
         this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
@@ -106,6 +107,22 @@ export class UiManager extends PacketHandler {
             this.mCacheUI();
             this.mCacheUI = undefined;
         }
+    }
+    public getScene(): Phaser.Scene {
+        return this.mScene;
+    }
+    // 方案二：独立出来给予外部模块调用game-core来创建mediator；方案一：在模块内部创建mediator，现利用方案一来实现，原因是防止多模块之间路径混乱，让这些创建事情在模块内部实现
+    public createMediator(className: string, nsPath: string): BaseMediator {
+        let mediator;
+        // const path: string = `./${type}/${type}Mediator`;
+        const ns: any = require(nsPath);
+        mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
+        if (!mediator) {
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        this.mMedMap.set(className, mediator);
+        return mediator;
     }
 
     public showMainUI() {
@@ -297,43 +314,63 @@ export class UiManager extends PacketHandler {
     }
 
     public showMed(type: string, ...param: any[]) {
-        // if (!this.mMedMap) {
-        //     this.mCache.push(param);
-        //     return;
-        // }
-        // if (type === "MessageBox") {
-        //     type = "PicaMessageBox";
-        // }
-        // const className: string = type + "Mediator";
-        // let mediator: BaseMediator = this.mMedMap.get(className);
-        // if (!mediator) {
-        //     const path: string = `./${type}/${type}Mediator`;
-        //     const ns: any = require(`./${type}/${className}`);
-        //     mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
-        //     if (!mediator) {
-        //         // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+        if (!this.mMedMap) {
+            this.mCache.push(param);
+            return;
+        }
+        if (type === "MessageBox") {
+            type = "PicaMessageBox";
+        }
+        const className: string = type + "Mediator";
+        let mediator: BaseMediator = this.mMedMap.get(className);
+        if (!mediator) {
+            // const path: string = `./${type}/${type}Mediator`;
+            let ns: any;
+            try {
+                ns = require(`./${type}/${className}`);
+            } catch (error) {
+                if (this.mModuleCache === undefined) {
+                    this.worldService.emitter.emit("SHOW_UI", [type, param]);
+                } else {
+                    this.mModuleCache.push(param);
+                }
+                return;
+            }
+            mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
+            if (!mediator) {
+                // 发送事件让加载的模块去监听是否存在对应的ui，如果存在则创建，不存在则不管
+                this.worldService.emitter.emit("SHOW_UI", [type, param]);
+                return;
+            }
+            this.mMedMap.set(type + "Mediator", mediator);
+            // mediator.setName(type);
+        }
+        // if (mediator.showing) return;
+        if (param) mediator.setParam(param);
+        // if (className === "RankMediator") {
+        //     if (!this.worldService.game.device.os.desktop) {
+        //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
+        //         if (med) {
+        //             if (!med.isShow()) {
+        //                 med.preRefreshBtn(className);
+        //             } else {
+        //                 med.refreshBtn(className, true);
+        //             }
+        //         }
         //         return;
         //     }
-        //     this.mMedMap.set(type + "Mediator", mediator);
-        //     // mediator.setName(type);
         // }
-        // // if (mediator.showing) return;
-        // if (param) mediator.setParam(param);
-        // // if (className === "RankMediator") {
-        // //     if (!this.worldService.game.device.os.desktop) {
-        // //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
-        // //         if (med) {
-        // //             if (!med.isShow()) {
-        // //                 med.preRefreshBtn(className);
-        // //             } else {
-        // //                 med.refreshBtn(className, true);
-        // //             }
-        // //         }
-        // //         return;
-        // //     }
-        // // }
-        // this.checkUIState(className, false);
-        // mediator.show(param);
+        this.checkUIState(className, false);
+        mediator.show(param);
+    }
+
+    public showModuleUI() {
+        for (const tmp of this.mModuleCache) {
+            const ui = tmp[0];
+            this.showMed(ui.name, ui);
+        }
+        this.mModuleCache.length = 0;
+        this.mModuleCache = undefined;
     }
 
     private handleShowUI(packet: PBpacket): void {
@@ -468,6 +505,7 @@ export class UiManager extends PacketHandler {
         const medName: string = `${type}Mediator`;
         const mediator: any = this.mMedMap.get(medName);
         if (!mediator) {
+            this.worldService.emitter.emit("HIDE_UI", type);
             // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }

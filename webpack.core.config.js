@@ -37,29 +37,29 @@ const config = {
             tooqingui: tooqingui
         },
     },
-    optimization: {
-        minimize: true,
-        minimizer: [
-            new TerserPlugin({
-                sourceMap: true,
-                terserOptions: {
-                    ecma: undefined,
-                    warnings: false,
-                    parse: {},
-                    compress: {},
-                    mangle: true, // Note `mangle.properties` is `false` by default.
-                    module: false,
-                    output: null,
-                    toplevel: false,
-                    nameCache: null,
-                    ie8: false,
-                    keep_classnames: true,
-                    keep_fnames: true,
-                    safari10: false,
-                },
-            }),
-        ],
-    },
+    // optimization: {
+    //     minimize: true,
+    //     minimizer: [
+    //         new TerserPlugin({
+    //             sourceMap: true,
+    //             terserOptions: {
+    //                 ecma: undefined,
+    //                 warnings: false,
+    //                 parse: {},
+    //                 compress: {},
+    //                 mangle: true, // Note `mangle.properties` is `false` by default.
+    //                 module: false,
+    //                 output: null,
+    //                 toplevel: false,
+    //                 nameCache: null,
+    //                 ie8: false,
+    //                 keep_classnames: true,
+    //                 keep_fnames: true,
+    //                 safari10: false,
+    //             },
+    //         }),
+    //     ],
+    // },
     plugins: [
         new CopyWebpackPlugin([{ from: "**/*", to: "resources", force: true, context: "resources" }]),
         new HtmlWebpackPlugin({

@@ -3,7 +3,7 @@ import { IRoomManager } from "./room.manager";
 import { ViewblockService, ViewblockManager } from "./cameras/viewblock.manager";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
 import { ConnectionService } from "../net/connection.service";
-import { LayerManager } from "./layer/layer.manager";
+import { RoomLayerManager } from "./layer/room.layer.manager";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
@@ -49,7 +49,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mMiniSize: IPosition45Obj;
     private mTerrainManager: DecorateTerrainManager;
     private mElementManager: DecorateElementManager;
-    private mLayerManager: LayerManager;
+    private mLayerManager: RoomLayerManager;
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
     private mSelectorElement: SelectorElement;
@@ -193,7 +193,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             this.mLayerManager.destroy();
         }
         this.mScene = this.world.game.scene.getScene(PlayScene.name);
-        this.mLayerManager = new LayerManager(this);
+        this.mLayerManager = new RoomLayerManager(this);
         // this.mLayerManager.drawGrid(this);
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
@@ -670,7 +670,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.mElementManager;
     }
 
-    get layerManager(): LayerManager {
+    get layerManager(): RoomLayerManager {
         return this.mLayerManager;
     }
 

@@ -1,10 +1,13 @@
-export { IAccountData, Account } from "./game";
+export * from "./game";
 export * from "./utils";
 export * from "./rooms";
 export * from "./plugins";
 export * from "./net";
 export * from "./const";
 export * from "./scenes";
+export * from "./ui";
+export * from "./role";
+export * from "./editor";
 export { i18n } from "./i18n";
 export { GameMain, ILauncherConfig } from "./launcher";
 export { Handler, HandlerDispatcher } from "./Handler";

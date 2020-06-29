@@ -17,7 +17,7 @@ const config = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: `js/[name]_v${appVer}.js`,
+        filename: `js/[name].js`,
         libraryTarget: "umd",
         library: "game-core",
     },
@@ -61,6 +61,7 @@ const config = {
         ],
     },
     plugins: [
+        new CopyWebpackPlugin([{ from: "**/*", to: "resources", force: true, context: "resources" }]),
         new HtmlWebpackPlugin({
             inject: "head",
             title: "图轻播放器",

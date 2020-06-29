@@ -2,8 +2,10 @@ import { WorldService } from "../game";
 
 export class BasicPlugin {
     protected mWorld: WorldService;
-    init(worldService: WorldService) {
+    constructor(worldService: WorldService) {
         this.mWorld = worldService;
+    }
+    init(worldService: WorldService) {
     }
 
     preUpdate(time, delta) { }

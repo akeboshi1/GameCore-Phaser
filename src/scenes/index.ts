@@ -1,1 +1,11 @@
 export { BasicScene } from "./basic.scene";
+export { PlayScene } from "./play";
+export { AlphaScene } from "./alpha";
+export { CreateRoleScene } from "./create.character";
+export { EditScene } from "./edit";
+export { GamePauseScene } from "./gamepause";
+export { LoadingScene } from "./loading";
+export { LoginScene } from "./login";
+export { MainUIScene } from "./main.ui";
+export { SelectCharacter } from "./select.character";
+export { SkyBoxScene } from "./sky.box";

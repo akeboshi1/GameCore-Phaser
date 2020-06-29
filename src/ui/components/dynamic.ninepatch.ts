@@ -30,10 +30,10 @@ export class DynamicNinepatch {
     private onLoadCompleteHandler() {
         const columns = this.mConfig.columns ? this.mConfig.columns.length : undefined;
         const rows = this.mConfig.rows ? this.mConfig.rows.length : undefined;
-        let left = this.mConfig.columns ? this.mConfig.columns[0] : 0;
-        let right = this.mConfig.columns ? this.mConfig.columns[2] : 0;
-        let top = this.mConfig.rows ? this.mConfig.rows[0] : 0;
-        let bottom = this.mConfig.rows ? this.mConfig.rows[2] : 0;
+        const left = this.mConfig.columns ? this.mConfig.columns[0] : 0;
+        const right = this.mConfig.columns ? this.mConfig.columns[2] : 0;
+        const top = this.mConfig.rows ? this.mConfig.rows[0] : 0;
+        const bottom = this.mConfig.rows ? this.mConfig.rows[2] : 0;
         this.mImage = new NinePatch(this.mScene, 0, 0, this.mConfig.width, this.mConfig.height, this.mConfig.key, undefined, columns, rows, { left, right, top, bottom }
         );
         if (this.mLoadCompleteCallBack) {

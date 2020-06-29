@@ -1,6 +1,6 @@
 import { IFramesModel } from "../display/frames.model";
 import { FramesDisplay } from "../display/frames.display";
-import { LayerManager } from "../layer/layer.manager";
+import { RoomLayerManager } from "../layer/room.layer.manager";
 import { EditorRoomService } from "../editor.room";
 import { IElementManager } from "../element/element.manager";
 import { op_client, op_def } from "pixelpai_proto";
@@ -13,7 +13,7 @@ import { IPosition45Obj, Position45 } from "../../utils/position45";
 export class MouseFollow {
     private mNodeType: NodeType;
     private mDisplay: MouseDisplayContainer;
-    private mLayerManager: LayerManager;
+    private mLayerManager: RoomLayerManager;
     private mElementManager: IElementManager;
     private mSprite: ISprite;
     private mAlignGrid: boolean;

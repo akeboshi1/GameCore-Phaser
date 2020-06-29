@@ -1,5 +1,5 @@
 import { DecoratePanel } from "./decorate.panel";
-import { LayerManager } from "../../rooms/layer/layer.manager";
+import { RoomLayerManager } from "../../rooms/layer/room.layer.manager";
 import { IRoomService } from "../../rooms/room";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { Pos } from "../../utils/pos";
@@ -10,7 +10,7 @@ import { IElement } from "../../rooms/element/element";
 
 export class DecorateManager extends Phaser.Events.EventEmitter {
     private mPanel: DecoratePanel;
-    private mLayerManager: LayerManager;
+    private mLayerManager: RoomLayerManager;
     private mRoomService: IRoomService;
     constructor(scene: Phaser.Scene, roomService: IRoomService) {
         super();
