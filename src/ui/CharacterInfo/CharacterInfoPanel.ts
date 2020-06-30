@@ -60,6 +60,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mBackGround.fillRect(0, 0, w, h);
         this.content.setPosition(w / 2, h / 2);
         this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
+        this.mGrideTable.resetMask();
         this.content.setInteractive();
     }
 
@@ -134,7 +135,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.avatar.x = 0;
         this.avatar.y = -80 * this.dpr;
         this.avatar.once("initialized", () => {
-            this.avatar.play({ animationName: "idle", flip: false });
+            this.avatar.play({ name: "idle", flip: false });
         });
 
         const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);

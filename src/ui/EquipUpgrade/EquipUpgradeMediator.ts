@@ -18,7 +18,7 @@ export class EquipUpgradeMediator extends BaseMediator {
         if (!this.equipUpgrade) {
             this.equipUpgrade = new EquipUpgrade(this.world);
             this.equipUpgrade.on("activeEquip", this.onActiveEquipment, this);
-            this.equipUpgrade.on("showopen",this.onShowEquipPanel,this);
+            this.equipUpgrade.on("showopen", this.onShowEquipPanel, this);
             this.equipUpgrade.register();
         }
     }
@@ -41,11 +41,13 @@ export class EquipUpgradeMediator extends BaseMediator {
     }
 
     destroy() {
-       super.destroy();
+        if (this.equipUpgrade) this.equipUpgrade.destroy();
+        this.equipUpgrade = undefined;
+        super.destroy();
     }
 
     private onHidePanel() {
-        this.destroy();
+        super.destroy();
     }
 
     private onEquipUpgradePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {

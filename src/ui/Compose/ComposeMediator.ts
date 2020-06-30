@@ -4,6 +4,8 @@ import { ComposePanel } from "./ComposePanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Compose } from "./Compose";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { Logger } from "../../utils/log";
+import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
 
 export class ComposeMediator extends BaseMediator {
     private scene: Phaser.Scene;
@@ -20,6 +22,7 @@ export class ComposeMediator extends BaseMediator {
             this.compose.on("formulaDetial", this.onRetFormulaDetial, this);
             this.compose.on("showopen", this.onShowPanel, this);
             this.compose.register();
+            Logger.getInstance().log("qwerqwerqwerqwerrrr+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
     }
 
@@ -39,7 +42,9 @@ export class ComposeMediator extends BaseMediator {
     }
 
     destroy() {
-      super.destroy();
+        if (this.compose) this.compose.destroy();
+        this.compose = undefined;
+        super.destroy();
     }
 
     private onReqFormulaDetial(id: string) {
@@ -54,7 +59,7 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private onHideView() {
-        this.destroy();
+        super.destroy();
     }
 
     private onShowPanel(content: any) {

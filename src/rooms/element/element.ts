@@ -13,7 +13,7 @@ import { ISprite } from "./sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
-import { DisplayObject } from "../display/display.object";
+import { DisplayObject, DisplayField } from "../display/display.object";
 import { AI } from "../action/AI";
 export enum PlayerState {
     IDLE = "idle",
@@ -69,7 +69,7 @@ export interface IElement {
 
     getDirection(): number;
 
-    showEffected();
+    showEffected(displayInfo: IFramesModel);
 
     showNickname();
 
@@ -501,8 +501,14 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public showEffected() {
-        if (this.mDisplay) this.mDisplay.showEffect();
+    public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
+        if (displayInfo&&this.mDisplay) {
+            const key = displayInfo.gene;
+            this.mDisplay.once(key, this.onDisplayReady, this);
+            this.mDisplay.load(displayInfo, field);
+            Logger.getInstance().log(JSON.stringify(this.mDisplayInfo));
+            Logger.getInstance().log(JSON.stringify(this.mDisplayInfo["animations"].get("idle")));
+        }
     }
 
     public showNickname() {
@@ -763,17 +769,19 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    protected onDisplayReady() {
+    protected onDisplayReady(display?: FramesDisplay | DragonbonesDisplay, field?: DisplayField, data?: IFramesModel) {
         if (this.mDisplay) {
-            this.mDisplay.play(this.model.currentAnimation);
-            if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
-                this.updateMounth(this.mModel.mountSprites);
+            this.mDisplay.play(this.model.currentAnimation, field, data);
+            if (!field || field === DisplayField.STAGE) {
+                if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
+                    this.updateMounth(this.mModel.mountSprites);
+                }
+                let depth = 0;
+                if (this.model && this.model.pos) {
+                    depth = this.model.pos.depth ? this.model.pos.depth : 0;
+                }
+                this.setDepth(depth);
             }
-            let depth = 0;
-            if (this.model && this.model.pos) {
-                depth = this.model.pos.depth ? this.model.pos.depth : 0;
-            }
-            this.setDepth(depth);
             // this.mDisplay.showRefernceArea();
         }
     }

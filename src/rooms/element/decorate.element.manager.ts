@@ -22,7 +22,7 @@ export class DecorateElementManager extends ElementManager {
       return;
     }
     const curAni = sprite.currentAnimation;
-    const aniName = curAni.animationName;
+    const aniName = curAni.name;
     const flip = curAni.flip;
     const collisionArea = displayInfo.getCollisionArea(aniName, flip);
     let walkArea = displayInfo.getWalkableArea(aniName, flip);
@@ -57,7 +57,7 @@ export class DecorateElementManager extends ElementManager {
       return;
     }
     const curAni = sprite.currentAnimation;
-    const aniName = curAni.animationName;
+    const aniName = curAni.name;
     const flip = curAni.flip;
     const collisionArea = displayInfo.getCollisionArea(aniName, flip);
     const origin = displayInfo.getOriginPoint(aniName, flip);

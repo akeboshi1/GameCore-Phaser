@@ -215,7 +215,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const curAni = sprite.currentAnimation;
-        const aniName = curAni.animationName;
+        const aniName = curAni.name;
         const flip = false;
         const collisionArea = displayInfo.getCollisionArea(aniName, flip);
         const walkArea = displayInfo.getWalkableArea(aniName, flip);

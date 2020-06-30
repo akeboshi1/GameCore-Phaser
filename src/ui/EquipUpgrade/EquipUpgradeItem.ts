@@ -89,6 +89,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.curEquipItem.x += x;
         this.curEquipItem.y += y;
         this.gridTable.refreshPos(x, y - 10 * this.dpr * this.zoom);
+        this.gridTable.resetMask();
         // this.gridTable.x = posX;
         // this.gridTable.y = posY;
         // this.gridTable.layout();

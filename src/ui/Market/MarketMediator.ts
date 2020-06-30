@@ -51,6 +51,12 @@ export class MarketMediator extends BaseMediator {
     this.layerManager.addToUILayer(this.mView);
   }
 
+  destroy() {
+    if (this.mMarket) this.mMarket.destroy();
+    this.mMarket = null;
+    super.destroy();
+  }
+
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
     this.mView.setCategories(content);
   }
@@ -102,6 +108,6 @@ export class MarketMediator extends BaseMediator {
   }
 
   private onCloseHandler() {
-    this.destroy();
+    super.destroy();
   }
 }

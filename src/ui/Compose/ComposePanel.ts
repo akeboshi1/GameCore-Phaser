@@ -42,6 +42,7 @@ export class ComposePanel extends BasePanel {
         this.content.x = width * 0.5;
         this.content.y = height * 0.5;
         this.mGrideTable.refreshPos(width * 0.5 + 10 * this.dpr, height - 70 * this.dpr);
+        this.mGrideTable.resetMask();
         this.setSize(width, height);
     }
 

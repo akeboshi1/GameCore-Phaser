@@ -8,8 +8,10 @@ import { Pos } from "../../utils/pos";
 import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
-import { IFramesModel } from "../display/frames.model";
+import { IFramesModel, FramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
+import { DisplayField } from "../display/display.object";
+import { Animation } from "../display/animation";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -106,11 +108,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.clear();
     }
 
-    public update(time: number, delta: number) {}
+    public update(time: number, delta: number) { }
 
-    protected addMap(sprite: ISprite) {}
+    protected addMap(sprite: ISprite) { }
 
-    protected removeMap(sprite: ISprite) {}
+    protected removeMap(sprite: ISprite) { }
 
     get camera(): Phaser.Cameras.Scene2D.Camera | undefined {
         return this.mRoom.cameraService.camera;
@@ -189,9 +191,78 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // if (!ele) ele = new Element(sprite, this);
         if (addMap) this.addMap(sprite);
         this.mElements.set(ele.id || 0, ele);
+        if (ele.model.id === 831991974) {
+            ele.showEffected(this.getTestEffect(), DisplayField.FRONTEND);
+        }
         return ele;
     }
 
+    protected getTestEffect() {
+        const ewew: any = { node: {}, baseLoc: "", originPoint: [0, 0] };
+        const anima = new Animation(ewew);
+        const animation = {
+            "mID": 1700993448,
+            "mName": "idle",
+            "mFrameName": [],
+            "mLoop": true,
+            "mFrameRate": 10,
+            "mBaseLoc": {
+                "type": 3,
+                "x": 0,
+                "y": 0
+            },
+            "mOriginPoint": {
+                "type": 3,
+                "x": 1,
+                "y": 1
+            },
+            "mLayer": [
+                {
+                    "frameName": [
+                        "01",
+                        "02",
+                        "03",
+                        "04",
+                        "05",
+                        "06"
+                    ],
+                    "offsetLoc": {
+                        "x": -15,
+                        "y": -54
+                    },
+                    "frameVisible": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ]
+                }
+            ],
+            "mMountLayer": null
+        };
+
+        for (const key in animation) {
+            if (animation.hasOwnProperty(key)) {
+                const element = animation[key];
+                anima[key] = element;
+            }
+        }
+        const data = new FramesModel({
+            animations: {
+                defaultAnimationName: "idle",
+                display: {
+                    "dataPath": "test/effect1/spritesheet (4).json",
+                    "texturePath": "test/effect1/spritesheet (4).png"
+                },
+                animationData: [anima],
+            },
+        });
+        data["mGen"] = "3b353a5c045b737d7a5fdc3210b81a2ab31d3555";
+
+        return data;
+    }
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
     }
@@ -264,6 +335,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     element.model = new Sprite(sprite);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
+                    element.updateModel(sprite);
+                    if (element.model.id === 831991974) {
+                        element.showEffected(this.getTestEffect(), DisplayField.FRONTEND);
+                    }
                     element.updateModel(sprite);
                 }
                 // const sp = new Sprite(sprite, content.nodeType);

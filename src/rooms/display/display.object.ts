@@ -10,6 +10,7 @@ import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
 import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
+import { DisplayEntity } from "./display.entity";
 
 export enum DisplayField {
     BACKEND = 1,
@@ -31,14 +32,13 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mFlagContainer: Phaser.GameObjects.Container;
     protected mNickname: Phaser.GameObjects.Text;
     protected mBadges: DynamicImage[];
-    protected mBackEffect: DynamicSprite;
-    protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
     protected mElement: IElement;
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
     protected mActionName: AnimationData;
+    protected mDisplays: Map<DisplayField, DisplayEntity[]> = new Map<DisplayField, DisplayEntity[]>();
     constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
         super(scene);
         this.mElement = element;
@@ -69,7 +69,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
     }
 
-    play(animationName: AnimationData, field?: DisplayField) {
+    play(animationName: AnimationData, field?: DisplayField, data?: IFramesModel | IDragonbonesModel) {
     }
 
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }
@@ -82,22 +82,11 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
                 this.mNickname.destroy();
                 this.mNickname = undefined;
             }
-
-            if (this.mBackEffect) {
-                this.mBackEffect.destroy();
-                this.mBackEffect = undefined;
-            }
-
-            if (this.mFrontEffect) {
-                this.mFrontEffect.destroy();
-                this.mFrontEffect = undefined;
-            }
-
             this.clearBadges();
-
             this.mFlagContainer.destroy();
             this.mFlagContainer = undefined;
         }
+
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();
             this.mReferenceArea = undefined;
@@ -154,8 +143,8 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     scaleTween(): void { }
 
     public showEffect() {
-        this.addEffect(this.mBackEffect, Url.getRes("ui/vip/vip_effect_back.png"), Url.getRes("ui/vip/vip_effect_back.json"), true, 15, false, true);
-        this.addEffect(this.mFrontEffect, Url.getRes("ui/vip/vip_effect_front.png"), Url.getRes("ui/vip/vip_effect_front.json"), true, 15, false, true);
+        // this.addEffect(this.mBackEffect, Url.getRes("ui/vip/vip_effect_back.png"), Url.getRes("ui/vip/vip_effect_back.json"), true, 15, false, true);
+        // this.addEffect(this.mFrontEffect, Url.getRes("ui/vip/vip_effect_front.png"), Url.getRes("ui/vip/vip_effect_front.json"), true, 15, false, true);
     }
 
     public getElement(key: string) {
@@ -204,9 +193,34 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
 
     protected get flagContainer(): Phaser.GameObjects.Container {
         if (this.mFlagContainer) return this.mFlagContainer;
-        this.mFlagContainer = this.scene.make.container(undefined, false);
-        this.addAt(this.mFlagContainer, DisplayField.FLAG);
+        this.mFlagContainer = this.createFieldContainer(DisplayField.FLAG);
         return this.mFlagContainer;
+    }
+
+    protected getFieldIndex(field: DisplayField) {
+        const backend = this.getFieldCount(DisplayField.BACKEND);
+        if (field === DisplayField.BACKEND) return backend;
+        const stage = this.getFieldCount(DisplayField.STAGE);
+        if (field === DisplayField.STAGE) return backend + stage;
+        const frontend = this.getFieldCount(DisplayField.FRONTEND);
+        if (field === DisplayField.FRONTEND) return backend + stage + frontend;
+    }
+
+    protected getFieldCount(field: DisplayField) {
+        const arr = this.mDisplays.get(field);
+        let index: number = 0;
+        if (arr) {
+            for (const item of arr) {
+                index += item.mDisplays.length;
+            }
+        }
+        return index;
+    }
+
+    protected createFieldContainer(field: DisplayField) {
+        const container = this.scene.make.container(undefined, false);
+        this.addAt(container, field);
+        return container;
     }
 
     protected addChildMap(key: string, display: Phaser.GameObjects.GameObject) {

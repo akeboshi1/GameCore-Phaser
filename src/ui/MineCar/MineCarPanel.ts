@@ -61,6 +61,8 @@ export class MineCarPanel extends BasePanel {
     this.categoriesBg.y = this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 38 * this.dpr * zoom;
     this.mPropGrid.refreshPos(this.mBg.x + 2 * this.dpr * zoom, this.mBg.y + 6 * this.dpr * zoom);
     this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 44 * this.dpr * zoom);
+    this.mPropGrid.resetMask();
+    this.mCategoryTable.resetMask();
   }
 
   public show(param?: any) {

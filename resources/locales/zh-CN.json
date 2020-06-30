@@ -85,5 +85,13 @@
     "collect_materials": "收集物资：",
     "submit_task": "提交任务",
     "task_quest": "任务要求："
+  },
+  "furni_unlock": {
+    "unlock": "立即解锁",
+    "repair": "立即修复",
+    "needMaterials": "合成所需材料",
+    "source": "来源：",
+    "sold": "可售卖：",
+    "notrading": "不可交易"
   }
 }

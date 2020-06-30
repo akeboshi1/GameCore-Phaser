@@ -174,7 +174,7 @@ export class FramesModel implements IFramesModel {
         let animationName = this.checkDirectionAnimation(baseName, dir);
         let flip = false;
         if (animationName) {
-            return { animationName, flip };
+            return { name: animationName, flip };
         }
         switch (dir) {
             case Direction.west_south:
@@ -193,7 +193,7 @@ export class FramesModel implements IFramesModel {
                 flip = true;
                 break;
         }
-        return { animationName, flip };
+        return { name: animationName, flip };
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {

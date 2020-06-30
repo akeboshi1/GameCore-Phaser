@@ -41,7 +41,7 @@ export class SpawnPoint implements ISprite {
             }
         });
         this.currentAnimation = {
-            animationName: "idle",
+            name: "idle",
             flip: false
         };
         this.direction = 3;

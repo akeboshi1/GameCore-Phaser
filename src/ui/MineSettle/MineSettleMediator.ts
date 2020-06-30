@@ -38,12 +38,14 @@ export class MineSettleMediator extends BaseMediator {
     }
 
     destroy() {
+        if (this.mineSettle) this.mineSettle.destroy();
+        this.mineSettle = undefined;
         super.destroy();
     }
 
     private onHideMineSettle() {
         this.mineSettle.reqMineSettlePacket();
-        this.destroy();
+        super.destroy();
     }
 
     private onMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {

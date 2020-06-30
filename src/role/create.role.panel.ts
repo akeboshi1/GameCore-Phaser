@@ -302,6 +302,6 @@ export class CreateRolePanel extends BasePanel {
   }
 
   private loadDragonbonesComplete() {
-    this.dragonbones.play({ animationName: "idle", flip: false });
+    this.dragonbones.play({ name: "idle", flip: false });
   }
 }

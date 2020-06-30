@@ -47,7 +47,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       this.remove(this.mImage);
     }
     this.mDragonboneDisplay.once("initialized", () => {
-      this.mDragonboneDisplay.play({ animationName: "idle", flip: false });
+      this.mDragonboneDisplay.play({ name: "idle", flip: false });
     });
     this.mDragonboneDisplay.load(new DragonbonesModel({
       id: 0,

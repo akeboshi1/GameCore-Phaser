@@ -11,6 +11,7 @@ export class PicaNavigatePanel extends BasePanel {
   private mFamilyBtn: Phaser.GameObjects.Image;
   private mGoHomeBtn: Phaser.GameObjects.Image;
   private mCloseBtn: Phaser.GameObjects.Image;
+  private mTestBtn: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.setTween(false);
@@ -40,7 +41,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    // this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
+    this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
@@ -51,7 +52,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    // this.mPlayerBtn.on("pointerup", this.onShowPlayerHandler, this);
+    this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -101,9 +102,9 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn = this.createImage(this.key, "bag_btn").setInteractive();
     this.mFamilyBtn = this.createImage(this.key, "family_btn").setInteractive();
     this.mGoHomeBtn = this.createImage(this.key, "home_btn").setInteractive();
-    // this.mPlayerBtn = this.createImage(this.key, "family_btn").setInteractive();
+    this.mTestBtn = this.createImage(this.key, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn];
+    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn, this.mTestBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
@@ -141,8 +142,8 @@ export class PicaNavigatePanel extends BasePanel {
   private onShowGoHomeHandler() {
     this.emit("goHome");
   }
-  private onShowPlayerHandler() {
-    this.emit("showPanel", "Task");
+  private onShowTestHandler() {
+    this.emit("showPanel", "PicFurniFun");
   }
   private onCloseHandler() {
     this.emit("close");
@@ -150,10 +151,10 @@ export class PicaNavigatePanel extends BasePanel {
   private checkUpdateActive() {
     const arr = this.mWorld.uiManager.getActiveUIData("PicaNavigate");
     if (arr) {
-        for (const data of arr) {
-            this.updateActiveUI(data);
-        }
+      for (const data of arr) {
+        this.updateActiveUI(data);
+      }
     }
 
-}
+  }
 }

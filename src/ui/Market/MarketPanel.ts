@@ -140,6 +140,8 @@ export class MarketPanel extends BasePanel {
     this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom;
     this.mPropGrid.layout();
     this.mSubCategorisScroll.layout();
+    this.mSubCategorisScroll.resetMask();
+    this.mPropGrid.resetMask();
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
     Logger.getInstance().log(this.mTabs[0].getWorldTransformMatrix());
