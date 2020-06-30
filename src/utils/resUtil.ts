@@ -1,9 +1,12 @@
 import { HTTP_REGEX } from "../const/constants";
 import { op_def } from "pixelpai_proto";
 export class Url {
+    // cdn资源路径
     static OSD_PATH = "";
+    // 本地资源路径
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
+    static MODULE_PATH: string = "";
     static getRes(value: string): string {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
         if (CONFIG.BUNDLE_RESOURCES_ROOT) {
@@ -29,6 +32,13 @@ export class Url {
             return CONFIG.osd + value;
         }
         return value;
+    }
+
+    static getModuleResUI(dpr: number, value: string): string {
+        return Url.MODULE_PATH + `${dpr}x/${value}`;
+    }
+    static getModuleRes(value: string): string {
+        return Url.MODULE_PATH + value;
     }
 }
 export class ResUtils {

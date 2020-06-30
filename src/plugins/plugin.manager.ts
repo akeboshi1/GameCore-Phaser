@@ -19,11 +19,12 @@ export class PluginManager {
                         def = window[name].default;
                     }
                     if (def) {
-                        const plugin: BasicPlugin = new def(this.mWorld);
+                        const plugin: BasicPlugin = new def();
                         plugin.init(this.mWorld);
                         this.add(name, plugin);
                         resolve(plugin);
-                        this.mWorld.uiManager.showModuleUI();
+                        this.mWorld.emitter.emit("MODULE_INIT");
+                        // this.mWorld.uiManager.showModuleUI();
                     }
                 })
                 .catch((err) => reject(err));

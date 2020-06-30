@@ -270,7 +270,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             Logger.getInstance().log(plugin);
         })
             .then(() => {
-                return this.mWorld.pluginManager.load("main-ui", `http://localhost:8081/js/picatown.min.js`);
+                // return this.mWorld.pluginManager.load("main-ui", `http://localhost:8081/js/picatown.min.js`);
             });
     }
 

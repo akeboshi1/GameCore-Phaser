@@ -1,4 +1,5 @@
 import { WorldService } from "../../game/world.service";
+import { InputText } from "tooqingui";
 
 export class InputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -11,10 +12,10 @@ export class InputPanel extends Phaser.Events.EventEmitter {
         this.mBackground.fillStyle(0x0, 0.6);
         this.mBackground.fillRect(0, 0, width, height).setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
 
-        this.mInput = (<any>scene.add).rexInputText(6 * world.uiRatio, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
+        this.mInput = new InputText(scene, 0, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
             fontSize: `${20 * world.uiRatio}px`,
             color: "#0",
-            text,
+            text: "",
             backgroundColor: "#FFFFFF",
             borderColor: "#FF9900"
         }).setOrigin(0, 0).setFocus();

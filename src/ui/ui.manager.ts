@@ -74,7 +74,7 @@ export class UiManager extends PacketHandler {
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
         this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
-
+        this.worldService.emitter.on("MODULE_INIT", this.showModuleUI, this);
     }
 
     public getInputTextFactory(): InputTextFactory {
@@ -241,6 +241,7 @@ export class UiManager extends PacketHandler {
     }
 
     public destroy() {
+        this.worldService.emitter.off("MODULE_INIT", this.showModuleUI, this);
         this.removePackListener();
         this.clearMediator();
         this.mMedMap = undefined;
@@ -329,11 +330,11 @@ export class UiManager extends PacketHandler {
             try {
                 ns = require(`./${type}/${className}`);
             } catch (error) {
-                if (this.mModuleCache === undefined) {
-                    this.worldService.emitter.emit("SHOW_UI", [type, param]);
-                } else {
-                    this.mModuleCache.push(param);
-                }
+                // if (this.mModuleCache === undefined) {
+                this.worldService.emitter.emit("SHOW_UI", [type, param]);
+                // } else {
+                //     this.mModuleCache.push(param);
+                // }
                 return;
             }
             mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);

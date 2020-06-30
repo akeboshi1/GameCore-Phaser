@@ -1,4 +1,4 @@
-import { ICreateRole } from "../role/create.role";
+import { ICreateRole } from "../ui/role/create.role";
 import { LoadingScene } from "./loading";
 import { BasicScene } from "./basic.scene";
 

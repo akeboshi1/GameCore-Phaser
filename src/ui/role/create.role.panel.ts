@@ -1,16 +1,16 @@
-import { BasePanel } from "../ui/components/BasePanel";
-import { WorldService } from "../game/world.service";
-import { ResUtils, Url } from "../utils/resUtil";
+import { BasePanel } from "../components/BasePanel";
+import { WorldService } from "../../game/world.service";
+import { ResUtils, Url } from "../../utils/resUtil";
 import { InputText, NineSliceButton, NinePatch } from "tooqingui";
-import { Logger } from "../utils/log";
-import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
+import { Logger } from "../../utils/log";
+import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
-import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbones.model";
-import { Font } from "../utils/font";
+import { DragonbonesModel, IDragonbonesModel } from "../../rooms/display/dragonbones.model";
+import { Font } from "../../utils/font";
 // import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 
 export class CreateRolePanel extends BasePanel {
-  private readonly key = "createCharacter";
+  protected key = "createCharacter";
   private mFoot: Phaser.GameObjects.Image;
   private mBackgroundColor: Phaser.GameObjects.Graphics;
   private mBackground: Phaser.GameObjects.Image;

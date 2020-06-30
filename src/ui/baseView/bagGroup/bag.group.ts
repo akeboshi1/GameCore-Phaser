@@ -116,7 +116,7 @@ export class BagGroup extends BasePanel {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
-            this.buttons = (<any>this.scene).rexUI.add.buttons({
+            this.buttons = (<any>this.scene).tooqingUI.add.buttons({
                 x: (tempWid + this.mBagBg.width) / 2,
                 y: 0,
                 width: 56,

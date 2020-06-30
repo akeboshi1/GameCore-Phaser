@@ -30,7 +30,7 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRT
 import { HttpService } from "../net";
 import { GamePauseScene } from "../scenes/gamepause";
 import { Clock, ClockReadyListener } from "../rooms/Clock";
-import { RoleManager } from "../role/role.manager";
+import { RoleManager } from "../ui/role/role.manager";
 import { initLocales } from "../i18n";
 import * as path from "path";
 import { SoundManager, ISoundConfig } from "./sound.manager";
@@ -113,6 +113,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
+        Url.MODULE_PATH = this.mConfig.modulePath || "";
 
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
@@ -557,13 +558,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
                 this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
                 this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
-                this.mGame.plugins.removeGlobalPlugin("rexButton");
-                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexInputText");
-                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                // this.mGame.plugins.removeGlobalPlugin("tooqinguiButton");
+                // this.mGame.plugins.removeGlobalPlugin("tooqinguiNinePatchPlugin");
+                // this.mGame.plugins.removeGlobalPlugin("tooqinguiInputText");
+                // this.mGame.plugins.removeGlobalPlugin("tooqinguiBBCodeTextPlugin");
+                // this.mGame.plugins.removeGlobalPlugin("tooqinguiMoveTo");
                 this.mGame.plugins.removeScenePlugin("DragonBones");
-                this.mGame.plugins.removeScenePlugin("rexUI");
+                // this.mGame.plugins.removeScenePlugin("tooqingui");
                 this.mGameEmitter.destroy();
                 this.roomManager.destroy();
                 this.uiManager.destroy();

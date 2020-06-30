@@ -6,7 +6,7 @@ export * from "./net";
 export * from "./const";
 export * from "./scenes";
 export * from "./ui";
-export * from "./role";
+export * from "./ui/role";
 export * from "./editor";
 export { i18n } from "./i18n";
 export { GameMain, ILauncherConfig } from "./launcher";

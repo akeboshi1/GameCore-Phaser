@@ -20,7 +20,7 @@ declare module 'game-core' {
     export * from "game-core/const";
     export * from "game-core/scenes";
     export * from "game-core/ui";
-    export * from "game-core/role";
+    export * from "game-core/ui/role";
     export * from "game-core/editor";
     export { i18n } from "game-core/i18n";
     export { GameMain, ILauncherConfig } from "game-core/launcher";
@@ -126,11 +126,13 @@ declare module 'game-core/ui' {
     export * from "game-core/ui/DecorateControl";
     export * from "game-core/ui/ComponentRank";
     export * from "game-core/ui/Bubble";
+    export * from "game-core/ui/role";
 }
 
-declare module 'game-core/role' {
-    export { CreateRole, ICreateRole } from "game-core/role/create.role";
-    export { RoleManager } from "game-core/role/role.manager";
+declare module 'game-core/ui/role' {
+    export { CreateRole, ICreateRole } from "game-core/ui/role/create.role";
+    export { RoleManager } from "game-core/ui/role/role.manager";
+    export { CreateRolePanel } from "game-core/ui/role/create.role.panel";
 }
 
 declare module 'game-core/editor' {
@@ -477,9 +479,12 @@ declare module 'game-core/utils/resUtil' {
         static OSD_PATH: string;
         static RES_PATH: string;
         static RESUI_PATH: string;
+        static MODULE_PATH: string;
         static getRes(value: string): string;
         static getUIRes(dpr: number, value: string): string;
         static getOsdRes(value: string): string;
+        static getModuleResUI(dpr: number, value: string): string;
+        static getModuleRes(value: string): string;
     }
     export class ResUtils {
         static getPartName(value: string): string;
@@ -992,7 +997,7 @@ declare module 'game-core/plugins/basic.plugin' {
     import { WorldService } from "game-core/game";
     export class BasicPlugin {
         protected mWorld: WorldService;
-        constructor(worldService: WorldService);
+        constructor();
         init(worldService: WorldService): void;
         preUpdate(time: any, delta: any): void;
         update(time: any, delta: any): void;
@@ -1396,6 +1401,7 @@ declare module 'game-core/ui/ui.manager' {
         baseFaceTween(show: boolean): void;
         checkUIState(medName: string, show: boolean): void;
         showMed(type: string, ...param: any[]): void;
+        showModuleUI(): void;
     }
 }
 
@@ -1580,8 +1586,8 @@ declare module 'game-core/ui/Bubble' {
     export * from "game-core/ui/Bubble/interactivebubble.manager";
 }
 
-declare module 'game-core/role/create.role' {
-    import { RoleManager } from "game-core/role/role.manager";
+declare module 'game-core/ui/role/create.role' {
+    import { RoleManager } from "game-core/ui/role/role.manager";
     import { PacketHandler } from "net-socket-packet";
     import { op_client } from "pixelpai_proto";
     export interface ICreateRole {
@@ -1597,7 +1603,7 @@ declare module 'game-core/role/create.role' {
     }
 }
 
-declare module 'game-core/role/role.manager' {
+declare module 'game-core/ui/role/role.manager' {
     import { PacketHandler } from "net-socket-packet";
     import { WorldService } from "game-core/game/world.service";
     /**
@@ -1608,6 +1614,24 @@ declare module 'game-core/role/role.manager' {
         constructor($world: WorldService);
         register(): void;
         unregister(): void;
+    }
+}
+
+declare module 'game-core/ui/role/create.role.panel' {
+    import { BasePanel } from "game-core/ui/components/BasePanel";
+    import { WorldService } from "game-core/game/world.service";
+    import { op_gameconfig } from "pixelpai_proto";
+    export class CreateRolePanel extends BasePanel {
+        protected key: string;
+        constructor(scene: Phaser.Scene, world: WorldService);
+        show(param: any): void;
+        preload(): void;
+        resize(wid: number, hei: number): void;
+        init(): void;
+        setAvatars(avatars: op_gameconfig.IAvatar[]): void;
+        showError(msg: string): void;
+        setNickName(val: string): void;
+        destroy(): void;
     }
 }
 

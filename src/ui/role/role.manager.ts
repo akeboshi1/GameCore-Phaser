@@ -1,5 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
+import { WorldService } from "../../game/world.service";
 import { CreateRole } from "./create.role";
 import { op_client } from "pixelpai_proto";
 

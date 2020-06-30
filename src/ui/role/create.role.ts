@@ -1,6 +1,6 @@
 import { RoleManager } from "./role.manager";
-import { WorldService } from "../game/world.service";
-import { CreateRoleScene } from "../scenes/create.character";
+import { WorldService } from "../../game/world.service";
+import { CreateRoleScene } from "../../scenes/create.character";
 import { CreateRolePanel } from "./create.role.panel";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
