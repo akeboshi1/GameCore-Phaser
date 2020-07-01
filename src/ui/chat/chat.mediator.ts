@@ -270,13 +270,12 @@ export class ChatMediator extends BaseMediator {
     }
 
     get room() {
-        // if (!this.world) {
-        //     return;
-        // }
-        // if (!this.world.roomManager) {
-        //     return;
-        // }
-        // return this.world.roomManager.currentRoom;
-        return undefined;
+        if (!this.world) {
+            return undefined;
+        }
+        if (!this.world.roomManager) {
+            return undefined;
+        }
+        return this.world.roomManager.currentRoom;
     }
 }

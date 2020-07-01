@@ -1,11 +1,10 @@
-import { WorldService } from "../game/world.service";
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
 // import { NoticeMediator } from "./Notice/NoticeMediator";
-// import { BagMediator } from "./bag/bagView/bagMediator";
+import { BagMediator } from "./bag/bagView/bagMediator";
 // import { FriendMediator } from "./friend/friend.mediator";
 // import { RankMediator } from "./Rank/RankMediator";
 import { Size } from "../utils";
@@ -29,6 +28,8 @@ import { InputTextFactory } from "./components/inputTextFactory";
 import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
 import { MessageType } from "../const/MessageType";
 import { BaseMediator } from "tooqingui";
+import { BagGroupMediator } from "../ui/baseView/bagGroup/bag.group.mediator";
+import { WorldService } from "../game";
 // import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 // import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
 
@@ -60,8 +61,10 @@ export class UiManager extends PacketHandler {
     private mShowuiList: any[] = [];
     private mInputTextFactory: any;
     private interBubbleMgr: any;
-    constructor(private worldService: WorldService) {
+    private worldService: WorldService;
+    constructor(worldService: WorldService) {
         super();
+        this.worldService = worldService;
         this.mConnect = worldService.connection;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
@@ -136,7 +139,9 @@ export class UiManager extends PacketHandler {
             this.mMedMap = new Map();
             // ============场景中固定显示ui
             if (this.worldService.game.device.os.desktop) {
-                // this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
+                this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
+                this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
+                this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
             } else {
                 // this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
                 // this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
@@ -144,8 +149,6 @@ export class UiManager extends PacketHandler {
                 // this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
                 // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             }
-            // this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
-            if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
             // this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             // this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
