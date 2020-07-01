@@ -43,7 +43,6 @@ export class EditorRoom extends Room implements EditorRoomService {
     private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
-    private mNimiSize: IPosition45Obj;
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
@@ -79,7 +78,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         cols *= 2;
         tileWidth /= 2;
         tileHeight /= 2;
-        this.mNimiSize = {
+        this.mMiniSize = {
             cols,
             rows,
             tileHeight,
@@ -107,12 +106,12 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mCameraService.camera = camera;
         const zoom = this.world.scaleRatio;
         // mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
-        this.mCameraService.setBounds(
-            -camera.width >> 1,
-            -camera.height >> 1,
-            this.mSize.sceneWidth * zoom + camera.width,
-            this.mSize.sceneHeight * zoom + camera.height
-        );
+        // this.mCameraService.setBounds(
+        //     -camera.width >> 1,
+        //     -camera.height >> 1,
+        //     this.mSize.sceneWidth * zoom * 3 + camera.width,
+        //     this.mSize.sceneHeight * zoom * 3 + camera.height
+        // );
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         this.mCameraService.centerCameas();
@@ -165,19 +164,19 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     transformToMini90(p: Pos): undefined | Pos {
-        if (!this.mNimiSize) {
+        if (!this.mMiniSize) {
             Logger.getInstance().error("position object is undefined");
             return;
         }
-        return Position45.transformTo90(p, this.mNimiSize);
+        return Position45.transformTo90(p, this.mMiniSize);
     }
 
     transformToMini45(p: Pos): undefined | Pos {
-        if (!this.mNimiSize) {
+        if (!this.mMiniSize) {
             Logger.getInstance().error("position object is undefined");
             return;
         }
-        return Position45.transformTo45(p, this.mNimiSize);
+        return Position45.transformTo45(p, this.mMiniSize);
     }
 
     removeSelected() {
@@ -543,7 +542,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     get miniSize(): IPosition45Obj {
-        return this.mNimiSize;
+        return this.mMiniSize;
     }
 
     private get mouseFollow(): MouseFollow {

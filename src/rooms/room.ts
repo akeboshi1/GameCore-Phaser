@@ -145,6 +145,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.onMovePathHandler
                 );
                 this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
+                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
             }
         }
     }
@@ -221,7 +222,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
-            this.mCameraService.setBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * this.mScaleRatio + camera.width, this.mSize.sceneHeight * this.mScaleRatio + camera.height);
+            const padding = 199 * this.mScaleRatio;
+            this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio  + padding * 2);
             // init block
             this.mBlocks.int(this.mSize);
 
@@ -400,6 +402,26 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public now(): number {
         return this.mWorld.clock.unixTime;
+    }
+
+    public getMaxScene() {
+        if (!this.mSize) {
+            return;
+        }
+        let w = this.mSize.sceneWidth;
+        let h = this.mSize.sceneHeight;
+        const blocks = this.mSkyboxManager.scenery;
+        for (const block of blocks) {
+            if (block.scenery) {
+                if (block.scenery.width > w) {
+                    w = block.scenery.width;
+                }
+                if (block.scenery.height > h) {
+                    h = block.scenery.height;
+                }
+            }
+        }
+        return { width: w, height: h };
     }
 
     public clear() {
@@ -632,6 +654,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         } else {
             if (this.mCameraService) this.mCameraService.stopFollow();
         }
+    }
+
+    private onSyncStateHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
+        const owner = content.owner;
     }
 
     private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {

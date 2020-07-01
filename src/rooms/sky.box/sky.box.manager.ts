@@ -1,8 +1,7 @@
 import { BlockManager } from "./block.manager";
 import { IRoomService } from "../room";
-import { IScenery, Scenery } from "./scenery";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { IScenery } from "./scenery";
+import { PacketHandler } from "net-socket-packet";
 
 export interface ISkyBoxConfig {
   key: string;
@@ -22,7 +21,16 @@ export class SkyBoxManager extends PacketHandler {
   }
 
   add(scenery: IScenery) {
+    // if (scenery.id === 1896802976) {
+    //   return;
+    // }
     this.mScenetys.set(scenery.id, new BlockManager(scenery, this.mRoom));
+  }
+
+  render() {
+    this.mScenetys.forEach((scenety) => {
+      scenety.render();
+    });
   }
 
   update(scenery: IScenery) {
@@ -47,6 +55,10 @@ export class SkyBoxManager extends PacketHandler {
       }
     }
     this.mScenetys.forEach((scenery: BlockManager) => scenery.destroy());
+  }
+
+  get scenery(): BlockManager[] {
+    return Array.from(this.mScenetys.values());
   }
 
   // private initCamera() {

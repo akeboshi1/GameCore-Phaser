@@ -1,7 +1,5 @@
 import { WorldService } from "../../game/world.service";
 import { DynamicImage } from "../../ui/components/dynamic.image";
-import { Logger } from "../../utils/log";
-import { BlockObject } from "../cameras/block.object";
 
 export class BackgroundDisplay {
   private mKey: string;
