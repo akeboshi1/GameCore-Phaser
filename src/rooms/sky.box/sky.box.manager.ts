@@ -2,6 +2,8 @@ import { BlockManager } from "./block.manager";
 import { IRoomService } from "../room";
 import { IScenery } from "./scenery";
 import { PacketHandler } from "net-socket-packet";
+import { State } from "../state/state.group";
+import { Logger } from "../../utils/log";
 
 export interface ISkyBoxConfig {
   key: string;
@@ -14,6 +16,7 @@ export interface ISkyBoxConfig {
 export class SkyBoxManager extends PacketHandler {
   protected mRoom: IRoomService;
   protected mScenetys: Map<number, BlockManager>;
+  protected mStateMap: Map<string, State>;
   constructor(room: IRoomService) {
     super();
     this.mRoom = room;
@@ -24,13 +27,11 @@ export class SkyBoxManager extends PacketHandler {
     // if (scenery.id === 1896802976) {
     //   return;
     // }
-    this.mScenetys.set(scenery.id, new BlockManager(scenery, this.mRoom));
-  }
-
-  render() {
-    this.mScenetys.forEach((scenety) => {
-      scenety.render();
-    });
+    const blockManager = new BlockManager(scenery, this.mRoom);
+    this.mScenetys.set(scenery.id, blockManager);
+    // if (this.mStateMap) {
+    //   blockManager.setState(this.mStateMap);
+    // }
   }
 
   update(scenery: IScenery) {
@@ -47,6 +48,16 @@ export class SkyBoxManager extends PacketHandler {
     }
   }
 
+  setState(states: State) {
+    if (!this.mStateMap) {
+      this.mStateMap = new Map();
+    }
+    this.mStateMap.set(states.name, states);
+    this.mScenetys.forEach((block) => {
+      block.setState(states);
+    });
+  }
+
   destroy() {
     if (this.mRoom) {
       const connection = this.mRoom.connection;
@@ -60,24 +71,4 @@ export class SkyBoxManager extends PacketHandler {
   get scenery(): BlockManager[] {
     return Array.from(this.mScenetys.values());
   }
-
-  // private initCamera() {
-  //   const camera = this.mScene.cameras.main;
-
-  //   if (this.mCameras) {
-  //     const main = this.mCameras.camera;
-  //     const imageWidth = this.mScenety.width;
-  //     const imageHeight = this.mScenety.height;
-  //     const size = this.mRoom.roomSize;
-  //     if (imageWidth > size.sceneWidth) {
-  //       // main.setBounds(0, 0, imageWidth, imageHeight);
-  //     }
-  //     const bound = main.getBounds();
-  //     camera.setBounds(bound.x, bound.y, bound.width, bound.height);
-  //     // camera.setPosition((size.sceneWidth - imageWidth >> 1) * this.mWorld.scaleRatio, (size.sceneHeight - imageHeight >> 1) * this.mWorld.scaleRatio);
-  //     // camera.setScroll(main.scrollX , main.scrollY);
-  //     this.mCameras.addCamera(camera);
-  //   }
-  // }
-
 }

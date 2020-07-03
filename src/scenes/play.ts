@@ -36,16 +36,13 @@ export class PlayScene extends BasicScene {
                 room: this.mRoom,
             });
         }
-        // this.scene.sendToBack();
+        this.scene.sendToBack();
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
         if (this.mRoom) this.mRoom.startPlay();
     }
 
     update(time: number, delta: number) {
-        // if (this.cameras.main) {
-        //   this.cameras.main.emit("renderer", this.cameras.main);
-        // }
         if (this.mRoom) {
             this.mRoom.update(time, delta);
         }

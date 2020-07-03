@@ -49,7 +49,7 @@ export class Bag extends PacketHandler implements IEntity {
     private handleAddItem(packet: PBpacket): void {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM = packet.content;
         if (content.nodetype === op_def.NodeType.ElementNodeType) {
-            this.mWorld.roomManager.currentRoom.map.addPackItems(content.id, content.item);
+            // this.mWorld.roomManager.currentRoom.map.addPackItems(content.id, content.item);
         } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
             this.mWorld.roomManager.currentRoom.playerManager.addPackItems(content.id, content.item);
         }
