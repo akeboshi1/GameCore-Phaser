@@ -17,7 +17,6 @@ import { TopMenuMediator } from "./baseView/top.menu/top.menu.mediator";
 import { MessageType } from "../const/MessageType";
 import { InputTextFactory } from "./components/inputTextFactory";
 import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
-import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
@@ -31,6 +30,7 @@ import { ComposeMediator } from "./Compose/ComposeMediator";
 import { MineSettleMediator } from "./MineSettle/MineSettleMediator";
 import { EquipUpgradeMediator } from "./EquipUpgrade/EquipUpgradeMediator";
 import { MarketMediator } from "./Market/MarketMediator";
+import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -104,7 +104,7 @@ export class UiManager extends PacketHandler {
         const arr: op_pkt_def.IPKT_UI[] = [];
         for (const data of this.mAtiveUIData.ui) {
             const tagName = data.name.split(".")[0];
-            const paneName = this.getPanelNameByActiveTag(tagName);
+            const paneName = this.getPanelNameByStateTag(tagName);
             if (paneName === name) {
                 arr.push(data);
             }
@@ -145,7 +145,7 @@ export class UiManager extends PacketHandler {
                 // this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
-                this.mMedMap.set(ComposeMediator.name, new ComposeMediator(this.mUILayerManager,scene, this.worldService));
+                this.mMedMap.set(ComposeMediator.name, new ComposeMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MarketMediator.name, new MarketMediator(this.mUILayerManager, scene, this.worldService));
             }
@@ -207,7 +207,7 @@ export class UiManager extends PacketHandler {
             }
         });
         if (this.mAtiveUIData) {
-            this.updateActiveUI(this.mAtiveUIData);
+            this.updateUIState(this.mAtiveUIData);
         }
         if (this.mCache) {
             for (const tmp of this.mCache) {
@@ -557,32 +557,28 @@ export class UiManager extends PacketHandler {
     private onActiveUIHandler(packge: PBpacket) {
         this.mAtiveUIData = packge.content;
         if (this.mAtiveUIData && this.mMedMap) {
-            this.updateActiveUI(this.mAtiveUIData);
+            this.updateUIState(this.mAtiveUIData);
         }
     }
 
-    private updateActiveUI(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
+    private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
-            const arr = ui.name.split(".");
-            const tagName = arr[0];
-            const panelName = this.getPanelNameByActiveTag(tagName);
+            const panelName = this.getPanelNameByStateTag(ui.name);
             if (panelName) {
                 const mediator: BaseMediator = this.mMedMap.get(panelName + "Mediator");
-                if (arr.length === 1) {
+                if (mediator) {
                     if (ui.visible) {
-                        if (!mediator || !mediator.isShow())
+                        if (mediator && !mediator.isShow()) {
                             this.showMed(panelName);
+                            mediator.getView().updateActiveUI(ui);
+                        }
                     } else
                         this.hideMed(panelName);
-                } else {
-                    if (mediator && mediator.isShow()) {
-                        mediator.getView().updateActiveUI(ui);
-                    }
                 }
             }
         }
     }
-    private getPanelNameByActiveTag(tag: string) {
+    private getPanelNameByStateTag(tag: string) {
         switch (tag) {
             case "mainui":
                 return "PicaMainUI";
