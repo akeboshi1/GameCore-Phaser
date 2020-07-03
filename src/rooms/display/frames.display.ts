@@ -19,33 +19,27 @@ import { DisplayEntity } from "./display.entity";
 export class FramesDisplay extends DisplayObject {
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mScaleTween: Phaser.Tweens.Tween;
-    protected mMountContainer: Phaser.GameObjects.Container;
     protected mCurAnimation: IAnimationData;
-    protected mMountList: Phaser.GameObjects.Container[];
+    protected mainEntity: DisplayEntity;
+    protected mountEntity: DisplayEntity;
 
-    public load(displayInfo: IFramesModel, field?: DisplayField) {
-        field = !field ? DisplayField.STAGE : field;
+    public load(displayInfo: IFramesModel, field: DisplayField = DisplayField.STAGE) {
         const data = displayInfo;
         if (!data || !data.gene) return;
         let entity = this.getDisplayEntity(field, data, "id");
         if (!entity) {
             const index = this.getFieldIndex(field);
             entity = new DisplayEntity(this, index);
-            entity.setFrameData(data);
-            let entitys = this.mDisplays.get(field);
-            if (!entitys) {
-                entitys = [];
-                this.mDisplays.set(field, entitys);
-            }
-            entitys.push(entity);
-        } else
-            entity.setFrameData(data);
+            this.addFieldChild(entity, field);
+        }
         if (entity.isLoaded) return;
         if (field === DisplayField.STAGE) {
             this.setData("id", data.id);
-            entity.setData("id", data.id);
+            entity.setData(data, "id");
+            this.mainEntity = entity;
+        } else {
+            entity.setData(data);
         }
-
         if (this.scene.textures.exists(data.gene)) {
             this.onLoadCompleted(field, data);
         } else {
@@ -69,38 +63,27 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    public play(animation: AnimationData, field?: DisplayField, data?: IFramesModel) {
+    public play(animation: AnimationData, field = DisplayField.STAGE, data?: IFramesModel) {
         if (!animation) return;
-        field = !field ? DisplayField.STAGE : field;
-        if (!data) {
-            const temp = this.getDisplayEntity(field);
-            data = temp.data;
-        } else {
-            data = this.getDisplayEntity(field, data, "id").data;
-        }
+        const entity = this.getDisplayEntity(field, data);
+        data = entity.data;
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
         const iAniData = data.getAnimations(animation.name);
         if (!iAniData) return;
+        entity.destroyDisplays();
         const spriteArr = this.createDisplay(data.gene, iAniData, animation.flip);
-        const entity = this.getDisplayEntity(field, data);
-        entity.setIndex(this.getFieldIndex(field));
+        const entityIndex = this.getFieldEnityIndex(field, entity);
+        entity.setIndex(this.getFieldIndex(field, entityIndex));
         entity.addArr(spriteArr);
-
         if (field === DisplayField.STAGE) {
-            const beforedata = this.mainEntity.data;
-            if (beforedata !== data)
-                this.clear(field, data);
             this.mCurAnimation = iAniData;
             this.initBaseLoc(animation);
             const mainSprite = this.mainEntity.mainSprite;
             this.emit("updateAnimation");
             if (mainSprite) {
                 mainSprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
-            }
-            if (this.mMountContainer && this.mCurAnimation.mountLayer) {
-                this.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
             }
             this.mActionName = animation;
         }
@@ -121,16 +104,12 @@ export class FramesDisplay extends DisplayObject {
         }
         display.x = x;
         display.y = mountPoint[targetIndex].y;
-
-        if (!this.mMountContainer) {
-            this.mMountContainer = this.scene.make.container(undefined, false);
+        if (!this.mountEntity) {
+            const entityIndex = this.mCurAnimation.mountLayer.index;
+            const newindex = this.getFieldIndex(DisplayField.STAGE, entityIndex);
+            this.mountEntity = new DisplayEntity(this, index);
         }
-        if (!this.mMountList) this.mMountList = [];
-        if (!this.mMountContainer.parentContainer) {
-            this.addAt(this.mMountContainer, index);
-        }
-        this.mMountContainer.addAt(display, targetIndex);
-        this.mMountList[targetIndex] = display;
+        this.mountEntity.add(display, targetIndex);
         if (entity.mainSprite) {
             // 侦听前先移除，避免重复添加
             entity.mainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
@@ -139,18 +118,12 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public unmount(display: Phaser.GameObjects.Container) {
-        if (!this.mMountContainer) {
+        if (!this.mountEntity) {
             return;
         }
-        this.mMountContainer.remove(display);
-        const index = this.mMountList.indexOf(display);
-        display.visible = true;
-        if (index > -1) {
-            this.mMountList.splice(index, 1);
-        }
-        const list = this.mMountContainer.list;
+        this.mountEntity.remove(display);
         const mainSprite = (this.mainEntity ? this.mainEntity.mainSprite : undefined);
-        if (list.length <= 0 && mainSprite) {
+        if (this.mountEntity.count <= 0 && mainSprite) {
             mainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
         }
     }
@@ -184,7 +157,7 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public scaleTween() {
-        if (this.mMountContainer && this.mMountContainer.list.length > 0) {
+        if (this.mountEntity && this.mountEntity.count > 0) {
             return;
         }
         if (this.mScaleTween) {
@@ -236,6 +209,8 @@ export class FramesDisplay extends DisplayObject {
     public destroy() {
 
         this.clear();
+        this.mountEntity = undefined;
+        this.mainEntity = undefined;
         if (this.mFadeTween) {
             this.clearFadeTween();
             this.mFadeTween = undefined;
@@ -307,14 +282,6 @@ export class FramesDisplay extends DisplayObject {
                     }
                 }
             }
-        }
-        if (field === DisplayField.STAGE) {
-            if (this.mMountContainer && this.mMountContainer.parentContainer) {
-                this.remove(this.mMountContainer);
-            }
-            if (!this.mMountList) this.mMountList = [];
-            else
-                this.mMountList.length = 0;
         }
     }
 
@@ -407,7 +374,7 @@ export class FramesDisplay extends DisplayObject {
     }
 
     private onAnimationUpdateHandler(ani: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-        if (!this.mMountContainer || !this.mCurAnimation) return;
+        if (!this.mountEntity || !this.mCurAnimation) return;
         const frameVisible = this.mCurAnimation.mountLayer.frameVisible;
         if (!frameVisible) {
             return;
@@ -416,15 +383,16 @@ export class FramesDisplay extends DisplayObject {
         if (index > frameVisible.length) {
             return;
         }
-        for (let i = 0; i < this.mMountList.length; i++) {
-            this.mMountList[i].visible = this.getMaskValue(frameVisible[index], i);
+        const mountDisplays = this.mountEntity.mDisplays;
+        for (let i = 0; i < mountDisplays.length; i++) {
+            mountDisplays[i].visible = this.getMaskValue(frameVisible[index], i);
         }
     }
 
     private getDisplayEntity(field: DisplayField, data?: IFramesModel, property?: string) {
-        const temps = this.mDisplays.get(field);
         let entity: DisplayEntity;
-        if (temps) {
+        if (this.mDisplays.has(field)) {
+            const temps = this.mDisplays.get(field);
             if (!data) {
                 entity = temps[temps.length - 1];
             } else {
@@ -459,14 +427,4 @@ export class FramesDisplay extends DisplayObject {
         }
         return height;
     }
-
-    protected get mainEntity(): DisplayEntity {
-        let entity: DisplayEntity;
-        const entitys = this.mDisplays.get(DisplayField.STAGE);
-        if (entitys && entitys.length > 0) {
-            entity = entitys[0];
-        }
-        return entity;
-    }
-
 }

@@ -658,7 +658,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onSyncStateHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
-        const owner = content.owner;
     }
 
     private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {

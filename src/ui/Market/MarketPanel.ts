@@ -262,7 +262,7 @@ export class MarketPanel extends BasePanel {
       // width: w,
       // height: capH,
       table: {
-        width: w,
+        width: w - 30 * this.dpr,
         height: capH,
         cellWidth: capW,
         cellHeight: capH,

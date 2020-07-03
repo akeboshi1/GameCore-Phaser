@@ -1,143 +1,143 @@
 {
 	"frames": {
-		"chat_icon": {
+		"button_h": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 87,
-				"h": 95
+				"w": 151,
+				"h": 151
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 87,
-				"h": 95
+				"w": 151,
+				"h": 151
 			},
 			"sourceSize": {
-				"w": 87,
-				"h": 95
+				"w": 151,
+				"h": 151
 			}
 		},
-		"emoji": {
+		"button_t": {
 			"frame": {
-				"x": 90,
+				"x": 154,
 				"y": 1,
-				"w": 90,
-				"h": 84
+				"w": 151,
+				"h": 151
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 90,
-				"h": 84
+				"w": 151,
+				"h": 151
 			},
 			"sourceSize": {
-				"w": 90,
-				"h": 84
+				"w": 151,
+				"h": 151
 			}
 		},
-		"horn_icon": {
-			"frame": {
-				"x": 182,
-				"y": 1,
-				"w": 107,
-				"h": 115
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 107,
-				"h": 115
-			},
-			"sourceSize": {
-				"w": 107,
-				"h": 115
-			}
-		},
-		"more_btn": {
+		"click_bg": {
 			"frame": {
 				"x": 1,
-				"y": 118,
-				"w": 80,
-				"h": 79
+				"y": 154,
+				"w": 150,
+				"h": 150
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 80,
-				"h": 79
+				"w": 150,
+				"h": 150
 			},
 			"sourceSize": {
-				"w": 80,
-				"h": 79
+				"w": 150,
+				"h": 150
 			}
 		},
-		"scroll_btn": {
+		"empty_handed": {
 			"frame": {
-				"x": 83,
-				"y": 118,
-				"w": 53,
-				"h": 55
+				"x": 153,
+				"y": 154,
+				"w": 105,
+				"h": 90
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 53,
-				"h": 55
+				"w": 105,
+				"h": 90
 			},
 			"sourceSize": {
-				"w": 53,
-				"h": 55
+				"w": 105,
+				"h": 90
 			}
 		},
-		"title_bg": {
+		"equp_bg": {
 			"frame": {
-				"x": 291,
+				"x": 307,
 				"y": 1,
-				"w": 2,
-				"h": 26
+				"w": 150,
+				"h": 150
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 2,
-				"h": 26
+				"w": 150,
+				"h": 150
 			},
 			"sourceSize": {
-				"w": 2,
-				"h": 26
+				"w": 150,
+				"h": 150
 			}
 		},
-		"vip_icon": {
+		"hand": {
 			"frame": {
-				"x": 138,
-				"y": 118,
-				"w": 37,
-				"h": 22
+				"x": 307,
+				"y": 153,
+				"w": 31,
+				"h": 32
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 37,
-				"h": 22
+				"w": 31,
+				"h": 32
 			},
 			"sourceSize": {
-				"w": 37,
-				"h": 22
+				"w": 31,
+				"h": 32
+			}
+		},
+		"superscript_h": {
+			"frame": {
+				"x": 340,
+				"y": 153,
+				"w": 91,
+				"h": 91
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 91,
+				"h": 91
+			},
+			"sourceSize": {
+				"w": 91,
+				"h": 91
 			}
 		}
 	},
@@ -147,8 +147,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 294,
-			"h": 198
+			"w": 458,
+			"h": 305
 		},
 		"scale": "1"
 	}

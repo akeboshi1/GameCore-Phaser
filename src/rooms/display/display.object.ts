@@ -197,24 +197,46 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         return this.mFlagContainer;
     }
 
-    protected getFieldIndex(field: DisplayField) {
-        const backend = this.getFieldCount(DisplayField.BACKEND);
+    protected getFieldIndex(field: DisplayField, index?: number) {
+        const backend = this.getFieldCount(DisplayField.BACKEND, index);
         if (field === DisplayField.BACKEND) return backend;
-        const stage = this.getFieldCount(DisplayField.STAGE);
+        const stage = this.getFieldCount(DisplayField.STAGE, index);
         if (field === DisplayField.STAGE) return backend + stage;
-        const frontend = this.getFieldCount(DisplayField.FRONTEND);
+        const frontend = this.getFieldCount(DisplayField.FRONTEND, index);
         if (field === DisplayField.FRONTEND) return backend + stage + frontend;
     }
 
-    protected getFieldCount(field: DisplayField) {
+    protected getFieldEnityIndex(field: DisplayField, enity: DisplayEntity) {
         const arr = this.mDisplays.get(field);
-        let index: number = 0;
+        const index = arr.indexOf(enity);
+        if (index === -1) return undefined;
+        return index;
+    }
+
+    protected getFieldCount(field: DisplayField, index?: number) {
+        const arr = this.mDisplays.get(field);
+        let count: number = 0;
         if (arr) {
-            for (const item of arr) {
-                index += item.mDisplays.length;
+            index = ((index === undefined) ? arr.length : index);
+            for (let i = 0; i < index; i++) {
+                count += arr[i].count;
             }
         }
-        return index;
+        return count;
+    }
+    protected addFieldChild(child: DisplayEntity, field = DisplayField.STAGE, index?: number) {
+        let arr: DisplayEntity[];
+        if (this.mDisplays.has(field)) {
+            arr = this.mDisplays.get(field);
+        } else {
+            arr = [];
+            this.mDisplays.set(field, arr);
+        }
+        if (index !== undefined) {
+            Phaser.Utils.Array.AddAt(arr, child, index);
+        } else {
+            arr.push(child);
+        }
     }
 
     protected createFieldContainer(field: DisplayField) {

@@ -1,7 +1,7 @@
 import { IFramesModel } from "./frames.model";
 export class DisplayEntity {
     public data: IFramesModel;
-    public mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = [];
+    public mDisplays: any[] = [];
     public content: Phaser.GameObjects.Container;
     public mainSprite: Phaser.GameObjects.Sprite;
     public index: number;
@@ -13,13 +13,12 @@ export class DisplayEntity {
     public setIndex(index: number) {
         this.index = index;
     }
-    public setFrameData(data: IFramesModel) {
+    public setData(data: any, key?: string) {
         this.data = data;
+        if (key)
+            this.content.setData(key, data);
     }
-    public setData(key: string | object, data?: any) {
-        this.content.setData(key, data);
-    }
-    public add(sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image, index?: number) {
+    public add(sprite: any, index?: number) {
         const tempIndex = (index === undefined ? this.index + this.mDisplays.length : this.index + index);
         this.mDisplays.push(sprite);
         this.content.addAt(sprite, tempIndex);
@@ -33,21 +32,36 @@ export class DisplayEntity {
             this.add(item);
         }
     }
+
+    public remove(display: any) {
+        const index = this.mDisplays.indexOf(display);
+        if (index !== -1) {
+            this.mDisplays.splice(index, 1);
+            this.content.remove(display);
+        }
+    }
     public checkData(data: IFramesModel, property: string = "gene") {
         if (data[property] === undefined) return false;
         if (this.data[property] === data[property]) return true;
         return false;
     }
-    public destroy() {
+    public clearDisplays() {
+        for (const temp of this.mDisplays) {
+            this.content.remove(this.mDisplays);
+        }
+        this.mDisplays.length = 0;
+    }
+    public destroyDisplays() {
         for (const temp of this.mDisplays) {
             temp.destroy();
         }
         this.mDisplays.length = 0;
-        this.content = null;
-        this.mDisplays = undefined;
         this.mainSprite = undefined;
+    }
+    public destroy() {
+        this.destroyDisplays();
         this.content = undefined;
-        this.data = null;
+        this.data = undefined;
     }
     public get width() {
         let width = 0;
@@ -67,5 +81,9 @@ export class DisplayEntity {
             }
         }
         return height;
+    }
+
+    public get count() {
+        return this.mDisplays.length;
     }
 }
