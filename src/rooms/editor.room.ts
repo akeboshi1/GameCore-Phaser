@@ -20,6 +20,7 @@ import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 import { EditorMossManager } from "./element/editor.moss.manager";
 import { DisplayObjectPool } from "./display-object.pool";
 import { EditorSkyBoxManager } from "./sky.box/editor.sky.box.manager";
+import { CamerasManager } from "./cameras/cameras.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -43,6 +44,9 @@ export class EditorRoom extends Room implements EditorRoomService {
     private mBrush: Brush = new Brush(this);
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
+    private mNimiSize: IPosition45Obj;
+    private mPointerDelta: Pos = null;
+
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
@@ -78,7 +82,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         cols *= 2;
         tileWidth /= 2;
         tileHeight /= 2;
-        this.mMiniSize = {
+        this.mNimiSize = {
             cols,
             rows,
             tileHeight,
@@ -106,12 +110,12 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.mCameraService.camera = camera;
         const zoom = this.world.scaleRatio;
         // mainCameras.setBounds(-200, -200, this.mSize.sceneWidth + 400, this.mSize.sceneHeight + 400);
-        // this.mCameraService.setBounds(
-        //     -camera.width >> 1,
-        //     -camera.height >> 1,
-        //     this.mSize.sceneWidth * zoom * 3 + camera.width,
-        //     this.mSize.sceneHeight * zoom * 3 + camera.height
-        // );
+        this.mCameraService.setBounds(
+            -camera.width >> 1,
+            -camera.height >> 1,
+            this.mSize.sceneWidth * zoom + camera.width,
+            this.mSize.sceneHeight * zoom + camera.height
+        );
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         this.mCameraService.centerCameas();
@@ -164,24 +168,25 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     transformToMini90(p: Pos): undefined | Pos {
-        if (!this.mMiniSize) {
+        if (!this.mNimiSize) {
             Logger.getInstance().error("position object is undefined");
             return;
         }
-        return Position45.transformTo90(p, this.mMiniSize);
+        return Position45.transformTo90(p, this.mNimiSize);
     }
 
     transformToMini45(p: Pos): undefined | Pos {
-        if (!this.mMiniSize) {
+        if (!this.mNimiSize) {
             Logger.getInstance().error("position object is undefined");
             return;
         }
-        return Position45.transformTo45(p, this.mMiniSize);
+        return Position45.transformTo45(p, this.mNimiSize);
     }
 
     removeSelected() {
         if (this.mSelectedElementEffect) {
             this.mSelectedElementEffect.remove();
+            this.mPointerDelta = null;
         }
     }
 
@@ -258,6 +263,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                         }
                     }
                     this.mSelectedElementEffect.selecting = false;
+                    this.mPointerDelta = null;
                 }
                 break;
             case BrushEnum.ERASER:
@@ -353,6 +359,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             if (this.mSelectedElementEffect) {
                 this.mSelectedElementEffect.destroy();
                 this.mSelectedElementEffect = null;
+                this.mPointerDelta = null;
             }
         }
 
@@ -430,6 +437,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (this.mSelectedElementEffect) {
             this.mSelectedElementEffect.destroy();
             this.mSelectedElementEffect = null;
+            this.mPointerDelta = null;
         }
         if (!this.editorSkyboxManager) {
             return;
@@ -527,13 +535,31 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!this.mouseFollow) {
             return;
         }
-        const pos = this.mMouseFollow.transitionGrid(
-            pointer.worldX / this.mScaleRatio,
-            pointer.worldY / this.mScaleRatio
+        if (!this.mSelectedElementEffect.display) {
+            return;
+        }
+
+        if (!this.mPointerDelta) {
+            const matrix = new Phaser.GameObjects.Components.TransformMatrix();
+            const parentMatrix = new Phaser.GameObjects.Components.TransformMatrix();
+            this.mSelectedElementEffect.display.getWorldTransformMatrix(matrix, parentMatrix);
+
+            this.mPointerDelta = new Pos(
+                matrix.tx - pointer.worldX,
+                matrix.ty - pointer.worldY
+            );
+        }
+        const elementWorldPos = new Pos(this.mPointerDelta.x + pointer.worldX, this.mPointerDelta.y + pointer.worldY);
+
+        const gridPos = this.mMouseFollow.transitionGrid(
+            elementWorldPos.x / this.mScaleRatio,
+            elementWorldPos.y / this.mScaleRatio
         );
-        if (pos) {
-            this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
-            this.mLayManager.depthSurfaceDirty = true;
+        if (gridPos) {
+            if (gridPos.x !== this.mSelectedElementEffect.display.x || gridPos.y !== this.mSelectedElementEffect.display.y) {
+                this.mSelectedElementEffect.setDisplayPos(gridPos.x, gridPos.y);
+                this.mLayManager.depthSurfaceDirty = true;
+            }
         }
     }
 
@@ -542,7 +568,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     get miniSize(): IPosition45Obj {
-        return this.mMiniSize;
+        return this.mNimiSize;
     }
 
     private get mouseFollow(): MouseFollow {
