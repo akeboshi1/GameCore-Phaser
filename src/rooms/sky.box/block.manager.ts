@@ -6,6 +6,7 @@ import { SkyBoxScene } from "../../scenes/sky.box";
 import { IScenery, Fit } from "./scenery";
 import { IRoomService, Room } from "../room";
 import { ICameraService } from "../cameras/cameras.manager";
+import { State } from "../state/state.group";
 
 export interface IBlockManager {
   readonly world: WorldService;
@@ -28,6 +29,7 @@ export class BlockManager implements IBlockManager {
   private mScenery: IScenery;
   private mRoom: IRoomService;
   private mCameras: ICameraService;
+  private mStateMap: Map<string, State>;
   constructor(scenery: IScenery, room: IRoomService) {
     this.mGrids = [];
     this.mScenery = scenery;
@@ -53,6 +55,9 @@ export class BlockManager implements IBlockManager {
   startPlay(scene: Phaser.Scene) {
     this.scene = scene;
     this.initBlock();
+    if (this.mStateMap) {
+      this.mStateMap.forEach((state) => this.handlerState(state));
+    }
   }
 
   check(time?: number, delta?: number) {
@@ -71,19 +76,6 @@ export class BlockManager implements IBlockManager {
     this.updateDepth();
   }
 
-  render() {
-    if (!this.mContainer) return;
-    if (this.mScenery.id === 79614431) {
-      this.mContainer.x++;
-      this.mContainer.y--;
-    }
-    // 云
-    if (this.mScenery.id === 1896802976) {
-      this.mContainer.x ++;
-      this.mContainer.y --;
-    }
-  }
-
   setSize(imageW: number, imageH: number, gridW?: number, gridH?: number) {
     if (gridW === undefined) gridW = imageW;
     if (gridH === undefined) gridH = imageH;
@@ -95,9 +87,9 @@ export class BlockManager implements IBlockManager {
 
   updatePosition() {
     const camera = this.scene.cameras.main;
-    const size = this.mRoom.roomSize;
-    const { width, height, offset } = this.mScenery;
-    camera.setPosition(((size.sceneWidth - width >> 1) + offset.x) * this.mWorld.scaleRatio, ((size.sceneHeight - height >> 1) + offset.y) * this.mWorld.scaleRatio);
+    const { offset } = this.mScenery;
+    const loc = this.fixPosition(offset);
+    camera.setPosition(loc.x, loc.y);
   }
 
   destroy() {
@@ -105,6 +97,35 @@ export class BlockManager implements IBlockManager {
       this.mWorld.game.scene.remove(this.mSceneName);
     }
     this.mGrids.length = 0;
+  }
+
+  setState(state: State) {
+    this.handlerState(state);
+  }
+
+  public playSkyBoxAnimation(packet: any) {
+    const { id, targets, duration, reset, resetDuration } = packet;
+    if (id === undefined || targets === undefined || duration === undefined) {
+      return;
+    }
+    if (!this.scene) {
+      return;
+    }
+    if (id !== this.mScenery.id) {
+      return;
+    }
+
+    const camera = this.scene.cameras.main;
+    this.move(camera, this.fixPosition(targets), duration, this.fixPosition(reset), resetDuration);
+  }
+
+  protected handlerState(state: State) {
+    const packet = state.packet;
+    for (const prop of packet) {
+      if (this.mScenery.id === prop.id) {
+        this.playSkyBoxAnimation(prop);
+      }
+    }
   }
 
   protected updateDepth() {
@@ -151,72 +172,31 @@ export class BlockManager implements IBlockManager {
           const block = new Block(this.scene, this.mUris[i][j]);
           block.setRectangle(i * this.mRows * this.mGridWidth, j * this.mRows * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
           this.mGrids.push(block);
-          const camera = this.scene.cameras.main;
-          const size = this.mRoom.roomSize;
-          const { width, height, offset } = this.mScenery;
-          if (this.mScenery.id === 1159516265) {
-            this.move(camera, {x: ((size.sceneWidth - width >> 1) + 1200) * this.mWorld.scaleRatio, y: ((size.sceneHeight - height >> 1) - 600) * this.world.scaleRatio}, 14000, {x: ((size.sceneWidth - width >> 1) - 1200) * this.mWorld.scaleRatio, y: ((size.sceneHeight - height >> 1) + 598) * this.mWorld.scaleRatio}, 28000);
-            // this.move(camera, {x: 1200, y: -600}, 14000, { x: -1200, y: 600 }, 14000 * 2);
-          }
-          if (this.mScenery.id === 250777944) {
-            this.move(camera, {x: ((size.sceneWidth - width >> 1) + 1200) * this.mWorld.scaleRatio, y: ((size.sceneHeight - height >> 1) - 600) * this.world.scaleRatio}, 28000, {x: ((size.sceneWidth - width >> 1) - 1200) * this.mWorld.scaleRatio, y: ((size.sceneHeight - height >> 1) + 598) * this.mWorld.scaleRatio});
-          }
-          if (this.mScenery.id === 1333316282) {
-            this.move(block, {x: this.mGridWidth * 0.5, y: -this.mGridHeight * 0.5}, 9000);
-          }
-          if (this.mScenery.id === 1209652299) {
-            this.move(block, {x: this.mGridWidth * 0.5, y: -this.mGridHeight * 0.5}, 8000);
-          }
         }
       }
     }
     this.mContainer.add(this.mGrids);
     this.initCamera();
-
-    // 远景
-    if (this.mScenery.id === 79614431) {
-      const camera = this.scene.cameras.main;
-      // camera.pan(-4000, 9000, 800000);
-      // this.scene.tweens.add({
-      //   targets: this.mGrids,
-      //   props: {
-      //     x: "+=450",
-      //     y: "-=900",
-      //   },
-      //   duration: 40000
-      // });
-    }
-    // // 云
-    if (this.mScenery.id === 1896802976) {
-      // this.scene.tweens.add({
-      //   targets: this.mGrids,
-      //   props: {
-      //     x: 450,
-      //     y: -900,
-      //   },
-      //   duration: 60000,
-      //   onComplete: (tween, target) => {
-      //     Logger.getInstance().log("tween complete: ", target);
-      //   }
-      // });
-    }
   }
 
-  protected move(targets, props, duration?: number, nextProps?: any, nextDuration?: number) {
-    // Logger.getInstance().log("duration: ", targets, duration);
+  protected move(targets, props, duration?: number, resetProps?: any, resetDuration?: number) {
+    // Logger.getInstance().log("duration: ", targets, duration)
     this.scene.tweens.add({
       targets,
       props,
       duration,
       onComplete: () => {
-        if (nextProps) {
-          targets.x = nextProps.x;
-          targets.y = nextProps.y;
+        let offset = null;
+        if (resetProps) {
+          targets.x = resetProps.x;
+          targets.y = resetProps.y;
         } else {
-          targets.x = -this.mRoom.roomSize.sceneWidth;
-          targets.y = this.mRoom.roomSize.sceneHeight;
+          const { x, y } = this.mScenery.offset;
+          offset = this.fixPosition({ x, y });
+          targets.x = offset.x;
+          targets.y = offset.y;
         }
-        this.move(targets, props, nextDuration || duration, nextProps, nextDuration);
+        this.move(targets, props, resetDuration || duration, resetProps, resetDuration);
       }
     });
   }
@@ -251,6 +231,33 @@ export class BlockManager implements IBlockManager {
 
   get scenery(): IScenery {
     return this.mScenery;
+  }
+
+  protected fixPosition(props: any) {
+    if (!props) return;
+    const offset = this.offset;
+    if (props.x !== undefined) {
+      props.x = (offset.x + props.x) * this.mWorld.scaleRatio;
+    }
+    if (props.y !== undefined) {
+      props.y = (offset.y + props.y) * this.mWorld.scaleRatio;
+    }
+    return props;
+  }
+
+  protected get offset(): { x: number, y: number} {
+    const os = {x: 0, y: 0};
+    let x = 0;
+    let y = 0;
+    if (this.mScenery) {
+      if (this.mScenery.fit === Fit.Center) {
+        const size = this.mRoom.roomSize;
+        const { width, height } = this.mScenery;
+        x = size.sceneWidth - width >> 1;
+        y = size.sceneHeight - height >> 1;
+      }
+    }
+    return { x, y };
   }
 }
 

@@ -16,7 +16,6 @@ import { Pos } from "../utils/pos";
 import { LoadingScene } from "../scenes/loading";
 import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
-import { Map } from "./map/map";
 import { Element, IElement } from "./element/element";
 import { IBlockObject } from "./cameras/block.object";
 import { Size } from "../utils/size";
@@ -32,6 +31,7 @@ import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { GroupManager } from "./group/GroupManager";
 import { FrameManager } from "./element/frame.manager";
 import { IScenery } from "./sky.box/scenery";
+import { State } from "./state/state.group";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -47,7 +47,6 @@ export interface IRoomService {
     readonly miniSize: IPosition45Obj;
     readonly blocks: ViewblockService;
     readonly world: WorldService;
-    readonly map?: Map;
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
 
@@ -103,7 +102,7 @@ export interface IRoomService {
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     protected mWorld: WorldService;
-    protected mMap: Map;
+    // protected mMap: Map;
     protected mID: number;
     protected mTerrainManager: TerrainManager;
     protected mElementManager: ElementManager;
@@ -120,7 +119,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
-    protected mMods: string[];
+    protected mStateMap: Map<string, State>;
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mFallEffectContainer: FallEffectContainer;
@@ -173,9 +172,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
-        if (this.mMap) this.mMap.destroy();
-        this.mMap = new Map(this.mWorld);
-        this.mMap.setMapInfo(data);
+        // if (this.mMap) this.mMap.destroy();
+        // this.mMap = new Map(this.mWorld);
+        // this.mMap.setMapInfo(data);
         this.world.showLoading().then(() => {
             this.completeLoad();
         });
@@ -248,12 +247,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);
 
-        // if (this.mWorld.getConfig().game_id === "5e719a0a68196e416ecf7aad") {
-        //     this.mBackgrounds = [];
-        //     this.mBackgrounds.push(new BackgroundManager(this, "close", this.mCameraService));
-        //     // const close = new BackgroundManager(this, "close", this.mCameraService);
-        // }
-        // this.addSkyBox();
         // const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
         // this.world.playSound({
         //     urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
@@ -424,6 +417,24 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return { width: w, height: h };
     }
 
+    public setState(states: op_def.IState[]) {
+        if (!this.mStateMap) this.mStateMap = new Map();
+        let state: State;
+        for (const sta of states) {
+            switch(sta.execCode) {
+                case op_def.ExecCode.EXEC_CODE_ADD:
+                case op_def.ExecCode.EXEC_CODE_UPDATE:
+                    state = new State(sta);
+                    this.mStateMap.set(sta.name, new State(sta));
+                    this.handlerState(state);
+                    break;
+                case op_def.ExecCode.EXEC_CODE_DELETE:
+                    this.mStateMap.delete(sta.name);
+                    break;
+            }
+        }
+    }
+
     public clear() {
         if (this.mLayManager) this.mLayManager.destroy();
         if (this.mTerrainManager) this.mTerrainManager.destroy();
@@ -435,6 +446,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mActorData) {
             this.mActorData = null;
         }
+        if (this.mStateMap) this.mStateMap = null;
         if (this.mCameraService) this.mCameraService.destroy();
     }
 
@@ -488,6 +500,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.removePointerMoveHandler();
     }
 
+    protected handlerState(state: State) {
+        switch(state.name) {
+            case "skyBoxAnimation":
+                this.mSkyboxManager.setState(state);
+                break;
+        }
+    }
+
     get scene(): Phaser.Scene | undefined {
         return this.mScene || undefined;
     }
@@ -502,10 +522,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get playerManager(): PlayerManager {
         return this.mPlayerManager || undefined;
-    }
-
-    get map(): Map {
-        return this.mMap;
     }
 
     get layerManager(): LayerManager {
@@ -558,10 +574,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
     }
 
-    get mods(): string[] {
-        return this.mMods;
-    }
-
     private onPressElementHandler(pointer, gameObject) {
         if (!gameObject || !gameObject.parentContainer) {
             return;
@@ -583,18 +595,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onEnableEditModeHandler(packet: PBpacket) {
         this.mEnableEdit = true;
-        // if (this.world) {
-        //     this.world.emitter.emit(MessageType.ADD_ICON_TO_TOP, {
-        //         key: "Turn_Btn_Top",
-        //         name: "EnterDecorate",
-        //         bgResKey: "baseView",
-        //         bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
-        //         iconResKey: "",
-        //         iconTexture: "btnGroup_top_expand.png",
-        //         pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json",
-        //         scale: 1
-        //     });
-        // }
     }
 
     private onShowMapTitle(packet: PBpacket) {
@@ -629,11 +629,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         fall.show(status);
         fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
         this.addToSceneUI(fall);
-
-        // test
-        // const content = new op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE();
-        // content.duration = 2000;
-        // this.playerManager.actor.showInteractionBubble(content);
     }
 
     private onMovePathHandler(packet: PBpacket) {
@@ -658,7 +653,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onSyncStateHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
-        const owner = content.owner;
+        const group = content.stateGroup;
+        for (const states of group) {
+            switch (states.owner.type) {
+                case op_def.NodeType.SceneNodeType:
+                    this.setState(states.state);
+                    break;
+            }
+        }
     }
 
     private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {
