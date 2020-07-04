@@ -180,25 +180,29 @@ export class BlockManager implements IBlockManager {
   }
 
   protected move(targets, props, duration?: number, resetProps?: any, resetDuration?: number) {
-    // Logger.getInstance().log("duration: ", targets, duration)
-    this.scene.tweens.add({
+    const tween = this.scene.tweens.add({
       targets,
       props,
       duration,
-      onComplete: () => {
-        let offset = null;
+      loop: -1,
+    });
+    if (resetProps) {
+      tween.once("loop", () => {
         if (resetProps) {
           targets.x = resetProps.x;
           targets.y = resetProps.y;
-        } else {
-          const { x, y } = this.mScenery.offset;
-          offset = this.fixPosition({ x, y });
-          targets.x = offset.x;
-          targets.y = offset.y;
         }
-        this.move(targets, props, resetDuration || duration, resetProps, resetDuration);
-      }
-    });
+        // else {
+        //   const { x, y } = this.mScenery.offset;
+        //   offset = this.fixPosition({ x, y });
+        //   targets.x = offset.x;
+        //   targets.y = offset.y;
+        // }
+        tween.stop();
+        this.move(targets, props, resetDuration);
+        // tween.duration = resetDuration;
+      });
+    }
   }
 
   protected initCamera() {
