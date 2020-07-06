@@ -43,7 +43,7 @@ export class PicaChatPanel extends BasePanel {
         } else {
             this.mShow = true;
         }
-        // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width * 2, this.height), Phaser.Geom.Rectangle.Contains);
+        //  this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width * 2, this.height), Phaser.Geom.Rectangle.Contains);
         this.addListen();
         this.checkUpdateActive();
     }
@@ -119,7 +119,7 @@ export class PicaChatPanel extends BasePanel {
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
     }
 
-    updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+    updateUIState(active?: op_pkt_def.IPKT_UI) {
         if (!this.mInitialized) {
             return;
         }
@@ -198,7 +198,7 @@ export class PicaChatPanel extends BasePanel {
         this.mTextArea = new TextArea(this.mScene, {
             x: width / 2 + 4 * this.dpr * zoom,
             y: 160 * this.dpr * zoom,
-            // background: (<any> this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, 0.2),
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, 0.2),
             textWidth: width - 4 * this.dpr * zoom,
             textHeight: this.MAX_HEIGHT,
             text: this.mOutputText,
@@ -265,7 +265,7 @@ export class PicaChatPanel extends BasePanel {
         const arr = this.mWorld.uiManager.getActiveUIData("PicaChat");
         if (arr) {
             for (const data of arr) {
-                this.updateActiveUI(data);
+                this.updateUIState(data);
             }
         }
 

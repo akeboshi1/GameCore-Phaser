@@ -55,22 +55,20 @@ export class PicaChatMediator extends BaseMediator {
         super.destroy();
     }
 
+    hide() {
+        super.hide();
+        this.mView.removeListen();
+        this.layerManager.removeToUILayer(this.mView);
+    }
+
     private onShowNavigateHandler() {
         if (!this.world) {
             return;
         }
         const uiManager = this.world.uiManager;
         uiManager.showMed("PicaNavigate");
-        this.mView.hide();
-        this.mView.removeListen();
-        this.layerManager.removeToUILayer(this.mView);
-        // const mediator = uiManager.getMediator(PicaNavigateMediator.name);
-        // if (mediator) {
-        //     mediator.show();
-        //     this.mView.hide();
-        //     this.mView.removeListen();
-        //     this.layerManager.removeToUILayer(this.mView);
-        // }
+        uiManager.hideMed("PicHandheld");
+        this.hide();
     }
 
     private onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {

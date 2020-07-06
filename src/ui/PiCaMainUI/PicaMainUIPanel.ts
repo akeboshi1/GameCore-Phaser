@@ -106,7 +106,7 @@ export class PicaMainUIPanel extends BasePanel {
         }
     }
 
-    updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+    updateUIState(active?: op_pkt_def.IPKT_UI) {
         if (!this.mInitialized) {
             return;
         }
@@ -226,7 +226,7 @@ export class PicaMainUIPanel extends BasePanel {
         const arr = this.mWorld.uiManager.getActiveUIData("PicaMainUI");
         if (arr) {
             for (const data of arr) {
-                this.updateActiveUI(data);
+                this.updateUIState(data);
             }
         }
 

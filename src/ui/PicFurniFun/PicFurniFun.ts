@@ -15,7 +15,7 @@ export class PicFurniFun extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            //    this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT, this.onRetOpenPanel);
         }
     }
 
@@ -39,8 +39,16 @@ export class PicFurniFun extends PacketHandler {
         this.mEvent.destroy();
     }
 
-    private handleCharacterChat(packet: PBpacket) {
-        this.mEvent.emit("chat", packet.content);
+    queryUnlockElement(ids: number[]) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UNLOCK_ELEMENT);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UNLOCK_ELEMENT = packet.content;
+        content.ids = ids;
+        this.connection.send(packet);
+    }
+
+    private onRetOpenPanel(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT = packet.content;
+        this.mEvent.emit("openview", content);
     }
 
     get connection(): ConnectionService {
