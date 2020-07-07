@@ -26,20 +26,20 @@ export class FramesDisplay extends DisplayObject {
     public load(displayInfo: IFramesModel, field: DisplayField = DisplayField.STAGE) {
         const data = displayInfo;
         if (!data || !data.gene) return;
-        let entity = this.getDisplayEntity(field, data, "id");
+        let entity = this.getDisplayEntity(field, data.id);
         if (!entity) {
             const index = this.getFieldIndex(field);
             entity = new DisplayEntity(this, index);
             this.addFieldChild(entity, field);
         }
-        if (entity.isLoaded) return;
         if (field === DisplayField.STAGE) {
-            this.setData("id", data.id);
+            this.setData("id", data);
             entity.setData(data, "id");
             this.mainEntity = entity;
         } else {
             entity.setData(data);
         }
+        if (entity.isLoaded) return;
         if (this.scene.textures.exists(data.gene)) {
             this.onLoadCompleted(field, data);
         } else {
@@ -54,7 +54,7 @@ export class FramesDisplay extends DisplayObject {
                 const rootUrl = (field === DisplayField.STAGE ? Url.OSD_PATH : Url.RES_PATH);
                 this.scene.load.atlas(data.gene, rootUrl + display.texturePath, rootUrl + display.dataPath);
                 const callback = (key: string) => {
-                    this.onAddTextureHandler(key, field, data, callback);
+                    this.onAddTextureHandler(key, field, data.id, callback);
                 };
                 this.scene.textures.on(Phaser.Textures.Events.ADD, callback, this);
                 this.scene.load.start();
@@ -63,10 +63,10 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    public play(animation: AnimationData, field = DisplayField.STAGE, data?: IFramesModel) {
+    public play(animation: AnimationData, field = DisplayField.STAGE, id?: number) {
         if (!animation) return;
-        const entity = this.getDisplayEntity(field, data);
-        data = entity.data;
+        const entity = this.getDisplayEntity(field, id);
+        const data = entity.data;
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
@@ -235,7 +235,6 @@ export class FramesDisplay extends DisplayObject {
             } else {
                 display = this.scene.make.image(undefined, false).setTexture(key, temp.frameName[0]);
             }
-
             display.scaleX = flip ? -1 : 1;
             let x = temp.offsetLoc.x;
             const y = temp.offsetLoc.y;
@@ -285,7 +284,10 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    private onAddTextureHandler(key: string, field: DisplayField, data: IFramesModel, callback: Function) {
+    private onAddTextureHandler(key: string, field: DisplayField, id: number, callback: Function) {
+        const entity = this.getDisplayEntity(field, id);
+        if (!entity) return;
+        const data = entity.data;
         if (data && data.gene === key) {
             this.scene.textures.off(Phaser.Textures.Events.ADD, callback, this);
             this.onLoadCompleted(field, data);
@@ -304,15 +306,12 @@ export class FramesDisplay extends DisplayObject {
         if (!data) {
             return;
         }
-        if (data.gene === "3b353a5c045b737d7a5fdc3210b81a2ab31d35c1") {
-            Logger.getInstance().log("3b353a5c045b737d7a5fdc3210b81a2ab31d35c1");
-        }
         field = !field ? DisplayField.STAGE : field;
         if (this.scene.textures.exists(data.gene)) {
             let key = "initialized";
             if (field !== DisplayField.STAGE)
                 key = data.gene;
-            this.emit(key, this, field, data);
+            this.emit(key, this, field, data.id);
         }
     }
 
@@ -389,16 +388,17 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    private getDisplayEntity(field: DisplayField, data?: IFramesModel, property?: string) {
+    private getDisplayEntity(field: DisplayField, id?: number) {
         let entity: DisplayEntity;
         if (this.mDisplays.has(field)) {
             const temps = this.mDisplays.get(field);
-            if (!data) {
+            if (id === undefined) {
                 entity = temps[temps.length - 1];
             } else {
                 for (const item of temps) {
-                    if ((property !== undefined && item.checkData(data, property)) || item.data === data) {
+                    if (id === item.data.id) {
                         entity = item;
+                        break;
                     }
                 }
             }

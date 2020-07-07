@@ -1,10 +1,10 @@
-import { InteractionBubble } from "./interactionbubble";
 import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
 import { BaseUI } from "../../../lib/rexui/lib/ui/baseUI/BaseUI";
+import { InteractionBubbleCell } from "./InteractionBubbleCell";
 export class InteractionBubbleContainer extends BaseUI {
     public id: number;
-    private mBubble: InteractionBubble;
+    private mBubble: InteractionBubbleCell;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
     }
@@ -34,7 +34,7 @@ export class InteractionBubbleContainer extends BaseUI {
         const resUrl = content.display.texturePath;
         const jsonUrl = content.display.dataPath;
         if (!this.mBubble) {
-            this.mBubble = new InteractionBubble(this.scene, this.dpr);
+            this.mBubble = new InteractionBubbleCell(this.scene, this.dpr);
             this.mBubble.load(resName, resUrl, jsonUrl);
             this.add(this.mBubble);
         }

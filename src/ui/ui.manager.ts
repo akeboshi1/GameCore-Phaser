@@ -21,7 +21,6 @@ import { ActivityMediator } from "./Activity/ActivityMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
 import { MineCarMediator } from "./MineCar/MineCarMediator";
-import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
 import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
@@ -33,6 +32,7 @@ import { MarketMediator } from "./Market/MarketMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 import { PicFurniFunMediator } from "./PicFurniFun/PicFurniFunMediator";
 import { PicHandheldMediator } from "./PicHandheld/PicHandheldMediator";
+import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -60,7 +60,6 @@ export class UiManager extends PacketHandler {
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
     private mInputTextFactory: InputTextFactory;
-    private interBubbleMgr: InteractiveBubbleManager;
     private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
     private mStackList: any[] = [];// 记录面板打开关闭先后顺序
     private isShowMainUI: boolean = false;
@@ -75,8 +74,6 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
-        this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
-
     }
 
     public getInputTextFactory(): InputTextFactory {
@@ -117,7 +114,6 @@ export class UiManager extends PacketHandler {
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
-        this.interBubbleMgr.setScene(scene);
         if (this.mCacheUI) {
             this.mCacheUI();
             this.mCacheUI = undefined;
@@ -152,6 +148,7 @@ export class UiManager extends PacketHandler {
                 this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MarketMediator.name, new MarketMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(PicFurniFunMediator.name, new PicFurniFunMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(InteractiveBubbleMediator.name, new InteractiveBubbleMediator(this.mUILayerManager, scene, this.worldService));
             }
             // this.mMedMap.set(UBaseMediatorType.MainUBaseMediator, new MainUBaseMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
