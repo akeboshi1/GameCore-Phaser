@@ -32,6 +32,7 @@ import { GroupManager } from "./group/GroupManager";
 import { FrameManager } from "./element/frame.manager";
 import { IScenery } from "./sky.box/scenery";
 import { State } from "./state/state.group";
+import { EffectManager } from "./effect/effect.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -112,6 +113,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mGroupManager: GroupManager;
     protected mFrameManager: FrameManager;
     protected mSkyboxManager: SkyBoxManager;
+    protected mEffectManager: EffectManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -218,6 +220,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mGroupManager = new GroupManager(this);
         this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
+        this.mEffectManager = new EffectManager(this);
         if (this.scene) {
             const camera = this.scene.cameras.main;
             this.mCameraService.camera = camera;
@@ -374,15 +377,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public update(time: number, delta: number) {
-        // 角色管理器和地块，物件管理器中在登陆时，add_sprite完成后，把交互管理器的交互开放
-        // if (this.mPlayerManager.hasAddComplete && this.mTerainManager.hasAddComplete && this.mElementManager.hasAddComplete) {
-        //   if (this.mWorld.inputManager.enable === false && this.world.game.loop.actualFps >= 20) {
-        //     this.mWorld.inputManager.enable = true;
-        //   }
-        // }
         this.updateClock(time, delta);
         this.mBlocks.update(time, delta);
-        // this.startCheckBlock();
         if (this.layerManager) this.layerManager.update(time, delta);
         if (this.elementManager) this.elementManager.update(time, delta);
         if (this.mFrameManager) this.frameManager.update(time, delta);
@@ -448,6 +444,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         if (this.mStateMap) this.mStateMap = null;
         if (this.mCameraService) this.mCameraService.destroy();
+        if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
     public destroy() {
@@ -538,6 +535,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get cameraService(): ICameraService {
         return this.mCameraService || undefined;
+    }
+
+    get effectManager(): EffectManager {
+        return this.mEffectManager;
     }
 
     get id(): number {
@@ -658,6 +659,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             switch (states.owner.type) {
                 case op_def.NodeType.SceneNodeType:
                     this.setState(states.state);
+                    break;
+                case op_def.NodeType.ElementNodeType:
+                case op_def.NodeType.ForkType:
+                    this.elementManager.setState(states);
                     break;
             }
         }

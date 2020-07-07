@@ -2,7 +2,7 @@ import { IElementManager, ElementManager } from "./element.manager";
 import { IFramesModel } from "../display/frames.model";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
-import { IRoomService } from "../room";
+import { IRoomService, Room } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel } from "../display/dragonbones.model";
 import { op_client, op_def } from "pixelpai_proto";
@@ -15,6 +15,8 @@ import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
 import { DisplayObject, DisplayField } from "../display/display.object";
 import { AI } from "../action/AI";
+import { Buffer } from "buffer/";
+
 export enum PlayerState {
     IDLE = "idle",
     WALK = "walk",
@@ -505,9 +507,7 @@ export class Element extends BlockObject implements IElement {
         if (displayInfo&&this.mDisplay) {
             const key = displayInfo.gene;
             this.mDisplay.once(key, this.onDisplayReady, this);
-            this.mDisplay.load(displayInfo, field);
-            Logger.getInstance().log(JSON.stringify(this.mDisplayInfo));
-            Logger.getInstance().log(JSON.stringify(this.mDisplayInfo["animations"].get("idle")));
+            this.mDisplay.load(displayInfo, DisplayField.Effect);
         }
     }
 
@@ -579,26 +579,19 @@ export class Element extends BlockObject implements IElement {
         return this;
     }
 
-    // public setConcomitant(ele: Element, isFollow: boolean = true) {
-    //     if (!this.concomitants) this.concomitants = [];
-    //     if (this.concomitants.indexOf(ele) !== -1) {
-    //         this.concomitants.push(ele);
-    //         if (isFollow)
-    //             this.mDisplay.add(ele.mDisplay);
-    //     }
-
-    // }
-
-    // public removeConcomitant(ele: Element, destroy: boolean = true) {
-    //     if (this.concomitants) {
-    //         const index = this.concomitants.indexOf(ele);
-    //         if (index !== -1) {
-    //             this.concomitants.slice(index, 1);
-    //             if (destroy)
-    //                 ele.destroy();
-    //         }
-    //     }
-    // }
+    public setState(states: op_def.IState[]) {
+        for (const state of states) {
+            switch(state.execCode) {
+                case op_def.ExecCode.EXEC_CODE_ADD:
+                case op_def.ExecCode.EXEC_CODE_UPDATE:
+                    this.updateStateHandler(state);
+                    break;
+                case op_def.ExecCode.EXEC_CODE_DELETE:
+                    this.removeStateHandler(state);
+                    break;
+            }
+        }
+    }
 
     public getDepth() {
         let depth = 0;
@@ -895,5 +888,26 @@ export class Element extends BlockObject implements IElement {
         }
 
         this.mModel.mountSprites = mounts;
+    }
+
+    protected updateStateHandler(state: op_def.IState) {
+        switch(state.name) {
+            case "effect":
+                const buf = Buffer.from(state.packet);
+                const id = buf.readDoubleBE(0);
+                const effect = (<Room> this.roomService).effectManager.get(id);
+                if (effect.displayInfo) {
+                    this.showEffected(<IFramesModel> effect.displayInfo, DisplayField.FRONTEND);
+                }
+                break;
+        }
+    }
+
+    protected removeStateHandler(state: op_def.IState) {
+        switch(state.name) {
+            case "effect":
+                // remove
+                break;
+        }
     }
 }

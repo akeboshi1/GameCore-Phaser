@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element, IElement, InputEnable } from "./element";
-import { IRoomService } from "../room";
+import { IRoomService, Room } from "../room";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { IElementStorage } from "../../game/element.storage";
@@ -99,6 +99,21 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public setState(state: op_client.IStateGroup) {
+        if (!state) {
+            return;
+        }
+        const owner = state.owner;
+        if (!owner || owner.type !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+        const element = this.get(owner.id);
+        if (!element) {
+            return;
+        }
+        element.setState(state.state);
+    }
+
     public destroy() {
         if (this.connection) {
             this.connection.removePacketListener(this);
@@ -191,78 +206,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // if (!ele) ele = new Element(sprite, this);
         if (addMap) this.addMap(sprite);
         this.mElements.set(ele.id || 0, ele);
-        if (ele.model.id === 831991974) {
-            ele.showEffected(this.getTestEffect(), DisplayField.FRONTEND);
-        }
         return ele;
     }
 
-    protected getTestEffect() {
-        const ewew: any = { node: {}, baseLoc: "", originPoint: [0, 0] };
-        const anima = new Animation(ewew);
-        const animation = {
-            "mID": 1700993448,
-            "mName": "idle",
-            "mFrameName": [],
-            "mLoop": true,
-            "mFrameRate": 10,
-            "mBaseLoc": {
-                "type": 3,
-                "x": 0,
-                "y": 0
-            },
-            "mOriginPoint": {
-                "type": 3,
-                "x": 1,
-                "y": 1
-            },
-            "mLayer": [
-                {
-                    "frameName": [
-                        "01",
-                        "02",
-                        "03",
-                        "04",
-                        "05",
-                        "06"
-                    ],
-                    "offsetLoc": {
-                        "x": -15,
-                        "y": -54
-                    },
-                    "frameVisible": [
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true
-                    ]
-                }
-            ],
-            "mMountLayer": null
-        };
-
-        for (const key in animation) {
-            if (animation.hasOwnProperty(key)) {
-                const element = animation[key];
-                anima[key] = element;
-            }
-        }
-        const data = new FramesModel({
-            animations: {
-                defaultAnimationName: "idle",
-                display: {
-                    "dataPath": "test/effect1/spritesheet (4).json",
-                    "texturePath": "test/effect1/spritesheet (4).png"
-                },
-                animationData: [anima],
-            },
-        });
-        data["mGen"] = "3b353a5c045b737d7a5fdc3210b81a2ab31d3555";
-
-        return data;
-    }
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
     }
@@ -336,14 +282,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     element.model = new Sprite(sprite);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     element.updateModel(sprite);
-                    if (element.model.id === 831991974) {
-                        element.showEffected(this.getTestEffect(), DisplayField.FRONTEND);
-                    }
-                    element.updateModel(sprite);
                 }
-                // const sp = new Sprite(sprite, content.nodeType);
-                // element.model = sp;
-                // this.addMap(sp);
             }
         }
     }
