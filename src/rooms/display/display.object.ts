@@ -16,7 +16,8 @@ export enum DisplayField {
     BACKEND = 1,
     STAGE,
     FRONTEND,
-    FLAG
+    FLAG,
+    Effect
 }
 
 export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {

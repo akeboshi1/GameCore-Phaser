@@ -10,14 +10,17 @@ export class DisplayEntity {
         this.content = content;
         this.index = (index !== undefined ? index : this.content.list.length);
     }
+
     public setIndex(index: number) {
         this.index = index;
     }
+
     public setData(data: any, key?: string) {
         this.data = data;
         if (key)
             this.content.setData(key, data);
     }
+
     public add(sprite: any, index?: number) {
         const tempIndex = (index === undefined ? this.index + this.mDisplays.length : this.index + index);
         this.mDisplays.push(sprite);
@@ -40,11 +43,13 @@ export class DisplayEntity {
             this.content.remove(display);
         }
     }
+
     public checkData(data: IFramesModel, property: string = "gene") {
         if (data[property] === undefined) return false;
         if (this.data[property] === data[property]) return true;
         return false;
     }
+
     public clearDisplays() {
         for (const temp of this.mDisplays) {
             this.content.remove(this.mDisplays);
@@ -58,11 +63,13 @@ export class DisplayEntity {
         this.mDisplays.length = 0;
         this.mainSprite = undefined;
     }
+
     public destroy() {
         this.destroyDisplays();
         this.content = undefined;
         this.data = undefined;
     }
+
     public get width() {
         let width = 0;
         if (this.mDisplays) {

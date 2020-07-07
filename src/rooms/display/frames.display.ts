@@ -4,14 +4,7 @@ import { DisplayObject, DisplayField } from "./display.object";
 import { IAnimationData } from "./animation";
 import { Url } from "../../utils/resUtil";
 import { AnimationData } from "../element/sprite";
-import { Handler } from "../../Handler/Handler";
 import { DisplayEntity } from "./display.entity";
-
-// export enum DisplayField {
-//     BACKEND = 1,
-//     STAGE,
-//     FRONTEND,
-// }
 
 /**
  * 序列帧显示对象
@@ -59,6 +52,17 @@ export class FramesDisplay extends DisplayObject {
                 this.scene.textures.on(Phaser.Textures.Events.ADD, callback, this);
                 this.scene.load.start();
             }
+
+        }
+    }
+
+    public loadEffect(display: IFramesModel) {
+        if (this.scene.textures.exists(display.gene)) {
+            const layer = display.getAnimations("idle").layer;
+            if (layer.length > 1) {
+
+            }
+        } else {
 
         }
     }
@@ -303,9 +307,6 @@ export class FramesDisplay extends DisplayObject {
     private onLoadCompleted(field: DisplayField, data: IFramesModel) {
         if (!data) {
             return;
-        }
-        if (data.gene === "3b353a5c045b737d7a5fdc3210b81a2ab31d35c1") {
-            Logger.getInstance().log("3b353a5c045b737d7a5fdc3210b81a2ab31d35c1");
         }
         field = !field ? DisplayField.STAGE : field;
         if (this.scene.textures.exists(data.gene)) {
