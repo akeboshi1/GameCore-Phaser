@@ -20,6 +20,11 @@ export class PicFurniFunMediator extends BaseMediator {
         super();
         this.world = worldService;
         this.scene = this.layerManager.scene;
+        if (!this.picFurni) {
+            this.picFurni = new PicFurniFun(this.world);
+            this.picFurni.register();
+            this.picFurni.on("openview", this.onOpenView, this);
+        }
     }
 
     show() {
@@ -27,17 +32,13 @@ export class PicFurniFunMediator extends BaseMediator {
             this.layerManager.addToUILayer(this.mView);
             return;
         }
-        if (!this.picFurni) {
-            this.picFurni = new PicFurniFun(this.world);
-            this.picFurni.register();
-        }
 
         if (!this.mView) {
             this.mView = new PicFurniFunPanel(this.scene, this.world);
             this.mView.on("close", this.onCloseHandler, this);
+            this.mView.on("queryunlock", this.queryUnlockElement, this);
         }
-
-        this.mView.show();
+        this.mView.show(this.mParam);
         this.layerManager.addToUILayer(this.mView);
     }
 
@@ -49,26 +50,18 @@ export class PicFurniFunMediator extends BaseMediator {
         if (this.picFurni) {
             this.picFurni.destroy();
         }
-        if (this.mView) {
-            this.mView.destroy();
-            this.mView = undefined;
-        }
         super.destroy();
     }
 
     private onCloseHandler() {
-        this.destroy();
+        super.destroy();
     }
 
-    private updatepicFurniHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST) {
-        if (!this.mView) {
-            return;
-        }
+    private onOpenView(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT) {
+        this.setParam(content);
+        this.show();
     }
-
-    private updateMypicFurniHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
-        if (!this.mView) {
-            return;
-        }
+    private queryUnlockElement(ids: number[]) {
+        this.picFurni.queryUnlockElement(ids);
     }
 }

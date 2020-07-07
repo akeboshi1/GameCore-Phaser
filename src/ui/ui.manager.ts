@@ -21,7 +21,6 @@ import { ActivityMediator } from "./Activity/ActivityMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
 import { MineCarMediator } from "./MineCar/MineCarMediator";
-import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
 import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
@@ -31,6 +30,9 @@ import { MineSettleMediator } from "./MineSettle/MineSettleMediator";
 import { EquipUpgradeMediator } from "./EquipUpgrade/EquipUpgradeMediator";
 import { MarketMediator } from "./Market/MarketMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
+import { PicFurniFunMediator } from "./PicFurniFun/PicFurniFunMediator";
+import { PicHandheldMediator } from "./PicHandheld/PicHandheldMediator";
+import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -58,7 +60,6 @@ export class UiManager extends PacketHandler {
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
     private mInputTextFactory: InputTextFactory;
-    private interBubbleMgr: InteractiveBubbleManager;
     private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
     private mStackList: any[] = [];// 记录面板打开关闭先后顺序
     private isShowMainUI: boolean = false;
@@ -70,11 +71,9 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_MARKET, this.onEnableMarket);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onActiveUIHandler);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
-        this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
-
     }
 
     public getInputTextFactory(): InputTextFactory {
@@ -115,7 +114,6 @@ export class UiManager extends PacketHandler {
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
-        this.interBubbleMgr.setScene(scene);
         if (this.mCacheUI) {
             this.mCacheUI();
             this.mCacheUI = undefined;
@@ -142,12 +140,15 @@ export class UiManager extends PacketHandler {
                 this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(PicHandheldMediator.name, new PicHandheldMediator(this.mUILayerManager, scene, this.worldService));
                 // this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(ComposeMediator.name, new ComposeMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
                 this.mMedMap.set(MarketMediator.name, new MarketMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(PicFurniFunMediator.name, new PicFurniFunMediator(this.mUILayerManager, scene, this.worldService));
+                this.mMedMap.set(InteractiveBubbleMediator.name, new InteractiveBubbleMediator(this.mUILayerManager, scene, this.worldService));
             }
             // this.mMedMap.set(UBaseMediatorType.MainUBaseMediator, new MainUBaseMediator(this.worldService, scene));
             this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
@@ -344,9 +345,7 @@ export class UiManager extends PacketHandler {
             this.mCache.push(param);
             return;
         }
-        if (type === "MessageBox") {
-            type = "PicaMessageBox";
-        }
+        type = this.getPanelNameByAlias(type);
         const className: string = type + "Mediator";
         let mediator: BaseMediator = this.mMedMap.get(className);
         if (!mediator) {
@@ -380,7 +379,29 @@ export class UiManager extends PacketHandler {
         // this.mStackList.unshift(className);
         // if (this.mStackList.length > 2) this.mStackList.splice(this.mStackList.length - 1, 1);
     }
-
+    public hideMed(type: string) {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const medName: string = `${type}Mediator`;
+        const mediator: BaseMediator = this.mMedMap.get(medName);
+        if (!mediator) {
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        this.checkUIState(medName, true);
+        mediator.hide();
+    }
+    public showExistMed(type: string, extendName = "Mediator") {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const className: string = type + extendName;
+        const mediator: BaseMediator = this.mMedMap.get(className);
+        if (mediator) mediator.show();
+    }
     private handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
         this.showMed(ui.name, ui);
@@ -503,34 +524,6 @@ export class UiManager extends PacketHandler {
         mediator.update(param);
     }
 
-    private hideMed(type: string) {
-        if (!this.mMedMap) {
-            return;
-        }
-        if (type === "MessageBox") {
-            type = "PicaMessageBox";
-        }
-        const medName: string = `${type}Mediator`;
-        const mediator: BaseMediator = this.mMedMap.get(medName);
-        if (!mediator) {
-            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-            return;
-        }
-        // if (!this.worldService.game.device.os.desktop && medName === "RankMediator") {
-        //     const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
-        //     if (med) {
-        //         if (!med.isShow()) {
-        //             med.preRefreshBtn(medName);
-        //         } else {
-        //             med.refreshBtn(medName, true);
-        //         }
-        //     }
-        // }
-        // if (!mediator.isShow()) return;
-        this.checkUIState(medName, true);
-        mediator.hide();
-    }
-
     private showAll() {
         if (!this.mMedMap) {
             return;
@@ -554,7 +547,7 @@ export class UiManager extends PacketHandler {
         this.mMedMap.forEach((med: BaseMediator) => med.hide());
     }
 
-    private onActiveUIHandler(packge: PBpacket) {
+    private onUIStateHandler(packge: PBpacket) {
         this.mAtiveUIData = packge.content;
         if (this.mAtiveUIData && this.mMedMap) {
             this.updateUIState(this.mAtiveUIData);
@@ -563,17 +556,23 @@ export class UiManager extends PacketHandler {
 
     private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
-            const panelName = this.getPanelNameByStateTag(ui.name);
+            const tag = ui.name;
+            const paneltags = tag.split(".");
+            const panelName = this.getPanelNameByStateTag(paneltags[0]);
             if (panelName) {
                 const mediator: BaseMediator = this.mMedMap.get(panelName + "Mediator");
                 if (mediator) {
-                    if (ui.visible) {
-                        if (mediator && !mediator.isShow()) {
+                    if (paneltags.length === 1) {
+                        if (ui.visible || ui.visible === undefined) {
                             this.showMed(panelName);
-                            mediator.getView().updateActiveUI(ui);
+                        } else {
+                            this.hideMed(panelName);
                         }
-                    } else
-                        this.hideMed(panelName);
+                    } else {
+                        const view = mediator.getView();
+                        if (view)
+                            view.updateUIState(ui);
+                    }
                 }
             }
         }
@@ -590,5 +589,12 @@ export class UiManager extends PacketHandler {
                 return "PicaNavigate";
         }
         return null;
+    }
+    private getPanelNameByAlias(alias: string) {
+        switch (alias) {
+            case "MessageBox":
+                return "PicaMessageBox";
+        }
+        return alias;
     }
 }

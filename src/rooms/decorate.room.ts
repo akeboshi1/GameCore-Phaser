@@ -7,7 +7,7 @@ import { LayerManager } from "./layer/layer.manager";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
-import { IElement } from "./element/element";
+import { IElement} from "./element/element";
 import { ElementDisplay } from "./display/element.display";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Pos } from "../utils/pos";
@@ -280,7 +280,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mCameraService.resize(width, height);
     }
 
-    transitionGrid(x: number, y: number, ) {
+    transitionGrid(x: number, y: number,) {
         const source = new Pos(x, y);
         const pos = this.transformToMini45(source);
         return this.checkBound(pos);

@@ -70,7 +70,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
     }
 
-    play(animationName: AnimationData, field?: DisplayField, data?: IFramesModel | IDragonbonesModel) {
+    play(animationName: AnimationData, field?: DisplayField, id?: number) {
     }
 
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }

@@ -9,6 +9,9 @@ import { BBCodeText, Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { Element } from "../../rooms/element/element";
+import { DetailDisplay } from "../Market/DetailDisplay";
+import { IFramesModel, FramesModel } from "../../rooms/display/frames.model";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
     private confirmBtn: NineSliceButton;
@@ -18,7 +21,7 @@ export class PicFurniFunPanel extends BasePanel {
     private bgicon: Phaser.GameObjects.Image;
     private titleimage: Phaser.GameObjects.Image;
     private titleName: Phaser.GameObjects.Text;
-    private icon: DynamicImage;
+    private mDetailDisplay: DetailDisplay;
     private materialCon: Phaser.GameObjects.Container;
     private materialGameScroll: GameScroller;
     private content: Phaser.GameObjects.Container;
@@ -65,7 +68,7 @@ export class PicFurniFunPanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.on("click", this.onConfirmBtnClick, this);
+        this.confirmBtn.on("Tap", this.onConfirmBtnClick, this);
         this.closeBtn.on("pointerup", this.OnClosePanel, this);
     }
 
@@ -105,8 +108,12 @@ export class PicFurniFunPanel extends BasePanel {
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" }).setScale(1.3);
         this.closeBtn.setInteractive();
         this.content.add([this.titleimage, this.titleName, this.closeBtn]);
-        this.icon = new DynamicImage(this.scene, 0, this.bgicon.y);
-        this.content.add(this.icon);
+        this.mDetailDisplay = new DetailDisplay(this.scene);
+        this.mDetailDisplay.setTexture(this.key, "bg_f");
+        this.mDetailDisplay.setNearest();
+        this.mDetailDisplay.y = this.bgicon.y;// this.bgicon.height / 2;
+        this.mDetailDisplay.scale = this.dpr * 0.8;
+        this.content.add(this.mDetailDisplay);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
         this.materialCon = this.scene.make.container(undefined, false).setSize(materialConWdith, materialConHeight);
         this.content.add(this.materialCon);
@@ -163,13 +170,13 @@ export class PicFurniFunPanel extends BasePanel {
         });
         tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);
         this.tipsbg = tipsbg;
-        const tipsText = new BBCodeText(this.scene, -28 * this.dpr, -tipsHeight + 60* this.dpr, "微软我让他委任他为回复", {
+        const tipsText = new BBCodeText(this.scene, -28 * this.dpr, -tipsHeight + 60 * this.dpr, "微软我让他委任他为回复", {
             color: "#333333",
             fontSize: 13 * this.dpr,
             fontFamily: Font.DEFULT_FONT,
             wrap: {
-                width: 110*this.dpr,
-                mode:"string"
+                width: 110 * this.dpr,
+                mode: "string"
             }
         }).setOrigin(0);
 
@@ -177,10 +184,10 @@ export class PicFurniFunPanel extends BasePanel {
         this.materialTipsCon.add([tipsbg, tipsText]);
 
         this.confirmBtn = new NineSliceButton(this.scene, 0, -posY - 30 * this.dpr, 100 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn_over", i18n.t("furni_unlock.unlock"), this.dpr, this.scale, {
-            left: 20,
-            top: 20,
-            right: 20,
-            bottom: 20
+            left: 26,
+            top: 26,
+            right: 26,
+            bottom: 26
         });
         this.confirmBtn.setTextStyle({
             color: "#976400",
@@ -199,43 +206,57 @@ export class PicFurniFunPanel extends BasePanel {
     }
 
     updateData() {
-        const data = this.mShowData;
-        // const url = Url.getOsdRes(data.display.texturePath);
-        // this.icon.load(url, this, () => {
-        //     this.icon.scale = this.dpr * this.scale;
-        // });
-        this.setMaterialItems(data);
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT = this.mShowData;
+        if (!content.ids) return;
+        const eleMgr = this.mWorld.roomManager.currentRoom.elementManager;
+        const ele = eleMgr.get(content.ids[0]);
+        if (!ele) return;
+        const display = (ele.model.displayInfo as FramesModel);
+        const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
+        resData.display = display.display;
+        const animas = display.createProtocolObject();
+        if (animas.length > 1) {
+            const arr = [];
+            for (const ani of animas) {
+                if (ani.node.name !== "lock") {
+                    ani.frameName = ani.layer[0].frameName;
+                    arr.push(ani);
+                }
+            }
+            if (arr.length === 0) arr.push(animas[0]);
+            resData.animations = arr;
+        } else {
+            resData.animations = animas;
+        }
+        this.mDetailDisplay.loadDisplay(resData);
+        this.titleName.text = ele.model.nickname;
+        this.setMaterialItems(content.materials);
     }
 
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
-        const len = 20;// datas.length;
+        const len = datas.length;
         const zoom = this.scale;
         this.materialGameScroll.clearItems();
         for (let i = 0; i < len; i++) {
             const item = new MaterialItem(this.scene, this.key, this.dpr, zoom);
             item.y = 0;
-            //    item.setItemData(datas[i]);
-            // item.setData("itemData", datas[i]);
+            item.setItemData(datas[i]);
+            item.setData("itemData", datas[i]);
             this.materialGameScroll.addItem(item);
         }
         this.materialGameScroll.Sort();
     }
 
-    private onSelectItemHandler(data: op_client.ICountablePackageItem) {
-    }
-
-    private onConfirmBtnClick(pointer: Phaser.Input.Pointer) {
-        if (!this.checkPointerDis(pointer)) return;
+    private onConfirmBtnClick() {
+        const data = this.showData;
+        if (!data || !data.ids) return;
+        this.emit("queryunlock", data.ids);
         this.emit("close");
     }
     private OnClosePanel() {
         this.emit("close");
     }
-    private checkPointerDis(pointer: Phaser.Input.Pointer) {
-        if (!this.mWorld) return true;
-        return Math.abs(pointer.downX - pointer.upX) < 10 * this.mWorld.uiRatio * this.mWorld.uiScale &&
-            Math.abs(pointer.downY - pointer.upY) < 10 * this.mWorld.uiRatio * this.mWorld.uiScale;
-    }
+
     private onMaterialItemHandler(item: MaterialItem) {
         const pos = item.getWorldTransformMatrix();
         this.materialTipsCon.x = pos.tx - this.scaleWidth * 0.5;
@@ -250,12 +271,12 @@ export class PicFurniFunPanel extends BasePanel {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
         let text: string = "";
         let source = i18n.t("furni_unlock.source");
-        source += "微软微软他特瑞特也让他";// data.source;
+        source += data.source;
         source = `[stroke=#333333][color=#333333]${source}[/color][/stroke]`;
         text += source + "\n";
         if (data.sellingPrice) {
             let price = i18n.t("furni_unlock.sold");
-            price += "5222银币";// data.sellingPrice.price + Coin.getName(data.sellingPrice.coinType);
+            price += data.sellingPrice.price + Coin.getName(data.sellingPrice.coinType);
             price = `[stroke=#333333][color=#333333]${price}[/color][/stroke]`;
             text += price + "\n";
         }

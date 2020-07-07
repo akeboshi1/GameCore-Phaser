@@ -27,7 +27,7 @@ export class ActivityPanel extends BasePanel {
         this.checkUpdateActive();
     }
 
-    updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+    updateUIState(active?: op_pkt_def.IPKT_UI) {
         if (!this.mInitialized) {
             return;
         }
@@ -85,7 +85,7 @@ export class ActivityPanel extends BasePanel {
         const arr = this.mWorld.uiManager.getActiveUIData("Activity");
         if (arr) {
             for (const data of arr) {
-                this.updateActiveUI(data);
+                this.updateUIState(data);
             }
         }
 

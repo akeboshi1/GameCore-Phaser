@@ -64,7 +64,7 @@ export class PicaNavigatePanel extends BasePanel {
     super.show(param);
     this.checkUpdateActive();
   }
-  updateActiveUI(active?: op_pkt_def.IPKT_UI) {
+  updateUIState(active?: op_pkt_def.IPKT_UI) {
     if (!this.mInitialized) {
       return;
     }
@@ -143,16 +143,16 @@ export class PicaNavigatePanel extends BasePanel {
     this.emit("goHome");
   }
   private onShowTestHandler() {
-    // this.emit("showPanel", "PicHandheld");
+    this.emit("showPanel", "PicHandheld");
   }
   private onCloseHandler() {
     this.emit("close");
   }
   private checkUpdateActive() {
-    const arr = this.mWorld.uiManager.getActiveUIData("PicaNavigate");
+    const arr = this.mWorld.uiManager.getActiveUIData("PicHandheld");
     if (arr) {
       for (const data of arr) {
-        this.updateActiveUI(data);
+        this.updateUIState(data);
       }
     }
 

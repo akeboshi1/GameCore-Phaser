@@ -5,7 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
 import { BubbleAnimation } from "../../rooms/Animation/bubble.animation";
 
-export class InteractionBubble extends Phaser.GameObjects.Container {
+export class InteractionBubbleCell extends Phaser.GameObjects.Container {
     private mBubbleAni: DragonbonesAnimation | FrameAnimation | BubbleAnimation;
     private mWdith: number = 78;
     private mHeight: number = 78;

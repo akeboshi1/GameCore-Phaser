@@ -504,7 +504,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
-        if (displayInfo&&this.mDisplay) {
+        if (displayInfo && this.mDisplay) {
             const key = displayInfo.gene;
             this.mDisplay.once(key, this.onDisplayReady, this);
             this.mDisplay.load(displayInfo, DisplayField.Effect);
@@ -762,9 +762,9 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    protected onDisplayReady(display?: FramesDisplay | DragonbonesDisplay, field?: DisplayField, data?: IFramesModel) {
+    protected onDisplayReady(display?: FramesDisplay | DragonbonesDisplay, field?: DisplayField, id?: number) {
         if (this.mDisplay) {
-            this.mDisplay.play(this.model.currentAnimation, field, data);
+            this.mDisplay.play(this.model.currentAnimation, field, id);
             if (!field || field === DisplayField.STAGE) {
                 if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
                     this.updateMounth(this.mModel.mountSprites);

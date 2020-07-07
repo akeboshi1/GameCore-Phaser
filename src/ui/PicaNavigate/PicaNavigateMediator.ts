@@ -4,6 +4,7 @@ import { PicaNavigatePanel } from "./PicaNavigatePanel";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicaNavigate } from "./PicaNavigate";
+import { PicHandheldMediator } from "../PicHandheld/PicHandheldMediator";
 
 export class PicaNavigateMediator extends BaseMediator {
   public static NAME: string = "PicaNavigateMediator";
@@ -56,13 +57,8 @@ export class PicaNavigateMediator extends BaseMediator {
       return;
     }
     const uiManager = this.world.uiManager;
-    const mediator = uiManager.getMediator(PicaChatMediator.name);
-    if (mediator) {
-      mediator.show();
-      // this.mView.hide();
-      // (<PicaNavigatePanel>this.mView).removeListen();
-      // this.layerManager.removeToUILayer(this.mView);
-    }
+    uiManager.showExistMed(PicaChatMediator.name, "");
+    uiManager.showExistMed(PicHandheldMediator.name, "");
     this.destroy();
   }
 
