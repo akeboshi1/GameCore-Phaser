@@ -21,10 +21,10 @@ export class ItemSlot implements IListItemComponent {
     protected mResJson: string;
     protected mResSlot: string;
     protected mIcon: DragDropIcon;
-    protected mAnimationCon: Phaser.GameObjects.Sprite;
-    protected mSubScriptSprite: Phaser.GameObjects.Sprite;
+    protected mAnimationCon: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+    protected mSubScriptSprite: Phaser.GameObjects.Image;
     protected mSubScriptRes: string;
-    protected itemBG: Phaser.GameObjects.Sprite;
+    protected itemBG: Phaser.GameObjects.Image | Phaser.GameObjects.Graphics;
     protected mSelectSprite: Phaser.GameObjects.Sprite;
     protected mSelectRes: string;
     protected mWorld: WorldService;
@@ -33,7 +33,7 @@ export class ItemSlot implements IListItemComponent {
     protected mWid: number = 0;
     protected mHei: number = 0;
     protected isTipBoo: boolean = true;
-    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
+    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr?: string, respng?: string, resjson?: string, resSlot?: string, selectRes?: string, subscriptRes?: string) {
         this.mScene = scene;
         this.mWorld = world;
         this.toolTipCon = scene.make.container(undefined, false); // new ToolTipContainer(this.mScene, world);
@@ -64,7 +64,7 @@ export class ItemSlot implements IListItemComponent {
         return this.toolTipCon;
     }
 
-    public getBg(): Phaser.GameObjects.Sprite {
+    public getBg(): Phaser.GameObjects.Graphics | Phaser.GameObjects.Image {
         return this.itemBG;
     }
 
@@ -156,24 +156,35 @@ export class ItemSlot implements IListItemComponent {
     }
 
     protected onLoadCompleteHandler() {
-        this.itemBG = this.mScene.make.sprite(undefined, false);
-        this.itemBG.setTexture(this.mResStr, this.mResSlot);
+        let bgWid: number = 56;
+        let bgHei: number = 56;
+        if (this.mResStr) {
+            this.itemBG = this.mScene.make.image(undefined, false);
+            this.itemBG.setTexture(this.mResStr, this.mResSlot);
+            bgWid = this.itemBG.width;
+            bgHei = this.itemBG.height;
+        } else {
+            this.itemBG = this.mScene.make.graphics(undefined, false);
+            this.itemBG.fillStyle(0, .8);
+            this.itemBG.fillRect(-bgWid >> 1, -bgHei >> 1, bgWid, bgHei);
+        }
+
         this.toolTipCon.addAt(this.itemBG, 0);
-        this.toolTipCon.setSize(this.itemBG.width, this.itemBG.height);
+        this.toolTipCon.setSize(bgWid, bgHei);
         this.mIcon = new DragDropIcon(this.mScene, 0, 0);
         this.toolTipCon.addAt(this.mIcon, 1);
         if (this.mSubScriptRes) {
-            this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
+            this.mSubScriptSprite = this.mScene.make.image(undefined, false);
             this.mSubScriptSprite.setTexture(this.mResStr, this.mSubScriptRes);
-            this.mSubScriptSprite.x = this.mSubScriptSprite.width - this.itemBG.width >> 1;
-            this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.itemBG.height >> 1;
+            this.mSubScriptSprite.x = this.mSubScriptSprite.width - bgWid >> 1;
+            this.mSubScriptSprite.y = this.mSubScriptSprite.height - bgHei >> 1;
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
         if (this.isTipBoo) {
             this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
         }
 
-        this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
+        this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, bgWid, bgHei), Phaser.Geom.Rectangle.Contains);
         this.toolTipCon.on("pointerover", this.overHandler, this);
         this.toolTipCon.on("pointerout", this.outHandler, this);
         this.toolTipCon.on("pointerdown", this.downHandler, this);
@@ -182,8 +193,8 @@ export class ItemSlot implements IListItemComponent {
         if (this.mData) {
             this.dataChange(this.mData);
         }
-        this.mWid += this.itemBG.width;
-        this.mHei += this.itemBG.height;
+        this.mWid += bgWid;
+        this.mHei += bgHei;
         // this.toolTipCon.setToolTip("itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"));
     }
 
