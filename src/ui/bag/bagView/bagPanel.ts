@@ -2,15 +2,14 @@ import { WorldService } from "../../../game/world.service";
 import { ItemSlot } from "../../components/item.slot";
 import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
-import { Url, Border, Background } from "../../../utils/resUtil";
+import { Border, Background, Url } from "../../../utils/resUtil";
 import { BagMediator } from "./bagMediator";
-import { InputText, NinePatch } from "tooqingui";
+import { InputText, NineSlicePatch } from "tooqingui";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
 import { IconBtn } from "../../components/icon.btn";
-import { UIMediatorType } from "../../ui.mediatorType";
 import { BasePanel } from "../../components/BasePanel";
-import { Font } from "game-core";
+import { UIMediatorType } from "../../ui.mediatorType";
 export class BagPanel extends BasePanel {
     public static PageMaxCount: number = 32;
     public bagSlotList: ItemSlot[];
@@ -19,12 +18,12 @@ export class BagPanel extends BasePanel {
     protected mResStr: string;
     protected mResPng: string;
     protected mResJson: string;
-    private mClsBtn: Phaser.GameObjects.Image | Phaser.GameObjects.Graphics;
+    private mClsBtn: IconBtn | Phaser.GameObjects.Graphics;
     private mPageNum: number = 0;
     private mPageIndex: number = 1;
     private mDataList: any[];
-    private mBg: NinePatch | Phaser.GameObjects.Graphics;
-    private mBorder: NinePatch | Phaser.GameObjects.Graphics;
+    private mBg: NineSlicePatch | Phaser.GameObjects.Graphics;
+    private mBorder: NineSlicePatch | Phaser.GameObjects.Graphics;
     private mInputText: InputText;
     private mBaseStr: string = "输入关键字进行搜索";
     private mCheckList: op_gameconfig.IItem[];
@@ -143,17 +142,26 @@ export class BagPanel extends BasePanel {
         const txtBgHei: number = 35;
         const btnWid: number = 30;
         const btnHei: number = 10;
-        let txtBg: NinePatch | Phaser.GameObjects.Graphics;
+        const titleConWid: number = 20;
+        const titleConHei: number = 20;
+        let txtBg: NineSlicePatch | Phaser.GameObjects.Graphics;
+
+        let titleCon;
         if (this.mResStr) {
-            this.mBg = new NinePatch(this.scene, 0, 0, bgWid, bgHei, Background.getName(), null, undefined, undefined, Background.getConfig());
-            this.mBorder = new NinePatch(this.scene, 0, 0, this.mBg.width - 10, this.mBg.height - 30, Border.getName(), null, undefined, undefined, Border.getConfig());
-            txtBg = new NinePatch(this.scene, borderWid / 4 + 5, -bgHei / 2 + 65, txtBgWid, txtBgHei, Border.getName(), null, undefined, undefined, Border.getConfig());
+            this.mBg = new NineSlicePatch(this.scene, 0, 0, bgWid, bgHei, Background.getName(), null, Background.getConfig());
+            this.mBorder = new NineSlicePatch(this.scene, 0, 0, borderWid, borderHei, Border.getName(), null, Border.getConfig());
+            txtBg = new NineSlicePatch(this.scene, 0, 0, txtBgWid, txtBgHei, Border.getName(), null, Border.getConfig());
+            txtBg.x = borderWid / 4 + 5;
+            txtBg.y = -bgHei / 2 + 65;
             this.mPreBtn = this.scene.make.sprite(undefined, false);
             this.mNextBtn = this.scene.make.sprite(undefined, false);
             this.mNextBtn.scaleX = -1;
-
-            this.mClsBtn = this.mScene.make.image(undefined, false);
-            this.mClsBtn.setSize(10, 10);
+            titleCon = this.scene.make.sprite(undefined, false);
+            titleCon.setTexture(this.mResStr, "bagView_titleBtn.png");
+            this.mClsBtn = new IconBtn(this.scene, this.mWorld, {
+                key: UIMediatorType.Close_Btn, bgResKey: "clsBtn", bgTextures: ["btn_normal", "btn_over", "btn_click"],
+                iconResKey: "", iconTexture: "", scale: 1, pngUrl: this.mResPng, jsonUrl: this.mResJson
+            });
         } else {
             this.mBg = this.mScene.make.graphics(undefined, false);
             this.mBg.fillStyle(0);
@@ -176,7 +184,9 @@ export class BagPanel extends BasePanel {
             this.mNextBtn.fillStyle(0xffff, .8);
             this.mNextBtn.fillRect(-btnWid >> 1, 0, btnWid, btnHei);
             this.mNextBtn.scaleX = 1;
-
+            titleCon = this.mScene.make.graphics(undefined, false);
+            titleCon.fillStyle(0xccff00, .8);
+            titleCon.fillRect(0, 0, titleConWid, titleConHei);
             this.mClsBtn = this.mScene.make.graphics(undefined, false);
             this.mClsBtn.fillStyle(0xffcc00, .8);
             this.mClsBtn.fillRect(0, 0, 10, 10);
@@ -208,7 +218,11 @@ export class BagPanel extends BasePanel {
         for (let i: number = 0; i < BagPanel.PageMaxCount; i++) {
             tmpX = i % 8 * 60 - 210;
             tmpY = Math.floor(i / 8) * 60 - borderHei / 2 + this.mBorder.y + borderHei / 2 - 55;
-            itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY);
+            if (this.mResStr) {
+                itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "itemSelectFrame");
+            } else {
+                itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY);
+            }
             itemSlot.createUI();
             this.bagSlotList.push(itemSlot);
         }
@@ -217,9 +231,9 @@ export class BagPanel extends BasePanel {
         this.mNextBtn.x = bgWid >> 1;
         // const titleCon: Phaser.GameObjects.Sprite = this.scene.make.sprite(undefined, false);
         // titleCon.setTexture(this.mResStr, "bagView_titleBtn.png");
-        // titleCon.x = (-this.mBg.width >> 1) + 50;
-        // titleCon.y = (-this.mBg.height >> 1);
-        // this.add(titleCon);
+        titleCon.x = (-bgWid >> 1) + 50;
+        titleCon.y = (-bgHei >> 1);
+        this.add(titleCon);
         const titleTF: Phaser.GameObjects.Text = this.scene.make.text(undefined, false);
         titleTF.setFontFamily("Tahoma");
         titleTF.setFontStyle("bold");
@@ -257,51 +271,55 @@ export class BagPanel extends BasePanel {
         if (!this.scene) {
             return;
         }
-        // this.mResStr = "bagView";
-        // this.mResPng = "ui/bag/bagView.png";
-        // this.mResJson = "ui/bag/bagView.json";
-        // this.scene.load.atlas("itemChose", Url.getRes("ui/bag/itemChose.png"), Url.getRes("ui/bag/itemChose.json"));
-        // this.scene.load.atlas("slip", Url.getRes("ui/bag/slip.png"), Url.getRes("ui/bag/slip.json"));
-        // this.scene.load.image(Border.getName(), Border.getPNG());
-        // this.scene.load.image(Background.getName(), Background.getPNG());
-        // this.scene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
-        // this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        if (!CONFIG.debug) {
+            this.mResStr = "bagView";
+            this.mResPng = "ui/bag/bagView.png";
+            this.mResJson = "ui/bag/bagView.json";
+            this.scene.load.atlas("itemChose", Url.getRes("ui/bag/itemChose.png"), Url.getRes("ui/bag/itemChose.json"));
+            this.scene.load.atlas("slip", Url.getRes("ui/bag/slip.png"), Url.getRes("ui/bag/slip.json"));
+            this.scene.load.image(Border.getName(), Border.getPNG());
+            this.scene.load.image(Background.getName(), Background.getPNG());
+            this.scene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
+            this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        }
         super.preload();
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
-        const selectFramesObj: {} = this.scene.textures.get("itemChose").frames;
-        const tmpSelectFrames: any[] = [];
-        for (const key in selectFramesObj) {
-            if (key === "__BASE") continue;
-            const frame = selectFramesObj[key];
-            if (!frame) continue;
-            tmpSelectFrames.push(key);
+        if (this.mResStr) {
+            const selectFramesObj: {} = this.scene.textures.get("itemChose").frames;
+            const tmpSelectFrames: any[] = [];
+            for (const key in selectFramesObj) {
+                if (key === "__BASE") continue;
+                const frame = selectFramesObj[key];
+                if (!frame) continue;
+                tmpSelectFrames.push(key);
+            }
+            // 手动把json配置中的frames给予anims
+            this.scene.anims.create({
+                key: "itemSelectFrame",
+                frames: this.scene.anims.generateFrameNumbers("itemChose", { start: 0, end: 8, frames: tmpSelectFrames }),
+                frameRate: 33,
+                yoyo: true,
+                repeat: -1
+            });
+            const framesObj: {} = this.scene.textures.get("slip").frames;
+            const tmpFrames: any[] = [];
+            for (const key in framesObj) {
+                if (key === "__BASE") continue;
+                const frame = framesObj[key];
+                if (!frame) continue;
+                tmpFrames.push(key);
+            }
+            // 手动把json配置中的frames给予anims
+            this.scene.anims.create({
+                key: "slipBtn",
+                frames: this.scene.anims.generateFrameNumbers("slip", { start: 0, end: 14, frames: tmpFrames }),
+                frameRate: 33,
+                yoyo: true,
+                repeat: -1
+            });
         }
-        // 手动把json配置中的frames给予anims
-        this.scene.anims.create({
-            key: "itemSelectFrame",
-            frames: this.scene.anims.generateFrameNumbers("itemChose", { start: 0, end: 8, frames: tmpSelectFrames }),
-            frameRate: 33,
-            yoyo: true,
-            repeat: -1
-        });
-        const framesObj: {} = this.scene.textures.get("slip").frames;
-        const tmpFrames: any[] = [];
-        for (const key in framesObj) {
-            if (key === "__BASE") continue;
-            const frame = framesObj[key];
-            if (!frame) continue;
-            tmpFrames.push(key);
-        }
-        // 手动把json配置中的frames给予anims
-        this.scene.anims.create({
-            key: "slipBtn",
-            frames: this.scene.anims.generateFrameNumbers("slip", { start: 0, end: 14, frames: tmpFrames }),
-            frameRate: 33,
-            yoyo: true,
-            repeat: -1
-        });
         super.loadComplete(loader, totalComplete, totalFailed);
     }
 
