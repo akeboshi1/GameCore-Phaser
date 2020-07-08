@@ -85,7 +85,7 @@ export class BagPanel extends BasePanel {
     public show(param?: any) {
         super.show(param);
         if (this.mInitialized) {
-            if (this.mResStr) {
+            if (!CONFIG.pure) {
                 (<Phaser.GameObjects.Sprite>this.mPreBtn).play("slipBtn");
                 (<Phaser.GameObjects.Sprite>this.mNextBtn).play("slipBtn");
             }
@@ -147,7 +147,7 @@ export class BagPanel extends BasePanel {
         let txtBg: NineSlicePatch | Phaser.GameObjects.Graphics;
 
         let titleCon;
-        if (this.mResStr) {
+        if (!CONFIG.pure) {
             this.mBg = new NineSlicePatch(this.scene, 0, 0, bgWid, bgHei, Background.getName(), null, Background.getConfig());
             this.mBorder = new NineSlicePatch(this.scene, 0, 0, borderWid, borderHei, Border.getName(), null, Border.getConfig());
             txtBg = new NineSlicePatch(this.scene, 0, 0, txtBgWid, txtBgHei, Border.getName(), null, Border.getConfig());
@@ -218,7 +218,7 @@ export class BagPanel extends BasePanel {
         for (let i: number = 0; i < BagPanel.PageMaxCount; i++) {
             tmpX = i % 8 * 60 - 210;
             tmpY = Math.floor(i / 8) * 60 - borderHei / 2 + this.mBorder.y + borderHei / 2 - 55;
-            if (this.mResStr) {
+            if (!CONFIG.pure) {
                 itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "itemSelectFrame");
             } else {
                 itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY);
@@ -286,7 +286,7 @@ export class BagPanel extends BasePanel {
     }
 
     protected loadComplete(loader: Phaser.Loader.LoaderPlugin, totalComplete: integer, totalFailed: integer) {
-        if (this.mResStr) {
+        if (!CONFIG.pure) {
             const selectFramesObj: {} = this.scene.textures.get("itemChose").frames;
             const tmpSelectFrames: any[] = [];
             for (const key in selectFramesObj) {

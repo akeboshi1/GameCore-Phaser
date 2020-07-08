@@ -14,15 +14,15 @@ export class BagGroup extends BasePanel {
 
     public static SlotMaxCount: number = 12;
     // bagBtn
-    public bagBtn: Phaser.GameObjects.Sprite;
+    public bagBtn: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
     public bagSlotList: ItemSlot[];
-    private mBagBg: Phaser.GameObjects.Sprite;
+    private mBagBg: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
     private baseBagBgWid: number;
     private mResStr: string;
     private mResPng: string;
     private mResJson: string;
-    private mSubScriptSprite: Phaser.GameObjects.Sprite;
-    private mBagSelect: Phaser.GameObjects.Sprite;
+    private mSubScriptSprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
+    private mBagSelect: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
     private mBagBtnCon: Phaser.GameObjects.Container;
     private radio: Radio;
 
@@ -112,12 +112,13 @@ export class BagGroup extends BasePanel {
         }
         if (this.width !== tempWid) {
             this.width = tempWid;
+            const bgWid: number = 50;
             if (this.buttons) {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
             this.buttons = (<any>this.scene).tooqingUI.add.buttons({
-                x: (tempWid + this.mBagBg.width) / 2,
+                x: (tempWid + bgWid) / 2,
                 y: 0,
                 width: 56,
                 height: 56,
@@ -146,28 +147,51 @@ export class BagGroup extends BasePanel {
         if (!this.scene) {
             return;
         }
-        this.mResStr = "bag";
-        this.mResPng = "ui/bag/bag.png";
-        this.mResJson = "ui/bag/bag.json";
-        this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        if (!CONFIG.pure) {
+            this.mResStr = "bag";
+            this.mResPng = "ui/bag/bag.png";
+            this.mResJson = "ui/bag/bag.json";
+            this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        }
         super.preload();
     }
 
     protected init() {
         this.mBagBtnCon = this.scene.add.container(0, 0);
-        this.mBagBg = this.scene.add.sprite(0, 0, this.mResStr, "bag_BtnBg");
-        this.baseBagBgWid = this.mBagBg.width;
-        this.tmpWid += this.mBagBg.width + 5;
-        this.bagBtn = this.scene.add.sprite(this.mBagBg.x, this.mBagBg.y, this.mResStr, "bag_Btn");
-        this.mSubScriptSprite = this.scene.make.sprite(undefined, false);
-        this.mSubScriptSprite.setTexture(this.mResStr, "bag_SubScripta");
-        this.mSubScriptSprite.x = this.mSubScriptSprite.width - this.mBagBg.width >> 1;
-        this.mSubScriptSprite.y = this.mSubScriptSprite.height - this.mBagBg.height >> 1;
+        let bgWid: number = 50;
+        let bgHei: number = 50;
+        const btnWid: number = 40;
+        const btnHei: number = 43;
+        const subWid: number = 16;
+        const subHei: number = 16;
+        if (!CONFIG.pure) {
+            this.mBagBg = this.scene.add.sprite(0, 0, this.mResStr, "bag_BtnBg");
+            bgWid = this.mBagBg.width;
+            bgHei = this.mBagBg.height;
+            this.bagBtn = this.scene.add.sprite(this.mBagBg.x, this.mBagBg.y, this.mResStr, "bag_Btn");
+            this.mSubScriptSprite = this.scene.make.sprite(undefined, false);
+            this.mSubScriptSprite.setTexture(this.mResStr, "bag_SubScripta");
+        } else {
+            this.mBagBg = this.scene.make.graphics(undefined, false);
+            this.mBagBg.fillStyle(0);
+            this.mBagBg.fillRect(-bgWid >> 1, -bgHei >> 1, bgWid, bgHei);
+            this.bagBtn = this.scene.make.graphics(undefined, false);
+            this.bagBtn.fillStyle(0xffff, .8);
+            this.bagBtn.fillRect(-btnWid >> 1, -btnHei >> 1, btnWid, btnHei);
+            this.mSubScriptSprite = this.scene.make.graphics(undefined, false);
+            this.mSubScriptSprite.fillStyle(0xffffcc, .8);
+            this.mSubScriptSprite.fillRect(-btnWid >> 1, -btnHei >> 1, btnWid, btnHei);
+        }
+        this.baseBagBgWid = bgWid;
+        this.tmpWid += bgWid + 5;
+
+        this.mSubScriptSprite.x = subWid - bgWid >> 1;
+        this.mSubScriptSprite.y = subHei - bgHei >> 1;
         this.mBagBtnCon.addAt(this.mBagBg, 0);
         this.mBagBtnCon.addAt(this.bagBtn, 1);
         // this.mBagBtnCon.addAt(this.mSubScriptSprite, 2);
         this.mBagBtnCon.setSize(56, 56);
-        this.mBagBtnCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.mBagBg.width, this.mBagBg.height), Phaser.Geom.Rectangle.Contains);
+        this.mBagBtnCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, bgWid, bgHei), Phaser.Geom.Rectangle.Contains);
         this.initBagSlot();
         this.setSize(this.tmpWid, 65);
         if (this.mWorld.roomManager.currentRoom && this.mWorld.roomManager.currentRoom.playerManager && this.mWorld.roomManager.currentRoom.playerManager.actor) {
@@ -192,7 +216,12 @@ export class BagGroup extends BasePanel {
             } else {
                 subScriptRes = "bag_SubScript" + (i + 1);
             }
-            const itemSlot = new ItemSlot(this.scene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
+            let itemSlot;
+            if (!CONFIG.pure) {
+                itemSlot = new ItemSlot(this.scene, this.mWorld, this, 0, 0, this.mResStr, this.mResPng, this.mResJson, "bag_Slot", "", subScriptRes);
+            } else {
+                itemSlot = new ItemSlot(this.scene, this.mWorld, this, 0, 0);
+            }
             itemSlot.createUI();
             itemSlot.getView().visible = false;
             this.bagSlotList.push(itemSlot);
@@ -246,8 +275,17 @@ export class BagGroup extends BasePanel {
     }
 
     private bagBtnOver(pointer) {
-        this.mBagSelect = this.scene.make.sprite(undefined, false);
-        this.mBagSelect.setTexture(this.mResStr, "bag_BtnSelect");
+        if (!CONFIG.pure) {
+            this.mBagSelect = this.scene.make.sprite(undefined, false);
+            this.mBagSelect.setTexture(this.mResStr, "bag_BtnSelect");
+        } else {
+            const selectWid: number = 56;
+            const selectHei: number = 56;
+            this.mBagSelect = this.scene.make.graphics(undefined, false);
+            this.mBagSelect.fillStyle(0xffffcc, .8);
+            this.mBagSelect.fillRect(-selectWid >> 1, -selectHei >> 1, selectWid, selectHei);
+        }
+
         this.mBagBtnCon.add(this.mBagSelect);
         // this.tmpLoad();
     }
@@ -255,6 +293,8 @@ export class BagGroup extends BasePanel {
     private bagBtnOut(pointer) {
         if (this.mBagSelect && this.mBagSelect.parentContainer) {
             this.mBagSelect.parentContainer.remove(this.mBagSelect);
+            this.mBagSelect.destroy();
+            this.mBagSelect = null;
         }
     }
 }

@@ -3,7 +3,7 @@ import { Size } from "../../../utils/size";
 import { WorldService } from "../../../game/world.service";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { IconBtn } from "../../components/icon.btn";
-import { NinePatch } from "tooqingui";
+import { NineSlicePatch } from "tooqingui";
 import { StorageMediator } from "./storageMediator";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { BasePanel } from "../../components/BasePanel";
@@ -14,8 +14,8 @@ export class StoragePanel extends BasePanel {
     private mResJson: string;
     private mBagItemSlotList: ItemSlot[];
     private mClsBtn: IconBtn | Phaser.GameObjects.Graphics;
-    private mBg: NinePatch | Phaser.GameObjects.Graphics;
-    private mBorder: NinePatch | Phaser.GameObjects.Graphics;
+    private mBg: NineSlicePatch | Phaser.GameObjects.Graphics;
+    private mBorder: NineSlicePatch | Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -57,9 +57,9 @@ export class StoragePanel extends BasePanel {
         const titleIconWid: number = 20;
         const titleIconHei: number = 20;
         let titleIcon;
-        if (this.mResStr) {
-            this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, undefined, undefined, Background.getConfig());
-            this.mBorder = new NinePatch(this.scene, 0, 0, borderWid, borderHei, Border.getName(), null, undefined, undefined, Border.getConfig());
+        if (CONFIG.pure) {
+            this.mBg = new NineSlicePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
+            this.mBorder = new NineSlicePatch(this.scene, 0, 0, borderWid, borderHei, Border.getName(), null, Border.getConfig());
             titleIcon = this.scene.make.sprite(undefined, false);
             titleIcon.setTexture(this.mResStr, "itemBagView_title.png");
             this.mClsBtn = new IconBtn(this.scene, this.mWorld, {
@@ -110,8 +110,8 @@ export class StoragePanel extends BasePanel {
         for (let i: number = 0; i < 9; i++) {
             tmpX = i % 9 * 60 + 32 - 724 / 2;
             tmpY = Math.floor(i / 9) * 60 - 55;
-            if (this.mResStr) {
-                itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "bagView_itemSelect.png");
+            if (CONFIG.pure) {
+                itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY, this.mResStr, this.mResPng, this.mResJson, "bagView_slot.png", "itemSelectFrame");
             } else {
                 itemSlot = new ItemSlot(this.scene, this.mWorld, this, tmpX, tmpY);
             }
@@ -129,13 +129,15 @@ export class StoragePanel extends BasePanel {
         if (!this.scene) {
             return;
         }
-        this.mResStr = "bagView";
-        this.mResPng = "ui/bag/bagView.png";
-        this.mResJson = "ui/bag/bagView.json";
-        this.scene.load.image(Border.getName(), Border.getPNG());
-        this.scene.load.image(Background.getName(), Background.getPNG());
-        this.scene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
-        this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        if (!CONFIG.debug) {
+            this.mResStr = "bagView";
+            this.mResPng = "ui/bag/bagView.png";
+            this.mResJson = "ui/bag/bagView.json";
+            this.scene.load.image(Border.getName(), Border.getPNG());
+            this.scene.load.image(Background.getName(), Background.getPNG());
+            this.scene.load.atlas("clsBtn", Url.getRes("ui/common/common_clsBtn.png"), Url.getRes("ui/common/common_clsBtn.json"));
+            this.scene.load.atlas(this.mResStr, Url.getRes(this.mResPng), Url.getRes(this.mResJson));
+        }
         super.preload();
     }
 
