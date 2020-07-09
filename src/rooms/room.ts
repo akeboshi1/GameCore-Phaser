@@ -265,15 +265,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addSkyBox(scenery);
             }
         }
+        if (CONFIG.modules) {
+            this.startLoadModule(0);
+        }
+        // this.mWorld.pluginManager.load("picatown-core", CONFIG.modulePath + `http://localhost:8081/ma/picatown.min.js`).then((plugin) => {
 
-        // this.mWorld.pluginManager.load("picatown-core", `http://localhost:8081/js/picatown.min.js`).then((plugin) => {
         //     Logger.getInstance().log(plugin);
-        // })
-        //     .then(() => {
-        //         // return this.mWorld.pluginManager.load("main-ui", `http://localhost:8081/js/picatown.min.js`);
-        //     });
+        // });
+        // .then(() => {
+        //     return this.mWorld.pluginManager.load("main-ui", `http://localhost:8081/js/picatown.min.js`);
+        // });
     }
-
     public pause() {
         if (this.mScene) this.mScene.scene.pause();
         if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = false;
@@ -545,6 +547,27 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get mods(): string[] {
         return this.mMods;
+    }
+
+    private startLoadModule(index: number) {
+        const modules: string[] = CONFIG.modules;
+        let module = modules[index];
+        if (!module) {
+            if (index >= modules.length) {
+                return;
+            }
+            this.startLoadModule(index + 1);
+        }
+        this.mWorld.pluginManager.load(module, CONFIG.modulePath + module + "/" + module + ".min.js").then((plugin) => {
+            index += 1;
+            module = modules[index];
+            if (!module) {
+                if (index >= modules.length) {
+                    return;
+                }
+                this.startLoadModule(index + 1);
+            }
+        });
     }
 
     private onPressElementHandler(pointer, gameObject) {

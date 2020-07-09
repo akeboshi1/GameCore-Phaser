@@ -19,6 +19,7 @@ export interface ILauncherConfig {
     width: number;
     height: number;
     modulePath?: string;
+    modules?: string[];
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;
