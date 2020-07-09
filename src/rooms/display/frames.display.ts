@@ -1,102 +1,164 @@
 import { IFramesModel } from "./frames.model";
 import { Logger } from "../../utils/log";
-import { DisplayObject, DisplayField } from "./display.object";
+import { DisplayField, DisplayObject } from "./display.object";
 import { IAnimationData } from "./animation";
 import { Url } from "../../utils/resUtil";
 import { AnimationData } from "../element/sprite";
-import { DisplayEntity } from "./display.entity";
+
+// export enum DisplayField {
+//     BACKEND = 1,
+//     STAGE,
+//     FRONTEND,
+//     Effect
+// }
 
 /**
  * 序列帧显示对象
  */
 export class FramesDisplay extends DisplayObject {
     protected mFadeTween: Phaser.Tweens.Tween;
+    protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
+    protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<
+        DisplayField,
+        Phaser.GameObjects.Sprite | Phaser.GameObjects.Image
+    >();
     protected mScaleTween: Phaser.Tweens.Tween;
+    protected mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = [];
+    protected mMountContainer: Phaser.GameObjects.Container;
+    protected mMainSprite: Phaser.GameObjects.Sprite;
     protected mCurAnimation: IAnimationData;
-    protected mainEntity: DisplayEntity;
-    protected mountEntity: DisplayEntity;
+    protected mMountList: Phaser.GameObjects.Container[];
 
-    public load(displayInfo: IFramesModel, field: DisplayField = DisplayField.STAGE) {
+    public load(displayInfo: IFramesModel, field?: DisplayField) {
+        field = !field ? DisplayField.STAGE : field;
         const data = displayInfo;
         if (!data || !data.gene) return;
-        let entity = this.getDisplayEntity(field, data.id);
-        if (!entity) {
-            const index = this.getFieldIndex(field);
-            entity = new DisplayEntity(this, index);
-            this.addFieldChild(entity, field);
+        const currentDisplay = this.mDisplayDatas.get(field);
+        if (currentDisplay && currentDisplay.gene === displayInfo.gene) {
+            return;
         }
-        if (field === DisplayField.STAGE) {
-            this.setData("id", data);
-            entity.setData(data, "id");
-            this.mainEntity = entity;
-        } else {
-            entity.setData(data);
-        }
-        if (entity.isLoaded) return;
+        this.mDisplayDatas.set(field, data);
+        this.setData("id", data.id);
         if (this.scene.textures.exists(data.gene)) {
-            this.onLoadCompleted(field, data);
+            this.onLoadCompleted(field);
         } else {
             const display = data.display;
             if (!display) {
                 Logger.getInstance().error("display is undefined");
             }
             if (display.texturePath === "" && display.dataPath === "") {
-                Logger.getInstance().error("动画资源报错：", data);
+                Logger.getInstance().error("动画资源报错：" , data);
             } else {
-                entity.isLoaded = true;
-                const rootUrl = (field === DisplayField.STAGE ? Url.OSD_PATH : Url.RES_PATH);
-                this.scene.load.atlas(data.gene, rootUrl + display.texturePath, rootUrl + display.dataPath);
-                const callback = (key: string) => {
-                    this.onAddTextureHandler(key, field, data.id, callback);
+                this.scene.load.atlas(data.gene, Url.OSD_PATH + display.texturePath, Url.OSD_PATH + display.dataPath);
+                // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
+                //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
+                // }, this);
+                const cb = (key: string) => {
+                    this.onAddTextureHandler(key, field, cb);
                 };
-                this.scene.textures.on(Phaser.Textures.Events.ADD, callback, this);
+                this.scene.textures.on(Phaser.Textures.Events.ADD, cb, this);
                 this.scene.load.start();
             }
 
         }
     }
 
-    public loadEffect(display: IFramesModel) {
-        if (this.scene.textures.exists(display.gene)) {
-            const layer = display.getAnimations("idle").layer;
-            if (layer.length > 1) {
-
-            }
-        } else {
-
-        }
-    }
-
-    public play(animation: AnimationData, field = DisplayField.STAGE, id?: number) {
+    public play(animation: AnimationData, field?: DisplayField) {
         if (!animation) return;
-        const entity = this.getDisplayEntity(field, id);
-        const data = entity.data;
+        field = !field ? DisplayField.STAGE : field;
+        const data = this.mDisplayDatas.get(field);
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
-        const iAniData = data.getAnimations(animation.name);
-        if (!iAniData) return;
-        entity.destroyDisplays();
-        const spriteArr = this.createDisplay(data.gene, iAniData, animation.flip);
-        const entityIndex = this.getFieldEnityIndex(field, entity);
-        entity.setIndex(this.getFieldIndex(field, entityIndex));
-        entity.addArr(spriteArr);
-        if (field === DisplayField.STAGE) {
-            this.mCurAnimation = iAniData;
-            this.initBaseLoc(animation);
-            const mainSprite = this.mainEntity.mainSprite;
-            this.emit("updateAnimation");
-            if (mainSprite) {
-                mainSprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
-            }
-            this.mActionName = animation;
+        this.mCurAnimation = data.getAnimations(animation.name);
+        if (!this.mCurAnimation) return;
+        this.clear();
+        const layer = this.mCurAnimation.layer;
+        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+        if (!container) {
+            container = this.scene.make.container(undefined, false);
+            container.setData("id", data.id);
+            this.addAt(container, DisplayField.STAGE);
+            this.mSprites.set(DisplayField.STAGE, container);
         }
+        for (let i = 0; i < layer.length; i++) {
+            let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+            const { frameName, offsetLoc } = layer[i];
+            if (frameName.length > 1) {
+                const key = `${data.gene}_${animation.name}_${i}`;
+                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
+                display = this.scene.make.sprite(undefined, false).play(key);
+                if (!this.mMainSprite) {
+                    this.mMainSprite = <Phaser.GameObjects.Sprite>display;
+                }
+            } else {
+                display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
+            }
+            this.mDisplays.push(display);
+            display.scaleX = animation.flip ? -1 : 1;
+            let x = offsetLoc.x;
+            const y = offsetLoc.y;
+            if (animation.flip) {
+                x = (0 - (display.width + x));
+            }
+            display.x = x + display.width * 0.5;
+            display.y = y + display.height * 0.5;
+            container.add(display);
+        }
+        // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
+        this.initBaseLoc(DisplayField.STAGE, animation);
+        // }
+        this.emit("updateAnimation");
+        if (this.mMainSprite) {
+            this.mMainSprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+        }
+        if (this.mMountContainer && this.mCurAnimation.mountLayer) {
+            const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+            if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
+        }
+
+        this.mActionName = animation;
+    }
+
+    public playEffect() {
+        const data = this.mDisplayDatas.get(DisplayField.Effect);
+        if (!data) {
+            return;
+        }
+        // TODO
+        const anis = data.getAnimations("idle");
+        if (!anis) {
+            return;
+        }
+        const layer = anis.layer;
+        const effects = [];
+        for (let i = 0; i < layer.length; i++) {
+            let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+            const { frameName, offsetLoc } = layer[i];
+            if (frameName.length > 1) {
+                const key = `${data.gene}_idle_${i}`;
+                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
+                display = this.scene.make.sprite(undefined, false).play(key);
+            } else {
+                display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
+            }
+            display.x = offsetLoc.x + display.width * 0.5;
+            display.y = offsetLoc.y + display.height * 0.5;
+            effects.push(display);
+        }
+        if (effects.length > 1) {
+            this.addAt(effects[1], DisplayField.BACKEND);
+            this.mSprites.set(DisplayField.BACKEND, effects[1]);
+        }
+        this.addAt(effects[0], DisplayField.FRONTEND);
+        this.mSprites.set(DisplayField.FRONTEND, effects[0]);
     }
 
     public mount(display: Phaser.GameObjects.Container, targetIndex?: number) {
         if (!display) return;
-        const entity = this.mainEntity;
-        if (!entity || entity.mDisplays.length === 0) return;
+        if (this.mDisplays.length <= 0) {
+            return;
+        }
         if (!this.mCurAnimation) {
             return;
         }
@@ -108,27 +170,36 @@ export class FramesDisplay extends DisplayObject {
         }
         display.x = x;
         display.y = mountPoint[targetIndex].y;
-        if (!this.mountEntity) {
-            const entityIndex = this.mCurAnimation.mountLayer.index;
-            const newindex = this.getFieldIndex(DisplayField.STAGE, entityIndex);
-            this.mountEntity = new DisplayEntity(this, index);
+
+        if (!this.mMountContainer) {
+            this.mMountContainer = this.scene.make.container(undefined, false);
         }
-        this.mountEntity.add(display, targetIndex);
-        if (entity.mainSprite) {
+        if (!this.mMountContainer.parentContainer) {
+            const container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+            if (container) container.addAt(this.mMountContainer, index);
+        }
+        this.mMountContainer.addAt(display, targetIndex);
+        this.mMountList[targetIndex] = display;
+        if (this.mMainSprite) {
             // 侦听前先移除，避免重复添加
-            entity.mainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
-            entity.mainSprite.on("animationupdate", this.onAnimationUpdateHandler, this);
+            this.mMainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
+            this.mMainSprite.on("animationupdate", this.onAnimationUpdateHandler, this);
         }
     }
 
     public unmount(display: Phaser.GameObjects.Container) {
-        if (!this.mountEntity) {
+        if (!this.mMountContainer) {
             return;
         }
-        this.mountEntity.remove(display);
-        const mainSprite = (this.mainEntity ? this.mainEntity.mainSprite : undefined);
-        if (this.mountEntity.count <= 0 && mainSprite) {
-            mainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
+        this.mMountContainer.remove(display);
+        const index = this.mMountList.indexOf(display);
+        display.visible = true;
+        if (index > -1) {
+            this.mMountList.splice(index, 1);
+        }
+        const list = this.mMountContainer.list;
+        if (list.length <= 0 && this.mDisplays.length > 0) {
+            this.mDisplays[0].off("animationupdate", this.onAnimationUpdateHandler, this);
         }
     }
 
@@ -161,7 +232,7 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public scaleTween() {
-        if (this.mountEntity && this.mountEntity.count > 0) {
+        if (this.mMountContainer && this.mMountContainer.list.length > 0) {
             return;
         }
         if (this.mScaleTween) {
@@ -190,31 +261,43 @@ export class FramesDisplay extends DisplayObject {
         dropZone?: boolean
     ): this {
         // super.setInteractive(shape, callback, dropZone);
-        const entity = this.mainEntity;
-        if (entity && entity.mDisplays.length > 0) {
-            entity.mDisplays.forEach((display) => {
-                display.setInteractive({ pixelPerfect: true });
-            });
-        }
+        this.mDisplays.forEach((display) => {
+            display.setInteractive({ pixelPerfect: true });
+        });
         return this;
     }
 
     public disableInteractive(): this {
         // super.disableInteractive();
-        const entity = this.mainEntity;
-        if (entity && entity.mDisplays.length > 0) {
-            entity.mDisplays.forEach((display) => {
-                display.disableInteractive();
-            });
-        }
+        this.mDisplays.forEach((sprite) => {
+            sprite.disableInteractive();
+        });
         return this;
     }
 
+    public removeEffect() {
+        const data = this.mDisplayDatas.get(DisplayField.Effect);
+        if (data) {
+            this.mDisplayDatas.delete(DisplayField.Effect);
+            this.removeDisplay(DisplayField.BACKEND);
+            this.removeDisplay(DisplayField.FRONTEND);
+        }
+    }
+
+    public removeDisplay(field: DisplayField) {
+        const display = this.mSprites.get(field);
+        if (display) {
+            this.mDisplayDatas.delete(field);
+            display.destroy();
+        }
+    }
+
     public destroy() {
+        this.mSprites.forEach((sprite) => sprite.destroy());
+        this.mSprites.clear();
 
         this.clear();
-        this.mountEntity = undefined;
-        this.mainEntity = undefined;
+
         if (this.mFadeTween) {
             this.clearFadeTween();
             this.mFadeTween = undefined;
@@ -223,33 +306,26 @@ export class FramesDisplay extends DisplayObject {
             this.mScaleTween.stop();
             this.mScaleTween = undefined;
         }
+
+        this.mDisplayDatas.clear();
         super.destroy();
     }
 
-    protected createDisplay(key: string, ani: IAnimationData, flip: boolean = false) {
+    protected createDisplay(key: string, ani: IAnimationData) {
+        // const ani = data.getAnimations(animationName);
         const layer = ani.layer;
-        const displayArr = [];
+        let display: any;
         for (let i = 0; i < layer.length; i++) {
-            let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
-            const temp = layer[i];
-            if (temp.frameName.length > 1) {
+            if (layer[i].frameName.length > 1) {
+                display = this.scene.make.sprite(undefined, false);
                 const aniName = `${key}_${ani.name}_${i}`;
-                this.makeAnimation(key, aniName, temp.frameName, temp.frameVisible, ani);
-                display = this.scene.make.sprite(undefined, false).play(aniName);
+                this.makeAnimation(key, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
+                display = this.scene.make.sprite(undefined, false);
             } else {
-                display = this.scene.make.image(undefined, false).setTexture(key, temp.frameName[0]);
+                display = this.scene.make.image(undefined, false);
             }
-            display.scaleX = flip ? -1 : 1;
-            let x = temp.offsetLoc.x;
-            const y = temp.offsetLoc.y;
-            if (flip) {
-                x = (0 - (display.width + x));
-            }
-            display.x = x + display.width * 0.5;
-            display.y = y + display.height * 0.5;
-            displayArr.push(display);
+            this.mDisplays.push(display);
         }
-        return displayArr;
     }
 
     protected clearFadeTween() {
@@ -259,63 +335,41 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    protected clear(field?: DisplayField, data?: IFramesModel) {
-        if (field === undefined && data === undefined) {
-            this.mDisplays.forEach((value, key) => {
-                for (const entity of value) {
-                    entity.destroy();
-                }
-            });
-            this.mDisplays.clear();
-        } else {
-            if (field !== undefined) {
-                const entitys = this.mDisplays.get(field);
-                if (!data) {
-                    for (const entity of entitys) {
-                        entity.destroy();
-                    }
-                    this.mDisplays.delete(field);
-                } else {
-                    for (let i = 0; i < entitys.length; i++) {
-                        if (entitys[i].data === data) {
-                            entitys[i].destroy();
-                            entitys.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
+    protected clear() {
+        for (const display of this.mDisplays) {
+            display.destroy();
         }
+        if (this.mMountContainer && this.mMountContainer.parentContainer) {
+            this.mMountContainer.parentContainer.remove(this.mMountContainer);
+        }
+        this.mMountList = [];
+        this.mDisplays = [];
+        this.mMainSprite = null;
+
     }
 
-    private onAddTextureHandler(key: string, field: DisplayField, id: number, callback: Function) {
-        const entity = this.getDisplayEntity(field, id);
-        if (!entity) return;
-        const data = entity.data;
+    private onAddTextureHandler(key: string, field?: DisplayField, cb?: (key: string) => void) {
+        if (field === undefined) {
+            field = DisplayField.STAGE;
+        }
+        const data = this.mDisplayDatas.get(field);
         if (data && data.gene === key) {
-            this.scene.textures.off(Phaser.Textures.Events.ADD, callback, this);
-            this.onLoadCompleted(field, data);
+            this.scene.textures.off(Phaser.Textures.Events.ADD, cb, this);
+            this.onLoadCompleted(field);
         }
     }
 
-    // private onAddTextureHandler(key: string) {
-    //     const data = this.mDisplayDatas.get(DisplayField.STAGE);
-    //     if (data && data.gene === key) {
-    //         this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
-    //         this.onLoadCompleted(DisplayField.STAGE);
-    //     }
-    // }
-
-    private onLoadCompleted(field: DisplayField, data: IFramesModel) {
+    private onLoadCompleted(field: DisplayField) {
+        const data = this.mDisplayDatas.get(field);
         if (!data) {
             return;
         }
-        field = !field ? DisplayField.STAGE : field;
         if (this.scene.textures.exists(data.gene)) {
-            let key = "initialized";
-            if (field !== DisplayField.STAGE)
-                key = data.gene;
-            this.emit(key, this, field, data.id);
+            if (field === DisplayField.STAGE) {
+                this.emit("initialized", this);
+            } else {
+                this.playEffect();
+            }
         }
     }
 
@@ -328,6 +382,9 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         const frames = [];
+        // frameName.forEach((frame) => {
+        //     frames.push({ key: gen, frame, visible: frame });
+        // });
         for (let i = 0; i < frameName.length; i++) {
             const frame = frameName[i];
             const visible = frameVisible ? frameVisible[i] : true;
@@ -343,14 +400,16 @@ export class FramesDisplay extends DisplayObject {
         this.scene.anims.create(config);
     }
 
-    private initBaseLoc(playAnimation: AnimationData) {
-        const entity = this.mainEntity;
-        if (!entity) return;
-        const data = entity.data;
-        if (entity.mDisplays.length < 1 || !data || !data.animations) return;
-        const { name: animationName, flip } = playAnimation;
-        this.mCollisionArea = data.getCollisionArea(animationName, flip);
-        this.mOriginPoint = data.getOriginPoint(animationName, flip);
+    private initBaseLoc(field: DisplayField, playAnimation: AnimationData) {
+        const data: IFramesModel = this.mDisplayDatas.get(field);
+        // const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
+        if (this.mDisplays.length < 1 || !data || !data.animations) return;
+        // const animations = data.getAnimations(aniName);
+        // if (!animations) return;
+        const { name, flip } = playAnimation;
+        this.mCollisionArea = data.getCollisionArea(name, flip);
+        this.mOriginPoint = data.getOriginPoint(name, flip);
+
         if (this.mReferenceArea) {
             this.showRefernceArea();
         }
@@ -364,9 +423,8 @@ export class FramesDisplay extends DisplayObject {
             queue.playedTimes++;
         }
         if (queue.playedTimes >= queue.playTimes) {
-            const entity = this.mainEntity;
-            if (entity && entity.mainSprite) {
-                entity.mainSprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+            if (this.mMainSprite) {
+                this.mMainSprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
             }
             // this.emit("animationComplete");
             if (queue.complete) {
@@ -377,7 +435,7 @@ export class FramesDisplay extends DisplayObject {
     }
 
     private onAnimationUpdateHandler(ani: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-        if (!this.mountEntity || !this.mCurAnimation) return;
+        if (!this.mMountContainer || !this.mCurAnimation) return;
         const frameVisible = this.mCurAnimation.mountLayer.frameVisible;
         if (!frameVisible) {
             return;
@@ -386,28 +444,9 @@ export class FramesDisplay extends DisplayObject {
         if (index > frameVisible.length) {
             return;
         }
-        const mountDisplays = this.mountEntity.mDisplays;
-        for (let i = 0; i < mountDisplays.length; i++) {
-            mountDisplays[i].visible = this.getMaskValue(frameVisible[index], i);
+        for (let i = 0; i < this.mMountList.length; i++) {
+            this.mMountList[i].visible = this.getMaskValue(frameVisible[index], i);
         }
-    }
-
-    private getDisplayEntity(field: DisplayField, id?: number) {
-        let entity: DisplayEntity;
-        if (this.mDisplays.has(field)) {
-            const temps = this.mDisplays.get(field);
-            if (id === undefined) {
-                entity = temps[temps.length - 1];
-            } else {
-                for (const item of temps) {
-                    if (id === item.data.id) {
-                        entity = item;
-                        break;
-                    }
-                }
-            }
-        }
-        return entity;
     }
 
     private getMaskValue(mask: number, idx: number): boolean {
@@ -415,19 +454,21 @@ export class FramesDisplay extends DisplayObject {
     }
 
     get spriteWidth(): number {
-        const displays = this.mDisplays.get(DisplayField.STAGE);
         let width = 0;
-        if (displays && displays.length > 0) {
-            width = displays[0].width;
+        if (this.mDisplays) {
+            for (const display of this.mDisplays) {
+                if (display.width > width) width = display.width;
+            }
         }
         return width;
     }
 
     get spriteHeight(): number {
-        const displays = this.mDisplays.get(DisplayField.STAGE);
         let height = 0;
-        if (displays && displays.length > 0) {
-            height = displays[0].height;
+        if (this.mDisplays) {
+            for (const display of this.mDisplays) {
+                if (display.height > height) height = display.height;
+            }
         }
         return height;
     }

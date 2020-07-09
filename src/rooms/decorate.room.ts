@@ -704,4 +704,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     get sceneType(): op_def.SceneTypeEnum {
         return op_def.SceneTypeEnum.EDIT_SCENE_TYPE;
     }
+
+    get effectManager() {
+        return undefined;
+    }
 }

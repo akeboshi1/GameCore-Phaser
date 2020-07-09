@@ -2,16 +2,15 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { Element, IElement, InputEnable } from "./element";
-import { IRoomService, Room } from "../room";
+import { IRoomService } from "../room";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
-import { IFramesModel, FramesModel } from "../display/frames.model";
+import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
-import { DisplayField } from "../display/display.object";
-import { Animation } from "../display/animation";
+
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -46,14 +45,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
-            this.addHandlerFun(
-                op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN,
-                this.onClearBubbleHandler
-            );
-            this.addHandlerFun(
-                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION,
-                this.onChangeAnimation
-            );
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
         }
         if (this.mRoom && this.mRoom.world) {

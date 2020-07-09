@@ -44,6 +44,7 @@ export interface IRoomService {
     readonly playerManager: PlayerManager;
     readonly layerManager: LayerManager;
     readonly cameraService: ICameraService;
+    readonly effectManager: EffectManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly blocks: ViewblockService;
@@ -223,6 +224,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mEffectManager = new EffectManager(this);
         if (this.scene) {
             const camera = this.scene.cameras.main;
+            setTimeout(() => {
+                camera.flash(6000, 1, 1, 1, true, undefined, this.scene);
+            }, 6000);
             this.mCameraService.camera = camera;
             const padding = 199 * this.mScaleRatio;
             this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio  + padding * 2);
@@ -661,7 +665,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.setState(states.state);
                     break;
                 case op_def.NodeType.ElementNodeType:
-                case op_def.NodeType.ForkType:
                     this.elementManager.setState(states);
                     break;
             }
@@ -692,7 +695,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
 
         if (gameObject) {
-            const displsy = gameObject.parentContainer;
+            const displsy = gameObject.parentContainer.parentContainer || gameObject.parentContainer;
             if (displsy && displsy instanceof DisplayObject) {
                 const ele = displsy.element;
                 if (ele && ele.model) {

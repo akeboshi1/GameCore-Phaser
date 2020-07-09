@@ -2,7 +2,7 @@ import { IElementManager, ElementManager } from "./element.manager";
 import { IFramesModel } from "../display/frames.model";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
-import { IRoomService, Room } from "../room";
+import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel } from "../display/dragonbones.model";
 import { op_client, op_def } from "pixelpai_proto";
@@ -235,10 +235,6 @@ export class Element extends BlockObject implements IElement {
             this.mModel.updateDisplay(model.display, model.animations);
             this.load(this.mModel.displayInfo);
         }
-        if (model.hasOwnProperty("point3f")) {
-            const pos = model.point3f;
-            this.setPosition(new Pos(pos.x, pos.y, pos.z));
-        }
         if (model.hasOwnProperty("currentAnimationName")) {
             this.play(model.currentAnimationName);
             this.setInputEnable(this.mInputEnable);
@@ -251,6 +247,10 @@ export class Element extends BlockObject implements IElement {
             const mounts = model.mountSprites;
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
+        }
+        if (model.hasOwnProperty("point3f")) {
+            const pos = model.point3f;
+            this.setPosition(new Pos(pos.x, pos.y, pos.z));
         }
     }
 
@@ -466,8 +466,11 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         if (this.mDisplay && p) {
-            this.mDisplay.setPosition(p.x, p.y, p.z);
             this.mModel.setPosition(p.x, p.y);
+            if (this.mRootMount) {
+                return;
+            }
+            this.mDisplay.setPosition(p.x, p.y, p.z);
             const depth = p.depth ? p.depth : 0;
             this.setDepth(depth);
         }
@@ -506,7 +509,7 @@ export class Element extends BlockObject implements IElement {
     public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
         if (displayInfo && this.mDisplay) {
             const key = displayInfo.gene;
-            this.mDisplay.once(key, this.onDisplayReady, this);
+            // this.mDisplay.once(key, this.onDisplayReady, this);
             this.mDisplay.load(displayInfo, DisplayField.Effect);
         }
     }
@@ -549,6 +552,7 @@ export class Element extends BlockObject implements IElement {
             pos.x += this.mDisplay.x;
             pos.y += this.mDisplay.y;
             this.mRootMount = null;
+            this.setPosition(pos);
             this.addToBlock();
         }
         return this;
@@ -762,21 +766,21 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    protected onDisplayReady(display?: FramesDisplay | DragonbonesDisplay, field?: DisplayField, id?: number) {
+    protected onDisplayReady(field?: FramesDisplay) {
         if (this.mDisplay) {
-            this.mDisplay.play(this.model.currentAnimation, field, id);
-            if (!field || field === DisplayField.STAGE) {
-                if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
-                    this.updateMounth(this.mModel.mountSprites);
-                }
-                let depth = 0;
-                if (this.model && this.model.pos) {
-                    depth = this.model.pos.depth ? this.model.pos.depth : 0;
-                }
-                this.setDepth(depth);
+            this.mDisplay.play(this.model.currentAnimation);
+            // if (!field || field === DisplayField.STAGE) {
+            if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
+                this.updateMounth(this.mModel.mountSprites);
             }
+            let depth = 0;
+            if (this.model && this.model.pos) {
+                depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            }
+            this.setDepth(depth);
+         }
             // this.mDisplay.showRefernceArea();
-        }
+        // }
     }
 
     protected onUpdateAnimationHandler() {
@@ -895,9 +899,11 @@ export class Element extends BlockObject implements IElement {
             case "effect":
                 const buf = Buffer.from(state.packet);
                 const id = buf.readDoubleBE(0);
-                const effect = (<Room> this.roomService).effectManager.get(id);
+                const effect = this.roomService.effectManager.get(id);
                 if (effect.displayInfo) {
-                    this.showEffected(<IFramesModel> effect.displayInfo, DisplayField.FRONTEND);
+                    this.showEffected(<IFramesModel> effect.displayInfo);
+                } else {
+                    effect.once("updateDisplayInfo", this.showEffected, this);
                 }
                 break;
         }
@@ -907,6 +913,9 @@ export class Element extends BlockObject implements IElement {
         switch(state.name) {
             case "effect":
                 // remove
+                if (this.mDisplay) {
+                    this.mDisplay.removeEffect(DisplayField.Effect);
+                }
                 break;
         }
     }
