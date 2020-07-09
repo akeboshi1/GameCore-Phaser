@@ -161,6 +161,7 @@ declare module 'game-core/launcher' {
         width: number;
         height: number;
         modulePath?: string;
+        modules?: string[];
         readonly screenWidth: number;
         readonly screenHeight: number;
         readonly baseWidth: number;
@@ -1293,8 +1294,8 @@ declare module 'game-core/scenes/loading' {
         preload(): void;
         init(data: any): void;
         create(): void;
-        awake(): void;
-        sleep(): void;
+        awake(cb?: Function): void;
+        sleep(cb?: Function): void;
         getKey(): string;
     }
 }
@@ -1376,11 +1377,11 @@ declare module 'game-core/ui/layer.manager' {
 }
 
 declare module 'game-core/ui/ui.manager' {
-    import { WorldService } from "game-core/game/world.service";
     import { PacketHandler } from "net-socket-packet";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { InputTextFactory } from "game-core/ui/components/inputTextFactory";
     import { BaseMediator } from "tooqingui";
+    import { WorldService } from "game-core/game";
     export class UiManager extends PacketHandler {
         constructor(worldService: WorldService);
         getInputTextFactory(): InputTextFactory;
@@ -3603,23 +3604,23 @@ declare module 'game-core/ui/components/item.slot' {
         protected mResJson: string;
         protected mResSlot: string;
         protected mIcon: DragDropIcon;
-        protected mAnimationCon: Phaser.GameObjects.Sprite;
-        protected mSubScriptSprite: Phaser.GameObjects.Sprite;
+        protected mAnimationCon: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+        protected mSubScriptSprite: Phaser.GameObjects.Image;
         protected mSubScriptRes: string;
-        protected itemBG: Phaser.GameObjects.Sprite;
-        protected mSelectSprite: Phaser.GameObjects.Sprite;
+        protected itemBG: Phaser.GameObjects.Image | Phaser.GameObjects.Graphics;
+        protected mSelectSprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
         protected mSelectRes: string;
         protected mWorld: WorldService;
         protected minitialize: boolean;
         protected mWid: number;
         protected mHei: number;
         protected isTipBoo: boolean;
-        constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string);
+        constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr?: string, respng?: string, resjson?: string, resSlot?: string, selectRes?: string, subscriptRes?: string);
         set hasTip(value: boolean);
         get hasTip(): boolean;
         createUI(): void;
         getView(): any;
-        getBg(): Phaser.GameObjects.Sprite;
+        getBg(): Phaser.GameObjects.Graphics | Phaser.GameObjects.Image;
         getIcon(): DragDropIcon;
         dataChange(val: any): void;
         destroy(): void;
@@ -3724,6 +3725,8 @@ declare module 'game-core/ui/components/icon.btn' {
             getBtnData(): any;
             setClick(func: Function): void;
             destroy(): void;
+            addListen(): void;
+            removeListen(): void;
             protected loadComplete(): void;
     }
 }
@@ -3810,7 +3813,7 @@ declare module 'game-core/ui/baseView/bagGroup/bag.group' {
       */
     export class BagGroup extends BasePanel {
         static SlotMaxCount: number;
-        bagBtn: Phaser.GameObjects.Sprite;
+        bagBtn: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
         bagSlotList: ItemSlot[];
         constructor(scene: Phaser.Scene, world: WorldService, x: number, y: number);
         show(param?: any): void;
@@ -4376,8 +4379,11 @@ declare module 'game-core/ui/bag/bagView/bagPanel' {
     export class BagPanel extends BasePanel {
         static PageMaxCount: number;
         bagSlotList: ItemSlot[];
-        mPreBtn: Phaser.GameObjects.Sprite;
-        mNextBtn: Phaser.GameObjects.Sprite;
+        mPreBtn: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
+        mNextBtn: Phaser.GameObjects.Sprite | Phaser.GameObjects.Graphics;
+        protected mResStr: string;
+        protected mResPng: string;
+        protected mResJson: string;
         constructor(scene: Phaser.Scene, world: WorldService);
         resize(wid: number, hei: number): void;
         setDataList(): void;
@@ -4498,7 +4504,7 @@ declare module 'game-core/ui/chat/chat.mediator' {
         setParam(param: any): void;
         getParam(): any;
         destroy(): void;
-        get room(): any;
+        get room(): import("../..").Room;
     }
 }
 
