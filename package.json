@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.216",
+    "version": "1.0.217",
     "main": "release/js/index.js",
     "types": "release/types/index.d.ts",
     "scripts": {
@@ -52,6 +52,6 @@
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "phaser": "^3.22.0",
         "simple-sha1": "^3.0.1",
-        "tooqingui": "^0.5.2"
+        "tooqingui": "^0.6.1"
     }
 }
