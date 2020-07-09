@@ -1,149 +1,118 @@
-/*! exports provided: AvatarEditorCanvas */
+/*! https://mths.be/punycode v1.4.1 by @mathias */
 
-/*! exports provided: Bin, MaxRectsBin, MaxRectsPacker, OversizedElementBin, PACKING_LOGIC, Rectangle */
+/**
+ * @author       Florian Vazelle
+ * @author       Geoffrey Glaive
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: EditorCanvas */
+/**
+ * @author       Jason Nicholls <nicholls.jason@gmail.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
 
-/*! exports provided: EditorCanvasType, EditorLauncher */
+/**
+ * @author       Joachim Grill <joachim@codeandweb.com>
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 CodeAndWeb GmbH
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: EditorLauncher, EditorCanvasType, ElementEditorCanvas, ElementEditorEmitType, ElementEditorBrushType, AvatarEditorCanvas */
+/**
+ * @author       Niklas von Hertzen (https://github.com/niklasvh/base64-arraybuffer)
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: ElementEditorBrushType, ElementEditorEmitType, ElementEditorCanvas */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       @samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: LOCAL_HOME_PATH, default */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: Launcher, EditorLauncher, EditorCanvasType, ElementEditorCanvas, ElementEditorEmitType, ElementEditorBrushType, AvatarEditorCanvas */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: Logger, log, error */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Florian Mertens
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: WEB_AVATAR_PATH, AvatarEditorDragonbone */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Igor Ognichenko <ognichenko.igor@gmail.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: WEB_HOME_PATH, SPRITE_SHEET_KEY, IMAGE_BLANK_KEY, default */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! exports provided: default */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       samme <samme.npm@gmail.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*! no static exports found */
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*!********************!*\
-  !*** ./version.js ***!
-  \********************/
+/**
+ * @author       Seth Berrier <berriers@uwstout.edu>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*!*********************!*\
-  !*** ./launcher.ts ***!
-  \*********************/
+/**
+ * @author       Stefan Hedman <schteppe@gmail.com> (http://steffe.se)
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*!**************************!*\
-  !*** ./src/utils/log.ts ***!
-  \**************************/
+/**
+ * @author       Vladimir Agafonkin
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*!*****************************!*\
-  !*** ./src/editor/index.ts ***!
-  \*****************************/
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
 
-/*!*********************************!*\
-  !*** ./node_modules/url/url.js ***!
-  \*********************************/
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2020 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
+*/
 
-/*!**********************************!*\
-  !*** ./node_modules/url/util.js ***!
-  \**********************************/
+//! stable.js 0.1.6, https://github.com/Two-Screen/stable
 
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-
-/*!***********************************!*\
-  !*** (webpack)/buildin/module.js ***!
-  \***********************************/
-
-/*!***************************************!*\
-  !*** ./src/editor/editor.launcher.ts ***!
-  \***************************************/
-
-/*!****************************************!*\
-  !*** ./lib/dragonBones/dragonBones.js ***!
-  \****************************************/
-
-/*!*****************************************!*\
-  !*** ./node_modules/process/browser.js ***!
-  \*****************************************/
-
-/*!********************************************!*\
-  !*** ./node_modules/phaser/dist/phaser.js ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./src/editor/canvas/editor.canvas.ts ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./src/editor/canvas/element/atlas.ts ***!
-  \********************************************/
-
-/*!***********************************************!*\
-  !*** ./node_modules/os-browserify/browser.js ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./node_modules/path-browserify/index.js ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./node_modules/querystring-es3/index.js ***!
-  \***********************************************/
-
-/*!************************************************!*\
-  !*** ./lib/dragonBones/dragonBones.js-exposed ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./node_modules/querystring-es3/decode.js ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./node_modules/querystring-es3/encode.js ***!
-  \************************************************/
-
-/*!**************************************************!*\
-  !*** ./src/editor/canvas/avatar/avatar.model.ts ***!
-  \**************************************************/
-
-/*!****************************************************!*\
-  !*** ./node_modules/phaser/dist/phaser.js-exposed ***!
-  \****************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/editor/canvas/element/position45.utils.ts ***!
-  \*******************************************************/
-
-/*!**********************************************************!*\
-  !*** ./src/editor/canvas/avatar/avatar.editor.canvas.ts ***!
-  \**********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/editor/canvas/element/element.editor.grids.ts ***!
-  \***********************************************************/
-
-/*!************************************************************!*\
-  !*** ./src/editor/canvas/element/element.editor.canvas.ts ***!
-  \************************************************************/
-
-/*!**************************************************************!*\
-  !*** ./src/editor/canvas/avatar/avatar.editor.dragonbone.ts ***!
-  \**************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./node_modules/maxrects-packer/dist/maxrects-packer.mjs ***!
-  \***************************************************************/
-
-/*!****************************************************************!*\
-  !*** ./src/editor/canvas/element/element.editor.animations.ts ***!
-  \****************************************************************/
-
-/*!**********************************************************************!*\
-  !*** ./src/editor/canvas/element/element.editor.resource.manager.ts ***!
-  \**********************************************************************/
-
-/*!**************************************************************************!*\
-  !*** ./node_modules/node-libs-browser/node_modules/punycode/punycode.js ***!
-  \**************************************************************************/
+//! © 2017 Angry Bytes and contributors. MIT licensed.
