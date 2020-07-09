@@ -4,6 +4,7 @@ import { CreateRoleScene } from "../../scenes/create.character";
 import { CreateRolePanel } from "./create.role.panel";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
+import { LoadingScene, LoginScene } from "../../scenes";
 
 export interface ICreateRole {
   enter();
@@ -28,10 +29,20 @@ export class CreateRole extends PacketHandler {
     this.mParam = content;
     if (!this.world.game.scene.getScene(CreateRoleScene.name))
       this.world.game.scene.add(CreateRoleScene.name, CreateRoleScene);
-    this.world.game.scene.start(CreateRoleScene.name, {
-      world: this.world,
-      role: this
-    });
+    const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
+    if (loadingScene && loadingScene.sys.isActive) {
+      loadingScene.sleep(() => {
+        this.world.game.scene.start(CreateRoleScene.name, {
+          world: this.world,
+          role: this
+        });
+      });
+    } else {
+      this.world.game.scene.start(CreateRoleScene.name, {
+        world: this.world,
+        role: this
+      });
+    }
   }
 
   start(scene: Phaser.Scene) {

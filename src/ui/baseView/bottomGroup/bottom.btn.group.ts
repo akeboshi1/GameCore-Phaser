@@ -14,18 +14,22 @@ import { BaseMediator } from "tooqingui";
 export class BottomBtnGroup extends BasePanel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;
-    private mChatBg: Phaser.GameObjects.Image;
+    private mChatBg: Phaser.GameObjects.Image | Phaser.GameObjects.Graphics;
     private mChatText: Phaser.GameObjects.Text;
-    private mTurnBtn: IconBtn;
-    private mBagBtn: IconBtn;
-    private mMarketBag: IconBtn;
-    private mShopBtn: IconBtn;
-    private mVoiceBtn: CheckButton;
-    private mMicBtn: CheckButton;
-    private mBtnList: IconBtn[];
+    private mTurnBtn: IconBtn | Phaser.GameObjects.Graphics;
+    private mBagBtn: IconBtn | Phaser.GameObjects.Graphics;
+    private mMarketBag: IconBtn | Phaser.GameObjects.Graphics;
+    private mShopBtn: IconBtn | Phaser.GameObjects.Graphics;
+    private mVoiceBtn: CheckButton | Phaser.GameObjects.Graphics;
+    private mMicBtn: CheckButton | Phaser.GameObjects.Graphics;
+    private mBtnList: any[];
     private mExpandBoo: boolean = false;
     private tmpWid: number = 0;
     private tmpHei: number = 0;
+    private mVoiceBtnWid: number = 0;
+    private mVoiceBtnHei: number = 0;
+    private mMicBtnWid: number = 0;
+    private mMicBtnHei: number = 0;
     // private mOrientation: Phaser.Scale.Orientation;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
@@ -37,30 +41,55 @@ export class BottomBtnGroup extends BasePanel {
     }
 
     public addListen() {
-        this.mChatContainer.on("pointerdown", this.chatHandler, this);
+        this.mChatContainer.on("pointerup", this.chatHandler, this);
         this.mVoiceBtn.on("selected", this.onSelectedVoiceHandler, this);
         this.mMicBtn.on("selected", this.onSelectedMicHandler, this);
+        if (CONFIG.pure) {
+            (<IconBtn>this.mTurnBtn).setClick(() => {
+                this.turnHandler();
+            });
+            (<IconBtn>this.mBagBtn).setClick(() => {
+                this.bagHandler();
+            });
+            (<IconBtn>this.mMarketBag).setClick(() => {
+                this.marketBagHandler();
+            });
+        } else {
+            this.mTurnBtn.on("pointerup", this.turnHandler, this);
+            this.mBagBtn.on("pointerup", this.bagHandler, this);
+            this.mMarketBag.on("pointerup", this.marketBagHandler, this);
+        }
     }
 
     public removeListen() {
-        this.mChatContainer.off("pointerdown", this.chatHandler, this);
+        this.mChatContainer.off("pointerup", this.chatHandler, this);
         this.mVoiceBtn.off("selected", this.onSelectedVoiceHandler, this);
         this.mMicBtn.off("selected", this.onSelectedMicHandler, this);
+        if (CONFIG.pure) {
+            (<IconBtn>this.mTurnBtn).removeListen();
+            (<IconBtn>this.mBagBtn).removeListen();
+            (<IconBtn>this.mMarketBag).removeListen();
+        } else {
+            this.mTurnBtn.on("pointerup", this.turnHandler, this);
+            this.mBagBtn.on("pointerup", this.bagHandler, this);
+        }
     }
     public resize() {
         const size: Size = this.mWorld.getSize();
         this.scale = this.mWorld.uiScale;
+        const voiceBtnWid: number = 28;
+        const voiceBtnHei: number = 28;
         if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.LANDSCAPE) {
             this.x = size.width >> 1;
-            this.mVoiceBtn.x = this.mVoiceBtn.width * this.mMicBtn.scaleX - this.mChatContainer.width / 2;
-            this.mVoiceBtn.y = -this.mVoiceBtn.height / 2 * this.mVoiceBtn.scaleY - this.mChatContainer.height / 2;
-            this.mMicBtn.x = this.mVoiceBtn.x + this.mVoiceBtn.width * this.mMicBtn.scaleX + 20;
+            this.mVoiceBtn.x = voiceBtnWid * this.mMicBtn.scaleX - this.mChatContainer.width / 2;
+            this.mVoiceBtn.y = -voiceBtnHei / 2 * this.mVoiceBtn.scaleY - this.mChatContainer.height / 2;
+            this.mMicBtn.x = this.mVoiceBtn.x + voiceBtnWid * this.mMicBtn.scaleX + 20;
             this.mMicBtn.y = this.mVoiceBtn.y;
         } else if (this.mWorld.game.scale.orientation === Phaser.Scale.Orientation.PORTRAIT) {
             this.x = size.width - (this.width / 2 + 40) * this.mWorld.uiScale;
-            this.mVoiceBtn.x = this.mVoiceBtn.width - this.mChatContainer.width / 2;
-            this.mVoiceBtn.y = this.mChatContainer.y - this.mChatContainer.height / 2 - this.mVoiceBtn.height / 2 * this.mMicBtn.scaleX;
-            this.mMicBtn.x = this.mVoiceBtn.x + this.mMicBtn.width * this.mMicBtn.scaleX + 20;
+            this.mVoiceBtn.x = voiceBtnWid - this.mChatContainer.width / 2;
+            this.mVoiceBtn.y = this.mChatContainer.y - this.mChatContainer.height / 2 - voiceBtnHei / 2 * this.mMicBtn.scaleX;
+            this.mMicBtn.x = this.mVoiceBtn.x + voiceBtnWid * this.mMicBtn.scaleX + 20;
             this.mMicBtn.y = this.mVoiceBtn.y;
         }
         this.y = size.height - 120 * this.mWorld.uiScale;
@@ -99,9 +128,11 @@ export class BottomBtnGroup extends BasePanel {
         if (!this.scene) {
             return;
         }
-        this.mResKey = "baseView";
-        this.scene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
-        this.scene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+        if (!CONFIG.pure) {
+            this.mResKey = "baseView";
+            this.scene.load.atlas("chat_atlas", Url.getRes("ui/chat/chat_atlas.png"), Url.getRes("ui/chat/chat_atlas.json"));
+            this.scene.load.atlas(this.mResKey, Url.getRes("ui/baseView/mainui_mobile.png"), Url.getRes("ui/baseView/mainui_mobile.json"));
+        }
         super.preload();
     }
 
@@ -111,9 +142,51 @@ export class BottomBtnGroup extends BasePanel {
         this.mWorld.uiManager.getUILayerManager().addToUILayer(this);
         const chatBgWidth: number = 430;
         const chatBgHeight: number = 230;
+        const btnWid: number = 58;
+        const btnHei: number = 58;
+        const bagBtnWid: number = 48;
+        const bagBtnHei: number = 48;
+        const voiceBtnWid: number = 28;
+        const voiceBtnHei: number = 28;
         this.mChatContainer = this.scene.make.container(undefined, false);
-        this.mChatBg = this.scene.make.image(undefined, false);
-        this.mChatBg.setTexture(this.mResKey, "btnGroup_chatBg.png");
+        if (!CONFIG.pure) {
+            this.mChatBg = this.scene.make.image(undefined, false);
+            this.mChatBg.setTexture(this.mResKey, "btnGroup_chatBg.png");
+            this.mTurnBtn = new IconBtn(this.scene, this.mWorld, {
+                key: UIMediatorType.Turn_Btn_Bottom, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"],
+                iconResKey: this.mResKey, iconTexture: "btnGroup_bottom_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+            });
+            this.mBagBtn = new IconBtn(this.scene, this.mWorld, {
+                key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+                iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+            });
+            this.mMarketBag = new IconBtn(this.scene, this.mWorld, {
+                key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+                iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+            });
+            this.mVoiceBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
+            this.mMicBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
+        } else {
+            this.mChatBg = this.scene.make.graphics(undefined, false);
+            this.mChatBg.fillStyle(0);
+            this.mChatBg.fillRect(-chatBgWidth >> 1, -chatBgHeight >> 1, chatBgWidth, chatBgHeight);
+            this.mTurnBtn = this.scene.make.graphics(undefined, false);
+            this.mTurnBtn.fillStyle(0xffcc00);
+            this.mTurnBtn.fillRect(-btnWid >> 1, -btnHei >> 1, btnWid, btnHei);
+            this.mBagBtn = this.scene.make.graphics(undefined, false);
+            this.mBagBtn.fillStyle(0xccff00);
+            this.mBagBtn.fillRect(-bagBtnWid >> 1, -bagBtnHei >> 1, bagBtnWid, bagBtnHei);
+            this.mMarketBag = this.scene.make.graphics(undefined, false);
+            this.mMarketBag.fillStyle(0xccff00);
+            this.mMarketBag.fillRect(-bagBtnWid >> 1, -bagBtnHei >> 1, bagBtnWid, bagBtnHei);
+            this.mVoiceBtn = this.scene.make.graphics(undefined, false);
+            this.mVoiceBtn.fillStyle(0xccff00);
+            this.mVoiceBtn.fillRect(-voiceBtnWid >> 1, -voiceBtnHei >> 1, voiceBtnWid, voiceBtnHei);
+            this.mMicBtn = this.scene.make.graphics(undefined, false);
+            this.mMicBtn.fillStyle(0xccff00);
+            this.mMicBtn.fillRect(-voiceBtnWid >> 1, -voiceBtnHei >> 1, voiceBtnWid, voiceBtnHei);
+        }
+
         this.mChatContainer.addAt(this.mChatBg, 0);
         this.mChatText = this.scene.make.text({
             width: chatBgWidth,
@@ -129,55 +202,35 @@ export class BottomBtnGroup extends BasePanel {
         this.add(this.mChatContainer);
         this.tmpWid += this.mChatContainer.width;
         this.tmpHei += this.mChatContainer.height;
-        this.mTurnBtn = new IconBtn(this.scene, this.mWorld, {
-            key: UIMediatorType.Turn_Btn_Bottom, bgResKey: this.mResKey, bgTextures: ["btnGroup_white_normal.png", "btnGroup_white_light.png", "btnGroup_white_select.png"],
-            iconResKey: this.mResKey, iconTexture: "btnGroup_bottom_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
-        });
+
         this.mTurnBtn.x = (this.tmpWid >> 1) + 30;
-        this.mTurnBtn.y = this.tmpHei - this.mTurnBtn.height >> 1;
-        this.mTurnBtn.setPos(this.mTurnBtn.x, this.mTurnBtn.y);
+        this.mTurnBtn.y = this.tmpHei - btnWid >> 1;
         this.add(this.mTurnBtn);
 
-        this.mBagBtn = new IconBtn(this.scene, this.mWorld, {
-            key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
-            iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
-        });
         this.mBagBtn.x = this.mTurnBtn.x;
-        this.mBagBtn.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 10;
-        this.mBagBtn.setPos(this.mBagBtn.x, this.mBagBtn.y);
-        this.tmpWid += this.mBagBtn.width + 30;
+        this.mBagBtn.y = this.mTurnBtn.y - btnHei / 2 - bagBtnHei / 2 - 10;
+        this.tmpWid += bagBtnWid + 30;
         this.add(this.mBagBtn);
         this.mBtnList.push(this.mBagBtn);
-        this.mTurnBtn.setClick(() => {
-            this.turnHandler();
-        });
+        // this.mTurnBtn.setClick(() => {
+        //     this.turnHandler();
+        // });
 
-        this.mBagBtn.setClick(() => {
-            this.bagHandler();
-        });
+        // this.mBagBtn.setClick(() => {
+        //     this.bagHandler();
+        // });
 
-        this.mMarketBag = new IconBtn(this.scene, this.mWorld, {
-            key: BagMediator.NAME, bgResKey: this.mResKey, bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
-            iconResKey: this.mResKey, iconTexture: "btnGroup_bag_icon.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
-        });
-        this.mMarketBag.x = this.mTurnBtn.x;
-        this.mMarketBag.y = this.mTurnBtn.y - this.mTurnBtn.height / 2 - this.mBagBtn.height / 2 - 60 - this.mMarketBag.height / 2;
-        this.mMarketBag.setPos(this.mMarketBag.x, this.mBagBtn.y);
-        this.tmpWid += this.mMarketBag.width + 30;
+        this.mMarketBag.x = this.mMarketBag.x;
+        this.mMarketBag.y = this.mBagBtn.y;
+        this.tmpWid += btnWid + 30;
         this.add(this.mMarketBag);
         this.setSize(this.tmpWid, this.tmpHei);
         this.mBtnList.push(this.mMarketBag);
 
-        this.mMarketBag.setClick(() => {
-            this.marketBagHandler();
-        });
-
-        this.mVoiceBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "voice_normal.png", "voice_selected.png");
         this.mVoiceBtn.x = this.width - 60 * this.mWorld.uiScale;
         this.mVoiceBtn.y = size.height - this.height;
         this.add(this.mVoiceBtn);
 
-        this.mMicBtn = new CheckButton(this.scene, 0, 0, "chat_atlas", "mic_normal.png", "mic_selected.png");
         this.mMicBtn.x = this.width - 20 * this.mWorld.uiScale;
         this.mMicBtn.y = size.height - this.height;
         this.add(this.mMicBtn);
@@ -196,17 +249,27 @@ export class BottomBtnGroup extends BasePanel {
 
     private onSelectedVoiceHandler(val: boolean) {
         if (val === false) {
-            this.mMicBtn.selected = false;
+            if (!CONFIG.pure) {
+                (<CheckButton>this.mMicBtn).selected = false;
+            } else {
+                const mode = val ? Phaser.BlendModes.SCREEN : Phaser.BlendModes.ADD;
+                (<Phaser.GameObjects.Graphics>this.mMicBtn).setBlendMode(mode);
+            }
         }
         this.emit("selectedVoice", val);
     }
 
     private onSelectedMicHandler(val: boolean) {
-        if (this.mVoiceBtn.selected === false) {
-            this.mMicBtn.selected = false;
-            return;
+        if (!CONFIG.pure) {
+            if ((<CheckButton>this.mVoiceBtn).selected === false) {
+                (<CheckButton>this.mVoiceBtn).selected = false;
+                return;
+            }
+            (<CheckButton>this.mVoiceBtn).selected = val;
+        } else {
+            const mode = val ? Phaser.BlendModes.SCREEN : Phaser.BlendModes.ADD;
+            (<Phaser.GameObjects.Graphics>this.mVoiceBtn).setBlendMode(mode);
         }
-        this.mMicBtn.selected = val;
         this.emit("selectedMic", val);
     }
 
@@ -302,7 +365,7 @@ export class BottomBtnGroup extends BasePanel {
         // test code
         let mediator = this.mWorld.uiManager.getMediator(ElementStorageMediator.name);
         if (!mediator) {
-            mediator = new ElementStorageMediator(this.mWorld.uiManager.getUILayerManager(), this.scene, this.mWorld)as BaseMediator;
+            mediator = new ElementStorageMediator(this.mWorld.uiManager.getUILayerManager(), this.scene, this.mWorld) as BaseMediator;
             this.mWorld.uiManager.setMediator(ElementStorageMediator.name, mediator);
         }
         if (mediator.isShow()) {

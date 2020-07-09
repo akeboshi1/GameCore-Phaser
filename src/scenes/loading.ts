@@ -12,6 +12,11 @@ export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Image;
   private mCallback: Function;
   private mRequestCom: boolean = false;
+  private graphicsMask: Phaser.GameObjects.Graphics;
+  private maskRadius: number = 10;
+  private tweenStart: Phaser.Tweens.Tween;
+  private awakeCallBack: Function;
+  private sleepCallBack: Function;
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -34,7 +39,7 @@ export class LoadingScene extends BasicScene {
   public init(data: any) {
     const element = document.createElement("style");
     document.head.appendChild(element);
-    const sheet: CSSStyleSheet = <CSSStyleSheet> element.sheet;
+    const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
 
     const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype'); }\n";
     sheet.insertRule(styles, 0);
@@ -50,7 +55,7 @@ export class LoadingScene extends BasicScene {
     try {
       WebFont.load({
         custom: {
-          families: [ "Source Han Sans" ]
+          families: ["Source Han Sans"]
         },
       });
     } catch (error) {
@@ -79,8 +84,14 @@ export class LoadingScene extends BasicScene {
       yoyo: false,
       repeat: -1
     });
+    this.graphicsMask = this.make.graphics(undefined, false);
+    this.graphicsMask.fillStyle(0xffcc00);
+    this.graphicsMask.fillCircle(0, 0, this.maskRadius);
+    this.graphicsMask.x = width >> 1;
+    this.graphicsMask.y = height >> 1;
     this.bg = this.add.image(width / 2, height / 2, "loading_bg");
     this.bg.scale = this.mWorld.uiScale;
+    this.bg.setMask(this.graphicsMask.createGeometryMask());
     this.lo = this.add.sprite(0, 0, "loading");
     // this.lo.setScale(this.mWorld.uiScale);
     this.scale.on("resize", this.checkSize, this);
@@ -91,30 +102,87 @@ export class LoadingScene extends BasicScene {
       this.mCallback.call(this, this);
       this.mCallback = undefined;
     }
+    this.tweenStart = this.tweens.add({
+      targets: this.graphicsMask,
+      duration: 1000,
+      ease: "Linear",
+      props: {
+        rotation: 360,
+      },
+      onUpdate: (tween, targets, element) => {
+        this.updateTween(true);
+      },
+    });
     // this.mLoadingManager.startup();
   }
 
   // update() {
-    // if (this.mRoom) {
-    //   if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
-    //     this.mRequestCom = true;
-    //     this.mRoom.completeLoad();
-    //   }
-    // }
+  // if (this.mRoom) {
+  //   if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
+  //     this.mRequestCom = true;
+  //     this.mRoom.completeLoad();
+  //   }
+  // }
   // }
 
-  public awake() {
+  public awake(cb?: Function) {
+    this.awakeCallBack = cb;
     this.scale.on("resize", this.checkSize, this);
     this.scene.wake();
   }
 
-  public sleep() {
-    this.scale.off("resize", this.checkSize, this);
-    this.scene.sleep();
+  public sleep(cb?: Function) {
+    this.sleepCallBack = cb;
+    if (this.graphicsMask) {
+      if (this.tweenStart) {
+        this.tweenStart.stop();
+        this.tweenStart.remove();
+        this.tweenStart = null;
+      }
+      this.tweenStart = this.tweens.add({
+        targets: this.graphicsMask,
+        duration: 1000,
+        ease: "Linear",
+        props: {
+          rotation: 0,
+        },
+        onUpdate: (tween, targets, element) => {
+          this.updateTween(false);
+        },
+        onComplete: () => {
+          this.scale.off("resize", this.checkSize, this);
+          this.scene.sleep();
+        }
+      });
+    } else {
+      this.scale.off("resize", this.checkSize, this);
+      this.scene.sleep();
+    }
   }
 
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+  }
+
+  private updateTween(show: boolean) {
+    if (this.graphicsMask) {
+      const pad: number = show ? 100 : -100;
+      if ((this.maskRadius <= 0 && !show) || (this.maskRadius > this.scale.gameSize.width + 20 && show)) {
+        if (this.tweenStart) {
+          if (this.sleepCallBack) {
+            this.sleepCallBack();
+          }
+          this.tweenStart.stop();
+          this.tweenStart.remove();
+          this.tweenStart = null;
+        }
+        return;
+      }
+      this.graphicsMask.clear();
+      this.maskRadius += pad;
+      this.graphicsMask.fillStyle(0xffcc00);
+      this.graphicsMask.fillCircle(0, 0, this.maskRadius);
+    }
   }
 
   private checkSize(size: Size) {

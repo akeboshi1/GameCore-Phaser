@@ -78,10 +78,12 @@ export class IconBtn extends Phaser.GameObjects.Container {
     }
 
     public setClick(func: Function) {
+        this.addListen();
         this.monClick = func;
     }
 
     public destroy() {
+        this.removeListen();
         if (this.mBtnBg) {
             this.mBtnBg.destroy(true);
         }
@@ -95,6 +97,21 @@ export class IconBtn extends Phaser.GameObjects.Container {
         this.mScene = null;
         super.destroy();
     }
+    public addListen() {
+        this.removeListen();
+        this.on("pointerup", this.upHandler, this);
+        this.on("pointerdown", this.downHandler, this);
+        this.on("pointerover", this.overHandler, this);
+        this.on("pointerout", this.outHandler, this);
+    }
+
+    public removeListen() {
+        this.monClick = null;
+        this.off("pointerup", this.upHandler, this);
+        this.off("pointerdown", this.downHandler, this);
+        this.off("pointerover", this.overHandler, this);
+        this.off("pointerout", this.outHandler, this);
+    }
 
     protected loadComplete() {
         this.mBtnBg.setTexture(this.mBgResKey, this.mBgTexture[0]);
@@ -107,10 +124,7 @@ export class IconBtn extends Phaser.GameObjects.Container {
         }
         this.setSize(this.mBtnBg.width, this.mBtnBg.height);
         this.setInteractive();
-        this.on("pointerup", this.upHandler, this);
-        this.on("pointerdown", this.downHandler, this);
-        this.on("pointerover", this.overHandler, this);
-        this.on("pointerout", this.outHandler, this);
+        this.addListen();
     }
 
     private overHandler(pointer) {
