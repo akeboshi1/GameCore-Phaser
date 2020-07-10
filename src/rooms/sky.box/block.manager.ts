@@ -88,7 +88,7 @@ export class BlockManager implements IBlockManager {
   updatePosition() {
     const camera = this.scene.cameras.main;
     const { offset } = this.mScenery;
-    const loc = this.fixPosition(offset);
+    const loc = this.fixPosition({ x: offset.x, y: offset.y });
     camera.setPosition(loc.x, loc.y);
   }
 
