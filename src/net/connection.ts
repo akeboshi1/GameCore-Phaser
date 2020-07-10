@@ -10,8 +10,8 @@ import { Logger } from "../utils/log";
 // PBpacket.addProtocol(op_gameconfig);
 // PBpacket.addProtocol(op_virtual_world);
 // PBpacket.addProtocol(op_gameconfig_01);
-import NetWorker from "worker-loader?name=js/[hash].[name].js!./networker";
-import HeartBeatWorker from "worker-loader?name=js/[hash].[name].js!./heartbeatworker";
+import NetWorker from "worker-loader?name=js/[name].js!./networker";
+import HeartBeatWorker from "worker-loader?name=js/[name].js!./heartbeatworker";
 import * as protos from "pixelpai_proto";
 
 for (const key in protos) {
