@@ -8,5 +8,7 @@
   },
   "game_id": "5cd8cf04cbcbf91a0afc3f96.5e410ba50681ad5557b4d6e9",
   "virtual_world_id": "0",
-  "pure": true
+  "pure": true,
+  "modulePath":"http://localhost:8081/js/",
+  "modules":["picatown"]
 }

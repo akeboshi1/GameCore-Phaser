@@ -50,8 +50,8 @@
         "i18next-xhr-backend": "^3.2.2",
         "maxrects-packer": "^2.6.0",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
-        "phaser": "^3.22.0",
+        "phaser": "^3.23.0",
         "simple-sha1": "^3.0.1",
-        "tooqingui": "^0.6.1"
+        "tooqingui": "^0.6.6"
     }
 }

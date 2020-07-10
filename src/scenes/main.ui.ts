@@ -5,7 +5,7 @@ import { Size } from "../utils/size";
 import { Font } from "../utils/font";
 import { BasicScene } from "./basic.scene";
 
-export class MainUIScene extends BasicScene {
+export class MainUIScene extends Phaser.Scene {
   private timeOutID = 0;
   private timeOutCancelMap = {};
   private timeOutCallerList = [];
@@ -15,6 +15,10 @@ export class MainUIScene extends BasicScene {
   private mRoom: Room;
   constructor() {
     super({ key: MainUIScene.name });
+  }
+
+  setViewPort(x: number, y: number, width: number, height: number) {
+    this.cameras.main.setViewport(x, y, width, height);
   }
 
   public preload() {
