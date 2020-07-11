@@ -336,6 +336,7 @@ declare module 'game-core/game/world' {
             get account(): Account;
             get modulePath(): string;
             enableClick(): void;
+            startLoadModule(index: number): void;
             disableClick(): void;
             showLoading(): Promise<any>;
             getGameConfig(): Phaser.Types.Core.GameConfig;
