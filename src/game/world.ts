@@ -99,6 +99,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         if (config.modulePath === undefined) {
             config.modulePath = CONFIG.modulePath || "";
+        } else {
+            CONFIG.modulePath = config.modulePath;
+        }
+        if (config.modules === undefined) {
+            config.modules = CONFIG.modules || undefined;
+        } else {
+            CONFIG.modules = config.modules;
         }
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
@@ -398,22 +405,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         ) {
             this.mRoomMamager.currentRoom.scene.input.enabled = true;
         }
-    }
-
-    public startLoadModule(index: number) {
-        const modules: any = <string[]>CONFIG.modules;
-        let module = modules[index];
-        if (!module) {
-            return;
-        }
-        this.pluginManager.load(module, CONFIG.modulePath + module + ".min.js").then((plugin) => {
-            index += 1;
-            module = modules[index];
-            if (!module) {
-                return;
-            }
-            this.startLoadModule(index + 1);
-        });
     }
 
     public disableClick() {
