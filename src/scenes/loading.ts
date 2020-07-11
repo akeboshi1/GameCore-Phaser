@@ -111,7 +111,7 @@ export class LoadingScene extends BasicScene {
       },
       onUpdate: (tween, targets, element) => {
         this.updateTween(true);
-      },
+      }
     });
     // this.mLoadingManager.startup();
   }
@@ -150,14 +150,24 @@ export class LoadingScene extends BasicScene {
           this.updateTween(false);
         },
         onComplete: () => {
-          this.scale.off("resize", this.checkSize, this);
-          this.scene.sleep();
+          // this.scale.off("resize", this.checkSize, this);
+          // this.scene.sleep();
+          // this.scene.stop();
         }
       });
     } else {
       this.scale.off("resize", this.checkSize, this);
       this.scene.sleep();
     }
+  }
+  public restart() {
+    this.scene.restart();
+  }
+  public start() {
+    this.scene.start();
+  }
+  public stop() {
+    this.scene.stop();
   }
 
   getKey(): string {
@@ -167,21 +177,20 @@ export class LoadingScene extends BasicScene {
   private updateTween(show: boolean) {
     if (this.graphicsMask) {
       const pad: number = show ? 100 : -100;
-      if ((this.maskRadius <= 0 && !show) || (this.maskRadius > this.scale.gameSize.width + 20 && show)) {
-        if (this.tweenStart) {
-          if (this.sleepCallBack) {
-            this.sleepCallBack();
-          }
-          this.tweenStart.stop();
-          this.tweenStart.remove();
-          this.tweenStart = null;
-        }
-        return;
-      }
       this.graphicsMask.clear();
       this.maskRadius += pad;
       this.graphicsMask.fillStyle(0xffcc00);
       this.graphicsMask.fillCircle(0, 0, this.maskRadius);
+      if ((this.maskRadius <= 0 && !show) || (this.maskRadius > this.scale.gameSize.width + 20 && show)) {
+        if (this.tweenStart) {
+          this.tweenStart.stop();
+          this.tweenStart.remove();
+          this.tweenStart = null;
+        }
+        if (this.sleepCallBack) {
+          this.sleepCallBack();
+        }
+      }
     }
   }
 

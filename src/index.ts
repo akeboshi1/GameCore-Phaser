@@ -11,5 +11,3 @@ export * from "./editor";
 export { i18n } from "./i18n";
 export { GameMain, ILauncherConfig } from "./launcher";
 export { Handler, HandlerDispatcher } from "./Handler";
-export * from "net-socket-packet";
-export * from "game-capsule";

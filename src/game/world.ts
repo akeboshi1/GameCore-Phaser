@@ -1,5 +1,4 @@
 import "phaser";
-import "dragonBones";
 import "tooqingui";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
@@ -97,16 +96,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (config.height === undefined) {
             config.height = window.innerHeight;
         }
-        if (config.modulePath === undefined) {
-            config.modulePath = CONFIG.modulePath || "";
-        } else {
-            CONFIG.modulePath = config.modulePath;
-        }
-        if (config.modules === undefined) {
-            config.modules = CONFIG.modules || undefined;
-        } else {
-            CONFIG.modules = config.modules;
-        }
+        config.modulePath = CONFIG.modulePath;
+        config.modules = CONFIG.modules;
+        // if (config.modulePath === undefined) {
+        //     config.modulePath = CONFIG.modulePath || "";
+        // } else {
+        //     CONFIG.modulePath = config.modulePath;
+        // }
+        // if (config.modules === undefined) {
+        //     config.modules = CONFIG.modules || undefined;
+        // } else {
+        //     CONFIG.modules = config.modules;
+        // }
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
         const scaleW = config.width / this.DEFAULT_WIDTH * (config.devicePixelRatio / this.mUIRatio);
