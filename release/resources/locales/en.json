@@ -84,11 +84,26 @@
     "task_quest": "Task Quest:"
   },
   "furni_unlock": {
-    "unlock": "UNLOCK",
+    "unlock": "Immediately unlock",
     "repair": "REPAIR",
-    "needMaterials": "Materials required",
+    "needMaterials": "Synthetic materials needed",
     "source": "Source",
     "sold": "Price",
     "notrading": "Not Trading"
+  },
+  "room_upgrade": {
+    "clicktocontinue": "Click on any blank area to continue"
+  },
+  "room_info": {
+    "infobtn": "ROOM INFORMATION",
+    "setting": "ROOM ETTINGS",
+    "editorroom": "Editing room",
+    "roomname": "Room name",
+    "roomlevel": "Room level",
+    "expvalue": "Experience value",
+    "popvalue": "Popular value",
+    "goodvalue": "Good value",
+    "compveness": "Competitiveness",
+    "prosperity": "Prosperity"
   }
 }
