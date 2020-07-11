@@ -395,6 +395,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mConfig.modulePath;
     }
 
+    get modules(): any {
+        return this.mConfig.modules;
+    }
+
     public enableClick() {
         if (
             this.game &&

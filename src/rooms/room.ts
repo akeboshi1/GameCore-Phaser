@@ -265,7 +265,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addSkyBox(scenery);
             }
         }
-        if (CONFIG.modules) {
+        if (this.mWorld.getConfig().modules) {
             this.startLoadModule(0);
         }
         // this.mWorld.pluginManager.load("picatown-core", CONFIG.modulePath + `http://localhost:8081/ma/picatown.min.js`).then((plugin) => {
@@ -550,12 +550,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private startLoadModule(index: number) {
-        const modules: any = <string[]>CONFIG.modules;
+        const modules: any = <string[]>this.mWorld.getConfig().modules;
         let module = modules[index];
         if (!module) {
             return;
         }
-        this.mWorld.pluginManager.load(module, CONFIG.modulePath + module + ".min.js").then((plugin) => {
+        this.mWorld.pluginManager.load(module, this.mWorld.getConfig().modulePath + module + ".min.js").then((plugin) => {
             index += 1;
             module = modules[index];
             if (!module) {

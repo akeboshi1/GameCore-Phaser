@@ -335,6 +335,7 @@ declare module 'game-core/game/world' {
             get httpService(): HttpService;
             get account(): Account;
             get modulePath(): string;
+            get modules(): any;
             enableClick(): void;
             disableClick(): void;
             showLoading(): Promise<any>;
