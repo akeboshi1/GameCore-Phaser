@@ -400,6 +400,22 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    public startLoadModule(index: number) {
+        const modules: any = <string[]>CONFIG.modules;
+        let module = modules[index];
+        if (!module) {
+            return;
+        }
+        this.pluginManager.load(module, CONFIG.modulePath + module + ".min.js").then((plugin) => {
+            index += 1;
+            module = modules[index];
+            if (!module) {
+                return;
+            }
+            this.startLoadModule(index + 1);
+        });
+    }
+
     public disableClick() {
         if (
             this.game &&
