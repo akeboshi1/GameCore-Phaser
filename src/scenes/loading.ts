@@ -32,17 +32,10 @@ export class LoadingScene extends BasicScene {
   }
 
   public init(data: any) {
-    const element = document.createElement("style");
-    document.head.appendChild(element);
-    const sheet: CSSStyleSheet = <CSSStyleSheet> element.sheet;
-
-    const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype'); }\n";
-    sheet.insertRule(styles, 0);
-
+    this.createFont();
     this.mWorld = data.world;
     this.mRoom = data.room;
     this.mRequestCom = false;
-
     this.mCallback = data.callBack;
   }
 
@@ -50,7 +43,8 @@ export class LoadingScene extends BasicScene {
     try {
       WebFont.load({
         custom: {
-          families: [ "Source Han Sans" ]
+          // families: ["Source Han Sans", "tt0173m_", "tt0503m_"]
+          families: ["Source Han Sans", "tt0173m_", "tt0503m_"]
         },
       });
     } catch (error) {
@@ -59,33 +53,25 @@ export class LoadingScene extends BasicScene {
     if (this.mRoom) this.mRoom.startLoad();
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;
-    // this.bg = this.add.graphics();
-    // this.bg.fillStyle(0x616161);
-    // this.bg.fillRect(0, 0, width, height);
-    // const framesObj: {} = this.textures.get("loading").frames;
-    // const tmpFrames: any[] = [];
-    // for (const key in framesObj) {
-    //   if (key === "__BASE") continue;
-    //   const frame = framesObj[key];
-    //   if (!frame) continue;
-    //   tmpFrames.push(key);
-    // }
-    // 手动把json配置中的frames给予anims
-    this.anims.create({
-      key: "loading_anmis",
-      // frames: this.anims.generateFrameNumbers("loading", { start: 0, end: 59, frames: tmpFrames }),
-      frames: this.anims.generateFrameNames("loading", { prefix: "loading_", start: 1, end: 59, zeroPad: 3, suffix: ".png" }),
-      frameRate: 16,
-      yoyo: false,
-      repeat: -1
-    });
     this.bg = this.add.image(width / 2, height / 2, "loading_bg");
     this.bg.scale = this.mWorld.uiScale;
     this.lo = this.add.sprite(0, 0, "loading");
     // this.lo.setScale(this.mWorld.uiScale);
     this.scale.on("resize", this.checkSize, this);
-    this.lo.play("loading_anmis");
-
+    // 手动把json配置中的frames给予anims
+    const frames = this.anims.generateFrameNames("loading", { prefix: "loading_", start: 1, end: 59, zeroPad: 3, suffix: ".png" });
+    try {
+      this.anims.create({
+        key: "loading_anmis",
+        frames,
+        frameRate: 16,
+        yoyo: false,
+        repeat: -1
+      });
+      this.lo.play("loading_anmis");
+    } catch (error) {
+      Logger.getInstance().warn("anims", error);
+    }
     this.checkSize(new Size(width, height));
     if (this.mCallback) {
       this.mCallback.call(this, this);
@@ -95,12 +81,12 @@ export class LoadingScene extends BasicScene {
   }
 
   // update() {
-    // if (this.mRoom) {
-    //   if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
-    //     this.mRequestCom = true;
-    //     this.mRoom.completeLoad();
-    //   }
-    // }
+  // if (this.mRoom) {
+  //   if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
+  //     this.mRequestCom = true;
+  //     this.mRoom.completeLoad();
+  //   }
+  // }
   // }
 
   public awake() {
@@ -121,6 +107,19 @@ export class LoadingScene extends BasicScene {
     const { width, height } = size;
     this.lo.x = width / 2;
     this.lo.y = height / 2;
+  }
+
+  private createFont() {
+    const element = document.createElement("style");
+    document.head.appendChild(element);
+    const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
+   // const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
+    const styles2 = "@font-face { font-family: 'tt0173m_'; src: url('./resources/fonts/en/tt0173m_.ttf') format('truetype');font-display:swap }\n";
+    const styles3 = "@font-face { font-family: 'tt0503m_'; src: url('./resources/fonts/en/tt0503m_.ttf') format('truetype'); font-display:swap}";
+   // sheet.insertRule(styles, 0);
+    sheet.insertRule(styles2, 0);
+    sheet.insertRule(styles3, 0);
+
   }
 
 }

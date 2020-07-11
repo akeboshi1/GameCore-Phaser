@@ -16,8 +16,7 @@ export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
     private confirmBtn: NineSliceButton;
     private blackGraphic: Phaser.GameObjects.Graphics;
-    private bg: Phaser.GameObjects.Image;
-    private bg1: Phaser.GameObjects.Image;
+    private bg: NineSlicePatch;
     private bgicon: Phaser.GameObjects.Image;
     private titleimage: Phaser.GameObjects.Image;
     private titleName: Phaser.GameObjects.Text;
@@ -80,7 +79,8 @@ export class PicFurniFunPanel extends BasePanel {
 
     preload() {
         this.addAtlas(this.key, "furni_unlock/furni_unlock.png", "furni_unlock/furni_unlock.json");
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.common + ".png", UIAtlasName.common + ".json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
+        this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
         super.preload();
     }
 
@@ -91,15 +91,20 @@ export class PicFurniFunPanel extends BasePanel {
         this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         this.add(this.blackGraphic);
         this.content = this.scene.make.container(undefined, false);
+        const bgwidth = 295 * this.dpr, bgheight = 369 * this.dpr;
+        this.content.setSize(bgwidth, bgheight);
         this.add(this.content);
-        this.bg = this.scene.make.image({ key: this.key, frame: "bg" });
-        this.bg1 = this.scene.make.image({ key: this.key, frame: "bg_1" });
+        this.bg = new NineSlicePatch(this.scene, 0, 0, bgwidth, bgheight, UIAtlasKey.common2Key, "bg", {
+            left: 20 * this.dpr,
+            top: 20 * this.dpr,
+            right: 20 * this.dpr,
+            bottom: 40 * this.dpr
+        });
         this.bgicon = this.scene.make.image({ key: this.key, frame: "bg_f" });
         const posY = -this.bg.height * 0.5;
-        this.bg1.y = posY + this.bg1.height * 0.5 + 5 * this.dpr;
         this.bgicon.y = posY + this.bgicon.height * 0.5 + 30 * this.dpr;
-        this.content.add([this.bg, this.bg1, this.bgicon]);
-        this.titleimage = this.scene.make.image({ x: 0, y: posY + 5 * this.dpr, key: this.key, frame: "title" }, false);
+        this.content.add([this.bg, this.bgicon]);
+        this.titleimage = this.scene.make.image({ x: 0, y: posY + 5 * this.dpr, key: UIAtlasKey.common2Key, frame: "title" }, false);
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.titleName = this.scene.make.text({
             x: 0, y: this.titleimage.y + 2 * this.dpr, text: "沙滩躺椅",
@@ -124,12 +129,8 @@ export class PicFurniFunPanel extends BasePanel {
             text: i18n.t("furni_unlock.needMaterials"),
             style: {
                 color: "#253FCA",
-                fontSize: 13 * this.dpr,
-                fontFamily: Font.DEFULT_FONT,
-                wordWrap: {
-                    width: 90 * this.dpr,
-                    useAdvancedWrap: true
-                }
+                fontSize: 10 * this.dpr,
+                fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
         const materialLine = this.scene.make.image({ key: this.key, frame: "sourcelist_title" });
@@ -140,7 +141,7 @@ export class PicFurniFunPanel extends BasePanel {
         this.materialCon.add([materialTitle, materialLine, materialLine2]);
         this.materialGameScroll = new GameScroller(this.scene, {
             x: 0,
-            y: 5 * this.dpr,
+            y: 8 * this.dpr,
             width: 240 * this.dpr,
             height: 90 * this.dpr,
             zoom: this.scale,
@@ -184,14 +185,14 @@ export class PicFurniFunPanel extends BasePanel {
         this.materialTipsCon.add([tipsbg, tipsText]);
 
         this.confirmBtn = new NineSliceButton(this.scene, 0, -posY - 30 * this.dpr, 100 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn_over", i18n.t("furni_unlock.unlock"), this.dpr, this.scale, {
-            left: 26,
-            top: 26,
-            right: 26,
-            bottom: 26
+            left: 15 * this.dpr,
+            top: 15 * this.dpr,
+            right: 15 * this.dpr,
+            bottom: 15 * this.dpr
         });
         this.confirmBtn.setTextStyle({
             color: "#976400",
-            fontSize: 16 * this.dpr,
+            fontSize: 10 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
         this.content.add(this.confirmBtn);

@@ -53,7 +53,7 @@ export class PicaMainUIPanel extends BasePanel {
             Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
             return;
         }
-        this.mSceneName.on("pointerup", this.onEnterEditScene, this);
+        this.mSceneName.on("pointerup", this.onOpenRoomPanel, this);
     }
 
     removeListen() {
@@ -62,7 +62,7 @@ export class PicaMainUIPanel extends BasePanel {
             Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
             return;
         }
-        this.mSceneName.off("pointerup", this.onEnterEditScene, this);
+        this.mSceneName.off("pointerup", this.onOpenRoomPanel, this);
     }
 
     update(param: any) {
@@ -207,8 +207,8 @@ export class PicaMainUIPanel extends BasePanel {
         super.init();
     }
 
-    private onEnterEditScene() {
-        this.emit("enterEdit");
+    private onOpenRoomPanel() {
+        this.emit("openroompanel");
     }
     private onHeadHandler() {
         this.emit("showPanel", "CharacterInfo");

@@ -93,5 +93,20 @@
     "source": "来源：",
     "sold": "可售卖：",
     "notrading": "不可交易"
+  },
+  "room_upgrade": {
+    "clicktocontinue": "点击任意处继续"
+  },
+  "room_info": {
+    "infobtn": "房间信息",
+    "setting": "房间设置",
+    "editorroom": "编辑房间",
+    "roomname": "房间名",
+    "roomlevel": "房间等级",
+    "expvalue": "经验值",
+    "popvalue": "热度",
+    "goodvalue": "点赞",
+    "compveness": "排名",
+    "prosperity": "装饰值"
   }
 }

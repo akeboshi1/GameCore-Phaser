@@ -9,11 +9,14 @@ export class PicaMainUIMediator extends BaseMediator {
     public static NAME: string = "PicaMainUIMediator";
     private world: WorldService;
     private mainUI: PicaMainUI;
+    private mPlayerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
+    private mRoomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
         this.mainUI = new PicaMainUI(worldService);
-        this.mainUI.on("update", this.onUpdateHandler, this);
+        this.mainUI.on("updateplayer", this.onUpdatePlayerHandler, this);
+        this.mainUI.on("updateroom", this.onUpdateRoomHandler, this);
     }
 
     show(param?: any) {
@@ -26,7 +29,7 @@ export class PicaMainUIMediator extends BaseMediator {
             this.mView.on("showPanel", this.onShowPanelHandler, this);
         }
         this.mView.show(param);
-        this.mView.on("enterEdit", this.onEnterEditSceneHandler, this);
+        this.mView.on("openroompanel", this.onOpenRoomHandler, this);
         this.layerManager.addToUILayer(this.mView);
     }
 
@@ -37,23 +40,50 @@ export class PicaMainUIMediator extends BaseMediator {
         super.destroy();
     }
 
-    private onEnterEditSceneHandler() {
-        if (this.mainUI) {
-            this.mainUI.sendEnterDecorate();
-        }
+    get playerInfo() {
+        return this.mPlayerInfo;
     }
 
-    private onUpdateHandler(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
-        this.show(content);
+    get roomInfo() {
+        return this.mRoomInfo;
+    }
+
+    get isSelfRoom() {
+        if (!this.playerInfo || !this.roomInfo) return false;
+        const rooms = this.playerInfo.rooms;
+        const curRoomid = this.roomInfo.roomId;
+        for (const room of rooms) {
+            if (room.roomId === curRoomid) return true;
+        }
+        return false;
+    }
+    private onOpenRoomHandler() {
+        if (!this.isSelfRoom) return;
+        const uimanager = this.world.uiManager;
+        uimanager.showMed("PicHouse");
+    }
+    private onUpdateHandler(data: any) {
+        this.show(data);
+    }
+
+    private onUpdatePlayerHandler(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+        this.onUpdateHandler(content);
+        this.mPlayerInfo = content;
+    }
+
+    private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
+        this.onUpdateHandler(content);
+        this.mRoomInfo = content;
     }
 
     private onShowPanelHandler(panel: string, data?: any) {
         if (!panel || !this.world) {
-          return;
+            return;
         }
         const uiManager = this.world.uiManager;
         if (data)
-          uiManager.showMed(panel, data);
+            uiManager.showMed(panel, data);
         else uiManager.showMed(panel);
-      }
+    }
+
 }

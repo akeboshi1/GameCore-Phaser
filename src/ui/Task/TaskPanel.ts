@@ -75,7 +75,7 @@ export class TaskPanel extends BasePanel {
 
     preload() {
         this.addAtlas(this.key, "task/task.png", "task/task.json");
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.common + ".png", UIAtlasName.common + ".json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
     init() {

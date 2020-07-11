@@ -35,22 +35,16 @@ export class PicaMainUI extends PacketHandler {
         }
     }
 
-    sendEnterDecorate() {
-        if (this.connection) {
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER));
-        }
-    }
-
     destroy() {
         this.unregister();
     }
 
     private onUpdatePlayerInfo(packet: PBpacket) {
-        this.mEvent.emit("update", packet.content);
+        this.mEvent.emit("updateplayer", packet.content);
     }
 
     private onUpdateModeRoomInfo(packet: PBpacket) {
-        this.mEvent.emit("update", packet.content);
+        this.mEvent.emit("updateroom", packet.content);
     }
 
     get connection(): ConnectionService {
