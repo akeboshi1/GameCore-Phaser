@@ -34,25 +34,19 @@ export class LoadingScene extends BasicScene {
   }
 
   public init(data: any) {
-    const element = document.createElement("style");
-    document.head.appendChild(element);
-    const sheet: CSSStyleSheet = <CSSStyleSheet> element.sheet;
-
-    const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype'); }\n";
-    sheet.insertRule(styles, 0);
-
+    this.createFont();
     this.mWorld = data.world;
     this.mRoom = data.room;
     this.mRequestCom = false;
-
-    // this.mCallback = data.callBack;
+    this.mCallback = data.callBack;
   }
 
   public create() {
     try {
       WebFont.load({
         custom: {
-          families: [ "Source Han Sans" ]
+          // families: ["Source Han Sans", "tt0173m_", "tt0503m_"]
+          families: ["Source Han Sans", "tt0173m_", "tt0503m_"]
         },
       });
     } catch (error) {
@@ -109,12 +103,12 @@ export class LoadingScene extends BasicScene {
   }
 
   // update() {
-    // if (this.mRoom) {
-    //   if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
-    //     this.mRequestCom = true;
-    //     this.mRoom.completeLoad();
-    //   }
-    // }
+  // if (this.mRoom) {
+  //   if (this.mRoom.world.clock.clockSync && !this.mRequestCom) {
+  //     this.mRequestCom = true;
+  //     this.mRoom.completeLoad();
+  //   }
+  // }
   // }
 
   public awake() {
@@ -147,6 +141,19 @@ export class LoadingScene extends BasicScene {
 
     this.bg.x = 0; // + this.bg.width * this.bg.originX;
     this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.height * this.bg.originY ;
+  }
+
+  private createFont() {
+    const element = document.createElement("style");
+    document.head.appendChild(element);
+    const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
+   // const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
+    const styles2 = "@font-face { font-family: 'tt0173m_'; src: url('./resources/fonts/en/tt0173m_.ttf') format('truetype');font-display:swap }\n";
+    const styles3 = "@font-face { font-family: 'tt0503m_'; src: url('./resources/fonts/en/tt0503m_.ttf') format('truetype'); font-display:swap}";
+   // sheet.insertRule(styles, 0);
+    sheet.insertRule(styles2, 0);
+    sheet.insertRule(styles3, 0);
+
   }
 
 }
@@ -213,4 +220,5 @@ class Curtain {
   destroy() {
 
   }
+
 }

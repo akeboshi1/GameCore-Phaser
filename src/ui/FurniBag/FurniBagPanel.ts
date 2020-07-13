@@ -53,7 +53,7 @@ export class FurniBagPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
-    this.scale =1;
+    this.scale = 1;
     this.setInteractive();
   }
 
@@ -85,7 +85,7 @@ export class FurniBagPanel extends BasePanel {
     this.useBtn.x = this.mAdd.x;
     this.useBtn.y = this.mAdd.y;
 
-    this.sellBtn.x = Math.floor(this.mAdd.x - this.sellBtn.width - 10 * this.dpr) ;
+    this.sellBtn.x = Math.floor(this.mAdd.x - this.sellBtn.width - 10 * this.dpr);
     this.sellBtn.y = this.mAdd.y;
 
     this.resetBtn.x = this.mAdd.x + 25 * this.dpr;
@@ -385,8 +385,8 @@ export class FurniBagPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom:this.scale,
-        cellPadX:10*this.dpr*zoom
+        zoom: this.scale,
+        cellPadX: 10 * this.dpr * zoom
       },
       scrollMode: 1,
       clamplChildOY: false,

@@ -1,48 +1,8 @@
 {
 	"frames": {
-		"bg": {
-			"frame": {
-				"x": 1,
-				"y": 1,
-				"w": 857,
-				"h": 1000
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 857,
-				"h": 1000
-			},
-			"sourceSize": {
-				"w": 857,
-				"h": 1000
-			}
-		},
-		"bg_1": {
-			"frame": {
-				"x": 860,
-				"y": 1,
-				"w": 834,
-				"h": 808
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 834,
-				"h": 808
-			},
-			"sourceSize": {
-				"w": 834,
-				"h": 808
-			}
-		},
 		"bg_f": {
 			"frame": {
-				"x": 1696,
+				"x": 1,
 				"y": 1,
 				"w": 428,
 				"h": 428
@@ -62,8 +22,8 @@
 		},
 		"bg_m": {
 			"frame": {
-				"x": 1696,
-				"y": 431,
+				"x": 431,
+				"y": 1,
 				"w": 141,
 				"h": 141
 			},
@@ -82,7 +42,7 @@
 		},
 		"sourcelist_title": {
 			"frame": {
-				"x": 1839,
+				"x": 1,
 				"y": 431,
 				"w": 172,
 				"h": 20
@@ -99,26 +59,6 @@
 				"w": 172,
 				"h": 20
 			}
-		},
-		"title": {
-			"frame": {
-				"x": 860,
-				"y": 811,
-				"w": 535,
-				"h": 121
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 535,
-				"h": 121
-			},
-			"sourceSize": {
-				"w": 535,
-				"h": 121
-			}
 		}
 	},
 	"meta": {
@@ -127,8 +67,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 2125,
-			"h": 1002
+			"w": 573,
+			"h": 452
 		},
 		"scale": "1"
 	}

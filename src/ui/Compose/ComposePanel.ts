@@ -78,7 +78,7 @@ export class ComposePanel extends BasePanel {
 
     preload() {
         this.addAtlas(this.key, "compose/compose.png", "compose/compose.json");
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.common + ".png", UIAtlasName.common + ".json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
 
