@@ -65,7 +65,7 @@ export class LoadingScene extends BasicScene {
       // frames: this.anims.generateFrameNumbers("loading", { start: 0, end: 59, frames: tmpFrames }),
       frames: this.anims.generateFrameNames("loading", { prefix: "loading_", start: 1, end: 3, zeroPad: 1, suffix: ".png" }),
       frameRate: 4,
-      yoyo: false,
+      yoyo: true,
       repeat: -1
     });
 
@@ -78,19 +78,12 @@ export class LoadingScene extends BasicScene {
 
     this.curtain = new Curtain(this, this.mWorld);
     // this.curtain.open().then(() => {
-    this.bg.x = 0 + this.bg.width * 0.5;
+    this.bg.x = 0;
     this.add.tween({
       targets: this.bg,
-      props: { x: width - this.bg.width * 0.5, rotation: -720 },
+      props: { x: width, rotation: -720 },
       duration: 2000,
-      yoyo: true,
-      loop: -1,
-      onYoyo: () => {
-        this.bg.flipX = !this.bg.flipX;
-      },
-      onLoop: () => {
-        this.bg.flipX = !this.bg.flipX;
-      }
+      loop: -1
     });
     // });
 
@@ -111,9 +104,32 @@ export class LoadingScene extends BasicScene {
   // }
   // }
 
-  public awake() {
-    this.scale.on("resize", this.checkSize, this);
-    this.scene.wake();
+  public async show() {
+    this.awake();
+    // return new Promise((resolve, reject) => {
+    if (!this.curtain) {
+      return Promise.resolve();
+    }
+    this.bg.visible = false;
+    this.lo.visible = false;
+    await this.curtain.open();
+    return Promise.resolve();
+    // });
+  }
+
+  public async close() {
+    if (!this.curtain) {
+      return;
+    }
+    this.bg.visible = false;
+    this.lo.visible = false;
+    await this.curtain.close();
+    return Promise.resolve();
+  }
+
+  public awake(data?: any) {
+      this.scale.on("resize", this.checkSize, this);
+      this.scene.wake();
   }
 
   public sleep() {
@@ -161,6 +177,8 @@ export class LoadingScene extends BasicScene {
 class Curtain {
   private upDisplay: Phaser.GameObjects.Image;
   private downDisplay: Phaser.GameObjects.Image;
+  private upTween: Phaser.Tweens.Tween;
+  private downTween: Phaser.Tweens.Tween;
   private readonly key = "curtain";
   constructor(private scene: Phaser.Scene, world: WorldService) {
     this.upDisplay = this.scene.add.image(0, 0, this.key, "up.png").setOrigin(0).setVisible(false).setScale(world.uiScale);
@@ -174,18 +192,19 @@ class Curtain {
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = -this.upDisplay.displayHeight;
       this.downDisplay.y = height + this.downDisplay.displayHeight;
-      this.scene.add.tween({
+      this.upTween = this.scene.add.tween({
         targets: this.upDisplay,
         props: { y: 0 },
-        duration: 1200
+        duration: 1000
       });
-      this.scene.add.tween({
+      this.downTween = this.scene.add.tween({
         targets: this.downDisplay,
         props: {y: height },
-        duration: 1200,
+        duration: 1000,
         onComplete: () => {
           this.upDisplay.visible = false;
           this.downDisplay.visible = false;
+          this.clearTween();
           resolve();
         }
       });
@@ -199,18 +218,19 @@ class Curtain {
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = 0;
       this.downDisplay.y = height;
-      this.scene.add.tween({
+      this.upTween = this.scene.add.tween({
         targets: this.upDisplay,
         props: { y: -this.upDisplay.displayHeight },
         duration: 1000
       });
-      this.scene.add.tween({
+      this.downTween = this.scene.add.tween({
         targets: this.downDisplay,
         props: {y: height + this.downDisplay.displayHeight },
         duration: 1000,
         onComplete: () => {
           this.downDisplay.visible = false;
           this.upDisplay.visible = false;
+          this.clearTween();
           resolve();
         }
       });
@@ -218,7 +238,17 @@ class Curtain {
   }
 
   destroy() {
-
+    this.destroy();
   }
 
+  private clearTween() {
+    if (this.upTween) {
+      this.upTween.stop();
+      this.upTween = null;
+    }
+    if (this.downTween) {
+      this.downTween.stop();
+      this.downTween = null;
+    }
+  }
 }

@@ -29,11 +29,21 @@ export class LoadingManager {
         if (!sceneManager) {
             return Promise.reject("start faild. SceneManager does not exist");
         }
-        if (!sceneManager.getScene(LoadingScene.name)) {
+        const loading: LoadingScene = <LoadingScene> sceneManager.getScene(LoadingScene.name);
+        if (!loading) {
             sceneManager.add(LoadingScene.name, LoadingScene);
         }
-        if (sceneManager.isActive(LoadingScene.name)) {
-            return Promise.resolve();
+        if (loading) {
+            loading.awake({
+                world: this.world,
+                callBack: (scene: Phaser.Scene) => {
+                    this.scene = scene;
+                    if (this.mResources.length > 0) {
+                        return this.addAssets(this.mResources);
+                    }
+                    return Promise.resolve();
+                }
+            });
         } else {
             sceneManager.start(LoadingScene.name, {
                 world: this.world,
