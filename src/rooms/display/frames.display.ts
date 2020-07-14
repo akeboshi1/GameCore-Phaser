@@ -11,7 +11,7 @@ import { AnimationData } from "../element/Sprite";
 export class FramesDisplay extends DisplayObject {
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
-    protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = new Map<
+    protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<
         DisplayField,
         Phaser.GameObjects.Sprite | Phaser.GameObjects.Image
     >();
@@ -39,12 +39,20 @@ export class FramesDisplay extends DisplayObject {
             if (!display) {
                 Logger.getInstance().error("display is undefined");
             }
-            this.scene.load.atlas(data.gene, Url.OSD_PATH + display.texturePath, Url.OSD_PATH + display.dataPath);
-            // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
-            //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
-            // }, this);
-            this.scene.textures.on(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
-            this.scene.load.start();
+            if (display.texturePath === "" && display.dataPath === "") {
+                Logger.getInstance().error("动画资源报错：" , data);
+            } else {
+                this.scene.load.atlas(data.gene, Url.OSD_PATH + display.texturePath, Url.OSD_PATH + display.dataPath);
+                // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
+                //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
+                // }, this);
+                const cb = (key: string) => {
+                    this.onAddTextureHandler(key, field, cb);
+                };
+                this.scene.textures.on(Phaser.Textures.Events.ADD, cb, this);
+                this.scene.load.start();
+            }
+
         }
     }
 
@@ -55,19 +63,26 @@ export class FramesDisplay extends DisplayObject {
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
-        this.mCurAnimation = data.getAnimations(animation.animationName);
+        this.mCurAnimation = data.getAnimations(animation.name);
         if (!this.mCurAnimation) return;
         this.clear();
         const layer = this.mCurAnimation.layer;
+        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+        if (!container) {
+            container = this.scene.make.container(undefined, false);
+            container.setData("id", data.id);
+            this.addAt(container, DisplayField.STAGE);
+            this.mSprites.set(DisplayField.STAGE, container);
+        }
         for (let i = 0; i < layer.length; i++) {
             let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
             const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
-                const key = `${data.gene}_${animation.animationName}_${i}`;
+                const key = `${data.gene}_${animation.name}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
                 display = this.scene.make.sprite(undefined, false).play(key);
                 if (!this.mMainSprite) {
-                    this.mMainSprite = <Phaser.GameObjects.Sprite> display;
+                    this.mMainSprite = <Phaser.GameObjects.Sprite>display;
                 }
             } else {
                 display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
@@ -81,7 +96,7 @@ export class FramesDisplay extends DisplayObject {
             }
             display.x = x + display.width * 0.5;
             display.y = y + display.height * 0.5;
-            this.add(display);
+            container.add(display);
         }
         // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
         this.initBaseLoc(DisplayField.STAGE, animation);
@@ -91,10 +106,45 @@ export class FramesDisplay extends DisplayObject {
             this.mMainSprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
         }
         if (this.mMountContainer && this.mCurAnimation.mountLayer) {
-            this.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
+            const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+            if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
 
         this.mActionName = animation;
+    }
+
+    public playEffect() {
+        const data = this.mDisplayDatas.get(DisplayField.Effect);
+        if (!data) {
+            return;
+        }
+        // TODO
+        const anis = data.getAnimations("idle");
+        if (!anis) {
+            return;
+        }
+        const layer = anis.layer;
+        const effects = [];
+        for (let i = 0; i < layer.length; i++) {
+            let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+            const { frameName, offsetLoc } = layer[i];
+            if (frameName.length > 1) {
+                const key = `${data.gene}_idle_${i}`;
+                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
+                display = this.scene.make.sprite(undefined, false).play(key);
+            } else {
+                display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
+            }
+            display.x = offsetLoc.x + display.width * 0.5;
+            display.y = offsetLoc.y + display.height * 0.5;
+            effects.push(display);
+        }
+        if (effects.length > 1) {
+            this.addAt(effects[1], DisplayField.BACKEND);
+            this.mSprites.set(DisplayField.BACKEND, effects[1]);
+        }
+        this.addAt(effects[0], DisplayField.FRONTEND);
+        this.mSprites.set(DisplayField.FRONTEND, effects[0]);
     }
 
     public mount(display: Phaser.GameObjects.Container, targetIndex?: number) {
@@ -109,7 +159,7 @@ export class FramesDisplay extends DisplayObject {
         if (targetIndex === undefined) targetIndex = 0;
         let { x } = mountPoint[targetIndex];
         if (this.mActionName.flip) {
-            x = (this.spriteWidth * 0.5 + x);
+            x = 0 - x;
         }
         display.x = x;
         display.y = mountPoint[targetIndex].y;
@@ -118,7 +168,8 @@ export class FramesDisplay extends DisplayObject {
             this.mMountContainer = this.scene.make.container(undefined, false);
         }
         if (!this.mMountContainer.parentContainer) {
-            this.addAt(this.mMountContainer, index);
+            const container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+            if (container) container.addAt(this.mMountContainer, index);
         }
         this.mMountContainer.addAt(display, targetIndex);
         this.mMountList[targetIndex] = display;
@@ -217,6 +268,23 @@ export class FramesDisplay extends DisplayObject {
         return this;
     }
 
+    public removeEffect() {
+        const data = this.mDisplayDatas.get(DisplayField.Effect);
+        if (data) {
+            this.mDisplayDatas.delete(DisplayField.Effect);
+            this.removeDisplay(DisplayField.BACKEND);
+            this.removeDisplay(DisplayField.FRONTEND);
+        }
+    }
+
+    public removeDisplay(field: DisplayField) {
+        const display = this.mSprites.get(field);
+        if (display) {
+            this.mDisplayDatas.delete(field);
+            display.destroy();
+        }
+    }
+
     public destroy() {
         this.mSprites.forEach((sprite) => sprite.destroy());
         this.mSprites.clear();
@@ -265,7 +333,7 @@ export class FramesDisplay extends DisplayObject {
             display.destroy();
         }
         if (this.mMountContainer && this.mMountContainer.parentContainer) {
-            this.remove(this.mMountContainer);
+            this.mMountContainer.parentContainer.remove(this.mMountContainer);
         }
         this.mMountList = [];
         this.mDisplays = [];
@@ -273,11 +341,14 @@ export class FramesDisplay extends DisplayObject {
 
     }
 
-    private onAddTextureHandler(key: string) {
-        const data = this.mDisplayDatas.get(DisplayField.STAGE);
+    private onAddTextureHandler(key: string, field?: DisplayField, cb?: (key: string) => void) {
+        if (field === undefined) {
+            field = DisplayField.STAGE;
+        }
+        const data = this.mDisplayDatas.get(field);
         if (data && data.gene === key) {
-            this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
-            this.onLoadCompleted(DisplayField.STAGE);
+            this.scene.textures.off(Phaser.Textures.Events.ADD, cb, this);
+            this.onLoadCompleted(field);
         }
     }
 
@@ -287,7 +358,11 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         if (this.scene.textures.exists(data.gene)) {
-            this.emit("initialized", this);
+            if (field === DisplayField.STAGE) {
+                this.emit("initialized", this);
+            } else {
+                this.playEffect();
+            }
         }
     }
 
@@ -324,9 +399,9 @@ export class FramesDisplay extends DisplayObject {
         if (this.mDisplays.length < 1 || !data || !data.animations) return;
         // const animations = data.getAnimations(aniName);
         // if (!animations) return;
-        const { animationName, flip } = playAnimation;
-        this.mCollisionArea = data.getCollisionArea(animationName, flip);
-        this.mOriginPoint = data.getOriginPoint(animationName, flip);
+        const { name, flip } = playAnimation;
+        this.mCollisionArea = data.getCollisionArea(name, flip);
+        this.mOriginPoint = data.getOriginPoint(name, flip);
 
         if (this.mReferenceArea) {
             this.showRefernceArea();

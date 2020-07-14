@@ -2,6 +2,7 @@ import { BlockManager } from "./block.manager";
 import { IRoomService } from "../room";
 import { IScenery } from "./scenery";
 import { PacketHandler } from "net-socket-packet";
+import { State } from "../state/state.group";
 
 export interface ISkyBoxConfig {
   key: string;
@@ -14,6 +15,7 @@ export interface ISkyBoxConfig {
 export class SkyBoxManager extends PacketHandler {
   protected mRoom: IRoomService;
   protected mScenetys: Map<number, BlockManager>;
+  protected mStateMap: Map<string, State>;
   constructor(room: IRoomService) {
     super();
     this.mRoom = room;
@@ -21,7 +23,14 @@ export class SkyBoxManager extends PacketHandler {
   }
 
   add(scenery: IScenery) {
-    this.mScenetys.set(scenery.id, new BlockManager(scenery, this.mRoom));
+    // if (scenery.id === 1896802976) {
+    //   return;
+    // }
+    const blockManager = new BlockManager(scenery, this.mRoom);
+    this.mScenetys.set(scenery.id, blockManager);
+    // if (this.mStateMap) {
+    //   blockManager.setState(this.mStateMap);
+    // }
   }
 
   update(scenery: IScenery) {
@@ -38,6 +47,16 @@ export class SkyBoxManager extends PacketHandler {
     }
   }
 
+  setState(states: State) {
+    if (!this.mStateMap) {
+      this.mStateMap = new Map();
+    }
+    this.mStateMap.set(states.name, states);
+    this.mScenetys.forEach((block) => {
+      block.setState(states);
+    });
+  }
+
   destroy() {
     if (this.mRoom) {
       const connection = this.mRoom.connection;
@@ -46,5 +65,9 @@ export class SkyBoxManager extends PacketHandler {
       }
     }
     this.mScenetys.forEach((scenery: BlockManager) => scenery.destroy());
+  }
+
+  get scenery(): BlockManager[] {
+    return Array.from(this.mScenetys.values());
   }
 }

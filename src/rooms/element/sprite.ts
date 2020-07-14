@@ -45,7 +45,7 @@ export interface ISprite {
 }
 
 export interface AnimationData {
-    animationName: string;
+    name: string;
     flip: boolean;
     playingQueue?: SpriteAnimationQueue;
 }
@@ -213,6 +213,7 @@ export class Sprite implements ISprite {
                     display,
                     animationData: anis,
                 },
+                id:this.id
             });
             if (defAnimation) {
                 this.currentAnimationName = defAnimation;
@@ -387,7 +388,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return false;
         }
-        const { animationName } = this.mCurrentAnimation;
+        const { name: animationName } = this.mCurrentAnimation;
         const area = this.mDisplayInfo.getInteractiveArea(animationName);
         if (area && area.length > 0) {
             return true;
@@ -446,7 +447,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName } = this.mCurrentAnimation;
+        const { name: animationName } = this.mCurrentAnimation;
         return this.mDisplayInfo.getInteractiveArea(animationName);
     }
 
@@ -490,7 +491,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName, flip } = this.mCurrentAnimation;
+        const { name: animationName, flip } = this.mCurrentAnimation;
         return this.mDisplayInfo.getCollisionArea(animationName, flip);
     }
 
@@ -498,7 +499,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName, flip } = this.mCurrentAnimation;
+        const { name: animationName, flip } = this.mCurrentAnimation;
         return this.mDisplayInfo.getWalkableArea(animationName, flip);
     }
 
@@ -506,7 +507,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName, flip } = this.mCurrentAnimation;
+        const { name: animationName, flip } = this.mCurrentAnimation;
         return this.mDisplayInfo.getOriginPoint(animationName, flip);
     }
 

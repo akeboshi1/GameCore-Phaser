@@ -56,7 +56,7 @@
   "compose": {
     "title": "Manufacture",
     "make": "make",
-    "needMaterials": "Materials required for synthesis",
+    "needMaterials": "Materials required",
     "synthesis": "Synthesis"
   },
   "minesettle": {
@@ -72,13 +72,38 @@
     "side_quest": "Side Quest",
     "active_task": "Active Task",
     "daily_quest": "Daily Quest",
+    "all_task": "All",
     "m": "M",
     "s": "S",
     "a": "A",
     "d": "D",
     "objective": "Objective",
     "rewards": "Rewards",
-    "collect_materials":"Collect Materials",
-    "submit_task":"Submit Task"
+    "collect_materials": "Collect Materials:",
+    "submit_task": "Submit Task",
+    "task_quest": "Task Quest:"
+  },
+  "furni_unlock": {
+    "unlock": "Immediately unlock",
+    "repair": "REPAIR",
+    "needMaterials": "Synthetic materials needed",
+    "source": "Source",
+    "sold": "Price",
+    "notrading": "Not Trading"
+  },
+  "room_upgrade": {
+    "clicktocontinue": "Click on any blank area to continue"
+  },
+  "room_info": {
+    "infobtn": "ROOM INFORMATION",
+    "setting": "ROOM ETTINGS",
+    "editorroom": "Editing room",
+    "roomname": "Room name",
+    "roomlevel": "Room level",
+    "expvalue": "Experience value",
+    "popvalue": "Popular value",
+    "goodvalue": "Good value",
+    "compveness": "Competitiveness",
+    "prosperity": "Prosperity"
   }
 }

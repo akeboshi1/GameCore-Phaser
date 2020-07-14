@@ -1,9 +1,8 @@
-import { NinePatch } from "tooqingui";
+import { NinePatch, BBCodeText } from "tooqingui";
 import { Font } from "../../utils/font";
-
 export class TextToolTips extends Phaser.GameObjects.Container {
     private bg: NinePatch;
-    private text: Phaser.GameObjects.Text;
+    private text: BBCodeText;
     private timeID: any;
     private dpr: number;
     constructor(scene: Phaser.Scene, key: string, frame: string, dpr: number, zoom: number) {
@@ -18,20 +17,15 @@ export class TextToolTips extends Phaser.GameObjects.Container {
             right: 20 * dpr,
             bottom: 20 * dpr
         });
-        this.text = this.scene.make.text({
-            x: 0,
-            y: 0,
-            text: "蓝矿石",
-            style: {
-                color: "#000000",
-                fontSize: 13 * dpr,
-                fontFamily: Font.DEFULT_FONT,
-                wordWrap: {
-                    width: 90 * dpr,
-                    useAdvancedWrap: true
-                }
+        this.text = new BBCodeText(this.scene, 0, 0, "蓝矿石", {
+            color: "#333333",
+            fontSize: 13 * this.dpr,
+            fontFamily: Font.DEFULT_FONT,
+            wrap: {
+                width: 90 * this.dpr,
+                mode: "string"
             }
-        }, false).setOrigin(0);
+        }).setOrigin(0);
         this.add([this.bg, this.text]);
         this.setSize(tipsWidth + 20 * dpr, tipsHeight + 20 * dpr);
     }
@@ -43,8 +37,10 @@ export class TextToolTips extends Phaser.GameObjects.Container {
         const textWidth = width - 16 * this.dpr;
         const textHeight = height - 16 * this.dpr;
         this.text.setSize(textWidth, textHeight);
-        this.text.setWordWrapWidth(textWidth, true);
-        this.text.setPosition(-textWidth * 0.5, -textHeight * 0.5);
+        this.text.setWrapWidth(textWidth);
+        this.text.x = -textWidth * 0.5;
+        this.text.y = -textHeight * 0.5;
+        // this.text.setPosition(-textWidth * 0.5, -textHeight * 0.5);
         return this;
     }
 

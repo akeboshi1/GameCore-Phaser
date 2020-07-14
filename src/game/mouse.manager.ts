@@ -90,7 +90,8 @@ export class MouseManager extends PacketHandler {
         let com = null;
         if (gameobject && gameobject.parentContainer) {
             id = gameobject.parentContainer.getData("id");
-            com = gameobject.parentContainer;
+            // TODO 提供个接口
+            com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
         }
         if (pointer.isDown === false) {
             const diffX = Math.abs(pointer.downX - pointer.upX);

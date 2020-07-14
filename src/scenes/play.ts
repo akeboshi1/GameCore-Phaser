@@ -11,7 +11,7 @@ export class PlayScene extends BasicScene {
         super(config || { key: PlayScene.name });
     }
 
-    public preload() {}
+    public preload() { }
 
     public init(data: any) {
         if (data) {
@@ -43,9 +43,6 @@ export class PlayScene extends BasicScene {
     }
 
     update(time: number, delta: number) {
-        // if (this.cameras.main) {
-        //   this.cameras.main.emit("renderer", this.cameras.main);
-        // }
         if (this.mRoom) {
             this.mRoom.update(time, delta);
         }

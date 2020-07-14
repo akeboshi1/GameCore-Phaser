@@ -1,6 +1,5 @@
-import { op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
+import { op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
-import { SceneryNode } from "game-capsule";
 
 export interface IScenery {
     readonly id: number;
@@ -91,5 +90,7 @@ export class Scenery implements IScenery {
 
 export enum Fit {
     Center = 1,
-    Fill
+    Fill,
+    Stretch,
+    Repeat
 }

@@ -57,7 +57,7 @@ export class HttpService {
 
     loginByPhoneCode(phone: string, code: string): Promise<Response> {
         return fetch(`${CONFIG.api_root}${`account/phone_signin`}`, {
-            body: JSON.stringify({ phone, code }),
+            body: JSON.stringify({ phone, code, areaCode: "86" }),
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

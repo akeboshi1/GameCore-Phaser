@@ -21,5 +21,4 @@ export * from "./ControlF";
 export * from "./DebugLogger";
 export * from "./DecorateControl";
 export * from "./ComponentRank";
-export * from "./Bubble";
 export * from "./role";

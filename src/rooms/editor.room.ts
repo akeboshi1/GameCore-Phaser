@@ -20,6 +20,7 @@ import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 import { EditorMossManager } from "./element/editor.moss.manager";
 import { DisplayObjectPool } from "./display-object.pool";
 import { EditorSkyBoxManager } from "./sky.box/editor.sky.box.manager";
+import { CamerasManager } from "./cameras/cameras.manager";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -44,6 +45,8 @@ export class EditorRoom extends Room implements EditorRoomService {
     private mMouseFollow: MouseFollow;
     private mSelectedElementEffect: SelectedElement;
     private mNimiSize: IPosition45Obj;
+    private mPointerDelta: Pos = null;
+
     constructor(manager: IRoomManager) {
         super(manager);
         if (this.connection) {
@@ -183,6 +186,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     removeSelected() {
         if (this.mSelectedElementEffect) {
             this.mSelectedElementEffect.remove();
+            this.mPointerDelta = null;
         }
     }
 
@@ -259,6 +263,7 @@ export class EditorRoom extends Room implements EditorRoomService {
                         }
                     }
                     this.mSelectedElementEffect.selecting = false;
+                    this.mPointerDelta = null;
                 }
                 break;
             case BrushEnum.ERASER:
@@ -354,6 +359,7 @@ export class EditorRoom extends Room implements EditorRoomService {
             if (this.mSelectedElementEffect) {
                 this.mSelectedElementEffect.destroy();
                 this.mSelectedElementEffect = null;
+                this.mPointerDelta = null;
             }
         }
 
@@ -431,6 +437,7 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (this.mSelectedElementEffect) {
             this.mSelectedElementEffect.destroy();
             this.mSelectedElementEffect = null;
+            this.mPointerDelta = null;
         }
         if (!this.editorSkyboxManager) {
             return;
@@ -528,13 +535,31 @@ export class EditorRoom extends Room implements EditorRoomService {
         if (!this.mouseFollow) {
             return;
         }
-        const pos = this.mMouseFollow.transitionGrid(
-            pointer.worldX / this.mScaleRatio,
-            pointer.worldY / this.mScaleRatio
+        if (!this.mSelectedElementEffect.display) {
+            return;
+        }
+
+        if (!this.mPointerDelta) {
+            const matrix = new Phaser.GameObjects.Components.TransformMatrix();
+            const parentMatrix = new Phaser.GameObjects.Components.TransformMatrix();
+            this.mSelectedElementEffect.display.getWorldTransformMatrix(matrix, parentMatrix);
+
+            this.mPointerDelta = new Pos(
+                matrix.tx - pointer.worldX,
+                matrix.ty - pointer.worldY
+            );
+        }
+        const elementWorldPos = new Pos(this.mPointerDelta.x + pointer.worldX, this.mPointerDelta.y + pointer.worldY);
+
+        const gridPos = this.mMouseFollow.transitionGrid(
+            elementWorldPos.x / this.mScaleRatio,
+            elementWorldPos.y / this.mScaleRatio
         );
-        if (pos) {
-            this.mSelectedElementEffect.setDisplayPos(pos.x, pos.y);
-            this.mLayManager.depthSurfaceDirty = true;
+        if (gridPos) {
+            if (gridPos.x !== this.mSelectedElementEffect.display.x || gridPos.y !== this.mSelectedElementEffect.display.y) {
+                this.mSelectedElementEffect.setDisplayPos(gridPos.x, gridPos.y);
+                this.mLayManager.depthSurfaceDirty = true;
+            }
         }
     }
 

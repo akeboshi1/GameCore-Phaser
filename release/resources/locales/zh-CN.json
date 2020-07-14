@@ -67,14 +67,15 @@
     "savebag": "存入背包"
   },
   "equipupgrade": {
-    "title": "Equip"
+    "title": "装备"
   },
   "task": {
-    "title": "Task",
+    "title": "任务",
     "main_quest": "主线任务",
     "side_quest": "支线任务",
     "active_task": "活动任务",
     "daily_quest": "每日任务",
+    "all_task": "全部",
     "m": "主",
     "s": "支",
     "a": "活",
@@ -82,6 +83,30 @@
     "objective": "任务目标：",
     "rewards": "任务奖励：",
     "collect_materials": "收集物资：",
-    "submit_task": "提交任务"
+    "submit_task": "提交任务",
+    "task_quest": "任务要求："
+  },
+  "furni_unlock": {
+    "unlock": "立即解锁",
+    "repair": "立即修复",
+    "needMaterials": "合成所需材料",
+    "source": "来源：",
+    "sold": "可售卖：",
+    "notrading": "不可交易"
+  },
+  "room_upgrade": {
+    "clicktocontinue": "点击任意处继续"
+  },
+  "room_info": {
+    "infobtn": "房间信息",
+    "setting": "房间设置",
+    "editorroom": "编辑房间",
+    "roomname": "房间名",
+    "roomlevel": "房间等级",
+    "expvalue": "经验值",
+    "popvalue": "热度",
+    "goodvalue": "点赞",
+    "compveness": "排名",
+    "prosperity": "装饰值"
   }
 }

@@ -1,31 +1,13 @@
 import { ConnectionService } from "../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ChatMediator } from "./chat/chat.mediator";
 import { ILayerManager, LayerManager } from "./layer.manager";
-// import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./bag/bagView/bagMediator";
-// import { FriendMediator } from "./friend/friend.mediator";
-// import { RankMediator } from "./Rank/RankMediator";
 import { Size } from "../utils";
-// import { RightMediator } from "./baseView/rightGroup/right.mediator";
-// import { LeftMediator } from "./baseView/leftGroup/left.mediator";
-// import { BottomMediator } from "./baseView/bottomGroup/bottom.mediator";
-// import { BagGroupMediator } from "./baseView/bagGroup/bag.group.mediator";
-// import { TopMenuMediator } from "./baseView/top.menu/top.menu.mediator";
-// import { MessageType } from "../const/MessageType";
-// import { InputTextFactory } from "./components/inputTextFactory";
-// import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
-// import { PicaMainUIMediator } from "./PiCaMainUI/PicaMainUIMediator";
-// import { ActivityMediator } from "./Activity/ActivityMediator";
-// import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
-// import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
-// import { MineCarMediator } from "./MineCar/MineCarMediator";
-// import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
-// import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
 import { InputTextFactory } from "./components/inputTextFactory";
-import { InteractiveBubbleManager } from "./Bubble/interactivebubble.manager";
+import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
 import { MessageType } from "../const/MessageType";
 import { BaseMediator } from "tooqingui";
 import { BagGroupMediator } from "../ui/baseView/bagGroup/bag.group.mediator";
@@ -59,10 +41,12 @@ export class UiManager extends PacketHandler {
     private mCacheUI: Function;
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
-    private mInputTextFactory: any;
     private interBubbleMgr: any;
-    private worldService: WorldService;
-    constructor(worldService: WorldService) {
+    private mInputTextFactory: InputTextFactory;
+    private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
+    private mStackList: any[] = [];// 记录面板打开关闭先后顺序
+    private isShowMainUI: boolean = false;
+    constructor(private worldService: WorldService) {
         super();
         this.worldService = worldService;
         this.mConnect = worldService.connection;
@@ -70,14 +54,14 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_MARKET, this.onEnableMarket);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE, this.openMineSettle);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openEquipUpgrade);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
-        this.interBubbleMgr = new InteractiveBubbleManager(this.mUILayerManager, this.worldService);
+        // this.interBubbleMgr = new InteractiveBubbleMediator(this.mUILayerManager, this.worldService);
         this.worldService.emitter.on("MODULE_INIT", this.showModuleUI, this);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
+        this.mUILayerManager = new LayerManager();
+        this.mInputTextFactory = new InputTextFactory(worldService);
     }
 
     public getInputTextFactory(): InputTextFactory {
@@ -102,10 +86,22 @@ export class UiManager extends PacketHandler {
         return this.mUILayerManager;
     }
 
+    public getActiveUIData(name: string): op_pkt_def.IPKT_UI[] {
+        if (!this.mAtiveUIData) return null;
+        const arr: op_pkt_def.IPKT_UI[] = [];
+        for (const data of this.mAtiveUIData.ui) {
+            const tagName = data.name.split(".")[0];
+            const paneName = this.getPanelNameByStateTag(tagName);
+            if (paneName === name) {
+                arr.push(data);
+            }
+        }
+        return arr;
+    }
+
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
-        this.interBubbleMgr.setScene(scene);
         if (this.mCacheUI) {
             this.mCacheUI();
             this.mCacheUI = undefined;
@@ -194,6 +190,16 @@ export class UiManager extends PacketHandler {
                 mediator.show();
             }
         });
+        if (this.mAtiveUIData) {
+            this.updateUIState(this.mAtiveUIData);
+        }
+        if (this.mCache) {
+            for (const tmp of this.mCache) {
+                const ui = tmp[0];
+                this.showMed(ui.name, ui);
+            }
+            this.mCache.length = 0;
+        }
     }
 
     public showDecorateUI() {
@@ -248,6 +254,7 @@ export class UiManager extends PacketHandler {
         this.removePackListener();
         this.clearMediator();
         this.mMedMap = undefined;
+        this.clearCache();
         this.mScene = undefined;
     }
 
@@ -322,9 +329,7 @@ export class UiManager extends PacketHandler {
             this.mCache.push(param);
             return;
         }
-        if (type === "MessageBox") {
-            type = "PicaMessageBox";
-        }
+        type = this.getPanelNameByAlias(type);
         const className: string = type + "Mediator";
         let mediator: BaseMediator = this.mMedMap.get(className);
         if (!mediator) {
@@ -366,6 +371,31 @@ export class UiManager extends PacketHandler {
         // }
         this.checkUIState(className, false);
         mediator.show(param);
+        // this.mStackList.unshift(className);
+        // if (this.mStackList.length > 2) this.mStackList.splice(this.mStackList.length - 1, 1);
+    }
+    // public hideMed(type: string) {
+    //     if (!this.mMedMap) {
+    //         return;
+    //     }
+    //     type = this.getPanelNameByAlias(type);
+    //     const medName: string = `${type}Mediator`;
+    //     const mediator: BaseMediator = this.mMedMap.get(medName);
+    //     if (!mediator) {
+    //         // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+    //         return;
+    //     }
+    //     this.checkUIState(medName, true);
+    //     mediator.hide();
+    // }
+    public showExistMed(type: string, extendName = "Mediator") {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const className: string = type + extendName;
+        const mediator: BaseMediator = this.mMedMap.get(className);
+        if (mediator) mediator.show();
     }
 
     public showModuleUI() {
@@ -539,6 +569,11 @@ export class UiManager extends PacketHandler {
         });
     }
 
+    private clearCache() {
+        this.mCacheUI = undefined;
+        this.mCache = [];
+    }
+
     private closeAll() {
         if (!this.mMedMap) {
             return;
@@ -546,17 +581,54 @@ export class UiManager extends PacketHandler {
         this.mMedMap.forEach((med: any) => med.hide());
     }
 
-    private openMineSettle(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE = packge.content;
-        this.showMed("MineSettle", content);
+    private onUIStateHandler(packge: PBpacket) {
+        this.mAtiveUIData = packge.content;
+        if (this.mAtiveUIData && this.mMedMap) {
+            this.updateUIState(this.mAtiveUIData);
+        }
     }
 
-    private openEquipUpgrade(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL = packge.content;
-        this.showMed("EquipUpgrade", content);
+    private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
+        for (const ui of data.ui) {
+            const tag = ui.name;
+            const paneltags = tag.split(".");
+            const panelName = this.getPanelNameByStateTag(paneltags[0]);
+            if (panelName) {
+                const mediator: BaseMediator = this.mMedMap.get(panelName + "Mediator");
+                if (mediator) {
+                    if (paneltags.length === 1) {
+                        if (ui.visible || ui.visible === undefined) {
+                            this.showMed(panelName);
+                        } else {
+                            this.hideMed(panelName);
+                        }
+                    } else {
+                        const view = mediator.getView();
+                        if (view)
+                            view.updateUIState(ui);
+                    }
+                }
+            }
+        }
     }
-    private openComposePanel(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
-        this.showMed("Compose", content);
+    private getPanelNameByStateTag(tag: string) {
+        switch (tag) {
+            case "mainui":
+                return "PicaMainUI";
+            case "activity":
+                return "Activity";
+            case "picachat":
+                return "PicaChat";
+            case "picanavigate":
+                return "PicaNavigate";
+        }
+        return null;
+    }
+    private getPanelNameByAlias(alias: string) {
+        switch (alias) {
+            case "MessageBox":
+                return "PicaMessageBox";
+        }
+        return alias;
     }
 }

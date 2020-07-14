@@ -154,6 +154,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
+        this.mSoundManager.addPackListener();
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
@@ -669,10 +670,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         if (this.mConfig && this.mConnection) {
             this.mAccount = new Account();
-            const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
-            if (!loadingScene) {
-                this.mGame.scene.add(LoadingScene.name, LoadingScene);
-            }
+            this.mLoadingManager.start();
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;
@@ -754,6 +752,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             return this.mGame;
         }
+        Logger.getInstance().log("dragonbones: ", dragonBones);
         this.gameConfig = {
             type: Phaser.AUTO,
             parent: this.mConfig.parent || "game",
@@ -801,7 +800,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 ],
             },
             render: {
-                pixelArt: false,
+                pixelArt: true,
                 roundPixels: true,
             },
             scale: {
@@ -820,6 +819,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
+        if (this.mSoundManager) this.mSoundManager.addPackListener();
         if (this.mElementStorage) {
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }

@@ -12,10 +12,11 @@ import { IElement } from "../element/element";
 import { AnimationData } from "../element/Sprite";
 
 export enum DisplayField {
-    BACKEND = 1,
+    BACKEND = 0,
     STAGE,
     FRONTEND,
-    FLAG
+    FLAG,
+    Effect
 }
 
 export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {
@@ -75,6 +76,12 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }
 
     unmount(ele: Phaser.GameObjects.Container) { }
+
+    removeEffect(field: DisplayField) {
+    }
+
+    removeDisplay(field: DisplayField) {
+    }
 
     public destroy(fromScene?: boolean): void {
         if (this.mFlagContainer) {

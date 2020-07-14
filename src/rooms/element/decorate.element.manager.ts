@@ -22,7 +22,7 @@ export class DecorateElementManager extends ElementManager {
       return;
     }
     const curAni = sprite.currentAnimation;
-    const aniName = curAni.animationName;
+    const aniName = curAni.name;
     const flip = curAni.flip;
     const collisionArea = displayInfo.getCollisionArea(aniName, flip);
     let walkArea = displayInfo.getWalkableArea(aniName, flip);
@@ -57,7 +57,7 @@ export class DecorateElementManager extends ElementManager {
       return;
     }
     const curAni = sprite.currentAnimation;
-    const aniName = curAni.animationName;
+    const aniName = curAni.name;
     const flip = curAni.flip;
     const collisionArea = displayInfo.getCollisionArea(aniName, flip);
     const origin = displayInfo.getOriginPoint(aniName, flip);
@@ -102,35 +102,50 @@ export class DecorateElementManager extends ElementManager {
     if (addMap === undefined) addMap = true;
     let ele = this.mElements.get(sprite.id);
     if (ele) {
-        ele.model = sprite;
+      ele.model = sprite;
     } else {
-        ele = new Element(sprite, this);
+      ele = new Element(sprite, this);
+      if (this.getFrozenType(sprite) === "FROZEN")
+        ele.setInputEnable(InputEnable.Diasble);
+      else
         ele.setInputEnable(InputEnable.Enable);
     }
     // if (!ele) ele = new Element(sprite, this);
     if (addMap) this.addMap(sprite);
     this.mElements.set(ele.id || 0, ele);
     return ele;
-}
+  }
 
   protected onSync(packet: PBpacket) {
     const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
     if (content.nodeType !== NodeType.ElementNodeType) {
-        return;
+      return;
     }
     let element: Element = null;
     const sprites = content.sprites;
     for (const sprite of sprites) {
-        element = this.get(sprite.id);
-        if (element) {
-            const sp = new Sprite(sprite, content.nodeType);
-            element.model = sp;
-            this.addMap(sp);
-        }
+      element = this.get(sprite.id);
+      if (element) {
+        const sp = new Sprite(sprite, content.nodeType);
+        element.model = sp;
+        this.addMap(sp);
+      }
     }
   }
 
   get map(): number[][] {
     return this.mMap;
+  }
+  private getFrozenType(sprite: ISprite) {
+    let frozenType;
+    const arr = sprite.attrs;
+    if (arr) {
+      arr.forEach((value) => {
+        if (value.key === "frozenType") {
+          frozenType = value.value;
+        }
+      });
+    }
+    return frozenType;
   }
 }

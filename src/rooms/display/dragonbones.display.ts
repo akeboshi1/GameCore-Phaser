@@ -1,11 +1,12 @@
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
-import { DisplayObject } from "./display.object";
+import { DisplayObject, DisplayField } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
-import { AnimationData } from "../element/Sprite";
 import { SoundField } from "../../game/sound.manager";
+import { AnimationData } from "../element/sprite";
+import { IFramesModel } from "./frames.model";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -122,12 +123,17 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         // this.alpha = val;
     }
 
-    public load(display: IDragonbonesModel) {
-        this.mDisplayInfo = display;
-        this.mCollisionArea = [[1, 1], [1, 1]];
-        this.mOriginPoint = new Phaser.Geom.Point(1, 1);
-        if (!this.mDisplayInfo) return;
-        this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
+    public load(display: IDragonbonesModel | IFramesModel, field?: DisplayField) {
+        field = !field ? DisplayField.STAGE : field;
+        if (field === DisplayField.STAGE) {
+            this.mDisplayInfo = <IDragonbonesModel>display;
+            this.mCollisionArea = [[1, 1], [1, 1]];
+            this.mOriginPoint = new Phaser.Geom.Point(1, 1);
+            if (!this.mDisplayInfo) return;
+            this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
+        } else {
+        }
+
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -143,7 +149,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             if (val.playingQueue && val.playingQueue.complete) {
                 this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
-            this.mArmatureDisplay.animation.play(val.animationName);
+            this.mArmatureDisplay.animation.play(val.name);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
         }
     }
@@ -838,10 +844,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             } else {
                 const drawTextureKey = loadArr[1] + "_png";
                 const drawTexture = this.scene.game.textures.get(drawTextureKey);
-                if (this.mAntial) {
-                    // 用于设置边缘抗锯齿
-                    drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                }
+                // if (this.mAntial) {
+                //     // 用于设置边缘抗锯齿
+                //     drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                // }
                 this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
             }
         }
@@ -850,9 +856,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 if (this.scene.game.textures.exists(renderTextureKey))
                     this.scene.game.textures.removeKey(renderTextureKey);
                 const changeTexture: Phaser.Textures.Texture = this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
-                if (this.mAntial) {
-                    changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-                }
+                // if (this.mAntial) {
+                //     changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                // }
                 this.mArmatureDisplay.armature.replacedTexture = changeTexture;
             }
         });

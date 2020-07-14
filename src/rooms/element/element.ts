@@ -13,8 +13,10 @@ import { ISprite } from "./Sprite";
 import { BlockObject } from "../cameras/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "./shop/shop.entity";
-import { DisplayObject } from "../display/display.object";
+import { DisplayObject, DisplayField } from "../display/display.object";
 import { AI } from "../action/AI";
+import { Buffer } from "buffer/";
+
 export enum PlayerState {
     IDLE = "idle",
     WALK = "walk",
@@ -69,7 +71,7 @@ export interface IElement {
 
     getDirection(): number;
 
-    showEffected();
+    showEffected(displayInfo: IFramesModel);
 
     showNickname();
 
@@ -233,10 +235,6 @@ export class Element extends BlockObject implements IElement {
             this.mModel.updateDisplay(model.display, model.animations);
             this.load(this.mModel.displayInfo);
         }
-        if (model.hasOwnProperty("point3f")) {
-            const pos = model.point3f;
-            this.setPosition(new Pos(pos.x, pos.y, pos.z));
-        }
         if (model.hasOwnProperty("currentAnimationName")) {
             this.play(model.currentAnimationName);
             this.setInputEnable(this.mInputEnable);
@@ -249,6 +247,10 @@ export class Element extends BlockObject implements IElement {
             const mounts = model.mountSprites;
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
+        }
+        if (model.hasOwnProperty("point3f")) {
+            const pos = model.point3f;
+            this.setPosition(new Pos(pos.x, pos.y, pos.z));
         }
     }
 
@@ -464,8 +466,11 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         if (this.mDisplay && p) {
-            this.mDisplay.setPosition(p.x, p.y, p.z);
             this.mModel.setPosition(p.x, p.y);
+            if (this.mRootMount) {
+                return;
+            }
+            this.mDisplay.setPosition(p.x, p.y, p.z);
             const depth = p.depth ? p.depth : 0;
             this.setDepth(depth);
         }
@@ -501,8 +506,12 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public showEffected() {
-        if (this.mDisplay) this.mDisplay.showEffect();
+    public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
+        if (displayInfo && this.mDisplay) {
+            const key = displayInfo.gene;
+            // this.mDisplay.once(key, this.onDisplayReady, this);
+            this.mDisplay.load(displayInfo, DisplayField.Effect);
+        }
     }
 
     public showNickname() {
@@ -543,6 +552,7 @@ export class Element extends BlockObject implements IElement {
             pos.x += this.mDisplay.x;
             pos.y += this.mDisplay.y;
             this.mRootMount = null;
+            this.setPosition(pos);
             this.addToBlock();
         }
         return this;
@@ -573,26 +583,19 @@ export class Element extends BlockObject implements IElement {
         return this;
     }
 
-    // public setConcomitant(ele: Element, isFollow: boolean = true) {
-    //     if (!this.concomitants) this.concomitants = [];
-    //     if (this.concomitants.indexOf(ele) !== -1) {
-    //         this.concomitants.push(ele);
-    //         if (isFollow)
-    //             this.mDisplay.add(ele.mDisplay);
-    //     }
-
-    // }
-
-    // public removeConcomitant(ele: Element, destroy: boolean = true) {
-    //     if (this.concomitants) {
-    //         const index = this.concomitants.indexOf(ele);
-    //         if (index !== -1) {
-    //             this.concomitants.slice(index, 1);
-    //             if (destroy)
-    //                 ele.destroy();
-    //         }
-    //     }
-    // }
+    public setState(states: op_def.IState[]) {
+        for (const state of states) {
+            switch(state.execCode) {
+                case op_def.ExecCode.EXEC_CODE_ADD:
+                case op_def.ExecCode.EXEC_CODE_UPDATE:
+                    this.updateStateHandler(state);
+                    break;
+                case op_def.ExecCode.EXEC_CODE_DELETE:
+                    this.removeStateHandler(state);
+                    break;
+            }
+        }
+    }
 
     public getDepth() {
         let depth = 0;
@@ -763,9 +766,10 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    protected onDisplayReady() {
+    protected onDisplayReady(field?: FramesDisplay) {
         if (this.mDisplay) {
             this.mDisplay.play(this.model.currentAnimation);
+            // if (!field || field === DisplayField.STAGE) {
             if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
                 this.updateMounth(this.mModel.mountSprites);
             }
@@ -774,8 +778,9 @@ export class Element extends BlockObject implements IElement {
                 depth = this.model.pos.depth ? this.model.pos.depth : 0;
             }
             this.setDepth(depth);
+         }
             // this.mDisplay.showRefernceArea();
-        }
+        // }
     }
 
     protected onUpdateAnimationHandler() {
@@ -887,5 +892,31 @@ export class Element extends BlockObject implements IElement {
         }
 
         this.mModel.mountSprites = mounts;
+    }
+
+    protected updateStateHandler(state: op_def.IState) {
+        switch(state.name) {
+            case "effect":
+                const buf = Buffer.from(state.packet);
+                const id = buf.readDoubleBE(0);
+                const effect = this.roomService.effectManager.get(id);
+                if (effect.displayInfo) {
+                    this.showEffected(<IFramesModel> effect.displayInfo);
+                } else {
+                    effect.once("updateDisplayInfo", this.showEffected, this);
+                }
+                break;
+        }
+    }
+
+    protected removeStateHandler(state: op_def.IState) {
+        switch(state.name) {
+            case "effect":
+                // remove
+                if (this.mDisplay) {
+                    this.mDisplay.removeEffect(DisplayField.Effect);
+                }
+                break;
+        }
     }
 }

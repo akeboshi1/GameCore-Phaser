@@ -1,10 +1,9 @@
-
 export interface ILayerManager {
     readonly interactive: Phaser.GameObjects.Container;
     readonly scene: Phaser.Scene;
     setScene(scene: Phaser.Scene): void;
 
-    addToUILayer(obj: Phaser.GameObjects.GameObject);
+    addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
     addToDialogLayer(obj: Phaser.GameObjects.GameObject);
     addToToolTipsLayer(obj: Phaser.GameObjects.GameObject);
 
@@ -40,11 +39,15 @@ export class LayerManager implements ILayerManager {
         this.mToolTipsLyaer = scene.add.container(0, 0);
     }
 
-    public addToUILayer(obj: Phaser.GameObjects.GameObject) {
+    public addToUILayer(obj: Phaser.GameObjects.GameObject, index: number = -1) {
         if (!this.mUILayer) {
             return;
         }
-        this.mUILayer.add(obj);
+        if (index === -1 || index === undefined) {
+            this.mUILayer.add(obj);
+        } else {
+            this.mUILayer.addAt(obj, index);
+        }
     }
 
     public addToDialogLayer(obj: Phaser.GameObjects.GameObject) {

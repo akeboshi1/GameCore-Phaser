@@ -261,4 +261,20 @@ export class Coin {
         }
         return res;
     }
+    static getName(coinType: number) {
+        let res = "银币";
+        const type = <op_def.CoinType>coinType;
+        if (type === op_def.CoinType.COIN) {
+            res = "银币";
+        } else if (type === op_def.CoinType.DIAMOND) {
+            res = "钻石";
+        } else if (type === op_def.CoinType.GOLD_COIN) {
+             res = "金币";
+        } else if (type === op_def.CoinType.QING_SONG_TANG) {
+            // res = "";
+        } else if (type === op_def.CoinType.TU_DING_COIN) {
+            // res = "";
+        }
+        return res;
+    }
 }

@@ -343,7 +343,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             player = this.get(id);
             if (player) {
-                player.showEffected();
+                player.showEffected(null);
             }
         }
     }

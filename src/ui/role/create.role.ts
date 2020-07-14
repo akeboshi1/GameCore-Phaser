@@ -31,12 +31,7 @@ export class CreateRole extends PacketHandler {
       this.world.game.scene.add(CreateRoleScene.name, CreateRoleScene);
     const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
     if (loadingScene && loadingScene.sys.isActive) {
-      loadingScene.sleep(() => {
-        this.world.game.scene.start(CreateRoleScene.name, {
-          world: this.world,
-          role: this
-        });
-      });
+      loadingScene.sleep();
     } else {
       this.world.game.scene.start(CreateRoleScene.name, {
         world: this.world,

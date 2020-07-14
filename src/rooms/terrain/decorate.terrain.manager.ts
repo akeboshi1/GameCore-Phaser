@@ -87,7 +87,7 @@ export class DecorateTerrainManager extends TerrainManager {
       return;
     }
     const curAni = sprite.currentAnimation;
-    const aniName = curAni.animationName;
+    const aniName = curAni.name;
     const flip = curAni.flip;
     const collisionArea = displayInfo.getCollisionArea(aniName, flip);
     const walkArea = displayInfo.getWalkableArea(aniName, flip);
