@@ -211,8 +211,6 @@
 
 /*! ../hitareamanager/HitAreaManager.js */
 
-/*! ../interface/baseUI/Patches.config */
-
 /*! ../interface/baseUI/UIType */
 
 /*! ../interface/event/ClickEvent */
@@ -264,6 +262,8 @@
 /*! ../ui/inputText/InputText.js */
 
 /*! ../ui/interface/baseUI/UIType.js */
+
+/*! ../ui/slider/GameSlider */
 
 /*! ../ui/textarea/AppendText.js */
 
@@ -527,6 +527,8 @@
 
 /*! ./ShowCells.js */
 
+/*! ./Slider.js */
+
 /*! ./SpinObject.js */
 
 /*! ./State.js */
@@ -637,7 +639,7 @@
 
 /*! ./ninepatch/NinePatch.js */
 
-/*! ./ninepatch/NineSlicePatch.js */
+/*! ./ninepatch/NineSlicePatch */
 
 /*! ./panel/Panel.js */
 
@@ -899,6 +901,10 @@
 
 /*!*************************************!*\
   !*** ./lib/ui/sizer/_layoutInit.js ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./lib/ui/slider/GameSlider.js ***!
   \*************************************/
 
 /*!*************************************!*\
@@ -1467,10 +1473,6 @@
 
 /*!***************************************************!*\
   !*** ./lib/ui/gridsizer/GetExpandedChildWidth.js ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./lib/ui/interface/baseUI/Patches.config.js ***!
   \***************************************************/
 
 /*!***************************************************!*\

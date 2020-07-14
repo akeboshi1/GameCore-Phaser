@@ -145,9 +145,9 @@
   integrity sha512-UfvBE9oRCAJVzfR+3eWm/sdLFe/qroAPEXP3GPJ1SehQiEVgZT6NQZWYbPMiJ3UdcKM06v4j+S1lTcdWCmw+3g==
 
 "@types/node@^14.0.13":
-  version "14.0.20"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.0.20.tgz#0da05cddbc761e1fa98af88a17244c8c1ff37231"
-  integrity sha512-MRn/NP3dee8yL5QhbSA6riuwkS+UOcsPUMOIOG3KMUQpuor/2TopdRBu8QaaB4fGU+gz/bzyDWt0FtUbeJ8H1A==
+  version "14.0.22"
+  resolved "https://registry.npmjs.org/@types/node/-/node-14.0.22.tgz#23ea4d88189cec7d58f9e6b66f786b215eb61bdc"
+  integrity sha512-emeGcJvdiZ4Z3ohbmw93E/64jRzUHAItSHt8nF7M4TGgQTiWqFVGB8KNpLGFmUHmHLvjvBgFwVlqNcq+VuGv9g==
 
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
@@ -5062,9 +5062,9 @@ toidentifier@1.0.0:
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
 tooqingui@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.npmjs.org/tooqingui/-/tooqingui-0.6.6.tgz#35f67a28031024308d9bf771b91de5d74224def4"
-  integrity sha512-BnKNbGUv/9FDvYvphZuOfORdKrOrAMxG5BZraKdPBuXCPL3t+mPyyiuONBsnHq3UMvuefsuaTEg1jEXDS7TGqA==
+  version "0.6.8"
+  resolved "https://registry.npmjs.org/tooqingui/-/tooqingui-0.6.8.tgz#2389660766d9f5abbeef8c667200421520173819"
+  integrity sha512-BVl3/TaTVFoi/Dd7j4a8SFd7NoyleGIVZ940ffJtVAkaOLdrIsugMBouuYMSlCaDQjHFgg4L3IjUGJOjt+utjA==
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"
