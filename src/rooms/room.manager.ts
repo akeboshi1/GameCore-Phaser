@@ -137,9 +137,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    private onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+    private async onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         if (this.mCurRoom) {
-            this.leaveScene(this.mCurRoom);
+            await this.leaveScene(this.mCurRoom);
         }
         const room: DecorateRoom = new DecorateRoom(this);
         room.enter(scene.scene);

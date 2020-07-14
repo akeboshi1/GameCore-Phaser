@@ -1,10 +1,11 @@
 {
-  "api_root": "http://172.18.0.100:17170/",
+  "api_root": "https://api-dev.tooqing.com/",
   "osd": "https://osd-alpha.tooqing.com/",
   "gateway": {
-    "host": "172.18.0.103",
-    "port": 12100
+    "host": "gdev.tooqing.com",
+    "port": 11100,
+    "secure": true
   },
-  "game_id": "5f059124eb47875d89961f0a",
-  "virtual_world_id": "65541"
+  "game_id": "5e719a0a68196e416ecf7aad",
+  "virtual_world_id": "0"
 }

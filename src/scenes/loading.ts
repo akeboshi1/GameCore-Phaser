@@ -190,6 +190,7 @@ class Curtain {
     this.downDisplay.visible = true;
     return new Promise((resolve, reject) => {
       const height = this.scene.cameras.main.height;
+      if (!this.scene.cameras.main) resolve();
       this.upDisplay.y = -this.upDisplay.displayHeight;
       this.downDisplay.y = height + this.downDisplay.displayHeight;
       this.upTween = this.scene.add.tween({
@@ -215,6 +216,7 @@ class Curtain {
     this.downDisplay.visible = true;
     this.upDisplay.visible = true;
     return new Promise((resolve, reject) => {
+      if (!this.scene.cameras.main) resolve();
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = 0;
       this.downDisplay.y = height;
