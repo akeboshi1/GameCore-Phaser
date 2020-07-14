@@ -49,6 +49,7 @@ export class FurniBagMediator extends BaseMediator {
             this.mView.on("querySaveAvatar", this.onQuerySaveAvatar, this);
             this.mView.on("queryResetAvatar", this.onQueryResetAvatar, this);
             this.mView.on("queryDressAvatarIDS", this.queryDressAvatarIDS, this);
+            this.mView.on("useprops", this.onUsePropsHandler, this);
         }
         this.mView.show();
         this.layerManager.addToUILayer(this.mView);
@@ -59,17 +60,10 @@ export class FurniBagMediator extends BaseMediator {
             this.mFurniBag.destroy();
             this.mFurniBag = undefined;
         }
-        if (this.mView) {
-            this.mView.destroy();
-            this.mView = undefined;
-        }
         super.destroy();
     }
 
     private onCloseHandler() {
-        // if (this.mView) {
-        //     this.layerManager.removeToUILayer(this.mView);
-        // }
         this.destroy();
     }
 
@@ -126,6 +120,10 @@ export class FurniBagMediator extends BaseMediator {
 
     private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
         this.mFurniBag.sellProps(prop, count, category);
+    }
+
+    private onUsePropsHandler(itemid: string, count: number) {
+        this.mFurniBag.useProps(itemid, count);
     }
     private onResetAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
         this.mView.resetAvatar(content);

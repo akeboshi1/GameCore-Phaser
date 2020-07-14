@@ -11,6 +11,8 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
 import { Logger } from "../../utils/log";
+import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
+import { Handler } from "../../Handler/Handler";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
@@ -172,6 +174,7 @@ export class MarketPanel extends BasePanel {
   public setCommodityResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
     if (this.mSelectItem) {
       this.mSelectItem.setResource(content);
+      this.mSelectItem.setData("display", content);
     }
   }
 
@@ -404,11 +407,20 @@ export class MarketPanel extends BasePanel {
 
   private onSelectItemHandler(prop: op_client.IMarketCommodity) {
     this.mSelectItem.setProp(prop);
+    this.mSelectItem.setData("propdata", prop);
     this.emit("queryPropResource", prop);
   }
 
   private onBuyItemHandler(prop: op_def.IOrderCommodities) {
-    this.emit("buyItem", prop);
+    const itemdata = this.getBuyPackageData();
+    itemdata.count = prop.quantity;
+    const data = itemdata;
+    const title = i18n.t("market.payment");
+    const resource = this.mSelectItem.getData("display");
+    const confirmHandler = new Handler(this, () => {
+      this.emit("buyItem", prop);
+    }, [prop]);
+    this.showPropFun({ confirmHandler, data, resource, slider: false, title });
   }
 
   private onCloseHandler() {
@@ -419,5 +431,18 @@ export class MarketPanel extends BasePanel {
     if (prop) {
       this.emit("popItemCard", prop, display);
     }
+  }
+  private getBuyPackageData() {
+    const propdata: op_client.IMarketCommodity = this.mSelectItem.getData("propdata");
+    const itemdata = op_client.CountablePackageItem.create();
+    itemdata.id = propdata.id;
+    itemdata.sellingPrice = propdata.price[0];
+    itemdata.name = propdata.name;
+    itemdata.shortName = propdata.shortName;
+    return itemdata;
+  }
+  private showPropFun(config: PicPropFunConfig) {
+    const uimanager = this.mWorld.uiManager;
+    uimanager.showMed("PicPropFun", config);
   }
 }

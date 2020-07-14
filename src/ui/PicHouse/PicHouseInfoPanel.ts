@@ -62,7 +62,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     }
     private getLevelImgs(level: number) {
         const power = 4;
-        level = level ? level : 0;
+        level =16;// level ? level : 0;
         const imgs = [];
         const sunNum = Math.floor(level / Math.pow(power, 2));
         const value1 = level % Math.pow(power, 2);

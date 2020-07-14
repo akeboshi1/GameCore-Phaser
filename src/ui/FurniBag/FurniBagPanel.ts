@@ -18,6 +18,8 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { IAvatar } from "../../rooms/display/dragonbones.model";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
+import { UiManager } from "../ui.manager";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -241,12 +243,6 @@ export class FurniBagPanel extends BasePanel {
     if (this.mPropGrid) {
       this.mPropGrid.destroy();
     }
-    if (this.itemPopPanel) {
-      this.itemPopPanel.off("itempopclose", () => {
-        this.mCategoryScroll.addListen();
-      });
-      this.itemPopPanel.destroy();
-    }
     super.destroy();
   }
 
@@ -334,7 +330,7 @@ export class FurniBagPanel extends BasePanel {
     const topCapH = 30 * this.dpr * zoom;
     const topPosY = 30 * this.dpr * zoom;
     const topStyle = {
-      fontFamily: Font.DEFULT_FONT,
+      fontFamily: Font.BOLD_FONT,
       fontSize: 20 * this.dpr * zoom,
       color: "#FFFFFF"
     };
@@ -709,15 +705,29 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private onSellBtnHandler() {
-    this.popItemsPopPanle();
-    if (this.mSelectedItemData.length > 0)
-      this.itemPopPanel.setProp(this.mSelectedItemData[0], 0, this.categoryType, new Handler(this, this.onSellPropsHandler));
+    this.mCategoryScroll.removeListen();
+    if (this.mSelectedItemData.length > 0) {
+      const data = this.mSelectedItemData[0];
+      const title = i18n.t("furni_bag.sold");
+      const confirmHandler = new Handler(this, this.onSellPropsHandler, [this.categoryType]);
+      const cancelHandler = new Handler(this, () => {
+        this.mCategoryScroll.addListen();
+      });
+      this.showPropFun({ confirmHandler, data, cancelHandler, title });
+    }
   }
 
   private onUseBtnHandler() {
-    this.popItemsPopPanle();
-    if (this.mSelectedItemData.length > 0)
-      this.itemPopPanel.setProp(this.mSelectedItemData[0], 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
+    this.mCategoryScroll.removeListen();
+    if (this.mSelectedItemData.length > 0) {
+      const data = this.mSelectedItemData[0];
+      const title = i18n.t("furni_bag.use");
+      const confirmHandler = new Handler(this, this.onUsePropsHandler);
+      const cancelHandler = new Handler(this, () => {
+        this.mCategoryScroll.addListen();
+      });
+      this.showPropFun({ confirmHandler, data, cancelHandler, price: false, title });
+    }
   }
   private onSaveBtnHandler() {
     if (this.mSelectedItemData.length > 0) {
@@ -734,27 +744,14 @@ export class FurniBagPanel extends BasePanel {
     if (this.mSelectedItemData.length > 0)
       this.emit("queryResetAvatar");
   }
-  private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
-
+  private onSellPropsHandler(category: number, prop: op_client.CountablePackageItem, count: number) {
+    this.mCategoryScroll.addListen();
     this.emit("sellProps", prop, count, category);
   }
 
-  private onUsePropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
-
-  }
-
-  private popItemsPopPanle() {
-    const zoom = this.mWorld.uiScale;
-    const width = this.scene.cameras.main.width;
-    const height = this.scene.cameras.main.height;
-    if (!this.itemPopPanel) {
-      this.itemPopPanel = new ItemsPopPanel(this.scene, width * 0.5, height * 0.5, this.key, this.commonkey, this.dpr, zoom);
-    }
-    this.itemPopPanel.once("itempopclose", () => {
-      this.mCategoryScroll.addListen();
-    });
-    this.mCategoryScroll.removeListen();
-    this.add(this.itemPopPanel);
+  private onUsePropsHandler(prop: op_client.CountablePackageItem, count: number) {
+    this.mCategoryScroll.addListen();
+    this.emit("useprops", prop.id, count);
   }
 
   private showSeach(parent: TextButton) {
@@ -799,6 +796,11 @@ export class FurniBagPanel extends BasePanel {
 
   get enableEdit() {
     return this.mEnableEdit;
+  }
+
+  private showPropFun(config: PicPropFunConfig) {
+    const uimanager = this.mWorld.uiManager;
+    uimanager.showMed("PicPropFun", config);
   }
 }
 
