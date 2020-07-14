@@ -199,6 +199,21 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.clearGame();
     }
 
+    getModuleRootPath(): string {
+        return CONFIG.modulePath + "/" || "";
+    }
+
+    getModulePath(name: string): string {
+        let modObj;
+        CONFIG.modules.forEach((obj) => {
+            if (obj && obj.name === name) {
+                modObj = obj;
+                return;
+            }
+        });
+        return CONFIG.modulePath + "/" + modObj.name + "/" + modObj.version + "/release/";
+    }
+
     onConnected(connection?: SocketConnection): void {
         // Logger.getInstance().info(`enterVirtualWorld`);
         this.enterVirtualWorld();
@@ -280,6 +295,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.orientationResize(this.mConfig.screenWidth, this.mConfig.screenHeight, width, height);
             }
         }
+    }
+
+    public startLoadMod(url: string) {
+        this.pluginManager.load("picatown-core", url).then((plugin) => {
+
+        });
     }
 
     public startFullscreen() {

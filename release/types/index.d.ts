@@ -3377,8 +3377,6 @@ declare module 'game-core/ui/components/BasePanel' {
         protected dpr: number;
         protected mResources: Map<string, any>;
         protected mReLoadResources: Map<string, any>;
-        protected mUITexturePath: string;
-        protected mUIJsonPath: string;
         constructor(scene: Phaser.Scene, world: WorldService);
         protected addResources(key: string, resource: any): void;
         protected get scaleWidth(): number;

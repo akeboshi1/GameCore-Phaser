@@ -36,7 +36,10 @@ export interface WorldService {
     startHeartBeat();
     changeScene();
     getSize(): Size;
+    startLoadMod(path: string);
     getConfig(): any;
+    getModuleRootPath(): string;
+    getModulePath(name: string): string;
     getGameConfig(): Phaser.Types.Core.GameConfig;
     onFocus();
     onBlur();
