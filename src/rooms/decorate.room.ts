@@ -399,7 +399,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onGameobjectUpHandler(pointer, gameobject) {
         // this.addPointerMoveHandler();
-        // TODO 
+        // TODO
         const com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
         if (!com) {
             return;
