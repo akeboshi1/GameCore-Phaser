@@ -31,6 +31,7 @@ export class UiManager extends PacketHandler {
     private mUILayerManager: ILayerManager;
     private mCache: any[] = [];
     private mModuleCache: any[] = [];
+    private mModuleLoad: boolean = false;
     private mNoneUIMap: Map<string, any> = new Map();
     private mSceneUIMap: Map<string, any> = new Map();
     private mNormalUIMap: Map<string, any> = new Map();
@@ -338,11 +339,11 @@ export class UiManager extends PacketHandler {
             try {
                 ns = require(`./${type}/${className}`);
             } catch (error) {
-                // if (this.mModuleCache === undefined) {
-                this.worldService.emitter.emit("SHOW_UI", [type, param]);
-                // } else {
-                //     this.mModuleCache.push(param);
-                // }
+                if (this.mModuleLoad) {
+                    this.worldService.emitter.emit("SHOW_UI", [type, param]);
+                } else {
+                    this.mModuleCache.push(param);
+                }
                 return;
             }
             mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
@@ -399,6 +400,7 @@ export class UiManager extends PacketHandler {
     }
 
     public showModuleUI() {
+        this.mModuleLoad = true;
         for (const tmp of this.mModuleCache) {
             const ui = tmp[0];
             this.showMed(ui.name, ui);
