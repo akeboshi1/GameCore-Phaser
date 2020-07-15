@@ -74,7 +74,7 @@ export class LoadingScene extends BasicScene {
     this.scale.on("resize", this.checkSize, this);
     this.lo.play("loading_anmis");
 
-    this.bg = this.add.image(0, 0, "loading", "bear.png");
+    this.bg = this.add.image(0, 0, "loading", "bear.png").setScale(this.mWorld.uiScale);
 
     this.curtain = new Curtain(this, this.mWorld);
     // this.curtain.open().then(() => {
@@ -156,7 +156,7 @@ export class LoadingScene extends BasicScene {
     this.lo.y = height;
 
     this.bg.x = 0; // + this.bg.width * this.bg.originX;
-    this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.height * this.bg.originY ;
+    this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY ;
   }
 
   private createFont() {
