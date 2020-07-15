@@ -125,8 +125,8 @@ declare module 'game-core/ui' {
     export * from "game-core/ui/DebugLogger";
     export * from "game-core/ui/DecorateControl";
     export * from "game-core/ui/ComponentRank";
-    export * from "game-core/ui/Bubble";
     export * from "game-core/ui/role";
+    export * from "game-core/ui/Bubble";
 }
 
 declare module 'game-core/ui/role' {
@@ -579,6 +579,7 @@ declare module 'game-core/utils/resUtil' {
     }
     export class Coin {
         static getIcon(coinType: number): string;
+        static getName(coinType: number): string;
     }
 }
 
@@ -598,7 +599,11 @@ declare module 'game-core/utils/font' {
         static readonly YAHEI_16_BOLD: string;
         static readonly YAHEI_18_BOLD: string;
         static readonly YAHEI_20_BOLD: string;
-        static readonly DEFULT_FONT = "'Source Han Sans'";
+        static readonly ZH_MAIN = "Source Han Sans";
+        static readonly EN_MAINT = "tt0503m_";
+        static readonly EN_BOLD = "tt0173m_";
+        static get DEFULT_FONT(): "tt0503m_" | "Source Han Sans";
+        static get BOLD_FONT(): "Source Han Sans" | "tt0173m_";
     }
 }
 
@@ -641,13 +646,14 @@ declare module 'game-core/rooms/room' {
     import { Pos } from "game-core/utils/pos";
     import { ClockReadyListener } from "game-core/rooms/Clock";
     import IActor = op_client.IActor;
-    import { Map } from "game-core/rooms/map/map";
-    import { IElement } from "game-core/rooms/element";
+    import { IElement } from "game-core/rooms/element/element";
     import { IBlockObject } from "game-core/rooms/cameras/block.object";
     import { WallManager } from "game-core/rooms/wall/wall.manager";
     import { SkyBoxManager, IScenery } from "game-core/rooms/sky.box";
     import { GroupManager } from "game-core/rooms/group/GroupManager";
     import { FrameManager } from "game-core/rooms/element/FrameManager";
+    import { State } from "game-core/rooms/state/state.group";
+    import { EffectManager } from "game-core/rooms/effect/effect.manager";
     export interface SpriteAddCompletedListener {
         onFullPacketReceived(sprite_t: op_def.NodeType): void;
     }
@@ -658,11 +664,11 @@ declare module 'game-core/rooms/room' {
         readonly playerManager: PlayerManager;
         readonly layerManager: RoomLayerManager;
         readonly cameraService: ICameraService;
+        readonly effectManager: EffectManager;
         readonly roomSize: IPosition45Obj;
         readonly miniSize: IPosition45Obj;
         readonly blocks: ViewblockService;
         readonly world: WorldService;
-        readonly map?: Map;
         readonly enableEdit: boolean;
         readonly sceneType: op_def.SceneTypeEnum;
         readonly scene: Phaser.Scene | undefined;
@@ -693,7 +699,6 @@ declare module 'game-core/rooms/room' {
     export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
         protected manager: IRoomManager;
         protected mWorld: WorldService;
-        protected mMap: Map;
         protected mID: number;
         protected mTerrainManager: TerrainManager;
         protected mElementManager: ElementManager;
@@ -703,6 +708,7 @@ declare module 'game-core/rooms/room' {
         protected mGroupManager: GroupManager;
         protected mFrameManager: FrameManager;
         protected mSkyboxManager: SkyBoxManager;
+        protected mEffectManager: EffectManager;
         protected mScene: Phaser.Scene | undefined;
         protected mSize: IPosition45Obj;
         protected mMiniSize: IPosition45Obj;
@@ -710,7 +716,7 @@ declare module 'game-core/rooms/room' {
         protected mBlocks: ViewblockService;
         protected mEnableEdit: boolean;
         protected mScaleRatio: number;
-        protected mMods: string[];
+        protected mStateMap: Map<string, State>;
         constructor(manager: IRoomManager);
         enter(data: op_client.IScene): void;
         onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -739,6 +745,11 @@ declare module 'game-core/rooms/room' {
         update(time: number, delta: number): void;
         updateClock(time: number, delta: number): void;
         now(): number;
+        getMaxScene(): {
+            width: number;
+            height: number;
+        };
+        setState(states: op_def.IState[]): void;
         clear(): void;
         destroy(): void;
         protected addSkyBox(scenery: IScenery): void;
@@ -748,15 +759,16 @@ declare module 'game-core/rooms/room' {
         protected removePointerMoveHandler(): void;
         protected onPointerMoveHandler(pointer: Phaser.Input.Pointer): void;
         protected onGameOutHandler(): void;
+        protected handlerState(state: State): void;
         get scene(): Phaser.Scene | undefined;
         get terrainManager(): TerrainManager;
         get elementManager(): ElementManager;
         get playerManager(): PlayerManager;
-        get map(): Map;
         get layerManager(): RoomLayerManager;
         get groupManager(): GroupManager;
         get frameManager(): FrameManager;
         get cameraService(): ICameraService;
+        get effectManager(): EffectManager;
         get id(): number;
         get roomSize(): IPosition45Obj | undefined;
         get miniSize(): IPosition45Obj | undefined;
@@ -838,7 +850,7 @@ declare module 'game-core/rooms/terrain' {
 declare module 'game-core/rooms/element' {
     export { ISprite, AnimationData, SpriteAnimationQueue } from "game-core/rooms/element/Sprite";
     export { ElementManager, IElementManager } from "game-core/rooms/element/element.manager";
-    export * from "game-core/rooms/element/element";
+    export { Element, PlayerState, Direction, IElement, MoveData, MovePath, InputEnable, AnimationQueue } from "game-core/rooms/element/element";
     export { FrameManager } from "game-core/rooms/element/FrameManager";
 }
 
@@ -1300,11 +1312,10 @@ declare module 'game-core/scenes/loading' {
         preload(): void;
         init(data: any): void;
         create(): void;
-        awake(cb?: Function): void;
-        sleep(cb?: Function): void;
-        restart(): void;
-        start(): void;
-        stop(): void;
+        show(): Promise<void>;
+        close(): Promise<void>;
+        awake(data?: any): void;
+        sleep(): void;
         getKey(): string;
     }
 }
@@ -1363,7 +1374,7 @@ declare module 'game-core/ui/layer.manager' {
         readonly interactive: Phaser.GameObjects.Container;
         readonly scene: Phaser.Scene;
         setScene(scene: Phaser.Scene): void;
-        addToUILayer(obj: Phaser.GameObjects.GameObject): any;
+        addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number): any;
         addToDialogLayer(obj: Phaser.GameObjects.GameObject): any;
         addToToolTipsLayer(obj: Phaser.GameObjects.GameObject): any;
         removeToUILayer(obj: Phaser.GameObjects.GameObject): any;
@@ -1373,7 +1384,7 @@ declare module 'game-core/ui/layer.manager' {
     }
     export class LayerManager implements ILayerManager {
         setScene(scene: Phaser.Scene): void;
-        addToUILayer(obj: Phaser.GameObjects.GameObject): void;
+        addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number): void;
         addToDialogLayer(obj: Phaser.GameObjects.GameObject): void;
         addToToolTipsLayer(obj: Phaser.GameObjects.GameObject): void;
         removeToUILayer(obj: Phaser.GameObjects.GameObject): void;
@@ -1387,6 +1398,7 @@ declare module 'game-core/ui/layer.manager' {
 
 declare module 'game-core/ui/ui.manager' {
     import { PacketHandler } from "net-socket-packet";
+    import { op_pkt_def } from "pixelpai_proto";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { InputTextFactory } from "game-core/ui/components/inputTextFactory";
     import { BaseMediator } from "tooqingui";
@@ -1397,6 +1409,7 @@ declare module 'game-core/ui/ui.manager' {
         addPackListener(): void;
         removePackListener(): void;
         getUILayerManager(): ILayerManager;
+        getActiveUIData(name: string): op_pkt_def.IPKT_UI[];
         setScene(scene: Phaser.Scene): void;
         getScene(): Phaser.Scene;
         createMediator(className: string, nsPath: string): BaseMediator;
@@ -1411,6 +1424,7 @@ declare module 'game-core/ui/ui.manager' {
         baseFaceTween(show: boolean): void;
         checkUIState(medName: string, show: boolean): void;
         showMed(type: string, ...param: any[]): void;
+        showExistMed(type: string, extendName?: string): void;
         showModuleUI(): void;
     }
 }
@@ -1443,10 +1457,12 @@ declare module 'game-core/ui/ui.mediatorType' {
 
 declare module 'game-core/ui/ui.atals.name' {
     export class UIAtlasName {
-        static common: string;
+        static commonUrl: string;
+        static common2Url: string;
     }
     export class UIAtlasKey {
         static commonKey: string;
+        static common2Key: string;
     }
 }
 
@@ -1591,9 +1607,11 @@ declare module 'game-core/ui/ComponentRank' {
 }
 
 declare module 'game-core/ui/Bubble' {
-    export * from "game-core/ui/Bubble/interactionbubble";
-    export * from "game-core/ui/Bubble/interactionbubble.container";
-    export * from "game-core/ui/Bubble/interactivebubble.manager";
+    export * from "game-core/ui/Bubble/InteractiveBubble";
+    export * from "game-core/ui/Bubble/InteractionBubbleContainer";
+    export * from "game-core/ui/Bubble/InteractionBubbleCell";
+    export * from "game-core/ui/Bubble/InteractiveBubbleMediator";
+    export * from "game-core/ui/Bubble/InteractiveBubblePanel";
 }
 
 declare module 'game-core/ui/role/create.role' {
@@ -1855,6 +1873,8 @@ declare module 'game-core/game/sound.manager' {
     }
     export class SoundManager extends PacketHandler {
         constructor(world: WorldService);
+        addPackListener(): void;
+        removePacketListener(): void;
         changeRoom(room: IRoomService): void;
         play(config: ISoundConfig): void;
         stop(field: SoundField): void;
@@ -1915,7 +1935,7 @@ declare module 'game-core/game/element.storage' {
 
 declare module 'game-core/rooms/element/element.manager' {
     import { PacketHandler, PBpacket } from "net-socket-packet";
-    import { op_def } from "pixelpai_proto";
+    import { op_client, op_def } from "pixelpai_proto";
     import { ConnectionService } from "game-core/net/connection.service";
     import { Element, IElement } from "game-core/rooms/element/element";
     import { IRoomService } from "game-core/rooms/room";
@@ -1949,6 +1969,7 @@ declare module 'game-core/rooms/element/element.manager' {
         remove(id: number): IElement;
         getElements(): IElement[];
         add(sprites: ISprite[], addMap?: boolean): void;
+        setState(state: op_client.IStateGroup): void;
         destroy(): void;
         update(time: number, delta: number): void;
         protected addMap(sprite: ISprite): void;
@@ -2076,6 +2097,7 @@ declare module 'game-core/rooms/cameras/cameras.manager' {
         centerCameas(): void;
         syncCamera(): void;
         syncCameraScroll(): void;
+        destroy(): void;
     }
     export class CamerasManager extends PacketHandler implements ICameraService {
         protected mRoomService: IRoomService;
@@ -2107,6 +2129,7 @@ declare module 'game-core/rooms/cameras/cameras.manager' {
         syncCamera(): void;
         syncCameraScroll(): void;
         scrollTargetPoint(x: number, y: number): void;
+        destroy(): void;
         get connection(): ConnectionService;
         set moving(val: boolean);
         get moving(): boolean;
@@ -2119,7 +2142,7 @@ declare module 'game-core/rooms/display/element.display' {
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
     import { op_def } from "pixelpai_proto";
     import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
     import { DisplayField } from "game-core/rooms/display/display.object";
     export interface ElementDisplay extends Phaser.GameObjects.Container {
         readonly baseLoc: Phaser.Geom.Point;
@@ -2165,23 +2188,180 @@ declare module 'game-core/rooms/cameras/viewblock.manager' {
     }
 }
 
-declare module 'game-core/rooms/map/map' {
-    import { WorldService } from "game-core/game/world.service";
-    import { op_client, op_gameconfig } from "pixelpai_proto";
-    import { MapModel } from "game-core/rooms/map/map.model";
-    import { PacketHandler } from "net-socket-packet";
-    import { IEntity } from "game-core/rooms/entity";
-    export class Map extends PacketHandler implements IEntity {
-        static NAME: string;
-        constructor(mWorld: WorldService);
-        initialize(): boolean;
-        getMapModel(): MapModel;
-        register(): void;
-        unRegister(): void;
+declare module 'game-core/rooms/element/element' {
+    import { IElementManager, ElementManager } from "game-core/rooms/element/element.manager";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    import { FramesDisplay } from "game-core/rooms/display/frames.display";
+    import { IRoomService } from "game-core/rooms/room";
+    import { ElementDisplay } from "game-core/rooms/display/element.display";
+    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { op_client, op_def } from "pixelpai_proto";
+    import { Tweens } from "phaser";
+    import { Pos } from "game-core/utils/pos";
+    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { BlockObject } from "game-core/rooms/cameras/block.object";
+    import { BubbleContainer } from "game-core/rooms/bubble/bubble.container";
+    import { ShopEntity } from "game-core/rooms/element/shop/shop.entity";
+    import { DisplayObject, DisplayField } from "game-core/rooms/display/display.object";
+    import { AI } from "game-core/rooms/action/AI";
+    export enum PlayerState {
+        IDLE = "idle",
+        WALK = "walk",
+        RUN = "run",
+        ATTACK = "attack",
+        JUMP = "jump",
+        INJURED = "injured",
+        FAILED = "failed",
+        DANCE01 = "dance01",
+        DANCE02 = "dance02",
+        FISHING = "fishing",
+        GREET01 = "greet01",
+        SIT = "sit",
+        LIE = "lit",
+        EMOTION01 = "emotion01"
+    }
+    export enum Direction {
+        north = 0,
+        north_west = 1,
+        west = 2,
+        west_south = 3,
+        south = 4,
+        south_east = 5,
+        east = 6,
+        east_north = 7
+    }
+    export interface IElement {
+        readonly id: number;
+        readonly dir: number;
+        readonly roomService: IRoomService;
+        readonly scene: Phaser.Scene;
+        model: ISprite;
+        setModel(model: ISprite): any;
+        updateModel(model: op_client.ISprite): any;
+        play(animationName: string): void;
+        getDisplay(): DisplayObject;
+        setPosition(p: Pos): void;
+        getPosition(): Pos;
+        getPosition45(): Pos;
+        setDirection(val: number): void;
+        getDirection(): number;
+        showEffected(displayInfo: IFramesModel): any;
+        showNickname(): any;
+        scaleTween(): any;
+        turn(): any;
+        setAlpha(val: number): any;
+        setQueue(queue: op_client.IChangeAnimation[]): any;
+        mount(ele: IElement): this;
+        unmount(): this;
+        addMount(ele: IElement, index?: number): this;
+        removeMount(ele: IElement): this;
+    }
+    export interface MoveData {
+        destPos?: Pos;
+        posPath?: MovePath[];
+        arrivalTime?: number;
+        tweenAnim?: Tweens.Tween;
+        tweenLineAnim?: Tweens.Timeline;
+        tweenLastUpdate?: number;
+        onCompleteParams?: any;
+        onComplete?: Function;
+        step?: number;
+    }
+    export interface MovePath {
+        x: number;
+        y: number;
+        duration?: number;
+        onStartParams?: any;
+        onStart?: Function;
+        onComplete?: Function;
+    }
+    export interface AnimationQueue {
+        name: string;
+        playTimes?: number;
+        complete?: Function;
+    }
+    export enum InputEnable {
+        Diasble = 0,
+        Enable = 1,
+        Interactive = 2
+    }
+    export class Element extends BlockObject implements IElement {
+        protected mElementManager: IElementManager;
+        get dir(): number;
+        get roomService(): IRoomService;
+        get id(): number;
+        get model(): ISprite;
+        set model(val: ISprite);
+        get scene(): Phaser.Scene;
+        get ai(): AI;
+        get eleMgr(): ElementManager;
+        protected mId: number;
+        protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+        protected mDisplay: DisplayObject | undefined;
+        protected mBubble: BubbleContainer;
+        protected mAnimationName: string;
+        protected mMoveData: MoveData;
+        protected mCurState: string;
+        protected mShopEntity: ShopEntity;
+        protected mAi: AI;
+        protected mOffsetY: number;
+        protected mQueueAnimations: AnimationQueue[];
+        protected mMoving: boolean;
+        protected mRootMount: IElement;
+        protected mMounts: IElement[];
+        constructor(sprite: ISprite, mElementManager: IElementManager);
+        load(displayInfo: IFramesModel | IDragonbonesModel): void;
+        setModel(model: ISprite): void;
+        updateModel(model: op_client.ISprite): void;
+        scaleTween(): void;
+        play(animationName: string): void;
+        setQueue(animations: op_client.IChangeAnimation[]): void;
+        setDirection(val: number): void;
+        getDirection(): number;
+        changeState(val?: string): void;
+        getState(): string;
+        getRenderable(): boolean;
+        getDisplay(): DisplayObject;
+        move(moveData: op_client.IMoveData): void;
+        movePosition(pos: Pos, angel: number): void;
+        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
+        startMove(): void;
+        stopMove(): void;
+        getPosition(): Pos;
+        setPosition(p: Pos): void;
+        getRootPosition(): Pos;
+        showBubble(text: string, setting: op_client.IChat_Setting): void;
+        clearBubble(): void;
+        showNickName(): void;
+        showEffected(displayInfo: IFramesModel, field?: DisplayField): void;
+        showNickname(): void;
+        turn(): void;
+        setAlpha(val: number): void;
+        mount(root: IElement): this;
+        unmount(): this;
+        addMount(ele: IElement, index: number): this;
+        removeMount(ele: IElement): this;
+        setState(states: op_def.IState[]): void;
+        getDepth(): number;
         destroy(): void;
-        setMapInfo(value: op_client.IScene): void;
-        addPackItems(elementId: number, items: op_gameconfig.IItem[]): void;
-        removePackItems(elementId: number, itemId: number): void;
+        protected _doMove(): void;
+        protected createDisplay(): ElementDisplay;
+        protected loadDisplayInfo(): void;
+        protected addDisplay(): void;
+        protected setDepth(depth: number): void;
+        protected onDisplayReady(field?: FramesDisplay): void;
+        protected onUpdateAnimationHandler(): void;
+        protected updateBubble(): void;
+        protected onMoveStart(): void;
+        protected onMoveComplete(): void;
+        protected onMoving(): void;
+        protected get offsetY(): number;
+        protected onCheckDirection(params: any): void;
+        protected calculateDirectionByAngle(angle: any): number;
+        protected mergeMounth(mounts: number[]): void;
+        protected updateMounth(mounts: number[]): void;
+        protected updateStateHandler(state: op_def.IState): void;
+        protected removeStateHandler(state: op_def.IState): void;
     }
 }
 
@@ -2228,11 +2408,42 @@ declare module 'game-core/rooms/cameras/block.object' {
     }
 }
 
+declare module 'game-core/rooms/state/state.group' {
+    import { op_def, op_client } from "pixelpai_proto";
+    export class StateGroup {
+        constructor();
+        update(group: op_client.IStateGroup): void;
+    }
+    export class State {
+        constructor(state: op_def.IState);
+        get name(): string;
+        get type(): op_def.NodeType;
+        get packet(): any;
+    }
+}
+
+declare module 'game-core/rooms/effect/effect.manager' {
+    import { IRoomService } from "game-core/rooms/room";
+    import { PacketHandler } from "net-socket-packet";
+    import { Effect } from "game-core/rooms/effect/effect";
+    export class EffectManager extends PacketHandler {
+        constructor(room: IRoomService);
+        add(id: number): Effect;
+        remove(id: number): void;
+        get(id: number): Effect;
+        destroy(): void;
+        protected updateDisplay(effect: Effect): void;
+        protected fetchDisplay(ids: number[]): void;
+        get connection(): import("../..").ConnectionService;
+    }
+}
+
 declare module 'game-core/rooms/sky.box/sky.box.manager' {
     import { BlockManager } from "game-core/rooms/sky.box/block.manager";
     import { IRoomService } from "game-core/rooms/room";
     import { IScenery } from "game-core/rooms/sky.box/scenery";
     import { PacketHandler } from "net-socket-packet";
+    import { State } from "game-core/rooms/state/state.group";
     export interface ISkyBoxConfig {
         key: string;
         width: number;
@@ -2243,11 +2454,14 @@ declare module 'game-core/rooms/sky.box/sky.box.manager' {
     export class SkyBoxManager extends PacketHandler {
         protected mRoom: IRoomService;
         protected mScenetys: Map<number, BlockManager>;
+        protected mStateMap: Map<string, State>;
         constructor(room: IRoomService);
         add(scenery: IScenery): void;
         update(scenery: IScenery): void;
         remove(id: number): void;
+        setState(states: State): void;
         destroy(): void;
+        get scenery(): BlockManager[];
     }
 }
 
@@ -2276,7 +2490,9 @@ declare module 'game-core/rooms/sky.box/scenery' {
     }
     export enum Fit {
         Center = 1,
-        Fill = 2
+        Fill = 2,
+        Stretch = 3,
+        Repeat = 4
     }
 }
 
@@ -2372,7 +2588,7 @@ declare module 'game-core/rooms/element/Sprite' {
         toSprite(): op_client.ISprite;
     }
     export interface AnimationData {
-        animationName: string;
+        name: string;
         flip: boolean;
         playingQueue?: SpriteAnimationQueue;
     }
@@ -2462,179 +2678,6 @@ declare module 'game-core/rooms/element/Sprite' {
         setOriginCollisionPoint(value: number[] | null): void;
         setOriginWalkPoint(value: number[] | null): void;
         getInteracviveArea(): op_def.IPBPoint2i[];
-    }
-}
-
-declare module 'game-core/rooms/element/element' {
-    import { IElementManager, ElementManager } from "game-core/rooms/element/element.manager";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { IRoomService } from "game-core/rooms/room";
-    import { ElementDisplay } from "game-core/rooms/display/element.display";
-    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { op_client } from "pixelpai_proto";
-    import { Tweens } from "phaser";
-    import { Pos } from "game-core/utils/pos";
-    import { ISprite } from "game-core/rooms/element/Sprite";
-    import { BlockObject } from "game-core/rooms/cameras/block.object";
-    import { BubbleContainer } from "game-core/rooms/bubble/bubble.container";
-    import { ShopEntity } from "game-core/rooms/element/shop/shop.entity";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
-    import { AI } from "game-core/rooms/action/AI";
-    export enum PlayerState {
-        IDLE = "idle",
-        WALK = "walk",
-        RUN = "run",
-        ATTACK = "attack",
-        JUMP = "jump",
-        INJURED = "injured",
-        FAILED = "failed",
-        DANCE01 = "dance01",
-        DANCE02 = "dance02",
-        FISHING = "fishing",
-        GREET01 = "greet01",
-        SIT = "sit",
-        LIE = "lit",
-        EMOTION01 = "emotion01"
-    }
-    export enum Direction {
-        north = 0,
-        north_west = 1,
-        west = 2,
-        west_south = 3,
-        south = 4,
-        south_east = 5,
-        east = 6,
-        east_north = 7
-    }
-    export interface IElement {
-        readonly id: number;
-        readonly dir: number;
-        readonly roomService: IRoomService;
-        readonly scene: Phaser.Scene;
-        model: ISprite;
-        setModel(model: ISprite): any;
-        updateModel(model: op_client.ISprite): any;
-        play(animationName: string): void;
-        getDisplay(): DisplayObject;
-        setPosition(p: Pos): void;
-        getPosition(): Pos;
-        getPosition45(): Pos;
-        setDirection(val: number): void;
-        getDirection(): number;
-        showEffected(): any;
-        showNickname(): any;
-        scaleTween(): any;
-        turn(): any;
-        setAlpha(val: number): any;
-        setQueue(queue: op_client.IChangeAnimation[]): any;
-        mount(ele: IElement): this;
-        unmount(): this;
-        addMount(ele: IElement, index?: number): this;
-        removeMount(ele: IElement): this;
-    }
-    export interface MoveData {
-        destPos?: Pos;
-        posPath?: MovePath[];
-        arrivalTime?: number;
-        tweenAnim?: Tweens.Tween;
-        tweenLineAnim?: Tweens.Timeline;
-        tweenLastUpdate?: number;
-        onCompleteParams?: any;
-        onComplete?: Function;
-        step?: number;
-    }
-    export interface MovePath {
-        x: number;
-        y: number;
-        duration?: number;
-        onStartParams?: any;
-        onStart?: Function;
-        onComplete?: Function;
-    }
-    export interface AnimationQueue {
-        name: string;
-        playTimes?: number;
-        complete?: Function;
-    }
-    export enum InputEnable {
-        Diasble = 0,
-        Enable = 1,
-        Interactive = 2
-    }
-    export class Element extends BlockObject implements IElement {
-        protected mElementManager: IElementManager;
-        get dir(): number;
-        get roomService(): IRoomService;
-        get id(): number;
-        get model(): ISprite;
-        set model(val: ISprite);
-        get scene(): Phaser.Scene;
-        get ai(): AI;
-        get eleMgr(): ElementManager;
-        protected mId: number;
-        protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-        protected mDisplay: DisplayObject | undefined;
-        protected mBubble: BubbleContainer;
-        protected mAnimationName: string;
-        protected mMoveData: MoveData;
-        protected mCurState: string;
-        protected mShopEntity: ShopEntity;
-        protected mAi: AI;
-        protected mOffsetY: number;
-        protected mQueueAnimations: AnimationQueue[];
-        protected mMoving: boolean;
-        protected mRootMount: IElement;
-        protected mMounts: IElement[];
-        constructor(sprite: ISprite, mElementManager: IElementManager);
-        load(displayInfo: IFramesModel | IDragonbonesModel): void;
-        setModel(model: ISprite): void;
-        updateModel(model: op_client.ISprite): void;
-        scaleTween(): void;
-        play(animationName: string): void;
-        setQueue(animations: op_client.IChangeAnimation[]): void;
-        setDirection(val: number): void;
-        getDirection(): number;
-        changeState(val?: string): void;
-        getState(): string;
-        getRenderable(): boolean;
-        getDisplay(): DisplayObject;
-        move(moveData: op_client.IMoveData): void;
-        movePosition(pos: Pos, angel: number): void;
-        movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH): void;
-        startMove(): void;
-        stopMove(): void;
-        getPosition(): Pos;
-        setPosition(p: Pos): void;
-        getRootPosition(): Pos;
-        showBubble(text: string, setting: op_client.IChat_Setting): void;
-        clearBubble(): void;
-        showNickName(): void;
-        showEffected(): void;
-        showNickname(): void;
-        turn(): void;
-        setAlpha(val: number): void;
-        mount(root: IElement): this;
-        unmount(): this;
-        addMount(ele: IElement, index: number): this;
-        removeMount(ele: IElement): this;
-        getDepth(): number;
-        destroy(): void;
-        protected _doMove(): void;
-        protected createDisplay(): ElementDisplay;
-        protected loadDisplayInfo(): void;
-        protected addDisplay(): void;
-        protected setDepth(depth: number): void;
-        protected onDisplayReady(): void;
-        protected onUpdateAnimationHandler(): void;
-        protected updateBubble(): void;
-        protected onMoveStart(): void;
-        protected onMoveComplete(): void;
-        protected onMoving(): void;
-        protected get offsetY(): number;
-        protected onCheckDirection(params: any): void;
-        protected calculateDirectionByAngle(angle: any): number;
-        protected mergeMounth(mounts: number[]): void;
-        protected updateMounth(mounts: number[]): void;
     }
 }
 
@@ -2835,10 +2878,11 @@ declare module 'game-core/rooms/display/display.object' {
     import { IElement } from "game-core/rooms/element/element";
     import { AnimationData } from "game-core/rooms/element/Sprite";
     export enum DisplayField {
-        BACKEND = 1,
-        STAGE = 2,
-        FRONTEND = 3,
-        FLAG = 4
+        BACKEND = 0,
+        STAGE = 1,
+        FRONTEND = 2,
+        FLAG = 3,
+        Effect = 4
     }
     export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {
         /**
@@ -2869,6 +2913,8 @@ declare module 'game-core/rooms/display/display.object' {
         play(animationName: AnimationData, field?: DisplayField): void;
         mount(ele: Phaser.GameObjects.Container, targetIndex?: number): void;
         unmount(ele: Phaser.GameObjects.Container): void;
+        removeEffect(field: DisplayField): void;
+        removeDisplay(field: DisplayField): void;
         destroy(fromScene?: boolean): void;
         showNickname(val: string): void;
         setDisplayBadges(cards: op_def.IBadgeCard[]): void;
@@ -2896,10 +2942,11 @@ declare module 'game-core/rooms/display/display.object' {
 declare module 'game-core/rooms/display/dragonbones.display' {
     import { ElementDisplay } from "game-core/rooms/display/element.display";
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { DisplayObject } from "game-core/rooms/display/display.object";
+    import { DisplayObject, DisplayField } from "game-core/rooms/display/display.object";
     import { IRoomService } from "game-core/rooms/room";
     import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
     export enum AvatarSlotType {
             BodyCostDres = "body_cost_$_dres",
             BodyCost = "body_cost_$",
@@ -2978,7 +3025,7 @@ declare module 'game-core/rooms/display/dragonbones.display' {
             get spriteHeight(): number;
             get GameObject(): DisplayObject;
             changeAlpha(val?: number): void;
-            load(display: IDragonbonesModel): void;
+            load(display: IDragonbonesModel | IFramesModel, field?: DisplayField): void;
             getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined;
             play(val: AnimationData): void;
             fadeIn(callback?: () => void): void;
@@ -3072,7 +3119,7 @@ declare module 'game-core/rooms/display/frames.display' {
     export class FramesDisplay extends DisplayObject {
         protected mFadeTween: Phaser.Tweens.Tween;
         protected mDisplayDatas: Map<DisplayField, IFramesModel>;
-        protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>;
+        protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container>;
         protected mScaleTween: Phaser.Tweens.Tween;
         protected mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>;
         protected mMountContainer: Phaser.GameObjects.Container;
@@ -3081,6 +3128,7 @@ declare module 'game-core/rooms/display/frames.display' {
         protected mMountList: Phaser.GameObjects.Container[];
         load(displayInfo: IFramesModel, field?: DisplayField): void;
         play(animation: AnimationData, field?: DisplayField): void;
+        playEffect(): void;
         mount(display: Phaser.GameObjects.Container, targetIndex?: number): void;
         unmount(display: Phaser.GameObjects.Container): void;
         fadeIn(callback?: () => void): void;
@@ -3088,6 +3136,8 @@ declare module 'game-core/rooms/display/frames.display' {
         scaleTween(): void;
         setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this;
         disableInteractive(): this;
+        removeEffect(): void;
+        removeDisplay(field: DisplayField): void;
         destroy(): void;
         protected createDisplay(key: string, ani: IAnimationData): void;
         protected clearFadeTween(): void;
@@ -4800,10 +4850,43 @@ declare module 'game-core/ui/ComponentRank/ComponentRankPanel' {
     }
 }
 
-declare module 'game-core/ui/Bubble/interactionbubble' {
+declare module 'game-core/ui/Bubble/InteractiveBubble' {
+    import { PacketHandler } from "net-socket-packet";
+    import { ConnectionService } from "game-core/net/connection.service";
+    import { WorldService } from "game-core/game/world.service";
+    export class InteractiveBubble extends PacketHandler {
+        constructor(world: WorldService);
+        register(): void;
+        unregister(): void;
+        on(event: string | symbol, fn: Function, context?: any): void;
+        off(event: string | symbol, fn: Function, context?: any): void;
+        destroy(): void;
+        queryInteractiveHandler(data: any): void;
+        get connection(): ConnectionService;
+    }
+}
+
+declare module 'game-core/ui/Bubble/InteractionBubbleContainer' {
     import { op_client } from "pixelpai_proto";
     import { Handler } from "game-core/Handler/Handler";
-    export class InteractionBubble extends Phaser.GameObjects.Container {
+    import { BaseUI } from "tooqingui";
+    import { InteractionBubbleCell } from "game-core/ui/Bubble/InteractionBubbleCell";
+    export class InteractionBubbleContainer extends BaseUI {
+        id: number;
+        constructor(scene: Phaser.Scene, dpr: number);
+        set show(value: boolean);
+        get show(): boolean;
+        hide(): void;
+        setFollow(gameObject: any, fromScene: Phaser.Scene, posFunc?: Function): void;
+        setBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, handler: Handler): InteractionBubbleCell;
+        destroy(): void;
+    }
+}
+
+declare module 'game-core/ui/Bubble/InteractionBubbleCell' {
+    import { op_client } from "pixelpai_proto";
+    import { Handler } from "game-core/Handler/Handler";
+    export class InteractionBubbleCell extends Phaser.GameObjects.Container {
         constructor(scene: Phaser.Scene, dpr: number);
         setContentData(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, handler: Handler): void;
         load(resName?: string, url?: string, jsonUrl?: string): void;
@@ -4813,35 +4896,35 @@ declare module 'game-core/ui/Bubble/interactionbubble' {
     }
 }
 
-declare module 'game-core/ui/Bubble/interactionbubble.container' {
-    import { InteractionBubble } from "game-core/ui/Bubble/interactionbubble";
-    import { op_client } from "pixelpai_proto";
-    import { Handler } from "game-core/Handler/Handler";
-    import { BaseUI } from "tooqingui";
-    export class InteractionBubbleContainer extends BaseUI {
-        id: number;
-        constructor(scene: Phaser.Scene, dpr: number);
-        set show(value: boolean);
-        get show(): boolean;
-        hide(): void;
-        setFollow(gameObject: any, fromScene: Phaser.Scene, posFunc?: Function): void;
-        setBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, handler: Handler): InteractionBubble;
-        destroy(): void;
-    }
-}
-
-declare module 'game-core/ui/Bubble/interactivebubble.manager' {
-    import { PacketHandler } from "net-socket-packet";
-    import { ConnectionService } from "game-core/net/connection.service";
+declare module 'game-core/ui/Bubble/InteractiveBubbleMediator' {
+    import { InteractiveBubblePanel } from "game-core/ui/Bubble/InteractiveBubblePanel";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { WorldService } from "game-core/game/world.service";
     import { Room } from "game-core/rooms/room";
-    export class InteractiveBubbleManager extends PacketHandler {
-        constructor(layerMgr: ILayerManager, mworld: WorldService);
-        setScene(scene: Phaser.Scene): void;
-        get connection(): ConnectionService;
+    import { BaseMediator } from "tooqingui";
+    export class InteractiveBubbleMediator extends BaseMediator {
+        protected mView: InteractiveBubblePanel;
+        constructor(layerMgr: ILayerManager, scene: Phaser.Scene, mworld: WorldService);
         get currentRoom(): Room;
         destroy(): void;
+        update(): void;
+    }
+}
+
+declare module 'game-core/ui/Bubble/InteractiveBubblePanel' {
+    import { WorldService } from "game-core/game/world.service";
+    import { op_client } from "pixelpai_proto";
+    import { BasePanel } from "game-core/ui/components/BasePanel";
+    import { IElement } from "game-core/rooms/element/element";
+    export class InteractiveBubblePanel extends BasePanel {
+        constructor(scene: Phaser.Scene, world: WorldService);
+        resize(width: number, height: number): void;
+        init(): void;
+        destroy(): void;
+        clearInteractionBubble(id: number): void;
+        showInteractionBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, ele: IElement): void;
+        updateBubblePos(gameObject: any, scene: Phaser.Scene): void;
+        update(): void;
     }
 }
 
@@ -4878,7 +4961,7 @@ declare module 'game-core/loading/loading.manager' {
     }
     export class LoadingManager {
         constructor(world: WorldService);
-        start(callBack?: Function): Promise<void>;
+        start(callBack?: Function): Promise<never>;
         addAssets(assets: IAsset[]): Promise<void>;
         startup(scene: Phaser.Scene): Promise<void>;
         destroy(): void;
@@ -4886,77 +4969,135 @@ declare module 'game-core/loading/loading.manager' {
     }
 }
 
-declare module 'game-core/rooms/map/map.model' {
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { op_client, op_gameconfig } from "pixelpai_proto";
-    export class MapModel {
-            mapId: number;
-            zStart: number;
-            zEnd: number;
-            get bgSound(): number;
-            set bgSound(value: number);
-            get mapTotalWidth(): number;
-            get mapTotalHeight(): number;
-            /**
-                * 获取格子宽（单位：像素）
-                */
-            get tileWidth(): number;
-            /**
-                * 获取格子高（单位：像素）
-                */
-            get tileHeight(): number;
-            get terrainConfig(): any[];
-            get elementConfig(): IFramesModel[];
-            get cols(): number;
-            set cols(value: number);
-            get rows(): number;
-            set rows(value: number);
-            get voiceChatRoomId(): number;
-            set voiceChatRoomId(value: number);
-            setConfig(cols: number, rows: number, zStart: number, zEnd: number, tileWidth: number, tileHeight: number): void;
-            setTerrainInfo(value: op_client.ITerrain[]): void;
-            addTerrainInfo(value: op_client.ITerrain[]): void;
-            setElementInfo(value: op_client.IElement[]): void;
-            addElementInfo(value: op_client.IElement[]): void;
-            addPackItems(elementId: number, items: op_gameconfig.IItem[]): void;
-            removePackItems(elementId: number, itemId: number): boolean;
-            getElementInfo(value: number): IFramesModel;
-    }
+import { Pos } from "game-core/utils/pos";
+import { IAvatar, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
+import { IFramesModel } from "game-core/rooms/display/frames.model";
+import NodeType = op_def.NodeType;
+export interface ISprite {
+    readonly id: number;
+    readonly avatar: IAvatar;
+    readonly nickname: string;
+    readonly alpha: number;
+    readonly displayBadgeCards: op_def.IBadgeCard[];
+    readonly platformId: string;
+    readonly sceneId: number;
+    readonly nodeType: op_def.NodeType;
+    readonly currentAnimation: AnimationData;
+    readonly currentCollisionArea: number[][];
+    readonly currentWalkableArea: number[][];
+    readonly currentCollisionPoint: Phaser.Geom.Point;
+    readonly hasInteractive: boolean;
+    readonly attrs: op_def.IStrPair[];
+    readonly animationQueue: SpriteAnimationQueue[];
+    currentAnimationName: string;
+    displayInfo: IFramesModel | IDragonbonesModel;
+    direction: number;
+    pos: Pos;
+    bindID: number;
+    sn: string;
+    isMoss?: boolean;
+    mountSprites?: number[];
+    newID(): any;
+    updateAvatar(avatar: op_gameconfig.IAvatar): any;
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): any;
+    setPosition(x: number, y: number): any;
+    setAnimationName(name: string, playTimes?: number): AnimationData;
+    setAnimationQueue(queue: SpriteAnimationQueue[]): any;
+    turn(): ISprite;
+    toSprite(): op_client.ISprite;
 }
-
-declare module 'game-core/rooms/entity' {
-    export interface IEntity {
-        destroy(): any;
-    }
+export interface AnimationData {
+    name: string;
+    flip: boolean;
+    playingQueue?: SpriteAnimationQueue;
 }
-
-declare module 'game-core/rooms/sky.box/block.manager' {
-    import { WorldService } from "game-core/game/world.service";
-    import { IScenery } from "game-core/rooms/sky.box/scenery";
-    import { IRoomService } from "game-core/rooms/room";
-    export interface IBlockManager {
-        readonly world: WorldService;
-        startPlay(scene: Phaser.Scene): any;
-        check(time?: number, delta?: number): any;
-    }
-    export class BlockManager implements IBlockManager {
-        constructor(scenery: IScenery, room: IRoomService);
-        startPlay(scene: Phaser.Scene): void;
-        check(time?: number, delta?: number): void;
-        update(scenery: IScenery): void;
-        setSize(imageW: number, imageH: number, gridW?: number, gridH?: number): void;
-        updatePosition(): void;
-        destroy(): void;
-        get world(): WorldService;
-        get scenery(): IScenery;
-    }
+export interface SpriteAnimationQueue {
+    name: string;
+    playTimes?: number;
+    playedTimes?: number;
+    complete?: Function;
 }
-
-declare module 'game-core/rooms/display/terrain.display' {
-    import { FramesDisplay } from "game-core/rooms/display/frames.display";
-    export class TerrainDisplay extends FramesDisplay {
-        showRefernceArea(): void;
-    }
+export declare class Sprite implements ISprite {
+    protected mID: number;
+    protected mPos: Pos;
+    protected mAvatar: IAvatar;
+    protected mCurrentAnimationName: string;
+    protected mDirection: number;
+    protected mBindID: number;
+    protected mSn: string;
+    protected mAlpha: number;
+    protected mNickname: string;
+    protected mDisplayBadgeCards: op_def.IBadgeCard[];
+    protected mPackage: op_gameconfig.IPackage;
+    protected mSceneId: number;
+    protected mUuid: number;
+    protected mPlatformId: string;
+    protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+    protected mNodeType: NodeType;
+    protected mCurrentAnimation: AnimationData;
+    protected mCurrentCollisionArea: number[][];
+    protected mCurrentWalkableArea: number[][];
+    protected mCurrentCollisionPoint: Phaser.Geom.Point;
+    protected mVersion: string;
+    protected mIsMoss: boolean;
+    protected mRegisterAnimation: Map<string, string>;
+    protected _originWalkPoint: Phaser.Geom.Point;
+    protected _originCollisionPoint: Phaser.Geom.Point;
+    protected mAttrs: op_def.IStrPair[];
+    protected mAnimationQueue: SpriteAnimationQueue[];
+    protected mMountSprites: number[];
+    constructor(obj: op_client.ISprite, nodeType?: NodeType);
+    toSprite(): op_client.ISprite;
+    newID(): void;
+    setPosition(x: number, y: number): void;
+    turn(): ISprite;
+    updateAvatar(avatar: op_gameconfig.IAvatar): void;
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
+    setAnimationQueue(queue: SpriteAnimationQueue[]): void;
+    setMountSprites(ids: number[]): void;
+    updateAttr(attrs: op_def.IStrPair[]): void;
+    setAnimationName(name: string): AnimationData;
+    get id(): number;
+    get pos(): Pos;
+    set pos(pos: Pos);
+    get avatar(): IAvatar;
+    get currentAnimationName(): string;
+    set currentAnimationName(animationName: string);
+    get direction(): number;
+    set direction(val: number);
+    get nickname(): string;
+    get bindID(): number;
+    set bindID(id: number);
+    get sn(): string;
+    set sn(value: string);
+    get alpha(): number;
+    get package(): op_gameconfig.IPackage;
+    set package(value: op_gameconfig.IPackage);
+    get sceneId(): number;
+    get uuid(): number;
+    get displayBadgeCards(): op_def.IBadgeCard[];
+    get platformId(): string;
+    get displayInfo(): IFramesModel | IDragonbonesModel;
+    set displayInfo(displayInfo: IFramesModel | IDragonbonesModel);
+    get isMoss(): boolean;
+    set isMoss(val: boolean);
+    get animationQueue(): SpriteAnimationQueue[];
+    get nodeType(): NodeType;
+    get currentAnimation(): AnimationData;
+    get currentCollisionArea(): number[][];
+    get currentWalkableArea(): number[][];
+    get currentCollisionPoint(): Phaser.Geom.Point;
+    get hasInteractive(): boolean;
+    get mountSprites(): number[];
+    set mountSprites(ids: number[]);
+    get animationMap(): Map<string, string>;
+    get originCollisionPoint(): Phaser.Geom.Point;
+    get originWalkPoint(): Phaser.Geom.Point;
+    get attrs(): op_def.IStrPair[];
+    setOriginCollisionPoint(value: number[] | null): void;
+    setOriginWalkPoint(value: number[] | null): void;
+    getInteracviveArea(): op_def.IPBPoint2i[];
 }
 
 declare module 'game-core/rooms/bubble/bubble.container' {
@@ -4994,6 +5135,69 @@ declare module 'game-core/rooms/action/AI' {
         addAction(action: AIAction, isbreak?: boolean): void;
         breakAction(): void;
         destroy(): void;
+    }
+}
+
+declare module 'game-core/rooms/effect/effect' {
+    import { op_client } from "pixelpai_proto";
+    import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+    import { IFramesModel } from "game-core/rooms/display/frames.model";
+    export class Effect extends Phaser.Events.EventEmitter {
+        constructor(id: number);
+        syncSprite(sprite: op_client.ISprite): void;
+        destroy(): void;
+        get id(): number;
+        set displayInfo(display: IFramesModel | IDragonbonesModel);
+        get displayInfo(): IFramesModel | IDragonbonesModel;
+    }
+}
+
+declare module 'game-core/rooms/sky.box/block.manager' {
+    import { WorldService } from "game-core/game/world.service";
+    import { IScenery } from "game-core/rooms/sky.box/scenery";
+    import { IRoomService } from "game-core/rooms/room";
+    import { State } from "game-core/rooms/state/state.group";
+    export interface IBlockManager {
+        readonly world: WorldService;
+        startPlay(scene: Phaser.Scene): any;
+        check(time?: number, delta?: number): any;
+    }
+    export class BlockManager implements IBlockManager {
+        constructor(scenery: IScenery, room: IRoomService);
+        startPlay(scene: Phaser.Scene): void;
+        check(time?: number, delta?: number): void;
+        update(scenery: IScenery): void;
+        setSize(imageW: number, imageH: number, gridW?: number, gridH?: number): void;
+        updatePosition(): void;
+        destroy(): void;
+        setState(state: State): void;
+        playSkyBoxAnimation(packet: any): void;
+        protected handlerState(state: State): void;
+        protected updateDepth(): void;
+        protected initBlock(): void;
+        protected move(targets: any, props: any, duration?: number, resetProps?: any, resetDuration?: number): void;
+        protected initCamera(): void;
+        protected clear(): void;
+        get world(): WorldService;
+        get scenery(): IScenery;
+        protected fixPosition(props: any): any;
+        protected get offset(): {
+            x: number;
+            y: number;
+        };
+    }
+}
+
+declare module 'game-core/rooms/display/terrain.display' {
+    import { FramesDisplay } from "game-core/rooms/display/frames.display";
+    export class TerrainDisplay extends FramesDisplay {
+        showRefernceArea(): void;
+    }
+}
+
+declare module 'game-core/rooms/entity' {
+    export interface IEntity {
+        destroy(): any;
     }
 }
 
@@ -5123,9 +5327,11 @@ declare module 'game-core/rooms/display-object.pool' {
 declare module 'game-core/rooms/sky.box/editor.sky.box.manager' {
     import { SkyBoxManager } from "game-core/rooms/sky.box/sky.box.manager";
     import { IRoomService } from "game-core/rooms/room";
+    import { IScenery } from "game-core/rooms/sky.box/scenery";
     import { BlockManager } from "game-core/rooms/sky.box/block.manager";
     export class EditorSkyBoxManager extends SkyBoxManager {
         constructor(room: IRoomService);
+        add(scenery: IScenery): void;
         fetch(id: number): void;
         move(pointer: Phaser.Input.Pointer): void;
         keyboardMove(keyCode: number): void;
@@ -5232,6 +5438,7 @@ declare module 'game-core/rooms/decorate.room' {
         get selectedSprite(): IElement | undefined;
         get enableEdit(): boolean;
         get sceneType(): op_def.SceneTypeEnum;
+        get effectManager(): any;
     }
 }
 
