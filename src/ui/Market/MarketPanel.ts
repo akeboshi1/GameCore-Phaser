@@ -13,6 +13,8 @@ import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabBu
 import { Logger } from "../../utils/log";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
@@ -33,6 +35,11 @@ export class MarketPanel extends BasePanel {
   private mItems: MarketItem[];
   private mPreSubCategoris: op_def.IStrPair;
   private mPropGrid: GameGridTable;
+  private randomCon: Phaser.GameObjects.Container;
+  private randomRefeshTime: Phaser.GameObjects.Text;
+  private randomRefreshBtn: NineSliceButton;
+  private refreshIcon: Phaser.GameObjects.Image;
+  private refreshNeedCount: Phaser.GameObjects.Text;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.mSubTabs = [];
@@ -67,9 +74,6 @@ export class MarketPanel extends BasePanel {
     this.mTIle.x = centerX;
 
     const shelfHeight = 290 * this.dpr * zoom;
-    // if (shelfHeight > height / 2) {
-    //   shelfHeight = height / 2;
-    // }
     this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width * zoom, height * zoom), Phaser.Geom.Rectangle.Contains);
 
     this.mShelfContainer.setSize(width, shelfHeight);
@@ -81,7 +85,6 @@ export class MarketPanel extends BasePanel {
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
 
     this.mSelectItem.setSize(width, height - this.mShelfContainer.height);
-    // this.mSelectItem.y = 45 * this.dpr;
     this.mSelectItem.resize(w, h);
 
     this.mCategoriesBar.clear();
@@ -133,38 +136,16 @@ export class MarketPanel extends BasePanel {
     }
     this.mCategoriesContainer.setSize(this.mTabs.length * capW, capH);
     this.mShelfContainer.add(this.mTabs);
-    // this.mSubCategeoriesContainer.y = this.mCategoriesContainer.height;
-    this.mCategoriesBar.y = this.mCategoriesContainer.height + this.mShelfContainer.y;
-    this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
-    this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom + this.mSubCategeoriesContainer.height + 9 * this.dpr;
-    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
-    this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom;
-    this.mPropGrid.layout();
-    this.mSubCategorisScroll.layout();
-    this.mSubCategorisScroll.resetMask();
-    this.mPropGrid.resetMask();
+    this.layoutCategories();
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
-    Logger.getInstance().log(this.mTabs[0].getWorldTransformMatrix());
     group.selectIndex(0);
-    // for (const category of categorys) {
-    //   const btn = new NinePatchButton(this.scene, )
-    // }
   }
 
   public setProp(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    // const zoom = this.mWorld.uiScale;
-    // for (let i = 0; i < commodities.length; i++) {
-    //   const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr * zoom) + (72 * this.dpr * zoom), Math.floor(i % 3) * (68 * this.dpr * zoom) + 30 * this.dpr * zoom, this.dpr, zoom);
-    //   item.setProp(commodities[i]);
-    //   item.on("select", this.onSelectItemHandler, this);
-    //   this.mItems[i] = item;
-    // }
-    // this.mPropContainer.add(this.mItems);
     this.mPropGrid.setItems(commodities);
     this.mPropGrid.layout();
     this.mPropGrid.setT(0);
@@ -188,9 +169,24 @@ export class MarketPanel extends BasePanel {
     super.destroy();
   }
 
+  protected layoutCategories() {
+    this.mCategoriesBar.y = this.mCategoriesContainer.height + this.mShelfContainer.y;
+    this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
+    this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr + this.mSubCategeoriesContainer.height + 9 * this.dpr;
+    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr;
+    this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
+    this.randomCon.y = this.mSubCategorisScroll.y;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr;
+    this.mPropGrid.layout();
+    this.mSubCategorisScroll.layout();
+    this.mSubCategorisScroll.resetMask();
+    this.mPropGrid.resetMask();
+  }
+
   protected preload() {
     // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market"), Url.getUIRes(this.dpr, "market/market.json"));
     this.addAtlas(this.key, "market/market.png", "market/market.json");
+    this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
     super.preload();
   }
 
@@ -299,7 +295,47 @@ export class MarketPanel extends BasePanel {
       this.onSelectSubCategoryHandler(cell);
     });
     this.add(this.mSubCategorisScroll.table);
+    this.randomCon = this.scene.make.container(undefined, false);
+    this.randomCon.x = w * 0.5;
+    this.randomCon.visible = false;
+    this.add(this.randomCon);
+    this.randomRefeshTime = this.scene.make.text({
+      x: -w * 0.5 + 10 * this.dpr, y: -12 * this.dpr,
+      text: i18n.t("market.refreshtime"),
+      style: {
+        color: "#007AAE",
+        fontSize: 13 * this.dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }).setOrigin(0, 0.5);
+    const btnWidth = 80 * this.dpr, btnHeight = 30 * this.dpr;
+    this.randomRefreshBtn = new NineSliceButton(this.scene, w * 0.5, this.randomRefeshTime.y, btnWidth, btnHeight, UIAtlasKey.commonKey, "button_g", i18n.t("market.refresh"), this.dpr, this.scale, {
+      left: 15 * this.dpr,
+      top: 15 * this.dpr,
+      right: 15 * this.dpr,
+      bottom: 15 * this.dpr
+    });
+    this.randomRefreshBtn.x = w * 0.5 - this.randomRefreshBtn.width * 0.5 - 10 * this.dpr;
+    this.randomRefreshBtn.setTextOffset(0, 5 * this.dpr);
+    this.randomRefreshBtn.setTextStyle({
+      color: "#0",
+      fontSize: 13 * this.dpr,
+      fontFamily: Font.BOLD_FONT
+    });
+    this.randomRefreshBtn.setFontStyle("bold");
 
+    this.refreshIcon = this.scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" }).setScale(0.8);
+    this.refreshIcon.setPosition(-10 * this.dpr, -8 * this.dpr);
+    this.refreshNeedCount = this.scene.make.text({
+      x: 0 * this.dpr, y: this.refreshIcon.y,
+      text: "100",
+      style: {
+        fontSize: 10 * this.dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }).setOrigin(0, 0.5);
+    this.randomRefreshBtn.add([this.refreshIcon, this.refreshNeedCount]);
+    this.randomCon.add([this.randomRefeshTime, this.randomRefreshBtn]);
     const propFrame = this.scene.textures.getFrame(this.key, "border");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;

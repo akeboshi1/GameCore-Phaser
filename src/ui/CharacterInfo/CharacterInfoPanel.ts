@@ -19,6 +19,9 @@ import { Url } from "../../utils/resUtil";
 // import { NinePatchButton } from "../../../lib/rexui/lib/ui/button/NinePatchButton";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { NinePatchButton } from "../components/ninepatch.button";
+import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
+import { Handler } from "../../Handler/Handler";
+import { CharacterAttributePanel } from "./CharacterAttributePanel";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -41,14 +44,14 @@ export default class CharacterInfoPanel extends BasePanel {
     private tradeBtn: NinePatchButton;
     private privaCharBtn: NinePatchButton;
     private mCategoryScroll: GameScroller;
-    private mGrideTable: GameGridTable;
+    private mSkillGrideTable: GameGridTable;
+    private mAttrPanel: CharacterAttributePanel;
     private editorPanel: CharacterEditorPanel;
     private curSelectCategeory: Button;
     private isOwner: boolean = true;
     private mBackGround: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
     }
     resize(width: number, height: number) {
         const w: number = this.scaleWidth;
@@ -56,11 +59,11 @@ export default class CharacterInfoPanel extends BasePanel {
         super.resize(width, height);
         this.setSize(w, h);
         this.mBackGround.clear();
-        this.mBackGround.fillStyle(0x6AE2FF, 0);
+        this.mBackGround.fillStyle(0x000000, 0.66);
         this.mBackGround.fillRect(0, 0, w, h);
         this.content.setPosition(w / 2, h / 2);
-        this.mGrideTable.refreshPos(w / 2 + 6 * this.dpr * this.scale, h / 2 + 180 * this.dpr * this.scale);
-        this.mGrideTable.resetMask();
+        // this.mSkillGrideTable.refreshPos(0, 180 * this.dpr);
+        this.mSkillGrideTable.resetMask();
         this.content.setInteractive();
     }
 
@@ -102,7 +105,8 @@ export default class CharacterInfoPanel extends BasePanel {
 
     preload() {
         this.addAtlas(this.key, "player_info/player_info.png", "player_info/player_info.json");
-        this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
+        this.commonkey = UIAtlasKey.commonKey;
+        this.addAtlas(this.commonkey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
     init() {
@@ -131,9 +135,9 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
         this.likeBtn.visible = false;
         this.avatar = new DragonbonesDisplay(this.scene, undefined, undefined, true);
-        this.avatar.scale = this.dpr *2;
+        this.avatar.scale = this.dpr * 2;
         this.avatar.x = 0;
-        this.avatar.y = -80 * this.dpr;
+        this.avatar.y = -70 * this.dpr;
         this.avatar.once("initialized", () => {
             this.avatar.play({ name: "idle", flip: false });
         });
@@ -199,9 +203,9 @@ export default class CharacterInfoPanel extends BasePanel {
         const h = this.scene.cameras.main.height;
         this.mCategoryScroll = new GameScroller(this.scene, {
             x: this.scaleWidth * 0.5,
-            y: this.scaleHeight * 0.5 + 62 * this.dpr * zoom,
+            y: this.scaleHeight * 0.5 + 62 * this.dpr,
             width: bottomWidth,
-            height: 41 * this.dpr,
+            height: 80 * this.dpr,
             zoom: this.scale,
             orientation: 1,
             cellupCallBack: (gameobject) => {
@@ -211,46 +215,14 @@ export default class CharacterInfoPanel extends BasePanel {
         this.add(this.mCategoryScroll);
 
         const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
-        const capW = propFrame.width + 5 * this.dpr * zoom;
-        const capH = propFrame.height + 2 * this.dpr * zoom;
-        const tableConfig: GridTableConfig = {
-            x: w / 2,
-            y: h * 0.5 + 145 * this.dpr * zoom,
-            table: {
-                width: (this.bottomCon.width - 10 * this.dpr) * zoom,
-                height: 200 * this.dpr * zoom,
-                columns: 3,
-                cellWidth: capW,
-                cellHeight: capH,
-                reuseCellContainer: true,
-                cellPadX: 24 * this.dpr * zoom
-                // cellOriginX:0.5,
-                // cellOriginY:0.5,
-            },
-            scrollMode: 1,
-            clamplChildOY: false,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
-            createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene,
-                    item = cell.item;
-                if (cellContainer === null) {
-                    cellContainer = new CharacterOwnerItem(scene, 0, 0, this.key, this.dpr, zoom);
-                    this.add(cellContainer);
-                }
-                // cellContainer.setSize(width, height);
-                cellContainer.setData({ item });
-                cellContainer.setItemData(item, this.isOwner);
-                return cellContainer;
-            },
-        };
-        this.mGrideTable = new GameGridTable(this.scene, tableConfig);
-        this.mGrideTable.layout();
-        this.mGrideTable.on("cellTap", (cell) => {
-            if (cell) {
-                this.onSelectItemHandler(cell);
-            }
-        });
-        this.add(this.mGrideTable.table);
+        const capW = propFrame.width + 5 * this.dpr;
+        const capH = propFrame.height + 2 * this.dpr;
+        const gridX = 0, gridY = 145 * this.dpr, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 200 * this.dpr;
+        this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
+            return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr, zoom);
+        }, new Handler(this, this.onSelectItemHandler));
+        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY, 260 * this.dpr, 149 * this.dpr, this.key, this.dpr);
+        this.content.add(this.mAttrPanel);
         this.resize(w, h);
         super.init();
         this.reqPlayerInfo();
@@ -291,7 +263,7 @@ export default class CharacterInfoPanel extends BasePanel {
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
-            this.mGrideTable.setColumnCount(3);
+            this.mSkillGrideTable.setColumnCount(3);
             this.isOwner = true;
         } else {
             const remark = (data.remark ? data.remark : "备注好友昵称");
@@ -306,16 +278,55 @@ export default class CharacterInfoPanel extends BasePanel {
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
-            this.mGrideTable.setColumnCount(2);
+            this.mSkillGrideTable.setColumnCount(2);
             this.isOwner = false;
         }
         this.setSubCategory(subArr);
     }
 
     public destroy() {
-        this.mGrideTable.destroy();
+        this.mSkillGrideTable.destroy();
         this.mCategoryScroll.destroy();
         super.destroy();
+    }
+
+    private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler) {
+        const tableConfig: GridTableConfig = {
+            x,
+            y,
+            table: {
+                width,
+                height,
+                columns: 3,
+                cellWidth: capW,
+                cellHeight: capH,
+                reuseCellContainer: true,
+                cellPadX: 24 * this.dpr
+            },
+            scrollMode: 1,
+            clamplChildOY: false,
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            createCellContainerCallback: (cell, cellContainer) => {
+                const scene = cell.scene,
+                    item = cell.item;
+                if (cellContainer === null) {
+                    cellContainer = createFun();
+                    this.content.add(cellContainer);
+                }
+                cellContainer.setData({ item });
+                cellContainer.setItemData(item, this.isOwner);
+                return cellContainer;
+            },
+        };
+        const grid = new GameGridTable(this.scene, tableConfig);
+        grid.layout();
+        grid.on("cellTap", (cell) => {
+            if (cell) {
+                callback.runWith(cell);
+            }
+        });
+        this.content.add(grid.table);
+        return grid;
     }
 
     private OnClosePanel() {
@@ -323,8 +334,8 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private setSubCategory(datas: any[]) {
-        const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_badge"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title"), i18n.t("player_info.option_title")];
-        const len = 1;// datas.length;
+        const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_attribute"), i18n.t("player_info.option_badge")];
+        const len = subNames.length;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
         for (let i = 0; i < len; i++) {
@@ -332,10 +343,11 @@ export default class CharacterInfoPanel extends BasePanel {
             item.width = itemWidth;
             item.height = 41 * this.dpr;
             items.push(item);
-            item.setTextStyle({ color: "#2B4BB5", bold: true, fontSize: 14 * this.dpr * this.scale, fontFamily: Font.DEFULT_FONT });
+            item.setTextStyle({ color: "#2B4BB5", fontSize: 12 * this.dpr, fontFamily: Font.BOLD_FONT });
             item.disInteractive();
             item.removeListen();
             item.setData("subData", datas[i]);
+            item.setData("optiontype", i);
             this.mCategoryScroll.addItem(item);
         }
         if (items.length <= 3) this.mCategoryScroll.setAlign(1);
@@ -354,9 +366,30 @@ export default class CharacterInfoPanel extends BasePanel {
         obj.setTextColor("#996600");
         this.curSelectCategeory = obj;
         const datas = obj.getData("subData");
-        if (datas)
-            this.mGrideTable.setItems(datas);
-        this.mGrideTable.refreshPos(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2 + 185 * this.dpr * this.scale, 0, 0);
+        const optionType = <CharacterOptionType>obj.getData("optiontype");
+        if (optionType === CharacterOptionType.Skill) {
+            this.mSkillGrideTable.setItems(datas);
+            //  this.mSkillGrideTable.refreshPos(0, 185 * this.dpr * this.scale, 0, 0);
+            this.mAttrPanel.visible = false;
+            this.mSkillGrideTable.table.visible = true;
+        } else if (optionType === CharacterOptionType.Attribute) {
+            // for (let i = 0; i < 8; i++) {
+            //     const data = {
+            //         key: "werwe",
+            //         icon: "Mana",
+            //         name: "Atttt" + i,
+            //         value: 5000,
+            //         tempValue: 600,
+            //     };
+            //     datas.push(data);
+            // }
+            if (datas) this.mAttrPanel.setAttributeData(datas);
+            this.mAttrPanel.visible = true;
+            this.mSkillGrideTable.setItems([]);
+            this.mSkillGrideTable.table.visible = false;
+        } else if (optionType === CharacterOptionType.Badge) {
+
+        }
     }
 
     private onSelectItemHandler(item) {
@@ -397,7 +430,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private setMainUIVisible(value) {
         this.avatar.visible = value;
         this.mCategoryScroll.visible = value;
-        this.mGrideTable.table.visible = value;
+        this.mSkillGrideTable.table.visible = value;
         this.mainContent.visible = value;
 
     }
@@ -413,6 +446,12 @@ export default class CharacterInfoPanel extends BasePanel {
         }
         return str;
     }
+}
+
+enum CharacterOptionType {
+    Skill = 0,
+    Attribute = 1,
+    Badge = 2
 }
 class CharacterOwnerItem extends Container {
     public itemData: any;

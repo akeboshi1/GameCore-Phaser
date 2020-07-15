@@ -40,8 +40,8 @@ export class PicFurniFunPanel extends BasePanel {
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width / this.scale, height / this.scale);
-        this.content.x = width / 2;
-        this.content.y = height / 2;
+        this.content.x = Math.floor(width / 2);
+        this.content.y = Math.floor(height / 2);
         this.setSize(width * this.scale, height * this.scale);
         this.materialGameScroll.refreshMask();
     }

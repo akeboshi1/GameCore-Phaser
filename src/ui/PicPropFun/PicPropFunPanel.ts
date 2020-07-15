@@ -202,7 +202,8 @@ export class PicPropFunPanel extends BasePanel {
 
     public setProp(config: PicPropFunConfig) {
         const prop = config.data;
-        const price = (config.price !== undefined ? config.price : true);
+        let price = (config.price !== undefined ? config.price : true);
+        price = prop.sellingPrice ? price : false;
         const slider = (config.slider !== undefined ? config.slider : true);
         this.itemData = prop;
         if (slider)
@@ -210,7 +211,6 @@ export class PicPropFunPanel extends BasePanel {
         else this.itemCount = prop.count;
         this.setResource(config.resource);
         this.itemName.text = prop.name || prop.shortName;
-        this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
         this.itemCountText.text = this.itemCount + "";
         if (config.title) {
             this.titleName.text = config.title;
@@ -220,14 +220,15 @@ export class PicPropFunPanel extends BasePanel {
             this.priceBg.visible = true;
             this.mCoinIcon.visible = true;
             this.slider.y = 70 * this.dpr;
+            this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
+            const coinIcon = Coin.getIcon(prop.sellingPrice.coinType);
+            this.mCoinIcon.setFrame(coinIcon);
         } else {
             this.pricText.visible = false;
             this.priceBg.visible = false;
             this.mCoinIcon.visible = false;
             this.slider.y = 50 * this.dpr;
         }
-        const coinIcon = Coin.getIcon(prop.sellingPrice.coinType);
-        this.mCoinIcon.setFrame(coinIcon);
         this.confirmHandler = config.confirmHandler;
         this.cancelHandler = config.cancelHandler;
         this.slider.visible = slider;
@@ -256,7 +257,8 @@ export class PicPropFunPanel extends BasePanel {
     private updateData() {
         if (this.mInitialized) {
             this.itemCountText.text = this.itemCount + "";
-            this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
+            if (this.itemData.sellingPrice)
+                this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
         }
     }
 
