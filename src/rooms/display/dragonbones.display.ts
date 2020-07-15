@@ -5,7 +5,7 @@ import { DisplayObject, DisplayField } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { SoundField } from "../../game/sound.manager";
-import { AnimationData } from "../element/sprite";
+import { AnimationData } from "../element/Sprite";
 import { IFramesModel } from "./frames.model";
 
 export enum AvatarSlotType {
