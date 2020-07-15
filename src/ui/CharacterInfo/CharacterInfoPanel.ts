@@ -217,7 +217,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
         const capW = propFrame.width + 5 * this.dpr;
         const capH = propFrame.height + 2 * this.dpr;
-        const gridX = 0, gridY = 145 * this.dpr, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 200 * this.dpr;
+        const gridX = 0, gridY = 165 * this.dpr, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 200 * this.dpr;
         this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
             return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr, zoom);
         }, new Handler(this, this.onSelectItemHandler));
