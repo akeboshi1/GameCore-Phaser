@@ -2,11 +2,10 @@ import { IRoomService } from "../room";
 import { ElementDisplay } from "./element.display";
 import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
-import { AnimationData } from "../element/Sprite";
+import { AnimationData } from "../element/sprite";
 import { op_def } from "pixelpai_proto";
 import { IElement } from "../element/element";
 import { Direction } from "../wall/wall";
-import { Logger } from "../../utils/log";
 
 export class WallDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
   protected readonly roomService: IRoomService;

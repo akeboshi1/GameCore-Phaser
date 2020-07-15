@@ -1,4 +1,4 @@
-import { ISprite, AnimationData, SpriteAnimationQueue } from "../element/Sprite";
+import { ISprite, AnimationData, SpriteAnimationQueue } from "../element/sprite";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import { IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
 import { Pos } from "../../utils/pos";

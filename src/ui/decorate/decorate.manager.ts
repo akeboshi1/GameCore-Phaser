@@ -3,7 +3,7 @@ import { RoomLayerManager } from "../../rooms/layer/room.layer.manager";
 import { IRoomService } from "../../rooms/room";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { Pos } from "../../utils/pos";
-import { ISprite } from "../../rooms/element/Sprite";
+import { ISprite } from "../../rooms/element/sprite";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def } from "pixelpai_proto";
 import { IElement } from "../../rooms/element/element";

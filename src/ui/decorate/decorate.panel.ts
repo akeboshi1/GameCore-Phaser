@@ -4,7 +4,7 @@ import { Position45, IPosition45Obj } from "../../utils/position45";
 import { DecorateRoom } from "../../rooms/decorate.room";
 import { MessageType } from "../../const/MessageType";
 import { Direction, IElement } from "../../rooms/element/element";
-import { ISprite } from "../../rooms/element/Sprite";
+import { ISprite } from "../../rooms/element/sprite";
 import { Button } from "tooqingui";
 export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";

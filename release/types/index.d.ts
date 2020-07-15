@@ -848,7 +848,7 @@ declare module 'game-core/rooms/terrain' {
 }
 
 declare module 'game-core/rooms/element' {
-    export * from "game-core/rooms/element/Sprite";
+    export * from "game-core/rooms/element/sprite";
     export { ElementManager, IElementManager } from "game-core/rooms/element/element.manager";
     export * from "game-core/rooms/element/element";
     export { FrameManager } from "game-core/rooms/element/FrameManager";
@@ -1939,7 +1939,7 @@ declare module 'game-core/rooms/element/element.manager' {
     import { ConnectionService } from "game-core/net/connection.service";
     import { Element, IElement } from "game-core/rooms/element/element";
     import { IRoomService } from "game-core/rooms/room";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
     export interface IElementManager {
@@ -1998,7 +1998,7 @@ declare module 'game-core/rooms/player/player.manager' {
     import { op_client, op_gameconfig } from "pixelpai_proto";
     import { ConnectionService } from "game-core/net/connection.service";
     import { IRoomService, Room } from "game-core/rooms/room";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { Player } from "game-core/rooms/player/player";
     import { IElement } from "game-core/rooms/element/element";
     import { Actor } from "game-core/rooms/player/Actor";
@@ -2034,7 +2034,7 @@ declare module 'game-core/rooms/terrain/terrain.manager' {
     import { IRoomService, SpriteAddCompletedListener } from "game-core/rooms/room";
     import { IElementManager } from "game-core/rooms/element/element.manager";
     import { IElementStorage } from "game-core/game/element.storage";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { IElement } from "game-core/rooms/element/element";
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
@@ -2142,7 +2142,7 @@ declare module 'game-core/rooms/display/element.display' {
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
     import { op_def } from "pixelpai_proto";
     import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
     import { DisplayField } from "game-core/rooms/display/display.object";
     export interface ElementDisplay extends Phaser.GameObjects.Container {
         readonly baseLoc: Phaser.Geom.Point;
@@ -2198,7 +2198,7 @@ declare module 'game-core/rooms/element/element' {
     import { op_client, op_def } from "pixelpai_proto";
     import { Tweens } from "phaser";
     import { Pos } from "game-core/utils/pos";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { BlockObject } from "game-core/rooms/cameras/block.object";
     import { BubbleContainer } from "game-core/rooms/bubble/bubble.container";
     import { ShopEntity } from "game-core/rooms/element/shop/shop.entity";
@@ -2368,7 +2368,7 @@ declare module 'game-core/rooms/element/element' {
 declare module 'game-core/rooms/cameras/block.object' {
     import { ElementDisplay } from "game-core/rooms/display/element.display";
     import { InputEnable } from "game-core/rooms/element/element";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { Pos } from "game-core/utils/pos";
     import { IRoomService } from "game-core/rooms/room";
     export interface IBlockObject {
@@ -2500,7 +2500,7 @@ declare module 'game-core/rooms/terrain/terrain' {
     import { IElement } from "game-core/rooms/element/element";
     import { IElementManager } from "game-core/rooms/element/element.manager";
     import { Pos } from "game-core/utils/pos";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     import { ElementDisplay } from "game-core/rooms/display/element.display";
     import { IRoomService } from "game-core/rooms/room";
@@ -2548,7 +2548,7 @@ declare module 'game-core/rooms/terrain/terrain' {
     }
 }
 
-declare module 'game-core/rooms/element/Sprite' {
+declare module 'game-core/rooms/element/sprite' {
     import { Pos } from "game-core/utils/pos";
     import { IAvatar, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
     import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
@@ -2876,7 +2876,7 @@ declare module 'game-core/rooms/display/display.object' {
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
     import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
     export enum DisplayField {
         BACKEND = 0,
         STAGE = 1,
@@ -2945,7 +2945,7 @@ declare module 'game-core/rooms/display/dragonbones.display' {
     import { DisplayObject, DisplayField } from "game-core/rooms/display/display.object";
     import { IRoomService } from "game-core/rooms/room";
     import { IElement } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     export enum AvatarSlotType {
             BodyCostDres = "body_cost_$_dres",
@@ -3040,7 +3040,7 @@ declare module 'game-core/rooms/display/dragonbones.display' {
 
 declare module 'game-core/rooms/display/dragonbones.model' {
     import { op_def } from "pixelpai_proto";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
     import { Direction } from "game-core/rooms/element/element";
     export interface IDragonbonesModel {
         readonly discriminator: string;
@@ -3112,7 +3112,7 @@ declare module 'game-core/rooms/display/frames.display' {
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     import { DisplayObject, DisplayField } from "game-core/rooms/display/display.object";
     import { IAnimationData } from "game-core/rooms/display/animation";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
     /**
       * 序列帧显示对象
       */
@@ -3150,9 +3150,8 @@ declare module 'game-core/rooms/display/frames.display' {
 declare module 'game-core/rooms/display/frames.model' {
     import { op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
     import { IAnimationData } from "game-core/rooms/display/animation";
-    import { Sprite } from "game-core/rooms/element/Sprite";
+    import { Sprite, AnimationData } from "game-core/rooms/element/sprite";
     import { Direction } from "game-core/rooms/element/element";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
     export interface IFramesModel {
         readonly discriminator: string;
         readonly gene: string | undefined;
@@ -5075,7 +5074,7 @@ declare module 'game-core/rooms/display/wall.display' {
     import { ElementDisplay } from "game-core/rooms/display/element.display";
     import { IFramesModel } from "game-core/rooms/display/frames.model";
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { AnimationData } from "game-core/rooms/element/Sprite";
+    import { AnimationData } from "game-core/rooms/element/sprite";
     import { op_def } from "pixelpai_proto";
     import { IElement } from "game-core/rooms/element/element";
     import { Direction } from "game-core/rooms/wall/wall";
@@ -5116,7 +5115,7 @@ declare module 'game-core/rooms/editor/reference.area' {
 
 declare module 'game-core/rooms/element/editor.element.manager' {
     import { ElementManager } from "game-core/rooms/element/element.manager";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { PBpacket } from "net-socket-packet";
     import { op_client } from "pixelpai_proto";
     import { EditorRoomService } from "game-core/rooms/editor.room";
@@ -5182,7 +5181,7 @@ declare module 'game-core/rooms/element/editor.moss.manager' {
 }
 
 declare module 'game-core/rooms/display-object.pool' {
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     export class DisplayObjectPool {
         constructor();
         getPool(poolName: string): any;
@@ -5245,7 +5244,7 @@ declare module 'game-core/rooms/decorate.room' {
     import { PlayerManager } from "game-core/rooms/player/player.manager";
     import { PacketHandler } from "net-socket-packet";
     import { DecorateElementManager } from "game-core/rooms/element/decorate.element.manager";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { IBlockObject } from "game-core/rooms/cameras/block.object";
     export interface DecorateRoomService extends IRoomService {
         readonly miniSize: IPosition45Obj;
@@ -5330,7 +5329,7 @@ declare module 'game-core/rooms/editor/selected.element' {
     import { FramesDisplay } from "game-core/rooms/display/frames.display";
     import { DragonbonesDisplay } from "game-core/rooms/display/dragonbones.display";
     import { RoomLayerManager } from "game-core/rooms/layer/room.layer.manager";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     export class SelectedElement {
         constructor(mScene: Phaser.Scene, mLayerManager: RoomLayerManager);
         setElement(display: FramesDisplay | DragonbonesDisplay): void;
@@ -5350,7 +5349,7 @@ declare module 'game-core/rooms/editor/selected.element' {
 
 declare module 'game-core/rooms/element/decorate.element.manager' {
     import { ElementManager } from "game-core/rooms/element/element.manager";
-    import { ISprite } from "game-core/rooms/element/Sprite";
+    import { ISprite } from "game-core/rooms/element/sprite";
     import { Element } from "game-core/rooms/element/element";
     import { DecorateRoomService } from "game-core/rooms/decorate.room";
     import { PBpacket } from "net-socket-packet";

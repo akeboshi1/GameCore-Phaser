@@ -6,7 +6,7 @@ import { IRoomService } from "../room";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { IElementStorage } from "../../game/element.storage";
-import { ISprite, Sprite } from "./Sprite";
+import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";

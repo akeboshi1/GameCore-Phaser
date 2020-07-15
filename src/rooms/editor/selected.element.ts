@@ -3,8 +3,7 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { DynamicImage } from "../../ui/components/dynamic.image";
 import { RoomLayerManager } from "../layer/room.layer.manager";
 import { Url } from "../../utils/resUtil";
-import { Logger } from "../../utils/log";
-import { ISprite } from "../element/Sprite";
+import { ISprite } from "../element/sprite";
 
 export class SelectedElement {
     private mDisplay: FramesDisplay | DragonbonesDisplay;

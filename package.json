@@ -11,7 +11,7 @@
         "dev:core": "webpack --config webpack.core.config.js",
         "build:core": "webpack --config webpack.core.config.js --mode=production --output-path=./release --progress",
         "ver": "genversion version.js",
-        "dts": "dts-bundle --configJson dts-bundle.json",
+        "dts": "dts-bundle --configJson dts-bundle.json && rm -rf types",
         "rm:dts": "rimraf types"
     },
     "repository": "git@code.apowo.com:PixelPai/game-core.git",

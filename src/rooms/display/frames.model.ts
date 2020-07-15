@@ -3,9 +3,8 @@ import { Logger } from "../../utils/log";
 import * as sha1 from "simple-sha1";
 import { Animation, IAnimationData } from "./animation";
 import Helpers from "../../utils/helpers";
-import { Sprite } from "../element/Sprite";
+import { Sprite, AnimationData } from "../element/sprite";
 import { Direction } from "../element/element";
-import { AnimationData } from "../element/Sprite";
 
 export interface IFramesModel {
     readonly discriminator: string;

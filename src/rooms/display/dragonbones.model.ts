@@ -1,5 +1,5 @@
 import { op_def } from "pixelpai_proto";
-import { AnimationData } from "../element/Sprite";
+import { AnimationData } from "../element/sprite";
 import { Direction } from "../element/element";
 
 export interface IDragonbonesModel {

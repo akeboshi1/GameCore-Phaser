@@ -1,4 +1,4 @@
-import { Sprite } from "../element/Sprite";
+import { Sprite } from "../element/sprite";
 import { op_client} from "pixelpai_proto";
 import { Pos } from "../../utils/pos";
 

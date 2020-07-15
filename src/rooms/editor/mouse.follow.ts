@@ -5,7 +5,7 @@ import { EditorRoomService } from "../editor.room";
 import { IElementManager } from "../element/element.manager";
 import { op_client, op_def } from "pixelpai_proto";
 import NodeType = op_def.NodeType;
-import { ISprite, Sprite } from "../element/Sprite";
+import { ISprite, Sprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
 import { IRoomService } from "../room";
 import { IPosition45Obj, Position45 } from "../../utils/position45";

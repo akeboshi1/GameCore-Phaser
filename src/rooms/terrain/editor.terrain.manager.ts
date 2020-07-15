@@ -1,13 +1,9 @@
 import { TerrainManager } from "./terrain.manager";
-import { ISprite, Sprite } from "../element/Sprite";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_editor } from "pixelpai_proto";
-import { IRoomService, SpriteAddCompletedListener } from "../room";
-import { Terrain } from "./terrain";
+import { SpriteAddCompletedListener } from "../room";
 import { Pos } from "../../utils/pos";
 import { Logger } from "../../utils/log";
-import { IElement, InputEnable } from "../element/element";
-import { DisplayObject } from "../display/display.object";
 import { EditorRoomService } from "../editor.room";
 
 export class EditorTerrainManager extends TerrainManager {

@@ -1,13 +1,10 @@
 import { ElementManager } from "./element.manager";
-import { ISprite, Sprite } from "./Sprite";
+import { ISprite, Sprite } from "./sprite";
 import { PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
-import { Pos } from "../../utils/pos";
-import { Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
 import { EditorRoomService } from "../editor.room";
-import { DisplayObject } from "../display/display.object";
 
 export class EditorElementManager extends ElementManager {
     private taskQueue: Map<number, any> = new Map();
