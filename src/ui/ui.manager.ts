@@ -260,69 +260,12 @@ export class UiManager extends PacketHandler {
     }
 
     public baseFaceResize() {
-        // const bottomMed = this.getMediator(BottomMediator.NAME);
-        // const rightMed = this.getMediator(RightMediator.NAME);
-        // const leftMed = this.getMediator(LeftMediator.NAME);
-        // // const topMed = this.getMediator(TopMediator.NAME);
-        // if (rightMed && rightMed.getView()) rightMed.getView().resize(0, 0);
-        // if (leftMed && leftMed.getView()) leftMed.getView().resize(0, 0);
-        // if (bottomMed && bottomMed.getView()) bottomMed.getView().resize(0, 0);
-        // // if (topMed && topMed.getView()) topMed.getView().resize(0, 0);
     }
 
     public baseFaceTween(show: boolean) {
-        // if (!this.worldService.game.device.os.desktop) {
-        //     (this.worldService.inputManager as JoyStickManager).tweenExpand(show);
-        // }
-        // const rightMed = this.getMediator(RightMediator.NAME);
-        // const leftMed = this.getMediator(LeftMediator.NAME);
-        // const bottomMed = this.getMediator(BottomMediator.NAME);
-        // // const topMed = this.getMediator(TopMediator.NAME);
-        // if (rightMed && rightMed.getView()) rightMed.getView().tweenExpand(show);
-        // if (leftMed && leftMed.getView()) leftMed.getView().tweenExpand(show);
-        // if (bottomMed && bottomMed.getView()) bottomMed.getView().tweenExpand(show);
-        // // if (topMed && topMed.getView()) topMed.getView().tweenExpand(show);
     }
 
     public checkUIState(medName: string, show: boolean) {
-        // const mediator = this.mMedMap.get(medName);
-        // if (!mediator) return;
-        // const uiType: number = mediator.UIType;
-        // const deskBoo: boolean = this.worldService.game.device.os.desktop;
-        // let map: Map<string, any>;
-        // switch (uiType) {
-        //     case UIType.None:
-        //         map = this.mNoneUIMap;
-        //         break;
-        //     case UIType.Scene:
-        //         map = this.mSceneUIMap;
-        //         break;
-        //     case UIType.Normal:
-        //         map = this.mNormalUIMap;
-        //         // pc端场景ui无需收进，但是功能ui可以共存，需要调整位置
-        //         if (deskBoo) {
-        //             this.checkNormalUITween(show, medName);
-        //         } else {
-        //             this.checkBaseUImap(show);
-        //         }
-        //         break;
-        //     case UIType.Monopoly:
-        //         map = this.mMonopolyUIMap;
-        //         this.checkBaseUImap(show);
-        //         this.checkNormalUImap(show);
-        //         this.chekcTipUImap(show);
-        //         break;
-        //     case UIType.Tips:
-        //         map = this.mTipUIMap;
-        //         break;
-        //     case UIType.Pop:
-        //         map = this.mPopUIMap;
-        //         break;
-        //     case UIType.Activity:
-        //         map = this.mActivityUIMap;
-        //         break;
-        // }
-        // map.set(medName, mediator);
     }
 
     public showMed(type: string, ...param: any[]) {
@@ -407,6 +350,17 @@ export class UiManager extends PacketHandler {
         }
         this.mModuleCache.length = 0;
         this.mModuleCache = undefined;
+    }
+
+    public register(key: string, mediator: BaseMediator) {
+        if (!mediator) {
+            this.mMedMap = new Map();
+        }
+        this.mMedMap.set(key, mediator);
+    }
+
+    public unregister(key: string) {
+        this.mMedMap.delete(key);
     }
 
     private handleShowUI(packet: PBpacket): void {

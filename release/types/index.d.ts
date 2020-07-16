@@ -1426,6 +1426,8 @@ declare module 'game-core/ui/ui.manager' {
         showMed(type: string, ...param: any[]): void;
         showExistMed(type: string, extendName?: string): void;
         showModuleUI(): void;
+        register(key: string, mediator: BaseMediator): void;
+        unregister(key: string): void;
     }
 }
 
