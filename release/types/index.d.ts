@@ -30,6 +30,7 @@ declare module 'game-core' {
 declare module 'game-core/game' {
     export { WorldService } from "game-core/game/world.service";
     export { World } from "game-core/game/world";
+    export * from "game-core/game/world.events";
     export { IAccountData, Account } from "game-core/game/Account";
     export { JoyStickManager } from "game-core/game/joystick.manager";
 }
@@ -350,6 +351,29 @@ declare module 'game-core/game/world' {
             getConfigUrl(sceneId: string): string;
             loadSceneConfig(sceneId: string): Promise<Lite>;
             createGame(keyEvents?: op_def.IKeyCodeEvent[]): Promise<void>;
+    }
+}
+
+declare module 'game-core/game/world.events' {
+    export enum SceneEvent {
+        SCENE_CREATE = "scene_create",
+        SCENE_CHANGE = "scene_change",
+        SCENE_DESTROY = "scene_destroy",
+        SCENE_PAUSE = "scene_pause",
+        SCENE_RESUME = "scene_resume"
+    }
+    export enum GameEvent {
+        GAME_CREATE = "game_create",
+        GAME_CLEAR = "game_clear",
+        GAME_DESTROY = "game_destroy"
+    }
+    export enum UIEvent {
+        SHOW_UI = "show_ui",
+        HIDE_UI = "hide_ui"
+    }
+    export enum ModuleEvent {
+        MODULE_INIT = "module_init",
+        MODULE_DESTROY = "module_destroy"
     }
 }
 
@@ -2550,137 +2574,135 @@ declare module 'game-core/rooms/terrain/terrain' {
     }
 }
 
-declare module 'game-core/rooms/element/sprite' {
-    import { Pos } from "game-core/utils/pos";
-    import { IAvatar, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
-    import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-    import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import NodeType = op_def.NodeType;
-    export interface ISprite {
-        readonly id: number;
-        readonly avatar: IAvatar;
-        readonly nickname: string;
-        readonly alpha: number;
-        readonly displayBadgeCards: op_def.IBadgeCard[];
-        readonly platformId: string;
-        readonly sceneId: number;
-        readonly nodeType: op_def.NodeType;
-        readonly currentAnimation: AnimationData;
-        readonly currentCollisionArea: number[][];
-        readonly currentWalkableArea: number[][];
-        readonly currentCollisionPoint: Phaser.Geom.Point;
-        readonly hasInteractive: boolean;
-        readonly attrs: op_def.IStrPair[];
-        readonly animationQueue: SpriteAnimationQueue[];
-        currentAnimationName: string;
-        displayInfo: IFramesModel | IDragonbonesModel;
-        direction: number;
-        pos: Pos;
-        bindID: number;
-        sn: string;
-        isMoss?: boolean;
-        mountSprites?: number[];
-        newID(): any;
-        updateAvatar(avatar: op_gameconfig.IAvatar): any;
-        updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): any;
-        setPosition(x: number, y: number): any;
-        setAnimationName(name: string, playTimes?: number): AnimationData;
-        setAnimationQueue(queue: SpriteAnimationQueue[]): any;
-        turn(): ISprite;
-        toSprite(): op_client.ISprite;
-    }
-    export interface AnimationData {
-        name: string;
-        flip: boolean;
-        playingQueue?: SpriteAnimationQueue;
-    }
-    export interface SpriteAnimationQueue {
-        name: string;
-        playTimes?: number;
-        playedTimes?: number;
-        complete?: Function;
-    }
-    export class Sprite implements ISprite {
-        protected mID: number;
-        protected mPos: Pos;
-        protected mAvatar: IAvatar;
-        protected mCurrentAnimationName: string;
-        protected mDirection: number;
-        protected mBindID: number;
-        protected mSn: string;
-        protected mAlpha: number;
-        protected mNickname: string;
-        protected mDisplayBadgeCards: op_def.IBadgeCard[];
-        protected mPackage: op_gameconfig.IPackage;
-        protected mSceneId: number;
-        protected mUuid: number;
-        protected mPlatformId: string;
-        protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-        protected mNodeType: NodeType;
-        protected mCurrentAnimation: AnimationData;
-        protected mCurrentCollisionArea: number[][];
-        protected mCurrentWalkableArea: number[][];
-        protected mCurrentCollisionPoint: Phaser.Geom.Point;
-        protected mVersion: string;
-        protected mIsMoss: boolean;
-        protected mRegisterAnimation: Map<string, string>;
-        protected _originWalkPoint: Phaser.Geom.Point;
-        protected _originCollisionPoint: Phaser.Geom.Point;
-        protected mAttrs: op_def.IStrPair[];
-        protected mAnimationQueue: SpriteAnimationQueue[];
-        protected mMountSprites: number[];
-        constructor(obj: op_client.ISprite, nodeType?: NodeType);
-        toSprite(): op_client.ISprite;
-        newID(): void;
-        setPosition(x: number, y: number): void;
-        turn(): ISprite;
-        updateAvatar(avatar: op_gameconfig.IAvatar): void;
-        updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
-        setAnimationQueue(queue: SpriteAnimationQueue[]): void;
-        setMountSprites(ids: number[]): void;
-        updateAttr(attrs: op_def.IStrPair[]): void;
-        setAnimationName(name: string): AnimationData;
-        get id(): number;
-        get pos(): Pos;
-        set pos(pos: Pos);
-        get avatar(): IAvatar;
-        get currentAnimationName(): string;
-        set currentAnimationName(animationName: string);
-        get direction(): number;
-        set direction(val: number);
-        get nickname(): string;
-        get bindID(): number;
-        set bindID(id: number);
-        get sn(): string;
-        set sn(value: string);
-        get alpha(): number;
-        get package(): op_gameconfig.IPackage;
-        set package(value: op_gameconfig.IPackage);
-        get sceneId(): number;
-        get uuid(): number;
-        get displayBadgeCards(): op_def.IBadgeCard[];
-        get platformId(): string;
-        get displayInfo(): IFramesModel | IDragonbonesModel;
-        set displayInfo(displayInfo: IFramesModel | IDragonbonesModel);
-        get isMoss(): boolean;
-        set isMoss(val: boolean);
-        get animationQueue(): SpriteAnimationQueue[];
-        get nodeType(): NodeType;
-        get currentAnimation(): AnimationData;
-        get currentCollisionArea(): number[][];
-        get currentWalkableArea(): number[][];
-        get currentCollisionPoint(): Phaser.Geom.Point;
-        get hasInteractive(): boolean;
-        get mountSprites(): number[];
-        set mountSprites(ids: number[]);
-        get animationMap(): Map<string, string>;
-        get originCollisionPoint(): Phaser.Geom.Point;
-        get originWalkPoint(): Phaser.Geom.Point;
-        get attrs(): op_def.IStrPair[];
-        setOriginCollisionPoint(value: number[] | null): void;
-        setOriginWalkPoint(value: number[] | null): void;
-        getInteracviveArea(): op_def.IPBPoint2i[];
-    }
+import { Pos } from "game-core/utils/pos";
+import { IAvatar, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
+import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
+import { IFramesModel } from "game-core/rooms/display/frames.model";
+import NodeType = op_def.NodeType;
+export interface ISprite {
+    readonly id: number;
+    readonly avatar: IAvatar;
+    readonly nickname: string;
+    readonly alpha: number;
+    readonly displayBadgeCards: op_def.IBadgeCard[];
+    readonly platformId: string;
+    readonly sceneId: number;
+    readonly nodeType: op_def.NodeType;
+    readonly currentAnimation: AnimationData;
+    readonly currentCollisionArea: number[][];
+    readonly currentWalkableArea: number[][];
+    readonly currentCollisionPoint: Phaser.Geom.Point;
+    readonly hasInteractive: boolean;
+    readonly attrs: op_def.IStrPair[];
+    readonly animationQueue: SpriteAnimationQueue[];
+    currentAnimationName: string;
+    displayInfo: IFramesModel | IDragonbonesModel;
+    direction: number;
+    pos: Pos;
+    bindID: number;
+    sn: string;
+    isMoss?: boolean;
+    mountSprites?: number[];
+    newID(): any;
+    updateAvatar(avatar: op_gameconfig.IAvatar): any;
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): any;
+    setPosition(x: number, y: number): any;
+    setAnimationName(name: string, playTimes?: number): AnimationData;
+    setAnimationQueue(queue: SpriteAnimationQueue[]): any;
+    turn(): ISprite;
+    toSprite(): op_client.ISprite;
+}
+export interface AnimationData {
+    name: string;
+    flip: boolean;
+    playingQueue?: SpriteAnimationQueue;
+}
+export interface SpriteAnimationQueue {
+    name: string;
+    playTimes?: number;
+    playedTimes?: number;
+    complete?: Function;
+}
+export declare class Sprite implements ISprite {
+    protected mID: number;
+    protected mPos: Pos;
+    protected mAvatar: IAvatar;
+    protected mCurrentAnimationName: string;
+    protected mDirection: number;
+    protected mBindID: number;
+    protected mSn: string;
+    protected mAlpha: number;
+    protected mNickname: string;
+    protected mDisplayBadgeCards: op_def.IBadgeCard[];
+    protected mPackage: op_gameconfig.IPackage;
+    protected mSceneId: number;
+    protected mUuid: number;
+    protected mPlatformId: string;
+    protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+    protected mNodeType: NodeType;
+    protected mCurrentAnimation: AnimationData;
+    protected mCurrentCollisionArea: number[][];
+    protected mCurrentWalkableArea: number[][];
+    protected mCurrentCollisionPoint: Phaser.Geom.Point;
+    protected mVersion: string;
+    protected mIsMoss: boolean;
+    protected mRegisterAnimation: Map<string, string>;
+    protected _originWalkPoint: Phaser.Geom.Point;
+    protected _originCollisionPoint: Phaser.Geom.Point;
+    protected mAttrs: op_def.IStrPair[];
+    protected mAnimationQueue: SpriteAnimationQueue[];
+    protected mMountSprites: number[];
+    constructor(obj: op_client.ISprite, nodeType?: NodeType);
+    toSprite(): op_client.ISprite;
+    newID(): void;
+    setPosition(x: number, y: number): void;
+    turn(): ISprite;
+    updateAvatar(avatar: op_gameconfig.IAvatar): void;
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
+    setAnimationQueue(queue: SpriteAnimationQueue[]): void;
+    setMountSprites(ids: number[]): void;
+    updateAttr(attrs: op_def.IStrPair[]): void;
+    setAnimationName(name: string): AnimationData;
+    get id(): number;
+    get pos(): Pos;
+    set pos(pos: Pos);
+    get avatar(): IAvatar;
+    get currentAnimationName(): string;
+    set currentAnimationName(animationName: string);
+    get direction(): number;
+    set direction(val: number);
+    get nickname(): string;
+    get bindID(): number;
+    set bindID(id: number);
+    get sn(): string;
+    set sn(value: string);
+    get alpha(): number;
+    get package(): op_gameconfig.IPackage;
+    set package(value: op_gameconfig.IPackage);
+    get sceneId(): number;
+    get uuid(): number;
+    get displayBadgeCards(): op_def.IBadgeCard[];
+    get platformId(): string;
+    get displayInfo(): IFramesModel | IDragonbonesModel;
+    set displayInfo(displayInfo: IFramesModel | IDragonbonesModel);
+    get isMoss(): boolean;
+    set isMoss(val: boolean);
+    get animationQueue(): SpriteAnimationQueue[];
+    get nodeType(): NodeType;
+    get currentAnimation(): AnimationData;
+    get currentCollisionArea(): number[][];
+    get currentWalkableArea(): number[][];
+    get currentCollisionPoint(): Phaser.Geom.Point;
+    get hasInteractive(): boolean;
+    get mountSprites(): number[];
+    set mountSprites(ids: number[]);
+    get animationMap(): Map<string, string>;
+    get originCollisionPoint(): Phaser.Geom.Point;
+    get originWalkPoint(): Phaser.Geom.Point;
+    get attrs(): op_def.IStrPair[];
+    setOriginCollisionPoint(value: number[] | null): void;
+    setOriginWalkPoint(value: number[] | null): void;
+    getInteracviveArea(): op_def.IPBPoint2i[];
 }
 
 declare module 'game-core/rooms/player/Actor' {
