@@ -1,6 +1,6 @@
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { Font } from "../../utils/font";
 import { op_pkt_def } from "pixelpai_proto";
+import { BBCodeText } from "tooqingui";
 export class CharacterAttributePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;

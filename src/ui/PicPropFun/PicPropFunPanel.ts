@@ -5,14 +5,13 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { Url, Coin } from "../../utils/resUtil";
 import { i18n } from "../../i18n";
-import { Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { Button, NineSlicePatch, NineSliceButton, GameSlider } from "tooqingui";
 import { Handler } from "../../Handler/Handler";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { GameSlider } from "../../../lib/rexui/lib/ui/slider/GameSlider";
 import { Logger } from "../../utils/log";
 import { PicPropFunConfig } from "./PicPropFunConfig";
-import { DetailDisplay } from "../Market/DetailDisplay";
+import { DetailDisplay } from "../PicFurniFun/DetailDisplay";
+// import { DetailDisplay } from "../Market/DetailDisplay";
 export class PicPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private key: string = "picpropfunpanel";
@@ -173,8 +172,8 @@ export class PicPropFunPanel extends BasePanel {
             value: 0.5
         });
 
-        this.slider.add(this.itemCountText);
-        this.slider.setValue(0);
+        this.slider.add(this.itemCountText, undefined, undefined, undefined, undefined, undefined);
+        this.slider.setValue(0, 0, 0);
         const bottomOffsetY = bg.height * 0.5 - 30 * dpr;
         const bottomOffsetX = -66 * dpr;
         this.cancelBtn = new NineSliceButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr, 36 * dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("common.cancel"), dpr, this.scale, {
@@ -232,7 +231,7 @@ export class PicPropFunPanel extends BasePanel {
         this.confirmHandler = config.confirmHandler;
         this.cancelHandler = config.cancelHandler;
         this.slider.visible = slider;
-        this.slider.setValue(this.itemCount / prop.count);
+        this.slider.setValue(this.itemCount / prop.count, 0, 1000);
     }
     setResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
         if (content) {

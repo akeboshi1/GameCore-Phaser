@@ -1,25 +1,25 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { i18n } from "../../i18n";
-import { DetailDisplay } from "../Market/DetailDisplay";
+// import { DetailDisplay } from "../Market/DetailDisplay";
 import { Font } from "../../utils/font";
 import { op_client, op_def, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "tooqingui";
 import { Handler } from "../../Handler/Handler";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { Button } from "tooqingui";
+import { TabButton } from "tooqingui";
+import { GridTableConfig } from "tooqingui";
+import { GameGridTable } from "tooqingui";
+import { GameScroller } from "tooqingui";
 import { IAvatar } from "../../rooms/display/dragonbones.model";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { NineSliceButton } from "tooqingui";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
-import { UiManager } from "../ui.manager";
+import { DetailDisplay } from "../PicFurniFun/DetailDisplay";
+import { TextButton } from "../components";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -369,47 +369,48 @@ export class FurniBagPanel extends BasePanel {
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
     w = this.scene.cameras.main.width + 35 * this.dpr * zoom + inputWid;
-    const tableConfig: GridTableConfig = {
-      x: 0,
-      y: 0,
-      table: {
-        width: this.scene.cameras.main.width - 16 * this.dpr * zoom,
-        height: 250 * this.dpr * zoom,
-        columns: 4,
-        cellWidth: capW,
-        cellHeight: capH,
-        reuseCellContainer: true,
-        cellOriginX: 0,
-        cellOriginY: 0,
-        zoom: this.scale,
-        cellPadX: 10 * this.dpr * zoom
-      },
-      scrollMode: 1,
-      clamplChildOY: false,
-      // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
-      createCellContainerCallback: (cell, cellContainer) => {
-        const scene = cell.scene,
-          item = cell.item;
-        if (cellContainer === null) {
-          cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
-          this.add(cellContainer);
-        }
-        cellContainer.setData({ item });
-        cellContainer.setProp(item);
-        if (item) {
-          if (this.isSelectedItemData(item))
-            cellContainer.isSelect = true;
-          if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-            cellContainer.isEquip = true;
-          } else cellContainer.isEquip = false;
+    // const tableConfig: GridTableConfig = {
+    //   x: 0,
+    //   y: 0,
+    //   table: {
+    //     width: this.scene.cameras.main.width - 16 * this.dpr * zoom,
+    //     height: 250 * this.dpr * zoom,
+    //     columns: 4,
+    //     cellWidth: capW,
+    //     cellHeight: capH,
+    //     reuseCellContainer: true,
+    //     cellOriginX: 0,
+    //     cellOriginY: 0,
+    //     zoom: this.scale,
+    //     cellPadX: 10 * this.dpr * zoom
+    //   },
+    //   scrollMode: 1,
+    //   clamplChildOY: false,
+    //   // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+    //   createCellContainerCallback: (cell, cellContainer) => {
+    //     const scene = cell.scene,
+    //       item = cell.item;
+    //     if (cellContainer === null) {
+    //       cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
+    //       this.add(cellContainer);
+    //     }
+    //     cellContainer.setData({ item });
+    //     cellContainer.setProp(item);
+    //     if (item) {
+    //       if (this.isSelectedItemData(item))
+    //         cellContainer.isSelect = true;
+    //       if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+    //         cellContainer.isEquip = true;
+    //       } else cellContainer.isEquip = false;
 
-        } else {
-          cellContainer.isSelect = false;
-          cellContainer.isEquip = false;
-        }
-        return cellContainer;
-      },
-    };
+    //     } else {
+    //       cellContainer.isSelect = false;
+    //       cellContainer.isEquip = false;
+    //     }
+    //     return cellContainer;
+    //   },
+    // };
+    const tableConfig = { };
     this.mPropGrid = new GameGridTable(this.scene, tableConfig);
     this.mPropGrid.layout();
     this.mPropGrid.on("cellTap", (cell) => {
@@ -1124,7 +1125,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
 
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, commonKey: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
-    const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", {
+    const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", 3, 3, {
       top: 40,
       bottom: 40
     });

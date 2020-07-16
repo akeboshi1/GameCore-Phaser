@@ -1,27 +1,24 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { TextButton } from "./TextButton";
-import { MarketItem } from "./item";
 import { Font } from "../../utils/font";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
+import { GameGridTable } from "tooqingui";
+import { GridTableConfig } from "tooqingui";
+import { NinePatchTabButton } from "tooqingui";
 import { Logger } from "../../utils/log";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { NineSliceButton } from "tooqingui";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
-  private mSelectItem: ElementDetail;
+  private mSelectItem: any;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mTIle: Phaser.GameObjects.Text;
   private mTabs: NinePatchTabButton[];
-  private mSubTabs: TextButton[];
+  private mSubTabs: any[];
   private mSelectedCategories: Phaser.GameObjects.GameObject;
   private mSelectedSubCategories: Phaser.GameObjects.GameObject;
   private mPropContainer: Phaser.GameObjects.Container;
@@ -32,7 +29,7 @@ export class MarketPanel extends BasePanel {
   private mBackgroundColor: Phaser.GameObjects.Graphics;
   private mShelfBackground: Phaser.GameObjects.Graphics;
   private mSubCategorisScroll: GameGridTable;
-  private mItems: MarketItem[];
+  private mItems: any[];
   private mPreSubCategoris: op_def.IStrPair;
   private mPropGrid: GameGridTable;
   private randomCon: Phaser.GameObjects.Container;
@@ -236,8 +233,8 @@ export class MarketPanel extends BasePanel {
     this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mPropContainer]);
     this.add([this.mShelfContainer, this.mSubCategeoriesContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.mWorld.uiScale);
-    this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
+    // this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.mWorld.uiScale);
+    // this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
@@ -255,41 +252,42 @@ export class MarketPanel extends BasePanel {
 
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
-    const config: GridTableConfig = {
-      x: w / 2,
-      // y: 0,
-      // width: w,
-      // height: capH,
-      table: {
-        width: w - 30 * this.dpr,
-        height: capH,
-        cellWidth: capW,
-        cellHeight: capH,
-        reuseCellContainer: true,
-        cellOriginX: 0,
-        cellOriginY: 0,
-      },
-      scrollMode: 1,
-      createCellContainerCallback: (cell, cellContainer) => {
-        const scene = cell.scene,
-          item = cell.item;
-        if (cellContainer === null) {
-          cellContainer = new TextButton(scene, this.dpr, zoom);
-          // cellContainer.width = capW;
-          // cellContainer.height = capH;
-          this.add(cellContainer);
-        }
-        cellContainer.setText(item.value);
-        // cellContainer.setSize(width, height);
-        cellContainer.setData({ item });
-        if (item && this.mPreSubCategoris && this.mPreSubCategoris.key === item.key) {
-          cellContainer.changeDown();
-        } else {
-          cellContainer.changeNormal();
-        }
-        return cellContainer;
-      },
-    };
+    // const config: GridTableConfig = {
+    //   x: w / 2,
+    //   // y: 0,
+    //   // width: w,
+    //   // height: capH,
+    //   table: {
+    //     width: w - 30 * this.dpr,
+    //     height: capH,
+    //     cellWidth: capW,
+    //     cellHeight: capH,
+    //     reuseCellContainer: true,
+    //     cellOriginX: 0,
+    //     cellOriginY: 0,
+    //   },
+    //   scrollMode: 1,
+    //   createCellContainerCallback: (cell, cellContainer) => {
+    //     const scene = cell.scene,
+    //       item = cell.item;
+    //     if (cellContainer === null) {
+    //       cellContainer = new TextButton(scene, this.dpr, zoom);
+    //       // cellContainer.width = capW;
+    //       // cellContainer.height = capH;
+    //       this.add(cellContainer);
+    //     }
+    //     cellContainer.setText(item.value);
+    //     // cellContainer.setSize(width, height);
+    //     cellContainer.setData({ item });
+    //     if (item && this.mPreSubCategoris && this.mPreSubCategoris.key === item.key) {
+    //       cellContainer.changeDown();
+    //     } else {
+    //       cellContainer.changeNormal();
+    //     }
+    //     return cellContainer;
+    //   },
+    // };
+    const config = { };
     this.mSubCategorisScroll = new GameGridTable(this.scene, config);
     this.mSubCategorisScroll.on("cellTap", (cell, index) => {
       this.onSelectSubCategoryHandler(cell);
@@ -339,38 +337,40 @@ export class MarketPanel extends BasePanel {
     const propFrame = this.scene.textures.getFrame(this.key, "border");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;
-    const propGridConfig: GridTableConfig = {
-      x: w / 2,
-      y: 1050 + (41 * this.dpr * zoom) / 2,
-      // y: 0,
-      table: {
-        width: w - 20 * this.dpr * zoom,
-        height: 224 * this.dpr * zoom,
-        columns: 3,
-        cellWidth,
-        cellHeight,
-        reuseCellContainer: true,
-        // mask: false,
-        cellOriginX: 0,
-        cellOriginY: 0
-      },
-      scrollMode: 1,
-      clamplChildOY: false,
-      createCellContainerCallback: (cell, cellContainer) => {
-        const scene = cell.scene,
-          item = cell.item;
-        if (cellContainer === null) {
-          cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
-          // cellContainer.width = capW;
-          // cellContainer.height = capH;
-          this.add(cellContainer);
-        }
-        // cellContainer.setSize(width, height);
-        cellContainer.setData({ item });
-        cellContainer.setProp(item);
-        return cellContainer;
-      },
-    };
+    // const propGridConfig: GridTableConfig = {
+    //   x: w / 2,
+    //   y: 1050 + (41 * this.dpr * zoom) / 2,
+    //   // y: 0,
+    //   table: {
+    //     width: w - 20 * this.dpr * zoom,
+    //     height: 224 * this.dpr * zoom,
+    //     columns: 3,
+    //     cellWidth,
+    //     cellHeight,
+    //     reuseCellContainer: true,
+    //     // mask: false,
+    //     cellOriginX: 0,
+    //     cellOriginY: 0
+    //   },
+    //   scrollMode: 1,
+    //   clamplChildOY: false,
+    //   createCellContainerCallback: (cell, cellContainer) => {
+    //     const scene = cell.scene,
+    //       item = cell.item;
+    //     if (cellContainer === null) {
+    //       cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
+    //       // cellContainer.width = capW;
+    //       // cellContainer.height = capH;
+    //       this.add(cellContainer);
+    //     }
+    //     // cellContainer.setSize(width, height);
+    //     cellContainer.setData({ item });
+    //     cellContainer.setProp(item);
+    //     return cellContainer;
+    //   },
+    // };
+
+    const propGridConfig = { };
     this.mPropGrid = new GameGridTable(this.scene, propGridConfig);
     this.mPropGrid.layout();
     this.mPropGrid.on("cellTap", (cell) => {
@@ -417,13 +417,13 @@ export class MarketPanel extends BasePanel {
     }
   }
 
-  private onSelectSubCategoryHandler(gameobject: TextButton) {
+  private onSelectSubCategoryHandler(gameobject: any) {
     if (!this.mSelectedCategories) {
       return;
     }
-    if (!(gameobject instanceof TextButton)) {
-      return;
-    }
+    // if (!(gameobject instanceof TextButton)) {
+    //   return;
+    // }
     const categories: op_def.IMarketCategory = this.mSelectedCategories.getData("category");
     if (!categories) {
       return;

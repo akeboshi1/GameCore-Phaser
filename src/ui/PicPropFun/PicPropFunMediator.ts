@@ -1,8 +1,8 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicPropFunPanel } from "./PicPropFunPanel";
+import { BaseMediator } from "tooqingui";
 export class PicPropFunMediator extends BaseMediator {
     protected mView: PicPropFunPanel;
     private scene: Phaser.Scene;

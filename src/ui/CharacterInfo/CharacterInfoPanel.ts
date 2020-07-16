@@ -3,25 +3,24 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { BBCodeText, Button } from "../../../lib/rexui/lib/ui/ui-components";
+import { BBCodeText, Button } from "tooqingui";
 import { i18n } from "../../i18n";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { GameGridTable } from "tooqingui";
+import { GridTableConfig } from "tooqingui";
 import { Logger } from "../../utils/log";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
-import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
-import { CharacterEditorPanel } from "./CharacterEditorPanel";
+import { ProgressBar } from "tooqingui";
+// import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { GameScroller } from "tooqingui";
 import { Url } from "../../utils/resUtil";
 // import { NinePatchButton } from "../../../lib/rexui/lib/ui/button/NinePatchButton";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { CoreUI } from "tooqingui";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
-import { CharacterAttributePanel } from "./CharacterAttributePanel";
+// import { CharacterAttributePanel } from "./CharacterAttributePanel";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -40,13 +39,13 @@ export default class CharacterInfoPanel extends BasePanel {
     private nickEditor: Button;
     private bottomCon: Container;
     private bottombg: Phaser.GameObjects.Graphics;
-    private addFriendBtn: NinePatchButton;
-    private tradeBtn: NinePatchButton;
-    private privaCharBtn: NinePatchButton;
+    private addFriendBtn: any; // NinePatchButton;
+    private tradeBtn: any; // NinePatchButton;
+    private privaCharBtn: any; // NinePatchButton;
     private mCategoryScroll: GameScroller;
     private mSkillGrideTable: GameGridTable;
-    private mAttrPanel: CharacterAttributePanel;
-    private editorPanel: CharacterEditorPanel;
+    private mAttrPanel: any; // CharacterAttributePanel;
+    private editorPanel: any; // CharacterEditorPanel;
     private curSelectCategeory: Button;
     private isOwner: boolean = true;
     private mBackGround: Phaser.GameObjects.Graphics;
@@ -87,20 +86,20 @@ export default class CharacterInfoPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
-        this.nickEditor.on(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
-        this.privaCharBtn.on(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
-        this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
-        this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
+        // this.closeBtn.on(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        // this.nickEditor.on(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
+        // this.privaCharBtn.on(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
+        // this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
+        // this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
     }
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
-        this.nickEditor.off(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
-        this.privaCharBtn.off(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
-        this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
-        this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
+        // this.closeBtn.off(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        // this.nickEditor.off(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
+        // this.privaCharBtn.off(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
+        // this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
+        // this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
     }
 
     preload() {
@@ -146,7 +145,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr);
         const nickOffsetY = 30 * this.dpr;
         const fontSize = Math.round(13 * this.dpr);
-        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
+        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY)
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
         this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
@@ -170,26 +169,26 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottombg = this.scene.make.graphics(undefined, false);
         const bottomBtnPosx = - 60 * this.dpr;
         const bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
-        this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
-        this.addFriendBtn.setFrameNormal("button_g");
-        this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
+        // this.addFriendBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), {
+        //     left: 12 * this.dpr,
+        //     top: 12 * this.dpr,
+        //     right: 12 * this.dpr,
+        //     bottom: 12 * this.dpr
+        // });
+        // this.addFriendBtn.setFrameNormal("button_g");
+        // this.privaCharBtn = new NinePatchButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), {
+        //     left: 12 * this.dpr,
+        //     top: 12 * this.dpr,
+        //     right: 12 * this.dpr,
+        //     bottom: 12 * this.dpr
+        // });
 
-        this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
+        // this.tradeBtn = new NinePatchButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), {
+        //     left: 12 * this.dpr,
+        //     top: 12 * this.dpr,
+        //     right: 12 * this.dpr,
+        //     bottom: 12 * this.dpr
+        // });
         this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
         this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
@@ -221,7 +220,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
             return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr, zoom);
         }, new Handler(this, this.onSelectItemHandler));
-        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY, 260 * this.dpr, 149 * this.dpr, this.key, this.dpr);
+        // this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY, 260 * this.dpr, 149 * this.dpr, this.key, this.dpr);
         this.content.add(this.mAttrPanel);
         this.resize(w, h);
         super.init();
@@ -291,33 +290,34 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler) {
-        const tableConfig: GridTableConfig = {
-            x,
-            y,
-            table: {
-                width,
-                height,
-                columns: 3,
-                cellWidth: capW,
-                cellHeight: capH,
-                reuseCellContainer: true,
-                cellPadX: 24 * this.dpr
-            },
-            scrollMode: 1,
-            clamplChildOY: false,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
-            createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene,
-                    item = cell.item;
-                if (cellContainer === null) {
-                    cellContainer = createFun();
-                    this.content.add(cellContainer);
-                }
-                cellContainer.setData({ item });
-                cellContainer.setItemData(item, this.isOwner);
-                return cellContainer;
-            },
-        };
+        // const tableConfig: GridTableConfig = {
+        //     x,
+        //     y,
+        //     table: {
+        //         width,
+        //         height,
+        //         columns: 3,
+        //         cellWidth: capW,
+        //         cellHeight: capH,
+        //         reuseCellContainer: true,
+        //         cellPadX: 24 * this.dpr
+        //     },
+        //     scrollMode: 1,
+        //     clamplChildOY: false,
+        //     // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+        //     createCellContainerCallback: (cell, cellContainer) => {
+        //         const scene = cell.scene,
+        //             item = cell.item;
+        //         if (cellContainer === null) {
+        //             cellContainer = createFun();
+        //             this.content.add(cellContainer);
+        //         }
+        //         cellContainer.setData({ item });
+        //         cellContainer.setItemData(item, this.isOwner);
+        //         return cellContainer;
+        //     },
+        // };
+        const tableConfig = { };
         const grid = new GameGridTable(this.scene, tableConfig);
         grid.layout();
         grid.on("cellTap", (cell) => {
@@ -399,7 +399,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private onEditorHandler() {
         const w = 247 * this.dpr;
         const h = this.content.height;
-        if (!this.editorPanel) this.editorPanel = new CharacterEditorPanel(this.scene, 0, 0, w, h, this.key, this.dpr);
+        // if (!this.editorPanel) this.editorPanel = new CharacterEditorPanel(this.scene, 0, 0, w, h, this.key, this.dpr);
         this.content.add(this.editorPanel);
         this.editorPanel.visible = true;
         this.editorPanel.on("editorHide", this.onEditorPanelHideHandler, this);
