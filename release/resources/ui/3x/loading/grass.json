@@ -1,63 +1,63 @@
 {
 	"frames": {
-		"loading_1.png": {
+		"grass_1.png": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 676,
-				"h": 506
+				"w": 1080,
+				"h": 75
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 676,
-				"h": 506
+				"w": 1080,
+				"h": 75
 			},
 			"sourceSize": {
-				"w": 676,
-				"h": 506
+				"w": 1080,
+				"h": 75
 			}
 		},
-		"loading_2.png": {
+		"grass_2.png": {
 			"frame": {
 				"x": 1,
-				"y": 509,
-				"w": 676,
-				"h": 506
+				"y": 78,
+				"w": 1080,
+				"h": 75
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 676,
-				"h": 506
+				"w": 1080,
+				"h": 75
 			},
 			"sourceSize": {
-				"w": 676,
-				"h": 506
+				"w": 1080,
+				"h": 75
 			}
 		},
-		"loading_3.png": {
+		"grass_3.png": {
 			"frame": {
-				"x": 679,
-				"y": 1,
-				"w": 676,
-				"h": 506
+				"x": 1,
+				"y": 155,
+				"w": 1080,
+				"h": 75
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 676,
-				"h": 506
+				"w": 1080,
+				"h": 75
 			},
 			"sourceSize": {
-				"w": 676,
-				"h": 506
+				"w": 1080,
+				"h": 75
 			}
 		}
 	},
@@ -67,8 +67,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1356,
-			"h": 1016
+			"w": 1082,
+			"h": 231
 		},
 		"scale": "1"
 	}

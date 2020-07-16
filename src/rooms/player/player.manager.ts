@@ -12,10 +12,6 @@ import { IElement } from "../element/element";
 import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
 import { PlayerModel } from "./player.model";
-import { FollowGroup } from "../group/FollowGroup";
-import { GroupType } from "../group/GroupManager";
-import { FollowAction } from "../action/FollowAction";
-import { MineCarSimulateData } from "./MineCarSimulateData";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
