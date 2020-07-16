@@ -8,6 +8,7 @@ import { EditorRoom } from "./editor.room";
 import { DecorateRoom } from "./decorate.room";
 import { Lite } from "game-capsule";
 import { LoadingScene } from "../scenes/loading";
+import { SceneEvent } from "../game/world.events";
 export interface IRoomManager {
     readonly world: WorldService | undefined;
 
@@ -124,6 +125,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             room.addActor(vw.actor);
             room.enter(vw.scene);
             this.mCurRoom = room;
+            this.mWorld.emitter.emit(SceneEvent.SCENE_CREATE);
         } else {
             // load this scene config in gameConfig
             this.world.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
@@ -136,6 +138,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 room.addActor(vw.actor);
                 room.enter(vw.scene);
                 this.mCurRoom = room;
+                this.mWorld.emitter.emit(SceneEvent.SCENE_CREATE);
             });
         }
     }

@@ -17,7 +17,7 @@ const config = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: `js/[name].js`,
+        filename: `js/[name]_v${appVer}.js`,
         libraryTarget: "umd",
         library: "game-core",
     },

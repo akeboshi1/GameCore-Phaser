@@ -1,7 +1,7 @@
 {
     "name": "game-core",
     "version": "1.0.269",
-    "main": "release/js/index.js",
+    "main": "release/js/tooqing.js",
     "types": "release/types/index.d.ts",
     "scripts": {
         "dev": "rimraf dist && webpack-dev-server --mode development",

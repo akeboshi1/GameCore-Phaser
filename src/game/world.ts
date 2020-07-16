@@ -2,11 +2,10 @@ import "phaser";
 import "tooqingui";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "phaser";
+import { Game, Scene } from "phaser";
 import { IConnectListener, SocketConnection, SocketConnectionError, ConnectionService, ServerAddress } from "../net";
 import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import Connection from "../net/connection";
-import { LoadingScene } from "../scenes/loading";
 import { Size, Logger, Tool, load } from "../utils";
 import { IRoomManager, IRoomService, RoomManager } from "../rooms";
 import { KeyBoardManager } from "./keyboard.manager";
@@ -35,6 +34,7 @@ import * as path from "path";
 import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { PluginManager } from "../plugins";
+import { SceneEvent, GameEvent } from "./world.events";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -236,6 +236,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mInputManager) this.mInputManager.onRoomChanged(room);
         this.mMouseManager.changeRoom(room);
         this.mSoundManager.changeRoom(room);
+        this.emitter.emit(SceneEvent.SCENE_CHANGE);
     }
 
     public getSize(): Size | undefined {
@@ -298,9 +299,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public startLoadMod(url: string) {
-        this.pluginManager.load("picatown-core", url).then((plugin) => {
-
-        });
     }
 
     public startFullscreen() {
@@ -606,8 +604,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mLoadingManager.destroy();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
+                    this.emitter.emit(GameEvent.GAME_DESTROY);
                     resolve();
                 });
+                this.emitter.emit(GameEvent.GAME_CLEAR);
                 this.mGame.destroy(true);
             } else {
                 resolve();
@@ -863,6 +863,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
+        this.emitter.emit(GameEvent.GAME_CREATE);
         // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 
@@ -898,6 +899,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         this.mRoomMamager.onFocus();
+        this.emitter.emit(SceneEvent.SCENE_RESUME);
         if (this.mGame && this.mConfig.platform === "pc") {
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
             if (pauseScene) {
@@ -912,6 +914,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         this.mRoomMamager.onBlur();
+        this.emitter.emit(SceneEvent.SCENE_PAUSE);
         if (this.mGame && this.mConfig.platform === "pc") {
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);

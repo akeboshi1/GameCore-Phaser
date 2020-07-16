@@ -31,6 +31,7 @@ import { GroupManager } from "./group/GroupManager";
 import { FrameManager } from "./element/FrameManager";
 import { State } from "./state/state.group";
 import { EffectManager } from "./effect/effect.manager";
+import { SceneEvent } from "../game/world.events";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -227,7 +228,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }, 6000);
             this.mCameraService.camera = camera;
             const padding = 199 * this.mScaleRatio;
-            this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio  + padding * 2);
+            this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
             // init block
             this.mBlocks.int(this.mSize);
 
@@ -429,7 +430,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mStateMap) this.mStateMap = new Map();
         let state: State;
         for (const sta of states) {
-            switch(sta.execCode) {
+            switch (sta.execCode) {
                 case op_def.ExecCode.EXEC_CODE_ADD:
                 case op_def.ExecCode.EXEC_CODE_UPDATE:
                     state = new State(sta);
@@ -465,6 +466,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.connection) this.connection.removePacketListener(this);
         this.mWorld.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
+        this.mWorld.emitter.emit(SceneEvent.SCENE_DESTROY);
         // if (this.mScene) {
         //   this.mScene = null;
         // }
@@ -510,7 +512,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     protected handlerState(state: State) {
-        switch(state.name) {
+        switch (state.name) {
             case "skyBoxAnimation":
                 this.mSkyboxManager.setState(state);
                 break;
