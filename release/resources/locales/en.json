@@ -2,7 +2,9 @@
   "market": {
     "title": "Market",
     "buy_button": "Buy",
-    "payment": "PAYMENT"
+    "payment": "PAYMENT",
+    "refreshtime": "The next refresh time is ",
+    "refresh": "Refresh"
   },
   "item": {
     "source": "source: ",
@@ -39,9 +41,10 @@
     "nick_name": "Nickname",
     "player_lv": "Lv",
     "player_title": "Title",
-    "option_live": "Living",
-    "option_badge": "Badge",
-    "option_title": "Title",
+    "option_live": "SKILL",
+    "option_badge": "BADGE",
+    "option_attribute": "ATTRIBUTE",
+    "option_title": "TITLE",
     "add_friend": "Add Friend",
     "tade_btn": "Trade",
     "private_chat": "Private Chat",
