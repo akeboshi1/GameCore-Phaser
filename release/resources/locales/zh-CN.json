@@ -1,7 +1,10 @@
 {
   "market": {
     "title": "商城",
-    "buy_button": "购 买"
+    "buy_button": "购 买",
+    "payment": "付费",
+    "refreshtime": "下一次刷新事件是  ",
+    "refresh": "刷新"
   },
   "item": {
     "source": "来源：",
@@ -43,6 +46,7 @@
     "option_live": "生活",
     "option_badge": "徽章",
     "option_title": "称号",
+    "option_attribute": "属性",
     "add_friend": "添加好友",
     "tade_btn": "交易",
     "private_chat": "私聊",

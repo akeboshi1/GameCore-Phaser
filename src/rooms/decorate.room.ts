@@ -7,7 +7,7 @@ import { RoomLayerManager } from "./layer/room.layer.manager";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { WorldService } from "../game/world.service";
-import { IElement} from "./element/element";
+import { IElement } from "./element/element";
 import { ElementDisplay } from "./display/element.display";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Pos } from "../utils/pos";
@@ -399,7 +399,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onGameobjectUpHandler(pointer, gameobject) {
         // this.addPointerMoveHandler();
-        const com = gameobject.parentContainer;
+        // TODO
+        const com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
         if (!com) {
             return;
         }
