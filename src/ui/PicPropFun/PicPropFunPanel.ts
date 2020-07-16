@@ -255,11 +255,10 @@ export class PicPropFunPanel extends BasePanel {
         }
     }
     private updateData() {
-        if (this.mInitialized) {
+        if (this.itemCountText)
             this.itemCountText.text = this.itemCount + "";
-            if (this.itemData.sellingPrice)
-                this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
-        }
+        if (this.pricText && this.itemData && this.itemData.sellingPrice)
+            this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
     }
 
     private onCancelBtnHandler() {
@@ -274,12 +273,40 @@ export class PicPropFunPanel extends BasePanel {
 
     private onSliderValueHandler(value: number) {
         this.itemCountText.x = this.thumb.x;
-        if (this.itemData) {
-            this.itemCount = Math.floor(this.itemData.count * value);
-            this.updateData();
+        this.itemCount = this.calcuSliderValue(value);
+        this.updateData();
+    }
+
+    private calcuSliderValue(value) {
+        const allcount = this.itemData ? this.itemData.count : 0;
+        let count = 0;
+        const line = 10;
+        const num = 4;
+        if (allcount <= line * num) {
+            count = Math.round(allcount * value);
         } else {
-            this.itemCount = 0;
-            this.itemCountText.text = "0";
+            if (value <= 1 / num) {
+                count = line * num * value;
+            } else {
+                const mcount = allcount - line;
+                if (mcount <= line * num) {
+                    count = line + mcount * (value - 1 / num) / (1 - 1 / num);
+                } else {
+                    const ncount = mcount / num;
+                    count = line;
+                    for (let i = 1; i < num; i++) {
+                        const fcount = ncount + mcount / (num * (num - 1)) * (i - 1);
+                        if (value > i / num && value <= (i + 1) / num) {
+                            count += fcount * (value - i / num) / (1 / num);
+                            break;
+                        } else {
+                            count += fcount;
+                        }
+                    }
+                }
+            }
         }
+        count = Math.round(count);
+        return count;
     }
 }
