@@ -250,13 +250,16 @@ export default class CharacterInfoPanel extends BasePanel {
         const likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
         this.likeBtn.x = likeposx - 20 * this.dpr;
         this.lvText.text = "Lv" + levle + "";
-        const subArr: any[] = [data.lifeSkills, data.badges];
+        const subArr: Map<any, any[]> = new Map();
+        subArr.set(CharacterOptionType.Skill, data.lifeSkills);
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
             this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(20) + exp + "/" + nexExp);
             this.lvCon.setPosition(this.idText.x + 58 * this.dpr, this.idText.y);
             this.likeBtn.setFrame("praise_aft");
-            subArr.push(data.titles);
+            subArr.set(CharacterOptionType.Attribute, data.properties);
+            subArr.set(CharacterOptionType.Badge, data.badges);
+            //   subArr.set(CharacterOptionType.Title, data.titles);
             this.addFriendBtn.visible = false;
             this.privaCharBtn.visible = false;
             this.tradeBtn.visible = false;
@@ -271,7 +274,8 @@ export default class CharacterInfoPanel extends BasePanel {
             this.idText.setText(this.getRichLabel("I   D") + spaceOffset + cid);
             this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
-            subArr.push(data.avatar);
+            subArr.set(CharacterOptionType.Badge, data.badges);
+            // subArr.set(CharacterOptionType.Avatar, data.avatar);
             this.addFriendBtn.visible = !data.friend;
             this.privaCharBtn.visible = data.friend;
             this.tradeBtn.visible = true;
@@ -333,26 +337,26 @@ export default class CharacterInfoPanel extends BasePanel {
         this.emit("hide");
     }
 
-    private setSubCategory(datas: any[]) {
+    private setSubCategory(map: Map<CharacterOptionType, any[]>) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_attribute"), i18n.t("player_info.option_badge")];
-        const len = subNames.length;
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
-        for (let i = 0; i < len; i++) {
-            const item = new Button(this.scene, this.key, "title_normal", "title_select", subNames[i]);
+        map.forEach((value, key) => {
+            const titleName = this.getOptionName(key);
+            const item = new Button(this.scene, this.key, "title_normal", "title_select", titleName);
             item.width = itemWidth;
             item.height = 41 * this.dpr;
             items.push(item);
             item.setTextStyle({ color: "#2B4BB5", fontSize: 12 * this.dpr, fontFamily: Font.BOLD_FONT });
             item.disInteractive();
             item.removeListen();
-            item.setData("subData", datas[i]);
-            item.setData("optiontype", i);
+            item.setData("subData", value);
+            item.setData("optiontype", key);
             this.mCategoryScroll.addItem(item);
-        }
+        });
         if (items.length <= 3) this.mCategoryScroll.setAlign(1);
         else {
-            this.mCategoryScroll.setAlign(0);
+            this.mCategoryScroll.setAlign(2);
         }
         this.onSelectSubCategoryHandler(items[0]);
     }
@@ -373,16 +377,6 @@ export default class CharacterInfoPanel extends BasePanel {
             this.mAttrPanel.visible = false;
             this.mSkillGrideTable.table.visible = true;
         } else if (optionType === CharacterOptionType.Attribute) {
-            // for (let i = 0; i < 8; i++) {
-            //     const data = {
-            //         key: "werwe",
-            //         icon: "Mana",
-            //         name: "Atttt" + i,
-            //         value: 5000,
-            //         tempValue: 600,
-            //     };
-            //     datas.push(data);
-            // }
             if (datas) this.mAttrPanel.setAttributeData(datas);
             this.mAttrPanel.visible = true;
             this.mSkillGrideTable.setItems([]);
@@ -446,12 +440,28 @@ export default class CharacterInfoPanel extends BasePanel {
         }
         return str;
     }
+
+    private getOptionName(type: CharacterOptionType) {
+        let title = "";
+        if (type === CharacterOptionType.Skill) {
+            title = i18n.t("player_info.option_live");
+        } else if (type === CharacterOptionType.Attribute) {
+            title = i18n.t("player_info.option_attribute");
+        } else if (type === CharacterOptionType.Badge) {
+            title = i18n.t("player_info.option_badge");
+        } else if (type === CharacterOptionType.Title) {
+            title = i18n.t("player_info.option_title");
+        }
+        return title;
+    }
 }
 
 enum CharacterOptionType {
     Skill = 0,
     Attribute = 1,
-    Badge = 2
+    Badge = 2,
+    Title = 3,
+    Avatar = 4
 }
 class CharacterOwnerItem extends Container {
     public itemData: any;

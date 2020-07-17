@@ -1,6 +1,8 @@
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { Font } from "../../utils/font";
 import { op_pkt_def } from "pixelpai_proto";
+import { DynamicImage } from "../components/dynamic.image";
+import { Url } from "../../utils/resUtil";
 export class CharacterAttributePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
@@ -20,7 +22,7 @@ export class CharacterAttributePanel extends Phaser.GameObjects.Container {
         const cheight = 20 * this.dpr;
         const cwidth = width / 2;
         const offsetY = 20 * this.dpr;
-        const posy: number = -height * 0.5+10*this.dpr;
+        const posy: number = -height * 0.5 + 10 * this.dpr;
         for (const item of this.attriItems) {
             item.visible = false;
         }
@@ -43,7 +45,7 @@ export class CharacterAttributePanel extends Phaser.GameObjects.Container {
 
 }
 class PlayerAttributeValue extends Phaser.GameObjects.Container {
-    private icon: Phaser.GameObjects.Image;
+    private icon: DynamicImage;
     private nameText: Phaser.GameObjects.Text;
     private valueText: BBCodeText;
     private dpr: number;
@@ -51,8 +53,9 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.dpr = dpr;
         this.setSize(width, height);
-        this.icon = this.scene.make.image({ key, frame: "health" });
+        this.icon = new DynamicImage(this.scene, 0, 0);
         this.icon.x = -width * 0.5 + this.icon.width * 0.5;
+        this.icon.setTexture(key, "health");
         this.nameText = this.scene.make.text({
             x: this.icon.x + 13 * dpr, y: 0, text: "Attack:",
             style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * dpr, color: "#131313" }
@@ -66,9 +69,15 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
         this.add([this.icon, this.nameText, this.valueText]);
     }
     public setInfo(data: op_pkt_def.IPKT_Property) {
-        // this.icon.setFrame("");
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.icon.load(url, this, () => {
+            this.icon.displayWidth = 17 * this.dpr;
+            this.icon.scaleY = this.icon.scaleX;
+        });
+        this.icon.setFrame(data.display.texturePath);
         this.nameText.text = data.name + ":";
         this.valueText.text = data.value + (data.tempValue ? this.getRichLabel(data.tempValue) : "");
+        this.valueText.x = this.nameText.x + this.nameText.width + 3 * this.dpr;
     }
     private getRichLabel(tempValue: number, color = "#0B77CD") {
         const label = `[color=${color}](+${tempValue})[/color]`;
