@@ -69,9 +69,15 @@ export class PicHandheldPanel extends BasePanel {
     public setEqipedDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD) {
         let datas = content.handheld;
         datas = datas.sort((a, b) => {
+            if (a.latestUse >= b.latestUse) return 1;
+            else return -1;
+        });
+        const useArr = datas.splice(0, 3);
+        datas = datas.sort((a, b) => {
             if (a.recommended >= b.recommended) return 1;
             else return -1;
         });
+        datas = useArr.concat(datas);
         const emptyData = op_client.CountablePackageItem.create({ id: "empty_handed", count: 0 });
         let curr: op_client.ICountablePackageItem;
         if (content.currentHandheldId === "" || !content.currentHandheldId) {
