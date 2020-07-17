@@ -72,13 +72,19 @@ export class PicHandheldPanel extends BasePanel {
             if (a.recommended >= b.recommended) return 1;
             else return -1;
         });
+        const emptyData = op_client.CountablePackageItem.create({ id: "empty_handed", count: 0 });
         let curr: op_client.ICountablePackageItem;
-        for (const data of datas) {
-            if (data.id === content.currentHandheldId) {
-                curr = data;
-                break;
+        if (content.currentHandheldId === "" || !content.currentHandheldId) {
+            curr = emptyData;
+        } else {
+            for (const data of datas) {
+                if (data.id === content.currentHandheldId) {
+                    curr = data;
+                    break;
+                }
             }
         }
+        datas.unshift(emptyData);
         this.handeldEqiped.setItemData(curr);
         if (this.isExtendsGrid) {
             const len = 14;
@@ -88,11 +94,12 @@ export class PicHandheldPanel extends BasePanel {
             if (curr) {
                 const cells = this.mPropGrid.getCells();
                 for (const cell of cells) {
-                    const container = cell.container;
-                    if (container && container.itemData === curr) {
-                        container.isSelect = true;
-                        this.curHandheldItem = cell;
-                        break;
+                    if (cell) {
+                        const container = cell.container;
+                        if (container && container.itemData === curr) {
+                            container.isSelect = true;
+                            this.curHandheldItem = cell;
+                        } else container.isSelect = false;
                     }
                 }
             }
@@ -174,7 +181,7 @@ export class PicHandheldPanel extends BasePanel {
             y = height - this.handeldEqiped.height * 0.5 - 10 * this.dpr;
             this.gridContent.visible = false;
             this.handeldEqiped.waiting();
-            if (this.handeldEqiped.itemData)
+            if (!this.handeldEqiped.isEmptyHanded)
                 this.handeldEqiped.showShortcut();
         } else {
             y = height - this.handeldEqiped.height * 0.5 - this.gridContent.height;
@@ -192,7 +199,12 @@ export class PicHandheldPanel extends BasePanel {
         if (this.curHandheldItem) this.curHandheldItem.isSelect = false;
         item.isSelect = true;
         this.curHandheldItem = item;
-        this.emit("changehandheld", data.id);
+        if (item.isEmptyHanded) {
+            this.emit("clearhandheld");
+        } else {
+            this.emit("changehandheld", data.id);
+        }
+
     }
 
     private onHandheldEqipedHandler(data: any) {
@@ -221,9 +233,11 @@ class HandheldItem extends Phaser.GameObjects.Container {
     public icon: DynamicImage;
     private mIsSelect: boolean = false;
     private dpr: number;
+    private key: string;
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         this.dpr = dpr;
+        this.key = key;
         this.bg = this.scene.make.image({ key, frame: "equp_bg" });
         this.selectbg = this.scene.make.image({ key, frame: "click_bg" });
         this.icon = new DynamicImage(scene, 0, 0);
@@ -242,12 +256,16 @@ class HandheldItem extends Phaser.GameObjects.Container {
         }
         this.icon.visible = true;
         this.selectbg.visible = this.mIsSelect;
-        const display = data.display;
-        const url = Url.getOsdRes(display.texturePath);
-        this.icon.load(url, this, () => {
-            this.icon.displayWidth = 34 * this.dpr;
-            this.icon.scaleY = this.icon.scaleX;
-        });
+        if (this.isEmptyHanded) {
+            this.icon.setTexture(this.key, "empty_handed");
+        } else {
+            const display = data.display;
+            const url = Url.getOsdRes(display.texturePath);
+            this.icon.load(url, this, () => {
+                this.icon.displayWidth = 34 * this.dpr;
+                this.icon.scaleY = this.icon.scaleX;
+            });
+        }
     }
 
     public get isSelect() {
@@ -256,6 +274,10 @@ class HandheldItem extends Phaser.GameObjects.Container {
     public set isSelect(value: boolean) {
         this.mIsSelect = value;
         this.selectbg.visible = value;
+    }
+    public get isEmptyHanded() {
+        if (this.itemData && this.itemData.id === "empty_handed") return true;
+        return false;
     }
 }
 
@@ -308,7 +330,7 @@ class HandheldEqiped extends Phaser.GameObjects.Container {
     }
     public setItemData(data: op_client.ICountablePackageItem) {
         this.itemData = data;
-        if (data) {
+        if (!this.isEmptyHanded) {
             const display = data.display;
             const url = Url.getOsdRes(display.texturePath);
             this.icon.load(url, this, () => {
@@ -317,6 +339,7 @@ class HandheldEqiped extends Phaser.GameObjects.Container {
             });
             if (!this.isExtendsGrid) this.showShortcut();
         } else {
+            this.icon.setScale(1);
             this.icon.setTexture(this.key, "empty_handed");
             this.hideShortcut();
         }
@@ -342,6 +365,18 @@ class HandheldEqiped extends Phaser.GameObjects.Container {
     public showShortcut() {
         this.shortcutCon.visible = true;
         this.shortcutCon.setInteractive();
+    }
+
+    public get isCanShowShortcut() {
+        if (!this.isEmptyHanded) {
+            return true;
+        }
+        return false;
+    }
+
+    public get isEmptyHanded() {
+        if (!this.itemData || this.itemData.id === "empty_handed") return true;
+        return false;
     }
     private onShortcutHandler() {
         if (this.shortcutHandler) this.shortcutHandler.runWith(this.itemData);
