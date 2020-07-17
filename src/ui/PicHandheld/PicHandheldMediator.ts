@@ -23,17 +23,17 @@ export class PicHandheldMediator extends BaseMediator {
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.mShow) {
-            this.layerManager.addToUILayer(this.mView);
-            return;
-        }
         if (!this.picHand) {
             this.picHand = new PicHandheld(this.world);
+            this.picHand.on("handheldlist", this.onHandheldList, this);
             this.picHand.register();
         }
 
         if (!this.mView) {
             this.mView = new PicHandheldPanel(this.scene, this.world);
+            this.mView.on("changehandheld", this.onChangeHandheld, this);
+            this.mView.on("clearhandheld", this.onClearHandheld, this);
+            this.mView.on("handheldlist", this.onReqHandheldList, this);
             this.mView.on("openeqiped", this.openEquipedPanel, this);
         }
 
@@ -62,6 +62,20 @@ export class PicHandheldMediator extends BaseMediator {
         return true;
     }
 
+    private onHandheldList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD) {
+        this.mView.setEqipedDatas(content);
+    }
+    private onChangeHandheld(id: string) {
+        this.picHand.queryChangeHandheld(id);
+    }
+
+    private onReqHandheldList() {
+        this.picHand.queryHandheldList();
+    }
+
+    private onClearHandheld() {
+        this.picHand.queryClearHandheld();
+    }
     private openEquipedPanel(state: boolean) {
         const uiManager = this.world.uiManager;
         const mediator = uiManager.getMediator(PicaChatMediator.name);

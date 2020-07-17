@@ -27,9 +27,9 @@ export class PicaMainUIMediator extends BaseMediator {
         if (!this.mView) {
             this.mView = new PicaMainUIPanel(this.scene, this.world);
             this.mView.on("showPanel", this.onShowPanelHandler, this);
+            this.mView.on("openroompanel", this.onOpenRoomHandler, this);
         }
         this.mView.show(param);
-        this.mView.on("openroompanel", this.onOpenRoomHandler, this);
         this.layerManager.addToUILayer(this.mView);
     }
 
