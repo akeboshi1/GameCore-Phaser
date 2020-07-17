@@ -137,7 +137,7 @@ export class FramesDisplay extends DisplayObject {
             const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_idle_${i}`;
-                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
+                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, anis);
                 display = this.scene.make.sprite(undefined, false).play(key);
             } else {
                 display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
