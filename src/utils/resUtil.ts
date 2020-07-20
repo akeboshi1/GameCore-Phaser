@@ -13,7 +13,7 @@ export class Url {
             return CONFIG.BUNDLE_RESOURCES_ROOT
                 + value;
         }
-        return modulePath ? Url.RES_PATH + value : Url.MODULE_PATH + modulePath + "release/resource/" + value;
+        return modulePath === undefined ? Url.RES_PATH + value : Url.MODULE_PATH + modulePath + "release/resource/" + value;
     }
 
     static getUIRes(dpr: number, value: string, modulePath?: string): string {
@@ -21,7 +21,7 @@ export class Url {
             return CONFIG.BUNDLE_RESOURCES_ROOT
                 + dpr + "x" + value;
         }
-        return modulePath ? Url.RESUI_PATH + `${dpr}x/${value}` : Url.MODULE_PATH + modulePath + "release/resource/ui/" + value;
+        return modulePath === undefined ? Url.RESUI_PATH + `${dpr}x/${value}` : Url.MODULE_PATH + modulePath + "release/resource/ui/" + value;
     }
 
     static getOsdRes(value: string): string {
