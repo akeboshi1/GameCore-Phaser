@@ -764,6 +764,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.createGame(content.keyEvents);
                 Logger.getInstance().debug("created game suc");
             })
+            .then(() => {
+
+            })
             .catch((err: any) => {
                 Logger.getInstance().log(err);
             });
