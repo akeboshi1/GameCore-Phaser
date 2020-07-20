@@ -1,4 +1,5 @@
 export class BasicScene extends Phaser.Scene {
+    protected mModuleName: string;
     constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config);
     }

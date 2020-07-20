@@ -33,7 +33,8 @@ export class ItemSlot implements IListItemComponent {
     protected mWid: number = 0;
     protected mHei: number = 0;
     protected isTipBoo: boolean = true;
-    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr?: string, respng?: string, resjson?: string, resSlot?: string, selectRes?: string, subscriptRes?: string) {
+    protected mModuleName: string;
+    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr?: string, respng?: string, resjson?: string, resSlot?: string, selectRes?: string, subscriptRes?: string, moduleName?: string) {
         this.mScene = scene;
         this.mWorld = world;
         this.toolTipCon = scene.make.container(undefined, false); // new ToolTipContainer(this.mScene, world);
@@ -46,6 +47,7 @@ export class ItemSlot implements IListItemComponent {
         this.mResSlot = resSlot;
         this.mSubScriptRes = subscriptRes;
         this.mSelectRes = selectRes;
+        this.mModuleName = moduleName;
     }
 
     public set hasTip(value: boolean) {
@@ -181,7 +183,7 @@ export class ItemSlot implements IListItemComponent {
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
         if (this.isTipBoo) {
-            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
+            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json", this.mModuleName), Url.getRes("ui/toolTip/toolTip.png", this.mModuleName), this.mWorld.uiScale);
         }
 
         this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, bgWid, bgHei), Phaser.Geom.Rectangle.Contains);

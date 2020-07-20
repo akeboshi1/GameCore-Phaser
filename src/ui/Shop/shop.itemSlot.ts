@@ -11,8 +11,9 @@ import { PBpacket } from "net-socket-packet";
 export class ShopItemSlot extends ItemSlot {
     private moneyIcon: DynamicImage;
     private mPackageID: number;
-    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string) {
-        super(scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes);
+
+    constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string, moduleName?: string) {
+        super(scene, world, parentCon, x, y, resStr, respng, resjson, resSlot, selectRes, undefined, moduleName);
     }
 
     public shopDataChange(val: any, packID: number) {
@@ -85,7 +86,7 @@ export class ShopItemSlot extends ItemSlot {
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
         if (this.isTipBoo) {
-            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"), this.mWorld.uiScale);
+            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json",this.mModuleName), Url.getRes("ui/toolTip/toolTip.png",this.mModuleName), this.mWorld.uiScale);
         }
         this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);
         this.toolTipCon.on("pointerover", this.overHandler, this);

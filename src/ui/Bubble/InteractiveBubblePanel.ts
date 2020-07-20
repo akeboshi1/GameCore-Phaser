@@ -13,9 +13,10 @@ export class InteractiveBubblePanel extends BasePanel {
     private world: WorldService;
     private map = new Map<number, InteractionBubbleContainer>();
     private mBubble: InteractionBubbleContainer;
-    constructor(scene: Phaser.Scene, world: WorldService) {
+    constructor(scene: Phaser.Scene, world: WorldService, moduleName?: string) {
         super(scene, world);
         this.world = world;
+        this.mModuleName = moduleName;
         this.scale = 1;
     }
 
@@ -52,8 +53,8 @@ export class InteractiveBubblePanel extends BasePanel {
     showInteractionBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, ele: IElement) {
         const dpr = this.dpr;
         content.display["resName"] = null;// "gems";
-        content.display.texturePath = Url.getUIRes(dpr, "bubble/bubblebg.png");// "resources/test/columns";
-        content.display.dataPath = Url.getUIRes(dpr, "bubble/tipsicon.png");// "resources/test/columns";
+        content.display.texturePath = Url.getUIRes(dpr, "bubble/bubblebg.png", this.mModuleName);// "resources/test/columns";
+        content.display.dataPath = Url.getUIRes(dpr, "bubble/tipsicon.png", this.mModuleName);// "resources/test/columns";
         const key = content.id;
         if (this.mBubble) this.mBubble.hide();
         if (this.map.has(key)) {

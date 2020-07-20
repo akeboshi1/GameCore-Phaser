@@ -96,18 +96,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (config.height === undefined) {
             config.height = window.innerHeight;
         }
-        // config.modulePath = CONFIG.modulePath;
-        // config.modules = CONFIG.modules;
-        // if (config.modulePath === undefined) {
-        //     config.modulePath = CONFIG.modulePath || "";
-        // } else {
-        //     CONFIG.modulePath = config.modulePath;
-        // }
-        // if (config.modules === undefined) {
-        //     config.modules = CONFIG.modules || undefined;
-        // } else {
-        //     CONFIG.modules = config.modules;
-        // }
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
         const scaleW = config.width / this.DEFAULT_WIDTH * (config.devicePixelRatio / this.mUIRatio);
@@ -121,7 +109,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
-        Url.MODULE_PATH = this.mConfig.modulePath || "";
+        Url.MODULE_PATH = this.mConfig.modulePath + "/" || "";
 
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
@@ -761,15 +749,26 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
-                this.createGame(content.keyEvents);
-                Logger.getInstance().debug("created game suc");
+                return this.loadMods(this.mConfig.modules);
             })
             .then(() => {
-
+                this.createGame(content.keyEvents);
             })
             .catch((err: any) => {
                 Logger.getInstance().log(err);
             });
+    }
+
+    private loadMods(mods: any[]) {
+        if (!mods || mods.length < 1) {
+            return;
+        }
+        const promises = [];
+        const rootPath: string = this.mConfig.modulePath;
+        for (const mod of mods) {
+            if (mod) promises.push(this.pluginManager.load(mod.name, path.resolve(rootPath, `/js/${mod.name}.min.js`)));
+        }
+        return Promise.all(promises);
     }
 
     private _newGame(): Phaser.Game {

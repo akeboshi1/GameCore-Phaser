@@ -2,8 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const pathToPhaser = path.join(__dirname, "/node_modules/phaser");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
-const tooqinguiPath = path.join(__dirname, "/node_modules/tooqingui");
-const tooqingui = path.join(tooqinguiPath, "dist/tooqingui.js");
+const phaseruiPath = path.join(__dirname, "/node_modules/@apowo/phaserui");
+const phaserui = path.join(phaseruiPath, "dist/phaserui.js");
 const ConfigWebpackPlugin = require("config-webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -26,7 +26,7 @@ const config = {
             { test: /\.ts$/, loader: "ts-loader", exclude: "/node_modules/" },
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
-            { test: /tooqingui\.js$/, loader: "expose-loader?tooqingui" }
+            { test: /phaserui\.js$/, loader: "expose-loader?phaserui" }
         ],
     },
     resolve: {
@@ -34,7 +34,7 @@ const config = {
         alias: {
             phaser: phaser,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-            tooqingui: tooqingui
+            phaserui: phaserui
         },
     },
     optimization: {

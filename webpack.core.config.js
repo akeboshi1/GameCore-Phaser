@@ -25,7 +25,6 @@ const config = {
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
             { test: /phaserui\.js$/, loader: "expose-loader?phaserui" },
-            { test: /tooqingui\.js$/, loader: "expose-loader?tooqingui" }
         ],
     },
     resolve: {
@@ -33,8 +32,7 @@ const config = {
         alias: {
             phaser: phaser,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-            phaserui: path.join(__dirname,"/node_modules/@apowo/phaserui/dist/phaserui.js"),
-            tooqingui: path.join(__dirname,"/node_modules/tooqingui/dist/tooqingui.js")
+            phaserui: path.join(__dirname,"/node_modules/@apowo/phaserui/dist/phaserui.js")
         }
     },
     // optimization: {

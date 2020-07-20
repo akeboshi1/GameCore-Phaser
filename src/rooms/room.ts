@@ -266,9 +266,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addSkyBox(scenery);
             }
         }
-        Logger.getInstance().log("===>>: ", this.world.getConfig().modules);
+
+        this.world.emitter.emit(SceneEvent.SCENE_CREATE, this);
         // if (this.mWorld.getConfig().modules) {
-        this.startLoadModule(0);
+        // this.startLoadModule(0);
         // }
         // this.mWorld.pluginManager.load("picatown-core", CONFIG.modulePath + `http://localhost:8081/ma/picatown.min.js`).then((plugin) => {
 
