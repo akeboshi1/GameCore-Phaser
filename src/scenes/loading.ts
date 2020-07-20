@@ -111,8 +111,8 @@ export class LoadingScene extends BasicScene {
     if (!this.curtain) {
       return Promise.resolve();
     }
-    this.bg.visible = false;
-    this.grass.visible = false;
+    if (this.bg) this.bg.visible = false;
+    if (this.grass) this.grass.visible = false;
     return this.curtain.open();
   }
 
@@ -120,8 +120,8 @@ export class LoadingScene extends BasicScene {
     if (!this.curtain) {
       return;
     }
-    this.bg.visible = false;
-    this.grass.visible = false;
+    if (this.bg) this.bg.visible = false;
+    if (this.grass) this.grass.visible = false;
     return this.curtain.close();
   }
 
@@ -131,8 +131,8 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
-    this.bg.visible = false;
-    this.grass.visible = false;
+    if (this.bg) this.bg.visible = false;
+    if (this.grass) this.grass.visible = false;
     if (this.curtain) {
       this.curtain.close().then(() => {
         this.scale.off("resize", this.checkSize, this);
@@ -170,11 +170,15 @@ export class LoadingScene extends BasicScene {
 
   private checkSize(size: Size) {
     const { width, height } = size;
-    this.grass.x = width * 0.5;
-    this.grass.y = height;
+    if (this.grass) {
+      this.grass.x = width * 0.5;
+      this.grass.y = height;
+    }
 
-    // this.bg.x = 0; // + this.bg.width * this.bg.originX;
-    this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY;
+    if (this.bg) {
+      // this.bg.x = 0; // + this.bg.width * this.bg.originX;
+      this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY;
+    }
   }
 
   private createFont() {
