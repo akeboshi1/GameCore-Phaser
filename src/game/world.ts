@@ -96,8 +96,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (config.height === undefined) {
             config.height = window.innerHeight;
         }
-        config.modulePath = CONFIG.modulePath;
-        config.modules = CONFIG.modules;
+        // config.modulePath = CONFIG.modulePath;
+        // config.modules = CONFIG.modules;
         // if (config.modulePath === undefined) {
         //     config.modulePath = CONFIG.modulePath || "";
         // } else {
