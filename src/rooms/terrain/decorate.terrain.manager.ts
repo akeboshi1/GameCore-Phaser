@@ -107,14 +107,14 @@ export class DecorateTerrainManager extends TerrainManager {
     let _x = 0;
     let _y = 0;
     for (let i = 0; i < rows; i++) {
-      _x = pos.x + i - origin.x;
+      _x = pos.y + i - origin.x;
       for (let j = 0; j < cols; j++) {
         if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
-          _y = pos.y + j - origin.y;
+          _y = pos.x + j - origin.y;
           if (_x >= this.mMap.length || _y >= this.mMap[_x].length) {
             continue;
           }
-          this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
+          this.mMap[_x][_y] = type;
         }
       }
     }
