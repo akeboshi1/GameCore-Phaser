@@ -1,6 +1,6 @@
 
 import { Tweens } from "phaser";
-import { IAbstractPanel } from "tooqingui";
+import { IAbstractPanel } from "@apowo/phaserui";
 
 export class LoadingView implements IAbstractPanel {
     public id: number;

@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { UserInfoPanel } from "./UserInfoPanel";
 import { MessageType } from "../../const/MessageType";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 
 export class UserInfoMediator extends BaseMediator {
     public static NAME: string = "UserInfoMediator";

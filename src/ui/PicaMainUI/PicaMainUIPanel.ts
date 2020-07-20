@@ -5,7 +5,7 @@ import { Logger } from "../../utils/log";
 import { Handler } from "../../Handler/Handler";
 import { TextToolTips } from "../tips/TextToolTip";
 import { op_pkt_def } from "pixelpai_proto";
-import { NinePatch } from "tooqingui";
+import { NinePatch } from "@apowo/phaserui";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";

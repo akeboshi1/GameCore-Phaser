@@ -4,7 +4,7 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { Room } from "../../rooms/room";
 import { InteractiveBubble } from "./InteractiveBubble";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 
 export class InteractiveBubbleMediator extends BaseMediator {
     protected mView: InteractiveBubblePanel;

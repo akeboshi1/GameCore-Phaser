@@ -1,6 +1,6 @@
 import { op_client } from "pixelpai_proto";
 import { Handler } from "../../Handler/Handler";
-import { BaseUI } from "tooqingui";
+import { BaseUI } from "@apowo/phaserui";
 import { InteractionBubbleCell } from "./InteractionBubbleCell";
 export class InteractionBubbleContainer extends BaseUI {
     public id: number;

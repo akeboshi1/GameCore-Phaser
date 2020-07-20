@@ -1,4 +1,4 @@
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 import { WorldService } from "../../game/world.service";
 import { ReAwardTips } from "./ReAwardTip";
 import { op_client } from "pixelpai_proto";

@@ -1,4 +1,4 @@
-import { InputText } from "tooqingui";
+import { InputText } from "@apowo/phaserui";
 import { WorldService } from "../../game/world.service";
 import { MainUIScene } from "../../scenes/main.ui";
 export class InputTextFactory {

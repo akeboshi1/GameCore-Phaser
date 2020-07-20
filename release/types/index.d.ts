@@ -3,13 +3,13 @@
 //   ../net-socket-packet
 //   ../pixelpai_proto
 //   ../game-capsule
-//   ../tooqingui
 //   ../game-capsule/lib/configobjects/animations
 //   ../game-capsule/lib/configobjects/scene
 //   ../phaser
 //   ../game-capsule/lib/helpers
 //   ../events
 //   ../buffer
+//   ../@apowo/phaserui
 
 declare module 'game-core' {
     export * from "game-core/game";
@@ -271,7 +271,7 @@ declare module 'game-core/game/world.service' {
 
 declare module 'game-core/game/world' {
     import "phaser";
-    import "tooqingui";
+    import "@apowo/phaserui";
     import { WorldService } from "game-core/game/world.service";
     import { PacketHandler, PBpacket } from "net-socket-packet";
     import { IConnectListener, SocketConnection, SocketConnectionError, ConnectionService } from "game-core/net";
@@ -1425,8 +1425,8 @@ declare module 'game-core/ui/ui.manager' {
     import { op_pkt_def } from "pixelpai_proto";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { InputTextFactory } from "game-core/ui/components/inputTextFactory";
-    import { BaseMediator } from "tooqingui";
     import { WorldService } from "game-core/game";
+    import { BaseMediator } from "game-core/ui/components";
     export class UiManager extends PacketHandler {
         constructor(worldService: WorldService);
         getInputTextFactory(): InputTextFactory;
@@ -1494,6 +1494,7 @@ declare module 'game-core/ui/ui.atals.name' {
 
 declare module 'game-core/ui/components' {
     export { BasePanel } from "game-core/ui/components/BasePanel";
+    export { BaseMediator } from "game-core/ui/components/BaseMediator";
     export { DynamicImage } from "game-core/ui/components/dynamic.image";
     export { DynamicNinepatch } from "game-core/ui/components/dynamic.ninepatch";
     export { DynamicSprite } from "game-core/ui/components/dynamic.sprite";
@@ -3440,7 +3441,7 @@ declare module 'game-core/ui/components/inputTextFactory' {
 
 declare module 'game-core/ui/components/BasePanel' {
     import { WorldService } from "game-core/game/world.service";
-    import { Panel } from "tooqingui";
+    import { Panel } from "@apowo/phaserui";
     export class BasePanel extends Panel {
         protected mInitialized: boolean;
         protected mTweening: boolean;
@@ -3453,11 +3454,58 @@ declare module 'game-core/ui/components/BasePanel' {
         protected mResources: Map<string, any>;
         protected mReLoadResources: Map<string, any>;
         constructor(scene: Phaser.Scene, world: WorldService);
+        updateUIState(ui: any): void;
         protected addResources(key: string, resource: any): void;
         protected get scaleWidth(): number;
         protected get scaleHeight(): number;
         protected get cameraWidth(): number;
         protected get cameraHeight(): number;
+    }
+}
+
+declare module 'game-core/ui/components/BaseMediator' {
+    import { IAbstractPanel, Panel } from "@apowo/phaserui";
+    export interface IMediator {
+            type: number;
+            isShow(): boolean;
+            tweenExpand(show: boolean): any;
+            resize(wid: any, hei: any): any;
+            show(param?: any): void;
+            update(param?: any): void;
+            hide(): void;
+            updateViewPos(): any;
+            destroy(): any;
+            isSceneUI(): boolean;
+            getView(): IAbstractPanel;
+            setParam(param: any): void;
+            getParam(): any;
+    }
+    export class BaseMediator implements IMediator {
+            protected mView: Panel;
+            /**
+                * 面板处于打开状态
+                */
+            protected mShow: boolean;
+            protected mParam: any;
+            protected mUIType: number;
+            constructor();
+            get type(): number;
+            updateViewPos(): void;
+            tweenExpand(show: boolean): void;
+            /**
+                * @method tooqingui.BaseMediator#getView
+                * @return {*}
+                */
+            getView(): Panel;
+            hide(): void;
+            isSceneUI(): boolean;
+            isShow(): boolean;
+            resize(width?: number, height?: number): void;
+            show(param?: any): void;
+            update(param?: any): void;
+            setParam(param: any): void;
+            getParam(): any;
+            destroy(): void;
     }
 }
 
@@ -3472,7 +3520,7 @@ declare module 'game-core/ui/components/dynamic.image' {
 }
 
 declare module 'game-core/ui/components/dynamic.ninepatch' {
-    import { NinePatch } from "tooqingui";
+    import { NinePatch } from "@apowo/phaserui";
     export class DynamicNinepatch {
         protected mUrl: string;
         protected mLoadCompleteCallBack?: Function;
@@ -3494,7 +3542,7 @@ declare module 'game-core/ui/components/dynamic.sprite' {
 }
 
 declare module 'game-core/ui/components/radio' {
-    import { BBCodeText } from "tooqingui";
+    import { BBCodeText } from "@apowo/phaserui";
     export interface IRadioResConfig {
         wid: number;
         hei: number;
@@ -3764,7 +3812,7 @@ declare module 'game-core/ui/components/ScrollRect' {
 }
 
 declare module 'game-core/ui/components/TextButton' {
-    import { IButtonState } from "tooqingui";
+    import { IButtonState } from "@apowo/phaserui";
     export class TextButton extends Phaser.GameObjects.Container implements IButtonState {
         constructor(scene: Phaser.Scene, dpr: number, scale?: number, text?: string, x?: number, y?: number);
         setText(val: string): void;
@@ -3863,7 +3911,7 @@ declare module 'game-core/ui/components/input.panel' {
 }
 
 declare module 'game-core/ui/components/checkbox.group' {
-    export { IButtonState } from "tooqingui";
+    export { IButtonState } from "@apowo/phaserui";
     export class CheckboxGroup extends Phaser.Events.EventEmitter {
         constructor();
         appendItem(item: any): this;
@@ -4036,7 +4084,7 @@ declare module 'game-core/ui/baseView/top.menu/top.menu.mediator' {
     import { WorldService } from "game-core/game/world.service";
     import { TopMenuContainer } from "game-core/ui/baseView/top.menu/top.menu.container";
     import { IBtnData } from "game-core/ui/components/icon.btn";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class TopMenuMediator extends BaseMediator {
         static NAME: string;
         protected mView: TopMenuContainer;
@@ -4096,7 +4144,7 @@ declare module 'game-core/ui/ElementStorage/ElementStorageMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ElementStoragePanel } from "game-core/ui/ElementStorage/ElementStoragePanel";
     import { ILayerManager } from "game-core/ui/layer.manager";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class ElementStorageMediator extends BaseMediator {
             static NAME: string;
             constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService);
@@ -4171,7 +4219,8 @@ declare module 'game-core/ui/Notice/Notice' {
 declare module 'game-core/ui/Notice/NoticeMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
-    import { BaseMediator, Panel } from "tooqingui";
+    import { Panel } from "@apowo/phaserui";
+    import { BaseMediator } from "game-core/ui/components";
     export class NoticeMediator extends BaseMediator {
         static NAME: string;
         constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService);
@@ -4210,7 +4259,7 @@ declare module 'game-core/ui/Rank/BasicRankPanel' {
     import { BasePanel } from "game-core/ui/components/BasePanel";
     import { op_client } from "pixelpai_proto";
     import { WorldService } from "game-core/game/world.service";
-    import { NinePatch } from "tooqingui";
+    import { NinePatch } from "@apowo/phaserui";
     export class BasicRankPanel extends BasePanel {
         protected mTitleLabel: Phaser.GameObjects.Text;
         protected mTexts: Phaser.GameObjects.Text[];
@@ -4231,7 +4280,7 @@ declare module 'game-core/ui/Rank/RankMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { BasePanel } from "game-core/ui/components/BasePanel";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class RankMediator extends BaseMediator {
         static NAME: string;
         constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService);
@@ -4279,7 +4328,7 @@ declare module 'game-core/ui/ReAwardTips/ReAwardTip' {
 }
 
 declare module 'game-core/ui/ReAwardTips/ReAwardTipsMediator' {
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     import { WorldService } from "game-core/game/world.service";
     export class ReAwardTipsMediator extends BaseMediator {
         constructor(scene: Phaser.Scene, world: WorldService);
@@ -4306,12 +4355,12 @@ declare module 'game-core/ui/Shop/ShopMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { BasePanel } from "game-core/ui/components/BasePanel";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class ShopMediator extends BaseMediator {
         static NAME: string;
         constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService);
         isSceneUI(): boolean;
-        resize(): any;
+        resize(): void;
         getView(): BasePanel;
         show(param?: any): void;
         update(param?: any): void;
@@ -4362,7 +4411,7 @@ declare module 'game-core/ui/UserInfo/UserInfoMediator' {
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { WorldService } from "game-core/game/world.service";
     import { BasePanel } from "game-core/ui/components/BasePanel";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class UserInfoMediator extends BaseMediator {
         static NAME: string;
         constructor(mLayerManager: ILayerManager, mScene: Phaser.Scene, world: WorldService);
@@ -4395,7 +4444,7 @@ declare module 'game-core/ui/UserInfo/UserInfoPanel' {
 
 declare module 'game-core/ui/UserMenu/MenuItem' {
     import { IPatchesConfig } from "game-core/ui/components/patches.config";
-    import { NinePatch, NineSliceButton } from "tooqingui";
+    import { NinePatch, NineSliceButton } from "@apowo/phaserui";
     export class MenuItem extends NineSliceButton {
         protected mMenus: MenuItem[];
         protected mChild: Phaser.GameObjects.Container;
@@ -4413,7 +4462,7 @@ declare module 'game-core/ui/UserMenu/UserMenuMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { BasePanel } from "game-core/ui/components/BasePanel";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class UserMenuMediator extends BaseMediator {
         constructor(layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService);
         getView(): BasePanel;
@@ -4488,7 +4537,7 @@ declare module 'game-core/ui/bag/bagView/bagPanel' {
 declare module 'game-core/ui/bag/bagView/bagMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export enum DragType {
         DRAG_TYPE_SHORTCUT = 1,
         DRAG_TYPE_BAG = 2
@@ -4515,7 +4564,7 @@ declare module 'game-core/ui/bag/bagView/bagMediator' {
 declare module 'game-core/ui/bag/storage/storageMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class StorageMediator extends BaseMediator {
         static NAME: string;
         constructor(layerManager: ILayerManager, mworld: WorldService, scene: Phaser.Scene);
@@ -4569,7 +4618,7 @@ declare module 'game-core/ui/chat/base.chat.panel' {
 
 declare module 'game-core/ui/chat/chat.mediator' {
     import { WorldService } from "game-core/game/world.service";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class ChatMediator extends BaseMediator {
         static NAME: string;
         world: WorldService;
@@ -4668,13 +4717,13 @@ declare module 'game-core/ui/decorate/decorate.panel' {
 
 declare module 'game-core/ui/friend/friend.mediator' {
     import { WorldService } from "game-core/game/world.service";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class FriendMediator extends BaseMediator {
         static NAME: string;
         constructor(scene: Phaser.Scene, world: WorldService);
         isShow(): boolean;
         isSceneUI(): boolean;
-        resize(): any;
+        resize(): void;
         show(param?: any): void;
         hide(): void;
         destroy(): void;
@@ -4750,7 +4799,7 @@ declare module 'game-core/ui/ControlF/ControlFMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { BasePanel } from "game-core/ui/components/BasePanel";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class ControlFMediator extends BaseMediator {
         static NAME: string;
         constructor(layerManager: ILayerManager, scene: Phaser.Scene, world: WorldService);
@@ -4783,11 +4832,11 @@ declare module 'game-core/ui/ControlF/ControlFPanel' {
 declare module 'game-core/ui/DebugLogger/DebugLoggerMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class DebugLoggerMediator extends BaseMediator {
         static NAME: string;
         constructor(uiManager: ILayerManager, scene: Phaser.Scene, world: WorldService);
-        resize(): any;
+        resize(): void;
         isShow(): boolean;
         show(param?: any): void;
         hide(): void;
@@ -4816,7 +4865,7 @@ declare module 'game-core/ui/DecorateControl/DecorateControlMediator' {
     import { DecorateControlPanel } from "game-core/ui/DecorateControl/DecorateControlPanel";
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { ConnectionService } from "game-core/net/connection.service";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class DecorateControlMediator extends BaseMediator {
         static NAME: string;
         protected mView: DecorateControlPanel;
@@ -4844,7 +4893,7 @@ declare module 'game-core/ui/DecorateControl/DecorateControlPanel' {
 declare module 'game-core/ui/ComponentRank/ComponentRankMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class ComponentRankMediator extends BaseMediator {
         static NAME: string;
         readonly world: WorldService;
@@ -4894,7 +4943,7 @@ declare module 'game-core/ui/Bubble/InteractiveBubble' {
 declare module 'game-core/ui/Bubble/InteractionBubbleContainer' {
     import { op_client } from "pixelpai_proto";
     import { Handler } from "game-core/Handler/Handler";
-    import { BaseUI } from "tooqingui";
+    import { BaseUI } from "@apowo/phaserui";
     import { InteractionBubbleCell } from "game-core/ui/Bubble/InteractionBubbleCell";
     export class InteractionBubbleContainer extends BaseUI {
         id: number;
@@ -4926,7 +4975,7 @@ declare module 'game-core/ui/Bubble/InteractiveBubbleMediator' {
     import { ILayerManager } from "game-core/ui/layer.manager";
     import { WorldService } from "game-core/game/world.service";
     import { Room } from "game-core/rooms/room";
-    import { BaseMediator } from "tooqingui";
+    import { BaseMediator } from "game-core/ui/components";
     export class InteractiveBubbleMediator extends BaseMediator {
         protected mView: InteractiveBubblePanel;
         constructor(layerMgr: ILayerManager, scene: Phaser.Scene, mworld: WorldService);
@@ -5236,7 +5285,8 @@ declare module 'game-core/rooms/sky.box/editor.sky.box.manager' {
 
 declare module 'game-core/ui/baseView/baseFace.mediator' {
     import { WorldService } from "game-core/game/world.service";
-    import { BaseMediator, Panel } from "tooqingui";
+    import { Panel } from "@apowo/phaserui";
+    import { BaseMediator } from "game-core/ui/components";
     /**
       * 场景UImediator
       */
@@ -5247,7 +5297,7 @@ declare module 'game-core/ui/baseView/baseFace.mediator' {
         getView(): Panel;
         isSceneUI(): boolean;
         isShow(): boolean;
-        resize(): any;
+        resize(): void;
         hide(): void;
         destroy(): void;
     }

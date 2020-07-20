@@ -117,7 +117,7 @@ export class BagGroup extends BasePanel {
                 this.buttons.destroy(true);
                 this.buttons = null;
             }
-            this.buttons = (<any>this.scene).tooqingUI.add.buttons({
+            this.buttons = (<any>this.scene).phaserui.add.buttons({
                 x: (tempWid + bgWid) / 2,
                 y: 0,
                 width: 56,

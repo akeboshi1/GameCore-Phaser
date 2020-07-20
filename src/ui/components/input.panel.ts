@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import { InputText } from "tooqingui";
+import { InputText } from "@apowo/phaserui";
 
 export class InputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;

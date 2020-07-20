@@ -2,7 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { DynamicImage } from "../components/dynamic.image";
 import { Font } from "../../utils/font";
-import { Button } from "tooqingui";
+import { Button } from "@apowo/phaserui";
 import { Handler } from "../../Handler/Handler";
 import { op_def, op_client, op_virtual_world, op_gameconfig_01 } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";

@@ -4,7 +4,7 @@ import { TopMenuContainer } from "./top.menu.container";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { IBtnData } from "../../components/icon.btn";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../components";
 
 export class TopMenuMediator extends BaseMediator {
   public static NAME: string = "TopMenuMediator";

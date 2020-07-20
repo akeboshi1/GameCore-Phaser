@@ -1,4 +1,4 @@
-export { IButtonState } from "tooqingui";
+export { IButtonState } from "@apowo/phaserui";
 export class CheckboxGroup extends Phaser.Events.EventEmitter {
   private mList: any[] = [];
   private mPrevButton: any;

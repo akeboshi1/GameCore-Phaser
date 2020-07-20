@@ -4,7 +4,7 @@ import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { PicHandheld } from "./PicHandheld";
 import { PicHandheldPanel } from "./PicHandheldPanel";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 
 export class PicHandheldMediator extends BaseMediator {
     protected mView: PicHandheldPanel;

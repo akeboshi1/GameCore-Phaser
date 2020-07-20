@@ -1,5 +1,5 @@
 import { ConnectionService } from "../net/connection.service";
-import { InputText, IComboboxConfig, ComboBox } from "tooqingui";
+import { InputText, IComboboxConfig, ComboBox } from "@apowo/phaserui";
 import { PopUpTextUI } from "../ui/alert/PopUpTextUI";
 import { WorldService } from "../game/world.service";
 import { Logger } from "../utils/log";

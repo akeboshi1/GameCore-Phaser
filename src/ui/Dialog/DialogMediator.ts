@@ -3,7 +3,7 @@ import { ILayerManager } from "../layer.manager";
 import { Dialog } from "./Dialog";
 import { DialogPanel } from "./DialogPanel";
 import { op_client } from "pixelpai_proto";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 export class DialogMediator extends BaseMediator {
     private scene: Phaser.Scene;
     private world: WorldService;

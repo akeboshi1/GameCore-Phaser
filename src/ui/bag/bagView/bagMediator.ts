@@ -6,9 +6,9 @@ import { IDropable } from "../../components/idropable";
 import { op_gameconfig } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
-import { InputText, InputTextEvent } from "tooqingui";
-import { BaseMediator } from "tooqingui";
-import { UIType } from "tooqingui";
+import { InputText, InputTextEvent } from "@apowo/phaserui";
+import { UIType } from "@apowo/phaserui";
+import { BaseMediator } from "../../components";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,

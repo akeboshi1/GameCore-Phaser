@@ -1,7 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { FriendPanel } from "./friend.panel";
-import { BaseMediator, UIType } from "tooqingui";
-
+import { UIType } from "@apowo/phaserui";
+import { BaseMediator } from "../../ui/components";
 export class FriendMediator extends BaseMediator {
     public static NAME: string = "FriendMediator";
     private mScene: Phaser.Scene;

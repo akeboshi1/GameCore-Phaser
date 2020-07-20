@@ -1,5 +1,5 @@
 import "phaser";
-import "tooqingui";
+import "@apowo/phaserui";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game, Scene } from "phaser";
@@ -590,13 +590,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
                 this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
                 this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
-                // this.mGame.plugins.removeGlobalPlugin("tooqinguiButton");
-                // this.mGame.plugins.removeGlobalPlugin("tooqinguiNinePatchPlugin");
-                // this.mGame.plugins.removeGlobalPlugin("tooqinguiInputText");
-                // this.mGame.plugins.removeGlobalPlugin("tooqinguiBBCodeTextPlugin");
-                // this.mGame.plugins.removeGlobalPlugin("tooqinguiMoveTo");
+                // this.mGame.plugins.removeGlobalPlugin("phaseruiButton");
+                // this.mGame.plugins.removeGlobalPlugin("phaseruiNinePatchPlugin");
+                // this.mGame.plugins.removeGlobalPlugin("phaseruiInputText");
+                // this.mGame.plugins.removeGlobalPlugin("phaseruiBBCodeTextPlugin");
+                // this.mGame.plugins.removeGlobalPlugin("phaseruiMoveTo");
                 this.mGame.plugins.removeScenePlugin("DragonBones");
-                // this.mGame.plugins.removeScenePlugin("tooqingui");
+                // this.mGame.plugins.removeScenePlugin("phaserui");
                 this.mGameEmitter.destroy();
                 this.roomManager.destroy();
                 this.uiManager.destroy();

@@ -5,7 +5,7 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
 import { UserInfoMediator } from "./UserInfoMediator";
-import { NinePatch, NineSliceButton } from "tooqingui";
+import { NinePatch, NineSliceButton } from "@apowo/phaserui";
 
 export class UserInfoPanel extends BasePanel {
     private mActor: DynamicImage;

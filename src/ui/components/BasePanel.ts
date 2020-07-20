@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
-import { Panel } from "tooqingui";
+import { Panel } from "@apowo/phaserui";
 export class BasePanel extends Panel {
     protected mInitialized: boolean;
     protected mTweening: boolean = false;
@@ -21,6 +21,10 @@ export class BasePanel extends Panel {
             this.dpr = Math.round(world.uiRatio || 1);
             this.scale = this.mWorld.uiScale;
         }
+    }
+
+    public updateUIState(ui: any) {
+
     }
 
     protected addResources(key: string, resource: any) {

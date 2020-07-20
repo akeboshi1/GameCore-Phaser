@@ -5,7 +5,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 
 export class DecorateControlMediator extends BaseMediator {
     public static NAME: string = "DecorateControlMediator";

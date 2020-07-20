@@ -4,9 +4,9 @@ import { NoticePanel } from "./NoticePanel";
 import { PBpacket } from "net-socket-packet";
 import { MessageType } from "../../const/MessageType";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator,UIType,Panel } from "tooqingui";
+import { UIType, Panel } from "@apowo/phaserui";
 import { Notice } from "./Notice";
-
+import { BaseMediator } from "../../ui/components";
 export class NoticeMediator extends BaseMediator {
     public static NAME: string = "NoticeMediator";
     private world: WorldService;

@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { Task } from "./Task";
 import { TaskPanel } from "./TaskPanel";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 
 export class TaskMediator extends BaseMediator {
     protected mView: TaskPanel;

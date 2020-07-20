@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 import { Font } from "../../utils/font";
-import { GameGridTable, GridTableConfig } from "tooqingui";
+import { GameGridTable, GridTableConfig } from "@apowo/phaserui";
 import { DynamicImage } from "../components/dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url } from "../../utils/resUtil";

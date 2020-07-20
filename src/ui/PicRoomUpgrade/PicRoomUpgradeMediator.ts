@@ -2,7 +2,7 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "tooqingui";
+import { BaseMediator } from "../../ui/components";
 import { PicRoomUpgradePanel } from "./PicRoomUpgradePanel";
 import { PicRoomUpgrade } from "./PicRoomUpgrade";
 

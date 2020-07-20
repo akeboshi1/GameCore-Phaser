@@ -14,7 +14,7 @@
     "outDir": "types",
     "typeRoots": [
       "node_modules/@types",
-      "node_modules/tooqingui/types"
+      "node_modules/@apowo/phaserui/types"
     ]
   }
 }

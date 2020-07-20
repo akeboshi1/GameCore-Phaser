@@ -1,5 +1,5 @@
 import { Font } from "../../utils/font";
-import { IButtonState } from "tooqingui";
+import { IButtonState } from "@apowo/phaserui";
 
 export class TextButton extends Phaser.GameObjects.Container implements IButtonState {
   private mText: Phaser.GameObjects.Text;

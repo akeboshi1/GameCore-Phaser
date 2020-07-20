@@ -4,7 +4,7 @@ import { i18n } from "../../i18n";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Font } from "../../utils/font";
 import { Logger } from "../../utils/log";
-import { NineSlicePatch, Button,NineSliceButton,TabButton  } from "tooqingui";
+import { NineSlicePatch, Button,NineSliceButton,TabButton  } from "@apowo/phaserui";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { PicHouseInfoPanel } from "./PicHouseInfoPanel";

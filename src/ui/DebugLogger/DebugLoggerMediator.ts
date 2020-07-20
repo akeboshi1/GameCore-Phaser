@@ -1,7 +1,8 @@
 import { WorldService } from "../../game/world.service";
 import { DebugLogger } from "./DebugLoggerPanel";
 import { ILayerManager } from "../layer.manager";
-import { BaseMediator,UIType } from "tooqingui";
+import { UIType } from "@apowo/phaserui";
+import { BaseMediator } from "../../ui/components";
 export class DebugLoggerMediator extends BaseMediator {
     public static NAME: string = "DebugLoggerMediator";
     private mScene: Phaser.Scene;

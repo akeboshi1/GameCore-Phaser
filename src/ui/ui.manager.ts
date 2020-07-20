@@ -9,9 +9,10 @@ import { UIMediatorType } from "./ui.mediatorType";
 import { InputTextFactory } from "./components/inputTextFactory";
 import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
 import { MessageType } from "../const/MessageType";
-import { BaseMediator } from "tooqingui";
 import { BagGroupMediator } from "../ui/baseView/bagGroup/bag.group.mediator";
 import { WorldService } from "../game";
+import { BaseMediator } from "../ui/components";
+import { BasePanel } from "../ui/components/BasePanel";
 // import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 // import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
 
@@ -561,7 +562,7 @@ export class UiManager extends PacketHandler {
                     } else {
                         const view = mediator.getView();
                         if (view)
-                            view.updateUIState(ui);
+                            (<BasePanel>view).updateUIState(ui);
                     }
                 }
             }

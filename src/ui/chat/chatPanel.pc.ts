@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import { TextArea, InputText, BBCodeText, RoundRectangle, NineSliceButton, NinePatch } from "tooqingui";
+import { TextArea, InputText, BBCodeText, RoundRectangle, NineSliceButton, NinePatch } from "@apowo/phaserui";
 import { Border, Url } from "../../utils/resUtil";
 import { CheckButton } from "../components/check.button";
 import { BaseChatPanel } from "./base.chat.panel";

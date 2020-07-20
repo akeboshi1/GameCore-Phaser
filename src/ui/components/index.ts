@@ -1,4 +1,5 @@
 export { BasePanel } from "./BasePanel";
+export { BaseMediator } from "./BaseMediator";
 export { DynamicImage } from "./dynamic.image";
 export { DynamicNinepatch } from "./dynamic.ninepatch";
 export { DynamicSprite } from "./dynamic.sprite";
@@ -16,7 +17,7 @@ export { DragDropIcon } from "./dragDropIcon";
 export { IItem } from "./baseitem";
 export { ScrollRect } from "./ScrollRect";
 export { TextButton } from "./TextButton";
-export { IconBtn,IBtnData } from "../components/icon.btn";
+export { IconBtn, IBtnData } from "../components/icon.btn";
 export { IconSelectBtn } from "../components/icon.select.btn";
 export { AlertView } from "../components/alert.view";
 export { InputPanel } from "./input.panel";

@@ -1,7 +1,7 @@
 import { Font } from "../../utils/font";
 import { op_client, op_def, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { i18n } from "../../i18n";
-import { BBCodeText } from "tooqingui";
+import { BBCodeText } from "@apowo/phaserui";
 export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;

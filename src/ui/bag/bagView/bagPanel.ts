@@ -4,7 +4,7 @@ import { Size } from "../../../utils/size";
 import { Logger } from "../../../utils/log";
 import { Border, Background, Url } from "../../../utils/resUtil";
 import { BagMediator } from "./bagMediator";
-import { InputText, NineSlicePatch } from "tooqingui";
+import { InputText, NineSlicePatch } from "@apowo/phaserui";
 import { Tool } from "../../../utils/tool";
 import { op_gameconfig } from "pixelpai_proto";
 import { IconBtn } from "../../components/icon.btn";

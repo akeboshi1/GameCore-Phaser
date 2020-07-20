@@ -7,8 +7,9 @@ import { ChatPanelPC } from "./chatPanel.pc";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator, UIType } from "tooqingui";
+import { UIType } from "@apowo/phaserui";
 import { Chat } from "./Chat";
+import { BaseMediator } from "../../ui/components";
 export class ChatMediator extends BaseMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;
