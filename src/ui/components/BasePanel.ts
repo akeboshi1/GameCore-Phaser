@@ -12,10 +12,12 @@ export class BasePanel extends Panel {
     protected dpr: number;
     protected mResources: Map<string, any>;
     protected mReLoadResources: Map<string, any>;
-    constructor(scene: Phaser.Scene, world: WorldService) {
+    protected mModuleName: string;
+    constructor(scene: Phaser.Scene, world: WorldService, moduleName?: string) {
         super(scene, world);
         this.mScene = scene;
         this.mWorld = world;
+        this.mModuleName = moduleName;
         this.mInitialized = false;
         if (world) {
             this.dpr = Math.round(world.uiRatio || 1);
@@ -31,7 +33,7 @@ export class BasePanel extends Panel {
         super.addResources(key, resource);
         if (resource.type) {
             if (this.scene.load[resource.type]) {
-                this.scene.load[resource.type](key, Url.getUIRes(resource.dpr, resource.texture), Url.getUIRes(resource.dpr, resource.data));
+                this.scene.load[resource.type](key, Url.getUIRes(resource.dpr, resource.texture, this.mModuleName), Url.getUIRes(resource.dpr, resource.data, this.mModuleName));
             }
         }
     }

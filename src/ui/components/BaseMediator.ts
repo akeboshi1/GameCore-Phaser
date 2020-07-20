@@ -41,10 +41,6 @@ export class BaseMediator implements IMediator {
         if (this.mView) this.mView.tweenExpand(show);
     }
 
-    /**
-     * @method tooqingui.BaseMediator#getView
-     * @return {*}
-     */
     getView(): Panel {
         return this.mView;
     }

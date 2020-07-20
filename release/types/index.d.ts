@@ -511,11 +511,9 @@ declare module 'game-core/utils/resUtil' {
         static RES_PATH: string;
         static RESUI_PATH: string;
         static MODULE_PATH: string;
-        static getRes(value: string): string;
-        static getUIRes(dpr: number, value: string): string;
+        static getRes(value: string, modulePath?: string): string;
+        static getUIRes(dpr: number, value: string, modulePath?: string): string;
         static getOsdRes(value: string): string;
-        static getModuleResUI(dpr: number, value: string): string;
-        static getModuleRes(value: string): string;
     }
     export class ResUtils {
         static getPartName(value: string): string;
@@ -1272,6 +1270,7 @@ declare module 'game-core/const/loader' {
 
 declare module 'game-core/scenes/basic.scene' {
     export class BasicScene extends Phaser.Scene {
+        protected mModuleName: string;
         constructor(config: string | Phaser.Types.Scenes.SettingsConfig);
         setViewPort(x: number, y: number, width: number, height: number): void;
     }
@@ -1332,15 +1331,22 @@ declare module 'game-core/scenes/gamepause' {
 declare module 'game-core/scenes/loading' {
     import { BasicScene } from "game-core/scenes/basic.scene";
     export class LoadingScene extends BasicScene {
-        constructor();
-        preload(): void;
-        init(data: any): void;
-        create(): void;
-        show(): Promise<unknown>;
-        close(): Promise<unknown>;
-        awake(data?: any): void;
-        sleep(): void;
-        getKey(): string;
+            constructor();
+            /**
+                * preload是scene创建的第二步
+                */
+            preload(): void;
+            /**
+                * 初始化 是scene创建的第一步
+                * @param data
+                */
+            init(data: any): void;
+            create(): void;
+            show(): Promise<unknown>;
+            close(): Promise<unknown>;
+            awake(data?: any): void;
+            sleep(): void;
+            getKey(): string;
     }
 }
 
@@ -3453,7 +3459,8 @@ declare module 'game-core/ui/components/BasePanel' {
         protected dpr: number;
         protected mResources: Map<string, any>;
         protected mReLoadResources: Map<string, any>;
-        constructor(scene: Phaser.Scene, world: WorldService);
+        protected mModuleName: string;
+        constructor(scene: Phaser.Scene, world: WorldService, moduleName?: string);
         updateUIState(ui: any): void;
         protected addResources(key: string, resource: any): void;
         protected get scaleWidth(): number;
@@ -3466,46 +3473,42 @@ declare module 'game-core/ui/components/BasePanel' {
 declare module 'game-core/ui/components/BaseMediator' {
     import { IAbstractPanel, Panel } from "@apowo/phaserui";
     export interface IMediator {
-            type: number;
-            isShow(): boolean;
-            tweenExpand(show: boolean): any;
-            resize(wid: any, hei: any): any;
-            show(param?: any): void;
-            update(param?: any): void;
-            hide(): void;
-            updateViewPos(): any;
-            destroy(): any;
-            isSceneUI(): boolean;
-            getView(): IAbstractPanel;
-            setParam(param: any): void;
-            getParam(): any;
+        type: number;
+        isShow(): boolean;
+        tweenExpand(show: boolean): any;
+        resize(wid: any, hei: any): any;
+        show(param?: any): void;
+        update(param?: any): void;
+        hide(): void;
+        updateViewPos(): any;
+        destroy(): any;
+        isSceneUI(): boolean;
+        getView(): IAbstractPanel;
+        setParam(param: any): void;
+        getParam(): any;
     }
     export class BaseMediator implements IMediator {
-            protected mView: Panel;
-            /**
-                * 面板处于打开状态
-                */
-            protected mShow: boolean;
-            protected mParam: any;
-            protected mUIType: number;
-            constructor();
-            get type(): number;
-            updateViewPos(): void;
-            tweenExpand(show: boolean): void;
-            /**
-                * @method tooqingui.BaseMediator#getView
-                * @return {*}
-                */
-            getView(): Panel;
-            hide(): void;
-            isSceneUI(): boolean;
-            isShow(): boolean;
-            resize(width?: number, height?: number): void;
-            show(param?: any): void;
-            update(param?: any): void;
-            setParam(param: any): void;
-            getParam(): any;
-            destroy(): void;
+        protected mView: Panel;
+        /**
+          * 面板处于打开状态
+          */
+        protected mShow: boolean;
+        protected mParam: any;
+        protected mUIType: number;
+        constructor();
+        get type(): number;
+        updateViewPos(): void;
+        tweenExpand(show: boolean): void;
+        getView(): Panel;
+        hide(): void;
+        isSceneUI(): boolean;
+        isShow(): boolean;
+        resize(width?: number, height?: number): void;
+        show(param?: any): void;
+        update(param?: any): void;
+        setParam(param: any): void;
+        getParam(): any;
+        destroy(): void;
     }
 }
 
@@ -3747,7 +3750,8 @@ declare module 'game-core/ui/components/item.slot' {
         protected mWid: number;
         protected mHei: number;
         protected isTipBoo: boolean;
-        constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr?: string, respng?: string, resjson?: string, resSlot?: string, selectRes?: string, subscriptRes?: string);
+        protected mModuleName: string;
+        constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr?: string, respng?: string, resjson?: string, resSlot?: string, selectRes?: string, subscriptRes?: string, moduleName?: string);
         set hasTip(value: boolean);
         get hasTip(): boolean;
         createUI(): void;
@@ -4396,7 +4400,7 @@ declare module 'game-core/ui/Shop/shop.itemSlot' {
     import { WorldService } from "game-core/game/world.service";
     import { op_gameconfig } from "pixelpai_proto";
     export class ShopItemSlot extends ItemSlot {
-        constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string);
+        constructor(scene: Phaser.Scene, world: WorldService, parentCon: Phaser.GameObjects.Container, x: number, y: number, resStr: string, respng: string, resjson: string, resSlot: string, selectRes?: string, subscriptRes?: string, moduleName?: string);
         shopDataChange(val: any, packID: number): void;
         destroy(): void;
         protected makeCoin(price: op_gameconfig.IPrice, y: number): void;
@@ -4991,7 +4995,7 @@ declare module 'game-core/ui/Bubble/InteractiveBubblePanel' {
     import { BasePanel } from "game-core/ui/components/BasePanel";
     import { IElement } from "game-core/rooms/element/element";
     export class InteractiveBubblePanel extends BasePanel {
-        constructor(scene: Phaser.Scene, world: WorldService);
+        constructor(scene: Phaser.Scene, world: WorldService, moduleName?: string);
         resize(width: number, height: number): void;
         init(): void;
         destroy(): void;

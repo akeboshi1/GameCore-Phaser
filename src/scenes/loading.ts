@@ -21,7 +21,9 @@ export class LoadingScene extends BasicScene {
   constructor() {
     super({ key: LoadingScene.name });
   }
-
+  /**
+   * preload是scene创建的第二步
+   */
   public preload() {
     // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
     // this.load.image("loading_bg", Url.getRes(""))
@@ -29,19 +31,23 @@ export class LoadingScene extends BasicScene {
     if (this.mWorld) {
       dpr = this.mWorld.uiRatio || 2;
     }
-    this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
-    this.load.atlas("loading", Url.getUIRes(dpr, "loading/loading.png"), Url.getUIRes(dpr, "loading/loading.json"));
-    this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));
+    this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png", this.mModuleName), Url.getUIRes(dpr, "loading/curtain.json", this.mModuleName));
+    this.load.atlas("loading", Url.getUIRes(dpr, "loading/loading.png", this.mModuleName), Url.getUIRes(dpr, "loading/loading.json", this.mModuleName));
+    this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png", this.mModuleName), Url.getUIRes(dpr, "loading/grass.json", this.mModuleName));
     this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
     // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
   }
-
+  /**
+   * 初始化 是scene创建的第一步
+   * @param data
+   */
   public init(data: any) {
     this.createFont();
     this.mWorld = data.world;
     this.mRoom = data.room;
     this.mRequestCom = false;
     this.mCallback = data.callBack;
+    this.mModuleName = data.moduleName;
   }
 
   public create() {
@@ -120,8 +126,8 @@ export class LoadingScene extends BasicScene {
   }
 
   public awake(data?: any) {
-      this.scale.on("resize", this.checkSize, this);
-      this.scene.wake();
+    this.scale.on("resize", this.checkSize, this);
+    this.scene.wake();
   }
 
   public sleep() {
@@ -168,17 +174,17 @@ export class LoadingScene extends BasicScene {
     this.grass.y = height;
 
     // this.bg.x = 0; // + this.bg.width * this.bg.originX;
-    this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY ;
+    this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY;
   }
 
   private createFont() {
     const element = document.createElement("style");
     document.head.appendChild(element);
     const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
-   // const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
+    // const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
     const styles2 = "@font-face { font-family: 'tt0173m_'; src: url('./resources/fonts/en/tt0173m_.ttf') format('truetype');font-display:swap }\n";
     const styles3 = "@font-face { font-family: 'tt0503m_'; src: url('./resources/fonts/en/tt0503m_.ttf') format('truetype'); font-display:swap}";
-   // sheet.insertRule(styles, 0);
+    // sheet.insertRule(styles, 0);
     sheet.insertRule(styles2, 0);
     sheet.insertRule(styles3, 0);
 
@@ -212,7 +218,7 @@ class Curtain {
       });
       this.downTween = this.scene.add.tween({
         targets: this.downDisplay,
-        props: {y: height },
+        props: { y: height },
         duration: 1000,
         onComplete: () => {
           this.upDisplay.visible = false;
@@ -239,7 +245,7 @@ class Curtain {
       });
       this.downTween = this.scene.add.tween({
         targets: this.downDisplay,
-        props: {y: height + this.downDisplay.displayHeight },
+        props: { y: height + this.downDisplay.displayHeight },
         duration: 1000,
         onComplete: () => {
           this.downDisplay.visible = false;

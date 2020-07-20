@@ -7,21 +7,21 @@ export class Url {
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
     static MODULE_PATH: string = "";
-    static getRes(value: string): string {
+    static getRes(value: string, modulePath?: string): string {
         // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
         if (CONFIG.BUNDLE_RESOURCES_ROOT) {
             return CONFIG.BUNDLE_RESOURCES_ROOT
                 + value;
         }
-        return Url.RES_PATH + value;
+        return modulePath ? Url.RES_PATH + value : Url.MODULE_PATH + modulePath + "release/resource/" + value;
     }
 
-    static getUIRes(dpr: number, value: string): string {
+    static getUIRes(dpr: number, value: string, modulePath?: string): string {
         if (CONFIG.BUNDLE_RESOURCES_ROOT) {
             return CONFIG.BUNDLE_RESOURCES_ROOT
                 + dpr + "x" + value;
         }
-        return Url.RESUI_PATH + `${dpr}x/${value}`;
+        return modulePath ? Url.RESUI_PATH + `${dpr}x/${value}` : Url.MODULE_PATH + modulePath + "release/resource/ui/" + value;
     }
 
     static getOsdRes(value: string): string {
@@ -32,13 +32,6 @@ export class Url {
             return CONFIG.osd + value;
         }
         return value;
-    }
-
-    static getModuleResUI(dpr: number, value: string): string {
-        return Url.MODULE_PATH + `${dpr}x/${value}`;
-    }
-    static getModuleRes(value: string): string {
-        return Url.MODULE_PATH + value;
     }
 }
 export class ResUtils {
@@ -269,7 +262,7 @@ export class Coin {
         } else if (type === op_def.CoinType.DIAMOND) {
             res = "钻石";
         } else if (type === op_def.CoinType.GOLD_COIN) {
-             res = "金币";
+            res = "金币";
         } else if (type === op_def.CoinType.QING_SONG_TANG) {
             // res = "";
         } else if (type === op_def.CoinType.TU_DING_COIN) {
