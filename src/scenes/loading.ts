@@ -120,9 +120,9 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
-    this.bg.visible = false;
-    this.grass.visible = false;
     if (this.curtain) {
+      this.bg.visible = false;
+      this.grass.visible = false;
       this.curtain.close().then(() => {
         this.scale.off("resize", this.checkSize, this);
         this.scene.sleep();

@@ -1,63 +1,43 @@
 {
 	"frames": {
-		"loading_1.png": {
+		"down.png": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 338,
-				"h": 253
+				"w": 720,
+				"h": 1075
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 338,
-				"h": 253
+				"w": 720,
+				"h": 1075
 			},
 			"sourceSize": {
-				"w": 338,
-				"h": 253
+				"w": 720,
+				"h": 1075
 			}
 		},
-		"loading_2.png": {
+		"up.png": {
 			"frame": {
-				"x": 1,
-				"y": 256,
-				"w": 338,
-				"h": 253
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 338,
-				"h": 253
-			},
-			"sourceSize": {
-				"w": 338,
-				"h": 253
-			}
-		},
-		"loading_3.png": {
-			"frame": {
-				"x": 341,
+				"x": 723,
 				"y": 1,
-				"w": 338,
-				"h": 253
+				"w": 720,
+				"h": 1054
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 338,
-				"h": 253
+				"w": 720,
+				"h": 1054
 			},
 			"sourceSize": {
-				"w": 338,
-				"h": 253
+				"w": 720,
+				"h": 1054
 			}
 		}
 	},
@@ -67,8 +47,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 680,
-			"h": 510
+			"w": 1444,
+			"h": 1077
 		},
 		"scale": "1"
 	}

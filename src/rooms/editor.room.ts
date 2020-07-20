@@ -447,7 +447,7 @@ export class EditorRoom extends Room implements EditorRoomService {
     }
 
     private onGameobjectDownHandler(pointer, gameobject) {
-        const com = gameobject.parentContainer;
+        const com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
         if (!com) {
             return;
         }
