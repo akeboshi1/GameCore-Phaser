@@ -132,7 +132,6 @@ export class UiManager extends PacketHandler {
             return;
         }
         const scene = this.mScene;
-        this.clearMediator();
         if (!this.mMedMap) {
             this.mMedMap = new Map();
             // ============场景中固定显示ui
@@ -158,36 +157,6 @@ export class UiManager extends PacketHandler {
         }
         // TOOD 通过统一的方法创建打开
         this.mMedMap.forEach((mediator: any, key: string) => {
-            // let map: Map<string, any>;
-            // const deskBoo: boolean = this.worldService.game.device.os.desktop ? true : false;
-            // switch (key) {
-            //     case LeftMediator.NAME:
-            //     case RightMediator.NAME:
-            //     case BottomMediator.NAME:
-            //         map = this.mSceneUIMap;
-            //         break;
-            //     // case TopMediator.NAME:
-            //     //     if (deskBoo) {
-            //     //         map = this.mSceneUIMap;
-            //     //     }
-            //     //     break;
-            //     case BagGroupMediator.NAME:
-            //         if (deskBoo) {
-            //             map = this.mSceneUIMap;
-            //         }
-            //         break;
-            //     case UIMediatorType.ChatMediator:
-            //         if (deskBoo) {
-            //             map = this.mSceneUIMap;
-            //         }
-            //         break;
-            //     case RankMediator.NAME:
-            //         if (deskBoo) {
-            //             map = this.mSceneUIMap;
-            //         }
-            //         break;
-            // }
-            // if (map) map.set(key, mediator);
             if (mediator.isSceneUI()) {
                 mediator.show();
             }
@@ -275,7 +244,7 @@ export class UiManager extends PacketHandler {
             return;
         }
         type = this.getPanelNameByAlias(type);
-        const className: string = type + "Mediator";
+        const className: string = type;
         let mediator: BaseMediator = this.mMedMap.get(className);
         if (!mediator) {
             // const path: string = `./${type}/${type}Mediator`;
