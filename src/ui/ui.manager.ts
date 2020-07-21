@@ -354,7 +354,7 @@ export class UiManager extends PacketHandler {
     }
 
     public register(key: string, mediator: BaseMediator) {
-        if (!mediator) {
+        if (!this.mMedMap) {
             this.mMedMap = new Map();
         }
         this.mMedMap.set(key, mediator);
