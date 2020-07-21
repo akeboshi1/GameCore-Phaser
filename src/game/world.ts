@@ -749,12 +749,26 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
+                return this.loadMods(this.mConfig.modules);
+            })
+            .then(() => {
                 this.createGame(content.keyEvents);
-                Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {
                 Logger.getInstance().log(err);
             });
+    }
+
+    private loadMods(mods: any[]) {
+        if (!mods || mods.length < 1) {
+            return;
+        }
+        const promises = [];
+        const rootPath: string = this.mConfig.modulePath;
+        for (const mod of mods) {
+            if (mod) promises.push(this.pluginManager.load(mod.name, path.resolve(rootPath, `/js/${mod.name}.min.js`)));
+        }
+        return Promise.all(promises);
     }
 
     private _newGame(): Phaser.Game {

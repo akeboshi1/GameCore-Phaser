@@ -266,9 +266,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addSkyBox(scenery);
             }
         }
-        if (this.mWorld.getConfig().modules) {
-            this.startLoadModule(0);
-        }
+
+        this.world.emitter.emit(SceneEvent.SCENE_CREATE, this);
+        // if (this.mWorld.getConfig().modules) {
+        // this.startLoadModule(0);
+        // }
         // this.mWorld.pluginManager.load("picatown-core", CONFIG.modulePath + `http://localhost:8081/ma/picatown.min.js`).then((plugin) => {
 
         //     Logger.getInstance().log(plugin);
@@ -596,6 +598,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private startLoadModule(index: number) {
         const modules: any = <string[]>this.mWorld.getConfig().modules;
+        if (!modules) {
+            return;
+        }
         let module = modules[index];
         if (!module) {
             return;
@@ -604,7 +609,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const moduleName: string = module.name;
         const moduleVersion: string = module.version || "0.0.2";
         const modulePath = CONFIG.modulePath !== undefined ? rootPath + "/mjxmjx/mods/testPica08/" + moduleVersion : rootPath;
-        this.mWorld.pluginManager.load(moduleName, modulePath + "/release/js/" + moduleName + ".min.js").then((plugin) => {
+        this.mWorld.pluginManager.load(moduleName, modulePath + "/release/js/" + `${moduleName}.min.js`).then((plugin) => {
             index += 1;
             module = modules[index];
             if (!module) {
