@@ -23,7 +23,6 @@ export class PluginManager {
                         const plugin: BasicPlugin = new def();
                         plugin.init(this.mWorld);
                         this.add(name, plugin);
-                        Logger.getInstance().log("=====>>: ", plugin);
                         this.mWorld.emitter.emit("MODULE_INIT", plugin);
                         resolve(plugin);
                         // this.mWorld.uiManager.showModuleUI();

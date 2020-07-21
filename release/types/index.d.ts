@@ -252,7 +252,6 @@ declare module 'game-core/game/world.service' {
         startHeartBeat(): any;
         changeScene(): any;
         getSize(): Size;
-        startLoadMod(path: string): any;
         getConfig(): any;
         getModuleRootPath(): string;
         getModulePath(name: string): string;
@@ -314,7 +313,6 @@ declare module 'game-core/game/world' {
             closeGame(): void;
             resize(width: number, height: number): void;
             onOrientationChange(orientation: number, width: number, height: number): void;
-            startLoadMod(url: string): void;
             startFullscreen(): void;
             stopFullscreen(): void;
             onGotoAnotherGame(packet: PBpacket): void;
@@ -1455,7 +1453,6 @@ declare module 'game-core/ui/ui.manager' {
         checkUIState(medName: string, show: boolean): void;
         showMed(type: string, ...param: any[]): void;
         showExistMed(type: string, extendName?: string): void;
-        showModuleUI(): void;
         register(key: string, mediator: BaseMediator): void;
         unregister(key: string): void;
     }

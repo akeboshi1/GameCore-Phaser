@@ -286,9 +286,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    public startLoadMod(url: string) {
-    }
-
     public startFullscreen() {
         if (!this.mGame) {
             return;
