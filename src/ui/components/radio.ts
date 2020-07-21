@@ -1,5 +1,5 @@
 import { Background } from "../../utils/resUtil";
-import { BBCodeText, NinePatch } from "@apowo/phaserui";
+import { BBCodeText, NinePatch } from "apowophaserui";
 export interface IRadioResConfig {
     wid: number;
     hei: number;

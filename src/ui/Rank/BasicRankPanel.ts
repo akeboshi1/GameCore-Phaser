@@ -3,7 +3,7 @@ import { op_client } from "pixelpai_proto";
 import { Background, Border, Url } from "../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { NinePatch } from "@apowo/phaserui";
+import { NinePatch } from "apowophaserui";
 
 export class BasicRankPanel extends BasePanel {
     protected mTitleLabel: Phaser.GameObjects.Text;

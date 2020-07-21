@@ -5,7 +5,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { PlayerState } from "../../rooms/element/element";
 import { BasePanel } from "../components/BasePanel";
-import { UIType } from "@apowo/phaserui";
+import { UIType } from "apowophaserui";
 import { BaseMediator } from "../../ui/components";
 export class ControlFMediator extends BaseMediator {
     public static NAME: string = "ControlFMediator";

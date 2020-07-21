@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
-import { Panel } from "@apowo/phaserui";
+import { Panel } from "apowophaserui";
 export class BasePanel extends Panel {
     protected mInitialized: boolean;
     protected mTweening: boolean = false;

@@ -5,7 +5,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { MessageType } from "../../const/MessageType";
 import { BasePanel } from "../components/BasePanel";
-import { UIType } from "@apowo/phaserui";
+import { UIType } from "apowophaserui";
 import { BaseMediator } from "../../ui/components";
 export class UserMenuMediator extends BaseMediator {
     private world: WorldService;

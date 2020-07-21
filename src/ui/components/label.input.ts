@@ -1,4 +1,4 @@
-import { InputText } from "@apowo/phaserui";
+import { InputText } from "apowophaserui";
 import { Logger } from "../../utils/log";
 import { Font } from "../../utils/font";
 

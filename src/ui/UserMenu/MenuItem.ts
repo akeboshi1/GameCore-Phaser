@@ -1,5 +1,5 @@
 import { IPatchesConfig } from "../components/patches.config";
-import { NinePatch, NineSliceButton } from "@apowo/phaserui";
+import { NinePatch, NineSliceButton } from "apowophaserui";
 import { Border } from "../../utils/resUtil";
 
 export class MenuItem extends NineSliceButton {

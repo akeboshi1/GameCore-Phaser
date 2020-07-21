@@ -4,13 +4,13 @@ import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { Font } from "../../utils/font";
-import { GameGridTable } from "@apowo/phaserui";
-import { GridTableConfig } from "@apowo/phaserui";
-import { NinePatchTabButton } from "@apowo/phaserui";
+import { GameGridTable } from "apowophaserui";
+import { GridTableConfig } from "apowophaserui";
+import { NinePatchTabButton } from "apowophaserui";
 import { Logger } from "../../utils/log";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
-import { NineSliceButton } from "@apowo/phaserui";
+import { NineSliceButton } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";

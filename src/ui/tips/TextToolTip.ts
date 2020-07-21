@@ -1,4 +1,4 @@
-import { NinePatch, BBCodeText } from "@apowo/phaserui";
+import { NinePatch, BBCodeText } from "apowophaserui";
 import { Font } from "../../utils/font";
 export class TextToolTips extends Phaser.GameObjects.Container {
     private bg: NinePatch;

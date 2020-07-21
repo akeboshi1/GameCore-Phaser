@@ -1,5 +1,5 @@
 import "phaser";
-import "@apowo/phaserui";
+import "apowophaserui";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game, Scene } from "phaser";

@@ -5,7 +5,7 @@ import { DecorateRoom } from "../../rooms/decorate.room";
 import { MessageType } from "../../const/MessageType";
 import { Direction, IElement } from "../../rooms/element/element";
 import { ISprite } from "../../rooms/element/sprite";
-import { Button } from "@apowo/phaserui";
+import { Button } from "apowophaserui";
 export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";
     private readonly minGrid: number = 2;

@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { FriendPanel } from "./friend.panel";
-import { UIType } from "@apowo/phaserui";
+import { UIType } from "apowophaserui";
 import { BaseMediator } from "../../ui/components";
 export class FriendMediator extends BaseMediator {
     public static NAME: string = "FriendMediator";

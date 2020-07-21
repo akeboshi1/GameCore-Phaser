@@ -5,7 +5,7 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { Url, Coin } from "../../utils/resUtil";
 import { i18n } from "../../i18n";
-import { Button, NineSlicePatch, NineSliceButton, GameSlider } from "@apowo/phaserui";
+import { Button, NineSlicePatch, NineSliceButton, GameSlider } from "apowophaserui";
 import { Handler } from "../../Handler/Handler";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { Logger } from "../../utils/log";

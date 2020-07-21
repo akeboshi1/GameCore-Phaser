@@ -1,7 +1,7 @@
 import { BasePanel } from "./BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { BBCodeText,Button } from "@apowo/phaserui";
+import { BBCodeText,Button } from "apowophaserui";
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";
     private mOkBtn: Button;

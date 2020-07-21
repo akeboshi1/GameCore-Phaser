@@ -1,6 +1,6 @@
 import { BaseChatPanel } from "../base.chat.panel";
 import { WorldService } from "../../../game/world.service";
-import { TextArea, InputText, BBCodeText, NinePatch, NineSliceButton } from "@apowo/phaserui";
+import { TextArea, InputText, BBCodeText, NinePatch, NineSliceButton } from "apowophaserui";
 import { Url, Border, WhiteButton } from "../../../utils/resUtil";
 export class ChatPanelMobile extends BaseChatPanel {
     private mTextArea: TextArea;

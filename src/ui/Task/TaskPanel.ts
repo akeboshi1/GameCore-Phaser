@@ -7,7 +7,7 @@ import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url } from "../../utils/resUtil";
-import { GameScroller, NineSlicePatch, Button, NineSliceButton, BBCodeText } from "@apowo/phaserui";
+import { GameScroller, NineSlicePatch, Button, NineSliceButton, BBCodeText } from "apowophaserui";
 export class TaskPanel extends BasePanel {
     private key = "task_ui";
     private blackBg: Phaser.GameObjects.Graphics;

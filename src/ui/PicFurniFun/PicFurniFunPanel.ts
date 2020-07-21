@@ -8,7 +8,7 @@ import { i18n } from "../../i18n";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Element } from "../../rooms/element/element";
 import { IFramesModel, FramesModel } from "../../rooms/display/frames.model";
-import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText } from "@apowo/phaserui";
+import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText } from "apowophaserui";
 import { DetailDisplay } from "./DetailDisplay";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
