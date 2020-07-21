@@ -3,7 +3,7 @@ import { Size } from "../../../utils/size";
 import { WorldService } from "../../../game/world.service";
 import { Url, Border, Background } from "../../../utils/resUtil";
 import { IconBtn } from "../../components/icon.btn";
-import { NineSlicePatch } from "@apowo/phaserui";
+import { NineSlicePatch } from "apowophaserui";
 import { StorageMediator } from "./storageMediator";
 import { UIMediatorType } from "../../ui.mediatorType";
 import { BasePanel } from "../../components/BasePanel";

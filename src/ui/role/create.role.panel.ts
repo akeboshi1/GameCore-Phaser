@@ -1,7 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { ResUtils, Url } from "../../utils/resUtil";
-import { InputText, NineSliceButton, NinePatch } from "@apowo/phaserui";
+import { InputText, NineSliceButton, NinePatch } from "apowophaserui";
 import { Logger } from "../../utils/log";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";

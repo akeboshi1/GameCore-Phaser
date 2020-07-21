@@ -1,4 +1,4 @@
-import { NinePatch } from "@apowo/phaserui";
+import { NinePatch } from "apowophaserui";
 import { Url } from "../../utils/resUtil";
 
 export class DynamicNinepatch {

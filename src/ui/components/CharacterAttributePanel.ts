@@ -1,6 +1,6 @@
 import { Font } from "../../utils/font";
 import { op_pkt_def } from "pixelpai_proto";
-import { BBCodeText } from "@apowo/phaserui";
+import { BBCodeText } from "apowophaserui";
 export class CharacterAttributePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;

@@ -3,7 +3,7 @@ import { StoragePanel } from "./storagePanel";
 import { ILayerManager } from "../../layer.manager";
 import { BasePanel } from "../../components/BasePanel";
 import { BaseMediator } from "../../components";
-import { UIType } from "@apowo/phaserui";
+import { UIType } from "apowophaserui";
 
 export class StorageMediator extends BaseMediator {
     public static NAME: string = "StorageMediator";

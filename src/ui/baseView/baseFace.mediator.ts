@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../utils/size";
-import { Panel, UIType } from "@apowo/phaserui";
+import { Panel, UIType } from "apowophaserui";
 import { BaseMediator } from "../../ui/components";
 /**
  * 场景UImediator

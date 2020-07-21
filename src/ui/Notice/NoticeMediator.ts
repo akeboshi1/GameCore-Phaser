@@ -4,7 +4,7 @@ import { NoticePanel } from "./NoticePanel";
 import { PBpacket } from "net-socket-packet";
 import { MessageType } from "../../const/MessageType";
 import { BasePanel } from "../components/BasePanel";
-import { UIType, Panel } from "@apowo/phaserui";
+import { UIType, Panel } from "apowophaserui";
 import { Notice } from "./Notice";
 import { BaseMediator } from "../../ui/components";
 export class NoticeMediator extends BaseMediator {

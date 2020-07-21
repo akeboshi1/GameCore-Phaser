@@ -2,7 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { Border } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { Font } from "../../utils/font";
-import { NinePatch } from "@apowo/phaserui";
+import { NinePatch } from "apowophaserui";
 import { WorldService } from "../../game/world.service";
 
 export class NoticePanel extends BasePanel {

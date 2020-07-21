@@ -9,7 +9,7 @@
 //   ../game-capsule/lib/helpers
 //   ../events
 //   ../buffer
-//   ../@apowo/phaserui
+//   ../apowophaserui
 
 declare module 'game-core' {
     export * from "game-core/game";
@@ -271,7 +271,7 @@ declare module 'game-core/game/world.service' {
 
 declare module 'game-core/game/world' {
     import "phaser";
-    import "@apowo/phaserui";
+    import "apowophaserui";
     import { WorldService } from "game-core/game/world.service";
     import { PacketHandler, PBpacket } from "net-socket-packet";
     import { IConnectListener, SocketConnection, SocketConnectionError, ConnectionService } from "game-core/net";
@@ -3447,7 +3447,7 @@ declare module 'game-core/ui/components/inputTextFactory' {
 
 declare module 'game-core/ui/components/BasePanel' {
     import { WorldService } from "game-core/game/world.service";
-    import { Panel } from "@apowo/phaserui";
+    import { Panel } from "apowophaserui";
     export class BasePanel extends Panel {
         protected mInitialized: boolean;
         protected mTweening: boolean;
@@ -3471,7 +3471,7 @@ declare module 'game-core/ui/components/BasePanel' {
 }
 
 declare module 'game-core/ui/components/BaseMediator' {
-    import { IAbstractPanel, Panel } from "@apowo/phaserui";
+    import { IAbstractPanel, Panel } from "apowophaserui";
     export interface IMediator {
         type: number;
         isShow(): boolean;
@@ -3523,7 +3523,7 @@ declare module 'game-core/ui/components/dynamic.image' {
 }
 
 declare module 'game-core/ui/components/dynamic.ninepatch' {
-    import { NinePatch } from "@apowo/phaserui";
+    import { NinePatch } from "apowophaserui";
     export class DynamicNinepatch {
         protected mUrl: string;
         protected mLoadCompleteCallBack?: Function;
@@ -3545,7 +3545,7 @@ declare module 'game-core/ui/components/dynamic.sprite' {
 }
 
 declare module 'game-core/ui/components/radio' {
-    import { BBCodeText } from "@apowo/phaserui";
+    import { BBCodeText } from "apowophaserui";
     export interface IRadioResConfig {
         wid: number;
         hei: number;
@@ -3816,7 +3816,7 @@ declare module 'game-core/ui/components/ScrollRect' {
 }
 
 declare module 'game-core/ui/components/TextButton' {
-    import { IButtonState } from "@apowo/phaserui";
+    import { IButtonState } from "apowophaserui";
     export class TextButton extends Phaser.GameObjects.Container implements IButtonState {
         constructor(scene: Phaser.Scene, dpr: number, scale?: number, text?: string, x?: number, y?: number);
         setText(val: string): void;
@@ -3915,7 +3915,7 @@ declare module 'game-core/ui/components/input.panel' {
 }
 
 declare module 'game-core/ui/components/checkbox.group' {
-    export { IButtonState } from "@apowo/phaserui";
+    export { IButtonState } from "apowophaserui";
     export class CheckboxGroup extends Phaser.Events.EventEmitter {
         constructor();
         appendItem(item: any): this;
@@ -4223,7 +4223,7 @@ declare module 'game-core/ui/Notice/Notice' {
 declare module 'game-core/ui/Notice/NoticeMediator' {
     import { WorldService } from "game-core/game/world.service";
     import { ILayerManager } from "game-core/ui/layer.manager";
-    import { Panel } from "@apowo/phaserui";
+    import { Panel } from "apowophaserui";
     import { BaseMediator } from "game-core/ui/components";
     export class NoticeMediator extends BaseMediator {
         static NAME: string;
@@ -4263,7 +4263,7 @@ declare module 'game-core/ui/Rank/BasicRankPanel' {
     import { BasePanel } from "game-core/ui/components/BasePanel";
     import { op_client } from "pixelpai_proto";
     import { WorldService } from "game-core/game/world.service";
-    import { NinePatch } from "@apowo/phaserui";
+    import { NinePatch } from "apowophaserui";
     export class BasicRankPanel extends BasePanel {
         protected mTitleLabel: Phaser.GameObjects.Text;
         protected mTexts: Phaser.GameObjects.Text[];
@@ -4448,7 +4448,7 @@ declare module 'game-core/ui/UserInfo/UserInfoPanel' {
 
 declare module 'game-core/ui/UserMenu/MenuItem' {
     import { IPatchesConfig } from "game-core/ui/components/patches.config";
-    import { NinePatch, NineSliceButton } from "@apowo/phaserui";
+    import { NinePatch, NineSliceButton } from "apowophaserui";
     export class MenuItem extends NineSliceButton {
         protected mMenus: MenuItem[];
         protected mChild: Phaser.GameObjects.Container;
@@ -4947,7 +4947,7 @@ declare module 'game-core/ui/Bubble/InteractiveBubble' {
 declare module 'game-core/ui/Bubble/InteractionBubbleContainer' {
     import { op_client } from "pixelpai_proto";
     import { Handler } from "game-core/Handler/Handler";
-    import { BaseUI } from "@apowo/phaserui";
+    import { BaseUI } from "apowophaserui";
     import { InteractionBubbleCell } from "game-core/ui/Bubble/InteractionBubbleCell";
     export class InteractionBubbleContainer extends BaseUI {
         id: number;
@@ -5289,7 +5289,7 @@ declare module 'game-core/rooms/sky.box/editor.sky.box.manager' {
 
 declare module 'game-core/ui/baseView/baseFace.mediator' {
     import { WorldService } from "game-core/game/world.service";
-    import { Panel } from "@apowo/phaserui";
+    import { Panel } from "apowophaserui";
     import { BaseMediator } from "game-core/ui/components";
     /**
       * 场景UImediator

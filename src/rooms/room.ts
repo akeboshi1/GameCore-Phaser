@@ -607,8 +607,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         const rootPath: string = this.mWorld.getConfig().modulePath;
         const moduleName: string = module.name;
-        // const moduleVersion: string = module.version;
-        this.mWorld.pluginManager.load(moduleName, rootPath + "/js/" + `${moduleName}.min.js`).then((plugin) => {
+        const moduleVersion: string = module.version || "0.0.2";
+        const modulePath = CONFIG.modulePath !== undefined ? rootPath + "/mjxmjx/mods/testPica08/" + moduleVersion : rootPath;
+        this.mWorld.pluginManager.load(moduleName, modulePath + "/release/js/" + `${moduleName}.min.js`).then((plugin) => {
             index += 1;
             module = modules[index];
             if (!module) {

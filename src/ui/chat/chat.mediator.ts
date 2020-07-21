@@ -7,7 +7,7 @@ import { ChatPanelPC } from "./chatPanel.pc";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
 import { BasePanel } from "../components/BasePanel";
-import { UIType } from "@apowo/phaserui";
+import { UIType } from "apowophaserui";
 import { Chat } from "./Chat";
 import { BaseMediator } from "../../ui/components";
 export class ChatMediator extends BaseMediator {

@@ -1,5 +1,5 @@
 
-import { InputText } from "@apowo/phaserui";
+import { InputText } from "apowophaserui";
 import { LabelInput } from "../components/label.input";
 
 export class NumberCounter extends Phaser.GameObjects.Container {

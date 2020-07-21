@@ -10,7 +10,7 @@ import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { IconBtn } from "../components/icon.btn";
 import { FriendMediator } from "./friend.mediator";
 import { UIMediatorType } from "../ui.mediatorType";
-import { NinePatch } from "@apowo/phaserui";
+import { NinePatch } from "apowophaserui";
 export interface IFriendIcon {
     res: string;
     name: string;

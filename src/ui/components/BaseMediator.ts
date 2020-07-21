@@ -1,4 +1,4 @@
-import { IAbstractPanel, Panel, UIType } from "@apowo/phaserui";
+import { IAbstractPanel, Panel, UIType } from "apowophaserui";
 
 export interface IMediator {
     type: number;

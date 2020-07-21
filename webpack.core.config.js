@@ -32,7 +32,7 @@ const config = {
         alias: {
             phaser: phaser,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-            phaserui: path.join(__dirname,"/node_modules/@apowo/phaserui/dist/phaserui.js")
+            phaserui: path.join(__dirname,"/node_modules/apowophaserui/dist/phaserui.js")
         }
     },
     // optimization: {

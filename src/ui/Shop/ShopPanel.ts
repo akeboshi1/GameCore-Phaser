@@ -5,7 +5,7 @@ import { ShopItemSlot } from "./shop.itemSlot";
 import { Size } from "../../utils/size";
 import { op_client } from "pixelpai_proto";
 import { ShopMediator } from "./ShopMediator";
-import { NinePatch } from "@apowo/phaserui";
+import { NinePatch } from "apowophaserui";
 import { IconBtn } from "../components/icon.btn";
 import { UIMediatorType } from "../ui.mediatorType";
 

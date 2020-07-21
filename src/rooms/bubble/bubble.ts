@@ -1,4 +1,4 @@
-import { NinePatch } from "@apowo/phaserui";
+import { NinePatch } from "apowophaserui";
 import { op_client } from "pixelpai_proto";
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { Url } from "../../utils/resUtil";
