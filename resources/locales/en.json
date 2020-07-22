@@ -109,5 +109,10 @@
     "goodvalue": "Good value",
     "compveness": "Competitiveness",
     "prosperity": "Prosperity"
+  },
+  "business_street": {
+    "commercial_street": "COMMERCIAL STREET",
+    "my_store": "MY STORE",
+    "enter": "Enter"
   }
 }

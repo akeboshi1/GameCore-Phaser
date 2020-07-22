@@ -1,8 +1,28 @@
 {
 	"frames": {
-		"bg": {
+		"bear": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 47,
+				"h": 46
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 47,
+				"h": 46
+			},
+			"sourceSize": {
+				"w": 47,
+				"h": 46
+			}
+		},
+		"bg": {
+			"frame": {
+				"x": 50,
 				"y": 1,
 				"w": 896,
 				"h": 915
@@ -22,7 +42,7 @@
 		},
 		"block": {
 			"frame": {
-				"x": 899,
+				"x": 948,
 				"y": 1,
 				"w": 73,
 				"h": 73
@@ -38,6 +58,26 @@
 			"sourceSize": {
 				"w": 73,
 				"h": 73
+			}
+		},
+		"moon": {
+			"frame": {
+				"x": 1,
+				"y": 76,
+				"w": 47,
+				"h": 47
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 47,
+				"h": 47
+			},
+			"sourceSize": {
+				"w": 47,
+				"h": 47
 			}
 		},
 		"price_bg": {
@@ -62,7 +102,7 @@
 		},
 		"slider_bg": {
 			"frame": {
-				"x": 974,
+				"x": 1023,
 				"y": 1,
 				"w": 11,
 				"h": 10
@@ -82,8 +122,8 @@
 		},
 		"slider_rate": {
 			"frame": {
-				"x": 987,
-				"y": 1,
+				"x": 1023,
+				"y": 13,
 				"w": 11,
 				"h": 10
 			},
@@ -100,10 +140,50 @@
 				"h": 10
 			}
 		},
+		"star": {
+			"frame": {
+				"x": 948,
+				"y": 76,
+				"w": 38,
+				"h": 44
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 38,
+				"h": 44
+			},
+			"sourceSize": {
+				"w": 38,
+				"h": 44
+			}
+		},
+		"sun": {
+			"frame": {
+				"x": 988,
+				"y": 76,
+				"w": 50,
+				"h": 47
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 50,
+				"h": 47
+			},
+			"sourceSize": {
+				"w": 50,
+				"h": 47
+			}
+		},
 		"title": {
 			"frame": {
-				"x": 1000,
-				"y": 1,
+				"x": 378,
+				"y": 918,
 				"w": 535,
 				"h": 121
 			},
@@ -127,8 +207,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1536,
-			"h": 994
+			"w": 1039,
+			"h": 1040
 		},
 		"scale": "1"
 	}
