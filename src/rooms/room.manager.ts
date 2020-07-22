@@ -136,7 +136,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 room = new Room(this);
                 this.mRooms.push(room);
                 room.addActor(vw.actor);
-                room.enter(vw.scene);
+                room.enter(vw.scene, () => {
+
+                });
                 this.mCurRoom = room;
                 this.mWorld.emitter.emit(SceneEvent.SCENE_CREATE);
             });
@@ -166,7 +168,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     private async leaveScene(room: IRoomService) {
         if (!room) return;
         return new Promise((resolve, reject) => {
-            const loading: LoadingScene = <LoadingScene> this.mWorld.game.scene.getScene(LoadingScene.name);
+            const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
             if (loading) {
                 loading.show().then(() => {
                     this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);

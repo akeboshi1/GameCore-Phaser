@@ -4,6 +4,7 @@ import { IRoomService } from "../room";
 import { WallDisplay } from "../display/wall.display";
 import { Url } from "../../utils/resUtil";
 import { Pos } from "../../utils/pos";
+import { WallManager } from "./wall.manager";
 
 export enum Direction {
     UP = "up",
@@ -28,11 +29,11 @@ export class Wall extends BlockObject {
     }
 
     setPosition(pos: Pos) {
-      this.mPosition = pos;
-      if (this.mDisplay) {
-        this.mDisplay.x = pos.x;
-        this.mDisplay.y = pos.y;
-      }
+        this.mPosition = pos;
+        if (this.mDisplay) {
+            this.mDisplay.x = pos.x;
+            this.mDisplay.y = pos.y;
+        }
     }
 
     protected createDisplay(): ElementDisplay {
@@ -57,7 +58,7 @@ export class Wall extends BlockObject {
     }
 
     protected onInitializedHandler() {
-      this.mDisplay.setDir(this.mDirection);
+        this.mDisplay.setDir(this.mDirection);
     }
 
     protected addDisplay() {
@@ -85,6 +86,6 @@ export class Wall extends BlockObject {
     }
 
     get id(): number {
-      return this.mID;
+        return this.mID;
     }
 }

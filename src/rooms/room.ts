@@ -151,7 +151,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public enter(data: op_client.IScene): void {
+    public enter(data: op_client.IScene, callback?: Function): void {
         const size: Size = this.mWorld.getSize();
         if (!data) {
             // Logger.getInstance().error("wrong room");
@@ -195,9 +195,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public startLoad() { }
 
     public completeLoad() {
+        const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+        if (loadingScene) loadingScene.sleep();
         if (this.mWorld.game.scene.getScene(PlayScene.name)) {
-            const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-            if (loadingScene) loadingScene.sleep();
             return;
         }
         this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {

@@ -228,6 +228,7 @@ declare module 'game-core/game/world.service' {
     import { ConnectionService } from "game-core/net";
     import { ISoundConfig } from "game-core/game/sound.manager";
     import { PluginManager } from "game-core/plugins";
+    import { ILoadingManager } from "game-core/loading/loading.manager";
     export interface WorldService {
         connection: ConnectionService;
         clock: Clock;
@@ -239,6 +240,7 @@ declare module 'game-core/game/world.service' {
         readonly uiManager: UiManager;
         readonly inputManager: InputManager;
         readonly mouseManager: MouseManager;
+        readonly loadingManager: ILoadingManager;
         readonly httpService: HttpService;
         readonly uiScale: number;
         readonly scaleRatio: number;
@@ -286,6 +288,7 @@ declare module 'game-core/game/world' {
     import { HttpService } from "game-core/net";
     import { Clock, ClockReadyListener } from "game-core/rooms/Clock";
     import { ISoundConfig } from "game-core/game/sound.manager";
+    import { ILoadingManager } from "game-core/loading/loading.manager";
     import { PluginManager } from "game-core/plugins";
     export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
             static SCALE_CHANGE: string;
@@ -337,6 +340,7 @@ declare module 'game-core/game/world' {
             get account(): Account;
             get modulePath(): string;
             get modules(): any;
+            get loadingManager(): ILoadingManager;
             enableClick(): void;
             disableClick(): void;
             showLoading(): Promise<any>;
@@ -737,7 +741,7 @@ declare module 'game-core/rooms/room' {
         protected mScaleRatio: number;
         protected mStateMap: Map<string, State>;
         constructor(manager: IRoomManager);
-        enter(data: op_client.IScene): void;
+        enter(data: op_client.IScene, callback?: Function): void;
         onFullPacketReceived(sprite_t: op_def.NodeType): void;
         onClockReady(): void;
         startLoad(): void;
@@ -888,7 +892,10 @@ declare module 'game-core/rooms/wall/wall.manager' {
     import { PacketHandler } from "net-socket-packet";
     export class WallManager extends PacketHandler {
         protected mRoom: IRoomService;
+        static COMPLETE: string;
         constructor(mRoom: IRoomService);
+        hasElement(id: any): boolean;
+        deleElement(id: any): void;
         destroy(): void;
         protected _add(x: number, y: number, dir: Direction): void;
     }
@@ -1911,6 +1918,28 @@ declare module 'game-core/game/sound.manager' {
     }
 }
 
+declare module 'game-core/loading/loading.manager' {
+    import { WorldService } from "game-core/game/world.service";
+    export interface IAsset {
+        type: string;
+        key: string;
+        source: string;
+    }
+    export interface ILoadingManager {
+        start(): Promise<any>;
+        addAssets(asset: IAsset[]): Promise<any>;
+        destroy(): any;
+    }
+    export class LoadingManager {
+        constructor(world: WorldService);
+        start(callBack?: Function): Promise<never>;
+        addAssets(assets: IAsset[]): Promise<void>;
+        startup(scene: Phaser.Scene): Promise<void>;
+        destroy(): void;
+        get game(): Phaser.Game;
+    }
+}
+
 declare module 'game-core/game/element.storage' {
     import { FramesModel, IFramesModel } from "game-core/rooms/display/frames.model";
     import { DragonbonesModel, IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
@@ -1984,11 +2013,14 @@ declare module 'game-core/rooms/element/element.manager' {
     }
     export class ElementManager extends PacketHandler implements IElementManager {
         protected mRoom: IRoomService;
+        static COMPLETE: string;
         hasAddComplete: boolean;
         protected mElements: Map<number, Element>;
         protected mMap: number[][];
         constructor(mRoom: IRoomService);
         init(): void;
+        hasElement(id: any): boolean;
+        deleElement(id: any): void;
         get(id: number): Element;
         remove(id: number): IElement;
         getElements(): IElement[];
@@ -2027,6 +2059,7 @@ declare module 'game-core/rooms/player/player.manager' {
     import { IElement } from "game-core/rooms/element/element";
     import { Actor } from "game-core/rooms/player/Actor";
     export class PlayerManager extends PacketHandler implements IElementManager {
+        static COMPLETE: string;
         hasAddComplete: boolean;
         constructor(mRoom: Room);
         createActor(actor: op_client.IActor): void;
@@ -2038,6 +2071,8 @@ declare module 'game-core/rooms/player/player.manager' {
         stopActorMove(): void;
         get(id: number): Player;
         add(sprite: ISprite[]): void;
+        hasElement(id: any): boolean;
+        deleElement(id: any): void;
         remove(id: number): IElement;
         getElements(): IElement[];
         set(id: number, player: Player): void;
@@ -2064,8 +2099,10 @@ declare module 'game-core/rooms/terrain/terrain.manager' {
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
     export class TerrainManager extends PacketHandler implements IElementManager {
         protected mRoom: IRoomService;
+        static COMPLETE: string;
         hasAddComplete: boolean;
         protected mTerrains: Map<number, Terrain>;
+        protected mInitMap: Map<number, any>;
         protected mGameConfig: IElementStorage;
         protected mPacketFrameCount: number;
         protected mListener: SpriteAddCompletedListener;
@@ -2074,6 +2111,8 @@ declare module 'game-core/rooms/terrain/terrain.manager' {
         init(): void;
         destroy(): void;
         get(id: number): Terrain;
+        hasElement(id: any): boolean;
+        deleElement(id: any): void;
         add(sprites: ISprite[]): void;
         remove(id: number): IElement;
         getElements(): IElement[];
@@ -2215,7 +2254,6 @@ declare module 'game-core/rooms/cameras/viewblock.manager' {
 declare module 'game-core/rooms/element/element' {
     import { IElementManager, ElementManager } from "game-core/rooms/element/element.manager";
     import { IFramesModel } from "game-core/rooms/display/frames.model";
-    import { FramesDisplay } from "game-core/rooms/display/frames.display";
     import { IRoomService } from "game-core/rooms/room";
     import { ElementDisplay } from "game-core/rooms/display/element.display";
     import { IDragonbonesModel } from "game-core/rooms/display/dragonbones.model";
@@ -2373,7 +2411,7 @@ declare module 'game-core/rooms/element/element' {
         protected loadDisplayInfo(): void;
         protected addDisplay(): void;
         protected setDepth(depth: number): void;
-        protected onDisplayReady(field?: FramesDisplay): void;
+        protected onDisplayReady(field?: any): void;
         protected onUpdateAnimationHandler(): void;
         protected updateBubble(): void;
         protected onMoveStart(): void;
@@ -2425,6 +2463,7 @@ declare module 'game-core/rooms/cameras/block.object' {
         clear(): void;
         protected addDisplay(): void;
         protected removeDisplay(): void;
+        protected onDisplayReady(): void;
         protected addToBlock(): void;
         protected removeFromBlock(remove?: boolean): void;
         protected updateBlock(): void;
@@ -2560,8 +2599,8 @@ declare module 'game-core/rooms/terrain/terrain' {
         destroy(): void;
         protected createDisplay(): ElementDisplay;
         protected addDisplay(): void;
+        protected onDisplayReady(field?: TerrainDisplay): void;
         protected setDepth(): void;
-        protected onInitializedHandler(): void;
         get id(): number;
         get dir(): number;
         get roomService(): IRoomService;
@@ -2760,6 +2799,7 @@ declare module 'game-core/rooms/player/player' {
         changeState(val?: string): void;
         setPosition(pos: Pos): void;
         getPosition(): Pos;
+        protected onDisplayReady(field?: any): void;
         protected onCheckDirection(params: any): void;
         protected onMoveStart(): void;
         protected onMoveComplete(): void;
@@ -4974,28 +5014,6 @@ declare module 'game-core/editor/canvas/editor.canvas' {
         constructor(config: IEditorCanvasConfig);
         resize(bounds: IRectangle): void;
         destroy(): void;
-    }
-}
-
-declare module 'game-core/loading/loading.manager' {
-    import { WorldService } from "game-core/game/world.service";
-    export interface IAsset {
-        type: string;
-        key: string;
-        source: string;
-    }
-    export interface ILoadingManager {
-        start(): Promise<any>;
-        addAssets(asset: IAsset[]): Promise<any>;
-        destroy(): any;
-    }
-    export class LoadingManager {
-        constructor(world: WorldService);
-        start(callBack?: Function): Promise<never>;
-        addAssets(assets: IAsset[]): Promise<void>;
-        startup(scene: Phaser.Scene): Promise<void>;
-        destroy(): void;
-        get game(): Phaser.Game;
     }
 }
 

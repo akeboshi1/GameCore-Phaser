@@ -30,9 +30,11 @@ export interface Task {
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
+    public static COMPLETE: string = "element_total_complete";
     public hasAddComplete: boolean = false;
     protected mElements: Map<number, Element> = new Map();
     protected mMap: number[][];
+    private mInitMap: Map<number, any> = new Map();
     private mGameConfig: IElementStorage;
     constructor(protected mRoom: IRoomService) {
         super();
@@ -62,6 +64,17 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public init() {
         // this.destroy();
+    }
+
+    public hasElement(id: any): boolean {
+        return this.mInitMap.has(id);
+    }
+
+    public deleElement(id: any) {
+        this.mInitMap.delete(id);
+        if (this.mInitMap.size < 1) {
+            this.roomService.world.emitter.emit(ElementManager.COMPLETE);
+        }
     }
 
     public get(id: number): Element {
@@ -111,9 +124,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
-        if (!this.mElements) return;
-        this.mElements.forEach((element) => this.remove(element.id));
-        this.mElements.clear();
+        if (this.mInitMap) {
+            this.mInitMap.forEach((element) => this.remove(element.id));
+            this.mInitMap.clear();
+        }
+        if (this.mElements) {
+            this.mElements.forEach((element) => this.remove(element.id));
+            this.mElements.clear();
+        }
     }
 
     public update(time: number, delta: number) { }
@@ -189,6 +207,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected _add(sprite: ISprite, addMap?: boolean): Element {
         if (addMap === undefined) addMap = true;
+        this.mInitMap.set(sprite.id || 0, sprite);
         let ele = this.mElements.get(sprite.id);
         if (ele) {
             ele.model = sprite;
@@ -204,6 +223,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
+        Logger.getInstance().log("element");
     }
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {

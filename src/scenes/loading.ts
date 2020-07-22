@@ -89,15 +89,6 @@ export class LoadingScene extends BasicScene {
     this.bg.play("loading_anis");
 
     this.curtain = new Curtain(this, this.mWorld);
-    // this.curtain.open().then(() => {
-    // this.bg.x = 0;
-    // this.add.tween({
-    //   targets: this.bg,
-    //   props: { x: width, rotation: -720 },
-    //   duration: 2000,
-    //   loop: -1
-    // });
-    // });
 
     this.checkSize(new Size(width, height));
     if (this.mCallback) {
@@ -107,7 +98,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public async show() {
-    this.awake();
+    if (!this.scene.isActive()) this.awake();
     if (!this.curtain) {
       return Promise.resolve();
     }
@@ -126,6 +117,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public awake(data?: any) {
+    if (this.scene.isActive()) return;
     this.scale.on("resize", this.checkSize, this);
     this.scene.wake();
   }
@@ -134,6 +126,7 @@ export class LoadingScene extends BasicScene {
     if (this.bg) this.bg.visible = false;
     if (this.grass) this.grass.visible = false;
     if (this.curtain) {
+      if (this.curtain.tweenBoo) return;
       this.curtain.close().then(() => {
         this.scale.off("resize", this.checkSize, this);
         this.scene.sleep();
@@ -202,14 +195,21 @@ class Curtain {
   private upTween: Phaser.Tweens.Tween;
   private downTween: Phaser.Tweens.Tween;
   private readonly key = "curtain";
+  private mTweenBoo: boolean = false;
+  private mDelay: boolean = false;
   constructor(private scene: Phaser.Scene, world: WorldService) {
     this.upDisplay = this.scene.add.image(0, 0, this.key, "up.png").setOrigin(0).setVisible(false).setScale(world.uiScale);
     this.downDisplay = this.scene.add.image(0, 0, this.key, "down.png").setOrigin(0, 1).setVisible(false).setScale(world.uiScale);
   }
 
   open() {
+    if (this.mTweenBoo) {
+      this.mDelay = true;
+      return;
+    }
     this.upDisplay.visible = true;
     this.downDisplay.visible = true;
+    this.mTweenBoo = true;
     return new Promise((resolve, reject) => {
       if (!this.scene.cameras.main) resolve();
       const height = this.scene.cameras.main.height;
@@ -225,6 +225,8 @@ class Curtain {
         props: { y: height },
         duration: 1000,
         onComplete: () => {
+          this.mDelay = false;
+          this.mTweenBoo = false;
           this.upDisplay.visible = false;
           this.downDisplay.visible = false;
           this.clearTween();
@@ -237,6 +239,7 @@ class Curtain {
   close() {
     this.downDisplay.visible = true;
     this.upDisplay.visible = true;
+    this.mTweenBoo = true;
     return new Promise((resolve, reject) => {
       if (!this.scene.cameras.main) resolve();
       const height = this.scene.cameras.main.height;
@@ -252,16 +255,26 @@ class Curtain {
         props: { y: height + this.downDisplay.displayHeight },
         duration: 1000,
         onComplete: () => {
+          this.mTweenBoo = false;
+          this.mDelay = false;
           this.downDisplay.visible = false;
           this.upDisplay.visible = false;
           this.clearTween();
+          if (this.mDelay) {
+            this.open();
+            return;
+          }
           resolve();
         }
       });
     });
   }
+  get tweenBoo(): boolean {
+    return this.mTweenBoo;
+  }
 
   destroy() {
+    this.mTweenBoo = false;
     this.destroy();
   }
 

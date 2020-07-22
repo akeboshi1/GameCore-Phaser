@@ -10,10 +10,13 @@ import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
+import { Logger } from "../../utils/log";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
+    public static COMPLETE: string = "terrain_total_complete";
     public hasAddComplete: boolean = false;
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
+    protected mInitMap: Map<number, any> = new Map<number, Terrain>();
     protected mGameConfig: IElementStorage;
     // add by 7 ----
     protected mPacketFrameCount: number = 0;
@@ -55,9 +58,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
-        if (!this.mTerrains) return;
-        this.mTerrains.forEach((terrain) => this.remove(terrain.id));
-        this.mTerrains.clear();
+        if (this.mInitMap) {
+            this.mInitMap.forEach((terrain) => this.remove(terrain.id));
+            this.mInitMap.clear();
+        }
+        if (this.mTerrains) {
+            this.mTerrains.forEach((terrain) => this.remove(terrain.id));
+            this.mTerrains.clear();
+        }
     }
 
     public get(id: number): Terrain {
@@ -66,6 +74,17 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         return terrain;
+    }
+
+    public hasElement(id: any): boolean {
+        return this.mInitMap.has(id);
+    }
+
+    public deleElement(id: any) {
+        this.mInitMap.delete(id);
+        if (this.mInitMap.size < 1) {
+            this.roomService.world.emitter.emit(TerrainManager.COMPLETE);
+        }
     }
 
     public add(sprites: ISprite[]) {
@@ -126,6 +145,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     protected _add(sprite: ISprite): Terrain {
+        this.mInitMap.set(sprite.id || 0, sprite);
         let terrain = this.mTerrains.get(sprite.id);
         if (!terrain) {
             terrain = new Terrain(sprite, this);
@@ -139,6 +159,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
+        Logger.getInstance().log("terrain");
     }
 
     protected onRemove(packet: PBpacket) {

@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.286",
+    "version": "1.0.288",
     "main": "release/js/tooqing.js",
     "types": "release/types/index.d.ts",
     "scripts": {

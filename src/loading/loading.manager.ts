@@ -1,5 +1,6 @@
 import { WorldService } from "../game/world.service";
 import { LoadingScene } from "../scenes/loading";
+import { TerrainManager, ElementManager, PlayerManager } from "../rooms";
 
 export interface IAsset {
     type: string;
@@ -18,7 +19,9 @@ export class LoadingManager {
     private mResources: IAsset[];
     private scene: Phaser.Scene;
     private mLoading: boolean;
-
+    private elementComplete: boolean = false;
+    private playerComplete: boolean = false;
+    private terrainComplete: boolean = false;
     constructor(world: WorldService) {
         this.world = world;
         this.mResources = [];
@@ -29,19 +32,28 @@ export class LoadingManager {
         if (!sceneManager) {
             return Promise.reject("start faild. SceneManager does not exist");
         }
-        const loading: LoadingScene = <LoadingScene> sceneManager.getScene(LoadingScene.name);
+        const loading: LoadingScene = <LoadingScene>sceneManager.getScene(LoadingScene.name);
         if (!loading) {
             sceneManager.add(LoadingScene.name, LoadingScene);
         }
+        this.world.emitter.once(TerrainManager.COMPLETE, () => {
+            this.terrainComplete = true;
+            this.checkLoad();
+        }, this);
+        this.world.emitter.once(ElementManager.COMPLETE, () => {
+            this.elementComplete = true;
+            this.checkLoad();
+        }, this);
+        this.world.emitter.once(PlayerManager.COMPLETE, () => {
+            this.playerComplete = true;
+            this.checkLoad();
+        }, this);
         if (loading) {
             loading.awake({
                 world: this.world,
                 callBack: (scene: Phaser.Scene) => {
                     this.scene = scene;
-                    if (this.mResources.length > 0) {
-                        return this.addAssets(this.mResources);
-                    }
-                    return Promise.resolve();
+                    this.checkLoad();
                 }
             });
         } else {
@@ -49,10 +61,7 @@ export class LoadingManager {
                 world: this.world,
                 callBack: (scene: Phaser.Scene) => {
                     this.scene = scene;
-                    if (this.mResources.length > 0) {
-                        return this.addAssets(this.mResources);
-                    }
-                    return Promise.resolve();
+                    this.checkLoad();
                 }
             });
         }
@@ -91,7 +100,26 @@ export class LoadingManager {
         if (this.mResources) {
             this.mResources = [];
         }
+        this.elementComplete = false;
+        this.playerComplete = false;
+        this.terrainComplete = false;
         this.scene = undefined;
+    }
+
+    private checkLoad() {
+        if (!this.terrainComplete || !this.elementComplete || !this.playerComplete || !this.scene) {
+            return;
+        }
+        // 所有场景内资源加载完成，且loading处于回调状态
+        if (this.mResources.length > 0) {
+            return this.addAssets(this.mResources);
+        }
+        this.elementComplete = false;
+        this.playerComplete = false;
+        this.terrainComplete = false;
+        this.mResources.length = 0;
+        this.mResources = [];
+        return Promise.resolve();
     }
 
     private loadAsset(asset: IAsset) {

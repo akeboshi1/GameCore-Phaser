@@ -130,13 +130,16 @@ export abstract class BlockObject implements IBlockObject {
         this.isUsed = false;
     }
 
-    protected addDisplay() {}
+    protected addDisplay() { }
 
     protected removeDisplay() {
         if (!this.mDisplay) {
             return;
         }
         this.mDisplay.removeFromParent();
+    }
+
+    protected onDisplayReady() {
     }
 
     protected addToBlock() {

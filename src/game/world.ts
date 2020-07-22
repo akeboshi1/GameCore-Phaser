@@ -405,6 +405,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mConfig.modules;
     }
 
+    get loadingManager(): ILoadingManager {
+        return this.mLoadingManager;
+    }
+
     public enableClick() {
         if (
             this.game &&

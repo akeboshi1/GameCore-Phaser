@@ -11,6 +11,7 @@ import { MouseManager } from "./mouse.manager";
 import { ConnectionService } from "../net";
 import { ISoundConfig } from "./sound.manager";
 import { PluginManager } from "../plugins";
+import { ILoadingManager } from "../loading/loading.manager";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -23,6 +24,7 @@ export interface WorldService {
     readonly uiManager: UiManager;
     readonly inputManager: InputManager;
     readonly mouseManager: MouseManager;
+    readonly loadingManager: ILoadingManager;
     readonly httpService: HttpService;
     readonly uiScale: number;
     readonly scaleRatio: number;

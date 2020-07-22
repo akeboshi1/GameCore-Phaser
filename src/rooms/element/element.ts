@@ -585,7 +585,7 @@ export class Element extends BlockObject implements IElement {
 
     public setState(states: op_def.IState[]) {
         for (const state of states) {
-            switch(state.execCode) {
+            switch (state.execCode) {
                 case op_def.ExecCode.EXEC_CODE_ADD:
                 case op_def.ExecCode.EXEC_CODE_UPDATE:
                     this.updateStateHandler(state);
@@ -766,7 +766,7 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    protected onDisplayReady(field?: FramesDisplay) {
+    protected onDisplayReady(field?: any) {
         if (this.mDisplay) {
             this.mDisplay.play(this.model.currentAnimation);
             // if (!field || field === DisplayField.STAGE) {
@@ -778,9 +778,14 @@ export class Element extends BlockObject implements IElement {
                 depth = this.model.pos.depth ? this.model.pos.depth : 0;
             }
             this.setDepth(depth);
-         }
-            // this.mDisplay.showRefernceArea();
-        // }
+            if (field) {
+                const id = field.element.model.id;
+                if (!(<ElementManager>this.mElementManager).hasElement(id)) {
+                    return;
+                }
+                (<ElementManager>this.mElementManager).deleElement(id);
+            }
+        }
     }
 
     protected onUpdateAnimationHandler() {
@@ -895,13 +900,13 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected updateStateHandler(state: op_def.IState) {
-        switch(state.name) {
+        switch (state.name) {
             case "effect":
                 const buf = Buffer.from(state.packet);
                 const id = buf.readDoubleBE(0);
                 const effect = this.roomService.effectManager.get(id);
                 if (effect.displayInfo) {
-                    this.showEffected(<IFramesModel> effect.displayInfo);
+                    this.showEffected(<IFramesModel>effect.displayInfo);
                 } else {
                     effect.once("updateDisplayInfo", this.showEffected, this);
                 }
@@ -910,7 +915,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected removeStateHandler(state: op_def.IState) {
-        switch(state.name) {
+        switch (state.name) {
             case "effect":
                 // remove
                 if (this.mDisplay) {

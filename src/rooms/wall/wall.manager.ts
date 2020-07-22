@@ -5,7 +5,9 @@ import { op_client } from "pixelpai_proto";
 import { Pos } from "../../utils/pos";
 import { Logger } from "../../utils/log";
 export class WallManager extends PacketHandler {
+    public static COMPLETE: string = "wall_total_complete";
     private mWalls: Map<number, Wall> = new Map<number, Wall>();
+    private mInitMap: Map<number, Wall> = new Map<number, Wall>();
     constructor(protected mRoom: IRoomService) {
         super();
 
@@ -15,10 +17,23 @@ export class WallManager extends PacketHandler {
         }
     }
 
+    public hasElement(id: any): boolean {
+        return this.mInitMap.has(id);
+    }
+
+    public deleElement(id) {
+        this.mInitMap.delete(id);
+        if (this.mInitMap.size < 1) {
+            this.mRoom.world.emitter.emit(WallManager.COMPLETE);
+        }
+    }
+
     destroy() {
         if (this.mRoom.connection) {
             this.mRoom.connection.removePacketListener(this);
         }
+        this.mInitMap.forEach((wall: Wall) => wall.destroy());
+        this.mInitMap.clear();
         this.mWalls.forEach((wall: Wall) => wall.destroy());
         this.mWalls.clear();
     }
@@ -30,6 +45,7 @@ export class WallManager extends PacketHandler {
     }
 
     private onDawWallHandler(packet: PBpacket) {
+        Logger.getInstance().log("wall");
         const terrains = this.mRoom.world.elementStorage.getTerrainCollection();
         if (!terrains) {
             return;

@@ -241,7 +241,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         }
         this.setData("id", this.mDisplayInfo.id);
         this.add(this.mClickCon);
-        this.emit("initialized");
     }
 
     private loadDragonBones(resUrl: string, pngUrl: string, jsonUrl: string, dbbinUrl: string) {
@@ -863,7 +862,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             }
         });
         // }
-
+        this.emit("initialized",this);
         this.mArmatureDisplay.visible = true;
     }
 

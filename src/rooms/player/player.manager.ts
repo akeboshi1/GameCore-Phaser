@@ -14,9 +14,11 @@ import NodeType = op_def.NodeType;
 import { PlayerModel } from "./player.model";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
+    public static COMPLETE: string = "player_total_complete";
     public hasAddComplete: boolean = false;
     private mActor: Actor;
     private mPlayerMap: Map<number, Player> = new Map();
+    private mInitMap: Map<number, any> = new Map();
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -60,15 +62,20 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
-        if (!this.mPlayerMap) return;
-        this.mPlayerMap.forEach((player) => this.removeFromMap(player.id));
-        this.mPlayerMap.clear();
+        if (this.mInitMap) {
+            this.mInitMap.forEach((player) => this.removeFromMap(player.id));
+            this.mInitMap.clear();
+        }
+        if (this.mPlayerMap) {
+            this.mPlayerMap.forEach((player) => this.removeFromMap(player.id));
+            this.mPlayerMap.clear();
+        }
     }
 
     public removeFromMap(id: number) {
         const player = this.mPlayerMap.get(id);
         if (player) {
-           // MineCarSimulateData.destroyMineCar(this.roomService.elementManager, player.model);
+            // MineCarSimulateData.destroyMineCar(this.roomService.elementManager, player.model);
             this.mPlayerMap.delete(id);
             player.destroy();
         }
@@ -119,6 +126,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     add(sprite: ISprite[]) {
     }
 
+    public hasElement(id: any): boolean {
+        return this.mInitMap.has(id);
+    }
+
+    public deleElement(id: any) {
+        this.mInitMap.delete(id);
+        if (this.mInitMap.size < 1) {
+            this.roomService.world.emitter.emit(PlayerManager.COMPLETE);
+        }
+    }
+
     public remove(id: number): IElement {
         const element = this.mPlayerMap.get(id);
         if (element) {
@@ -141,6 +159,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.mPlayerMap = new Map();
         }
         this.mPlayerMap.set(id, player);
+        this.mInitMap.set(id, player);
     }
 
     get camera(): Phaser.Cameras.Scene2D.Camera {
@@ -197,7 +216,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             player = this.get(sprite.id);
             if (player) {
-              //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
+                //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     player.model = new Sprite(sprite);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
@@ -247,13 +266,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         for (const sprite of sprites) {
             this._add(new Sprite(sprite));
-           // MineCarSimulateData.addSimulate(this.roomService, sprite);
+            // MineCarSimulateData.addSimulate(this.roomService, sprite);
         }
     }
 
     private _add(sprite: ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
         if (!this.mPlayerMap.has(sprite.id)) {
+            this.mInitMap.set(sprite.id || 0, sprite);
             const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
         }
@@ -261,6 +281,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     private addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
+        Logger.getInstance().log("player");
     }
 
     private onRemove(packet: PBpacket) {

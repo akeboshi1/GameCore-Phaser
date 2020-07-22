@@ -10,13 +10,13 @@ import { TerrainDisplay } from "../display/terrain.display";
 import { BlockObject } from "../cameras/block.object";
 import { op_client } from "pixelpai_proto";
 import { DisplayObject } from "../display/display.object";
+import { TerrainManager } from "./terrain.manager";
 
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel;
     protected mDisplay: TerrainDisplay | undefined;
     protected mModel: ISprite;
-
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -50,7 +50,7 @@ export class Terrain extends BlockObject implements IElement {
             this.createDisplay();
         }
         this.mDisplayInfo = displayInfo;
-        this.mDisplay.once("initialized", this.onInitializedHandler, this);
+        this.mDisplay.once("initialized", this.onDisplayReady, this);
         this.mDisplay.load(this.mDisplayInfo);
     }
 
@@ -87,15 +87,15 @@ export class Terrain extends BlockObject implements IElement {
         return this.mDisplay;
     }
 
-    public showNickname() {}
+    public showNickname() { }
 
-    public showEffected() {}
+    public showEffected() { }
 
-    public turn() {}
+    public turn() { }
 
-    public setAlpha(val: number) {}
+    public setAlpha(val: number) { }
 
-    public scaleTween() {}
+    public scaleTween() { }
 
     public setQueue() { }
 
@@ -159,6 +159,19 @@ export class Terrain extends BlockObject implements IElement {
         this.setDepth();
     }
 
+    protected onDisplayReady(field?: TerrainDisplay) {
+        if (this.mDisplay) {
+            this.mDisplay.play(this.model.currentAnimation);
+            if (field) {
+                const id = field.element.model.id;
+                if (!(<TerrainManager>this.mElementManager).hasElement(id)) {
+                    return;
+                }
+                (<TerrainManager>this.mElementManager).deleElement(id);
+            }
+        }
+    }
+
     protected setDepth() {
         if (this.mDisplay) {
             this.mDisplay.setDepth(this.mDisplay.y);
@@ -170,13 +183,6 @@ export class Terrain extends BlockObject implements IElement {
                 throw new Error("layerManager is undefined");
             }
             layerManager.depthGroundDirty = true;
-        }
-    }
-
-    protected onInitializedHandler() {
-        if (this.mDisplay) {
-            // this.mDisplay.setInteractive();
-            this.mDisplay.play(this.model.currentAnimation);
         }
     }
 

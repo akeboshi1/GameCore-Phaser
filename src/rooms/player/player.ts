@@ -4,6 +4,7 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ISprite } from "../element";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
+import { PlayerManager } from "./player.manager";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -115,6 +116,28 @@ export class Player extends Element {
         const pos = super.getPosition();
         pos.y -= this.offsetY;
         return pos;
+    }
+
+    protected onDisplayReady(field?: any) {
+        if (this.mDisplay) {
+            this.mDisplay.play(this.model.currentAnimation);
+            // if (!field || field === DisplayField.STAGE) {
+            if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
+                this.updateMounth(this.mModel.mountSprites);
+            }
+            let depth = 0;
+            if (this.model && this.model.pos) {
+                depth = this.model.pos.depth ? this.model.pos.depth : 0;
+            }
+            this.setDepth(depth);
+            if (field) {
+                const id = field.element.model.id;
+                if (!(<PlayerManager>this.mElementManager).hasElement(id)) {
+                    return;
+                }
+                (<PlayerManager>this.mElementManager).deleElement(id);
+            }
+        }
     }
 
     protected onCheckDirection(params: any) {
