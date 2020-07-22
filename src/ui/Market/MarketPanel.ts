@@ -5,10 +5,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { Font } from "../../utils/font";
 import { GameGridTable } from "apowophaserui";
-import { GridTableConfig } from "apowophaserui";
 import { NinePatchTabButton } from "apowophaserui";
-import { Logger } from "../../utils/log";
-import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
 import { NineSliceButton } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
@@ -468,6 +465,7 @@ export class MarketPanel extends BasePanel {
       this.emit("popItemCard", prop, display);
     }
   }
+
   private getBuyPackageData() {
     const propdata: op_client.IMarketCommodity = this.mSelectItem.getData("propdata");
     const itemdata = op_client.CountablePackageItem.create();
@@ -477,7 +475,8 @@ export class MarketPanel extends BasePanel {
     itemdata.shortName = propdata.shortName;
     return itemdata;
   }
-  private showPropFun(config: PicPropFunConfig) {
+
+  private showPropFun(config) {
     const uimanager = this.mWorld.uiManager;
     uimanager.showMed("PicPropFun", config);
   }

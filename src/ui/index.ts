@@ -7,7 +7,6 @@ export * from "./baseView";
 export * from "./ElementStorage";
 export * from "./Notice";
 export * from "./Rank";
-export * from "./ReAwardTips";
 export * from "./Shop";
 export * from "./UserInfo";
 export * from "./UserMenu";

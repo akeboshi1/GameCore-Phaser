@@ -5,7 +5,7 @@
     "types": "release/types/index.d.ts",
     "scripts": {
         "dev": "rimraf dist && webpack-dev-server --mode development",
-        "build": "rimraf release && yarn ver && yarn webpack --mode=production --output-path=./release && yarn build:launcher && yarn dts",
+        "build": "rimraf release && yarn ver && yarn webpack --output-path=./release && yarn build:launcher && yarn dts",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
         "build:launcher": "webpack --config webpack.launcher.config.js --mode=production --output-path=./release --progress",
         "dev:core": "webpack --config webpack.core.config.js",

@@ -112,7 +112,6 @@ declare module 'game-core/ui' {
     export * from "game-core/ui/ElementStorage";
     export * from "game-core/ui/Notice";
     export * from "game-core/ui/Rank";
-    export * from "game-core/ui/ReAwardTips";
     export * from "game-core/ui/Shop";
     export * from "game-core/ui/UserInfo";
     export * from "game-core/ui/UserMenu";
@@ -1452,6 +1451,7 @@ declare module 'game-core/ui/ui.manager' {
         baseFaceTween(show: boolean): void;
         checkUIState(medName: string, show: boolean): void;
         showMed(type: string, ...param: any[]): void;
+        hideMed(type: string): void;
         showExistMed(type: string, extendName?: string): void;
         register(key: string, mediator: BaseMediator): void;
         unregister(key: string): void;
@@ -1555,12 +1555,6 @@ declare module 'game-core/ui/Rank' {
     export * from "game-core/ui/Rank/BasicRankPanel";
     export * from "game-core/ui/Rank/RankMediator";
     export * from "game-core/ui/Rank/RankPanel";
-}
-
-declare module 'game-core/ui/ReAwardTips' {
-    export * from "game-core/ui/ReAwardTips/ReAwardTip";
-    export * from "game-core/ui/ReAwardTips/ReAwardTipsMediator";
-    export * from "game-core/ui/ReAwardTips/ReAwardTipsPanel";
 }
 
 declare module 'game-core/ui/Shop' {
@@ -4310,45 +4304,6 @@ declare module 'game-core/ui/Rank/RankPanel' {
         destroy(): void;
         protected init(): void;
         protected tweenComplete(show: boolean): void;
-    }
-}
-
-declare module 'game-core/ui/ReAwardTips/ReAwardTip' {
-    import { PacketHandler } from "net-socket-packet";
-    import { WorldService } from "game-core/game/world.service";
-    import { ConnectionService } from "game-core/net/connection.service";
-    export class ReAwardTips extends PacketHandler {
-        constructor(world: WorldService);
-        on(event: string | symbol, fn: Function, context?: any): void;
-        off(event: string | symbol, fn: Function, context?: any): void;
-        register(): void;
-        unregister(): void;
-        destroy(): void;
-        get connection(): ConnectionService;
-    }
-}
-
-declare module 'game-core/ui/ReAwardTips/ReAwardTipsMediator' {
-    import { BaseMediator } from "game-core/ui/components";
-    import { WorldService } from "game-core/game/world.service";
-    export class ReAwardTipsMediator extends BaseMediator {
-        constructor(scene: Phaser.Scene, world: WorldService);
-        show(param: any): void;
-        destroy(): void;
-    }
-}
-
-declare module 'game-core/ui/ReAwardTips/ReAwardTipsPanel' {
-    import { BasePanel } from "game-core/ui/components/BasePanel";
-    import { WorldService } from "game-core/game/world.service";
-    import { op_client } from "pixelpai_proto";
-    export class ReAwardTipsPanel extends BasePanel {
-        constructor(scene: Phaser.Scene, world: WorldService);
-        show(): void;
-        appendAward(tips: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS): void;
-        addAward(): void;
-        protected preload(): void;
-        protected init(): void;
     }
 }
 

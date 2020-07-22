@@ -136,16 +136,7 @@ export class UiManager extends PacketHandler {
                 this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
                 this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
                 this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
-            } else {
-                // this.mMedMap.set(ActivityMediator.name, new ActivityMediator(this.mUILayerManager, scene, this.worldService));
-                // this.mMedMap.set(PicaMainUIMediator.name, new PicaMainUIMediator(this.mUILayerManager, scene, this.worldService));
-                // this.mMedMap.set(PicaChatMediator.name, new PicaChatMediator(this.mUILayerManager, scene, this.worldService));
-                // this.mMedMap.set(PicaNavigateMediator.name, new PicaNavigateMediator(this.mUILayerManager, scene, this.worldService));
-                // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
             }
-            // this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
-            // this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
-            // this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
             for (const tmp of this.mCache) {
                 const ui = tmp[0];
                 this.showMed(ui.name, ui);
@@ -265,20 +256,21 @@ export class UiManager extends PacketHandler {
         mediator.show(param);
     }
 
-    // public hideMed(type: string) {
-    //     if (!this.mMedMap) {
-    //         return;
-    //     }
-    //     type = this.getPanelNameByAlias(type);
-    //     const medName: string = `${type}Mediator`;
-    //     const mediator: BaseMediator = this.mMedMap.get(medName);
-    //     if (!mediator) {
-    //         // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-    //         return;
-    //     }
-    //     this.checkUIState(medName, true);
-    //     mediator.hide();
-    // }
+    public hideMed(type: string) {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const medName: string = `${type}Mediator`;
+        const mediator: BaseMediator = this.mMedMap.get(medName);
+        if (!mediator) {
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        this.checkUIState(medName, true);
+        mediator.hide();
+    }
+
     public showExistMed(type: string, extendName = "Mediator") {
         if (!this.mMedMap) {
             return;
@@ -389,23 +381,23 @@ export class UiManager extends PacketHandler {
         mediator.update(param);
     }
 
-    private hideMed(type: string) {
-        if (!this.mMedMap) {
-            return;
-        }
-        if (type === "MessageBox") {
-            type = "PicaMessageBox";
-        }
-        const medName: string = `${type}Mediator`;
-        const mediator: any = this.mMedMap.get(medName);
-        if (!mediator) {
-            this.worldService.emitter.emit("HIDE_UI", type);
-            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-            return;
-        }
-        this.checkUIState(medName, true);
-        mediator.hide();
-    }
+    // private hideMed(type: string) {
+    //     if (!this.mMedMap) {
+    //         return;
+    //     }
+    //     if (type === "MessageBox") {
+    //         type = "PicaMessageBox";
+    //     }
+    //     const medName: string = `${type}Mediator`;
+    //     const mediator: any = this.mMedMap.get(medName);
+    //     if (!mediator) {
+    //         this.worldService.emitter.emit("HIDE_UI", type);
+    //         // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+    //         return;
+    //     }
+    //     this.checkUIState(medName, true);
+    //     mediator.hide();
+    // }
 
     private showAll() {
         if (!this.mMedMap) {
