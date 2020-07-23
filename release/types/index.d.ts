@@ -526,6 +526,10 @@ declare module 'game-core/utils/resUtil' {
         static getPNG(): string;
         static getColumns(): number[];
         static getRows(): number[];
+        static left(): number;
+        static top(): number;
+        static right(): number;
+        static bottom(): number;
         static getConfig(): {
             top: number;
             left: number;
@@ -539,6 +543,10 @@ declare module 'game-core/utils/resUtil' {
         static getJSON(): string;
         static getColumns(): number[];
         static getRows(): number[];
+        static left(): number;
+        static top(): number;
+        static right(): number;
+        static bottom(): number;
         static getConfig(): {
             left: number;
             top: number;
@@ -552,6 +560,10 @@ declare module 'game-core/utils/resUtil' {
         static getJSON(): string;
         static getColumns(): number[];
         static getRows(): number[];
+        static left(): number;
+        static top(): number;
+        static right(): number;
+        static bottom(): number;
         static getConfig(): {
             left: number;
             top: number;
@@ -570,6 +582,10 @@ declare module 'game-core/utils/resUtil' {
         static getPNG(): string;
         static getColumns(): number[];
         static getRows(): number[];
+        static left(): number;
+        static top(): number;
+        static right(): number;
+        static bottom(): number;
         static getConfig(): {
             left: number;
             top: number;
@@ -582,6 +598,10 @@ declare module 'game-core/utils/resUtil' {
         static getPNG(): string;
         static getColumns(): number[];
         static getRows(): number[];
+        static left(): number;
+        static top(): number;
+        static right(): number;
+        static bottom(): number;
         static getConfig(): {
             left: number;
             top: number;
@@ -593,6 +613,10 @@ declare module 'game-core/utils/resUtil' {
         static getName(): string;
         static getPNG(): string;
         static getJSON(): string;
+        static left(): number;
+        static top(): number;
+        static right(): number;
+        static bottom(): number;
         static getConfig(): {
             left: number;
             top: number;

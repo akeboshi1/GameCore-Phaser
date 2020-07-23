@@ -70,6 +70,21 @@ export class BlackButton {
         return [4, 2, 4];
     }
 
+    static left(): number {
+        return 4;
+    }
+
+    static top(): number {
+        return 4;
+    }
+    static right(): number {
+        return 4;
+    }
+
+    static bottom(): number {
+        return 4;
+    }
+
     static getConfig() {
         return {
             top: 4,
@@ -101,6 +116,21 @@ export class BlueButton {
         return [7, 1, 7];
     }
 
+    static left(): number {
+        return 7;
+    }
+
+    static top(): number {
+        return 7;
+    }
+    static right(): number {
+        return 7;
+    }
+
+    static bottom(): number {
+        return 7;
+    }
+
     static getConfig() {
         return {
             left: 7,
@@ -130,6 +160,21 @@ export class WhiteButton {
 
     static getRows(): number[] {
         return [7, 1, 7];
+    }
+
+    static left(): number {
+        return 7;
+    }
+
+    static top(): number {
+        return 7;
+    }
+    static right(): number {
+        return 7;
+    }
+
+    static bottom(): number {
+        return 7;
     }
 
     static getConfig() {
@@ -177,6 +222,21 @@ export class Background {
         return [14, 13, 14];
     }
 
+    static left(): number {
+        return 10;
+    }
+
+    static top(): number {
+        return 15;
+    }
+    static right(): number {
+        return 10;
+    }
+
+    static bottom(): number {
+        return 15;
+    }
+
     static getConfig() {
         return {
             left: 10,
@@ -204,6 +264,21 @@ export class Border {
         return [4, 2, 4];
     }
 
+    static left(): number {
+        return 4;
+    }
+
+    static top(): number {
+        return 4;
+    }
+    static right(): number {
+        return 4;
+    }
+
+    static bottom(): number {
+        return 4;
+    }
+
     static getConfig() {
         return {
             left: 4,
@@ -225,6 +300,21 @@ export class TransparentButton {
 
     static getJSON(): string {
         return Url.getRes("ui/common/button_transparent.json");
+    }
+
+    static left(): number {
+        return 4;
+    }
+
+    static top(): number {
+        return 4;
+    }
+    static right(): number {
+        return 4;
+    }
+
+    static bottom(): number {
+        return 4;
     }
 
     static getConfig() {
