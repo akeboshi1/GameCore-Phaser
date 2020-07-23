@@ -4,6 +4,7 @@
 /node_modules/*
 /builds/*
 /dist/*
+/lib/rexui/*
 /yarn-error.log
 .idea/**/workspace.xml
 .idea/**/tasks.xml

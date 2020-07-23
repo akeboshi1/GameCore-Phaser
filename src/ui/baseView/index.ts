@@ -10,3 +10,4 @@ export { TopMenuContainer } from "./top.menu/top.menu.container";
 export { TopMenuMediator } from "./top.menu/top.menu.mediator";
 export { TopBtnGroup } from "./topGroup/top.btn.group";
 export { TopMediator } from "./topGroup/top.mediator";
+export { BaseFaceMediator } from "./baseFace.mediator";

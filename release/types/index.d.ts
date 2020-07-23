@@ -1543,6 +1543,7 @@ declare module 'game-core/ui/baseView' {
     export { TopMenuMediator } from "game-core/ui/baseView/top.menu/top.menu.mediator";
     export { TopBtnGroup } from "game-core/ui/baseView/topGroup/top.btn.group";
     export { TopMediator } from "game-core/ui/baseView/topGroup/top.mediator";
+    export { BaseFaceMediator } from "game-core/ui/baseView/baseFace.mediator";
 }
 
 declare module 'game-core/ui/ElementStorage' {
@@ -4168,6 +4169,26 @@ declare module 'game-core/ui/baseView/topGroup/top.mediator' {
     }
 }
 
+declare module 'game-core/ui/baseView/baseFace.mediator' {
+    import { WorldService } from "game-core/game/world.service";
+    import { Panel } from "apowophaserui";
+    import { BaseMediator } from "game-core/ui/components";
+    /**
+      * 场景UImediator
+      */
+    export class BaseFaceMediator extends BaseMediator {
+        protected mScene: Phaser.Scene;
+        protected world: WorldService;
+        constructor(world: WorldService, scene: Phaser.Scene);
+        getView(): Panel;
+        isSceneUI(): boolean;
+        isShow(): boolean;
+        resize(): void;
+        hide(): void;
+        destroy(): void;
+    }
+}
+
 declare module 'game-core/ui/ElementStorage/DragManager' {
     export class DragManager {
         constructor(scene: Phaser.Scene);
@@ -5254,26 +5275,6 @@ declare module 'game-core/rooms/sky.box/editor.sky.box.manager' {
         keyboardMove(keyCode: number): void;
         removeSelect(): void;
         get selected(): BlockManager;
-    }
-}
-
-declare module 'game-core/ui/baseView/baseFace.mediator' {
-    import { WorldService } from "game-core/game/world.service";
-    import { Panel } from "apowophaserui";
-    import { BaseMediator } from "game-core/ui/components";
-    /**
-      * 场景UImediator
-      */
-    export class BaseFaceMediator extends BaseMediator {
-        protected mScene: Phaser.Scene;
-        protected world: WorldService;
-        constructor(world: WorldService, scene: Phaser.Scene);
-        getView(): Panel;
-        isSceneUI(): boolean;
-        isShow(): boolean;
-        resize(): void;
-        hide(): void;
-        destroy(): void;
     }
 }
 
