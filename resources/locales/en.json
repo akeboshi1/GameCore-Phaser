@@ -113,6 +113,8 @@
   "business_street": {
     "commercial_street": "COMMERCIAL STREET",
     "my_store": "MY STORE",
-    "enter": "Enter"
+    "enter": "Enter",
+    "takeall": "Take all",
+    "goout": "Go Out"
   }
 }

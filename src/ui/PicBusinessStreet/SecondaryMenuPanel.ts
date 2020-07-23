@@ -1,4 +1,4 @@
-import { CheckboxGroup } from "../components/checkbox.group"
+import { CheckboxGroup } from "../components/checkbox.group";
 import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
 import { IPatchesConfig } from "../../../lib/rexui/lib/ui/interface/baseUI/Patches.config";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
@@ -16,7 +16,7 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
     private zoom: number;
     private categoryHandler: Handler;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, scrollconfig: ScrollerConfig) {
-        super(scene, x, y)
+        super(scene, x, y);
         this.dpr = dpr;
         this.zoom = zoom;
         this.setSize(width, height);
@@ -30,7 +30,7 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
     public setCategoryHandler(handler: Handler) {
         this.categoryHandler = handler;
     }
-    public createCategories<T1 extends Button>(type: (new (...args: any[]) => T1), categorys: { text?: string, data: any }[], btnConfig: ButtonConfig) {
+    public createCategories<T1 extends Button>(type: (new (...args: any[]) => T1), categorys: Array<{ text?: string, data: any }>, btnConfig: ButtonConfig) {
         const capW = btnConfig.width;
         const capH = btnConfig.height;
         const key = btnConfig.key;
@@ -38,11 +38,11 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         const downFrame = btnConfig.downFrame;
         const patchConfig = btnConfig.patchList;
         const tabs = [];
-        for (let i = 0; i < categorys.length; i++) {
-            const text = categorys[i].text;
+        for (const data of categorys) {
+            const text = data.text;
             const btn = new type(this.scene, capW, capH, key, normalFrame, downFrame, text, patchConfig, this.dpr, this.scale);
             if (btnConfig.textStyle) btn.setTextStyle(btnConfig.textStyle);
-            btn.setData("category", categorys[i].data);
+            btn.setData("category", data.data);
             this.gameScroll.addItem(btn);
             tabs.push(btn);
         }
@@ -55,10 +55,6 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         if (this.gridTable) this.gridTable.setItems(datas);
     }
 
-    private onSelectCategoryHandler(gameobject: Phaser.GameObjects.GameObject) {
-        const category = gameobject.getData("category");
-        if (this.categoryHandler) this.categoryHandler.runWith(category);
-    }
     public createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Handler, callback: Handler, scrollMode: number = 1) {
         const tableConfig: GridTableConfig = {
             x,
@@ -90,6 +86,10 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         });
         this.add(this.gridTable.table);
         this.gridTable.resetMask();
+    }
+    private onSelectCategoryHandler(gameobject: Phaser.GameObjects.GameObject) {
+        const category = gameobject.getData("category");
+        if (this.categoryHandler) this.categoryHandler.runWith(category);
     }
 }
 

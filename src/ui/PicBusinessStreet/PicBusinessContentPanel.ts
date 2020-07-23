@@ -32,26 +32,38 @@ export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
             bottom: 40 * this.dpr
         });
         this.add(this.bg);
-        const posY = -width * 0.5;
+        const posY = -height * 0.5;
+        const topbg = this.scene.make.image({ key: this.key, frame: "eaves" });
+        topbg.y = posY - 2 * this.dpr;
+        this.add(topbg);
         this.titlebg = this.scene.make.image({ key: this.key, frame: "title" });
-        this.titlebg.y = posY;
+        this.titlebg.y = posY - 25 * this.dpr;
         this.add(this.titlebg);
-        const mfont = `bold ${15 * this.dpr}px ${Font.DEFULT_FONT}`;
-        this.titleText = this.scene.make.text({ x: 0, y: posY, text: "", style: { font: mfont, bold: true, color: "#FFD248" } }).setOrigin(0.5, 0);
-        this.titleText.setStroke("#ED7814", 4);
+        const mfont = `bold ${15 * this.dpr}px ${Font.BOLD_FONT}`;
+        this.titleText = this.scene.make.text({ x: 0, y: this.titlebg.y - 5 * this.dpr, text: "Commercial Street", style: { font: mfont, bold: true, color: "#FFD248" } }).setOrigin(0.5, 0);
+        this.titleText.setStroke("#553100", 2 * this.dpr);
+        this.titleText.setShadow(2, 2, "#553100", 4 * this.dpr, true, true);
         this.add(this.titleText);
         this.closeBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
-        this.closeBtn.setPosition(this.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
+        this.closeBtn.setDisplaySize(28 * this.dpr, 28 * this.dpr);
+        this.closeBtn.setPosition(this.width * 0.5 - 6 * this.dpr, posY + this.dpr * 5);
         this.closeBtn.on(CoreUI.MouseEvent.Tap, this.onCloseHandler, this);
         this.add(this.closeBtn);
+        this.setContentSize(width, height);
     }
 
     public setContentSize(width: number, height: number) {
         this.setSize(width, height);
         this.bg.setSize(width, height);
-        const posY = -width * 0.5;
-        this.titlebg.y = posY;
-        this.closeBtn.setPosition(this.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
+        const posY = -height * 0.5;
+        this.titlebg.y = posY - 25 * this.dpr;
+        this.titleText.y = this.titlebg.y - 5 * this.dpr;
+        this.closeBtn.setPosition(this.width * 0.5 - 6 * this.dpr, posY + this.dpr * 5);
+
+    }
+
+    public setTitleText(text: string) {
+        this.titleText.text = text;
     }
 
     public setCloseHandler(handler: Handler) {
@@ -62,4 +74,3 @@ export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
         if (this.closeHandler) this.closeHandler.run();
     }
 }
-
