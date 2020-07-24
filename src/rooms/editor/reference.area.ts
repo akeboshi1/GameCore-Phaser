@@ -1,7 +1,7 @@
-import {IRoomService} from "../room";
+import { IRoomService } from "../room";
 import { Pos } from "../../utils/pos";
 import { Logger } from "../../utils/log";
-import {IPosition45Obj, Position45} from "../../utils/position45";
+import { IPosition45Obj, Position45 } from "../../utils/position45";
 
 export class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize: IPosition45Obj;
@@ -53,11 +53,11 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
     setPosition(x?: number, y?: number, z?: number, w?: number): this {
         if (!this.mSize) return;
         const _x = x - this.mSize.rows * (this.mSize.tileWidth >> 1) - (this.mOrigin.x - this.mOrigin.y) * (this.mSize.tileWidth >> 1);
-        const _y = y - (this.mOrigin.x + this.mOrigin.y) * (this.mSize.tileHeight >> 1);
+        const _y = y - (this.mOrigin.x + this.mOrigin.y + 0.5) * (this.mSize.tileHeight >> 1);
         return super.setPosition(_x, _y, z, w);
     }
 
     get size(): IPosition45Obj {
-        return  this.mSize;
+        return this.mSize;
     }
 }

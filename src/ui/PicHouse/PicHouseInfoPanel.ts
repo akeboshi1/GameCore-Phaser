@@ -2,6 +2,7 @@ import { Font } from "../../utils/font";
 import { op_client, op_def, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { i18n } from "../../i18n";
 import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import { UIAtlasKey } from "../ui.atals.name";
 export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
@@ -29,7 +30,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
             curExp = data.roomLevel.currentLevelExp ? data.roomLevel.currentLevelExp : 0;
             nexExp = data.roomLevel.nextLevelExp ? data.roomLevel.nextLevelExp : 0;
         }
-        this.roomlevel.setImageInfo(i18n.t("room_info.roomlevel"), this.key, this.getLevelImgs(level));
+        this.roomlevel.setImageInfo(i18n.t("room_info.roomlevel"), UIAtlasKey.common2Key, this.getLevelImgs(level));
         let expvalue = `[color=#0D8288]${curExp}[/color]/${nexExp}`;
         if (nexExp === 0) expvalue = "MAX";
         this.expvalue.setTextInfo(i18n.t("room_info.expvalue"), expvalue);
@@ -64,11 +65,16 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         const power = 4;
         level = level ? level : 0;
         const imgs = [];
-        const sunNum = Math.floor(level / Math.pow(power, 2));
-        const value1 = level % Math.pow(power, 2);
+        const bearNum = Math.floor(level / Math.pow(power, 3));
+        const value0 = level % Math.pow(power, 3);
+        const sunNum = Math.floor(value0 / Math.pow(power, 2));
+        const value1 = value0 % Math.pow(power, 2);
         const moon = Math.floor((value1) / Math.pow(power, 1));
         const value2 = value1 % Math.pow(power, 1);
         const star = value2;
+        for (let i = 0; i < bearNum; i++) {
+            imgs.push("bear");
+        }
         for (let i = 0; i < sunNum; i++) {
             imgs.push("sun");
         }

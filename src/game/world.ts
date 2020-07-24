@@ -101,7 +101,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
-        const scaleW = config.width / this.DEFAULT_WIDTH * (config.devicePixelRatio / this.mUIRatio);
+        const scaleW = (config.width / this.DEFAULT_WIDTH) * (config.devicePixelRatio / this.mUIRatio);
         // const scaleH = config.height / this.DEFAULT_HEIGHT;
         this.mUIScale = scaleW;
         // if (!config.scale_ratio) {
@@ -160,7 +160,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.game && this.game.device.os.iOS) {
             window.scrollTo(0, 0);
         }
-    }
+    };
 
     get moveStyle(): number {
         return this.mMoveStyle;
@@ -194,9 +194,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void { }
+    onDisConnected(connection?: SocketConnection): void {}
 
-    onError(reason: SocketConnectionError | undefined): void { }
+    onError(reason: SocketConnectionError | undefined): void {}
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;

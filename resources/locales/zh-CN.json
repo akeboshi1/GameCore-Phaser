@@ -112,5 +112,12 @@
     "goodvalue": "点赞",
     "compveness": "排名",
     "prosperity": "装饰值"
+  },
+  "business_street": {
+    "commercial_street": "商业街",
+    "my_store": "我的店铺",
+    "enter": "进入",
+    "takeall": "Take all",
+    "goout": "Go Out"
   }
 }

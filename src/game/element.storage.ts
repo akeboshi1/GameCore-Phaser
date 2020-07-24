@@ -164,7 +164,7 @@ export class ElementStorage implements IElementStorage {
                     this._assets.push({
                         type: fileType[1],
                         key: asset.key,
-                        source: Url.getOsdRes(media)
+                        source: Url.getOsdRes(media),
                     });
                 }
             }
@@ -265,8 +265,17 @@ export class ElementStorage implements IElementStorage {
 
     public destroy() {
         this.mElementRef.clear();
+
         this.terrainPalette.clear();
+        this.terrainPaletteWithBindId.clear();
         this.mossPalette.clear();
+
+        this.mModels.forEach((model, index) => {
+            model.destroy();
+        });
+
+        this.mModels.clear();
+
         this._assets = undefined;
     }
 }
