@@ -55,7 +55,6 @@ export class VerifiedPanel extends BasePanel {
 
         this.mNameInput = new InputText(this.scene, 0, 0, 160 * this.dpr, 36 * this.dpr, {
             type: "text",
-            maxlength: 4,
             placeholder: "请输入真实姓名",
             color: "#838383",
             fontSize: 10 * this.dpr + "px"
@@ -63,7 +62,7 @@ export class VerifiedPanel extends BasePanel {
 
         this.mIDCardInput = new InputText(this.scene, 0, 0, 160 * this.dpr, 36 * this.dpr, {
             type: "text",
-            maxlength: 4,
+            maxLength: 11,
             placeholder: "请输入有效身份证号",
             color: "#838383",
             fontSize: 10 * this.dpr + "px"

@@ -88,8 +88,8 @@ export class LoginPanel extends BasePanel {
         bg.y = height - bg.height * 0.5;
 
         this.mPhoneInput = new InputText(this.scene, 0, 0, 256 * this.dpr, 40 * this.dpr, {
-            type: "number",
-            maxlength: 4,
+            type: "tel",
+            maxLength: 11,
             placeholder: "请输入手机号",
             color: "#717171",
             fontSize: 16 * this.dpr + "px"
@@ -97,15 +97,15 @@ export class LoginPanel extends BasePanel {
         const phoneContaier = this.createInput(this.mPhoneInput, width * 0.5, 97 * this.dpr + logo.y + logo.height);
 
         this.mPhoneCodeInput = new InputText(this.scene, 0, 0, 256 * this.dpr, 40 * this.dpr, {
-            type: "number",
-            maxlength: 4,
+            type: "tel",
+            maxLength: 4,
             placeholder: "验证码",
             color: "#717171",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
         const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height);
         this.mPhoneCodeInput.resize(100 * this.dpr, this.mPhoneCodeInput.height);
-        this.mPhoneCodeInput.x = -codeContainer.width / 2;
+        this.mPhoneCodeInput.x = -codeContainer.width / 2 + 8 * this.dpr;
 
         const label1 = this.scene.make.text({
             x: width * 0.5,
@@ -169,7 +169,7 @@ export class LoginPanel extends BasePanel {
 
     private createInput(input: InputText, x: number, y: number) {
         const container = this.scene.make.container({ x, y }, false);
-        const bg = new NinePatch(this.scene, input.x - 5 * this.dpr, input.y - 5 * this.dpr, input.width, input.height + 10 * this.dpr, this.key, "input_bg", {
+        const bg = new NinePatch(this.scene, input.x - 8 * this.dpr, input.y, input.width + 14 * this.dpr, input.height + 10 * this.dpr, this.key, "input_bg", {
             left: 27 * this.dpr,
             top: 24 * this.dpr,
             right: 28 * this.dpr,

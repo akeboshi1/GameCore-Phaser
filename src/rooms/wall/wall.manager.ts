@@ -9,10 +9,10 @@ export class WallManager extends PacketHandler {
     constructor(protected mRoom: IRoomService) {
         super();
 
-        if (this.mRoom.connection) {
-            this.mRoom.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.onDawWallHandler);
-        }
+        // if (this.mRoom.connection) {
+        //     this.mRoom.connection.addPacketListener(this);
+        //     this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.onDawWallHandler);
+        // }
     }
 
     destroy() {

@@ -35,7 +35,6 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.gridtable.resetMask();
     }
 
-
     protected create() {
         const posy = -this.height * 0.5;
         const posx = -this.width * 0.5;
@@ -201,7 +200,6 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.enterHandler = handler;
     }
 
-
     public setImageInfo(key: string, imgs: string[]) {
         let posX = 0;
         const space: number = 15 * this.dpr;
@@ -216,8 +214,6 @@ class MyStoreItem extends Phaser.GameObjects.Container {
     private onEnterHandler() {
         if (this.enterHandler) this.enterHandler.runWith(this.storeData);
     }
-
-
 
     private getLevelImgs(level: number) {
         const power = 4;
