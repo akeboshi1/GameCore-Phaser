@@ -505,6 +505,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.gameCreated();
     }
 
+    public enterGame() {
+        this.loginEnterWorld();
+        // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+        this.mGame.scene.remove(LoginScene.name);
+        this.uiManager.destroy();
+        // loginScene.remove();
+        this.mLoadingManager.start();
+        // this.mGame.scene.start(LoadingScene.name, { world: this });
+    }
+
     private async _createAnotherGame(gameId, worldId) {
         await this.clearGame();
         if (this.mConnection) {
@@ -527,7 +537,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         // }, 1000);
         const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-        if (loginScene) loginScene.remove();
+        if (loginScene) this.mGame.scene.remove(LoginScene.name);
         this.mLoadingManager.start();
         // this.mGame.scene.start(LoadingScene.name, { world: this });
     }
@@ -599,11 +609,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             connect: this.mConnection,
             world: this,
             callBack: () => {
-                this.loginEnterWorld();
-                const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-                loginScene.remove();
-                this.mLoadingManager.start();
-                // this.mGame.scene.start(LoadingScene.name, { world: this });
+                this.enterGame();
             },
         });
     }

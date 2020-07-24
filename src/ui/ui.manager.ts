@@ -337,13 +337,16 @@ export class UiManager extends PacketHandler {
                 map = this.mActivityUIMap;
                 break;
         }
-        map.set(medName, mediator);
+        if (map) map.set(medName, mediator);
     }
 
     public showMed(type: string, ...param: any[]) {
-        if (!this.mMedMap) {
+        if (!this.mScene) {
             this.mCache.push(param);
             return;
+        }
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
         }
         type = this.getPanelNameByAlias(type);
         const className: string = type + "Mediator";
