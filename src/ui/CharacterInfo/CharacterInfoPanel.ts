@@ -65,6 +65,7 @@ export default class CharacterInfoPanel extends BasePanel {
         // this.mSkillGrideTable.refreshPos(0, 180 * this.dpr);
         this.mSkillGrideTable.resetMask();
         this.content.setInteractive();
+        this.mCategoryScroll.refreshMask();
     }
 
     public show(param?: any) {
@@ -111,13 +112,13 @@ export default class CharacterInfoPanel extends BasePanel {
     }
     init() {
         const zoom = this.scale;
-        const wid: number = this.scene.cameras.main.width;
-        const hei: number = this.scene.cameras.main.height;
+        const wid: number = this.scaleWidth;
+        const hei: number = this.scaleHeight;
         this.mBackGround = this.scene.make.graphics(undefined, false);
         this.mBackGround.clear();
         this.mBackGround.fillStyle(0x6AE2FF, 0);
         this.mBackGround.fillRect(0, 0, wid * zoom, hei * zoom);
-        this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+        this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(this.bg.width, this.bg.height);
@@ -199,31 +200,32 @@ export default class CharacterInfoPanel extends BasePanel {
         this.content.add(this.bg);
         this.content.add(this.mainContent);
         this.add([this.mBackGround, this.content]);
-        const w = this.scene.cameras.main.width;
-        const h = this.scene.cameras.main.height;
+        const scrollY = 62 * this.dpr;
+        const scrollHeight = 80 * this.dpr;
         this.mCategoryScroll = new GameScroller(this.scene, {
-            x: this.scaleWidth * 0.5,
-            y: this.scaleHeight * 0.5 + 62 * this.dpr,
+            x: 0,
+            y: scrollY,
             width: bottomWidth,
-            height: 80 * this.dpr,
+            height: scrollHeight,
             zoom: this.scale,
             orientation: 1,
             cellupCallBack: (gameobject) => {
                 this.onSelectSubCategoryHandler(gameobject);
             }
         });
-        this.add(this.mCategoryScroll);
-
+        this.content.add(this.mCategoryScroll);
         const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
         const capW = propFrame.width + 5 * this.dpr;
         const capH = propFrame.height + 2 * this.dpr;
-        const gridX = 0, gridY = 165 * this.dpr, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 200 * this.dpr;
+        const gridX = 0, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 200 * this.dpr;
+        const gridY = scrollY + scrollHeight * 0.5 + 60 * this.dpr;
         this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
             return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr, zoom);
         }, new Handler(this, this.onSelectItemHandler));
-        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY, 260 * this.dpr, 149 * this.dpr, this.key, this.dpr);
+        const attrHeigth = 149 * this.dpr;
+        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY - 5 * this.dpr, 260 * this.dpr, attrHeigth, this.key, this.dpr);
         this.content.add(this.mAttrPanel);
-        this.resize(w, h);
+        this.resize(wid, hei);
         super.init();
         this.reqPlayerInfo();
     }
@@ -305,7 +307,8 @@ export default class CharacterInfoPanel extends BasePanel {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                cellPadX: 24 * this.dpr
+                cellPadX: 24 * this.dpr,
+                zoom: this.scale
             },
             scrollMode: 1,
             clamplChildOY: false,
