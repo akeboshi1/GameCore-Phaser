@@ -97,6 +97,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public destroy() {
         this.removePackListener();
+        this.mCurRoom = null;
         for (let room of this.mRooms) {
             room.destroy();
             room = null;
