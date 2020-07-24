@@ -51,4 +51,5 @@ export interface WorldService {
 
     playSound(config: ISoundConfig);
     showLoading();
+    enterGame();
 }

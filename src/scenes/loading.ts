@@ -150,10 +150,10 @@ export class LoadingScene extends BasicScene {
     const element = document.createElement("style");
     document.head.appendChild(element);
     const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
-   // const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
+    const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
     const styles2 = "@font-face { font-family: 'tt0173m_'; src: url('./resources/fonts/en/tt0173m_.ttf') format('truetype');font-display:swap }\n";
     const styles3 = "@font-face { font-family: 'tt0503m_'; src: url('./resources/fonts/en/tt0503m_.ttf') format('truetype'); font-display:swap}";
-   // sheet.insertRule(styles, 0);
+    sheet.insertRule(styles, 0);
     sheet.insertRule(styles2, 0);
     sheet.insertRule(styles3, 0);
 

@@ -45,9 +45,9 @@ export class HttpService {
      * 请求手机验证码
      * @param name
      */
-    requestPhoneCode(phone: string): Promise<Response> {
+    requestPhoneCode(phone: string, areaCode: string): Promise<Response> {
         return fetch(`${CONFIG.api_root}${`account/sms_code`}`, {
-            body: JSON.stringify({ phone }),
+            body: JSON.stringify({ phone, areaCode }),
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -55,9 +55,9 @@ export class HttpService {
         }).then((response) => response.json());
     }
 
-    loginByPhoneCode(phone: string, code: string): Promise<Response> {
+    loginByPhoneCode(phone: string, code: string, areaCode: string): Promise<Response> {
         return fetch(`${CONFIG.api_root}${`account/phone_signin`}`, {
-            body: JSON.stringify({ phone, code, areaCode: "86" }),
+            body: JSON.stringify({ phone, code, areaCode }),
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -69,6 +69,14 @@ export class HttpService {
         return fetch(`${CONFIG.api_root}${`account/quick_signin`}`, {
             method: "POST",
         }).then((response) => response.json());
+    }
+
+    verified(realName: string, identifcationCode: string) {
+        // return fetch(`${CONFIG.api_root}${`game/real_name_authentication`}`, {
+        //     body: JSON.stringify({ realName, identifcationCode  }),
+        //     method: "POST",
+        // }).then((response) => response.json());
+        return this.post(`game/real_name_authentication`, { realName, identifcationCode });
     }
 
     /**
