@@ -17,7 +17,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
     private dpr: number;
     private key: string;
-    private key2: string
+    private key2: string;
     private zoom: number;
     private historyHandler: Handler;
     private rankHandler: Handler;
@@ -33,9 +33,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setMyStoreData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
+    public setStreetListData() {
         const att = [{ text: "Popular", data: {} }, { text: "Hot", data: {} }, { text: "Praise", data: {} }];
         this.secondaryPanel.setCategories(TabButton, att, {
             width: 88 * this.dpr,
@@ -73,17 +71,17 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         const storeTitle = this.scene.make.text({ x: storex, y: storebg.y, text: i18n.t("business_street.street"), style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(0, 0.5);
         storeTitle.setStroke("#553100", 2 * this.dpr);
         this.add(storeTitle);
-        this.secondaryPanel = new SecondaryMenuPanel(this.scene, 0, posy + 20 * this.dpr, this.width, 60 * this.dpr, this.dpr, this.zoom, {
+        this.secondaryPanel = new SecondaryMenuPanel(this.scene, 0, posy + 56 * this.dpr, this.width, 60 * this.dpr, this.dpr, this.zoom, {
             x: 0,
-            y: 0,
+            y: -15 * this.dpr,
             width: this.width - 10 * this.dpr,
             height: 30 * this.dpr,
             zoom: this.zoom,
             orientation: 1,
         });
         const scrollbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar" });
-        this.secondaryPanel.gameScroll.add(scrollbg);
-        this.secondaryPanel.createGrideTable(0, 30 * this.dpr, this.width, 27 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
+        this.secondaryPanel.gameScroll.addAt(scrollbg);
+        this.secondaryPanel.createGrideTable(0, 0 * this.dpr, this.width, 27 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
@@ -97,13 +95,14 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         }, new Handler(this, this.onSubCategoryHandle));
 
         const gridbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar_2" });
-        this.secondaryPanel.gridTable.add(gridbg);
+        gridbg.y = 14 * this.dpr;
+        this.secondaryPanel.gridTable.addAt(gridbg);
         this.secondaryPanel.setCategoryHandler(new Handler(this, this.onCategoryHandler));
         this.add(this.secondaryPanel);
 
         const gridWdith = this.width;
         const gridHeight = this.height - 80 * this.dpr;
-        const gridY = posy + 33 * this.dpr + gridHeight * 0.5;
+        const gridY = posy + 99 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 75 * this.dpr);
 
         const rankBtn = new Button(this.scene, this.key2, "ranking", "ranking");
@@ -211,7 +210,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
             bottom: 9 * this.dpr
         });
         this.add(bg);
-        const iconbg = this.scene.make.image({ key, frame: "icon_bg_s" });
+        const iconbg = this.scene.make.image({ key: key2, frame: "icon_bg_s" });
         iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
         this.add(iconbg);
         const cornerbg = new NineSlicePatch(this.scene, 0, 0, 44 * dpr, 15 * dpr, this.key, "resturant_tag", {

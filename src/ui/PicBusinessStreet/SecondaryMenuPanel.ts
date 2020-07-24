@@ -5,7 +5,7 @@ import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Handler } from "../../Handler/Handler";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { Button, NinePatchConfig } from "../../../lib/rexui/lib/ui/button/Button";
 import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 
 export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
@@ -24,7 +24,6 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         this.checkGroup.on("selected", this.onSelectCategoryHandler, this);
         this.gameScroll = new GameScroller(this.scene, scrollconfig);
         this.add(this.gameScroll);
-        this.gameScroll.refreshMask();
     }
 
     public setCategoryHandler(handler: Handler) {
@@ -37,19 +36,25 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         const key = btnConfig.key;
         const normalFrame = btnConfig.normalFrame;
         const downFrame = btnConfig.downFrame;
-        const patchConfig = btnConfig.patchList;
+        const patchConfig = btnConfig.patchConfig;
+        const music = btnConfig.music;
         const tabs = [];
         for (const data of categorys) {
             const text = data.text;
-            const btn = new type(this.scene, capW, capH, key, normalFrame, downFrame, text, patchConfig, this.dpr, this.scale);
+            const btn = new type(this.scene, key, normalFrame, downFrame, text, music, this.dpr, this.zoom, patchConfig);
             if (btnConfig.textStyle) btn.setTextStyle(btnConfig.textStyle);
             btn.setData("category", data.data);
+            btn.disableInteractive();
+            if (capW) btn.width = capW;
+            if (capH) btn.height = capH;
             this.gameScroll.addItem(btn);
             tabs.push(btn);
         }
         this.checkGroup.appendItemAll(tabs);
         this.checkGroup.selectIndex(0);
+        this.gameScroll.setAlign(1);
         this.gameScroll.Sort(true);
+        this.gameScroll.refreshMask();
     }
 
     public setSubItems(datas: any[]) {
@@ -99,7 +104,8 @@ export interface ButtonConfig {
     normalFrame: string;
     downFrame: string;
     text?: string;
-    patchList?: IPatchesConfig[];
+    patchConfig?: NinePatchConfig;
     data?: any;
     textStyle?: any;
+    music?: any;
 }

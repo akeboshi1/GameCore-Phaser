@@ -25,7 +25,7 @@ export default class PicBusinessStreetPanel extends BasePanel {
     private picMyStreetPanel: PicBusinessMyStreetPanel;
     private picStoreCreatePanel: PicBusinessStoreCreatePanel;
     private picSecondStorePanel: PicBusinessStoreCreatePanel;
-    private picStreetListPanel: PicBusinessStreetListPanel
+    private picStreetListPanel: PicBusinessStreetListPanel;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
