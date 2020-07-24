@@ -118,6 +118,11 @@
     "my_store": "我的店铺",
     "enter": "进入",
     "takeall": "Take all",
-    "goout": "Go Out"
+    "goout": "Go Out",
+    "choosetheindustry": "选择产业",
+    "select": "选择",
+    "choosestorelike": "选择喜欢的商店",
+    "street": "商业街",
+    "back": "返回"
   }
 }

@@ -6,6 +6,7 @@ import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
 export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
+    private topbg: Phaser.GameObjects.Image;
     private titleText: Phaser.GameObjects.Text;
     private titlebg: Phaser.GameObjects.Image;
     private closeBtn: Button;
@@ -33,9 +34,9 @@ export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
         });
         this.add(this.bg);
         const posY = -height * 0.5;
-        const topbg = this.scene.make.image({ key: this.key, frame: "eaves" });
-        topbg.y = posY - 2 * this.dpr;
-        this.add(topbg);
+        this.topbg = this.scene.make.image({ key: this.key, frame: "eaves" });
+        this.topbg.y = posY - 2 * this.dpr;
+        this.add(this.topbg);
         this.titlebg = this.scene.make.image({ key: this.key, frame: "title" });
         this.titlebg.y = posY - 25 * this.dpr;
         this.add(this.titlebg);
@@ -54,8 +55,9 @@ export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
 
     public setContentSize(width: number, height: number) {
         this.setSize(width, height);
-        this.bg.setSize(width, height);
+        this.bg.resize(width, height);
         const posY = -height * 0.5;
+        this.topbg.y = posY - 2 * this.dpr;
         this.titlebg.y = posY - 25 * this.dpr;
         this.titleText.y = this.titlebg.y - 5 * this.dpr;
         this.closeBtn.setPosition(this.width * 0.5 - 6 * this.dpr, posY + this.dpr * 5);

@@ -20,10 +20,110 @@
 				"h": 40
 			}
 		},
+		"bar_icon": {
+			"frame": {
+				"x": 43,
+				"y": 1,
+				"w": 82,
+				"h": 84
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 82,
+				"h": 84
+			},
+			"sourceSize": {
+				"w": 82,
+				"h": 84
+			}
+		},
+		"barber_icon": {
+			"frame": {
+				"x": 127,
+				"y": 1,
+				"w": 81,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 81,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 81,
+				"h": 86
+			}
+		},
+		"burger_icon": {
+			"frame": {
+				"x": 210,
+				"y": 1,
+				"w": 82,
+				"h": 85
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 82,
+				"h": 85
+			},
+			"sourceSize": {
+				"w": 82,
+				"h": 85
+			}
+		},
+		"cinema_icon": {
+			"frame": {
+				"x": 294,
+				"y": 1,
+				"w": 81,
+				"h": 84
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 81,
+				"h": 84
+			},
+			"sourceSize": {
+				"w": 81,
+				"h": 84
+			}
+		},
+		"dentist_icon": {
+			"frame": {
+				"x": 377,
+				"y": 1,
+				"w": 82,
+				"h": 88
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 82,
+				"h": 88
+			},
+			"sourceSize": {
+				"w": 82,
+				"h": 88
+			}
+		},
 		"eaves": {
 			"frame": {
 				"x": 1,
-				"y": 43,
+				"y": 91,
 				"w": 613,
 				"h": 69
 			},
@@ -43,7 +143,7 @@
 		"entertainment_bg": {
 			"frame": {
 				"x": 1,
-				"y": 114,
+				"y": 162,
 				"w": 25,
 				"h": 134
 			},
@@ -63,26 +163,26 @@
 		"entertainment_icon": {
 			"frame": {
 				"x": 28,
-				"y": 114,
-				"w": 88,
-				"h": 69
+				"y": 162,
+				"w": 120,
+				"h": 134
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 88,
-				"h": 69
+				"w": 120,
+				"h": 134
 			},
 			"sourceSize": {
-				"w": 88,
-				"h": 69
+				"w": 120,
+				"h": 134
 			}
 		},
 		"entertainment_tag": {
 			"frame": {
-				"x": 43,
+				"x": 461,
 				"y": 1,
 				"w": 22,
 				"h": 29
@@ -100,10 +200,30 @@
 				"h": 29
 			}
 		},
+		"gym_icon": {
+			"frame": {
+				"x": 485,
+				"y": 1,
+				"w": 82,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 82,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 82,
+				"h": 86
+			}
+		},
 		"has_plan_bg": {
 			"frame": {
-				"x": 118,
-				"y": 114,
+				"x": 150,
+				"y": 162,
 				"w": 26,
 				"h": 106
 			},
@@ -120,10 +240,30 @@
 				"h": 106
 			}
 		},
+		"hotpot_icon": {
+			"frame": {
+				"x": 178,
+				"y": 162,
+				"w": 81,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 81,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 81,
+				"h": 87
+			}
+		},
 		"item_bg": {
 			"frame": {
-				"x": 146,
-				"y": 114,
+				"x": 261,
+				"y": 162,
 				"w": 71,
 				"h": 71
 			},
@@ -142,8 +282,8 @@
 		},
 		"market_b": {
 			"frame": {
-				"x": 219,
-				"y": 114,
+				"x": 334,
+				"y": 162,
 				"w": 26,
 				"h": 146
 			},
@@ -162,8 +302,8 @@
 		},
 		"market_r": {
 			"frame": {
-				"x": 247,
-				"y": 114,
+				"x": 362,
+				"y": 162,
 				"w": 26,
 				"h": 146
 			},
@@ -182,8 +322,8 @@
 		},
 		"new_store": {
 			"frame": {
-				"x": 275,
-				"y": 114,
+				"x": 390,
+				"y": 162,
 				"w": 49,
 				"h": 48
 			},
@@ -202,8 +342,8 @@
 		},
 		"no_plan_bg": {
 			"frame": {
-				"x": 326,
-				"y": 114,
+				"x": 441,
+				"y": 162,
 				"w": 26,
 				"h": 106
 			},
@@ -220,10 +360,30 @@
 				"h": 106
 			}
 		},
+		"pets_icon": {
+			"frame": {
+				"x": 469,
+				"y": 162,
+				"w": 81,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 81,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 81,
+				"h": 86
+			}
+		},
 		"plan_bg": {
 			"frame": {
-				"x": 354,
-				"y": 114,
+				"x": 469,
+				"y": 250,
 				"w": 128,
 				"h": 160
 			},
@@ -242,8 +402,8 @@
 		},
 		"plan_bg_click": {
 			"frame": {
-				"x": 484,
-				"y": 114,
+				"x": 1,
+				"y": 412,
 				"w": 127,
 				"h": 160
 			},
@@ -262,8 +422,8 @@
 		},
 		"plan_icon_bg": {
 			"frame": {
-				"x": 1,
-				"y": 276,
+				"x": 130,
+				"y": 412,
 				"w": 84,
 				"h": 84
 			},
@@ -282,8 +442,8 @@
 		},
 		"progress_bar_bg": {
 			"frame": {
-				"x": 67,
-				"y": 1,
+				"x": 216,
+				"y": 412,
 				"w": 317,
 				"h": 17
 			},
@@ -302,7 +462,7 @@
 		},
 		"progress_bar_g": {
 			"frame": {
-				"x": 386,
+				"x": 569,
 				"y": 1,
 				"w": 26,
 				"h": 16
@@ -322,8 +482,8 @@
 		},
 		"progress_bar_r": {
 			"frame": {
-				"x": 414,
-				"y": 1,
+				"x": 569,
+				"y": 19,
 				"w": 26,
 				"h": 16
 			},
@@ -342,8 +502,8 @@
 		},
 		"progress_bar_y": {
 			"frame": {
-				"x": 442,
-				"y": 1,
+				"x": 569,
+				"y": 37,
 				"w": 26,
 				"h": 16
 			},
@@ -360,10 +520,30 @@
 				"h": 16
 			}
 		},
+		"ramen_icon": {
+			"frame": {
+				"x": 216,
+				"y": 431,
+				"w": 82,
+				"h": 84
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 82,
+				"h": 84
+			},
+			"sourceSize": {
+				"w": 82,
+				"h": 84
+			}
+		},
 		"resturant_bg": {
 			"frame": {
-				"x": 87,
-				"y": 276,
+				"x": 535,
+				"y": 412,
 				"w": 25,
 				"h": 134
 			},
@@ -382,28 +562,28 @@
 		},
 		"resturant_icon": {
 			"frame": {
-				"x": 114,
-				"y": 276,
-				"w": 90,
-				"h": 88
+				"x": 300,
+				"y": 431,
+				"w": 105,
+				"h": 136
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 90,
-				"h": 88
+				"w": 105,
+				"h": 136
 			},
 			"sourceSize": {
-				"w": 90,
-				"h": 88
+				"w": 105,
+				"h": 136
 			}
 		},
 		"resturant_tag": {
 			"frame": {
-				"x": 470,
-				"y": 1,
+				"x": 461,
+				"y": 37,
 				"w": 22,
 				"h": 29
 			},
@@ -422,8 +602,8 @@
 		},
 		"service_bg": {
 			"frame": {
-				"x": 206,
-				"y": 276,
+				"x": 562,
+				"y": 412,
 				"w": 25,
 				"h": 134
 			},
@@ -442,28 +622,28 @@
 		},
 		"service_icon": {
 			"frame": {
-				"x": 233,
-				"y": 276,
-				"w": 87,
-				"h": 75
+				"x": 407,
+				"y": 431,
+				"w": 100,
+				"h": 130
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 87,
-				"h": 75
+				"w": 100,
+				"h": 130
 			},
 			"sourceSize": {
-				"w": 87,
-				"h": 75
+				"w": 100,
+				"h": 130
 			}
 		},
 		"service_tag": {
 			"frame": {
-				"x": 494,
-				"y": 1,
+				"x": 1,
+				"y": 55,
 				"w": 22,
 				"h": 29
 			},
@@ -481,26 +661,6 @@
 			}
 		},
 		"store_bg": {
-			"frame": {
-				"x": 322,
-				"y": 276,
-				"w": 158,
-				"h": 200
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 158,
-				"h": 200
-			},
-			"sourceSize": {
-				"w": 158,
-				"h": 200
-			}
-		},
-		"store_bg_click": {
 			"frame": {
 				"x": 616,
 				"y": 1,
@@ -520,10 +680,30 @@
 				"h": 200
 			}
 		},
+		"store_bg_click": {
+			"frame": {
+				"x": 599,
+				"y": 203,
+				"w": 158,
+				"h": 200
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 158,
+				"h": 200
+			},
+			"sourceSize": {
+				"w": 158,
+				"h": 200
+			}
+		},
 		"store_icon": {
 			"frame": {
-				"x": 518,
-				"y": 1,
+				"x": 552,
+				"y": 203,
 				"w": 45,
 				"h": 34
 			},
@@ -542,8 +722,8 @@
 		},
 		"store_icon_bg": {
 			"frame": {
-				"x": 613,
-				"y": 203,
+				"x": 599,
+				"y": 405,
 				"w": 112,
 				"h": 120
 			},
@@ -562,8 +742,8 @@
 		},
 		"subtitle": {
 			"frame": {
-				"x": 28,
-				"y": 203,
+				"x": 130,
+				"y": 527,
 				"w": 63,
 				"h": 33
 			},
@@ -582,8 +762,8 @@
 		},
 		"title": {
 			"frame": {
-				"x": 1,
-				"y": 478,
+				"x": 407,
+				"y": 563,
 				"w": 298,
 				"h": 91
 			},
@@ -608,7 +788,7 @@
 		"format": "RGBA8888",
 		"size": {
 			"w": 775,
-			"h": 570
+			"h": 655
 		},
 		"scale": "1"
 	}

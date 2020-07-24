@@ -5,14 +5,14 @@ import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Handler } from "../../Handler/Handler";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { Button, NinePatchConfig } from "../../../lib/rexui/lib/ui/button/Button";
 import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
 
 export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
+    public gameScroll: GameScroller;
+    public gridTable: GameGridTable;
     private checkGroup: CheckboxGroup;
     private dpr: number;
-    private gameScroll: GameScroller;
-    private gridTable: GameGridTable;
     private zoom: number;
     private categoryHandler: Handler;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, scrollconfig: ScrollerConfig) {
@@ -23,39 +23,45 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         this.checkGroup = new CheckboxGroup();
         this.checkGroup.on("selected", this.onSelectCategoryHandler, this);
         this.gameScroll = new GameScroller(this.scene, scrollconfig);
-        this.gameScroll.refreshMask();
         this.add(this.gameScroll);
     }
 
     public setCategoryHandler(handler: Handler) {
         this.categoryHandler = handler;
     }
-    public createCategories<T1 extends Button>(type: (new (...args: any[]) => T1), categorys: Array<{ text?: string, data: any }>, btnConfig: ButtonConfig) {
+    public setCategories<T1 extends Button>(type: (new (...args: any[]) => T1), categorys: Array<{ text?: string, data: any }>, btnConfig: ButtonConfig) {
+        this.gameScroll.clearItems();
         const capW = btnConfig.width;
         const capH = btnConfig.height;
         const key = btnConfig.key;
         const normalFrame = btnConfig.normalFrame;
         const downFrame = btnConfig.downFrame;
-        const patchConfig = btnConfig.patchList;
+        const patchConfig = btnConfig.patchConfig;
+        const music = btnConfig.music;
         const tabs = [];
         for (const data of categorys) {
             const text = data.text;
-            const btn = new type(this.scene, capW, capH, key, normalFrame, downFrame, text, patchConfig, this.dpr, this.scale);
+            const btn = new type(this.scene, key, normalFrame, downFrame, text, music, this.dpr, this.zoom, patchConfig);
             if (btnConfig.textStyle) btn.setTextStyle(btnConfig.textStyle);
             btn.setData("category", data.data);
+            btn.disableInteractive();
+            if (capW) btn.width = capW;
+            if (capH) btn.height = capH;
             this.gameScroll.addItem(btn);
             tabs.push(btn);
         }
         this.checkGroup.appendItemAll(tabs);
         this.checkGroup.selectIndex(0);
+        this.gameScroll.setAlign(1);
         this.gameScroll.Sort(true);
+        this.gameScroll.refreshMask();
     }
 
     public setSubItems(datas: any[]) {
         if (this.gridTable) this.gridTable.setItems(datas);
     }
 
-    public createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Handler, callback: Handler, scrollMode: number = 1) {
+    public createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: (cell, cellContainer) => Phaser.GameObjects.GameObject, callback: Handler, scrollMode: number = 1) {
         const tableConfig: GridTableConfig = {
             x,
             y,
@@ -71,11 +77,7 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
             scrollMode,
             clamplChildOY: false,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
-            createCellContainerCallback: (cell, cellContainer) => {
-                const item = cell.item;
-                createFun.runWith([item, cellContainer]);
-                return cellContainer;
-            },
+            createCellContainerCallback: createFun,
         };
         this.gridTable = new GameGridTable(this.scene, tableConfig);
         this.gridTable.layout();
@@ -84,7 +86,7 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
                 callback.runWith(cell);
             }
         });
-        this.add(this.gridTable.table);
+        this.add(this.gridTable);
         this.gridTable.resetMask();
     }
     private onSelectCategoryHandler(gameobject: Phaser.GameObjects.GameObject) {
@@ -101,8 +103,9 @@ export interface ButtonConfig {
     key: string;
     normalFrame: string;
     downFrame: string;
-    text: string;
-    patchList?: IPatchesConfig[];
+    text?: string;
+    patchConfig?: NinePatchConfig;
     data?: any;
     textStyle?: any;
+    music?: any;
 }
