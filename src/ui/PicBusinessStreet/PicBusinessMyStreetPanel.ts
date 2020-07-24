@@ -17,6 +17,9 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
     private zoom: number;
+    private takeAllHandler: Handler;
+    private goOutHandler: Handler;
+    private newStoreHandler: Handler;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -31,10 +34,15 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.gridtable.setItems(arr);
     }
 
+    public setHandler(takeAll: Handler, goOut: Handler, newStore: Handler) {
+        this.takeAllHandler = takeAll;
+        this.goOutHandler = goOut;
+        this.newStoreHandler = newStore;
+    }
+
     public resetMask() {
         this.gridtable.resetMask();
     }
-
 
     protected create() {
         const posy = -this.height * 0.5;
@@ -48,16 +56,19 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         const storeTitle = this.scene.make.text({ x: storex, y: storebg.y, text: i18n.t("business_street.my_store"), style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(0, 0.5);
         storeTitle.setStroke("#553100", 2 * this.dpr);
         this.add(storeTitle);
+        const gridWdith = this.width;
+        const gridHeight = this.height - 80 * this.dpr;
+        const gridY = posy + 33* this.dpr + gridHeight * 0.5;
+        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 75 * this.dpr);
+
         this.newStoreBtn = new Button(this.scene, this.key, "new_store", "new_store");
         const btnX = -posx - this.newStoreBtn.width * 0.5 - 20 * this.dpr;
         this.newStoreBtn.setPosition(btnX, posy + 6 * this.dpr);
+        this.newStoreBtn.on(CoreUI.MouseEvent.Tap, this.onNewStoreHandler, this);
         this.add(this.newStoreBtn);
         this.storeCountText = this.scene.make.text({ x: btnX + this.newStoreBtn.width * 0.5 + 20 * this.dpr, y: posy, text: "", style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(1, 0);
         this.add(this.storeCountText);
-        const gridWdith = this.width;
-        const gridHeight = this.height - 80 * this.dpr;
-        const gridY = posy + 28 * this.dpr + gridHeight * 0.5;
-        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 75 * this.dpr);
+
         const talkAllBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.takeall"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
@@ -101,7 +112,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
                 if (cellContainer === null) {
                     cellContainer = new MyStoreItem(this.scene, 0, 0, capW, capH, this.key, this.dpr, this.zoom);
                     cellContainer.setHandler(new Handler(this, this.onEnterHandler));
-                    this.add(cellContainer);
+                    grid.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setStoreData(item);
@@ -110,7 +121,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         };
         const grid = new GameGridTable(this.scene, tableConfig);
         grid.layout();
-        this.add(grid.table);
+        this.add(grid);
 
         return grid;
     }
@@ -119,11 +130,15 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
 
     }
     private onTalkAllHandler() {
-
+        if (this.takeAllHandler) this.takeAllHandler.run();
     }
 
     private onGoOutHandler() {
+        if (this.goOutHandler) this.goOutHandler.run();
+    }
 
+    private onNewStoreHandler() {
+        if (this.newStoreHandler) this.newStoreHandler.run();
     }
 }
 
@@ -201,7 +216,6 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.enterHandler = handler;
     }
 
-
     public setImageInfo(key: string, imgs: string[]) {
         let posX = 0;
         const space: number = 15 * this.dpr;
@@ -216,8 +230,6 @@ class MyStoreItem extends Phaser.GameObjects.Container {
     private onEnterHandler() {
         if (this.enterHandler) this.enterHandler.runWith(this.storeData);
     }
-
-
 
     private getLevelImgs(level: number) {
         const power = 4;
