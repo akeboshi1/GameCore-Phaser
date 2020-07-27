@@ -79,8 +79,6 @@ export class LoginPanel extends BasePanel {
         }, false).setOrigin(0.5, 0);
 
         const bg = this.scene.make.image({
-            // x: width * 0.5,
-            // y: height * 0.5,
             key: this.key,
             frame: "bg"
         });
@@ -95,12 +93,20 @@ export class LoginPanel extends BasePanel {
             fontSize: 16 * this.dpr + "px"
         });
         const phoneContaier = this.createInput(this.mPhoneInput, width * 0.5, 97 * this.dpr + logo.y + logo.height);
+        const accountData: string = localStorage.getItem("accountphone");
+        if (accountData) {
+            try {
+                this.mPhoneInput.text = JSON.parse(accountData).account;
+            } catch {
+            }
+        }
 
         this.mPhoneCodeInput = new InputText(this.scene, 0, 0, 256 * this.dpr, 40 * this.dpr, {
             type: "tel",
             maxLength: 4,
             placeholder: "验证码",
             color: "#717171",
+            text: "2992",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
         const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height);
@@ -148,11 +154,11 @@ export class LoginPanel extends BasePanel {
         fetchCode.on("pointerup", this.onFetchCodeHandler, this);
         codeContainer.add([line, fetchCode]);
 
-        const login = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 陆", this.dpr, this.scale, {
-            left: 12 * this.dpr * this.scale,
-            top: 12 * this.dpr * this.scale,
-            right: 12 * this.dpr * this.scale,
-            bottom: 12 * this.dpr * this.scale
+        const login = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
+            left: 12 * this.dpr,
+            top: 12 * this.dpr,
+            right: 12 * this.dpr,
+            bottom: 12 * this.dpr
         });
         login.setTextStyle({
             color: "#995E00",

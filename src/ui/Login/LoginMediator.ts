@@ -44,6 +44,7 @@ export class LoginMediator extends BaseMediator {
             if (response.code === 200 || response.code === 201) {
                 const data = response.data;
                 this.world.account.setAccount(data);
+                localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
                 this.enterGame();
                 // if (data.hasIdentityInfo) {
                 //     this.enterGame();
