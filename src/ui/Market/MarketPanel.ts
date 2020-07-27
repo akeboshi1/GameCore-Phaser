@@ -3,20 +3,24 @@ import { WorldService } from "../../game/world.service";
 import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "./TextButton";
 import { MarketItem } from "./item";
-import { TabButton } from "../components/tab.button";
 import { Font } from "../../utils/font";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
+import { Logger } from "../../utils/log";
+import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
+import { Handler } from "../../Handler/Handler";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mTIle: Phaser.GameObjects.Text;
-  private mTabs: NinePatchButton[];
+  private mTabs: NinePatchTabButton[];
   private mSubTabs: TextButton[];
   private mSelectedCategories: Phaser.GameObjects.GameObject;
   private mSelectedSubCategories: Phaser.GameObjects.GameObject;
@@ -29,8 +33,13 @@ export class MarketPanel extends BasePanel {
   private mShelfBackground: Phaser.GameObjects.Graphics;
   private mSubCategorisScroll: GameGridTable;
   private mItems: MarketItem[];
-  private mPreSubCategoris: TextButton;
+  private mPreSubCategoris: op_def.IStrPair;
   private mPropGrid: GameGridTable;
+  private randomCon: Phaser.GameObjects.Container;
+  private randomRefeshTime: Phaser.GameObjects.Text;
+  private randomRefreshBtn: NineSliceButton;
+  private refreshIcon: Phaser.GameObjects.Image;
+  private refreshNeedCount: Phaser.GameObjects.Text;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.mSubTabs = [];
@@ -65,9 +74,6 @@ export class MarketPanel extends BasePanel {
     this.mTIle.x = centerX;
 
     const shelfHeight = 290 * this.dpr * zoom;
-    // if (shelfHeight > height / 2) {
-    //   shelfHeight = height / 2;
-    // }
     this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width * zoom, height * zoom), Phaser.Geom.Rectangle.Contains);
 
     this.mShelfContainer.setSize(width, shelfHeight);
@@ -79,7 +85,6 @@ export class MarketPanel extends BasePanel {
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
 
     this.mSelectItem.setSize(width, height - this.mShelfContainer.height);
-    // this.mSelectItem.y = 45 * this.dpr;
     this.mSelectItem.resize(w, h);
 
     this.mCategoriesBar.clear();
@@ -106,18 +111,18 @@ export class MarketPanel extends BasePanel {
       w = frame.width;
       h = frame.height;
     }
-    const config = {
-      left: 10 * this.dpr,
-      top: 13 * this.dpr,
-      right: w - 2 - 10 * this.dpr,
-      bottom: h - 2 - 13 * this.dpr
+    const config0 = {
+      left: w / 2 + 2 * this.dpr,
+      top: 12 * this.dpr,
+      right: w / 2 - 4 * this.dpr,
+      bottom: 2 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
     const zoom = this.mWorld.uiScale;
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new TabButton(this.scene, i * 80 * this.dpr * zoom + capW / 2, capH / 2, capW, capH, this.key, "categories", categorys[i].category.value, config);
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], this.dpr, this.scale);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
@@ -125,48 +130,32 @@ export class MarketPanel extends BasePanel {
       });
       this.mTabs[i] = btn;
       btn.setData("category", categorys[i]);
+      btn.x = i * 80 * this.dpr * zoom + capW / 2;
+      btn.y = capH / 2;
       // this.add(btn);
     }
     this.mCategoriesContainer.setSize(this.mTabs.length * capW, capH);
     this.mShelfContainer.add(this.mTabs);
-    // this.mSubCategeoriesContainer.y = this.mCategoriesContainer.height;
-    this.mCategoriesBar.y = this.mCategoriesContainer.height + this.mShelfContainer.y;
-    this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
-    this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom + this.mSubCategeoriesContainer.height + 9 * this.dpr;
-    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
-    this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr * zoom;
-    this.mPropGrid.layout();
-    this.mSubCategorisScroll.layout();
+    this.layoutCategories();
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
-
     group.selectIndex(0);
-    // for (const category of categorys) {
-    //   const btn = new NinePatchButton(this.scene, )
-    // }
   }
 
   public setProp(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
-    // const zoom = this.mWorld.uiScale;
-    // for (let i = 0; i < commodities.length; i++) {
-    //   const item = new MarketItem(this.scene, Math.floor(i / 3) * (135 * this.dpr * zoom) + (72 * this.dpr * zoom), Math.floor(i % 3) * (68 * this.dpr * zoom) + 30 * this.dpr * zoom, this.dpr, zoom);
-    //   item.setProp(commodities[i]);
-    //   item.on("select", this.onSelectItemHandler, this);
-    //   this.mItems[i] = item;
-    // }
-    // this.mPropContainer.add(this.mItems);
     this.mPropGrid.setItems(commodities);
     this.mPropGrid.layout();
+    this.mPropGrid.setT(0);
     if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
   }
 
   public setCommodityResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
     if (this.mSelectItem) {
       this.mSelectItem.setResource(content);
+      this.mSelectItem.setData("display", content);
     }
   }
 
@@ -180,9 +169,24 @@ export class MarketPanel extends BasePanel {
     super.destroy();
   }
 
+  protected layoutCategories() {
+    this.mCategoriesBar.y = this.mCategoriesContainer.height + this.mShelfContainer.y;
+    this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
+    this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr + this.mSubCategeoriesContainer.height + 9 * this.dpr;
+    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr;
+    this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
+    this.randomCon.y = this.mSubCategorisScroll.y;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr;
+    this.mPropGrid.layout();
+    this.mSubCategorisScroll.layout();
+    this.mSubCategorisScroll.resetMask();
+    this.mPropGrid.resetMask();
+  }
+
   protected preload() {
-    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market.png"), Url.getUIRes(this.dpr, "market/market.json"));
+    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market"), Url.getUIRes(this.dpr, "market/market.json"));
     this.addAtlas(this.key, "market/market.png", "market/market.json");
+    this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
     super.preload();
   }
 
@@ -202,7 +206,7 @@ export class MarketPanel extends BasePanel {
       y: h
     }, false).setSize(w, 290 * this.dpr * zoom);
 
-    const frame = this.scene.textures.getFrame(this.key, "bg.png");
+    const frame = this.scene.textures.getFrame(this.key, "bg");
     const countW = Math.ceil(w / (frame.width * zoom));
     const countH = Math.ceil((h - this.mShelfContainer.height + frame.height * zoom) / (frame.height * zoom));
     for (let i = 0; i < countW; i++) {
@@ -211,7 +215,7 @@ export class MarketPanel extends BasePanel {
           x: i * frame.width * zoom,
           y: j * frame.height * zoom,
           key: this.key,
-          frame: "bg.png"
+          frame: "bg"
         }, false).setScale(zoom);
         this.add(bg);
       }
@@ -221,7 +225,7 @@ export class MarketPanel extends BasePanel {
 
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
-      frame: "back_arrow.png",
+      frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
     }).setInteractive().setScale(zoom);
@@ -257,11 +261,13 @@ export class MarketPanel extends BasePanel {
       // width: w,
       // height: capH,
       table: {
-        width: w,
+        width: w - 30 * this.dpr,
         height: capH,
         cellWidth: capW,
         cellHeight: capH,
-        reuseCellContainer: true
+        reuseCellContainer: true,
+        cellOriginX: 0,
+        cellOriginY: 0,
       },
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
@@ -276,8 +282,10 @@ export class MarketPanel extends BasePanel {
         cellContainer.setText(item.value);
         // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
-        if (!this.mPreSubCategoris) {
-          this.onSelectSubCategoryHandler(cellContainer);
+        if (item && this.mPreSubCategoris && this.mPreSubCategoris.key === item.key) {
+          cellContainer.changeDown();
+        } else {
+          cellContainer.changeNormal();
         }
         return cellContainer;
       },
@@ -287,8 +295,48 @@ export class MarketPanel extends BasePanel {
       this.onSelectSubCategoryHandler(cell);
     });
     this.add(this.mSubCategorisScroll.table);
+    this.randomCon = this.scene.make.container(undefined, false);
+    this.randomCon.x = w * 0.5;
+    this.randomCon.visible = false;
+    this.add(this.randomCon);
+    this.randomRefeshTime = this.scene.make.text({
+      x: -w * 0.5 + 10 * this.dpr, y: -12 * this.dpr,
+      text: i18n.t("market.refreshtime"),
+      style: {
+        color: "#007AAE",
+        fontSize: 13 * this.dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }).setOrigin(0, 0.5);
+    const btnWidth = 80 * this.dpr, btnHeight = 30 * this.dpr;
+    this.randomRefreshBtn = new NineSliceButton(this.scene, w * 0.5, this.randomRefeshTime.y, btnWidth, btnHeight, UIAtlasKey.commonKey, "button_g", i18n.t("market.refresh"), this.dpr, this.scale, {
+      left: 15 * this.dpr,
+      top: 15 * this.dpr,
+      right: 15 * this.dpr,
+      bottom: 15 * this.dpr
+    });
+    this.randomRefreshBtn.x = w * 0.5 - this.randomRefreshBtn.width * 0.5 - 10 * this.dpr;
+    this.randomRefreshBtn.setTextOffset(0, 5 * this.dpr);
+    this.randomRefreshBtn.setTextStyle({
+      color: "#0",
+      fontSize: 13 * this.dpr,
+      fontFamily: Font.BOLD_FONT
+    });
+    this.randomRefreshBtn.setFontStyle("bold");
 
-    const propFrame = this.scene.textures.getFrame(this.key, "border.png");
+    this.refreshIcon = this.scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" }).setScale(0.8);
+    this.refreshIcon.setPosition(-10 * this.dpr, -8 * this.dpr);
+    this.refreshNeedCount = this.scene.make.text({
+      x: 0 * this.dpr, y: this.refreshIcon.y,
+      text: "100",
+      style: {
+        fontSize: 10 * this.dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      }
+    }).setOrigin(0, 0.5);
+    this.randomRefreshBtn.add([this.refreshIcon, this.refreshNeedCount]);
+    this.randomCon.add([this.randomRefeshTime, this.randomRefreshBtn]);
+    const propFrame = this.scene.textures.getFrame(this.key, "border");
     const cellWidth = propFrame.width * zoom + 10 * this.dpr;
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;
     const propGridConfig: GridTableConfig = {
@@ -302,7 +350,9 @@ export class MarketPanel extends BasePanel {
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
-        mask: false
+        // mask: false,
+        cellOriginX: 0,
+        cellOriginY: 0
       },
       scrollMode: 1,
       clamplChildOY: false,
@@ -361,6 +411,8 @@ export class MarketPanel extends BasePanel {
       if (this.mSubCategorisScroll) {
         this.mSubCategorisScroll.setItems(subcategorys);
         this.mSubCategorisScroll.layout();
+        const cell = this.mSubCategorisScroll.getCell(0);
+        this.onSelectSubCategoryHandler(cell.container);
       }
     }
   }
@@ -380,13 +432,9 @@ export class MarketPanel extends BasePanel {
     if (!subCategories) {
       return;
     }
-    if (this.mPreSubCategoris) {
-      this.mPreSubCategoris.changeNormal();
-    }
-
     this.queryProp(categories.category.key, subCategories.key);
-    gameobject.changeDown();
-    this.mPreSubCategoris = gameobject;
+    this.mPreSubCategoris = subCategories;
+    this.mSubCategorisScroll.refresh();
   }
 
   private queryProp(category: string, subCategory: string) {
@@ -395,11 +443,20 @@ export class MarketPanel extends BasePanel {
 
   private onSelectItemHandler(prop: op_client.IMarketCommodity) {
     this.mSelectItem.setProp(prop);
+    this.mSelectItem.setData("propdata", prop);
     this.emit("queryPropResource", prop);
   }
 
   private onBuyItemHandler(prop: op_def.IOrderCommodities) {
-    this.emit("buyItem", prop);
+    const itemdata = this.getBuyPackageData();
+    itemdata.count = prop.quantity;
+    const data = itemdata;
+    const title = i18n.t("market.payment");
+    const resource = this.mSelectItem.getData("display");
+    const confirmHandler = new Handler(this, () => {
+      this.emit("buyItem", prop);
+    }, [prop]);
+    this.showPropFun({ confirmHandler, data, resource, slider: false, title });
   }
 
   private onCloseHandler() {
@@ -410,5 +467,18 @@ export class MarketPanel extends BasePanel {
     if (prop) {
       this.emit("popItemCard", prop, display);
     }
+  }
+  private getBuyPackageData() {
+    const propdata: op_client.IMarketCommodity = this.mSelectItem.getData("propdata");
+    const itemdata = op_client.CountablePackageItem.create();
+    itemdata.id = propdata.id;
+    itemdata.sellingPrice = propdata.price[0];
+    itemdata.name = propdata.name;
+    itemdata.shortName = propdata.shortName;
+    return itemdata;
+  }
+  private showPropFun(config: PicPropFunConfig) {
+    const uimanager = this.mWorld.uiManager;
+    uimanager.showMed("PicPropFun", config);
   }
 }

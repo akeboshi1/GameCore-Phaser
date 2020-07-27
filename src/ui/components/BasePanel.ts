@@ -21,13 +21,8 @@ export class BasePanel extends Panel {
         this.mInitialized = false;
         if (world) {
             this.dpr = Math.round(world.uiRatio || 1);
-            this.scale = this.mWorld.uiScale || 1;
+            this.scale = this.mWorld.uiScale;
         }
-    }
-
-    protected init() {
-        super.init();
-        // this.setInteractive();
     }
 
     protected addResources(key: string, resource: any) {
@@ -37,5 +32,22 @@ export class BasePanel extends Panel {
                 this.scene.load[resource.type](key, Url.getUIRes(resource.dpr, resource.texture), Url.getUIRes(resource.dpr, resource.data));
             }
         }
+    }
+
+    protected get scaleWidth() {
+        const width = this.scene.cameras.main.width / this.scale;
+        return width;
+    }
+    protected get scaleHeight() {
+        const height = this.scene.cameras.main.height / this.scale;
+        return height;
+    }
+    protected get cameraWidth() {
+        const width = this.scene.cameras.main.width;
+        return width;
+    }
+    protected get cameraHeight() {
+        const height = this.scene.cameras.main.height;
+        return height;
     }
 }

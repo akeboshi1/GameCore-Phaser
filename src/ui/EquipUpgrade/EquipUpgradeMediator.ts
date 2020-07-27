@@ -15,6 +15,12 @@ export class EquipUpgradeMediator extends BaseMediator {
         this.scene = scene;
         this.layerMgr = layerMgr;
         this.world = worldService;
+        if (!this.equipUpgrade) {
+            this.equipUpgrade = new EquipUpgrade(this.world);
+            this.equipUpgrade.on("activeEquip", this.onActiveEquipment, this);
+            this.equipUpgrade.on("showopen", this.onShowEquipPanel, this);
+            this.equipUpgrade.register();
+        }
     }
 
     show() {
@@ -27,34 +33,21 @@ export class EquipUpgradeMediator extends BaseMediator {
             this.mView.on("reqActive", this.onReqActiveEquipment, this);
             this.mView.on("reqEquiped", this.onReqEquipedEquipment, this);
         }
-        if (!this.equipUpgrade) {
-            this.equipUpgrade = new EquipUpgrade(this.world);
-            this.equipUpgrade.on("activeEquip", this.onActiveEquipment, this);
-            this.equipUpgrade.register();
-        }
+
         this.layerMgr.addToUILayer(this.mView);
         if (this.mParam && this.mParam.length > 0)
             this.onEquipUpgradePacket(this.mParam[0]);
         this.mView.show();
     }
 
-    isSceneUI() {
-        return true;
-    }
-
     destroy() {
-        if (this.equipUpgrade) {
-            this.equipUpgrade.destroy();
-            this.equipUpgrade = undefined;
-        }
-        if (this.mView) {
-            this.mView.hide();
-            this.mView = undefined;
-        }
+        if (this.equipUpgrade) this.equipUpgrade.destroy();
+        this.equipUpgrade = undefined;
+        super.destroy();
     }
 
     private onHidePanel() {
-        this.destroy();
+        super.destroy();
     }
 
     private onEquipUpgradePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
@@ -77,6 +70,11 @@ export class EquipUpgradeMediator extends BaseMediator {
 
     private onReqActiveEquipment(id: string) {
         if (this.equipUpgrade) this.equipUpgrade.reqActiveEquipment(id);
+    }
+
+    private onShowEquipPanel(content: any) {
+        this.setParam([content]);
+        this.show();
     }
 
 }

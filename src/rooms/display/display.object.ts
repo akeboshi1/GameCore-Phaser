@@ -1,12 +1,10 @@
 import { Font } from "../../utils/font";
-import { Logger } from "../../utils/log";
 import { DynamicSprite } from "../../ui/components/dynamic.sprite";
 import { DynamicImage } from "../../ui/components/dynamic.image";
 import { op_def } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { ReferenceArea } from "../editor/reference.area";
 import { IRoomService } from "../room";
-import { Pos } from "../../utils/pos";
 import { ElementDisplay } from "./element.display";
 import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
@@ -14,10 +12,11 @@ import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
 
 export enum DisplayField {
-    BACKEND = 1,
+    BACKEND = 0,
     STAGE,
     FRONTEND,
-    FLAG
+    FLAG,
+    Effect
 }
 
 export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {
@@ -40,6 +39,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
+    protected mActionName: AnimationData;
     constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
         super(scene);
         this.mElement = element;
@@ -73,15 +73,14 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     play(animationName: AnimationData, field?: DisplayField) {
     }
 
-    public setDirection(val: number) {
-        if (this.mDirection !== val) {
-            this.mDirection = val;
-            if (val === 5 || val === 7) {
-                this.scaleX = -1;
-            } else {
-                this.scaleX = 1;
-            }
-        }
+    mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }
+
+    unmount(ele: Phaser.GameObjects.Container) { }
+
+    removeEffect(field: DisplayField) {
+    }
+
+    removeDisplay(field: DisplayField) {
     }
 
     public destroy(fromScene?: boolean): void {

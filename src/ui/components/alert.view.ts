@@ -10,6 +10,7 @@ export class AlertView extends BasePanel {
     private mCancelBtn: Button;
     private mContent: BBCodeText;
     private mTitleLabel: Phaser.GameObjects.Text;
+    private mOkText: string;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.disInteractive();
@@ -28,12 +29,32 @@ export class AlertView extends BasePanel {
             if (config.title) {
                 this.mTitleLabel.setText(config.title);
             }
+            // if (config.btns === Buttons.Ok) {
+
+            // }
+            const btns = config.btns;
+            if (btns === Buttons.Cancel) {
+                this.remove(this.mOkBtn);
+                this.mCancelBtn.x = 0;
+            } else if (btns === Buttons.Ok) {
+                this.remove(this.mCancelBtn);
+                this.mOkBtn.x = 0;
+            }
+
         }
     }
 
     preload() {
         this.addAtlas(this.key, "pica_alert/pica_alert.png", "pica_alert/pica_alert.json");
         super.preload();
+    }
+
+    setOKText(val: string) {
+        this.mOkText = val;
+        if (this.mOkBtn) {
+            this.mOkBtn.setText(val);
+        }
+        return this;
     }
 
     protected init() {
@@ -69,15 +90,14 @@ export class AlertView extends BasePanel {
             }
         });
         this.mContent.setOrigin(0.5, 0.5);
-        this.mContent.setText("[color=#FF0000][/color]");
 
-        this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, "确定");
+        this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, this.mOkText || "确定");
         this.mOkBtn.setTextStyle({
             color: "#905B06",
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mOkBtn.x = (bg.width - this.mOkBtn.displayWidth) / 2 - 33 * this.dpr;
+        this.mOkBtn.x = -(bg.width - this.mOkBtn.displayWidth) / 2 + 38* this.dpr;
         this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
         this.mOkBtn.on("Tap", this.onOkHandler, this);
 
@@ -86,7 +106,7 @@ export class AlertView extends BasePanel {
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mCancelBtn.x = -(bg.width - this.mCancelBtn.displayWidth) / 2 + 33 * this.dpr;
+        this.mCancelBtn.x = (bg.width - this.mCancelBtn.displayWidth) / 2 - 38* this.dpr;
         this.mCancelBtn.y = this.mOkBtn.y;
         this.mCancelBtn.on("Tap", this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);
@@ -118,4 +138,11 @@ export interface IAlertConfig {
     content?: any;
     ox?: number;
     oy?: number;
+    btns?: Buttons;
+}
+
+export enum Buttons {
+    Ok,
+    Cancel,
+    OKAndCancel,
 }

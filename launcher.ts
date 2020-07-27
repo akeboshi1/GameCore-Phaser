@@ -3,15 +3,19 @@
 // 2. 做设备兼容
 
 import { version } from "./version";
-import { ServerAddress } from "./src/net/address";
-import { ConnectionService } from "./src/net/connection.service";
-import { Capsule, PaletteNode, MossNode } from "game-capsule";
+// import { ServerAddress } from "./src/net/address";
+// import { ConnectionService } from "./src/net/connection.service";
+// import { Capsule, PaletteNode, MossNode } from "game-capsule";
+// import { EditorLauncher, EditorCanvasType } from "./src/editor/editor.launcher";
+// import { ElementEditorEmitType, ElementEditorBrushType } from "./src/editor/canvas/element/element.editor.canvas";
+import { Logger } from "./src/utils/log";
+import { load } from "./src/utils/http";
 
 export interface ILauncherConfig {
     auth_token: string;
     token_expire: string | null;
     token_fingerprint: string;
-    server_addr: ServerAddress | undefined;
+    server_addr: any | undefined;
     game_id: string;
     virtual_world_id: string;
     ui_scale?: number;
@@ -25,7 +29,7 @@ export interface ILauncherConfig {
     readonly baseWidth: number;
     readonly baseHeight: number;
     readonly game_created?: Function;
-    readonly connection?: ConnectionService;
+    readonly connection?: any;
     readonly isEditor?: boolean;
     readonly osd?: string;
     readonly closeGame: Function;
@@ -42,10 +46,10 @@ export interface GameMain {
     startFullscreen(): void;
     stopFullscreen(): void;
     createGame(): void;
-    setGameConfig(config: Capsule): void;
-    updatePalette(palette: PaletteNode): void;
+    setGameConfig(config): void;
+    updatePalette(palett): void;
 
-    updateMoss(moss: MossNode): void;
+    updateMoss(moss): void;
 
     destroy(): void;
 }
@@ -57,6 +61,31 @@ export class Launcher {
 
     public static start(config?: ILauncherConfig): Launcher {
         return new this(config);
+    }
+
+    public static DeserializeNode(buffer) {
+        // const capsule = new Capsule();
+        // capsule.deserialize(buffer);
+
+        // return capsule;
+    }
+
+    public static startElementEditor(config) {
+        // const canvas = EditorLauncher.CreateCanvas(EditorCanvasType.Element, config);
+        // let loadCount = 0;
+        // canvas.on(ElementEditorEmitType.Resource_Loaded, (success: boolean, msg: string) => {
+        //     Logger.getInstance().log("loadCount", loadCount);
+        //     if (success && loadCount === 0) {
+        //         loadCount++;
+        //         // canvas.deserializeDisplay().then((val) => {
+        //         //     Logger.getInstance().log("deserializeDisplay", val);
+        //         //     canvas.generateSpriteSheet(val).then((spriteSheet) => {
+        //         //         Logger.getInstance().log("generateSpriteSheet", spriteSheet);
+        //         //     });
+        //         // });
+        //         canvas.reloadDisplayNode();
+        //     }
+        // });
     }
 
     readonly minWidth = 1280;
@@ -81,7 +110,7 @@ export class Launcher {
         screenHeight: this.minHeight,
         baseWidth: this.maxWidth,
         baseHeight: this.maxHeight,
-        ui_scale: 1,
+        ui_scale: undefined,
         closeGame: null,
         platform: "pc",
     };
@@ -142,17 +171,17 @@ export class Launcher {
         this.world.stopFullscreen();
     }
 
-    public setGameConfig(config: Capsule) {
+    public setGameConfig(config) {
         if (!this.world) return;
         this.world.setGameConfig(config);
     }
 
-    public updatePalette(palette: PaletteNode) {
+    public updatePalette(palette) {
         if (!this.world) return;
         this.world.updatePalette(palette);
     }
 
-    public updateMoss(moss: MossNode) {
+    public updateMoss(moss) {
         if (!this.world) return;
         this.world.updateMoss(moss);
     }
@@ -186,3 +215,5 @@ export class Launcher {
         if (this.world) this.world.destroy();
     }
 }
+
+export * from "./src/editor"// 待launcher模块分离后  这行代码写在game-core中

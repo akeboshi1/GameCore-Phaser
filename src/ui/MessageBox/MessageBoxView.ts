@@ -89,6 +89,7 @@ export class MessageBoxView extends BasePanel {
         const size: Size = this.mWorld.getSize();
         this.mWidth = 300;
         this.mHeight = 200;
+
         const border = new NinePatch(this.scene, 0, 0, this.mWidth, this.mHeight, Border.getName(), null, Border.getConfig());
         border.x = 0;
         border.y = 0;

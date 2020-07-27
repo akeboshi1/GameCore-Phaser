@@ -8,34 +8,57 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { i18n } from "../../i18n";
 export class MineSettlePanel extends BasePanel {
     private key: string = "mine_settle";
     private confirmBtn: NinePatchButton;
     private mPropGrid: GameGridTable;
     private blackGraphic: Phaser.GameObjects.Graphics;
+    private bg: NinePatch;
+    private titleimage: Phaser.GameObjects.Image;
+    private titleName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.setInteractive();
+        this.scale = 1;
     }
 
     resize(w: number, h: number) {
-        const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height;
-        const zoom = this.mWorld.uiScale;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
         super.resize(width, height);
-        this.x = width / 2;
-        this.y = height / 2;
-        this.blackGraphic.setPosition(-this.x, -this.y);
+        this.bg.x = width / 2;
+        this.bg.y = height / 2;
+        this.titleimage.x = width / 2;
+        this.titleimage.y = this.bg.y - this.bg.displayHeight / 2 - 8 * this.dpr;
+        this.confirmBtn.x = width / 2;
+        this.confirmBtn.y = this.bg.y + 100 * this.dpr;
+        this.titleName.x = width / 2;
+        this.titleName.y = this.titleimage.y + 32 * this.dpr;
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
-        this.blackGraphic.fillRect(0, 0, width, height);
-        this.mPropGrid.refreshPos(this.x + 15 * this.dpr * zoom, this.y - 20 * this.dpr * zoom, -this.x + 15 * this.dpr * zoom, -this.y -0 * this.dpr * zoom);
-        this.setSize(width, height);
+        this.blackGraphic.fillRect(0, 0, width / this.scale, height / this.scale);
+        this.mPropGrid.refreshPos(width / 2, this.bg.y - 2 * this.dpr);
+        this.mPropGrid.resetMask();
+        this.setSize(width * this.scale * this.scale, height * this.scale * this.scale);
     }
 
     show(param?: any) {
-        super.show(param);
+        this.mShowData = param;
         this.refreshData();
+        if (this.mPreLoad) return;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShow) return;
+        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        } else {
+            this.mShow = true;
+        }
+        this.setInteractive();
+        this.addListen();
     }
 
     addListen() {
@@ -54,35 +77,37 @@ export class MineSettlePanel extends BasePanel {
     }
 
     init() {
-        const zoom = this.mWorld.uiScale;
-        const bg = new NinePatch(this.scene, 0, 0, 293 * this.dpr * zoom, 260 * this.dpr * zoom, this.key, "bg", {
+        const width = this.cameraWidth;
+        const height = this.cameraHeight;
+        this.bg = new NinePatch(this.scene, 0, 0, 293 * this.dpr, 260 * this.dpr, this.key, "bg", {
             left: 10,
             top: 10,
             right: 10,
             bottom: 10
         });
         this.blackGraphic = this.scene.make.graphics(undefined, false);
-        const titleimage = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "title" }, false);
-        titleimage.setPosition(0, -bg.displayWidth * 0.5 - 10 * this.dpr * zoom);
-        const tilteName = this.scene.make.text({
-            x: 0, y: titleimage.y + 32 * this.dpr * zoom, text: "获得物品",
-            style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
-        }).setOrigin(0.5, 0.5);
+        this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
-        const capW = (propFrame.width + 20 * this.dpr);
-        const capH = (propFrame.height + 25 * this.dpr);
+        const zoom = this.scale;
+        const capW = (propFrame.width + 20 * this.dpr * zoom);
+        const capH = (propFrame.height + 25 * this.dpr * zoom);
         const config: GridTableConfig = {
             x: 0,
             y: 0,
-            background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             table: {
-                width: 300 * this.dpr * zoom,
-                height: 170 * this.dpr * zoom,
+                width: 280 * this.dpr * zoom,
+                height: 160 * this.dpr * zoom,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                cellOriginX: 0,
+                cellOriginY: 0,
+                cellPadX: 18 * this.dpr * zoom,
+                zoom: this.scale
             },
+            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
+            clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
@@ -103,7 +128,12 @@ export class MineSettlePanel extends BasePanel {
                 this.onSelectItemHandler(data);
             }
         });
-        this.confirmBtn = new NinePatchButton(this.scene, 0, 100 * this.dpr * zoom, 90 * this.dpr * zoom, 40 * this.dpr * zoom, this.key, "button", "存入背包", {
+        this.titleimage = this.scene.make.image({ x: 0, y: -this.bg.displayWidth * 0.5 - 10 * this.dpr, key: this.key, frame: "title" }, false);
+        this.titleName = this.scene.make.text({
+            x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("minesettle.settle"),
+            style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
+        }).setOrigin(0.5, 0.5);
+        this.confirmBtn = new NinePatchButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, this.key, "button", i18n.t("minesettle.savebag"), {
             left: 20,
             top: 20,
             right: 20,
@@ -114,16 +144,15 @@ export class MineSettlePanel extends BasePanel {
             fontSize: 16 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        this.add([this.blackGraphic, bg, titleimage, tilteName, this.confirmBtn, this.mPropGrid.table]);
+        this.add([this.blackGraphic, this.bg, this.titleimage, this.titleName, this.confirmBtn]);
+        this.add(this.mPropGrid.table);
         this.resize(0, 0);
         super.init();
-        // this.setMineSettlePacket(this.testData());
     }
 
     setMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {
         if (this.mInitialized) {
             this.mPropGrid.setItems(content.items);
-            this.mPropGrid.layout();
         }
     }
 

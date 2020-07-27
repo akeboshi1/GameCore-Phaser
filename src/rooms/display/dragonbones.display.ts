@@ -1,11 +1,12 @@
 import { ResUtils } from "../../utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
-import { DisplayObject } from "./display.object";
+import { DisplayObject, DisplayField } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
-import { Logger } from "../../utils/log";
+import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
+import { IFramesModel } from "./frames.model";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -81,7 +82,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     public mDisplayInfo: IDragonbonesModel | undefined;
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
-    protected mActionName: AnimationData;
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
     private mPreDirection: number;
@@ -123,13 +123,17 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         // this.alpha = val;
     }
 
-    public load(display: IDragonbonesModel) {
-        this.mDisplayInfo = display;
-        this.mCollisionArea = [[1, 1], [1, 1]];
-        this.mOriginPoint = new Phaser.Geom.Point(1, 1);
-        if (!this.mDisplayInfo) return;
-        this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
-        if (this.scene.cache.obj.has(this.dragonBonesName)) { }
+    public load(display: IDragonbonesModel | IFramesModel, field?: DisplayField) {
+        field = !field ? DisplayField.STAGE : field;
+        if (field === DisplayField.STAGE) {
+            this.mDisplayInfo = <IDragonbonesModel>display;
+            this.mCollisionArea = [[1, 1], [1, 1]];
+            this.mOriginPoint = new Phaser.Geom.Point(1, 1);
+            if (!this.mDisplayInfo) return;
+            this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
+        } else {
+        }
+
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -139,7 +143,13 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     public play(val: AnimationData) {
         this.mActionName = val;
         if (this.mArmatureDisplay) {
-            this.mArmatureDisplay.animation.play(val.animationName);
+            if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
+                this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            }
+            if (val.playingQueue && val.playingQueue.complete) {
+                this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            }
+            this.mArmatureDisplay.animation.play(val.name);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
         }
     }
@@ -208,6 +218,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.mAnimationName,
             this.dragonBonesName,
         );
+        this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
         this.mArmatureDisplay.visible = false;
         this.add(this.mArmatureDisplay);
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
@@ -815,11 +826,15 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                     const frameName: string = "test resources/" + tmpKey;
                     const part: string = obj.slot.replace("$", obj.dir.toString());
                     if (part === slotKey) {
+                        const texture = this.scene.textures.get(partName);
+                        // if (this.mAntial) {
+                        //     // 用于设置边缘抗锯齿
+                        //     texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                        // }
                         if (dragonBonesTexture.frames[frameName]) {
                             this.mDragonBonesRenderTexture.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
                             break;
                         } else {
-                            const texture = this.scene.textures.get(partName);
                             this.mDragonBonesRenderTexture.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);
                             break;
                         }
@@ -829,6 +844,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             } else {
                 const drawTextureKey = loadArr[1] + "_png";
                 const drawTexture = this.scene.game.textures.get(drawTextureKey);
+                // if (this.mAntial) {
+                //     // 用于设置边缘抗锯齿
+                //     drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                // }
                 this.mDragonBonesRenderTexture.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
             }
         }
@@ -837,6 +856,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 if (this.scene.game.textures.exists(renderTextureKey))
                     this.scene.game.textures.removeKey(renderTextureKey);
                 const changeTexture: Phaser.Textures.Texture = this.scene.game.textures.create(renderTextureKey, snapshot, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
+                // if (this.mAntial) {
+                //     changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                // }
                 this.mArmatureDisplay.armature.replacedTexture = changeTexture;
             }
         });
@@ -852,8 +874,39 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         }
     }
 
+    private onArmatureLoopComplete(event: dragonBones.EventObject) {
+        if (!this.mArmatureDisplay || !this.mActionName) {
+            return;
+        }
+        const queue = this.mActionName.playingQueue;
+        if (queue.playedTimes === undefined) {
+            queue.playedTimes = 1;
+        } else {
+            queue.playedTimes++;
+        }
+        if (queue.playedTimes >= queue.playTimes) {
+            this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            // this.emit("animationComplete");
+            if (queue.complete) {
+                queue.complete.call(this);
+                delete queue.complete;
+            }
+        }
+    }
+
+    private onSoundEventHandler(event: dragonBones.EventObject) {
+        // Logger.getInstance().log("sound event: ", event.name);
+        if (event.name) {
+            this.mRoomService.world.playSound({
+                field: SoundField.Element,
+                key: event.name,
+            });
+        }
+    }
+
     set dragonBonesName(val: string) {
         // if (this.mDragonbonesName !== val) {
+        // TODO 暴露一个换装接口
         this.mDragonbonesName = val;
         this.buildDragbones();
         // }

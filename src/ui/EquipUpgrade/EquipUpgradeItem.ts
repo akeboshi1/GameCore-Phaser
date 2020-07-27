@@ -1,15 +1,18 @@
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
-import { Url } from "../../utils/resUtil";
+import { Url, Coin } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatch } from "../components/nine.patch";
+import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import { UIAtlasKey } from "../ui.atals.name";
 export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
     private bottombg: Phaser.GameObjects.Image;
     private unlockbtn: Phaser.GameObjects.Container;
+    private unlockBg: NinePatch;
     private titleName: Phaser.GameObjects.Text;
     private equipName: Phaser.GameObjects.Text;
     private penetrationText: Phaser.GameObjects.Text;
@@ -21,7 +24,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private diamondIcon: Phaser.GameObjects.Image;
     private costNum: Phaser.GameObjects.Text;
     private btnName: Phaser.GameObjects.Text;
-    private unlockCondition: Phaser.GameObjects.Text;
+    private unlockCondition: BBCodeText;
     private haveEquiped: boolean = false;
     private curEquipItem: EquipItemCell;
     private zoom: number;
@@ -54,32 +57,47 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
 
         this.gridTable.setItems(items);
         if (this.haveEquiped)
-            this.gridTable.setT((index + 1) / items.length);
-        this.setBgTexture(data["isblue"]);
+            // this.gridTable.setT((index + 1) / items.length);
+            this.setBgTexture(data["isblue"]);
     }
 
     setTransPosition(x: number, y: number) {
-        const w = this.mScene.cameras.main.width, h = this.mScene.cameras.main.height;
-        const posX = w * 0.5 + this.mContainer.x * this.zoom;
-        const posY = h * 0.5 + this.mContainer.y * this.zoom - 20 * this.dpr;
-        this.gridTable.refreshPos(x, y); //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        // const w = this.mScene.cameras.main.width, h = this.mScene.cameras.main.height;
+        // const posX = w * 0.5 + this.mContainer.x * this.zoom;
+        // const posY = h * 0.5 + this.mContainer.y * this.zoom - 20 * this.dpr;
+        //  -posX + this.cellWidth / 2 * this.zoom, -posY);
+        this.bg.x += x;
         this.bg.y += y;
+        this.titleName.x += x;
         this.titleName.y += y;
+        this.bottombg.x += x;
         this.bottombg.y += y;
+        this.equipName.x += x;
         this.equipName.y += y;
+        this.penetrationText.x += x;
         this.penetrationText.y += y;
+        this.equipDes.x += x;
         this.equipDes.y += y;
+        this.topbg.x += x;
         this.topbg.y += y;
+        this.unlockbtn.x += x;
         this.unlockbtn.y += y;
-        this.costNum.y += y;
-        this.diamondIcon.y += y;
+        // this.costNum.x += x;
+        // this.costNum.y += y;
+        // this.diamondIcon.x += x;
+        // this.diamondIcon.y += y;
+        this.curEquipItem.x += x;
         this.curEquipItem.y += y;
+        this.gridTable.refreshPos(x, y - 10 * this.dpr * this.zoom);
+        this.gridTable.resetMask();
         // this.gridTable.x = posX;
         // this.gridTable.y = posY;
         // this.gridTable.layout();
         // this.mScrollContainer.setPosition(-this.gridTable.x + this.cellWidth / 2 * this.zoom, -this.gridTable.y);
     }
-
+    get displayList(): any[] {
+        return [this.bg, this.topbg, this.bottombg, this.titleName, this.equipName, this.penetrationText, this.equipDes];
+    }
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
         this.gridTable.refresh();
@@ -141,15 +159,16 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.cellHeight = capH;
         const config: GridTableConfig = {
             scrollMode: 1,
-            background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
+            // background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
-                width: 245 * this.dpr * this.zoom,
-                height: 60 * this.dpr * this.zoom,
+                width: 259 * this.dpr * this.zoom,
+                height: 77 * this.dpr * this.zoom,
                 columns: 1,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                mask: false
+                cellOriginX: 0,
+                cellOriginY: 0
             },
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
@@ -157,10 +176,10 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
                 const index = cell.index;
                 if (cellContainer === null) {
                     cellContainer = new EquipItemCell(scene, this.dpr, this.key, this.zoom);
+                    cellContainer.setSize(capW, capH);
                     this.mContainer.add(cellContainer);
                     cellContainer.setChildPosition();
                 }
-                cellContainer.setSize(capW, capH);
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item, index);
                 if (this.curEquipItem == null) {
@@ -179,7 +198,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.gridTable.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.gridTable.addListen();
         this.mContainer.add(this.gridTable.table);
     }
 
@@ -197,24 +215,32 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.penetrationText.text = data.buffDisplayNames[0];
         this.equipDes.text = data.description;
         this.equipName.text = data.name;
-        this.costNum.text = data.price + "";
         if (data.owned) this.unlockbtn.visible = false;
         else this.unlockbtn.visible = true;
         if (data.qualified) {
             this.unlockCondition.visible = false;
             this.unlockbtn.setInteractive();
+            this.unlockBg.clearTint();
+            this.costNum.setColor("#ffffff");
         } else if (!data.owned) {
             this.unlockCondition.visible = true;
             this.unlockCondition.text = data.conditionDisplayNames[0];
             this.unlockbtn.disableInteractive();
+            this.unlockBg.setTintFill(0x888888);
+            this.costNum.setColor("#999999");
         }
-        if (data.price == null) {
+        if (data.price === null) {
             this.costNum.visible = false;
             this.diamondIcon.visible = false;
             this.btnName.setPosition(0, 0 * this.dpr);
         } else {
+            const costPrice = data.price.price;
+            const powValue = Math.pow(10, data.price.displayPrecision);
+            this.costNum.text = Math.floor(costPrice * powValue) / powValue + "";
             this.costNum.visible = true;
             this.diamondIcon.visible = true;
+            this.diamondIcon.setTexture(this.commonKey, Coin.getIcon(data.price.coinType));
+            this.diamondIcon.setDisplaySize(12 * this.dpr, 12* this.dpr);
             this.btnName.setPosition(0, 6 * this.dpr);
         }
         cell.setSelect(true);
@@ -224,7 +250,9 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     }
 
     private createBtn() {
-        this.unlockCondition = this.mScene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        // this.unlockCondition = this.mScene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.unlockCondition = new BBCodeText(this.mScene, 0, -26 * this.dpr, {})
+            .setOrigin(0.5).setFontSize(10 * this.dpr).setFontFamily(Font.DEFULT_FONT);
         this.unlockbtn = this.mScene.make.container(undefined, false);
         const btnBg = new NinePatch(this.mScene, 0, 0, 88 * this.dpr * this.zoom, 31 * this.dpr * this.zoom, this.commonKey, "yellow_btn_normal", {
             left: 12 * this.dpr * this.zoom,
@@ -232,9 +260,10 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
             right: 12 * this.dpr * this.zoom,
             bottom: 12 * this.dpr * this.zoom
         });
-        this.diamondIcon = this.mScene.make.image({ x: -15 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
-        this.costNum = this.mScene.make.text({ x: 0, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.btnName = this.mScene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
+        this.unlockBg = btnBg;
+        this.diamondIcon = this.mScene.make.image({ x: -13 * this.dpr, y: -8 * this.dpr, key: this.commonKey, frame: "test_diamond" });
+        this.costNum = this.mScene.make.text({ x: -2, y: -8 * this.dpr, text: "1000", style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.btnName = this.mScene.make.text({ x: 0, y: 6 * this.dpr, text: "立即解锁", style: { color: "#8F4300", fontSize: 11* this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.costNum.setStroke("#ffffff", 1);
         this.btnName.setStroke("#8F4300", 1);
         this.unlockCondition.setStroke("#000000", 1);
@@ -274,12 +303,12 @@ class EquipItemCell extends Phaser.GameObjects.Container {
     public setItemData(data: op_client.IMiningEquipment, index: number) {
         this.itemData = data;
         this.index = index;
-        const url = Url.getOsdRes(data.display.texturePath);// "resources/test/test_equip";// Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.display.texturePath);
         this.equipIcon.load(url, this, () => {
-            // this.equipIcon.setDisplaySize(22 * this.dpr * this.zoom, 22 * this.dpr * this.zoom);
-            const x = - this.equipIcon.width * 0.5 + 2 * this.dpr * this.zoom;
-            const y = 2 * this.dpr * this.zoom;
-            this.equipIcon.setPosition(x, y);
+            this.equipIcon.scale = this.dpr * this.zoom;
+            // const x = this.equipIcon.width * 0.5 + 18 * this.dpr * this.zoom;
+            // const y = this.equipIcon.height * 0.5 + 15 * this.dpr * this.zoom;
+            // this.equipIcon.setPosition(x, y);
         });
         this.setEquiped(data.selected, data.owned);
         this.setSelect(this.isSelect);
@@ -292,18 +321,19 @@ class EquipItemCell extends Phaser.GameObjects.Container {
             if (this.isUnlock) bgName = "equipbg2";
             else bgName = "equipbg1";
         }
+        if (this.itemData.selected) bgName = "equipbg2";
         this.bg.setTexture(this.key, bgName);
     }
 
     public setChildPosition() {
-        let x = - this.bg.width * 0.5;
-        let y = -10 * this.dpr * this.zoom;
+        let x = this.bg.width * 0.5 + 10 * this.dpr * this.zoom;
+        let y = this.height - 10 * this.dpr * this.zoom;
         this.bg.setPosition(x, y);
-        x = - this.equipIcon.width * 0.5 + 2 * this.dpr * this.zoom;
-        y = 2 * this.dpr * this.zoom;
+        x = x + 1 * this.dpr * this.zoom;
+        y = this.height * 0.5 + 2 * this.dpr * this.zoom;
         this.equipIcon.setPosition(x, y);
-        x = - this.unlock.width * 0.5 + 20 * this.dpr * this.zoom;
-        y = -8 * this.dpr * this.zoom;
+        x = x + 22 * this.dpr * this.zoom;
+        y = 8 * this.dpr * this.zoom;
         this.unlock.setPosition(x, y);
 
     }
@@ -322,9 +352,9 @@ class EquipItemCell extends Phaser.GameObjects.Container {
     }
 
     private create() {
-        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr * this.zoom, key: this.key, frame: "equipbg" }).setOrigin(0, 0).setScale(this.zoom);
-        this.equipIcon = new DynamicImage(this.scene, 15 * this.dpr * this.zoom, 0 * this.dpr * this.zoom).setOrigin(0, 0);
-        this.unlock = this.scene.make.image({ x: 30 * this.dpr * this.zoom, y: -10 * this.dpr * this.zoom, key: this.key, frame: "lock" }).setOrigin(0, 0);
+        this.bg = this.scene.make.image({ x: 0, y: -10 * this.dpr * this.zoom, key: this.key, frame: "equipbg" });
+        this.equipIcon = new DynamicImage(this.scene, 15 * this.dpr * this.zoom, 0 * this.dpr * this.zoom);
+        this.unlock = this.scene.make.image({ x: 30 * this.dpr * this.zoom, y: -10 * this.dpr * this.zoom, key: this.key, frame: "lock" });
         this.add([this.bg, this.equipIcon, this.unlock]);
     }
 }

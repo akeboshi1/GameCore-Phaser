@@ -11,6 +11,7 @@ export class SelectedElement {
     private mEffecte: DynamicImage;
     private mSelecting: boolean;
     private mSprite: ISprite;
+    private mDisplayHeight: number = 0;
     constructor(private mScene: Phaser.Scene, private mLayerManager: LayerManager) {
         this.mEffecte = new DynamicImage(this.mScene, 0, 0);
         this.mEffecte.load(Url.getRes("ui/editor/selectFlag.png"));
@@ -24,6 +25,7 @@ export class SelectedElement {
         }
         this.mDisplay = display;
         display.showRefernceArea();
+        this.mDisplayHeight = this.mDisplay.spriteHeight;
         const ele = display.element;
         if (ele) {
             ele.showNickname();
@@ -58,8 +60,8 @@ export class SelectedElement {
             return;
         }
         const baseLoc = this.mDisplay.baseLoc;
-        this.mEffecte.x = this.mDisplay.x + baseLoc.x + (this.mDisplay.spriteWidth >> 1);
-        this.mEffecte.y = this.mDisplay.y + baseLoc.y;
+        this.mEffecte.x = this.mDisplay.x + baseLoc.x;
+        this.mEffecte.y = this.mDisplay.y + baseLoc.y - (this.mDisplayHeight >> 1);
     }
 
     setDisplayPos(x: number, y: number) {

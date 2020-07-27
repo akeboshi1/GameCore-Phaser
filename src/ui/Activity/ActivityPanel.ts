@@ -1,18 +1,43 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
+import { Handler } from "../../Handler/Handler";
+import { Logger } from "../../utils/log";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
+    private content: Phaser.GameObjects.Container;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
     }
 
     resize(w: number, h: number) {
-        const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height;
-        this.x = width - 40 * this.dpr;
-        this.y = 150 * this.dpr;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
+        this.content.x = width - 20 * this.dpr;
+        this.content.y = 90 * this.dpr;
         this.setSize(w, h);
+    }
+
+    show(param?: any) {
+        if (this.mInitialized) {
+            this.setInteractive();
+        }
+        super.show(param);
+        this.checkUpdateActive();
+    }
+
+    updateUIState(active?: op_pkt_def.IPKT_UI) {
+        if (!this.mInitialized) {
+            return;
+        }
+        if (active.name === "activity.taskbtn") {
+            const btn = <Phaser.GameObjects.Image>this.content.list[3];
+            btn.visible = active.visible;
+            if (!active.disabled) {
+                btn.setInteractive();
+            } else btn.removeInteractive();
+        }
     }
 
     protected preload() {
@@ -21,30 +46,48 @@ export class ActivityPanel extends BasePanel {
     }
 
     protected init() {
-        for (let i = 0; i < 3; i++) {
+        this.content = this.scene.make.container(undefined, false);
+        this.add(this.content);
+        for (let i = 0; i < 4; i++) {
             const img = this.scene.make.image({
                 key: this.key,
-                frame: `icon_${i + 1}.png`
+                frame: `icon_${i + 1}`
             }, false);
-            // img.y = i * 50 * this.dpr;
-            this.add(img);
+            this.content.add(img);
         }
 
-        let mainMenuW = 160 * this.dpr;
-        const subList = this.list;
-        subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.height);
-        const margin = mainMenuW / (subList.length - 1);
+        const subList = this.content.list;
+        const offsetY: number = 15 * this.dpr;
         let tmpWid: number = 0;
-        let tmpHei: number = 0;
-        for (let i = 1; i < subList.length; i++) {
-            const preButton = <Phaser.GameObjects.Image>subList[i - 1];
+        let height: number = 0;
+        const handler = new Handler(this, this.onClickHandler);
+        for (let i = 0; i < subList.length; i++) {
             const button = <Phaser.GameObjects.Image>subList[i];
-            button.y = preButton.height + preButton.y + margin;
-            tmpHei += button.y;
+            button.y = button.height * button.originY + height;
+            height += button.height + offsetY;
             tmpWid = button.width;
+            button.on("pointerup", () => {
+                handler.runWith(i + 1);
+            }, this);
+            button.setInteractive();
+        }
+        this.resize(tmpWid, height);
+        super.init();
+    }
+
+    private onClickHandler(name: number) {
+        Logger.getInstance().log(name);
+        if (name === 4) {
+            this.emit("showPanel", "Task");
+        }
+    }
+    private checkUpdateActive() {
+        const arr = this.mWorld.uiManager.getActiveUIData("Activity");
+        if (arr) {
+            for (const data of arr) {
+                this.updateUIState(data);
+            }
         }
 
-        this.resize(tmpWid, tmpHei);
-        super.init();
     }
 }

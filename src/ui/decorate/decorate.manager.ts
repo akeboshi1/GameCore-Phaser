@@ -46,7 +46,7 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
         if (!this.mPanel) {
             return;
         }
-        this.mPanel.setPosition(x, y);
+        this.mPanel.setPos(x, y);
     }
 
     public destroy() {

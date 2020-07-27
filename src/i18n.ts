@@ -5,8 +5,9 @@ import LanguageDetector from "i18next-browser-languagedetector";
 export function initLocales(path: string): Promise<any> {
   return i18next
     .use(i18nextXHRBackend)
-    .use(LanguageDetector)
+    // .use(LanguageDetector)
     .init({
+      lng: "en",
       fallbackLng: "en",
       backend: {
         loadPath: path,

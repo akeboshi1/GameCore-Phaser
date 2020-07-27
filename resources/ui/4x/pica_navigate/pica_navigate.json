@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"bag_btn.png": {
+		"bag_btn": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,7 +20,7 @@
 				"h": 169
 			}
 		},
-		"bg.png": {
+		"bg": {
 			"frame": {
 				"x": 172,
 				"y": 1,
@@ -40,7 +40,7 @@
 				"h": 225
 			}
 		},
-		"close_btn.png": {
+		"close_btn": {
 			"frame": {
 				"x": 176,
 				"y": 1,
@@ -60,7 +60,7 @@
 				"h": 143
 			}
 		},
-		"family_btn.png": {
+		"family_btn": {
 			"frame": {
 				"x": 176,
 				"y": 146,
@@ -80,10 +80,30 @@
 				"h": 179
 			}
 		},
-		"map_btn.png": {
+		"home_btn": {
 			"frame": {
 				"x": 355,
 				"y": 1,
+				"w": 139,
+				"h": 174
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 139,
+				"h": 174
+			},
+			"sourceSize": {
+				"w": 139,
+				"h": 174
+			}
+		},
+		"map_btn": {
+			"frame": {
+				"x": 1,
+				"y": 177,
 				"w": 137,
 				"h": 176
 			},
@@ -100,10 +120,10 @@
 				"h": 176
 			}
 		},
-		"shop_btn.png": {
+		"shop_btn": {
 			"frame": {
-				"x": 1,
-				"y": 327,
+				"x": 355,
+				"y": 177,
 				"w": 154,
 				"h": 167
 			},
@@ -124,11 +144,11 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 493,
-			"h": 495
+			"w": 510,
+			"h": 354
 		},
 		"scale": "1"
 	}

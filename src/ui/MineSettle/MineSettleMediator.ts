@@ -15,9 +15,14 @@ export class MineSettleMediator extends BaseMediator {
         this.scene = scene;
         this.layerMgr = layerMgr;
         this.world = worldService;
+        if (!this.mineSettle) {
+            this.mineSettle = new MineSettle(this.world);
+            this.mineSettle.on("minesettlepacket", this.onMineSettlePacket, this);
+            this.mineSettle.register();
+        }
     }
 
-    show() {
+    show(param?: any) {
         if ((this.mView && this.mView.isShow()) || this.mShow) {
             return;
         }
@@ -25,38 +30,34 @@ export class MineSettleMediator extends BaseMediator {
             this.mView = new MineSettlePanel(this.scene, this.world);
             this.mView.on("hide", this.onHideMineSettle, this);
         }
-        if (!this.mineSettle) {
-            this.mineSettle = new MineSettle(this.world);
-            this.mineSettle.on("minesettlepacket", this.onMineSettlePacket, this);
-            this.mineSettle.register();
-        }
+        super.show();
         this.layerMgr.addToUILayer(this.mView);
         if (this.mParam && this.mParam.length > 0)
-            this.onMineSettlePacket(this.mParam[0]);
+            this.setMIneSettlePanel(this.mParam[0]);
         this.mView.show();
     }
 
-    isSceneUI() {
-        return true;
-    }
-
     destroy() {
-        if (this.mineSettle) {
-            this.mineSettle.destroy();
-            this.mineSettle = undefined;
-        }
-        if (this.mView) {
-            this.mView.hide();
-            this.mView = undefined;
-        }
+        if (this.mineSettle) this.mineSettle.destroy();
+        this.mineSettle = undefined;
+        super.destroy();
     }
 
     private onHideMineSettle() {
         this.mineSettle.reqMineSettlePacket();
-        this.destroy();
+        super.destroy();
     }
 
     private onMineSettlePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_REWARD_PACKAGE) {
+        if (!this.mView || !this.mView.visible) {
+            this.setParam([content]);
+            this.show();
+        } else {
+            this.setMIneSettlePanel(content);
+        }
+    }
+
+    private setMIneSettlePanel(content) {
         const panel = this.mView as MineSettlePanel;
         panel.setData("settleData", content);
         panel.setMineSettlePacket(content);

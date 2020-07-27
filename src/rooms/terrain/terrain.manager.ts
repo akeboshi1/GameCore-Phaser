@@ -4,12 +4,10 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { IRoomService, SpriteAddCompletedListener } from "../room";
 import { IElementManager } from "../element/element.manager";
-import { Logger } from "../../utils/log";
 import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "../element/sprite";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
-import { WorldService } from "../../game/world.service";
 import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
 
@@ -217,7 +215,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const curAni = sprite.currentAnimation;
-        const aniName = curAni.animationName;
+        const aniName = curAni.name;
         const flip = false;
         const collisionArea = displayInfo.getCollisionArea(aniName, flip);
         const walkArea = displayInfo.getWalkableArea(aniName, flip);
@@ -246,11 +244,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         const anis = content.changeAnimation;
+        const ids = content.ids;
         let terrain: Terrain = null;
-        for (const ani of anis) {
-            terrain = this.get(ani.id);
+        for (const id of ids) {
+            terrain = this.get(id);
             if (terrain) {
-                terrain.play(ani.animationName);
+                // terrain.play(ani.animationName);
             }
         }
     }

@@ -1,14 +1,12 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { Font } from "../../utils/font";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../Market/TextButton";
 import { Url } from "../../utils/resUtil";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { NinePatch } from "../components/nine.patch";
@@ -17,6 +15,11 @@ import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { IAvatar } from "../../rooms/display/dragonbones.model";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
+import { UiManager } from "../ui.manager";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -27,20 +30,18 @@ export class FurniBagPanel extends BasePanel {
   private mBackground: Phaser.GameObjects.Graphics;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mShelfContainer: Phaser.GameObjects.Container;
-  private mCategeoriesContainer: Phaser.GameObjects.Container;
-  // private mPropsContainer: Phaser.GameObjects.Container;
   private mDetailDisplay: DetailDisplay;
-  private mAdd: NinePatchButton;
+  private mAdd: NineSliceButton;
   private mBg: Phaser.GameObjects.Image;
   private mSeachInput: SeachInput;
-  private mSelectedItemData: op_client.ICountablePackageItem;
-  private mSelectItem: Item;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: op_def.IStrPair;
   private mPropGrid: GameGridTable;
   private mCategoryScroll: GameScroller;
-  private sellBtn: NinePatchButton;
-  private useBtn: NinePatchButton;
+  private sellBtn: NineSliceButton;
+  private useBtn: NineSliceButton;
+  private saveBtn: NineSliceButton;
+  private resetBtn: NineSliceButton;
   private topBtns: TabButton[] = [];
 
   private mDetailBubble: DetailBubble;
@@ -49,6 +50,8 @@ export class FurniBagPanel extends BasePanel {
   private mEnableEdit: boolean = false;
   private mInputBoo: boolean = false;
   private categoryType: op_def.EditModePackageCategory;
+  private mSelectedItemData: op_client.ICountablePackageItem[] = [];
+  private dressAvatarIDS: string[];
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
@@ -57,28 +60,21 @@ export class FurniBagPanel extends BasePanel {
   }
 
   resize(w: number, h: number) {
-    const width = this.scene.cameras.main.width / this.scale;
-    const height = this.scene.cameras.main.height / this.scale;
+    const width = this.scaleWidth;
+    const height = this.scaleHeight;
     super.resize(width, height);
     const zoom = this.mWorld.uiScale;
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
-
     this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
-
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
     this.mCategoriesBar.fillStyle(0x00cccc);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
-    this.mCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
-    this.mCategeoriesContainer.y = this.mShelfContainer.y;
-    this.mSeachInput.y = this.mCategoriesBar.y + 20 * this.dpr * zoom;
-
-    // this.mPropsContainer.y = 7 * this.dpr * zoom + this.mCategeoriesContainer.height;
 
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.height / 2 + 10 * this.dpr * zoom;
@@ -91,50 +87,57 @@ export class FurniBagPanel extends BasePanel {
     this.useBtn.x = this.mAdd.x;
     this.useBtn.y = this.mAdd.y;
 
-    this.sellBtn.x = this.mAdd.x - this.sellBtn.width - 10 * this.dpr;
+    this.sellBtn.x = Math.floor(this.mAdd.x - this.sellBtn.width - 10 * this.dpr);
     this.sellBtn.y = this.mAdd.y;
+
+    this.resetBtn.x = this.mAdd.x + 25 * this.dpr;
+    this.resetBtn.y = this.mAdd.y;
+
+    this.saveBtn.x = this.resetBtn.x - (this.saveBtn.width + this.resetBtn.width) / 2 - 10 * this.dpr;
+    this.saveBtn.y = this.resetBtn.y;
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
     this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
+    this.mPropGrid.resetMask();
     // this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
     this.setSize(width, height);
   }
 
   setCategories(subcategorys: op_def.IStrPair[]) {
-    subcategorys.unshift({ key: this.seachKey, value: "搜索" });
+    // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
     const zoom = this.mWorld.uiScale;
-    const capW = 56 * this.dpr * zoom;
+    const capW = 60 * this.dpr * zoom;
     const capH = 41 * this.dpr * zoom;
     const items = [];
-    this.mCategoryScroll.clearInteractiveObject();
-    for (const item of this.mCategeoriesContainer.list) {
-      item.destroy();
-    }
-    this.mCategeoriesContainer.list.length = 0;
+    if (this.mSeachInput.parentContainer)
+      this.closeSeach(null);
+    this.mCategoryScroll.clearItems();
+    const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
+    seachBtn.setData("item", { key: this.seachKey, value: "搜索" });
+    seachBtn.y = capH - 40 * this.dpr * zoom;
+    this.mCategoryScroll.addItem(seachBtn);
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, i * capW + 10 * this.dpr * zoom, 0);
-      item.y = capH - item.text.height >> 1;
+      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, 0, 0);
+      item.x = i * capW;
+      item.y = capH - item.text.height - 40 * this.dpr * zoom >> 1;
       item.setData("item", subcategorys[i]);
-      this.mCategeoriesContainer.add(item);
       item.setSize(capW, capH);
-      this.mCategoryScroll.setInteractiveObject(item);
+      this.mCategoryScroll.addItem(item);
 
       items[i] = item;
       item.setFontSize(17 * this.dpr * zoom);
       item.setFontStyle("bold");
     }
-    this.mCategoryScroll.resize();
-    if (items.length > 1) this.onSelectSubCategoryHandler(items[1]);
-    this.mSeachInput.x = capW + this.mSeachInput.width / 2;
-    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
+    if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
+    // this.mSeachInput.x = capW - this.mSeachInput.width / 2;
+    // this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 10 * this.dpr * zoom);
     this.updateCategeoriesLoc(false);
   }
 
   public setProp(props: op_client.ICountablePackageItem[]) {
-    this.mSelectItem = null;
     if (!props) {
       return;
     }
@@ -142,25 +145,73 @@ export class FurniBagPanel extends BasePanel {
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
-
     this.mPropGrid.setItems(props);
-    if (this.mSelectItem)
-      this.onSelectItemHandler(this.mSelectItem);
-    else {
-      this.sellBtn.enable = false;
-      this.useBtn.enable = false;
-      this.mAdd.enable = false;
+    if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      this.mSelectedItemData.length = 0;
+      const cell = this.mPropGrid.getCell(0);
+      this.onSelectItemHandler(cell.container);
+    } else {
+      if (this.mSelectedItemData.length === 0) {
+        for (const prop of props) {
+          if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+            this.mSelectedItemData.push(prop);
+          }
+        }
+        this.updateAvatarItems();
+      }
     }
   }
 
+  public setDressAvatarIds(ids: string[]) {
+    this.dressAvatarIDS = ids;
+    this.updateAvatarItems();
+  }
+
+  public displayAvatar() {
+    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+    content.avatar = new op_gameconfig.Avatar();
+    const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
+    const avatar = player.model.avatar;
+    for (const key in avatar) {
+      if (avatar.hasOwnProperty(key)) {
+        const element = avatar[key];
+        if (element) content.avatar[key] = element;
+      }
+    }
+    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 2, offset);
+  }
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
     if (content.display) {
       this.mDetailDisplay.loadDisplay(content);
     } else if (content.avatar) {
-      this.mDetailDisplay.loadAvatar(content);
-    } else {
-      // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
+      const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
+      const avatar = player.model.avatar;
+      for (const key in avatar) {
+        if (avatar.hasOwnProperty(key)) {
+          const element = avatar[key];
+          if (element) content.avatar[key] = element;
+        }
+      }
+      for (const item of this.mSelectedItemData) {
+        const dataAvatar = item.avatar;
+        for (const key in dataAvatar) {
+          if (dataAvatar.hasOwnProperty(key)) {
+            const element = dataAvatar[key];
+            if (element) content.avatar[key] = element;
+          }
+        }
+      }
+      const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
+      this.mDetailDisplay.loadAvatar(content, 2, offset);
     }
+  }
+
+  public resetAvatar(avatar: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
+    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
+    content.avatar = avatar.avatar;
+    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 2, offset);
   }
 
   public addListen() {
@@ -170,6 +221,8 @@ export class FurniBagPanel extends BasePanel {
     this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
     this.sellBtn.on("pointerup", this.onSellBtnHandler, this);
     this.useBtn.on("pointerup", this.onUseBtnHandler, this);
+    this.saveBtn.on("pointerup", this.onSaveBtnHandler, this);
+    this.resetBtn.on("pointerup", this.onResetBtnHandler, this);
   }
 
   public removeListen() {
@@ -179,6 +232,8 @@ export class FurniBagPanel extends BasePanel {
     this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
     this.sellBtn.off("pointerup", this.onSellBtnHandler, this);
     this.useBtn.off("pointerup", this.onUseBtnHandler, this);
+    this.saveBtn.on("pointerup", this.onSaveBtnHandler, this);
+    this.resetBtn.on("pointerup", this.onResetBtnHandler, this);
   }
 
   destroy() {
@@ -212,9 +267,9 @@ export class FurniBagPanel extends BasePanel {
     this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     // this.mPropsContainer = this.scene.make.container(undefined, false);
-    this.mCategeoriesContainer = this.scene.make.container(undefined, false);
-    this.mCategeoriesContainer.x = this.mShelfContainer.x;
-    this.mCategeoriesContainer.y = this.mShelfContainer.y;
+    // this.mCategeoriesContainer = this.scene.make.container(undefined, false);
+    // this.mCategeoriesContainer.x = this.mShelfContainer.x;
+    // this.mCategeoriesContainer.y = this.mShelfContainer.y;
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
@@ -228,82 +283,63 @@ export class FurniBagPanel extends BasePanel {
     const btnHeight = 40 * this.dpr * zoom;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
     const btnPosY = this.mShelfContainer.y - 25 * this.dpr * zoom;
-    this.mAdd = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), {
-      left: 12 * this.dpr * zoom,
-      top: 12 * this.dpr * zoom,
-      right: 12 * this.dpr * zoom,
-      bottom: 12 * this.dpr * zoom
-    });
-    this.mAdd.setTextStyle({
-      color: "#996600",
-      fontSize: 16 * this.dpr * zoom,
-      fontFamily: Font.DEFULT_FONT
-    });
-    this.mAdd.setFontStyle("bold");
 
-    this.sellBtn = new NinePatchButton(this.scene, btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), {
-      left: 12 * this.dpr * zoom,
-      top: 12 * this.dpr * zoom,
-      right: 12 * this.dpr * zoom,
-      bottom: 12 * this.dpr * zoom
-    });
-    this.sellBtn.setTextStyle({
-      color: "#FFFFFF",
-      fontSize: 16 * this.dpr * zoom,
-      fontFamily: Font.DEFULT_FONT
-    });
-    this.sellBtn.setFontStyle("bold");
-
-    this.useBtn = new NinePatchButton(this.scene, btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), {
-      left: 12 * this.dpr * zoom,
-      top: 12 * this.dpr * zoom,
-      right: 12 * this.dpr * zoom,
-      bottom: 12 * this.dpr * zoom
-    });
-    this.useBtn.setTextStyle({
-      color: "#996600",
-      fontSize: 16 * this.dpr * zoom,
-      fontFamily: Font.DEFULT_FONT
-    });
-    this.useBtn.setFontStyle("bold");
-
+    this.mAdd = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), "#996600");
+    this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), "#FFFFFF");
+    this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), "#996600");
+    this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.save"), "#996600");
+    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY - btnHeight - 5 * this.dpr * zoom, 40 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn");
+    const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
+    this.resetBtn.add(reseticon);
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
+    this.mDetailDisplay.scale = this.dpr;
 
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr, zoom);
     this.mDetailBubble.x = 10 * this.dpr;
-    this.mDetailDisplay.scale = this.mWorld.scaleRatio * zoom;
 
     this.mSeachInput = new SeachInput(this.scene, this.mWorld, this.key, this.dpr);
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
-
-    this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategeoriesContainer]);
-    this.add([this.sellBtn, this.useBtn, this.mAdd]);
+    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
+    let w = this.scene.cameras.main.width + inputWid;
+    this.mCategoryScroll = new GameScroller(this.scene, {
+      x: w * .5,
+      y: this.mShelfContainer.y + 20 * this.dpr * zoom,
+      width: this.scene.cameras.main.width,
+      height: 41 * this.dpr * zoom,
+      zoom: this.scale,
+      orientation: 1,
+      // valuechangeCallback: (newValue) => {
+      //   this.refreshPos(newValue);
+      // },
+      cellupCallBack: (gameobject) => {
+        this.onSelectSubCategoryHandler(gameobject);
+      }
+    });
+    this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategoryScroll]);
+    this.add([this.sellBtn, this.useBtn, this.mAdd, this.saveBtn, this.resetBtn]);
     this.mShelfContainer.add(this.mCategoriesBar);
     // this.mCategeoriesContainer.add([this.mCategoriesBar]);
     if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
     }
-    // if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit) {
-    //   this.add(this.mAdd);
-    // }
+
     const topCapW = 67 * this.dpr * zoom;
     const topCapH = 30 * this.dpr * zoom;
     const topPosY = 30 * this.dpr * zoom;
     const topStyle = {
-      fontFamily: Font.DEFULT_FONT,
+      fontFamily: Font.BOLD_FONT,
       fontSize: 20 * this.dpr * zoom,
       color: "#FFFFFF"
     };
     this.topCheckBox = new CheckboxGroup();
-    const topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
-    const topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
-    if (!this.mEnableEdit) {
-      // const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
-      // topCategorys.splice(index, 1);
-      // topBtnTexts.splice(index, 1);
+    let topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
+    let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
+    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
+      topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE];
+      topBtnTexts = [i18n.t("furni_bag.furni")];
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
     for (const key in topCategorys) {
@@ -329,41 +365,24 @@ export class FurniBagPanel extends BasePanel {
     } else {
       this.topCheckBox.selectIndex(0);
     }
-
-    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
-    this.mCategoryScroll = new GameScroller(this.scene, this.mCategeoriesContainer, {
-      x: 0,
-      y: this.mCategeoriesContainer.y,
-      width: this.mWorld.getSize().width,
-      height: 41 * this.dpr * zoom,
-      value: w / 2,
-      orientation: 1,
-      bounds: [
-        -w / 2,
-        w / 2
-      ],
-      valuechangeCallback: (newValue) => {
-        this.refreshPos(newValue);
-      },
-      cellupCallBack: (gameobject) => {
-        this.onSelectSubCategoryHandler(gameobject);
-      }
-    });
-
     const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
     const capW = (propFrame.width + 10 * this.dpr) * zoom;
     const capH = (propFrame.height + 10 * this.dpr) * zoom;
+    w = this.scene.cameras.main.width + 35 * this.dpr * zoom + inputWid;
     const tableConfig: GridTableConfig = {
       x: 0,
       y: 0,
       table: {
-        width: this.scene.cameras.main.width,
+        width: this.scene.cameras.main.width - 16 * this.dpr * zoom,
         height: 250 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
+        cellOriginX: 0,
+        cellOriginY: 0,
+        zoom: this.scale,
+        cellPadX: 10 * this.dpr * zoom
       },
       scrollMode: 1,
       clamplChildOY: false,
@@ -375,12 +394,18 @@ export class FurniBagPanel extends BasePanel {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
           this.add(cellContainer);
         }
-        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         cellContainer.setProp(item);
-        if (this.mSelectItem === null) this.mSelectItem = cellContainer;
-        if (item && (this.mSelectedItemData === undefined || this.mSelectedItemData.id === item.id)) {
-          this.onSelectItemHandler(cellContainer);
+        if (item) {
+          if (this.isSelectedItemData(item))
+            cellContainer.isSelect = true;
+          if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+            cellContainer.isEquip = true;
+          } else cellContainer.isEquip = false;
+
+        } else {
+          cellContainer.isSelect = false;
+          cellContainer.isEquip = false;
         }
         return cellContainer;
       },
@@ -392,35 +417,133 @@ export class FurniBagPanel extends BasePanel {
         this.onSelectItemHandler(cell);
       }
     });
-    // this.add(this.mPropGrid);
     this.add(this.mPropGrid.table);
     this.resize(0, 0);
     super.init();
   }
 
-  private refreshPos(value: number) {
-    if (!this.scene) {
-      return;
+  private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
+    const zoom = this.scale;
+    const btn = new NineSliceButton(this.scene, x, y, width, height, key, frame, text, this.dpr, this.scale, {
+      left: 12 * this.dpr * zoom,
+      top: 12 * this.dpr * zoom,
+      right: 12 * this.dpr * zoom,
+      bottom: 12 * this.dpr * zoom
+    });
+    if (text) {
+      btn.setTextStyle({
+        color,
+        fontSize: 16 * this.dpr * zoom,
+        fontFamily: Font.DEFULT_FONT
+      });
+      btn.setFontStyle("bold");
     }
-    const zoom: number = this.mWorld.uiScale;
-    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom + inputWid;
-    this.mCategeoriesContainer.x = value - w / 2;
+
+    return btn;
   }
 
-  private setSelectedItem(prop: op_client.ICountablePackageItem) {
-    if (!prop) {
-      return;
+  private updateAvatarItems() {
+    if (this.dressAvatarIDS && this.mSelectedItemData.length > 0) {
+      this.mSelectedItemData.length = 0;
+      const cells = this.mPropGrid.getCells();
+      for (const id of this.dressAvatarIDS) {
+        for (const cell of cells) {
+          if (cell) {
+            const item: op_client.ICountablePackageItem = cell.container.getData("item");
+            if (item && id === item.id && item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+              this.onSelectItemHandler(cell.container);
+            }
+          }
+        }
+      }
+    } else {
+      this.mDetailBubble.setProp(null);
+      this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     }
-    this.mSelectedItemData = prop;
-    const url = Url.getOsdRes(prop.display.texturePath);
-    this.mDetailDisplay.loadUrl(url);
+  }
+  private replaceSelectItem(data: op_client.ICountablePackageItem) {
+    if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      this.mSelectedItemData.length = 0;
+      this.mSelectedItemData.push(data);
+    } else {
+      const dataAvatar = data.avatar;
+      const removeArr = [];
+      for (const item of this.mSelectedItemData) {
+        const avatar = item.avatar;
+        if (this.isContainProperty(avatar, dataAvatar)) {
+          const index = this.mSelectedItemData.indexOf(item);
+          removeArr.push(item);
+        }
+      }
+      for (const item of removeArr) {
+        const index = this.mSelectedItemData.indexOf(item);
+        this.mSelectedItemData.splice(index, 1);
+      }
+      this.mSelectedItemData.push(data);
+    }
+  }
+
+  private isContainProperty(obj: any, obj1: any) {
+    let canreplace = true;
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (!obj1.hasOwnProperty(key)) {
+          canreplace = false;
+          break;
+        }
+      }
+    }
+    return canreplace;
+  }
+
+  private isContainObject(obj: any, obj1: any) {
+    if (!obj && !obj1) return true;
+    if (typeof obj !== typeof obj1) return false;
+    if (typeof obj === "object") {
+      let canreplace = true;
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          if (obj1.hasOwnProperty(key)) {
+            const value = obj1[key];
+            if (!this.isContainObject(value, obj[key])) {
+              canreplace = false;
+              break;
+            }
+          } else {
+            canreplace = false;
+            break;
+          }
+        }
+      }
+      return canreplace;
+    } else {
+      if (obj === obj1) return true;
+      else return false;
+    }
+
+  }
+
+  private isSelectedItemData(data: op_client.ICountablePackageItem) {
+    for (const temp of this.mSelectedItemData) {
+      if (temp.indexId === data.indexId) {
+        return true;
+      }
+    }
+    return false;
+  }
+  private setSelectedItem(prop: op_client.ICountablePackageItem) {
     this.emit("queryPropResource", prop);
-    this.mDetailBubble.setProp(prop);
-    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     this.sellBtn.enable = prop.recyclable;
     this.useBtn.enable = prop.executable;
     this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
+    if (this.categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      this.saveBtn.enable = true;
+      this.resetBtn.enable = true;
+    } else {
+      const url = Url.getOsdRes(prop.display.texturePath);
+      this.mDetailDisplay.loadUrl(url);
+    }
+
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
@@ -433,18 +556,18 @@ export class FurniBagPanel extends BasePanel {
       }
       return;
     }
-    if (!(gameobject instanceof TextButton)) {
-      return;
-    }
+    // if (!(gameobject instanceof TextButton)) {
+    //   return;
+    // }
     const category: op_def.IStrPair = gameobject.getData("item");
     if (category) {
-      if (this.mPreCategoryBtn) {
+      if (this.mPreCategoryBtn && (this.mPreCategoryBtn instanceof TextButton)) {
         this.mPreCategoryBtn.changeNormal();
       }
-      gameobject.changeDown();
+      if (gameobject instanceof TextButton)
+        gameobject.changeDown();
       let key = category.key;
       if (key === this.seachKey) {
-        // gameobject.setSize(100 * this.dpr * this.mWorld.uiScale, gameobject.height);
         this.showSeach(gameobject);
       } else {
         if (this.mPreCategoryBtn) {
@@ -457,7 +580,7 @@ export class FurniBagPanel extends BasePanel {
           this.closeSeach(gameobject);
         }
         this.mSelectedCategeories = category;
-        this.emit("queryPackage", category.key);
+        this.queryPackege();
       }
       this.mPreCategoryBtn = gameobject;
     }
@@ -467,13 +590,30 @@ export class FurniBagPanel extends BasePanel {
     this.emit("close");
   }
 
+  private queryPackege() {
+    if (this.mSelectedCategeories) {
+      this.emit("queryPackage", this.mSelectedCategeories.key);
+    }
+  }
+
   private onSelectItemHandler(cell: Item) {
     const item: op_client.ICountablePackageItem = cell.getData("item");
+    this.mDetailBubble.setProp(item);
+    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
-      if (this.mSelectItem) this.mSelectItem.isSelect = false;
-      this.mSelectItem = cell;
-      this.mSelectItem.isSelect = true;
+      this.replaceSelectItem(item);
       this.setSelectedItem(item);
+      this.mPropGrid.refresh();
+    } else {
+      if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR && this.mSelectedItemData.length === 0) {
+        this.sellBtn.enable = false;
+        this.useBtn.enable = false;
+        this.mAdd.enable = false;
+        this.saveBtn.enable = false;
+        this.resetBtn.enable = false;
+        this.mDetailDisplay.setTexture(this.key, "ghost");
+        this.mDetailDisplay.setNearest();
+      }
     }
   }
 
@@ -487,21 +627,35 @@ export class FurniBagPanel extends BasePanel {
     if (!this.mSelectedItemData) {
       return;
     }
-    this.emit("addFurniToScene", this.mSelectedItemData.id);
+    this.emit("addFurniToScene", this.mSelectedItemData[0].id);
   }
 
   private onTopCategoryHandler(item: Button) {
     const categoryType = item.getData("data");
+    const width = this.scaleWidth;
+    this.mSelectedItemData.length = 0;
+    // this.mDetailDisplay.setTexture(this.key, "ghost");
+    // this.mDetailDisplay.setNearest();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
         this.sellBtn.visible = true;
-        this.useBtn.visible = false;
         this.mAdd.visible = true;
+        this.useBtn.visible = false;
+        this.saveBtn.visible = false;
+        this.resetBtn.visible = false;
+      } else if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+        this.sellBtn.visible = false;
+        this.saveBtn.visible = true;
+        this.resetBtn.visible = true;
+        this.useBtn.visible = false;
+        this.mAdd.visible = false;
       } else {
         this.sellBtn.visible = true;
         this.useBtn.visible = true;
         this.mAdd.visible = false;
+        this.saveBtn.visible = false;
+        this.resetBtn.visible = false;
       }
     }
     this.layoutTopBtn(item);
@@ -543,54 +697,72 @@ export class FurniBagPanel extends BasePanel {
 
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
+    if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      this.displayAvatar();
+      this.emit("queryDressAvatarIDS");
+    }
     this.emit("getCategories", categoryType);
   }
 
   private onSellBtnHandler() {
-    this.popItemsPopPanle();
-    if (this.mSelectedItemData)
-      this.itemPopPanel.setProp(this.mSelectedItemData, 0, this.categoryType, new Handler(this, this.onSellPropsHandler));
+    this.mCategoryScroll.removeListen();
+    if (this.mSelectedItemData.length > 0) {
+      const data = this.mSelectedItemData[0];
+      const title = i18n.t("furni_bag.sold");
+      const confirmHandler = new Handler(this, this.onSellPropsHandler, [this.categoryType]);
+      const cancelHandler = new Handler(this, () => {
+        this.mCategoryScroll.addListen();
+      });
+      this.showPropFun({ confirmHandler, data, cancelHandler, title });
+    }
   }
 
   private onUseBtnHandler() {
-    this.popItemsPopPanle();
-    if (this.mSelectedItemData)
-      this.itemPopPanel.setProp(this.mSelectedItemData, 1, this.categoryType, new Handler(this, this.onUsePropsHandler));
+    this.mCategoryScroll.removeListen();
+    if (this.mSelectedItemData.length > 0) {
+      const data = this.mSelectedItemData[0];
+      const title = i18n.t("furni_bag.use");
+      const confirmHandler = new Handler(this, this.onUsePropsHandler);
+      const cancelHandler = new Handler(this, () => {
+        this.mCategoryScroll.addListen();
+      });
+      this.showPropFun({ confirmHandler, data, cancelHandler, price: false, title });
+    }
+  }
+  private onSaveBtnHandler() {
+    if (this.mSelectedItemData.length > 0) {
+      const idsArr = [];
+      for (const item of this.mSelectedItemData) {
+        idsArr.push(item.id);
+      }
+      this.emit("querySaveAvatar", idsArr);
+      this.queryPackege();
+    }
   }
 
-  private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
-
+  private onResetBtnHandler() {
+    if (this.mSelectedItemData.length > 0)
+      this.emit("queryResetAvatar");
+  }
+  private onSellPropsHandler(category: number, prop: op_client.CountablePackageItem, count: number) {
+    this.mCategoryScroll.addListen();
     this.emit("sellProps", prop, count, category);
   }
 
-  private onUsePropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
-
-  }
-
-  private popItemsPopPanle() {
-    const zoom = this.mWorld.uiScale;
-    const width = this.scene.cameras.main.width;
-    const height = this.scene.cameras.main.height;
-    if (!this.itemPopPanel) {
-      this.itemPopPanel = new ItemsPopPanel(this.scene, width * 0.5, height * 0.5, this.key, this.commonkey, this.dpr, zoom);
-    }
-    this.add(this.itemPopPanel);
+  private onUsePropsHandler(prop: op_client.CountablePackageItem, count: number) {
+    this.mCategoryScroll.addListen();
+    this.emit("useprops", prop.id, count);
   }
 
   private showSeach(parent: TextButton) {
-    // const cellTable = this.mCategoryScroll.childrenMap.child;
-    // cellTable.setCellWidth(0, this.mSeachInput.x + this.mSeachInput.width / 2);
-    // cellTable.updateTable(true);
-    this.mCategeoriesContainer.addAt(this.mSeachInput, 1);
+    this.mCategoryScroll.addItemAt(this.mSeachInput, 1);
     this.mCategoryScroll.setInteractiveObject(this.mSeachInput.seachBtn);
     this.mCategoryScroll.setInteractiveObject(this.mSeachInput.label);
+
     this.updateCategeoriesLoc(true);
   }
 
   private closeSeach(parent: TextButton) {
-    // const cellTable = this.mCategoryScroll.childrenMap.child;
-    // cellTable.setCellWidth(0, 56 * this.dpr * this.mWorld.uiScale);
-    // cellTable.updateTable(true);
     if (this.mSeachInput.parentContainer) {
       this.mSeachInput.parentContainer.remove(this.mSeachInput);
     }
@@ -600,28 +772,35 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private updateCategeoriesLoc(inputBoo: boolean) {
-    const list = this.mCategeoriesContainer.list;
-    const zoom = this.mWorld.uiScale;
-    const w = this.scene.cameras.main.width + 45 * this.dpr * zoom;
+    const list = this.mCategoryScroll.getItemList();
+    const zoom = this.scale;
     const h = 41 * this.dpr * zoom;
     let preBtn: Phaser.GameObjects.Container = null;
-    const offset = 10 * this.dpr * zoom;
+    const offset = 30 * this.dpr * zoom;
+    const w = this.mScene.cameras.main.width;
+    let tmpW: number = offset;
     for (let i = 0; i < list.length; i++) {
       const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>list[i];
       if (i > 0) {
         preBtn = <Phaser.GameObjects.Container>list[i - 1];
         item.x = preBtn.x + preBtn.width; // - item.width * item.originX;
       } else {
-        item.x = offset;
+        item.x = tmpW;
       }
+      tmpW += item.width;
     }
-    const inputWid: number = inputBoo ? 200 * this.dpr * zoom : 0;
-    const updateWid: number = w + inputWid;
-    this.mCategoryScroll.resize(updateWid, h);
+
+    this.mCategoryScroll.setAlign();
+
   }
 
   get enableEdit() {
     return this.mEnableEdit;
+  }
+
+  private showPropFun(config: PicPropFunConfig) {
+    const uimanager = this.mWorld.uiManager;
+    uimanager.showMed("PicPropFun", config);
   }
 }
 
@@ -638,7 +817,7 @@ class SeachInput extends Phaser.GameObjects.Container {
     this.bg = scene.make.image({
       key,
       frame: "seach_bg"
-    }, false).setOrigin(0, 0.5);
+    }, false).setOrigin(0.5, 0.5);
 
     // this.mLabelInput = new LabelInput(this.scene, {
     //   x: -10 * dpr,
@@ -649,7 +828,7 @@ class SeachInput extends Phaser.GameObjects.Container {
     //   color: "#666666",
     // });
     this.mLabelInput = this.scene.make.text({
-      x: 10 * dpr,
+      x: 0,
       width: this.bg.width,
       height: this.bg.height,
       style: {
@@ -664,9 +843,11 @@ class SeachInput extends Phaser.GameObjects.Container {
       key,
       frame: "seach_normal"
     }, false).setData("type", "seachBtn");
-    this.mSeachBtn.x = this.bg.width - this.mSeachBtn.width / 2 - 4 * dpr,
+    this.mLabelInput.x = -this.bg.width / 2 + 6 * dpr * world.uiScale;
+    this.mSeachBtn.x = this.bg.width / 2 - this.mSeachBtn.width,
       this.add([this.bg, this.mLabelInput, this.mSeachBtn]);
-    this.setSize(this.bg.width + 20 * dpr, this.bg.height);
+    this.disableInteractive();
+    this.setSize(this.bg.width, this.bg.height);
   }
 
   public showInputPanel() {
@@ -766,40 +947,54 @@ class DetailBubble extends Phaser.GameObjects.Container {
   }
 
   setProp(prop: op_client.ICountablePackageItem): this {
-    this.mNickName.setText(prop.shortName || prop.name);
-    let posY = 9 * this.dpr;
-    const offsetY = 21 * this.dpr;
-    // this.mDesText.setText(prop.des);
-    if (prop.sellingPrice) {
-      posY += offsetY;
-      this.mPriceText.y = posY;
-      this.mPriceText.setText(`可售卖：${prop.sellingPrice.price}`);
+    if (!prop) {
+      this.mNickName.setText("背包里空空如也");
+      this.mPriceText.text = "";
+      this.mSource.text = "";
+      this.mDesText.text = "";
+      this.resize();
     } else {
-      posY += offsetY;
-      this.mPriceText.y = posY;
-      this.mPriceText.setText(`不可交易`);
+      this.mNickName.setText(prop.shortName || prop.name);
+      let posY = 9 * this.dpr;
+      const offsetY = 21 * this.dpr;
+      // this.mDesText.setText(prop.des);
+      if (prop.recyclable) {
+        posY += offsetY;
+        this.mPriceText.y = posY;
+        this.mPriceText.setText(`可售出：${prop.sellingPrice.price} 银币`);
+      } else {
+        posY += offsetY;
+        this.mPriceText.y = posY;
+        this.mPriceText.setText(`不可售出`);
+      }
+      // if (prop.tradable) {
+      //   this.mPriceText.setText(`可交易`);
+      // }
+      if (prop.source) {
+        this.mSource.setText(`来源： ${prop.source}`);
+        posY += offsetY;
+        this.mSource.y = posY;
+      } else {
+        this.mSource.setText("");
+      }
+      const offset = 15 * this.dpr;
+      const width = this.getMaxWidth(offset);
+      if (prop.des) {
+        posY += offsetY;
+        this.mDesText.setWordWrapWidth(width - offset, true);
+        this.mDesText.setText(prop.des);
+        this.mDesText.y = posY;
+      } else {
+        this.mDesText.setText("");
+      }
+      this.resize(width);
     }
-    if (prop.source) {
-      this.mSource.setText(`来源： ${prop.source}`);
-      posY += offsetY;
-      this.mSource.y = posY;
-    } else {
-      this.mSource.setText("");
-    }
-    if (prop.des) {
-      posY += offsetY;
-      this.mDesText.setText(prop.des);
-      this.mDesText.y = posY;
-    } else {
-      this.mDesText.setText("");
-    }
-    this.resize();
     return this;
   }
 
   private resize(w?: number, h?: number) {
     if (w === undefined) w = this.width;
-    const bubbleH = this.mDesText.height + 60 * this.dpr;
+    const bubbleH = this.mDesText.height + 80 * this.dpr;
     if (w === this.width && bubbleH === this.height) {
       return;
     }
@@ -810,6 +1005,17 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.setSize(w, bubbleH);
     // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
   }
+
+  private getMaxWidth(offset: number = 0) {
+    const width = 100 * this.dpr;
+    let maxWidth = 0;
+    if (maxWidth < this.mNickName.width) maxWidth = this.mNickName.width;
+    if (maxWidth < this.mPriceText.width) maxWidth = this.mPriceText.width;
+    if (maxWidth < this.mSource.width) maxWidth = this.mSource.width;
+    if (width - maxWidth < offset) maxWidth += offset + ((maxWidth - width) >= 0 ? 0 : (maxWidth - width));
+    if (maxWidth < width) maxWidth = width;
+    return maxWidth;
+  }
 }
 
 class Item extends Phaser.GameObjects.Container {
@@ -817,33 +1023,40 @@ class Item extends Phaser.GameObjects.Container {
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
   private selectbg: Phaser.GameObjects.Image;
+  private selectIcon: Phaser.GameObjects.Image;
+  private dpr: number;
+  private zoom: number;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
-
+    this.dpr = dpr;
+    this.zoom = zoom;
     const background = scene.make.image({
       key,
       frame: "grid_bg"
     }, false).setOrigin(0).setScale(zoom);
-
+    this.setSize(background.width, background.height);
     this.selectbg = scene.make.image({
       key,
       frame: "grid_choose"
     }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
-
+    this.selectIcon = scene.make.image({
+      key,
+      frame: "selected"
+    }, false).setOrigin(1).setScale(zoom).setPosition(this.width, this.height);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
     this.mPropImage.scale = dpr * zoom;
 
     this.mCounter = scene.make.text({
-      x: background.width - 4 * dpr,
-      y: background.height + 2 * dpr,
+      x: this.width - 4 * dpr,
+      y: this.height + 2 * dpr,
       style: {
         fontSize: 12 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
-    this.add([background, this.selectbg]);
+    this.add([background, this.selectbg, this.selectIcon]);
     this.isSelect = false;
-    this.setSize(background.width, background.height);
+    this.isEquip = false;
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
     // this.on("pointerup", this.onSelectedHandler, this);
   }
@@ -872,8 +1085,10 @@ class Item extends Phaser.GameObjects.Container {
     if (this.mPropImage && this.mPropImage.texture) {
       const texture = this.mPropImage.texture;
       // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
-      this.mPropImage.x = this.width / 2;
-      this.mPropImage.y = this.height / 2;
+      this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
+      this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
+      this.mPropImage.displayHeight = 45 * this.dpr;
+      this.mPropImage.scaleX = this.mPropImage.scaleY;
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
@@ -882,6 +1097,10 @@ class Item extends Phaser.GameObjects.Container {
 
   public set isSelect(value) {
     this.selectbg.visible = value;
+  }
+
+  public set isEquip(value) {
+    this.selectIcon.visible = value;
   }
 
   private onSelectedHandler() {
@@ -912,8 +1131,10 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     this.blackBg = this.scene.make.graphics(undefined, false);
     this.blackBg.clear();
     this.blackBg.fillStyle(0, 0.5);
-    this.blackBg.setPosition(-500 * dpr * zoom, -1000 * dpr * zoom);
-    this.blackBg.fillRect(0, 0, 1000 * dpr, 2000 * dpr);
+    const w = this.scene.cameras.main.width / this.scale;
+    const h = this.scene.cameras.main.height / this.scale;
+    this.blackBg.fillRect(-w / 2, -h / 2, w, h);
+    bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     const posY = -bg.height * 0.5 + 3 * dpr * zoom;
     const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "title" });
     this.titleName = scene.make.text({
@@ -951,6 +1172,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5);
+    // this.pricText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.priceBg.width, this.priceBg.height),Phaser.Geom.Rectangle.Contains);
     const countOffsetY = 50 * dpr * zoom;
     const countOffsetX = -58 * dpr * zoom;
     const countBg = this.scene.make.image({ x: 0, y: countOffsetY, key: commonKey, frame: "input_bg" });
@@ -970,13 +1192,13 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
 
     const bottomOffsetY = bg.height * 0.5 - 50 * dpr * zoom;
     const bottomOffsetX = -66 * dpr * zoom;
-    const cancelBtn = new NinePatchButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n.t("common.cancel"), {
+    const cancelBtn = new NineSliceButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n.t("common.cancel"), dpr, zoom, {
       left: 12 * dpr * zoom,
       top: 12 * dpr * zoom,
       right: 12 * dpr * zoom,
       bottom: 12 * dpr * zoom
     });
-    const confirmBtn = new NinePatchButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n.t("common.confirm"), {
+    const confirmBtn = new NineSliceButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n.t("common.confirm"), dpr, zoom, {
       left: 12 * dpr * zoom,
       top: 12 * dpr * zoom,
       right: 12 * dpr * zoom,
@@ -995,8 +1217,8 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, this.priceBg, this.pricText, countBg, this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
     minusBtn.on("Tap", this.onMinusBtnHandler, this);
     addBtn.on("Tap", this.onAddBtnHandler, this);
-    cancelBtn.on("click", this.onCancelBtnHandler, this);
-    confirmBtn.on("click", this.onConfirmBtnHandler, this);
+    cancelBtn.on("Tap", this.onCancelBtnHandler, this);
+    confirmBtn.on("Tap", this.onConfirmBtnHandler, this);
   }
 
   public setProp(prop: op_client.ICountablePackageItem, stated: number, category: number, handler: Handler) {
@@ -1038,10 +1260,12 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
   }
 
   private onCancelBtnHandler() {
+    this.emit("itempopclose");
     if (this.parentContainer) this.parentContainer.remove(this);
   }
 
   private onConfirmBtnHandler() {
+    this.emit("itempopclose");
     if (this.parentContainer) this.parentContainer.remove(this);
     if (this.handler) this.handler.runWith([this.itemData, this.itemCount, this.category]);
   }

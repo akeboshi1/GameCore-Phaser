@@ -8,6 +8,5 @@ export class EditScene extends PlayScene {
 
   create() {
     this.mRoom.startPlay();
-    this.scene.sendToBack();
   }
 }

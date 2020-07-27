@@ -1,7 +1,6 @@
 import { Pos } from "../../utils/pos";
 import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-import { SlotInfo } from "../player/slot.info";
+import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
 import { FramesModel, IFramesModel } from "../display/frames.model";
 import { Animation } from "../display/animation";
 import Helpers from "../../utils/helpers";
@@ -24,6 +23,8 @@ export interface ISprite {
     readonly currentWalkableArea: number[][];
     readonly currentCollisionPoint: Phaser.Geom.Point;
     readonly hasInteractive: boolean;
+    readonly attrs: op_def.IStrPair[];
+    readonly animationQueue: AnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -31,16 +32,29 @@ export interface ISprite {
     bindID: number;
     sn: string;
     isMoss?: boolean;
+    mountSprites?: number[];
 
     newID();
+    updateAvatar(avatar: op_gameconfig.IAvatar);
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
+    setAnimationName(name: string, playTimes?: number): AnimationData;
+    setAnimationQueue(queue: AnimationQueue[]);
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
 
 export interface AnimationData {
-    animationName: string;
+    name: string;
     flip: boolean;
+    playingQueue?: AnimationQueue;
+}
+
+export interface AnimationQueue {
+    name: string;
+    playTimes?: number;
+    playedTimes?: number;
+    complete?: Function;
 }
 
 export class Sprite implements ISprite {
@@ -75,16 +89,19 @@ export class Sprite implements ISprite {
 
     protected mAttrs: op_def.IStrPair[];
 
+    protected mAnimationQueue: AnimationQueue[];
+
+    protected mMountSprites: number[];
+
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         this.mID = obj.id;
         if (obj.point3f) {
             const point = obj.point3f;
             this.mPos = new Pos(point.x, point.y, point.z);
         }
+        this.mAttrs = obj.attrs;
         if (obj.avatar) {
-            this.mAvatar = { id: obj.avatar.id };
-            this.mAvatar = Object.assign(this.mAvatar, obj.avatar);
-            this.mAttrs = obj.attrs;
+            this.updateAvatar(obj.avatar);
             // if (attrs && attrs.length > 0) {
             //     for (const att of attrs) {
             //         if (att.key === "minecart") {
@@ -92,30 +109,14 @@ export class Sprite implements ISprite {
             //         }
             //     }
             // }
-            this.mDisplayInfo = new DragonbonesModel(this);
         }
         if (obj.display) {
-            const anis = [];
-            const objAnis = obj.animations;
-            for (const ani of objAnis) {
-                anis.push(new Animation(ani));
-            }
-            this.mDisplayInfo = new FramesModel({
-                id: obj.id,
-                animations: {
-                    defaultAnimationName: obj.currentAnimationName,
-                    display: obj.display,
-                    animationData: anis,
-                },
-            });
+            this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
         if (obj.sn) {
             this.mSn = obj.sn;
         }
         this.tryRegisterAnimation(obj.animationRegistrationMap);
-        // if (obj.currentAnimationName) {
-        //     Logger.getInstance().error(`${Sprite.name}: currentAnimationName is null, ${JSON.stringify(obj)}`);
-        // }
         this.mCurrentAnimationName = obj.currentAnimationName || "idle";
         this.direction = obj.direction || 3;
         this.mNickname = obj.nickname;
@@ -131,6 +132,8 @@ export class Sprite implements ISprite {
         if (obj.isMoss !== undefined) {
             this.isMoss = obj.isMoss;
         }
+
+        this.mMountSprites = obj.mountSprites;
     }
 
     public toSprite(): op_client.ISprite {
@@ -145,7 +148,7 @@ export class Sprite implements ISprite {
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<FramesModel>this.displayInfo).toClient();
+            sprite.animations = (<FramesModel>this.displayInfo).createProtocolObject();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
@@ -181,6 +184,64 @@ export class Sprite implements ISprite {
         return this;
     }
 
+    public updateAvatar(avatar: op_gameconfig.IAvatar) {
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.destroy();
+        }
+        this.mAvatar = { id: avatar.id };
+        this.mAvatar = Object.assign(this.mAvatar, avatar);
+        this.mDisplayInfo = new DragonbonesModel(this);
+    }
+
+    public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
+        if (!display || !animations) {
+            return;
+        }
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.destroy();
+        }
+        if (display) {
+            const anis = [];
+            const objAnis = animations;
+            for (const ani of objAnis) {
+                anis.push(new Animation(ani));
+            }
+            defAnimation = defAnimation || this.mCurrentAnimationName || "";
+            this.mDisplayInfo = new FramesModel({
+                animations: {
+                    defaultAnimationName: defAnimation,
+                    display,
+                    animationData: anis,
+                },
+                id:this.id
+            });
+            if (defAnimation) {
+                this.currentAnimationName = defAnimation;
+            }
+        }
+    }
+
+    public setAnimationQueue(queue: AnimationQueue[]) {
+        this.mAnimationQueue = queue;
+    }
+
+    public setMountSprites(ids: number[]) {
+        this.mMountSprites = ids;
+    }
+
+    public updateAttr(attrs: op_def.IStrPair[]) {
+        this.mAttrs = attrs;
+    }
+
+    public setAnimationName(name: string) {
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.animationName = name;
+        }
+        this.mCurrentAnimationName = name;
+        const ani = this.setAnimationData(name, this.direction);
+        return ani;
+    }
+
     get id(): number {
         return this.mID;
     }
@@ -202,6 +263,9 @@ export class Sprite implements ISprite {
     }
 
     set currentAnimationName(animationName: string) {
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.animationName = animationName;
+        }
         this.mCurrentAnimationName = animationName;
         this.setAnimationData(animationName, this.direction);
         // this.mCurrentAnimation = this.findAnimation(animationName, this.mDirection);
@@ -212,11 +276,11 @@ export class Sprite implements ISprite {
     }
 
     set direction(val: number) {
-        this.mDirection = val;
+        this.mDirection = val || 3;
         if (!this.mDisplayInfo) {
             return;
         }
-        this.setAnimationData(this.mCurrentAnimationName, val);
+        this.setAnimationData(this.mCurrentAnimationName, this.mDirection);
     }
 
     get nickname(): string {
@@ -273,7 +337,10 @@ export class Sprite implements ISprite {
 
     set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
-        if (this.currentAnimationName) this.mDisplayInfo.animationName = this.currentAnimationName;
+        if (this.currentAnimationName) {
+            this.mDisplayInfo.animationName = this.currentAnimationName;
+            this.setAnimationData(this.currentAnimationName, this.direction);
+        }
     }
 
     get isMoss() {
@@ -282,6 +349,10 @@ export class Sprite implements ISprite {
 
     set isMoss(val: boolean) {
         this.mIsMoss = val;
+    }
+
+    get animationQueue(): AnimationQueue[] {
+        return this.mAnimationQueue;
     }
 
     get nodeType(): NodeType {
@@ -317,12 +388,20 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return false;
         }
-        const { animationName } = this.mCurrentAnimation;
+        const { name: animationName } = this.mCurrentAnimation;
         const area = this.mDisplayInfo.getInteractiveArea(animationName);
         if (area && area.length > 0) {
             return true;
         }
         return false;
+    }
+
+    get mountSprites(): number[] {
+        return this.mMountSprites;
+    }
+
+    set mountSprites(ids: number[]) {
+        this.mMountSprites = ids;
     }
 
     get animationMap() {
@@ -368,7 +447,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName } = this.mCurrentAnimation;
+        const { name: animationName } = this.mCurrentAnimation;
         return this.mDisplayInfo.getInteractiveArea(animationName);
     }
 
@@ -383,9 +462,11 @@ export class Sprite implements ISprite {
             }
         }
         this.mCurrentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+        if (this.mAnimationQueue && this.mAnimationQueue.length > 0) this.mCurrentAnimation.playingQueue = this.mAnimationQueue[0];
         if (this.mCurrentCollisionArea) {
             this.setArea();
         }
+        return this.mCurrentAnimation;
         // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
         // if (animationName !== this.mCurrentAnimation.animationName) {
         //     Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
@@ -410,7 +491,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName, flip } = this.mCurrentAnimation;
+        const { name: animationName, flip } = this.mCurrentAnimation;
         return this.mDisplayInfo.getCollisionArea(animationName, flip);
     }
 
@@ -418,7 +499,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName, flip } = this.mCurrentAnimation;
+        const { name: animationName, flip } = this.mCurrentAnimation;
         return this.mDisplayInfo.getWalkableArea(animationName, flip);
     }
 
@@ -426,7 +507,7 @@ export class Sprite implements ISprite {
         if (!this.mDisplayInfo || !this.mCurrentAnimation) {
             return;
         }
-        const { animationName, flip } = this.mCurrentAnimation;
+        const { name: animationName, flip } = this.mCurrentAnimation;
         return this.mDisplayInfo.getOriginPoint(animationName, flip);
     }
 

@@ -2,7 +2,8 @@ import { Logger } from "../utils/log";
 import { IRoomService } from "../rooms/room";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_virtual_world, op_client } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
+import { Url } from "../utils/resUtil";
 
 export enum SoundField {
     Background,
@@ -12,20 +13,32 @@ export enum SoundField {
 
 export interface ISoundConfig {
     key?: string;
-    urls: string | string[];
+    urls?: string | string[];
     field?: SoundField;
     soundConfig?: Phaser.Types.Sound.SoundConfig;
 }
 
 export class SoundManager extends PacketHandler {
+    private readonly world: WorldService;
     private mScene: Phaser.Scene;
     private mSoundMap: Map<SoundField, Sound>;
     constructor(world: WorldService) {
         super();
-        const connection = world.connection;
+        this.world = world;
+    }
+
+    addPackListener() {
+        const connection = this.world.connection;
         if (connection) {
             connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL, this.onPlaySoundHandler);
+        }
+    }
+
+    removePacketListener() {
+        const connection = this.world.connection;
+        if (connection) {
+            connection.removePacketListener(this);
         }
     }
 
@@ -56,6 +69,7 @@ export class SoundManager extends PacketHandler {
             sound = new Sound(this.mScene);
             this.mSoundMap.set(field, sound);
         }
+        // sound.play(key);
         sound.play(key, config.urls, config.soundConfig);
     }
 
@@ -125,14 +139,20 @@ export class SoundManager extends PacketHandler {
             this.mSoundMap.clear();
             this.mSoundMap = undefined;
         }
+        this.removePacketListener();
     }
 
     private onPlaySoundHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
+        if (content.loop === undefined) {
+            content.loop = true;
+        }
         // TODO
         this.play({
-            urls: content.soundKey,
-            soundConfig: { loop: true }
+            key: content.soundKey,
+            urls: Url.getOsdRes(content.soundKey),
+            field: content.scope,
+            soundConfig: { loop: content.loop }
         });
     }
 }
@@ -160,6 +180,9 @@ class Sound {
         if (this.scene.cache.audio.exists(key)) {
             this.startPlay();
         } else {
+            if (!urls) {
+                return;
+            }
             this.scene.load.once(`filecomplete-audio-${key}`, this.onSoundCompleteHandler, this);
             this.scene.load.audio(key, urls);
             this.scene.load.start();

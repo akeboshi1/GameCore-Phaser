@@ -12,10 +12,6 @@ import { IElement } from "../element/element";
 import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
 import { PlayerModel } from "./player.model";
-import { FollowGroup } from "../group/FollowGroup";
-import { GroupType } from "../group/GroupManager";
-import { FollowAction } from "../action/FollowAction";
-import { MineCarSimulateData } from "./MineCarSimulateData";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -37,7 +33,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollow);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollow);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
         }
     }
@@ -72,7 +68,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public removeFromMap(id: number) {
         const player = this.mPlayerMap.get(id);
         if (player) {
-            MineCarSimulateData.destroyMineCar(this.roomService.elementManager, player.model);
+           // MineCarSimulateData.destroyMineCar(this.roomService.elementManager, player.model);
             this.mPlayerMap.delete(id);
             player.destroy();
         }
@@ -197,11 +193,16 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         let player: Player = null;
         const sprites = content.sprites;
+        const command = content.command;
         for (const sprite of sprites) {
             player = this.get(sprite.id);
             if (player) {
-                MineCarSimulateData.addSimulate(this.roomService, sprite,player.model);
-                player.model = new Sprite(sprite);
+              //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
+                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
+                    player.model = new Sprite(sprite);
+                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
+                    player.updateModel(sprite);
+                }
             }
         }
     }
@@ -246,7 +247,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         for (const sprite of sprites) {
             this._add(new Sprite(sprite));
-            MineCarSimulateData.addSimulate(this.roomService, sprite);
+           // MineCarSimulateData.addSimulate(this.roomService, sprite);
         }
     }
 
@@ -338,7 +339,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             player = this.get(id);
             if (player) {
-                player.showEffected();
+                player.showEffected(null);
             }
         }
     }
@@ -348,12 +349,12 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== NodeType.CharacterNodeType) {
             return;
         }
-        const anis = content.changeAnimation;
         let player: Player = null;
-        for (const ani of anis) {
-            player = this.get((ani.id));
+        const ids = content.ids;
+        for (const id of ids) {
+            player = this.get(id);
             if (player) {
-                player.play(ani.animationName);
+                player.setQueue(content.changeAnimation);
             }
         }
     }

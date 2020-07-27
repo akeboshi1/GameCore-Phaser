@@ -29,6 +29,7 @@ export class MineCarPanel extends BasePanel {
   private mPreSelectedCategorie: CategorieButton;
   private mBg: Phaser.GameObjects.Image;
   private carIcon: Phaser.GameObjects.Image;
+  private mBackGround: Phaser.GameObjects.Graphics;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.scale = 1;
@@ -41,22 +42,27 @@ export class MineCarPanel extends BasePanel {
     super.resize(width, height);
     const zoom = this.mWorld.uiScale;
     this.setSize(w, h);
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(0, 0, w, h);
     this.mBg.x = w / 2;
-    this.mBg.y = h / 2;
+    this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr * zoom;
     this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
-    this.carIcon.y = this.mBg.y / 2;
-    this.mCloseBtn.x = this.mBg.x + this.mBg.width / 2;
-    this.mCloseBtn.y = this.mBg.y / 2 + 10 * this.dpr * zoom;
+    this.carIcon.y = this.mBg.y - (this.mBg.displayHeight - this.carIcon.displayHeight) / 2 + 4 * this.dpr * zoom;
+    this.mCloseBtn.x = this.mBg.x + this.mBg.displayWidth / 2;
+    this.mCloseBtn.y = this.mBg.y - (this.mBg.displayHeight - this.mCloseBtn.displayHeight) / 2 + 10 * this.dpr * zoom;
     this.mCounter.x = this.mBg.x / 2;
-    this.mCounter.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2 - 6 * this.dpr * zoom;
-    this.mTips.x = this.mBg.x;
-    this.mTips.y = this.mBg.y / 2 - 15 * this.dpr * zoom;
-    this.mDiscardBtn.x = this.mBg.x + this.mBg.width / 2 - this.mDiscardBtn.width / 2;
-    this.mDiscardBtn.y = this.mBg.y + this.mBg.height / 2 - this.mDiscardBtn.height / 2;
+    this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 16 * this.dpr * zoom;
+    this.mTips.x = this.mBg.x + 20 * this.dpr * zoom;
+    this.mTips.y = this.mBg.y - this.mBg.displayHeight / 2 - 15 * this.dpr * zoom;
+    this.mDiscardBtn.x = this.mBg.x + this.mBg.displayWidth / 2 - this.mDiscardBtn.displayWidth / 2 - 9 * this.dpr * zoom;
+    this.mDiscardBtn.y = this.mBg.y + this.mBg.displayHeight / 2 - this.mDiscardBtn.displayHeight / 2 - 9 * this.dpr * zoom;
     this.categoriesBg.x = this.mBg.x;
-    this.categoriesBg.y = this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 12 * this.dpr * zoom;
+    this.categoriesBg.y = this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 38 * this.dpr * zoom;
     this.mPropGrid.refreshPos(this.mBg.x + 2 * this.dpr * zoom, this.mBg.y + 6 * this.dpr * zoom);
-    this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.height / 2 + this.categoriesBg.height + 18 * this.dpr * zoom);
+    this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 44 * this.dpr * zoom);
+    this.mPropGrid.resetMask();
+    this.mCategoryTable.resetMask();
   }
 
   public show(param?: any) {
@@ -74,6 +80,7 @@ export class MineCarPanel extends BasePanel {
   }
 
   setCategories(subcategorys: op_def.IStrPair[]) {
+    this.mPreSelectedCategorie = undefined;
     this.mCategoryTable.setItems(subcategorys);
   }
 
@@ -117,7 +124,11 @@ export class MineCarPanel extends BasePanel {
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
     const zoom = this.mWorld.uiScale;
-
+    this.mBackGround = this.scene.make.graphics(undefined, false);
+    this.mBackGround.clear();
+    this.mBackGround.fillStyle(0x6AE2FF, 0);
+    this.mBackGround.fillRect(0, 0, w, h);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
     this.mBg = this.scene.make
       .image({
         key: this.key,
@@ -176,7 +187,7 @@ export class MineCarPanel extends BasePanel {
     this.mTips.y = (-(this.mBg.height + this.mTips.height) * zoom) / 2 + 15 * this.dpr * zoom;
 
     this.mDiscardBtn = new DiscardButton(this.scene, this.key, "yellow_btn.png", undefined, "丢弃");
-    this.mDiscardBtn.scale = zoom;
+    this.mDiscardBtn.setScale(zoom);
     (this.mDiscardBtn.x = ((this.mBg.width - this.mDiscardBtn.displayWidth) * zoom) / 2 - 17 * this.dpr * zoom),
       (this.mDiscardBtn.y = ((this.mBg.height - this.mDiscardBtn.displayHeight) * zoom) / 2 - 10 * this.dpr * zoom),
       this.mDiscardBtn.setTextStyle({
@@ -210,6 +221,8 @@ export class MineCarPanel extends BasePanel {
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
+        cellOriginX: 0,
+        cellOriginY: 0
         // mask: false
       },
       scrollMode: 0,
@@ -246,6 +259,8 @@ export class MineCarPanel extends BasePanel {
         cellWidth: (frame.width + 4 * this.dpr) * zoom,
         cellHeight: (29 * this.dpr) * zoom,
         reuseCellContainer: true,
+        cellOriginX: 0,
+        cellOriginY: 0
         // mask: false
       },
       scrollMode: 1,
@@ -261,6 +276,7 @@ export class MineCarPanel extends BasePanel {
             fontSize: 10 * this.dpr * zoom
           });
           cellContainer.setFontStyle("bold");
+          cellContainer.setScale(zoom);
           this.add(cellContainer);
         }
         cellContainer.setText(item.value);
@@ -278,14 +294,14 @@ export class MineCarPanel extends BasePanel {
     });
     // this.add(this.mPanel);
     this.add([
-      // this.mMask,
+      this.mBackGround,
       this.mBg,
       this.carIcon,
-      this.mCloseBtn,
       this.mCounter,
       this.categoriesBg,
       this.mPropGrid.table,
       this.mCategoryTable.table,
+      this.mCloseBtn,
       this.mDiscardBtn,
     ]);
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
@@ -332,7 +348,7 @@ export class MineCarPanel extends BasePanel {
       this.checkMode();
       return;
     }
-    if (packageItem) {
+    if (packageItem && packageItem.item.item) {
       if (!this.mTips.parentContainer) {
         this.add(this.mTips);
       }
@@ -464,27 +480,28 @@ class PackageItem extends Phaser.GameObjects.Container {
     this.mSelectedIcon.x = border.width * zoom - 2 * dpr - (this.mSelectedIcon.width * zoom) / 2;
     this.mSelectedIcon.y = 2 * dpr + (this.mSelectedIcon.height * zoom) / 2;
     this.add(border);
+    this.add([this.mItemImage, this.mCounter, this.mSelectedIcon]);
   }
 
   setProp(data: IPackageItem) {
     this.mItem = data;
     const packageItem = data.item;
     if (!data || !packageItem) {
-      this.remove([this.mItemImage, this.mCounter, this.mSelectedIcon]);
+      this.mItemImage.visible = false;
+      this.mCounter.visible = false;
+      this.mSelectedIcon.visible = false;
       return;
     }
     if (this.mItem) {
       this.mItemImage.load(Url.getOsdRes(packageItem.display.texturePath), this, this.onLoadCompleteHandler);
-      this.add(this.mItemImage);
+      this.mItemImage.visible = true;
       if (packageItem.count > 1) {
         this.mCounter.setText(packageItem.count.toString());
-        this.add(this.mCounter);
-      }
-      if (this.mItem.selectVisible) {
-        this.add(this.mSelectedIcon);
+        this.mCounter.visible = true;
       } else {
-        this.remove(this.mSelectedIcon);
+        this.mCounter.visible = false;
       }
+      this.mSelectedIcon.visible = (this.mItem.selectVisible ? true : false);
       this.setSelected();
     }
   }
@@ -631,7 +648,7 @@ class CategorieButton extends TabButton {
     super(scene, key, frame, downFrame, text);
     this.disInteractive();
     this.removeListen();
-    this.mBackground.setOrigin(0);
+    (this.mBackground as Phaser.GameObjects.Image).setOrigin(0);
     if (this.mText) {
       this.mText.setPosition(this.mBackground.width / 2, this.mBackground.height / 2);
     }

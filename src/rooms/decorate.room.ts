@@ -102,11 +102,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         this.mCameraService = new CamerasManager(this);
 
-        if (!this.world.game.scene.getScene(LoadingScene.name))
-            this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
-        this.world.game.scene.start(LoadingScene.name, {
-            world: this.world,
-            room: this
+        // if (!this.world.game.scene.getScene(LoadingScene.name))
+        //     this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
+        // this.world.game.scene.start(LoadingScene.name, {
+        //     world: this.world,
+        //     room: this
+        // });
+        this.world.showLoading().then(() => {
+            this.completeLoad();
         });
     }
 
@@ -191,7 +194,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
         this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mLayerManager = new LayerManager(this);
-        this.mLayerManager.drawGrid(this);
+        // this.mLayerManager.drawGrid(this);
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
@@ -277,7 +280,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mCameraService.resize(width, height);
     }
 
-    transitionGrid(x: number, y: number, ) {
+    transitionGrid(x: number, y: number,) {
         const source = new Pos(x, y);
         const pos = this.transformToMini45(source);
         return this.checkBound(pos);
@@ -328,22 +331,29 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (pos45.x < 0 || pos45.y < 0 || pos45.x > this.miniSize.rows || pos45.y > this.miniSize.cols) {
             return false;
         }
-        let row = 0;
-        let col = 0;
-        const map = this.mElementManager.map;
-        for (let i = 0; i < collisionArea.length; i++) {
-            row = i + pos45.y - origin.y;
-            if (row >= map.length) {
+        const eles = [this.mElementManager, this.mTerrainManager];
+        for (const manager of eles) {
+            if (manager.canPut(pos45, collisionArea, origin) === false) {
                 return false;
-            }
-            for (let j = 0; j < collisionArea[i].length; j++) {
-                col = j + pos45.x - origin.x;
-                if (col >= map[i].length || map[row][col] === 0) {
-                    return false;
-                }
             }
         }
         return true;
+        // let row = 0;
+        // let col = 0;
+        // const map = this.terrainManager.map;
+        // for (let i = 0; i < collisionArea.length; i++) {
+        //     row = i + pos45.y - origin.y;
+        //     if (row >= map.length) {
+        //         return false;
+        //     }
+        //     for (let j = 0; j < collisionArea[i].length; j++) {
+        //         col = j + pos45.x - origin.x;
+        //         if (col >= map[i].length || map[row][col] === 1) {
+        //             return false;
+        //         }
+        //     }
+        // }
+        // return true;
     }
 
     public setMap(cols: number, rows: number, type: number) {
@@ -351,6 +361,17 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             return;
         }
         this.mMap[cols][rows] = type;
+    }
+
+    public getElement(id: number): IElement {
+        let ele = null;
+        if (this.mElementManager) {
+            ele = this.elementManager.get(id);
+        }
+        if (!ele && this.mTerrainManager) {
+            ele = this.mTerrainManager.get(id);
+        }
+        return ele;
     }
 
     private addPointerMoveHandler() {
@@ -378,7 +399,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     private onGameobjectUpHandler(pointer, gameobject) {
         // this.addPointerMoveHandler();
-        const com = gameobject.parentContainer;
+        // TODO
+        const com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
         if (!com) {
             return;
         }
@@ -682,5 +704,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     get sceneType(): op_def.SceneTypeEnum {
         return op_def.SceneTypeEnum.EDIT_SCENE_TYPE;
+    }
+
+    get effectManager() {
+        return undefined;
     }
 }

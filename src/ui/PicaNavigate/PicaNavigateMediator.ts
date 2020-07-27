@@ -3,11 +3,14 @@ import { WorldService } from "../../game/world.service";
 import { PicaNavigatePanel } from "./PicaNavigatePanel";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { PicaNavigate } from "./PicaNavigate";
+import { PicHandheldMediator } from "../PicHandheld/PicHandheldMediator";
 
 export class PicaNavigateMediator extends BaseMediator {
   public static NAME: string = "PicaNavigateMediator";
   private scene: Phaser.Scene;
   private world: WorldService;
+  private picaNa: PicaNavigate;
   constructor(
     private layerManager: ILayerManager,
     scene: Phaser.Scene,
@@ -28,6 +31,10 @@ export class PicaNavigateMediator extends BaseMediator {
       this.mView = new PicaNavigatePanel(this.scene, this.world);
       this.mView.on("showPanel", this.onShowPanelHandler, this);
       this.mView.on("close", this.onCloseHandler, this);
+      this.mView.on("goHome", this.onGomeHomeHandler, this);
+    }
+    if (!this.picaNa) {
+      this.picaNa = new PicaNavigate(this.world);
     }
     this.mView.show();
     this.layerManager.addToUILayer(this.mView);
@@ -37,18 +44,22 @@ export class PicaNavigateMediator extends BaseMediator {
     return false;
   }
 
+  destroy() {
+    if (this.picaNa) {
+      this.picaNa.destroy();
+      this.picaNa = undefined;
+    }
+    super.destroy();
+  }
+
   private onCloseHandler() {
     if (!this.world) {
       return;
     }
     const uiManager = this.world.uiManager;
-    const mediator = uiManager.getMediator(PicaChatMediator.name);
-    if (mediator) {
-      mediator.show();
-      this.mView.hide();
-      (<PicaNavigatePanel>this.mView).removeListen();
-      this.layerManager.removeToUILayer(this.mView);
-    }
+    uiManager.showExistMed(PicaChatMediator.name, "");
+    uiManager.showExistMed(PicHandheldMediator.name, "");
+    this.destroy();
   }
 
   private onShowPanelHandler(panel: string, data?: any) {
@@ -59,5 +70,8 @@ export class PicaNavigateMediator extends BaseMediator {
     if (data)
       uiManager.showMed(panel, data);
     else uiManager.showMed(panel);
+  }
+  private onGomeHomeHandler() {
+    this.picaNa.queryGOHomeHandler();
   }
 }

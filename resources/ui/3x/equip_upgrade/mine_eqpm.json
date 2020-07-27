@@ -64,60 +64,60 @@
 			"frame": {
 				"x": 1,
 				"y": 574,
-				"w": 146,
-				"h": 122
+				"w": 153,
+				"h": 71
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 146,
-				"h": 122
+				"w": 153,
+				"h": 71
 			},
 			"sourceSize": {
-				"w": 146,
-				"h": 122
+				"w": 153,
+				"h": 71
 			}
 		},
 		"equipbg1": {
 			"frame": {
-				"x": 149,
+				"x": 156,
 				"y": 574,
-				"w": 146,
-				"h": 117
+				"w": 153,
+				"h": 71
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 146,
-				"h": 117
+				"w": 153,
+				"h": 71
 			},
 			"sourceSize": {
-				"w": 146,
-				"h": 117
+				"w": 153,
+				"h": 71
 			}
 		},
 		"equipbg2": {
 			"frame": {
-				"x": 297,
+				"x": 311,
 				"y": 574,
-				"w": 146,
-				"h": 117
+				"w": 156,
+				"h": 72
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 146,
-				"h": 117
+				"w": 156,
+				"h": 72
 			},
 			"sourceSize": {
-				"w": 146,
-				"h": 117
+				"w": 156,
+				"h": 72
 			}
 		},
 		"lock": {
@@ -160,30 +160,10 @@
 				"h": 32
 			}
 		},
-		"test_equip": {
-			"frame": {
-				"x": 445,
-				"y": 574,
-				"w": 65,
-				"h": 64
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 65,
-				"h": 64
-			},
-			"sourceSize": {
-				"w": 65,
-				"h": 64
-			}
-		},
 		"titlebg": {
 			"frame": {
-				"x": 813,
-				"y": 1,
+				"x": 1,
+				"y": 648,
 				"w": 496,
 				"h": 161
 			},
@@ -202,8 +182,8 @@
 		},
 		"topbg": {
 			"frame": {
-				"x": 512,
-				"y": 574,
+				"x": 813,
+				"y": 1,
 				"w": 786,
 				"h": 70
 			},
@@ -222,8 +202,8 @@
 		},
 		"topbg1": {
 			"frame": {
-				"x": 445,
-				"y": 646,
+				"x": 779,
+				"y": 73,
 				"w": 786,
 				"h": 70
 			},
@@ -247,8 +227,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1310,
-			"h": 717
+			"w": 1600,
+			"h": 810
 		},
 		"scale": "1"
 	}

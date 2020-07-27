@@ -15,7 +15,6 @@ import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
 import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
-import { MainUIScene } from "../scenes/main.ui";
 import { JoyStickManager } from "./joystick.manager";
 import { GameMain, ILauncherConfig } from "../../launcher";
 import { ElementStorage, IElementStorage } from "./element.storage";
@@ -34,13 +33,13 @@ import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { HttpService } from "../net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
-import { EditScene } from "../scenes/edit";
 import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
 import { initLocales } from "../i18n";
 import * as path from "path";
 import { Tool } from "../utils/tool";
 import { SoundManager, ISoundConfig } from "./sound.manager";
+import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -67,6 +66,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mOrientation: number = 0;
     private gameConfigUrls: Map<string, string> = new Map();
     private gameConfigUrl: string = "";
+    private mLoadingManager: ILoadingManager;
 
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
@@ -101,7 +101,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
-        const scaleW = config.width / this.DEFAULT_WIDTH;
+        const scaleW = (config.width / this.DEFAULT_WIDTH) * (config.devicePixelRatio / this.mUIRatio);
         // const scaleH = config.height / this.DEFAULT_HEIGHT;
         this.mUIScale = scaleW;
         // if (!config.scale_ratio) {
@@ -136,12 +136,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mHttpService = new HttpService(this);
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
+        this.mLoadingManager = new LoadingManager(this);
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
         // this.mCharacterManager.register();
 
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
+        this.mSoundManager.addPackListener();
 
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
@@ -192,9 +194,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void { }
+    onDisConnected(connection?: SocketConnection): void {}
 
-    onError(reason: SocketConnectionError | undefined): void { }
+    onError(reason: SocketConnectionError | undefined): void {}
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -317,9 +319,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     get uiScale(): number {
-        if (this.mConfig && this.mConfig.ui_scale) {
-            return this.mConfig.ui_scale;
-        }
         return this.mUIScale;
     }
 
@@ -403,6 +402,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    public showLoading() {
+        return this.mLoadingManager.start();
+    }
+
     public getGameConfig(): Phaser.Types.Core.GameConfig {
         return this.gameConfig;
     }
@@ -460,12 +463,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.loadGameConfig(url);
     }
 
-    public createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
+    public async createGame(keyEvents?: op_def.IKeyCodeEvent[]) {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this._newGame();
+        // if (!this.mGame.scene.getScene(MainUIScene.name)) {
+        //     this.mGame.scene.add(MainUIScene.name, MainUIScene);
+        // }
+        // if (!this.mGame.scene.getScene(EditScene.name)) {
+        //     this.mGame.scene.add(EditScene.name, EditScene);
+        // }
         // this.mGame.scene.add(PlayScene.name, PlayScene);
-        this.mGame.scene.add(MainUIScene.name, MainUIScene);
-        this.mGame.scene.add(EditScene.name, EditScene);
         // this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         if (this.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
@@ -494,7 +501,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             }
         }
 
+        await this.mLoadingManager.addAssets(this.mElementStorage.getAssets());
         this.gameCreated();
+    }
+
+    public enterGame() {
+        this.loginEnterWorld();
+        // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+        this.mGame.scene.remove(LoginScene.name);
+        this.uiManager.destroy();
+        // loginScene.remove();
+        this.mLoadingManager.start();
+        // this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
     private async _createAnotherGame(gameId, worldId) {
@@ -519,8 +537,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         // }, 1000);
         const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-        if (loginScene) loginScene.remove();
-        this.mGame.scene.start(LoadingScene.name, { world: this });
+        if (loginScene) this.mGame.scene.remove(LoginScene.name);
+        this.mLoadingManager.start();
+        // this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
     private onFullScreenChange() {
@@ -549,6 +568,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGameEmitter.destroy();
                 this.roomManager.destroy();
                 this.uiManager.destroy();
+                this.mElementStorage.destroy();
+                this.mLoadingManager.destroy();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
                     resolve();
@@ -588,10 +609,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             connect: this.mConnection,
             world: this,
             callBack: () => {
-                this.loginEnterWorld();
-                const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-                loginScene.remove();
-                this.mGame.scene.start(LoadingScene.name, { world: this });
+                this.enterGame();
             },
         });
     }
@@ -635,15 +653,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         if (this.mConfig && this.mConnection) {
             this.mAccount = new Account();
-            const loadingScene: LoadingScene = this.mGame.scene.getScene(LoadingScene.name) as LoadingScene;
-            if (!loadingScene) {
-                this.mGame.scene.add(LoadingScene.name, LoadingScene);
-            }
+            this.mLoadingManager.start();
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;
             } else {
-                this.mGame.scene.start(LoadingScene.name, { world: this });
+                // this.mGame.scene.start(LoadingScene.name, { world: this });
+                this.mLoadingManager.start();
                 this.mAccount.setAccount({
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
@@ -687,6 +703,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const configUrls = content.configUrls;
         this.mMoveStyle = content.moveStyle;
 
+        this.clock.sync(-1);
+
         this.initgameConfigUrls(configUrls);
 
         if (!configUrls || configUrls.length <= 0) {
@@ -717,6 +735,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame) {
             return this.mGame;
         }
+        Logger.getInstance().log("dragonbones: ", dragonBones);
         this.gameConfig = {
             type: Phaser.AUTO,
             parent: this.mConfig.parent || "game",
@@ -764,7 +783,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 ],
             },
             render: {
-                pixelArt: false,
+                pixelArt: true,
                 roundPixels: true,
             },
             scale: {
@@ -783,6 +802,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mRoomMamager) this.mRoomMamager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
+        if (this.mSoundManager) this.mSoundManager.addPackListener();
         if (this.mElementStorage) {
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }

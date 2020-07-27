@@ -7,9 +7,12 @@ import { Logger } from "../../utils/log";
 export class BubbleContainer extends Phaser.GameObjects.Container {
     private mBubbles: Bubble[] = [];
     private mArrow: DynamicImage;
-    constructor(scene: Phaser.Scene) {
+    private mScale: number;
+    constructor(scene: Phaser.Scene, scale: number) {
         super(scene);
+        this.mScale = scale;
         this.mArrow = new DynamicImage(this.scene, 0, 0);
+        this.mArrow.scale = scale;
         this.mArrow.load(Url.getRes("ui/chat/bubble_arrow.png"));
         this.add(this.mArrow);
     }
@@ -19,14 +22,19 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
         const len = this.mBubbles.length;
         let bul: Bubble = null;
         let h = 0;
+        bubble.show(text, bubbleSetting);
         for (let i = len - 1; i >= 0; i--) {
             bul = this.mBubbles[i];
-            h += bul.minHeight + 5;
+            h += bul.minHeight + 5 * this.mScale;
             bul.tweenTo(-h);
         }
-        bubble.show(text, bubbleSetting);
         this.add(bubble);
-        this.mArrow.y = bubble.minHeight + 4;
+        this.mArrow.y = 4 * this.mScale;
+    }
+
+    updatePos(x: number, y: number) {
+        this.x = x * this.mScale;
+        this.y = y * this.mScale;
     }
 
     public destroy(fromScene?: boolean): void {
@@ -51,7 +59,7 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
 
     private createBubble(bubbleSetting: op_client.IChat_Setting): Bubble {
         if (!bubbleSetting) return;
-        const bubble = new Bubble(this.scene);
+        const bubble = new Bubble(this.scene, this.mScale);
         this.mBubbles.push(bubble);
         const duration = bubbleSetting.duration ? bubbleSetting.duration : 5000;
         bubble.durationRemove(duration, this.onRemoveBubble, this);

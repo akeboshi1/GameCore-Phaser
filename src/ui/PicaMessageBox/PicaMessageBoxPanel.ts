@@ -13,7 +13,7 @@ export class PicaMessageBoxPanel extends BasePanel {
   private mButtonContaier: Phaser.GameObjects.Container;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.disInteractive();
+    // this.disInteractive();
   }
 
   show(param) {
@@ -21,13 +21,19 @@ export class PicaMessageBoxPanel extends BasePanel {
     if (!this.mInitialized) {
       return;
     }
+    const data = param[0];
     this.mButtons = [];
-    if (param[0] && param[0].text && param[0].text[0]) {
-      this.mText.setText(param[0].text[0].text);
-      this.mText.x = -this.mText.width / 2;
-      this.mText.y = -this.mText.height;
+    if (data) {
+      if (data.text && data.text[0]) {
+        this.mText.setText(data.text[0].text);
+        this.mText.x = -this.mText.width / 2;
+        this.mText.y = -this.mText.height;
+      }
+      if (data.title) {
+        this.mTitleLabel.setText(data.title.text);
+      }
     }
-    const buttons = param[0].button;
+    const buttons = data.button;
     if (buttons) {
       const btnWid: number = 114 * this.dpr;
       const btnHei: number = 40 * this.dpr;
@@ -78,6 +84,14 @@ export class PicaMessageBoxPanel extends BasePanel {
   }
 
   protected init() {
+    const { width, height } = this.scene.cameras.main;
+
+    const border = this.scene.make.graphics(undefined, false);
+    border.fillStyle(0, 0.6);
+    border.fillRect(-width * 0.5, -height * 0.5, width, height);
+    border.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+    this.add(border);
+
     const frame = this.scene.textures.getFrame(this.key, "bg");
     const background = new NinePatch(this.scene, 0, 0, 286 * this.dpr, frame.height, this.key, "bg", {
       left: 22 * this.dpr,
@@ -119,7 +133,8 @@ export class PicaMessageBoxPanel extends BasePanel {
     // this.mText.y = -this.mHeight / 2 + 10;
     this.add([background, title, this.mTitleLabel, this.mText, this.mButtonContaier]);
     super.init();
-    this.resize(0, 0);
+    this.resize(width, height);
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
   }
 
   private onClickHandler(pointer, gameobject) {

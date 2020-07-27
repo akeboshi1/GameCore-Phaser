@@ -3,9 +3,10 @@ import { WorldService } from "../../game/world.service";
 import { Logger } from "../../utils/log";
 import { Url } from "../../utils/resUtil";
 import { SkyBoxScene } from "../../scenes/sky.box";
-import { IScenery } from "./scenery";
-import { IRoomService } from "../room";
+import { IScenery, Fit } from "./scenery";
+import { IRoomService, Room } from "../room";
 import { ICameraService } from "../cameras/cameras.manager";
+import { State } from "../state/state.group";
 
 export interface IBlockManager {
   readonly world: WorldService;
@@ -28,6 +29,7 @@ export class BlockManager implements IBlockManager {
   private mScenery: IScenery;
   private mRoom: IRoomService;
   private mCameras: ICameraService;
+  private mStateMap: Map<string, State>;
   constructor(scenery: IScenery, room: IRoomService) {
     this.mGrids = [];
     this.mScenery = scenery;
@@ -45,13 +47,17 @@ export class BlockManager implements IBlockManager {
       return;
     }
     this.mSceneName = SkyBoxScene.name + `_${scenery.id}`;
-    this.mWorld.game.scene.add(this.mSceneName, SkyBoxScene, false);
+    const scene = this.mWorld.game.scene.add(this.mSceneName, SkyBoxScene, false);
     playScene.scene.launch(this.mSceneName, this);
+    this.updateDepth();
   }
 
   startPlay(scene: Phaser.Scene) {
     this.scene = scene;
     this.initBlock();
+    if (this.mStateMap) {
+      this.mStateMap.forEach((state) => this.handlerState(state));
+    }
   }
 
   check(time?: number, delta?: number) {
@@ -67,6 +73,7 @@ export class BlockManager implements IBlockManager {
     this.mUris = scenery.uris;
     this.setSize(scenery.width, scenery.height);
     this.initBlock();
+    this.updateDepth();
   }
 
   setSize(imageW: number, imageH: number, gridW?: number, gridH?: number) {
@@ -80,9 +87,9 @@ export class BlockManager implements IBlockManager {
 
   updatePosition() {
     const camera = this.scene.cameras.main;
-    const size = this.mRoom.roomSize;
-    const { width, height, offset } = this.mScenery;
-    camera.setPosition(((size.sceneWidth - width >> 1) + offset.x) * this.mWorld.scaleRatio, ((size.sceneHeight - height >> 1) + offset.y) * this.mWorld.scaleRatio);
+    const { offset } = this.mScenery;
+    const loc = this.fixPosition({ x: offset.x, y: offset.y });
+    camera.setPosition(loc.x, loc.y);
   }
 
   destroy() {
@@ -92,24 +99,113 @@ export class BlockManager implements IBlockManager {
     this.mGrids.length = 0;
   }
 
-  private initBlock() {
+  setState(state: State) {
+    this.handlerState(state);
+  }
+
+  public playSkyBoxAnimation(packet: any) {
+    const { id, targets, duration, reset, resetDuration } = packet;
+    if (id === undefined || targets === undefined || duration === undefined) {
+      return;
+    }
+    if (!this.scene) {
+      return;
+    }
+    if (id !== this.mScenery.id) {
+      return;
+    }
+
+    const camera = this.scene.cameras.main;
+    this.move(camera, this.fixPosition(targets), duration, this.fixPosition(reset), resetDuration);
+  }
+
+  protected handlerState(state: State) {
+    const packet = state.packet;
+    for (const prop of packet) {
+      if (this.mScenery.id === prop.id) {
+        this.playSkyBoxAnimation(prop);
+      }
+    }
+  }
+
+  protected updateDepth() {
+    if (!this.mRoom) {
+      return;
+    }
+    const playScene = this.mRoom.scene;
+    if (!this.mScenery || !playScene) {
+      return;
+    }
+    const scene = this.mWorld.game.scene.getScene(this.mSceneName);
+    if (!scene) {
+      return;
+    }
+    if (this.mScenery.depth < 0) {
+      scene.scene.sendToBack(this.mSceneName);
+    } else {
+      scene.scene.moveAbove(playScene.sys.settings.key, this.mSceneName);
+    }
+  }
+
+  protected initBlock() {
     this.clear();
     this.mContainer = this.scene.add.container(0, 0);
     this.mContainer.setScale(this.mWorld.scaleRatio);
     const len = this.mUris.length;
-    for (let i = 0; i < len; i++) {
-      const l = this.mUris[i].length;
-      for (let j = 0; j < l; j++) {
-        const block = new Block(this.scene, this.mUris[i][j]);
-        block.setRectangle(i % this.mRows * this.mGridWidth, Math.floor(i / this.mRows) * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
-        this.mGrids.push(block);
+    // TODO
+    if (this.mScenery.fit === Fit.Repeat) {
+      const room = <Room> this.mRoom;
+      const { width, height } = room.getMaxScene();
+      const rows = Math.floor(width /  this.mScenery.width);
+      const cols = Math.floor(height / this.mScenery.height);
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const block = new Block(this.scene, this.mUris[0][0]);
+          block.setRectangle(i * this.mRows * this.mGridWidth, j * this.mRows * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
+          this.mGrids.push(block);
+        }
+      }
+    } else {
+      for (let i = 0; i < len; i++) {
+        const l = this.mUris[i].length;
+        for (let j = 0; j < l; j++) {
+          const block = new Block(this.scene, this.mUris[i][j]);
+          block.setRectangle(i * this.mRows * this.mGridWidth, j * this.mRows * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
+          this.mGrids.push(block);
+        }
       }
     }
     this.mContainer.add(this.mGrids);
     this.initCamera();
   }
 
-  private initCamera() {
+  protected move(targets, props, duration?: number, resetProps?: any, resetDuration?: number) {
+    const tween = this.scene.tweens.add({
+      targets,
+      props,
+      duration,
+      loop: -1,
+    });
+    if (resetProps) {
+      tween.once("loop", () => {
+        if (resetProps) {
+          targets.x = resetProps.x;
+          targets.y = resetProps.y;
+        }
+        // else {
+        //   const { x, y } = this.mScenery.offset;
+        //   offset = this.fixPosition({ x, y });
+        //   targets.x = offset.x;
+        //   targets.y = offset.y;
+        // }
+        tween.stop();
+        this.move(targets, props, resetDuration);
+        // tween.duration = resetDuration;
+      });
+    }
+  }
+
+  protected initCamera() {
     const camera = this.scene.cameras.main;
 
     if (this.mCameras) {
@@ -123,7 +219,7 @@ export class BlockManager implements IBlockManager {
     }
   }
 
-  private clear() {
+  protected clear() {
     for (const grid of this.mGrids) {
       grid.destroy();
     }
@@ -139,6 +235,33 @@ export class BlockManager implements IBlockManager {
 
   get scenery(): IScenery {
     return this.mScenery;
+  }
+
+  protected fixPosition(props: any) {
+    if (!props) return;
+    const offset = this.offset;
+    if (props.x !== undefined) {
+      props.x = (offset.x + props.x) * this.mWorld.scaleRatio;
+    }
+    if (props.y !== undefined) {
+      props.y = (offset.y + props.y) * this.mWorld.scaleRatio;
+    }
+    return props;
+  }
+
+  protected get offset(): { x: number, y: number} {
+    const os = {x: 0, y: 0};
+    let x = 0;
+    let y = 0;
+    if (this.mScenery) {
+      if (this.mScenery.fit === Fit.Center) {
+        const size = this.mRoom.roomSize;
+        const { width, height } = this.mScenery;
+        x = size.sceneWidth - width >> 1;
+        y = size.sceneHeight - height >> 1;
+      }
+    }
+    return { x, y };
   }
 }
 

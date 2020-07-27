@@ -10,6 +10,7 @@ import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
+
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -44,14 +45,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
-            this.addHandlerFun(
-                op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN,
-                this.onClearBubbleHandler
-            );
-            this.addHandlerFun(
-                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION,
-                this.onChangeAnimation
-            );
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
         }
         if (this.mRoom && this.mRoom.world) {
@@ -97,6 +92,21 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public setState(state: op_client.IStateGroup) {
+        if (!state) {
+            return;
+        }
+        const owner = state.owner;
+        if (!owner || owner.type !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+        const element = this.get(owner.id);
+        if (!element) {
+            return;
+        }
+        element.setState(state.state);
+    }
+
     public destroy() {
         if (this.connection) {
             this.connection.removePacketListener(this);
@@ -106,11 +116,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.clear();
     }
 
-    public update(time: number, delta: number) {}
+    public update(time: number, delta: number) { }
 
-    protected addMap(sprite: ISprite) {}
+    protected addMap(sprite: ISprite) { }
 
-    protected removeMap(sprite: ISprite) {}
+    protected removeMap(sprite: ISprite) { }
 
     get camera(): Phaser.Cameras.Scene2D.Camera | undefined {
         return this.mRoom.cameraService.camera;
@@ -251,18 +261,21 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onSync(packet: PBpacket) {
-        const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
         if (content.nodeType !== NodeType.ElementNodeType) {
             return;
         }
         let element: Element = null;
         const sprites = content.sprites;
+        const command = content.command;
         for (const sprite of sprites) {
             element = this.get(sprite.id);
             if (element) {
-                const sp = new Sprite(sprite, content.nodeType);
-                element.model = sp;
-                this.addMap(sp);
+                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
+                    element.model = new Sprite(sprite);
+                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
+                    element.updateModel(sprite);
+                }
             }
         }
     }
@@ -309,12 +322,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== NodeType.ElementNodeType) {
             return;
         }
-        const anis = content.changeAnimation;
-        let ele = null;
-        for (const ani of anis) {
-            ele = this.get(ani.id);
+        let ele: IElement = null;
+        const ids = content.ids;
+        for (const id of ids) {
+            ele = this.get(id);
             if (ele) {
-                ele.play(ani.animationName);
+                ele.setQueue(content.changeAnimation);
             }
         }
     }

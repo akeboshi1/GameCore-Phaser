@@ -2,9 +2,10 @@ import { SkyBoxManager } from "./sky.box.manager";
 import { IRoomService } from "../room";
 import { op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Scenery } from "./scenery";
+import { Scenery, IScenery } from "./scenery";
 import { BlockManager } from "./block.manager";
 import { op_editor, op_def } from "pixelpai_proto";
+import { EditorBlockManager } from "./editor.block.manager";
 
 export class EditorSkyBoxManager extends SkyBoxManager {
     private mSelected: BlockManager;
@@ -18,6 +19,10 @@ export class EditorSkyBoxManager extends SkyBoxManager {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SCENERY, this.onDeleteSceneryHandler);
         }
     }
+
+    add(scenery: IScenery) {
+        this.mScenetys.set(scenery.id, new EditorBlockManager(scenery, this.mRoom));
+      }
 
     public fetch(id: number) {
         if (!this.mScenetys) {

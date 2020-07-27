@@ -14,41 +14,57 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
 
   loadDisplay(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
     this.mDisplay = content;
-    if (this.mDragonboneDisplay) {
-      this.mDragonboneDisplay.destroy();
+    this.destroyDragon();
+    if (!this.mImage) {
+      this.mImage = this.scene.make.image(undefined, false);
     }
+    this.add(this.mImage);
     if (content.display) {
       const display = content.display;
       if (this.scene.textures.exists(display.texturePath)) {
         this.onCompleteHandler();
       } else {
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
-        this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
+        if (display.texturePath !== "" && display.dataPath !== "") {
+          this.scene.load.atlas(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
+        } else {
+          this.loadUrl(Url.getOsdRes(display.texturePath));
+        }
         this.scene.load.start();
       }
     }
   }
 
-  loadAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
+  loadAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE, scale: number = 1, offset?: Phaser.Geom.Point) {
     if (!this.mDragonboneDisplay) {
-      this.mDragonboneDisplay = new DragonbonesDisplay(this.scene, undefined);
+      this.mDragonboneDisplay = new DragonbonesDisplay(this.scene, undefined, undefined, true);
+      if (offset) {
+        this.mDragonboneDisplay.x += offset.x;
+        this.mDragonboneDisplay.y += offset.y;
+      }
     }
     if (this.mImage) {
       this.remove(this.mImage);
     }
+    this.mDragonboneDisplay.once("initialized", () => {
+      this.mDragonboneDisplay.play({ name: "idle", flip: false });
+    });
     this.mDragonboneDisplay.load(new DragonbonesModel({
       id: 0,
       avatar: content.avatar
     }));
+    this.mDragonboneDisplay.scale = scale;
     this.add(this.mDragonboneDisplay);
   }
 
   loadUrl(url: string) {
     this.mUrl = url;
     if (this.mDisplay) this.mDisplay = null;
-    if (this.mDragonboneDisplay) {
-      this.mDragonboneDisplay.destroy();
+    this.destroyDragon();
+    if (!this.mImage) {
+      this.mImage = this.scene.make.image(undefined, false);
     }
+    this.add(this.mImage);
     if (this.scene.textures.exists(url)) {
       this.onCompleteHandler();
     } else {
@@ -59,11 +75,14 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
 
   setTexture(key: string, frame?: string) {
+    this.destroyDragon();
     if (!this.mImage) {
       this.mImage = this.scene.make.image({
         key,
         frame
       }, false);
+    } else {
+      this.mImage.setTexture(key, frame);
     }
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.add(this.mImage);
@@ -84,9 +103,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     if (!this.scene) {
       return;
     }
-    if (!this.mImage) {
-      this.mImage = this.scene.make.image(undefined, false);
-    }
     if (this.mDisplay) {
       const display = this.mDisplay.display;
       const ani = this.mDisplay.animations;
@@ -99,7 +115,12 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
     this.setNearest();
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
-    this.add(this.mImage);
     this.emit("show", this.mImage);
+  }
+  private destroyDragon() {
+    if (this.mDragonboneDisplay) {
+      this.mDragonboneDisplay.destroy();
+      this.mDragonboneDisplay = undefined;
+    }
   }
 }

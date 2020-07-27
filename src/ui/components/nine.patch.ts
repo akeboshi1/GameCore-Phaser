@@ -1,4 +1,5 @@
 import { IPatchesConfig, normalizePatchesConfig } from "./patches.config";
+import { Logger } from "../../utils/log";
 
 export class NinePatch extends Phaser.GameObjects.Container {
     private static readonly __BASE: string = "__BASE";
@@ -21,6 +22,11 @@ export class NinePatch extends Phaser.GameObjects.Container {
         config?: IPatchesConfig) {
         super(scene, x, y);
         this.config = config || this.scene.cache.custom.ninePatch.get(frame ? `${frame}` : key);
+        // 对于config进行取整
+        this.config.top = Math.round(this.config.top);
+        if (this.config.right) this.config.right = Math.round(this.config.right);
+        if (this.config.bottom) this.config.bottom = Math.round(this.config.bottom);
+        if (this.config.left) this.config.left = Math.round(this.config.left);
         normalizePatchesConfig(this.config);
         this.setSize(width, height);
         this.setTexture(key, frame);
@@ -35,8 +41,9 @@ export class NinePatch extends Phaser.GameObjects.Container {
         if (this.width === width && this.height === height) {
             return this;
         }
-        width = Math.max(width, this.config.left + this.config.right);
-        height = Math.max(height, this.config.top + this.config.bottom);
+        // 增加中间区域尺寸 1
+        width = Math.max(width, this.config.left + this.config.right + 1);
+        height = Math.max(height, this.config.top + this.config.bottom + 1);
         this.setSize(width, height);
         this.drawPatches();
         return;
@@ -82,7 +89,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
     }
 
     public set tint(value: number) {
-        this.each((patch: Phaser.GameObjects.Image) => patch.setTint(value));
+        this.each((patch: Phaser.GameObjects.Image) => patch.setTintFill(value));
         this.internalTint = value;
     }
 
@@ -92,6 +99,8 @@ export class NinePatch extends Phaser.GameObjects.Container {
 
     public clearTint() {
         this.each((patch: Phaser.GameObjects.Image) => patch.clearTint());
+        this.internalTint = undefined;
+        this.tintFill = false;
     }
 
     private createPatches(): void {
@@ -139,22 +148,31 @@ export class NinePatch extends Phaser.GameObjects.Container {
         const tintFill = this.tintFill;
         this.removeAll(true);
         let patchIndex = 0;
+        // const info = [];
         for (let yi = 0; yi < 3; yi++) {
             for (let xi = 0; xi < 3; xi++) {
                 const patch: Phaser.Textures.Frame = this.originTexture.frames[this.getPatchNameByIndex(patchIndex)];
                 const patchImg = new Phaser.GameObjects.Image(this.scene, 0, 0, patch.texture.key, patch.name);
                 patchImg.setOrigin(0);
-                patchImg.setPosition(this.finalXs[xi] - this.width * this.originX, this.finalYs[yi] - this.height * this.originY);
-                patchImg.setScale(
-                    (this.finalXs[xi + 1] - this.finalXs[xi]) / patch.width,
-                    (this.finalYs[yi + 1] - this.finalYs[yi]) / patch.height
-                );
+                patchImg.setPosition(
+                    (this.finalXs[xi] * 1000 - this.width * this.originX * 1000) / 1000,
+                    (this.finalYs[yi] * 1000 - this.height * this.originY * 1000) / 1000);
+                // patchImg.setScale(
+                //     (this.finalXs[xi + 1] * 1000 - this.finalXs[xi] * 1000) / patch.width / 1000,
+                //     (this.finalYs[yi + 1] * 1000 - this.finalYs[yi] * 1000) / patch.height / 1000
+                // );
+                // 直接设置displayWidth即最终显示宽度
+                patchImg.displayWidth = this.finalXs[xi + 1] - this.finalXs[xi];
+                patchImg.displayHeight = this.finalYs[yi + 1] - this.finalYs[yi];
                 this.add(patchImg);
-                patchImg.setTint(this.internalTint);
+                if (this.internalTint) patchImg.setTint(this.internalTint);
                 patchImg.tintFill = tintFill;
                 ++patchIndex;
+                // info.push({ x: patchImg.x, y: patchImg.y, w: patchImg.width, h: patchImg.height, s: patchImg.scale, sx: patchImg.scaleX, sy: patchImg.scaleY });
             }
         }
+        // Logger.getInstance().log("ZW-- drawPatches: ", info);
+        // Logger.getInstance().log("ZW-- lines: " + (info[0].w * info[0].sx + info[0].x) + "; " + (info[1].w * info[1].sx + info[1].x));
     }
 
     private createPatchFrame(patch: string, x: number, y: number, width: number, height: number) {

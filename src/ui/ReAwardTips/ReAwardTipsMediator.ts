@@ -14,7 +14,7 @@ export class ReAwardTipsMediator extends BaseMediator {
     }
 
     show(param: any) {
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView) {
             (<ReAwardTipsPanel> this.mView).appendAward(param);
             return;
         }

@@ -5,6 +5,8 @@ import { EquipUpgradeItem } from "./EquipUpgradeItem";
 import { NinePatch } from "../components/nine.patch";
 import { op_client } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
+import { i18n } from "../../i18n";
+import { UIAtlasKey } from "../ui.atals.name";
 
 export default class EquipUpgradePanel extends BasePanel {
     private key = "equip_upgrade";
@@ -18,16 +20,25 @@ export default class EquipUpgradePanel extends BasePanel {
     private content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
+        this.scale = 1;
     }
     resize(width: number, height: number) {
+        const w: number = this.scene.cameras.main.width / this.scale;
+        const h: number = this.scene.cameras.main.height / this.scale;
         super.resize(width, height);
-        this.setSize(width, height);
-        this.x = width / 2;
-        this.y = height / 2;
-        this.blackBg.setPosition(-this.x, -this.y);
+        this.setSize(w, h);
+        this.bg.x = w / 2;// - 24 * this.dpr * this.scale;
+        this.bg.y = h / 2;// - 20 * this.dpr * this.scale;
+        this.tilteName.x = this.bg.x;
+        this.tilteName.y = this.bg.y - this.bg.height / 2;
+        this.titlebg.x = this.bg.x;
+        this.titlebg.y = this.bg.y - this.bg.height / 2;
+        this.closeBtn.x = this.bg.x + this.bg.width / 2 - 10 * this.dpr * this.scale; // + this.bg.width / 2 - this.dpr * 8;
+        this.closeBtn.y = this.bg.y - this.bg.height / 2 + 10 * this.dpr * this.scale; // + posY + this.dpr * 8;
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
-        this.blackBg.fillRect(0, 0, width, height);
+        this.blackBg.fillRoundedRect(-this.x, -this.y, w, h);
+        this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
     }
 
     public show(param?: any) {
@@ -59,21 +70,31 @@ export default class EquipUpgradePanel extends BasePanel {
     }
 
     preload() {
+        this.commonkey = UIAtlasKey.commonKey;
         this.addAtlas(this.key, "equip_upgrade/mine_eqpm.png", "equip_upgrade/mine_eqpm.json");
         this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
         super.preload();
     }
     init() {
+        const w = this.scene.cameras.main.width / this.scale;
+        const h = this.scene.cameras.main.height / this.scale;
+        this.setSize(w, h);
         this.blackBg = this.scene.make.graphics(undefined, false);
+        this.blackBg.clear();
+        this.blackBg.fillStyle(0, 0.5);
+        this.blackBg.fillRoundedRect(0, 0, w, h);
+        this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
         this.bg = new NinePatch(this.scene, 0, 0, 300 * this.dpr, 300 * this.dpr, this.commonkey, "bg", {
+            left: 40,
             top: 40,
-            bottom: 40
+            bottom: 40,
+            right: 40,
         });
         const posY = -this.bg.height * 0.5;
         this.titlebg = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "titlebg" });
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
-        this.tilteName = this.scene.make.text({ x: 0, y: posY, text: "装备", style: { font: mfont, color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
-        this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 8, y: posY + this.dpr * 8, key: this.commonkey, frame: "close" });
+        this.tilteName = this.scene.make.text({ x: 0, y: posY, text: i18n.t("equipupgrade.title"), style: { font: mfont, color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
+        this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: this.commonkey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
         this.closeBtn.setInteractive();
         this.add([this.blackBg, this.bg, this.closeBtn, this.titlebg, this.tilteName]);
@@ -84,6 +105,8 @@ export default class EquipUpgradePanel extends BasePanel {
     setEquipDatas(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
         this.content = content;
         if (!this.mInitialized) return;
+        const w: number = this.scene.cameras.main.width / this.scale;
+        const h: number = this.scene.cameras.main.height / this.scale;
         const arr = content.mineEquipments; // this.getEuipDatas();// [content.minePicks, content.minePicks];
         const height = 175 * this.dpr;
         const bgHeight = height * arr.length - (arr.length >= 2 ? 40 * (arr.length - 2) : 0);
@@ -97,11 +120,12 @@ export default class EquipUpgradePanel extends BasePanel {
             item.on("reqActive", this.onReqActiveEquipment, this);
             item.on("reqEquiped", this.onReqEquipedEquipment, this);
             item.setEquipItems(value);
-            item.setTransPosition(0, posY);
+            item.setTransPosition(w / 2, posY + h / 2);
             this.equipItems.push(item);
             posY += cellHeight;
             index++;
         }
+        this.resize(w, h);
     }
 
     setActiveEquipment(equip: op_client.IMiningEquipment) {

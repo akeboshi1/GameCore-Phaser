@@ -6,7 +6,6 @@ import { MessageType } from "../../const/MessageType";
 import { Direction, IElement } from "../../rooms/element/element";
 import { ISprite } from "../../rooms/element/sprite";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-
 export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";
     private readonly minGrid: number = 2;
@@ -121,7 +120,7 @@ export class DecoratePanel extends BasePanel {
         }
     }
 
-    public setPosition(x: number, y?: number, z?: number): this {
+    public setPos(x: number, y?: number, z?: number): this {
         this.x = x * this.mScaleRatio;
         this.y = (y + this.offset.y) * this.mScaleRatio;
         this.z = z || 0;
@@ -629,14 +628,14 @@ class MoveMenu extends Phaser.GameObjects.Container {
         // for (const btn of this.mBtns) {
         //     btn.on("pointerup", this.onArrowHandler, this);
         // }
-        this.mArrow1.on("hold", this.onHoldHandler, this);
-        this.mArrow1.on("click", this.onClickHandler, this);
-        this.mArrow3.on("hold", this.onHoldHandler, this);
-        this.mArrow3.on("click", this.onClickHandler, this);
-        this.mArrow5.on("hold", this.onHoldHandler, this);
-        this.mArrow5.on("click", this.onClickHandler, this);
-        this.mArrow7.on("hold", this.onHoldHandler, this);
-        this.mArrow7.on("click", this.onClickHandler, this);
+        this.mArrow1.on("Hold", this.onHoldHandler, this);
+        this.mArrow1.on("Tap", this.onClickHandler, this);
+        this.mArrow3.on("Hold", this.onHoldHandler, this);
+        this.mArrow3.on("Tap", this.onClickHandler, this);
+        this.mArrow5.on("Hold", this.onHoldHandler, this);
+        this.mArrow5.on("Tap", this.onClickHandler, this);
+        this.mArrow7.on("Hold", this.onHoldHandler, this);
+        this.mArrow7.on("Tap", this.onClickHandler, this);
         // this.mArrow1.on("pointerup", this.onArrow1Handler, this);
         // this.mArrow3.on("pointerup", this.onArrow3Handler, this);
         // this.mArrow5.on("pointerup", this.onArrow5Handler, this);
@@ -644,14 +643,14 @@ class MoveMenu extends Phaser.GameObjects.Container {
     }
 
     public unRegister() {
-        this.mArrow1.off("hold", this.onHoldHandler, this);
-        this.mArrow1.off("click", this.onClickHandler, this);
-        this.mArrow3.off("hold", this.onHoldHandler, this);
-        this.mArrow3.off("click", this.onClickHandler, this);
-        this.mArrow5.off("hold", this.onHoldHandler, this);
-        this.mArrow5.off("click", this.onClickHandler, this);
-        this.mArrow7.off("hold", this.onHoldHandler, this);
-        this.mArrow7.off("click", this.onClickHandler, this);
+        this.mArrow1.off("Hold", this.onHoldHandler, this);
+        this.mArrow1.off("Tap", this.onClickHandler, this);
+        this.mArrow3.off("Hold", this.onHoldHandler, this);
+        this.mArrow3.off("Tap", this.onClickHandler, this);
+        this.mArrow5.off("Hold", this.onHoldHandler, this);
+        this.mArrow5.off("Tap", this.onClickHandler, this);
+        this.mArrow7.off("Hold", this.onHoldHandler, this);
+        this.mArrow7.off("Tap", this.onClickHandler, this);
         // this.mArrow1.off("pointerup", this.onArrow1Handler, this);
         // this.mArrow3.off("pointerup", this.onArrow3Handler, this);
         // this.mArrow5.off("pointerup", this.onArrow5Handler, this);

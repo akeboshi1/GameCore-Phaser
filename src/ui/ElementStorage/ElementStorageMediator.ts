@@ -1,12 +1,10 @@
 import { WorldService } from "../../game/world.service";
 import { ElementStoragePanel } from "./ElementStoragePanel";
 import { ILayerManager } from "../layer.manager";
-import { DecoratePanel } from "../decorate/decorate.panel";
 import { ElementStorage } from "./ElementStorate";
 import { MessageType } from "../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { Logger } from "../../utils/log";
+import { op_client, op_virtual_world } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class ElementStorageMediator extends BaseMediator {

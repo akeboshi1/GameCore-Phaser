@@ -8,6 +8,7 @@ import { EditorRoom } from "./editor.room";
 import { DecorateRoom } from "./decorate.room";
 import { Tool } from "../utils/tool";
 import { Lite } from "game-capsule";
+import { LoadingScene } from "../scenes/loading";
 export interface IRoomManager {
     readonly world: WorldService | undefined;
 
@@ -96,6 +97,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public destroy() {
         this.removePackListener();
+        this.mCurRoom = null;
         for (let room of this.mRooms) {
             room.destroy();
             room = null;
@@ -108,23 +110,25 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return idx >= 0;
     }
 
-    private onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+    private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
         const vw = scene;
         let room: Room;
         if (this.hasRoom(vw.scene.id)) {
             room = <Room>this.getRoom(vw.scene.id);
+            if (this.mCurRoom) {
+                await this.leaveScene(this.mCurRoom);
+            }
             room.addActor(vw.actor);
             room.enter(vw.scene);
             this.mCurRoom = room;
         } else {
-            if (this.mCurRoom) {
-                this.leaveScene(this.mCurRoom);
-            }
-
             // load this scene config in gameConfig
-            this.world.loadSceneConfig(vw.scene.id.toString()).then((config: Lite) => {
+            this.world.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
                 this.world.elementStorage.setSceneConfig(config);
+                if (this.mCurRoom) {
+                    await this.leaveScene(this.mCurRoom);
+                }
                 room = new Room(this);
                 this.mRooms.push(room);
                 room.addActor(vw.actor);
@@ -134,9 +138,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    private onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+    private async onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         if (this.mCurRoom) {
-            this.leaveScene(this.mCurRoom);
+            await this.leaveScene(this.mCurRoom);
         }
         const room: DecorateRoom = new DecorateRoom(this);
         room.enter(scene.scene);
@@ -144,11 +148,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (actor) room.setEnterPos(actor.x, actor.y);
         this.mRooms.push(room);
         this.mCurRoom = room;
-    }
-
-    private onEditRoom(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
-        Logger.getInstance().log("edit: ", content);
     }
 
     private onEnterEditor(packet: PBpacket) {
@@ -159,10 +158,18 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.push(room);
     }
 
-    private leaveScene(room: IRoomService) {
+    private async leaveScene(room: IRoomService) {
         if (!room) return;
-        this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
-        room.destroy();
+        return new Promise((resolve, reject) => {
+            const loading: LoadingScene = <LoadingScene> this.mWorld.game.scene.getScene(LoadingScene.name);
+            if (loading) {
+                loading.show().then(() => {
+                    this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
+                    room.destroy();
+                    resolve();
+                });
+            }
+        });
     }
 
     private onEnterSceneHandler(packet: PBpacket) {

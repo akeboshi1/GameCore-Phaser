@@ -9,13 +9,15 @@ import {
     SceneNode,
     AnimationDataNode,
     MossNode,
-    SceneryNode,
+    AssetsNode,
 } from "game-capsule";
 import { Logger } from "../utils/log";
 import { op_def } from "pixelpai_proto";
 import { Animation } from "../rooms/display/animation";
 import { MossCollectionNode } from "game-capsule/lib/configobjects/scene";
 import { IScenery } from "../rooms/sky.box/scenery";
+import { IAsset } from "../loading/loading.manager";
+import { Url } from "../utils/resUtil";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
@@ -28,9 +30,11 @@ export interface IElementStorage {
     getTerrainPalette(key: number): IFramesModel;
     getTerrainPaletteByBindId(id: number): IFramesModel;
     getMossPalette(key: number): IFramesModel;
+    getAssets(): IAsset[];
     getScenerys(): IScenery[];
     on(event: string | symbol, fn: Function, context?: any);
     off(event: string | symbol, fn: Function, context?: any);
+    destroy();
 }
 
 interface IDisplayRef {
@@ -48,6 +52,7 @@ export class ElementStorage implements IElementStorage {
     private _terrainCollection: TerrainCollectionNode;
     private _mossCollection: MossCollectionNode;
     private _scenerys: IScenery[];
+    private _assets: IAsset[];
 
     private event: Phaser.Events.EventEmitter;
 
@@ -79,7 +84,7 @@ export class ElementStorage implements IElementStorage {
                     const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
-                        anis.push(new Animation(ani));
+                        anis.push(new Animation(ani.createProtocolObject()));
                     }
                     displayModel = new FramesModel({
                         id: obj.id,
@@ -102,6 +107,7 @@ export class ElementStorage implements IElementStorage {
 
         this.updatePalette(config.root.palette);
         this.updateMoss(config.root.moss);
+        this.updateAssets(config.root.assets);
     }
 
     public updatePalette(palette: PaletteNode) {
@@ -116,11 +122,12 @@ export class ElementStorage implements IElementStorage {
                         defaultAnimationName: terrainPalette.animations.defaultAnimationName,
                         display: terrainPalette.animations.display,
                         animationData: terrainPalette.animations.animationData.map(
-                            (ani: AnimationDataNode) => new Animation(ani)
+                            (ani: AnimationDataNode) => new Animation(ani.createProtocolObject())
                         ),
                     },
                 });
                 this.terrainPalette.set(key, frameModel);
+                this.terrainPaletteWithBindId.set(terrainPalette.id, frameModel);
             }
         }
     }
@@ -137,11 +144,29 @@ export class ElementStorage implements IElementStorage {
                         defaultAnimationName: elementMoss.animations.defaultAnimationName,
                         display: elementMoss.animations.display,
                         animationData: elementMoss.animations.animationData.map(
-                            (ani: AnimationDataNode) => new Animation(ani)
+                            (ani: AnimationDataNode) => new Animation(ani.createProtocolObject())
                         ),
                     },
                 });
                 this.mossPalette.set(peerKey, frameModel);
+            }
+        }
+    }
+
+    public updateAssets(assetsNode: AssetsNode) {
+        const assets = assetsNode.getAssetList();
+        this._assets = [];
+        for (const asset of assets) {
+            const media = asset.media;
+            if (media) {
+                const fileType = media.match(/\.([a-zA-Z0-9]+)($|\?)/);
+                if (fileType && fileType[1]) {
+                    this._assets.push({
+                        type: fileType[1],
+                        key: asset.key,
+                        source: Url.getOsdRes(media),
+                    });
+                }
             }
         }
     }
@@ -158,7 +183,7 @@ export class ElementStorage implements IElementStorage {
                     const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
-                        anis.push(new Animation(ani));
+                        anis.push(new Animation(ani.createProtocolObject()));
                     }
                     displayModel = new FramesModel({
                         id: obj.id,
@@ -232,5 +257,25 @@ export class ElementStorage implements IElementStorage {
 
     public getScenerys(): IScenery[] {
         return this._scenerys;
+    }
+
+    public getAssets(): IAsset[] {
+        return this._assets;
+    }
+
+    public destroy() {
+        this.mElementRef.clear();
+
+        this.terrainPalette.clear();
+        this.terrainPaletteWithBindId.clear();
+        this.mossPalette.clear();
+
+        this.mModels.forEach((model, index) => {
+            model.destroy();
+        });
+
+        this.mModels.clear();
+
+        this._assets = undefined;
     }
 }

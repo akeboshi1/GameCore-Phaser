@@ -11,7 +11,7 @@ export class PlayScene extends BasicScene {
         super(config || { key: PlayScene.name });
     }
 
-    public preload() {}
+    public preload() { }
 
     public init(data: any) {
         if (data) {
@@ -20,7 +20,6 @@ export class PlayScene extends BasicScene {
     }
 
     public create() {
-        const scene = this.game.scene.getScene(MainUIScene.name);
         const oldCamera = this.cameras.main;
         this.cameras.addExisting(
             new PlayCamera(0, 0, this.sys.scale.width, this.sys.scale.height, this.mRoom.world.scaleRatio),
@@ -28,6 +27,10 @@ export class PlayScene extends BasicScene {
         );
         this.cameras.remove(oldCamera);
 
+        if (!this.game.scene.getScene(MainUIScene.name)) {
+            this.game.scene.add(MainUIScene.name, MainUIScene, false);
+        }
+        const scene = this.game.scene.getScene(MainUIScene.name);
         if (!scene.scene.isActive()) {
             this.scene.launch(MainUIScene.name, {
                 room: this.mRoom,
@@ -40,9 +43,6 @@ export class PlayScene extends BasicScene {
     }
 
     update(time: number, delta: number) {
-        // if (this.cameras.main) {
-        //   this.cameras.main.emit("renderer", this.cameras.main);
-        // }
         if (this.mRoom) {
             this.mRoom.update(time, delta);
         }

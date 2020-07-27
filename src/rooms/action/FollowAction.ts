@@ -62,6 +62,8 @@ export class FollowAction extends AIAction {
             if (this.tempdis > this.distance) {
                 canMove = true;
                 this.tempdis -= this.tempPath[0].len;
+            } else {
+                this.owner.stopMove();
             }
         }
         if (canMove) {
@@ -106,7 +108,7 @@ export class FollowAction extends AIAction {
         while (dis > 0) {
             dis -= interdis;
             const tempos = {
-                x: pos.x +(this.distance-dis),
+                x: pos.x + (this.distance - dis),
                 y: hy,
                 len: 0,
                 angle: 0
