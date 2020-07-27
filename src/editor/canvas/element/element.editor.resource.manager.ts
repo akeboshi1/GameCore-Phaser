@@ -81,8 +81,8 @@ export default class ElementEditorResourceManager {
             for (const image of images) {
                 // if (image.name === this.IMAGE_BLANK_KEY) continue;
                 imgCount++;
-                if (!this.mScene.textures.exists(image.name)) {
-                    this.mScene.textures.addBase64(image.name, image.url);
+                if (!this.mScene.textures.exists(image.key)) {
+                    this.mScene.textures.addBase64(image.key, image.url);
                 }
             }
             if (imgCount === 0) {
@@ -96,7 +96,7 @@ export default class ElementEditorResourceManager {
                 let allLoaded = true;
                 _imgs.forEach((img) => {
                     // if (img.name === this.IMAGE_BLANK_KEY) return;
-                    if (!this.mScene.textures.exists(img.name)) {
+                    if (!this.mScene.textures.exists(img.key)) {
                         allLoaded = false;
                     }
                 });
@@ -107,8 +107,8 @@ export default class ElementEditorResourceManager {
                 const packer = new MaxRectsPacker();
                 packer.padding = 2;
                 for (const image of _imgs) {
-                    const f = this.mScene.textures.getFrame(image.name, "__BASE");
-                    packer.add(f.width, f.height, { name: image.name });
+                    const f = this.mScene.textures.getFrame(image.key, "__BASE");
+                    packer.add(f.width, f.height, { name: image.key });
                 }
 
                 const { width, height } = packer.bins[0];
@@ -125,9 +125,9 @@ export default class ElementEditorResourceManager {
                 canvas.destroy();
                 // remove imgs
                 _imgs.forEach((one) => {
-                    if (this.mScene.textures.exists(one.name)) {
-                        this.mScene.textures.remove(one.name);
-                        this.mScene.textures.removeKey(one.name);
+                    if (this.mScene.textures.exists(one.key)) {
+                        this.mScene.textures.remove(one.key);
+                        this.mScene.textures.removeKey(one.key);
                     }
                 });
 
@@ -156,11 +156,14 @@ export default class ElementEditorResourceManager {
                 const imgs = [];
                 for (const frameName of frameNames) {
                     frame = frames[frameName];
+                    let imgName = "NAME_ERROR";
+                    const imgHash = frameName.split("?t=");
+                    if (imgHash.length > 0) imgName = imgHash[0];
 
                     const canvas = this.mScene.textures.createCanvas("DeserializeSpriteSheet", frame.width, frame.height);
                     canvas.drawFrame(SPRITE_SHEET_KEY, frameName);
                     const url = canvas.canvas.toDataURL("image/png", 1);
-                    imgs.push({ name: frameName, url });
+                    imgs.push({ key: frameName, name: imgName, url });
                     canvas.destroy();
                 }
                 Logger.getInstance().log("deserialize sprite sheet: ", imgs);
