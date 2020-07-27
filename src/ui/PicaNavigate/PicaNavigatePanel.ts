@@ -2,6 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_def } from "pixelpai_proto";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
   private mBackground: Phaser.GameObjects.Image;
@@ -14,6 +15,7 @@ export class PicaNavigatePanel extends BasePanel {
   private mTestBtn: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
+    this.UIType = UIType.Scene;
     this.setTween(false);
     this.setInteractive();
   }

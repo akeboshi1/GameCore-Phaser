@@ -76,7 +76,6 @@ export class LoadingScene extends BasicScene {
 
     this.bg = this.add.sprite(width * 0.5, 0, "loading").setScale(this.mWorld.uiScale);
     this.bg.play("loading_anis");
-
     this.curtain = new Curtain(this, this.mWorld);
     // this.curtain.open().then(() => {
     // this.bg.x = 0;

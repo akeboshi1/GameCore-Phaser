@@ -5,6 +5,7 @@ import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodete
 import { Font } from "../../utils/font";
 import { InputPanel } from "../components/input.panel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class PicaChatPanel extends BasePanel {
     private readonly key: string = "pica_chat";
@@ -27,6 +28,7 @@ export class PicaChatPanel extends BasePanel {
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
         this.scale = 1;
+        this.UIType = UIType.Scene;
     }
 
     show(param?: any) {

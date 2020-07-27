@@ -3,12 +3,14 @@ import { WorldService } from "../../game/world.service";
 import { Handler } from "../../Handler/Handler";
 import { Logger } from "../../utils/log";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
     private content: Phaser.GameObjects.Container;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
+        this.UIType = UIType.Scene;
     }
 
     resize(w: number, h: number) {

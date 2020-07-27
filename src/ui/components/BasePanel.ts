@@ -1,6 +1,8 @@
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../utils/resUtil";
 import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
+import { PlayScene } from "../../scenes/play";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class BasePanel extends Panel {
     protected mInitialized: boolean;
@@ -23,6 +25,25 @@ export class BasePanel extends Panel {
             this.dpr = Math.round(world.uiRatio || 1);
             this.scale = this.mWorld.uiScale;
         }
+        this.UIType = UIType.None;
+    }
+
+    public show(data?: any) {
+        super.show(data);
+        const play = this.mWorld.game.scene.getScene(PlayScene.name);
+        if (play && this.UIType !== UIType.Scene) play.scene.pause();
+    }
+
+    public hide() {
+        super.hide();
+        const play = this.mWorld.game.scene.getScene(PlayScene.name);
+        if (play && this.UIType !== UIType.Scene) play.scene.resume();
+    }
+
+    public destroy() {
+        const play = this.mWorld.game.scene.getScene(PlayScene.name);
+        if (play && this.UIType !== UIType.Scene) play.scene.resume();
+        super.destroy();
     }
 
     protected addResources(key: string, resource: any) {

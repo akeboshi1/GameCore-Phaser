@@ -6,6 +6,7 @@ import { Logger } from "../../utils/log";
 import { Handler } from "../../Handler/Handler";
 import { TextToolTips } from "../tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -23,6 +24,7 @@ export class PicaMainUIPanel extends BasePanel {
     private isSceneNameActive: boolean = false;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
+        this.UIType = UIType.Scene;
     }
 
     show(param?: any) {
