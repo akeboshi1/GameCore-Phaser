@@ -59,19 +59,23 @@ export class ChatPanelMobile extends BaseChatPanel {
                 },
             });
 
-            track = new NineSliceButton(this.scene, 0, 0, 4, 7, "track", "", "", this.dpr, this.scale, {
-                left: 0,
-                top: 2,
-                right: 0,
-                bottom: 2
+            track = new NineSliceButton(this.scene, {
+                x: 0, y: 0, width: 4, height: 7, key: "track", dpr: this.dpr, scale: this.scale, config: {
+                    left: 0,
+                    top: 2,
+                    right: 0,
+                    bottom: 2
+                }
             });
             // track.x = this.width / 2;
             // track.y = 8 * this.mWorld.uiScale;
-            thumb = new NineSliceButton(this.scene, 0, 0, 20, 35, "button", "", "", this.dpr, this.scale, {
-                left: 4,
-                top: 4,
-                right: 4,
-                bottom: 4
+            thumb = new NineSliceButton(this.scene, {
+                x: 0, y: 0, width: 20, height: 35, key: "button", dpr: this.dpr, scale: this.scale, config: {
+                    left: 4,
+                    top: 4,
+                    right: 4,
+                    bottom: 4
+                }
             });
             this.add(text);
             this.add(track);
@@ -246,19 +250,23 @@ export class ChatPanelMobile extends BaseChatPanel {
             },
         });
 
-        const track = new NineSliceButton(this.scene, 0, 0, 4, 7, "track", "", "", this.dpr, this.scale, {
-            left: 0,
-            top: 2,
-            right: 0,
-            bottom: 2
+        const track = new NineSliceButton(this.scene, {
+            x: 0, y: 0, width: 4, height: 7, key: "track", dpr: this.dpr, scale: this.scale, config: {
+                left: 0,
+                top: 2,
+                right: 0,
+                bottom: 2
+            }
         });
         track.x = this.width / 2;
         track.y = 8 * this.mWorld.uiScale;
-        const thumb = new NineSliceButton(this.scene, 0, 0, 20, 35, "button", "", "", this.dpr, this.scale, {
-            left: 4,
-            top: 4,
-            right: 4,
-            bottom: 4
+        const thumb = new NineSliceButton(this.scene, {
+            x: 0, y: 0, width: 20, height: 35, key: "button", dpr: this.dpr, scale: this.scale, config: {
+                left: 4,
+                top: 4,
+                right: 4,
+                bottom: 4
+            }
         });
         this.add(text);
         this.add(track);
@@ -291,7 +299,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             .on("focus", this.onFocusHandler, this)
             .on("blur", this.onBlurHandler, this);
 
-        this.mSendBtn = new NineSliceButton(this.scene, 0, 0, 60, 30, WhiteButton.getName(), "", "发送", this.dpr, this.scale, WhiteButton.getConfig());
+        this.mSendBtn = new NineSliceButton(this.scene, { x: 0, y: 0, width: 60, height: 30, key: WhiteButton.getName(), normalFrame: "", text: "发送", dpr: this.dpr, scale: this.scale, config: WhiteButton.getConfig() });
         this.add(this.mSendBtn);
 
         this.clickContainer = this.scene.make.container(undefined, false);

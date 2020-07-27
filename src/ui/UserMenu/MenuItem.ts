@@ -8,7 +8,7 @@ export class MenuItem extends NineSliceButton {
     protected mArrow: Phaser.GameObjects.Image;
     protected mBackground: NinePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, text: string, config: IPatchesConfig) {
-        super(scene, x, y, width, height, key, "", text, 1, 1, config);
+        super(scene, { x, y, width, height, key, text, dpr: 1, scale: 1, config });
     }
 
     public appendItem(menu: MenuItem) {

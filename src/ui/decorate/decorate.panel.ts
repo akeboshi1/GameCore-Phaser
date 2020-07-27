@@ -596,13 +596,13 @@ class MoveMenu extends Phaser.GameObjects.Container {
         //     key,
         //     frame: "arrow_7.png"
         // }, false).setInteractive().setData("dir", 7);
-        this.mArrow1 = new Button(this.scene, key, "arrow_1.png");
+        this.mArrow1 = new Button(this.scene, { key, normalFrame: "arrow_1.png" });
         this.mArrow1.setData("dir", Direction.north_west);
-        this.mArrow3 = new Button(this.scene, key, "arrow_3.png");
+        this.mArrow3 = new Button(this.scene, { key, normalFrame: "arrow_3.png" });
         this.mArrow3.setData("dir", Direction.west_south);
-        this.mArrow5 = new Button(this.scene, key, "arrow_5.png");
+        this.mArrow5 = new Button(this.scene, { key, normalFrame: "arrow_5.png" });
         this.mArrow5.setData("dir", Direction.south_east);
-        this.mArrow7 = new Button(this.scene, key, "arrow_7.png");
+        this.mArrow7 = new Button(this.scene, { key, normalFrame: "arrow_7.png" });
         this.mArrow7.setData("dir", Direction.east_north);
         this.mBtns = [this.mArrow1, this.mArrow3, this.mArrow5, this.mArrow7];
         this.add(bg);

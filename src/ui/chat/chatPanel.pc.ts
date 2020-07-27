@@ -118,11 +118,13 @@ export class ChatPanelPC extends BaseChatPanel {
         const background = new RoundRectangle(this.scene, 0, 0, 2, 2, 3, 0x808080, 0.5);
         this.outPut.add(background);
 
-        const track = new NineSliceButton(this.scene, 0, 0, 4, 7, "track", "", "", this.dpr, this.scale, {
-            left: 0,
-            top: 2,
-            right: 0,
-            bottom: 2
+        const track = new NineSliceButton(this.scene, {
+            x: 0, y: 0, width: 4, height: 7, key: "track", dpr: this.dpr, scale: this.scale, config: {
+                left: 0,
+                top: 2,
+                right: 0,
+                bottom: 2
+            }
         });
         track.x = 100 * this.mWorld.uiScale;
         track.y = 10 * this.mWorld.uiScale;
@@ -137,11 +139,13 @@ export class ChatPanelPC extends BaseChatPanel {
         });
         this.outPut.add(text);
 
-        const thumb = new NineSliceButton(this.scene, 0, 0, 20, 35, "button", "", "", this.dpr, this.scale, {
-            left: 4,
-            top: 4,
-            right: 4,
-            bottom: 4
+        const thumb = new NineSliceButton(this.scene, {
+            x: 0, y: 0, width: 20, height: 35, key: "button", dpr: this.dpr, scale: this.scale, config: {
+                left: 4,
+                top: 4,
+                right: 4,
+                bottom: 4
+            }
         });
         // const indicator = new NinePatchButton(this.scene, 0, 0, 8, 10, "thumbTexture", "", {
         //     left: 0,
@@ -191,11 +195,13 @@ export class ChatPanelPC extends BaseChatPanel {
         this.mInputText.y = size.height - 40 * this.mWorld.uiScale;
         inputContainer.add(this.mInputText);
 
-        this.sendMsgBtn = new NineSliceButton(this.scene, 0, 0, 60, 30, "button", "", "发送", this.dpr, this.scale, {
-            left: 4,
-            top: 4,
-            right: 4,
-            bottom: 4
+        this.sendMsgBtn = new NineSliceButton(this.scene, {
+            x: 0, y: 0, width: 60, height: 30, key: "button", text: "发送", dpr: this.dpr, scale: this.scale, config: {
+                left: 4,
+                top: 4,
+                right: 4,
+                bottom: 4
+            }
         });
         this.sendMsgBtn.x = this.width - this.sendMsgBtn.width + 10 * this.mWorld.uiScale;
         this.sendMsgBtn.y = size.height - this.sendMsgBtn.height;

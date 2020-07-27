@@ -232,7 +232,7 @@ export class ElementStoragePanel extends BasePanel {
             bottom: 4
         };
 
-        this.mDragBtn = new NineSliceButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器",this.dpr,this.scale, config);
+        this.mDragBtn = new NineSliceButton(this.scene, { x: 0, y: -20, width: 80, height: 40, key: "button", text: "物件容器", dpr: this.dpr, scale: this.scale, config });
 
         // this.mTabs = [];
 

@@ -145,9 +145,9 @@
   integrity sha512-Az3QsOt1U/K1pbCQ0TXGELTuTkPLOiFIQf3ILzbOyo0FqgV9SxRnxbxM5QlAveERZMHpZY+7u3Jz2tKyl+yg6g==
 
 "@types/node@^14.0.13":
-  version "14.0.24"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.0.24.tgz#b0f86f58564fa02a28b68f8b55d4cdec42e3b9d6"
-  integrity sha512-btt/oNOiDWcSuI721MdL8VQGnjsKjlTMdrKyTcLCKeQp/n4AAMFJ961wMbp+09y8WuGPClDEv07RIItdXKIXAA==
+  version "14.0.26"
+  resolved "https://registry.npmjs.org/@types/node/-/node-14.0.26.tgz#22a3b8a46510da8944b67bfc27df02c34a35331c"
+  integrity sha512-W+fpe5s91FBGE0pEa0lnqGLL4USgpLgs4nokw16SrBBco/gQxuua7KnArSEOd5iaMqbbSHV10vUDkJYJJqpXKA==
 
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
@@ -425,10 +425,10 @@ anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apowophaserui@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.2.2.tgz#e50aeaae5bd42b444e72f989ea000e5755cef302"
-  integrity sha512-gSD2OVN0Ou+zDuQTdcVVsNsi6gWAB0EGYoOZCg4c0tHHui+qqo/BlRFNHiIIcZJQSkOyDIBlgaKvFGLE4ta/Gw==
+apowophaserui@^0.2.5:
+  version "0.2.7"
+  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.2.7.tgz#b9575129c35bcf49b08eba756b9eeceeac87b9aa"
+  integrity sha512-fItFwJGrQWxGR8qbtUDTk58mm68n73rdRsl02AJKUxjMY06fFSNQ17hPyT5+D0JWScVLIfwfESH6K4GISJpdbg==
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"

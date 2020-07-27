@@ -116,7 +116,7 @@ export class MarketPanel extends BasePanel {
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], this.dpr, this.scale);
+      const btn = new NinePatchTabButton(this.scene, { width: capW, height: capH, key: this.key, normalFrame: "categories_normal", downFrame: "categories_down", text: categorys[i].category.value, config: config0, dpr: this.dpr, scale: this.scale });
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
@@ -284,7 +284,7 @@ export class MarketPanel extends BasePanel {
     //     return cellContainer;
     //   },
     // };
-    const config = { };
+    const config = {};
     this.mSubCategorisScroll = new GameGridTable(this.scene, config);
     this.mSubCategorisScroll.on("cellTap", (cell, index) => {
       this.onSelectSubCategoryHandler(cell);
@@ -304,11 +304,13 @@ export class MarketPanel extends BasePanel {
       }
     }).setOrigin(0, 0.5);
     const btnWidth = 80 * this.dpr, btnHeight = 30 * this.dpr;
-    this.randomRefreshBtn = new NineSliceButton(this.scene, w * 0.5, this.randomRefeshTime.y, btnWidth, btnHeight, UIAtlasKey.commonKey, "button_g", i18n.t("market.refresh"), this.dpr, this.scale, {
-      left: 15 * this.dpr,
-      top: 15 * this.dpr,
-      right: 15 * this.dpr,
-      bottom: 15 * this.dpr
+    this.randomRefreshBtn = new NineSliceButton(this.scene, {
+      x: w * 0.5, y: this.randomRefeshTime.y, width: btnWidth, height: btnHeight, key: UIAtlasKey.commonKey, normalFrame: "button_g", text: i18n.t("market.refresh"), dpr: this.dpr, scale: this.scale, config: {
+        left: 15 * this.dpr,
+        top: 15 * this.dpr,
+        right: 15 * this.dpr,
+        bottom: 15 * this.dpr
+      }
     });
     this.randomRefreshBtn.x = w * 0.5 - this.randomRefreshBtn.width * 0.5 - 10 * this.dpr;
     this.randomRefreshBtn.setTextOffset(0, 5 * this.dpr);
@@ -367,7 +369,7 @@ export class MarketPanel extends BasePanel {
     //   },
     // };
 
-    const propGridConfig = { };
+    const propGridConfig = {};
     this.mPropGrid = new GameGridTable(this.scene, propGridConfig);
     this.mPropGrid.layout();
     this.mPropGrid.on("cellTap", (cell) => {

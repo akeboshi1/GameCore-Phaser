@@ -7,6 +7,7 @@ import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragonbonesModel, IDragonbonesModel } from "../../rooms/display/dragonbones.model";
 import { Font } from "../../utils/font";
+import * as apowophaserui from "apowophaserui";
 // import InputText from "../../../../lib/rexui/plugins/gameobjects/inputtext/InputText";
 
 export class CreateRolePanel extends BasePanel {
@@ -146,12 +147,24 @@ export class CreateRolePanel extends BasePanel {
       w = frame.width;
       h = frame.height;
     }
-    this.mSubmit = new NineSliceButton(this.scene, size.width >> 1, 445 * this.dpr, 202 * this.dpr, 55 * this.dpr, this.key, "submit_button", text, this.dpr, this.scale, {
-      left: 19 * this.dpr,
-      top: 20 * this.dpr,
-      right: w - 2 - 19 * this.dpr,
-      bottom: h - 2 - 20 * this.dpr
-    });
+    const buttonConfig: apowophaserui.NineSliceButtonConfig = {
+      x: size.width >> 1,
+      y: 445 * this.dpr,
+      width: 202 * this.dpr,
+      height: 55 * this.dpr,
+      key: this.key,
+      normalFrame: "submit_button",
+      text,
+      dpr: this.dpr,
+      scale: this.scale,
+      config: {
+        left: 19 * this.dpr,
+        top: 20 * this.dpr,
+        right: w - 2 - 19 * this.dpr,
+        bottom: h - 2 - 20 * this.dpr
+      }
+    };
+    this.mSubmit = new NineSliceButton(this.scene, buttonConfig);
     this.mSubmit.setTextStyle({
       color: "#976400",
       fontSize: 18 * this.dpr,

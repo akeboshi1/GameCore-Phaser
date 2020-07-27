@@ -1,7 +1,7 @@
 import { BasePanel } from "./BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { BBCodeText,Button } from "apowophaserui";
+import { BBCodeText, Button } from "apowophaserui";
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";
     private mOkBtn: Button;
@@ -69,22 +69,22 @@ export class AlertView extends BasePanel {
         this.mContent.setOrigin(0.5, 0.5);
         this.mContent.setText("[color=#FF0000][/color]");
 
-        this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, "确定");
+        this.mOkBtn = new Button(this.scene, { key: this.key, normalFrame: "yellow_btn.png", text: "确定" });
         this.mOkBtn.setTextStyle({
             color: "#905B06",
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mOkBtn.x = -(bg.width - this.mOkBtn.displayWidth) / 2 + 38* this.dpr;
+        this.mOkBtn.x = -(bg.width - this.mOkBtn.displayWidth) / 2 + 38 * this.dpr;
         this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
         this.mOkBtn.on("Tap", this.onOkHandler, this);
 
-        this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, "取消");
+        this.mCancelBtn = new Button(this.scene, { key: this.key, normalFrame: "red_btn.png", text: "取消" });
         this.mCancelBtn.setTextStyle({
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
         });
-        this.mCancelBtn.x = (bg.width - this.mCancelBtn.displayWidth) / 2 - 38* this.dpr;
+        this.mCancelBtn.x = (bg.width - this.mCancelBtn.displayWidth) / 2 - 38 * this.dpr;
         this.mCancelBtn.y = this.mOkBtn.y;
         this.mCancelBtn.on("Tap", this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);

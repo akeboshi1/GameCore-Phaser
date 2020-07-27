@@ -158,7 +158,7 @@ export class UserInfoPanel extends BasePanel {
         });
         this.add(this.mLv);
 
-        this.mFollwerBtn = new NineSliceButton(this.scene, 258, 145, 80, 34, BlueButton.getName(), BlueButton.getName(), "关注", this.dpr, this.scale, BlueButton.getConfig());
+        this.mFollwerBtn = new NineSliceButton(this.scene, { x: 258, y: 145, width: 80, height: 34, key: BlueButton.getName(), normalFrame: BlueButton.getName(), text: "关注", dpr: this.dpr, scale: this.scale, config: BlueButton.getConfig() });
         this.mFollwerBtn.x = 258 + (this.mFollwerBtn.width >> 1);
         this.mFollwerBtn.y = 145 + (this.mFollwerBtn.height >> 1);
         this.mFollwerBtn.setTextStyle({ font: Font.YAHEI_16_BOLD });

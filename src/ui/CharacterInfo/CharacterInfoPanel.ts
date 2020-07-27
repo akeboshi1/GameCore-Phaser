@@ -126,9 +126,9 @@ export default class CharacterInfoPanel extends BasePanel {
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n.t("player_info.title"), style: { font: mfont, bold: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.labelText.setStroke("#8F4300", 1);
-        this.closeBtn = new Button(this.scene, this.commonkey, "close");
+        this.closeBtn = new Button(this.scene, { key: this.commonkey, normalFrame: "close" });
         this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
-        this.likeBtn = new Button(this.scene, this.key, "praise_bef", "praise_bef", "999");
+        this.likeBtn = new Button(this.scene, { key: this.key, normalFrame: "praise_bef", downFrame: "praise_bef", text: "999" });
         this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT });
         this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
         this.likeBtn.setPosition(this.bg.width * 0.5 - 50 * this.dpr, posY + 50 * this.dpr);
@@ -147,7 +147,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const fontSize = Math.round(13 * this.dpr);
         this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY)
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
-        this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
+        this.nickEditor = new Button(this.scene, { key: this.key, normalFrame: "edit", downFrame: "edit" });
         this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
         const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
         this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
@@ -317,7 +317,7 @@ export default class CharacterInfoPanel extends BasePanel {
         //         return cellContainer;
         //     },
         // };
-        const tableConfig = { };
+        const tableConfig = {};
         const grid = new GameGridTable(this.scene, tableConfig);
         grid.layout();
         grid.on("cellTap", (cell) => {
@@ -339,7 +339,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
         for (let i = 0; i < len; i++) {
-            const item = new Button(this.scene, this.key, "title_normal", "title_select", subNames[i]);
+            const item = new Button(this.scene, { key: this.key, normalFrame: "title_normal", downFrame: "title_select", text: subNames[i] });
             item.width = itemWidth;
             item.height = 41 * this.dpr;
             items.push(item);

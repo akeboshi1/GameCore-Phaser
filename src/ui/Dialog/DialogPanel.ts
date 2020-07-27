@@ -93,7 +93,7 @@ export class DialogPanel extends BasePanel {
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5);
 
-        const closeBtn = new Button(this.scene, this.key, "close_1", "close_1");
+        const closeBtn = new Button(this.scene, { key: this.key, normalFrame: "close_1", downFrame: "close_1" });
         closeBtn.setPosition(width * 0.5 - 30 * this.dpr, -cheight * 0.5 + 10 * this.dpr);
         closeBtn.on("Tap", this.onCloseHandler, this);
         closeBtn.visible = false;
