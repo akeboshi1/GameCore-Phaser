@@ -335,7 +335,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             return;
         }
         const pos45 = this.transformToMini45(pos);
-        if (pos45.x < 0 || pos45.y < 0 || pos45.x > this.miniSize.rows || pos45.y > this.miniSize.cols) {
+        if (pos45.x < 0 || pos45.y < 0 || pos45.y > this.miniSize.rows || pos45.x > this.miniSize.cols) {
             return false;
         }
         const eles = [this.mElementManager, this.mTerrainManager];
