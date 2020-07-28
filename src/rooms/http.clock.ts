@@ -10,11 +10,15 @@ export class HttpClock {
     private readonly interval = 60000;
     private mTimestamp: number = 0;
     private httpService: HttpService;
+    private mEnable: boolean;
     constructor(private world: WorldService) {
         this.httpService = world.httpService;
     }
 
     update(time: number, delta: number) {
+        if (this.mEnable === false) {
+            return;
+        }
         if (this.mTimestamp > this.interval) {
             this.sync();
             this.mTimestamp = 0;
@@ -77,5 +81,9 @@ export class HttpClock {
             callback,
             btns: Buttons.Ok
         });
+    }
+
+    set enable(val: boolean) {
+        this.mEnable = val;
     }
 }
