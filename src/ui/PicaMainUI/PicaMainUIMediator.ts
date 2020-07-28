@@ -58,7 +58,7 @@ export class PicaMainUIMediator extends BaseMediator {
         return false;
     }
     private onOpenRoomHandler() {
-        if (!this.roomInfo || this.roomInfo.roomType !== "pkt_ST0000000") return;
+        if (!this.roomInfo || this.roomInfo.roomType !== "room") return;
         const uimanager = this.world.uiManager;
         uimanager.showMed("PicHouse");
     }
