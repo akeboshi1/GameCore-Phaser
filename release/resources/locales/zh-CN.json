@@ -37,11 +37,6 @@
   "common": {
     "cancel": "取消",
     "confirm": "确定"
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-=======
-=======
->>>>>>> Stashed changes
   },
   "player_info": {
     "title": "信息详情",
@@ -131,9 +126,5 @@
     "back": "返回",
     "history_title": "最近参观的 ${} 个店铺",
     "ranking_list": "排行榜列表"
-<<<<<<< Updated upstream
->>>>>>> 82e533cbdd45786a9b87427d574d4f8d7a507653
-=======
->>>>>>> Stashed changes
   }
 }

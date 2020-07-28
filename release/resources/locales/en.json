@@ -34,12 +34,6 @@
   },
   "common": {
     "cancel": "Cancel",
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-    "confirm": "Confirm"
-=======
-=======
->>>>>>> Stashed changes
     "confirm": "Determine"
   },
   "player_info": {
@@ -129,9 +123,5 @@
     "back": "BACK",
     "history_title": "LAST ${} VISITS",
     "ranking_list":"RANKING LIST"
-<<<<<<< Updated upstream
->>>>>>> 82e533cbdd45786a9b87427d574d4f8d7a507653
-=======
->>>>>>> Stashed changes
   }
 }
