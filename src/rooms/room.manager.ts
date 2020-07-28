@@ -160,16 +160,18 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private async leaveScene(room: IRoomService) {
         if (!room) return;
-        return new Promise((resolve, reject) => {
-            const loading: LoadingScene = <LoadingScene> this.mWorld.game.scene.getScene(LoadingScene.name);
-            if (loading) {
-                loading.show().then(() => {
-                    this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
-                    room.destroy();
-                    resolve();
-                });
-            }
-        });
+        // return new Promise((resolve, reject) => {
+        //     const loading: LoadingScene = <LoadingScene> this.mWorld.game.scene.getScene(LoadingScene.name);
+        //     if (loading) {
+        //         loading.show().then(() => {
+        //             this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
+        //             room.destroy();
+        //             resolve();
+        //         });
+        //     }
+        // });
+        this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
+        room.destroy();
     }
 
     private onEnterSceneHandler(packet: PBpacket) {

@@ -102,7 +102,11 @@ export class HttpService {
         return this.get(`userpackage/${uid}/badgecards`);
     }
 
-    private post(uri: string, body: any): Promise<Response> {
+    playedDuration(Appid: string, gameId: string) {
+        return this.post("game/played_duration", { gameId }, { Appid });
+    }
+
+    private post(uri: string, body: any, headers?: any): Promise<Response> {
         const account = this.mWorld.account;
         if (!account) {
             return Promise.reject("account does not exist");
@@ -110,13 +114,14 @@ export class HttpService {
         if (!account.accountData) {
             return Promise.reject("token does not exist");
         }
+        headers = Object.assign({
+            "Content-Type": "application/json",
+            "X-Pixelpai-TK": account.accountData.token
+        }, headers);
         const data = {
             body: JSON.stringify(body),
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Pixelpai-TK": account.accountData.token
-            }
+            headers,
         };
         return fetch(`${CONFIG.api_root}${uri}`, data).then((response) => response.json());
     }

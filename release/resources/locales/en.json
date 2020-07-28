@@ -1,7 +1,10 @@
 {
   "market": {
     "title": "Market",
-    "buy_button": "Buy"
+    "buy_button": "Buy",
+    "payment": "PAYMENT",
+    "refreshtime": "The next refresh time is ",
+    "refresh": "Refresh"
   },
   "item": {
     "source": "source: ",
@@ -25,10 +28,110 @@
     "Props": "Prop",
     "decorate": "Decorations",
     "sold": "Sold",
-    "use": "Use"
+    "use": "Use",
+    "save": "Save",
+    "reset": "Reset"
   },
   "common": {
     "cancel": "Cancel",
+<<<<<<< Updated upstream
+<<<<<<< HEAD
     "confirm": "Confirm"
+=======
+=======
+>>>>>>> Stashed changes
+    "confirm": "Determine"
+  },
+  "player_info": {
+    "title": "Player Info",
+    "nick_name": "Nickname",
+    "player_lv": "Lv",
+    "player_title": "Title",
+    "option_live": "SKILL",
+    "option_badge": "BADGE",
+    "option_attribute": "ATTRIBUTE",
+    "option_title": "TITLE",
+    "add_friend": "Add Friend",
+    "tade_btn": "Trade",
+    "private_chat": "Private Chat",
+    "edit_profile": "Edit Profile",
+    "user_name": "User Name",
+    "input_nickname": "Please input a nickname",
+    "constellation": "Constellation",
+    "birthday": "Birthday",
+    "city": "City",
+    "signature": "Signature",
+    "input_signature": "Fill in personality signature to get others attention!"
+  },
+  "compose": {
+    "title": "Manufacture",
+    "make": "make",
+    "needMaterials": "Materials required",
+    "synthesis": "Synthesis"
+  },
+  "minesettle": {
+    "settle": "Settle",
+    "savebag": "SaveToBag"
+  },
+  "equipupgrade": {
+    "title": "装备"
+  },
+  "task": {
+    "title": "任务",
+    "main_quest": "Main Quest",
+    "side_quest": "Side Quest",
+    "active_task": "Active Task",
+    "daily_quest": "Daily Quest",
+    "all_task": "All",
+    "m": "M",
+    "s": "S",
+    "a": "A",
+    "d": "D",
+    "objective": "Objective",
+    "rewards": "Rewards",
+    "collect_materials": "Collect Materials:",
+    "submit_task": "Submit Task",
+    "task_quest": "Task Quest:"
+  },
+  "furni_unlock": {
+    "unlock": "Immediately unlock",
+    "repair": "REPAIR",
+    "needMaterials": "Synthetic materials needed",
+    "source": "Source",
+    "sold": "Price",
+    "notrading": "Not Trading"
+  },
+  "room_upgrade": {
+    "clicktocontinue": "Click on any blank area to continue"
+  },
+  "room_info": {
+    "infobtn": "ROOM INFORMATION",
+    "setting": "ROOM ETTINGS",
+    "editorroom": "Editing room",
+    "roomname": "Room name",
+    "roomlevel": "Room level",
+    "expvalue": "Experience value",
+    "popvalue": "Popular value",
+    "goodvalue": "Good value",
+    "compveness": "Competitiveness",
+    "prosperity": "Prosperity"
+  },
+  "business_street": {
+    "commercial_street": "COMMERCIAL STREET",
+    "my_store": "MY STORE",
+    "enter": "Enter",
+    "takeall": "Take all",
+    "goout": "Go Out",
+    "choosetheindustry": "Choose the Industry",
+    "select": "Select",
+    "choosestorelike": "Choose the store you like",
+    "street": "STREET",
+    "back": "BACK",
+    "history_title": "LAST ${} VISITS",
+    "ranking_list":"RANKING LIST"
+<<<<<<< Updated upstream
+>>>>>>> 82e533cbdd45786a9b87427d574d4f8d7a507653
+=======
+>>>>>>> Stashed changes
   }
 }

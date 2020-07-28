@@ -25,6 +25,8 @@ import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
 import { SpawnPoint } from "./decorate/spawn.point";
 import { SelectorElement } from "./decorate/selector.element";
 import { IBlockObject } from "./cameras/block.object";
+import { SkyBoxManager } from "./sky.box/sky.box.manager";
+import { IScenery } from "./sky.box/scenery";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -53,6 +55,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
     private mSelectorElement: SelectorElement;
+    private mSkyboxManager: SkyBoxManager;
     private mMap: number[][];
     private mScaleRatio: number;
     private cameraPos: Pos;
@@ -148,6 +151,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mLayerManager) this.mLayerManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
+        if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         this.removePointerMoveHandler();
         this.world.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
@@ -198,6 +202,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
+        this.mSkyboxManager = new SkyBoxManager(this);
         this.mBlocks.int(this.mSize);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
@@ -226,6 +231,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.world.emitter.on(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
         this.world.emitter.on(MessageType.PUT_ELEMENT, this.onPutElement, this);
         this.world.emitter.on(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
+
+        this.initSkyBox();
     }
 
     transformTo45(p: Pos): Pos {
@@ -328,7 +335,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             return;
         }
         const pos45 = this.transformToMini45(pos);
-        if (pos45.x < 0 || pos45.y < 0 || pos45.x > this.miniSize.rows || pos45.y > this.miniSize.cols) {
+        if (pos45.x < 0 || pos45.y < 0 || pos45.y > this.miniSize.rows || pos45.x > this.miniSize.cols) {
             return false;
         }
         const eles = [this.mElementManager, this.mTerrainManager];
@@ -372,6 +379,19 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             ele = this.mTerrainManager.get(id);
         }
         return ele;
+    }
+
+    protected initSkyBox() {
+        const scenerys = this.world.elementStorage.getScenerys();
+        if (scenerys) {
+            for (const scenery of scenerys) {
+                this.addSkyBox(scenery);
+            }
+        }
+    }
+
+    protected addSkyBox(scenery: IScenery) {
+        this.mSkyboxManager.add(scenery);
     }
 
     private addPointerMoveHandler() {
