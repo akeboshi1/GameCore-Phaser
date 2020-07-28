@@ -58,7 +58,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.add(storeTitle);
         const gridWdith = this.width;
         const gridHeight = this.height - 80 * this.dpr;
-        const gridY = posy + 33* this.dpr + gridHeight * 0.5;
+        const gridY = posy + 33 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 75 * this.dpr);
 
         this.newStoreBtn = new Button(this.scene, this.key, "new_store", "new_store");
@@ -146,13 +146,13 @@ class MyStoreItem extends Phaser.GameObjects.Container {
     public storeData: any;
     private key: string;
     private dpr: number;
-    private cornerText: Phaser.GameObjects.Text;
     private storeName: Phaser.GameObjects.Text;
     private savings: Phaser.GameObjects.Text;
     private competitiveness: Phaser.GameObjects.Text;
     private prosperity: Phaser.GameObjects.Text;
     private storeIcon: DynamicImage;
     private lvimgCon: Phaser.GameObjects.Container;
+    private industryIcon: Phaser.GameObjects.Image;
     private enterHandler: Handler;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -171,15 +171,6 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         const iconbg = this.scene.make.image({ key, frame: "store_icon_bg" });
         iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
         this.add(iconbg);
-        const cornerbg = new NineSlicePatch(this.scene, 0, 0, 44 * dpr, 15 * dpr, this.key, "resturant_tag", {
-            left: 3 * this.dpr,
-            top: 0,
-            right: 7 * this.dpr,
-            bottom: 0
-        });
-        cornerbg.setPosition(posx + cornerbg.width * 0.5 - 2 * dpr, posy + 10 * dpr);
-        this.add(cornerbg);
-        this.cornerText = this.scene.make.text({ x: posx, y: posy, text: "Restaurant", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.storeIcon = new DynamicImage(this.scene, iconbg.x, 0);
         this.add(this.storeIcon);
         const storeX = iconbg.x + iconbg.width * 0.5 + 10 * dpr;
@@ -195,6 +186,9 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.add(this.competitiveness);
         this.prosperity = this.scene.make.text({ x: storeX, y: this.competitiveness.y + this.competitiveness.height + 3 * dpr, text: "Prosperity: +13000 / Day", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.prosperity);
+        this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
+        this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
+        this.add(this.industryIcon);
         const enterBtn = new NineSliceButton(scene, -posx, 0, 48 * dpr, 27 * dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("business_street.enter"), this.dpr, zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
