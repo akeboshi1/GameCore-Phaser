@@ -6,7 +6,7 @@ export class CheckButton extends Phaser.GameObjects.Image {
         super(scene, x, y, key, normalFrames);
         this.mNormalFrame = normalFrames;
         this.mSelectFrame = selectFrame;
-
+        this.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
         this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.width, this.height), Phaser.Geom.Rectangle.Contains);
         this.on("pointerup", this.onSelected, this);
     }

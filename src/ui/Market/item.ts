@@ -20,13 +20,14 @@ export class MarketItem extends Phaser.GameObjects.Container {
       key: "market",
       frame: "border"
     }, false).setOrigin(0).setScale(zoom);
-
+    this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
     this.mBorder = this.scene.make.image({
       x: 3 * dpr * zoom,
       y: 3 * dpr * zoom,
       key: "market",
       frame: "item_border"
     }, false).setOrigin(0).setScale(zoom);
+    this.mBorder.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
     // this.mBorder.x = -42 * this.dpr;
     // this.mBorder.x = -this.mBackground.width / 2 + this.mBorder.width / 2 + (this.mBackground.height - this.mBorder.height / 2);
     // this.mBorder.x = -(this.mBackground.displayWidth - this.mBorder.displayWidth) / 2 + (this.mBackground.displayHeight - this.mBorder.displayHeight) / 2;

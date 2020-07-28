@@ -27,7 +27,7 @@ export class PicaChatPanel extends BasePanel {
         super(scene, world);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
-        this.scale = 1;
+        // this.scale = 1;
         this.UIType = UIType.Scene;
     }
 
@@ -56,7 +56,7 @@ export class PicaChatPanel extends BasePanel {
         const height = this.scene.cameras.main.height;
         const frame = this.scene.textures.getFrame(this.key, "title_bg");
         const scaleRatio = width / frame.width;
-        this.mTitleBg.scaleX = scaleRatio;
+        this.mTitleBg.scaleX = Math.round(scaleRatio);
         this.mTitleBg.x = width / 2;
 
         this.y = height - this.height;
@@ -160,15 +160,19 @@ export class PicaChatPanel extends BasePanel {
 
         this.mChatBtn.x = this.mScrollBtn.x + this.mScrollBtn.width * 0.5 + space + this.mChatBtn.width * 0.5;
         this.mChatBtn.y = -this.mChatBtn.height / 2 + this.mTitleBg.height;
+        this.mChatBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         this.mHornBtn.x = this.mChatBtn.x + this.mChatBtn.width * 0.5 + space + this.mHornBtn.width * 0.5;
         this.mHornBtn.y = -this.mHornBtn.height / 2 + this.mTitleBg.height;
+        this.mHornBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         this.mEmojiBtn.x = this.mHornBtn.x + this.mHornBtn.width * 0.5 + space + this.mEmojiBtn.width * 0.5;
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
+        this.mEmojiBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         this.mNavigateBtn.x = width - this.mNavigateBtn.width * 0.5 - 5 * this.dpr;
         this.mNavigateBtn.y = -this.mNavigateBtn.height / 2 + this.mTitleBg.height;
+        this.mNavigateBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         this.mOutputText = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: 14 * this.dpr / zoom + "px",
