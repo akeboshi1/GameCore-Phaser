@@ -175,7 +175,9 @@ export class LoginPanel extends BasePanel {
 
     private createInput(input: InputText, x: number, y: number) {
         const container = this.scene.make.container({ x, y }, false);
-        const bg = new NinePatch(this.scene, input.x - 8 * this.dpr, input.y, input.width + 14 * this.dpr, input.height + 10 * this.dpr, this.key, "input_bg", {
+        const frame = this.scene.textures.getFrame(this.key, "input_bg");
+        // const height = frame ? frame.height || 50 * this.dpr;
+        const bg = new NinePatch(this.scene, input.x - 8 * this.dpr, input.y, input.width + 14 * this.dpr, frame.height, this.key, "input_bg", {
             left: 27 * this.dpr,
             top: 24 * this.dpr,
             right: 28 * this.dpr,

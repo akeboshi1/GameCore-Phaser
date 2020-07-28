@@ -39,10 +39,10 @@ export class DecorateElementManager extends ElementManager {
     let row = 0;
     let col = 0;
     for (let i = 0; i < rows; i++) {
-      row = pos.y + i - origin.x;
+      row = pos.y + i - origin.y;
       for (let j = 0; j < cols; j++) {
         if (collisionArea[i][j] === 1 && (i >= walkArea.length || j >= walkArea[i].length || walkArea[i][j] === 0)) {
-          col = pos.x + j - origin.y;
+          col = pos.x + j - origin.x;
           if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
             this.mMap[row][col] = 1;
           }
@@ -67,12 +67,12 @@ export class DecorateElementManager extends ElementManager {
     let row = 0;
     let col = 0;
     for (let i = 0; i < rows; i++) {
-      row = pos.y + i - origin.x;
+      row = pos.y + i - origin.y;
       for (let j = 0; j < cols; j++) {
-        col = pos.x + j - origin.y;
+        col = pos.x + j - origin.x;
         if (collisionArea[i][j] === 1) {
           if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-            this.mMap[pos.y + i - origin.x][pos.x + j - origin.y] = 0;
+            this.mMap[row][col] = 0;
           }
         }
       }
@@ -85,7 +85,7 @@ export class DecorateElementManager extends ElementManager {
     const map = this.map;
     for (let i = 0; i < collisionArea.length; i++) {
       row = i + pos45.y - origin.y;
-      if (row >= map.length) {
+      if (row < 0 || row >= map.length) {
         return false;
       }
       for (let j = 0; j < collisionArea[i].length; j++) {

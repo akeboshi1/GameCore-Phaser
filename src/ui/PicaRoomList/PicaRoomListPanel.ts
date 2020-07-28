@@ -371,6 +371,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       const roomItem: RoomItem = roomList[i];
       this.mScroller.setInteractiveObject(roomItem);
     }
+    this.refreshPos();
   }
 }
 

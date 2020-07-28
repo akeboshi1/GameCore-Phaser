@@ -261,12 +261,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     soundConfig: { loop: true },
         // });
 
-        const scenerys = this.world.elementStorage.getScenerys();
-        if (scenerys) {
-            for (const scenery of scenerys) {
-                this.addSkyBox(scenery);
-            }
-        }
+        this.initSkyBox();
     }
 
     public pause() {
@@ -386,6 +381,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.layerManager) this.layerManager.update(time, delta);
         if (this.elementManager) this.elementManager.update(time, delta);
         if (this.mFrameManager) this.frameManager.update(time, delta);
+        if (this.mWorld.httpClock) this.mWorld.httpClock.update(time, delta);
     }
 
     public updateClock(time: number, delta: number) {
@@ -460,6 +456,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mScene) {
         //   this.mScene = null;
         // }
+    }
+
+    protected initSkyBox() {
+        const scenerys = this.world.elementStorage.getScenerys();
+        if (scenerys) {
+            for (const scenery of scenerys) {
+                this.addSkyBox(scenery);
+            }
+        }
     }
 
     protected addSkyBox(scenery: IScenery) {

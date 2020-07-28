@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"effect_bg": {
+		"effect_bg.png": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,7 +20,7 @@
 				"h": 841
 			}
 		},
-		"lv0": {
+		"lv0.png": {
 			"frame": {
 				"x": 1,
 				"y": 844,
@@ -40,7 +40,7 @@
 				"h": 316
 			}
 		},
-		"lv1": {
+		"lv1.png": {
 			"frame": {
 				"x": 555,
 				"y": 844,
@@ -60,7 +60,7 @@
 				"h": 316
 			}
 		},
-		"lv2": {
+		"lv2.png": {
 			"frame": {
 				"x": 844,
 				"y": 1,
@@ -80,7 +80,7 @@
 				"h": 316
 			}
 		},
-		"lv3": {
+		"lv3.png": {
 			"frame": {
 				"x": 844,
 				"y": 319,
@@ -100,7 +100,7 @@
 				"h": 316
 			}
 		},
-		"lv4": {
+		"lv4.png": {
 			"frame": {
 				"x": 1109,
 				"y": 637,
@@ -120,7 +120,7 @@
 				"h": 316
 			}
 		},
-		"tittle_bg": {
+		"tittle_bg.png": {
 			"frame": {
 				"x": 1109,
 				"y": 955,
@@ -144,7 +144,7 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet",
+		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
 			"w": 1758,

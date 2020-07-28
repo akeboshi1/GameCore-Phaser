@@ -40,12 +40,14 @@ import * as path from "path";
 import { Tool } from "../utils/tool";
 import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
+import { HttpClock } from "../rooms/http.clock";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
     private mClock: Clock;
+    private mHttpClock: HttpClock;
     private mMoveStyle: number = 1;
     private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
@@ -118,6 +120,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mConnection.addPacketListener(this);
 
         this.mClock = new Clock(this.mConnection, this);
+        this.mHttpClock = new HttpClock(this);
 
         // add Packet listener.
         this.addHandlerFun(
@@ -366,6 +369,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mClock;
     }
 
+    get httpClock(): HttpClock {
+        return this.mHttpClock;
+    }
+
     get emitter(): Phaser.Events.EventEmitter {
         return this.mGameEmitter;
     }
@@ -510,6 +517,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
         this.mGame.scene.remove(LoginScene.name);
         this.uiManager.destroy();
+        this.uiManager.addPackListener();
         // loginScene.remove();
         this.mLoadingManager.start();
         // this.mGame.scene.start(LoadingScene.name, { world: this });
