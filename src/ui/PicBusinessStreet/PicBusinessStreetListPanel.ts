@@ -23,6 +23,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private rankHandler: Handler;
     private backHandler: Handler;
     private secondaryPanel: SecondaryMenuPanel;
+    private curSubCategoryData: any;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, key2: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -34,12 +35,14 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     }
 
     public setStreetListData() {
+        const arr = new Array(60);
+        this.gridtable.setItems(arr);
         const att = [{ text: "Popular", data: {} }, { text: "Hot", data: {} }, { text: "Praise", data: {} }];
         this.secondaryPanel.setCategories(TabButton, att, {
             width: 88 * this.dpr,
             height: 27 * this.dpr,
             key: this.key2,
-            normalFrame: "",
+            normalFrame: "navigation_bar_click",
             downFrame: "navigation_bar_click",
             textStyle: {
                 fontSize: 11 * this.dpr,
@@ -74,14 +77,15 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.secondaryPanel = new SecondaryMenuPanel(this.scene, 0, posy + 56 * this.dpr, this.width, 60 * this.dpr, this.dpr, this.zoom, {
             x: 0,
             y: -15 * this.dpr,
-            width: this.width - 10 * this.dpr,
+            width: this.width - 30 * this.dpr,
             height: 30 * this.dpr,
             zoom: this.zoom,
-            orientation: 1,
+            orientation: 1
         });
+        this.add(this.secondaryPanel);
         const scrollbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar" });
         this.secondaryPanel.gameScroll.addAt(scrollbg);
-        this.secondaryPanel.createGrideTable(0, 0 * this.dpr, this.width, 27 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
+        this.secondaryPanel.createGrideTable(0, 5* this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
@@ -89,21 +93,20 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
             }
             cellContainer.setText("Pub");
             cellContainer.setData("itemData", item);
-            this.secondaryPanel.gridTable.add(cellContainer);
+            if (this.curSubCategoryData === item) {
+                cellContainer.changeDown();
+            } else cellContainer.changeNormal();
+            this.secondaryPanel.addGridTableItem(cellContainer);
             return cellContainer;
-
-        }, new Handler(this, this.onSubCategoryHandle));
-
+        });
+        this.secondaryPanel.setHandler(new Handler(this, this.onCategoryHandler), new Handler(this, this.onSubCategoryHandle));
         const gridbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar_2" });
-        gridbg.y = 14 * this.dpr;
+        gridbg.y = 9 * this.dpr;
         this.secondaryPanel.gridTable.addAt(gridbg);
-        this.secondaryPanel.setCategoryHandler(new Handler(this, this.onCategoryHandler));
-        this.add(this.secondaryPanel);
-
         const gridWdith = this.width;
-        const gridHeight = this.height - 80 * this.dpr;
-        const gridY = posy + 99 * this.dpr + gridHeight * 0.5;
-        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 75 * this.dpr);
+        const gridHeight = this.height - 140 * this.dpr;
+        const gridY = posy + 77 * this.dpr + gridHeight * 0.5;
+        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 50 * this.dpr);
 
         const rankBtn = new Button(this.scene, this.key2, "ranking", "ranking");
         const btnX = -posx - rankBtn.width * 0.5 - 20 * this.dpr;
@@ -169,7 +172,8 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     }
 
     private onSubCategoryHandle(item) {
-
+        const data = item.getData("itemData");
+        this.curSubCategoryData = data;
     }
     private onHistoryHandler() {
         if (this.historyHandler) this.historyHandler.run();
@@ -203,7 +207,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         const posx = -this.width * 0.5;
         const posy = -this.height * 0.5;
-        const bg = new NineSlicePatch(this.scene, 0, 0, width, 68 * dpr, this.key, "resturant_bg", {
+        const bg = new NineSlicePatch(this.scene, 0, 0, width, 45 * dpr, this.key, "resturant_bg", {
             left: 4 * this.dpr,
             top: 9 * this.dpr,
             right: 4 * this.dpr,
@@ -225,14 +229,14 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.storeIcon = new DynamicImage(this.scene, iconbg.x, 0);
         this.add(this.storeIcon);
         const storeX = iconbg.x + iconbg.width * 0.5 + 10 * dpr;
-        this.storeName = this.scene.make.text({ x: storeX, y: posy + 5 * dpr, text: "Restaurant", style: { color: "#FFE11A", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.storeName = this.scene.make.text({ x: storeX, y: posy + 10 * dpr, text: "Restaurant", style: { color: "#FFE11A", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.storeName);
-        this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 3 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
         const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
-        praiseIcon.x = -posx - 100 * dpr;
+        praiseIcon.x = -posx - 80 * dpr;
         this.add(praiseIcon);
-        this.praiseCount = this.scene.make.text({ x: praiseIcon.x + praiseIcon.width * 0.5 + 10 * dpr, y: praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.praiseCount = this.scene.make.text({ x: praiseIcon.x + praiseIcon.width * 0.5 + 10 * dpr, y: praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0,0.5);
         this.add(this.praiseCount);
     }
 

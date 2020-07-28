@@ -64,60 +64,60 @@
 			"frame": {
 				"x": 1,
 				"y": 386,
-				"w": 98,
-				"h": 82
+				"w": 102,
+				"h": 48
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 98,
-				"h": 82
+				"w": 102,
+				"h": 48
 			},
 			"sourceSize": {
-				"w": 98,
-				"h": 82
+				"w": 102,
+				"h": 48
 			}
 		},
 		"equipbg1": {
 			"frame": {
-				"x": 101,
+				"x": 105,
 				"y": 386,
-				"w": 98,
-				"h": 78
+				"w": 102,
+				"h": 48
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 98,
-				"h": 78
+				"w": 102,
+				"h": 48
 			},
 			"sourceSize": {
-				"w": 98,
-				"h": 78
+				"w": 102,
+				"h": 48
 			}
 		},
 		"equipbg2": {
 			"frame": {
-				"x": 201,
+				"x": 209,
 				"y": 386,
-				"w": 98,
-				"h": 78
+				"w": 104,
+				"h": 48
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 98,
-				"h": 78
+				"w": 104,
+				"h": 48
 			},
 			"sourceSize": {
-				"w": 98,
-				"h": 78
+				"w": 104,
+				"h": 48
 			}
 		},
 		"lock": {
@@ -160,30 +160,10 @@
 				"h": 22
 			}
 		},
-		"test_equip": {
-			"frame": {
-				"x": 301,
-				"y": 386,
-				"w": 44,
-				"h": 43
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 44,
-				"h": 43
-			},
-			"sourceSize": {
-				"w": 44,
-				"h": 43
-			}
-		},
 		"titlebg": {
 			"frame": {
-				"x": 545,
-				"y": 1,
+				"x": 1,
+				"y": 436,
 				"w": 331,
 				"h": 108
 			},
@@ -202,8 +182,8 @@
 		},
 		"topbg": {
 			"frame": {
-				"x": 347,
-				"y": 386,
+				"x": 545,
+				"y": 1,
 				"w": 524,
 				"h": 47
 			},
@@ -222,8 +202,8 @@
 		},
 		"topbg1": {
 			"frame": {
-				"x": 301,
-				"y": 435,
+				"x": 521,
+				"y": 50,
 				"w": 524,
 				"h": 47
 			},
@@ -247,8 +227,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 877,
-			"h": 483
+			"w": 1070,
+			"h": 545
 		},
 		"scale": "1"
 	}

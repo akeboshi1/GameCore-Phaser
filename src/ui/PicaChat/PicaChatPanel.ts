@@ -27,7 +27,7 @@ export class PicaChatPanel extends BasePanel {
         super(scene, world);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
-        // this.scale = 1;
+        this.scale = 1;
         this.UIType = UIType.Scene;
     }
 

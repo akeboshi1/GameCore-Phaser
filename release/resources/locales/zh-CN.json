@@ -1,7 +1,10 @@
 {
   "market": {
     "title": "商城",
-    "buy_button": "购 买"
+    "buy_button": "购 买",
+    "payment": "付费",
+    "refreshtime": "下一次刷新事件是  ",
+    "refresh": "刷新"
   },
   "item": {
     "source": "来源：",
@@ -25,12 +28,103 @@
     "add": "放 置",
     "furni": "家具",
     "Props": "道具",
-    "decorate": "装饰",
+    "decorate": "装扮",
     "sold": "售出",
-    "use": "使用"
+    "use": "使用",
+    "save": "保存",
+    "reset": "还原"
   },
   "common": {
     "cancel": "取消",
     "confirm": "确定"
+  },
+  "player_info": {
+    "title": "信息详情",
+    "nick_name": "昵称",
+    "player_lv": "等级",
+    "player_title": "称号",
+    "option_live": "生活",
+    "option_badge": "徽章",
+    "option_title": "称号",
+    "option_attribute": "属性",
+    "add_friend": "添加好友",
+    "tade_btn": "交易",
+    "private_chat": "私聊",
+    "edit_profile": "编辑资料",
+    "user_name": "用 户 名",
+    "input_nickname": "请输入用户昵称",
+    "constellation": "星   座",
+    "birthday": "生   日",
+    "city": "地   区",
+    "signature": "个性签名",
+    "input_signature": "填写个性签名获得别人关注哦！",
+    "save": "保存"
+  },
+  "compose": {
+    "title": "制造",
+    "make": "制作",
+    "needMaterials": "合成所需材料",
+    "synthesis": "合成"
+  },
+  "minesettle": {
+    "settle": "获得物品",
+    "savebag": "存入背包"
+  },
+  "equipupgrade": {
+    "title": "装备"
+  },
+  "task": {
+    "title": "任务",
+    "main_quest": "主线任务",
+    "side_quest": "支线任务",
+    "active_task": "活动任务",
+    "daily_quest": "每日任务",
+    "all_task": "全部",
+    "m": "主",
+    "s": "支",
+    "a": "活",
+    "d": "日",
+    "objective": "任务目标：",
+    "rewards": "任务奖励：",
+    "collect_materials": "收集物资：",
+    "submit_task": "提交任务",
+    "task_quest": "任务要求："
+  },
+  "furni_unlock": {
+    "unlock": "立即解锁",
+    "repair": "立即修复",
+    "needMaterials": "合成所需材料",
+    "source": "来源：",
+    "sold": "可售卖：",
+    "notrading": "不可交易"
+  },
+  "room_upgrade": {
+    "clicktocontinue": "点击任意处继续"
+  },
+  "room_info": {
+    "infobtn": "房间信息",
+    "setting": "房间设置",
+    "editorroom": "编辑房间",
+    "roomname": "房间名",
+    "roomlevel": "房间等级",
+    "expvalue": "经验值",
+    "popvalue": "热度",
+    "goodvalue": "点赞",
+    "compveness": "排名",
+    "prosperity": "装饰值"
+  },
+  "business_street": {
+    "commercial_street": "商业街",
+    "my_store": "我的店铺",
+    "enter": "进入",
+    "takeall": "Take all",
+    "goout": "Go Out",
+    "choosetheindustry": "选择产业",
+    "select": "选择",
+    "choosestorelike": "选择喜欢的商店",
+    "street": "商业街",
+    "back": "返回",
+    "history_title": "最近参观的 ${} 个店铺",
+    "ranking_list": "排行榜列表"
   }
 }
