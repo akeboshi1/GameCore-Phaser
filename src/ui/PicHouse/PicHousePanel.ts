@@ -105,7 +105,7 @@ export class PicHousePanel extends BasePanel {
             left: 20 * this.dpr,
             top: 20 * this.dpr,
             right: 20 * this.dpr,
-            bottom: 80 * this.dpr
+            bottom: 60 * this.dpr
         });
         this.content.add(this.bg);
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: -this.bg.height * 0.5 + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" }).setScale(1.3);
