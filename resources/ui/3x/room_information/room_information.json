@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"check tab.png": {
+		"check tab": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,7 +20,7 @@
 				"h": 114
 			}
 		},
-		"close.png": {
+		"close": {
 			"frame": {
 				"x": 1,
 				"y": 117,
@@ -40,7 +40,7 @@
 				"h": 86
 			}
 		},
-		"close_shop.png": {
+		"close_shop": {
 			"frame": {
 				"x": 89,
 				"y": 117,
@@ -60,7 +60,7 @@
 				"h": 86
 			}
 		},
-		"default tab.png": {
+		"default tab": {
 			"frame": {
 				"x": 1,
 				"y": 205,
@@ -80,7 +80,7 @@
 				"h": 98
 			}
 		},
-		"good.png": {
+		"good": {
 			"frame": {
 				"x": 202,
 				"y": 117,
@@ -100,7 +100,7 @@
 				"h": 52
 			}
 		},
-		"good1.png": {
+		"good1": {
 			"frame": {
 				"x": 253,
 				"y": 117,
@@ -120,7 +120,7 @@
 				"h": 49
 			}
 		},
-		"popularity.png": {
+		"popularity": {
 			"frame": {
 				"x": 304,
 				"y": 117,
@@ -140,7 +140,7 @@
 				"h": 57
 			}
 		},
-		"renovation.png": {
+		"renovation": {
 			"frame": {
 				"x": 343,
 				"y": 1,
@@ -160,7 +160,7 @@
 				"h": 102
 			}
 		},
-		"small_information.png": {
+		"small_information": {
 			"frame": {
 				"x": 347,
 				"y": 105,
@@ -180,7 +180,7 @@
 				"h": 52
 			}
 		},
-		"small_setting.png": {
+		"small_setting": {
 			"frame": {
 				"x": 347,
 				"y": 159,
@@ -204,7 +204,7 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
 			"w": 467,

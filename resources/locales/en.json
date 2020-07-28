@@ -120,6 +120,8 @@
     "select": "Select",
     "choosestorelike": "Choose the store you like",
     "street": "STREET",
-    "back": "BACK"
+    "back": "BACK",
+    "history_title": "LAST ${} VISITS",
+    "ranking_list":"RANKING LIST"
   }
 }

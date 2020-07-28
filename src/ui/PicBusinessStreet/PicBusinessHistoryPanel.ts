@@ -9,21 +9,15 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
-import { TextButton } from "../Market/TextButton";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 
-export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
+export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
+    private titleText: Phaser.GameObjects.Text;
     private gridtable: GameGridTable;
     private dpr: number;
     private key: string;
     private key2: string;
     private zoom: number;
-    private historyHandler: Handler;
-    private rankHandler: Handler;
     private backHandler: Handler;
-    private secondaryPanel: SecondaryMenuPanel;
-    private curSubCategoryData: any;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, key2: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -34,27 +28,13 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setStreetListData() {
+    public setHistoryeData() {
         const arr = new Array(60);
         this.gridtable.setItems(arr);
-        const att = [{ text: "Popular", data: {} }, { text: "Hot", data: {} }, { text: "Praise", data: {} }];
-        this.secondaryPanel.setCategories(TabButton, att, {
-            width: 88 * this.dpr,
-            height: 27 * this.dpr,
-            key: this.key2,
-            normalFrame: "navigation_bar_click",
-            downFrame: "navigation_bar_click",
-            textStyle: {
-                fontSize: 11 * this.dpr,
-                fontFamily: Font.DEFULT_FONT,
-                color: "#ffffff"
-            }
-        });
+        this.titleText.text = i18n.t("business_street.history_title").replace("${}", "10");
     }
 
-    public setHandler(history: Handler, rank: Handler, back: Handler) {
-        this.historyHandler = history;
-        this.rankHandler = rank;
+    public setHandler(back: Handler) {
         this.backHandler = back;
     }
 
@@ -65,59 +45,15 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     protected create() {
         const posy = -this.height * 0.5;
         const posx = -this.width * 0.5;
-        const storebg = this.scene.make.image({ key: this.key, frame: "store_icon" });
-        storebg.x = posx + 30 * this.dpr;
-        storebg.y = posy + 6 * this.dpr;
-        this.add(storebg);
         const mfont = `bold ${13 * this.dpr}px ${Font.BOLD_FONT}`;
-        const storex = storebg.x + storebg.width * 0.5 + 10 * this.dpr;
-        const storeTitle = this.scene.make.text({ x: storex, y: storebg.y, text: i18n.t("business_street.street"), style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(0, 0.5);
-        storeTitle.setStroke("#553100", 2 * this.dpr);
-        this.add(storeTitle);
-        this.secondaryPanel = new SecondaryMenuPanel(this.scene, 0, posy + 56 * this.dpr, this.width, 60 * this.dpr, this.dpr, this.zoom, {
-            x: 0,
-            y: -15 * this.dpr,
-            width: this.width - 30 * this.dpr,
-            height: 30 * this.dpr,
-            zoom: this.zoom,
-            orientation: 1
-        });
-        this.add(this.secondaryPanel);
-        const scrollbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar" });
-        this.secondaryPanel.gameScroll.addAt(scrollbg);
-        this.secondaryPanel.createGrideTable(0, 5* this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
-            const item = cell.item;
-            if (!cellContainer) {
-                cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
-                this.add(cellContainer);
-            }
-            cellContainer.setText("Pub");
-            cellContainer.setData("itemData", item);
-            if (this.curSubCategoryData === item) {
-                cellContainer.changeDown();
-            } else cellContainer.changeNormal();
-            this.secondaryPanel.addGridTableItem(cellContainer);
-            return cellContainer;
-        });
-        this.secondaryPanel.setHandler(new Handler(this, this.onCategoryHandler), new Handler(this, this.onSubCategoryHandle));
-        const gridbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar_2" });
-        gridbg.y = 9 * this.dpr;
-        this.secondaryPanel.gridTable.addAt(gridbg);
+        const titleText = this.scene.make.text({ x: posx + 30 * this.dpr, y: posy + 6 * this.dpr, text: i18n.t("business_street.history_title"), style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(0, 0.5);
+        titleText.setStroke("#553100", 2 * this.dpr);
+        this.add(titleText);
+        this.titleText = titleText;
         const gridWdith = this.width;
-        const gridHeight = this.height - 140 * this.dpr;
-        const gridY = posy + 77 * this.dpr + gridHeight * 0.5;
+        const gridHeight = this.height - 80 * this.dpr;
+        const gridY = posy + 33 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 50 * this.dpr);
-
-        const rankBtn = new Button(this.scene, this.key2, "ranking", "ranking");
-        const btnX = -posx - rankBtn.width * 0.5 - 20 * this.dpr;
-        rankBtn.setPosition(btnX, posy + 6 * this.dpr);
-        rankBtn.on(CoreUI.MouseEvent.Tap, this.onRankHandler, this);
-        this.add(rankBtn);
-
-        const historyBtn = new Button(this.scene, this.key2, "history", "history");
-        historyBtn.setPosition(btnX - rankBtn.width * 0.5 - historyBtn.width * 0.5 - 10 * this.dpr, posy + 6 * this.dpr);
-        historyBtn.on(CoreUI.MouseEvent.Tap, this.onHistoryHandler, this);
-        this.add(historyBtn);
 
         const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
@@ -151,7 +87,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new PicStreetItem(this.scene, 0, 0, capW, capH, this.key, this.key2, this.dpr, this.zoom);
+                    cellContainer = new PicHistoryItem(this.scene, 0, 0, capW, capH, this.key, this.key2, this.dpr, this.zoom);
                     grid.add(cellContainer);
                 }
                 cellContainer.setData({ item });
@@ -162,25 +98,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         const grid = new GameGridTable(this.scene, tableConfig);
         grid.layout();
         this.add(grid);
-
         return grid;
-    }
-
-    private onCategoryHandler(data) {
-        const arr = new Array(60);
-        this.secondaryPanel.setSubItems(arr);
-    }
-
-    private onSubCategoryHandle(item) {
-        const data = item.getData("itemData");
-        this.curSubCategoryData = data;
-    }
-    private onHistoryHandler() {
-        if (this.historyHandler) this.historyHandler.run();
-    }
-
-    private onRankHandler() {
-        if (this.rankHandler) this.rankHandler.run();
     }
 
     private onBackHandler() {
@@ -188,7 +106,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     }
 }
 
-class PicStreetItem extends Phaser.GameObjects.Container {
+class PicHistoryItem extends Phaser.GameObjects.Container {
     public storeData: any;
     private key: string;
     private key2: string;
@@ -233,11 +151,11 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
-        const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
-        praiseIcon.x = -posx - 80 * dpr;
-        this.add(praiseIcon);
-        this.praiseCount = this.scene.make.text({ x: praiseIcon.x + praiseIcon.width * 0.5 + 10 * dpr, y: praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0,0.5);
-        this.add(this.praiseCount);
+        // const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
+        // praiseIcon.x = -posx - 80 * dpr;
+        // this.add(praiseIcon);
+        // this.praiseCount = this.scene.make.text({ x: praiseIcon.x + praiseIcon.width * 0.5 + 10 * dpr, y: praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0,0.5);
+        // this.add(this.praiseCount);
     }
 
     public setStoreData(data) {
