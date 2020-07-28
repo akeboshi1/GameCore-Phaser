@@ -35,8 +35,16 @@ export class LoginMediator extends BaseMediator {
     }
 
     private enterGame() {
-        this.destroy();
-        this.world.enterGame();
+        this.world.httpClock.allowLogin(() => { (<LoginPanel>this.mView).setInputVisible(true); })
+            .then((result: boolean) => {
+                if (result) {
+                    this.destroy();
+                    this.world.enterGame();
+                } else {
+                    (<LoginPanel>this.mView).setInputVisible(false);
+                }
+            })
+            .catch(Logger.getInstance().error);
     }
 
     private onLoginHandler(phone: string, code: string, areaCode: string) {
