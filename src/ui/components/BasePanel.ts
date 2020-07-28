@@ -30,19 +30,19 @@ export class BasePanel extends Panel {
 
     public show(data?: any) {
         super.show(data);
-        const play = this.mWorld.game.scene.getScene(PlayScene.name);
-        if (play && this.UIType !== UIType.Scene) play.scene.pause();
+        const play: PlayScene = this.mWorld.game.scene.getScene(PlayScene.name) as PlayScene;
+        if (play && this.UIType !== UIType.Scene) play.pause();
     }
 
     public hide() {
         super.hide();
-        const play = this.mWorld.game.scene.getScene(PlayScene.name);
-        if (play && this.UIType !== UIType.Scene) play.scene.resume();
+        const play: PlayScene = this.mWorld.game.scene.getScene(PlayScene.name) as PlayScene;
+        if (play && this.UIType !== UIType.Scene) play.resume();
     }
 
     public destroy() {
-        const play = this.mWorld.game.scene.getScene(PlayScene.name);
-        if (play && this.UIType !== UIType.Scene) play.scene.resume();
+        const play: PlayScene = this.mWorld.game.scene.getScene(PlayScene.name) as PlayScene;
+        if (play && this.UIType !== UIType.Scene) play.resume();
         super.destroy();
     }
 

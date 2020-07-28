@@ -12,7 +12,13 @@ export class PlayScene extends BasicScene {
     }
 
     public preload() { }
-
+    public pause() {
+        this.scene.pause();
+        this.scene.systems.settings.status = 7;
+    }
+    public resume() {
+        this.scene.resume();
+    }
     public init(data: any) {
         if (data) {
             this.mRoom = data.room;
