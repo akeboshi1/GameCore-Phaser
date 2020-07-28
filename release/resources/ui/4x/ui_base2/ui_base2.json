@@ -1,8 +1,28 @@
 {
 	"frames": {
-		"bg": {
+		"bear": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 63,
+				"h": 62
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 63,
+				"h": 62
+			},
+			"sourceSize": {
+				"w": 63,
+				"h": 62
+			}
+		},
+		"bg": {
+			"frame": {
+				"x": 66,
 				"y": 1,
 				"w": 1195,
 				"h": 1220
@@ -22,7 +42,7 @@
 		},
 		"block": {
 			"frame": {
-				"x": 1198,
+				"x": 1263,
 				"y": 1,
 				"w": 97,
 				"h": 97
@@ -38,6 +58,26 @@
 			"sourceSize": {
 				"w": 97,
 				"h": 97
+			}
+		},
+		"moon": {
+			"frame": {
+				"x": 1,
+				"y": 100,
+				"w": 63,
+				"h": 63
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 63,
+				"h": 63
+			},
+			"sourceSize": {
+				"w": 63,
+				"h": 63
 			}
 		},
 		"price_bg": {
@@ -62,7 +102,7 @@
 		},
 		"slider_bg": {
 			"frame": {
-				"x": 1297,
+				"x": 1362,
 				"y": 1,
 				"w": 15,
 				"h": 14
@@ -82,8 +122,8 @@
 		},
 		"slider_rate": {
 			"frame": {
-				"x": 1314,
-				"y": 1,
+				"x": 1362,
+				"y": 17,
 				"w": 15,
 				"h": 14
 			},
@@ -100,10 +140,50 @@
 				"h": 14
 			}
 		},
+		"star": {
+			"frame": {
+				"x": 1263,
+				"y": 100,
+				"w": 51,
+				"h": 59
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 51,
+				"h": 59
+			},
+			"sourceSize": {
+				"w": 51,
+				"h": 59
+			}
+		},
+		"sun": {
+			"frame": {
+				"x": 1316,
+				"y": 100,
+				"w": 67,
+				"h": 63
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 67,
+				"h": 63
+			},
+			"sourceSize": {
+				"w": 67,
+				"h": 63
+			}
+		},
 		"title": {
 			"frame": {
-				"x": 1331,
-				"y": 1,
+				"x": 503,
+				"y": 1223,
 				"w": 713,
 				"h": 161
 			},
@@ -127,8 +207,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 2045,
-			"h": 1324
+			"w": 1384,
+			"h": 1385
 		},
 		"scale": "1"
 	}

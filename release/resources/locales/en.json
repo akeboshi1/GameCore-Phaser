@@ -109,5 +109,19 @@
     "goodvalue": "Good value",
     "compveness": "Competitiveness",
     "prosperity": "Prosperity"
+  },
+  "business_street": {
+    "commercial_street": "COMMERCIAL STREET",
+    "my_store": "MY STORE",
+    "enter": "Enter",
+    "takeall": "Take all",
+    "goout": "Go Out",
+    "choosetheindustry": "Choose the Industry",
+    "select": "Select",
+    "choosestorelike": "Choose the store you like",
+    "street": "STREET",
+    "back": "BACK",
+    "history_title": "LAST ${} VISITS",
+    "ranking_list":"RANKING LIST"
   }
 }
