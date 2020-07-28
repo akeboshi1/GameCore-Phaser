@@ -85,7 +85,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.add(this.secondaryPanel);
         const scrollbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar" });
         this.secondaryPanel.gameScroll.addAt(scrollbg);
-        this.secondaryPanel.createGrideTable(0, 5* this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
+        this.secondaryPanel.createGrideTable(0, 5 * this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
@@ -193,11 +193,11 @@ class PicStreetItem extends Phaser.GameObjects.Container {
     private key: string;
     private key2: string;
     private dpr: number;
-    private cornerText: Phaser.GameObjects.Text;
     private storeName: Phaser.GameObjects.Text;
     private playerName: Phaser.GameObjects.Text;
     private storeIcon: DynamicImage;
     private praiseCount: Phaser.GameObjects.Text;
+    private industryIcon: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, key2: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -217,15 +217,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         const iconbg = this.scene.make.image({ key: key2, frame: "icon_bg_s" });
         iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
         this.add(iconbg);
-        const cornerbg = new NineSlicePatch(this.scene, 0, 0, 44 * dpr, 15 * dpr, this.key, "resturant_tag", {
-            left: 3 * this.dpr,
-            top: 0,
-            right: 7 * this.dpr,
-            bottom: 0
-        });
-        cornerbg.setPosition(posx + cornerbg.width * 0.5 - 2 * dpr, posy + 10 * dpr);
-        this.add(cornerbg);
-        this.cornerText = this.scene.make.text({ x: posx, y: posy, text: "Restaurant", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+
         this.storeIcon = new DynamicImage(this.scene, iconbg.x, 0);
         this.add(this.storeIcon);
         const storeX = iconbg.x + iconbg.width * 0.5 + 10 * dpr;
@@ -233,10 +225,13 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
+        this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
+        this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
+        this.add(this.industryIcon);
         const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
         praiseIcon.x = -posx - 80 * dpr;
         this.add(praiseIcon);
-        this.praiseCount = this.scene.make.text({ x: praiseIcon.x + praiseIcon.width * 0.5 + 10 * dpr, y: praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0,0.5);
+        this.praiseCount = this.scene.make.text({ x: praiseIcon.x + praiseIcon.width * 0.5 + 10 * dpr, y: praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.add(this.praiseCount);
     }
 
