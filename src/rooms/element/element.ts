@@ -206,8 +206,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(this.mModel.pos);
         }
         this.mDisplay.changeAlpha(this.mModel.alpha);
-        // todo 暂时不显示，后续添加显示名字的协议
-        // this.mDisplay.showNickname(this.mModel.nickname);
+        this.showNickname();
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
         const frameModel = <IFramesModel>this.mDisplayInfo;
@@ -500,7 +499,7 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.destroy();
         this.mBubble = null;
     }
-    public showNickName() {
+    public showNickname() {
         if (this.mDisplay && this.model) {
             this.mDisplay.showNickname(this.model.nickname);
         }
@@ -511,12 +510,6 @@ export class Element extends BlockObject implements IElement {
             const key = displayInfo.gene;
             // this.mDisplay.once(key, this.onDisplayReady, this);
             this.mDisplay.load(displayInfo, DisplayField.Effect);
-        }
-    }
-
-    public showNickname() {
-        if (this.model && this.mDisplay) {
-            this.mDisplay.showNickname(this.model.nickname);
         }
     }
 
@@ -585,7 +578,7 @@ export class Element extends BlockObject implements IElement {
 
     public setState(states: op_def.IState[]) {
         for (const state of states) {
-            switch(state.execCode) {
+            switch (state.execCode) {
                 case op_def.ExecCode.EXEC_CODE_ADD:
                 case op_def.ExecCode.EXEC_CODE_UPDATE:
                     this.updateStateHandler(state);
@@ -778,8 +771,8 @@ export class Element extends BlockObject implements IElement {
                 depth = this.model.pos.depth ? this.model.pos.depth : 0;
             }
             this.setDepth(depth);
-         }
-            // this.mDisplay.showRefernceArea();
+        }
+        // this.mDisplay.showRefernceArea();
         // }
     }
 
@@ -895,13 +888,13 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected updateStateHandler(state: op_def.IState) {
-        switch(state.name) {
+        switch (state.name) {
             case "effect":
                 const buf = Buffer.from(state.packet);
                 const id = buf.readDoubleBE(0);
                 const effect = this.roomService.effectManager.get(id);
                 if (effect.displayInfo) {
-                    this.showEffected(<IFramesModel> effect.displayInfo);
+                    this.showEffected(<IFramesModel>effect.displayInfo);
                 } else {
                     effect.once("updateDisplayInfo", this.showEffected, this);
                 }
@@ -910,7 +903,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected removeStateHandler(state: op_def.IState) {
-        switch(state.name) {
+        switch (state.name) {
             case "effect":
                 // remove
                 if (this.mDisplay) {
