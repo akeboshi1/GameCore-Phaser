@@ -81,8 +81,9 @@ export class LoginMediator extends BaseMediator {
 
     private onVerifiedHandler(name: string, idcard: string) {
         this.world.httpService.verified(name, idcard).then((response: any) => {
+            this.verifiedPanel.off("verified", this.onVerifiedHandler, this);
             const { code, data } = response;
-            if (code === 200 || code === 201) {
+            if (code === 200 || code === 201 || code === 0) {
                 this.enterGame(data.adult);
             } else if (code === 10001) {
                 // 验证失败

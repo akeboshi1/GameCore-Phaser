@@ -164,4 +164,8 @@ export class VerifiedPanel extends BasePanel {
         container.setSize(width + input.x, height);
         return container;
     }
+
+    get verifiedBtn(): NineSliceButton {
+        return this.mVerifiedBtn;
+    }
 }

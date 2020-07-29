@@ -140,6 +140,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+        this.mConfig.auth_token = undefined;
+
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
         // this.mCharacterManager.register();
@@ -663,7 +665,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mAccount = new Account();
             this.mLoadingManager.start();
             // test login and verified
-            this.mConfig.auth_token = undefined;
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;

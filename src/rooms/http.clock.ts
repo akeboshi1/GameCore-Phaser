@@ -79,7 +79,8 @@ export class HttpClock {
         new AlertView(uiLayer.scene, this.world).show({
             text,
             callback,
-            btns: Buttons.Ok
+            btns: Buttons.Ok,
+            title: "提示"
         });
     }
 
