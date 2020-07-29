@@ -9,6 +9,7 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { op_client } from "pixelpai_proto";
 
 export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     private storeCountText: Phaser.GameObjects.Text;
@@ -29,9 +30,8 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setMyStoreData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
+    public setMyStoreData(datas: op_client.IEditModeRoom[]) {
+        this.gridtable.setItems(datas);
     }
 
     public setHandler(takeAll: Handler, goOut: Handler, newStore: Handler) {
@@ -143,7 +143,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
 }
 
 class MyStoreItem extends Phaser.GameObjects.Container {
-    public storeData: any;
+    public storeData: op_client.EditModeRoom;
     private key: string;
     private dpr: number;
     private storeName: Phaser.GameObjects.Text;
@@ -154,6 +154,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
     private lvimgCon: Phaser.GameObjects.Container;
     private industryIcon: Phaser.GameObjects.Image;
     private enterHandler: Handler;
+    private bg: NineSlicePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -161,13 +162,13 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         const posx = -this.width * 0.5;
         const posy = -this.height * 0.5;
-        const bg = new NineSlicePatch(this.scene, 0, 0, width, 68 * dpr, this.key, "resturant_bg", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, 68 * dpr, this.key, "resturant_bg", {
             left: 4 * this.dpr,
             top: 9 * this.dpr,
             right: 4 * this.dpr,
             bottom: 9 * this.dpr
         });
-        this.add(bg);
+        this.add(this.bg);
         const iconbg = this.scene.make.image({ key, frame: "store_icon_bg" });
         iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
         this.add(iconbg);
@@ -189,7 +190,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
-        const enterBtn = new NineSliceButton(scene, -posx, 0, 48 * dpr, 27 * dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("business_street.enter"), this.dpr, zoom, {
+        const enterBtn = new NineSliceButton(scene, -posx, 0, 48 * dpr, 27 * dpr, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("business_street.enter"), this.dpr, zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -201,9 +202,18 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.add(enterBtn);
     }
 
-    public setStoreData(data) {
+    public setStoreData(data: op_client.EditModeRoom) {
+        const industry = data.industry;
+        const storeType = data.storeType;
+        this.bg.setFrame(industry + "_bg");
+        this.storeIcon.setFrame(storeType + "_icon");
+        this.storeName.text = data.name;
         this.lvimgCon.removeAll(true);
-        this.setImageInfo(UIAtlasKey.common2Key, this.getLevelImgs(200));
+        this.setImageInfo(UIAtlasKey.common2Key, this.getLevelImgs(data.roomLevel.level));
+        this.savings.text = i18n.t("business_street.savings") + ":" + data.savings + "";
+        this.competitiveness.text = i18n.t("business_street.competitiveness") + ":" + data.competitiveness;
+        this.prosperity.text = i18n.t("business_street.prosperity") + ":" + data.prosperity;
+        this.industryIcon.setFrame(industry + "_tag");
     }
 
     public setHandler(handler: Handler) {

@@ -10,6 +10,7 @@ import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { Coin } from "../../utils/resUtil";
 import { op_def } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 
 export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
     private recommendedText: Phaser.GameObjects.Text;
@@ -26,6 +27,8 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
     private isFirst: boolean = true;
     private cancelHandler: Handler;
     private selectHandler: Handler;
+    private curSelectData: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL;
+    private curSelectItem: StoreTypeItem;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, isfirst: boolean = true) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -36,17 +39,31 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setStoreTypeData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
+    public setTypeData(datas: op_pkt_def.IPKT_INDUSTRY[] | op_pkt_def.IPKT_INDUSTRY) {
+        if (datas instanceof Array) {
+            this.gridtable.setItems(datas);
+        } else
+            this.gridtable.setItems(datas.roomModels);
+        const cells = this.gridtable.getCells();
+        const cell = cells[0];
+        if (cell && cell.container) {
+            this.onGridSelectHandler(cell.container);
+        }
+
+    }
+    public setTypeInfo(data: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL) {
+        this.curSelectData = data;
         if (this.isFirst) {
             this.recommendedText.text = "Recommended";
             this.describleText.text = "This industry has great development potential.";
             this.prosperityText.setText("Store prosperity [color=#52BC04]+10%[/color]");
         } else {
-            this.coinImg.setFrame(Coin.getIcon(op_def.CoinType.COIN));
-            this.coinCount.text = "60000";
-            this.describleText2.text = "wqerwqerqwerqfdgsdsdflgjsdgjwpioerjhtiowertjiowertiowhertiowherthweoirthwoierhtoiwerhtiowerhtoiwerhtoiwehrtiowhertiowhertoiwedsfgnfdgnosdfghiweorhtioerwhtwoierhtwoiret";
+            const storeData = <op_pkt_def.PKT_ROOM_MODEL>data;
+            if (storeData.price) {
+                this.coinImg.setFrame(Coin.getIcon(storeData.price.coinType));
+                this.coinCount.text = storeData.price.price + "";
+            }
+            this.describleText2.text = storeData.des;
         }
     }
     public setHandler(cancel: Handler, select: Handler) {
@@ -157,14 +174,30 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
                 }
                 cellContainer.setData({ item });
                 cellContainer.setStoreData(item);
+                if (this.curSelectData && item === this.curSelectData) {
+                    cellContainer.select = true;
+                } else
+                    cellContainer.select = false;
                 return cellContainer;
             },
         };
         const grid = new GameGridTable(this.scene, tableConfig);
         grid.layout();
+        grid.on("cellTap", (cell) => {
+            if (cell) {
+                this.onGridSelectHandler(cell);
+            }
+        });
         this.add(grid.table);
 
         return grid;
+    }
+
+    private onGridSelectHandler(cell: StoreTypeItem) {
+        this.setTypeInfo(cell.storeData);
+        if (this.curSelectItem) this.curSelectItem.select = false;
+        cell.select = true;
+        this.curSelectItem = cell;
     }
 
     private onCancelHandler() {
@@ -172,18 +205,17 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
     }
 
     private onSelectHandler() {
-        if (this.selectHandler) this.selectHandler.run();
+        if (this.selectHandler) this.selectHandler.runWith(this.curSelectData);
     }
 }
 
 class StoreTypeItem extends Phaser.GameObjects.Container {
-    public storeData: any;
+    public storeData: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL;
     private key: string;
     private dpr: number;
     private storeName: Phaser.GameObjects.Text;
     private bg: Phaser.GameObjects.Image;
     private storeIcon: Phaser.GameObjects.Image;
-    private enterHandler: Handler;
     private isSelect: boolean = false;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -193,15 +225,23 @@ class StoreTypeItem extends Phaser.GameObjects.Container {
         this.bg = this.scene.make.image({ key, frame: "store_bg" });
         this.add(this.bg);
 
-        this.storeIcon = this.scene.make.image({ key, frame: "resturant_icon" });
+        this.storeIcon = this.scene.make.image({ key, frame: "restaurant_icon" });
         this.storeIcon.setPosition(0, -8 * dpr);
         this.add(this.storeIcon);
-        this.storeName = this.scene.make.text({ x: 0, y: this.storeIcon.y + this.storeIcon.height * 0.5 + 18 * dpr, text: "Restaurant", style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
+        this.storeName = this.scene.make.text({ x: 0, y: this.storeIcon.y + this.storeIcon.height * 0.5 + 10 * dpr, text: "Restaurant", style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
         this.add(this.storeName);
     }
 
-    public setStoreData(data) {
-
+    public setStoreData(data: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL) {
+        this.storeData = data;
+        if (data instanceof op_pkt_def.PKT_INDUSTRY) {
+            this.storeIcon.setFrame(data.industryType + "_icon");
+            this.storeName.text = data.name;
+        } else {
+            const storeData = <op_pkt_def.PKT_ROOM_MODEL>data;
+            this.storeIcon.setFrame(storeData.storeType + "_icon");
+            this.storeName.text = storeData.name;
+        }
     }
 
     public get select() {
