@@ -12,6 +12,7 @@ import { ILauncherConfig } from "../../launcher";
 import { Clock } from "../rooms/clock";
 import { MouseManager } from "./mouse.manager";
 import { ISoundConfig } from "./sound.manager";
+import { HttpClock } from "../rooms/http.clock";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -30,6 +31,7 @@ export interface WorldService {
     readonly uiRatio: number;
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
+    readonly httpClock: HttpClock;
 
     reconnect();
     startHeartBeat();

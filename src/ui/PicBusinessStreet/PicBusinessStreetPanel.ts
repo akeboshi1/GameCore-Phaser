@@ -17,6 +17,8 @@ import { PicBusinessContentPanel } from "./PicBusinessContentPanel";
 import { PicBusinessMyStreetPanel } from "./PicBusinessMyStreetPanel";
 import { PicBusinessStoreCreatePanel } from "./PicBusinessStoreCreatePanel";
 import { PicBusinessStreetListPanel } from "./PicBusinessStreetListPanel";
+import { PicBusinessHistoryPanel } from "./PicBusinessHistoryPanel";
+import { PicBusinessRankingPanel } from "./PicBusinessRankingPanel";
 export default class PicBusinessStreetPanel extends BasePanel {
     private key = "c_street_1";
     private key2 = "c_street_2";
@@ -26,6 +28,8 @@ export default class PicBusinessStreetPanel extends BasePanel {
     private picStoreCreatePanel: PicBusinessStoreCreatePanel;
     private picSecondStorePanel: PicBusinessStoreCreatePanel;
     private picStreetListPanel: PicBusinessStreetListPanel;
+    private picStreetHistoryPanel: PicBusinessHistoryPanel;
+    private picStreetRankingPanel: PicBusinessRankingPanel;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -116,61 +120,25 @@ export default class PicBusinessStreetPanel extends BasePanel {
         this.picStreetListPanel.setStreetListData();
     }
 
+    public openStreetHistoryPanel() {
+        this.showStreetHistoryPanel();
+        this.picStreetHistoryPanel.setHistoryeData();
+    }
+
+    public openStreetRankingPanel() {
+        this.showStreetRankingPanel();
+        this.picStreetRankingPanel.setRankingData();
+    }
+
     public destroy() {
 
         super.destroy();
     }
 
-    // private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler) {
-    //     const tableConfig: GridTableConfig = {
-    //         x,
-    //         y,
-    //         table: {
-    //             width,
-    //             height,
-    //             columns: 3,
-    //             cellWidth: capW,
-    //             cellHeight: capH,
-    //             reuseCellContainer: true,
-    //             cellPadX: 24 * this.dpr
-    //         },
-    //         scrollMode: 1,
-    //         clamplChildOY: false,
-    //         // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
-    //         createCellContainerCallback: (cell, cellContainer) => {
-    //             const scene = cell.scene,
-    //                 item = cell.item;
-    //             if (cellContainer === null) {
-    //                 cellContainer = createFun();
-    //                 this.content.add(cellContainer);
-    //             }
-    //             cellContainer.setData({ item });
-    //             cellContainer.setItemData(item);
-    //             return cellContainer;
-    //         },
-    //     };
-    //     const grid = new GameGridTable(this.scene, tableConfig);
-    //     grid.layout();
-    //     grid.on("cellTap", (cell) => {
-    //         if (cell) {
-    //             callback.runWith(cell);
-    //         }
-    //     });
-    //     this.content.add(grid.table);
-    //     return grid;
-    // }
-
     private showMyStreetPanel() {
-        const width: number = this.scaleWidth;
-        const height: number = this.scaleHeight;
         const topoffset = 90 * this.dpr;
         const bottomoffset = 74 * this.dpr;
-        const conWidth = 295 * this.dpr;
-        const conHeight = height - topoffset - bottomoffset;
-        const conY = topoffset + conHeight * 0.5;
-        const conX = width * 0.5;
-        this.content.setPosition(conX, conY);
-        this.content.setContentSize(conWidth, conHeight);
+        this.setContentSize(topoffset, bottomoffset);
         if (!this.picMyStreetPanel) {
             const wid = this.content.width;
             const hei = this.content.height - 50 * this.dpr;
@@ -250,24 +218,19 @@ export default class PicBusinessStreetPanel extends BasePanel {
     }
 
     private showStreetListPanel() {
-        const width: number = this.scaleWidth;
-        const height: number = this.scaleHeight;
         const topoffset = 90 * this.dpr;
         const bottomoffset = 74 * this.dpr;
-        const conWidth = 295 * this.dpr;
-        const conHeight = height - topoffset - bottomoffset;
-        const conY = topoffset + conHeight * 0.5;
-        const conX = width * 0.5;
-        this.content.setPosition(conX, conY);
-        this.content.setContentSize(conWidth, conHeight);
+        this.setContentSize(topoffset, bottomoffset);
         if (!this.picStreetListPanel) {
             const wid = this.content.width;
             const hei = this.content.height - 50 * this.dpr;
             this.picStreetListPanel = new PicBusinessStreetListPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key, this.key2);
             this.picStreetListPanel.setHandler(new Handler(this, () => {
-
+                this.openStreetHistoryPanel();
+                this.hideStreetListPanel();
             }), new Handler(this, () => {
-
+                this.openStreetRankingPanel();
+                this.hideStreetListPanel();
             }), new Handler(this, () => {
                 this.hideStreetListPanel();
                 this.openMyStreet();
@@ -279,6 +242,59 @@ export default class PicBusinessStreetPanel extends BasePanel {
 
     private hideStreetListPanel() {
         this.content.remove(this.picStreetListPanel);
+    }
+
+    private showStreetHistoryPanel() {
+        const topoffset = 90 * this.dpr;
+        const bottomoffset = 74 * this.dpr;
+        this.setContentSize(topoffset, bottomoffset);
+        if (!this.picStreetHistoryPanel) {
+            const wid = this.content.width;
+            const hei = this.content.height - 50 * this.dpr;
+            this.picStreetHistoryPanel = new PicBusinessHistoryPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key, this.key2);
+            this.picStreetHistoryPanel.setHandler(new Handler(this, () => {
+                this.hideStreetHistoryPanel();
+                this.openStoreStreetPanel();
+            }));
+        }
+        this.content.add(this.picStreetHistoryPanel);
+        this.picStreetHistoryPanel.resetMask();
+    }
+
+    private hideStreetHistoryPanel() {
+        this.content.remove(this.picStreetHistoryPanel);
+    }
+
+    private showStreetRankingPanel() {
+        const topoffset = 110 * this.dpr;
+        const bottomoffset = 94 * this.dpr;
+        this.setContentSize(topoffset, bottomoffset);
+        if (!this.picStreetRankingPanel) {
+            const wid = this.content.width;
+            const hei = this.content.height - 50 * this.dpr;
+            this.picStreetRankingPanel = new PicBusinessRankingPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key, this.key2);
+            this.picStreetRankingPanel.setHandler(new Handler(this, () => {
+                this.hideStreetRankingPanel();
+                this.openStoreStreetPanel();
+            }));
+        }
+        this.content.add(this.picStreetRankingPanel);
+        this.picStreetRankingPanel.resetMask();
+    }
+
+    private hideStreetRankingPanel() {
+        this.content.remove(this.picStreetRankingPanel);
+    }
+
+    private setContentSize(topoffset: number, bottomoffset: number) {
+        const width: number = this.scaleWidth;
+        const height: number = this.scaleHeight;
+        const conWidth = 295 * this.dpr;
+        const conHeight = height - topoffset - bottomoffset;
+        const conY = topoffset + conHeight * 0.5;
+        const conX = width * 0.5;
+        this.content.setPosition(conX, conY);
+        this.content.setContentSize(conWidth, conHeight);
     }
 
     private OnCloseHandler() {

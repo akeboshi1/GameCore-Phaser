@@ -54,9 +54,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
 
         const size = this.mRoom.miniSize;
-        this.mMap = new Array(size.cols);
+        this.mMap = new Array(size.rows);
         for (let i = 0; i < this.mMap.length; i++) {
-            this.mMap[i] = new Array(size.rows).fill(-1);
+            this.mMap[i] = new Array(size.cols).fill(-1);
         }
     }
 
