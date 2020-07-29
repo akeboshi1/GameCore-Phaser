@@ -662,6 +662,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mConfig && this.mConnection) {
             this.mAccount = new Account();
             this.mLoadingManager.start();
+            // test login and verified
+            this.mConfig.auth_token = undefined;
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;

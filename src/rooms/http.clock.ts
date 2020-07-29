@@ -68,7 +68,7 @@ export class HttpClock {
 
     private checkTimeAllowed(data: any, callback?: () => void) {
         if (data.time_played >= data.max_time_allowed) {
-            this.showAlert(`[color=#ff0000][size=${16 * this.world.uiRatio}]您的账号属于未成年[/size][/color]\n今日累计时长已超过${data.time_played / 3600}小时！`, callback);
+            this.showAlert(`[color=#ff0000][size=${16 * this.world.uiRatio}]您的账号属于未成年[/size][/color]\n今日累计时长已超过${(data.time_played / 3600).toFixed(1)}小时！`, callback);
             return false;
         }
         return true;

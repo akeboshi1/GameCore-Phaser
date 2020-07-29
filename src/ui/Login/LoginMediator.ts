@@ -35,7 +35,7 @@ export class LoginMediator extends BaseMediator {
     }
 
     private enterGame(adult: boolean) {
-        if (this.world.httpClock) this.world.httpClock.enable = true;
+        if (this.world.httpClock) this.world.httpClock.enable = !adult;
         if (adult) {
             this.destroy();
             this.world.enterGame();
@@ -59,7 +59,7 @@ export class LoginMediator extends BaseMediator {
                 const data = response.data;
                 this.world.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                // this.enterGame();
+                // this.enterGame(true);
                 if (data.hasIdentityInfo) {
                     this.enterGame(data.adult);
                 } else {
