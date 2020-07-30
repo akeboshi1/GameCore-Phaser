@@ -295,7 +295,7 @@ export class FurniBagPanel extends BasePanel {
     this.resetBtn.add(reseticon);
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.setTexture(this.key, "ghost");
-    this.mDetailDisplay.setLINEAR();
+    this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
     this.mDetailDisplay.scale = this.dpr;
 
@@ -614,7 +614,7 @@ export class FurniBagPanel extends BasePanel {
         this.saveBtn.enable = false;
         this.resetBtn.enable = false;
         this.mDetailDisplay.setTexture(this.key, "ghost");
-        this.mDetailDisplay.setLINEAR();
+        this.mDetailDisplay.setNearest();
       }
     }
   }
