@@ -740,7 +740,7 @@
 				"h": 323
 			}
 		},
-		"resturant_bg": {
+		"restaurant_bg": {
 			"frame": {
 				"x": 794,
 				"y": 684,
@@ -760,7 +760,7 @@
 				"h": 133
 			}
 		},
-		"resturant_tag_s": {
+		"restaurant_tag_s": {
 			"frame": {
 				"x": 1,
 				"y": 1081,
