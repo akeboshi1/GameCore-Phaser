@@ -44,7 +44,7 @@ export class MarketPanel extends BasePanel {
     super(scene, world);
     this.mSubTabs = [];
     this.mTabs = [];
-    this.scale = 1;
+    // this.scale = 1;
   }
 
   public addListen() {
@@ -122,7 +122,7 @@ export class MarketPanel extends BasePanel {
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], this.dpr, this.scale);
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], 1, 1);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
@@ -176,11 +176,11 @@ export class MarketPanel extends BasePanel {
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr;
     this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
     this.randomCon.y = this.mSubCategorisScroll.y;
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 135 * this.dpr * this.scale;
     this.mPropGrid.layout();
+    this.mPropGrid.resetMask();
     this.mSubCategorisScroll.layout();
     this.mSubCategorisScroll.resetMask();
-    this.mPropGrid.resetMask();
   }
 
   protected preload() {
@@ -241,9 +241,9 @@ export class MarketPanel extends BasePanel {
 
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
-      y: 30 * this.dpr * zoom,
+      y: 30 * this.dpr,
       style: {
-        fontSize: 36 * this.dpr * zoom,
+        fontSize: 36 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
@@ -341,18 +341,19 @@ export class MarketPanel extends BasePanel {
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;
     const propGridConfig: GridTableConfig = {
       x: w / 2,
-      y: 1050 + (41 * this.dpr * zoom) / 2,
+      y: 1051 + (20 * this.dpr * zoom) / 2,
       // y: 0,
       table: {
         width: w - 20 * this.dpr * zoom,
-        height: 224 * this.dpr * zoom,
+        height: 260 * this.dpr * zoom,
         columns: 3,
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
         // mask: false,
         cellOriginX: 0,
-        cellOriginY: 0
+        cellOriginY: 0,
+        zoom,
       },
       scrollMode: 1,
       clamplChildOY: false,

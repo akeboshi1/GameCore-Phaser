@@ -13,7 +13,7 @@ export class PicRoomUpgradePanel extends BasePanel {
     private roomIcon: Phaser.GameObjects.Sprite;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
 
     public resize(w: number, h: number) {

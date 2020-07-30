@@ -19,7 +19,7 @@ export class MineSettlePanel extends BasePanel {
     private titleName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
 
     resize(w: number, h: number) {

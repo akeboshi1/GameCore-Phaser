@@ -32,7 +32,7 @@ export class MineCarPanel extends BasePanel {
   private mBackGround: Phaser.GameObjects.Graphics;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.scale = 1;
+    // this.scale = 1;
     this.disInteractive();
   }
 
@@ -222,7 +222,8 @@ export class MineCarPanel extends BasePanel {
         cellHeight: capH,
         reuseCellContainer: true,
         cellOriginX: 0,
-        cellOriginY: 0
+        cellOriginY: 0,
+        zoom
         // mask: false
       },
       scrollMode: 0,
@@ -260,7 +261,8 @@ export class MineCarPanel extends BasePanel {
         cellHeight: (29 * this.dpr) * zoom,
         reuseCellContainer: true,
         cellOriginX: 0,
-        cellOriginY: 0
+        cellOriginY: 0,
+        zoom
         // mask: false
       },
       scrollMode: 1,
