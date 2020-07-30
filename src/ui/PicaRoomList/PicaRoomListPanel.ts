@@ -155,12 +155,12 @@ export class PicaRoomListPanel extends BasePanel {
     const h = this.mRoomContainer.height * this.scale;
     const config: ScrollerConfig = {
       x: this.scaleWidth - w / this.scale >> 1,
-      y: this.content.y - h / 2 - 20 * this.dpr * zoom,
+      y: this.content.y - this.content.height / 2 + 20 * this.dpr * this.scale,
       clickX: 0,
       clickY: 0,
       width: this.scaleWidth,
       height: h,
-      boundPad0: - 25 * this.dpr * zoom,
+      boundPad0: - 40 * this.dpr * zoom,
       zoom,
       // bounds: [
       //   this.y,
