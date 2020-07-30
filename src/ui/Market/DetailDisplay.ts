@@ -89,9 +89,9 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.emit("show", this.mImage);
   }
 
-  setNearest() {
+  setLINEAR() {
     if (this.mImage) {
-      this.mImage.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+      this.mImage.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
   }
 
@@ -113,7 +113,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     } else {
       this.mImage.setTexture(this.mUrl);
     }
-    this.setNearest();
+    this.setLINEAR();
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.emit("show", this.mImage);
   }

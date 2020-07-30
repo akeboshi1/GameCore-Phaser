@@ -18,7 +18,7 @@ export class PicHandheldPanel extends BasePanel {
     private isExtendsGrid: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
 
     public resize(w: number, h: number) {

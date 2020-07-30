@@ -98,7 +98,7 @@ export class PicaNavigatePanel extends BasePanel {
 
   protected init() {
     this.mBackground = this.createImage(this.key, "bg");
-    this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+    this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mMapBtn = this.createImage(this.key, "map_btn").setInteractive();
     this.mShopBtn = this.createImage(this.key, "shop_btn").setInteractive();
     this.mBagBtn = this.createImage(this.key, "bag_btn").setInteractive();

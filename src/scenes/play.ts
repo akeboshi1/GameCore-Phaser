@@ -13,11 +13,13 @@ export class PlayScene extends BasicScene {
 
     public preload() { }
     public pause() {
-        this.scene.pause();
-        this.scene.systems.settings.status = 7;
+        // if (!this.scene || !this.scene.systems) return;
+        // this.scene.pause();
+        // this.scene.systems.settings.status = 7;
     }
     public resume() {
-        this.scene.resume();
+        // if (!this.scene || !this.scene.systems) return;
+        // this.scene.resume();
     }
     public init(data: any) {
         if (data) {

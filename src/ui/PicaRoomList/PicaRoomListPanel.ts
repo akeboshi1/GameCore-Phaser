@@ -21,22 +21,23 @@ export class PicaRoomListPanel extends BasePanel {
   private mRoomContainer: Phaser.GameObjects.Container;
   private mScroller: BaseScroller;
   private mBackGround: Phaser.GameObjects.Graphics;
+  private content: Phaser.GameObjects.Container;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    this.scale = 1;
+    // this.scale = 1;
   }
 
   resize(w: number, h: number) {
-    const scale = this.scale;
-    const width = this.scene.cameras.main.width / scale;
-    const height = this.scene.cameras.main.height / scale;
-    this.x = width / 2;
-    this.y = height / 2;
+    const width = this.scaleWidth;
+    const height = this.scaleHeight;
+    this.content.x = width >> 1;
+    this.content.y = height >> 1;
     this.mBackGround.clear();
     this.mBackGround.fillStyle(0x6AE2FF, 0);
-    this.mBackGround.fillRect(-this.x, -this.y, width, height);
-    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(-width * 0.5, -height * 0.5, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
-    super.resize(w, h);
+    this.mBackGround.fillRect(0, 0, width, height);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+    super.resize(width, height);
+    this.setSize(width, height);
   }
 
   updateRoomList(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST) {
@@ -76,14 +77,12 @@ export class PicaRoomListPanel extends BasePanel {
   }
 
   protected init() {
+    this.setSize(this.scaleWidth, this.scaleWidth);
     const zoom = this.mWorld.uiScale;
     const background = this.scene.make.image({
       key: this.key,
       frame: "bg.png"
     }, false).setInteractive();
-    const wid: number = this.scene.cameras.main.width;
-    const hei: number = this.scene.cameras.main.height;
-    this.setSize(background.width, background.height);
     this.mBackGround = this.scene.make.graphics(undefined, false);
     // this.mBackGround.clear();
     // this.mBackGround.fillStyle(0x6AE2FF, 0);
@@ -93,12 +92,12 @@ export class PicaRoomListPanel extends BasePanel {
       key: this.key,
       frame: "close_btn.png"
     }, false).setInteractive();
-    this.mCloseBtn.x = this.width / 2 - this.mCloseBtn.width / 2 - 2 * this.dpr;
-    this.mCloseBtn.y = -this.height / 2 + this.mCloseBtn.height / 2;
+    this.mCloseBtn.x = background.width / 2 - this.mCloseBtn.width / 2 - 2 * this.dpr;
+    this.mCloseBtn.y = -background.height / 2 + this.mCloseBtn.height / 2;
 
     this.mRoomDeleBtn = new TabButton(this.scene, this.key, "checkbox_normal", "checkbox_down", i18n.t("room_list.visit"));
     this.mRoomDeleBtn.x = -54 * this.dpr;
-    this.mRoomDeleBtn.y = -this.height / 2 + this.mRoomDeleBtn.displayHeight / 2 - 4 * this.dpr;
+    this.mRoomDeleBtn.y = -background.height / 2 + this.mRoomDeleBtn.displayHeight / 2 - 4 * this.dpr;
     this.mRoomDeleBtn.setTextStyle({
       color: "#3333cc",
       fontFamily: Font.DEFULT_FONT,
@@ -118,13 +117,13 @@ export class PicaRoomListPanel extends BasePanel {
     checkbox.appendItemAll([this.mRoomDeleBtn, this.mMyRoomDeleBtn]);
     checkbox.on("selected", this.onSelectedHandler, this);
     this.mRoomContainer = this.scene.make.container(undefined, false);
-    this.mRoomContainer.setSize(272 * this.dpr, 362 * this.dpr);
-    this.mRoomContainer.y = -this.height / 2 + 11 * this.dpr * zoom;
+    this.mRoomContainer.setSize(282 * this.dpr, 362 * this.dpr);
+    this.mRoomContainer.y = -background.height / 2 + 11 * this.dpr * zoom;
     this.mSeachBtn = this.scene.make.image({
       key: this.key,
       frame: "seach_btn.png"
     }, false).setInteractive();
-    this.mSeachBtn.y = this.height / 2 - this.mSeachBtn.height / 2 + 12 * this.dpr;
+    this.mSeachBtn.y = background.height / 2 - this.mSeachBtn.height / 2 + 12 * this.dpr;
 
     const seachText = this.scene.make.text({
       x: -35 * this.dpr,
@@ -146,28 +145,31 @@ export class PicaRoomListPanel extends BasePanel {
         fontSize: 14 * this.dpr
       }
     }, false).setOrigin(0.5);
-
-    this.add([this.mBackGround, background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText]);
+    this.content = this.scene.make.container(undefined, false);
+    this.content.setSize(background.width, background.height);
+    this.content.add([background, this.mRoomContainer, this.mCloseBtn, this.mSeachBtn, seachText, roomText]);
+    this.add([this.mBackGround, this.content]);
     super.init();
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;
     const h = this.mRoomContainer.height * this.scale;
     const config: ScrollerConfig = {
-      x: this.x - w / 2,
-      y: this.y - h / 2 - 20 * this.dpr * this.scale,
+      x: this.scaleWidth - w / this.scale >> 1,
+      y: this.content.y - h / 2 - 20 * this.dpr * zoom,
       clickX: 0,
       clickY: 0,
-      width: w,
+      width: this.scaleWidth,
       height: h,
       boundPad0: - 25 * this.dpr * zoom,
+      zoom,
       // bounds: [
       //   this.y,
       //   this.y - h - 100 * this.dpr + (350 * this.dpr / 2)
       // ],
-      value: this.y,
+      value: this.content.y,
       valuechangeCallback: (newValue) => {
-        this.mRoomContainer.y = newValue - this.y - h / 2;
-        Logger.getInstance().log(this.mRoomContainer.y + "," + this.y);
+        this.mRoomContainer.y = newValue - this.content.y - h / 2;
+        Logger.getInstance().log(this.mRoomContainer.y + "," + this.content.y);
       },
       cellupCallBack: (gameobject: RoomItem) => {
         gameobject.onEnterRoomHandler();
@@ -175,7 +177,7 @@ export class PicaRoomListPanel extends BasePanel {
       }
     };
     this.mScroller = new BaseScroller(this.scene, this.mRoomContainer, config);
-    this.add([this.mRoomDeleBtn, this.mMyRoomDeleBtn, this.mCloseBtn]);
+    this.content.add([this.mRoomDeleBtn, this.mMyRoomDeleBtn, this.mCloseBtn]);
     checkbox.selectIndex(0);
   }
 
@@ -274,7 +276,7 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     this.mContent = content;
     this.mScroller.clearInteractiveObject();
     this.mHeight = this.activity.height;
-    this.mChildPad = this.activity.height + 14 * this.mDpr * this.mWorld.uiScale;
+    this.mChildPad = this.activity.height + 14 * this.mDpr;
     if (!this.mContent) {
       return;
     }
@@ -410,7 +412,7 @@ class MyRoomDelegate extends RoomDelegate {
     this.mContent = content;
     this.mScroller.clearInteractiveObject();
     this.mHeight = this.activity.height;
-    this.mChildPad = this.activity.height + 14 * this.mDpr * this.mWorld.uiScale;
+    this.mChildPad = this.activity.height + 14 * this.mDpr;
     this.mMyRoom.addItem(content.selfRooms, this.mChildPad);
   }
 
@@ -457,7 +459,7 @@ class MyRoomDelegate extends RoomDelegate {
       frame: "activity_title.png"
     }, false);
     this.activity.y = this.activity.height / 2 + 2 * this.mDpr;
-    this.mChildPad = this.activity.height + 14 * this.mDpr * this.mWorld.uiScale;
+    this.mChildPad = this.activity.height + 14 * this.mDpr;
     this.mMyRoom = new MyRoomZoon(this.mScene, this.mKey, "my_room_icon.png", i18n.t("room_list.my_room"), this.mDpr, this.mWorld.uiScale, 0, this.mChildPad, (hei: number) => {
       if (this.mMyRoom.roomList) this.setScrollInteractive(this.mMyRoom.roomList);
       this.mHeight += hei;

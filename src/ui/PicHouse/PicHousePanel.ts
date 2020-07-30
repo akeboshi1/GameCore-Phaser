@@ -24,7 +24,7 @@ export class PicHousePanel extends BasePanel {
     private mRoomInfoData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        //  this.scale = 1;
+        // this.scale = 1;
     }
 
     public resize(w: number, h: number) {
@@ -110,6 +110,7 @@ export class PicHousePanel extends BasePanel {
         this.content.add(this.bg);
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: -this.bg.height * 0.5 + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" }).setScale(1.3);
         this.closeBtn.setInteractive();
+        this.closeBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.content.add([this.closeBtn]);
         this.roomInfoBtn = this.createTabButton(i18n.t("room_info.infobtn"), "small_information");
         this.roomSettingBtn = this.createTabButton(i18n.t("room_info.setting"), "small_setting");

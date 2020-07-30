@@ -30,7 +30,7 @@ export class PicFurniFunPanel extends BasePanel {
     private tipsbg: NineSlicePatch;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
 
     resize(w: number, h: number) {
@@ -39,7 +39,7 @@ export class PicFurniFunPanel extends BasePanel {
         super.resize(width, height);
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
-        this.blackGraphic.fillRect(0, 0, width / this.scale, height / this.scale);
+        this.blackGraphic.fillRect(0, 0, width, height);
         this.content.x = Math.floor(width / 2);
         this.content.y = Math.floor(height / 2);
         this.setSize(width * this.scale, height * this.scale);
@@ -88,7 +88,7 @@ export class PicFurniFunPanel extends BasePanel {
         const width = this.cameraWidth;
         const height = this.cameraHeight;
         this.blackGraphic = this.scene.make.graphics(undefined, false);
-        this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+        this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width / this.scale, height / this.scale), Phaser.Geom.Rectangle.Contains);
         this.add(this.blackGraphic);
         this.content = this.scene.make.container(undefined, false);
         const bgwidth = 295 * this.dpr, bgheight = 369 * this.dpr;
@@ -115,7 +115,7 @@ export class PicFurniFunPanel extends BasePanel {
         this.content.add([this.titleimage, this.titleName, this.closeBtn]);
         this.mDetailDisplay = new DetailDisplay(this.scene);
         this.mDetailDisplay.setTexture(this.key, "bg_f");
-        this.mDetailDisplay.setNearest();
+        // this.mDetailDisplay.setNearest();
         this.mDetailDisplay.y = this.bgicon.y;// this.bgicon.height / 2;
         this.mDetailDisplay.scale = this.dpr * 0.8;
         this.content.add(this.mDetailDisplay);

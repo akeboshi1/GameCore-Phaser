@@ -29,7 +29,7 @@ export class TaskPanel extends BasePanel {
     private taskDatas: op_client.PKT_Quest[];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
@@ -97,11 +97,13 @@ export class TaskPanel extends BasePanel {
         const bgHeight = this.bg.height;
         const posY = -this.bg.height * 0.5;
         this.titlebg = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "title" });
+        this.titlebg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.titlebg.y = posY - this.titlebg.height * 0.5 + 20 * this.dpr;
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.tilteName = this.scene.make.text({ x: 0, y: posY - 12 * this.dpr, text: i18n.t("task.title"), style: { font: mfont, color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
+        this.closeBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.closeBtn.setInteractive();
         const optionWidth = 253 * this.dpr;
         const optionHeight = 26 * this.dpr;
@@ -109,6 +111,7 @@ export class TaskPanel extends BasePanel {
         this.optionBtn.setInteractive();
         this.optionBtn.on("pointerup", this.onOpenOptionHandler, this);
         this.optionArrow = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "drop_down" });
+        this.optionArrow.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.optionBtn.x = -bgwidth * 0.5 + 50 * this.dpr;
         this.optionBtn.y = -bgHeight * 0.5 + 30 * this.dpr;
         this.optionArrow.x = this.optionBtn.x + 30 * this.dpr;
@@ -297,16 +300,19 @@ class TaskItem extends Phaser.GameObjects.Container {
         });
         const posx = -width * 0.5, posy = -height * 0.5;
         const headbg = scene.make.image({ key, frame: "head_border" });
+        headbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         headbg.x = posx + 25 * dpr;
         this.headIcon = new DynamicImage(scene, headbg.x, 0);
         this.headIcon.setTexture(key, "head_test");
         this.typeBg = scene.make.image({ key, frame: "tag_main" });
+        this.typeBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.typeBg.setPosition(posx + this.typeBg.width * 0.5, posy + this.typeBg.height * 0.5 - 2 * dpr);
         this.typeTex = scene.make.text({ x: 0, y: 0, text: i18n.t("task.m"), style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         this.typeTex.setOrigin(0.5).setPosition(this.typeBg.x - 1 * dpr, this.typeBg.y);
         this.taskName = scene.make.text({ x: this.headIcon.x + 20 * dpr, y: -9 * dpr, text: "获得两把钥匙", style: { color: "#ffffff", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.taskDes = scene.make.text({ x: this.headIcon.x + 25 * dpr, y: 10 * dpr, text: "任务要求获得两把钥匙", style: { color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.finish = scene.make.image({ key, frame: "done" });
+        this.finish.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.finish.setPosition(width * 0.5 - 30 * dpr, 4 * dpr);
         this.openBtn = new Button(scene, key, "open", "open");
         this.setExtendBtn(this.openBtn);
@@ -479,6 +485,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.taskTex.setWordWrapWidth(width - 10 * dpr, true);
         this.rewardLabel = scene.make.text({ x: posx, y: posy + 90 * dpr, text: i18n.t("task.rewards"), style: { color: "#8F4300", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         const line = scene.make.image({ key, frame: "reward_cutline" });
+        line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         line.setPosition(0, posy + 110 * dpr);
         this.line = line;
         this.finishBtn = new NineSliceButton(this.scene, Math.ceil(width * 0.5 - 40 * this.dpr), Math.ceil(height * 0.5 - 25 * this.dpr), 60 * this.dpr, 30 * this.dpr, UIAtlasKey.commonKey, "button_g", i18n.t("task.submit_task"), this.dpr, this.scale, {
@@ -584,6 +591,7 @@ class TaskCell extends Phaser.GameObjects.Container {
         this.key = key;
         this.dpr = dpr;
         this.bg = scene.make.image({ key, frame: "task_bg" });
+        this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.countTex = new BBCodeText(this.scene, 0, 0, {})

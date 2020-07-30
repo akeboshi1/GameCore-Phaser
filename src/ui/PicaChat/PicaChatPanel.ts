@@ -27,7 +27,7 @@ export class PicaChatPanel extends BasePanel {
         super(scene, world);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
-        this.scale = 1;
+        // this.scale = 1;
         this.UIType = UIType.Scene;
     }
 
@@ -55,14 +55,14 @@ export class PicaChatPanel extends BasePanel {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         const frame = this.scene.textures.getFrame(this.key, "title_bg");
-        const scaleRatio = width / frame.width;
-        this.mTitleBg.scaleX = Math.round(scaleRatio);
-        this.mTitleBg.x = width / 2;
+        const scaleRatio = (width / this.scale) / frame.width;
+        this.mTitleBg.scaleX = scaleRatio;
+        this.mTitleBg.x = (width / this.scale) / 2;
 
         this.y = height - this.height;
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
-        this.mBackground.fillRect(0, 0, width, h);
+        this.mBackground.fillRect(0, 0, width / this.scale, h / this.scale);
         this.mTextArea.childrenMap.child.setMinSize(w, (h - 16 * this.dpr) * zoom);
         this.mTextArea.layout();
         this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr * zoom);
@@ -155,7 +155,7 @@ export class PicaChatPanel extends BasePanel {
         this.mTileContainer = this.scene.make.container(undefined, false);
         this.mScrollBtn = this.scene.make.image({ x: 21 * this.dpr * zoom, key: this.key, frame: "scroll_btn" }, false).setScale(zoom);
         this.mTitleBg = this.scene.make.image({ key: this.key, frame: "title_bg" }, false).setScale(zoom);
-        this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.mChatBtn = this.scene.make.image({ x: 96 * this.dpr * zoom, key: this.key, frame: "chat_icon" }, false).setScale(zoom);
         this.mHornBtn = this.scene.make.image({ x: 159 * this.dpr * zoom, key: this.key, frame: "horn_icon" }, false).setScale(zoom);
         this.mEmojiBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "emoji" }, false).setScale(zoom);
@@ -167,19 +167,19 @@ export class PicaChatPanel extends BasePanel {
 
         this.mChatBtn.x = this.mScrollBtn.x + this.mScrollBtn.width * 0.5 + space + this.mChatBtn.width * 0.5;
         this.mChatBtn.y = -this.mChatBtn.height / 2 + this.mTitleBg.height;
-        this.mChatBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.mChatBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         this.mHornBtn.x = this.mChatBtn.x + this.mChatBtn.width * 0.5 + space + this.mHornBtn.width * 0.5;
         this.mHornBtn.y = -this.mHornBtn.height / 2 + this.mTitleBg.height;
-        this.mHornBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.mHornBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         this.mEmojiBtn.x = this.mHornBtn.x + this.mHornBtn.width * 0.5 + space + this.mEmojiBtn.width * 0.5;
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
-        this.mEmojiBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.mEmojiBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
-        this.mNavigateBtn.x = width - this.mNavigateBtn.width * 0.5 - 5 * this.dpr;
+        this.mNavigateBtn.x = width / this.scale - this.mNavigateBtn.width * 0.5 - 5 * this.dpr;
         this.mNavigateBtn.y = -this.mNavigateBtn.height / 2 + this.mTitleBg.height;
-        this.mNavigateBtn.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.mNavigateBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         this.mOutputText = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: 14 * this.dpr / zoom + "px",

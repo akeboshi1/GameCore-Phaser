@@ -34,23 +34,17 @@ export class LoginMediator extends BaseMediator {
         this.world.httpService.requestPhoneCode(phone, areaCode);
     }
 
-    private enterGame(adult: boolean) {
-        if (this.world.httpClock) this.world.httpClock.enable = !adult;
-        if (adult) {
-            this.destroy();
-            this.world.enterGame();
-            return;
-        }
-        this.world.httpClock.allowLogin(() => { (<LoginPanel>this.mView).setInputVisible(true); })
-            .then((allow: boolean) => {
-                if (allow) {
-                    this.destroy();
-                    this.world.enterGame();
-                } else {
-                    (<LoginPanel>this.mView).setInputVisible(false);
-                }
-            })
-            .catch(Logger.getInstance().error);
+    private enterGame() {
+        // this.world.httpClock.allowLogin(() => { (<LoginPanel>this.mView).setInputVisible(true); })
+        //     .then((result: boolean) => {
+        //         if (result) {
+        this.destroy();
+        this.world.enterGame();
+        //     } else {
+        //         (<LoginPanel>this.mView).setInputVisible(false);
+        //     }
+        // })
+        // .catch(Logger.getInstance().error);
     }
 
     private onLoginHandler(phone: string, code: string, areaCode: string) {
