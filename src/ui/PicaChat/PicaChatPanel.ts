@@ -121,7 +121,14 @@ export class PicaChatPanel extends BasePanel {
             return;
         }
         if (active.name === "picachat.navigatebtn") {
-            this.mNavigateBtn.visible = active.visible;
+            if (this.mNavigateBtn.visible !== active.visible) {
+                this.mNavigateBtn.visible = active.visible;
+                if (active.visible) {
+                    this.addListen();
+                } else {
+                    this.removeListen();
+                }
+            }
         }
     }
 

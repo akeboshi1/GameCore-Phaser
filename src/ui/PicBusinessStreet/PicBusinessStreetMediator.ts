@@ -19,15 +19,23 @@ export class PicBusinessStreetMediator extends BaseMediator {
     }
 
     show() {
-        if (this.mView) {
+        if ((this.mView && this.mView.isShow()) || this.mShow) {
+            this.layerMgr.addToUILayer(this.mView);
             return;
         }
         if (!this.mView) {
             this.mView = new PicBusinessStreetPanel(this.scene, this.world);
+            this.mView.on("querymystore", this.queryMyStoreList, this);
+            this.mView.on("querystreet", this.query_COMMERCIAL_STREET, this);
+            this.mView.on("querymodels", this.query_INDUSTRY_MODELS, this);
+            this.mView.on("querycreatestore", this.query_CREATE_STORE, this);
             this.mView.on("hide", this.onHidePanel, this);
         }
         if (!this.picStreet) {
             this.picStreet = new PicBusinessStreet(this.world);
+            this.picStreet.on("onmystore", this.onMyStoreList, this);
+            this.picStreet.on("onstreet", this.onCOMMERCIAL_STREET, this);
+            this.picStreet.on("onmodels", this.onINDUSTRY_MODELS, this);
             this.picStreet.register();
         }
         this.layerMgr.addToUILayer(this.mView);
@@ -47,5 +55,29 @@ export class PicBusinessStreetMediator extends BaseMediator {
 
     private onHidePanel() {
         this.destroy();
+    }
+
+    private queryMyStoreList() {
+        this.picStreet.query_My_STORE();
+    }
+    private query_COMMERCIAL_STREET() {
+        this.picStreet.query_COMMERCIAL_STREET();
+    }
+
+    private query_INDUSTRY_MODELS() {
+        this.picStreet.query_INDUSTRY_MODELS();
+    }
+    private query_CREATE_STORE(modelId: string) {
+        this.picStreet.query_CREATE_STORE(modelId);
+    }
+    private onMyStoreList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
+        this.mView.setMyStore(content);
+    }
+    private onCOMMERCIAL_STREET(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET) {
+        this.mView.setCommercialStreet(content);
+    }
+
+    private onINDUSTRY_MODELS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS) {
+        this.mView.setIndustryModels(content);
     }
 }

@@ -420,6 +420,26 @@
 				"h": 63
 			}
 		},
+		"yellow_btn_normal_s": {
+			"frame": {
+				"x": 1,
+				"y": 348,
+				"w": 26,
+				"h": 28
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 26,
+				"h": 28
+			},
+			"sourceSize": {
+				"w": 26,
+				"h": 28
+			}
+		},
 		"yellow_btn_over": {
 			"frame": {
 				"x": 778,

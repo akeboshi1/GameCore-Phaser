@@ -10,11 +10,15 @@ export class HttpClock {
     private readonly interval = 60000;
     private mTimestamp: number = 0;
     private httpService: HttpService;
+    private mEnable: boolean;
     constructor(private world: WorldService) {
         this.httpService = world.httpService;
     }
 
     update(time: number, delta: number) {
+        if (this.mEnable === false) {
+            return;
+        }
         if (this.mTimestamp > this.interval) {
             this.sync();
             this.mTimestamp = 0;
@@ -64,7 +68,7 @@ export class HttpClock {
 
     private checkTimeAllowed(data: any, callback?: () => void) {
         if (data.time_played >= data.max_time_allowed) {
-            this.showAlert(`[color=#ff0000][size=${16 * this.world.uiRatio}]您的账号属于未成年[/size][/color]\n今日累计时长已超过${data.time_played / 3600}小时！`, callback);
+            this.showAlert(`[color=#ff0000][size=${16 * this.world.uiRatio}]您的账号属于未成年[/size][/color]\n今日累计时长已超过${(data.time_played / 3600).toFixed(1)}小时！`, callback);
             return false;
         }
         return true;
@@ -75,7 +79,12 @@ export class HttpClock {
         new AlertView(uiLayer.scene, this.world).show({
             text,
             callback,
-            btns: Buttons.Ok
+            btns: Buttons.Ok,
+            title: "提示"
         });
+    }
+
+    set enable(val: boolean) {
+        this.mEnable = val;
     }
 }

@@ -14,6 +14,14 @@ export class VerifiedPanel extends BasePanel {
         super(scene, world);
     }
 
+    public setVerifiedEnable(val: boolean) {
+        if (this.mIDCardInput) {
+            this.mNameInput.visible = val;
+            this.mIDCardInput.visible = val;
+            this.mVerifiedBtn.enable = val;
+        }
+    }
+
     protected preload() {
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
@@ -61,8 +69,8 @@ export class VerifiedPanel extends BasePanel {
         }).setOrigin(0, 0.5);
 
         this.mIDCardInput = new InputText(this.scene, 0, 0, 160 * this.dpr, 36 * this.dpr, {
-            type: "text",
-            maxLength: 11,
+            type: "tel",
+            maxLength: 18,
             placeholder: "请输入有效身份证号",
             color: "#838383",
             fontSize: 10 * this.dpr + "px"
@@ -124,9 +132,9 @@ export class VerifiedPanel extends BasePanel {
         if (!name) {
             return;
         }
-        // if (!idCard || idCard.length !== 18) {
-        //     return;
-        // }
+        if (!idCard || idCard.length !== 18) {
+            return;
+        }
         this.emit("verified", name, idCard);
     }
 
@@ -151,5 +159,9 @@ export class VerifiedPanel extends BasePanel {
         container.add([text, boder, input]);
         container.setSize(width + input.x, height);
         return container;
+    }
+
+    get verifiedBtn(): NineSliceButton {
+        return this.mVerifiedBtn;
     }
 }

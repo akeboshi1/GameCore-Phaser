@@ -125,6 +125,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
                 this.mNickname.setShadow(2, 2, "#0", 4, true, true);
             }
             this.flagContainer.add(this.mNickname);
+            this.addChildMap("nickname", this.mNickname);
         }
         this.mNickname.setText(val);
         this.layouFlag();
