@@ -32,7 +32,6 @@ export class MineCarPanel extends BasePanel {
   private mBackGround: Phaser.GameObjects.Graphics;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
-    // this.scale = 1;
     this.disInteractive();
   }
 
@@ -40,7 +39,7 @@ export class MineCarPanel extends BasePanel {
     const w = this.scene.cameras.main.width / this.scale;
     const h = this.scene.cameras.main.height / this.scale;
     super.resize(width, height);
-    const zoom = this.mWorld.uiScale;
+    const zoom = 1;
     this.setSize(w, h);
     this.mBackGround.clear();
     this.mBackGround.fillStyle(0x6AE2FF, 0);
@@ -123,12 +122,12 @@ export class MineCarPanel extends BasePanel {
     this.setSize(w, h);
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
-    const zoom = this.mWorld.uiScale;
+    const zoom = 1;
     this.mBackGround = this.scene.make.graphics(undefined, false);
     this.mBackGround.clear();
     this.mBackGround.fillStyle(0x6AE2FF, 0);
     this.mBackGround.fillRect(0, 0, w, h);
-    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+    this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     this.mBg = this.scene.make
       .image({
         key: this.key,
@@ -250,15 +249,15 @@ export class MineCarPanel extends BasePanel {
       // }
     });
 
-    const frame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png");
+    const btnFrame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png");
     const categoryTableConfig: GridTableConfig = {
       x: -9 * this.dpr * zoom,
       y: -155 * this.dpr * zoom,
       table: {
         width: gridW,
         height: this.categoriesBg.displayHeight,
-        cellWidth: (frame.width + 4 * this.dpr) * zoom,
-        cellHeight: (29 * this.dpr) * zoom,
+        cellWidth: btnFrame.width * zoom + 4 * this.dpr,
+        cellHeight: btnFrame.height * zoom,
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
@@ -650,7 +649,7 @@ class CategorieButton extends TabButton {
     super(scene, key, frame, downFrame, text);
     this.disInteractive();
     this.removeListen();
-    (this.mBackground as Phaser.GameObjects.Image).setOrigin(0);
+    (this.mBackground as Phaser.GameObjects.Image).setOrigin(0, 0);
     if (this.mText) {
       this.mText.setPosition(this.mBackground.width / 2, this.mBackground.height / 2);
     }
