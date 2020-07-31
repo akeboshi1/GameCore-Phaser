@@ -53,6 +53,9 @@ export class LoadingScene extends BasicScene {
 
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;
+    const rect = this.add.graphics();
+    rect.fillStyle(0);
+    rect.fillRect(0, 0, width, height);
     // 手动把json配置中的frames给予anims
     this.anims.create({
       key: "grass_anis",
@@ -76,7 +79,6 @@ export class LoadingScene extends BasicScene {
 
     this.bg = this.add.sprite(width * 0.5, 0, "loading").setScale(this.mWorld.uiScale);
     this.bg.play("loading_anis");
-
     this.curtain = new Curtain(this, this.mWorld);
     // this.curtain.open().then(() => {
     // this.bg.x = 0;
@@ -100,8 +102,8 @@ export class LoadingScene extends BasicScene {
     if (!this.curtain) {
       return Promise.resolve();
     }
-    this.bg.visible = false;
-    this.grass.visible = false;
+    if (this.bg) this.bg.visible = false;
+    if (this.grass) this.grass.visible = false;
     return this.curtain.open();
   }
 
@@ -109,20 +111,20 @@ export class LoadingScene extends BasicScene {
     if (!this.curtain) {
       return;
     }
-    this.bg.visible = false;
-    this.grass.visible = false;
+    if (this.bg) this.bg.visible = false;
+    if (this.grass) this.grass.visible = false;
     return this.curtain.close();
   }
 
   public awake(data?: any) {
-      this.scale.on("resize", this.checkSize, this);
-      this.scene.wake();
+    this.scale.on("resize", this.checkSize, this);
+    this.scene.wake();
   }
 
   public sleep() {
     if (this.curtain) {
-      this.bg.visible = false;
-      this.grass.visible = false;
+      if (this.bg) this.bg.visible = false;
+      if (this.grass) this.grass.visible = false;
       this.curtain.close().then(() => {
         this.scale.off("resize", this.checkSize, this);
         this.scene.sleep();
@@ -139,11 +141,14 @@ export class LoadingScene extends BasicScene {
 
   private checkSize(size: Size) {
     const { width, height } = size;
-    this.grass.x = width * 0.5;
-    this.grass.y = height;
-
-    // this.bg.x = 0; // + this.bg.width * this.bg.originX;
-    this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY ;
+    if (this.grass) {
+      this.grass.x = width * 0.5;
+      this.grass.y = height;
+    }
+    if (this.bg) {
+      // this.bg.x = 0; // + this.bg.width * this.bg.originX;
+      this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY;
+    }
   }
 
   private createFont() {
@@ -187,7 +192,7 @@ class Curtain {
       });
       this.downTween = this.scene.add.tween({
         targets: this.downDisplay,
-        props: {y: height },
+        props: { y: height },
         duration: 1000,
         onComplete: () => {
           this.upDisplay.visible = false;
@@ -214,7 +219,7 @@ class Curtain {
       });
       this.downTween = this.scene.add.tween({
         targets: this.downDisplay,
-        props: {y: height + this.downDisplay.displayHeight },
+        props: { y: height + this.downDisplay.displayHeight },
         duration: 1000,
         onComplete: () => {
           this.downDisplay.visible = false;

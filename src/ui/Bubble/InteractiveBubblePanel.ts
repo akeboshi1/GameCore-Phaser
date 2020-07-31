@@ -16,7 +16,7 @@ export class InteractiveBubblePanel extends BasePanel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
-        this.scale = 1;
+        // this.scale = 1;
     }
 
     resize(width: number, height: number) {

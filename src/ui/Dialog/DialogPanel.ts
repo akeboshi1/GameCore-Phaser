@@ -18,7 +18,7 @@ export class DialogPanel extends BasePanel {
     private bg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
     resize(w: number, h: number) {
         const width = this.scaleWidth;
@@ -36,7 +36,7 @@ export class DialogPanel extends BasePanel {
         this.bg.scaleX = scaleRatio * 1.5;
         this.bg.x = 0;
         this.bg.setInteractive();
-        this.bg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
 
     preload() {
@@ -71,7 +71,7 @@ export class DialogPanel extends BasePanel {
         this.content.setSize(width, cheight);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "menu_bg_l" });
         this.bg.scaleY = this.scale;
-        this.bg.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.bg.displayWidth = width;
         this.bg.displayHeight = cheight;
         const whiteGraphic = this.scene.make.graphics(undefined, false);
