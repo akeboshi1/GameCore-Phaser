@@ -15,12 +15,14 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     private storeCountText: Phaser.GameObjects.Text;
     private newStoreBtn: Button;
     private gridtable: GameGridTable;
+    private storelimitText: Phaser.GameObjects.Text;
     private dpr: number;
     private key: string;
     private zoom: number;
     private takeAllHandler: Handler;
     private goOutHandler: Handler;
     private newStoreHandler: Handler;
+    private isCanNewCreate: boolean = false;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -30,8 +32,11 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setMyStoreData(datas: op_client.IEditModeRoom[]) {
+    public setMyStoreData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
+        const datas = content.storeList;
+        this.storelimitText.text = i18n.t("business_street.store_limit") + ":" + `${datas.length}/${content.storeLimit}`;
         this.gridtable.setItems(datas);
+        this.isCanNewCreate = datas.length < content.storeLimit;
     }
 
     public setHandler(takeAll: Handler, goOut: Handler, newStore: Handler) {
@@ -59,13 +64,17 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         const gridWdith = this.width;
         const gridHeight = this.height - 80 * this.dpr;
         const gridY = posy + 33 * this.dpr + gridHeight * 0.5;
-        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 75 * this.dpr);
+        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 87 * this.dpr);
 
         this.newStoreBtn = new Button(this.scene, this.key, "new_store", "new_store");
         const btnX = -posx - this.newStoreBtn.width * 0.5 - 20 * this.dpr;
         this.newStoreBtn.setPosition(btnX, posy + 6 * this.dpr);
         this.newStoreBtn.on(CoreUI.MouseEvent.Tap, this.onNewStoreHandler, this);
         this.add(this.newStoreBtn);
+
+        this.storelimitText = this.scene.make.text({ x: btnX - this.newStoreBtn.width * 0.5 - 10 * this.dpr, y: posy + 5 * this.dpr, text: "store limit", style: { color: "#0", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(1, 0.5);
+        this.add(this.storelimitText);
+
         this.storeCountText = this.scene.make.text({ x: btnX + this.newStoreBtn.width * 0.5 + 20 * this.dpr, y: posy, text: "", style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(1, 0);
         this.add(this.storeCountText);
 
@@ -138,6 +147,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     }
 
     private onNewStoreHandler() {
+        if (!this.isCanNewCreate) return;
         if (this.newStoreHandler) this.newStoreHandler.run();
     }
 }
@@ -162,7 +172,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         const posx = -this.width * 0.5;
         const posy = -this.height * 0.5;
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, 68 * dpr, this.key, "resturant_bg", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, 80 * dpr, this.key, "resturant_bg", {
             left: 4 * this.dpr,
             top: 9 * this.dpr,
             right: 4 * this.dpr,
@@ -170,7 +180,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         });
         this.add(this.bg);
         const iconbg = this.scene.make.image({ key, frame: "store_icon_bg" });
-        iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
+        iconbg.setPosition(posx + iconbg.width * 0.5 + 10 * dpr, 0);
         this.add(iconbg);
         this.storeIcon = new DynamicImage(this.scene, iconbg.x, 0);
         this.add(this.storeIcon);
@@ -179,13 +189,13 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.lvimgCon = this.scene.make.container(undefined, false);
         this.lvimgCon.height = 14 * dpr;
-        this.lvimgCon.setPosition(storeX + 6 * dpr, this.storeName.y + this.storeName.height + this.lvimgCon.height * 0.5 + 3 * dpr);
+        this.lvimgCon.setPosition(storeX + 6 * dpr, this.storeName.y + this.storeName.height + this.lvimgCon.height * 0.5 + 2 * dpr);
         this.add(this.lvimgCon);
-        this.savings = this.scene.make.text({ x: storeX, y: this.lvimgCon.y + this.lvimgCon.height * 0.5 + 3 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.savings = this.scene.make.text({ x: storeX, y: this.lvimgCon.y + this.lvimgCon.height * 0.5 + 2 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.savings);
-        this.competitiveness = this.scene.make.text({ x: storeX, y: this.savings.y + this.savings.height + 3 * dpr, text: "Competitiveness: 13000", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.competitiveness = this.scene.make.text({ x: storeX, y: this.savings.y + this.savings.height + 2 * dpr, text: "Competitiveness: 13000", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.competitiveness);
-        this.prosperity = this.scene.make.text({ x: storeX, y: this.competitiveness.y + this.competitiveness.height + 3 * dpr, text: "Prosperity: +13000 / Day", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.prosperity = this.scene.make.text({ x: storeX, y: this.competitiveness.y + this.competitiveness.height + 2 * dpr, text: "Prosperity: +13000 / Day", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.prosperity);
         this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;

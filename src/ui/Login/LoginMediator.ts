@@ -59,13 +59,13 @@ export class LoginMediator extends BaseMediator {
                 const data = response.data;
                 this.world.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                // this.enterGame(true);
-                if (data.hasIdentityInfo) {
-                    this.enterGame(data.adult);
-                } else {
-                    (<LoginPanel>this.mView).setInputVisible(false);
-                    this.onShowVerified();
-                }
+                this.enterGame(true);
+                // if (data.hasIdentityInfo) {
+                //     this.enterGame(data.adult);
+                // } else {
+                //     (<LoginPanel>this.mView).setInputVisible(false);
+                //     this.onShowVerified();
+                // }
             }
         });
     }

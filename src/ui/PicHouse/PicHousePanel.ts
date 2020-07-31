@@ -10,12 +10,14 @@ import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButto
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { PicHouseInfoPanel } from "./PicHouseInfoPanel";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 export class PicHousePanel extends BasePanel {
     private readonly key = "pichousepanel";
     private content: Phaser.GameObjects.Container;
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
     private editorRoomBtn: NineSliceButton;
+    private closeShopBtn: NineSliceButton;
     private closeBtn: Phaser.GameObjects.Image;
     private roomInfoBtn: TabButton;
     private roomSettingBtn: TabButton;
@@ -78,6 +80,22 @@ export class PicHousePanel extends BasePanel {
     public setRoomInfoData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, isSelf: boolean = true) {
         this.mRoomInfoData = content;
         if (!this.mInitialized) return;
+        const bgwidth = 295 * this.dpr;
+        let bgheight = 370 * this.dpr;
+        if (content.roomType === "store") {
+            bgheight = 452 * this.dpr;
+            this.content.setSize(bgwidth, bgheight);
+            this.bg.resize(bgwidth, bgheight);
+            this.closeShopBtn.visible = true;
+            this.roomInfoBtn.y = -this.content.height * 0.5 - this.roomInfoBtn.height * 0.5 + 5 * this.dpr;
+            this.roomSettingBtn.y = this.roomInfoBtn.y;
+            this.closeBtn.y = -this.bg.height * 0.5 + this.dpr * 5;
+            this.editorRoomBtn.y = this.content.height * 0.5 - 30 * this.dpr;
+            this.houseInfoPanel.y = -this.content.height * 0.5 + this.houseInfoPanel.height * 0.5 + 30 * this.dpr;
+            this.closeShopBtn.on(CoreUI.MouseEvent.Tap, this.onCloseShopHandler, this);
+        } else {
+            this.closeShopBtn.visible = false;
+        }
         this.houseInfoPanel.setAttributeData(content);
         this.roomSettingBtn.visible = isSelf;
         this.editorRoomBtn.visible = isSelf;
@@ -113,14 +131,30 @@ export class PicHousePanel extends BasePanel {
         this.content.add([this.closeBtn]);
         this.roomInfoBtn = this.createTabButton(i18n.t("room_info.infobtn"), "small_information");
         this.roomSettingBtn = this.createTabButton(i18n.t("room_info.setting"), "small_setting");
-        this.roomInfoBtn.setPosition(-this.roomInfoBtn.width * 0.5 - 2 * this.dpr, -this.content.height * 0.5 - this.roomInfoBtn.height * 0.5 + 2 * this.dpr);
+        this.roomInfoBtn.setPosition(-this.roomInfoBtn.width * 0.5 - 2 * this.dpr, -this.content.height * 0.5 - this.roomInfoBtn.height * 0.5 + 3 * this.dpr);
         this.roomSettingBtn.setPosition(this.roomSettingBtn.width * 0.5 + 2 * this.dpr, this.roomInfoBtn.y);
         this.topCheckBox = new CheckboxGroup();
         this.topCheckBox.appendItemAll([this.roomInfoBtn, this.roomSettingBtn]);
         this.topCheckBox.on("selected", this.onTabBtnHandler, this);
         this.content.add([this.roomInfoBtn, this.roomSettingBtn]);
         this.houseInfoPanel = new PicHouseInfoPanel(this.scene, 0, 0, this.content.width - 40 * this.dpr, this.content.height - 70 * this.dpr, this.key, this.dpr);
+        this.houseInfoPanel.y = -this.content.height * 0.5 + this.houseInfoPanel.height * 0.5 + 30 * this.dpr;
         this.content.add(this.houseInfoPanel);
+        this.closeShopBtn = new NineSliceButton(this.scene, 0, this.houseInfoPanel.height - 30 * this.dpr, 94 * this.dpr, 29 * this.dpr, this.key, "close_shop", i18n.t("room_info.closeshop"), this.dpr, this.scale, {
+            left: 14 * this.dpr,
+            top: 0 * this.dpr,
+            right: 14 * this.dpr,
+            bottom: 0 * this.dpr
+        });
+        this.closeShopBtn.setTextStyle({
+            color: "#C12914",
+            fontSize: 12 * this.dpr,
+            fontFamily: Font.BOLD_FONT
+        });
+        const shopBtnY = this.houseInfoPanel.y + this.houseInfoPanel.height * 0.5 + this.closeShopBtn.height * 0.5 + 20 * this.dpr;
+        this.closeShopBtn.y = shopBtnY;
+        this.houseInfoPanel.add(this.closeShopBtn);
+
         const btnY = this.content.height * 0.5;
         this.editorRoomBtn = new NineSliceButton(this.scene, 0, btnY - 30 * this.dpr, 100 * this.dpr, 35 * this.dpr, UIAtlasKey.commonKey, "button_g", i18n.t("room_info.editorroom"), this.dpr, this.scale, {
             left: 16 * this.dpr,
@@ -164,7 +198,7 @@ export class PicHousePanel extends BasePanel {
 
     private createTabButton(text: string, icon: string) {
         const btn = new TabButton(this.scene, this.key, "default tab", "check tab", text);
-        btn.setTextStyle({ fontFamily: Font.BOLD_FONT, fontSize: 9 * this.dpr, color: "#ffffff" });
+        btn.setTextStyle({ fontFamily: Font.BOLD_FONT, fontSize: 12 * this.dpr, color: "#ffffff" });
         btn.setTextOffset(13 * this.dpr, 0);
         const img = this.scene.make.image({ key: this.key, frame: icon });
         btn.add(img);
@@ -172,6 +206,9 @@ export class PicHousePanel extends BasePanel {
         return btn;
     }
 
+    private onCloseShopHandler() {
+        this.emit("closeshop", this.mRoomInfoData);
+    }
     private onCloseHandler() {
         this.emit("hide");
     }

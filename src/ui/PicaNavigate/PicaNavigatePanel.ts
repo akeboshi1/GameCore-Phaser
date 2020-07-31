@@ -143,7 +143,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.emit("goHome");
   }
   private onShowTestHandler() {
-    this.emit("showPanel", "PicBusinessStreet");
+    this.emit("showPanel", "PicBusinessMarketingPlan");
   }
   private onCloseHandler() {
     this.emit("close");

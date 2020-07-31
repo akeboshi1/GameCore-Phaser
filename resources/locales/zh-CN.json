@@ -111,7 +111,8 @@
     "popvalue": "热度",
     "goodvalue": "点赞",
     "compveness": "排名",
-    "prosperity": "装饰值"
+    "prosperity": "装饰值",
+    "closeshop": "关闭商店"
   },
   "business_street": {
     "commercial_street": "商业街",
@@ -130,6 +131,7 @@
     "rank_reward": "排行榜奖励",
     "savings": "存款金额",
     "competitiveness": "竞争力",
-    "prosperity": "繁华度"
+    "prosperity": "繁华度",
+    "store_limit": "店铺限制"
   }
 }
