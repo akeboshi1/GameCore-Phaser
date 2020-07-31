@@ -36,7 +36,6 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-
     public setPlanData() {
         const arr = new Array(60);
         this.gridtable.setItems(arr);

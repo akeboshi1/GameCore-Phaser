@@ -49,12 +49,13 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     protected create() {
         const posy = -this.height * 0.5;
         const topWid = 253 * this.dpr, topHei = 73 * this.dpr;
-        const topbg = new NineSlicePatch(this.scene, 0, posy + topHei * 0.5 + 20 * this.dpr, topWid, topHei, this.key, "market_b", {
-            left: 13 * this.dpr,
+        const topbg = new NineSlicePatch(this.scene, 0, 0, topWid, topHei, this.key, "market_b", {
+            left: 6 * this.dpr,
             top: 0 * this.dpr,
-            right: 13 * this.dpr,
+            right: 6 * this.dpr,
             bottom: 0 * this.dpr
         });
+        topbg.y = posy + topHei * 0.5 + 20 * this.dpr;
         this.add(topbg);
         this.describleText = this.scene.make.text({ x: 0, y: topbg.y, text: "This industry has great development potential.", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5);
         this.add(this.describleText);
@@ -67,17 +68,16 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
             bottom: 0 * this.dpr
         });
         titlebg.x = 0;
-        titlebg.y = posy + 10 * this.dpr;
+        titlebg.y = topbg.y + topbg.height * 0.5 + 20 * this.dpr;
         this.add(titlebg);
-        const title = this.scene.make.text({ x: 0, y: titlebg.y, text: i18n.t("business_street.choosetheindustry"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5);
+        const title = this.scene.make.text({ x: 0, y: titlebg.y, text: i18n.t("business_street.marketing_plan"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5);
         this.add(title);
-        title.text = i18n.t("business_street.choosetheindustry");
         titlebg.resize(135 * this.dpr, 17 * this.dpr);
 
         const gridWdith = this.width - 24 * this.dpr;
-        const gridHeight = 100 * this.dpr;
-        const gridY = -50 * this.dpr;
-        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 253 * this.dpr, 53 * this.dpr);
+        const gridHeight = 220 * this.dpr;
+        const gridY = titlebg.y + titlebg.height * 0.5 + 20 * this.dpr + gridHeight * 0.5;
+        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 253 * this.dpr, 63 * this.dpr);
 
         const cancelBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("common.cancel"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
@@ -176,9 +176,9 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         this.key = key;
         this.setSize(width, height);
         this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, this.key, "no_plan_bg", {
-            left: 13 * this.dpr,
+            left: 6 * this.dpr,
             top: 0 * this.dpr,
-            right: 13 * this.dpr,
+            right: 6 * this.dpr,
             bottom: 0 * this.dpr
         });
         this.add(this.bg);

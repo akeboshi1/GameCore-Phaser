@@ -12,8 +12,6 @@ import { PicBusinessRankingPanel } from "./PicBusinessRankingPanel";
 import { PicBusinessRankingDetailPanel } from "./PicBusinessRankingDetailPanel";
 import { PicBusinessRankRewardPanel } from "./PicBusinessRankRewardPanel";
 import { i18n } from "../../i18n";
-import { PicBusinessMarketingPlanPanel } from "./PicBusinessMarketingPlanPanel";
-import { PicBusinessChoosePlanPanel } from "./PicBusinessChoosePlanPanel";
 export default class PicBusinessStreetPanel extends BasePanel {
     private key = "c_street_1";
     private key2 = "c_street_2";
@@ -27,8 +25,6 @@ export default class PicBusinessStreetPanel extends BasePanel {
     private picStreetRankingPanel: PicBusinessRankingPanel;
     private picRankingDetailPanel: PicBusinessRankingDetailPanel;
     private picRankRewardPanel: PicBusinessRankRewardPanel;
-    private picMarketingPlanPanel: PicBusinessMarketingPlanPanel;
-    private picChoosePlanPanel: PicBusinessChoosePlanPanel;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -164,11 +160,6 @@ export default class PicBusinessStreetPanel extends BasePanel {
     private openRankRewardPanel() {
         this.showRankRewardPanel();
         this.picRankRewardPanel.setRankRewardData();
-    }
-
-    private openMarketingPlanPanel() {
-        this.showMarketingPlanPanel();
-        this.picMarketingPlanPanel.setPlanData();
     }
 
     private showMyStreetPanel() {
@@ -372,53 +363,6 @@ export default class PicBusinessStreetPanel extends BasePanel {
 
     private hideRankRewardPanel() {
         this.content.remove(this.picRankRewardPanel);
-    }
-
-    private showMarketingPlanPanel() {
-        const topoffset = 90 * this.dpr;
-        const bottomoffset = 74 * this.dpr;
-        this.setContentSize(topoffset, bottomoffset);
-        if (!this.picMarketingPlanPanel) {
-            const wid = this.content.width;
-            const hei = this.content.height - 50 * this.dpr;
-            this.picMarketingPlanPanel = new PicBusinessMarketingPlanPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key);
-            this.picMarketingPlanPanel.setHandler(new Handler(this, () => {
-                this.hideMarketingPlanPanel();
-
-            }), new Handler(this, () => {
-
-            }));
-        }
-        this.content.add(this.picMarketingPlanPanel);
-        this.picMarketingPlanPanel.resetMask();
-    }
-
-    private hideMarketingPlanPanel() {
-        this.content.remove(this.picMarketingPlanPanel);
-    }
-
-
-    private showChoosePlanPanel() {
-        const topoffset = 90 * this.dpr;
-        const bottomoffset = 74 * this.dpr;
-        this.setContentSize(topoffset, bottomoffset);
-        if (!this.picChoosePlanPanel) {
-            const wid = this.content.width;
-            const hei = this.content.height - 50 * this.dpr;
-            this.picChoosePlanPanel = new PicBusinessChoosePlanPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key);
-            this.picChoosePlanPanel.setHandler(new Handler(this, () => {
-                this.hideMarketingPlanPanel();
-
-            }), new Handler(this, () => {
-
-            }));
-        }
-        this.content.add(this.picChoosePlanPanel);
-        this.picMarketingPlanPanel.resetMask();
-    }
-
-    private hideChoosePlanPanel() {
-        this.content.remove(this.picChoosePlanPanel);
     }
 
     private setContentSize(topoffset: number, bottomoffset: number) {
