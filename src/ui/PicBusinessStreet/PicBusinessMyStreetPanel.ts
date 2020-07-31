@@ -216,7 +216,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         const industry = data.industry;
         const storeType = data.storeType;
         this.bg.setFrame(industry + "_bg");
-        this.storeIcon.setFrame(storeType + "_icon");
+        this.storeIcon.setTexture(this.key, storeType + "_icon");
         this.storeName.text = data.name;
         this.lvimgCon.removeAll(true);
         this.setImageInfo(UIAtlasKey.common2Key, this.getLevelImgs(data.roomLevel.level));
