@@ -199,9 +199,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void {}
+    onDisConnected(connection?: SocketConnection): void { }
 
-    onError(reason: SocketConnectionError | undefined): void {}
+    onError(reason: SocketConnectionError | undefined): void { }
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;

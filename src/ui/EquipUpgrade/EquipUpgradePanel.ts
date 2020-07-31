@@ -20,7 +20,7 @@ export default class EquipUpgradePanel extends BasePanel {
     private content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
     resize(width: number, height: number) {
         const w: number = this.scene.cameras.main.width / this.scale;

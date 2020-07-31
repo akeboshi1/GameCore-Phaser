@@ -53,7 +53,7 @@ export class CreateRolePanel extends BasePanel {
 
   resize(wid: number, hei: number) {
     const size = this.mWorld.getSize();
-    this.setSize(size.width, size.height);
+    this.setSize(this.scaleWidth, this.scaleHeight);
     if (!this.mBackground) {
       return;
     }
@@ -213,7 +213,7 @@ export class CreateRolePanel extends BasePanel {
     this.add([this.mErrorBg, this.mError]);
 
     this.dragonbones = new DragonbonesDisplay(this.scene, undefined, undefined, true);
-    this.dragonbones.scale = this.dpr*2;
+    this.dragonbones.scale = this.dpr * 2;
     this.dragonbones.x = size.width >> 1;
     this.dragonbones.y = this.mNextPageBtn.y + 70 * this.dpr;
     // this.dragonbones.y = 286 * this.dpr;
