@@ -59,7 +59,7 @@ export class LoginPanel extends BasePanel {
         const scale = this.scale;
 
         const backgroundColor = this.scene.make.graphics(undefined, false);
-        backgroundColor.fillRect(0, 0, width * scale, height * scale);
+        backgroundColor.fillRect(0, 0, width, height);
         backgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x01cdff, 0x01cdff);
 
         const cloudLeft = this.scene.make.image({

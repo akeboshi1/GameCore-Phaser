@@ -55,16 +55,15 @@ export class FurniBagPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
-    // this.scale = 1;
+    this.scale = 1;
     this.setInteractive();
   }
 
   resize(w: number, h: number) {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
-    this.setSize(width, height);
-    // super.resize(width, height);
-    const zoom = 1;
+    super.resize(width, height);
+    const zoom = this.mWorld.uiScale;
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width, height);
@@ -99,15 +98,18 @@ export class FurniBagPanel extends BasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
+    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 160 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
+    this.mPropGrid.resetMask();
     // this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
+    this.setSize(width, height);
   }
 
   setCategories(subcategorys: op_def.IStrPair[]) {
     // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
-    const zoom = 1;
-    const capW = 70 * this.dpr * zoom;
+    const zoom = this.mWorld.uiScale;
+    const capW = 60 * this.dpr * zoom;
     const capH = 41 * this.dpr * zoom;
     const items = [];
     if (this.mSeachInput.parentContainer)
@@ -129,15 +131,9 @@ export class FurniBagPanel extends BasePanel {
       item.setFontSize(17 * this.dpr * zoom);
       item.setFontStyle("bold");
     }
-    this.mCategoryScroll.Sort();
-    this.mCategoryScroll.x = this.scaleWidth / 2;
-    this.mCategoryScroll.y = this.mShelfContainer.y + 20 * this.dpr * zoom;
-    this.mCategoryScroll.refreshMask();
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
-    this.mPropGrid.layout();
-    this.mPropGrid.x = this.scaleWidth < this.scene.cameras.main.width ? this.scene.cameras.main.width / 2 : this.scaleWidth / 2;
-    this.mPropGrid.y = this.mShelfContainer.y + 175 * this.dpr * zoom;
-    this.mPropGrid.resetMask();
+    // this.mSeachInput.x = capW - this.mSeachInput.width / 2;
+    // this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 10 * this.dpr * zoom);
     this.updateCategeoriesLoc(false);
   }
 
@@ -150,10 +146,6 @@ export class FurniBagPanel extends BasePanel {
       props = props.concat(new Array(24 - len));
     }
     this.mPropGrid.setItems(props);
-    this.mPropGrid.layout();
-    this.mPropGrid.x = this.scaleWidth / 2;
-    this.mPropGrid.y = this.mShelfContainer.y + 175 * this.dpr;
-    this.mPropGrid.resetMask();
     if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
       this.mSelectedItemData.length = 0;
       const cell = this.mPropGrid.getCell(0);
@@ -264,12 +256,12 @@ export class FurniBagPanel extends BasePanel {
     const width = this.scene.cameras.main.width;
     const height = this.scene.cameras.main.height;
     this.mBackground = this.scene.make.graphics(undefined, false);
-    const zoom = 1;
+    const zoom = this.mWorld.uiScale;
 
     this.mBg = this.scene.make.image({
       key: this.key,
       frame: "bg"
-    }, false);
+    }, false).setScale(zoom);
 
     this.mShelfContainer = this.scene.make.container(undefined, false);
     this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
@@ -313,9 +305,9 @@ export class FurniBagPanel extends BasePanel {
     const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
     let w = this.scene.cameras.main.width + inputWid;
     this.mCategoryScroll = new GameScroller(this.scene, {
-      x: (w / zoom) * .5,
+      x: w * .5,
       y: this.mShelfContainer.y + 20 * this.dpr * zoom,
-      width: this.scaleWidth,
+      width: this.scene.cameras.main.width,
       height: 41 * this.dpr * zoom,
       zoom: this.scale,
       orientation: 1,
@@ -373,16 +365,16 @@ export class FurniBagPanel extends BasePanel {
     } else {
       this.topCheckBox.selectIndex(0);
     }
-    const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
-    const capW = (propFrame.width * zoom + 2 * this.dpr);
-    const capH = (propFrame.height * zoom + 2 * this.dpr);
+    const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
+    const capW = (propFrame.width + 10 * this.dpr) * zoom;
+    const capH = (propFrame.height + 10 * this.dpr) * zoom;
     w = this.scene.cameras.main.width + 35 * this.dpr * zoom + inputWid;
     const tableConfig: GridTableConfig = {
-      x: this.scaleWidth / 2,
+      x: 0,
       y: 0,
       table: {
-        width: this.scaleWidth - 15 * this.dpr * this.scale,
-        height: 255 * this.dpr * zoom,
+        width: this.scene.cameras.main.width - 16 * this.dpr * zoom,
+        height: 260 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
@@ -390,7 +382,7 @@ export class FurniBagPanel extends BasePanel {
         cellOriginX: 0,
         cellOriginY: 0,
         zoom: this.scale,
-        // cellPadX: 10 * this.dpr * zoom,
+        cellPadX: 10 * this.dpr * zoom
       },
       scrollMode: 1,
       clamplChildOY: false,
@@ -643,7 +635,7 @@ export class FurniBagPanel extends BasePanel {
     const width = this.scaleWidth;
     this.mSelectedItemData.length = 0;
     // this.mDetailDisplay.setTexture(this.key, "ghost");
-    // this.mDetailDisplay.setLINEAR();
+    // this.mDetailDisplay.setNearest();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
@@ -1037,35 +1029,34 @@ class Item extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
     this.dpr = dpr;
-    this.zoom = zoom < 1 ? 1 : zoom;
+    this.zoom = zoom;
     const background = scene.make.image({
       key,
       frame: "grid_bg"
-    }, false).setOrigin(0).setScale(this.zoom);
+    }, false).setOrigin(0).setScale(zoom);
     this.setSize(background.displayWidth, background.displayHeight);
     this.selectbg = scene.make.image({
       key,
       frame: "grid_choose"
-    }, false).setOrigin(0).setScale(this.zoom).setPosition(-2 * dpr * this.zoom, -2 * dpr * this.zoom);
+    }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
     this.selectIcon = scene.make.image({
       key,
       frame: "selected"
-    }, false).setOrigin(1).setScale(this.zoom).setPosition(this.width, this.height);
+    }, false).setOrigin(1).setScale(zoom).setPosition(this.width, this.height);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
-    this.mPropImage.scale = dpr * this.zoom;
+    this.mPropImage.scale = dpr * zoom;
 
     this.mCounter = scene.make.text({
       x: this.width - 4 * dpr,
       y: this.height + 2 * dpr,
       style: {
-        fontSize: 12 * dpr * this.zoom,
+        fontSize: 12 * dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
     this.add([background, this.selectbg, this.selectIcon]);
     this.isSelect = false;
     this.isEquip = false;
-
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
     // this.on("pointerup", this.onSelectedHandler, this);
   }
@@ -1099,7 +1090,7 @@ class Item extends Phaser.GameObjects.Container {
       this.mPropImage.displayHeight = 45 * this.dpr;
       this.mPropImage.scaleX = this.mPropImage.scaleY;
       if (texture) {
-        texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
     }
   }
@@ -1282,7 +1273,7 @@ class ItemsPopPanel extends Phaser.GameObjects.Container {
     if (this.icon && this.icon.texture) {
       const texture = this.icon.texture;
       if (texture) {
-        texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
     }
   }
