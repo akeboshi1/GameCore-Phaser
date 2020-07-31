@@ -1,4 +1,5 @@
 import * as Chance from "chance";
+import { Logger } from "./log";
 
 export default class Helpers {
     static readonly MAX_ID: number = Math.pow(2, 31);
@@ -23,5 +24,10 @@ export default class Helpers {
             }
         }
         return result;
+    }
+
+    static openUrl(url: string) {
+        const tempwindow = window.open("", "_blank"); // 先打开页面
+        if (tempwindow) tempwindow.location.href = url; // 后更改页面地址
     }
 }

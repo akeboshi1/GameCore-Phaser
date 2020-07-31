@@ -64,7 +64,7 @@ export class FurniBagPanel extends BasePanel {
     const height = this.scaleHeight;
     this.setSize(width, height);
     // super.resize(width, height);
-    const zoom = this.scale;
+    const zoom = 1;
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width, height);
@@ -106,8 +106,8 @@ export class FurniBagPanel extends BasePanel {
     // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
-    const zoom = this.mWorld.uiScale;
-    const capW = 60 * this.dpr * zoom;
+    const zoom = 1;
+    const capW = 70 * this.dpr * zoom;
     const capH = 41 * this.dpr * zoom;
     const items = [];
     if (this.mSeachInput.parentContainer)
@@ -129,12 +129,14 @@ export class FurniBagPanel extends BasePanel {
       item.setFontSize(17 * this.dpr * zoom);
       item.setFontStyle("bold");
     }
+    this.mCategoryScroll.Sort();
+    this.mCategoryScroll.x = this.scaleWidth / 2;
     this.mCategoryScroll.y = this.mShelfContainer.y + 20 * this.dpr * zoom;
     this.mCategoryScroll.refreshMask();
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
-    this.mPropGrid.x = this.scaleWidth / 2;
-    this.mPropGrid.y = this.mShelfContainer.y + 175 * this.dpr * zoom;
     this.mPropGrid.layout();
+    this.mPropGrid.x = this.scaleWidth < this.scene.cameras.main.width ? this.scene.cameras.main.width / 2 : this.scaleWidth / 2;
+    this.mPropGrid.y = this.mShelfContainer.y + 175 * this.dpr * zoom;
     this.mPropGrid.resetMask();
     this.updateCategeoriesLoc(false);
   }
@@ -148,6 +150,10 @@ export class FurniBagPanel extends BasePanel {
       props = props.concat(new Array(24 - len));
     }
     this.mPropGrid.setItems(props);
+    this.mPropGrid.layout();
+    this.mPropGrid.x = this.scaleWidth / 2;
+    this.mPropGrid.y = this.mShelfContainer.y + 175 * this.dpr;
+    this.mPropGrid.resetMask();
     if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
       this.mSelectedItemData.length = 0;
       const cell = this.mPropGrid.getCell(0);
@@ -258,7 +264,7 @@ export class FurniBagPanel extends BasePanel {
     const width = this.scene.cameras.main.width;
     const height = this.scene.cameras.main.height;
     this.mBackground = this.scene.make.graphics(undefined, false);
-    const zoom = this.scale;
+    const zoom = 1;
 
     this.mBg = this.scene.make.image({
       key: this.key,
@@ -375,7 +381,7 @@ export class FurniBagPanel extends BasePanel {
       x: this.scaleWidth / 2,
       y: 0,
       table: {
-        width: (this.scene.cameras.main.width - 20) / zoom,
+        width: this.scaleWidth - 15 * this.dpr * this.scale,
         height: 255 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
@@ -383,7 +389,7 @@ export class FurniBagPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom,
+        zoom: this.scale,
         // cellPadX: 10 * this.dpr * zoom,
       },
       scrollMode: 1,
@@ -1031,34 +1037,35 @@ class Item extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
     this.dpr = dpr;
-    this.zoom = zoom;
+    this.zoom = zoom < 1 ? 1 : zoom;
     const background = scene.make.image({
       key,
       frame: "grid_bg"
-    }, false).setOrigin(0).setScale(zoom);
-    this.setSize(background.width, background.height);
+    }, false).setOrigin(0).setScale(this.zoom);
+    this.setSize(background.displayWidth, background.displayHeight);
     this.selectbg = scene.make.image({
       key,
       frame: "grid_choose"
-    }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
+    }, false).setOrigin(0).setScale(this.zoom).setPosition(-2 * dpr * this.zoom, -2 * dpr * this.zoom);
     this.selectIcon = scene.make.image({
       key,
       frame: "selected"
-    }, false).setOrigin(1).setScale(zoom).setPosition(this.width, this.height);
+    }, false).setOrigin(1).setScale(this.zoom).setPosition(this.width, this.height);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
-    this.mPropImage.scale = dpr * zoom;
+    this.mPropImage.scale = dpr * this.zoom;
 
     this.mCounter = scene.make.text({
       x: this.width - 4 * dpr,
       y: this.height + 2 * dpr,
       style: {
-        fontSize: 12 * dpr * zoom,
+        fontSize: 12 * dpr * this.zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
     this.add([background, this.selectbg, this.selectIcon]);
     this.isSelect = false;
     this.isEquip = false;
+
     // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
     // this.on("pointerup", this.onSelectedHandler, this);
   }

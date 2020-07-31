@@ -64,11 +64,11 @@ export class DecoratePanel extends BasePanel {
         if (this.mExtendBtn) this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.register();
-            this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
+            this.mMoveMenuContainer.on("tap", this.onMoveHandler, this);
         }
         if (this.mRepeatMenuContainer) {
             this.mRepeatMenuContainer.register();
-            this.mRepeatMenuContainer.on("move", this.onRepeatHandler, this);
+            this.mRepeatMenuContainer.on("tap", this.onRepeatHandler, this);
             this.mRepeatMenuContainer.on("hold", this.onHoldRepeatHandler, this);
         }
     }
@@ -83,11 +83,11 @@ export class DecoratePanel extends BasePanel {
         if (this.mExtendBtn) this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.unRegister();
-            this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
+            this.mMoveMenuContainer.off("tap", this.onMoveHandler, this);
         }
         if (this.mRepeatMenuContainer) {
             this.mRepeatMenuContainer.unRegister();
-            this.mRepeatMenuContainer.off("move", this.onRepeatHandler, this);
+            this.mRepeatMenuContainer.off("tap", this.onRepeatHandler, this);
             this.mRepeatMenuContainer.off("hold", this.onHoldRepeatHandler, this);
         }
     }
@@ -636,10 +636,6 @@ class MoveMenu extends Phaser.GameObjects.Container {
         this.mArrow5.on("Tap", this.onClickHandler, this);
         this.mArrow7.on("Hold", this.onHoldHandler, this);
         this.mArrow7.on("Tap", this.onClickHandler, this);
-        // this.mArrow1.on("pointerup", this.onArrow1Handler, this);
-        // this.mArrow3.on("pointerup", this.onArrow3Handler, this);
-        // this.mArrow5.on("pointerup", this.onArrow5Handler, this);
-        // this.mArrow7.on("pointerup", this.onArrow7Handler, this);
     }
 
     public unRegister() {
@@ -651,26 +647,6 @@ class MoveMenu extends Phaser.GameObjects.Container {
         this.mArrow5.off("Tap", this.onClickHandler, this);
         this.mArrow7.off("Hold", this.onHoldHandler, this);
         this.mArrow7.off("Tap", this.onClickHandler, this);
-        // this.mArrow1.off("pointerup", this.onArrow1Handler, this);
-        // this.mArrow3.off("pointerup", this.onArrow3Handler, this);
-        // this.mArrow5.off("pointerup", this.onArrow5Handler, this);
-        // this.mArrow7.off("pointerup", this.onArrow7Handler, this);
-    }
-
-    private onArrow1Handler(pointer: Phaser.Input.Pointer) {
-        this.emit("move", Direction.north_west);
-    }
-
-    private onArrow3Handler() {
-        this.emit("move", Direction.west_south);
-    }
-
-    private onArrow5Handler() {
-        this.emit("move", Direction.south_east);
-    }
-
-    private onArrow7Handler() {
-        this.emit("move", Direction.east_north);
     }
 
     private onHoldHandler(gameobject) {
@@ -678,6 +654,6 @@ class MoveMenu extends Phaser.GameObjects.Container {
     }
 
     private onClickHandler(pointer, gameobject) {
-        this.emit("move", gameobject.getData("dir"));
+        this.emit("tap", gameobject.getData("dir"));
     }
 }

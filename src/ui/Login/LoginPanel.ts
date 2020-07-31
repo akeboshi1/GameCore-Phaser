@@ -7,6 +7,9 @@ import { Font } from "../../utils/font";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
+import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import Helpers from "../../utils/helpers";
 
 export class LoginPanel extends BasePanel {
     private readonly key = "login";
@@ -14,6 +17,8 @@ export class LoginPanel extends BasePanel {
     private mPhoneInput: InputText;
     private mPhoneCodeInput: InputText;
     private fetchTime: any;
+    private acceptBtn: CheckBox;
+    private loginBtn: NineSliceButton;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -119,7 +124,8 @@ export class LoginPanel extends BasePanel {
             style: {
                 color: "#FFEC48",
                 align: "center",
-                fontSize: 11 * this.dpr
+                fontSize: 11 * this.dpr,
+                fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
         label1.y = height - 50 * this.dpr - label1.height * 0.5;
@@ -130,7 +136,8 @@ export class LoginPanel extends BasePanel {
             style: {
                 color: "#FFFFFF",
                 align: "center",
-                fontSize: 9.33 * this.dpr
+                fontSize: 9.33 * this.dpr,
+                fontFamily: Font.DEFULT_FONT
             }
         }).setOrigin(0.5);
         label2.y = height - 16 * this.dpr - label2.height * 0.5;
@@ -154,20 +161,41 @@ export class LoginPanel extends BasePanel {
         fetchCode.on("pointerup", this.onFetchCodeHandler, this);
         codeContainer.add([line, fetchCode]);
 
-        const login = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
+        this.loginBtn = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
-        login.setTextStyle({
+        this.loginBtn.setTextStyle({
             color: "#995E00",
             fontSize: 22 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        login.setFontStyle("bold");
-        login.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
-        this.add([backgroundColor, bg, cloudLeft, cloudRight, logo, phoneContaier, codeContainer, label1, label2, login]);
+        this.loginBtn.setFontStyle("bold");
+        this.loginBtn.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
+
+        const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=serve][color=#FFEC48]《用户服务协议》[/color][/area]和[area=ABC][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
+            color: "#ffffff",
+            fontSize: 11 * this.dpr,
+            fontFamily: Font.DEFULT_FONT,
+        }).setOrigin(0.5, 0.5).setInteractive().on("areadown", (key) => {
+            if (key === "serve") {
+                // TODO 链接放到环境变量中
+                Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
+            } else {
+                Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
+            }
+        });
+
+        this.acceptBtn = new CheckBox(this.scene, this.key, "accept_unchecked", "accept_checked").on(CoreUI.MouseEvent.Tap, this.onCheckboxHandler, this);
+        label.x = this.loginBtn.x + 8 * this.dpr;
+        label.y = this.loginBtn.y + this.loginBtn.height * 0.5 + 24 * this.dpr;
+
+        this.acceptBtn.x = label.x - label.width * 0.5 - 8 * this.dpr;
+        this.acceptBtn.y = label.y;
+        this.acceptBtn.selected = true;
+        this.add([backgroundColor, bg, cloudLeft, cloudRight, logo, phoneContaier, codeContainer, label1, label2, this.loginBtn, this.acceptBtn, label]);
         this.scene.scene.sleep(LoadingScene.name);
 
         super.init();
@@ -212,5 +240,11 @@ export class LoginPanel extends BasePanel {
             return;
         }
         this.emit("login", phone, code, this.areaCode);
+    }
+
+    private onCheckboxHandler() {
+        if (this.tryLogin) {
+            this.loginBtn.enable = this.acceptBtn.selected;
+        }
     }
 }
