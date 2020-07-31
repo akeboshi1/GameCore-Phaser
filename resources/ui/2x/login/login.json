@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"accept": {
+		"accept_checked": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,9 +20,29 @@
 				"h": 20
 			}
 		},
-		"bg": {
+		"accept_unchecked": {
 			"frame": {
 				"x": 23,
+				"y": 1,
+				"w": 20,
+				"h": 20
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 20,
+				"h": 20
+			},
+			"sourceSize": {
+				"w": 20,
+				"h": 20
+			}
+		},
+		"bg": {
+			"frame": {
+				"x": 45,
 				"y": 1,
 				"w": 720,
 				"h": 1024
@@ -42,7 +62,7 @@
 		},
 		"cloud_left": {
 			"frame": {
-				"x": 745,
+				"x": 767,
 				"y": 1,
 				"w": 252,
 				"h": 145
@@ -62,8 +82,8 @@
 		},
 		"cloud_right": {
 			"frame": {
-				"x": 999,
-				"y": 1,
+				"x": 767,
+				"y": 148,
 				"w": 314,
 				"h": 158
 			},
@@ -82,8 +102,8 @@
 		},
 		"input_bg": {
 			"frame": {
-				"x": 745,
-				"y": 161,
+				"x": 1021,
+				"y": 1,
 				"w": 153,
 				"h": 100
 			},
@@ -102,7 +122,7 @@
 		},
 		"line": {
 			"frame": {
-				"x": 1315,
+				"x": 1176,
 				"y": 1,
 				"w": 2,
 				"h": 56
@@ -122,8 +142,8 @@
 		},
 		"logo": {
 			"frame": {
-				"x": 745,
-				"y": 263,
+				"x": 1180,
+				"y": 1,
 				"w": 575,
 				"h": 298
 			},
@@ -144,10 +164,10 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "login.png",
+		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1321,
+			"w": 1756,
 			"h": 1026
 		},
 		"scale": "1"
