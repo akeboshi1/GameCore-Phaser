@@ -129,6 +129,7 @@ export class MineSettlePanel extends BasePanel {
             }
         });
         this.titleimage = this.scene.make.image({ x: 0, y: -this.bg.displayWidth * 0.5 - 10 * this.dpr, key: this.key, frame: "title" }, false);
+        this.titleimage.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.titleName = this.scene.make.text({
             x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("minesettle.settle"),
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
