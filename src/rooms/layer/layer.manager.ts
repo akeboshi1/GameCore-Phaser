@@ -185,7 +185,6 @@ export class LayerManager {
                 // Logger.debug(displayA, displayB);
                 // const sortA = displayA.sortRectangle;
                 // const sortB = displayB.sortRectangle;
-                
                 // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
                 // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
                 // const depthA: number = displayA.depth ? displayA.depth : 0;
