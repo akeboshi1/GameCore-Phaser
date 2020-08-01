@@ -165,9 +165,9 @@ export class LayerManager {
     }
 
     public update(time: number, delta: number) {
-        // if (time - this.mDelta < 3000) {
-        //     return;
-        // }
+        if (time - this.mDelta < 200) {
+            return;
+        }
         this.mDelta = time;
         if (this.mDepthGround) {
             this.mGroundLayer.sort("depth");
@@ -176,20 +176,31 @@ export class LayerManager {
         if (this.mDepthSurface) {
             this.mDepthSurface = false;
             // this.mSurfaceLayer.sort("depth");
+            // for (const display of this.mSurfaceLayer.list) {
+            //     if ((<any> display).element.id ===1787929712 || (<any> display).element.id === 902683971) {
+            //         Logger.getInstance().log("===>> ", (<any> display).element.id);
+            //     }
+            // }
             this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
                 // Logger.debug(displayA, displayB);
                 // const sortA = displayA.sortRectangle;
                 // const sortB = displayB.sortRectangle;
-
+                
                 // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
                 // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
-                const depthA: number = displayA.depth ? displayA.depth : 0;
-                const depthB: number = displayB.depth ? displayB.depth : 0;
-                if (depthA > depthB) {
-                    return 1;
-                }
+                // const depthA: number = displayA.depth ? displayA.depth : 0;
+                // const depthB: number = displayB.depth ? displayB.depth : 0;
+                // if (displayA.element.id === 902683971 || displayA.element.id === 1787929712) {
+                //     Logger.getInstance().log("===》》 element: ", displayA.element, depthA, depthB);
+                // }
+                // if (depthA > depthB) {
+                //     return 1;
+                // }
                 // ---------------根据角度判断深度
                 const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
+                // if ((displayA.element.id === 1787929712 && displayB.element.id === 902683971) || (displayB.element.id === 1787929712 && displayA.element.id === 902683971)) {
+                //     Logger.getInstance().log("===》》angle: ", displayA.element.id, displayB.element.id, displayA.sortX, displayA.sortY, angle, angle * (180 * Math.PI));
+                // }
                 if (angle * (180 * Math.PI) >= 70) {
                     return 1;
                 }

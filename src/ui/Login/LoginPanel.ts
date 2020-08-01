@@ -175,12 +175,12 @@ export class LoginPanel extends BasePanel {
         this.loginBtn.setFontStyle("bold");
         this.loginBtn.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
 
-        const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=serve][color=#FFEC48]《用户服务协议》[/color][/area]和[area=ABC][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
+        const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#FFEC48]《用户服务协议》[/color][/area]和[area=privacy][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
             color: "#ffffff",
             fontSize: 11 * this.dpr,
             fontFamily: Font.DEFULT_FONT,
         }).setOrigin(0.5, 0.5).setInteractive().on("areadown", (key) => {
-            if (key === "serve") {
+            if (key === "userService") {
                 // TODO 链接放到环境变量中
                 Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
             } else {

@@ -104,6 +104,11 @@ export class FramesDisplay extends DisplayObject {
             display.x = x + display.width * 0.5;
             display.y = y + display.height * 0.5;
             container.add(display);
+
+            // const graphics = this.scene.make.graphics(undefined, false);
+            // graphics.fillStyle(0xFF0000);
+            // graphics.fillCircle(0, 0, 10);
+            // this.add(graphics);
         }
         // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
         this.initBaseLoc(DisplayField.STAGE, animation);
