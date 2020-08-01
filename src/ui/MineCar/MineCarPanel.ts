@@ -222,7 +222,7 @@ export class MineCarPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom
+        zoom: this.scale
         // mask: false
       },
       scrollMode: 0,
@@ -261,7 +261,7 @@ export class MineCarPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom
+        zoom: this.scale
         // mask: false
       },
       scrollMode: 1,

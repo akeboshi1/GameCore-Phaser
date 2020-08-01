@@ -36,14 +36,22 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.expvalue.setTextInfo(i18n.t("room_info.expvalue"), expvalue);
         this.popvalue.setImageInfo(i18n.t("room_info.popvalue"), this.key, this.getpopImgs());
         this.goodvalue.setImageInfo(i18n.t("room_info.goodvalue"), this.key, this.getgoodImgs());
-        this.compviness.setTextInfo(i18n.t("room_info.compveness"), "16525");
-        this.prosprity.setTextInfo(i18n.t("room_info.prosperity"), "68");
+        if (data.roomType === "store") {
+            this.compviness.visible = true;
+            this.prosprity.visible = true;
+            this.compviness.setTextInfo(i18n.t("room_info.compveness"), "16525");
+            this.prosprity.setTextInfo(i18n.t("room_info.prosperity"), "68");
+        } else {
+            this.compviness.visible = false;
+            this.prosprity.visible = false;
+        }
+
     }
     createAttribute() {
-        let posy = -this.height * 0.5;
+        let posy = -this.height * 0.5 + 10 * this.dpr;
         const itemHeight = 20 * this.dpr;
         const itemWidth = this.width;
-        const space = 20 * this.dpr + itemHeight;
+        const space = 25 * this.dpr + itemHeight;
 
         this.roomname = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;

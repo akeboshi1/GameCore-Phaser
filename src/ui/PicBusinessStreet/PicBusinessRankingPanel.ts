@@ -38,7 +38,7 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
     public create() {
         const posy = -this.height * 0.5;
         const posx = -this.width * 0.5;
-        const mfont = `bold ${20 * this.dpr}px ${Font.BOLD_FONT}`;
+        const mfont = `bold ${18 * this.dpr}px ${Font.BOLD_FONT}`;
         const titleText = this.scene.make.text({ x: 0, y: posy + 20 * this.dpr, text: i18n.t("business_street.ranking_list"), style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(0.5);
         titleText.setStroke("#553100", 2 * this.dpr);
         this.add(titleText);

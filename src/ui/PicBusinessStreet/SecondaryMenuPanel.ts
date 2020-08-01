@@ -72,6 +72,13 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         if (this.gridTable) {
             this.gridTable.setItems(datas);
             this.gridTable.resetMask();
+            const cells = this.gridTable.getCells();
+            if (cells) {
+                const cell = cells[0];
+                if (cell && cell.container) {
+                    this.onSubCategoryHandler(cell.container);
+                }
+            }
         }
     }
 

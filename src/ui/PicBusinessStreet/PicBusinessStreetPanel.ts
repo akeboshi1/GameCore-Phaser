@@ -96,14 +96,22 @@ export default class PicBusinessStreetPanel extends BasePanel {
     }
 
     public setMyStore(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
-        this.picMyStreetPanel.setMyStoreData(content.storeList);
+        this.picMyStreetPanel.setMyStoreData(content);
     }
 
     public setCommercialStreet(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET) {
-        this.picStreetListPanel.setStreetListData();
+        this.picStreetListPanel.setStreetListData(content.commercialStreet);
     }
     public setIndustryModels(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS) {
         this.picStoreCreatePanel.setTypeData(content.industry);
+    }
+
+    public setMarketPlan() {
+
+    }
+
+    public setChoosePlan() {
+
     }
 
     public destroy() {
@@ -134,7 +142,6 @@ export default class PicBusinessStreetPanel extends BasePanel {
 
     private openStoreStreetPanel() {
         this.showStreetListPanel();
-        this.picStreetListPanel.setStreetListData();
     }
 
     private openStreetHistoryPanel() {
@@ -166,7 +173,9 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picMyStreetPanel.setHandler(new Handler(this, () => {
 
             }), new Handler(this, () => {
-
+                this.openStoreStreetPanel();
+                this.hideMyStreetPanel();
+                this.emit("querystreet");
             }), new Handler(this, () => {
                 this.hideMyStreetPanel();
                 this.openStoreCreatePanel();

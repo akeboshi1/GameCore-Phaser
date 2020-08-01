@@ -44,7 +44,7 @@ export class MarketPanel extends BasePanel {
     super(scene, world);
     this.mSubTabs = [];
     this.mTabs = [];
-    // this.scale = 1;
+    this.scale = 1;
   }
 
   public addListen() {
@@ -176,11 +176,11 @@ export class MarketPanel extends BasePanel {
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr;
     this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
     this.randomCon.y = this.mSubCategorisScroll.y;
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 135 * this.dpr * this.scale;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 118 * this.dpr * this.mWorld.uiScale;
     this.mPropGrid.layout();
-    this.mPropGrid.resetMask();
     this.mSubCategorisScroll.layout();
     this.mSubCategorisScroll.resetMask();
+    this.mPropGrid.resetMask();
   }
 
   protected preload() {
@@ -241,9 +241,9 @@ export class MarketPanel extends BasePanel {
 
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
-      y: 30 * this.dpr,
+      y: 30 * this.dpr * zoom,
       style: {
-        fontSize: 36 * this.dpr,
+        fontSize: 36 * this.dpr * zoom,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
@@ -268,6 +268,7 @@ export class MarketPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
+        zoom: this.scale
       },
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
@@ -341,11 +342,11 @@ export class MarketPanel extends BasePanel {
     const cellHeight = propFrame.height * zoom + 10 * this.dpr;
     const propGridConfig: GridTableConfig = {
       x: w / 2,
-      y: 1051 + (20 * this.dpr * zoom) / 2,
+      y: 1050 + (41 * this.dpr * zoom) / 2,
       // y: 0,
       table: {
         width: w - 20 * this.dpr * zoom,
-        height: 260 * this.dpr * zoom,
+        height: 224 * this.dpr * zoom,
         columns: 3,
         cellWidth,
         cellHeight,
@@ -353,7 +354,7 @@ export class MarketPanel extends BasePanel {
         // mask: false,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom,
+        zoom: this.scale
       },
       scrollMode: 1,
       clamplChildOY: false,
