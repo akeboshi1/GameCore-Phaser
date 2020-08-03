@@ -23,10 +23,11 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private historyHandler: Handler;
     private rankHandler: Handler;
     private backHandler: Handler;
+    private queryHandler: Handler;
     private secondaryPanel: SecondaryMenuPanel;
-    private curSubCategoryData: string;
     private curCategoryType: CategoryType = CategoryType.popularity;
-    private subCategory: Map<string, op_client.IEditModeRoom[]>;
+    private subCategory: string;
+    private curSubCategoryItem: any;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, key2: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -37,9 +38,16 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setStreetListData(datas: op_client.IEditModeRoom[]) {
-        this.subCategory = this.Sort(datas);
-        const att = [{ text: "Popular", data: { categoryType: CategoryType.popularity } }, { text: "Hot", data: { categoryType: CategoryType.popularity } }];
+    public setIndustryModels(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS) {
+        const att = [{ text: i18n.t("business_street.popularity"), data: { categoryType: CategoryType.popularity } }, { text: i18n.t("business_street.praise"), data: { categoryType: CategoryType.praise } }];
+        const storeTypeArr = [];
+        for (const ind of content.industry) {
+            for (const item of ind.roomModels) {
+                if (storeTypeArr.indexOf(item.storeType) === -1) {
+                    storeTypeArr.push({ type: item.storeType, name: item.name });
+                }
+            }
+        }
         this.secondaryPanel.setCategories(TabButton, att, {
             width: 88 * this.dpr,
             height: 27 * this.dpr,
@@ -47,17 +55,23 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
             normalFrame: "navigation_bar_click",
             downFrame: "navigation_bar_click",
             textStyle: {
-                fontSize: 11 * this.dpr,
+                fontSize: 14 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#ffffff"
             }
         });
+        this.secondaryPanel.setSubItems(storeTypeArr);
     }
 
-    public setHandler(history: Handler, rank: Handler, back: Handler) {
+    public setStreetListData(datas: op_client.IEditModeRoom[]) {
+        this.gridtable.setItems(datas);
+    }
+
+    public setHandler(history: Handler, rank: Handler, back: Handler, query: Handler) {
         this.historyHandler = history;
         this.rankHandler = rank;
         this.backHandler = back;
+        this.queryHandler = query;
     }
 
     public resetMask() {
@@ -87,15 +101,18 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.add(this.secondaryPanel);
         const scrollbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar" });
         this.secondaryPanel.gameScroll.addAt(scrollbg);
-        this.secondaryPanel.createGrideTable(0, 5 * this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 40 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
+        this.secondaryPanel.createGrideTable(0, 6 * this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 65 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
+                const btn: TextButton = cellContainer;
+                btn.setFontSize(13 * this.dpr);
+                btn.text.originX = 0.5;
                 this.add(cellContainer);
             }
-            cellContainer.setText(item);
+            cellContainer.setText(item.name);
             cellContainer.setData("itemData", item);
-            if (this.curSubCategoryData === item) {
+            if (this.subCategory === item.type) {
                 cellContainer.changeDown();
             } else cellContainer.changeNormal();
             this.secondaryPanel.addGridTableItem(cellContainer);
@@ -103,7 +120,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         });
         this.secondaryPanel.setHandler(new Handler(this, this.onCategoryHandler), new Handler(this, this.onSubCategoryHandle));
         const gridbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar_2" });
-        gridbg.y = 9 * this.dpr;
+        gridbg.y = 8 * this.dpr;
         this.secondaryPanel.gridTable.addAt(gridbg);
         const gridWdith = this.width;
         const gridHeight = this.height - 140 * this.dpr;
@@ -130,24 +147,6 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.add(backBtn);
         backBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
         backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
-    }
-
-    private Sort(datas: op_client.IEditModeRoom[]) {
-        if (!this.subCategory) this.subCategory = new Map<string, op_client.IEditModeRoom[]>();
-        else
-            this.subCategory.clear();
-        const att = [{ text: "Popular", data: {} }, { text: "Hot", data: {} }, { text: "Praise", data: {} }];
-        for (const data of datas) {
-            if (this.subCategory.has(data.storeType)) {
-                const arr = this.subCategory.get(data.storeType);
-                arr.push(data);
-            } else {
-                const arr: op_client.IEditModeRoom[] = [];
-                this.subCategory.set(data.storeType, arr);
-                arr.push(data);
-            }
-        }
-        return this.subCategory;
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
@@ -188,25 +187,16 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
 
     private onCategoryHandler(data) {
         this.curCategoryType = data.categoryType;
-        const arr: string[] = [];
-        this.subCategory.forEach((value, key) => {
-            arr.push(key);
-        });
-        this.secondaryPanel.setSubItems(arr);
+
     }
 
     private onSubCategoryHandle(item) {
         const data = item.getData("itemData");
-        this.curSubCategoryData = data;
-        let arr = this.subCategory.get(item);
-        arr = arr.sort((a, b) => {
-            if (this.curCategoryType === CategoryType.popularity) {
-                if (a.prosperity > b.prosperity) return 1;
-            } else {
-                if (a.vote > b.vote) return 1;
-            }
-        });
-        this.gridtable.setItems(arr);
+        if (this.curSubCategoryItem) this.curSubCategoryItem.changeNormal();
+        item.changeDown();
+        this.curSubCategoryItem = item;
+        this.subCategory = data.type;
+        if (this.queryHandler) this.queryHandler.runWith([this.curCategoryType, this.subCategory]);
     }
     private onHistoryHandler() {
         if (this.historyHandler) this.historyHandler.run();
@@ -259,7 +249,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
-        this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
+        this.industryIcon = this.scene.make.image({ key: this.key2, frame: "entertainment_tag" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
         const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
@@ -273,15 +263,15 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         const industry = data.industry;
         const storeType = data.storeType;
         this.bg.setFrame(industry + "_bg");
-        this.storeIcon.setTexture(this.key, storeType + "_icon");
+        this.storeIcon.setTexture(this.key2, storeType + "_icon_s");
         this.storeName.text = data.name;
         this.playerName.text = data.ownerName;
-        this.praiseCount.text = data.vote + "";
-        this.industryIcon.setFrame(industry + "_tag");
+        this.praiseCount.text = data.praise+ "";
+        this.industryIcon.setFrame(industry + "_tag_s");
     }
 }
 
 enum CategoryType {
     popularity = 1,
-    vote = 2
+    praise = 2
 }

@@ -1,6 +1,6 @@
 import { IRectangle, IPoint } from "game-capsule/lib/helpers";
 import { AnimationDataNode } from "game-capsule";
-import Position45Utils from "./position45.utils";
+import Position45Utils from "../../utils/position45.utils";
 import { Logger } from "../../../utils/log";
 import { ElementEditorCanvas, ElementEditorBrushType } from "./element.editor.canvas";
 

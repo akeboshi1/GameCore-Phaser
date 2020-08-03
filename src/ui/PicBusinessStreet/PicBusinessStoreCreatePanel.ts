@@ -15,7 +15,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
     private recommendedText: Phaser.GameObjects.Text;
     private describleText: Phaser.GameObjects.Text;
-    private prosperityText: BBCodeText;
+    private turnoverText: BBCodeText;
     private gridtable: GameGridTable;
     private coinImg: Phaser.GameObjects.Image;
     private coinBg: Phaser.GameObjects.Image;
@@ -56,7 +56,7 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
         if (this.isFirst) {
             this.recommendedText.text = "Recommended";
             this.describleText.text = "This industry has great development potential.";
-            this.prosperityText.setText("Store prosperity [color=#52BC04]+10%[/color]");
+            this.turnoverText.setText("Store Turnover [color=#52BC04]+10%[/color]");
         } else {
             const storeData = <op_pkt_def.PKT_ROOM_MODEL>data;
             if (storeData.price) {
@@ -98,9 +98,9 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
             this.add(this.recommendedText);
             this.describleText = this.scene.make.text({ x: 0, y: this.recommendedText.y + this.recommendedText.height + 10 * this.dpr, text: "This industry has great development potential.", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5, 0);
             this.add(this.describleText);
-            this.prosperityText = new BBCodeText(this.scene, 0, this.describleText.y + this.describleText.height + 10 * this.dpr)
+            this.turnoverText = new BBCodeText(this.scene, 0, this.describleText.y + this.describleText.height + 10 * this.dpr)
                 .setOrigin(0.5, 0).setFontSize(11 * this.dpr).setFontFamily(Font.DEFULT_FONT).setColor("#0");
-            this.add(this.prosperityText);
+            this.add(this.turnoverText);
             title.text = i18n.t("business_street.choosetheindustry");
             titlebg.resize(135 * this.dpr, 17 * this.dpr);
         } else {

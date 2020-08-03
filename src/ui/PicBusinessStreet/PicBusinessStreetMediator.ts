@@ -60,8 +60,8 @@ export class PicBusinessStreetMediator extends BaseMediator {
     private queryMyStoreList() {
         this.picStreet.query_My_STORE();
     }
-    private query_COMMERCIAL_STREET() {
-        this.picStreet.query_COMMERCIAL_STREET();
+    private query_COMMERCIAL_STREET(sortedBy: string, storeType: string) {
+        this.picStreet.query_COMMERCIAL_STREET(sortedBy, storeType);
     }
 
     private query_INDUSTRY_MODELS() {
