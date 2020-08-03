@@ -259,7 +259,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
-        this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
+        this.industryIcon = this.scene.make.image({ key: this.key2, frame: "entertainment_tag" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
         const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });

@@ -20,7 +20,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     private key: string;
     private zoom: number;
     private cancelHandler: Handler;
-    private selectHandler: Handler;
+    private addPlanHandler: Handler;
     private curSelectData: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL;
     private curSelectItem: MarketingPlanItem;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, isfirst: boolean = true) {
@@ -37,9 +37,9 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         this.gridtable.setItems(arr);
     }
 
-    public setHandler(cancel: Handler, select: Handler) {
+    public setHandler(cancel: Handler, add: Handler) {
         this.cancelHandler = cancel;
-        this.selectHandler = select;
+        this.addPlanHandler = add;
     }
 
     public resetMask() {
@@ -55,7 +55,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
             right: 6 * this.dpr,
             bottom: 0 * this.dpr
         });
-        topbg.y = posy + topHei * 0.5 + 20 * this.dpr;
+        topbg.y = posy + topHei * 0.5 + 10 * this.dpr;
         this.add(topbg);
         this.describleText = this.scene.make.text({ x: 0, y: topbg.y, text: "This industry has great development potential.", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5);
         this.add(this.describleText);
@@ -68,7 +68,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
             bottom: 0 * this.dpr
         });
         titlebg.x = 0;
-        titlebg.y = topbg.y + topbg.height * 0.5 + 20 * this.dpr;
+        titlebg.y = topbg.y + topbg.height * 0.5 + 40 * this.dpr;
         this.add(titlebg);
         const title = this.scene.make.text({ x: 0, y: titlebg.y, text: i18n.t("business_street.marketing_plan"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5);
         this.add(title);
@@ -79,7 +79,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         const gridY = titlebg.y + titlebg.height * 0.5 + 20 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 253 * this.dpr, 63 * this.dpr);
 
-        const cancelBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("common.cancel"), this.dpr, this.zoom, {
+        const cancelBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("common.cancel"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -88,15 +88,6 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         this.add(cancelBtn);
         cancelBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
         cancelBtn.on(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
-        const selectBtn = new NineSliceButton(this.scene, 60 * this.dpr, cancelBtn.y, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("business_street.select"), this.dpr, this.zoom, {
-            left: 10 * this.dpr,
-            top: 10 * this.dpr,
-            right: 10 * this.dpr,
-            bottom: 10 * this.dpr
-        });
-        this.add(selectBtn);
-        selectBtn.on(CoreUI.MouseEvent.Tap, this.onSelectHandler, this);
-        selectBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
@@ -111,7 +102,8 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
                 cellHeight: capH,
                 reuseCellContainer: true,
                 tableOY: 5 * this.dpr,
-                zoom: this.zoom
+                zoom: this.zoom,
+                cellPadX: 8 * this.dpr
             },
             scrollMode: 0,
             clamplChildOY: false,
@@ -146,15 +138,11 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     }
 
     private onAddPlanHandler(data) {
-
+        if (this.addPlanHandler) this.addPlanHandler.runWith(data);
     }
 
     private onCancelHandler() {
         if (this.cancelHandler) this.cancelHandler.run();
-    }
-
-    private onSelectHandler() {
-        if (this.selectHandler) this.selectHandler.runWith(this.curSelectData);
     }
 }
 
@@ -167,7 +155,7 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
     private progress: ProgressBar;
     private planText: Phaser.GameObjects.Text;
     private bg: NineSlicePatch;
-    private storeIcon: Phaser.GameObjects.Image;
+    private planIcon: Phaser.GameObjects.Image;
     private addBtn: Button;
     private addBtnHandler: Handler;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
@@ -175,40 +163,42 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.key = key;
         this.setSize(width, height);
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, this.key, "no_plan_bg", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, 53 * dpr, this.key, "no_plan_bg", {
             left: 6 * this.dpr,
             top: 0 * this.dpr,
             right: 6 * this.dpr,
             bottom: 0 * this.dpr
         });
         this.add(this.bg);
-        const storebg = this.scene.make.image({ key: this.key, frame: "store_icon_bg" });
+        const storebg = this.scene.make.image({ key: this.key, frame: "plan_icon_bg" });
+        storebg.x = -this.width * 0.5 + storebg.width * 0.5 + 5 * dpr;
         this.add(storebg);
-        this.storeIcon = this.scene.make.image({ key, frame: "restaurant_icon" });
-        this.storeIcon.setPosition(0, -8 * dpr);
-        this.add(this.storeIcon);
-        this.planText = this.scene.make.text({ x: 0, y: 0, text: "Restaurant", style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.planIcon = this.scene.make.image({ key, frame: "restaurant_icon" });
+        this.planIcon.setPosition(storebg.x, -8 * dpr);
+        this.add(this.planIcon);
+        this.planText = this.scene.make.text({ x: storebg.x + storebg.width * 0.5 + 10 * dpr, y: 0, style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.planText.text = i18n.t("business_street.plan_title");
         this.add(this.planText);
 
-        this.planName = this.scene.make.text({ x: 0, y: 0, text: "Plane Name", style: { color: "#0", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.planName = this.scene.make.text({ x: storebg.x + storebg.width * 0.5 + 10 * dpr, y: -this.bg.height * 0.5 + 4 * dpr, text: "Plane Name", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.planName);
-        this.planAtt = this.scene.make.text({ x: 0, y: 0, text: "Competitiveness +10%,  Prosperity +10%", style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.planAtt = this.scene.make.text({ x: this.planName.x, y: this.planName.y + this.planName.height + 4 * dpr, text: "Competitiveness +10%,  Prosperity +10%", style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.planAtt);
-
+        const barWdith = 159 * dpr, barHeight = 8 * dpr;
         this.progress = new ProgressBar(this.scene, {
-            x: 48 * dpr / 2,
-            y: 15 * dpr,
-            width: 41 * dpr,
-            height: 4 * dpr,
+            x: 5 * dpr,
+            y: this.planAtt.y + this.planAtt.height + 4 * dpr + barHeight * 0.5,
+            width: barWdith,
+            height: barHeight,
             background: {
                 x: 0,
                 y: 0,
-                width: 41 * dpr,
-                height: 4 * dpr,
+                width: barWdith,
+                height: barHeight,
                 config: {
                     top: 1 * dpr,
-                    left: 2 * dpr,
-                    right: 2 * dpr,
+                    left: 5 * dpr,
+                    right: 5 * dpr,
                     bottom: 1 * dpr,
                 },
                 key,
@@ -217,12 +207,12 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             bar: {
                 x: 0,
                 y: 0,
-                width: 41 * dpr,
-                height: 4 * dpr,
+                width: barWdith,
+                height: barHeight - dpr,
                 config: {
                     top: 1 * dpr,
-                    left: 2 * dpr,
-                    right: 2 * dpr,
+                    left: 5 * dpr,
+                    right: 5 * dpr,
                     bottom: 1 * dpr,
                 },
                 key,
@@ -231,6 +221,7 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             dpr,
             textConfig: undefined
         });
+        this.add(this.progress);
         this.addBtn = new Button(this.scene, this.key, "add_plan", "add_plan");
         this.addBtn.x = this.width * 0.5 - this.addBtn.width * 0.5 - 20 * dpr;
         this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddBtnHandler, this);
@@ -248,8 +239,10 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             this.planName.visible = true;
             this.planAtt.visible = true;
             this.progress.visible = true;
+            this.planText.visible = false;
             this.bg.setFrame("has_plan_bg");
             this.remove(this.addBtn);
+            this.progress.setProgress(50, 100);
         }
         this.planData = data;
     }

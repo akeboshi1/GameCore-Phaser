@@ -130,6 +130,8 @@
     "competitiveness": "Competitiveness",
     "prosperity": "Prosperity",
     "store_limit":"store limit",
-    "marketing_plan":"Marketing Plan"
+    "marketing_plan":"Marketing Plan",
+    "plan_title":"There is now plan yet",
+    "material_requirements":"Material requirements:"
   }
 }

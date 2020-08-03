@@ -133,6 +133,8 @@
     "competitiveness": "竞争力",
     "prosperity": "繁华度",
     "store_limit": "店铺限制",
-    "marketing_plan": "营业计划"
+    "marketing_plan": "营业计划",
+    "plan_title": "现在开始一个的营业计划",
+    "material_requirements": "选择计划需要的材料:"
   }
 }

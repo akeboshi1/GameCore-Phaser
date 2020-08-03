@@ -100,6 +100,7 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
 
     private openChoosePlanPanel() {
         this.showChoosePlanPanel();
+        this.picChoosePlanPanel.resetMask();
         this.picChoosePlanPanel.setPlanData();
     }
 
@@ -113,9 +114,10 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
             this.picBusinessPlanPanel = new PicBusinessPlanPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key);
             this.picBusinessPlanPanel.setHandler(new Handler(this, () => {
                 this.hideMarketingPlanPanel();
-
-            }), new Handler(this, () => {
-
+                this.OnCloseHandler();
+            }), new Handler(this, (data) => {
+                this.hideMarketingPlanPanel();
+                this.openChoosePlanPanel();
             }));
         }
         this.content.add(this.picBusinessPlanPanel);
@@ -127,15 +129,21 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
     }
 
     private showChoosePlanPanel() {
-        const topoffset = 90 * this.dpr;
-        const bottomoffset = 74 * this.dpr;
-        this.setContentSize(topoffset, bottomoffset);
+        const width: number = this.scaleWidth;
+        const height: number = this.scaleHeight;
+        const conWidth = 295 * this.dpr;
+        const conHeight = 320 * this.dpr;
+        const conY = height * 0.5;
+        const conX = width * 0.5;
+        this.content.setPosition(conX, conY);
+        this.content.setContentSize(conWidth, conHeight);
         if (!this.picChoosePlanPanel) {
             const wid = this.content.width;
             const hei = this.content.height - 50 * this.dpr;
             this.picChoosePlanPanel = new PicBusinessChoosePlanPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key);
             this.picChoosePlanPanel.setHandler(new Handler(this, () => {
-                this.hideMarketingPlanPanel();
+                this.hideChoosePlanPanel();
+                this.openPlanPanel();
 
             }), new Handler(this, () => {
 
