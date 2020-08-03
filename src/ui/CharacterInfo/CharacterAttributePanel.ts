@@ -54,7 +54,7 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.setSize(width, height);
         this.icon = new DynamicImage(this.scene, 0, 0);
-        this.icon.x = -width * 0.5 + this.icon.width * 0.5;
+        this.icon.x = -22 * dpr;
         this.icon.setTexture(key, "health");
         this.nameText = this.scene.make.text({
             x: this.icon.x + 13 * dpr, y: 0, text: "Attack:",
