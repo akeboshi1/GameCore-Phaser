@@ -176,7 +176,9 @@ export class LayerManager {
         if (this.mDepthSurface) {
             this.mDepthSurface = false;
             this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
-                return (displayA.x + displayA.y) > (displayB.x + displayB.y);
+                const posA = displayA.element.getPosition45();
+                const posB = displayB.element.getPosition45();
+                return (posA.x + posA.y) > (posB.x + posB.y);
             });
         }
     }
