@@ -1,71 +1,47 @@
-import Atlas from "../../utils/atlas";
-import AnimationsNode, { IImage } from "game-capsule/lib/configobjects/animations";
-import { DisplayNode, ElementNode } from "game-capsule";
-import * as path from "path";
-import * as os from "os";
-import IFrame from "../../utils/iframe";
-import { MaxRectsPacker } from "maxrects-packer";
-import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
-import ElementEditorAnimations from "./element.editor.animations";
 import { Logger } from "../../../utils/log";
-import { Events } from "phaser";
+import { IImage } from "game-capsule";
+import { MaxRectsPacker } from "maxrects-packer";
+import IFrame from "../../utils/iframe";
+import Atlas from "../../utils/atlas";
 
-// export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
-export const WEB_HOME_PATH: string = "https://osd.tooqing.com/";
-export const SPRITE_SHEET_KEY: string = "ELEMENT_EDITOR_SPRITE_SHEET_KEY";
-export const IMAGE_BLANK_KEY: string = "blank";
+export const SPRITE_SHEET_KEY: string = "AVATAR_EDITOR_SPRITE_SHEET_KEY";
 
-export default class ElementEditorResourceManager {
-    private mElementNode: ElementNode;
+export default class AvatarEditorResourceManager {
     private mScene: Phaser.Scene;
-    private mEmitter: Phaser.Events.EventEmitter;
     private mResourcesChangeListeners: ResourcesChangeListener[] = [];
-    private mLocalHomePath: string;
+    private mEmitter: Phaser.Events.EventEmitter;
 
-    constructor(data: ElementNode, emitter: Phaser.Events.EventEmitter, localHomePath: string) {
-        this.mElementNode = data;
+    constructor(emitter: Phaser.Events.EventEmitter) {
         this.mEmitter = emitter;
-        this.mLocalHomePath = localHomePath;
     }
 
     public init(scene: Phaser.Scene) {
         this.mScene = scene;
-        this.loadResources();
     }
-
     public addResourcesChangeListener(listener: ResourcesChangeListener) {
         this.mResourcesChangeListeners.push(listener);
     }
     public removeResourcesChangeListener(listener: ResourcesChangeListener) {
         const idx: number = this.mResourcesChangeListeners.indexOf(listener);
-        if (idx !== -1) {
+        if (idx >= 0) {
             this.mResourcesChangeListeners.splice(idx, 1);
         }
     }
 
-    public loadResources() {
+    public loadResources(texturePath: string, dataPath: string) {
         if (!this.mScene) {
             Logger.getInstance().warn("ResourceManager not inited");
             return;
         }
 
-        if (!this.mElementNode ||
-            !this.mElementNode.animations.display.texturePath ||
-            this.mElementNode.animations.display.texturePath === "" ||
-            !this.mElementNode.animations.display.dataPath ||
-            this.mElementNode.animations.display.dataPath === "") {
-            this.mEmitter.emit(ElementEditorEmitType.Resource_Loaded, false, "DisplayNode is empty");
-            return;
-        }
         this.clearResource();
-        const val = this.mElementNode.animations.display;
         this.mScene.load.addListener(Phaser.Loader.Events.COMPLETE, this.imageLoaded, this);
         this.mScene.load.atlas(
             SPRITE_SHEET_KEY,
-            path.join(this.mLocalHomePath, val.texturePath),// this.mLocalHomePath WEB_HOME_PATH
-            path.join(this.mLocalHomePath, val.dataPath)// this.mLocalHomePath WEB_HOME_PATH
+            texturePath,
+            dataPath
         ).on("loaderror", this.imageLoadError, this);
-        Logger.getInstance().log("loadResources ", path.join(this.mLocalHomePath, val.texturePath));
+        Logger.getInstance().log("loadResources ", texturePath);
         this.mScene.load.start();
     }
 
@@ -141,38 +117,9 @@ export default class ElementEditorResourceManager {
         });
     }
 
-    /**
-     * 解析sprite sheet
-     */
-    public deserializeDisplay(): Promise<IImage[]> {
-        return new Promise<IImage[]>((resolve, reject) => {
-            if (!this.mScene.textures.exists(SPRITE_SHEET_KEY)) {
-                reject([]);
-            } else {
-                const atlasTexture = this.mScene.textures.get(SPRITE_SHEET_KEY);
-                const frames = atlasTexture.frames;
-                const frameNames = atlasTexture.getFrameNames(false);
-                let frame: Phaser.Textures.Frame = null;
-                const imgs = [];
-                for (const frameName of frameNames) {
-                    frame = frames[frameName];
-                    let imgName = "NAME_ERROR";
-                    const imgHash = frameName.split("?t=");
-                    if (imgHash.length > 0) imgName = imgHash[0];
-
-                    const canvas = this.mScene.textures.createCanvas("DeserializeSpriteSheet", frame.width, frame.height);
-                    canvas.drawFrame(SPRITE_SHEET_KEY, frameName);
-                    const url = canvas.canvas.toDataURL("image/png", 1);
-                    imgs.push({ key: frameName, name: imgName, url });
-                    canvas.destroy();
-                }
-                Logger.getInstance().log("deserialize sprite sheet: ", imgs);
-                resolve(imgs);
-            }
-        });
-    }
-
     public clearResource() {
+        if (!this.mScene) return;
+
         if (this.mScene.textures.exists(SPRITE_SHEET_KEY)) {
             this.mResourcesChangeListeners.forEach((listener) => {
                 listener.onResourcesCleared();
@@ -184,19 +131,12 @@ export default class ElementEditorResourceManager {
     }
 
     public destroy() {
-        this.clearResource();
-        this.mResourcesChangeListeners.length = 0;
-    }
+        if (!this.mScene) return;
 
-    private getFrame(rect): IFrame {
-        return {
-            filename: rect.data.name,
-            frame: { x: rect.x, y: rect.y, w: rect.width, h: rect.height },
-            rotated: false,
-            trimmed: false,
-            spriteSourceSize: { x: 0, y: 0, w: rect.width, h: rect.height },
-            sourceSize: { w: rect.width, h: rect.height }
-        };
+        this.clearResource();
+        this.mScene = null;
+        this.mResourcesChangeListeners.length = 0;
+        this.mResourcesChangeListeners = null;
     }
 
     private imageLoaded() {
@@ -212,12 +152,20 @@ export default class ElementEditorResourceManager {
         this.mResourcesChangeListeners.forEach((listener) => {
             listener.onResourcesLoaded();
         });
-
-        // Logger.getInstance().log("imageLoaded");
-        this.mEmitter.emit(ElementEditorEmitType.Resource_Loaded, true, "DisplayNode load success");
     }
     private imageLoadError() {
-        this.mEmitter.emit(ElementEditorEmitType.Resource_Loaded, false, "DisplayNode load error");
+        Logger.getInstance().error("load error");
+    }
+
+    private getFrame(rect): IFrame {
+        return {
+            filename: rect.data.name,
+            frame: { x: rect.x, y: rect.y, w: rect.width, h: rect.height },
+            rotated: false,
+            trimmed: false,
+            spriteSourceSize: { x: 0, y: 0, w: rect.width, h: rect.height },
+            sourceSize: { w: rect.width, h: rect.height }
+        };
     }
 }
 
