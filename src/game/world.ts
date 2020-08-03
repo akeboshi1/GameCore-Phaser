@@ -140,6 +140,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
         // this.mCharacterManager.register();
@@ -197,9 +198,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void {}
+    onDisConnected(connection?: SocketConnection): void { }
 
-    onError(reason: SocketConnectionError | undefined): void {}
+    onError(reason: SocketConnectionError | undefined): void { }
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -663,7 +664,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mAccount = new Account();
             this.mLoadingManager.start();
             // test login and verified
-            this.mConfig.auth_token = undefined;
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;
@@ -756,6 +756,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             resolution: 1,
             fps: {
                 target: 30,
+                forceSetTimeOut: true
             },
             dom: {
                 createContainer: true,

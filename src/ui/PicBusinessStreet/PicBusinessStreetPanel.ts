@@ -1,24 +1,17 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Font } from "../../utils/font";
-import { op_client } from "pixelpai_proto";
-import { DynamicImage } from "../components/dynamic.image";
-import { BBCodeText, Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
-import { i18n } from "../../i18n";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { Url } from "../../utils/resUtil";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
-import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
 import { PicBusinessContentPanel } from "./PicBusinessContentPanel";
 import { PicBusinessMyStreetPanel } from "./PicBusinessMyStreetPanel";
 import { PicBusinessStoreCreatePanel } from "./PicBusinessStoreCreatePanel";
 import { PicBusinessStreetListPanel } from "./PicBusinessStreetListPanel";
 import { PicBusinessHistoryPanel } from "./PicBusinessHistoryPanel";
 import { PicBusinessRankingPanel } from "./PicBusinessRankingPanel";
+import { PicBusinessRankingDetailPanel } from "./PicBusinessRankingDetailPanel";
+import { PicBusinessRankRewardPanel } from "./PicBusinessRankRewardPanel";
+import { i18n } from "../../i18n";
 export default class PicBusinessStreetPanel extends BasePanel {
     private key = "c_street_1";
     private key2 = "c_street_2";
@@ -30,6 +23,8 @@ export default class PicBusinessStreetPanel extends BasePanel {
     private picStreetListPanel: PicBusinessStreetListPanel;
     private picStreetHistoryPanel: PicBusinessHistoryPanel;
     private picStreetRankingPanel: PicBusinessRankingPanel;
+    private picRankingDetailPanel: PicBusinessRankingDetailPanel;
+    private picRankRewardPanel: PicBusinessRankRewardPanel;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -97,42 +92,74 @@ export default class PicBusinessStreetPanel extends BasePanel {
         this.add(this.content);
         this.resize(wid, hei);
         super.init();
-        this.openStoreStreetPanel();
+        this.openMyStreet();
     }
 
-    public openMyStreet() {
-        this.showMyStreetPanel();
-        this.picMyStreetPanel.setMyStoreData();
+    public setMyStore(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
+        this.picMyStreetPanel.setMyStoreData(content);
     }
 
-    public openStoreCreatePanel() {
-        this.showStoreCreatePanel();
-        this.picStoreCreatePanel.setStoreTypeData();
+    public setCommercialStreet(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET) {
+        this.picStreetListPanel.setStreetListData(content.commercialStreet);
+    }
+    public setIndustryModels(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS) {
+        this.picStoreCreatePanel.setTypeData(content.industry);
     }
 
-    public openSecondStorePanel() {
-        this.showSecondStorePanel();
-        this.picSecondStorePanel.setStoreTypeData();
+    public setMarketPlan() {
+
     }
 
-    public openStoreStreetPanel() {
-        this.showStreetListPanel();
-        this.picStreetListPanel.setStreetListData();
-    }
+    public setChoosePlan() {
 
-    public openStreetHistoryPanel() {
-        this.showStreetHistoryPanel();
-        this.picStreetHistoryPanel.setHistoryeData();
-    }
-
-    public openStreetRankingPanel() {
-        this.showStreetRankingPanel();
-        this.picStreetRankingPanel.setRankingData();
     }
 
     public destroy() {
 
         super.destroy();
+    }
+
+    private setSecondStore(datas: op_pkt_def.PKT_ROOM_MODEL[]) {
+        this.picSecondStorePanel.setTypeData(datas);
+    }
+
+    private openMyStreet() {
+        this.emit("querymystore");
+        this.showMyStreetPanel();
+        this.content.setTitleText(i18n.t("business_street.commercial_street"));
+    }
+
+    private openStoreCreatePanel() {
+        this.emit("querymodels");
+        this.showStoreCreatePanel();
+        this.content.setTitleText(i18n.t("business_street.newstore"));
+    }
+
+    private openSecondStorePanel() {
+        this.showSecondStorePanel();
+        this.content.setTitleText(i18n.t("business_street.newstore"));
+    }
+
+    private openStoreStreetPanel() {
+        this.showStreetListPanel();
+    }
+
+    private openStreetHistoryPanel() {
+        this.showStreetHistoryPanel();
+        this.picStreetHistoryPanel.setHistoryeData();
+    }
+
+    private openStreetRankingPanel() {
+        this.showStreetRankingPanel();
+        this.picStreetRankingPanel.setRankingData();
+    }
+    private openRankingDetailPanel() {
+        this.showRankingDetailPanel();
+        this.picRankingDetailPanel.setRankingData();
+    }
+    private openRankRewardPanel() {
+        this.showRankRewardPanel();
+        this.picRankRewardPanel.setRankRewardData();
     }
 
     private showMyStreetPanel() {
@@ -146,7 +173,9 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picMyStreetPanel.setHandler(new Handler(this, () => {
 
             }), new Handler(this, () => {
-
+                this.openStoreStreetPanel();
+                this.hideMyStreetPanel();
+                this.emit("querystreet");
             }), new Handler(this, () => {
                 this.hideMyStreetPanel();
                 this.openStoreCreatePanel();
@@ -176,9 +205,10 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picStoreCreatePanel.setHandler(new Handler(this, () => {
                 this.openMyStreet();
                 this.hideStoreCreatePanel();
-            }), new Handler(this, () => {
+            }), new Handler(this, (datas) => {
                 this.openSecondStorePanel();
                 this.hideStoreCreatePanel();
+                this.setSecondStore(datas);
             }));
         }
         this.content.add(this.picStoreCreatePanel);
@@ -205,8 +235,8 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picSecondStorePanel.setHandler(new Handler(this, () => {
                 this.openStoreCreatePanel();
                 this.hideSecondStorePanel();
-            }), new Handler(this, () => {
-
+            }), new Handler(this, (data) => {
+                this.emit("querycreatestore", data.modelId);
             }));
         }
         this.content.add(this.picSecondStorePanel);
@@ -264,7 +294,6 @@ export default class PicBusinessStreetPanel extends BasePanel {
     private hideStreetHistoryPanel() {
         this.content.remove(this.picStreetHistoryPanel);
     }
-
     private showStreetRankingPanel() {
         const topoffset = 110 * this.dpr;
         const bottomoffset = 94 * this.dpr;
@@ -276,14 +305,64 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picStreetRankingPanel.setHandler(new Handler(this, () => {
                 this.hideStreetRankingPanel();
                 this.openStoreStreetPanel();
+            }), new Handler(this, (data) => {
+                this.openRankingDetailPanel();
+                this.hideStreetRankingPanel();
             }));
         }
         this.content.add(this.picStreetRankingPanel);
+        this.picStreetRankingPanel.show();
         this.picStreetRankingPanel.resetMask();
     }
 
     private hideStreetRankingPanel() {
         this.content.remove(this.picStreetRankingPanel);
+        this.picStreetRankingPanel.hide();
+    }
+
+    private showRankingDetailPanel() {
+        const topoffset = 90 * this.dpr;
+        const bottomoffset = 74 * this.dpr;
+        this.setContentSize(topoffset, bottomoffset);
+        if (!this.picRankingDetailPanel) {
+            const wid = this.content.width;
+            const hei = this.content.height - 50 * this.dpr;
+            this.picRankingDetailPanel = new PicBusinessRankingDetailPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key, this.key2);
+            this.picRankingDetailPanel.setHandler(new Handler(this, () => {
+                this.hideRankingDetailPanel();
+                this.openStreetRankingPanel();
+            }), new Handler(this, (data) => {
+                this.hideRankingDetailPanel();
+                this.openRankRewardPanel();
+            }));
+        }
+        this.content.add(this.picRankingDetailPanel);
+        this.picRankingDetailPanel.resetMask();
+    }
+
+    private hideRankingDetailPanel() {
+        this.content.remove(this.picRankingDetailPanel);
+    }
+
+    private showRankRewardPanel() {
+        const topoffset = 90 * this.dpr;
+        const bottomoffset = 74 * this.dpr;
+        this.setContentSize(topoffset, bottomoffset);
+        if (!this.picRankRewardPanel) {
+            const wid = this.content.width;
+            const hei = this.content.height - 50 * this.dpr;
+            this.picRankRewardPanel = new PicBusinessRankRewardPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key, this.key2);
+            this.picRankRewardPanel.setHandler(new Handler(this, () => {
+                this.hideRankRewardPanel();
+                this.openRankingDetailPanel();
+            }));
+        }
+        this.content.add(this.picRankRewardPanel);
+        this.picRankRewardPanel.resetMask();
+    }
+
+    private hideRankRewardPanel() {
+        this.content.remove(this.picRankRewardPanel);
     }
 
     private setContentSize(topoffset: number, bottomoffset: number) {

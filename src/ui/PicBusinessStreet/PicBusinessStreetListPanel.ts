@@ -12,6 +12,7 @@ import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
 import { TextButton } from "../Market/TextButton";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 
 export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
@@ -23,7 +24,9 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private rankHandler: Handler;
     private backHandler: Handler;
     private secondaryPanel: SecondaryMenuPanel;
-    private curSubCategoryData: any;
+    private curSubCategoryData: string;
+    private curCategoryType: CategoryType = CategoryType.popularity;
+    private subCategory: Map<string, op_client.IEditModeRoom[]>;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, key2: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -34,10 +37,9 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setStreetListData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
-        const att = [{ text: "Popular", data: {} }, { text: "Hot", data: {} }, { text: "Praise", data: {} }];
+    public setStreetListData(datas: op_client.IEditModeRoom[]) {
+        this.subCategory = this.Sort(datas);
+        const att = [{ text: "Popular", data: { categoryType: CategoryType.popularity } }, { text: "Hot", data: { categoryType: CategoryType.popularity } }];
         this.secondaryPanel.setCategories(TabButton, att, {
             width: 88 * this.dpr,
             height: 27 * this.dpr,
@@ -91,7 +93,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
                 this.add(cellContainer);
             }
-            cellContainer.setText("Pub");
+            cellContainer.setText(item);
             cellContainer.setData("itemData", item);
             if (this.curSubCategoryData === item) {
                 cellContainer.changeDown();
@@ -128,6 +130,24 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.add(backBtn);
         backBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
         backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+    }
+
+    private Sort(datas: op_client.IEditModeRoom[]) {
+        if (!this.subCategory) this.subCategory = new Map<string, op_client.IEditModeRoom[]>();
+        else
+            this.subCategory.clear();
+        const att = [{ text: "Popular", data: {} }, { text: "Hot", data: {} }, { text: "Praise", data: {} }];
+        for (const data of datas) {
+            if (this.subCategory.has(data.storeType)) {
+                const arr = this.subCategory.get(data.storeType);
+                arr.push(data);
+            } else {
+                const arr: op_client.IEditModeRoom[] = [];
+                this.subCategory.set(data.storeType, arr);
+                arr.push(data);
+            }
+        }
+        return this.subCategory;
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
@@ -167,13 +187,26 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     }
 
     private onCategoryHandler(data) {
-        const arr = new Array(60);
+        this.curCategoryType = data.categoryType;
+        const arr: string[] = [];
+        this.subCategory.forEach((value, key) => {
+            arr.push(key);
+        });
         this.secondaryPanel.setSubItems(arr);
     }
 
     private onSubCategoryHandle(item) {
         const data = item.getData("itemData");
         this.curSubCategoryData = data;
+        let arr = this.subCategory.get(item);
+        arr = arr.sort((a, b) => {
+            if (this.curCategoryType === CategoryType.popularity) {
+                if (a.prosperity > b.prosperity) return 1;
+            } else {
+                if (a.vote > b.vote) return 1;
+            }
+        });
+        this.gridtable.setItems(arr);
     }
     private onHistoryHandler() {
         if (this.historyHandler) this.historyHandler.run();
@@ -198,6 +231,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
     private storeIcon: DynamicImage;
     private praiseCount: Phaser.GameObjects.Text;
     private industryIcon: Phaser.GameObjects.Image;
+    private bg: NineSlicePatch;
 
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, key2: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -207,13 +241,13 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         const posx = -this.width * 0.5;
         const posy = -this.height * 0.5;
-        const bg = new NineSlicePatch(this.scene, 0, 0, width, 45 * dpr, this.key, "resturant_bg", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, 45 * dpr, this.key, "restaurant_bg", {
             left: 4 * this.dpr,
             top: 9 * this.dpr,
             right: 4 * this.dpr,
             bottom: 9 * this.dpr
         });
-        this.add(bg);
+        this.add(this.bg);
         const iconbg = this.scene.make.image({ key: key2, frame: "icon_bg_s" });
         iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
         this.add(iconbg);
@@ -235,8 +269,19 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.add(this.praiseCount);
     }
 
-    public setStoreData(data) {
-
+    public setStoreData(data: op_client.IEditModeRoom) {
+        const industry = data.industry;
+        const storeType = data.storeType;
+        this.bg.setFrame(industry + "_bg");
+        this.storeIcon.setTexture(this.key, storeType + "_icon");
+        this.storeName.text = data.name;
+        this.playerName.text = data.ownerName;
+        this.praiseCount.text = data.vote + "";
+        this.industryIcon.setFrame(industry + "_tag");
     }
+}
 
+enum CategoryType {
+    popularity = 1,
+    vote = 2
 }

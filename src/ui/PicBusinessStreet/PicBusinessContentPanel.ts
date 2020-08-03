@@ -4,6 +4,7 @@ import { BBCodeText, Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
+import { i18n } from "../../i18n";
 export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
     private topbg: Phaser.GameObjects.Image;
@@ -41,7 +42,7 @@ export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
         this.titlebg.y = posY - 25 * this.dpr;
         this.add(this.titlebg);
         const mfont = `bold ${15 * this.dpr}px ${Font.BOLD_FONT}`;
-        this.titleText = this.scene.make.text({ x: 0, y: this.titlebg.y - 5 * this.dpr, text: "Commercial Street", style: { font: mfont, bold: true, color: "#FFD248" } }).setOrigin(0.5, 0);
+        this.titleText = this.scene.make.text({ x: 0, y: this.titlebg.y - 5 * this.dpr, text: i18n.t("business_street.commercial_street"), style: { font: mfont, bold: true, color: "#FFD248" } }).setOrigin(0.5, 0);
         this.titleText.setStroke("#553100", 2 * this.dpr);
         this.titleText.setShadow(2, 2, "#553100", 4 * this.dpr, true, true);
         this.add(this.titleText);

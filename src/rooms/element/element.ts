@@ -206,7 +206,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(this.mModel.pos);
         }
         this.mDisplay.changeAlpha(this.mModel.alpha);
-        this.showNickname();
+        if (this.mDisplay.getElement("nickname")) this.showNickname();
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
         const frameModel = <IFramesModel>this.mDisplayInfo;

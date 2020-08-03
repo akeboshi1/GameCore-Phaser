@@ -14,16 +14,12 @@ export class VerifiedPanel extends BasePanel {
         super(scene, world);
     }
 
-    public setInputVisible(val: boolean) {
+    public setVerifiedEnable(val: boolean) {
         if (this.mIDCardInput) {
             this.mNameInput.visible = val;
             this.mIDCardInput.visible = val;
+            this.mVerifiedBtn.enable = val;
         }
-    }
-
-    public setVisible(val: boolean) {
-        super.setVisible(val);
-        return this;
     }
 
     protected preload() {
@@ -163,5 +159,9 @@ export class VerifiedPanel extends BasePanel {
         container.add([text, boder, input]);
         container.setSize(width + input.x, height);
         return container;
+    }
+
+    get verifiedBtn(): NineSliceButton {
+        return this.mVerifiedBtn;
     }
 }

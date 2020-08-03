@@ -59,13 +59,13 @@ export class LoginMediator extends BaseMediator {
                 const data = response.data;
                 this.world.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                // this.enterGame(true);
-                if (data.hasIdentityInfo) {
-                    this.enterGame(data.adult);
-                } else {
-                    (<LoginPanel>this.mView).setInputVisible(false);
-                    this.onShowVerified();
-                }
+                this.enterGame(true);
+                // if (data.hasIdentityInfo) {
+                //     this.enterGame(data.adult);
+                // } else {
+                //     (<LoginPanel>this.mView).setInputVisible(false);
+                //     this.onShowVerified();
+                // }
             }
         });
     }
@@ -73,6 +73,9 @@ export class LoginMediator extends BaseMediator {
     private onShowVerified() {
         if (!this.verifiedPanel) {
             this.verifiedPanel = new VerifiedPanel(this.layerManager.scene, this.world);
+        }
+        if (this.verifiedPanel.isShow()) {
+            return;
         }
         this.verifiedPanel.show();
         this.verifiedPanel.on("verified", this.onVerifiedHandler, this);
@@ -82,17 +85,18 @@ export class LoginMediator extends BaseMediator {
     private onVerifiedHandler(name: string, idcard: string) {
         this.world.httpService.verified(name, idcard).then((response: any) => {
             const { code, data } = response;
-            if (code === 200 || code === 201) {
-                this.enterGame(data.adult);
+            if (code === 200 || code === 201 || code === 0) {
+                // this.enterGame(data.adult);
+                this.enterGame(true);
             } else if (code === 10001) {
                 // 验证失败
-                this.verifiedPanel.setInputVisible(false);
+                this.verifiedPanel.setVerifiedEnable(false);
                 // this.verifiedPanel.setVisible(false);
                 new AlertView(this.layerManager.scene, this.world).setOKText("重新认证").show({
                     text: "[color=#F9361B]实名认证失败，身份证号码有误，\n请如实进行实名认证！[/color]",
                     title: "提示",
                     callback: () => {
-                        this.verifiedPanel.setInputVisible(true);
+                        this.verifiedPanel.setVerifiedEnable(true);
                         // this.verifiedPanel.setVisible(true);
                     },
                     btns: Buttons.Ok

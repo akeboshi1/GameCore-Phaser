@@ -36,14 +36,22 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.expvalue.setTextInfo(i18n.t("room_info.expvalue"), expvalue);
         this.popvalue.setImageInfo(i18n.t("room_info.popvalue"), this.key, this.getpopImgs());
         this.goodvalue.setImageInfo(i18n.t("room_info.goodvalue"), this.key, this.getgoodImgs());
-        this.compviness.setTextInfo(i18n.t("room_info.compveness"), "16525");
-        this.prosprity.setTextInfo(i18n.t("room_info.prosperity"), "68");
+        if (data.roomType === "store") {
+            this.compviness.visible = true;
+            this.prosprity.visible = true;
+            this.compviness.setTextInfo(i18n.t("room_info.compveness"), "16525");
+            this.prosprity.setTextInfo(i18n.t("room_info.prosperity"), "68");
+        } else {
+            this.compviness.visible = false;
+            this.prosprity.visible = false;
+        }
+
     }
     createAttribute() {
-        let posy = -this.height * 0.5;
+        let posy = -this.height * 0.5 + 10 * this.dpr;
         const itemHeight = 20 * this.dpr;
         const itemWidth = this.width;
-        const space = 20 * this.dpr + itemHeight;
+        const space = 25 * this.dpr + itemHeight;
 
         this.roomname = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
@@ -109,12 +117,12 @@ class HouseAttributeValue extends Phaser.GameObjects.Container {
         this.nameText = this.scene.make.text({
             x: -width * 0.5 + 15 * dpr, y: 0, text: "Room name",
             style: { fontFamily: Font.BOLD_FONT, fontSize: 14 * dpr, color: "#FFC51A" }
-        }).setOrigin(0, 0.5).setStroke("#0", 4);
+        }).setOrigin(0, 0.5).setStroke("#0", 4).setResolution(dpr);
         this.valueText = new BBCodeText(this.scene, 0, 0, "This my Room", {
             color: "#000000",
             fontSize: 13 * this.dpr,
             fontFamily: Font.DEFULT_FONT,
-        }).setOrigin(0, 0.5);
+        }).setOrigin(0, 0.5).setResolution(dpr);
         this.imgCon = this.scene.make.container(undefined, false);
         this.imgCon.x = 10 * dpr;
         this.add([this.nameText, this.valueText, this.imgCon]);
@@ -131,6 +139,7 @@ class HouseAttributeValue extends Phaser.GameObjects.Container {
         const space: number = 10 * this.dpr;
         for (const frame of imgs) {
             const image = this.scene.make.image({ key, frame });
+            image.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
             image.x = posX;
             posX += image.width * 0.5 + space;
             this.imgCon.add(image);

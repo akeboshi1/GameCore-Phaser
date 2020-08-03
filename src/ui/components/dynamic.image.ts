@@ -46,6 +46,7 @@ export class DynamicImage extends Phaser.GameObjects.Image {
             this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
             this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);
             this.setTexture(this.mUrl);
+            this.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
             if (this.mLoadCompleteCallbak) {
                 const cb: Function = this.mLoadCompleteCallbak;
                 this.mLoadCompleteCallbak = null;

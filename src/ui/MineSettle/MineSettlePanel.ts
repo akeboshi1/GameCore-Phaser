@@ -19,7 +19,7 @@ export class MineSettlePanel extends BasePanel {
     private titleName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.scale = 1;
+        // this.scale = 1;
     }
 
     resize(w: number, h: number) {
@@ -37,7 +37,7 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
         this.blackGraphic.fillRect(0, 0, width / this.scale, height / this.scale);
-        this.mPropGrid.refreshPos(width / 2, this.bg.y - 2 * this.dpr);
+        this.mPropGrid.refreshPos(width / 2, this.bg.y - 2 * this.dpr * this.scale);
         this.mPropGrid.resetMask();
         this.setSize(width * this.scale * this.scale, height * this.scale * this.scale);
     }
@@ -88,7 +88,7 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic = this.scene.make.graphics(undefined, false);
         this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
-        const zoom = this.scale;
+        const zoom = 1;
         const capW = (propFrame.width + 20 * this.dpr * zoom);
         const capH = (propFrame.height + 25 * this.dpr * zoom);
         const config: GridTableConfig = {
@@ -104,7 +104,7 @@ export class MineSettlePanel extends BasePanel {
                 cellOriginX: 0,
                 cellOriginY: 0,
                 cellPadX: 18 * this.dpr * zoom,
-                zoom: this.scale
+                zoom
             },
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             clamplChildOY: false,
@@ -129,6 +129,7 @@ export class MineSettlePanel extends BasePanel {
             }
         });
         this.titleimage = this.scene.make.image({ x: 0, y: -this.bg.displayWidth * 0.5 - 10 * this.dpr, key: this.key, frame: "title" }, false);
+        this.titleimage.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.titleName = this.scene.make.text({
             x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("minesettle.settle"),
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }

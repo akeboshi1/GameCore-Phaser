@@ -111,20 +111,28 @@
     "popvalue": "热度",
     "goodvalue": "点赞",
     "compveness": "排名",
-    "prosperity": "装饰值"
+    "prosperity": "装饰值",
+    "closeshop": "关闭商店"
   },
   "business_street": {
     "commercial_street": "商业街",
+    "newstore": "新店铺",
     "my_store": "我的店铺",
     "enter": "进入",
-    "takeall": "Take all",
-    "goout": "Go Out",
+    "takeall": "全部领取",
+    "goout": "商业街",
     "choosetheindustry": "选择产业",
     "select": "选择",
     "choosestorelike": "选择喜欢的商店",
     "street": "商业街",
     "back": "返回",
     "history_title": "最近参观的 ${} 个店铺",
-    "ranking_list": "排行榜列表"
+    "ranking_list": "排行榜列表",
+    "rank_reward": "排行榜奖励",
+    "savings": "存款金额",
+    "competitiveness": "竞争力",
+    "prosperity": "繁华度",
+    "store_limit": "店铺限制",
+    "marketing_plan": "营业计划"
   }
 }

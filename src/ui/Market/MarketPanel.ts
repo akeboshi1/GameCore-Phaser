@@ -122,7 +122,7 @@ export class MarketPanel extends BasePanel {
     const capW = 77 * this.dpr * zoom;
     const capH = 38 * this.dpr * zoom;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], this.dpr, this.scale);
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], 1, 1);
       // btn.removeAllListeners();
       btn.setTextStyle({
         fontSize: 18 * this.dpr * zoom,
@@ -176,7 +176,7 @@ export class MarketPanel extends BasePanel {
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr;
     this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
     this.randomCon.y = this.mSubCategorisScroll.y;
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 122 * this.dpr;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 118 * this.dpr * this.mWorld.uiScale;
     this.mPropGrid.layout();
     this.mSubCategorisScroll.layout();
     this.mSubCategorisScroll.resetMask();
@@ -268,6 +268,7 @@ export class MarketPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
+        zoom: this.scale
       },
       scrollMode: 1,
       createCellContainerCallback: (cell, cellContainer) => {
@@ -352,7 +353,8 @@ export class MarketPanel extends BasePanel {
         reuseCellContainer: true,
         // mask: false,
         cellOriginX: 0,
-        cellOriginY: 0
+        cellOriginY: 0,
+        zoom: this.scale
       },
       scrollMode: 1,
       clamplChildOY: false,

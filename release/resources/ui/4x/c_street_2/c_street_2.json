@@ -760,7 +760,7 @@
 				"h": 431
 			}
 		},
-		"resturant_bg": {
+		"restaurant_bg": {
 			"frame": {
 				"x": 3180,
 				"y": 1,
@@ -780,29 +780,9 @@
 				"h": 179
 			}
 		},
-		"resturant_icon_s": {
+		"restaurant_tag_s": {
 			"frame": {
 				"x": 1,
-				"y": 1440,
-				"w": 107,
-				"h": 104
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 107,
-				"h": 104
-			},
-			"sourceSize": {
-				"w": 107,
-				"h": 104
-			}
-		},
-		"resturant_tag_s": {
-			"frame": {
-				"x": 110,
 				"y": 1440,
 				"w": 113,
 				"h": 168
@@ -880,29 +860,9 @@
 				"h": 179
 			}
 		},
-		"service_icon_s": {
-			"frame": {
-				"x": 225,
-				"y": 1440,
-				"w": 121,
-				"h": 105
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 121,
-				"h": 105
-			},
-			"sourceSize": {
-				"w": 121,
-				"h": 105
-			}
-		},
 		"service_tag_s": {
 			"frame": {
-				"x": 348,
+				"x": 116,
 				"y": 1440,
 				"w": 125,
 				"h": 168
@@ -962,7 +922,7 @@
 		},
 		"title": {
 			"frame": {
-				"x": 475,
+				"x": 243,
 				"y": 1440,
 				"w": 105,
 				"h": 9

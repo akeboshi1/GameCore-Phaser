@@ -66,7 +66,7 @@ export class FurniBagPanel extends BasePanel {
     const zoom = this.mWorld.uiScale;
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
-    this.mBackground.fillRect(0, 0, width * zoom, height * zoom);
+    this.mBackground.fillRect(0, 0, width, height);
     this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
@@ -98,7 +98,7 @@ export class FurniBagPanel extends BasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
-    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
+    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 160 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
     this.mPropGrid.resetMask();
     // this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
     this.setSize(width, height);
@@ -374,7 +374,7 @@ export class FurniBagPanel extends BasePanel {
       y: 0,
       table: {
         width: this.scene.cameras.main.width - 16 * this.dpr * zoom,
-        height: 250 * this.dpr * zoom,
+        height: 260 * this.dpr * zoom,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
@@ -1034,7 +1034,7 @@ class Item extends Phaser.GameObjects.Container {
       key,
       frame: "grid_bg"
     }, false).setOrigin(0).setScale(zoom);
-    this.setSize(background.width, background.height);
+    this.setSize(background.displayWidth, background.displayHeight);
     this.selectbg = scene.make.image({
       key,
       frame: "grid_choose"

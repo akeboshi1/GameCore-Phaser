@@ -9,17 +9,20 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { op_client } from "pixelpai_proto";
 
 export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     private storeCountText: Phaser.GameObjects.Text;
     private newStoreBtn: Button;
     private gridtable: GameGridTable;
+    private storelimitText: Phaser.GameObjects.Text;
     private dpr: number;
     private key: string;
     private zoom: number;
     private takeAllHandler: Handler;
     private goOutHandler: Handler;
     private newStoreHandler: Handler;
+    private isCanNewCreate: boolean = false;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -29,9 +32,11 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setMyStoreData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
+    public setMyStoreData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
+        const datas = content.storeList;
+        this.storelimitText.text = i18n.t("business_street.store_limit") + ":" + `${datas.length}/${content.storeLimit}`;
+        this.gridtable.setItems(datas);
+        this.isCanNewCreate = datas.length < content.storeLimit;
     }
 
     public setHandler(takeAll: Handler, goOut: Handler, newStore: Handler) {
@@ -59,13 +64,17 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         const gridWdith = this.width;
         const gridHeight = this.height - 80 * this.dpr;
         const gridY = posy + 33 * this.dpr + gridHeight * 0.5;
-        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 75 * this.dpr);
+        this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 87 * this.dpr);
 
         this.newStoreBtn = new Button(this.scene, this.key, "new_store", "new_store");
         const btnX = -posx - this.newStoreBtn.width * 0.5 - 20 * this.dpr;
         this.newStoreBtn.setPosition(btnX, posy + 6 * this.dpr);
         this.newStoreBtn.on(CoreUI.MouseEvent.Tap, this.onNewStoreHandler, this);
         this.add(this.newStoreBtn);
+
+        this.storelimitText = this.scene.make.text({ x: btnX - this.newStoreBtn.width * 0.5 - 10 * this.dpr, y: posy + 5 * this.dpr, text: "store limit", style: { color: "#0", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(1, 0.5);
+        this.add(this.storelimitText);
+
         this.storeCountText = this.scene.make.text({ x: btnX + this.newStoreBtn.width * 0.5 + 20 * this.dpr, y: posy, text: "", style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(1, 0);
         this.add(this.storeCountText);
 
@@ -138,12 +147,13 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     }
 
     private onNewStoreHandler() {
+        if (!this.isCanNewCreate) return;
         if (this.newStoreHandler) this.newStoreHandler.run();
     }
 }
 
 class MyStoreItem extends Phaser.GameObjects.Container {
-    public storeData: any;
+    public storeData: op_client.EditModeRoom;
     private key: string;
     private dpr: number;
     private storeName: Phaser.GameObjects.Text;
@@ -154,6 +164,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
     private lvimgCon: Phaser.GameObjects.Container;
     private industryIcon: Phaser.GameObjects.Image;
     private enterHandler: Handler;
+    private bg: NineSlicePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -161,15 +172,15 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         const posx = -this.width * 0.5;
         const posy = -this.height * 0.5;
-        const bg = new NineSlicePatch(this.scene, 0, 0, width, 68 * dpr, this.key, "resturant_bg", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, 80 * dpr, this.key, "resturant_bg", {
             left: 4 * this.dpr,
             top: 9 * this.dpr,
             right: 4 * this.dpr,
             bottom: 9 * this.dpr
         });
-        this.add(bg);
+        this.add(this.bg);
         const iconbg = this.scene.make.image({ key, frame: "store_icon_bg" });
-        iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
+        iconbg.setPosition(posx + iconbg.width * 0.5 + 10 * dpr, 0);
         this.add(iconbg);
         this.storeIcon = new DynamicImage(this.scene, iconbg.x, 0);
         this.add(this.storeIcon);
@@ -178,18 +189,18 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.lvimgCon = this.scene.make.container(undefined, false);
         this.lvimgCon.height = 14 * dpr;
-        this.lvimgCon.setPosition(storeX + 6 * dpr, this.storeName.y + this.storeName.height + this.lvimgCon.height * 0.5 + 3 * dpr);
+        this.lvimgCon.setPosition(storeX + 6 * dpr, this.storeName.y + this.storeName.height + this.lvimgCon.height * 0.5 + 2 * dpr);
         this.add(this.lvimgCon);
-        this.savings = this.scene.make.text({ x: storeX, y: this.lvimgCon.y + this.lvimgCon.height * 0.5 + 3 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.savings = this.scene.make.text({ x: storeX, y: this.lvimgCon.y + this.lvimgCon.height * 0.5 + 2 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.savings);
-        this.competitiveness = this.scene.make.text({ x: storeX, y: this.savings.y + this.savings.height + 3 * dpr, text: "Competitiveness: 13000", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.competitiveness = this.scene.make.text({ x: storeX, y: this.savings.y + this.savings.height + 2 * dpr, text: "Competitiveness: 13000", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.competitiveness);
-        this.prosperity = this.scene.make.text({ x: storeX, y: this.competitiveness.y + this.competitiveness.height + 3 * dpr, text: "Prosperity: +13000 / Day", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.prosperity = this.scene.make.text({ x: storeX, y: this.competitiveness.y + this.competitiveness.height + 2 * dpr, text: "Prosperity: +13000 / Day", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.prosperity);
         this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
-        const enterBtn = new NineSliceButton(scene, -posx, 0, 48 * dpr, 27 * dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("business_street.enter"), this.dpr, zoom, {
+        const enterBtn = new NineSliceButton(scene, -posx, 0, 48 * dpr, 27 * dpr, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("business_street.enter"), this.dpr, zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -201,9 +212,18 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.add(enterBtn);
     }
 
-    public setStoreData(data) {
+    public setStoreData(data: op_client.EditModeRoom) {
+        const industry = data.industry;
+        const storeType = data.storeType;
+        this.bg.setFrame(industry + "_bg");
+        this.storeIcon.setTexture(this.key, storeType + "_icon");
+        this.storeName.text = data.name;
         this.lvimgCon.removeAll(true);
-        this.setImageInfo(UIAtlasKey.common2Key, this.getLevelImgs(200));
+        this.setImageInfo(UIAtlasKey.common2Key, this.getLevelImgs(data.roomLevel.level));
+        this.savings.text = i18n.t("business_street.savings") + ":" + data.savings + "";
+        this.competitiveness.text = i18n.t("business_street.competitiveness") + ":" + data.competitiveness;
+        this.prosperity.text = i18n.t("business_street.prosperity") + ":" + data.prosperity;
+        this.industryIcon.setFrame(industry + "_tag");
     }
 
     public setHandler(handler: Handler) {

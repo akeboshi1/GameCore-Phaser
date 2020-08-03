@@ -52,6 +52,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
     public setTexture(key: string, frame?: string | integer): this {
         this.originTexture = this.scene.textures.get(key);
         this.setFrame(frame);
+        this.originTexture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         return this;
     }
 
@@ -167,6 +168,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
                 this.add(patchImg);
                 if (this.internalTint) patchImg.setTint(this.internalTint);
                 patchImg.tintFill = tintFill;
+                patchImg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
                 ++patchIndex;
                 // info.push({ x: patchImg.x, y: patchImg.y, w: patchImg.width, h: patchImg.height, s: patchImg.scale, sx: patchImg.scaleX, sy: patchImg.scaleY });
             }

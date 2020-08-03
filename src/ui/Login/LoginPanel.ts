@@ -7,6 +7,9 @@ import { Font } from "../../utils/font";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
+import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import Helpers from "../../utils/helpers";
 
 export class LoginPanel extends BasePanel {
     private readonly key = "login";
@@ -14,6 +17,8 @@ export class LoginPanel extends BasePanel {
     private mPhoneInput: InputText;
     private mPhoneCodeInput: InputText;
     private fetchTime: any;
+    private acceptBtn: CheckBox;
+    private loginBtn: NineSliceButton;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -54,7 +59,7 @@ export class LoginPanel extends BasePanel {
         const scale = this.scale;
 
         const backgroundColor = this.scene.make.graphics(undefined, false);
-        backgroundColor.fillRect(0, 0, width * scale, height * scale);
+        backgroundColor.fillRect(0, 0, width, height);
         backgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x01cdff, 0x01cdff);
 
         const cloudLeft = this.scene.make.image({
@@ -63,6 +68,7 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "cloud_left"
         }, false).setOrigin(0);
+        cloudLeft.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         const cloudRight = this.scene.make.image({
             x: width,
@@ -70,6 +76,7 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "cloud_right"
         }, false).setOrigin(1, 0);
+        cloudRight.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         const logo = this.scene.make.image({
             x: width * 0.5,
@@ -77,11 +84,12 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "logo"
         }, false).setOrigin(0.5, 0);
-
+        logo.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         const bg = this.scene.make.image({
             key: this.key,
             frame: "bg"
         });
+        bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         bg.x = width * 0.5;
         bg.y = height - bg.height * 0.5;
 
@@ -119,9 +127,11 @@ export class LoginPanel extends BasePanel {
             style: {
                 color: "#FFEC48",
                 align: "center",
-                fontSize: 11 * this.dpr
+                fontSize: 11 * this.dpr,
+                fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
+        label1.setResolution(this.dpr);
         label1.y = height - 50 * this.dpr - label1.height * 0.5;
 
         const label2 = this.scene.make.text({
@@ -130,9 +140,11 @@ export class LoginPanel extends BasePanel {
             style: {
                 color: "#FFFFFF",
                 align: "center",
-                fontSize: 9.33 * this.dpr
+                fontSize: 9.33 * this.dpr,
+                fontFamily: Font.DEFULT_FONT
             }
         }).setOrigin(0.5);
+        label2.setResolution(this.dpr);
         label2.y = height - 16 * this.dpr - label2.height * 0.5;
 
         const line = this.scene.make.image({
@@ -140,7 +152,7 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "line",
         }, false);
-
+        line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         const fetchCode = this.scene.make.text({
             x: codeContainer.width * 0.5 - 20 * this.dpr,
             y: 0,
@@ -151,23 +163,46 @@ export class LoginPanel extends BasePanel {
                 color: "#2B5AF3"
             }
         }, false).setOrigin(1, 0.5).setInteractive();
+        fetchCode.setResolution(this.dpr);
         fetchCode.on("pointerup", this.onFetchCodeHandler, this);
         codeContainer.add([line, fetchCode]);
 
-        const login = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
+        this.loginBtn = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
-        login.setTextStyle({
+        this.loginBtn.setTextStyle({
             color: "#995E00",
             fontSize: 22 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        login.setFontStyle("bold");
-        login.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
-        this.add([backgroundColor, bg, cloudLeft, cloudRight, logo, phoneContaier, codeContainer, label1, label2, login]);
+        this.loginBtn.setFontStyle("bold");
+        this.loginBtn.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
+
+        const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#FFEC48]《用户服务协议》[/color][/area]和[area=privacy][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
+            color: "#ffffff",
+            fontSize: 11 * this.dpr,
+            fontFamily: Font.DEFULT_FONT,
+        }).setOrigin(0.5, 0.5).setInteractive().on("areadown", (key) => {
+            if (key === "userService") {
+                // TODO 链接放到环境变量中
+                Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
+            } else {
+                Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
+            }
+        });
+        label.setResolution(this.dpr);
+
+        this.acceptBtn = new CheckBox(this.scene, this.key, "accept_unchecked", "accept_checked").on(CoreUI.MouseEvent.Tap, this.onCheckboxHandler, this);
+        label.x = this.loginBtn.x + 8 * this.dpr;
+        label.y = this.loginBtn.y + this.loginBtn.height * 0.5 + 24 * this.dpr;
+
+        this.acceptBtn.x = label.x - label.width * 0.5 - 8 * this.dpr;
+        this.acceptBtn.y = label.y;
+        this.acceptBtn.selected = true;
+        this.add([backgroundColor, bg, cloudLeft, cloudRight, logo, phoneContaier, codeContainer, label1, label2, this.loginBtn, this.acceptBtn, label]);
         this.scene.scene.sleep(LoadingScene.name);
 
         super.init();
@@ -182,7 +217,7 @@ export class LoginPanel extends BasePanel {
             top: 24 * this.dpr,
             right: 28 * this.dpr,
             bottom: 24 * this.dpr
-          });
+        });
         container.add([input, bg]);
         container.setSize(bg.width, bg.height);
         return container;
@@ -212,5 +247,11 @@ export class LoginPanel extends BasePanel {
             return;
         }
         this.emit("login", phone, code, this.areaCode);
+    }
+
+    private onCheckboxHandler() {
+        if (this.tryLogin) {
+            this.loginBtn.enable = this.acceptBtn.selected;
+        }
     }
 }

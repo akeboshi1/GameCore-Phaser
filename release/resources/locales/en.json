@@ -68,10 +68,10 @@
     "savebag": "SaveToBag"
   },
   "equipupgrade": {
-    "title": "装备"
+    "title": "Equip"
   },
   "task": {
-    "title": "任务",
+    "title": "Task",
     "main_quest": "Main Quest",
     "side_quest": "Side Quest",
     "active_task": "Active Task",
@@ -108,10 +108,12 @@
     "popvalue": "Popular value",
     "goodvalue": "Good value",
     "compveness": "Competitiveness",
-    "prosperity": "Prosperity"
+    "prosperity": "Prosperity",
+    "closeshop":"Close Shop"
   },
   "business_street": {
     "commercial_street": "COMMERCIAL STREET",
+    "newstore": "NEW STORE",
     "my_store": "MY STORE",
     "enter": "Enter",
     "takeall": "Take all",
@@ -122,6 +124,12 @@
     "street": "STREET",
     "back": "BACK",
     "history_title": "LAST ${} VISITS",
-    "ranking_list":"RANKING LIST"
+    "ranking_list": "RANKING LIST",
+    "rank_reward": "Rank Reward",
+    "savings": "Savings",
+    "competitiveness": "Competitiveness",
+    "prosperity": "Prosperity",
+    "store_limit":"store limit",
+    "marketing_plan":"Marketing Plan"
   }
 }
