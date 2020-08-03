@@ -51,7 +51,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       w = frame.width;
       h = frame.height;
     }
-    this.mBuyBtn = new NinePatchButton(this.scene, 440 * this.dpr, 700 * this.dpr, 81 * this.dpr, 41 * this.dpr, this.key, "yellow_button", i18n.t("market.buy_button"), {
+    this.mBuyBtn = new NinePatchButton(this.scene, 440, 700, 81 * this.dpr, 41 * this.dpr, this.key, "yellow_button", i18n.t("market.buy_button"), {
       left: 14 * this.dpr,
       top: 14 * this.dpr,
       right: w - 2 - 14 * this.dpr,
@@ -153,7 +153,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const height = ((this.scene.cameras.main.height) >> 1) - 150;
     const centerX = this.scene.cameras.main.centerX;
 
-    this.mBuyBtn.x = width / this.uiScale - this.mBuyBtn.displayWidth / 2 - 10 * this.dpr * this.uiScale;
+    this.mBuyBtn.x = width - this.mBuyBtn.displayWidth / 2 - 10 * this.dpr * this.uiScale;
     this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.displayHeight / 2 - 12 * this.dpr * this.uiScale;
 
     const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 - 17 * this.dpr * this.uiScale;

@@ -59,7 +59,7 @@ export class LoginPanel extends BasePanel {
         const scale = this.scale;
 
         const backgroundColor = this.scene.make.graphics(undefined, false);
-        backgroundColor.fillRect(0, 0, width * scale, height * scale);
+        backgroundColor.fillRect(0, 0, width, height);
         backgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x01cdff, 0x01cdff);
 
         const cloudLeft = this.scene.make.image({
@@ -68,6 +68,7 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "cloud_left"
         }, false).setOrigin(0);
+        cloudLeft.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         const cloudRight = this.scene.make.image({
             x: width,
@@ -75,6 +76,7 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "cloud_right"
         }, false).setOrigin(1, 0);
+        cloudRight.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         const logo = this.scene.make.image({
             x: width * 0.5,
@@ -82,11 +84,12 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "logo"
         }, false).setOrigin(0.5, 0);
-
+        logo.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         const bg = this.scene.make.image({
             key: this.key,
             frame: "bg"
         });
+        bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         bg.x = width * 0.5;
         bg.y = height - bg.height * 0.5;
 
@@ -128,6 +131,7 @@ export class LoginPanel extends BasePanel {
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
+        label1.setResolution(this.dpr);
         label1.y = height - 50 * this.dpr - label1.height * 0.5;
 
         const label2 = this.scene.make.text({
@@ -140,6 +144,7 @@ export class LoginPanel extends BasePanel {
                 fontFamily: Font.DEFULT_FONT
             }
         }).setOrigin(0.5);
+        label2.setResolution(this.dpr);
         label2.y = height - 16 * this.dpr - label2.height * 0.5;
 
         const line = this.scene.make.image({
@@ -147,7 +152,7 @@ export class LoginPanel extends BasePanel {
             key: this.key,
             frame: "line",
         }, false);
-
+        line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         const fetchCode = this.scene.make.text({
             x: codeContainer.width * 0.5 - 20 * this.dpr,
             y: 0,
@@ -158,6 +163,7 @@ export class LoginPanel extends BasePanel {
                 color: "#2B5AF3"
             }
         }, false).setOrigin(1, 0.5).setInteractive();
+        fetchCode.setResolution(this.dpr);
         fetchCode.on("pointerup", this.onFetchCodeHandler, this);
         codeContainer.add([line, fetchCode]);
 
@@ -175,18 +181,19 @@ export class LoginPanel extends BasePanel {
         this.loginBtn.setFontStyle("bold");
         this.loginBtn.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
 
-        const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=serve][color=#FFEC48]《用户服务协议》[/color][/area]和[area=ABC][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
+        const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#FFEC48]《用户服务协议》[/color][/area]和[area=privacy][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
             color: "#ffffff",
             fontSize: 11 * this.dpr,
             fontFamily: Font.DEFULT_FONT,
         }).setOrigin(0.5, 0.5).setInteractive().on("areadown", (key) => {
-            if (key === "serve") {
+            if (key === "userService") {
                 // TODO 链接放到环境变量中
                 Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
             } else {
                 Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
             }
         });
+        label.setResolution(this.dpr);
 
         this.acceptBtn = new CheckBox(this.scene, this.key, "accept_unchecked", "accept_checked").on(CoreUI.MouseEvent.Tap, this.onCheckboxHandler, this);
         label.x = this.loginBtn.x + 8 * this.dpr;
@@ -210,7 +217,7 @@ export class LoginPanel extends BasePanel {
             top: 24 * this.dpr,
             right: 28 * this.dpr,
             bottom: 24 * this.dpr
-          });
+        });
         container.add([input, bg]);
         container.setSize(bg.width, bg.height);
         return container;

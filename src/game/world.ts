@@ -757,6 +757,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             resolution: 1,
             fps: {
                 target: 30,
+                forceSetTimeOut: true
             },
             dom: {
                 createContainer: true,

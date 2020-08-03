@@ -52,6 +52,7 @@ export class MineCarPanel extends BasePanel {
     this.mCloseBtn.y = this.mBg.y - (this.mBg.displayHeight - this.mCloseBtn.displayHeight) / 2 + 10 * this.dpr * zoom;
     this.mCounter.x = this.mBg.x / 2;
     this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 16 * this.dpr * zoom;
+    this.mCounter.setResolution(this.dpr);
     this.mTips.x = this.mBg.x + 20 * this.dpr * zoom;
     this.mTips.y = this.mBg.y - this.mBg.displayHeight / 2 - 15 * this.dpr * zoom;
     this.mDiscardBtn.x = this.mBg.x + this.mBg.displayWidth / 2 - this.mDiscardBtn.displayWidth / 2 - 9 * this.dpr * zoom;
@@ -164,7 +165,7 @@ export class MineCarPanel extends BasePanel {
     this.mCloseBtn.setInteractive();
     this.mCloseBtn.x = (this.mBg.width * zoom) / 2;
     this.mCloseBtn.y = (-(this.mBg.height - this.mCloseBtn.height) * zoom) / 2 + 10 * this.dpr * zoom;
-
+    this.mCloseBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mCounter = this.scene.make.text(
       {
         text: "25/50",
@@ -222,7 +223,7 @@ export class MineCarPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom
+        zoom: this.scale
         // mask: false
       },
       scrollMode: 0,
@@ -261,7 +262,7 @@ export class MineCarPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom
+        zoom: this.scale
         // mask: false
       },
       scrollMode: 1,

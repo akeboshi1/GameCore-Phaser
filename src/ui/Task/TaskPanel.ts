@@ -103,6 +103,7 @@ export class TaskPanel extends BasePanel {
         this.tilteName = this.scene.make.text({ x: 0, y: posY - 12 * this.dpr, text: i18n.t("task.title"), style: { font: mfont, color: "#8F4300", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" });
         this.tilteName.setStroke("#8F4300", 1);
+        this.tilteName.setResolution(this.dpr);
         this.closeBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.closeBtn.setInteractive();
         const optionWidth = 253 * this.dpr;
