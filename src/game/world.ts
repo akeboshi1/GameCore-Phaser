@@ -755,7 +755,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             backgroundColor: 0x0,
             resolution: 1,
             fps: {
-                target: 30,
+                target: 60,
                 forceSetTimeOut: true
             },
             dom: {

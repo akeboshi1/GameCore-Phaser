@@ -12,7 +12,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private popvalue: HouseAttributeValue;
     private goodvalue: HouseAttributeValue;
     private compviness: HouseAttributeValue;
-    private prosprity: HouseAttributeValue;
+    private turnover: HouseAttributeValue;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.key = key;
@@ -38,12 +38,12 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.goodvalue.setImageInfo(i18n.t("room_info.goodvalue"), this.key, this.getgoodImgs());
         if (data.roomType === "store") {
             this.compviness.visible = true;
-            this.prosprity.visible = true;
+            this.turnover.visible = true;
             this.compviness.setTextInfo(i18n.t("room_info.compveness"), "16525");
-            this.prosprity.setTextInfo(i18n.t("room_info.prosperity"), "68");
+            this.turnover.setTextInfo(i18n.t("room_info.turnover"), "68");
         } else {
             this.compviness.visible = false;
-            this.prosprity.visible = false;
+            this.turnover.visible = false;
         }
 
     }
@@ -65,8 +65,8 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         posy += space;
         this.compviness = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.prosprity = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
-        this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue, this.compviness, this.prosprity]);
+        this.turnover = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue, this.compviness, this.turnover]);
 
     }
     private getLevelImgs(level: number) {

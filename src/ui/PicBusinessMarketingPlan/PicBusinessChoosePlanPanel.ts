@@ -27,7 +27,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     private selectHandler: Handler;
     private curSelectData: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL;
     private curSelectItem: PlanTypeItem;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, isfirst: boolean = true) {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
         this.dpr = dpr;
         this.key = key;
@@ -39,6 +39,13 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     public setPlanData() {
         const arr = new Array(60);
         this.gridtable.setItems(arr);
+        const cells = this.gridtable.getCells();
+        if (cells) {
+            const cell = cells[0];
+            if (cell && cell.container) {
+                this.onGridSelectHandler(cell.container);
+            }
+        }
     }
     public setHandler(cancel: Handler, select: Handler) {
         this.cancelHandler = cancel;
@@ -52,27 +59,14 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
 
     protected create() {
         const posy = -this.height * 0.5;
-        const titlebg = new NineSlicePatch(this.scene, 0, 0, 135 * this.dpr, 17 * this.dpr, this.key, "subtitle", {
-            left: 13 * this.dpr,
-            top: 0 * this.dpr,
-            right: 13 * this.dpr,
-            bottom: 0 * this.dpr
-        });
-        titlebg.x = 0;
-        titlebg.y = posy + 10 * this.dpr;
-        this.add(titlebg);
-        const title = this.scene.make.text({ x: 0, y: titlebg.y, text: i18n.t("business_street.choosetheindustry"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5);
-        this.add(title);
-        title.text = i18n.t("business_street.choosestorelike");
-
-        const gridWdith = this.width - 24 * this.dpr;
+        const gridWdith = this.width - 29 * this.dpr;
         const gridHeight = 100 * this.dpr;
-        const gridY = -50 * this.dpr;
+        const gridY = -this.height * 0.5 + gridHeight * 0.5 + 10 * this.dpr;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 90 * this.dpr, 100 * this.dpr);
-        this.describleText = this.scene.make.text({ x: 0, y: gridY + gridHeight * 0.5 + 10 * this.dpr, text: "This industry has great development potential.", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0);
+        this.describleText = this.scene.make.text({ x: -this.width * 0.5 + 20 * this.dpr, y: gridY + gridHeight * 0.5 + 10 * this.dpr, text: "This industry has great development potential.", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0);
         this.add(this.describleText);
         this.effectText = this.scene.make.text({
-            x: 0, y: this.describleText.y + this.describleText.height + 10 * this.dpr,
+            x: this.describleText.x, y: this.describleText.y + this.describleText.height + 10 * this.dpr,
             text: "55225sadffqwerqwerqwer",
             style: {
                 fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0",
@@ -83,18 +77,18 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             }
         }).setOrigin(0);
         this.add(this.effectText);
-        this.materialTitle = this.scene.make.text({ x: 0, y: this.effectText.y + this.effectText.height + 10 * this.dpr, text: i18n.t("business_street.choosetheindustry"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0);
+        this.materialTitle = this.scene.make.text({ x: this.describleText.x, y: this.effectText.y + this.effectText.height + 10 * this.dpr, text: i18n.t("business_street.material_requirements"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0);
         this.add(this.materialTitle);
 
         this.gameScroll = new GameScroller(this.scene, {
             x: 0,
-            y: this.materialTitle.y + this.materialTitle.height + 10 * this.dpr,
-            width: this.width,
+            y: this.materialTitle.y + this.materialTitle.height + 25 * this.dpr,
+            width: this.width - 30 * this.dpr,
             height: 40 * this.dpr,
             zoom: this.zoom,
             align: 2,
             orientation: 1,
-            space: 20 * this.dpr
+            space: 10 * this.dpr
         });
         this.add(this.gameScroll);
         const cancelBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("common.cancel"), this.dpr, this.zoom, {
@@ -142,7 +136,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
                     this.add(cellContainer);
                 }
                 cellContainer.setData({ item });
-                cellContainer.setStoreData(item);
+                cellContainer.setPlanData(item);
                 if (this.curSelectData && item === this.curSelectData) {
                     cellContainer.select = true;
                 } else
@@ -183,7 +177,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
 }
 
 class PlanTypeItem extends Phaser.GameObjects.Container {
-    public storeData: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL;
+    public palnData: any;
     private key: string;
     private dpr: number;
     private storeName: Phaser.GameObjects.Text;
@@ -205,16 +199,15 @@ class PlanTypeItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
     }
 
-    public setStoreData(data: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL) {
-        this.storeData = data;
-        if (data instanceof op_pkt_def.PKT_INDUSTRY) {
-            this.storeIcon.setFrame(data.industryType + "_icon");
-            this.storeName.text = data.name;
-        } else {
-            const storeData = <op_pkt_def.PKT_ROOM_MODEL>data;
-            this.storeIcon.setFrame(storeData.storeType + "_icon");
-            this.storeName.text = storeData.name;
-        }
+    public setPlanData() {
+        // if (data instanceof op_pkt_def.PKT_INDUSTRY) {
+        //     this.storeIcon.setFrame(data.industryType + "_icon");
+        //     this.storeName.text = data.name;
+        // } else {
+        //     const storeData = <op_pkt_def.PKT_ROOM_MODEL>data;
+        //     this.storeIcon.setFrame(storeData.storeType + "_icon");
+        //     this.storeName.text = storeData.name;
+        // }
     }
 
     public get select() {

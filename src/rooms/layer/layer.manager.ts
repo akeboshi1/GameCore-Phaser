@@ -175,88 +175,11 @@ export class LayerManager {
         }
         if (this.mDepthSurface) {
             this.mDepthSurface = false;
-            // this.mSurfaceLayer.sort("depth");
-            // for (const display of this.mSurfaceLayer.list) {
-            //     if ((<any> display).element.id ===1787929712 || (<any> display).element.id === 902683971) {
-            //         Logger.getInstance().log("===>> ", (<any> display).element.id);
-            //     }
-            // }
-            // const list = this.mSurfaceLayer.list;
-            // const len: number = list.length;
-            // let k = len - 1;
-            // let pos = 0;// pos变量用来标记循环里最后一次交换的位置
-            // for (let i = 0; i < len - 1; i++) {
-            //     // 每次遍历标志位都要先置为0，才能判断后面的元素是否发生了交换
-            //     let flag = 0;
-            //     for (let j = 0; j < k; j++) {
-            //         const displayA: ElementDisplay = list[j] as ElementDisplay;
-            //         const displayB: ElementDisplay = list[j + 1] as ElementDisplay;
-            //         const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
-            //         if (angle * (180 * Math.PI) >= 70) {
-            //             const temp = list[j + 1];        // 元素交换
-            //             list[j + 1] = list[j];
-            //             list[j] = temp;
-            //             flag = 1;// 只要有发生了交换，flag就置为1
-            //             pos = j; // 循环里最后一次交换的位置 j赋给pos
-            //         }
-            //     }
-            //     k = pos;
-            //     // 判断标志位是否为0，如果为0，说明后面的元素已经有序，就直接return
-            //     // if (flag === 0) {
-            //     //     return;
-            //     // }
-
-            // }
             this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
-                // Logger.debug(displayA, displayB);
-                // const sortA = displayA.sortRectangle;
-                // const sortB = displayB.sortRectangle;
-                // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
-                // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
-                // const depthA: number = displayA.depth ? displayA.depth : 0;
-                // const depthB: number = displayB.depth ? displayB.depth : 0;
-                // if (displayA.element.id === 902683971 || displayA.element.id === 1787929712) {
-                //     Logger.getInstance().log("===》》 element: ", displayA.element, depthA, depthB);
-                // }
-                // if (depthA > depthB) {
-                //     return 1;
-                // }
-                // ---------------根据角度判断深度
-                const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
-                // if ((displayA.element.id === 1787929712 && displayB.element.id === 902683971) || (displayB.element.id === 1787929712 && displayA.element.id === 902683971)) {
-                //     Logger.getInstance().log("===》》angle: ", displayA.element.id, displayB.element.id, displayA.sortX, displayA.sortY, angle, angle * (180 * Math.PI));
-                // }
-                if (angle * (180 * Math.PI) >= 70) {
-                    return 1;
-                }
-                return -1;
+                const posA = displayA.element.getPosition45();
+                const posB = displayB.element.getPosition45();
+                return (posA.x + posA.y) > (posB.x + posB.y);
             });
-
-            // this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
-            //     // Logger.debug(displayA, displayB);
-            //     // const sortA = displayA.sortRectangle;
-            //     // const sortB = displayB.sortRectangle;
-
-            //     // Logger.log("sort x: ", displayA, displayA.sortX, displayA.sortY);
-            //     // Logger.log("sortB: ", displayB, displayB.sortX, displayB.sortY);
-            //     const depthA: number = displayA.depth ? displayA.depth : 0;
-            //     const depthB: number = displayB.depth ? displayB.depth : 0;
-            //     if (depthA > depthB) {
-            //         return 1;
-            //     }
-            //     // ---------------根据角度判断深度
-            //     const angle: number = Math.atan2(displayA.sortY - displayB.sortY, displayA.sortX - displayB.sortX);
-            //     if (angle * (180 * Math.PI) >= 70) {
-            //         return 1;
-            //     }
-            //     // if (displayA.sortY > displayB.sortY) {
-            //     //     return 1;
-            //     // }
-            //     // if (displayB.y + sortB.top.y > displayA.y + sortA.left.y) {
-            //     //     return 1;
-            //     // }
-            //     return -1;
-            // });
         }
     }
 
