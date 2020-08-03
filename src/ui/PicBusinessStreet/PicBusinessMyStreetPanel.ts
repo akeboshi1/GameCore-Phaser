@@ -159,7 +159,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
     private storeName: Phaser.GameObjects.Text;
     private savings: Phaser.GameObjects.Text;
     private competitiveness: Phaser.GameObjects.Text;
-    private prosperity: Phaser.GameObjects.Text;
+    private turnover: Phaser.GameObjects.Text;
     private storeIcon: DynamicImage;
     private lvimgCon: Phaser.GameObjects.Container;
     private industryIcon: Phaser.GameObjects.Image;
@@ -195,8 +195,8 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.add(this.savings);
         this.competitiveness = this.scene.make.text({ x: storeX, y: this.savings.y + this.savings.height + 2 * dpr, text: "Competitiveness: 13000", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.competitiveness);
-        this.prosperity = this.scene.make.text({ x: storeX, y: this.competitiveness.y + this.competitiveness.height + 2 * dpr, text: "Prosperity: +13000 / Day", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
-        this.add(this.prosperity);
+        this.turnover = this.scene.make.text({ x: storeX, y: this.competitiveness.y + this.competitiveness.height + 2 * dpr, text: "Prosperity: +13000 / Day", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.add(this.turnover);
         this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
@@ -222,7 +222,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.setImageInfo(UIAtlasKey.common2Key, this.getLevelImgs(data.roomLevel.level));
         this.savings.text = i18n.t("business_street.savings") + ":" + data.savings + "";
         this.competitiveness.text = i18n.t("business_street.competitiveness") + ":" + data.competitiveness;
-        this.prosperity.text = i18n.t("business_street.prosperity") + ":" + data.prosperity;
+        this.turnover.text = i18n.t("business_street.turnover") + ":" + data.turnover;
         this.industryIcon.setFrame(industry + "_tag");
     }
 

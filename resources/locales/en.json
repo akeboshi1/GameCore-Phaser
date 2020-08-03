@@ -108,7 +108,7 @@
     "popvalue": "Popular value",
     "goodvalue": "Good value",
     "compveness": "Competitiveness",
-    "prosperity": "Prosperity",
+    "turnover": "Turnover",
     "closeshop":"Close Shop"
   },
   "business_street": {
@@ -128,7 +128,9 @@
     "rank_reward": "Rank Reward",
     "savings": "Savings",
     "competitiveness": "Competitiveness",
-    "prosperity": "Prosperity",
+    "prosperity": "Turnover ",
+    "popularity": "Popularity",
+    "praise":"Praise",
     "store_limit":"store limit",
     "marketing_plan":"Marketing Plan",
     "plan_title":"There is now plan yet",
