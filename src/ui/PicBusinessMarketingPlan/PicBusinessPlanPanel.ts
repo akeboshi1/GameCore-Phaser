@@ -151,7 +151,7 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private planName: Phaser.GameObjects.Text;
-    private planAtt: Phaser.GameObjects.Text;
+    private planAtt: BBCodeText;
     private progress: ProgressBar;
     private planText: Phaser.GameObjects.Text;
     private bg: NineSlicePatch;
@@ -182,7 +182,11 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
 
         this.planName = this.scene.make.text({ x: storebg.x + storebg.width * 0.5 + 10 * dpr, y: -this.bg.height * 0.5 + 4 * dpr, text: "Plane Name", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.planName);
-        this.planAtt = this.scene.make.text({ x: this.planName.x, y: this.planName.y + this.planName.height + 4 * dpr, text: "Competitiveness +10%,  Prosperity +10%", style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.planAtt = new BBCodeText(this.scene, this.planName.x, this.planName.y + this.planName.height + 4 * dpr, "Competitiveness +10%,  Prosperity +10%", {
+            color: "#0",
+            fontSize: 10 * this.dpr,
+            fontFamily: Font.DEFULT_FONT,
+        }).setOrigin(0);
         this.add(this.planAtt);
         const barWdith = 159 * dpr, barHeight = 8 * dpr;
         this.progress = new ProgressBar(this.scene, {
@@ -244,6 +248,10 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             this.remove(this.addBtn);
             this.progress.setProgress(50, 100);
         }
+        let barframe = "progress_bar_r";
+        if (data > 30 && data <= 50) barframe = "progress_bar_y";
+        else if (data > 50) barframe = "progress_bar_g";
+        this.progress.bar.setFrame(barframe);
         this.planData = data;
     }
 

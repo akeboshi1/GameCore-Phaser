@@ -10,7 +10,7 @@ import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButto
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
-import { TextButton } from "../Market/TextButton";
+import { TextButton } from "../components/TextButton";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 
@@ -101,13 +101,12 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.add(this.secondaryPanel);
         const scrollbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar" });
         this.secondaryPanel.gameScroll.addAt(scrollbg);
-        this.secondaryPanel.createGrideTable(0, 6 * this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 65 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
+        this.secondaryPanel.createGrideTable(0, 9* this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 65 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
                 const btn: TextButton = cellContainer;
                 btn.setFontSize(13 * this.dpr);
-                btn.text.originX = 0.5;
                 this.add(cellContainer);
             }
             cellContainer.setText(item.name);
@@ -120,7 +119,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         });
         this.secondaryPanel.setHandler(new Handler(this, this.onCategoryHandler), new Handler(this, this.onSubCategoryHandle));
         const gridbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar_2" });
-        gridbg.y = 8 * this.dpr;
+        gridbg.y = 3* this.dpr;
         this.secondaryPanel.gridTable.addAt(gridbg);
         const gridWdith = this.width;
         const gridHeight = this.height - 140 * this.dpr;
@@ -187,6 +186,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
 
     private onCategoryHandler(data) {
         this.curCategoryType = data.categoryType;
+        if (this.subCategory !== undefined) this.queryHandler.runWith([this.curCategoryType, this.subCategory]);
 
     }
 
@@ -266,7 +266,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.storeIcon.setTexture(this.key2, storeType + "_icon_s");
         this.storeName.text = data.name;
         this.playerName.text = data.ownerName;
-        this.praiseCount.text = data.praise+ "";
+        this.praiseCount.text = data.praise + "";
         this.industryIcon.setFrame(industry + "_tag_s");
     }
 }

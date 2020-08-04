@@ -4,7 +4,7 @@ import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { TextButton } from "./TextButton";
+import { TextButton } from "../components/TextButton";
 import { MarketItem } from "./item";
 import { Font } from "../../utils/font";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
@@ -15,6 +15,7 @@ import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { FramesModel } from "../../rooms/display/frames.model";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
@@ -44,7 +45,6 @@ export class MarketPanel extends BasePanel {
     super(scene, world);
     this.mSubTabs = [];
     this.mTabs = [];
-    this.scale = 1;
   }
 
   public addListen() {
@@ -63,18 +63,13 @@ export class MarketPanel extends BasePanel {
 
   public resize(w: number, h: number) {
     // super.resize(w, h);
-    const scale = this.scale;
-    const zoom = this.mWorld.uiScale;
-    const width = this.scene.cameras.main.width / scale;
-    const height = this.scene.cameras.main.height / scale;
-    const centerX = this.scene.cameras.main.centerX / scale;
-
+    const width = this.scaleWidth;
+    const height = this.scaleHeight;
     this.setSize(width, height);
+    this.mTIle.x = width / 2;
 
-    this.mTIle.x = centerX;
-
-    const shelfHeight = 290 * this.dpr * zoom;
-    this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width * zoom, height * zoom), Phaser.Geom.Rectangle.Contains);
+    const shelfHeight = 290 * this.dpr;
+    this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
 
     this.mShelfContainer.setSize(width, shelfHeight);
     this.mShelfContainer.setPosition(0, height - this.mShelfContainer.height);
@@ -82,19 +77,14 @@ export class MarketPanel extends BasePanel {
     this.mShelfBackground.clear();
     this.mShelfBackground.fillStyle(0x02ccff);
     this.mShelfBackground.fillRect(0, 0, this.mShelfContainer.width, this.mShelfContainer.height);
-    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr * zoom;
-
-    this.mSelectItem.setSize(width, height - this.mShelfContainer.height);
-    this.mSelectItem.resize(w, h);
-
+    this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr;
+    this.mSelectItem.resize(width, height);
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x3ee1ff);
-    this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
+    this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.mCategoriesBar.fillStyle(0x04b3d3);
-    this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
-    this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr * zoom);
-    // this.setInteractive();
-    // this.setInteractive(new Phaser.Geom.Rectangle(-(width >> 1), -(height >> 1), width, height), Phaser.Geom.Rectangle.Contains);
+    this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
+    this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
   }
 
   public setCategories(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
@@ -118,19 +108,18 @@ export class MarketPanel extends BasePanel {
       bottom: 2 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();
-    const zoom = this.mWorld.uiScale;
-    const capW = 77 * this.dpr * zoom;
-    const capH = 38 * this.dpr * zoom;
+    const capW = 77 * this.dpr;
+    const capH = 38 * this.dpr;
     for (let i = 0; i < categorys.length; i++) {
       const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], 1, 1);
       // btn.removeAllListeners();
       btn.setTextStyle({
-        fontSize: 18 * this.dpr * zoom,
+        fontSize: 18 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
       });
       this.mTabs[i] = btn;
       btn.setData("category", categorys[i]);
-      btn.x = i * 80 * this.dpr * zoom + capW / 2;
+      btn.x = i * 80 * this.dpr + capW / 2;
       btn.y = capH / 2;
       // this.add(btn);
     }
@@ -174,9 +163,9 @@ export class MarketPanel extends BasePanel {
     this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
     this.mPropContainer.y = this.mSubCategeoriesContainer.y + 43 * this.dpr + this.mSubCategeoriesContainer.height + 9 * this.dpr;
     this.mShelfBackground.y = this.mSubCategeoriesContainer.y + 43 * this.dpr;
-    this.mSubCategorisScroll.y = this.mCategoriesBar.y + (33 * this.dpr);
+    this.mSubCategorisScroll.y = this.mCategoriesBar.y + (25 * this.dpr);
     this.randomCon.y = this.mSubCategorisScroll.y;
-    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + 118 * this.dpr * this.mWorld.uiScale;
+    this.mPropGrid.y = this.mCategoriesBar.y + this.mSubCategeoriesContainer.height + this.mPropGrid.height * 0.5 + 5 * this.dpr;
     this.mPropGrid.layout();
     this.mSubCategorisScroll.layout();
     this.mSubCategorisScroll.resetMask();
@@ -192,9 +181,8 @@ export class MarketPanel extends BasePanel {
 
   protected init() {
     if (this.mInitialized) return;
-    const w = this.scene.scale.width / this.scale;
-    const h = this.scene.scale.height / this.scale;
-    const zoom = this.mWorld.uiScale;
+    const w = this.scaleWidth;
+    const h = this.scaleHeight;
     this.mBackgroundColor = this.scene.make.graphics(undefined, false);
     this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     // this.mBackgroundColor.fillStyle(0x6f75ff);
@@ -204,19 +192,19 @@ export class MarketPanel extends BasePanel {
     this.mShelfContainer = this.scene.make.container({
       x: (w / 2),
       y: h
-    }, false).setSize(w, 290 * this.dpr * zoom);
+    }, false).setSize(w, 290 * this.dpr);
 
     const frame = this.scene.textures.getFrame(this.key, "bg");
-    const countW = Math.ceil(w / (frame.width * zoom));
-    const countH = Math.ceil((h - this.mShelfContainer.height + frame.height * zoom) / (frame.height * zoom));
+    const countW = Math.ceil(w / (frame.width));
+    const countH = Math.ceil((h - this.mShelfContainer.height + frame.height) / (frame.height));
     for (let i = 0; i < countW; i++) {
       for (let j = 0; j < countH; j++) {
         const bg = this.scene.make.image({
-          x: i * frame.width * zoom,
-          y: j * frame.height * zoom,
+          x: i * frame.width,
+          y: j * frame.height,
           key: this.key,
           frame: "bg"
-        }, false).setScale(zoom);
+        }, false);
         this.add(bg);
       }
     }
@@ -228,7 +216,7 @@ export class MarketPanel extends BasePanel {
       frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
-    }).setInteractive().setScale(zoom);
+    }).setInteractive();
 
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
@@ -236,14 +224,14 @@ export class MarketPanel extends BasePanel {
     this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mPropContainer]);
     this.add([this.mShelfContainer, this.mSubCategeoriesContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr, this.mWorld.uiScale);
+    this.mSelectItem = new ElementDetail(this.scene, this.mWorld, this.key, this.dpr);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({
       text: i18n.t("market.title"),
-      y: 30 * this.dpr * zoom,
+      y: 30 * this.dpr,
       style: {
-        fontSize: 36 * this.dpr * zoom,
+        fontSize: 36 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
@@ -256,18 +244,14 @@ export class MarketPanel extends BasePanel {
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
     const config: GridTableConfig = {
-      x: w / 2,
-      // y: 0,
-      // width: w,
-      // height: capH,
+      x: w/4,
+      y: 0,
       table: {
-        width: w - 30 * this.dpr,
-        height: capH,
+        width: w,
+        height: 50 * this.dpr,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
-        cellOriginX: 0,
-        cellOriginY: 0,
         zoom: this.scale
       },
       scrollMode: 1,
@@ -275,13 +259,10 @@ export class MarketPanel extends BasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new TextButton(scene, this.dpr, zoom);
-          // cellContainer.width = capW;
-          // cellContainer.height = capH;
-          this.add(cellContainer);
+          cellContainer = new TextButton(scene, this.dpr);
+          this.mSubCategorisScroll.add(cellContainer);
         }
         cellContainer.setText(item.value);
-        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         if (item && this.mPreSubCategoris && this.mPreSubCategoris.key === item.key) {
           cellContainer.changeDown();
@@ -295,7 +276,7 @@ export class MarketPanel extends BasePanel {
     this.mSubCategorisScroll.on("cellTap", (cell, index) => {
       this.onSelectSubCategoryHandler(cell);
     });
-    this.add(this.mSubCategorisScroll.table);
+    this.add(this.mSubCategorisScroll);
     this.randomCon = this.scene.make.container(undefined, false);
     this.randomCon.x = w * 0.5;
     this.randomCon.visible = false;
@@ -305,7 +286,7 @@ export class MarketPanel extends BasePanel {
       text: i18n.t("market.refreshtime"),
       style: {
         color: "#007AAE",
-        fontSize: 13 * this.dpr * zoom,
+        fontSize: 13 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0, 0.5);
@@ -331,27 +312,25 @@ export class MarketPanel extends BasePanel {
       x: 0 * this.dpr, y: this.refreshIcon.y,
       text: "100",
       style: {
-        fontSize: 10 * this.dpr * zoom,
+        fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0, 0.5);
     this.randomRefreshBtn.add([this.refreshIcon, this.refreshNeedCount]);
     this.randomCon.add([this.randomRefeshTime, this.randomRefreshBtn]);
     const propFrame = this.scene.textures.getFrame(this.key, "border");
-    const cellWidth = propFrame.width * zoom + 10 * this.dpr;
-    const cellHeight = propFrame.height * zoom + 10 * this.dpr;
+    const cellWidth = propFrame.width + 10 * this.dpr;
+    const cellHeight = propFrame.height + 10 * this.dpr;
     const propGridConfig: GridTableConfig = {
-      x: w / 2,
-      y: 1050 + (41 * this.dpr * zoom) / 2,
-      // y: 0,
+      x: w/4,
+      y: 0,
       table: {
-        width: w - 20 * this.dpr * zoom,
-        height: 224 * this.dpr * zoom,
+        width: w,
+        height: 224 * this.dpr,
         columns: 3,
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
-        // mask: false,
         cellOriginX: 0,
         cellOriginY: 0,
         zoom: this.scale
@@ -362,12 +341,9 @@ export class MarketPanel extends BasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new MarketItem(scene, 0, 0, this.dpr, zoom);
-          // cellContainer.width = capW;
-          // cellContainer.height = capH;
-          this.add(cellContainer);
+          cellContainer = new MarketItem(scene, 0, 0, this.dpr);
+          this.mPropGrid.add(cellContainer);
         }
-        // cellContainer.setSize(width, height);
         cellContainer.setData({ item });
         cellContainer.setProp(item);
         return cellContainer;
@@ -381,8 +357,7 @@ export class MarketPanel extends BasePanel {
         this.onSelectItemHandler(data);
       }
     });
-    this.add(this.mPropGrid.table);
-
+    this.add(this.mPropGrid);
     this.resize(0, 0);
 
     this.emit("getCategories");

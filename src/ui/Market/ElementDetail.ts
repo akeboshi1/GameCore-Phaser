@@ -24,26 +24,14 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
   private readonly dpr: number;
-  private readonly uiScale: number;
-  constructor(scene: Phaser.Scene, world: WorldService, $key: string, dpr: number, uiScale?: number) {
+  constructor(scene: Phaser.Scene, world: WorldService, $key: string, dpr: number) {
     super(scene);
     this.key = $key;
     this.mWorld = world;
-    this.uiScale = uiScale || 1;
-
     this.dpr = dpr;
 
     this.setPosition(0, 0);
-
-    // this.mBackground = this.scene.make.image({
-    //   x: this.scene.cameras.main.width >> 1,
-    //   key: this.key,
-    //   frame: "bg"
-    // });
-    // this.mBackground.y = (this.mBackground.height >> 1) + 43 * this.dpr;
-
-    this.mCounter = new NumberCounter(this.scene, $key, 360, 700, this.dpr, uiScale);
-
+    this.mCounter = new NumberCounter(this.scene, $key, 360, 700, this.dpr);
     const frame = this.scene.textures.getFrame(this.key, "yellow_button_normal");
     let w = 60;
     let h = 65;
@@ -56,29 +44,19 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       top: 14 * this.dpr,
       right: w - 2 - 14 * this.dpr,
       bottom: h - 2 - 14 * this.dpr
-    }).setScale(uiScale);
+    });
     this.mBuyBtn.setTextStyle({
       color: "#976400",
-      fontSize: 16 * this.dpr * uiScale,
+      fontSize: 16 * this.dpr,
       fontFamily: Font.DEFULT_FONT
     });
     this.mBuyBtn.setFontStyle("bold");
-    // this.mBuyBtn.setTextOffset(0, 10 * this.dpr);
     this.mBuyBtn.on("pointerup", this.onBuyHandler, this);
-
-    // this.mNickNameContainer = this.scene.make.container(undefined, false);
-
-    // this.mNickNameBg = this.scene.make.image({
-    //   key: this.key,
-    //   frame: "name_bg"
-    // }, false);
-    // this.mNickNameContainer.setSize(this.mNickNameBg.width, this.mNickNameBg.height);
-
     this.mNickName = this.scene.make.text({
       x: 7 * this.dpr,
       y: 9 * this.dpr,
       style: {
-        fontSize: 12 * this.dpr * uiScale,
+        fontSize: 12 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#FFFF00",
         align: "center"
@@ -90,11 +68,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: -78,
       key: this.key,
       frame: "iv_coin"
-    }, false).setScale(uiScale);
+    }, false);
     this.mPriceText = this.scene.make.text({
       x: 0,
       style: {
-        fontSize: 14 * this.dpr * uiScale,
+        fontSize: 14 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
@@ -102,14 +80,14 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const priceBg = this.scene.make.image({
       key: this.key,
       frame: "price_bg"
-    }).setScale(uiScale);
+    });
 
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.scale = this.dpr;
     this.mDetailDisplay.y = 110 * this.dpr;
 
-    const bubbleW = 110 * this.dpr * this.uiScale;
-    const bubbleH = 96 * this.dpr * this.uiScale;
+    const bubbleW = 110 * this.dpr;
+    const bubbleH = 96 * this.dpr;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
     this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
     this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
@@ -122,10 +100,10 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       y: 56 * this.dpr,
       style: {
         color: "#32347b",
-        fontSize: 10 * this.dpr * uiScale,
+        fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         wordWrap: {
-          width: 90 * this.dpr * uiScale,
+          width: 90 * this.dpr,
           useAdvancedWrap: true
         }
       }
@@ -135,7 +113,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: 8 * this.dpr,
       y: 38 * this.dpr,
       style: {
-        fontSize: 10 * this.dpr * uiScale,
+        fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
       }
     }, false);
@@ -143,53 +121,41 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.add([this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubbleContainer]);
     this.mDetailBubbleContainer.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource]);
     this.mPriceContainer.add([priceBg, this.mPriceIcon, this.mPriceText]);
-    // this.mNickNameContainer.add([this.mNickNameBg, this.mNickName]);
 
     this.addActionListener();
   }
 
   resize(w: number, h: number) {
-    const width = (this.scene.cameras.main.width);
-    const height = ((this.scene.cameras.main.height) >> 1) - 150;
-    const centerX = this.scene.cameras.main.centerX;
+    const width = w;
+    const height = h / 2 - 150;
+    const centerX = w / 2;
 
-    this.mBuyBtn.x = width - this.mBuyBtn.displayWidth / 2 - 10 * this.dpr * this.uiScale;
-    this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.displayHeight / 2 - 12 * this.dpr * this.uiScale;
+    this.mBuyBtn.x = width - this.mBuyBtn.displayWidth / 2 - 10 * this.dpr;
+    this.mBuyBtn.y = this.height - this.y - this.mBuyBtn.displayHeight / 2 - 12 * this.dpr;
 
-    const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 - 17 * this.dpr * this.uiScale;
-    // if (counterX < this.mCounter.displayWidth / 2 + 10) {
-    //   counterX = this.mCounter.displayWidth / 2 + 10;
-    // }
+    const counterX = this.mBuyBtn.x - this.mBuyBtn.displayWidth / 2 - this.mCounter.displayWidth / 2 - 17 * this.dpr;
+
     this.mCounter.x = counterX;
     this.mCounter.y = this.mBuyBtn.y;
 
     this.mDetailBubbleContainer.x = 10 * this.dpr;
     const endW = width - (width - this.mCounter.x) - this.mCounter.width / 2;
     if (this.mDetailBubbleContainer.displayWidth + this.mDetailBubbleContainer.x + 10 * this.dpr > endW) {
-      const bubbleW = endW - 16 * this.dpr * this.uiScale;
-      this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr * this.uiScale, true);
+      const bubbleW = endW - 16 * this.dpr;
+      this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr, true);
 
       this.resizeDesBubble(bubbleW, this.mDetailBubbleContainer.height);
     }
-    // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
 
     this.mPriceContainer.x = this.mCounter.x;
     this.mPriceContainer.y = this.mCounter.y - 35 * this.dpr;
 
     this.mDetailDisplay.x = centerX;
     this.mDetailDisplay.y = (this.height - this.y) / 2;
-    // this.mDetailBubbleContainer.y = this.mDetailDisplay.y;
 
     const clickW = width * 0.8;
     const clickH = height * 0.7;
     this.setInteractive(new Phaser.Geom.Rectangle((width >> 1) + (width - clickW >> 1), height >> 1, clickW, clickH), Phaser.Geom.Rectangle.Contains);
-
-    // test interactive
-    // const graphics = this.scene.make.graphics(undefined, false);
-    // graphics.fillStyle(0xFF9900, 0.5);
-    // graphics.fillRect(width - clickW >> 1, 0, clickW, clickH);
-    // this.add(graphics);
-
     this.mCounter.resize();
   }
 
@@ -199,7 +165,6 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     }
     this.mCounter.addActionListener();
     this.mCounter.on("change", this.onChangeCounterHandler, this);
-    // this.mDetailDisplay.on("show", this.onShowDisplayHandler, this);
     this.on("pointerup", this.onPointerUpHandler, this);
   }
 
@@ -209,7 +174,6 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     }
     this.mCounter.removeActionListener();
     this.mCounter.off("change", this.onChangeCounterHandler, this);
-    // this.mDetailDisplay.off("show", this.onShowDisplayHandler, this);
     this.off("gameobjectup", this.onPointerUpHandler, this);
   }
 
@@ -249,7 +213,6 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     } else {
       this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
     }
-    // this.mDetailDisplay.loadDisplay(content.display || this.mSelectedProp.icon);
   }
 
   private updatePrice(price: string) {
@@ -286,7 +249,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private resizeDesBubble(w?, h?) {
     // const bubbleW = 110 * this.dpr;
     if (w === undefined) w = this.mDetailBubbleContainer.width;
-    const bubbleH = this.mDesText.height + 60 * this.dpr * this.uiScale;
+    const bubbleH = this.mDesText.height + 60 * this.dpr;
     if (w === this.mDetailBubbleContainer.width && bubbleH === this.mDetailBubbleContainer.height) {
       return;
     }
@@ -297,17 +260,4 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mDetailBubbleContainer.setSize(w, bubbleH);
     this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
   }
-
-  private onShowDisplayHandler(image: Phaser.GameObjects.Image) {
-    if (!image) {
-      return;
-    }
-    // this.mNickNameContainer.x = this.mDetailDisplay.x; // + this.mDetailDisplay.width / 2 - this.mNickNameContainer.width / 2;
-    // let _y = this.mDetailDisplay.y + this.mDetailDisplay.height / 2 + this.mNickNameContainer.height / 2 + 45;
-    // if (_y > this.mCounter.y - this.mNickNameContainer.height - 45) {
-    //   _y = this.mCounter.y - this.mNickNameContainer.height - 45;
-    // }
-    // this.mNickNameContainer.y = _y;
-  }
-
 }

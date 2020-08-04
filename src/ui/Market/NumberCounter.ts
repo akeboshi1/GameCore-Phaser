@@ -12,7 +12,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   private tween: Phaser.Tweens.Tween;
   private mMinNum: number = 1;
   private mMaxNum: number = 99;
-  constructor(scene: Phaser.Scene, key: string, x?: number, y?: number, dpr: number = 1, scale: number = 1) {
+  constructor(scene: Phaser.Scene, key: string, x?: number, y?: number, dpr: number = 1) {
     super(scene, x, y);
 
     // this.mBackground = new Phaser.GameObjects.Image(this.scene, 0, 0, 200, 144, key, "input_bg", {
@@ -24,20 +24,20 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mBackground = this.scene.make.image({
       key,
       frame: "input_bg"
-    }).setScale(scale);
+    });
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mReduceBtn = this.scene.make.image({
       key,
       frame: "reduce",
-    }, false).setInteractive().setScale(scale);
-    this.mReduceBtn.x = -(this.mBackground.displayWidth / 2) - this.mReduceBtn.displayWidth / 2 - 7 * dpr * scale;
+    }, false).setInteractive();
+    this.mReduceBtn.x = -(this.mBackground.displayWidth / 2) - this.mReduceBtn.displayWidth / 2 - 7 * dpr;
     this.mReduceBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mIncreaseBtn = this.scene.make.image({
       key,
       frame: "increase",
-    }, false).setInteractive().setScale(scale);
+    }, false).setInteractive();
     this.mIncreaseBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    this.mIncreaseBtn.x = (this.mBackground.displayWidth + this.mIncreaseBtn.displayWidth) / 2 + 7 * dpr * scale;
+    this.mIncreaseBtn.x = (this.mBackground.displayWidth + this.mIncreaseBtn.displayWidth) / 2 + 7 * dpr;
     // this.mInputText = new InputText(this.scene, 0, 0, 200, 80, {
     //   fontSize: "46px",
     //   color: "#666666",
@@ -50,7 +50,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
       y: 0,
       width: 160,
       height: 80,
-      fontSize: 14 * dpr * scale + "px",
+      fontSize: 14 * dpr + "px",
       color: "#666666",
       align: "center",
       type: "number",
@@ -59,7 +59,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mLabelInput.setText("1");
     this.mLabelInput.on("textchange", this.onTextChangeHandler, this);
     this.add([this.mBackground, this.mLabelInput, this.mReduceBtn, this.mIncreaseBtn]);
-    this.setSize(this.mIncreaseBtn.displayWidth + this.mReduceBtn.displayWidth + this.mBackground.displayWidth + 14 * dpr * scale, this.mBackground.displayHeight);
+    this.setSize(this.mIncreaseBtn.displayWidth + this.mReduceBtn.displayWidth + this.mBackground.displayWidth + 14 * dpr, this.mBackground.displayHeight);
   }
 
   resize() {

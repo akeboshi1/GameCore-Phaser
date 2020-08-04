@@ -5,7 +5,7 @@ import { DetailDisplay } from "../Market/DetailDisplay";
 import { Font } from "../../utils/font";
 import { op_client, op_def, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { TextButton } from "../Market/TextButton";
+import { TextButton } from "../components/TextButton";
 import { Url } from "../../utils/resUtil";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";
@@ -45,7 +45,6 @@ export class FurniBagPanel extends BasePanel {
   private topBtns: TabButton[] = [];
 
   private mDetailBubble: DetailBubble;
-  private itemPopPanel: ItemsPopPanel;
   private mSceneType: op_def.SceneTypeEnum;
   private mEnableEdit: boolean = false;
   private mInputBoo: boolean = false;
@@ -55,7 +54,6 @@ export class FurniBagPanel extends BasePanel {
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
     this.mSceneType = sceneType;
-    this.scale = 1;
     this.setInteractive();
   }
 
@@ -63,26 +61,23 @@ export class FurniBagPanel extends BasePanel {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
     super.resize(width, height);
-    const zoom = this.mWorld.uiScale;
     this.mBackground.clear();
     this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
     this.mBackground.fillRect(0, 0, width, height);
-    this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
+    this.mShelfContainer.setSize(width, 295 * this.dpr);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
-    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr * zoom - this.mDetailBubble.height;
+    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     this.mCategoriesBar.clear();
     this.mCategoriesBar.fillStyle(0x33ccff);
-    this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr * zoom);
+    this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.mCategoriesBar.fillStyle(0x00cccc);
-    this.mCategoriesBar.fillRect(0, 40 * this.dpr * zoom, width, 3 * this.dpr * zoom);
+    this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
 
     this.mBg.x = width / 2;
-    this.mBg.y = this.mBg.height / 2 + 10 * this.dpr * zoom;
+    this.mBg.y = this.mBg.height / 2 + 10 * this.dpr;
 
-    //  this.mTiltle.x = width / 2;
-    // this.mCategoryScroll.resize(width, 41 * this.dpr * zoom);
     this.mAdd.x = width - this.mAdd.width / 2 - 10 * this.dpr;
-    this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr * zoom;
+    this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr;
 
     this.useBtn.x = this.mAdd.x;
     this.useBtn.y = this.mAdd.y;
@@ -98,9 +93,10 @@ export class FurniBagPanel extends BasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
-    this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 160 * this.dpr * zoom, 8 * this.dpr * zoom, 3 * this.dpr * zoom);
+    this.mPropGrid.x = width / 2;
+    this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 50 * this.dpr;
+    this.mPropGrid.layout();
     this.mPropGrid.resetMask();
-    // this.mPropGrid.y = this.mShelfContainer.y + 43 * this.dpr * zoom + 120 * this.dpr * zoom;
     this.setSize(width, height);
   }
 
@@ -108,32 +104,29 @@ export class FurniBagPanel extends BasePanel {
     // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
-    const zoom = this.mWorld.uiScale;
-    const capW = 60 * this.dpr * zoom;
-    const capH = 41 * this.dpr * zoom;
+    const capW = 60 * this.dpr;
+    const capH = 41 * this.dpr;
     const items = [];
     if (this.mSeachInput.parentContainer)
       this.closeSeach(null);
     this.mCategoryScroll.clearItems();
     const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
     seachBtn.setData("item", { key: this.seachKey, value: "搜索" });
-    seachBtn.y = capH - 40 * this.dpr * zoom;
+    seachBtn.y = capH - 40 * this.dpr;
     this.mCategoryScroll.addItem(seachBtn);
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new TextButton(this.scene, this.dpr, zoom, subcategorys[i].value, 0, 0);
+      const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].value, 0, 0);
       item.x = i * capW;
-      item.y = capH - item.text.height - 40 * this.dpr * zoom >> 1;
+      item.y = capH - item.text.height - 20 * this.dpr;
       item.setData("item", subcategorys[i]);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);
 
       items[i] = item;
-      item.setFontSize(17 * this.dpr * zoom);
+      item.setFontSize(17 * this.dpr);
       item.setFontStyle("bold");
     }
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
-    // this.mSeachInput.x = capW - this.mSeachInput.width / 2;
-    // this.mPropGrid.refreshPos(this.mShelfContainer.width / 2, this.mShelfContainer.y + 170 * this.dpr * zoom, 8 * this.dpr * zoom, 10 * this.dpr * zoom);
     this.updateCategeoriesLoc(false);
   }
 
@@ -253,42 +246,35 @@ export class FurniBagPanel extends BasePanel {
   }
 
   protected init() {
-    const width = this.scene.cameras.main.width;
-    const height = this.scene.cameras.main.height;
+    const width = this.scaleWidth;
+    const height = this.scaleHeight;
     this.mBackground = this.scene.make.graphics(undefined, false);
-    const zoom = this.mWorld.uiScale;
-
     this.mBg = this.scene.make.image({
       key: this.key,
       frame: "bg"
-    }, false).setScale(zoom);
+    }, false);
 
     this.mShelfContainer = this.scene.make.container(undefined, false);
-    this.mShelfContainer.setSize(width, 295 * this.dpr * zoom);
+    this.mShelfContainer.setSize(width, 295 * this.dpr);
     this.mShelfContainer.y = height - this.mShelfContainer.height;
-    // this.mPropsContainer = this.scene.make.container(undefined, false);
-    // this.mCategeoriesContainer = this.scene.make.container(undefined, false);
-    // this.mCategeoriesContainer.x = this.mShelfContainer.x;
-    // this.mCategeoriesContainer.y = this.mShelfContainer.y;
-
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
-    this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+    this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = this.scene.make.image({
       key: this.key,
       frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
-    }).setScale(zoom).setInteractive();
-    const btnwidth = 90 * this.dpr * zoom;
-    const btnHeight = 40 * this.dpr * zoom;
+    }).setInteractive();
+    const btnwidth = 90 * this.dpr;
+    const btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
-    const btnPosY = this.mShelfContainer.y - 25 * this.dpr * zoom;
+    const btnPosY = this.mShelfContainer.y - 25 * this.dpr;
 
-    this.mAdd = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), "#996600");
+    this.mAdd = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), "#996600");
     this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), "#FFFFFF");
-    this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), "#996600");
-    this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.save"), "#996600");
-    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr * zoom, btnPosY - btnHeight - 5 * this.dpr * zoom, 40 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn");
+    this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), "#996600");
+    this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.save"), "#996600");
+    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY - btnHeight - 5 * this.dpr, 40 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn");
     const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
     this.resetBtn.add(reseticon);
     this.mDetailDisplay = new DetailDisplay(this.scene);
@@ -297,18 +283,17 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
     this.mDetailDisplay.scale = this.dpr;
 
-    this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr, zoom);
+    this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 10 * this.dpr;
 
     this.mSeachInput = new SeachInput(this.scene, this.mWorld, this.key, this.dpr);
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
-    const inputWid: number = this.mInputBoo ? 260 * this.dpr * zoom : 0;
-    let w = this.scene.cameras.main.width + inputWid;
+    const inputWid: number = this.mInputBoo ? 260 * this.dpr : 0;
     this.mCategoryScroll = new GameScroller(this.scene, {
-      x: w * .5,
-      y: this.mShelfContainer.y + 20 * this.dpr * zoom,
-      width: this.scene.cameras.main.width,
-      height: 41 * this.dpr * zoom,
+      x: width * 0.5,
+      y: this.mShelfContainer.y + 20 * this.dpr,
+      width,
+      height: 41 * this.dpr,
       zoom: this.scale,
       orientation: 1,
       // valuechangeCallback: (newValue) => {
@@ -326,12 +311,12 @@ export class FurniBagPanel extends BasePanel {
       this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
     }
 
-    const topCapW = 67 * this.dpr * zoom;
-    const topCapH = 30 * this.dpr * zoom;
-    const topPosY = 30 * this.dpr * zoom;
+    const topCapW = 67 * this.dpr;
+    const topCapH = 30 * this.dpr;
+    const topPosY = 30 * this.dpr;
     const topStyle = {
       fontFamily: Font.BOLD_FONT,
-      fontSize: 20 * this.dpr * zoom,
+      fontSize: 20 * this.dpr,
       color: "#FFFFFF"
     };
     this.topCheckBox = new CheckboxGroup();
@@ -341,7 +326,7 @@ export class FurniBagPanel extends BasePanel {
       topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE];
       topBtnTexts = [i18n.t("furni_bag.furni")];
     }
-    const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1);
+    const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1) - 20 * this.dpr;
     for (const key in topCategorys) {
       const index = Number(key);
       const category = topCategorys[index];
@@ -365,24 +350,20 @@ export class FurniBagPanel extends BasePanel {
     } else {
       this.topCheckBox.selectIndex(0);
     }
-    const propFrame = this.scene.textures.getFrame(this.key, "prop_bg");
-    const capW = (propFrame.width + 10 * this.dpr) * zoom;
-    const capH = (propFrame.height + 10 * this.dpr) * zoom;
-    w = this.scene.cameras.main.width + 35 * this.dpr * zoom + inputWid;
+    const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
+    const capW = (propFrame.width);
+    const capH = (propFrame.height);
     const tableConfig: GridTableConfig = {
       x: 0,
       y: 0,
       table: {
-        width: this.scene.cameras.main.width - 16 * this.dpr * zoom,
-        height: 260 * this.dpr * zoom,
+        width,
+        height: 260 * this.dpr,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
-        cellOriginX: 0,
-        cellOriginY: 0,
-        zoom: this.scale,
-        cellPadX: 10 * this.dpr * zoom
+        zoom: this.scale
       },
       scrollMode: 1,
       clamplChildOY: false,
@@ -391,8 +372,8 @@ export class FurniBagPanel extends BasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new Item(scene, 0, 0, this.key, this.dpr, zoom);
-          this.add(cellContainer);
+          cellContainer = new Item(scene, 0, 0, this.key, this.dpr);
+          this.mPropGrid.add(cellContainer);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);
@@ -417,23 +398,22 @@ export class FurniBagPanel extends BasePanel {
         this.onSelectItemHandler(cell);
       }
     });
-    this.add(this.mPropGrid.table);
+    this.add(this.mPropGrid);
     this.resize(0, 0);
     super.init();
   }
 
   private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
-    const zoom = this.scale;
-    const btn = new NineSliceButton(this.scene, x, y, width, height, key, frame, text, this.dpr, this.scale, {
-      left: 12 * this.dpr * zoom,
-      top: 12 * this.dpr * zoom,
-      right: 12 * this.dpr * zoom,
-      bottom: 12 * this.dpr * zoom
+    const btn = new NineSliceButton(this.scene, x, y, width, height, key, frame, text, this.dpr, 1, {
+      left: 12 * this.dpr,
+      top: 12 * this.dpr,
+      right: 12 * this.dpr,
+      bottom: 12 * this.dpr
     });
     if (text) {
       btn.setTextStyle({
         color,
-        fontSize: 16 * this.dpr * zoom,
+        fontSize: 16 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       });
       btn.setFontStyle("bold");
@@ -662,11 +642,10 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private layoutTopBtn(button: Button) {
-    const width = this.scene.cameras.main.width;
-    const zoom = this.mWorld.uiScale;
+    const width = this.scaleWidth;
     let allRadiu = 0;
     for (const btn of this.topBtns) {
-      allRadiu += btn.width;
+      allRadiu += btn.width + 5 * this.dpr;
     }
     allRadiu /= 2;
     let offsetX: number = width * 0.5 - allRadiu;
@@ -676,22 +655,22 @@ export class FurniBagPanel extends BasePanel {
       if (btn !== button) {
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
-          fontSize: 12 * this.dpr * zoom,
+          fontSize: 12 * this.dpr,
           color: "#2B4BB5"
         });
         posY = btn.height * 0.5;
       } else {
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
-          fontSize: 16 * this.dpr * zoom,
+          fontSize: 16 * this.dpr,
           color: "#8B5603"
         });
-        posY = btn.height * 0.5 + 2 * this.dpr * zoom;
+        posY = btn.height * 0.5 + 2 * this.dpr;
       }
       const radiu = btn.width * 0.5;
       btn.x = offsetX + radiu;
       btn.y = posY;
-      offsetX += radiu * 2 + 12 * this.dpr * zoom;
+      offsetX += radiu * 2 + 12 * this.dpr;
     }
   }
 
@@ -773,10 +752,9 @@ export class FurniBagPanel extends BasePanel {
 
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategoryScroll.getItemList();
-    const zoom = this.scale;
-    const h = 41 * this.dpr * zoom;
+    const h = 41 * this.dpr;
     let preBtn: Phaser.GameObjects.Container = null;
-    const offset = 30 * this.dpr * zoom;
+    const offset = 30 * this.dpr;
     const w = this.mScene.cameras.main.width;
     let tmpW: number = offset;
     for (let i = 0; i < list.length; i++) {
@@ -889,8 +867,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
     super(scene);
     this.dpr = dpr;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
-    const bubbleW = 100 * dpr * zoom;
-    const bubbleH = 96 * dpr * zoom;
+    const bubbleW = 100 * dpr;
+    const bubbleH = 96 * dpr;
     this.mDetailBubble = this.scene.make.graphics(undefined, false);
     this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
     this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
@@ -900,7 +878,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       y: 9 * this.dpr,
       text: "背包里空空如也",
       style: {
-        fontSize: 12 * this.dpr * zoom,
+        fontSize: 12 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#FFFF00",
         align: "center"
@@ -912,7 +890,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       y: 28 * this.dpr,
       text: "不可交易",
       style: {
-        fontSize: 10 * this.dpr * zoom,
+        fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#DC143C",
         align: "center"
@@ -923,7 +901,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       y: 47 * dpr,
       text: "可通过商城购物获得",
       style: {
-        fontSize: 10 * dpr * zoom,
+        fontSize: 10 * dpr,
         fontFamily: Font.DEFULT_FONT,
       }
     }, false);
@@ -933,7 +911,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       y: 66 * dpr,
       style: {
         color: "#32347b",
-        fontSize: 10 * dpr * zoom,
+        fontSize: 10 * dpr,
         fontFamily: Font.DEFULT_FONT,
         wordWrap: {
           width: 90 * dpr,
@@ -1033,32 +1011,30 @@ class Item extends Phaser.GameObjects.Container {
     const background = scene.make.image({
       key,
       frame: "grid_bg"
-    }, false).setOrigin(0).setScale(zoom);
-    this.setSize(background.displayWidth, background.displayHeight);
+    }, false);
     this.selectbg = scene.make.image({
       key,
       frame: "grid_choose"
-    }, false).setOrigin(0).setScale(zoom).setPosition(-2 * dpr * zoom, -2 * dpr * zoom);
+    }, false);
+    this.setSize(background.displayWidth, background.displayHeight);
     this.selectIcon = scene.make.image({
       key,
       frame: "selected"
-    }, false).setOrigin(1).setScale(zoom).setPosition(this.width, this.height);
+    }, false).setOrigin(1).setPosition(this.width * 0.5, this.height * 0.5);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
-    this.mPropImage.scale = dpr * zoom;
+    this.mPropImage.scale = dpr;
 
     this.mCounter = scene.make.text({
       x: this.width - 4 * dpr,
       y: this.height + 2 * dpr,
       style: {
-        fontSize: 12 * dpr * zoom,
+        fontSize: 12 * dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
     this.add([background, this.selectbg, this.selectIcon]);
     this.isSelect = false;
     this.isEquip = false;
-    // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, background.width, background.height), Phaser.Geom.Rectangle.Contains);
-    // this.on("pointerup", this.onSelectedHandler, this);
   }
 
   setProp(prop: op_client.ICountablePackageItem) {
@@ -1084,9 +1060,6 @@ class Item extends Phaser.GameObjects.Container {
   private onPropLoadCompleteHandler() {
     if (this.mPropImage && this.mPropImage.texture) {
       const texture = this.mPropImage.texture;
-      // this.mPropImage.setPosition((this.mPropImage.width) / 2, (this.mPropImage.height) / 2);
-      this.mPropImage.x = this.width + 3 * this.dpr * this.zoom >> 1;
-      this.mPropImage.y = this.height + 3 * this.dpr * this.zoom >> 1;
       this.mPropImage.displayHeight = 45 * this.dpr;
       this.mPropImage.scaleX = this.mPropImage.scaleY;
       if (texture) {
@@ -1106,176 +1079,4 @@ class Item extends Phaser.GameObjects.Container {
   private onSelectedHandler() {
     this.emit("select", this.mProp);
   }
-}
-
-class ItemsPopPanel extends Phaser.GameObjects.Container {
-  public itemCount: number = 1;
-  private itemName: Phaser.GameObjects.Text;
-  private titleName: Phaser.GameObjects.Text;
-  private icon: DynamicImage;
-  private pricText: Phaser.GameObjects.Text;
-  private priceBg: Phaser.GameObjects.Image;
-  private itemCountText: Phaser.GameObjects.Text;
-  private itemData: op_client.ICountablePackageItem;
-  private popState: number = 0;  // 0 卖出 1 使用
-  private blackBg: Phaser.GameObjects.Graphics;
-  private handler: Handler;
-  private category: number;
-
-  constructor(scene: Phaser.Scene, x: number, y: number, key: string, commonKey: string, dpr: number, zoom: number = 1) {
-    super(scene, x, y);
-    const bg = new NinePatch(this.scene, 0, 0, 286 * dpr * zoom, 331 * dpr * zoom, commonKey, "bg", {
-      top: 40,
-      bottom: 40
-    });
-    this.blackBg = this.scene.make.graphics(undefined, false);
-    this.blackBg.clear();
-    this.blackBg.fillStyle(0, 0.5);
-    const w = this.scene.cameras.main.width / this.scale;
-    const h = this.scene.cameras.main.height / this.scale;
-    this.blackBg.fillRect(-w / 2, -h / 2, w, h);
-    bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-    const posY = -bg.height * 0.5 + 3 * dpr * zoom;
-    const titlebg = this.scene.make.image({ x: 0, y: posY, key, frame: "title" });
-    this.titleName = scene.make.text({
-      x: 0,
-      y: posY + 3 * dpr * zoom,
-      text: "售出",
-      style: {
-        color: "#905B06",
-        fontSize: 15 * dpr * zoom,
-        fontFamily: Font.DEFULT_FONT
-      }
-    }, false).setOrigin(0.5);
-    this.titleName.setFontStyle("bold");
-    this.itemName = scene.make.text({
-      x: 0,
-      y: posY + 40 * dpr * zoom,
-      style: {
-        color: "#000000",
-        fontSize: 15 * dpr * zoom,
-        fontFamily: Font.DEFULT_FONT
-      }
-    }, false).setOrigin(0.5);
-    const iconOffset: number = -56 * dpr * zoom;
-    const iconBg = this.scene.make.image({ x: 0, y: iconOffset, key, frame: "sell_bg" });
-    this.icon = new DynamicImage(this.scene, 0, iconOffset);
-    this.icon.scale = dpr * zoom;
-    const priceOffset: number = 10 * dpr * zoom;
-    this.priceBg = this.scene.make.image({ x: 0, y: priceOffset, key: commonKey, frame: "price_bg" });
-    this.pricText = scene.make.text({
-      x: 0,
-      y: priceOffset,
-      style: {
-        color: "#FFFFFF",
-        fontSize: 15 * dpr * zoom,
-        fontFamily: Font.DEFULT_FONT
-      }
-    }, false).setOrigin(0.5);
-    // this.pricText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.priceBg.width, this.priceBg.height),Phaser.Geom.Rectangle.Contains);
-    const countOffsetY = 50 * dpr * zoom;
-    const countOffsetX = -58 * dpr * zoom;
-    const countBg = this.scene.make.image({ x: 0, y: countOffsetY, key: commonKey, frame: "input_bg" });
-    this.itemCountText = scene.make.text({
-      x: 0,
-      y: countOffsetY,
-      style: {
-        color: "#0771AC",
-        fontSize: 15 * dpr * zoom,
-        fontFamily: Font.DEFULT_FONT
-      }
-    }, false).setOrigin(0.5);
-    const minusBtn = new Button(this.scene, commonKey, "reduce", "reduce");
-    const addBtn = new Button(this.scene, commonKey, "increase", "increase");
-    minusBtn.x = countOffsetX; minusBtn.y = countOffsetY;
-    addBtn.x = -countOffsetX; addBtn.y = countOffsetY;
-
-    const bottomOffsetY = bg.height * 0.5 - 50 * dpr * zoom;
-    const bottomOffsetX = -66 * dpr * zoom;
-    const cancelBtn = new NineSliceButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "red_btn", i18n.t("common.cancel"), dpr, zoom, {
-      left: 12 * dpr * zoom,
-      top: 12 * dpr * zoom,
-      right: 12 * dpr * zoom,
-      bottom: 12 * dpr * zoom
-    });
-    const confirmBtn = new NineSliceButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr * zoom, 40 * dpr * zoom, commonKey, "yellow_btn", i18n.t("common.confirm"), dpr, zoom, {
-      left: 12 * dpr * zoom,
-      top: 12 * dpr * zoom,
-      right: 12 * dpr * zoom,
-      bottom: 12 * dpr * zoom
-    });
-    cancelBtn.setTextStyle({
-      color: "#FFFFFF",
-      fontSize: 16 * dpr * zoom,
-      fontFamily: Font.DEFULT_FONT
-    });
-    confirmBtn.setTextStyle({
-      color: "#976400",
-      fontSize: 16 * dpr * zoom,
-      fontFamily: Font.DEFULT_FONT
-    });
-    this.add([this.blackBg, bg, titlebg, this.titleName, this.itemName, iconBg, this.icon, this.priceBg, this.pricText, countBg, this.itemCountText, minusBtn, addBtn, cancelBtn, confirmBtn]);
-    minusBtn.on("Tap", this.onMinusBtnHandler, this);
-    addBtn.on("Tap", this.onAddBtnHandler, this);
-    cancelBtn.on("Tap", this.onCancelBtnHandler, this);
-    confirmBtn.on("Tap", this.onConfirmBtnHandler, this);
-  }
-
-  public setProp(prop: op_client.ICountablePackageItem, stated: number, category: number, handler: Handler) {
-    this.itemData = prop;
-    this.itemCount = 1;
-    this.icon.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
-    this.itemName.text = prop.name || prop.shortName;
-    this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
-    this.itemCountText.text = this.itemCount + "";
-    this.popState = stated;
-    if (stated === 0) {
-      this.titleName.text = i18n.t("furni_bag.sold");
-      this.pricText.visible = true;
-      this.priceBg.visible = true;
-    } else {
-      this.titleName.text = i18n.t("furni_bag.use");
-      this.pricText.visible = false;
-      this.priceBg.visible = false;
-    }
-    this.handler = handler;
-    this.category = category;
-  }
-
-  private onMinusBtnHandler() {
-    if (this.itemCount === 1) return;
-    this.itemCount--;
-    this.updateData();
-  }
-
-  private onAddBtnHandler() {
-    if (this.itemCount === this.itemData.count) return;
-    this.itemCount++;
-    this.updateData();
-  }
-
-  private updateData() {
-    this.itemCountText.text = this.itemCount + "";
-    this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
-  }
-
-  private onCancelBtnHandler() {
-    this.emit("itempopclose");
-    if (this.parentContainer) this.parentContainer.remove(this);
-  }
-
-  private onConfirmBtnHandler() {
-    this.emit("itempopclose");
-    if (this.parentContainer) this.parentContainer.remove(this);
-    if (this.handler) this.handler.runWith([this.itemData, this.itemCount, this.category]);
-  }
-  private onPropLoadCompleteHandler() {
-    if (this.icon && this.icon.texture) {
-      const texture = this.icon.texture;
-      if (texture) {
-        texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-      }
-    }
-  }
-
 }
