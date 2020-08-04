@@ -16,6 +16,7 @@ export interface ILauncherConfig {
     token_expire: string | null;
     token_fingerprint: string;
     server_addr: any | undefined;
+    user_id: string;
     game_id: string;
     virtual_world_id: string;
     ui_scale?: number;
@@ -100,6 +101,7 @@ export class Launcher {
         auth_token: CONFIG.auth_token,
         token_expire: CONFIG.token_expire,
         token_fingerprint: CONFIG.token_fingerprint,
+        user_id: "",
         server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
         game_id: CONFIG.game_id,
         virtual_world_id: CONFIG.virtual_world_id,

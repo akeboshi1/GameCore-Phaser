@@ -4,6 +4,7 @@ import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import PicFriendPanel from "./PicFriendPanel";
 import { PicFriend } from "./PicFriend";
+import { FetchFriend } from "./FetchFriend";
 
 export class PicFriendMediator extends BaseMediator {
     protected mView: PicFriendPanel;
@@ -11,6 +12,7 @@ export class PicFriendMediator extends BaseMediator {
     private layerMgr: ILayerManager;
     private picFriend: PicFriend;
     private world: WorldService;
+    private fetchFriend: FetchFriend;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.scene = scene;
@@ -30,6 +32,9 @@ export class PicFriendMediator extends BaseMediator {
             this.picFriend = new PicFriend(this.world);
             this.picFriend.register();
         }
+        if (!this.fetchFriend) {
+            this.fetchFriend = new FetchFriend(this.world);
+        }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show();
     }
@@ -43,6 +48,8 @@ export class PicFriendMediator extends BaseMediator {
             this.mView.hide();
             this.mView = undefined;
         }
+
+        this.fetchFriend = undefined;
     }
 
     private onHidePanel() {

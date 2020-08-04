@@ -135,5 +135,12 @@
     "marketing_plan":"Marketing Plan",
     "plan_title":"There is now plan yet",
     "material_requirements":"Material requirements:"
+  },
+  "friendlist": {
+    "title": "MY FRIEND",
+    "olinetitle": "Show only online",
+    "friends": "Friends",
+    "fans": "Fans",
+    "follow": "Follow"
   }
 }

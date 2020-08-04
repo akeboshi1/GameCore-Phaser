@@ -2,7 +2,7 @@ import { IButtonState } from "../../../lib/rexui/lib/ui/interface/button/IButton
 
 export class CheckboxGroup extends Phaser.Events.EventEmitter {
   private mList: IButtonState[] = [];
-  private mPrevButton: IButtonState;
+  private mSelectedButton: IButtonState;
   constructor() {
     super();
   }
@@ -41,15 +41,15 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
   }
 
   public select(item: IButtonState) {
-    if (this.mPrevButton === item) {
+    if (this.mSelectedButton === item) {
       return;
     }
-    if (this.mPrevButton) {
-      this.mPrevButton.changeNormal();
+    if (this.mSelectedButton) {
+      this.mSelectedButton.changeNormal();
     }
     item.changeDown();
-    this.emit("selected", item, this.mPrevButton);
-    this.mPrevButton = item;
+    this.mSelectedButton = item;
+    this.emit("selected", item);
   }
 
   public reset() {
@@ -72,5 +72,9 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
 
   private onGameObjectUpHandler(pointer, gameobject: any) {
     this.select(gameobject);
+  }
+
+  get selectedIndex(): number {
+    return this.mList.indexOf(this.mSelectedButton);
   }
 }
