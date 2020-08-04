@@ -79,6 +79,8 @@ export class ActivityPanel extends BasePanel {
         Logger.getInstance().log(name);
         if (name === 4) {
             this.emit("showPanel", "Task");
+        } else if (name === 3) {
+            this.emit("showPanel", "PicFriend");
         }
     }
     private checkUpdateActive() {

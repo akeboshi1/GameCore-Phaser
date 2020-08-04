@@ -22,6 +22,7 @@ export class PicaRoomListPanel extends BasePanel {
   private mScroller: BaseScroller;
   private mBackGround: Phaser.GameObjects.Graphics;
   private content: Phaser.GameObjects.Container;
+  private preTabButton: Button;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     // this.scale = 1;
@@ -207,7 +208,7 @@ export class PicaRoomListPanel extends BasePanel {
     this.emit("enterRoom", room);
   }
 
-  private onSelectedHandler(gameobject, prevButton) {
+  private onSelectedHandler(gameobject) {
     if (!(gameobject instanceof Button)) {
       return;
     }
@@ -221,11 +222,10 @@ export class PicaRoomListPanel extends BasePanel {
         break;
     }
     (gameobject).setTextColor("#996600");
-    if (prevButton) {
-      if (prevButton instanceof Button) {
-        prevButton.setTextColor("#3333cc");
-      }
+    if (this.preTabButton) {
+      this.preTabButton.setTextColor("#3333cc");
     }
+    this.preTabButton = gameobject;
   }
 
   private onSeachHandler() {

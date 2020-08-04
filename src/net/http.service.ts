@@ -106,7 +106,7 @@ export class HttpService {
         return this.post("game/played_duration", { gameId }, { Appid });
     }
 
-    private post(uri: string, body: any, headers?: any): Promise<Response> {
+    public post(uri: string, body: any, headers?: any): Promise<Response> {
         const account = this.mWorld.account;
         if (!account) {
             return Promise.reject("account does not exist");
@@ -126,7 +126,7 @@ export class HttpService {
         return fetch(`${CONFIG.api_root}${uri}`, data).then((response) => response.json());
     }
 
-    private get(uri: string) {
+    public get(uri: string) {
         const account = this.mWorld.account;
         if (!account) {
             return Promise.reject("account does not exist");
