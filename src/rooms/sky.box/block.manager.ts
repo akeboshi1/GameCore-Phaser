@@ -30,6 +30,7 @@ export class BlockManager implements IBlockManager {
   private mRoom: IRoomService;
   private mCameras: ICameraService;
   private mStateMap: Map<string, State>;
+  private _bound: Phaser.Geom.Rectangle;
   constructor(scenery: IScenery, room: IRoomService) {
     this.mGrids = [];
     this.mScenery = scenery;
@@ -38,6 +39,7 @@ export class BlockManager implements IBlockManager {
     this.mWorld = room.world;
     this.mCameras = room.cameraService;
     this.mMainCamera = this.mCameras.camera;
+    this._bound = this.mMainCamera.getBounds();
     this.mScaleRatio = this.mWorld.scaleRatio;
     this.setSize(scenery.width, scenery.height);
 
@@ -154,9 +156,9 @@ export class BlockManager implements IBlockManager {
     const len = this.mUris.length;
     // TODO
     if (this.mScenery.fit === Fit.Repeat) {
-      const room = <Room> this.mRoom;
+      const room = <Room>this.mRoom;
       const { width, height } = room.getMaxScene();
-      const rows = Math.floor(width /  this.mScenery.width);
+      const rows = Math.floor(width / this.mScenery.width);
       const cols = Math.floor(height / this.mScenery.height);
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
@@ -207,14 +209,14 @@ export class BlockManager implements IBlockManager {
 
   protected initCamera() {
     const camera = this.scene.cameras.main;
-
     if (this.mCameras) {
-      const main = this.mCameras.camera;
-      const bound = main.getBounds();
+      // const main = this.mCameras.camera;
+      this.mMainCamera.setBounds(this._bound.x, this._bound.y, this._bound.width, this._bound.height);
+      const bound = this.mMainCamera.getBounds();
       camera.setBounds(bound.x, bound.y, bound.width, bound.height);
 
       this.updatePosition();
-      camera.setScroll(main.scrollX , main.scrollY);
+      camera.setScroll(this.mMainCamera.scrollX, this.mMainCamera.scrollY);
       this.mCameras.addCamera(camera);
     }
   }
@@ -249,8 +251,8 @@ export class BlockManager implements IBlockManager {
     return props;
   }
 
-  protected get offset(): { x: number, y: number} {
-    const os = {x: 0, y: 0};
+  protected get offset(): { x: number, y: number } {
+    const os = { x: 0, y: 0 };
     let x = 0;
     let y = 0;
     if (this.mScenery) {
