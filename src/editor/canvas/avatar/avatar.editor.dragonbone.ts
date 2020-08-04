@@ -10,16 +10,13 @@ export const WEB_AVATAR_PATH = "https://osd.tooqing.com/avatar/part";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container implements ResourcesChangeListener {
 
-    private readonly DRAGONBONERESOURCEMAP = {
-        [AvatarDragonboneResType.default]: { dbName: "bones_human01", armatureName: "Armature" },
-        [AvatarDragonboneResType.model]: { dbName: "bones_human01", armatureName: "Armature" },
-    };
+    private readonly DRAGONBONENAME = "bones_human01";
+    private readonly DRAGONBONEARMATURENAME = "Armature";
     private readonly BACKMAP = {
         ["head_hair"]: ["head_hair", "head_back"],
         ["body_cost"]: ["body_cost", "body_dres"]
     };
 
-    private mDragonboneRes;
     private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
 
     private mCurAnimationName: string = "idle_3";
@@ -27,20 +24,14 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
     private mSets: IAvatarSet[] = [];
     private mParts: { [key: string]: IAvatarSet } = {};
 
-    constructor(scene: Phaser.Scene, resType: AvatarDragonboneResType) {
+    constructor(scene: Phaser.Scene) {
         super(scene);
 
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
 
         this.setDefaultParts();
-
-        if (resType in this.DRAGONBONERESOURCEMAP) {
-            this.mDragonboneRes = this.DRAGONBONERESOURCEMAP[resType];
-            this.loadDragonbone();
-        } else {
-            Logger.getInstance().error(`resType <${resType}> error`);
-        }
+        this.loadDragonbone();
     }
 
     public destroy() {
@@ -52,7 +43,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
             this.remove(this.mArmatureDisplay);
             this.mArmatureDisplay = null;
         }
-        this.mDragonboneRes = null;
         this.mCurAnimationName = null;
         this.mCurDir = null;
         this.mSets = [];
@@ -115,7 +105,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
 
     private loadDragonbone() {
         const root = "assets/avatar/";
-        const dbName = this.mDragonboneRes.dbName;
+        const dbName = this.DRAGONBONENAME;
         this.scene.load.dragonbone(
             dbName,
             `${root}/${dbName}_tex.png`,
@@ -133,7 +123,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         if (this.mArmatureDisplay) {
             this.mArmatureDisplay.destroy();
         }
-        this.mArmatureDisplay = this.scene.add.armature(this.mDragonboneRes.armatureName, this.mDragonboneRes.dbName);
+        this.mArmatureDisplay = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME);
         this.mArmatureDisplay.animation.play(this.mCurAnimationName);
         this.mArmatureDisplay.scale = 2;
         this.mArmatureDisplay.x = this.scene.scale.width >> 1;

@@ -7,7 +7,7 @@ import AvatarEditorResourceManager from "./avatar.editor.resource.manager";
 
 export class AvatarEditorCanvas extends EditorCanvas {
 
-    public mData: IAvatarCanvasData;
+    public mData;
 
     private readonly SCENEKEY: string = "AvatarEditorScene";
 
@@ -23,7 +23,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
         this.mResourceManager = new AvatarEditorResourceManager(this.mEmitter);
 
         // start
-        this.mData = config.node as IAvatarCanvasData;
+        this.mData = config.node;
         this.mGame.scene.start(this.SCENEKEY, this);
     }
 
@@ -52,7 +52,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
     public onSceneCreated() {
         const scene = this.getScene();
-        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mData.dbRes);
+        this.mDragonbone = new AvatarEditorDragonbone(scene);
         this.mResourceManager.init(scene);
         this.mResourceManager.addResourcesChangeListener(this.mDragonbone);
     }
@@ -123,8 +123,4 @@ class AvatarEditorScene extends Phaser.Scene {
     public destroy() {
         if (this.mCanvas) this.mCanvas.onSceneDestroy();
     }
-}
-
-export interface IAvatarCanvasData {
-    dbRes: number;
 }
