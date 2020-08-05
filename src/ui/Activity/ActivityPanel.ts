@@ -76,7 +76,6 @@ export class ActivityPanel extends BasePanel {
     }
 
     private onClickHandler(name: number) {
-        Logger.getInstance().log(name);
         if (name === 4) {
             this.emit("showPanel", "Task");
         } else if (name === 3) {
