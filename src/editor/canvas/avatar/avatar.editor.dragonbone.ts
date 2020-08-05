@@ -16,6 +16,22 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         ["head_hair"]: ["head_hair", "head_back"],
         ["body_cost"]: ["body_cost", "body_dres"]
     };
+    private readonly DEFAULTSETS = [
+        { id: "0001", parts: ["head_base"] },
+        { id: "5cd28238fb073710972a73c2", parts: ["head_hair"] },
+        { id: "5cd28238fb073710972a73c2", parts: ["head_eyes"] },
+        { id: "5cd28238fb073710972a73c2", parts: ["head_mous"] },
+        { id: "0001", parts: ["body_base"] },
+        { id: "5cd28238fb073710972a73c2", parts: ["body_cost"] },
+        { id: "0001", parts: ["farm_base"] },
+        { id: "0001", parts: ["barm_base"] },
+        { id: "0001", parts: ["fleg_base"] },
+        { id: "0001", parts: ["bleg_base"] },
+        { id: "0001", parts: ["farm_base"] },
+    ];
+    private readonly MODELSETS = [
+        { id: "5f2a52ad958e4b6aaf797913", parts: ["body_cost", "barm_cost", "farm_cost", "bleg_cost", "fleg_cost", "head_hair"] }
+    ];
 
     private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
 
@@ -30,7 +46,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
 
-        this.setDefaultParts();
+        this.addSets(this.DEFAULTSETS);
         this.loadDragonbone();
     }
 
@@ -45,7 +61,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         }
         this.mCurAnimationName = null;
         this.mCurDir = null;
-        this.mSets = [];
+        if (this.mSets) this.mSets.length = 0;
         this.mSets = null;
         this.mParts = {};
         this.mParts = null;
@@ -69,8 +85,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
 
     public clearParts() {
         this.mParts = {};
-        this.mSets.length = 0;
-        this.setDefaultParts();
+        if (this.mSets) this.mSets.length = 0;
+        this.addSets(this.DEFAULTSETS);
         this.reloadParts();
     }
 
@@ -84,19 +100,35 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         this.reloadParts();
     }
 
-    public snapshoot(): Promise<string> {
+    public generateShopIcon(): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!this.mArmatureDisplay) {
                 reject(null);
             } else {
-                this.scene.game.renderer.snapshot((img: HTMLImageElement) => {
-                    resolve(img.src);
-                });
+                // change default parts
+                this.replaceDefaultPartsWithModelParts();
+                this.replaceDisplay()
+                    .then(() => {
+                        // snapshot
+                        this.scene.game.renderer.snapshot((img: HTMLImageElement) => {
+                            resolve(img.src);
+
+                            Logger.getInstance().log("ZW-- generateShopIcon: ", img);
+
+                            // reverse parts
+                            this.addSets([]);
+                            this.replaceDisplay();
+                        });
+                    })
+                    .catch(() => {
+                        reject(null);
+                    });
             }
         });
     }
 
     public onResourcesLoaded() {
+        Logger.getInstance().log("ZW-- dragonbone.onResourcesLoaded");
         this.replaceDisplay();
     }
     public onResourcesCleared() {
@@ -204,6 +236,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
             if (localTex.has(key)) {
                 _k = SPRITE_SHEET_KEY;
                 _f = key;
+                Logger.getInstance().log(`ZW-- get local img: key<${_k}> frame<${_f}>`);
             }
         }
         const dis = _f ? new dragonBones.phaser.display.SlotImage(
@@ -221,34 +254,39 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         slot.display = dis;
     }
 
-    private replaceDisplay() {
-        const parts = this.mParts;
-        let slotName = "";
-        let uri = "";
-        for (const partName in parts) {
-            if (!parts.hasOwnProperty(partName)) {
-                continue;
-            }
-            slotName = `${partName}_${this.mCurDir}`;
-            if (partName === "head_back") {
-                slotName = `head_hair_${this.mCurDir}_back`;
-            }
-            if (partName === "body_dres") {
-                slotName = `body_cost_${this.mCurDir}_dres`;
-            }
-            const avatarSet: IAvatarComponent = parts[partName];
-            if (avatarSet) {
-                uri = `/avatar/part/${partName}_${avatarSet.id}_${this.mCurDir}.png`;
+    private replaceDisplay(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            const parts = this.mParts;
+            let slotName = "";
+            let uri = "";
+            for (const partName in parts) {
+                if (!parts.hasOwnProperty(partName)) {
+                    continue;
+                }
+                slotName = `${partName}_${this.mCurDir}`;
                 if (partName === "head_back") {
-                    uri = `/avatar/part/head_hair_${avatarSet.id}_${this.mCurDir}_back.png`;
+                    slotName = `head_hair_${this.mCurDir}_back`;
                 }
                 if (partName === "body_dres") {
-                    uri = `/avatar/part/body_cost_${avatarSet.id}_${this.mCurDir}_dres.png`;
+                    slotName = `body_cost_${this.mCurDir}_dres`;
                 }
-                this.replaceSlotDisplay(`${slotName}`, uri);
+                const avatarSet: IAvatarComponent = parts[partName];
+                if (avatarSet) {
+                    uri = `/avatar/part/${partName}_${avatarSet.id}_${this.mCurDir}.png`;
+                    if (partName === "head_back") {
+                        uri = `/avatar/part/head_hair_${avatarSet.id}_${this.mCurDir}_back.png`;
+                    }
+                    if (partName === "body_dres") {
+                        uri = `/avatar/part/body_cost_${avatarSet.id}_${this.mCurDir}_dres.png`;
+                    }
+                    this.replaceSlotDisplay(`${slotName}`, uri);
+                }
             }
-        }
-        this.mArmatureDisplay.animation.play(this.mCurAnimationName);
+
+            this.mArmatureDisplay.animation.play(this.mCurAnimationName);
+
+            setTimeout(resolve, 100, true);
+        });
     }
 
     private cleanUp() {
@@ -330,6 +368,14 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
                 }
             }
         }
+
+        // add model resources
+        this.MODELSETS.forEach((set) => {
+            set.parts.forEach((part) => {
+                res.push(this.relativeUri(part, set.id, dir));
+            });
+        });
+
         return res;
     }
     // 从部件ID转换为资源相对路径
@@ -344,27 +390,46 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         }
         return `/avatar/part/${part}_${id}_${dir}.png`;
     }
-    private setDefaultParts() {
-        const defaulAvatar = [
-            { id: "0001", parts: ["head_base"] },
-            { id: "5cd28238fb073710972a73c2", parts: ["head_hair"] },
-            { id: "5cd28238fb073710972a73c2", parts: ["head_eyes"] },
-            { id: "5cd28238fb073710972a73c2", parts: ["head_mous"] },
-            { id: "0001", parts: ["body_base"] },
-            { id: "5cd28238fb073710972a73c2", parts: ["body_cost"] },
-            { id: "0001", parts: ["farm_base"] },
-            { id: "0001", parts: ["barm_base"] },
-            { id: "0001", parts: ["fleg_base"] },
-            { id: "0001", parts: ["bleg_base"] },
-            { id: "0001", parts: ["farm_base"] },
-        ];
-        this.addSets(defaulAvatar);
-    }
-}
+    // 1.delete DEFAULT parts 2.add *unused* MODEL parts
+    private replaceDefaultPartsWithModelParts() {
+        const deleteParts = [];
 
-export enum AvatarDragonboneResType {
-    default = 0,
-    model = 1
+        for (const key in this.mParts) {
+            if (this.mParts.hasOwnProperty(key)) {
+                const set: IAvatarSet = this.mParts[key];
+                const ias = this.findPartSet(key, this.DEFAULTSETS);
+                if (ias && ias.id === set.id) {
+                    deleteParts.push(key);
+                }
+            }
+        }
+
+        Logger.getInstance().log("ZW-- before: ", this.mParts);
+
+        deleteParts.forEach((part) => {
+            delete this.mParts[part];
+        });
+
+        Logger.getInstance().log("ZW-- after delete: ", this.mParts);
+
+        this.MODELSETS.forEach((set) => {
+            set.parts.forEach((part) => {
+                if (!this.mParts.hasOwnProperty(part)) {
+                    this.mParts[part] = set;
+                }
+            });
+        });
+        Logger.getInstance().log("ZW-- after replace: ", this.mParts);
+    }
+    private findPartSet(part: string, sets: IAvatarSet[]): IAvatarSet {
+        sets.forEach((set) => {
+            if (set.parts.includes(part)) {
+                return set;
+            }
+        });
+
+        return null;
+    }
 }
 
 export interface IAvatarComponent {

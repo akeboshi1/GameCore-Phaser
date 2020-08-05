@@ -2749,7 +2749,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.3:
+lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.19, lodash@^4.17.3:
   version "4.17.19"
   resolved "https://registry.npm.taobao.org/lodash/download/lodash-4.17.19.tgz?cache=0&sync_timestamp=1594226827854&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Flodash%2Fdownload%2Flodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha1-5I3e2+MLMyF4PFtDAfvTU7weSks=
@@ -3481,8 +3481,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.269"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#3591a1fa8b450401ce87b6fd8ecf691c23fc1e25"
+  version "1.0.270"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#b3fd8fa8e64b4d26cdff4ebf1136a1efd181cd77"
   dependencies:
     protobufjs "^6.8.8"
 
