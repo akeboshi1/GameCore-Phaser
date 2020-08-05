@@ -170,7 +170,6 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new StoreTypeItem(this.scene, 0, 0, capW, capH, this.key, this.dpr, this.zoom);
-                    this.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setStoreData(item);
@@ -188,7 +187,7 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
                 this.onGridSelectHandler(cell);
             }
         });
-        this.add(grid.table);
+        this.add(grid);
 
         return grid;
     }

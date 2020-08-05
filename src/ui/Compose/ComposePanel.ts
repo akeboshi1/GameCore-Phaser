@@ -34,15 +34,14 @@ export class ComposePanel extends BasePanel {
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.world = world;
-        // this.scale = 1;
     }
 
     resize(width: number, height: number) {
         super.resize(width, height);
         this.content.x = width * 0.5;
         this.content.y = height * 0.5;
-        this.mGrideTable.refreshPos(width * 0.5 + 10 * this.dpr, height - 70 * this.dpr);
         this.mGrideTable.resetMask();
+        this.materialGameScroll.refreshMask();
         this.setSize(width, height);
     }
 
@@ -85,17 +84,16 @@ export class ComposePanel extends BasePanel {
     init() {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
-        const zoom = this.scale;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(width, height);
         this.add(this.content);
         const bggraphics = this.scene.make.graphics(undefined, false);
         bggraphics.clear();
         bggraphics.fillGradientStyle(0x7062EC, 0x7062EC, 0xCC99F5, 0xCC99F5);
-        bggraphics.fillRect(-width * 0.5, -height * 0.5, width * zoom, height * zoom);
+        bggraphics.fillRect(-width * 0.5, -height * 0.5, width, height);
         const bg = this.scene.make.image({ key: this.key, frame: "main_bg" });
         bg.y = -height * 0.5 + bg.height * 0.5;
-        bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+        bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.cameraWidth, this.cameraHeight), Phaser.Geom.Rectangle.Contains);
         bg.displayWidth = width;
         this.content.add([bggraphics, bg]);
         const mfont = `bold ${17 * this.dpr}px Source Han Sans`;
@@ -116,7 +114,7 @@ export class ComposePanel extends BasePanel {
         this.mDetailBubble.x = -width * 0.5;
         this.mDetailBubble.y = height * 0.5 - 360 * this.dpr;
         this.content.add(this.mDetailBubble);
-        this.makeBtn = new NineSliceButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), this.dpr, this.scale, {
+        this.makeBtn = new NineSliceButton(this.scene, Math.ceil(width * 0.5 - 60 * this.dpr), Math.ceil(height * 0.5 - 310 * this.dpr), 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("compose.make"), this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -153,14 +151,13 @@ export class ComposePanel extends BasePanel {
         const materialLine3 = this.scene.make.image({ x: 0, y: materialTitle.y + 12 * this.dpr, key: this.key, frame: "separator" });
         this.materialCon.add([materialbg, materialTitle, materialLine, materialLine2, materialLine3]);
         this.materialGameScroll = new GameScroller(this.scene, {
-            x: width * 0.5,
-            y: height - 220 * this.dpr,
+            x: 0,
+            y: 10 * this.dpr,
             width,
             height: 70 * this.dpr,
             zoom: this.scale,
             align: 2,
             orientation: 1,
-            valuechangeCallback: undefined,
             celldownCallBack: (gameobject) => {
                 this.materialTipsCon.visible = true;
                 this.onMaterialItemHandler(gameobject);
@@ -169,7 +166,7 @@ export class ComposePanel extends BasePanel {
                 this.materialTipsCon.visible = false;
             }
         });
-        this.add(this.materialGameScroll);
+        this.materialCon.add(this.materialGameScroll);
         this.materialTipsCon = this.scene.make.container(undefined, false).setPosition(0, -20 * this.dpr);
         this.materialTipsCon.visible = false;
         this.materialCon.add(this.materialTipsCon);
@@ -216,19 +213,20 @@ export class ComposePanel extends BasePanel {
         this.materialTipsDes = tipsText;
         this.materialTipsCon.add([tipsbg, tipsName, tipsText, tipsArrow]);
         const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
-        const capW = propFrame.width + 10 * this.dpr * zoom;
-        const capH = propFrame.height + 12 * this.dpr * zoom;
+        const capW = propFrame.width + 10 * this.dpr;
+        const capH = propFrame.height + 12 * this.dpr;
+        const gridHeight = 190 * this.dpr;
+        const gridY = height * 0.5 - gridHeight * 0.5 + 10 * this.dpr;
         const tableConfig: GridTableConfig = {
-            x: width * zoom / 2,
-            y: height * zoom * 0.5 + 145 * this.dpr * zoom,
+            x: 0,
+            y: gridY,
             table: {
-                width: width * zoom,
-                height: 190 * this.dpr * zoom,
+                width,
+                height: gridHeight,
                 columns: 2,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                cellPadX: 40 * this.dpr * zoom,
                 zoom: this.scale
             },
             scrollMode: 1,
@@ -238,10 +236,8 @@ export class ComposePanel extends BasePanel {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new ComposeItem(scene, this.key, this.dpr, zoom);
-                    this.add(cellContainer);
+                    cellContainer = new ComposeItem(scene, this.key, this.dpr);
                 }
-                // cellContainer.setSize(width, height);
                 cellContainer.setItemData(item);
                 if (item && this.mSelectItemData && item.id === this.mSelectItemData.id)
                     cellContainer.select = true;
@@ -255,7 +251,7 @@ export class ComposePanel extends BasePanel {
                 this.onSelectItemHandler(cell);
             }
         });
-        this.add(this.mGrideTable.table);
+        this.content.add(this.mGrideTable);
         this.resize(width, height);
         super.init();
         if (this.mShowData)
@@ -304,11 +300,10 @@ export class ComposePanel extends BasePanel {
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
-        const zoom = this.scale;
         const items = [];
         this.materialGameScroll.clearItems();
         for (let i = 0; i < len; i++) {
-            const item = new ComposeMaterialItem(this.scene, this.key, this.dpr, zoom);
+            const item = new ComposeMaterialItem(this.scene, this.key, this.dpr);
             item.y = 0;
             items.push(item);
             item.setItemData(datas[i]);
@@ -434,7 +429,6 @@ class ComposeItem extends Phaser.GameObjects.Container {
     public itemData: op_pkt_def.PKT_Skill;
     private readonly dpr: number;
     private readonly key: string;
-    private readonly zoom: number;
     private bg: Phaser.GameObjects.Image;
     private itemIcon: DynamicImage;
     private newIcon: Phaser.GameObjects.Image;
@@ -444,11 +438,10 @@ class ComposeItem extends Phaser.GameObjects.Container {
     private qualifiedIcon: Phaser.GameObjects.Image;
     private lockbg: Phaser.GameObjects.Image;
     private lockIcon: Phaser.GameObjects.Image;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
-        this.zoom = zoom;
         this.bg = this.scene.make.image({ key: this.key, frame: "bprint_bg_1" });
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(this.scene, 0, 0);
@@ -461,7 +454,7 @@ class ComposeItem extends Phaser.GameObjects.Container {
             y: this.newIcon.y,
             text: "N",
             style: {
-                fontSize: 11 * this.dpr * zoom,
+                fontSize: 11 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#ffffff",
                 align: "center"
@@ -474,7 +467,7 @@ class ComposeItem extends Phaser.GameObjects.Container {
             y: this.qualityIcon.y,
             text: "A",
             style: {
-                fontSize: 11 * this.dpr * zoom,
+                fontSize: 11 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#ffffff",
                 align: "center"
@@ -512,7 +505,7 @@ class ComposeItem extends Phaser.GameObjects.Container {
     private setItemIcon(display: op_gameconfig.IDisplay) {
         const url = Url.getOsdRes(display.texturePath);
         this.itemIcon.load(url, this, () => {
-            this.itemIcon.scale = this.dpr * this.zoom;
+            this.itemIcon.scale = this.dpr;
             this.itemIcon.setPosition(0, 0);
         });
     }
@@ -529,14 +522,12 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
     public itemData: op_client.ICountablePackageItem;
     private readonly dpr: number;
     private readonly key: string;
-    private readonly zoom: number;
     private itemIcon: DynamicImage;
     private itemCount: BBCodeText;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
-        this.zoom = zoom;
         const bg = this.scene.make.image({ key: this.key, frame: "source_bg" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemCount = new BBCodeText(this.scene, 0, 0, {})
@@ -550,7 +541,7 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
         this.itemCount.text = this.getCountText(data.count, data.neededCount);
         const url = Url.getOsdRes(data.display.texturePath);
         this.itemIcon.load(url, this, () => {
-            this.itemIcon.scale = this.dpr * this.zoom;
+            this.itemIcon.scale = this.dpr;
             this.itemIcon.setPosition(0, 0);
         });
     }

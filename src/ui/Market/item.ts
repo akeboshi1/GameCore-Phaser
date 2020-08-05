@@ -13,56 +13,53 @@ export class MarketItem extends Phaser.GameObjects.Container {
   private mProp: op_client.IMarketCommodity;
   private readonly dpr: number;
 
-  constructor(scene: Phaser.Scene, x, y, dpr, zoom) {
+  constructor(scene: Phaser.Scene, x, y, dpr) {
     super(scene, x, y);
     this.dpr = dpr;
     this.mBackground = this.scene.make.image({
       key: "market",
       frame: "border"
-    }, false).setOrigin(0).setScale(zoom);
+    }, false).setOrigin(0);
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mBorder = this.scene.make.image({
-      x: 3 * dpr * zoom,
-      y: 3 * dpr * zoom,
+      x: 3 * dpr ,
+      y: 3 * dpr ,
       key: "market",
       frame: "item_border"
-    }, false).setOrigin(0).setScale(zoom);
+    }, false).setOrigin(0);
     this.mBorder.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    // this.mBorder.x = -42 * this.dpr;
-    // this.mBorder.x = -this.mBackground.width / 2 + this.mBorder.width / 2 + (this.mBackground.height - this.mBorder.height / 2);
-    // this.mBorder.x = -(this.mBackground.displayWidth - this.mBorder.displayWidth) / 2 + (this.mBackground.displayHeight - this.mBorder.displayHeight) / 2;
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = this.dpr * zoom;
+    this.mPropImage.scale = this.dpr ;
 
     this.mNickName = this.scene.make.text({
-      x: 62 * this.dpr * zoom,
-      y: 6 * this.dpr * zoom,
+      x: 62 * this.dpr ,
+      y: 6 * this.dpr ,
       style: {
-        fontSize: 13 * this.dpr * zoom,
+        fontSize: 13 * this.dpr ,
         fontFamily: Font.DEFULT_FONT,
         color: "#3399cc"
       }
     }, false);
 
     this.mCoinIcon = this.scene.make.image({
-      x: 45 * this.dpr * zoom,
-      y: 40 * this.dpr * zoom,
+      x: 45 * this.dpr ,
+      y: 40 * this.dpr ,
       key: "market",
       frame: "tuding_icon"
-    }, false).setOrigin(0).setScale(zoom);
+    }, false).setOrigin(0);
 
     const priceBg = this.scene.make.image({
-      x: 62 * this.dpr * zoom,
-      y: 39 * this.dpr * zoom,
+      x: 62 * this.dpr ,
+      y: 39 * this.dpr ,
       key: "market",
       frame: "price_border"
-    }, false).setOrigin(0).setScale(zoom);
+    }, false).setOrigin(0);
 
     this.mPriceText = this.scene.make.text({
-      x: 92 * this.dpr * zoom,
-      y: 49 * this.dpr * zoom,
+      x: 92 * this.dpr ,
+      y: 49 * this.dpr ,
       style: {
-        fontSize: 13 * this.dpr * zoom,
+        fontSize: 13 * this.dpr ,
         fontFamily: Font.DEFULT_FONT,
         color: "#996600"
       }
@@ -73,7 +70,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       frame: "tip_red",
       x: -86 * this.dpr,
       y: -34 * this.dpr
-    }, false).setOrigin(0).setScale(zoom);
+    }, false).setOrigin(0);
 
     this.add([this.mBackground, this.mBorder, this.mPropImage, this.mNickName, priceBg, this.mCoinIcon, this.mPriceText]);
 

@@ -39,28 +39,27 @@ export class MineCarPanel extends BasePanel {
     const w = this.scene.cameras.main.width / this.scale;
     const h = this.scene.cameras.main.height / this.scale;
     super.resize(width, height);
-    const zoom = 1;
     this.setSize(w, h);
     this.mBackGround.clear();
     this.mBackGround.fillStyle(0x6AE2FF, 0);
     this.mBackGround.fillRect(0, 0, w, h);
     this.mBg.x = w / 2;
-    this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr * zoom;
-    this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr * zoom;
-    this.carIcon.y = this.mBg.y - (this.mBg.displayHeight - this.carIcon.displayHeight) / 2 + 4 * this.dpr * zoom;
+    this.mBg.y = this.mBg.displayHeight / 2 + 107 * this.dpr;
+    this.carIcon.x = this.mBg.x / 2 - 4 * this.dpr;
+    this.carIcon.y = this.mBg.y - (this.mBg.displayHeight - this.carIcon.displayHeight) / 2 + 4 * this.dpr;
     this.mCloseBtn.x = this.mBg.x + this.mBg.displayWidth / 2;
-    this.mCloseBtn.y = this.mBg.y - (this.mBg.displayHeight - this.mCloseBtn.displayHeight) / 2 + 10 * this.dpr * zoom;
+    this.mCloseBtn.y = this.mBg.y - (this.mBg.displayHeight - this.mCloseBtn.displayHeight) / 2 + 10 * this.dpr;
     this.mCounter.x = this.mBg.x / 2;
-    this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 16 * this.dpr * zoom;
+    this.mCounter.y = this.mBg.y + (this.mBg.displayHeight - this.mDiscardBtn.displayHeight) / 2 - 16 * this.dpr;
     this.mCounter.setResolution(this.dpr);
-    this.mTips.x = this.mBg.x + 20 * this.dpr * zoom;
-    this.mTips.y = this.mBg.y - this.mBg.displayHeight / 2 - 15 * this.dpr * zoom;
-    this.mDiscardBtn.x = this.mBg.x + this.mBg.displayWidth / 2 - this.mDiscardBtn.displayWidth / 2 - 9 * this.dpr * zoom;
-    this.mDiscardBtn.y = this.mBg.y + this.mBg.displayHeight / 2 - this.mDiscardBtn.displayHeight / 2 - 9 * this.dpr * zoom;
+    this.mTips.x = this.mBg.x + 20 * this.dpr;
+    this.mTips.y = this.mBg.y - this.mBg.displayHeight / 2 - 15 * this.dpr;
+    this.mDiscardBtn.x = this.mBg.x + this.mBg.displayWidth / 2 - this.mDiscardBtn.displayWidth / 2 - 9 * this.dpr;
+    this.mDiscardBtn.y = this.mBg.y + this.mBg.displayHeight / 2 - this.mDiscardBtn.displayHeight / 2 - 9 * this.dpr;
     this.categoriesBg.x = this.mBg.x;
-    this.categoriesBg.y = this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 38 * this.dpr * zoom;
-    this.mPropGrid.refreshPos(this.mBg.x + 2 * this.dpr * zoom, this.mBg.y + 6 * this.dpr * zoom);
-    this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 44 * this.dpr * zoom);
+    this.categoriesBg.y = this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 38 * this.dpr;
+    this.mPropGrid.refreshPos(this.mBg.x + 2 * this.dpr, this.mBg.y + 6 * this.dpr);
+    this.mCategoryTable.refreshPos(this.mBg.x, this.mBg.y - this.mBg.displayHeight / 2 + this.categoriesBg.displayHeight / 2 + 44 * this.dpr);
     this.mPropGrid.resetMask();
     this.mCategoryTable.resetMask();
   }
@@ -123,7 +122,6 @@ export class MineCarPanel extends BasePanel {
     this.setSize(w, h);
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
-    const zoom = 1;
     this.mBackGround = this.scene.make.graphics(undefined, false);
     this.mBackGround.clear();
     this.mBackGround.fillStyle(0x6AE2FF, 0);
@@ -133,8 +131,7 @@ export class MineCarPanel extends BasePanel {
       .image({
         key: this.key,
         frame: "bg.png",
-      })
-      .setScale(zoom);
+      });
     this.mBg.x = w / 2;
     this.mBg.y = h / 2;
     // this.mPanel.setSize(bg.displayWidth, bg.displayHeight);
@@ -146,25 +143,21 @@ export class MineCarPanel extends BasePanel {
           frame: "car_icon.png",
         },
         false
-      )
-      .setScale(zoom);
-    this.carIcon.x = (-(this.mBg.width - this.carIcon.width) * zoom) / 2 + 28 * this.dpr * zoom;
-    this.carIcon.y = (-(this.mBg.height - this.carIcon.height / 2) * zoom) / 2 + 10 * this.dpr * zoom;
+      );
+    this.carIcon.x = (-(this.mBg.width - this.carIcon.width)) / 2 + 28 * this.dpr;
+    this.carIcon.y = (-(this.mBg.height - this.carIcon.height / 2)) / 2 + 10 * this.dpr;
 
     this.mCloseBtn = this.scene.make
       .image(
         {
-          // x: 110 * this.dpr * zoom,
-          // y: -125 * this.dpr * zoom,
           key: this.key,
           frame: "close_btn.png",
         },
         false
-      )
-      .setScale(zoom);
+      );
     this.mCloseBtn.setInteractive();
-    this.mCloseBtn.x = (this.mBg.width * zoom) / 2;
-    this.mCloseBtn.y = (-(this.mBg.height - this.mCloseBtn.height) * zoom) / 2 + 10 * this.dpr * zoom;
+    this.mCloseBtn.x = (this.mBg.width) / 2;
+    this.mCloseBtn.y = (-(this.mBg.height - this.mCloseBtn.height)) / 2 + 10 * this.dpr;
     this.mCloseBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mCounter = this.scene.make.text(
       {
@@ -172,50 +165,46 @@ export class MineCarPanel extends BasePanel {
         style: {
           fontFamily: Font.DEFULT_FONT,
           color: "#FFFFFF",
-          fontSize: 12 * this.dpr * zoom,
+          fontSize: 12 * this.dpr,
         },
       },
       false
     );
-    this.mCounter.x = -this.displayWidth / 2 + 17 * this.dpr * zoom;
-    this.mCounter.y = this.displayHeight / 2 - 18 * this.dpr * zoom - this.mCounter.height;
+    this.mCounter.x = -this.displayWidth / 2 + 17 * this.dpr;
+    this.mCounter.y = this.displayHeight / 2 - 18 * this.dpr - this.mCounter.height;
     this.mCounter.setFontStyle("bold");
 
-    this.mTips = new Tips(this.scene, this.key, this.dpr, zoom);
-    this.mTips.scale = zoom;
-    this.mTips.x = 40 * this.dpr * zoom; // - this.mTips.width / 2;
-    this.mTips.y = (-(this.mBg.height + this.mTips.height) * zoom) / 2 + 15 * this.dpr * zoom;
+    this.mTips = new Tips(this.scene, this.key, this.dpr);
+    this.mTips.x = 40 * this.dpr;
+    this.mTips.y = (-(this.mBg.height + this.mTips.height)) / 2 + 15 * this.dpr;
 
     this.mDiscardBtn = new DiscardButton(this.scene, this.key, "yellow_btn.png", undefined, "丢弃");
-    this.mDiscardBtn.setScale(zoom);
-    (this.mDiscardBtn.x = ((this.mBg.width - this.mDiscardBtn.displayWidth) * zoom) / 2 - 17 * this.dpr * zoom),
-      (this.mDiscardBtn.y = ((this.mBg.height - this.mDiscardBtn.displayHeight) * zoom) / 2 - 10 * this.dpr * zoom),
+    (this.mDiscardBtn.x = ((this.mBg.width - this.mDiscardBtn.displayWidth)) / 2 - 17 * this.dpr),
+      (this.mDiscardBtn.y = ((this.mBg.height - this.mDiscardBtn.displayHeight)) / 2 - 10 * this.dpr),
       this.mDiscardBtn.setTextStyle({
         color: "##996600",
         fontFamily: Font.DEFULT_FONT,
-        fontSize: 10 * this.dpr * zoom,
+        fontSize: 10 * this.dpr,
       });
     this.mDiscardBtn.changeState(DiscardEnum.Discard);
     this.categoriesBg = this.scene.make
       .image({
         key: this.key,
         frame: "nav_bg.png",
-      })
-      .setScale(zoom);
-    // this.categoriesBg.y = -111 * this.dpr * zoom + this.categoriesBg.height * zoom / 2;
-    this.categoriesBg.y = -(this.displayHeight - this.categoriesBg.displayHeight) / 2 + 36 * this.dpr * zoom;
+      });
+    this.categoriesBg.y = -(this.displayHeight - this.categoriesBg.displayHeight) / 2 + 36 * this.dpr;
 
     const propFrame = this.scene.textures.getFrame(this.key, "item_border.png");
-    const capW = propFrame.width * zoom + 4 * this.dpr * zoom;
-    const capH = propFrame.height * zoom + 4 * this.dpr * zoom;
+    const capW = propFrame.width + 4 * this.dpr;
+    const capH = propFrame.height + 4 * this.dpr;
     // this.cellHeight = capH;
-    const gridW = 236 * this.dpr * zoom;
+    const gridW = 236 * this.dpr;
     const propConfig: GridTableConfig = {
-      x: -7 * this.dpr * zoom,
-      y: -16 * this.dpr * zoom,
+      x: -7 * this.dpr,
+      y: -16 * this.dpr,
       table: {
         width: gridW,
-        height: 295 * this.dpr * zoom,
+        height: 295 * this.dpr,
         columns: 4,
         cellsCount: 25,
         cellWidth: capW,
@@ -233,8 +222,7 @@ export class MineCarPanel extends BasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new PackageItem(scene, this.key, this.dpr, zoom);
-          this.add(cellContainer);
+          cellContainer = new PackageItem(scene, this.key, this.dpr);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);
@@ -252,13 +240,13 @@ export class MineCarPanel extends BasePanel {
 
     const btnFrame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png");
     const categoryTableConfig: GridTableConfig = {
-      x: -9 * this.dpr * zoom,
-      y: -155 * this.dpr * zoom,
+      x: -9 * this.dpr,
+      y: -155 * this.dpr,
       table: {
         width: gridW,
         height: this.categoriesBg.displayHeight,
-        cellWidth: btnFrame.width * zoom + 4 * this.dpr,
-        cellHeight: btnFrame.height * zoom,
+        cellWidth: btnFrame.width + 4 * this.dpr,
+        cellHeight: btnFrame.height,
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
@@ -275,11 +263,9 @@ export class MineCarPanel extends BasePanel {
           cellContainer.setTextStyle({
             color: "#566ddb",
             fontFamily: Font.DEFULT_FONT,
-            fontSize: 10 * this.dpr * zoom
+            fontSize: 10 * this.dpr
           });
           cellContainer.setFontStyle("bold");
-          cellContainer.setScale(zoom);
-          this.add(cellContainer);
         }
         cellContainer.setText(item.value);
         cellContainer.setData("data", item);
@@ -301,8 +287,8 @@ export class MineCarPanel extends BasePanel {
       this.carIcon,
       this.mCounter,
       this.categoriesBg,
-      this.mPropGrid.table,
-      this.mCategoryTable.table,
+      this.mPropGrid,
+      this.mCategoryTable,
       this.mCloseBtn,
       this.mDiscardBtn,
     ]);
@@ -440,7 +426,7 @@ class PackageItem extends Phaser.GameObjects.Container {
   private mItem: IPackageItem;
   private mSelectedIcon: Phaser.GameObjects.Image;
 
-  constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+  constructor(scene: Phaser.Scene, key: string, dpr: number) {
     super(scene);
 
     const border = this.scene.make
@@ -451,13 +437,12 @@ class PackageItem extends Phaser.GameObjects.Container {
         },
         false
       )
-      .setOrigin(0)
-      .setScale(zoom);
-    this.setSize(border.width * zoom, border.height * zoom);
+      .setOrigin(0);
+    this.setSize(border.width, border.height);
 
     this.mItemImage = new DynamicImage(this.scene, 0, 0);
     this.mItemImage.setOrigin(0);
-    this.mItemImage.setScale(dpr * zoom);
+    this.mItemImage.setScale(dpr);
 
     this.mCounter = this.scene.make
       .text({
@@ -465,7 +450,7 @@ class PackageItem extends Phaser.GameObjects.Container {
         y: border.displayHeight - 1 * dpr,
         style: {
           fontFamily: Font.DEFULT_FONT,
-          fontSize: 9 * dpr * zoom,
+          fontSize: 9 * dpr,
           color: "#566DDB",
         },
       })
@@ -479,8 +464,8 @@ class PackageItem extends Phaser.GameObjects.Container {
       },
       false
     );
-    this.mSelectedIcon.x = border.width * zoom - 2 * dpr - (this.mSelectedIcon.width * zoom) / 2;
-    this.mSelectedIcon.y = 2 * dpr + (this.mSelectedIcon.height * zoom) / 2;
+    this.mSelectedIcon.x = border.width - 2 * dpr - (this.mSelectedIcon.width) / 2;
+    this.mSelectedIcon.y = 2 * dpr + (this.mSelectedIcon.height) / 2;
     this.add(border);
     this.add([this.mItemImage, this.mCounter, this.mSelectedIcon]);
   }
@@ -546,7 +531,7 @@ class Tips extends Phaser.GameObjects.Container {
   private mName: Phaser.GameObjects.Text;
   private mDes: Phaser.GameObjects.Text;
   private mDpr: number;
-  constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
+  constructor(scene: Phaser.Scene, key: string, dpr: number) {
     super(scene);
     this.mDpr = dpr;
     const bg = this.scene.make.image(
@@ -558,11 +543,11 @@ class Tips extends Phaser.GameObjects.Container {
     );
     this.mName = this.scene.make.text(
       {
-        x: -bg.width / 2 + 12 * dpr * zoom,
-        y: -bg.height / 2 + 5 * dpr * zoom,
+        x: -bg.width / 2 + 12 * dpr,
+        y: -bg.height / 2 + 5 * dpr,
         style: {
           fontFamily: Font.DEFULT_FONT,
-          fontSize: 10 * dpr * zoom,
+          fontSize: 10 * dpr,
           color: "#000000",
         },
       },
@@ -574,7 +559,7 @@ class Tips extends Phaser.GameObjects.Container {
           x: this.mName.x,
           style: {
             fontFamily: Font.DEFULT_FONT,
-            fontSize: 10 * dpr * zoom,
+            fontSize: 10 * dpr,
             color: "#000000",
           },
         },
@@ -582,7 +567,7 @@ class Tips extends Phaser.GameObjects.Container {
       )
       .setOrigin(0, 1);
     this.add([bg, this.mName, this.mDes]);
-    this.setSize(bg.width * zoom, bg.height * zoom);
+    this.setSize(bg.width, bg.height);
   }
 
   setItem(item: op_client.ICountablePackageItem) {

@@ -62,12 +62,6 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         }
         this.onSelectCategoryHandler(items[0]);
     }
-
-    public addGridTableItem(item) {
-        if (this.gridTable)
-            this.gridTable.add(item);
-    }
-
     public setSubItems(datas: any[]) {
         if (this.gridTable) {
             this.gridTable.setItems(datas);
@@ -97,7 +91,6 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
             },
             scrollMode,
             clamplChildOY: false,
-            //  background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: createFun,
         };
         this.gridTable = new GameGridTable(this.scene, tableConfig);
