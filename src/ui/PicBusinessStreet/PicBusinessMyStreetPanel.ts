@@ -63,7 +63,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.add(storeTitle);
         const gridWdith = this.width;
         const gridHeight = this.height - 80 * this.dpr;
-        const gridY = posy + 33 * this.dpr + gridHeight * 0.5;
+        const gridY = posy + 28 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 87 * this.dpr);
 
         this.newStoreBtn = new Button(this.scene, this.key, "new_store", "new_store");

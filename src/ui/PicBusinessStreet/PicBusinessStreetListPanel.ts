@@ -101,29 +101,25 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.add(this.secondaryPanel);
         const scrollbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar" });
         this.secondaryPanel.gameScroll.addAt(scrollbg);
-        this.secondaryPanel.createGrideTable(0, 9* this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 65 * this.dpr, 27 * this.dpr, (cell, cellContainer) => {
+        this.secondaryPanel.createGrideTable(0, 13 * this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 65 * this.dpr, 40 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
-                const btn: TextButton = cellContainer;
-                btn.setFontSize(13 * this.dpr);
-                this.add(cellContainer);
+                cellContainer.setFontSize(13 * this.dpr);
             }
             cellContainer.setText(item.name);
             cellContainer.setData("itemData", item);
             if (this.subCategory === item.type) {
                 cellContainer.changeDown();
             } else cellContainer.changeNormal();
-            this.secondaryPanel.addGridTableItem(cellContainer);
             return cellContainer;
         });
         this.secondaryPanel.setHandler(new Handler(this, this.onCategoryHandler), new Handler(this, this.onSubCategoryHandle));
         const gridbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar_2" });
-        gridbg.y = 3* this.dpr;
         this.secondaryPanel.gridTable.addAt(gridbg);
         const gridWdith = this.width;
         const gridHeight = this.height - 140 * this.dpr;
-        const gridY = posy + 77 * this.dpr + gridHeight * 0.5;
+        const gridY = posy + 88 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 50 * this.dpr);
 
         const rankBtn = new Button(this.scene, this.key2, "ranking", "ranking");

@@ -84,8 +84,12 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
         this.openPlanPanel();
     }
 
-    public setChoosePlan() {
+    public setPlanModels(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN_MODELS_BY_TYPE) {
+        this.picChoosePlanPanel.setPlanData(content.marketPlan);
+    }
 
+    public setEquipedPlan(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
+        this.picBusinessPlanPanel.setPlanData(content.marketPlanPairs);
     }
 
     public destroy() {
@@ -95,13 +99,13 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
 
     private openPlanPanel() {
         this.showMarketingPlanPanel();
-        this.picBusinessPlanPanel.setPlanData();
+        this.picBusinessPlanPanel.setWorld(this.mWorld);
+        this.emit("querymarketplan");
     }
 
     private openChoosePlanPanel() {
         this.showChoosePlanPanel();
         this.picChoosePlanPanel.resetMask();
-        this.picChoosePlanPanel.setPlanData();
     }
 
     private showMarketingPlanPanel() {
@@ -118,6 +122,7 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
             }), new Handler(this, (data) => {
                 this.hideMarketingPlanPanel();
                 this.openChoosePlanPanel();
+                this.emit("queryplanmodels", data);
             }));
         }
         this.content.add(this.picBusinessPlanPanel);

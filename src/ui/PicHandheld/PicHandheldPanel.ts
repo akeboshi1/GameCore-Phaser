@@ -156,7 +156,6 @@ export class PicHandheldPanel extends BasePanel {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new HandheldItem(scene, 0, 0, this.key, this.dpr);
-                    this.gridContent.add(cellContainer);
                 }
                 cellContainer.setItemData(item);
                 return cellContainer;
@@ -167,7 +166,7 @@ export class PicHandheldPanel extends BasePanel {
         this.mPropGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.gridContent.add(this.mPropGrid.table);
+        this.gridContent.add(this.mPropGrid);
         this.resize(0, 0);
         super.init();
     }

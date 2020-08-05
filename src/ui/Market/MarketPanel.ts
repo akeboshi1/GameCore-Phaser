@@ -244,7 +244,7 @@ export class MarketPanel extends BasePanel {
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
     const config: GridTableConfig = {
-      x: w/4,
+      x: w / 2,
       y: 0,
       table: {
         width: w,
@@ -260,7 +260,6 @@ export class MarketPanel extends BasePanel {
           item = cell.item;
         if (cellContainer === null) {
           cellContainer = new TextButton(scene, this.dpr);
-          this.mSubCategorisScroll.add(cellContainer);
         }
         cellContainer.setText(item.value);
         cellContainer.setData({ item });
@@ -322,7 +321,7 @@ export class MarketPanel extends BasePanel {
     const cellWidth = propFrame.width + 10 * this.dpr;
     const cellHeight = propFrame.height + 10 * this.dpr;
     const propGridConfig: GridTableConfig = {
-      x: w/4,
+      x: w / 2,
       y: 0,
       table: {
         width: w,
@@ -342,7 +341,6 @@ export class MarketPanel extends BasePanel {
           item = cell.item;
         if (cellContainer === null) {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr);
-          this.mPropGrid.add(cellContainer);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);

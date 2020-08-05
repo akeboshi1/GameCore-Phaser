@@ -30,7 +30,6 @@ export class PicFurniFunPanel extends BasePanel {
     private tipsbg: NineSlicePatch;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        // this.scale = 1;
     }
 
     resize(w: number, h: number) {
@@ -236,10 +235,9 @@ export class PicFurniFunPanel extends BasePanel {
 
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
-        const zoom = this.scale;
         this.materialGameScroll.clearItems();
         for (let i = 0; i < len; i++) {
-            const item = new MaterialItem(this.scene, this.key, this.dpr, zoom);
+            const item = new MaterialItem(this.scene, this.key, this.dpr);
             item.y = 0;
             item.setItemData(datas[i]);
             item.setData("itemData", datas[i]);
@@ -295,14 +293,12 @@ class MaterialItem extends Phaser.GameObjects.Container {
     public itemData: op_client.ICountablePackageItem;
     private readonly dpr: number;
     private readonly key: string;
-    private readonly zoom: number;
     private itemIcon: DynamicImage;
     private itemCount: BBCodeText;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
-        this.zoom = zoom;
         const bg = this.scene.make.image({ key: this.key, frame: "bg_m" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemCount = new BBCodeText(this.scene, 0, 15 * dpr, "10/20", { color: "#000000" })
@@ -316,7 +312,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.itemCount.text = this.getCountText(data.count, data.neededCount);
         const url = Url.getOsdRes(data.display.texturePath);
         this.itemIcon.load(url, this, () => {
-            this.itemIcon.scale = this.dpr * this.zoom;
+            this.itemIcon.scale = this.dpr;
             this.itemIcon.setPosition(0, 0);
         });
     }

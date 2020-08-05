@@ -19,7 +19,6 @@ export class MineSettlePanel extends BasePanel {
     private titleName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        // this.scale = 1;
     }
 
     resize(w: number, h: number) {
@@ -88,23 +87,22 @@ export class MineSettlePanel extends BasePanel {
         this.blackGraphic = this.scene.make.graphics(undefined, false);
         this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
-        const zoom = 1;
-        const capW = (propFrame.width + 20 * this.dpr * zoom);
-        const capH = (propFrame.height + 25 * this.dpr * zoom);
+        const capW = (propFrame.width + 20 * this.dpr);
+        const capH = (propFrame.height + 25 * this.dpr);
         const config: GridTableConfig = {
             x: 0,
             y: 0,
             table: {
-                width: 280 * this.dpr * zoom,
-                height: 160 * this.dpr * zoom,
+                width: 280 * this.dpr,
+                height: 160 * this.dpr,
                 columns: 5,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
                 cellOriginX: 0,
                 cellOriginY: 0,
-                cellPadX: 18 * this.dpr * zoom,
-                zoom
+                cellPadX: 18 * this.dpr,
+                zoom: this.scale
             },
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             clamplChildOY: false,
@@ -112,7 +110,6 @@ export class MineSettlePanel extends BasePanel {
                 const scene = cell.scene, item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new MineSettleItem(scene, this.dpr);
-                    this.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item);
@@ -146,7 +143,7 @@ export class MineSettlePanel extends BasePanel {
             fontFamily: Font.DEFULT_FONT
         });
         this.add([this.blackGraphic, this.bg, this.titleimage, this.titleName, this.confirmBtn]);
-        this.add(this.mPropGrid.table);
+        this.add(this.mPropGrid);
         this.resize(0, 0);
         super.init();
     }

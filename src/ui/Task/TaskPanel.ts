@@ -29,7 +29,6 @@ export class TaskPanel extends BasePanel {
     private taskDatas: op_client.PKT_Quest[];
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        // this.scale = 1;
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
@@ -170,7 +169,7 @@ export class TaskPanel extends BasePanel {
             if (i < list.length) {
                 option = list[i];
             } else {
-                option = new TaskOption(this.scene, this.key, this.dpr, this.scale);
+                option = new TaskOption(this.scene, this.key, this.dpr);
                 option.setHandler(new Handler(this, this.onTaskOptionHandler));
                 this.optionCon.add(option);
             }
@@ -204,7 +203,7 @@ export class TaskPanel extends BasePanel {
             if (i < this.taskItems.length) {
                 item = this.taskItems[i];
             } else {
-                item = new TaskItem(this.scene, this.key, this.dpr, this.scale);
+                item = new TaskItem(this.scene, this.key, this.dpr);
                 this.mGameScroll.addItem(item);
                 item.setHandler(new Handler(this, this.onExtendsHandler), new Handler(this, this.onFinishHandler));
                 this.taskItems.push(item);
@@ -281,14 +280,12 @@ class TaskItem extends Phaser.GameObjects.Container {
     private extend: TaskItemExtend;
     private key: string;
     private dpr: number;
-    private zoom: number;
     private extendHandler: Handler;
     private finishHandler: Handler;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
         this.dpr = dpr;
-        this.zoom = zoom;
         const width = 254 * dpr;
         const height = 45 * dpr;
         this.content = scene.make.container(undefined, false);
@@ -369,7 +366,7 @@ class TaskItem extends Phaser.GameObjects.Container {
     }
     private openExtend() {
         if (!this.extend) {
-            this.extend = new TaskItemExtend(this.scene, this.key, this.dpr, this.zoom);
+            this.extend = new TaskItemExtend(this.scene, this.key, this.dpr);
             this.extend.setFinishHandler(new Handler(this, this.onFinishHandler));
             this.add(this.extend);
             this.extend.y = this.height * 0.5 + this.extend.height * 0.5;
@@ -465,10 +462,9 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     private finishBtn: NineSliceButton;
     private line: Phaser.GameObjects.Image;
     private dpr: number = 0;
-    private zoom: number = 0;
     private key: string;
     private finishHandler: Handler;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         const width = 253 * dpr;
         const height = 202 * dpr;
@@ -500,7 +496,6 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.add([bg, this.taskLabel, this.taskTex, this.rewardLabel, line, this.finishBtn]);
         this.setSize(width, height);
         this.key = key;
-        this.zoom = zoom;
         this.finishBtn.visible = false;
     }
 
@@ -553,7 +548,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
             if (i < arr.length) {
                 item = arr[i];
             } else {
-                item = new TaskCell(this.scene, this.key, this.dpr, this.zoom);
+                item = new TaskCell(this.scene, this.key, this.dpr);
                 arr.push(item);
                 this.add(item);
             }
@@ -587,7 +582,7 @@ class TaskCell extends Phaser.GameObjects.Container {
     private countTex: BBCodeText;
     private key: string;
     private dpr;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
         this.dpr = dpr;
@@ -630,7 +625,7 @@ class TaskOption extends Phaser.GameObjects.Container {
     private text: Phaser.GameObjects.Text;
     private clickHandler: Handler;
     private dpr: number = 0;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         const width = 256 * dpr;
         const height = 30 * dpr;

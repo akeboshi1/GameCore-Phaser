@@ -168,7 +168,8 @@ export default class PicFriendPanel extends BasePanel {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                cellPadX: 24 * this.dpr
+                cellPadX: 24 * this.dpr,
+                zoom:this.scale
             },
             scrollMode: 1,
             clamplChildOY: false,
@@ -178,7 +179,6 @@ export default class PicFriendPanel extends BasePanel {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = createFun();
-                    this.content.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item);
@@ -192,7 +192,7 @@ export default class PicFriendPanel extends BasePanel {
                 callback.runWith(cell);
             }
         });
-        this.content.add(grid.table);
+        this.content.add(grid);
         return grid;
     }
 

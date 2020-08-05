@@ -8,7 +8,7 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { Coin } from "../../utils/resUtil";
+import { Coin, Url } from "../../utils/resUtil";
 import { op_def } from "pixelpai_proto";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
@@ -36,9 +36,8 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setPlanData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
+    public setPlanData(marketPlan: op_client.IMarketPlan[]) {
+        this.gridtable.setItems(marketPlan);
         const cells = this.gridtable.getCells();
         if (cells) {
             const cell = cells[0];
@@ -133,7 +132,6 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new PlanTypeItem(this.scene, 0, 0, capW, capH, this.key, this.dpr, this.zoom);
-                    this.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setPlanData(item);
@@ -151,7 +149,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
                 this.onGridSelectHandler(cell);
             }
         });
-        this.add(grid.table);
+        this.add(grid);
 
         return grid;
     }
@@ -159,12 +157,17 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     private onGridSelectHandler(cell: PlanTypeItem) {
         if (this.curSelectItem) this.curSelectItem.select = false;
         cell.select = true;
-        this.curSelectItem = cell;
-        for (let i = 0; i < 10; i++) {
-            const item = new RewardItem(this.scene, 0, 0, 36 * this.dpr, 36 * this.dpr, this.key, this.dpr, this.zoom);
+        const data = cell.palnData;
+        this.gameScroll.clearItems();
+        for (const itemdata of data.requirements) {
+            const item = new MaterialItem(this.scene, 0, 0, 36 * this.dpr, 36 * this.dpr, this.key, this.dpr, this.zoom);
+            item.setItemData(itemdata);
             this.gameScroll.addItem(item);
         }
         this.gameScroll.Sort();
+        this.describleText.text = data.des;
+        this.effectText.text = i18n.t("business_street.effect") + ":" + data.buffDes;
+        this.curSelectItem = cell;
     }
 
     private onCancelHandler() {
@@ -177,12 +180,12 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
 }
 
 class PlanTypeItem extends Phaser.GameObjects.Container {
-    public palnData: any;
+    public palnData: op_client.MarketPlan;
     private key: string;
     private dpr: number;
     private storeName: Phaser.GameObjects.Text;
     private bg: Phaser.GameObjects.Image;
-    private storeIcon: Phaser.GameObjects.Image;
+    private storeIcon: DynamicImage;
     private isSelect: boolean = false;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -192,22 +195,22 @@ class PlanTypeItem extends Phaser.GameObjects.Container {
         this.bg = this.scene.make.image({ key, frame: "store_bg" });
         this.add(this.bg);
 
-        this.storeIcon = this.scene.make.image({ key, frame: "restaurant_icon" });
+        this.storeIcon = new DynamicImage(this.scene, 0, 0);
+        this.storeIcon.setTexture(this.key, "restaurant_icon");
         this.storeIcon.setPosition(0, -8 * dpr);
         this.add(this.storeIcon);
         this.storeName = this.scene.make.text({ x: 0, y: this.storeIcon.y + this.storeIcon.height * 0.5 + 10 * dpr, text: "Restaurant", style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
         this.add(this.storeName);
     }
 
-    public setPlanData() {
-        // if (data instanceof op_pkt_def.PKT_INDUSTRY) {
-        //     this.storeIcon.setFrame(data.industryType + "_icon");
-        //     this.storeName.text = data.name;
-        // } else {
-        //     const storeData = <op_pkt_def.PKT_ROOM_MODEL>data;
-        //     this.storeIcon.setFrame(storeData.storeType + "_icon");
-        //     this.storeName.text = storeData.name;
-        // }
+    public setPlanData(data: op_client.MarketPlan) {
+        this.palnData = data;
+        const url = Url.getOsdRes(data.icon);
+        this.storeIcon.load(url, this, () => {
+            this.storeIcon.displayWidth = 46 * this.dpr;
+            this.storeIcon.scaleY = this.storeIcon.scaleX;
+        });
+        this.storeName.text = data.name;
     }
 
     public get select() {
@@ -220,12 +223,12 @@ class PlanTypeItem extends Phaser.GameObjects.Container {
     }
 }
 
-class RewardItem extends Phaser.GameObjects.Container {
-    public rewardData: any;
+class MaterialItem extends Phaser.GameObjects.Container {
+    public itemData: op_client.ICountablePackageItem;
     private key2: string;
     private dpr: number;
-    private countText: Phaser.GameObjects.Text;
-    private itemIcon: Phaser.GameObjects.Image;
+    private countText: BBCodeText;
+    private itemIcon: DynamicImage;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key2: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -235,11 +238,25 @@ class RewardItem extends Phaser.GameObjects.Container {
         this.add(bg);
         this.itemIcon = new DynamicImage(this.scene, 0, 0);
         this.add(this.itemIcon);
-        this.countText = this.scene.make.text({ x: bg.width * 0.5, y: bg.height * 0.5, text: "4~10", style: { color: "#0", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(1, 0.5);
+        this.countText = new BBCodeText(this.scene, bg.width * 0.5, bg.height * 0.5, {})
+            .setOrigin(1, 0.5).setFontSize(12 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add(this.countText);
     }
 
-    public setRewardData(data) {
-
+    public setItemData(data: op_client.ICountablePackageItem) {
+        this.itemData = data;
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.itemIcon.load(url, this, () => {
+            this.itemIcon.displayWidth = 29 * this.dpr;
+            this.itemIcon.scaleY = this.itemIcon.scaleX;
+        });
+        this.countText.text = this.getCountText(data.count, data.neededCount);
+    }
+    private getCountText(count: number, needcount: number) {
+        const color = (count >= needcount ? "#0054FF" : "#FF2B2B");
+        const countText = `[stroke=${color}][color=${color}]${count}[/color][/stroke]/`;
+        const needText = `[stroke=#2D2D2D][color=#2D2D2D]${needcount}[/color][/stroke]/`;
+        const text = countText + needText;
+        return text;
     }
 }
