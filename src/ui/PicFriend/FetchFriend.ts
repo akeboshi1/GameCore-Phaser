@@ -6,7 +6,7 @@ export class FetchFriend {
     private userId: string;
     constructor(worldService: WorldService) {
         this.httpService = worldService.httpService;
-        this.userId = worldService.getConfig().user_id;
+        this.userId = worldService.getConfig().user_id || "5f228eca28884d186ca2d542";
     }
 
     getFolloweds() {

@@ -2,14 +2,19 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
+import { HttpService } from "../../net/http.service";
 
 export class PicFriend extends PacketHandler {
     private readonly world: WorldService;
+    private httpService: HttpService;
     private mEvent: Phaser.Events.EventEmitter;
+    private userId: string;
     constructor(world: WorldService) {
         super();
         this.world = world;
         this.mEvent = new Phaser.Events.EventEmitter();
+        this.httpService = world.httpService;
+        this.userId = world.getConfig().user_id || "5f228eca28884d186ca2d542";
     }
     register() {
         const connection = this.connection;
@@ -37,6 +42,22 @@ export class PicFriend extends PacketHandler {
     destroy() {
         this.unregister();
         this.mEvent.destroy();
+    }
+
+    getFolloweds() {
+        return this.httpService.get(`user/${this.userId}/followeds`);
+    }
+
+    getFans() {
+        return this.httpService.get(`user/${this.userId}/fans`);
+    }
+
+    getBanlist() {
+        return this.httpService.get(`user/banlist`);
+    }
+
+    getFriends() {
+        return this.httpService.get(`user/friends`);
     }
 
     get connection(): ConnectionService {
