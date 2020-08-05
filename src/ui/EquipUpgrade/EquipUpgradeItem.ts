@@ -27,6 +27,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private unlockCondition: BBCodeText;
     private haveEquiped: boolean = false;
     private curEquipItem: EquipItemCell;
+    private curSelectItemData: op_client.IMiningEquipment;
     private zoom: number;
     private cellWidth: number = 0;
     private cellHeight: number = 0;
@@ -77,8 +78,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.topbg.y += y;
         this.unlockbtn.x += x;
         this.unlockbtn.y += y;
-        this.curEquipItem.x += x;
-        this.curEquipItem.y += y;
         this.gridTable.refreshPos(x, y - 10 * this.dpr);
         this.gridTable.resetMask();
     }
@@ -108,6 +107,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         this.costNum = null;
         this.diamondIcon = null;
         this.curEquipItem = null;
+        this.curSelectItemData = null;
     }
 
     private setBgTexture(isblue: boolean) {
@@ -169,6 +169,8 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item, index);
+                if (this.curSelectItemData === item) cellContainer.setSelect(true);
+                else cellContainer.setSelect(false);
                 if (this.curEquipItem == null) {
                     if (this.haveEquiped) {
                         if (item.selected) this.onSelectItemHandler(cellContainer);
@@ -192,6 +194,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         // Logger.getInstance().log(cell.itemData);
         if (this.curEquipItem) this.curEquipItem.setSelect(false);
         const data = cell.itemData;
+        this.curSelectItemData = data;
         this.updateEquipItem(cell);
         this.curEquipItem = cell;
         if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
