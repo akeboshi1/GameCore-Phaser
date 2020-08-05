@@ -210,10 +210,7 @@ export class BlockManager implements IBlockManager {
   protected initCamera() {
     const camera = this.scene.cameras.main;
     if (this.mCameras) {
-      // const main = this.mCameras.camera;
-      this.mMainCamera.setBounds(this._bound.x, this._bound.y, this._bound.width, this._bound.height);
-      const bound = this.mMainCamera.getBounds();
-      camera.setBounds(bound.x, bound.y, bound.width, bound.height);
+      camera.setBounds(this._bound.x, this._bound.y, this._bound.width, this._bound.height);
 
       this.updatePosition();
       camera.setScroll(this.mMainCamera.scrollX, this.mMainCamera.scrollY);

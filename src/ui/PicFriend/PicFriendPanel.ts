@@ -174,7 +174,7 @@ export default class PicFriendPanel extends BasePanel {
         this.channelGroup.appendItemAll([friendsTab, fansTab, followsTab]);
         this.channelGroup.selectIndex(0);
 
-        this.friendTabel = this.createGrideTable(0,this.topContent.y + this.topContent.height + 380 * this.dpr * 0.5 + 18 * this.dpr, 275 * this.dpr, 380 * this.dpr, 275 * this.dpr, 36 * this.dpr, () => {
+        this.friendTabel = this.createGrideTable(0,this.topContent.y + this.topContent.height + 380 * this.dpr * 0.5 + 18 * this.dpr, 275 * this.dpr, 380 * this.dpr, 275 * this.dpr, 36 * this.dpr, (scene, cell) => {
             return new PicFriendItem(this.scene, 0, 0, this.key, this.dpr, zoom);
         }, new Handler(this, this.onSelectItemHandler));
 
@@ -198,7 +198,8 @@ export default class PicFriendPanel extends BasePanel {
                 columns: 1,
                 cellWidth: capW,
                 cellHeight: capH,
-                reuseCellContainer: true            },
+                reuseCellContainer: true
+              },
             scrollMode: 0,
             clamplChildOY: false,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
@@ -206,7 +207,7 @@ export default class PicFriendPanel extends BasePanel {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = createFun();
+                    cellContainer = createFun(this.scene, cell);
                     this.content.add(cellContainer);
                 }
                 cellContainer.setData({ item });
@@ -279,6 +280,24 @@ class PicFriendItem extends Container {
         this.itemData = data;
         this.nameText.text = data.nickname || data.followed_user.nickname;
         // this.lvText.text = data.user.level;
+    }
+}
+
+class FriendMenu extends Container {
+    constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
+        super(scene, x, y);
+        this.setSize(275 * dpr, 36 * dpr);
+        const graphics = this.scene.make.graphics(undefined, false);
+        graphics.fillStyle(0xFF9900);
+        graphics.fillRect(-275 * dpr * 0.5, -18 * dpr, 275 * dpr, 36 * dpr);
+        this.add(graphics);
+
+        const icon = this.scene.make.image({x: 7.44 * dpr - this.width * 0.5, key, frame: "offline_head"}).setOrigin(0, 0.5);
+        this.add(icon);
+    }
+
+    setItemData(data: any) {
+
     }
 }
 
