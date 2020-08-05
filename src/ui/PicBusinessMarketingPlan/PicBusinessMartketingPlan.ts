@@ -15,9 +15,8 @@ export class PicBusinessMartketingPlan extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE, this.onMyStoreList);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET, this.onCOMMERCIAL_STREET);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS, this.onINDUSTRY_MODELS);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN, this.onEquiped_MARKET_PLAN);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN_MODELS_BY_TYPE, this.onMARKET_PLAN_MODELS_BY_TYPE);
         }
     }
 
@@ -47,39 +46,35 @@ export class PicBusinessMartketingPlan extends PacketHandler {
         }
     }
 
-    public query_My_STORE() {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_MY_STORE);
+    public query_Equiped_MARKET_PLAN(room_id: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_MARKET_PLAN);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_MARKET_PLAN = packet.content;
+        content.roomId = room_id;
         this.connection.send(packet);
     }
 
-    public query_COMMERCIAL_STREET() {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_COMMERCIAL_STREET);
+    public query_MARKET_PLAN_MODELS_BY_TYPE(market_plan_type: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_MARKET_PLAN_MODELS_BY_TYPE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_MARKET_PLAN_MODELS_BY_TYPE = packet.content;
+        content.marketPlanType = market_plan_type;
         this.connection.send(packet);
     }
 
-    public query_INDUSTRY_MODELS() {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_INDUSTRY_MODELS);
+    public query_SELECT_MARKET_PLAN(room_id: string, market_plan_type: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELECT_MARKET_PLAN);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELECT_MARKET_PLAN = packet.content;
+        content.marketPlanId = market_plan_type;
+        content.roomId = market_plan_type;
         this.connection.send(packet);
     }
-    public query_CREATE_STORE(modelId: string) {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CREATE_STORE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CREATE_STORE = packet.content;
-        content.modelId = modelId;
-        this.connection.send(packet);
-    }
-    private onMyStoreList(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE = packet.content;
-        this.mEvent.emit("onmystore", content);
+
+    private onEquiped_MARKET_PLAN(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN = packet.content;
+        this.mEvent.emit("onequipedplan", content);
     }
 
-    private onCOMMERCIAL_STREET(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET = packet.content;
-        this.mEvent.emit("onstreet", content);
+    private onMARKET_PLAN_MODELS_BY_TYPE(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN_MODELS_BY_TYPE = packet.content;
+        this.mEvent.emit("onplanmodels", content);
     }
-
-    private onINDUSTRY_MODELS(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS = packet.content;
-        this.mEvent.emit("onmodels", content);
-    }
-
 }

@@ -62,7 +62,6 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mBackGround.fillStyle(0x000000, 0.66);
         this.mBackGround.fillRect(0, 0, w, h);
         this.content.setPosition(w / 2, h / 2);
-        // this.mSkillGrideTable.refreshPos(0, 180 * this.dpr);
         this.mSkillGrideTable.resetMask();
         this.content.setInteractive();
         this.mCategoryScroll.refreshMask();
@@ -111,13 +110,12 @@ export default class CharacterInfoPanel extends BasePanel {
         super.preload();
     }
     init() {
-        const zoom = this.scale;
         const wid: number = this.scaleWidth;
         const hei: number = this.scaleHeight;
         this.mBackGround = this.scene.make.graphics(undefined, false);
         this.mBackGround.clear();
         this.mBackGround.fillStyle(0x6AE2FF, 0);
-        this.mBackGround.fillRect(0, 0, wid * zoom, hei * zoom);
+        this.mBackGround.fillRect(0, 0, wid, hei);
         this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
@@ -220,7 +218,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const gridX = 0, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 200 * this.dpr;
         const gridY = scrollY + scrollHeight * 0.5 + 60 * this.dpr;
         this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
-            return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr, zoom);
+            return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr);
         }, new Handler(this, this.onSelectItemHandler));
         const attrHeigth = 149 * this.dpr;
         this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY - 5 * this.dpr, 260 * this.dpr, attrHeigth, this.key, this.dpr);
@@ -318,7 +316,6 @@ export default class CharacterInfoPanel extends BasePanel {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = createFun();
-                    this.content.add(cellContainer);
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item, this.isOwner);
@@ -332,7 +329,7 @@ export default class CharacterInfoPanel extends BasePanel {
                 callback.runWith(cell);
             }
         });
-        this.content.add(grid.table);
+        this.content.add(grid);
         return grid;
     }
 
@@ -376,14 +373,13 @@ export default class CharacterInfoPanel extends BasePanel {
         const optionType = <CharacterOptionType>obj.getData("optiontype");
         if (optionType === CharacterOptionType.Skill) {
             this.mSkillGrideTable.setItems(datas);
-            //  this.mSkillGrideTable.refreshPos(0, 185 * this.dpr * this.scale, 0, 0);
             this.mAttrPanel.visible = false;
-            this.mSkillGrideTable.table.visible = true;
+            this.mSkillGrideTable.visible = true;
         } else if (optionType === CharacterOptionType.Attribute) {
             if (datas) this.mAttrPanel.setAttributeData(datas);
             this.mAttrPanel.visible = true;
             this.mSkillGrideTable.setItems([]);
-            this.mSkillGrideTable.table.visible = false;
+            this.mSkillGrideTable.visible = false;
         } else if (optionType === CharacterOptionType.Badge) {
 
         }
@@ -427,7 +423,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private setMainUIVisible(value) {
         this.avatar.visible = value;
         this.mCategoryScroll.visible = value;
-        this.mSkillGrideTable.table.visible = value;
+        this.mSkillGrideTable.visible = value;
         this.mainContent.visible = value;
 
     }
@@ -473,9 +469,8 @@ class CharacterOwnerItem extends Container {
     private icon: DynamicImage;
     private progressBar: ProgressBar;
     private dpr: number = 0;
-    private zoom: number = 0;
     private key: string;
-    constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
+    constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         const bg = this.scene.make.image({ x: 0, y: 0, key, frame: "skill_bg" });
         this.nameText = this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
@@ -520,7 +515,6 @@ class CharacterOwnerItem extends Container {
         this.add([bg, this.icon, this.nameText, this.lvText, this.progressBar]);
         this.setSize(bg.width, bg.height);
         this.dpr = dpr;
-        this.zoom = zoom;
         this.key = key;
         // this.progressBar.setProgress(1, 100);
     }
@@ -528,9 +522,9 @@ class CharacterOwnerItem extends Container {
     public setItemData(data, isOwner: boolean = false) {
         this.itemData = data;
         this.nameText.text = data.name;
-        const posY = (isOwner ? -16 * this.dpr * this.zoom : -11 * this.dpr * this.zoom);
-        const offsetY = (isOwner ? 20 * this.dpr * this.zoom : 25 * this.dpr * this.zoom);
-        const cheight = 10 * this.dpr * this.zoom;
+        const posY = (isOwner ? -16 * this.dpr : -11 * this.dpr);
+        const offsetY = (isOwner ? 20 * this.dpr : 25 * this.dpr);
+        const cheight = 10 * this.dpr;
         this.nameText.y = posY + cheight * 0.5;
         this.icon.setTexture(this.key, "test_skillicon");
         const width = this.icon.width;
@@ -545,8 +539,8 @@ class CharacterOwnerItem extends Container {
         }
         const url = Url.getOsdRes(data.display.texturePath);
         this.icon.load(url, this, () => {
-            this.icon.scale = this.dpr * this.zoom;
-            const x = -this.width * 0.5 + width * 0.5 + 6 * this.dpr * this.zoom;
+            this.icon.scale = this.dpr;
+            const x = -this.width * 0.5 + width * 0.5 + 6 * this.dpr;
             this.icon.setPosition(x, 0);
         });
 

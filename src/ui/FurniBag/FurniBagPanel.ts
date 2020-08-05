@@ -97,6 +97,7 @@ export class FurniBagPanel extends BasePanel {
     this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 50 * this.dpr;
     this.mPropGrid.layout();
     this.mPropGrid.resetMask();
+    this.mCategoryScroll.refreshMask();
     this.setSize(width, height);
   }
 
@@ -373,7 +374,6 @@ export class FurniBagPanel extends BasePanel {
           item = cell.item;
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr);
-          this.mPropGrid.add(cellContainer);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);

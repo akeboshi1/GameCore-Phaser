@@ -5,11 +5,12 @@ import { WorldService } from "../../game/world.service";
 import PicBusinessStreetPanel from "./PicBusinessMarketingPlanPanel";
 import { PicBusinessMartketingPlan } from "./PicBusinessMartketingPlan";
 import PicBusinessMarketingPlanPanel from "./PicBusinessMarketingPlanPanel";
+import { PicaMainUIMediator } from "../PicaMainUI/PicaMainUIMediator";
 export class PicBusinessMarketingPlanMediator extends BaseMediator {
     protected mView: PicBusinessMarketingPlanPanel;
     private scene: Phaser.Scene;
     private layerMgr: ILayerManager;
-    private picStreet: PicBusinessMartketingPlan;
+    private picPlan: PicBusinessMartketingPlan;
     private world: WorldService;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
@@ -25,27 +26,25 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
         }
         if (!this.mView) {
             this.mView = new PicBusinessMarketingPlanPanel(this.scene, this.world);
-            // this.mView.on("querymystore", this.queryMyStoreList, this);
-            // this.mView.on("querystreet", this.query_COMMERCIAL_STREET, this);
-            // this.mView.on("querymodels", this.query_INDUSTRY_MODELS, this);
-            // this.mView.on("querycreatestore", this.query_CREATE_STORE, this);
+            this.mView.on("queryplanmodels", this.query_MARKET_PLAN_MODELS_BY_TYPE, this);
+            this.mView.on("querymarketplan", this.query_Equiped_MARKET_PLAN, this);
+            this.mView.on("queryselectplan", this.query_SELECT_MARKET_PLAN, this);
             this.mView.on("hide", this.onHidePanel, this);
         }
-        if (!this.picStreet) {
-            this.picStreet = new PicBusinessMartketingPlan(this.world);
-            // this.picStreet.on("onmystore", this.onMyStoreList, this);
-            // this.picStreet.on("onstreet", this.onCOMMERCIAL_STREET, this);
-            // this.picStreet.on("onmodels", this.onINDUSTRY_MODELS, this);
-            this.picStreet.register();
+        if (!this.picPlan) {
+            this.picPlan = new PicBusinessMartketingPlan(this.world);
+            this.picPlan.on("onequipedplan", this.onEquiped_MARKET_PLAN, this);
+            this.picPlan.on("onplanmodels", this.onMARKET_PLAN_MODELS_BY_TYPE, this);
+            this.picPlan.register();
         }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show();
     }
 
     destroy() {
-        if (this.picStreet) {
-            this.picStreet.destroy();
-            this.picStreet = undefined;
+        if (this.picPlan) {
+            this.picPlan.destroy();
+            this.picPlan = undefined;
         }
         if (this.mView) {
             this.mView.hide();
@@ -57,23 +56,23 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
         this.destroy();
     }
 
-    private queryMyStoreList() {
-        this.picStreet.query_My_STORE();
+    private query_MARKET_PLAN_MODELS_BY_TYPE(market_plan_type: string) {
+        this.picPlan.query_MARKET_PLAN_MODELS_BY_TYPE(market_plan_type);
     }
-    private query_COMMERCIAL_STREET() {
-        this.picStreet.query_COMMERCIAL_STREET();
+    private query_Equiped_MARKET_PLAN() {
+        const uimanager = this.world.uiManager;
+        const picmainui = <PicaMainUIMediator>uimanager.getMediator("PicaMainUIMediator");
+        const room_id = picmainui.roomInfo.roomId;
+        this.picPlan.query_Equiped_MARKET_PLAN(room_id);
     }
 
-    private query_INDUSTRY_MODELS() {
-        this.picStreet.query_INDUSTRY_MODELS();
+    private query_SELECT_MARKET_PLAN(room_id: string, market_plan_type: string) {
+        this.picPlan.query_SELECT_MARKET_PLAN(room_id, market_plan_type);
     }
-    private query_CREATE_STORE(modelId: string) {
-        this.picStreet.query_CREATE_STORE(modelId);
+    private onEquiped_MARKET_PLAN(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
+        this.mView.setEquipedPlan(content);
     }
-    // private onMyStoreList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
-    //     this.mView.setMyStore(content);
-    // }
-    // private onCOMMERCIAL_STREET(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET) {
-    //     this.mView.setCommercialStreet(content);
-    // }
+    private onMARKET_PLAN_MODELS_BY_TYPE(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN_MODELS_BY_TYPE) {
+        this.mView.setPlanModels(content);
+    }
 }
