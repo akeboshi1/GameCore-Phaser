@@ -2,9 +2,10 @@ import { ILayerManager } from "../layer.manager";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
-import PicFriendPanel from "./PicFriendPanel";
+import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";
 import { PicFriend } from "./PicFriend";
 import { FetchFriend } from "./FetchFriend";
+import { Logger } from "../../utils/log";
 
 export class PicFriendMediator extends BaseMediator {
     protected mView: PicFriendPanel;
@@ -27,13 +28,11 @@ export class PicFriendMediator extends BaseMediator {
         if (!this.mView) {
             this.mView = new PicFriendPanel(this.scene, this.world);
             this.mView.on("hide", this.onHidePanel, this);
+            this.mView.on("fetchFriend", this.onFetchFriendHandler, this);
         }
         if (!this.picFriend) {
             this.picFriend = new PicFriend(this.world);
             this.picFriend.register();
-        }
-        if (!this.fetchFriend) {
-            this.fetchFriend = new FetchFriend(this.world);
         }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show();
@@ -48,8 +47,43 @@ export class PicFriendMediator extends BaseMediator {
             this.mView.hide();
             this.mView = undefined;
         }
+    }
 
-        this.fetchFriend = undefined;
+    private onFetchFriendHandler(type: FriendChannel) {
+        switch (type) {
+            case FriendChannel.Friends:
+                this.getFriends();
+                break;
+            case FriendChannel.Fans:
+                this.getFans();
+                break;
+            case FriendChannel.Followes:
+                this.getFolloweds();
+                break;
+        }
+    }
+
+    private getFriends() {
+        this.picFriend.getFriends().then((response) => {
+            this.mView.setFriend(FriendChannel.Friends, response.data);
+        });
+    }
+
+    private getBanlist() {
+        this.picFriend.getBanlist().then((response) => {
+        });
+    }
+
+    private getFans() {
+        this.picFriend.getFans().then((response) => {
+            this.mView.setFriend(FriendChannel.Fans, response.data);
+        });
+    }
+
+    private getFolloweds() {
+        this.picFriend.getFolloweds().then((response) => {
+            this.mView.setFriend(FriendChannel.Followes, response.data);
+        });
     }
 
     private onHidePanel() {
