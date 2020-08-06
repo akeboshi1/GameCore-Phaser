@@ -111,6 +111,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     public spliceParts(set: IAvatarSet) {
         this.removeSet(set);
         this.reloadParts();
+
+        // remove local texture
+
     }
 
     public generateShopIcon(): Promise<string> {
@@ -128,7 +131,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                             Logger.getInstance().log("ZW-- generateShopIcon: ", img);
 
                             // reverse parts
-                            this.addSets([]);
+                            this.removeModelParts();
                             this.replaceDisplay();
                         });
                     })
@@ -384,6 +387,16 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         });
         Logger.getInstance().log("ZW-- after set model parts: ", this.mParts);
     }
+    private removeModelParts() {
+        this.MODELSETS.forEach((set) => {
+            set.parts.forEach((part) => {
+                if (this.mParts.hasOwnProperty(part) && this.mParts[part] === set) {
+                    delete this.mParts[part];
+                }
+            });
+        });
+    }
+
     private findPartSet(part: string, sets: IAvatarSet[]): IAvatarSet {
         sets.forEach((set) => {
             if (set.parts.includes(part)) {
