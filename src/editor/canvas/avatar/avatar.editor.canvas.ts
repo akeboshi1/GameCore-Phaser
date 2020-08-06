@@ -3,7 +3,6 @@ import { Logger } from "../../../utils/log";
 import { AvatarNode, IImage } from "game-capsule";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { IAvatarSet } from "game-capsule/lib/configobjects/avatar";
-import AvatarEditorResourceManager from "./avatar.editor.resource.manager";
 
 export class AvatarEditorCanvas extends EditorCanvas {
 
@@ -12,15 +11,12 @@ export class AvatarEditorCanvas extends EditorCanvas {
     private readonly SCENEKEY: string = "AvatarEditorScene";
 
     private mDragonbone: AvatarEditorDragonbone;
-    private mResourceManager: AvatarEditorResourceManager;
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
         Logger.getInstance().log("AvatarEditorCanvas.constructor()");
 
         this.mGame.scene.add(this.SCENEKEY, AvatarEditorScene);
-
-        this.mResourceManager = new AvatarEditorResourceManager(this.mEmitter);
 
         // start
         this.mData = config.node;
@@ -36,9 +32,6 @@ export class AvatarEditorCanvas extends EditorCanvas {
         if (this.mDragonbone) {
             this.mDragonbone.destroy();
         }
-        if (this.mResourceManager) {
-            this.mResourceManager.destroy();
-        }
 
         super.destroy();
     }
@@ -53,8 +46,6 @@ export class AvatarEditorCanvas extends EditorCanvas {
     public onSceneCreated() {
         const scene = this.getScene();
         this.mDragonbone = new AvatarEditorDragonbone(scene);
-        this.mResourceManager.init(scene);
-        this.mResourceManager.addResourcesChangeListener(this.mDragonbone);
     }
     public update() {
 
@@ -64,17 +55,10 @@ export class AvatarEditorCanvas extends EditorCanvas {
         if (this.mDragonbone) {
             this.mDragonbone.destroy();
         }
-        if (this.mResourceManager) {
-            this.mResourceManager.destroy();
-        }
     }
 
-    public generateSpriteSheet(images: IImage[]): Promise<{ url: string, json: string }> {
-        return this.mResourceManager.generateSpriteSheet(images);
-    }
-
-    public loadLocalResources(texturePath: string, dataPath: string) {
-        this.mResourceManager.loadResources(texturePath, dataPath);
+    public loadLocalResources(img: IImage, part: string, dir: string, layer?: string) {
+        if (this.mDragonbone) this.mDragonbone.loadLocalResources(img, part, dir);
     }
 
     public toggleFacing(dir: number) {
