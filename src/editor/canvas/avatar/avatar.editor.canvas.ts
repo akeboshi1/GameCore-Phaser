@@ -6,7 +6,7 @@ import { IAvatarSet } from "game-capsule/lib/configobjects/avatar";
 
 export class AvatarEditorCanvas extends EditorCanvas {
 
-    public mData;
+    public mData: AvatarEditorConfigNode;
 
     private readonly SCENEKEY: string = "AvatarEditorScene";
 
@@ -19,7 +19,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
         this.mGame.scene.add(this.SCENEKEY, AvatarEditorScene);
 
         // start
-        this.mData = config.node;
+        this.mData = config.node as AvatarEditorConfigNode;
         this.mGame.scene.start(this.SCENEKEY, this);
     }
 
@@ -45,7 +45,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
     public onSceneCreated() {
         const scene = this.getScene();
-        this.mDragonbone = new AvatarEditorDragonbone(scene);
+        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mData.WEB_AVATAR_PATH);
     }
     public update() {
 
@@ -107,4 +107,8 @@ class AvatarEditorScene extends Phaser.Scene {
     public destroy() {
         if (this.mCanvas) this.mCanvas.onSceneDestroy();
     }
+}
+
+export interface AvatarEditorConfigNode {
+    WEB_AVATAR_PATH: string;
 }
