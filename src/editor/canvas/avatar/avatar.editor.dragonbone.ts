@@ -67,7 +67,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     public loadLocalResources(img: IImage, part: string, dir: string) {
-        const uri = this.relativeUri(img.key, part, dir);
+        const uri = this.relativeUri(part, img.key, dir);
 
         if (this.scene.textures.exists(uri)) {
             this.onResourcesLoaded();
