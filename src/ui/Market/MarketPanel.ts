@@ -377,6 +377,7 @@ export class MarketPanel extends BasePanel {
     if (!this.mSubCategeoriesContainer) {
       return;
     }
+    this.mSubCategorisScroll.setT(0);
     this.mPreSubCategoris = null;
     this.clearCategories(this.mSubTabs);
     const subcategory: op_def.IMarketCategory = gameobject.getData("category");

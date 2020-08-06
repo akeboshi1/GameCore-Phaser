@@ -18,7 +18,7 @@ export class TaskPanel extends BasePanel {
     private titlebg: Phaser.GameObjects.Image;
     private tilteName: Phaser.GameObjects.Text;
     private closeBtn: Phaser.GameObjects.Image;
-    private optionBtn: Phaser.GameObjects.Text;
+    private optionText: Phaser.GameObjects.Text;
     private optionArrow: Phaser.GameObjects.Image;
     private optionCon: Phaser.GameObjects.Container;
     private mGameScroll: GameScroller;
@@ -105,17 +105,18 @@ export class TaskPanel extends BasePanel {
         this.tilteName.setResolution(this.dpr);
         this.closeBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.closeBtn.setInteractive();
-        const optionWidth = 253 * this.dpr;
-        const optionHeight = 26 * this.dpr;
-        this.optionBtn = this.scene.make.text({ x: 0, y: 0, text: "全部", style: { color: "#8F4300", fontSize: 20 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
-        this.optionBtn.setInteractive();
-        this.optionBtn.on("pointerup", this.onOpenOptionHandler, this);
+        const container = this.scene.make.container(undefined, false);
+        container.setSize(80 * this.dpr, 30 * this.dpr);
+        container.setPosition(-bgwidth * 0.5 + 70 * this.dpr, -bgHeight * 0.5 + 30 * this.dpr);
+        container.setInteractive();
+        container.on("pointerup", this.onOpenOptionHandler, this);
+        this.optionText = this.scene.make.text({ x: -30 * this.dpr, y: 0, text: i18n.t("task.all_task"), style: { color: "#8F4300", fontSize: 16 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.optionArrow = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "drop_down" });
         this.optionArrow.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.optionBtn.x = -bgwidth * 0.5 + 50 * this.dpr;
-        this.optionBtn.y = -bgHeight * 0.5 + 30 * this.dpr;
-        this.optionArrow.x = this.optionBtn.x + 30 * this.dpr;
-        this.optionArrow.y = -bgHeight * 0.5 + 30 * this.dpr;
+        this.optionArrow.x = this.optionText.x + 30 * this.dpr;
+        container.add([this.optionText, this.optionArrow]);
+
+        const optionWidth = 253 * this.dpr;
         const optionLine = this.scene.make.graphics(undefined, false);
         optionLine.clear();
         optionLine.fillStyle(0xc0c0c0, 1);
@@ -134,7 +135,7 @@ export class TaskPanel extends BasePanel {
             orientation: 0,
             space: 20 * this.dpr
         });
-        this.content.add([this.bg, this.closeBtn, this.titlebg, this.tilteName, this.mGameScroll, this.optionBtn, this.optionArrow, optionLine, this.optionCon]);
+        this.content.add([this.bg, this.closeBtn, this.titlebg, this.tilteName, this.mGameScroll, container, optionLine, this.optionCon]);
         this.resize();
         super.init();
         this.emit("questlist");
@@ -262,6 +263,8 @@ export class TaskPanel extends BasePanel {
         this.optionCon.visible = false;
         this.curOptionItem = taskOption;
         taskOption.changeDown();
+        this.optionText.text = taskOption.optionText;
+        this.optionArrow.x = this.optionText.x + this.optionText.width + 10 * this.dpr;
     }
 }
 
@@ -621,6 +624,7 @@ class TaskCell extends Phaser.GameObjects.Container {
 
 class TaskOption extends Phaser.GameObjects.Container {
     public optionData: op_pkt_def.PKT_Quest_Type;
+    public optionText: string;
     private bg: Phaser.GameObjects.Graphics;
     private text: Phaser.GameObjects.Text;
     private clickHandler: Handler;
@@ -662,6 +666,7 @@ class TaskOption extends Phaser.GameObjects.Container {
         } else {
             this.text.text = i18n.t("task.all_task");
         }
+        this.optionText = this.text.text;
     }
 
     public changeDown() {

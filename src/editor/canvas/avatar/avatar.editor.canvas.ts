@@ -3,16 +3,14 @@ import { Logger } from "../../../utils/log";
 import { AvatarNode, IImage } from "game-capsule";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { IAvatarSet } from "game-capsule/lib/configobjects/avatar";
-import AvatarEditorResourceManager from "./avatar.editor.resource.manager";
 
 export class AvatarEditorCanvas extends EditorCanvas {
 
-    public mData;
+    public mData: AvatarEditorConfigNode;
 
     private readonly SCENEKEY: string = "AvatarEditorScene";
 
     private mDragonbone: AvatarEditorDragonbone;
-    private mResourceManager: AvatarEditorResourceManager;
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
@@ -20,10 +18,8 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
         this.mGame.scene.add(this.SCENEKEY, AvatarEditorScene);
 
-        this.mResourceManager = new AvatarEditorResourceManager(this.mEmitter);
-
         // start
-        this.mData = config.node;
+        this.mData = config.node as AvatarEditorConfigNode;
         this.mGame.scene.start(this.SCENEKEY, this);
     }
 
@@ -35,9 +31,6 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
         if (this.mDragonbone) {
             this.mDragonbone.destroy();
-        }
-        if (this.mResourceManager) {
-            this.mResourceManager.destroy();
         }
 
         super.destroy();
@@ -52,9 +45,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
     public onSceneCreated() {
         const scene = this.getScene();
-        this.mDragonbone = new AvatarEditorDragonbone(scene);
-        this.mResourceManager.init(scene);
-        this.mResourceManager.addResourcesChangeListener(this.mDragonbone);
+        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mData.WEB_AVATAR_PATH);
     }
     public update() {
 
@@ -64,17 +55,10 @@ export class AvatarEditorCanvas extends EditorCanvas {
         if (this.mDragonbone) {
             this.mDragonbone.destroy();
         }
-        if (this.mResourceManager) {
-            this.mResourceManager.destroy();
-        }
     }
 
-    public generateSpriteSheet(images: IImage[]): Promise<{ url: string, json: string }> {
-        return this.mResourceManager.generateSpriteSheet(images);
-    }
-
-    public loadLocalResources(texturePath: string, dataPath: string) {
-        this.mResourceManager.loadResources(texturePath, dataPath);
+    public loadLocalResources(img: IImage, part: string, dir: string, layer?: string) {
+        if (this.mDragonbone) this.mDragonbone.loadLocalResources(img, part, dir);
     }
 
     public toggleFacing(dir: number) {
@@ -123,4 +107,8 @@ class AvatarEditorScene extends Phaser.Scene {
     public destroy() {
         if (this.mCanvas) this.mCanvas.onSceneDestroy();
     }
+}
+
+export interface AvatarEditorConfigNode {
+    WEB_AVATAR_PATH: string;
 }

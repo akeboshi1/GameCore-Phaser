@@ -29,6 +29,7 @@ export class PicBusinessStreetMediator extends BaseMediator {
             this.mView.on("querystreet", this.query_COMMERCIAL_STREET, this);
             this.mView.on("querymodels", this.query_INDUSTRY_MODELS, this);
             this.mView.on("querycreatestore", this.query_CREATE_STORE, this);
+            this.mView.on("queryenterroom", this.query_ENTER_ROOM, this);
             this.mView.on("hide", this.onHidePanel, this);
         }
         if (!this.picStreet) {
@@ -69,6 +70,10 @@ export class PicBusinessStreetMediator extends BaseMediator {
     }
     private query_CREATE_STORE(modelId: string) {
         this.picStreet.query_CREATE_STORE(modelId);
+    }
+
+    private query_ENTER_ROOM(roomId: string, password: string) {
+        this.picStreet.query_ENTER_ROOM(roomId, password);
     }
     private onMyStoreList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
         this.mView.setMyStore(content);

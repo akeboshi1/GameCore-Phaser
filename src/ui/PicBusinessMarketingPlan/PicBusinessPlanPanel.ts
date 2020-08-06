@@ -64,7 +64,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         this.describleText = new BBCodeText(this.scene, 0, topbg.y, "This industry has great development potential.", { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" })
             .setOrigin(0.5);
         this.add(this.describleText);
-        this.describleText.setWordWrapWidth(topWid, true);
+        this.describleText.setWrapWidth(topWid, true);
 
         const titlebg = new NineSlicePatch(this.scene, 0, 0, 135 * this.dpr, 17 * this.dpr, this.key, "subtitle", {
             left: 13 * this.dpr,
