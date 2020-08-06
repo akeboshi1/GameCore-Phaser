@@ -1,14 +1,13 @@
-import { AvatarNode } from "game-capsule";
+import { AvatarNode, IImage } from "game-capsule";
 import { op_gameconfig_01 } from "pixelpai_proto";
 import * as url from "url";
 import { AvatarDirEnum, IAvatarSet } from "game-capsule/lib/configobjects/avatar";
 import * as _ from "lodash";
 import { Logger } from "../../../utils/log";
-import { ResourcesChangeListener, SPRITE_SHEET_KEY } from "./avatar.editor.resource.manager";
 
 export const WEB_AVATAR_PATH = "https://osd.tooqing.com/avatar/part";
 
-export class AvatarEditorDragonbone extends Phaser.GameObjects.Container implements ResourcesChangeListener {
+export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private readonly DRAGONBONENAME = "bones_human01";
     private readonly DRAGONBONEARMATURENAME = "Armature";
@@ -65,6 +64,19 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         this.mSets = null;
         this.mParts = {};
         this.mParts = null;
+    }
+
+    public loadLocalResources(img: IImage, part: string, dir: string) {
+        const uri = this.relativeUri(part, img.key, dir);
+
+        if (this.scene.textures.exists(uri)) {
+            this.onResourcesLoaded();
+        } else {
+            this.scene.textures.addBase64(uri, img.url);
+            Logger.getInstance().log("ZW-- load img: ", uri);
+
+            this.scene.textures.on("onload", this.onResourcesLoaded, this);
+        }
     }
 
     public setDir(dir: AvatarDirEnum) {
@@ -129,10 +141,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
 
     public onResourcesLoaded() {
         Logger.getInstance().log("ZW-- dragonbone.onResourcesLoaded");
+        this.scene.textures.off("onload", this.onResourcesLoaded, this, false);
         this.replaceDisplay();
-    }
-    public onResourcesCleared() {
-        this.clearParts();
     }
 
     private loadDragonbone() {
@@ -220,7 +230,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         this.scene.load.start();
     }
 
-    private replaceSlotDisplay(soltName: string, key: string): void {
+    private replaceSlotDisplay(soltName: string, key: string) {
         if (!!this.mArmatureDisplay === false) return;
         const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(`${soltName}`);
         if (!slot) return;
@@ -229,29 +239,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
             if (display) display.setTexture(undefined);
             return;
         }
-        let _k = key;
-        let _f = null;
-        if (this.scene.textures.exists(SPRITE_SHEET_KEY)) {
-            const localTex = this.scene.textures.get(SPRITE_SHEET_KEY);
-            if (localTex.has(key)) {
-                _k = SPRITE_SHEET_KEY;
-                _f = key;
-                Logger.getInstance().log(`ZW-- get local img: key<${_k}> frame<${_f}>`);
-            }
-        }
-        const dis = _f ? new dragonBones.phaser.display.SlotImage(
+        slot.display = new dragonBones.phaser.display.SlotImage(
             this.scene,
             slot.display.x,
             slot.display.y,
-            _k,
-            _f
-        ) : new dragonBones.phaser.display.SlotImage(
-            this.scene,
-            slot.display.x,
-            slot.display.y,
-            _k
+            key
         );
-        slot.display = dis;
     }
 
     private replaceDisplay(): Promise<boolean> {
@@ -263,22 +256,10 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
                 if (!parts.hasOwnProperty(partName)) {
                     continue;
                 }
-                slotName = `${partName}_${this.mCurDir}`;
-                if (partName === "head_back") {
-                    slotName = `head_hair_${this.mCurDir}_back`;
-                }
-                if (partName === "body_dres") {
-                    slotName = `body_cost_${this.mCurDir}_dres`;
-                }
-                const avatarSet: IAvatarComponent = parts[partName];
+                slotName = this.slotName(partName, this.mCurDir + "");
+                const avatarSet: IAvatarSet = parts[partName];
                 if (avatarSet) {
-                    uri = `/avatar/part/${partName}_${avatarSet.id}_${this.mCurDir}.png`;
-                    if (partName === "head_back") {
-                        uri = `/avatar/part/head_hair_${avatarSet.id}_${this.mCurDir}_back.png`;
-                    }
-                    if (partName === "body_dres") {
-                        uri = `/avatar/part/body_cost_${avatarSet.id}_${this.mCurDir}_dres.png`;
-                    }
+                    uri = this.relativeUri(partName, avatarSet.id, this.mCurDir + "");
                     this.replaceSlotDisplay(`${slotName}`, uri);
                 }
             }
@@ -290,13 +271,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
     }
 
     private cleanUp() {
-        const slots = [
+        const parts = [
             "barm_cost",
             "barm_spec",
             "bleg_cost",
             "bleg_spec",
-            // "body_cost",
-            ["body_cost", "_dres"],
+            "body_dres",
             "body_spec",
             "body_tail",
             "body_wing",
@@ -304,33 +284,19 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
             "farm_spec",
             "fleg_cost",
             "fleg_spec",
-            // "head_eyes",
-            // "head_hair",
-            ["head_hair", "_back"],
+            "head_back",
             "head_hats",
             "head_mask",
-            // "head_mous",
             "head_spec",
             "shld_farm",
             "weap_farm",
             "weap_barm",
-            "shld_barm",
-            []
+            "shld_barm"
         ];
 
-        for (const p of slots) {
-            let part = "",
-                subPart = "";
-            if (typeof p === "string") {
-                part = p;
-            } else if (typeof p === "object") {
-                part = p.shift();
-                subPart = p.shift();
-            }
-            if (part) {
-                this.replaceSlotDisplay(`${part}_1${subPart}`, "");
-                this.replaceSlotDisplay(`${part}_3${subPart}`, "");
-            }
+        for (const p of parts) {
+            this.replaceSlotDisplay(this.slotName(p, "1"), "");
+            this.replaceSlotDisplay(this.slotName(p, "3"), "");
         }
     }
 
@@ -348,23 +314,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         for (const key in parts) {
             if (parts.hasOwnProperty(key)) {
                 const set: IAvatarSet = parts[key];
-                if (!set.hasOwnProperty("localImages")) {
-                    // eyes mous 没有背面素材
-                    if (dir === 1 && key === "head_eyes") {
-                        // Do nothing
-                    } else if (dir === 1 && key === "head_mous") {
-                        // Do nothing
-                    } else if (key === "head_back") {
-                        res.push(
-                            this.relativeUri("head_hair", set.id, dir, "back")
-                        );
-                    } else if (key === "body_dres") {
-                        res.push(
-                            this.relativeUri("body_cost", set.id, dir, "dres")
-                        );
-                    } else {
-                        res.push(this.relativeUri(key, set.id, dir));
-                    }
+                // eyes mous 没有背面素材
+                if (dir === 1 && key === "head_eyes") {
+                    // Do nothing
+                } else if (dir === 1 && key === "head_mous") {
+                    // Do nothing
+                } else {
+                    res.push(this.relativeUri(key, set.id, dir + ""));
                 }
             }
         }
@@ -372,24 +328,47 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
         // add model resources
         this.MODELSETS.forEach((set) => {
             set.parts.forEach((part) => {
-                res.push(this.relativeUri(part, set.id, dir));
+                res.push(this.relativeUri(part, set.id, dir + ""));
             });
         });
 
         return res;
     }
-    // 从部件ID转换为资源相对路径
-    private relativeUri(
-        part: string,
-        id: string,
-        dir: number,
-        layer?: string
-    ) {
-        if (layer) {
-            return `/avatar/part/${part}_${id}_${dir}_${layer}.png`;
+    // 从部件ID转换为资源相对路径 同时也是TextureManager中的key
+    private relativeUri(part: string, id: string, dir: string) {
+        let _layer = null;
+        let _part = part;
+        if (part === "head_back") {
+            _part = "head_hair";
+            _layer = "back";
+        } else if (part === "body_dres") {
+            _part = "body_cost";
+            _layer = "dres";
         }
-        return `/avatar/part/${part}_${id}_${dir}.png`;
+
+        if (_layer) {
+            return `/avatar/part/${_part}_${id}_${dir}_${_layer}.png`;
+        }
+        return `/avatar/part/${_part}_${id}_${dir}.png`;
     }
+    // 部件名转换为插槽名
+    private slotName(part: string, dir: string) {
+        let _layer = null;
+        let _part = part;
+        if (part === "head_back") {
+            _part = "head_hair";
+            _layer = "back";
+        } else if (part === "body_dres") {
+            _part = "body_cost";
+            _layer = "dres";
+        }
+
+        if (_layer) {
+            return `${_part}_${dir}_${_layer}`;
+        }
+        return `${_part}_${dir}`;
+    }
+
     // 1.delete DEFAULT parts 2.add *unused* MODEL parts
     private replaceDefaultPartsWithModelParts() {
         const deleteParts = [];
@@ -430,10 +409,4 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container impleme
 
         return null;
     }
-}
-
-export interface IAvatarComponent {
-    id: string;
-    parts: string[];
-    name?: string;
 }
