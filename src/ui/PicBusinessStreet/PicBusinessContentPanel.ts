@@ -27,11 +27,11 @@ export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
     create() {
         const width = this.width;
         const height = this.height;
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasKey.common2Key, "bg", {
-            left: 20 * this.dpr,
-            top: 20 * this.dpr,
-            right: 20 * this.dpr,
-            bottom: 40 * this.dpr
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasKey.common2Key, "bg",{
+            left: 70 * this.dpr,
+            top: 30 * this.dpr,
+            right: 30 * this.dpr,
+            bottom: 70 * this.dpr
         });
         this.add(this.bg);
         const posY = -height * 0.5;
