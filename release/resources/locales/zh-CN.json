@@ -138,6 +138,10 @@
     "marketing_plan": "营业计划",
     "plan_title": "现在开始一个的营业计划",
     "material_requirements": "选择计划需要的材料:",
-    "effect": "增益"
+    "effect": "增益",
+    "onrank": "未上榜",
+    "history": "历史记录",
+    "ranking": "排行榜",
+    "rankreward": "奖励"
   }
 }
