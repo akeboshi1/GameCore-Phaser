@@ -272,9 +272,9 @@ export class FurniBagPanel extends BasePanel {
     const btnPosY = this.mShelfContainer.y - 25 * this.dpr;
 
     this.mAdd = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), "#996600");
-    this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("furni_bag.sold"), "#FFFFFF");
-    this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.use"), "#996600");
-    this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.save"), "#996600");
+    this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("common.sold"), "#FFFFFF");
+    this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.use"), "#996600");
+    this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.save"), "#996600");
     this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY - btnHeight - 5 * this.dpr, 40 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn");
     const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
     this.resetBtn.add(reseticon);
@@ -700,7 +700,7 @@ export class FurniBagPanel extends BasePanel {
     this.mCategoryScroll.removeListen();
     if (this.mSelectedItemData.length > 0) {
       const data = this.mSelectedItemData[0];
-      const title = i18n.t("furni_bag.use");
+      const title = i18n.t("common.use");
       const confirmHandler = new Handler(this, this.onUsePropsHandler);
       const cancelHandler = new Handler(this, () => {
         this.mCategoryScroll.addListen();
