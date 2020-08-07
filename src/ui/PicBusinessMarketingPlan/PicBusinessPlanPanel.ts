@@ -64,7 +64,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         this.describleText = new BBCodeText(this.scene, 0, topbg.y, "This industry has great development potential.", { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" })
             .setOrigin(0.5);
         this.add(this.describleText);
-        this.describleText.setWordWrapWidth(topWid, true);
+        this.describleText.setWrapWidth(topWid, true);
 
         const titlebg = new NineSlicePatch(this.scene, 0, 0, 135 * this.dpr, 17 * this.dpr, this.key, "subtitle", {
             left: 13 * this.dpr,
@@ -80,7 +80,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         titlebg.resize(135 * this.dpr, 17 * this.dpr);
 
         const gridWdith = this.width - 24 * this.dpr;
-        const gridHeight = 220 * this.dpr;
+        const gridHeight = this.height - 200 * this.dpr;
         const gridY = titlebg.y + titlebg.height * 0.5 + 20 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 253 * this.dpr, 63 * this.dpr);
 
@@ -141,8 +141,8 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
 
     }
 
-    private onAddPlanHandler(data) {
-        if (this.addPlanHandler) this.addPlanHandler.runWith(data);
+    private onAddPlanHandler(data: op_client.MarketPlanPair) {
+        if (this.addPlanHandler) this.addPlanHandler.runWith(data.marketPlanType);
     }
 
     private onCancelHandler() {
@@ -250,13 +250,13 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             this.planText.visible = false;
             this.bg.setFrame("has_plan_bg");
             this.remove(this.addBtn);
-            this.progress.setProgress(50, 100);
             let barframe = "progress_bar_r";
-            const remainTime = data.marketPlan.endTime - unixTime;
+            const remainTime = data.marketPlan.endTime - unixTime / 1000;
             const ratio = Math.floor(remainTime / data.marketPlan.totalTime * 100);
             if (ratio > 30 && ratio <= 50) barframe = "progress_bar_y";
             else if (ratio > 50) barframe = "progress_bar_g";
             this.progress.bar.setFrame(barframe);
+            this.progress.setProgress(remainTime, data.marketPlan.totalTime);
             this.planName.text = data.marketPlan.name;
             this.planAtt.text = data.marketPlan.buffDes;
             const url = Url.getOsdRes(data.marketPlan.icon);

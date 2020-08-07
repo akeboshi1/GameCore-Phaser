@@ -176,7 +176,8 @@ export class LayerManager {
         if (this.mDepthSurface) {
             this.mDepthSurface = false;
             this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
-                return displayA.sortY > displayB.sortY;
+                // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
+                return displayA.sortY + displayA.sortZ > displayB.sortY + displayB.sortZ;
             });
         }
     }

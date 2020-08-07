@@ -22,6 +22,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     private takeAllHandler: Handler;
     private goOutHandler: Handler;
     private newStoreHandler: Handler;
+    private enterRoomHandler: Handler;
     private isCanNewCreate: boolean = false;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
@@ -39,10 +40,11 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.isCanNewCreate = datas.length < content.storeLimit;
     }
 
-    public setHandler(takeAll: Handler, goOut: Handler, newStore: Handler) {
+    public setHandler(takeAll: Handler, goOut: Handler, newStore: Handler, enter: Handler) {
         this.takeAllHandler = takeAll;
         this.goOutHandler = goOut;
         this.newStoreHandler = newStore;
+        this.enterRoomHandler = enter;
     }
 
     public resetMask() {
@@ -62,7 +64,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         storeTitle.setStroke("#553100", 2 * this.dpr);
         this.add(storeTitle);
         const gridWdith = this.width;
-        const gridHeight = this.height - 80 * this.dpr;
+        const gridHeight = this.height - 68 * this.dpr;
         const gridY = posy + 28 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 87 * this.dpr);
 
@@ -78,7 +80,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.storeCountText = this.scene.make.text({ x: btnX + this.newStoreBtn.width * 0.5 + 20 * this.dpr, y: posy, text: "", style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(1, 0);
         this.add(this.storeCountText);
 
-        const talkAllBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.takeall"), this.dpr, this.zoom, {
+        const talkAllBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.takeall"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -135,8 +137,8 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         return grid;
     }
 
-    private onEnterHandler(data: any) {
-
+    private onEnterHandler(data: op_client.EditModeRoom) {
+        if (this.enterRoomHandler) this.enterRoomHandler.runWith(data.roomId);
     }
     private onTalkAllHandler() {
         if (this.takeAllHandler) this.takeAllHandler.run();
@@ -224,6 +226,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         this.competitiveness.text = i18n.t("business_street.competitiveness") + ":" + data.competitiveness;
         this.turnover.text = i18n.t("business_street.turnover") + ":" + data.turnover;
         this.industryIcon.setFrame(industry + "_tag");
+        this.storeData = data;
     }
 
     public setHandler(handler: Handler) {

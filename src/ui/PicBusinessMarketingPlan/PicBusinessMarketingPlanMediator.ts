@@ -66,8 +66,11 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
         this.picPlan.query_Equiped_MARKET_PLAN(room_id);
     }
 
-    private query_SELECT_MARKET_PLAN(room_id: string, market_plan_type: string) {
-        this.picPlan.query_SELECT_MARKET_PLAN(room_id, market_plan_type);
+    private query_SELECT_MARKET_PLAN(marketPlanId: string) {
+        const uimanager = this.world.uiManager;
+        const picmainui = <PicaMainUIMediator>uimanager.getMediator("PicaMainUIMediator");
+        const room_id = picmainui.roomInfo.roomId;
+        this.picPlan.query_SELECT_MARKET_PLAN(room_id, marketPlanId);
     }
     private onEquiped_MARKET_PLAN(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
         this.mView.setEquipedPlan(content);

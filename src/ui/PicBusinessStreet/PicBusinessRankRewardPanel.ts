@@ -10,7 +10,8 @@ import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButto
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { Url } from "../../utils/resUtil";
 export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
     private dpr: number;
@@ -28,9 +29,8 @@ export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setRankRewardData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
+    public setRankRewardData(datas: op_client.IPKT_RewardStage[]) {
+        this.gridtable.setItems(datas);
     }
 
     public setHandler(back: Handler) {
@@ -48,7 +48,7 @@ export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
         const gridY = posy + 23 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(-5 * this.dpr, gridY, gridWdith, gridHeight, 256 * this.dpr, 80 * this.dpr);
 
-        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
+        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -100,14 +100,13 @@ export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
 }
 
 class PicRankRewardItem extends Phaser.GameObjects.Container {
-    public storeData: any;
+    public rewardData: op_client.IPKT_RewardStage;
     private key: string;
     private key2: string;
     private dpr: number;
     private zoom: number;
-    private storeName: Phaser.GameObjects.Text;
+    private rankText: Phaser.GameObjects.Text;
     private rankIcon: Phaser.GameObjects.Image;
-    private isre: boolean = false;
     private rewardItems: RewardItem[] = [];
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, key2: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -122,19 +121,38 @@ class PicRankRewardItem extends Phaser.GameObjects.Container {
         this.rankIcon.x = - width * 0.5 + this.rankIcon.width * 0.5 + 10 * dpr;
         this.add(this.rankIcon);
         const storeX = this.rankIcon.x;
-        this.storeName = this.scene.make.text({ x: storeX, y: 0, text: "4~10", style: { color: "#0", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
-        this.add(this.storeName);
+        this.rankText = this.scene.make.text({ x: storeX, y: 0, text: "3", style: { color: "#0", bold: true, fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
+        this.add(this.rankText);
     }
 
-    public setRankRewardData(data) {
-        if (this.isre) return;
-        this.isre = true;
-        for (let i = 0; i < 3; i++) {
-            const item = new RewardItem(this.scene, 0, 0, 50 * this.dpr, 50 * this.dpr, this.key2, this.dpr, this.zoom);
-            this.add(item);
-            this.rewardItems.push(item);
+    public setRankRewardData(data: op_client.IPKT_RewardStage) {
+        if (this.rewardData === data) return;
+        if (data.start === data.end) {
+            this.rankIcon.visible = true;
+            this.rankText.visible = false;
+            this.rankIcon.setFrame(data.start + "");
+        } else {
+            this.rankIcon.visible = false;
+            this.rankText.visible = true;
+            this.rankText.text = data.start + "~" + data.end;
+        }
+        for (const item of this.rewardItems) {
+            item.visible = false;
+        }
+        for (let i = 0; i < data.rewards.length; i++) {
+            let item: RewardItem;
+            if (i < this.rewardItems.length) {
+                item = this.rewardItems[i];
+            } else {
+                item = new RewardItem(this.scene, 0, 0, 50 * this.dpr, 50 * this.dpr, this.key2, this.dpr, this.zoom);
+                this.add(item);
+                this.rewardItems.push(item);
+            }
+            item.visible = true;
+            item.setRewardData(data.rewards[i]);
         }
         this.Sort();
+        this.rewardData = data;
     }
 
     private Sort() {
@@ -153,7 +171,7 @@ class RewardItem extends Phaser.GameObjects.Container {
     private key2: string;
     private dpr: number;
     private countText: Phaser.GameObjects.Text;
-    private itemIcon: Phaser.GameObjects.Image;
+    private itemIcon: DynamicImage;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key2: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -167,7 +185,12 @@ class RewardItem extends Phaser.GameObjects.Container {
         this.add(this.countText);
     }
 
-    public setRewardData(data) {
-
+    public setRewardData(data: op_client.ICountablePackageItem) {
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.itemIcon.load(url, this, () => {
+            this.itemIcon.displayWidth = 43 * this.dpr;
+            this.itemIcon.scaleY = this.itemIcon.scaleX;
+        });
+        this.countText.text = data.count + "";
     }
 }

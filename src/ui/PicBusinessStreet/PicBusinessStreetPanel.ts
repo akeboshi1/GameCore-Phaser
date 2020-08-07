@@ -114,12 +114,21 @@ export default class PicBusinessStreetPanel extends BasePanel {
         }
     }
 
-    public setMarketPlan() {
+    public setStoreRankingList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST) {
+        this.picStreetRankingPanel.setRankingData(content.rankChampions);
+    }
+
+    public setStoreRankingDetial(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL) {
+        this.picRankingDetailPanel.setRankingDetailData(content);
 
     }
 
-    public setChoosePlan() {
+    public setStoreRankingReward(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD) {
+        this.picRankRewardPanel.setRankRewardData(content.rewardStage);
+    }
 
+    public setEnterHistory(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_ENTER_HISTORY) {
+        this.picStreetHistoryPanel.setHistoryeData(content.history);
     }
 
     public destroy() {
@@ -155,24 +164,25 @@ export default class PicBusinessStreetPanel extends BasePanel {
         } else {
             this.emit("querymodels");
         }
+        this.content.setTitleText(i18n.t("business_street.commercial_street"));
     }
 
     private openStreetHistoryPanel() {
         this.showStreetHistoryPanel();
-        this.picStreetHistoryPanel.setHistoryeData();
+        this.content.setTitleText(i18n.t("business_street.history"));
     }
 
     private openStreetRankingPanel() {
         this.showStreetRankingPanel();
-        this.picStreetRankingPanel.setRankingData();
+        this.content.setTitleText(i18n.t("business_street.ranking"));
     }
     private openRankingDetailPanel() {
         this.showRankingDetailPanel();
-        this.picRankingDetailPanel.setRankingData();
+        this.content.setTitleText(i18n.t("business_street.ranking"));
     }
     private openRankRewardPanel() {
         this.showRankRewardPanel();
-        this.picRankRewardPanel.setRankRewardData();
+        this.content.setTitleText(i18n.t("business_street.rankreward"));
     }
 
     private showMyStreetPanel() {
@@ -191,6 +201,8 @@ export default class PicBusinessStreetPanel extends BasePanel {
             }), new Handler(this, () => {
                 this.hideMyStreetPanel();
                 this.openStoreCreatePanel();
+            }), new Handler(this, (roomid, password) => {
+                this.emit("queryenterroom", roomid, password);
             }));
         }
         this.content.add(this.picMyStreetPanel);
@@ -270,9 +282,11 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picStreetListPanel.setHandler(new Handler(this, () => {
                 this.openStreetHistoryPanel();
                 this.hideStreetListPanel();
+                this.emit("queryenterhistory");
             }), new Handler(this, () => {
                 this.openStreetRankingPanel();
                 this.hideStreetListPanel();
+                this.emit("queryranklist");
             }), new Handler(this, () => {
                 this.hideStreetListPanel();
                 this.openMyStreet();
@@ -319,9 +333,10 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picStreetRankingPanel.setHandler(new Handler(this, () => {
                 this.hideStreetRankingPanel();
                 this.openStoreStreetPanel();
-            }), new Handler(this, (data) => {
+            }), new Handler(this, (key, type) => {
                 this.openRankingDetailPanel();
                 this.hideStreetRankingPanel();
+                this.emit("queryrankdetail", key, type);
             }));
         }
         this.content.add(this.picStreetRankingPanel);
@@ -345,9 +360,10 @@ export default class PicBusinessStreetPanel extends BasePanel {
             this.picRankingDetailPanel.setHandler(new Handler(this, () => {
                 this.hideRankingDetailPanel();
                 this.openStreetRankingPanel();
-            }), new Handler(this, (data) => {
+            }), new Handler(this, (key, type) => {
                 this.hideRankingDetailPanel();
                 this.openRankRewardPanel();
+                this.emit("queryrankreward", key, type);
             }));
         }
         this.content.add(this.picRankingDetailPanel);

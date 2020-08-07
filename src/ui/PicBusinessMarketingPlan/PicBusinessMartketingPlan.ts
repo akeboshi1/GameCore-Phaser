@@ -60,11 +60,11 @@ export class PicBusinessMartketingPlan extends PacketHandler {
         this.connection.send(packet);
     }
 
-    public query_SELECT_MARKET_PLAN(room_id: string, market_plan_type: string) {
+    public query_SELECT_MARKET_PLAN(room_id: string, marketPlanId: string) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELECT_MARKET_PLAN);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELECT_MARKET_PLAN = packet.content;
-        content.marketPlanId = market_plan_type;
-        content.roomId = market_plan_type;
+        content.marketPlanId = marketPlanId;
+        content.roomId = room_id;
         this.connection.send(packet);
     }
 
