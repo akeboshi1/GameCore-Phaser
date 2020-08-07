@@ -64,6 +64,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     }
 
     public setStreetListData(datas: op_client.IEditModeRoom[]) {
+        this.gridtable.setT(0);
         this.gridtable.setItems(datas);
     }
 
