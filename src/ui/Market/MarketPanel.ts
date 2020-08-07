@@ -102,9 +102,9 @@ export class MarketPanel extends BasePanel {
       h = frame.height;
     }
     const config0 = {
-      left: w / 2 + 2 * this.dpr,
+      left: w / 2,
       top: 12 * this.dpr,
-      right: w / 2 - 4 * this.dpr,
+      right: 4 * this.dpr,
       bottom: 2 * this.dpr
     };
     const group: CheckboxGroup = new CheckboxGroup();

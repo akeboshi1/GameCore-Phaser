@@ -145,7 +145,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     .then(() => {
                         const rt = this.scene.make.renderTexture({ x: 0, y: 0, width, height }, false);
                         this.mArmatureDisplay.scaleY *= -1;
-                        rt.draw(this.mArmatureDisplay, width >> 1, 0);
+                        rt.draw(this.mArmatureDisplay, this.mArmatureDisplay.x, 30);
                         // snapshot
                         rt.snapshotArea(0, 0, width, height, (img: HTMLImageElement) => {
                             resolve(img.src);
