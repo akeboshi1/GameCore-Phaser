@@ -3,14 +3,14 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import PicBusinessStreetPanel from "./PicBusinessMarketingPlanPanel";
-import { PicBusinessMartketingPlan } from "./PicBusinessMartketingPlan";
+import { PicBusinessMarketingPlan } from "./PicBusinessMarketingPlan";
 import PicBusinessMarketingPlanPanel from "./PicBusinessMarketingPlanPanel";
 import { PicaMainUIMediator } from "../PicaMainUI/PicaMainUIMediator";
 export class PicBusinessMarketingPlanMediator extends BaseMediator {
     protected mView: PicBusinessMarketingPlanPanel;
     private scene: Phaser.Scene;
     private layerMgr: ILayerManager;
-    private picPlan: PicBusinessMartketingPlan;
+    private picPlan: PicBusinessMarketingPlan;
     private world: WorldService;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
@@ -32,7 +32,7 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
             this.mView.on("hide", this.onHidePanel, this);
         }
         if (!this.picPlan) {
-            this.picPlan = new PicBusinessMartketingPlan(this.world);
+            this.picPlan = new PicBusinessMarketingPlan(this.world);
             this.picPlan.on("onequipedplan", this.onEquiped_MARKET_PLAN, this);
             this.picPlan.on("onplanmodels", this.onMARKET_PLAN_MODELS_BY_TYPE, this);
             this.picPlan.register();
