@@ -4,8 +4,8 @@ import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";
 import { PicFriend } from "./PicFriend";
-import { FetchFriend } from "./FetchFriend";
 import { Logger } from "../../utils/log";
+import { PicFriendEvent } from "./PicFriendEvent";
 
 export class PicFriendMediator extends BaseMediator {
     protected mView: PicFriendPanel;
@@ -13,7 +13,6 @@ export class PicFriendMediator extends BaseMediator {
     private layerMgr: ILayerManager;
     private picFriend: PicFriend;
     private world: WorldService;
-    private fetchFriend: FetchFriend;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.scene = scene;
@@ -28,7 +27,12 @@ export class PicFriendMediator extends BaseMediator {
         if (!this.mView) {
             this.mView = new PicFriendPanel(this.scene, this.world);
             this.mView.on("hide", this.onHidePanel, this);
-            this.mView.on("fetchFriend", this.onFetchFriendHandler, this);
+            this.mView.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
+            this.mView.on(PicFriendEvent.UN_FOLLOW, this.onUnfollowHandler, this);
+            this.mView.on(PicFriendEvent.FOLLOW, this.onFollowHandler, this);
+            this.mView.on(PicFriendEvent.BanUser, this.onBanUserHandler, this);
+            this.mView.on(PicFriendEvent.REMOVE_BAN_USER, this.onRemoveBanUserHandler, this);
+            this.mView.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
         }
         if (!this.picFriend) {
             this.picFriend = new PicFriend(this.world);
@@ -84,6 +88,35 @@ export class PicFriendMediator extends BaseMediator {
         this.picFriend.getFolloweds().then((response) => {
             this.mView.setFriend(FriendChannel.Followes, response.data);
         });
+    }
+
+    private onFollowHandler(id: string) {
+        this.picFriend.follow(id).then((response) => {
+
+        });
+    }
+
+    private onUnfollowHandler(id: string) {
+        this.picFriend.unfollow(id).then((response) => {
+            this.mView.filterById(id);
+        });
+    }
+
+    private onBanUserHandler(fuid: string) {
+        this.picFriend.banUser(fuid).then(() => {
+            // this.mView.
+        });
+    }
+
+    private onRemoveBanUserHandler(fuid: string) {
+        this.picFriend.removeBanUser(fuid).then((response) => {
+            this.mView.filterById(fuid);
+        });
+    }
+
+    private onReqFriendAttributesHandler(id: string) {
+        // TODO 点击好友头像，显示属性面板
+        Logger.getInstance().log("Req friend attributes: ", id);
     }
 
     private onHidePanel() {

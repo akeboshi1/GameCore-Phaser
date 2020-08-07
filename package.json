@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.296",
+    "version": "1.0.297",
     "main": "release/js/tooqing.js",
     "scripts": {
         "dev": "webpack-dev-server --mode development",
@@ -41,7 +41,6 @@
         "i18next": "^19.0.3",
         "i18next-browser-languagedetector": "^4.0.1",
         "i18next-xhr-backend": "^3.2.2",
-        "lodash": "^4.17.19",
         "maxrects-packer": "^2.6.0",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "simple-sha1": "^3.0.1"

@@ -150,8 +150,8 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
                 this.hideChoosePlanPanel();
                 this.openPlanPanel();
 
-            }), new Handler(this, () => {
-
+            }), new Handler(this, (marketPlanId: string) => {
+                this.emit("queryselectplan", marketPlanId);
             }));
         }
         this.content.add(this.picChoosePlanPanel);

@@ -135,13 +135,18 @@
     "marketing_plan": "Marketing Plan",
     "plan_title": "There is now plan yet",
     "material_requirements": "Material requirements:",
-    "effect": "Effect"
+    "effect": "Effect",
+    "onrank": "No Ranking",
+    "history": "HISTORY",
+    "ranking": "RANKING",
+    "rankreward": "REWARD"
   },
   "friendlist": {
     "title": "MY FRIEND",
     "olinetitle": "Show only online",
     "friends": "Friends",
     "fans": "Fans",
-    "follow": "Follow"
+    "follow": "Follow",
+    "blacklist": "BLACKLIST"
   }
 }

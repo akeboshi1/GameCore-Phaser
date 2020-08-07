@@ -44,6 +44,22 @@ export class PicFriend extends PacketHandler {
         this.mEvent.destroy();
     }
 
+    follow(fuid: string) {
+        return this.httpService.post(`user/follow`, { fuid });
+    }
+
+    unfollow(fuid: string) {
+        return this.httpService.post(`user/unfollow`, { fuid });
+    }
+
+    banUser(fuid: string) {
+        return this.httpService.post(`user/ban`, { fuid });
+    }
+
+    removeBanUser(fuid: string) {
+        return this.httpService.post(`user/unban`, { fuid });
+    }
+
     getFolloweds() {
         return this.httpService.get(`user/${this.userId}/followeds`);
     }

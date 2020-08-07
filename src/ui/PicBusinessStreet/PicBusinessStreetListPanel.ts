@@ -118,7 +118,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         const gridbg = this.scene.make.image({ key: this.key2, frame: "navigation_bar_2" });
         this.secondaryPanel.gridTable.addAt(gridbg);
         const gridWdith = this.width;
-        const gridHeight = this.height - 140 * this.dpr;
+        const gridHeight = this.height - 130 * this.dpr;
         const gridY = posy + 88 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 50 * this.dpr);
 
@@ -133,7 +133,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         historyBtn.on(CoreUI.MouseEvent.Tap, this.onHistoryHandler, this);
         this.add(historyBtn);
 
-        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
+        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -245,7 +245,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
-        this.industryIcon = this.scene.make.image({ key: this.key2, frame: "entertainment_tag" });
+        this.industryIcon = this.scene.make.image({ key: this.key2, frame: "entertainment_tag_s" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
         const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });

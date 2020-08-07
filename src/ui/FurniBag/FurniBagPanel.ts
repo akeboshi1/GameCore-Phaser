@@ -1025,14 +1025,14 @@ class Item extends Phaser.GameObjects.Container {
     this.mPropImage.scale = dpr;
 
     this.mCounter = scene.make.text({
-      x: this.width - 4 * dpr,
-      y: this.height + 2 * dpr,
+      x: this.width * 0.5 - 2 * dpr,
+      y: this.height * 0.5,
       style: {
         fontSize: 12 * dpr,
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
-    this.add([background, this.selectbg, this.selectIcon]);
+    this.add([background, this.selectbg, this.selectIcon, this.mPropImage, this.mCounter]);
     this.isSelect = false;
     this.isEquip = false;
   }
@@ -1042,18 +1042,17 @@ class Item extends Phaser.GameObjects.Container {
     this.isSelect = false;
     if (!prop) {
       // this.mPropImage.setFrame("");
-      this.mCounter.setText("");
-      this.remove(this.mPropImage);
+      this.mCounter.visible = false;
+      this.mPropImage.visible = false;
       return;
     }
     this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
-    this.add(this.mPropImage);
+    this.mPropImage.visible = true;
     if (prop.count > 1) {
+      this.mCounter.visible = true;
       this.mCounter.setText(prop.count.toString());
-      this.add(this.mCounter);
     } else {
-      if (this.mCounter.parentContainer)
-        this.remove(this.mCounter);
+      this.mCounter.visible = false;
     }
   }
 

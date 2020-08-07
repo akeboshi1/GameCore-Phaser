@@ -14,20 +14,37 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         ["body_cost"]: ["body_cost", "body_dres"]
     };
     private readonly DEFAULTSETS = [
-        { id: "0001", parts: ["head_base"] },
-        { id: "5cd28238fb073710972a73c2", parts: ["head_hair"] },
-        { id: "5cd28238fb073710972a73c2", parts: ["head_eyes"] },
-        { id: "5cd28238fb073710972a73c2", parts: ["head_mous"] },
-        { id: "0001", parts: ["body_base"] },
-        { id: "5cd28238fb073710972a73c2", parts: ["body_cost"] },
-        { id: "0001", parts: ["farm_base"] },
-        { id: "0001", parts: ["barm_base"] },
-        { id: "0001", parts: ["fleg_base"] },
-        { id: "0001", parts: ["bleg_base"] },
-        { id: "0001", parts: ["farm_base"] },
+        { id: "0001", parts: ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"] },
+        { id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"] },
     ];
     private readonly MODELSETS = [
-        { id: "5f2a52ad958e4b6aaf797913", parts: ["body_cost", "barm_cost", "farm_cost", "bleg_cost", "fleg_cost", "head_hair"] }
+        { id: "5f2a52ad958e4b6aaf797913", parts: ["body_base", "barm_base", "farm_base", "bleg_base", "fleg_base", "head_base"] }
+    ];
+    private readonly ALLPARTS = [
+        "barm_cost",
+        "barm_spec",
+        "bleg_cost",
+        "bleg_spec",
+        "body_cost",
+        "body_dres",
+        "body_spec",
+        "body_tail",
+        "body_wing",
+        "farm_cost",
+        "farm_spec",
+        "fleg_cost",
+        "fleg_spec",
+        "head_eyes",
+        "head_hair",
+        "head_mous",
+        "head_back",
+        "head_hats",
+        "head_mask",
+        "head_spec",
+        "shld_farm",
+        "weap_farm",
+        "weap_barm",
+        "shld_barm"
     ];
 
     private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
@@ -35,6 +52,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mWebHomePath: string;
     private mCurAnimationName: string = "idle_3";
     private mCurDir: AvatarDirEnum = AvatarDirEnum.Front;
+    private mBaseSets: IAvatarSet[] = [];
     private mSets: IAvatarSet[] = [];
     private mParts: { [key: string]: IAvatarSet } = {};
 
@@ -46,7 +64,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
 
-        this.addSets(this.DEFAULTSETS);
+        this.setBaseSets(this.DEFAULTSETS);
         this.loadDragonbone();
     }
 
@@ -61,7 +79,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
         this.mCurAnimationName = null;
         this.mCurDir = null;
-        if (this.mSets) this.mSets.length = 0;
+        if (this.mBaseSets) this.mBaseSets = [];
+        this.mBaseSets = null;
+        if (this.mSets) this.mSets = [];
         this.mSets = null;
         this.mParts = {};
         this.mParts = null;
@@ -97,9 +117,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     public clearParts() {
-        this.mParts = {};
-        if (this.mSets) this.mSets.length = 0;
-        this.addSets(this.DEFAULTSETS);
+        if (this.mSets) this.mSets = [];
+        this.setBaseSets(this.DEFAULTSETS);
         this.reloadParts();
     }
 
@@ -116,22 +135,26 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     }
 
-    public generateShopIcon(): Promise<string> {
+    public generateShopIcon(width: number, height: number): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!this.mArmatureDisplay) {
                 reject(null);
             } else {
-                this.setModelParts();
+                this.setBaseSets(this.MODELSETS);
                 this.replaceDisplay()
                     .then(() => {
+                        const rt = this.scene.make.renderTexture({ x: 0, y: 0, width, height }, false);
+                        this.mArmatureDisplay.scaleY *= -1;
+                        rt.draw(this.mArmatureDisplay, this.mArmatureDisplay.x, 30);
                         // snapshot
-                        this.scene.game.renderer.snapshot((img: HTMLImageElement) => {
+                        rt.snapshotArea(0, 0, width, height, (img: HTMLImageElement) => {
                             resolve(img.src);
+                            this.mArmatureDisplay.scaleY *= -1;
 
                             Logger.getInstance().log("ZW-- generateShopIcon: ", img);
 
                             // reverse parts
-                            this.removeModelParts();
+                            this.setBaseSets(this.DEFAULTSETS);
                             this.replaceDisplay();
                         });
                     })
@@ -178,6 +201,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.reloadParts();
     }
 
+    private setBaseSets(sets: IAvatarSet[]) {
+        if (this.mBaseSets) this.mBaseSets = [];
+        this.mBaseSets = sets;
+
+        this.applySets(true);
+    }
+
     // 将一组AvatatSet整合到一起形成一个完整的Avatar，并保存到self._parts里
     private addSets(newSets: IAvatarSet[]) {
         // 解决替换发型，后发分层存在的问题
@@ -198,6 +228,23 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
 
         this.mSets = this.mSets.concat(newSets);
+        this.applySets();
+    }
+
+    private applySets(reset: boolean = false) {
+        if (reset) {
+            this.mParts = {};
+
+            for (const part of this.ALLPARTS) {
+                this.mParts[part] = null;
+            }
+
+            for (const set of this.mBaseSets) {
+                for (const part of set.parts) {
+                    this.mParts[part] = set;
+                }
+            }
+        }
         for (const set of this.mSets) {
             for (const part of set.parts) {
                 this.mParts[part] = set;
@@ -209,11 +256,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         const idx = this.mSets.indexOf(set);
         if (idx >= 0) {
             this.mSets.splice(idx, 1);
-            for (const one of this.mSets) {
-                for (const part of one.parts) {
-                    this.mParts[part] = one;
-                }
-            }
         }
     }
 
@@ -264,9 +306,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 const avatarSet: IAvatarSet = parts[partName];
                 if (avatarSet) {
                     uri = this.relativeUri(partName, avatarSet.id, this.mCurDir + "");
-                    this.replaceSlotDisplay(`${slotName}`, uri);
-                    Logger.getInstance().log("ZW-- replaceSlot() ", slotName, uri);
+                } else {
+                    uri = "";
                 }
+                this.replaceSlotDisplay(`${slotName}`, uri);
+                Logger.getInstance().log("ZW-- replaceSlot() ", slotName, uri);
             }
 
             this.mArmatureDisplay.animation.play(this.mCurAnimationName);
@@ -276,30 +320,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private cleanUp() {
-        const parts = [
-            "barm_cost",
-            "barm_spec",
-            "bleg_cost",
-            "bleg_spec",
-            "body_dres",
-            "body_spec",
-            "body_tail",
-            "body_wing",
-            "farm_cost",
-            "farm_spec",
-            "fleg_cost",
-            "fleg_spec",
-            "head_back",
-            "head_hats",
-            "head_mask",
-            "head_spec",
-            "shld_farm",
-            "weap_farm",
-            "weap_barm",
-            "shld_barm"
-        ];
-
-        for (const p of parts) {
+        for (const p of this.ALLPARTS) {
             this.replaceSlotDisplay(this.slotName(p, "1"), "");
             this.replaceSlotDisplay(this.slotName(p, "3"), "");
         }
@@ -320,23 +341,25 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         for (const key in parts) {
             if (parts.hasOwnProperty(key)) {
                 const set: IAvatarSet = parts[key];
-                // eyes mous 没有背面素材
-                if (dir === 1 && key === "head_eyes") {
-                    // Do nothing
-                } else if (dir === 1 && key === "head_mous") {
-                    // Do nothing
-                } else {
-                    res.push(this.relativeUri(key, set.id, dir + ""));
+                if (set) {
+                    // eyes mous 没有背面素材
+                    if (dir === 1 && key === "head_eyes") {
+                        // Do nothing
+                    } else if (dir === 1 && key === "head_mous") {
+                        // Do nothing
+                    } else {
+                        res.push(this.relativeUri(key, set.id, dir + ""));
+                    }
                 }
             }
         }
 
         // add model resources
-        this.MODELSETS.forEach((set) => {
-            set.parts.forEach((part) => {
+        for (const set of this.MODELSETS) {
+            for (const part of set.parts) {
                 res.push(this.relativeUri(part, set.id, dir + ""));
-            });
-        });
+            }
+        }
 
         return res;
     }
@@ -375,34 +398,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         return `${_part}_${dir}`;
     }
 
-    private setModelParts() {
-        Logger.getInstance().log("ZW-- before set model parts: ", this.mParts);
-
-        this.MODELSETS.forEach((set) => {
-            set.parts.forEach((part) => {
-                if (!this.mParts.hasOwnProperty(part)) {
-                    this.mParts[part] = set;
-                }
-            });
-        });
-        Logger.getInstance().log("ZW-- after set model parts: ", this.mParts);
-    }
-    private removeModelParts() {
-        this.MODELSETS.forEach((set) => {
-            set.parts.forEach((part) => {
-                if (this.mParts.hasOwnProperty(part) && this.mParts[part] === set) {
-                    delete this.mParts[part];
-                }
-            });
-        });
-    }
-
     private findPartSet(part: string, sets: IAvatarSet[]): IAvatarSet {
-        sets.forEach((set) => {
+        for (const set of sets) {
             if (set.parts.includes(part)) {
                 return set;
             }
-        });
+        }
 
         return null;
     }

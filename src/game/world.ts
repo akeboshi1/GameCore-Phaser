@@ -35,7 +35,7 @@ import { HttpService } from "../net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
 import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
-import { initLocales } from "../i18n";
+import { initLocales, i18n } from "../i18n";
 import * as path from "path";
 import { Tool } from "../utils/tool";
 import { SoundManager, ISoundConfig } from "./sound.manager";
@@ -558,6 +558,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.connection.send(pkt);
+
+        const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
+        content.localeCode = i18n.language;
+        this.connection.send(i18Packet);
     }
 
     private clearGame(): Promise<void> {

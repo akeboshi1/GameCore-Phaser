@@ -64,7 +64,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         storeTitle.setStroke("#553100", 2 * this.dpr);
         this.add(storeTitle);
         const gridWdith = this.width;
-        const gridHeight = this.height - 80 * this.dpr;
+        const gridHeight = this.height - 68 * this.dpr;
         const gridY = posy + 28 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 87 * this.dpr);
 
@@ -80,7 +80,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.storeCountText = this.scene.make.text({ x: btnX + this.newStoreBtn.width * 0.5 + 20 * this.dpr, y: posy, text: "", style: { font: mfont, bold: true, color: "#FFC51A" } }).setOrigin(1, 0);
         this.add(this.storeCountText);
 
-        const talkAllBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.takeall"), this.dpr, this.zoom, {
+        const talkAllBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.takeall"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
