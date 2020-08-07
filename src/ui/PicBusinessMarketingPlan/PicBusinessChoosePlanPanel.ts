@@ -25,7 +25,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     private zoom: number;
     private cancelHandler: Handler;
     private selectHandler: Handler;
-    private curSelectData: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL;
+    private curSelectData: op_client.MarketPlan;
     private curSelectItem: PlanTypeItem;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
@@ -83,7 +83,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             x: 0,
             y: this.materialTitle.y + this.materialTitle.height + 25 * this.dpr,
             width: this.width - 30 * this.dpr,
-            height: 40 * this.dpr,
+            height: 60 * this.dpr,
             zoom: this.zoom,
             align: 2,
             orientation: 1,
@@ -168,6 +168,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         this.describleText.text = data.des;
         this.effectText.text = i18n.t("business_street.effect") + ":" + data.buffDes;
         this.curSelectItem = cell;
+        this.curSelectData = data;
     }
 
     private onCancelHandler() {
@@ -175,7 +176,8 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     }
 
     private onSelectHandler() {
-        if (this.selectHandler) this.selectHandler.runWith(this.curSelectData);
+        if (this.selectHandler) this.selectHandler.runWith(this.curSelectData.id);
+        this.onCancelHandler();
     }
 }
 
@@ -254,8 +256,8 @@ class MaterialItem extends Phaser.GameObjects.Container {
     }
     private getCountText(count: number, needcount: number) {
         const color = (count >= needcount ? "#0054FF" : "#FF2B2B");
-        const countText = `[stroke=${color}][color=${color}]${count}[/color][/stroke]/`;
-        const needText = `[stroke=#2D2D2D][color=#2D2D2D]${needcount}[/color][/stroke]/`;
+        const countText = `[stroke=${color}][color=${color}]${count}[/color][/stroke]`;
+        const needText = `[stroke=#2D2D2D][color=#2D2D2D]/${needcount}[/color][/stroke]`;
         const text = countText + needText;
         return text;
     }

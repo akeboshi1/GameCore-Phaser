@@ -18,6 +18,9 @@ export class PicBusinessStreet extends PacketHandler {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE, this.onMyStoreList);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET, this.onCOMMERCIAL_STREET);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS, this.onINDUSTRY_MODELS);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST, this.onSTORE_RANKING_LIST);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL, this.onSTORE_RANKING_DETAIL);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD, this.onSTORE_RANKING_REWARD);
         }
     }
 
@@ -78,6 +81,28 @@ export class PicBusinessStreet extends PacketHandler {
         content.password = password;
         this.connection.send(packet);
     }
+
+    public query_RANKING_LIST() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_STORE_RANKING_LIST);
+        this.connection.send(packet);
+    }
+
+    public query_STORE_RANKING_DETAIL(key: string, type: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_STORE_RANKING_DETAIL);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_STORE_RANKING_DETAIL = packet.content;
+        content.key = key;
+        content.type = type;
+        this.connection.send(packet);
+    }
+
+    public query_STORE_RANKING_REWARD(key: string, type: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_STORE_RANKING_REWARD);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_STORE_RANKING_REWARD = packet.content;
+        content.key = key;
+        content.type = type;
+        this.connection.send(packet);
+    }
+
     private onMyStoreList(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE = packet.content;
         this.mEvent.emit("onmystore", content);
@@ -91,6 +116,19 @@ export class PicBusinessStreet extends PacketHandler {
     private onINDUSTRY_MODELS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS = packet.content;
         this.mEvent.emit("onmodels", content);
+    }
+
+    private onSTORE_RANKING_LIST(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST = packet.content;
+        this.mEvent.emit("onranklist", content);
+    }
+    private onSTORE_RANKING_DETAIL(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL = packet.content;
+        this.mEvent.emit("onrankdetail", content);
+    }
+    private onSTORE_RANKING_REWARD(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD = packet.content;
+        this.mEvent.emit("onrankreward", content);
     }
 
 }

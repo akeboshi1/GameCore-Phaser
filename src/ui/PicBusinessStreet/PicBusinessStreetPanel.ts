@@ -114,11 +114,16 @@ export default class PicBusinessStreetPanel extends BasePanel {
         }
     }
 
-    public setMarketPlan() {
+    public setStoreRankingList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST) {
+        this.picStreetRankingPanel.setRankingData(content.rankChampions);
+    }
+
+    public setStoreRankingDetial(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL) {
+        this.picRankingDetailPanel.setRankingDetailData(content);
 
     }
 
-    public setChoosePlan() {
+    public setStoreRankingReward(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD) {
 
     }
 
@@ -164,11 +169,10 @@ export default class PicBusinessStreetPanel extends BasePanel {
 
     private openStreetRankingPanel() {
         this.showStreetRankingPanel();
-        this.picStreetRankingPanel.setRankingData();
+        this.emit("queryranklist");
     }
     private openRankingDetailPanel() {
         this.showRankingDetailPanel();
-        this.picRankingDetailPanel.setRankingData();
     }
     private openRankRewardPanel() {
         this.showRankRewardPanel();

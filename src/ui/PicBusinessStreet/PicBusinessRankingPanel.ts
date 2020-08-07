@@ -1,17 +1,12 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
-import { DynamicImage } from "../components/dynamic.image";
 import { NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { Logger } from "../../utils/log";
-import { Radio } from "../components/radio";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 
 export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
     private titleText: Phaser.GameObjects.Text;
@@ -76,14 +71,16 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
         backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
     }
 
-    public setRankingData() {
+    public setRankingData(datas: op_pkt_def.IPKT_RankChampion[]) {
         const item0 = this.scene.make.container(undefined, false);
         item0.setSize(this.boundOffset, 185 * this.dpr);
         this.gameScroll.addItem(item0);
-        for (let i = 0; i < 10; i++) {
+        for (const data of datas) {
             const item = new PicRankingItem(this.scene, 0, 0, 133 * this.dpr, 185 * this.dpr, this.key, this.key2, this.dpr, this.zoom);
+            item.setRankData(data);
             this.gameScroll.addItem(item);
         }
+
         const item1 = this.scene.make.container(undefined, false);
         item1.setSize(this.boundOffset, 185 * this.dpr);
         this.gameScroll.addItem(item1);
@@ -246,7 +243,7 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
 }
 
 class PicRankingItem extends Phaser.GameObjects.Container {
-    public storeData: any;
+    public rankData: op_pkt_def.IPKT_RankChampion;
     private key: string;
     private key2: string;
     private dpr: number;
@@ -279,14 +276,16 @@ class PicRankingItem extends Phaser.GameObjects.Container {
         this.add(this.storebg);
         this.storeName = this.scene.make.text({ x: 0, y: this.storebg.y, text: "Restaurant", style: { color: "#0", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
         this.add(this.storeName);
-        this.storeIcon = this.scene.make.image({ key: this.key2, frame: "ranking_res_s" });
+        this.storeIcon = this.scene.make.image({ key: this.key2, frame: "restaurant_rank_icon_s" });
         this.storeIcon.y = -posy - this.storeIcon.height * 0.5 - 5 * dpr;
         this.add(this.storeIcon);
-        this.switchImage(1);
     }
 
-    public setStoreData(data) {
-
+    public setRankData(data: op_pkt_def.IPKT_RankChampion) {
+        this.rankData = data;
+        this.titleText.text = data.name;
+        this.storeName.text = data.champion;
+        this.switchImage(1);
     }
 
     public setRadio(radio: number) {
@@ -311,27 +310,29 @@ class PicRankingItem extends Phaser.GameObjects.Container {
      * @param type  1  小图片 2  大图片
      */
     public switchImage(type: number) {
-        const imgname = "ranking_res";
+        const imgname = this.rankData.type;
         let bgres, titleFont, storebgres, storebgwidth, storebgheight, storefont, storeiconres, ratio;
-        const smallWidth = this.scene.textures.getFrame(this.key2, imgname + "_bg_s").realWidth;
+        const smallWidth = 133 * this.dpr;
+        let curWidth = 133 * this.dpr;
         if (type === 1) {
-            bgres = imgname + "_bg_s";
+            bgres = imgname + "_rank_bg_s";
             titleFont = 14 * this.dpr;
             storebgres = "store_name_bg_s";
             storebgwidth = 72 * this.dpr;
             storebgheight = 14 * this.dpr;
             storefont = 10 * this.dpr;
-            storeiconres = imgname + "_s";
+            storeiconres = imgname + "_rank_icon_s";
+            curWidth = 133 * this.dpr;
         } else {
-            bgres = imgname + "_bg_m";
+            bgres = imgname + "_rank_bg_m";
             titleFont = 18 * this.dpr;
             storebgres = "store_name_bg_m";
             storebgwidth = 88 * this.dpr;
             storebgheight = 17 * this.dpr;
             storefont = 12 * this.dpr;
-            storeiconres = imgname + "_m";
+            storeiconres = imgname + "_rank_icon_m";
+            curWidth = 163 * this.dpr;
         }
-        const curWidth = this.scene.textures.getFrame(this.key2, bgres).realWidth;
         ratio = curWidth / smallWidth;
         this.radio = ratio;
         this.bg.setFrame(bgres);

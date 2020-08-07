@@ -30,6 +30,9 @@ export class PicBusinessStreetMediator extends BaseMediator {
             this.mView.on("querymodels", this.query_INDUSTRY_MODELS, this);
             this.mView.on("querycreatestore", this.query_CREATE_STORE, this);
             this.mView.on("queryenterroom", this.query_ENTER_ROOM, this);
+            this.mView.on("queryranklist", this.query_RANKING_LIST, this);
+            this.mView.on("queryrankdetail", this.query_STORE_RANKING_DETAIL, this);
+            this.mView.on("queryrankdetail", this.query_STORE_RANKING_REWARD, this);
             this.mView.on("hide", this.onHidePanel, this);
         }
         if (!this.picStreet) {
@@ -37,6 +40,9 @@ export class PicBusinessStreetMediator extends BaseMediator {
             this.picStreet.on("onmystore", this.onMyStoreList, this);
             this.picStreet.on("onstreet", this.onCOMMERCIAL_STREET, this);
             this.picStreet.on("onmodels", this.onINDUSTRY_MODELS, this);
+            this.picStreet.on("onranklist", this.onSTORE_RANKING_LIST, this);
+            this.picStreet.on("onrankdetail", this.onSTORE_RANKING_DETAIL, this);
+            this.picStreet.on("onrankreward", this.onSTORE_RANKING_REWARD, this);
             this.picStreet.register();
         }
         this.layerMgr.addToUILayer(this.mView);
@@ -75,6 +81,19 @@ export class PicBusinessStreetMediator extends BaseMediator {
     private query_ENTER_ROOM(roomId: string, password: string) {
         this.picStreet.query_ENTER_ROOM(roomId, password);
     }
+
+    private query_RANKING_LIST() {
+        this.picStreet.query_RANKING_LIST();
+    }
+
+    private query_STORE_RANKING_DETAIL(key: string, type: string) {
+        this.picStreet.query_STORE_RANKING_DETAIL(key, type);
+    }
+
+    private query_STORE_RANKING_REWARD(key: string, type: string) {
+        this.picStreet.query_STORE_RANKING_REWARD(key, type);
+    }
+
     private onMyStoreList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
         this.mView.setMyStore(content);
     }
@@ -84,5 +103,14 @@ export class PicBusinessStreetMediator extends BaseMediator {
 
     private onINDUSTRY_MODELS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS) {
         this.mView.setIndustryModels(content);
+    }
+    private onSTORE_RANKING_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST) {
+        this.mView.setStoreRankingList(content);
+    }
+    private onSTORE_RANKING_DETAIL(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL) {
+        this.mView.setStoreRankingDetial(content);
+    }
+    private onSTORE_RANKING_REWARD(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD) {
+        this.mView.setStoreRankingReward(content);
     }
 }
