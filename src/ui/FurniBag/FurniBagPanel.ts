@@ -405,10 +405,10 @@ export class FurniBagPanel extends BasePanel {
 
   private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
     const btn = new NineSliceButton(this.scene, x, y, width, height, key, frame, text, this.dpr, 1, {
-      left: 12 * this.dpr,
-      top: 12 * this.dpr,
-      right: 12 * this.dpr,
-      bottom: 12 * this.dpr
+      left: 14 * this.dpr,
+      top: 14 * this.dpr,
+      right: 15 * this.dpr,
+      bottom: 14 * this.dpr
     });
     if (text) {
       btn.setTextStyle({

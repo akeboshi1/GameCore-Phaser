@@ -175,7 +175,7 @@ export class ComposePanel extends BasePanel {
         const tipsbg = new NinePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", {
             left: 20 * this.dpr,
             top: 20 * this.dpr,
-            right: 20 * this.dpr,
+            right: 30 * this.dpr,
             bottom: 20 * this.dpr
         });
         tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);

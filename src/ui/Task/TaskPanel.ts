@@ -89,8 +89,8 @@ export class TaskPanel extends BasePanel {
         this.bg = new NineSlicePatch(this.scene, 0, 0, conWdith, conHeight, UIAtlasKey.commonKey, "bg", {
             left: 40,
             top: 40,
-            bottom: 40,
-            right: 40,
+            bottom: 50,
+            right: 50,
         });
         const bgwidth = this.bg.width;
         const bgHeight = this.bg.height;

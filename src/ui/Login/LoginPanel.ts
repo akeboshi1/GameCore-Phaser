@@ -2,13 +2,12 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { LoadingScene } from "../../scenes/loading";
-import { NinePatch } from "../components/nine.patch";
 import { Font } from "../../utils/font";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import { BBCodeText, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import Helpers from "../../utils/helpers";
 
 export class LoginPanel extends BasePanel {
@@ -118,7 +117,7 @@ export class LoginPanel extends BasePanel {
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
         const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height);
-        this.mPhoneCodeInput.resize(100 * this.dpr, this.mPhoneCodeInput.height);
+        // this.mPhoneCodeInput.resize(100 * this.dpr, this.mPhoneCodeInput.height);
         this.mPhoneCodeInput.x = -codeContainer.width / 2 + 8 * this.dpr;
 
         const label1 = this.scene.make.text({
@@ -170,7 +169,7 @@ export class LoginPanel extends BasePanel {
         this.loginBtn = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
-            right: 12 * this.dpr,
+            right: 14 * this.dpr,
             bottom: 12 * this.dpr
         });
         this.loginBtn.setTextStyle({
@@ -212,12 +211,12 @@ export class LoginPanel extends BasePanel {
         const container = this.scene.make.container({ x, y }, false);
         const frame = this.scene.textures.getFrame(this.key, "input_bg");
         // const height = frame ? frame.height || 50 * this.dpr;
-        const bg = new NinePatch(this.scene, input.x - 8 * this.dpr, input.y, input.width + 14 * this.dpr, frame.height, this.key, "input_bg", {
+        const bg = new NineSlicePatch(this.scene, input.x - 8 * this.dpr, input.y, input.width + 14 * this.dpr, frame.height, this.key, "input_bg", {
             left: 27 * this.dpr,
-            top: 24 * this.dpr,
+            top: 0 * this.dpr,
             right: 28 * this.dpr,
-            bottom: 24 * this.dpr
-        });
+            bottom: 0 * this.dpr
+        }, this.dpr, 1);
         container.add([input, bg]);
         container.setSize(bg.width, bg.height);
         return container;
