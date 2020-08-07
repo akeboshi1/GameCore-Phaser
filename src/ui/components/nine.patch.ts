@@ -11,7 +11,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
     private finalXs: number[];
     private finalYs: number[];
     private internalTint: number;
-
+    private patchKey: string;
     constructor(
         scene: Phaser.Scene,
         x: number,
@@ -23,6 +23,7 @@ export class NinePatch extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.config = config || this.scene.cache.custom.ninePatch.get(frame ? `${frame}` : key);
         // 对于config进行取整
+        this.patchKey = Math.random() * 1000 + "";
         this.config.top = Math.round(this.config.top);
         if (this.config.right) this.config.right = Math.round(this.config.right);
         if (this.config.bottom) this.config.bottom = Math.round(this.config.bottom);
@@ -104,6 +105,26 @@ export class NinePatch extends Phaser.GameObjects.Container {
         this.tintFill = false;
     }
 
+    public destroy() {
+        if (this.originTexture) {
+            let patchIndex: number = 0;
+            for (let yi: number = 0; yi < 3; yi++) {
+                for (let xi: number = 0; xi < 3; xi++) {
+                    const patch = this.getPatchNameByIndex(patchIndex);
+                    if (this.originTexture.frames.hasOwnProperty(patch)) {
+                        this.originTexture.remove(patch);
+                    }
+                    ++patchIndex;
+                }
+            }
+        }
+        super.destroy();
+    }
+
+    protected getPatchNameByIndex(index: number): string {
+        return this.originFrame.name + NinePatch.patches[index] + this.patchKey;
+    }
+
     private createPatches(): void {
         // The positions we want from the base texture
         const textureXs: number[] = [0, this.config.left, this.originFrame.width - this.config.right, this.originFrame.width];
@@ -182,9 +203,5 @@ export class NinePatch extends Phaser.GameObjects.Container {
             return;
         }
         this.originTexture.add(patch, this.originFrame.sourceIndex, this.originFrame.cutX + x, this.originFrame.cutY + y, width, height);
-    }
-
-    private getPatchNameByIndex(index: number): string {
-        return `${this.originFrame.name}|${NinePatch.patches[index]}`;
     }
 }

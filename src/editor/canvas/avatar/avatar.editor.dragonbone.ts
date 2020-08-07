@@ -5,8 +5,6 @@ import { AvatarDirEnum, IAvatarSet } from "game-capsule/lib/configobjects/avatar
 import * as _ from "lodash";
 import { Logger } from "../../../utils/log";
 
-export const WEB_AVATAR_PATH = "https://osd.tooqing.com/avatar/part";
-
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private readonly DRAGONBONENAME = "bones_human01";
@@ -34,13 +32,16 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
 
+    private mWebHomePath: string;
     private mCurAnimationName: string = "idle_3";
     private mCurDir: AvatarDirEnum = AvatarDirEnum.Front;
     private mSets: IAvatarSet[] = [];
     private mParts: { [key: string]: IAvatarSet } = {};
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, webHomePath: string) {
         super(scene);
+
+        this.mWebHomePath = webHomePath;
 
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
@@ -110,6 +111,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     public spliceParts(set: IAvatarSet) {
         this.removeSet(set);
         this.reloadParts();
+
+        // remove local texture
+
     }
 
     public generateShopIcon(): Promise<string> {
@@ -117,8 +121,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             if (!this.mArmatureDisplay) {
                 reject(null);
             } else {
-                // change default parts
-                this.replaceDefaultPartsWithModelParts();
+                this.setModelParts();
                 this.replaceDisplay()
                     .then(() => {
                         // snapshot
@@ -128,7 +131,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                             Logger.getInstance().log("ZW-- generateShopIcon: ", img);
 
                             // reverse parts
-                            this.addSets([]);
+                            this.removeModelParts();
                             this.replaceDisplay();
                         });
                     })
@@ -224,7 +227,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.cleanUp();
         const resources = this.getResourcesByDir(this.mCurDir);
         for (const resource of resources) {
-            this.loadPart(resource, url.resolve(WEB_AVATAR_PATH, resource));
+            this.loadPart(resource, url.resolve(this.mWebHomePath, resource));
         }
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.replaceDisplay, this);
         this.scene.load.start();
@@ -249,6 +252,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private replaceDisplay(): Promise<boolean> {
         return new Promise((resolve, reject) => {
+            Logger.getInstance().log("ZW-- replaceDisplay() mParts: ", this.mParts);
             const parts = this.mParts;
             let slotName = "";
             let uri = "";
@@ -261,6 +265,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 if (avatarSet) {
                     uri = this.relativeUri(partName, avatarSet.id, this.mCurDir + "");
                     this.replaceSlotDisplay(`${slotName}`, uri);
+                    Logger.getInstance().log("ZW-- replaceSlot() ", slotName, uri);
                 }
             }
 
@@ -301,6 +306,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private loadPart(key: string, path: string) {
+        Logger.getInstance().log("ZW-- loadPart() ", key, path);
         if (!this.scene.cache.obj.has(key)) {
             this.scene.load.image(key, path);
         }
@@ -369,27 +375,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         return `${_part}_${dir}`;
     }
 
-    // 1.delete DEFAULT parts 2.add *unused* MODEL parts
-    private replaceDefaultPartsWithModelParts() {
-        const deleteParts = [];
-
-        for (const key in this.mParts) {
-            if (this.mParts.hasOwnProperty(key)) {
-                const set: IAvatarSet = this.mParts[key];
-                const ias = this.findPartSet(key, this.DEFAULTSETS);
-                if (ias && ias.id === set.id) {
-                    deleteParts.push(key);
-                }
-            }
-        }
-
-        Logger.getInstance().log("ZW-- before: ", this.mParts);
-
-        deleteParts.forEach((part) => {
-            delete this.mParts[part];
-        });
-
-        Logger.getInstance().log("ZW-- after delete: ", this.mParts);
+    private setModelParts() {
+        Logger.getInstance().log("ZW-- before set model parts: ", this.mParts);
 
         this.MODELSETS.forEach((set) => {
             set.parts.forEach((part) => {
@@ -398,8 +385,18 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 }
             });
         });
-        Logger.getInstance().log("ZW-- after replace: ", this.mParts);
+        Logger.getInstance().log("ZW-- after set model parts: ", this.mParts);
     }
+    private removeModelParts() {
+        this.MODELSETS.forEach((set) => {
+            set.parts.forEach((part) => {
+                if (this.mParts.hasOwnProperty(part) && this.mParts[part] === set) {
+                    delete this.mParts[part];
+                }
+            });
+        });
+    }
+
     private findPartSet(part: string, sets: IAvatarSet[]): IAvatarSet {
         sets.forEach((set) => {
             if (set.parts.includes(part)) {
