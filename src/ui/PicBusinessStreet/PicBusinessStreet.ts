@@ -21,6 +21,7 @@ export class PicBusinessStreet extends PacketHandler {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST, this.onSTORE_RANKING_LIST);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL, this.onSTORE_RANKING_DETAIL);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD, this.onSTORE_RANKING_REWARD);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_ENTER_HISTORY, this.onSTORE_ENTER_HISTORY);
         }
     }
 
@@ -103,6 +104,10 @@ export class PicBusinessStreet extends PacketHandler {
         this.connection.send(packet);
     }
 
+    public query_STORE_ENTER_HISTORY() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_STORE_ENTER_HISTORY);
+        this.connection.send(packet);
+    }
     private onMyStoreList(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE = packet.content;
         this.mEvent.emit("onmystore", content);
@@ -129,6 +134,11 @@ export class PicBusinessStreet extends PacketHandler {
     private onSTORE_RANKING_REWARD(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD = packet.content;
         this.mEvent.emit("onrankreward", content);
+    }
+
+    private onSTORE_ENTER_HISTORY(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_ENTER_HISTORY = packet.content;
+        this.mEvent.emit("onenterhistory", content);
     }
 
 }

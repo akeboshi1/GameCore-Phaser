@@ -9,7 +9,7 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-
+import { op_client, op_pkt_def } from "pixelpai_proto";
 export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
     private titleText: Phaser.GameObjects.Text;
     private gridtable: GameGridTable;
@@ -28,9 +28,8 @@ export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setHistoryeData() {
-        const arr = new Array(60);
-        this.gridtable.setItems(arr);
+    public setHistoryeData(datas: op_client.IEditModeRoom[]) {
+        this.gridtable.setItems(datas);
         this.titleText.text = i18n.t("business_street.history_title").replace("${}", "10");
     }
 
@@ -55,7 +54,7 @@ export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
         const gridY = posy + 33 * this.dpr + gridHeight * 0.5;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 256 * this.dpr, 50 * this.dpr);
 
-        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
+        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -107,7 +106,7 @@ export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
 }
 
 class PicHistoryItem extends Phaser.GameObjects.Container {
-    public storeData: any;
+    public storeData: op_client.IEditModeRoom;
     private key: string;
     private key2: string;
     private dpr: number;
@@ -116,6 +115,7 @@ class PicHistoryItem extends Phaser.GameObjects.Container {
     private storeIcon: DynamicImage;
     private praiseCount: Phaser.GameObjects.Text;
     private industryIcon: Phaser.GameObjects.Image;
+    private bg: NineSlicePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, key2: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -124,13 +124,13 @@ class PicHistoryItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         const posx = -this.width * 0.5;
         const posy = -this.height * 0.5;
-        const bg = new NineSlicePatch(this.scene, 0, 0, width, 45 * dpr, this.key, "resturant_bg", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, 45 * dpr, this.key, "resturant_bg", {
             left: 4 * this.dpr,
             top: 9 * this.dpr,
             right: 4 * this.dpr,
             bottom: 9 * this.dpr
         });
-        this.add(bg);
+        this.add(this.bg);
         const iconbg = this.scene.make.image({ key: key2, frame: "icon_bg_s" });
         iconbg.setPosition(posx + iconbg.width * 0.5 + 3 * dpr, 0);
         this.add(iconbg);
@@ -141,7 +141,7 @@ class PicHistoryItem extends Phaser.GameObjects.Container {
         this.add(this.storeName);
         this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
-        this.industryIcon = this.scene.make.image({ key: this.key, frame: "entertainment_tag" });
+        this.industryIcon = this.scene.make.image({ key: this.key2, frame: "entertainment_tag_s" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
         // const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
@@ -151,8 +151,13 @@ class PicHistoryItem extends Phaser.GameObjects.Container {
         // this.add(this.praiseCount);
     }
 
-    public setStoreData(data) {
-
+    public setStoreData(data: op_client.IEditModeRoom) {
+        this.storeData = data;
+        this.bg.setTexture(this.key2, data.industry + "_bg");
+        this.storeName.text = data.name;
+        this.playerName.text = data.ownerName;
+        this.storeIcon.setTexture(this.key2, data.storeType + "_icon_s");
+        this.industryIcon.setFrame(data.industry + "_tag_s");
     }
 
 }

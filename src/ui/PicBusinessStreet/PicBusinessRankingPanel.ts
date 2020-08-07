@@ -56,11 +56,11 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
                 this.onScrollValueChange(value);
             },
             cellupCallBack: (gameobject) => {
-                this.onScrollClickHandler();
+                this.onScrollClickHandler(gameobject);
             }
         });
         this.add(this.gameScroll);
-        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 15 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
+        const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
@@ -73,7 +73,9 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
 
     public setRankingData(datas: op_pkt_def.IPKT_RankChampion[]) {
         const item0 = this.scene.make.container(undefined, false);
+        this.boundOffset = 35 * this.dpr;
         item0.setSize(this.boundOffset, 185 * this.dpr);
+        this.gameScroll.clearItems();
         this.gameScroll.addItem(item0);
         for (const data of datas) {
             const item = new PicRankingItem(this.scene, 0, 0, 133 * this.dpr, 185 * this.dpr, this.key, this.key2, this.dpr, this.zoom);
@@ -86,6 +88,7 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
         this.gameScroll.addItem(item1);
         this.gameScroll.Sort();
         this.gameScroll.refreshMask();
+        this.gameScroll.setValue(this.gameScroll.bounds[1]);
     }
 
     public setHandler(back: Handler, rank: Handler) {
@@ -138,14 +141,15 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
             const allLen = this.gameScroll.getItemList().length;
             if (index >= 0 && index < allLen - 1) {
                 const item = <PicRankingItem>this.gameScroll.getItemAt(index + 1);
-                const dis = item.getWorldTransformMatrix().tx - this.getWorldTransformMatrix().tx;
+                let dis = item.getWorldTransformMatrix().tx - this.getWorldTransformMatrix().tx;
+                dis *= this.scale;
                 if (dis < 0) {
                     const max = Math.abs(dis) + value;
                     this.timerID = setInterval(() => {
                         value += 10 * this.dpr;
                         this.gameScroll.setValue(value);
                         if (value >= max) {
-                            this.gameScroll.setValue(max);
+                            this.gameScroll.setValue(value);
                             clearInterval(this.timerID);
                             this.timerID = undefined;
                         }
@@ -156,7 +160,7 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
                         value -= 10 * this.dpr;
                         this.gameScroll.setValue(value);
                         if (value <= mix) {
-                            this.gameScroll.setValue(mix);
+                            this.gameScroll.setValue(value);
                             clearInterval(this.timerID);
                             this.timerID = undefined;
                         }
@@ -166,16 +170,20 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
             this.gameScroll.Sort(true, false);
         }
     }
-    private onScrollClickHandler() {
+    private onScrollClickHandler(obj: PicRankingItem) {
         if (this.timerID) {
             clearInterval(this.timerID);
             this.timerID = undefined;
         }
-        if (this.rankHandler) this.rankHandler.runWith(null);
+        if (this.rankHandler) {
+            const data = obj.rankData;
+            this.rankHandler.runWith([data.key, data.type]);
+        }
     }
 
     private onBackHandler() {
         if (this.backHandler) this.backHandler.run();
+        this.gameScroll.clearItems();
     }
 
     private addListen() {
@@ -262,7 +270,7 @@ class PicRankingItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         const posx = -this.width * 0.5;
         const posy = -this.height * 0.5;
-        this.bg = this.scene.make.image({ key: this.key2, frame: "ranking_res_bg_s" });
+        this.bg = this.scene.make.image({ key: this.key2, frame: "restaurant_rank_bg_s" });
         this.add(this.bg);
         this.titleText = this.scene.make.text({ x: 0, y: posy, text: "Restaurant", style: { color: "#0555AF", fontSize: 14 * dpr, fontFamily: Font.BOLD_FONT } }).setOrigin(0.5);
         this.add(this.titleText);

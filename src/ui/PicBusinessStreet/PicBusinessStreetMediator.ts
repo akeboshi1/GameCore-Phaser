@@ -32,7 +32,8 @@ export class PicBusinessStreetMediator extends BaseMediator {
             this.mView.on("queryenterroom", this.query_ENTER_ROOM, this);
             this.mView.on("queryranklist", this.query_RANKING_LIST, this);
             this.mView.on("queryrankdetail", this.query_STORE_RANKING_DETAIL, this);
-            this.mView.on("queryrankdetail", this.query_STORE_RANKING_REWARD, this);
+            this.mView.on("queryrankreward", this.query_STORE_RANKING_REWARD, this);
+            this.mView.on("queryenterhistory", this.query_STORE_ENTER_HISTORY, this);
             this.mView.on("hide", this.onHidePanel, this);
         }
         if (!this.picStreet) {
@@ -43,6 +44,7 @@ export class PicBusinessStreetMediator extends BaseMediator {
             this.picStreet.on("onranklist", this.onSTORE_RANKING_LIST, this);
             this.picStreet.on("onrankdetail", this.onSTORE_RANKING_DETAIL, this);
             this.picStreet.on("onrankreward", this.onSTORE_RANKING_REWARD, this);
+            this.picStreet.on("onenterhistory", this.onSTORE_ENTER_HISTORY, this);
             this.picStreet.register();
         }
         this.layerMgr.addToUILayer(this.mView);
@@ -93,7 +95,9 @@ export class PicBusinessStreetMediator extends BaseMediator {
     private query_STORE_RANKING_REWARD(key: string, type: string) {
         this.picStreet.query_STORE_RANKING_REWARD(key, type);
     }
-
+    private query_STORE_ENTER_HISTORY() {
+        this.picStreet.query_STORE_ENTER_HISTORY();
+    }
     private onMyStoreList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
         this.mView.setMyStore(content);
     }
@@ -112,5 +116,8 @@ export class PicBusinessStreetMediator extends BaseMediator {
     }
     private onSTORE_RANKING_REWARD(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD) {
         this.mView.setStoreRankingReward(content);
+    }
+    private onSTORE_ENTER_HISTORY(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_ENTER_HISTORY) {
+        this.mView.setEnterHistory(content);
     }
 }
