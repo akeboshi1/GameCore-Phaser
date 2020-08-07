@@ -135,7 +135,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     }
 
-    public generateShopIcon(): Promise<string> {
+    public generateShopIcon(width: number, height: number): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!this.mArmatureDisplay) {
                 reject(null);
@@ -143,9 +143,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 this.setBaseSets(this.MODELSETS);
                 this.replaceDisplay()
                     .then(() => {
+                        const rt = this.scene.make.renderTexture({ x: 0, y: 0, width, height }, false);
+                        this.mArmatureDisplay.scaleY *= -1;
+                        rt.draw(this.mArmatureDisplay, width >> 1, 0);
                         // snapshot
-                        this.scene.game.renderer.snapshot((img: HTMLImageElement) => {
+                        rt.snapshotArea(0, 0, width, height, (img: HTMLImageElement) => {
                             resolve(img.src);
+                            this.mArmatureDisplay.scaleY *= -1;
 
                             Logger.getInstance().log("ZW-- generateShopIcon: ", img);
 
