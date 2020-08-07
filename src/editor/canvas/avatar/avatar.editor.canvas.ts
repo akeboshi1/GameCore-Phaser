@@ -81,9 +81,9 @@ export class AvatarEditorCanvas extends EditorCanvas {
         if (this.mDragonbone) this.mDragonbone.spliceParts(set);
     }
 
-    public generateShopIcon(): Promise<string> {
+    public generateShopIcon(width: number, height: number): Promise<string> {
         if (this.mDragonbone) {
-            return this.mDragonbone.generateShopIcon();
+            return this.mDragonbone.generateShopIcon(width, height);
         }
     }
 }
