@@ -1,11 +1,10 @@
 import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { Logger } from "../../utils/log";
 import { Font } from "../../utils/font";
 
 export class LabelInput extends Phaser.GameObjects.Container {
     private mLabel: Phaser.GameObjects.Text;
     private mInputText: InputText;
-    private mInputConfig: object;
+    private mInputConfig: any;
     constructor(scene: Phaser.Scene, config: any) {
         super(scene);
 
@@ -15,6 +14,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         const clickW = config.width || 100;
         const clickH = config.height || 100;
         this.mLabel = this.scene.make.text({
+            text: config.placeholder,
             style: Object.assign(labelConfig, config)
         }, false).setInteractive(new Phaser.Geom.Rectangle(-(clickW >> 1), -(clickH >> 1), clickW, clickH), Phaser.Geom.Rectangle.Contains);
         this.mLabel.on("pointerup", this.onShowInputHandler, this);
@@ -64,13 +64,18 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
         this.remove(this.mLabel);
         this.add(this.mInputText);
-        this.mInputText.setText(this.mLabel.text);
+        if (this.mInputConfig.placeholder !== this.mLabel.text)
+            this.mInputText.setText(this.mLabel.text);
         this.mInputText.setFocus();
     }
 
     private onShowLabel() {
         if (this.mInputText) {
-            this.mLabel.setText(this.mInputText.text);
+            if (!this.mInputText.text && this.mInputConfig.placeholder) {
+                this.mLabel.setText(this.mInputConfig.placeholder);
+            } else {
+                this.mLabel.setText(this.mInputText.text);
+            }
             this.destroyInput();
         }
         this.add(this.mLabel);
@@ -83,7 +88,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         }
     }
 
-    private onTextChangeHandler() {
+    private onTextChangeHandler(input, event) {
         this.emit("textchange");
     }
 
