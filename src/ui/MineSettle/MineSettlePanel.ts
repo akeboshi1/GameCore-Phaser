@@ -35,10 +35,10 @@ export class MineSettlePanel extends BasePanel {
         this.titleName.y = this.titleimage.y + 32 * this.dpr;
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 0.66);
-        this.blackGraphic.fillRect(0, 0, width / this.scale, height / this.scale);
-        this.mPropGrid.refreshPos(width / 2, this.bg.y - 2 * this.dpr * this.scale);
+        this.blackGraphic.fillRect(0, 0, width, height);
+        this.mPropGrid.refreshPos(width / 2, this.bg.y - 2 * this.dpr);
         this.mPropGrid.resetMask();
-        this.setSize(width * this.scale * this.scale, height * this.scale * this.scale);
+        this.setSize(width, height);
     }
 
     show(param?: any) {
