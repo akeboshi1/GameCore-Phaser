@@ -37,10 +37,10 @@ export class Bubble extends Phaser.GameObjects.Container {
         // }, false);
         this.mChatContent = new BBCodeText(this.scene, 0, 4 * this.mScale, text, {
             fontFamily: Font.DEFULT_FONT,
-            ontSize: 14 * this.mScale,
+            fontSize: 14 * this.mScale,
             color: "#000000",
             origin: { x: 0, y: 0 },
-            wrap: { width: 300, mode: "character" }
+            wrap: { width: 200 * this.mScale, mode: "character" }
         });
         this.add(this.mChatContent);
 
