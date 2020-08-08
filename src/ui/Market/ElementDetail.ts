@@ -39,7 +39,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       w = frame.width;
       h = frame.height;
     }
-    this.mBuyBtn = new NinePatchButton(this.scene, 440, 700, 81 * this.dpr, 41 * this.dpr, this.key, "yellow_button", i18n.t("market.buy_button"), {
+    this.mBuyBtn = new NinePatchButton(this.scene, 440, 700, 81 * this.dpr, 41 * this.dpr, this.key, "yellow_button", i18n.t("common.buy"), {
       left: 14 * this.dpr,
       top: 14 * this.dpr,
       right: w - 2 - 14 * this.dpr,
@@ -242,7 +242,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   private onPointerUpHandler() {
-    this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
+    // this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
     this.mCounter.setBlur();
   }
 

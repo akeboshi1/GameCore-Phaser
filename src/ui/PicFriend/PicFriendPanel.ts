@@ -22,15 +22,11 @@ export default class PicFriendPanel extends BasePanel {
     private closeBtn: Button;
     private content: Container;
     private friendContainer: MainContainer;
-    private blackContaienr: BlackContainer;
-    private searchContainer: SearchContainer;
     private mBackGround: Phaser.GameObjects.Graphics;
     private mShowingSubContainer: SubFriendContainer;
-    private mSubContainer: Map<FriendChannel, SubFriendContainer>;
     private mSubContanerMap: Map<FriendChannel, any>;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        this.mSubContainer = new Map();
         this.mSubContanerMap = new Map();
         this.mSubContanerMap.set(FriendChannel.Blacklist, BlackContainer);
         this.mSubContanerMap.set(FriendChannel.Search, SearchContainer);

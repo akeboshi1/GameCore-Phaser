@@ -1,9 +1,8 @@
 {
   "market": {
     "title": "Market",
-    "buy_button": "Buy",
-    "payment": "PAYMENT",
-    "refreshtime": "The next refresh time is ",
+    "payment": "PURCHASE",
+    "refreshtime": "Refresh at ",
     "refresh": "Refresh"
   },
   "item": {
@@ -13,31 +12,34 @@
     "des": "description"
   },
   "room_list": {
-    "player_room": "Player Room",
-    "popularity_room": "Popularity Room",
-    "my_room": "My Room",
-    "my_history": "My history",
+    "player_room": "Others' Room",
+    "popularity_room": "Most Popular",
+    "my_room": "My Rooms",
+    "my_history": "Visit History",
     "password": "Password",
     "close": "Close",
-    "visit": "Visit",
-    "my": "My"
+    "visit": "World",
+    "my": "Personal"
   },
   "furni_bag": {
     "add": "Add",
-    "furni": "Furniture",
-    "Props": "Prop",
-    "decorate": "Decorations",
-    "sold": "Sold",
-    "use": "Use",
-    "save": "Save",
+    "furni": "Furnitures",
+    "Props": "Items",
+    "decorate": "Avatars",
     "reset": "Reset"
   },
   "common": {
     "cancel": "Cancel",
-    "confirm": "Determine"
+    "confirm": "OK",
+    "use": "USE",
+    "save": "SAVE",
+    "lv": "Lv",
+    "refresh": "REFRESH",
+    "buy": "BUY",
+    "sold": "售出"
   },
   "player_info": {
-    "title": "Player Info",
+    "title": "Personal Data",
     "nick_name": "Nickname",
     "player_lv": "Lv",
     "player_title": "Title",
@@ -45,98 +47,98 @@
     "option_badge": "BADGE",
     "option_attribute": "ATTRIBUTE",
     "option_title": "TITLE",
-    "add_friend": "Add Friend",
-    "tade_btn": "Trade",
+    "add_friend": "D: Add Friend",
+    "tade_btn": "D: Trade",
     "private_chat": "Private Chat",
     "edit_profile": "Edit Profile",
-    "user_name": "User Name",
+    "user_name": "D: User Name",
     "input_nickname": "Please input a nickname",
-    "constellation": "Constellation",
-    "birthday": "Birthday",
+    "constellation": "D: Constellation",
+    "birthday": "D: Birthday",
     "city": "City",
-    "signature": "Signature",
-    "input_signature": "Fill in personality signature to get others attention!"
+    "signature": "D: Signature",
+    "input_signature": "D: Fill in personality signature to get others attention!"
   },
   "compose": {
-    "title": "Manufacture",
-    "make": "make",
-    "needMaterials": "Materials required",
-    "synthesis": "Synthesis"
+    "title": "Produce",
+    "make": "Produce",
+    "needMaterials": "Materials",
+    "synthesis": "Produce"
   },
   "minesettle": {
-    "settle": "Settle",
-    "savebag": "SaveToBag"
+    "settle": "Summary",
+    "savebag": "OK"
   },
   "equipupgrade": {
     "title": "Equip"
   },
   "task": {
-    "title": "Task",
+    "title": "Quests",
     "main_quest": "Main Quest",
-    "side_quest": "Side Quest",
-    "active_task": "Active Task",
+    "side_quest": "Optional Quest",
+    "active_task": "Event Quest",
     "daily_quest": "Daily Quest",
     "all_task": "All",
     "m": "M",
-    "s": "S",
-    "a": "A",
+    "s": "O",
+    "a": "E",
     "d": "D",
     "objective": "Objective",
     "rewards": "Rewards",
-    "collect_materials": "Collect Materials:",
-    "submit_task": "Submit Task",
-    "task_quest": "Task Quest:"
+    "collect_materials": "Collect:",
+    "submit_task": "Submit",
+    "task_quest": "Quest:"
   },
   "furni_unlock": {
-    "unlock": "Immediately unlock",
-    "repair": "REPAIR",
-    "needMaterials": "Synthetic materials needed",
-    "source": "Source",
-    "sold": "Price",
-    "notrading": "Not Trading"
+    "unlock": "Unlock",
+    "repair": "D: REPAIR",
+    "needMaterials": "Materials",
+    "source": "D: Source",
+    "sold": "D: Price",
+    "notrading": "D: Not Trading"
   },
   "room_upgrade": {
-    "clicktocontinue": "Click on any blank area to continue"
+    "clicktocontinue": "Click to continue"
   },
   "room_info": {
-    "infobtn": "ROOM INFORMATION",
-    "setting": "ROOM ETTINGS",
-    "editorroom": "Editing room",
-    "roomname": "Room name",
-    "roomlevel": "Room level",
-    "expvalue": "Experience value",
-    "popvalue": "Popular value",
-    "goodvalue": "Good value",
-    "compveness": "Competitiveness",
-    "turnover": "Turnover",
+    "infobtn": "INFO",
+    "setting": "SETTING",
+    "editorroom": "Edit",
+    "roomname": "Name",
+    "roomlevel": "Level",
+    "expvalue": "Exp",
+    "popvalue": "Popularity",
+    "goodvalue": "Like Count",
+    "compveness": "D: Competitiveness",
+    "turnover": "Income",
     "closeshop": "Close Shop"
   },
   "business_street": {
-    "commercial_street": "COMMERCIAL STREET",
+    "commercial_street": "STORES",
     "newstore": "NEW STORE",
-    "my_store": "MY STORE",
+    "my_store": "MY STORES",
     "enter": "Enter",
     "takeall": "Take all",
-    "goout": "Go Out",
-    "choosetheindustry": "Choose the Industry",
+    "goout": "All Stores",
+    "choosetheindustry": "Choose Industry",
     "select": "Select",
-    "choosestorelike": "Choose the store you like",
-    "street": "STREET",
+    "choosestorelike": "Choose store type",
+    "street": "All Stores",
     "back": "BACK",
-    "history_title": "LAST ${} VISITS",
-    "ranking_list": "RANKING LIST",
-    "rank_reward": "Rank Reward",
-    "savings": "Savings",
+    "history_title": "LAST ${} STORES VISITED",
+    "ranking_list": "RANKING",
+    "rank_reward": "Reward",
+    "savings": "D: Savings",
     "competitiveness": "Competitiveness",
     "turnover": "Turnover ",
     "popularity": "Popularity",
-    "praise": "Praise",
-    "store_limit": "store limit",
+    "praise": "Like",
+    "store_limit": "D: store limit",
     "marketing_plan": "Marketing Plan",
-    "plan_title": "There is now plan yet",
-    "material_requirements": "Material requirements:",
+    "plan_title": "Start Marketing",
+    "material_requirements": "Items required:",
     "effect": "Effect",
-    "onrank": "No Ranking",
+    "onrank": "N/A",
     "history": "HISTORY",
     "ranking": "RANKING",
     "rankreward": "REWARD"
@@ -148,5 +150,9 @@
     "fans": "Fans",
     "follow": "Follow",
     "blacklist": "BLACKLIST"
+  },
+  "friend_invite": {
+    "refused": "refused",
+    "agree": "agree"
   }
 }

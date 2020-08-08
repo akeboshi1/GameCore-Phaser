@@ -8,6 +8,7 @@ import { AlertView, Buttons } from "../components/alert.view";
 
 export class LoginMediator extends BaseMediator {
     private verifiedPanel: VerifiedPanel;
+    private readonly onVerified: boolean = false;
     constructor(private layerManager: LayerManager, scene: Phaser.Scene, private world: WorldService) {
         super();
     }
@@ -59,13 +60,16 @@ export class LoginMediator extends BaseMediator {
                 const data = response.data;
                 this.world.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                this.enterGame(true);
-                // if (data.hasIdentityInfo) {
-                //     this.enterGame(data.adult);
-                // } else {
-                //     (<LoginPanel>this.mView).setInputVisible(false);
-                //     this.onShowVerified();
-                // }
+                if (!this.onVerified) {
+                    this.enterGame(!this.onVerified);
+                    return;
+                }
+                if (data.hasIdentityInfo) {
+                    this.enterGame(data.adult);
+                } else {
+                    (<LoginPanel>this.mView).setInputVisible(false);
+                    this.onShowVerified();
+                }
             }
         });
     }
