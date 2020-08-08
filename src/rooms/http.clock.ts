@@ -10,7 +10,7 @@ export class HttpClock {
     private readonly interval = 60000;
     private mTimestamp: number = 0;
     private httpService: HttpService;
-    private mEnable: boolean;
+    private mEnable: boolean = false;
     constructor(private world: WorldService) {
         this.httpService = world.httpService;
     }
