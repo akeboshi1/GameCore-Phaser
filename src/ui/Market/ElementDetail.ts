@@ -242,7 +242,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   }
 
   private onPointerUpHandler() {
-    this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
+    // this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
     this.mCounter.setBlur();
   }
 

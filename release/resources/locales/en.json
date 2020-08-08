@@ -150,5 +150,9 @@
     "fans": "Fans",
     "follow": "Follow",
     "blacklist": "BLACKLIST"
+  },
+  "friend_invite": {
+    "refused": "refused",
+    "agree": "agree"
   }
 }
