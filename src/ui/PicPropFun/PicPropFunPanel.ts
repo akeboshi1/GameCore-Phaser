@@ -102,7 +102,7 @@ export class PicPropFunPanel extends BasePanel {
         const bg = new NineSlicePatch(this.scene, 0, 0, bgwidth, bgheight, UIAtlasKey.common2Key, "bg", {
             left: 20 * this.dpr,
             top: 20 * this.dpr,
-            right: 20 * this.dpr,
+            right: 30 * this.dpr,
             bottom: 40 * this.dpr
         });
         bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);

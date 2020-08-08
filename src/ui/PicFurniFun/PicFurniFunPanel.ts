@@ -274,7 +274,7 @@ export class PicFurniFunPanel extends BasePanel {
         source = `[stroke=#333333][color=#333333]${source}[/color][/stroke]`;
         text += source + "\n";
         if (data.sellingPrice) {
-            let price = i18n.t("furni_unlock.sold");
+            let price = i18n.t("common.sold");
             price += data.sellingPrice.price + Coin.getName(data.sellingPrice.coinType);
             price = `[stroke=#333333][color=#333333]${price}[/color][/stroke]`;
             text += price + "\n";
