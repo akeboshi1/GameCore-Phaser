@@ -26,6 +26,7 @@ export class PicBusinessStreetMediator extends BaseMediator {
         if (!this.mView) {
             this.mView = new PicBusinessStreetPanel(this.scene, this.world);
             this.mView.on("querymystore", this.queryMyStoreList, this);
+            this.mView.on("queryallsaves", this.query_TAKE_ALL_STORE_SAVINGS, this);
             this.mView.on("querystreet", this.query_COMMERCIAL_STREET, this);
             this.mView.on("querymodels", this.query_INDUSTRY_MODELS, this);
             this.mView.on("querycreatestore", this.query_CREATE_STORE, this);
@@ -69,6 +70,10 @@ export class PicBusinessStreetMediator extends BaseMediator {
     private queryMyStoreList() {
         this.picStreet.query_My_STORE();
     }
+    private query_TAKE_ALL_STORE_SAVINGS() {
+        this.picStreet.query_TAKE_ALL_STORE_SAVINGS();
+    }
+
     private query_COMMERCIAL_STREET(sortedBy: string, storeType: string) {
         this.picStreet.query_COMMERCIAL_STREET(sortedBy, storeType);
     }

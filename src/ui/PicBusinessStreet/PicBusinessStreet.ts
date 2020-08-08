@@ -55,6 +55,10 @@ export class PicBusinessStreet extends PacketHandler {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_MY_STORE);
         this.connection.send(packet);
     }
+    public query_TAKE_ALL_STORE_SAVINGS() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_ALL_STORE_SAVINGS);
+        this.connection.send(packet);
+    }
 
     public query_COMMERCIAL_STREET(sortedBy: string, storeType: string) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_COMMERCIAL_STREET);

@@ -687,7 +687,7 @@ export class FurniBagPanel extends BasePanel {
     this.mCategoryScroll.removeListen();
     if (this.mSelectedItemData.length > 0) {
       const data = this.mSelectedItemData[0];
-      const title = i18n.t("furni_bag.sold");
+      const title = i18n.t("common.sold");
       const confirmHandler = new Handler(this, this.onSellPropsHandler, [this.categoryType]);
       const cancelHandler = new Handler(this, () => {
         this.mCategoryScroll.addListen();

@@ -194,7 +194,7 @@ export default class PicBusinessStreetPanel extends BasePanel {
             const hei = this.content.height - 50 * this.dpr;
             this.picMyStreetPanel = new PicBusinessMyStreetPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key);
             this.picMyStreetPanel.setHandler(new Handler(this, () => {
-
+                this.emit("queryallsaves");
             }), new Handler(this, () => {
                 this.openStoreStreetPanel();
                 this.hideMyStreetPanel();
