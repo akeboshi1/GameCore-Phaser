@@ -1,11 +1,12 @@
 import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
+import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText";
 import { op_client } from "pixelpai_proto";
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { Url } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
 
 export class Bubble extends Phaser.GameObjects.Container {
-    private mChatContent: Phaser.GameObjects.Text;
+    private mChatContent: BBCodeText;
     private mBubbleBg: DynamicNinepatch;
     private mMinWidth: number = 0;
     private mMinHeight: number = 0;
@@ -22,18 +23,25 @@ export class Bubble extends Phaser.GameObjects.Container {
     }
 
     public show(text: string, bubble: op_client.IChat_Setting) {
-        this.mChatContent = this.scene.make.text({
-            text,
-            style: {
-                x: 0,
-                y: 4 * this.mScale,
-                fontFamily: Font.DEFULT_FONT,
-                fontSize: 14 * this.mScale,
-                color: "#000000",
-                origin: { x: 0, y: 0 },
-                wordWrap: { width: 300, useAdvancedWrap: true }
-            }
-        }, false);
+        // this.mChatContent = this.scene.make.text({
+        //     text,
+        //     style: {
+        //         x: 0,
+        //         y: 4 * this.mScale,
+        //         fontFamily: Font.DEFULT_FONT,
+        //         fontSize: 14 * this.mScale,
+        //         color: "#000000",
+        //         origin: { x: 0, y: 0 },
+        //         wordWrap: { width: 300, useAdvancedWrap: true }
+        //     }
+        // }, false);
+        this.mChatContent = new BBCodeText(this.scene, 0, 4 * this.mScale, text, {
+            fontFamily: Font.DEFULT_FONT,
+            ontSize: 14 * this.mScale,
+            color: "#000000",
+            origin: { x: 0, y: 0 },
+            wrap: { width: 300, mode: "character" }
+        });
         this.add(this.mChatContent);
 
         this.mMinHeight = this.mChatContent.height + 26;
