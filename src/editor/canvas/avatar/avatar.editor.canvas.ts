@@ -77,8 +77,8 @@ export class AvatarEditorCanvas extends EditorCanvas {
         if (this.mDragonbone) this.mDragonbone.mergeParts(sets);
     }
 
-    public cancelParts(set: IAvatarSet) {
-        if (this.mDragonbone) this.mDragonbone.spliceParts(set);
+    public cancelParts(id: string) {
+        if (this.mDragonbone) this.mDragonbone.spliceParts(id);
     }
 
     public generateShopIcon(width: number, height: number): Promise<string> {

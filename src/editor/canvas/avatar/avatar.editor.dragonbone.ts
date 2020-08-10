@@ -127,8 +127,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.reloadParts();
     }
 
-    public spliceParts(set: IAvatarSet) {
-        this.removeSet(set);
+    public spliceParts(id: string) {
+        this.removeSet(id);
         this.reloadParts();
 
         // remove local texture
@@ -252,8 +252,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
     }
 
-    private removeSet(set: IAvatarSet) {
-        const idx = this.mSets.indexOf(set);
+    private removeSet(id: string) {
+        const idx = this.mSets.findIndex((x) => x.id === id);
         if (idx >= 0) {
             this.mSets.splice(idx, 1);
         }
