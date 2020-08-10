@@ -147,7 +147,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                         this.mArmatureDisplay.scaleY *= -1;
                         rt.draw(this.mArmatureDisplay, this.mArmatureDisplay.x, 30);
                         // snapshot
-                        rt.snapshotArea(0, 0, width, height, (img: HTMLImageElement) => {
+                        rt.snapshot((img: HTMLImageElement) => {
                             resolve(img.src);
                             this.mArmatureDisplay.scaleY *= -1;
 
@@ -156,7 +156,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                             // reverse parts
                             this.setBaseSets(this.DEFAULTSETS);
                             this.replaceDisplay();
-                        });
+                        }, "image/png", 1);
                     })
                     .catch(() => {
                         reject(null);
