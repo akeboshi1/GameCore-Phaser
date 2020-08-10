@@ -127,12 +127,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.reloadParts();
     }
 
-    public spliceParts(id: string) {
-        this.removeSet(id);
+    public cancelParts(sets: IAvatarSet[]) {
+        for (const set of sets) {
+            this.removeSet(set);
+        }
         this.reloadParts();
-
-        // remove local texture
-
     }
 
     public generateShopIcon(width: number, height: number): Promise<string> {
@@ -252,10 +251,21 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
     }
 
-    private removeSet(id: string) {
-        const idx = this.mSets.findIndex((x) => x.id === id);
+    private removeSet(set: IAvatarSet) {
+        const idx = this.mSets.indexOf(set);
         if (idx >= 0) {
             this.mSets.splice(idx, 1);
+        }
+
+        const dirs = ["1", "3"];
+        for (const dir of dirs) {
+            for (const part of set.parts) {
+                const imgKey = this.relativeUri(part, set.id, dir);
+                if (this.scene.textures.exists(imgKey)) {
+                    this.scene.textures.remove(imgKey);
+                    this.scene.textures.removeKey(imgKey);
+                }
+            }
         }
     }
 
