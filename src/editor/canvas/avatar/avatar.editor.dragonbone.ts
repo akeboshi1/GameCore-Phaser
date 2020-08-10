@@ -128,9 +128,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     public cancelParts(sets: IAvatarSet[]) {
-        for (const set of sets) {
-            this.removeSet(set);
-        }
+        this.removeSets(sets);
         this.reloadParts();
     }
 
@@ -251,22 +249,26 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
     }
 
-    private removeSet(set: IAvatarSet) {
-        const idx = this.mSets.findIndex((x) => x.id === set.id);
-        if (idx >= 0) {
-            this.mSets.splice(idx, 1);
-        }
+    private removeSets(sets: IAvatarSet[]) {
+        for (const set of sets) {
+            const idx = this.mSets.findIndex((x) => x.id === set.id);
+            if (idx >= 0) {
+                this.mSets.splice(idx, 1);
+            }
 
-        const dirs = ["1", "3"];
-        for (const dir of dirs) {
-            for (const part of set.parts) {
-                const imgKey = this.relativeUri(part, set.id, dir);
-                if (this.scene.textures.exists(imgKey)) {
-                    this.scene.textures.remove(imgKey);
-                    this.scene.textures.removeKey(imgKey);
+            const dirs = ["1", "3"];
+            for (const dir of dirs) {
+                for (const part of set.parts) {
+                    const imgKey = this.relativeUri(part, set.id, dir);
+                    if (this.scene.textures.exists(imgKey)) {
+                        this.scene.textures.remove(imgKey);
+                        this.scene.textures.removeKey(imgKey);
+                    }
                 }
             }
         }
+
+        this.applySets(true);
     }
 
     private reloadParts() {
