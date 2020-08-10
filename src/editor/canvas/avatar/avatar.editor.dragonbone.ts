@@ -252,7 +252,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private removeSet(set: IAvatarSet) {
-        const idx = this.mSets.indexOf(set);
+        const idx = this.mSets.findIndex((x) => x.id === set.id);
         if (idx >= 0) {
             this.mSets.splice(idx, 1);
         }
