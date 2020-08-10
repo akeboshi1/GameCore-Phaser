@@ -89,7 +89,7 @@ export default class PicBusinessMarketingPlanPanel extends BasePanel {
     }
 
     public setEquipedPlan(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
-        this.picBusinessPlanPanel.setPlanData(content.marketPlanPairs);
+        this.picBusinessPlanPanel.setPlanData(content);
     }
 
     public destroy() {
