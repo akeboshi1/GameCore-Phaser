@@ -49,14 +49,14 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
         if (cell && cell.container) {
             this.onGridSelectHandler(cell.container);
         }
-
+        this.gridtable.setT(0);
     }
     public setTypeInfo(data: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL) {
         this.curSelectData = data;
-        if (this.isFirst) {
-            this.recommendedText.text = "Recommended";
-            this.describleText.text = "This industry has great development potential.";
-            this.turnoverText.setText("Store Turnover [color=#52BC04]+10%[/color]");
+        if (data instanceof op_pkt_def.PKT_INDUSTRY) {
+            this.recommendedText.text = data.state;
+            this.describleText.text = data.des;
+            this.turnoverText.setText(data.buffDes);
         } else {
             const storeData = <op_pkt_def.PKT_ROOM_MODEL>data;
             if (storeData.price) {

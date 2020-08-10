@@ -16,7 +16,8 @@ import { WorldService } from "../../game/world.service";
 import { DynamicImage } from "../components/dynamic.image";
 
 export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
-    private describleText: BBCodeText;
+    private planBuffText: BBCodeText;
+    private describleText: Phaser.GameObjects.Text;
     private gridtable: GameGridTable;
     private dpr: number;
     private key: string;
@@ -26,6 +27,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     private curSelectData: op_pkt_def.IPKT_INDUSTRY | op_pkt_def.PKT_ROOM_MODEL;
     private curSelectItem: MarketingPlanItem;
     private world: WorldService;
+    private topbg: NineSlicePatch;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -37,7 +39,11 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     public setWorld(world: WorldService) {
         this.world = world;
     }
-    public setPlanData(marketPlanPairs: op_client.IMarketPlanPair[]) {
+    public setPlanData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
+        const marketPlanPairs = content.marketPlanPairs;
+        this.topbg.setFrame(content.industryBackground);
+        this.describleText.text = content.industryDes;
+        this.planBuffText.text = content.industryDes;
         this.gridtable.setItems(marketPlanPairs);
     }
 
@@ -53,18 +59,21 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     protected create() {
         const posy = -this.height * 0.5;
         const topWid = 253 * this.dpr, topHei = 73 * this.dpr;
-        const topbg = new NineSlicePatch(this.scene, 0, 0, topWid, topHei, this.key, "market_b", {
+        this.topbg = new NineSlicePatch(this.scene, 0, 0, topWid, topHei, this.key, "market_b", {
             left: 6 * this.dpr,
             top: 0 * this.dpr,
             right: 6 * this.dpr,
             bottom: 0 * this.dpr
         });
-        topbg.y = posy + topHei * 0.5 + 10 * this.dpr;
-        this.add(topbg);
-        this.describleText = new BBCodeText(this.scene, 0, topbg.y, "This industry has great development potential.", { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" })
-            .setOrigin(0.5);
+        this.topbg.y = posy + topHei * 0.5 + 10 * this.dpr;
+        this.add(this.topbg);
+        this.describleText = this.scene.make.text({ x: 0, y: this.topbg.y - 20 * this.dpr, text: "Your store is now at a advantage", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#ffffff" } }).setOrigin(0, 0.5);
+        this.describleText.setWordWrapWidth(200 * this.dpr);
         this.add(this.describleText);
-        this.describleText.setWrapWidth(topWid, true);
+        this.planBuffText = new BBCodeText(this.scene, 0, this.describleText.y + this.describleText.height * 0.5 + 10 * this.dpr, "Store prosperity -10%", { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" })
+            .setOrigin(0.5, 0);
+        this.add(this.planBuffText);
+        this.planBuffText.setWrapWidth(200 * this.dpr, true);
 
         const titlebg = new NineSlicePatch(this.scene, 0, 0, 135 * this.dpr, 17 * this.dpr, this.key, "subtitle", {
             left: 13 * this.dpr,
@@ -73,7 +82,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
             bottom: 0 * this.dpr
         });
         titlebg.x = 0;
-        titlebg.y = topbg.y + topbg.height * 0.5 + 40 * this.dpr;
+        titlebg.y = this.topbg.y + this.topbg.height * 0.5 + 40 * this.dpr;
         this.add(titlebg);
         const title = this.scene.make.text({ x: 0, y: titlebg.y, text: i18n.t("business_street.marketing_plan"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0.5);
         this.add(title);
