@@ -28,7 +28,7 @@ export class PicFriendMediator extends BaseMediator {
             this.mView = new PicFriendPanel(this.scene, this.world);
             this.mView.on("hide", this.onHidePanel, this);
             this.mView.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
-            this.mView.on(PicFriendEvent.UN_FOLLOW, this.onUnfollowHandler, this);
+            this.mView.on(PicFriendEvent.UNFOLLOW, this.onUnfollowHandler, this);
             this.mView.on(PicFriendEvent.FOLLOW, this.onFollowHandler, this);
             this.mView.on(PicFriendEvent.BanUser, this.onBanUserHandler, this);
             this.mView.on(PicFriendEvent.REMOVE_BAN_USER, this.onRemoveBanUserHandler, this);

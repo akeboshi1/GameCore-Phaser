@@ -36,7 +36,9 @@
     "lv": "Lv",
     "refresh": "REFRESH",
     "buy": "BUY",
-    "sold": "售出"
+    "sold": "Sell",
+    "add": "Add",
+    "remove": "Remove"
   },
   "player_info": {
     "title": "Personal Data",
@@ -149,7 +151,9 @@
     "friends": "Friends",
     "fans": "Fans",
     "follow": "Follow",
-    "blacklist": "BLACKLIST"
+    "blacklist": "BLACKLIST",
+    "search_friends_notes": "Search friends or notes",
+    "unfollow": "unfollow"
   },
   "friend_invite": {
     "refused": "refused",

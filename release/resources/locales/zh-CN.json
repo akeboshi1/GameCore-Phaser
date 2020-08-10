@@ -37,7 +37,8 @@
     "lv": "等级",
     "refresh": "刷新",
     "buy": "购买",
-    "sold": "售出"
+    "sold": "售出",
+    "add": "添加"
   },
   "player_info": {
     "title": "信息详情",

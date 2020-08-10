@@ -12,7 +12,7 @@ export namespace PicFriendEvent {
     /**
      * 取消关注
      */
-    export const UN_FOLLOW: string = "unfollow";
+    export const UNFOLLOW: string = "unfollow";
 
     /**
      * 添加黑名单
@@ -33,4 +33,14 @@ export namespace PicFriendEvent {
      * 请求好友游戏数据
      */
     export const REQ_FRIEND_GAME_DATA: string = "reqFriendGameData";
+
+    /**
+     * 请求关注好友
+     */
+    export const REQ_FOLLOW_FRIEND: string = "reqFollowFriend";
+
+    /**
+     * 从黑名单移除
+     */
+    export const REMOVE_FROM_BLACKLIST: string = "removeFromBlacklist";
 }

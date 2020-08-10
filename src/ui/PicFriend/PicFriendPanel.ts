@@ -16,6 +16,7 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { Logger } from "../../utils/log";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Phaser.GameObjects.Image;
@@ -345,9 +346,9 @@ class MainContainer extends FriendContainer {
         this.searchInput = new LabelInput(this.scene, {
             x: 0,
             y: 0,
-            width: 160,
-            height: 80,
-            placeholder: "搜索好友或备注",
+            width: 160 * this.dpr,
+            height: 30 * this.dpr,
+            placeholder: i18n.t("friendlist.search_friends_notes"),
             fontSize: 14 * this.dpr + "px",
             color: "#666666",
         });
@@ -416,23 +417,18 @@ class MainContainer extends FriendContainer {
 
 class PicFriendItem extends Container {
     public itemData: any;
-    private nameText: Text;
-    private lvText: Text;
-    private icon: Phaser.GameObjects.Image;
-    private dpr: number = 0;
-    private key: string;
+    protected nameText: Text;
+    protected lvText: Text;
+    protected addBtn: NineSliceButton;
+    protected icon: Phaser.GameObjects.Image;
+    protected dpr: number = 0;
+    protected key: string;
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         this.setSize(275 * dpr, 36 * dpr);
-        this.icon = this.scene.make.image({x: 7.44 * dpr - this.width * 0.5, key, frame: "offline_head"}).setOrigin(0, 0.5).setInteractive().on("pointerup", this.onHeadhandler, this);
-        this.nameText = this.scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * dpr, y: -this.icon.height * 0.5 + 1 * this.dpr, text: "Natasha Romanoff", style: {
-            fontSize: 10 * dpr,
-            fontFamily: Font.DEFULT_FONT,
-            color: "#6F75FF"
-        } }, false);
-        this.add([this.icon, this.nameText]);
         this.dpr = dpr;
         this.key = key;
+        this.draw();
     }
 
     public setItemData(data: FriendData, isOwner: boolean = false) {
@@ -441,8 +437,86 @@ class PicFriendItem extends Container {
         // this.lvText.text = data.user.level;
     }
 
-    private onHeadhandler() {
+    protected draw() {
+        this.icon = this.scene.make.image({x: 7.44 * this.dpr - this.width * 0.5, key: this.key, frame: "offline_head"}).setOrigin(0, 0.5).setInteractive().on("pointerup", this.onHeadhandler, this);
+        this.nameText = this.scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * this.dpr, y: -this.icon.height * 0.5 + 1 * this.dpr, text: "Natasha Romanoff", style: {
+            fontSize: 10 * this.dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#6F75FF"
+        } }, false);
+
+        this.add([this.icon, this.nameText]);
+    }
+
+    protected createAddBtn(text: string) {
+        const width = 48 * this.dpr;
+        const height = 24 * this.dpr;
+        return new NineSliceButton(this.scene, (this.width - width) * 0.5 - 18 * this.dpr, 0, width, height, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("common.add"), this.dpr, this.scale, {
+            left: 10 * this.dpr,
+            top: 10 * this.dpr,
+            right: 10 * this.dpr,
+            bottom: 10 * this.dpr
+        });
+    }
+
+    protected onHeadhandler() {
         this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.itemData);
+    }
+}
+
+class SearchItem extends PicFriendItem {
+    protected draw() {
+        super.draw();
+
+        this.addBtn = this.createAddBtn(i18n.t("common.add"));
+        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        this.add(this.addBtn);
+    }
+
+    private onAddHandler() {
+        this.emit(PicFriendEvent.REQ_FOLLOW_FRIEND, this.itemData);
+    }
+}
+
+class FollowItem extends PicFriendItem {
+    protected draw() {
+        super.draw();
+
+        this.addBtn = this.createAddBtn(i18n.t("friendlist.unfollow"));
+        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        this.add(this.addBtn);
+    }
+
+    private onAddHandler() {
+        this.emit(PicFriendEvent.UNFOLLOW, this.itemData);
+    }
+}
+
+class FansItem extends PicFriendItem {
+    protected draw() {
+        super.draw();
+
+        this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
+        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        this.add(this.addBtn);
+    }
+
+    private onAddHandler() {
+        this.emit(PicFriendEvent.FOLLOW, this.itemData);
+    }
+}
+
+class BlacklistItem extends PicFriendItem {
+    protected draw() {
+        super.draw();
+
+        this.addBtn = this.createAddBtn(i18n.t("common.remove"));
+        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler);
+        this.add(this.addBtn);
+    }
+
+    private onAddHandler() {
+        this.emit(PicFriendEvent.REMOVE_FROM_BLACKLIST);
     }
 }
 
@@ -483,10 +557,6 @@ class SubFriendContainer extends FriendContainer {
         this.backBtn = new Button(this.scene, this.key, "back");
         this.backBtn.setPosition((-this.width + this.backBtn.width) * 0.5 + 21.67 * this.dpr, (-this.height + this.backBtn.height) * 0.5 + 47 * this.dpr);
 
-        this.gridTable = this.createGrideTable(0, 18 * this.dpr, 275 * this.dpr, 400 * this.dpr, 275 * this.dpr, 36 * this.dpr, () => {
-            return new PicFriendItem(this.scene, 0, 0, this.key, this.dpr);
-        }, new Handler(this.onItemClickHandler));
-
         this.add([this.backBtn]);
     }
 
@@ -500,12 +570,14 @@ class SubFriendContainer extends FriendContainer {
 }
 
 class SearchContainer extends SubFriendContainer {
+    private searchInput: LabelInput;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene, width, height, key, dpr);
     }
 
     protected draw() {
         super.draw();
+
         const topbg = new NineSlicePatch(this.scene, 0, 0, 276 * this.dpr, 33 * this.dpr, this.key, "min_pic_bg", {
             left: 5 * this.dpr,
             top: 5 * this.dpr,
@@ -514,10 +586,25 @@ class SearchContainer extends SubFriendContainer {
         });
         topbg.setPosition(0, 73.67 * this.dpr + (topbg.height - this.height) * 0.5);
 
+        this.gridTable = this.createGrideTable(0, 18 * this.dpr, 275 * this.dpr, 400 * this.dpr, 275 * this.dpr, 36 * this.dpr, () => {
+            return new SearchItem(this.scene, 0, 0, this.key, this.dpr);
+        }, new Handler(this.onItemClickHandler));
+
+        this.searchInput = new LabelInput(this.scene, {
+            x: 0,
+            y: 0,
+            width: 160 * this.dpr,
+            height: 30 * this.dpr,
+            placeholder: i18n.t("friendlist.search_friends_notes"),
+            fontSize: 14 * this.dpr + "px",
+            color: "#666666",
+        });
+        this.searchInput.setPosition(0, topbg.y);
+
         this.gridTable.y = topbg.height;
         this.gridTable.layout();
 
-        this.add([topbg]);
+        this.add([topbg, this.searchInput]);
     }
 }
 
@@ -528,6 +615,10 @@ class BlackContainer extends SubFriendContainer {
 
     protected draw() {
         super.draw();
+
+        this.gridTable = this.createGrideTable(0, 18 * this.dpr, 275 * this.dpr, 400 * this.dpr, 275 * this.dpr, 36 * this.dpr, () => {
+            return new BlacklistItem(this.scene, 0, 0, this.key, this.dpr);
+        }, new Handler(this.onItemClickHandler));
     }
 }
 

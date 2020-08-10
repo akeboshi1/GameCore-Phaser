@@ -3,7 +3,6 @@ import { WorldService } from "../../game/world.service";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { i18n } from "../../i18n";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText";
 import { Font } from "../../utils/font";
