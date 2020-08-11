@@ -127,12 +127,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.reloadParts();
     }
 
-    public spliceParts(set: IAvatarSet) {
-        this.removeSet(set);
+    public cancelParts(sets: IAvatarSet[]) {
+        this.removeSets(sets);
         this.reloadParts();
-
-        // remove local texture
-
     }
 
     public generateShopIcon(width: number, height: number): Promise<string> {
@@ -147,16 +144,16 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                         this.mArmatureDisplay.scaleY *= -1;
                         rt.draw(this.mArmatureDisplay, this.mArmatureDisplay.x, 30);
                         // snapshot
-                        rt.snapshotArea(0, 0, width, height, (img: HTMLImageElement) => {
-                            resolve(img.src);
+                        rt.snapshot((img: HTMLImageElement) => {
                             this.mArmatureDisplay.scaleY *= -1;
-
-                            Logger.getInstance().log("ZW-- generateShopIcon: ", img);
-
                             // reverse parts
                             this.setBaseSets(this.DEFAULTSETS);
-                            this.replaceDisplay();
-                        });
+                            this.replaceDisplay()
+                                .then(() => {
+                                    resolve(img.src);
+                                    Logger.getInstance().log("ZW-- generateShopIcon: ", img);
+                                });
+                        }, "image/png", 1);
                     })
                     .catch(() => {
                         reject(null);
@@ -252,11 +249,26 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
     }
 
-    private removeSet(set: IAvatarSet) {
-        const idx = this.mSets.indexOf(set);
-        if (idx >= 0) {
-            this.mSets.splice(idx, 1);
+    private removeSets(sets: IAvatarSet[]) {
+        for (const set of sets) {
+            const idx = this.mSets.findIndex((x) => x.id === set.id);
+            if (idx >= 0) {
+                this.mSets.splice(idx, 1);
+            }
+
+            const dirs = ["1", "3"];
+            for (const dir of dirs) {
+                for (const part of set.parts) {
+                    const imgKey = this.relativeUri(part, set.id, dir);
+                    if (this.scene.textures.exists(imgKey)) {
+                        this.scene.textures.remove(imgKey);
+                        this.scene.textures.removeKey(imgKey);
+                    }
+                }
+            }
         }
+
+        this.applySets(true);
     }
 
     private reloadParts() {
