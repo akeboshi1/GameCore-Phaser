@@ -145,14 +145,14 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                         rt.draw(this.mArmatureDisplay, this.mArmatureDisplay.x, 30);
                         // snapshot
                         rt.snapshot((img: HTMLImageElement) => {
-                            resolve(img.src);
                             this.mArmatureDisplay.scaleY *= -1;
-
-                            Logger.getInstance().log("ZW-- generateShopIcon: ", img);
-
                             // reverse parts
                             this.setBaseSets(this.DEFAULTSETS);
-                            this.replaceDisplay();
+                            this.replaceDisplay()
+                                .then(() => {
+                                    resolve(img.src);
+                                    Logger.getInstance().log("ZW-- generateShopIcon: ", img);
+                                });
                         }, "image/png", 1);
                     })
                     .catch(() => {
