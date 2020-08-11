@@ -20,11 +20,11 @@ export class LoadingScene extends BasicScene {
   public preload() {
     // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
     // this.load.image("loading_bg", Url.getRes(""))
-    // let dpr = 2;
-    // if (this.mWorld) {
-    //   dpr = this.mWorld.uiRatio || 2;
-    // }
-    // this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
+    let dpr = 2;
+    if (this.mWorld) {
+      dpr = this.mWorld.uiRatio || 2;
+    }
+    this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
     this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
     // this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));
     this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
