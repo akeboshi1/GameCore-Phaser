@@ -20,13 +20,13 @@ export class LoadingScene extends BasicScene {
   public preload() {
     // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
     // this.load.image("loading_bg", Url.getRes(""))
-    let dpr = 2;
-    if (this.mWorld) {
-      dpr = this.mWorld.uiRatio || 2;
-    }
-    this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
-    this.load.atlas("loading", Url.getUIRes(dpr, "loading/loading.png"), Url.getUIRes(dpr, "loading/loading.json"));
-    this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));
+    // let dpr = 2;
+    // if (this.mWorld) {
+    //   dpr = this.mWorld.uiRatio || 2;
+    // }
+    // this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
+    this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
+    // this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));
     this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
     // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
   }
@@ -53,17 +53,14 @@ export class LoadingScene extends BasicScene {
 
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;
-    const rect = this.add.graphics();
-    rect.fillStyle(0);
-    rect.fillRect(0, 0, width, height);
     // 手动把json配置中的frames给予anims
-    this.anims.create({
-      key: "grass_anis",
-      frames: this.anims.generateFrameNames("grass", { prefix: "grass_", start: 1, end: 3, zeroPad: 1, suffix: ".png" }),
-      frameRate: 5,
-      yoyo: true,
-      repeat: -1
-    });
+    // this.anims.create({
+    //   key: "grass_anis",
+    //   frames: this.anims.generateFrameNames("grass", { prefix: "grass_", start: 1, end: 3, zeroPad: 1, suffix: ".png" }),
+    //   frameRate: 5,
+    //   yoyo: true,
+    //   repeat: -1
+    // });
 
     this.anims.create({
       key: "loading_anis",
@@ -72,12 +69,12 @@ export class LoadingScene extends BasicScene {
       repeat: -1
     });
 
-    this.grass = this.add.sprite(0, height, "grass").setOrigin(0.5, 1).setScale(this.mWorld.uiScale);
+    // this.grass = this.add.sprite(0, height, "grass").setOrigin(0.5, 1).setScale(this.mWorld.uiScale);
     // this.lo.setScale(this.mWorld.uiScale);
     this.scale.on("resize", this.checkSize, this);
-    this.grass.play("grass_anis");
+    // this.grass.play("grass_anis");
 
-    this.bg = this.add.sprite(width * 0.5, 0, "loading").setScale(this.mWorld.uiScale);
+    this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.mWorld.uiScale * this.mWorld.uiRatio * 2);
     this.bg.play("loading_anis");
     this.curtain = new Curtain(this, this.mWorld);
     // this.curtain.open().then(() => {
@@ -103,7 +100,7 @@ export class LoadingScene extends BasicScene {
       return Promise.resolve();
     }
     if (this.bg) this.bg.visible = false;
-    if (this.grass) this.grass.visible = false;
+    // if (this.grass) this.grass.visible = false;
     return this.curtain.open();
   }
 
@@ -112,7 +109,7 @@ export class LoadingScene extends BasicScene {
       return;
     }
     if (this.bg) this.bg.visible = false;
-    if (this.grass) this.grass.visible = false;
+    // if (this.grass) this.grass.visible = false;
     return this.curtain.close();
   }
 
@@ -124,7 +121,7 @@ export class LoadingScene extends BasicScene {
   public sleep() {
     if (this.curtain) {
       if (this.bg) this.bg.visible = false;
-      if (this.grass) this.grass.visible = false;
+      // if (this.grass) this.grass.visible = false;
       this.curtain.close().then(() => {
         this.scale.off("resize", this.checkSize, this);
         this.scene.sleep();
@@ -141,13 +138,14 @@ export class LoadingScene extends BasicScene {
 
   private checkSize(size: Size) {
     const { width, height } = size;
-    if (this.grass) {
-      this.grass.x = width * 0.5;
-      this.grass.y = height;
-    }
+    // if (this.grass) {
+    //   this.grass.x = width * 0.5;
+    //   this.grass.y = height;
+    // }
     if (this.bg) {
+      // this.bg.y = height * 0.5;
       // this.bg.x = 0; // + this.bg.width * this.bg.originX;
-      this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY;
+      // this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY;
     }
   }
 
