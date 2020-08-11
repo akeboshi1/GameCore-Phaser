@@ -375,8 +375,10 @@ export class FurniBagPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr);
         }
-        cellContainer.setData({ item });
-        cellContainer.setProp(item);
+        if (cellContainer.mProp !== item) {
+          cellContainer.setData({ item });
+          cellContainer.setProp(item);
+        }
         if (item) {
           if (this.isSelectedItemData(item))
             cellContainer.isSelect = true;

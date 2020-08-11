@@ -591,7 +591,7 @@ export class UiManager extends PacketHandler {
             case "picanavigate":
                 return "PicaNavigate";
         }
-        return null;
+        return tag;
     }
     private getPanelNameByAlias(alias: string) {
         switch (alias) {

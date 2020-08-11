@@ -1,83 +1,103 @@
 {
 	"frames": {
-		"icon_1": {
+		"home_more": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 124,
-				"h": 148
+				"w": 75,
+				"h": 54
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 124,
-				"h": 148
+				"w": 75,
+				"h": 54
 			},
 			"sourceSize": {
-				"w": 124,
-				"h": 148
+				"w": 75,
+				"h": 54
+			}
+		},
+		"icon_1": {
+			"frame": {
+				"x": 78,
+				"y": 1,
+				"w": 172,
+				"h": 173
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 172,
+				"h": 173
+			},
+			"sourceSize": {
+				"w": 172,
+				"h": 173
 			}
 		},
 		"icon_2": {
 			"frame": {
-				"x": 127,
-				"y": 1,
-				"w": 129,
-				"h": 142
+				"x": 1,
+				"y": 176,
+				"w": 172,
+				"h": 173
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 129,
-				"h": 142
+				"w": 172,
+				"h": 173
 			},
 			"sourceSize": {
-				"w": 129,
-				"h": 142
+				"w": 172,
+				"h": 173
 			}
 		},
 		"icon_3": {
 			"frame": {
-				"x": 258,
-				"y": 1,
-				"w": 131,
-				"h": 158
+				"x": 175,
+				"y": 176,
+				"w": 172,
+				"h": 173
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 131,
-				"h": 158
+				"w": 172,
+				"h": 173
 			},
 			"sourceSize": {
-				"w": 131,
-				"h": 158
+				"w": 172,
+				"h": 173
 			}
 		},
 		"icon_4": {
 			"frame": {
-				"x": 1,
-				"y": 161,
-				"w": 121,
-				"h": 169
+				"x": 252,
+				"y": 1,
+				"w": 172,
+				"h": 173
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 121,
-				"h": 169
+				"w": 172,
+				"h": 173
 			},
 			"sourceSize": {
-				"w": 121,
-				"h": 169
+				"w": 172,
+				"h": 173
 			}
 		}
 	},
@@ -87,8 +107,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 390,
-			"h": 331
+			"w": 425,
+			"h": 350
 		},
 		"scale": "1"
 	}

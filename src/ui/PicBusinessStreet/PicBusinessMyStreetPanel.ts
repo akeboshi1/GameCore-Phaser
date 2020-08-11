@@ -125,8 +125,10 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
                     cellContainer.setHandler(new Handler(this, this.onEnterHandler));
                     grid.add(cellContainer);
                 }
-                cellContainer.setData({ item });
-                cellContainer.setStoreData(item);
+                if (cellContainer.storeData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setStoreData(item);
+                }
                 return cellContainer;
             },
         };

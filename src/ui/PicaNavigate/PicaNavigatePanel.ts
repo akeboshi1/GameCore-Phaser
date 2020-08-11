@@ -3,8 +3,10 @@ import { WorldService } from "../../game/world.service";
 import { op_def } from "pixelpai_proto";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { i18n } from "../../i18n";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
+  private readonly key_lang: string = "key_lang";
   private mBackground: Phaser.GameObjects.Image;
   private mMapBtn: Phaser.GameObjects.Image;
   private mShopBtn: Phaser.GameObjects.Image;
@@ -93,18 +95,23 @@ export class PicaNavigatePanel extends BasePanel {
   }
   protected preload() {
     this.addAtlas(this.key, "pica_navigate/pica_navigate.png", "pica_navigate/pica_navigate.json");
+    let lang = "cn";
+    if (i18n.language !== "zh-CN") {
+      lang = "en";
+    }
+    this.addAtlas(this.key_lang, "pica_navigate/pica_navigate" + `_${lang}.png`, "pica_navigate/pica_navigate" + `_${lang}.json`);
     super.preload();
   }
 
   protected init() {
     this.mBackground = this.createImage(this.key, "bg");
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    this.mMapBtn = this.createImage(this.key, "map_btn").setInteractive();
-    this.mShopBtn = this.createImage(this.key, "shop_btn").setInteractive();
-    this.mBagBtn = this.createImage(this.key, "bag_btn").setInteractive();
-    this.mFamilyBtn = this.createImage(this.key, "family_btn").setInteractive();
-    this.mGoHomeBtn = this.createImage(this.key, "home_btn").setInteractive();
-    this.mTestBtn = this.createImage(this.key, "family_btn").setInteractive();
+    this.mMapBtn = this.createImage(this.key_lang, "map_btn").setInteractive();
+    this.mShopBtn = this.createImage(this.key_lang, "shop_btn").setInteractive();
+    this.mBagBtn = this.createImage(this.key_lang, "bag_btn").setInteractive();
+    this.mFamilyBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
+    this.mGoHomeBtn = this.createImage(this.key_lang, "home_btn").setInteractive();
+    this.mTestBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(this.key, "close_btn").setInteractive();
     const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn, this.mTestBtn];
     this.add([this.mBackground]);

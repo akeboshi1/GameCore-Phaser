@@ -317,8 +317,10 @@ export default class CharacterInfoPanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = createFun();
                 }
-                cellContainer.setData({ item });
-                cellContainer.setItemData(item, this.isOwner);
+                if (cellContainer.itemData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setItemData(item, this.isOwner);
+                }
                 return cellContainer;
             },
         };

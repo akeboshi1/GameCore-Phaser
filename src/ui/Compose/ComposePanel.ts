@@ -238,9 +238,12 @@ export class ComposePanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = new ComposeItem(scene, this.key, this.dpr);
                 }
-                cellContainer.setItemData(item);
-                if (item && this.mSelectItemData && item.id === this.mSelectItemData.id)
-                    cellContainer.select = true;
+                if (cellContainer.itemData !== item) {
+                    cellContainer.setItemData(item);
+                    if (item && this.mSelectItemData && item.id === this.mSelectItemData.id)
+                        cellContainer.select = true;
+                }
+
                 return cellContainer;
             },
         };

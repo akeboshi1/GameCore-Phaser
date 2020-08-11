@@ -35,6 +35,7 @@ export class MarketPanel extends BasePanel {
   private mSubCategorisScroll: GameGridTable;
   private mItems: MarketItem[];
   private mPreSubCategoris: op_def.IStrPair;
+  private mPreSubCategorisItem: TextButton;
   private mPropGrid: GameGridTable;
   private randomCon: Phaser.GameObjects.Container;
   private randomRefeshTime: Phaser.GameObjects.Text;
@@ -261,12 +262,15 @@ export class MarketPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new TextButton(scene, this.dpr);
         }
-        cellContainer.setText(item.value);
-        cellContainer.setData({ item });
-        if (item && this.mPreSubCategoris && this.mPreSubCategoris.key === item.key) {
-          cellContainer.changeDown();
-        } else {
-          cellContainer.changeNormal();
+        const subCategories = cellContainer.getData("item");
+        if (subCategories !== item) {
+          cellContainer.setText(item.value);
+          cellContainer.setData({ item });
+          if (item && this.mPreSubCategoris && this.mPreSubCategoris.key === item.key) {
+            cellContainer.changeDown();
+          } else {
+            cellContainer.changeNormal();
+          }
         }
         return cellContainer;
       },
@@ -342,8 +346,10 @@ export class MarketPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr);
         }
-        cellContainer.setData({ item });
-        cellContainer.setProp(item);
+        if (cellContainer.mProp !== item) {
+          cellContainer.setData({ item });
+          cellContainer.setProp(item);
+        }
         return cellContainer;
       },
     };
@@ -410,7 +416,10 @@ export class MarketPanel extends BasePanel {
     }
     this.queryProp(categories.category.key, subCategories.key);
     this.mPreSubCategoris = subCategories;
-    this.mSubCategorisScroll.refresh();
+    if (this.mPreSubCategorisItem) this.mPreSubCategorisItem.changeNormal();
+    gameobject.changeDown();
+    this.mPreSubCategorisItem = gameobject;
+
   }
 
   private queryProp(category: string, subCategory: string) {
