@@ -25,8 +25,6 @@ export interface ILauncherConfig {
     platform?: string;
     width: number;
     height: number;
-    pauseGame: Function;
-    resumeGame: Function;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;
@@ -117,20 +115,12 @@ export class Launcher {
         baseHeight: this.maxHeight,
         ui_scale: undefined,
         closeGame: null,
-        resumeGame: null,
-        pauseGame: null,
         platform: "pc",
     };
 
     constructor(config?: ILauncherConfig) {
         if (config) {
             Object.assign(this.mConfig, config);
-            this.mConfig.pauseGame = () => {
-                this.world.onBlur();
-            };
-            this.mConfig.resumeGame = () => {
-                this.world.onFocus();
-            };
         }
 
         this.intervalId = setInterval(() => {
@@ -156,6 +146,14 @@ export class Launcher {
             }
             this.disableClick();
         });
+    }
+
+    public pauseGame() {
+        if (this.world) this.world.onBlur();
+    }
+
+    public resumeGame() {
+        if (this.world) this.world.onFocus();
     }
 
     public enableClick() {
