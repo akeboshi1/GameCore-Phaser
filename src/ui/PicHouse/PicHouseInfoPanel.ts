@@ -35,7 +35,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         if (nexExp === 0) expvalue = "MAX";
         this.expvalue.setTextInfo(i18n.t("room_info.expvalue"), expvalue);
         this.popvalue.setImageInfo(i18n.t("room_info.popvalue"), this.key, this.getpopImgs());
-        this.goodvalue.setImageInfo(i18n.t("room_info.goodvalue"), this.key, this.getgoodImgs());
+        this.goodvalue.setTextInfo(i18n.t("room_info.goodvalue"), data.praise + "");
         if (data.roomType === "store") {
             this.compviness.visible = true;
             this.turnover.visible = true;

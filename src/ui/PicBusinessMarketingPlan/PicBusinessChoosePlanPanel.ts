@@ -133,12 +133,14 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
                 if (cellContainer === null) {
                     cellContainer = new PlanTypeItem(this.scene, 0, 0, capW, capH, this.key, this.dpr, this.zoom);
                 }
-                cellContainer.setData({ item });
-                cellContainer.setPlanData(item);
-                if (this.curSelectData && item === this.curSelectData) {
-                    cellContainer.select = true;
-                } else
-                    cellContainer.select = false;
+                if (cellContainer.palnData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setPlanData(item);
+                    if (this.curSelectData && item === this.curSelectData) {
+                        cellContainer.select = true;
+                    } else
+                        cellContainer.select = false;
+                }
                 return cellContainer;
             },
         };

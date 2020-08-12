@@ -3,6 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { Handler } from "../../Handler/Handler";
 import { Logger } from "../../utils/log";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
@@ -71,6 +72,11 @@ export class ActivityPanel extends BasePanel {
             }, this);
             button.setInteractive();
         }
+
+        const foldBtn = this.scene.make.image({ key: this.key, frame: "home_more" });
+        this.content.add(foldBtn);
+        foldBtn.setInteractive();
+        foldBtn.on("pointerup", this.onFoldBtnHandler, this);
         this.resize(tmpWid, height);
         super.init();
     }
@@ -83,6 +89,10 @@ export class ActivityPanel extends BasePanel {
         } else if (name === 2) {
             // this.emit("showPanel", "FriendInvite");
         }
+    }
+
+    private onFoldBtnHandler() {
+
     }
     private checkUpdateActive() {
         const arr = this.mWorld.uiManager.getActiveUIData("Activity");

@@ -6,21 +6,29 @@ import { Logger } from "../../utils/log";
 import { Handler } from "../../Handler/Handler";
 import { TextToolTips } from "../tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
+import { NineSlicePatch, Button } from "../../../lib/rexui/lib/ui/ui-components";
+import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
     private mCoinValue: ValueContainer;
     private mDiamondValue: ValueContainer;
-    private mSceneName: IconText;
-    private mSceneType: IconText;
+    private mSceneName: SceneName;
     private mCounter: IconText;
     private mStrengthValue: ProgressValue;
-    private mExpProgress: ExpProgress;
+    //  private mExpProgress: ExpProgress;
+    private playerLv: Phaser.GameObjects.Text;
     private playerIcon: Phaser.GameObjects.Image;
     private playerCon: Phaser.GameObjects.Container;
     private roomCon: Phaser.GameObjects.Container;
     private textToolTip: TextToolTips;
     private isSceneNameActive: boolean = false;
+    private praiseBtn: CheckBox;
+    private praiseImg: Phaser.GameObjects.Image;
+    private playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
+    private roomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
     }
@@ -29,7 +37,7 @@ export class PicaMainUIPanel extends BasePanel {
         super.show(param);
         if (this.mInitialized) {
             this.setInteractive();
-            this.update(param);
+            this.update(this.mShowData);
             this.checkUpdateActive();
         }
     }
@@ -44,66 +52,111 @@ export class PicaMainUIPanel extends BasePanel {
 
     preload() {
         this.addAtlas(this.key, "main_ui/main_ui.png", "main_ui/main_ui.json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
 
     addListen() {
         if (!this.mInitialized) return;
-        if (!this.mSceneName) {
+        if (!this.roomCon) {
             Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
             return;
         }
-        this.mSceneName.on("pointerup", this.onOpenRoomPanel, this);
+        this.roomCon.on("pointerup", this.onOpenRoomPanel, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        if (!this.mSceneName) {
+        if (!this.roomCon) {
             Logger.getInstance().fatal(`${PicaMainUIPanel.name}: sceneName does not exist!`);
             return;
         }
-        this.mSceneName.off("pointerup", this.onOpenRoomPanel, this);
+        this.roomCon.off("pointerup", this.onOpenRoomPanel, this);
     }
 
-    update(param: any) {
-        Object.assign(this.mShowData, param);
-        super.update(this.mShowData);
-        if (!param) {
-            return;
+    update(param) {
+        super.update();
+        let data: any;
+        if (param && param.length > 0) {
+            data = param[0];
         }
-        if (!this.mInitialized) {
-            return;
+        if (data) {
+            if (data instanceof op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+                this.playerInfo = data;
+            } else {
+                this.roomInfo = data;
+            }
         }
 
-        if (param.hasOwnProperty("level")) {
-            const level: op_pkt_def.PKT_Level = param.level;
-            const curExp = (level.currentLevelExp === undefined ? 0 : level.currentLevelExp);
-            this.mExpProgress.setLv(level.level, curExp / level.nextLevelExp);
+        if (this.playerInfo) {
+            this.updatePlayerInfo(this.playerInfo);
         }
-        if (param.hasOwnProperty("coin")) this.mCoinValue.setText(param.coin.toString());
-        if (param.hasOwnProperty("diamond")) this.mDiamondValue.setText(param.diamond.toString());
-        if (param.hasOwnProperty("energy")) {
-            const energy = param.energy;
+        if (this.roomInfo) {
+            this.updateRoomInfo(this.roomInfo);
+        }
+    }
+
+    updatePlayerInfo(player: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+        this.playerInfo = player;
+        if (!this.mInitialized) return;
+        if (player.level) {
+            const level: op_pkt_def.IPKT_Level = player.level;
+            const curExp = (level.currentLevelExp === undefined ? 0 : level.currentLevelExp);
+            this.playerLv.text = level.level + "";
+        }
+        if (player.coin) this.mCoinValue.setText(player.coin.toString());
+        if (player.diamond) this.mDiamondValue.setText(player.diamond.toString());
+        if (player.energy) {
+            const energy = player.energy;
             if (energy) {
                 this.mStrengthValue.setValue(energy.currentValue, energy.max);
             } else {
                 this.mStrengthValue.setValue(0, 100);
             }
         }
-        if (param.hasOwnProperty("name")) {
-            this.mSceneName.setText(param.name);
-            const bound = this.mSceneName.getBounds();
-            this.mSceneName.setSize(bound.width, bound.height);
-            this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(this.mSceneName.width / 2, 0, this.mSceneName.width, this.mSceneName.height), Phaser.Geom.Rectangle.Contains);
+        this.mSceneName.rightIcon.visible = this.isSelfRoom;
+    }
+
+    updateRoomInfo(room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
+        this.roomInfo = room;
+        if (!this.mInitialized) return;
+        if (room.name) {
+            this.mSceneName.setText(room.name);
+            this.roomCon.setSize(this.mSceneName.rightbound * 2, 30 * this.dpr);
+            this.roomCon.setInteractive();
             this.isSceneNameActive = true;
         }
-        if (param.hasOwnProperty("ownerName")) {
-            this.mSceneType.setText(param.ownerName);
-        }
-        if (param.hasOwnProperty("playerCount")) {
+        if (room.playerCount) {
             // TODO 多语言适配
-            this.mCounter.setText(`${param.playerCount}人`);
+            this.mCounter.setText(`${room.playerCount}人`);
+            this.mCounter.x = this.mSceneName.x + this.mSceneName.rightbound + 5 * this.dpr;
         }
+        this.praiseBtn.visible = false;
+        if (room.roomType) {
+            if (room.roomType === "room" || room.roomType === "store") {
+                this.praiseBtn.visible = true;
+            }
+            this.praiseBtn.setText(room.praise + "");
+            this.praiseBtn.selected = room.hasPraised;
+            if (room.hasPraised) {
+                this.praiseBtn.setTextColor("#8E99C1");
+                this.praiseImg.setFrame("praise_after");
+            } else {
+                this.praiseBtn.setTextColor("#ffffff");
+                this.praiseImg.setFrame("praise_before");
+            }
+        }
+        this.mSceneName.rightIcon.visible = this.isSelfRoom;
+    }
+
+    get isSelfRoom() {
+        if (!this.playerInfo || !this.roomInfo) return false;
+        const rooms = this.playerInfo.rooms;
+        const curRoomid = this.roomInfo.roomId;
+        for (const room of rooms) {
+            if (room.roomId === curRoomid) return true;
+        }
+        return false;
     }
 
     updateUIState(active?: op_pkt_def.IPKT_UI) {
@@ -128,9 +181,10 @@ export class PicaMainUIPanel extends BasePanel {
             this.mSceneName.visible = active.visible;
             if (this.isSceneNameActive) {
                 if (!active.disabled) {
-                    this.mSceneName.setInteractive(new Phaser.Geom.Rectangle(this.mSceneName.width / 2, 0, this.mSceneName.width, this.mSceneName.height), Phaser.Geom.Rectangle.Contains);
+                    this.roomCon.setSize(this.mSceneName.rightbound * 2, 30 * this.dpr);
+                    this.roomCon.setInteractive();
                 } else {
-                    this.mSceneName.removeInteractive();
+                    this.roomCon.removeInteractive();
                 }
             }
         }
@@ -139,17 +193,16 @@ export class PicaMainUIPanel extends BasePanel {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
         this.playerCon = this.scene.make.container(undefined, false);
+        this.playerCon.y = 18 * this.dpr;
         this.add(this.playerCon);
         this.mCoinValue = new ValueContainer(this.scene, this.key, "coin", this.dpr);
-        this.mCoinValue.y = 28 * this.dpr;
         this.mDiamondValue = new ValueContainer(this.scene, this.key, "diamond", this.dpr);
-        this.mDiamondValue.y = 68 * this.dpr;
+        this.mDiamondValue.y = 35 * this.dpr;
 
         const frame = this.scene.textures.getFrame(this.key, "strength_progress");
         this.mStrengthValue = new ProgressValue(this.scene, this.key, "strength_icon", this.dpr);
-        this.mStrengthValue.x = 78 * this.dpr;
-        this.mStrengthValue.y = 27 * this.dpr;
-        const ninePatch = new NinePatch(this.scene, 60 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "strength_progress", {
+        this.mStrengthValue.x = 76 * this.dpr;
+        const ninePatch = new NineSlicePatch(this.scene, 68 * this.dpr / 2, this.mStrengthValue.height / 2 - frame.height - 1 * this.dpr, 92 * this.dpr, frame.height, this.key, "strength_progress", {
             left: 8 * this.dpr,
             top: 3 * this.dpr,
             right: frame.width - 2 - 8 * this.dpr,
@@ -158,51 +211,46 @@ export class PicaMainUIPanel extends BasePanel {
         });
         this.mStrengthValue.setProgress(ninePatch, this.scale);
         this.playerIcon = this.scene.make.image({ key: this.key, frame: "head" });
-        this.playerIcon.x = -this.mStrengthValue.width * 0.5 - 18 * this.dpr;
+        this.playerIcon.x = -this.mStrengthValue.width * 0.5 - 8 * this.dpr;
         this.mStrengthValue.add(this.playerIcon);
         this.playerIcon.on("pointerup", this.onHeadHandler, this);
         this.playerIcon.setInteractive();
         this.mStrengthValue.setValue(1000, 1000);
         this.mStrengthValue.setInteractive();
         this.mStrengthValue.on("pointerup", this.onStrengthHandler, this);
-        this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
-
-        this.playerCon.add([this.mExpProgress, this.mStrengthValue, this.mCoinValue, this.mDiamondValue]);
-
+        const lvx = this.playerIcon.x + this.playerIcon.width * 0.5 - 2 * this.dpr;
+        const lvy = this.playerIcon.y + this.playerIcon.height * 0.5 - 10 * this.dpr;
+        this.playerLv = this.scene.make.text({ text: "0", x: lvx, y: lvy, style: { fontSize: 11 * this.dpr, bold: true, fontFamily: Font.DEFULT_FONT, color: "#356EE3" } }, false).setOrigin(1, 0);
+        this.playerLv.setShadow(0, 0, "#ffffff", 4);
+        this.playerLv.setStroke("#356EE3", 4);
+        this.playerLv.setShadowStroke(true);
+        this.mStrengthValue.add(this.playerLv);
+        //  this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
+        this.playerCon.add([this.mStrengthValue, this.mCoinValue, this.mDiamondValue]);
         this.roomCon = this.scene.make.container(undefined, false);
+        this.roomCon.y = 50 * this.dpr;
         this.add(this.roomCon);
         this.mSceneName = new SceneName(this.scene, this.key, "room_icon", "setting_icon", this.dpr);
         this.mSceneName.setText("");
-        this.mSceneName.x = 15 * this.dpr;
-        this.mSceneName.y = 55 * this.dpr;
-        this.mSceneType = new IconText(this.scene, this.key, "star_icon", this.dpr);
-        this.mSceneType.setText("");
-        this.mSceneType.x = 15 * this.dpr;
-        this.mSceneType.y = 80 * this.dpr;
-        this.mSceneType.setColor("#FFFF00");
-        this.mCounter = new IconText(this.scene, this.key, "counter_icon", this.dpr);
+        this.mSceneName.x = 18 * this.dpr;
+        this.mCounter = new IconText(this.scene, this.key, "home_persons", this.dpr);
         this.mCounter.setText("1人");
-        this.mCounter.x = 15 * this.dpr;
-        this.mCounter.y = 105 * this.dpr;
-        this.mCounter.setColor("#27f6ff");
-        this.textToolTip = new TextToolTips(this.scene, this.key, "tips_bg", this.dpr, this.scale);
+        this.mCounter.x = this.mSceneName.x + this.mSceneName.rightbound + 5 * this.dpr;
+        this.mCounter.y = this.mSceneName.y;
+        this.mCounter.setColor("#28D5F5");
+        this.textToolTip = new TextToolTips(this.scene, UIAtlasKey.commonKey, "tips_bg", this.dpr, this.scale);
         this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
-        this.roomCon.add([this.mSceneName, this.mSceneType, this.mCounter, this.textToolTip]);
-
-        // frame = this.scene.textures.getFrame(this.key, "health_progress");
-        // const healthValue = new ProgressValue(this.scene, this.key, "health_con", this.dpr);
-        // healthValue.x = 150 * this.dpr;
-        // healthValue.y = 27 * this.dpr;
-        // const healthNinePatch = new NinePatch(this.scene, 60 * this.dpr / 2, healthValue.height / 2 - frame.height - 1 * this.dpr, 62 * this.dpr, frame.height, this.key, "health_progress", {
-        //     left: 8 * this.dpr,
-        //     top: 3 * this.dpr,
-        //     right: frame.width - 2 - 8 * this.dpr,
-        //     bottom: frame.height - 1 - 3 * this.dpr
-        // });
-        // healthValue.setProgress(healthNinePatch, this.scale);
-        // this.add(healthValue);
-        // healthValue.setValue(200, 1000);
-
+        this.praiseBtn = new CheckBox(this.scene, this.key, "praise_before_bg", "praise_after_bg", "998");
+        this.praiseBtn.y = this.mSceneName.y + this.mSceneName.height + this.praiseBtn.height * 0.5 + 20 * this.dpr;
+        this.praiseBtn.x = 8 * this.dpr + this.praiseBtn.width * 0.5;
+        this.praiseBtn.setTextStyle({ fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT });
+        this.praiseBtn.setTextOffset(10 * this.dpr, 0);
+        this.praiseBtn.on(CoreUI.MouseEvent.Tap, this.onPraiseHandler, this);
+        this.praiseImg = this.scene.make.image({ key: this.key, frame: "praise_before" });
+        this.praiseImg.x = -10 * this.dpr;
+        this.praiseBtn.add(this.praiseImg);
+        this.roomCon.add([this.mSceneName, this.mCounter, this.praiseBtn, this.textToolTip]);
+        this.roomCon.setSize(this.mSceneName.rightbound * 2, 30 * this.dpr);
         this.resize(w, h);
         super.init();
     }
@@ -231,11 +279,16 @@ export class PicaMainUIPanel extends BasePanel {
         }
 
     }
+
+    private onPraiseHandler(pointer: any, box: CheckBox) {
+        this.emit("querypraise", box.selected);
+    }
 }
 
 class ValueContainer extends Phaser.GameObjects.Container {
     protected mText: Phaser.GameObjects.Text;
     protected mAddBtn: Phaser.GameObjects.Image;
+    protected mLeft: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, key: string, leftIcon: string, dpr: number = 1) {
         super(scene);
         this.init(key, leftIcon, dpr);
@@ -248,10 +301,10 @@ class ValueContainer extends Phaser.GameObjects.Container {
     protected init(key: string, leftIcon: string, dpr: number) {
         const bg = this.scene.make.image({
             key,
-            frame: "price_bg"
+            frame: "home_progress_bottom"
         }, false);
 
-        const left = this.scene.make.image({
+        this.mLeft = this.scene.make.image({
             key,
             frame: leftIcon,
         }, false);
@@ -264,7 +317,7 @@ class ValueContainer extends Phaser.GameObjects.Container {
                 fontSize: 14 * dpr,
                 fontFamily: Font.DEFULT_FONT
             }
-        }, false).setOrigin(1, 0);
+        }, false).setOrigin(0.5);
         this.mText.setStroke("#000000", 1 * dpr);
 
         this.mAddBtn = this.scene.make.image({
@@ -272,13 +325,11 @@ class ValueContainer extends Phaser.GameObjects.Container {
             frame: "add_btn"
         });
         this.setSize(bg.width, bg.height);
-        left.x = -this.width * this.originX + 10 * dpr;
-        this.mAddBtn.x = this.width * this.originX - this.mAddBtn.width * this.originX;
-        this.mAddBtn.y = (this.height - this.mAddBtn.height) / 2 + 2 * dpr;
-        this.mText.x = this.width / 2 - 30 * dpr;
-        this.mText.y = -(this.height - 12 * dpr) / 2;
-        this.add([bg, left, this.mText, this.mAddBtn]);
-        this.mAddBtn.visible = false;
+        this.mLeft.x = -bg.width * 0.5;
+        this.mLeft.y = bg.y + bg.height * 0.5 - this.mLeft.height * 0.5;
+        this.mAddBtn.x = this.width * this.originX - this.mAddBtn.width * this.originX - 5 * dpr;
+        this.mText.x = 10 * dpr;
+        this.add([bg, this.mLeft, this.mText, this.mAddBtn]);
     }
 
 }
@@ -299,7 +350,7 @@ class IconText extends Phaser.GameObjects.Container {
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0, 0.5);
-        this.mText.x = icon.width / 2 + 8 * dpr;
+        this.mText.x = icon.width / 2 + 4 * dpr;
         // this.mText.y = -icon.height / 2;
         this.mText.setStroke("#000000", 2 * dpr);
         this.add([icon, this.mText]);
@@ -331,11 +382,18 @@ class SceneName extends IconText {
             frame: rightFrame
         }, false);
         this.add(this.mRightIcon);
-        this.mRightIcon.y = -1 * dpr;
+        this.mRightIcon.y = 8 * dpr;
+        this.mRightIcon.x = 10 * dpr;
     }
     public setText(val: string) {
         super.setText(val);
-        this.mRightIcon.x = this.mText.x + this.mText.width + this.mRightIcon.width / 2 + 2 * this.mDpr;
+    }
+
+    public get rightbound() {
+        return this.mText.x + this.mText.width + 10 * this.mDpr;
+    }
+    public get rightIcon() {
+        return this.mRightIcon;
     }
 }
 
@@ -353,7 +411,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
         const progressH = this.height;
         this.mProgressBar = new ProgressBar(scene, dpr);
         this.mProgressBar.setSize(this.width, this.height);
-        const bg = new NinePatch(this.scene, progressW / 2, progressH / 2, progressW, progressH, key, "exp_bg", {
+        const bg = new NineSlicePatch(this.scene, progressW / 2, progressH / 2, progressW, progressH, key, "exp_bg", {
             left: 8 * dpr,
             top: 3 * dpr,
             right: frame.width - 2 - 8 * dpr,
@@ -362,13 +420,13 @@ class ExpProgress extends Phaser.GameObjects.Container {
         this.mProgressBar.setBackground(bg);
 
         frame = this.scene.textures.getFrame(key, "exp_progress");
-        const progres = new NinePatch(this.scene, progressW / 2, progressH / 2, width, frame.height, key, "exp_progress", {
+        const progres = new NineSlicePatch(this.scene, progressW / 2, progressH / 2, width, frame.height, key, "exp_progress", {
             left: 8 * dpr,
             top: 3 * dpr,
             right: frame.width - 2 - 10 * dpr,
             bottom: frame.height - 1 - 5 * dpr
         });
-        this.mProgressBar.setProgress(progres, this.x, this.y, scale);
+        this.mProgressBar.setProgress(progres, scale);
         this.mProgressBar.setRatio(0.5);
         this.mCurrentLv = scene.make.text({
             text: "Lv. 57",
@@ -405,13 +463,13 @@ class ProgressValue extends ValueContainer {
         super(scene, key, leftIcon, dpr);
     }
 
-    setProgress(progres: NinePatch, scale: number) {
-        this.mProgress.setProgress(progres, this.x + this.mProgress.x, this.y + this.mProgress.y, scale);
+    setProgress(progres: NineSlicePatch, scale: number) {
+        this.mProgress.setProgress(progres, scale);
     }
 
     setValue(val: number, maxValue: number) {
         if (this.mText) {
-            this.mText.text = val.toString();
+            this.mText.text = `${val}/${maxValue}`;
             this.mProgress.setRatio(val / maxValue);
         }
     }
@@ -424,11 +482,11 @@ class ProgressValue extends ValueContainer {
     protected init(key: string, leftIcon: string, dpr: number) {
         const bg = this.scene.make.image({
             key,
-            frame: "strength_bg"
+            frame: "home_progress_bottom"
         }, false);
         this.setSize(bg.width, bg.height);
 
-        const left = this.scene.make.image({
+        this.mLeft = this.scene.make.image({
             key,
             frame: leftIcon,
         }, false);
@@ -453,56 +511,49 @@ class ProgressValue extends ValueContainer {
             frame: "add_btn"
         });
         this.setSize(bg.width, bg.height);
-        left.x = -this.width * this.originX + 10 * dpr;
+        this.mLeft.x = -this.width * this.originX + 13 * dpr;
         this.mAddBtn.x = this.width * this.originX - 10 * dpr;
-        this.mAddBtn.y = 6 * dpr;
-        // this.mText.x = this.width / 2
         this.mText.y = (this.height - this.mText.height) / 2;
-        this.add([bg, this.mProgress, left, this.mText, this.mAddBtn]);
-        this.mAddBtn.visible = false;
+        this.add([bg, this.mProgress, this.mLeft, this.mText, this.mAddBtn]);
     }
 
 }
 
 class ProgressBar extends Phaser.GameObjects.Container {
-    private mProgress: NinePatch;
+    private mProgress: NineSlicePatch;
     private readonly dpr: number;
     private mMaskGraphics: Phaser.GameObjects.Graphics;
-    private offsetX: number = 0;
-    private offsetY: number = 0;
     private mScale: number;
+    private worldpos: Phaser.Geom.Point;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
     }
 
-    public setBackground(bg: NinePatch) {
+    public setBackground(bg: NineSlicePatch) {
         this.addAt(bg, 0);
     }
 
-    public setProgress(progress: NinePatch, offsetX: number, offsetY: number, scale: number) {
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
+    public setProgress(progress: NineSlicePatch, scale: number) {
         this.mScale = scale;
         this.mProgress = progress;
+        this.add(this.mProgress);
         this.setSize(progress.width * this.mScale, progress.height * this.mScale);
-
+        const worldpos = progress.getWorldTransformMatrix();
+        this.worldpos = new Phaser.Geom.Point(worldpos.tx, worldpos.ty);
         this.mMaskGraphics = this.scene.make.graphics(undefined, false);
         this.mMaskGraphics.fillStyle(0xFF9900);
-        this.mMaskGraphics.fillRoundedRect(0, progress.y * this.mScale - progress.height * this.mScale / 2, this.width, progress.height, 10);
-        this.add(this.mProgress);
+        this.mMaskGraphics.fillRect(0, 0, this.width, this.height + 4 * this.dpr);
         this.mProgress.mask = new Phaser.Display.Masks.GeometryMask(this.scene, this.mMaskGraphics);
-        this.mMaskGraphics.x = offsetX * scale;
-        this.mMaskGraphics.y = offsetY * scale;
+        this.mMaskGraphics.y = worldpos.ty + this.height + 2 * this.dpr;
+        this.mMaskGraphics.x = worldpos.tx;
     }
 
     public setRatio(ratio: number) {
         if (!this.mMaskGraphics) {
             return;
         }
-        this.mMaskGraphics.x = ((this.width * ratio) - this.width + this.offsetX);
-        // setInterval(() => {
-        //     this.mMaskGraphics.x += 1 * this.dpr;
-        // }, 100);
+        this.mMaskGraphics.x = this.worldpos.x + 4 * this.dpr - this.mProgress.width * 0.5 + ((this.width * ratio) - this.width);
+
     }
 }

@@ -1,0 +1,115 @@
+{
+	"frames": {
+		"bag_btn": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 179,
+				"h": 174
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 179,
+				"h": 174
+			},
+			"sourceSize": {
+				"w": 179,
+				"h": 174
+			}
+		},
+		"family_btn": {
+			"frame": {
+				"x": 182,
+				"y": 1,
+				"w": 177,
+				"h": 173
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 177,
+				"h": 173
+			},
+			"sourceSize": {
+				"w": 177,
+				"h": 173
+			}
+		},
+		"home_btn": {
+			"frame": {
+				"x": 182,
+				"y": 176,
+				"w": 171,
+				"h": 155
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 171,
+				"h": 155
+			},
+			"sourceSize": {
+				"w": 171,
+				"h": 155
+			}
+		},
+		"map_btn": {
+			"frame": {
+				"x": 361,
+				"y": 1,
+				"w": 140,
+				"h": 173
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 140,
+				"h": 173
+			},
+			"sourceSize": {
+				"w": 140,
+				"h": 173
+			}
+		},
+		"shop_btn": {
+			"frame": {
+				"x": 355,
+				"y": 176,
+				"w": 135,
+				"h": 174
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 135,
+				"h": 174
+			},
+			"sourceSize": {
+				"w": 135,
+				"h": 174
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet",
+		"format": "RGBA8888",
+		"size": {
+			"w": 502,
+			"h": 351
+		},
+		"scale": "1"
+	}
+}

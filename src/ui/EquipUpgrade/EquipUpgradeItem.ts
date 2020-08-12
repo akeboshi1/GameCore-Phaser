@@ -167,8 +167,10 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
                     cellContainer.setSize(capW, capH);
                     cellContainer.setChildPosition();
                 }
-                cellContainer.setData({ item });
-                cellContainer.setItemData(item, index);
+                if (cellContainer.itemData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setItemData(item, index);
+                }
                 if (this.curSelectItemData) {
                     if (this.curSelectItemData === item) {
                         cellContainer.setSelect(true);

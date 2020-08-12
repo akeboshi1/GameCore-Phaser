@@ -224,8 +224,10 @@ export class MineCarPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new PackageItem(scene, this.key, this.dpr);
         }
-        cellContainer.setData({ item });
-        cellContainer.setProp(item);
+        if (cellContainer.itemData !== item) {
+          cellContainer.setData({ item });
+          cellContainer.setProp(item);
+        }
         return cellContainer;
       },
     };
@@ -421,9 +423,9 @@ export class MineCarPanel extends BasePanel {
 }
 
 class PackageItem extends Phaser.GameObjects.Container {
+  public itemData: IPackageItem;
   private mItemImage: DynamicImage;
   private mCounter: Phaser.GameObjects.Text;
-  private mItem: IPackageItem;
   private mSelectedIcon: Phaser.GameObjects.Image;
 
   constructor(scene: Phaser.Scene, key: string, dpr: number) {
@@ -471,7 +473,7 @@ class PackageItem extends Phaser.GameObjects.Container {
   }
 
   setProp(data: IPackageItem) {
-    this.mItem = data;
+    this.itemData = data;
     const packageItem = data.item;
     if (!data || !packageItem) {
       this.mItemImage.visible = false;
@@ -479,7 +481,7 @@ class PackageItem extends Phaser.GameObjects.Container {
       this.mSelectedIcon.visible = false;
       return;
     }
-    if (this.mItem) {
+    if (this.itemData) {
       this.mItemImage.load(Url.getOsdRes(packageItem.display.texturePath), this, this.onLoadCompleteHandler);
       this.mItemImage.visible = true;
       if (packageItem.count > 1) {
@@ -488,21 +490,21 @@ class PackageItem extends Phaser.GameObjects.Container {
       } else {
         this.mCounter.visible = false;
       }
-      this.mSelectedIcon.visible = (this.mItem.selectVisible ? true : false);
+      this.mSelectedIcon.visible = (this.itemData.selectVisible ? true : false);
       this.setSelected();
     }
   }
 
   switchSelect() {
-    if (!this.mItem.item) {
+    if (!this.itemData.item) {
       return;
     }
-    this.mItem.selected = !this.mItem.selected;
+    this.itemData.selected = !this.itemData.selected;
     this.setSelected();
   }
 
   get item(): IPackageItem {
-    return this.mItem;
+    return this.itemData;
   }
 
   private onLoadCompleteHandler() {
@@ -513,7 +515,7 @@ class PackageItem extends Phaser.GameObjects.Container {
   }
 
   private setSelected() {
-    if (this.mItem.selected) {
+    if (this.itemData.selected) {
       this.mSelectedIcon.setFrame("icon_selected.png");
     } else {
       this.mSelectedIcon.setFrame("icon_normal.png");

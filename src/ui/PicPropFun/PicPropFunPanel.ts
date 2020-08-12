@@ -278,7 +278,7 @@ export class PicPropFunPanel extends BasePanel {
     }
 
     private calcuSliderValue(value) {
-        const allcount = this.itemData ? this.itemData.count : 0;
+        const allcount = this.itemData ? this.itemData.count : 1;
         let count = 0;
         const line = 10;
         const num = 4;
@@ -307,6 +307,7 @@ export class PicPropFunPanel extends BasePanel {
             }
         }
         count = Math.round(count);
+        if (count < 1) count = 1;
         return count;
     }
 }

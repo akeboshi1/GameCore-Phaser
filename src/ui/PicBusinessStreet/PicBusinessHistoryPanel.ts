@@ -89,8 +89,10 @@ export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicHistoryItem(this.scene, 0, 0, capW, capH, this.key, this.key2, this.dpr, this.zoom);
                     grid.add(cellContainer);
                 }
-                cellContainer.setData({ item });
-                cellContainer.setStoreData(item);
+                if (cellContainer.storeData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setStoreData(item);
+                }
                 return cellContainer;
             },
         };

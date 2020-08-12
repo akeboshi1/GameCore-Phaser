@@ -7,6 +7,7 @@ import { PicaMainUI } from "./PicaMainUI";
 
 export class PicaMainUIMediator extends BaseMediator {
     public static NAME: string = "PicaMainUIMediator";
+    protected mView: PicaMainUIPanel;
     private world: WorldService;
     private mainUI: PicaMainUI;
     private mPlayerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
@@ -28,6 +29,7 @@ export class PicaMainUIMediator extends BaseMediator {
             this.mView = new PicaMainUIPanel(this.scene, this.world);
             this.mView.on("showPanel", this.onShowPanelHandler, this);
             this.mView.on("openroompanel", this.onOpenRoomHandler, this);
+            this.mView.on("querypraise", this.onQuery_PRAISE_ROOM, this);
         }
         this.mView.show(param);
         this.layerManager.addToUILayer(this.mView);
@@ -62,18 +64,15 @@ export class PicaMainUIMediator extends BaseMediator {
         const uimanager = this.world.uiManager;
         uimanager.showMed("PicHouse");
     }
-    private onUpdateHandler(data: any) {
-        this.show(data);
-    }
 
     private onUpdatePlayerHandler(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
-        this.onUpdateHandler(content);
         this.mPlayerInfo = content;
+        this.mView.updatePlayerInfo(content);
     }
 
     private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
-        this.onUpdateHandler(content);
         this.mRoomInfo = content;
+        this.mView.updateRoomInfo(content);
     }
 
     private onShowPanelHandler(panel: string, data?: any) {
@@ -84,6 +83,12 @@ export class PicaMainUIMediator extends BaseMediator {
         if (data)
             uiManager.showMed(panel, data);
         else uiManager.showMed(panel);
+    }
+
+    private onQuery_PRAISE_ROOM(praise: boolean) {
+        if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
+        const roomid = this.mRoomInfo.roomId;
+        this.mainUI.query_PRAISE_ROOM(roomid, praise);
     }
 
 }

@@ -317,8 +317,10 @@ export default class CharacterInfoPanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = createFun();
                 }
-                cellContainer.setData({ item });
-                cellContainer.setItemData(item, this.isOwner);
+                if (cellContainer.itemData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setItemData(item, this.isOwner);
+                }
                 return cellContainer;
             },
         };
@@ -381,7 +383,8 @@ export default class CharacterInfoPanel extends BasePanel {
             this.mSkillGrideTable.setItems([]);
             this.mSkillGrideTable.visible = false;
         } else if (optionType === CharacterOptionType.Badge) {
-
+            this.mAttrPanel.visible = false;
+            this.mSkillGrideTable.visible = false;
         }
     }
 

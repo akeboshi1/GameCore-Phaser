@@ -132,8 +132,10 @@ export class PicBusinessRankingDetailPanel extends Phaser.GameObjects.Container 
                     cellContainer = new PicRankingDetailItem(this.scene, 0, 0, capW, capH, this.key, this.key2, this.dpr, this.zoom);
                     grid.add(cellContainer);
                 }
-                cellContainer.setData({ item });
-                cellContainer.setDetailData(item);
+                if (cellContainer.detailData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setDetailData(item);
+                }
                 return cellContainer;
             },
         };
