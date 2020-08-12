@@ -22,7 +22,6 @@ export class ComposeMediator extends BaseMediator {
             this.compose.on("formulaDetial", this.onRetFormulaDetial, this);
             this.compose.on("showopen", this.onShowPanel, this);
             this.compose.register();
-            Logger.getInstance().log("qwerqwerqwerqwerrrr+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
     }
 
