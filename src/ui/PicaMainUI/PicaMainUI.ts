@@ -43,7 +43,7 @@ export class PicaMainUI extends PacketHandler {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_PRAISE_ROOM);
         const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_PRAISE_ROOM = packet.content;
         content.roomId = roomid;
-        // content
+        content.praise = praise;
         this.connection.send(packet);
     }
     private onUpdatePlayerInfo(packet: PBpacket) {

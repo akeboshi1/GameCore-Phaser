@@ -12,15 +12,11 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   private tween: Phaser.Tweens.Tween;
   private mMinNum: number = 1;
   private mMaxNum: number = 99;
-  constructor(scene: Phaser.Scene, key: string, x?: number, y?: number, dpr: number = 1) {
+  private zoom: number = 1;
+  private mRectangle: Phaser.Geom.Rectangle;
+  constructor(scene: Phaser.Scene, key: string, x?: number, y?: number, dpr: number = 1, zoom: number = 1) {
     super(scene, x, y);
-
-    // this.mBackground = new Phaser.GameObjects.Image(this.scene, 0, 0, 200, 144, key, "input_bg", {
-    //   left: 50,
-    //   top: 48,
-    //   right: 50,
-    //   bottom: 48
-    // });
+    this.zoom = zoom;
     this.mBackground = this.scene.make.image({
       key,
       frame: "input_bg"
@@ -38,13 +34,6 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     }, false).setInteractive();
     this.mIncreaseBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mIncreaseBtn.x = (this.mBackground.displayWidth + this.mIncreaseBtn.displayWidth) / 2 + 7 * dpr;
-    // this.mInputText = new InputText(this.scene, 0, 0, 200, 80, {
-    //   fontSize: "46px",
-    //   color: "#666666",
-    //   align: "center",
-    //   type: "number",
-    //   text: 1
-    // }).setOrigin(0.5);
     this.mLabelInput = new LabelInput(this.scene, {
       x: 0,
       y: 0,
@@ -58,6 +47,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mLabelInput.setOrigin(0.5);
     this.mLabelInput.setText("1");
     this.mLabelInput.on("textchange", this.onTextChangeHandler, this);
+    this.mLabelInput.on("blur", this.onTextBlurHandler, this);
     this.add([this.mBackground, this.mLabelInput, this.mReduceBtn, this.mIncreaseBtn]);
     this.setSize(this.mIncreaseBtn.displayWidth + this.mReduceBtn.displayWidth + this.mBackground.displayWidth + 14 * dpr, this.mBackground.displayHeight);
   }
@@ -78,6 +68,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mIncreaseBtn.on("pointerdown", this.onIncreaseDownHandler, this);
     this.mReduceBtn.on("pointerup", this.onReduceHandler, this);
     this.mReduceBtn.on("pointerdown", this.onReduceDownHandler, this);
+    this.scene.input.on("pointerdown", this.pointerDownHandler, this);
   }
 
   removeActionListener() {
@@ -85,15 +76,14 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mIncreaseBtn.off("pointerdown", this.onIncreaseDownHandler, this);
     this.mReduceBtn.off("pointerup", this.onReduceHandler, this);
     this.mReduceBtn.off("pointerdown", this.onReduceDownHandler, this);
+    this.scene.input.off("pointerdown", this.pointerDownHandler, this);
   }
 
   setCounter(num: number) {
-    if (isNaN(num)) {
+    if (isNaN(num) || num < 0) {
       num = 0;
     }
-    if (num < this.mMinNum) {
-      num = this.mMinNum;
-    } else if (num > this.mMaxNum) {
+    if (num > this.mMaxNum) {
       num = this.mMaxNum;
     }
     this.mLabelInput.setText(num.toString());
@@ -110,7 +100,9 @@ export class NumberCounter extends Phaser.GameObjects.Container {
 
   private onReduceHandler() {
     let num = parseInt(this.mLabelInput.text, 10);
-    this.setCounter(--num);
+    num--;
+    if (num < this.mMinNum) num = this.mMinNum;
+    this.setCounter(num);
     this.clearTween();
   }
 
@@ -122,6 +114,17 @@ export class NumberCounter extends Phaser.GameObjects.Container {
 
   private onTextChangeHandler() {
     this.setCounter(parseInt(this.mLabelInput.text, 10));
+  }
+
+  private onTextBlurHandler() {
+    let num = parseInt(this.mLabelInput.text, 0);
+    if (num < this.mMinNum) {
+      num = this.mMinNum;
+    } else if (num > this.mMaxNum) {
+      num = this.mMaxNum;
+    }
+    this.mLabelInput.setText(num.toString());
+    this.emit("change", num);
   }
 
   private onReduceDownHandler() {
@@ -156,5 +159,31 @@ export class NumberCounter extends Phaser.GameObjects.Container {
       this.tween.stop();
       this.tween = undefined;
     }
+  }
+  private pointerDownHandler(pointer: Phaser.Input.Pointer) {
+
+    if (!this.checkPointerInBounds(this, pointer)) {
+      this.mLabelInput.setBlur();
+    }
+  }
+  private checkPointerInBounds(gameObject: any, pointer: Phaser.Input.Pointer, isCell: Boolean = false): boolean {
+    if (!this.mRectangle) {
+      this.mRectangle = new Phaser.Geom.Rectangle(0, 0, 0, 0);
+    }
+    const zoom = this.zoom ? this.zoom : 1;
+    this.mRectangle.left = -gameObject.width / 2;
+    this.mRectangle.right = gameObject.width / 2;
+    this.mRectangle.top = -gameObject.height / 2;
+    this.mRectangle.bottom = gameObject.height / 2;
+    if (pointer) {
+      const worldMatrix: Phaser.GameObjects.Components.TransformMatrix = gameObject.getWorldTransformMatrix();
+      const x: number = (pointer.x - worldMatrix.tx) / zoom;
+      const y: number = (pointer.y - worldMatrix.ty) / zoom;
+      if (this.mRectangle.left <= x && this.mRectangle.right >= x && this.mRectangle.top <= y && this.mRectangle.bottom >= y) {
+        return true;
+      }
+      return false;
+    }
+    return false;
   }
 }

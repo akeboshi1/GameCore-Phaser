@@ -31,7 +31,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.dpr = dpr;
 
     this.setPosition(0, 0);
-    this.mCounter = new NumberCounter(this.scene, $key, 360, 700, this.dpr);
+    this.mCounter = new NumberCounter(this.scene, $key, 360, 700, this.dpr, world.uiScale);
     const frame = this.scene.textures.getFrame(this.key, "yellow_button_normal");
     let w = 60;
     let h = 65;

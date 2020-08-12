@@ -120,10 +120,90 @@
 				"h": 32
 			}
 		},
-		"room_icon": {
+		"praise_after": {
+			"frame": {
+				"x": 23,
+				"y": 57,
+				"w": 24,
+				"h": 26
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 24,
+				"h": 26
+			},
+			"sourceSize": {
+				"w": 24,
+				"h": 26
+			}
+		},
+		"praise_after_bg": {
+			"frame": {
+				"x": 1,
+				"y": 123,
+				"w": 113,
+				"h": 42
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 113,
+				"h": 42
+			},
+			"sourceSize": {
+				"w": 113,
+				"h": 42
+			}
+		},
+		"praise_before": {
+			"frame": {
+				"x": 49,
+				"y": 57,
+				"w": 20,
+				"h": 22
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 20,
+				"h": 22
+			},
+			"sourceSize": {
+				"w": 20,
+				"h": 22
+			}
+		},
+		"praise_before_bg": {
 			"frame": {
 				"x": 181,
 				"y": 1,
+				"w": 113,
+				"h": 42
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 113,
+				"h": 42
+			},
+			"sourceSize": {
+				"w": 113,
+				"h": 42
+			}
+		},
+		"room_icon": {
+			"frame": {
+				"x": 181,
+				"y": 45,
 				"w": 50,
 				"h": 40
 			},
@@ -142,8 +222,8 @@
 		},
 		"setting_icon": {
 			"frame": {
-				"x": 181,
-				"y": 43,
+				"x": 233,
+				"y": 45,
 				"w": 17,
 				"h": 17
 			},
@@ -162,8 +242,8 @@
 		},
 		"strength_icon": {
 			"frame": {
-				"x": 200,
-				"y": 43,
+				"x": 252,
+				"y": 45,
 				"w": 16,
 				"h": 19
 			},
@@ -182,8 +262,8 @@
 		},
 		"strength_progress": {
 			"frame": {
-				"x": 218,
-				"y": 43,
+				"x": 270,
+				"y": 45,
 				"w": 20,
 				"h": 23
 			},
@@ -207,8 +287,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 239,
-			"h": 122
+			"w": 295,
+			"h": 166
 		},
 		"scale": "1"
 	}

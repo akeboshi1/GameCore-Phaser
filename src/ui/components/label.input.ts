@@ -51,6 +51,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         }
         this.mInputText = new InputText(this.scene, Object.assign({}, this.mInputConfig));
         this.mInputText.on("textchange", this.onTextChangeHandler, this);
+        this.mInputText.on("blur", this.onTextBlurHandler, this);
         this.mInputText.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
@@ -90,6 +91,10 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
     private onTextChangeHandler(input, event) {
         this.emit("textchange");
+    }
+
+    private onTextBlurHandler() {
+        this.emit("blur");
     }
 
     get object(): Phaser.GameObjects.Text | InputText {
