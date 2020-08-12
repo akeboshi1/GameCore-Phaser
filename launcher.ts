@@ -25,6 +25,8 @@ export interface ILauncherConfig {
     platform?: string;
     width: number;
     height: number;
+    pauseGame: Function;
+    resumeGame: Function;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;
@@ -49,7 +51,8 @@ export interface GameMain {
     createGame(): void;
     setGameConfig(config): void;
     updatePalette(palett): void;
-
+    onFocus();
+    onBlur();
     updateMoss(moss): void;
 
     destroy(): void;
@@ -114,12 +117,20 @@ export class Launcher {
         baseHeight: this.maxHeight,
         ui_scale: undefined,
         closeGame: null,
+        resumeGame: null,
+        pauseGame: null,
         platform: "pc",
     };
 
     constructor(config?: ILauncherConfig) {
         if (config) {
             Object.assign(this.mConfig, config);
+            this.mConfig.pauseGame = () => {
+                this.world.onBlur();
+            };
+            this.mConfig.resumeGame = () => {
+                this.world.onFocus();
+            };
         }
 
         this.intervalId = setInterval(() => {
@@ -140,7 +151,6 @@ export class Launcher {
 
         import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
             this.world = new game.World(this.config, this.mCompleteFunc);
-
             if (config.isEditor) {
                 this.world.createGame();
             }
@@ -218,4 +228,4 @@ export class Launcher {
     }
 }
 
-export * from "./src/editor"// 待launcher模块分离后  这行代码写在game-core中
+export * from "./src/editor";
