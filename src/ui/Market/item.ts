@@ -22,44 +22,44 @@ export class MarketItem extends Phaser.GameObjects.Container {
     }, false).setOrigin(0);
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mBorder = this.scene.make.image({
-      x: 3 * dpr ,
-      y: 3 * dpr ,
+      x: 3 * dpr,
+      y: 3 * dpr,
       key: "market",
       frame: "item_border"
     }, false).setOrigin(0);
     this.mBorder.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = this.dpr ;
+    this.mPropImage.scale = this.dpr;
 
     this.mNickName = this.scene.make.text({
-      x: 62 * this.dpr ,
-      y: 6 * this.dpr ,
+      x: 62 * this.dpr,
+      y: 6 * this.dpr,
       style: {
-        fontSize: 13 * this.dpr ,
+        fontSize: 13 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#3399cc"
       }
     }, false);
 
     this.mCoinIcon = this.scene.make.image({
-      x: 45 * this.dpr ,
-      y: 40 * this.dpr ,
+      x: 45 * this.dpr,
+      y: 40 * this.dpr,
       key: "market",
       frame: "tuding_icon"
     }, false).setOrigin(0);
 
     const priceBg = this.scene.make.image({
-      x: 62 * this.dpr ,
-      y: 39 * this.dpr ,
+      x: 62 * this.dpr,
+      y: 39 * this.dpr,
       key: "market",
       frame: "price_border"
     }, false).setOrigin(0);
 
     this.mPriceText = this.scene.make.text({
-      x: 92 * this.dpr ,
-      y: 49 * this.dpr ,
+      x: 92 * this.dpr,
+      y: 49 * this.dpr,
       style: {
-        fontSize: 13 * this.dpr ,
+        fontSize: 13 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
         color: "#996600"
       }
@@ -73,7 +73,6 @@ export class MarketItem extends Phaser.GameObjects.Container {
     }, false).setOrigin(0);
 
     this.add([this.mBackground, this.mBorder, this.mPropImage, this.mNickName, priceBg, this.mCoinIcon, this.mPriceText]);
-
     this.setSize(this.mBackground.displayWidth, this.mBackground.displayHeight);
 
   }

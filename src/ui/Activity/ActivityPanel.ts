@@ -85,9 +85,9 @@ export class ActivityPanel extends BasePanel {
         if (name === 4) {
             this.emit("showPanel", "Task");
         } else if (name === 3) {
-            this.emit("showPanel", "PicFriend");
+            //  this.emit("showPanel", "PicFriend");
         } else if (name === 2) {
-            this.emit("showPanel", "FriendInvite");
+            //  this.emit("showPanel", "FriendInvite");
         }
     }
 
