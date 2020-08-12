@@ -383,7 +383,8 @@ export default class CharacterInfoPanel extends BasePanel {
             this.mSkillGrideTable.setItems([]);
             this.mSkillGrideTable.visible = false;
         } else if (optionType === CharacterOptionType.Badge) {
-
+            this.mAttrPanel.visible = false;
+            this.mSkillGrideTable.visible = false;
         }
     }
 

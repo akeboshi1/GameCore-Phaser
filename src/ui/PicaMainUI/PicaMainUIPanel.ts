@@ -218,9 +218,12 @@ export class PicaMainUIPanel extends BasePanel {
         this.mStrengthValue.setValue(1000, 1000);
         this.mStrengthValue.setInteractive();
         this.mStrengthValue.on("pointerup", this.onStrengthHandler, this);
-        const lvx = this.playerIcon.x + this.playerIcon.width * 0.5;
-        const lvy = this.playerIcon.y + this.playerIcon.height * 0.5;
-        this.playerLv = this.scene.make.text({ text: "0", x: lvx, y: lvy, style: { fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#356EE3" } }, false).setOrigin(1, 0);
+        const lvx = this.playerIcon.x + this.playerIcon.width * 0.5 - 2 * this.dpr;
+        const lvy = this.playerIcon.y + this.playerIcon.height * 0.5 - 10 * this.dpr;
+        this.playerLv = this.scene.make.text({ text: "0", x: lvx, y: lvy, style: { fontSize: 11 * this.dpr, bold: true, fontFamily: Font.DEFULT_FONT, color: "#356EE3" } }, false).setOrigin(1, 0);
+        this.playerLv.setShadow(0, 0, "#ffffff", 4);
+        this.playerLv.setStroke("#356EE3", 4);
+        this.playerLv.setShadowStroke(true);
         this.mStrengthValue.add(this.playerLv);
         //  this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
         this.playerCon.add([this.mStrengthValue, this.mCoinValue, this.mDiamondValue]);

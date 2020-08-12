@@ -25,6 +25,7 @@ export class ComposePanel extends BasePanel {
     private materialCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
     private mSelectItemData: op_pkt_def.IPKT_Skill;
+    private mSelectItem: ComposeItem;
     private materialGameScroll: GameScroller;
     private makeBtn: NineSliceButton;
     private materialTipsCon: Phaser.GameObjects.Container;
@@ -299,7 +300,8 @@ export class ComposePanel extends BasePanel {
         item.select = true;
         this.mSelectItemData = item.itemData;
         this.makeBtn.enable = data.active && data.qualified;
-        this.mGrideTable.refresh();
+        if (this.mSelectItem) this.mSelectItem.select = false;
+        this.mSelectItem = item;
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
