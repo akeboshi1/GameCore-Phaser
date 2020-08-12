@@ -207,7 +207,9 @@ class FriendContainer extends Container {
                 if (item.type === FriendChannel.Null) {
                     cell.setHeight(10 * this.dpr);
                 } else {
-                    cell.setHeight(capH);
+                    if (cell.height !== capH) {
+                        cell.setHeight(capH);
+                    }
                 }
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item);
@@ -286,6 +288,7 @@ class MainContainer extends FriendContainer {
         for (const firend of data) {
             result.push({ type: FriendChannel.AddFriend, id: "0", nickname: firend.nickname || firend.followed_user.nickname});
         }
+        this.friendDatas.set(type, result);
         this.sortByName(result);
         let title = "";
         let friendType = "";
@@ -293,7 +296,7 @@ class MainContainer extends FriendContainer {
             case FriendChannel.Friends:
                 title = i18n.t("friendlist.title");
                 friendType = i18n.t("friendlist.friends");
-                const menu = [{ type: FriendChannel.FansButton }, { type: FriendChannel.NewFriendButton }, { type: FriendChannel.Fans }, { type: FriendChannel.Null }];
+                const menu = [{ type: FriendChannel.FansButton }, { type: FriendChannel.NewFriendButton }, { type: FriendChannel.BlackButton }, { type: FriendChannel.Null }];
                 result = menu.concat(result);
                 break;
             case FriendChannel.Fans:
@@ -308,7 +311,6 @@ class MainContainer extends FriendContainer {
                 title = i18n.t("friendlist.blacklist");
                 break;
         }
-        this.friendDatas.set(type, result);
         this.showingFriends = result;
         // this.friendList.setItems(this.showingFriends);
         this.friendTabel.setItems(this.showingFriends);
@@ -485,7 +487,8 @@ class PicFriendItem extends Container {
 
     public setItemData(data: FriendData) {
         this.itemData = data;
-        this.icon.visible = true;
+        this.clear();
+        // TODO 根据不同type选择不用renderer
         switch(data.type) {
             case FriendChannel.FansButton:
                 this.icon.setFrame("new_fans");
@@ -500,13 +503,13 @@ class PicFriendItem extends Container {
                 this.nameText.text = "Add Buddy";
                 break;
             case FriendChannel.Null:
-                this.icon.visible = false;
-                this.nameText.text = "";
-                break;
+                return;
             default:
+                this.icon.setFrame(data.online ? "online_head" : "offline_head");
                 this.nameText.text = data.nickname;
                 break;
-        }
+            }
+        this.add([this.icon, this.nameText]);
         // this.lvText.text = data.user.level;
     }
 
@@ -534,6 +537,17 @@ class PicFriendItem extends Container {
 
     protected onHeadhandler() {
         this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.itemData);
+    }
+
+    private showFansItem(data: any) {
+        if (this.addBtn) {
+            this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
+        }
+        this.add(this.addBtn);
+    }
+
+    private clear() {
+        this.removeAll(false);
     }
 }
 
@@ -673,7 +687,7 @@ class SearchContainer extends SubFriendContainer {
             width: 160 * this.dpr,
             height: 30 * this.dpr,
             placeholder: i18n.t("friendlist.search_friends_notes"),
-            fontSize: 14 * this.dpr + "px",
+            fontSize: 12 * this.dpr + "px",
             color: "#666666",
         }).setOrigin(0, 0.5);
         this.searchInput.setPosition(0, topbg.y);
