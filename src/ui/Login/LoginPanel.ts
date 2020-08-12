@@ -113,7 +113,7 @@ export class LoginPanel extends BasePanel {
             maxLength: 4,
             placeholder: "验证码",
             color: "#717171",
-            text: "2992",
+            text: "",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
         const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height);

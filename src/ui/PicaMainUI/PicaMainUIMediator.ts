@@ -33,6 +33,7 @@ export class PicaMainUIMediator extends BaseMediator {
         }
         this.mView.show(param);
         this.layerManager.addToUILayer(this.mView);
+        this.onUpdateHandler();
     }
 
     destroy() {
@@ -65,14 +66,20 @@ export class PicaMainUIMediator extends BaseMediator {
         uimanager.showMed("PicHouse");
     }
 
+    private onUpdateHandler() {
+        if (this.mPlayerInfo) this.mView.updatePlayerInfo(this.mPlayerInfo);
+        if (this.mRoomInfo) this.mView.updateRoomInfo(this.mRoomInfo);
+    }
     private onUpdatePlayerHandler(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
         this.mPlayerInfo = content;
-        this.mView.updatePlayerInfo(content);
+        if (this.mView)
+            this.mView.updatePlayerInfo(content);
     }
 
     private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
         this.mRoomInfo = content;
-        this.mView.updateRoomInfo(content);
+        if (this.mView)
+            this.mView.updateRoomInfo(content);
     }
 
     private onShowPanelHandler(panel: string, data?: any) {

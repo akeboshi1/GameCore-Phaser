@@ -1,10 +1,9 @@
 /* tslint:disable */
 export class Logger {
+  public isDebug: boolean = false;
   private static _instance: Logger;
-
   private mErrorList: string[];
   private mWarnList: string[];
-
   constructor() {
     this.mErrorList = [];
     this.mWarnList = [];
@@ -14,33 +13,38 @@ export class Logger {
     if (!Logger._instance) Logger._instance = new Logger();
     return Logger._instance;
   }
-  fatal(message?: any,...optionalParams: any[]){
-    if(!CONFIG.debug){
-      return console.error(message,...optionalParams);
+  fatal(message?: any, ...optionalParams: any[]) {
+    if (!CONFIG.debug) {
+      return console.error(message, ...optionalParams);
     }
 
     throw message;
   }
   log(message?: any, ...optionalParams: any[]) {
-    console.log(message, ...optionalParams);
+    if (this.isDebug)
+      console.log(message, ...optionalParams);
   }
 
   error(message?: any, ...optionalParams: any[]) {
-    console.error(message, ...optionalParams);
+    if (this.isDebug)
+      console.error(message, ...optionalParams);
     this.mErrorList.push(message);
   }
 
   warn(message?: any, ...optionalParams: any[]) {
-    console.warn(message, ...optionalParams);
+    if (this.isDebug)
+      console.warn(message, ...optionalParams);
     this.mWarnList.push(message);
   }
 
   debug(message?: any, ...optionalParams: any[]) {
-    console.log(message, ...optionalParams);
+    if (this.isDebug)
+      console.log(message, ...optionalParams);
   }
 
   info(message?: any, ...optionalParams: any[]) {
-    console.info(message, ...optionalParams);
+    if (this.isDebug)
+      console.info(message, ...optionalParams);
   }
 
   getErrorList(): string[] {
