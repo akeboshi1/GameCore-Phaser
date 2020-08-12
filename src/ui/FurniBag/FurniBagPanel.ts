@@ -51,6 +51,7 @@ export class FurniBagPanel extends BasePanel {
   private mInputBoo: boolean = false;
   private categoryType: op_def.EditModePackageCategory;
   private mSelectedItemData: op_client.ICountablePackageItem[] = [];
+  private mSelectedItems: Item[] = [];
   private dressAvatarIDS: string[];
   constructor(scene: Phaser.Scene, world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super(scene, world);
@@ -379,17 +380,16 @@ export class FurniBagPanel extends BasePanel {
         if (cellContainer.mProp !== item) {
           cellContainer.setData({ item });
           cellContainer.setProp(item);
-        }
-        if (item) {
-          if (this.isSelectedItemData(item))
+          if (this.isSelectedItemData(item)) {
             cellContainer.isSelect = true;
+            this.mSelectedItems.push(cellContainer);
+          } else {
+            const index = this.mSelectedItems.indexOf(cellContainer);
+            if (index !== -1) this.mSelectedItems.splice(index, 1);
+          }
           if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
             cellContainer.isEquip = true;
           } else cellContainer.isEquip = false;
-
-        } else {
-          cellContainer.isSelect = false;
-          cellContainer.isEquip = false;
         }
         return cellContainer;
       },
@@ -444,29 +444,46 @@ export class FurniBagPanel extends BasePanel {
       this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     }
   }
-  private replaceSelectItem(data: op_client.ICountablePackageItem) {
+  private replaceSelectItem(data: op_client.ICountablePackageItem, cell: Item) {
     if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      cell.isSelect = true;
+      if (this.mSelectedItems.length > 0) {
+        this.mSelectedItems[0].isSelect = false;
+      }
       this.mSelectedItemData.length = 0;
+      this.mSelectedItems.length = 0;
       this.mSelectedItemData.push(data);
+      this.mSelectedItems.push(cell);
     } else {
       const dataAvatar = data.avatar;
       if (!dataAvatar) {
         Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
         return;
       }
+      cell.isSelect = true;
       const removeArr = [];
       for (const item of this.mSelectedItemData) {
         const avatar = item.avatar;
         if (this.isContainProperty(avatar, dataAvatar)) {
-          const index = this.mSelectedItemData.indexOf(item);
           removeArr.push(item);
         }
       }
       for (const item of removeArr) {
         const index = this.mSelectedItemData.indexOf(item);
         this.mSelectedItemData.splice(index, 1);
+        for (let i = 0; i < this.mSelectedItems.length; i++) {
+          const cell1 = this.mSelectedItems[i];
+          cell1.isSelect = false;
+          cell1.isEquip = false;
+          if (cell1.propData === item) {
+            this.mSelectedItems.splice(i, 1);
+            break;
+          }
+        }
       }
+
       this.mSelectedItemData.push(data);
+      this.mSelectedItems.push(cell);
     }
   }
 
@@ -588,9 +605,8 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailBubble.setProp(item);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
-      this.replaceSelectItem(item);
+      this.replaceSelectItem(item, cell);
       this.setSelectedItem(item);
-      this.mPropGrid.refresh();
     } else {
       if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR && this.mSelectedItemData.length === 0) {
         this.sellBtn.enable = false;
@@ -1004,7 +1020,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
 }
 
 class Item extends Phaser.GameObjects.Container {
-  private mProp: op_client.ICountablePackageItem;
+  public propData: op_client.ICountablePackageItem;
   private mCounter: Phaser.GameObjects.Text;
   private mPropImage: DynamicImage;
   private selectbg: Phaser.GameObjects.Image;
@@ -1045,12 +1061,13 @@ class Item extends Phaser.GameObjects.Container {
   }
 
   setProp(prop: op_client.ICountablePackageItem) {
-    this.mProp = prop;
+    this.propData = prop;
     this.isSelect = false;
     if (!prop) {
       // this.mPropImage.setFrame("");
       this.mCounter.visible = false;
       this.mPropImage.visible = false;
+      this.isEquip = false;
       return;
     }
     this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
@@ -1083,6 +1100,6 @@ class Item extends Phaser.GameObjects.Container {
   }
 
   private onSelectedHandler() {
-    this.emit("select", this.mProp);
+    this.emit("select", this.propData);
   }
 }
