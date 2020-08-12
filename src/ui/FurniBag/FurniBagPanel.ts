@@ -20,6 +20,7 @@ import { IAvatar } from "../../rooms/display/dragonbones.model";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { UiManager } from "../ui.manager";
+import { Logger } from "../../utils/log";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -447,6 +448,10 @@ export class FurniBagPanel extends BasePanel {
       this.mSelectedItemData.push(data);
     } else {
       const dataAvatar = data.avatar;
+      if (!dataAvatar) {
+        Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
+        return;
+      }
       const removeArr = [];
       for (const item of this.mSelectedItemData) {
         const avatar = item.avatar;
