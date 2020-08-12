@@ -241,10 +241,11 @@ export class ComposePanel extends BasePanel {
                 }
                 if (cellContainer.itemData !== item) {
                     cellContainer.setItemData(item);
-                    if (item && this.mSelectItemData && item.id === this.mSelectItemData.id)
+                    if (item && this.mSelectItemData && item.id === this.mSelectItemData.id) {
                         cellContainer.select = true;
+                        this.mSelectItem = cellContainer;
+                    }
                 }
-
                 return cellContainer;
             },
         };

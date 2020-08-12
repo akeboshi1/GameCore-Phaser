@@ -377,19 +377,19 @@ export class FurniBagPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr);
         }
-        if (cellContainer.mProp !== item) {
+        if (cellContainer.propData !== item) {
           cellContainer.setData({ item });
           cellContainer.setProp(item);
-          if (this.isSelectedItemData(item)) {
+          if (item && this.isSelectedItemData(item)) {
             cellContainer.isSelect = true;
             this.mSelectedItems.push(cellContainer);
+            if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+              cellContainer.isEquip = true;
+            } else cellContainer.isEquip = false;
           } else {
             const index = this.mSelectedItems.indexOf(cellContainer);
             if (index !== -1) this.mSelectedItems.splice(index, 1);
           }
-          if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-            cellContainer.isEquip = true;
-          } else cellContainer.isEquip = false;
         }
         return cellContainer;
       },
