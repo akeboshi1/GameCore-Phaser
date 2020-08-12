@@ -281,6 +281,9 @@ export class FurniBagPanel extends BasePanel {
     const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
     this.resetBtn.add(reseticon);
     this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay.setComplHandler(new Handler(this, () => {
+      this.mDetailDisplay.visible = true;
+    }));
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
@@ -543,11 +546,12 @@ export class FurniBagPanel extends BasePanel {
     if (this.categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
       this.saveBtn.enable = true;
       this.resetBtn.enable = true;
-    } else {
-      const url = Url.getOsdRes(prop.display.texturePath);
-      this.mDetailDisplay.loadUrl(url);
     }
-
+    // else {
+    //   const url = Url.getOsdRes(prop.display.texturePath);
+    //   this.mDetailDisplay.loadUrl(url);
+    // }
+    this.mDetailDisplay.visible = false;
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {

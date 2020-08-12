@@ -193,7 +193,7 @@ export class PicaMainUIPanel extends BasePanel {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
         this.playerCon = this.scene.make.container(undefined, false);
-        this.playerCon.y = 18 * this.dpr;
+        this.playerCon.y = 25 * this.dpr;
         this.add(this.playerCon);
         this.mCoinValue = new ValueContainer(this.scene, this.key, "coin", this.dpr);
         this.mDiamondValue = new ValueContainer(this.scene, this.key, "diamond", this.dpr);
@@ -228,7 +228,7 @@ export class PicaMainUIPanel extends BasePanel {
         //  this.mExpProgress = new ExpProgress(this.scene, this.key, this.dpr, this.scale, this.mWorld);
         this.playerCon.add([this.mStrengthValue, this.mCoinValue, this.mDiamondValue]);
         this.roomCon = this.scene.make.container(undefined, false);
-        this.roomCon.y = 50 * this.dpr;
+        this.roomCon.y = this.playerCon.y + 32 * this.dpr;
         this.add(this.roomCon);
         this.mSceneName = new SceneName(this.scene, this.key, "room_icon", "setting_icon", this.dpr);
         this.mSceneName.setText("");
