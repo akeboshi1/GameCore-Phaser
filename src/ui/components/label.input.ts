@@ -5,6 +5,8 @@ export class LabelInput extends Phaser.GameObjects.Container {
     private mLabel: Phaser.GameObjects.Text;
     private mInputText: InputText;
     private mInputConfig: any;
+    private mOriginX: number;
+    private mOriginY: number;
     constructor(scene: Phaser.Scene, config: any) {
         super(scene);
 
@@ -17,6 +19,8 @@ export class LabelInput extends Phaser.GameObjects.Container {
             text: config.placeholder,
             style: Object.assign(labelConfig, config)
         }, false).setInteractive(new Phaser.Geom.Rectangle(-(clickW >> 1), -(clickH >> 1), clickW, clickH), Phaser.Geom.Rectangle.Contains);
+        this.mOriginX = this.mLabel.originX;
+        this.mOriginY = this.mLabel.originY;
         this.mLabel.on("pointerup", this.onShowInputHandler, this);
         this.add(this.mLabel);
 
@@ -28,11 +32,15 @@ export class LabelInput extends Phaser.GameObjects.Container {
         if (this.mInputText) {
             this.mInputText.text = val;
         }
+        return this;
     }
 
     setOrigin(x?: number, y?: number) {
         this.mLabel.setOrigin(x, y);
+        this.mOriginX = x;
+        this.mOriginY = y;
         if (this.mInputText) this.mInputText.setOrigin(x, y);
+        return this;
     }
 
     public setBlur() {
@@ -49,8 +57,9 @@ export class LabelInput extends Phaser.GameObjects.Container {
         if (this.mInputText) {
             this.mInputText.destroy();
         }
-        this.mInputText = new InputText(this.scene, Object.assign({}, this.mInputConfig));
+        this.mInputText = new InputText(this.scene, Object.assign({}, this.mInputConfig)).setOrigin(this.mOriginX, this.mOriginY);
         this.mInputText.on("textchange", this.onTextChangeHandler, this);
+        this.mInputText.on("blur", this.onTextBlurHandler, this);
         this.mInputText.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
@@ -90,6 +99,10 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
     private onTextChangeHandler(input, event) {
         this.emit("textchange");
+    }
+
+    private onTextBlurHandler() {
+        this.emit("blur");
     }
 
     get object(): Phaser.GameObjects.Text | InputText {

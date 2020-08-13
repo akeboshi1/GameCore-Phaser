@@ -49,7 +49,8 @@ export interface GameMain {
     createGame(): void;
     setGameConfig(config): void;
     updatePalette(palett): void;
-
+    onFocus();
+    onBlur();
     updateMoss(moss): void;
 
     destroy(): void;
@@ -140,12 +141,19 @@ export class Launcher {
 
         import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
             this.world = new game.World(this.config, this.mCompleteFunc);
-
             if (config.isEditor) {
                 this.world.createGame();
             }
             this.disableClick();
         });
+    }
+
+    public pauseGame() {
+        if (this.world) this.world.onBlur();
+    }
+
+    public resumeGame() {
+        if (this.world) this.world.onFocus();
     }
 
     public enableClick() {
@@ -218,4 +226,4 @@ export class Launcher {
     }
 }
 
-export * from "./src/editor"// 待launcher模块分离后  这行代码写在game-core中
+export * from "./src/editor";

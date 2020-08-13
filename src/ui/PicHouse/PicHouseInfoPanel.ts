@@ -34,8 +34,8 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         let expvalue = `[color=#0D8288]${curExp}[/color]/${nexExp}`;
         if (nexExp === 0) expvalue = "MAX";
         this.expvalue.setTextInfo(i18n.t("room_info.expvalue"), expvalue);
-        this.popvalue.setImageInfo(i18n.t("room_info.popvalue"), this.key, this.getpopImgs());
-        this.goodvalue.setImageInfo(i18n.t("room_info.goodvalue"), this.key, this.getgoodImgs());
+        this.popvalue.setTextInfo(i18n.t("room_info.popvalue"), "666");
+        this.goodvalue.setTextInfo(i18n.t("room_info.goodvalue"), data.praise + "");
         if (data.roomType === "store") {
             this.compviness.visible = true;
             this.turnover.visible = true;
@@ -115,10 +115,10 @@ class HouseAttributeValue extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.setSize(width, height);
         this.nameText = this.scene.make.text({
-            x: -width * 0.5 + 15 * dpr, y: 0, text: "Room name",
+            x: -width * 0.5 + 15 * dpr, y: 0, text: "",
             style: { fontFamily: Font.BOLD_FONT, fontSize: 14 * dpr, color: "#FFC51A" }
         }).setOrigin(0, 0.5).setStroke("#0", 4).setResolution(dpr);
-        this.valueText = new BBCodeText(this.scene, 0, 0, "This my Room", {
+        this.valueText = new BBCodeText(this.scene, 0, 0, "", {
             color: "#000000",
             fontSize: 13 * this.dpr,
             fontFamily: Font.DEFULT_FONT,

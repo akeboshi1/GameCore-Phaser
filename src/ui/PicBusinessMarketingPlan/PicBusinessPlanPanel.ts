@@ -127,10 +127,12 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new MarketingPlanItem(this.scene, 0, 0, capW, capH, this.key, this.dpr, this.zoom);
+                    cellContainer.setHandler(new Handler(this, this.onAddPlanHandler));
                 }
-                cellContainer.setData({ item });
-                cellContainer.setPlanData(item, this.world.clock.unixTime);
-                cellContainer.setHandler(new Handler(this, this.onAddPlanHandler));
+                if (cellContainer.planData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setPlanData(item, this.world.clock.unixTime);
+                }
                 return cellContainer;
             },
         };

@@ -2,12 +2,14 @@ import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
+import { Handler } from "../../Handler/Handler";
 
 export class DetailDisplay extends Phaser.GameObjects.Container {
   private mDisplay: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE;
   private mUrl: string;
   private mImage: Phaser.GameObjects.Image;
   private mDragonboneDisplay: DragonbonesDisplay;
+  private complHandler: Handler;
   constructor(scene: Phaser.Scene) {
     super(scene);
   }
@@ -95,6 +97,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
   }
 
+  setComplHandler(handler: Handler) {
+    this.complHandler = handler;
+  }
+
   get display(): op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE {
     return this.mDisplay;
   }
@@ -116,6 +122,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.setNearest();
     this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.emit("show", this.mImage);
+    if (this.complHandler) this.complHandler.run();
   }
   private destroyDragon() {
     if (this.mDragonboneDisplay) {

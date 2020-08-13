@@ -25,7 +25,10 @@ export class MainUIScene extends BasicScene {
   }
 
   public create() {
-    this.fps = this.add.text(10, 10, "", { style: { color: "#64DD17", } });
+    const world = this.mRoom.world;
+    const gameSize = world.getSize();
+    const width = gameSize.width;
+    this.fps = this.add.text(width * 0.5, 10, "", { style: { color: "#64DD17", } });
     this.fps.setStroke("0x0", 1);
     this.fps.setFontFamily(Font.DEFULT_FONT);
     this.fps.setFontSize(20 * window.devicePixelRatio);
@@ -33,7 +36,6 @@ export class MainUIScene extends BasicScene {
     this.sizeTF.setFontSize(20 * window.devicePixelRatio);
     this.sizeTF.setFontFamily(Font.DEFULT_FONT);
     this.sizeTF.setStroke("#0", 3);
-    const world = this.mRoom.world;
     if (world.game.device.os.desktop) {
     } else {
       if (world.inputManager) {

@@ -232,7 +232,7 @@ export class PicPropFunPanel extends BasePanel {
         this.confirmHandler = config.confirmHandler;
         this.cancelHandler = config.cancelHandler;
         this.slider.visible = slider;
-        this.slider.setValue(this.itemCount / prop.count);
+        this.slider.setValue(0);
     }
     setResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
         if (content) {
@@ -278,7 +278,7 @@ export class PicPropFunPanel extends BasePanel {
     }
 
     private calcuSliderValue(value) {
-        const allcount = this.itemData ? this.itemData.count : 0;
+        const allcount = this.itemData ? this.itemData.count : 1;
         let count = 0;
         const line = 10;
         const num = 4;
@@ -307,6 +307,7 @@ export class PicPropFunPanel extends BasePanel {
             }
         }
         count = Math.round(count);
+        if (count < 1) count = 1;
         return count;
     }
 }

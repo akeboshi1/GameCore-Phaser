@@ -108,11 +108,15 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                 cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
                 cellContainer.setFontSize(13 * this.dpr);
             }
-            cellContainer.setText(item.name);
-            cellContainer.setData("itemData", item);
-            if (this.subCategory === item.type) {
-                cellContainer.changeDown();
-            } else cellContainer.changeNormal();
+            const itemData = cellContainer.getData("itemData");
+            if (itemData !== item) {
+                cellContainer.setText(item.name);
+                cellContainer.setData("itemData", item);
+                if (this.subCategory === item.type) {
+                    cellContainer.changeDown();
+                } else cellContainer.changeNormal();
+            }
+
             return cellContainer;
         });
         this.secondaryPanel.setHandler(new Handler(this, this.onCategoryHandler), new Handler(this, this.onSubCategoryHandle));
@@ -169,8 +173,10 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicStreetItem(this.scene, 0, 0, capW, capH, this.key, this.key2, this.dpr, this.zoom);
                     grid.add(cellContainer);
                 }
-                cellContainer.setData({ item });
-                cellContainer.setStoreData(item);
+                if (cellContainer.storeData !== item) {
+                    cellContainer.setData({ item });
+                    cellContainer.setStoreData(item);
+                }
                 return cellContainer;
             },
         };
@@ -265,6 +271,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.playerName.text = data.ownerName;
         this.praiseCount.text = data.praise + "";
         this.industryIcon.setFrame(industry + "_tag_s");
+        this.storeData = data;
     }
 }
 
