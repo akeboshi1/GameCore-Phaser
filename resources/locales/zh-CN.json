@@ -144,5 +144,19 @@
     "history": "历史记录",
     "ranking": "排行榜",
     "rankreward": "奖励"
+  },
+  "friendlist": {
+    "title": "我的好友",
+    "olinetitle": "显示在线",
+    "friends": "好友",
+    "fans": "粉丝",
+    "follow": "关注",
+    "blacklist": "黑名单",
+    "search_friends_notes": "搜索",
+    "unfollow": "取消关注"
+  },
+  "friend_invite": {
+    "refused": "拒绝",
+    "agree": "同意"
   }
 }

@@ -35,11 +35,6 @@ export namespace PicFriendEvent {
     export const REQ_FRIEND_GAME_DATA: string = "reqFriendGameData";
 
     /**
-     * 请求关注好友
-     */
-    export const REQ_FOLLOW_FRIEND: string = "reqFollowFriend";
-
-    /**
      * 从黑名单移除
      */
     export const REMOVE_FROM_BLACKLIST: string = "removeFromBlacklist";

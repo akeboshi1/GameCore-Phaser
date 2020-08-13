@@ -411,6 +411,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    public exitUser() {
+        this.mConfig.token_expire = this.mConfig.token_fingerprint = this.mConfig.user_id = this.mConfig.auth_token = null;
+        this._createAnotherGame(this.mConfig.game_id, this.mConfig.virtual_world_id);
+    }
+
     public showLoading() {
         return this.mLoadingManager.start();
     }

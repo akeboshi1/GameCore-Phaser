@@ -20,6 +20,7 @@ export class LoginMediator extends BaseMediator {
         this.mView.show();
         this.mView.on("fetchCode", this.onFetchCodeHandler, this);
         this.mView.on("login", this.onLoginHandler, this);
+        this.mView.on("error", this.onLoginErrorHanler, this);
         this.layerManager.addToUILayer(this.mView);
     }
 
@@ -70,6 +71,8 @@ export class LoginMediator extends BaseMediator {
                     (<LoginPanel>this.mView).setInputVisible(false);
                     this.onShowVerified();
                 }
+            } else if (response.code >= 400) {
+                this.onLoginErrorHanler(response.msg || "服务器错误");
             }
         });
     }
@@ -83,7 +86,32 @@ export class LoginMediator extends BaseMediator {
         }
         this.verifiedPanel.show();
         this.verifiedPanel.on("verified", this.onVerifiedHandler, this);
+        this.verifiedPanel.on("error", this.onShowErrorHandler, this);
         this.layerManager.addToDialogLayer(this.verifiedPanel);
+    }
+
+    private onShowErrorHandler(error) {
+        this.verifiedPanel.setVerifiedEnable(false);
+        new AlertView(this.layerManager.scene, this.world).setOKText("重新输入").show({
+            text: "[color=#F9361B]证件格式有误[/color]",
+            title: "提示",
+            callback: () => {
+                this.verifiedPanel.setVerifiedEnable(true);
+            },
+            btns: Buttons.Ok
+        });
+    }
+
+    private onLoginErrorHanler(error: string) {
+        (<LoginPanel>this.mView).setInputVisible(false);
+        new AlertView(this.layerManager.scene, this.world).setOKText("重新输入").show({
+            text: error,
+            title: "提示",
+            callback: () => {
+                (<LoginPanel>this.mView).setInputVisible(true);
+            },
+            btns: Buttons.Ok
+        });
     }
 
     private onVerifiedHandler(name: string, idcard: string) {

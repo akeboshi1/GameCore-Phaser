@@ -5,6 +5,7 @@ import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButto
 import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { AlertView, Buttons } from "../components/alert.view";
 
 export class VerifiedPanel extends BasePanel {
     private mVerifiedBtn: NineSliceButton;
@@ -129,10 +130,14 @@ export class VerifiedPanel extends BasePanel {
     private onVerifiedHandler() {
         const name = this.mNameInput.text;
         const idCard = this.mIDCardInput.text;
+        this.mNameInput.setBlur();
+        this.mIDCardInput.setBlur();
         if (!name) {
+            this.emit("error", "[color=#F9361B]名字不能为空[/color]");
             return;
         }
         if (!idCard || idCard.length !== 18) {
+            this.emit("error", "[color=#F9361B]证件格式有误[/color]");
             return;
         }
         this.emit("verified", name, idCard);

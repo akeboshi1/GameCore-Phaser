@@ -22,6 +22,7 @@ import { NinePatchButton } from "../components/ninepatch.button";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
 import { CharacterAttributePanel } from "./CharacterAttributePanel";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -50,6 +51,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private curSelectCategeory: Button;
     private isOwner: boolean = true;
     private mBackGround: Phaser.GameObjects.Graphics;
+    private mExitBtn: NineSliceButton;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -92,6 +94,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.privaCharBtn.on(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
         this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
         this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
+        this.mExitBtn.on(CoreUI.MouseEvent.Tap, this.onExitHandler, this);
     }
 
     public removeListen() {
@@ -101,6 +104,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.privaCharBtn.off(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
         this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
         this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
+        this.mExitBtn.off(CoreUI.MouseEvent.Tap, this.onExitHandler, this);
     }
 
     preload() {
@@ -189,6 +193,13 @@ export default class CharacterInfoPanel extends BasePanel {
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
+
+        this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 27 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
+            left: 10 * this.dpr,
+            top: 10 * this.dpr,
+            right: 10 * this.dpr,
+            bottom: 10 * this.dpr
+        });
         this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
         this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
@@ -197,6 +208,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mainContent.add(this.avatar);
         this.content.add(this.bg);
         this.content.add(this.mainContent);
+        this.mainContent.add(this.mExitBtn);
         this.add([this.mBackGround, this.content]);
         const scrollY = 62 * this.dpr;
         const scrollHeight = 80 * this.dpr;
@@ -412,6 +424,10 @@ export default class CharacterInfoPanel extends BasePanel {
 
     private onPrivateChatHandler() {
 
+    }
+
+    private onExitHandler() {
+        this.mWorld.exitUser();
     }
 
     private onEditorPanelHideHandler() {

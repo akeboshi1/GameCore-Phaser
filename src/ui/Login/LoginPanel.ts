@@ -115,7 +115,7 @@ export class LoginPanel extends BasePanel {
             maxLength: 4,
             placeholder: "验证码",
             color: "#717171",
-            text: "2992",
+            text: "",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
         const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height, 256 * this.dpr);
@@ -225,7 +225,10 @@ export class LoginPanel extends BasePanel {
 
     private onFetchCodeHandler() {
         const text = this.mPhoneInput.text;
+        this.mPhoneCodeInput.setBlur();
+        this.mPhoneInput.setBlur();
         if (text.length !== 11) {
+            this.emit("error", "手机格式错误");
             return;
         }
         if (this.fetchTime) {
@@ -252,10 +255,14 @@ export class LoginPanel extends BasePanel {
     private tryLogin() {
         const phone = this.mPhoneInput.text;
         const code = this.mPhoneCodeInput.text;
+        this.mPhoneCodeInput.setBlur();
+        this.mPhoneInput.setBlur();
         if (phone.length !== 11) {
+            this.emit("error", "手机格式错误");
             return;
         }
         if (!code) {
+            this.emit("error", "验证码格式错误");
             return;
         }
         this.emit("login", phone, code, this.areaCode);
