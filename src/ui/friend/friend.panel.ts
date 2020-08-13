@@ -179,7 +179,7 @@ export class FriendPanel extends BasePanel {
         this.mDownBtn.setInteractive();
         this.mUpBtn.setInteractive();
         const image = this.scene.make.image(undefined, false);
-        image.setTexture((this.mWorld.roomManager.currentRoom.playerManager.actor.getDisplay() as DragonbonesDisplay).mDisplayInfo.id + "");
+        image.setTexture((this.mWorld.roomManager.currentRoom.playerManager.actor.getDisplay() as DragonbonesDisplay).displayInfo.id + "");
         this.add(image);
         this.mBg = new NinePatch(this.scene, 0, 0, 500, 350, Background.getName(), null, Background.getConfig());
         this.addAt(this.mBg, 0);
