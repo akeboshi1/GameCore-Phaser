@@ -232,7 +232,7 @@ export class PicPropFunPanel extends BasePanel {
         this.confirmHandler = config.confirmHandler;
         this.cancelHandler = config.cancelHandler;
         this.slider.visible = slider;
-        this.slider.setValue(this.itemCount / prop.count);
+        this.slider.setValue(0);
     }
     setResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
         if (content) {
