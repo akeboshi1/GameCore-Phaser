@@ -55,7 +55,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
             }
             index++;
         }
-
         this.gridTable.setItems(items);
         if (this.haveEquiped)
             this.setBgTexture(data["isblue"]);
@@ -86,9 +85,20 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     }
     refreshEquipData(data: op_client.IMiningEquipment, index: number) {
         this.gridTable.items[index] = data;
-        this.gridTable.refresh();
-        // this.gridTable.setT((index + 1) / this.gridTable.items.length);
-        this.updateEquipItem(this.curEquipItem);
+        const cells = this.gridTable.getCells();
+        for (const cell of cells) {
+            if (cell && cell.container) {
+                const cellData = cell.container.itemData;
+                if (cellData.id === data.id) {
+                    cell.container.setItemData(data);
+                } else {
+                    cell.container.setItemData(cellData);
+                }
+            }
+        }
+        if (this.curSelectItemData.id === data.id)
+            this.curSelectItemData = data;
+        this.updateEquipItem(this.curSelectItemData);
     }
 
     destroy() {
@@ -146,7 +156,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
             x: 0,
             y: 0,
             scrollMode: 1,
-            // background: (<any>this.mScene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFFFFF, .5),
             table: {
                 width: 259 * this.dpr,
                 height: 77 * this.dpr,
@@ -169,11 +178,10 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
                 }
                 if (cellContainer.itemData !== item) {
                     cellContainer.setData({ item });
-                    cellContainer.setItemData(item, index);
-                }
-                if (this.curSelectItemData) {
+                    cellContainer.setItemData(item);
                     if (this.curSelectItemData === item) {
                         cellContainer.setSelect(true);
+                        this.curEquipItem = cellContainer;
                     } else
                         cellContainer.setSelect(false);
                 }
@@ -199,13 +207,14 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         if (this.curEquipItem) this.curEquipItem.setSelect(false);
         const data = cell.itemData;
         this.curSelectItemData = data;
-        this.updateEquipItem(cell);
+        this.updateEquipItem(data);
+        cell.setSelect(true);
+        if (this.curEquipItem) this.curEquipItem.setSelect(false);
         this.curEquipItem = cell;
         if (data.owned && !data.selected) this.emit("reqEquiped", data.id);
     }
 
-    private updateEquipItem(cell: EquipItemCell) {
-        const data = cell.itemData;
+    private updateEquipItem(data: op_client.IMiningEquipment) {
         this.penetrationText.text = data.buffDisplayNames[0];
         this.equipDes.text = data.description;
         this.equipName.text = data.name;
@@ -237,7 +246,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
             this.diamondIcon.setDisplaySize(12 * this.dpr, 12 * this.dpr);
             this.btnName.setPosition(0, 6 * this.dpr);
         }
-        cell.setSelect(true);
     }
     private onUnlockEquipHandler() {
         this.emit("reqActive", this.curEquipItem.itemData.id);
@@ -277,7 +285,6 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
 
 class EquipItemCell extends Phaser.GameObjects.Container {
     public itemData: op_client.IMiningEquipment;
-    public index: number = 0;
     private dpr: number;
     private key: string;
     private bg: Phaser.GameObjects.Image;
@@ -292,9 +299,8 @@ class EquipItemCell extends Phaser.GameObjects.Container {
         this.create();
     }
 
-    public setItemData(data: op_client.IMiningEquipment, index: number) {
+    public setItemData(data: op_client.IMiningEquipment) {
         this.itemData = data;
-        this.index = index;
         const url = Url.getOsdRes(data.display.texturePath);
         this.equipIcon.load(url, this, () => {
             this.equipIcon.scale = this.dpr;
@@ -327,7 +333,7 @@ class EquipItemCell extends Phaser.GameObjects.Container {
 
     }
 
-    private setEquiped(isequiped: boolean, unlock: boolean) {
+    public setEquiped(isequiped: boolean, unlock: boolean) {
         this.isUnlock = unlock;
         this.unlock.visible = false;
         if (isequiped) {

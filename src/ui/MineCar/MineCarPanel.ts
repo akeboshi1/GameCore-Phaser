@@ -4,7 +4,7 @@ import { op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { BasePanel } from "../components/BasePanel";
 import { op_client } from "pixelpai_proto";
-import { Url } from "../../utils/resUtil";
+import { Url, CloseButton } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
@@ -27,6 +27,7 @@ export class MineCarPanel extends BasePanel {
   private categoriesBg: Phaser.GameObjects.Image;
   private mCategoryTable: GameGridTable;
   private mPreSelectedCategorie: CategorieButton;
+  private mPreSelectedCategorieData: op_def.StrPair;
   private mBg: Phaser.GameObjects.Image;
   private carIcon: Phaser.GameObjects.Image;
   private mBackGround: Phaser.GameObjects.Graphics;
@@ -36,8 +37,8 @@ export class MineCarPanel extends BasePanel {
   }
 
   resize(width: number, height: number) {
-    const w = this.scene.cameras.main.width / this.scale;
-    const h = this.scene.cameras.main.height / this.scale;
+    const w = this.scaleWidth;
+    const h = this.scaleHeight;
     super.resize(width, height);
     this.setSize(w, h);
     this.mBackGround.clear();
@@ -80,6 +81,7 @@ export class MineCarPanel extends BasePanel {
 
   setCategories(subcategorys: op_def.IStrPair[]) {
     this.mPreSelectedCategorie = undefined;
+    this.mPreSelectedCategorieData = undefined;
     this.mCategoryTable.setItems(subcategorys);
   }
 
@@ -117,8 +119,8 @@ export class MineCarPanel extends BasePanel {
   }
 
   protected init() {
-    const w = this.scene.cameras.main.width / this.scale;
-    const h = this.scene.cameras.main.height / this.scale;
+    const w = this.scaleWidth;
+    const h = this.scaleHeight;
     this.setSize(w, h);
     // this.mPanel = this.scene.make.container(undefined, false);
     // this.mMask = this.scene.make.graphics(undefined, false);
@@ -269,8 +271,17 @@ export class MineCarPanel extends BasePanel {
           });
           cellContainer.setFontStyle("bold");
         }
-        cellContainer.setText(item.value);
-        cellContainer.setData("data", item);
+        const data = cellContainer.getData("data");
+        if (data !== item) {
+          cellContainer.setText(item.value);
+          cellContainer.setData("data", item);
+          if (this.mPreSelectedCategorieData === item) {
+            cellContainer.changeDown();
+            this.mPreSelectedCategorie = cellContainer;
+          } else {
+            cellContainer.changeNormal();
+          }
+        }
         if (!this.mPreSelectedCategorie) {
           this.onClickCategoryHandler(cellContainer);
         }
@@ -357,6 +368,7 @@ export class MineCarPanel extends BasePanel {
       }
       item.changeDown();
       this.mPreSelectedCategorie = item;
+      this.mPreSelectedCategorieData = data;
     }
   }
 

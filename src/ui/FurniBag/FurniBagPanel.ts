@@ -137,13 +137,14 @@ export class FurniBagPanel extends BasePanel {
     if (!props) {
       return;
     }
+    this.mSelectedItemData.length = 0;
+    this.mSelectedItems.length = 0;
     const len = props.length;
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
     this.mPropGrid.setItems(props);
     if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
-      this.mSelectedItemData.length = 0;
       const cell = this.mPropGrid.getCell(0);
       this.onSelectItemHandler(cell.container);
     } else {
@@ -386,9 +387,6 @@ export class FurniBagPanel extends BasePanel {
           if (item && this.isSelectedItemData(item)) {
             cellContainer.isSelect = true;
             this.mSelectedItems.push(cellContainer);
-            if (item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-              cellContainer.isEquip = true;
-            } else cellContainer.isEquip = false;
           } else {
             const index = this.mSelectedItems.indexOf(cellContainer);
             if (index !== -1) this.mSelectedItems.splice(index, 1);
@@ -438,6 +436,7 @@ export class FurniBagPanel extends BasePanel {
             const item: op_client.ICountablePackageItem = cell.container.getData("item");
             if (item && id === item.id && item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
               this.onSelectItemHandler(cell.container);
+              break;
             }
           }
         }
@@ -476,9 +475,8 @@ export class FurniBagPanel extends BasePanel {
         this.mSelectedItemData.splice(index, 1);
         for (let i = 0; i < this.mSelectedItems.length; i++) {
           const cell1 = this.mSelectedItems[i];
-          cell1.isSelect = false;
-          cell1.isEquip = false;
           if (cell1.propData === item) {
+            cell1.isSelect = false;
             this.mSelectedItems.splice(i, 1);
             break;
           }
@@ -503,33 +501,6 @@ export class FurniBagPanel extends BasePanel {
     return canreplace;
   }
 
-  private isContainObject(obj: any, obj1: any) {
-    if (!obj && !obj1) return true;
-    if (typeof obj !== typeof obj1) return false;
-    if (typeof obj === "object") {
-      let canreplace = true;
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          if (obj1.hasOwnProperty(key)) {
-            const value = obj1[key];
-            if (!this.isContainObject(value, obj[key])) {
-              canreplace = false;
-              break;
-            }
-          } else {
-            canreplace = false;
-            break;
-          }
-        }
-      }
-      return canreplace;
-    } else {
-      if (obj === obj1) return true;
-      else return false;
-    }
-
-  }
-
   private isSelectedItemData(data: op_client.ICountablePackageItem) {
     for (const temp of this.mSelectedItemData) {
       if (temp.indexId === data.indexId) {
@@ -551,7 +522,9 @@ export class FurniBagPanel extends BasePanel {
     //   const url = Url.getOsdRes(prop.display.texturePath);
     //   this.mDetailDisplay.loadUrl(url);
     // }
-    this.mDetailDisplay.visible = false;
+    // this.mDetailDisplay.visible = false;
+    this.mDetailDisplay.setTexture(this.key, "ghost");
+    this.mDetailDisplay.setNearest();
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
@@ -564,9 +537,7 @@ export class FurniBagPanel extends BasePanel {
       }
       return;
     }
-    // if (!(gameobject instanceof TextButton)) {
-    //   return;
-    // }
+
     const category: op_def.IStrPair = gameobject.getData("item");
     if (category) {
       if (this.mPreCategoryBtn && (this.mPreCategoryBtn instanceof TextButton)) {
@@ -592,6 +563,7 @@ export class FurniBagPanel extends BasePanel {
       }
       this.mPreCategoryBtn = gameobject;
     }
+    this.mPropGrid.setT(0);
   }
 
   private onCloseHandler() {
@@ -606,6 +578,7 @@ export class FurniBagPanel extends BasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: op_client.ICountablePackageItem = cell.getData("item");
+    if (this.mSelectedItemData.indexOf(item) !== -1) return;
     this.mDetailBubble.setProp(item);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
@@ -737,9 +710,11 @@ export class FurniBagPanel extends BasePanel {
   }
   private onSaveBtnHandler() {
     if (this.mSelectedItemData.length > 0) {
+      this.dressAvatarIDS.length = 0;
       const idsArr = [];
       for (const item of this.mSelectedItemData) {
         idsArr.push(item.id);
+        this.dressAvatarIDS.push(item.id);
       }
       this.emit("querySaveAvatar", idsArr);
       this.queryPackege();
@@ -823,15 +798,6 @@ class SeachInput extends Phaser.GameObjects.Container {
       key,
       frame: "seach_bg"
     }, false).setOrigin(0.5, 0.5);
-
-    // this.mLabelInput = new LabelInput(this.scene, {
-    //   x: -10 * dpr,
-    //   y: 0,
-    //   width: 160,
-    //   height: 60,
-    //   fontSize: 14 * dpr + "px",
-    //   color: "#666666",
-    // });
     this.mLabelInput = this.scene.make.text({
       x: 0,
       width: this.bg.width,
@@ -1067,11 +1033,11 @@ class Item extends Phaser.GameObjects.Container {
   setProp(prop: op_client.ICountablePackageItem) {
     this.propData = prop;
     this.isSelect = false;
+    this.isEquip = false;
     if (!prop) {
       // this.mPropImage.setFrame("");
       this.mCounter.visible = false;
       this.mPropImage.visible = false;
-      this.isEquip = false;
       return;
     }
     this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
@@ -1082,6 +1048,9 @@ class Item extends Phaser.GameObjects.Container {
     } else {
       this.mCounter.visible = false;
     }
+    if (prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+      this.isEquip = true;
+    } else this.isEquip = false;
   }
 
   private onPropLoadCompleteHandler() {
