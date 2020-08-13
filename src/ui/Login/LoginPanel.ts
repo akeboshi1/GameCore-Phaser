@@ -18,6 +18,8 @@ export class LoginPanel extends BasePanel {
     private fetchTime: any;
     private acceptBtn: CheckBox;
     private loginBtn: NineSliceButton;
+    private downcount: number = -1;
+    private fetchCode: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -108,15 +110,15 @@ export class LoginPanel extends BasePanel {
             }
         }
 
-        this.mPhoneCodeInput = new InputText(this.scene, 0, 0, 256 * this.dpr, 40 * this.dpr, {
+        this.mPhoneCodeInput = new InputText(this.scene, 0, 0, 156 * this.dpr, 40 * this.dpr, {
             type: "tel",
             maxLength: 4,
             placeholder: "验证码",
             color: "#717171",
-            text: "",
+            text: "2992",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
-        const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height);
+        const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height, 256 * this.dpr);
         // this.mPhoneCodeInput.resize(100 * this.dpr, this.mPhoneCodeInput.height);
         this.mPhoneCodeInput.x = -codeContainer.width / 2 + 8 * this.dpr;
 
@@ -147,24 +149,23 @@ export class LoginPanel extends BasePanel {
         label2.y = height - 16 * this.dpr - label2.height * 0.5;
 
         const line = this.scene.make.image({
-            x: 20 * this.dpr,
+            x: 12 * this.dpr,
             key: this.key,
             frame: "line",
         }, false);
         line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        const fetchCode = this.scene.make.text({
-            x: codeContainer.width * 0.5 - 20 * this.dpr,
-            y: 0,
+        this.fetchCode = this.scene.make.text({
             text: "获取验证码",
             style: {
                 fontSize: 14 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#2B5AF3"
             }
-        }, false).setOrigin(1, 0.5).setInteractive();
-        fetchCode.setResolution(this.dpr);
-        fetchCode.on("pointerup", this.onFetchCodeHandler, this);
-        codeContainer.add([line, fetchCode]);
+        }, false).setOrigin(0.5).setInteractive();
+        this.fetchCode.x = (codeContainer.width - this.fetchCode.width) * 0.5 - 22 * this.dpr;
+        this.fetchCode.setResolution(this.dpr);
+        this.fetchCode.on("pointerup", this.onFetchCodeHandler, this);
+        codeContainer.add([line, this.fetchCode]);
 
         this.loginBtn = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
             left: 12 * this.dpr,
@@ -207,11 +208,11 @@ export class LoginPanel extends BasePanel {
         super.init();
     }
 
-    private createInput(input: InputText, x: number, y: number) {
+    private createInput(input: InputText, x: number, y: number, width?: number) {
         const container = this.scene.make.container({ x, y }, false);
         const frame = this.scene.textures.getFrame(this.key, "input_bg");
         // const height = frame ? frame.height || 50 * this.dpr;
-        const bg = new NineSlicePatch(this.scene, input.x - 8 * this.dpr, input.y, input.width + 14 * this.dpr, frame.height, this.key, "input_bg", {
+        const bg = new NineSlicePatch(this.scene, input.x - 8 * this.dpr, input.y, width ? width : input.width + 14 * this.dpr, frame.height, this.key, "input_bg", {
             left: 27 * this.dpr,
             top: 0 * this.dpr,
             right: 28 * this.dpr,
@@ -230,9 +231,21 @@ export class LoginPanel extends BasePanel {
         if (this.fetchTime) {
             return;
         }
-        this.fetchTime = setTimeout(() => {
-            this.fetchTime = null;
-        }, 60000);
+        // this.fetchTime = setTimeout(() => {
+        //     this.fetchTime = null;
+        // }, 60000);
+        this.downcount = 60;
+        this.fetchTime = setInterval(() => {
+            if (--this.downcount <= 0) {
+                clearInterval(this.fetchTime);
+                this.fetchTime = undefined;
+            }
+            if (this.downcount > 0) {
+                this.fetchCode.setText(`获取验证码(${this.downcount})`);
+            } else {
+                this.fetchCode.setText(`获取验证码`);
+            }
+        }, 1000);
         this.emit("fetchCode", text, this.areaCode);
     }
 
