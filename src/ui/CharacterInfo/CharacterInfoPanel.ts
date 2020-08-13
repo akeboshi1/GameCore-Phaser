@@ -194,11 +194,15 @@ export default class CharacterInfoPanel extends BasePanel {
             bottom: 12 * this.dpr
         });
 
-        this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 27 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
-            left: 10 * this.dpr,
-            top: 10 * this.dpr,
-            right: 10 * this.dpr,
+        this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 26 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
+            left: 8 * this.dpr,
+            top: 8 * this.dpr,
+            right: 8 * this.dpr,
             bottom: 10 * this.dpr
+        });
+        this.mExitBtn.setTextStyle({
+            fontSize: 10 * this.dpr,
+            fontFamily: Font.DEFULT_FONT
         });
         this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
