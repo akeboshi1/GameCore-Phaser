@@ -44,6 +44,7 @@ import { HttpClock } from "../rooms/http.clock";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
+    public isPause: boolean = false;
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
     private mClock: Clock;
@@ -447,9 +448,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         } else {
             Logger.getInstance().error("connection is undefined");
         }
-        if (this.game.device.os.desktop) {
-            this.pauseScene();
-        }
+        this.pauseScene();
+        // if (this.game.device.os.desktop) {
+        //     this.pauseScene();
+        // }
     }
 
     public initgameConfigUrls(urls: string[]) {
@@ -526,6 +528,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private async _createAnotherGame(gameId, worldId) {
         await this.clearGame();
+        this.isPause = false;
         if (this.mConnection) {
             this.mConnection.closeConnect();
         }
@@ -872,9 +875,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private resumeScene() {
-        if (this.mConfig.isEditor) {
+        if (this.mConfig.isEditor || !this.isPause) {
             return;
         }
+        this.isPause = false;
         this.mRoomMamager.onFocus();
         if (this.mGame && this.mConfig.platform === "pc") {
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
@@ -886,9 +890,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private pauseScene() {
-        if (this.mConfig.isEditor) {
+        if (this.mConfig.isEditor || this.isPause) {
             return;
         }
+        this.isPause = true;
         this.mRoomMamager.onBlur();
         if (this.mGame && this.mConfig.platform === "pc") {
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
