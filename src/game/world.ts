@@ -880,7 +880,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = false;
         this.mRoomMamager.onFocus();
-        if (this.mGame && this.mConfig.platform === "pc") {
+        if (this.mGame) {
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
             if (pauseScene) {
                 (pauseScene as GamePauseScene).sleep();
@@ -895,7 +895,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = true;
         this.mRoomMamager.onBlur();
-        if (this.mGame && this.mConfig.platform === "pc") {
+        if (this.mGame) {
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
