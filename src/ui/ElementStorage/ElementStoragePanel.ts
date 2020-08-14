@@ -4,17 +4,17 @@ import { Background, Border, Url } from "../../utils/resUtil";
 import { Size } from "../../utils/size";
 import { WorldService } from "../../game/world.service";
 import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { NinePatchButton } from "../components/ninepatch.button";
 import { Item } from "./item/Item";
 import { op_client } from "pixelpai_proto";
 import { ElementStorageMediator } from "./ElementStorageMediator";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 
 export class ElementStoragePanel extends BasePanel {
     private mBackground: NinePatch;
     private mBorder: NinePatch;
     private mSearchInput: InputText;
-    private mDragBtn: NinePatchButton;
-    // private mTabs: NinePatchButton[];
+    private mDragBtn: NineSliceButton;
+    // private mTabs: NineSliceButton[];
     private mProps: Item[];
     private mExpaned: boolean = true;
     private mPacgeNum: number;
@@ -234,13 +234,13 @@ export class ElementStoragePanel extends BasePanel {
             bottom: 4
         };
 
-        this.mDragBtn = new NinePatchButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器", config);
+        this.mDragBtn = new NineSliceButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器", this.dpr, this.scale, config);
 
         // this.mTabs = [];
 
-        // const button = new NinePatchButton(this.scene, 280, 40, 60, 30, "button", "地块",  config);
+        // const button = new NineSliceButton(this.scene, 280, 40, 60, 30, "button", "地块",  config);
 
-        // const button2 = new NinePatchButton(this.scene, 280, 80, 60, 30, "button", "物件",  config);
+        // const button2 = new NineSliceButton(this.scene, 280, 80, 60, 30, "button", "物件",  config);
 
         // const checkbox = new CheckboxGroup().appendItemAll([button, button2]);
         // checkbox.on("selected", this.onSelectedHandler, this);
