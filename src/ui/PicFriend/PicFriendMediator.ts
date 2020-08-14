@@ -80,19 +80,27 @@ export class PicFriendMediator extends BaseMediator {
 
     private getFans() {
         this.picFriend.getFans().then((response) => {
-            this.mView.setFriend(FriendChannel.Fans, response.data);
+            const data = response.data;
+            if (!data) {
+                return;
+            }
+            this.mView.setFriend(FriendChannel.Fans, data.filter((friend) => friend.user));
         });
     }
 
     private getFolloweds() {
         this.picFriend.getFolloweds().then((response) => {
-            this.mView.setFriend(FriendChannel.Followes, response.data);
+            const data = response.data;
+            if (!data) {
+                return;
+            }
+            this.mView.setFriend(FriendChannel.Followes, data.filter((friend) => friend.followed_user));
         });
     }
 
     private onFollowHandler(id: string) {
         this.picFriend.follow(id).then((response) => {
-
+            this.mView.filterById(id);
         });
     }
 
@@ -104,7 +112,7 @@ export class PicFriendMediator extends BaseMediator {
 
     private onBanUserHandler(fuid: string) {
         this.picFriend.banUser(fuid).then(() => {
-            // this.mView.
+            this.mView.filterById(fuid);
         });
     }
 

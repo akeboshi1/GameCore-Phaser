@@ -45,7 +45,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
     public onSceneCreated() {
         const scene = this.getScene();
-        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mData.WEB_AVATAR_PATH);
+        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mData.WEB_AVATAR_PATH, this.mEmitter);
     }
     public update() {
 
@@ -111,4 +111,9 @@ class AvatarEditorScene extends Phaser.Scene {
 
 export interface AvatarEditorConfigNode {
     WEB_AVATAR_PATH: string;
+}
+
+export enum AvatarEditorEmitType {
+    Shop_Icon_Generated = "shopIconGenerated",
+    Shop_Icon_Generate_Finished = "shopIconGenerateFinished"
 }

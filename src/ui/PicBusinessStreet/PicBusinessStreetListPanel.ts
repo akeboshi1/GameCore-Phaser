@@ -97,6 +97,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
             width: this.width - 30 * this.dpr,
             height: 30 * this.dpr,
             zoom: this.zoom,
+            dpr: this.dpr,
             orientation: 1
         });
         this.add(this.secondaryPanel);

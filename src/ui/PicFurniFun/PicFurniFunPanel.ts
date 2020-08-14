@@ -144,6 +144,7 @@ export class PicFurniFunPanel extends BasePanel {
             width: 240 * this.dpr,
             height: 90 * this.dpr,
             zoom: this.scale,
+            dpr: this.dpr,
             align: 2,
             orientation: 1,
             space: 20 * this.dpr,

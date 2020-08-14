@@ -152,8 +152,11 @@
     "fans": "Fans",
     "follow": "Follow",
     "blacklist": "BLACKLIST",
+    "search": "Search",
     "search_friends_notes": "Search",
-    "unfollow": "unfollow"
+    "unfollow": "unfollow",
+    "new_friend": "New Friend",
+    "new_fans": "New Fans"
   },
   "friend_invite": {
     "refused": "refused",

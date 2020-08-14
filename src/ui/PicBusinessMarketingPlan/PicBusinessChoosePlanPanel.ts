@@ -85,6 +85,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             width: this.width - 30 * this.dpr,
             height: 60 * this.dpr,
             zoom: this.zoom,
+            dpr: this.dpr,
             align: 2,
             orientation: 1,
             space: 10 * this.dpr

@@ -3,6 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { HttpService } from "../../net/http.service";
+import { Logger } from "../../utils/log";
 
 export class PicFriend extends PacketHandler {
     private readonly world: WorldService;
@@ -14,8 +15,9 @@ export class PicFriend extends PacketHandler {
         this.world = world;
         this.mEvent = new Phaser.Events.EventEmitter();
         this.httpService = world.httpService;
-        this.userId = world.getConfig().user_id || "5f228eca28884d186ca2d542";
+        if (world.account && world.account.accountData) this.userId = world.account.accountData.id;
     }
+
     register() {
         const connection = this.connection;
         if (connection) {
@@ -61,10 +63,18 @@ export class PicFriend extends PacketHandler {
     }
 
     getFolloweds() {
+        if (!this.userId) {
+            Logger.getInstance().error("fetch follow error, userId does not exist");
+            return;
+        }
         return this.httpService.get(`user/${this.userId}/followeds`);
     }
 
     getFans() {
+        if (!this.userId) {
+            Logger.getInstance().error("fetch fans error, userId does not exist");
+            return;
+        }
         return this.httpService.get(`user/${this.userId}/fans`);
     }
 

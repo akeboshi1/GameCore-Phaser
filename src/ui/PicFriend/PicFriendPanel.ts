@@ -31,8 +31,8 @@ export default class PicFriendPanel extends BasePanel {
         this.mSubContanerMap = new Map();
         this.mSubContanerMap.set(FriendChannel.Blacklist, BlackContainer);
         this.mSubContanerMap.set(FriendChannel.Search, SearchContainer);
-        this.mSubContanerMap.set(FriendChannel.NewFriend, SubFriendContainer);
-        this.mSubContanerMap.set(FriendChannel.NewFans, SubFriendContainer);
+        this.mSubContanerMap.set(FriendChannel.NewFriend, NewFriendContainer);
+        this.mSubContanerMap.set(FriendChannel.NewFans, NewFansContainer);
 
     }
 
@@ -189,9 +189,17 @@ export default class PicFriendPanel extends BasePanel {
 }
 
 class FriendContainer extends Container {
+    protected titleText: Text;
     constructor(scene: Phaser.Scene, width: number, height: number, protected key: string, protected dpr: number) {
         super(scene, 0, 0);
         this.setSize(width, height);
+    }
+
+    protected draw() {
+        const posY = 49 * this.dpr - this.height * 0.5;
+        const mfont = `bold ${16 * this.dpr}px ${Font.DEFULT_FONT}`;
+        this.titleText = this.scene.make.text({ x: 0, y: posY, style: { font: mfont, bold: true, color: "#0" } }).setOrigin(0.5, 0);
+        this.add(this.titleText);
     }
 
     protected createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler, ) {
@@ -251,7 +259,6 @@ class FriendContainer extends Container {
 
 class MainContainer extends FriendContainer {
     private friendNum: Text;
-    private titleText: Text;
     private onlineCheckBox: CheckBox;
     private topContent: Container;
     private channelGroup: CheckboxGroup;
@@ -298,10 +305,19 @@ class MainContainer extends FriendContainer {
 
     public showFriend(type: FriendChannel, data: any[]) {
         let result: FriendData[] = [];
-        for (const firend of data) {
-            result.push({ type, id: firend.followed_user ? firend.followed_user._id : firend._id, nickname: firend.nickname || firend.followed_user.nickname});
+        let target = null;
+        this.friendDatas.set(type, data);
+        for (const friend of data) {
+            target = friend.followed_user || friend.user || friend;
+            // if (type === FriendChannel.Followes) {
+            //     target = friend.followed_user;
+            // } else if (type === FriendChannel.Fans) {
+            //     target = friend.user;
+            // } else {
+            //     target = friend;
+            // }
+            if (target) result.push({ type, id: target._id, nickname: target.nickname});
         }
-        this.friendDatas.set(type, result);
         this.sortByName(result);
         let title = "";
         let friendType = "";
@@ -328,24 +344,22 @@ class MainContainer extends FriendContainer {
         // this.friendList.setItems(this.showingFriends);
         this.friendTabel.setItems(this.showingFriends);
         if (title) this.titleText.setText(title);
-        this.friendNum.setText(`Number of ${friendType}: ${this.showingFriends.length}`);
+        this.friendNum.setText(`Number of ${friendType}: ${data.length}`);
     }
 
     public filterById(id: string) {
         if (!this.showingFriends) {
             return;
         }
-        this.showingFriends.filter((friend: FriendData) => friend.id !== id);
+        const result = this.showingFriends.filter((friend: FriendData) => friend.id !== id);
+        this.friendTabel.setItems(result);
     }
 
     protected draw() {
-        let posY = -this.height * 0.5 + 17.33 * this.dpr;
+        super.draw();
+        const posY = -this.height * 0.5 + 17.33 * this.dpr;
         this.friendNum = this.scene.make.text({ x: 0, y: posY, text: "", style: { color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.add(this.friendNum);
-        posY = 49 * this.dpr - this.height * 0.5;
-        const mfont = `bold ${16 * this.dpr}px ${Font.DEFULT_FONT}`;
-        this.titleText = this.scene.make.text({ x: 0, y: posY, text: i18n.t("friendlist.title"), style: { font: mfont, bold: true, color: "#0" } }).setOrigin(0.5, 0);
-        this.add(this.titleText);
 
         this.topContent = this.scene.make.container(undefined, false);
         this.add(this.topContent);
@@ -420,12 +434,16 @@ class MainContainer extends FriendContainer {
     }
 
     private onSelectChannelHandler(item) {
-        const data = this.friendDatas.get(this.channelGroup.selectedIndex);
-        if (!data) {
-            this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
-        } else {
-            this.showFriend(this.channelGroup.selectedIndex, data);
+        if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
+            return;
         }
+        this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
+        // const data = this.friendDatas.get(this.channelGroup.selectedIndex);
+        // if (!data) {
+        //     this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
+        // } else {
+        //     this.showFriend(this.channelGroup.selectedIndex, data);
+        // }
     }
 
     private onSelectItemHandler(item) {
@@ -711,7 +729,6 @@ class BlacklistRenderer extends FansRenderer {
 
 class SubFriendContainer extends FriendContainer {
     protected backBtn: Button;
-    protected title: Text;
     protected gridTable: GameGridTable;
     protected friendType: FriendChannel;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
@@ -748,6 +765,7 @@ class SubFriendContainer extends FriendContainer {
     }
 
     protected draw() {
+        super.draw();
         this.backBtn = new Button(this.scene, this.key, "back");
         this.backBtn.setPosition((-this.width + this.backBtn.width) * 0.5 + 21.67 * this.dpr, (-this.height + this.backBtn.height) * 0.5 + 47 * this.dpr);
 
@@ -776,6 +794,8 @@ class SearchContainer extends SubFriendContainer {
 
     protected draw() {
         super.draw();
+
+        this.titleText.setText(i18n.t("friendlist.search"));
 
         const topbg = new NineSlicePatch(this.scene, 0, 0, 276 * this.dpr, 33 * this.dpr, this.key, "min_pic_bg", {
             left: 5 * this.dpr,
@@ -807,6 +827,45 @@ class BlackContainer extends SubFriendContainer {
     constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number) {
         super(scene, width, heigth, key, dpr);
         this.friendType = FriendChannel.Blacklist;
+    }
+
+    draw() {
+        super.draw();
+        this.titleText.setText(i18n.t("friendlist.blacklist"));
+    }
+}
+
+class NewFansContainer extends SubFriendContainer {
+    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number) {
+        super(scene, width, heigth, key, dpr);
+        this.friendType = FriendChannel.Blacklist;
+    }
+
+    draw() {
+        super.draw();
+        this.titleText.setText(i18n.t("friendlist.new_fans"));
+    }
+}
+
+class NewFriendContainer extends SubFriendContainer {
+    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number) {
+        super(scene, width, heigth, key, dpr);
+        this.friendType = FriendChannel.Blacklist;
+    }
+
+    draw() {
+        super.draw();
+        this.titleText.setText(i18n.t("friendlist.new_friend"));
+    }
+}
+
+class SearchInput extends LabelInput {
+    private searchBtn: Button;
+    constructor(scene: Phaser.Scene, config: any, key: string) {
+        super(scene, config);
+
+        this.searchBtn = new Button(this.scene, key, "search");
+        this.add(this.searchBtn);
     }
 }
 
