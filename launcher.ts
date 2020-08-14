@@ -23,6 +23,7 @@ export interface ILauncherConfig {
     devicePixelRatio?: number;
     scale_ratio?: number;
     platform?: string;
+    keyboardHeight: number;
     width: number;
     height: number;
     readonly screenWidth: number;
@@ -94,6 +95,7 @@ export class Launcher {
     readonly minHeight = 720;
     readonly maxWidth = 1920;
     readonly maxHeight = 1080;
+    readonly keyboardHeight = 256;
     private world: GameMain;
     private intervalId: any;
     private mReload: Function;
@@ -109,6 +111,7 @@ export class Launcher {
         // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
         width: this.minWidth,
         height: this.minHeight,
+        keyboardHeight: this.keyboardHeight,
         screenWidth: this.minWidth,
         screenHeight: this.minHeight,
         baseWidth: this.maxWidth,
