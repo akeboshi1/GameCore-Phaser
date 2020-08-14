@@ -117,6 +117,7 @@ export class VerifiedPanel extends BasePanel {
             fontSize: 14 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
+        this.mVerifiedBtn.on(CoreUI.MouseEvent.Down, this.onVerifiedDownHandler, this);
         this.mVerifiedBtn.on(CoreUI.MouseEvent.Tap, this.onVerifiedHandler, this);
         this.mVerifiedBtn.y -= this.mVerifiedBtn.height / 2;
         this.mVerifiedBtn.setFontStyle("bold");
@@ -130,8 +131,6 @@ export class VerifiedPanel extends BasePanel {
     private onVerifiedHandler() {
         const name = this.mNameInput.text;
         const idCard = this.mIDCardInput.text;
-        this.mNameInput.setBlur();
-        this.mIDCardInput.setBlur();
         if (!name) {
             this.emit("error", "[color=#F9361B]名字不能为空[/color]");
             return;
@@ -141,6 +140,13 @@ export class VerifiedPanel extends BasePanel {
             return;
         }
         this.emit("verified", name, idCard);
+    }
+
+    private onVerifiedDownHandler() {
+        if (this.mNameInput) {
+            this.mNameInput.setBlur();
+            this.mIDCardInput.setBlur();
+        }
     }
 
     private createInput(input: InputText, name: string, x: number, y: number) {

@@ -308,14 +308,14 @@ class MainContainer extends FriendContainer {
         let target = null;
         this.friendDatas.set(type, data);
         for (const friend of data) {
-            // target = friend.followed_user || friend.user || friend;
-            if (type === FriendChannel.Followes) {
-                target = friend.followed_user;
-            } else if (type === FriendChannel.Fans) {
-                target = friend.user;
-            } else {
-                target = friend;
-            }
+            target = friend.followed_user || friend.user || friend;
+            // if (type === FriendChannel.Followes) {
+            //     target = friend.followed_user;
+            // } else if (type === FriendChannel.Fans) {
+            //     target = friend.user;
+            // } else {
+            //     target = friend;
+            // }
             if (target) result.push({ type, id: target._id, nickname: target.nickname});
         }
         this.sortByName(result);

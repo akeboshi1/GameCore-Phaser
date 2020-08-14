@@ -165,6 +165,7 @@ export class LoginPanel extends BasePanel {
         this.fetchCode.x = (codeContainer.width - this.fetchCode.width) * 0.5 - 22 * this.dpr;
         this.fetchCode.setResolution(this.dpr);
         this.fetchCode.on("pointerup", this.onFetchCodeHandler, this);
+        this.fetchCode.on("pointerdown", this.onFetchCodeDownHandler ,this);
         codeContainer.add([line, this.fetchCode]);
 
         this.loginBtn = new NineSliceButton(this.scene, width * 0.5, codeContainer.y + codeContainer.height + 33 * this.dpr, 191 * this.dpr, 50 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
@@ -179,6 +180,7 @@ export class LoginPanel extends BasePanel {
             fontFamily: Font.DEFULT_FONT
         });
         this.loginBtn.setFontStyle("bold");
+        this.loginBtn.on(CoreUI.MouseEvent.Down, this.LoginDownHandler, this);
         this.loginBtn.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
 
         const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#FFEC48]《用户服务协议》[/color][/area]和[area=privacy][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
@@ -223,10 +225,15 @@ export class LoginPanel extends BasePanel {
         return container;
     }
 
+    private onFetchCodeDownHandler() {
+        if (this.mPhoneInput) {
+            this.mPhoneCodeInput.setBlur();
+            this.mPhoneInput.setBlur();
+        }
+    }
+
     private onFetchCodeHandler() {
         const text = this.mPhoneInput.text;
-        this.mPhoneCodeInput.setBlur();
-        this.mPhoneInput.setBlur();
         if (text.length !== 11) {
             this.emit("error", "手机格式错误");
             return;
@@ -255,8 +262,6 @@ export class LoginPanel extends BasePanel {
     private tryLogin() {
         const phone = this.mPhoneInput.text;
         const code = this.mPhoneCodeInput.text;
-        this.mPhoneCodeInput.setBlur();
-        this.mPhoneInput.setBlur();
         if (phone.length !== 11) {
             this.emit("error", "手机格式错误");
             return;
@@ -266,6 +271,13 @@ export class LoginPanel extends BasePanel {
             return;
         }
         this.emit("login", phone, code, this.areaCode);
+    }
+
+    private LoginDownHandler() {
+        if (this.mPhoneInput) {
+            this.mPhoneCodeInput.setBlur();
+            this.mPhoneInput.setBlur();
+        }
     }
 
     private onCheckboxHandler() {

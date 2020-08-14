@@ -2,6 +2,7 @@ export interface IAccountData {
     token: string;
     expire: number;
     fingerprint: string;
+    id: string;
 }
 
 export class Account {
@@ -17,6 +18,7 @@ export class Account {
             token: "",
             expire: 0,
             fingerprint: "",
+            id: ""
         };
         Object.assign(this.mCurAccountData, val);
     }
