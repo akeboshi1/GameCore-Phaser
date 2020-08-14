@@ -270,7 +270,7 @@ export class FurniBagPanel extends BasePanel {
       y: 30 * this.dpr
     }).setInteractive();
     const btnwidth = 90 * this.dpr;
-    const btnHeight = 40 * this.dpr;
+    const btnHeight = 38 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
     const btnPosY = this.mShelfContainer.y - 25 * this.dpr;
 
@@ -278,7 +278,7 @@ export class FurniBagPanel extends BasePanel {
     this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("common.sold"), "#FFFFFF");
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.use"), "#996600");
     this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.save"), "#996600");
-    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY - btnHeight - 5 * this.dpr, 40 * this.dpr, 40 * this.dpr, this.commonkey, "red_btn");
+    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY - btnHeight - 5 * this.dpr, 38 * this.dpr, 38 * this.dpr, this.commonkey, "red_btn");
     const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
     this.resetBtn.add(reseticon);
     this.mDetailDisplay = new DetailDisplay(this.scene);

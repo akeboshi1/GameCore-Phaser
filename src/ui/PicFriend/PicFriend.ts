@@ -15,8 +15,9 @@ export class PicFriend extends PacketHandler {
         this.world = world;
         this.mEvent = new Phaser.Events.EventEmitter();
         this.httpService = world.httpService;
-        this.userId = world.getConfig().user_id;
+        if (world.account && world.account.accountData) this.userId = world.account.accountData.id;
     }
+
     register() {
         const connection = this.connection;
         if (connection) {

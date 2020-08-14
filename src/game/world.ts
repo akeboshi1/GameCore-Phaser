@@ -687,6 +687,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
                     fingerprint: this.mConfig.token_fingerprint,
+                    id: this.mConfig.user_id,
                 });
             }
             this.loginEnterWorld();

@@ -45,7 +45,6 @@ export class MarketItem extends Phaser.GameObjects.Container {
       x: 45 * this.dpr,
       y: 40 * this.dpr,
       key: "market",
-      frame: "tuding_icon"
     }, false).setOrigin(0);
 
     const priceBg = this.scene.make.image({
