@@ -102,7 +102,7 @@ export class Launcher {
         auth_token: CONFIG.auth_token,
         token_expire: CONFIG.token_expire,
         token_fingerprint: CONFIG.token_fingerprint,
-        user_id: "",
+        user_id: CONFIG.user_id,
         server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
         game_id: CONFIG.game_id,
         virtual_world_id: CONFIG.virtual_world_id,
