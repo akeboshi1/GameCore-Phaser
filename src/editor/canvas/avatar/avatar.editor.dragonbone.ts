@@ -4,6 +4,7 @@ import * as url from "url";
 import { AvatarDirEnum, IAvatarSet } from "game-capsule/lib/configobjects/avatar";
 import * as _ from "lodash";
 import { Logger } from "../../../utils/log";
+import { AvatarEditorEmitType } from "./avatar.editor.canvas";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
@@ -49,6 +50,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
 
+    private mEmitter: Phaser.Events.EventEmitter;
     private mWebHomePath: string;
     private mCurAnimationName: string = "idle_3";
     private mCurDir: AvatarDirEnum = AvatarDirEnum.Front;
@@ -56,10 +58,16 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mSets: IAvatarSet[] = [];
     private mParts: { [key: string]: IAvatarSet } = {};
 
-    constructor(scene: Phaser.Scene, webHomePath: string) {
+    // batch generate shop icon
+    private mRunningBatchGenerateShopIcon: boolean = false;
+    private mLeftGenerateShopIconData: IAvatarSet[] = [];
+    private mGenerateShopIconSizes: Array<{ width: number, height: number }> = [];
+
+    constructor(scene: Phaser.Scene, webHomePath: string, emitter: Phaser.Events.EventEmitter) {
         super(scene);
 
         this.mWebHomePath = webHomePath;
+        this.mEmitter = emitter;
 
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
@@ -160,6 +168,19 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     });
             }
         });
+    }
+
+    public batchGenerateShopIcon(sizes: Array<{ width: number, height: number }>, datas: IAvatarSet[]) {
+        if (this.mRunningBatchGenerateShopIcon) {
+            Logger.getInstance().error("task not finished");
+            return;
+        }
+
+        this.mLeftGenerateShopIconData = [].concat(datas);
+        this.mGenerateShopIconSizes = [].concat(sizes);
+
+        this.mRunningBatchGenerateShopIcon = true;
+        this.batchStep();
     }
 
     public onResourcesLoaded() {
@@ -327,7 +348,10 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
             this.mArmatureDisplay.animation.play(this.mCurAnimationName);
 
-            setTimeout(resolve, 100, true);
+            setTimeout(() => {
+                if (this.mRunningBatchGenerateShopIcon) this.generateShopIconAndEmit();
+                resolve(true);
+            }, 100, true);
         });
     }
 
@@ -418,5 +442,33 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
 
         return null;
+    }
+
+    private batchStep() {
+        if (this.mLeftGenerateShopIconData.length <= 0) {
+            this.mEmitter.emit(AvatarEditorEmitType.Shop_Icon_Generate_Finished);
+            this.mRunningBatchGenerateShopIcon = false;
+            return;
+        }
+
+        const data = this.mLeftGenerateShopIconData.pop();
+
+        this.mSets = [];
+        this.mSets.push(data);
+        this.setBaseSets(this.MODELSETS);
+        this.reloadParts();
+    }
+
+    private generateShopIconAndEmit() {
+        const tasks: Array<Promise<string>> = [];
+        for (const size of this.mGenerateShopIconSizes) {
+            tasks.push(this.generateShopIcon(size.width, size.height));
+        }
+
+        Promise.all(tasks)
+            .then((urls) => {
+                this.mEmitter.emit(AvatarEditorEmitType.Shop_Icon_Generated, { id: this.mSets[0].id, urls });
+                this.batchStep();
+            });
     }
 }

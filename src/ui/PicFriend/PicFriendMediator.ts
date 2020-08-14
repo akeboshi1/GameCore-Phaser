@@ -92,7 +92,7 @@ export class PicFriendMediator extends BaseMediator {
 
     private onFollowHandler(id: string) {
         this.picFriend.follow(id).then((response) => {
-
+            this.mView.filterById(id);
         });
     }
 
@@ -104,7 +104,7 @@ export class PicFriendMediator extends BaseMediator {
 
     private onBanUserHandler(fuid: string) {
         this.picFriend.banUser(fuid).then(() => {
-            // this.mView.
+            this.mView.filterById(fuid);
         });
     }
 

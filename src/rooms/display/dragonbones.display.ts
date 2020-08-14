@@ -109,7 +109,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     public set displayInfo(val: IDragonbonesModel | undefined) {
         this.mNeedReplaceTexture = this.checkNeedReplaceTexture(this.mDisplayInfo, val);
-        Logger.getInstance().log("ZW-- set displayInfo:", val, this.mNeedReplaceTexture);
+        // console.log("ZW-- set displayInfo:", val, this.mNeedReplaceTexture);
 
         this.mDisplayInfo = val;
     }
@@ -240,7 +240,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
 
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
-        // this.clearArmatureSlot();
+        this.clearArmatureSlot();
         // ==========替换相应格位的display，服务端通信后可调用
         this.getReplaceArr();
         this.showReplaceArmatrue();
@@ -305,6 +305,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         for (const obj of this.replaceArr) {
             this.replacePartDisplay(obj.slot, obj.part, obj.dir, obj.skin);
         }
+        // this.hideUnreplacedParts();
         if (this.mLoadMap && this.mLoadMap.size > 0) {
             this.startLoad();
         } else {
@@ -750,6 +751,21 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         }
     }
 
+    private hideUnreplacedParts() {
+        // console.log("ZW-- replaceArr:", this.replaceArr);
+        const replaceSlots = [];
+        for (const rep of this.replaceArr) {
+            const part: string = rep.slot.replace("$", rep.dir.toString());
+            const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
+            replaceSlots.push(slot);
+        }
+
+        const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
+        for (const slot of slotList) {
+            if (slot) slot.display.visible = replaceSlots.includes(slot);
+        }
+    }
+
     // set loadMap
     private replacePartDisplay(soltName: string, soltPart: string, soltDir: number, skin: number): void {
         const part: string = soltName.replace("$", soltDir.toString());
@@ -815,28 +831,27 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     private refreshAvatar() {
-        this.clearArmatureSlot();
-
         // replace unpacked slots
+        const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
         for (const rep of this.replaceArr) {
             const part: string = rep.slot.replace("$", rep.dir.toString());
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
-            if (!this.UNPACKSLOTS.includes(rep.slot)) {
-                slot.display.visible = true;
-                continue;
-            }
             const key = rep.part.replace("#", rep.skin.toString()).replace("$", rep.dir.toString());
             const partName: string = ResUtils.getPartName(key);
+            const frameName: string = "test resources/" + key;
+            if (!this.UNPACKSLOTS.includes(rep.slot)) {
+                slot.display.visible = this.scene.textures.exists(partName) || dragonBonesTexture.frames[frameName];
+                continue;
+            }
             if (this.scene.textures.exists(partName)) {
                 const img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
                 // slot.replaceDisplay(img);
                 slot.display = img;
-                Logger.getInstance().log("ZW-- slot.replaceDisplay: ", slot, partName);
+                // console.log("ZW-- slot.replaceDisplay: ", slot, partName);
             }
         }
 
         if (this.mNeedReplaceTexture) {
-            const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
             const frames = dragonBonesTexture.getFrameNames();
             // ==============重绘贴图方式
             // if (this.mLoadMap.size > 0) {

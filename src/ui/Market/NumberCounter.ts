@@ -94,6 +94,11 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mLabelInput.setBlur();
   }
 
+  destroy() {
+    this.removeActionListener();
+    super.destroy();
+  }
+
   get number(): number {
     return parseInt(this.mLabelInput.text, 10);
   }
@@ -161,11 +166,11 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     }
   }
   private pointerDownHandler(pointer: Phaser.Input.Pointer) {
-
     if (!this.checkPointerInBounds(this, pointer)) {
       this.mLabelInput.setBlur();
     }
   }
+
   private checkPointerInBounds(gameObject: any, pointer: Phaser.Input.Pointer, isCell: Boolean = false): boolean {
     if (!this.mRectangle) {
       this.mRectangle = new Phaser.Geom.Rectangle(0, 0, 0, 0);
