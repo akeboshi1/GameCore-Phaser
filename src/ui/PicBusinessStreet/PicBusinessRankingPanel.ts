@@ -49,6 +49,7 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
             width: scrollwidth,
             height: scrollHeight,
             zoom: this.zoom,
+            dpr: this.dpr,
             align: 2,
             orientation: 1,
             space: 20 * this.dpr,

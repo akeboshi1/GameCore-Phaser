@@ -303,6 +303,7 @@ export class FurniBagPanel extends BasePanel {
       height: 41 * this.dpr,
       zoom: this.scale,
       orientation: 1,
+      dpr: this.dpr,
       // valuechangeCallback: (newValue) => {
       //   this.refreshPos(newValue);
       // },
