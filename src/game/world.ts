@@ -41,6 +41,7 @@ import { Tool } from "../utils/tool";
 import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { HttpClock } from "../rooms/http.clock";
+import { LoadingTips } from "../loading/loading.tips";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -141,6 +142,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+
+        initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
 
         this.mRoleManager.register();
         // this.mCharacterManager = new CharacterManager(this);
@@ -475,6 +478,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public loadSceneConfig(sceneId: string) {
         const url = this.getConfigUrl(sceneId);
+        this.mLoadingManager.start(LoadingTips.downloadSceneConfig());
         return this.loadGameConfig(url);
     }
 
@@ -527,7 +531,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.uiManager.destroy();
         this.uiManager.addPackListener();
         // loginScene.remove();
-        this.mLoadingManager.start();
+        this.mLoadingManager.start(LoadingTips.enterGame());
         // this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
@@ -675,14 +679,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         if (this.mConfig && this.mConnection) {
             this.mAccount = new Account();
-            this.mLoadingManager.start();
+            // this.mLoadingManager.start();
             // test login and verified
             if (!this.mConfig.auth_token) {
                 this.login();
                 return;
             } else {
                 // this.mGame.scene.start(LoadingScene.name, { world: this });
-                this.mLoadingManager.start();
+                // this.mLoadingManager.start();
                 this.mAccount.setAccount({
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
@@ -695,7 +699,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private async loginEnterWorld() {
-        await initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
+        this.mLoadingManager.start(LoadingTips.enterGame());
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         // Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
@@ -744,6 +748,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         const mainGameConfigUrl = this.gameConfigUrl;
 
+        this.mLoadingManager.start(LoadingTips.downloadGameConfig());
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
@@ -837,6 +842,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private gameCreated() {
         if (this.connection) {
+            this.mLoadingManager.start(LoadingTips.waitEnterRoom());
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
             if (this.mCallBack) {
@@ -858,6 +864,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
         return load(configPath, "arraybuffer").then((req: any) => {
             Logger.getInstance().log("start decodeConfig");
+            this.mLoadingManager.start(LoadingTips.parseConfig());
             return this.decodeConfigs(req);
         });
     }
