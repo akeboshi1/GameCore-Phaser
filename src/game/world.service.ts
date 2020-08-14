@@ -41,7 +41,7 @@ export interface WorldService {
     getGameConfig(): Phaser.Types.Core.GameConfig;
     onFocus();
     onBlur();
-
+    setKeyBoardHeight(height: number);
     changeRoom(room: IRoomService);
 
     startFullscreen();

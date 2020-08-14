@@ -175,6 +175,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         return this.mConfig;
     }
 
+    setKeyBoardHeight(height) {
+        this.mConfig.keyboardHeight = height;
+    }
+
     setGameConfig(config: Capsule) {
         this.elementStorage.setGameConfig(config);
     }
