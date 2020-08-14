@@ -163,6 +163,7 @@ export class PicaRoomListPanel extends BasePanel {
       height: h,
       boundPad0: - 40 * this.dpr * zoom,
       zoom,
+      dpr: this.dpr,
       // bounds: [
       //   this.y,
       //   this.y - h - 100 * this.dpr + (350 * this.dpr / 2)

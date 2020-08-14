@@ -159,6 +159,7 @@ export class ComposePanel extends BasePanel {
             zoom: this.scale,
             align: 2,
             orientation: 1,
+            dpr: this.dpr,
             celldownCallBack: (gameobject) => {
                 this.materialTipsCon.visible = true;
                 this.onMaterialItemHandler(gameobject);

@@ -131,6 +131,7 @@ export class TaskPanel extends BasePanel {
             width: bgwidth,
             height: bgHeight - 70 * this.dpr,
             zoom: this.scale,
+            dpr: this.dpr,
             align: 2,
             orientation: 0,
             space: 20 * this.dpr

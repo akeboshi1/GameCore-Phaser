@@ -223,6 +223,7 @@ export default class CharacterInfoPanel extends BasePanel {
             height: scrollHeight,
             zoom: this.scale,
             orientation: 1,
+            dpr: this.dpr,
             cellupCallBack: (gameobject) => {
                 this.onSelectSubCategoryHandler(gameobject);
             }
