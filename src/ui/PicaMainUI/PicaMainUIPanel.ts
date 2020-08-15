@@ -315,7 +315,7 @@ class ValueContainer extends Phaser.GameObjects.Container {
             height: bg.height,
             style: {
                 fontSize: 14 * dpr,
-                fontFamily: Font.DEFULT_FONT
+                fontFamily: Font.NUMBER
             }
         }, false).setOrigin(0.5);
         this.mText.setStroke("#000000", 1 * dpr);

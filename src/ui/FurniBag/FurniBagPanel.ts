@@ -492,7 +492,7 @@ export class FurniBagPanel extends BasePanel {
   private isContainProperty(obj: any, obj1: any) {
     let canreplace = true;
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
+      if (key!=="headBackId"&&key!=="bodyDresId"&&obj.hasOwnProperty(key)) {
         if (!obj1.hasOwnProperty(key)) {
           canreplace = false;
           break;

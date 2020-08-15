@@ -10,6 +10,7 @@ export class Font {
     static readonly ZH_MAIN = "Source Han Sans";
     static readonly EN_MAINT = "tt0503m_";
     static readonly EN_BOLD = "tt0173m_";
+    static readonly NUMBER = "t04B25";
     static get DEFULT_FONT() {
         if (i18n.language === "en") {
             return this.EN_MAINT;
