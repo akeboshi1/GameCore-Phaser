@@ -33,6 +33,8 @@ export class PicFriendMediator extends BaseMediator {
             this.mView.on(PicFriendEvent.BanUser, this.onBanUserHandler, this);
             this.mView.on(PicFriendEvent.REMOVE_BAN_USER, this.onRemoveBanUserHandler, this);
             this.mView.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
+            this.mView.on(PicFriendEvent.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
+            this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
         }
         if (!this.picFriend) {
             this.picFriend = new PicFriend(this.world);
@@ -119,6 +121,21 @@ export class PicFriendMediator extends BaseMediator {
     private onRemoveBanUserHandler(fuid: string) {
         this.picFriend.removeBanUser(fuid).then((response) => {
             this.mView.filterById(fuid);
+        });
+    }
+
+    private onReqBlacklistHandler() {
+        this.picFriend.getBanlist().then((response) => {
+            this.mView.setFriend(FriendChannel.Blacklist, response.data);
+        });
+    }
+
+    private onRemoveFromBlacklistHandler(args) {
+        if (!args || args.length < 1) {
+            return;
+        }
+        this.picFriend.removeBanUser(args[0]).then((response) => {
+            this.mView.filterById(args[0]);
         });
     }
 

@@ -4,15 +4,17 @@ import { Size } from "../utils/size";
 import { Url } from "../utils/resUtil";
 import { Logger } from "../utils/log";
 import { BasicScene } from "./basic.scene";
+import { Font } from "../utils/font";
 
 export class LoadingScene extends BasicScene {
   private mWorld: WorldService;
   private mRoom: IRoomService;
-  private grass: Phaser.GameObjects.Sprite;
   private bg: Phaser.GameObjects.Sprite;
   private mCallback: Function;
   private curtain: Curtain;
+  private progressText: Phaser.GameObjects.Text;
   private mRequestCom: boolean = false;
+  private tipsText: string;
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -37,6 +39,7 @@ export class LoadingScene extends BasicScene {
     this.mRoom = data.room;
     this.mRequestCom = false;
     this.mCallback = data.callBack;
+    this.tipsText = data.text;
   }
 
   public create() {
@@ -54,13 +57,6 @@ export class LoadingScene extends BasicScene {
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;
     // 手动把json配置中的frames给予anims
-    // this.anims.create({
-    //   key: "grass_anis",
-    //   frames: this.anims.generateFrameNames("grass", { prefix: "grass_", start: 1, end: 3, zeroPad: 1, suffix: ".png" }),
-    //   frameRate: 5,
-    //   yoyo: true,
-    //   repeat: -1
-    // });
 
     this.anims.create({
       key: "loading_anis",
@@ -69,29 +65,23 @@ export class LoadingScene extends BasicScene {
       repeat: -1
     });
 
-    // this.grass = this.add.sprite(0, height, "grass").setOrigin(0.5, 1).setScale(this.mWorld.uiScale);
-    // this.lo.setScale(this.mWorld.uiScale);
-    this.scale.on("resize", this.checkSize, this);
-    // this.grass.play("grass_anis");
-
-    this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.mWorld.uiScale * this.mWorld.uiRatio * 2);
+    const dpr = this.mWorld.uiRatio;
+    this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.mWorld.uiScale * dpr * 2);
     this.bg.play("loading_anis");
     this.curtain = new Curtain(this, this.mWorld);
-    // this.curtain.open().then(() => {
-    // this.bg.x = 0;
-    // this.add.tween({
-    //   targets: this.bg,
-    //   props: { x: width, rotation: -720 },
-    //   duration: 2000,
-    //   loop: -1
-    // });
-    // });
+
+    this.progressText = this.add.text(this.bg.x, this.bg.y + this.bg.displayHeight * 0.5, this.tipsText, {
+      fontSize: 12 * dpr,
+      fontFamily: Font.DEFULT_FONT
+    }
+    ).setOrigin(0.5);
 
     this.checkSize(new Size(width, height));
     if (this.mCallback) {
       this.mCallback.call(this, this);
       this.mCallback = undefined;
     }
+    this.scale.on("resize", this.checkSize, this);
   }
 
   public async show() {
@@ -100,7 +90,6 @@ export class LoadingScene extends BasicScene {
       return Promise.resolve();
     }
     if (this.bg) this.bg.visible = false;
-    // if (this.grass) this.grass.visible = false;
     return this.curtain.open();
   }
 
@@ -109,19 +98,27 @@ export class LoadingScene extends BasicScene {
       return;
     }
     if (this.bg) this.bg.visible = false;
-    // if (this.grass) this.grass.visible = false;
     return this.curtain.close();
   }
 
   public awake(data?: any) {
     this.scale.on("resize", this.checkSize, this);
     this.scene.wake();
+    if (!data) {
+      return;
+    }
+    this.tipsText = data.text;
+    if (data.text && this.progressText) {
+      this.progressText.setText(data.text);
+    }
   }
 
   public sleep() {
+    if (this.progressText) {
+      this.progressText.setText("");
+    }
     if (this.curtain) {
       if (this.bg) this.bg.visible = false;
-      // if (this.grass) this.grass.visible = false;
       this.curtain.close().then(() => {
         this.scale.off("resize", this.checkSize, this);
         this.scene.sleep();
@@ -132,21 +129,19 @@ export class LoadingScene extends BasicScene {
     }
   }
 
+  appendProgress(text: string) {
+    if (this.progressText) {
+      // let str = this.progressText.text;
+      // str += `${text}\n`;
+      this.progressText.setText(text);
+    }
+  }
+
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
 
   private checkSize(size: Size) {
-    const { width, height } = size;
-    // if (this.grass) {
-    //   this.grass.x = width * 0.5;
-    //   this.grass.y = height;
-    // }
-    if (this.bg) {
-      // this.bg.y = height * 0.5;
-      // this.bg.x = 0; // + this.bg.width * this.bg.originX;
-      // this.bg.y = (height - 4 * this.mWorld.uiRatio) - this.bg.displayHeight * this.bg.originY;
-    }
   }
 
   private createFont() {

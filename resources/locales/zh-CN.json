@@ -161,5 +161,13 @@
   "friend_invite": {
     "refused": "拒绝",
     "agree": "同意"
+  },
+  "loading": {
+    "enter_game": "正在进入游戏",
+    "logging": "正在登录...",
+    "downloading_config": "下载游戏配置...",
+    "downloading_scene_config": "下载场景配置...",
+    "parse_config": "解析配置...",
+    "wait_enter_room": "等待进入房间"
   }
 }

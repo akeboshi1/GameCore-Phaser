@@ -214,7 +214,7 @@ export class LoginPanel extends BasePanel {
         const container = this.scene.make.container({ x, y }, false);
         const frame = this.scene.textures.getFrame(this.key, "input_bg");
         // const height = frame ? frame.height || 50 * this.dpr;
-        const bg = new NineSlicePatch(this.scene, input.x - 8 * this.dpr, input.y, width ? width : input.width + 14 * this.dpr, frame.height, this.key, "input_bg", {
+        const bg = new NineSlicePatch(this.scene, input.x - 8 * this.dpr, input.y, (width ? width : input.width) + 14 * this.dpr, frame.height, this.key, "input_bg", {
             left: 27 * this.dpr,
             top: 0 * this.dpr,
             right: 28 * this.dpr,

@@ -93,7 +93,8 @@ export default class PicFriendPanel extends BasePanel {
     public setFriend(type: FriendChannel, data) {
         const subContaienr = this.mSubContanerMap.get(type);
         if (subContaienr) {
-            subContaienr.setItem(data);
+            if (this.mShowingSubContainer) this.mShowingSubContainer.setItems(data);
+            return;
         }
         if (this.friendContainer) {
             this.friendContainer.showFriend(type, data);
@@ -174,8 +175,12 @@ export default class PicFriendPanel extends BasePanel {
         this.mShowingSubContainer.resize();
         this.mShowingSubContainer.register();
         this.mShowingSubContainer.on("hide", this.onHideSearchHandler, this);
+        this.mShowingSubContainer.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
         this.content.remove(this.friendContainer);
         this.content.add(this.mShowingSubContainer);
+
+        const eventName = this.mShowingSubContainer.fetchEventName();
+        if (eventName) this.emit(eventName);
     }
 
     private onHideSearchHandler() {
@@ -185,6 +190,10 @@ export default class PicFriendPanel extends BasePanel {
             this.mShowingSubContainer.destroy();
             this.mShowingSubContainer = null;
         }
+    }
+
+    private onRendererEventHandler(event: string, ...args) {
+        if (event) this.emit(event, args);
     }
 }
 
@@ -308,14 +317,13 @@ class MainContainer extends FriendContainer {
         let target = null;
         this.friendDatas.set(type, data);
         for (const friend of data) {
-            target = friend.followed_user || friend.user || friend;
-            // if (type === FriendChannel.Followes) {
-            //     target = friend.followed_user;
-            // } else if (type === FriendChannel.Fans) {
-            //     target = friend.user;
-            // } else {
-            //     target = friend;
-            // }
+            if (type === FriendChannel.Followes) {
+                target = friend.followed_user;
+            } else if (type === FriendChannel.Fans) {
+                target = friend.user;
+            } else {
+                target = friend;
+            }
             if (target) result.push({ type, id: target._id, nickname: target.nickname});
         }
         this.sortByName(result);
@@ -723,7 +731,7 @@ class BlacklistRenderer extends FansRenderer {
     }
 
     protected onAddHandler() {
-        this.owner.emit(PicFriendEvent.REMOVE_FROM_BLACKLIST);
+        this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.REMOVE_FROM_BLACKLIST, this.itemData.id);
     }
 }
 
@@ -747,16 +755,15 @@ class SubFriendContainer extends FriendContainer {
     public resize() {
         if (this.gridTable) {
             this.gridTable.resetMask();
-            const items = [];
-            for (let i = 0; i < 10000; i++) {
-                items.push({ type: this.friendType, id: "0", nickname: `friend: ${i}` });
-            }
-            this.gridTable.setItems(items);
         }
     }
 
     public setItems(items: any[]) {
         if (this.gridTable) this.gridTable.setItems(items);
+    }
+
+    public fetchEventName() {
+        return "";
     }
 
     public destroy() {
@@ -770,7 +777,9 @@ class SubFriendContainer extends FriendContainer {
         this.backBtn.setPosition((-this.width + this.backBtn.width) * 0.5 + 21.67 * this.dpr, (-this.height + this.backBtn.height) * 0.5 + 47 * this.dpr);
 
         this.gridTable = this.createGrideTable(0, 18 * this.dpr, 275 * this.dpr, 400 * this.dpr, 275 * this.dpr, 36 * this.dpr, () => {
-            return new PicFriendItem(this.scene, 0, 0, this.key, this.dpr);
+            const item = new PicFriendItem(this.scene, 0, 0, this.key, this.dpr);
+            item.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
+            return item;
         }, new Handler(this.onItemClickHandler));
 
         this.add([this.backBtn]);
@@ -782,6 +791,10 @@ class SubFriendContainer extends FriendContainer {
 
     protected onItemClickHandler() {
 
+    }
+
+    protected onRendererEventHandler(event: string, ...args) {
+        this.emit(PicFriendEvent.RENDERER_EVENT, event, args);
     }
 }
 
@@ -832,6 +845,23 @@ class BlackContainer extends SubFriendContainer {
     draw() {
         super.draw();
         this.titleText.setText(i18n.t("friendlist.blacklist"));
+    }
+
+    setItems(data: any[]) {
+        if (!data) {
+            return;
+        }
+        const result = [];
+        let followed_user = null;
+        for (const friend of data) {
+            followed_user = friend.followed_user;
+            if (followed_user) result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname });
+        }
+        this.gridTable.setItems(result);
+    }
+
+    fetchEventName() {
+        return PicFriendEvent.REQ_BLACKLIST;
     }
 }
 

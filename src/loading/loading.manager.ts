@@ -1,5 +1,6 @@
 import { WorldService } from "../game/world.service";
 import { LoadingScene } from "../scenes/loading";
+import { Logger } from "../utils/log";
 
 export interface IAsset {
     type: string;
@@ -8,7 +9,7 @@ export interface IAsset {
 }
 
 export interface ILoadingManager {
-    start(): Promise<any>;
+    start(text?: string): Promise<any>;
     addAssets(asset: IAsset[]): Promise<any>;
     destroy();
 }
@@ -24,7 +25,7 @@ export class LoadingManager {
         this.mResources = [];
     }
 
-    async start(callBack?: Function) {
+    async start(text?: string) {
         const sceneManager = this.game.scene;
         if (!sceneManager) {
             return Promise.reject("start faild. SceneManager does not exist");
@@ -36,6 +37,7 @@ export class LoadingManager {
         if (loading) {
             loading.awake({
                 world: this.world,
+                text,
                 callBack: (scene: Phaser.Scene) => {
                     this.scene = scene;
                     if (this.mResources.length > 0) {
@@ -47,6 +49,7 @@ export class LoadingManager {
         } else {
             sceneManager.start(LoadingScene.name, {
                 world: this.world,
+                text,
                 callBack: (scene: Phaser.Scene) => {
                     this.scene = scene;
                     if (this.mResources.length > 0) {

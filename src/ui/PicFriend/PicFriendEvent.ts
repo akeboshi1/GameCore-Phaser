@@ -25,6 +25,11 @@ export namespace PicFriendEvent {
     export const REMOVE_BAN_USER: string = "removeBanUser";
 
     /**
+     * 请求黑名单
+     */
+    export const REQ_BLACKLIST: string = "ReqBlacklist";
+
+    /**
      * 请求好友属性，并打开好友属性面板
      */
     export const REQ_FRIEND_ATTRIBUTES: string = "reqFriendAttributes";
@@ -38,4 +43,9 @@ export namespace PicFriendEvent {
      * 从黑名单移除
      */
     export const REMOVE_FROM_BLACKLIST: string = "removeFromBlacklist";
+
+    /**
+     * renderer emit event
+     */
+    export const RENDERER_EVENT: string = "rendererEvent";
 }
