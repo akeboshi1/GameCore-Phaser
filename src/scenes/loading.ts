@@ -109,13 +109,13 @@ export class LoadingScene extends BasicScene {
     }
     this.tipsText = data.text;
     if (data.text && this.progressText) {
-      this.progressText.setText(data.text);
+      if (this.progressText.active) this.progressText.setText(data.text);
     }
   }
 
   public sleep() {
     if (this.progressText) {
-      this.progressText.setText("");
+      if (this.progressText.active) this.progressText.setText("");
     }
     if (this.curtain) {
       if (this.bg) this.bg.visible = false;
