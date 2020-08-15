@@ -47,7 +47,7 @@ export class LoadingScene extends BasicScene {
       WebFont.load({
         custom: {
           // families: ["Source Han Sans", "tt0173m_", "tt0503m_"]
-          families: ["Source Han Sans", "tt0173m_", "tt0503m_"]
+          families: ["Source Han Sans", "tt0173m_", "tt0503m_", "t04B25"]
         },
       });
     } catch (error) {
@@ -150,11 +150,12 @@ export class LoadingScene extends BasicScene {
     const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
     const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
     const styles2 = "@font-face { font-family: 'tt0173m_'; src: url('./resources/fonts/en/tt0173m_.ttf') format('truetype');font-display:swap }\n";
-    const styles3 = "@font-face { font-family: 'tt0503m_'; src: url('./resources/fonts/en/tt0503m_.ttf') format('truetype'); font-display:swap}";
+    const styles3 = "@font-face { font-family: 'tt0503m_'; src: url('./resources/fonts/en/tt0503m_.ttf') format('truetype'); font-display:swap}\n";
+    const styles4 = "@font-face { font-family: 't04B25'; src: url('./resources/fonts/04B.ttf') format('truetype'); font-display:swap}";
     sheet.insertRule(styles, 0);
     sheet.insertRule(styles2, 0);
     sheet.insertRule(styles3, 0);
-
+    sheet.insertRule(styles4, 0);
   }
 
 }

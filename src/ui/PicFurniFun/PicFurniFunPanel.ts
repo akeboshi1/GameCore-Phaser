@@ -269,7 +269,7 @@ export class PicFurniFunPanel extends BasePanel {
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
-        let text: string = "";
+        let text: string = data.name + "\n";
         let source = i18n.t("furni_unlock.source");
         source += data.source;
         source = `[stroke=#333333][color=#333333]${source}[/color][/stroke]`;

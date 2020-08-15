@@ -43,7 +43,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         const marketPlanPairs = content.marketPlanPairs;
         this.topbg.setFrame(content.industryBackground);
         this.describleText.text = content.industryDes;
-        this.planBuffText.text = content.industryDes;
+        this.planBuffText.text = content.industryBuffDes;
         this.gridtable.setItems(marketPlanPairs);
     }
 
@@ -204,6 +204,9 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         }).setOrigin(0);
         this.add(this.planAtt);
         const barWdith = 159 * dpr, barHeight = 8 * dpr;
+        const textConfig = <any>{
+            x: 0, y: 0, color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT, halign: 0.5, valign: 0.5
+        };
         this.progress = new ProgressBar(this.scene, {
             x: 5 * dpr,
             y: this.planAtt.y + this.planAtt.height + 4 * dpr + barHeight * 0.5,
@@ -238,8 +241,9 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
                 frame: "progress_bar_g"
             },
             dpr,
-            textConfig: undefined
+            textConfig
         });
+        this.progress.text.setOrigin(0.5);
         this.add(this.progress);
         this.addBtn = new Button(this.scene, this.key, "add_plan", "add_plan");
         this.addBtn.x = this.width * 0.5 - this.addBtn.width * 0.5 - 20 * dpr;
@@ -262,12 +266,13 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             this.bg.setFrame("has_plan_bg");
             this.remove(this.addBtn);
             let barframe = "progress_bar_r";
-            const remainTime = data.marketPlan.endTime - unixTime / 1000;
+            const remainTime = Math.floor(data.marketPlan.endTime - unixTime / 1000);
             const ratio = Math.floor(remainTime / data.marketPlan.totalTime * 100);
             if (ratio > 30 && ratio <= 50) barframe = "progress_bar_y";
             else if (ratio > 50) barframe = "progress_bar_g";
             this.progress.bar.setFrame(barframe);
             this.progress.setProgress(remainTime, data.marketPlan.totalTime);
+            this.progress.setText(this.getDataFormat(remainTime * 1000));
             this.planName.text = data.marketPlan.name;
             this.planAtt.text = data.marketPlan.buffDes;
             const url = Url.getOsdRes(data.marketPlan.icon);
@@ -285,5 +290,17 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
 
     private onAddBtnHandler() {
         if (this.addBtnHandler) this.addBtnHandler.runWith(this.planData);
+    }
+
+    private getDataFormat(time: number) {
+        const day = Math.floor(time / 86400000);
+        const hour = Math.floor(time / 3600000) % 24;
+        const minute = Math.floor(time / 60000) % 60;
+        const second = Math.floor(time / 1000) % 60;
+        let text = "";
+        if (day > 0) text = `${day} Days ${hour}:${minute}:${second}`;
+        else if (hour > 0) text = `${hour}:${minute}:${second}`;
+        else text = `${minute}:${second}`;
+        return text;
     }
 }
