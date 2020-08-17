@@ -32,6 +32,7 @@ export class MainUIScene extends BasicScene {
     this.fps.setStroke("0x0", 1);
     this.fps.setFontFamily(Font.DEFULT_FONT);
     this.fps.setFontSize(20 * window.devicePixelRatio);
+    this.fps.setDepth(1000);
     this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
     this.sizeTF.setFontSize(20 * window.devicePixelRatio);
     this.sizeTF.setFontFamily(Font.DEFULT_FONT);

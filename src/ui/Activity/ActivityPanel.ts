@@ -73,10 +73,10 @@ export class ActivityPanel extends BasePanel {
             button.setInteractive();
         }
 
-        const foldBtn = this.scene.make.image({ key: this.key, frame: "home_more" });
-        this.content.add(foldBtn);
-        foldBtn.setInteractive();
-        foldBtn.on("pointerup", this.onFoldBtnHandler, this);
+        // const foldBtn = this.scene.make.image({ key: this.key, frame: "home_more" });
+        // this.content.add(foldBtn);
+        // foldBtn.setInteractive();
+        // foldBtn.on("pointerup", this.onFoldBtnHandler, this);
         this.resize(tmpWid, height);
         super.init();
     }
