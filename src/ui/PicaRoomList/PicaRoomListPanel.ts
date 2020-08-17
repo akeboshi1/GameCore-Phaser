@@ -171,11 +171,9 @@ export class PicaRoomListPanel extends BasePanel {
       value: this.content.y,
       valuechangeCallback: (newValue) => {
         this.mRoomContainer.y = newValue - this.content.y - h / 2;
-        Logger.getInstance().log(this.mRoomContainer.y + "," + this.content.y);
       },
       cellupCallBack: (gameobject: RoomItem) => {
         gameobject.onEnterRoomHandler();
-        Logger.getInstance().log(gameobject.roomData().name);
       }
     };
     this.mScroller = new BaseScroller(this.scene, this.mRoomContainer, config);
