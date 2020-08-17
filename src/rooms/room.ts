@@ -97,6 +97,8 @@ export interface IRoomService {
 
     update(time: number, delta: number): void;
 
+    initUI(): void;
+
     destroy();
 }
 
@@ -234,7 +236,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         if (loadingScene) loadingScene.sleep();
         this.world.changeRoom(this);
-        if (this.world.uiManager) this.world.uiManager.showMainUI();
+        // if (this.world.uiManager) this.world.uiManager.showMainUI();
 
         if (this.connection) {
             this.cameraService.syncCamera();
@@ -420,6 +422,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     break;
             }
         }
+    }
+
+    public initUI() {
+        if (this.world.uiManager) this.world.uiManager.showMainUI();
     }
 
     public clear() {

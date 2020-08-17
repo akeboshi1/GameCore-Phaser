@@ -22,6 +22,9 @@ export class MainUIScene extends BasicScene {
 
   public init(data: any) {
     this.mRoom = data.room;
+    if (this.mRoom) {
+      this.mRoom.world.uiManager.setScene(null);
+    }
   }
 
   public create() {
@@ -43,6 +46,7 @@ export class MainUIScene extends BasicScene {
       }
     }
     world.uiManager.setScene(this);
+    this.mRoom.initUI();
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
     // this.scale.on("resize", this.checkSize, this);
