@@ -31,6 +31,7 @@ export class BlockManager implements IBlockManager {
   private mCameras: ICameraService;
   private mStateMap: Map<string, State>;
   private _bound: Phaser.Geom.Rectangle;
+  private tween: Phaser.Tweens.Tween;
   constructor(scenery: IScenery, room: IRoomService) {
     this.mGrids = [];
     this.mScenery = scenery;
@@ -182,14 +183,21 @@ export class BlockManager implements IBlockManager {
   }
 
   protected move(targets, props, duration?: number, resetProps?: any, resetDuration?: number) {
-    const tween = this.scene.tweens.add({
+    if (this.tween) {
+      this.tween.stop();
+      this.tween.removeAllListeners();
+    }
+    this.tween = this.scene.tweens.add({
       targets,
       props,
       duration,
       loop: -1,
+      onUpdate: () => {
+        // Logger.getInstance().log("scenery: ", targets, targets.scrollX, targets.scrollY, this);
+      }
     });
     if (resetProps) {
-      tween.once("loop", () => {
+      this.tween.once("loop", () => {
         if (resetProps) {
           targets.x = resetProps.x;
           targets.y = resetProps.y;
@@ -200,7 +208,7 @@ export class BlockManager implements IBlockManager {
         //   targets.x = offset.x;
         //   targets.y = offset.y;
         // }
-        tween.stop();
+        this.tween.stop();
         this.move(targets, props, resetDuration);
         // tween.duration = resetDuration;
       });
