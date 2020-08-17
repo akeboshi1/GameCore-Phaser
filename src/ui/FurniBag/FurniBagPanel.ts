@@ -164,15 +164,26 @@ export class FurniBagPanel extends BasePanel {
     this.updateAvatarItems();
   }
 
-  public displayAvatar() {
-    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.avatar = new op_gameconfig.Avatar();
+  public displayAvatar(content?: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
+    if (!content) {
+      content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+      content.avatar = new op_gameconfig.Avatar();
+    }
     const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
     const avatar = player.model.avatar;
     for (const key in avatar) {
       if (avatar.hasOwnProperty(key)) {
         const element = avatar[key];
         if (element) content.avatar[key] = element;
+      }
+    }
+    for (const item of this.mSelectedItemData) {
+      const dataAvatar = item.avatar;
+      for (const key in dataAvatar) {
+        if (dataAvatar.hasOwnProperty(key)) {
+          const element = dataAvatar[key];
+          if (element) content.avatar[key] = element;
+        }
       }
     }
     const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
@@ -182,25 +193,7 @@ export class FurniBagPanel extends BasePanel {
     if (content.display) {
       this.mDetailDisplay.loadDisplay(content);
     } else if (content.avatar) {
-      const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
-      const avatar = player.model.avatar;
-      for (const key in avatar) {
-        if (avatar.hasOwnProperty(key)) {
-          const element = avatar[key];
-          if (element) content.avatar[key] = element;
-        }
-      }
-      for (const item of this.mSelectedItemData) {
-        const dataAvatar = item.avatar;
-        for (const key in dataAvatar) {
-          if (dataAvatar.hasOwnProperty(key)) {
-            const element = dataAvatar[key];
-            if (element) content.avatar[key] = element;
-          }
-        }
-      }
-      const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
-      this.mDetailDisplay.loadAvatar(content, 2, offset);
+      this.displayAvatar();
     }
   }
 
@@ -429,19 +422,17 @@ export class FurniBagPanel extends BasePanel {
 
   private updateAvatarItems() {
     if (this.dressAvatarIDS && this.mSelectedItemData.length > 0) {
-      this.mSelectedItemData.length = 0;
-      const cells = this.mPropGrid.getCells();
+      const arr = [];
       for (const id of this.dressAvatarIDS) {
-        for (const cell of cells) {
-          if (cell) {
-            const item: op_client.ICountablePackageItem = cell.container.getData("item");
-            if (item && id === item.id && item.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-              this.onSelectItemHandler(cell.container);
-              break;
-            }
+        for (const avatar of this.mSelectedItemData) {
+          if (avatar.id === id) {
+            arr.push(avatar);
           }
         }
       }
+      this.mSelectedItemData.length = 0;
+      this.mSelectedItemData = arr;
+      this.displayAvatar();
     } else {
       this.mDetailBubble.setProp(null);
       this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
@@ -492,7 +483,7 @@ export class FurniBagPanel extends BasePanel {
   private isContainProperty(obj: any, obj1: any) {
     let canreplace = true;
     for (const key in obj) {
-      if (key!=="headBackId"&&key!=="bodyDresId"&&obj.hasOwnProperty(key)) {
+      if (key !== "headBackId" && key !== "bodyDresId" && obj.hasOwnProperty(key)) {
         if (!obj1.hasOwnProperty(key)) {
           canreplace = false;
           break;
@@ -503,11 +494,16 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private isSelectedItemData(data: op_client.ICountablePackageItem) {
-    for (const temp of this.mSelectedItemData) {
-      if (temp.indexId === data.indexId) {
-        return true;
+    if (this.mSelectedItemData.length > 0) {
+      for (const temp of this.mSelectedItemData) {
+        if (temp.indexId === data.indexId) {
+          return true;
+        }
       }
+    } else {
+      if (data.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) return true;
     }
+
     return false;
   }
   private setSelectedItem(prop: op_client.ICountablePackageItem) {
@@ -678,7 +674,7 @@ export class FurniBagPanel extends BasePanel {
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
     if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
-      this.displayAvatar();
+      // this.displayAvatar();
       this.emit("queryDressAvatarIDS");
     }
     this.emit("getCategories", categoryType);
