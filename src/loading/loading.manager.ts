@@ -38,25 +38,13 @@ export class LoadingManager {
             loading.awake({
                 world: this.world,
                 text,
-                callBack: (scene: Phaser.Scene) => {
-                    this.scene = scene;
-                    if (this.mResources.length > 0) {
-                        return this.addAssets(this.mResources);
-                    }
-                    return Promise.resolve();
-                }
+                callBack: this.sceneCallback.bind(this)
             });
         } else {
             sceneManager.start(LoadingScene.name, {
                 world: this.world,
                 text,
-                callBack: (scene: Phaser.Scene) => {
-                    this.scene = scene;
-                    if (this.mResources.length > 0) {
-                        return this.addAssets(this.mResources);
-                    }
-                    return Promise.resolve();
-                }
+                callBack: this.sceneCallback.bind(this)
             });
         }
     }
@@ -102,6 +90,14 @@ export class LoadingManager {
         if (this.scene.load[type]) {
             this.scene.load[type](asset.key, asset.source);
         }
+    }
+
+    private sceneCallback(scene: Phaser.Scene) {
+        this.scene = scene;
+        if (this.mResources.length > 0) {
+            return this.addAssets(this.mResources);
+        }
+        return Promise.resolve();
     }
 
     get game() {

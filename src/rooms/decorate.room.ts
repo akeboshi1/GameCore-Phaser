@@ -146,6 +146,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         });
     }
 
+    initUI() {
+        if (this.world.uiManager) {
+            this.world.uiManager.showDecorateUI();
+        }
+    }
+
     destroy() {
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
@@ -222,10 +228,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         // this.mCameraService.centerCameas();
-
-        if (this.world.uiManager) {
-            this.world.uiManager.showDecorateUI();
-        }
 
         this.world.emitter.on(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         this.world.emitter.on(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);

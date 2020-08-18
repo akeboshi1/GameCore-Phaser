@@ -9,7 +9,6 @@ import { IElement } from "../../rooms/element/element";
 
 export class PicaChatMediator extends BaseMediator {
     public static NAME: string = "PicaChatMediator";
-    protected mView: PicaChatPanel;
     private scene: Phaser.Scene;
     private mChat: PicaChat;
     private world: WorldService;
@@ -24,7 +23,7 @@ export class PicaChatMediator extends BaseMediator {
     }
 
     show() {
-        if ((this.mView && this.mView.isShow()) || this.mShow) {
+        if (this.mView) {
             this.mView.show();
             this.layerManager.addToUILayer(this.mView);
             return;
@@ -95,7 +94,7 @@ export class PicaChatMediator extends BaseMediator {
         if (!this.mView) {
             return;
         }
-        this.mView.appendChat(chat);
+        (<PicaChatPanel> this.mView).appendChat(chat);
     }
 
     private onSendChatHandler(val: string) {

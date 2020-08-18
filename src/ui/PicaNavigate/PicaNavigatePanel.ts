@@ -26,7 +26,7 @@ export class PicaNavigatePanel extends BasePanel {
   resize(w: number, h: number) {
     this.setSize(w, h);
     const zoom = this.scale;
-    const width = this.scaleWidth;
+    const width = this.scene.cameras.main.width / zoom;
     const height = this.scene.cameras.main.height;
     const frame = this.scene.textures.getFrame(UIAtlasKey.commonKey, "menu_bg");
     const scaleRatio = width / frame.width * this.dpr;
@@ -34,7 +34,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBackground.x = width / 2;
     this.mBackground.setInteractive();
     this.mCloseBtn.x = width - this.mCloseBtn.width / 2 - 3 * this.dpr;
-    this.mGoHomeBtn.x = this.mCloseBtn.x - this.mCloseBtn.width * 0.5 - this.mGoHomeBtn.width * 0.5 - 15 * this.dpr;
+    this.mGoHomeBtn.x = this.mCloseBtn.x - this.mCloseBtn.width * 0.5 - this.mGoHomeBtn.width * 0.5 - 10 * this.dpr;
 
     this.y = height - this.height / 2;
     super.resize(w, h);
@@ -109,38 +109,35 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBackground = this.createImage(UIAtlasKey.commonKey, "menu_bg");
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mMapBtn = this.createImage(this.key_lang, "map_btn").setInteractive();
-    this.mMapBtn.x = this.mMapBtn.width * 0.5+10*this.dpr;
     this.mShopBtn = this.createImage(this.key_lang, "shop_btn").setInteractive();
-    this.mShopBtn.x = this.mMapBtn.x + this.mShopBtn.width * 0.5 + 30 * this.dpr;
     this.mBagBtn = this.createImage(this.key_lang, "bag_btn").setInteractive();
-    this.mBagBtn.x = this.mShopBtn.x + this.mBagBtn.width * 0.5 + 25 * this.dpr;
     this.mFamilyBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
-    this.mFamilyBtn.x = this.mBagBtn.x + this.mFamilyBtn.width * 0.5 + 30 * this.dpr;
     this.mGoHomeBtn = this.createImage(this.key_lang, "home_btn").setInteractive();
-    this.mGoHomeBtn.x = this.mFamilyBtn.x + this.mGoHomeBtn.width * 0.5 + 30 * this.dpr;
     this.mTestBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
-    this.mTestBtn.x = this.mBagBtn.x + this.mTestBtn.width * 0.5 + 32 * this.dpr;
     this.mCloseBtn = this.createImage(UIAtlasKey.commonKey, "close_1").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mTestBtn, this.mGoHomeBtn];
+    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mTestBtn, this.mGoHomeBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
-    // for (let i = 0; i < list.length; i++) {
-    //   list[i].x = i * 50 * this.dpr - list[i].width / 2;
-    // }
+    let pad = 0;
+    for (let i = 0; i < list.length; i++) {
+      if (i > 0) {
+        pad = list[i - 1].width * 0.5;
+      } else {
+        pad = list[i].width * 0.5;
+      }
+      list[i].x = i * 50 * this.dpr + list[i].width * 0.5 + pad;
+    }
     const zoom = this.scale;
     this.resize(this.mBackground.width * zoom, this.mBackground.height * zoom);
     super.init();
   }
 
-  private createImage(key: string, frame: string, x: number = 0, y: number = 0) {
-    const img = this.scene.make.image({
+  private createImage(key: string, frame: string) {
+    return this.scene.make.image({
       key,
       frame
     }, false);
-    img.x = x;
-    img.y = y;
-    return img;
   }
 
   private onShowMapHandler() {
