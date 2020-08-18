@@ -33,9 +33,11 @@ export class HttpClock {
                if (code === 0) {
                    if (!this.allowedPeriod(data, callback)) {
                        resolve(false);
+                       return;
                    }
                    if (!this.checkTimeAllowed(data, callback)) {
                        resolve(false);
+                       return;
                    }
                    resolve(true);
                }

@@ -175,7 +175,10 @@ class Curtain {
     this.upDisplay.visible = true;
     this.downDisplay.visible = true;
     return new Promise((resolve, reject) => {
-      if (!this.scene.cameras.main) resolve();
+      if (!this.scene.cameras.main) {
+        resolve();
+        return;
+      }
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = -this.upDisplay.displayHeight;
       this.downDisplay.y = height + this.downDisplay.displayHeight;
@@ -202,7 +205,10 @@ class Curtain {
     this.downDisplay.visible = true;
     this.upDisplay.visible = true;
     return new Promise((resolve, reject) => {
-      if (!this.scene.cameras.main) resolve();
+      if (!this.scene.cameras.main) {
+        resolve();
+        return;
+      }
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = 0;
       this.downDisplay.y = height;
