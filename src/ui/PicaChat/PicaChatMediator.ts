@@ -94,7 +94,7 @@ export class PicaChatMediator extends BaseMediator {
         if (!this.mView) {
             return;
         }
-        (<PicaChatPanel> this.mView).appendChat(chat);
+        (<PicaChatPanel>this.mView).appendChat(chat);
     }
 
     private onSendChatHandler(val: string) {
