@@ -13,6 +13,7 @@ import { op_def } from "pixelpai_proto";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { DynamicImage } from "../components/dynamic.image";
+import { ItemInfoTips } from "../tips/ItemInfoTips";
 
 export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
@@ -27,6 +28,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     private selectHandler: Handler;
     private curSelectData: op_client.MarketPlan;
     private curSelectItem: PlanTypeItem;
+    private iteminfoTips: ItemInfoTips;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -88,7 +90,14 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             dpr: this.dpr,
             align: 2,
             orientation: 1,
-            space: 10 * this.dpr
+            space: 10 * this.dpr,
+            celldownCallBack: (gameobject) => {
+                this.iteminfoTips.visible = true;
+                this.onMaterialItemHandler(gameobject);
+            },
+            cellupCallBack: (gameobject) => {
+                this.iteminfoTips.visible = false;
+            }
         });
         this.add(this.gameScroll);
         const cancelBtn = new NineSliceButton(this.scene, -60 * this.dpr, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("common.cancel"), this.dpr, this.zoom, {
@@ -109,6 +118,9 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         this.add(selectBtn);
         selectBtn.on(CoreUI.MouseEvent.Tap, this.onSelectHandler, this);
         selectBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
+        this.iteminfoTips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
+        this.iteminfoTips.visible = false;
+        this.add(this.iteminfoTips);
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
@@ -153,7 +165,6 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             }
         });
         this.add(grid);
-
         return grid;
     }
 
@@ -181,6 +192,35 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     private onSelectHandler() {
         if (this.selectHandler) this.selectHandler.runWith(this.curSelectData.id);
         this.onCancelHandler();
+    }
+
+    private onMaterialItemHandler(gameobj: MaterialItem) {
+        const data = gameobj.itemData;
+        this.iteminfoTips.setText(this.getDesText(data));
+        const worldpos = gameobj.getWorldTransformMatrix();
+        const worldpos1 = this.gameScroll.getWorldTransformMatrix();
+        this.iteminfoTips.x = worldpos.tx - worldpos1.tx;
+        this.iteminfoTips.y = this.gameScroll.y-20*this.dpr;
+    }
+    private getDesText(data: op_client.ICountablePackageItem) {
+        if (!data) data = <any>{ "sellingPrice": true, tradable: false };
+        let text: string = data.name + "\n";
+        let source = i18n.t("common.source");
+        source += data.source;
+        source = `[stroke=#333333][color=#333333]${source}[/color][/stroke]`;
+        text += source + "\n";
+        if (data.sellingPrice) {
+            let price = i18n.t("common.sold");
+            price += data.sellingPrice.price + Coin.getName(data.sellingPrice.coinType);
+            price = `[stroke=#333333][color=#333333]${price}[/color][/stroke]`;
+            text += price + "\n";
+        }
+        if (!data.tradable) {
+            let trade = i18n.t("furni_unlock.notrading");
+            trade = `[stroke=#333333][color=#ff0000]*${trade}[/color][/stroke]`;
+            text += trade;
+        }
+        return text;
     }
 }
 
@@ -210,7 +250,11 @@ class PlanTypeItem extends Phaser.GameObjects.Container {
 
     public setPlanData(data: op_client.MarketPlan) {
         this.palnData = data;
-        const url = Url.getOsdRes(data.icon);
+        let icon = data.icon;
+        if (icon === "" && data.requirements && data.requirements.length > 0) {
+            icon = data.requirements[0].display.texturePath;
+        }
+        const url = Url.getOsdRes(icon);
         this.storeIcon.load(url, this, () => {
             this.storeIcon.displayWidth = 46 * this.dpr;
             this.storeIcon.scaleY = this.storeIcon.scaleX;
@@ -230,16 +274,16 @@ class PlanTypeItem extends Phaser.GameObjects.Container {
 
 class MaterialItem extends Phaser.GameObjects.Container {
     public itemData: op_client.ICountablePackageItem;
-    private key2: string;
+    private key: string;
     private dpr: number;
     private countText: BBCodeText;
     private itemIcon: DynamicImage;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key2: string, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
-        this.key2 = key2;
+        this.key = key;
         this.setSize(width, height);
-        const bg = this.scene.make.image({ key: this.key2, frame: "item_bg" });
+        const bg = this.scene.make.image({ key: this.key, frame: "item_bg" });
         this.add(bg);
         this.itemIcon = new DynamicImage(this.scene, 0, 0);
         this.add(this.itemIcon);

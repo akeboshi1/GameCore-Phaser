@@ -154,7 +154,11 @@ export class FurniBagPanel extends BasePanel {
             this.mSelectedItemData.push(prop);
           }
         }
-        this.updateAvatarItems();
+        if (this.mSelectedItemData.length === 0) {
+          this.displayAvatar();
+        } else {
+          this.updateAvatarItems();
+        }
       }
     }
   }
