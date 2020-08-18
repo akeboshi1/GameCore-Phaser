@@ -124,20 +124,20 @@
 			"frame": {
 				"x": 43,
 				"y": 111,
-				"w": 47,
-				"h": 52
+				"w": 39,
+				"h": 44
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 47,
-				"h": 52
+				"w": 39,
+				"h": 44
 			},
 			"sourceSize": {
-				"w": 47,
-				"h": 52
+				"w": 39,
+				"h": 44
 			}
 		},
 		"praise_after_bg": {
@@ -162,7 +162,7 @@
 		},
 		"praise_before": {
 			"frame": {
-				"x": 92,
+				"x": 84,
 				"y": 111,
 				"w": 39,
 				"h": 44

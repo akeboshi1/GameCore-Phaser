@@ -41,7 +41,8 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     }
     public setPlanData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
         const marketPlanPairs = content.marketPlanPairs;
-        this.topbg.setFrame(content.industryBackground);
+        const bg = content.industryBackground !== "" ? content.industryBackground : "market_b";
+        this.topbg.setFrame(bg);
         this.describleText.text = content.industryDes;
         this.planBuffText.text = content.industryBuffDes;
         this.gridtable.setItems(marketPlanPairs);
@@ -189,7 +190,7 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         storebg.x = -this.width * 0.5 + storebg.width * 0.5 + 5 * dpr;
         this.add(storebg);
         this.planIcon = new DynamicImage(this.scene, 0, 0);
-        this.planIcon.setPosition(storebg.x, -8 * dpr);
+        this.planIcon.setPosition(storebg.x, 0);
         this.add(this.planIcon);
         this.planText = this.scene.make.text({ x: storebg.x + storebg.width * 0.5 + 10 * dpr, y: 0, style: { color: "#0", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.planText.text = i18n.t("business_street.plan_title");
@@ -205,7 +206,7 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         this.add(this.planAtt);
         const barWdith = 159 * dpr, barHeight = 8 * dpr;
         const textConfig = <any>{
-            x: 0, y: 0, color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT, halign: 0.5, valign: 0.5
+            x: 0, y: 0, color: "#ffffff", fontSize: 9 * dpr, fontFamily: Font.DEFULT_FONT, halign: 0.5, valign: 0.5
         };
         this.progress = new ProgressBar(this.scene, {
             x: 5 * dpr,
@@ -275,7 +276,11 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             this.progress.setText(this.getDataFormat(remainTime * 1000));
             this.planName.text = data.marketPlan.name;
             this.planAtt.text = data.marketPlan.buffDes;
-            const url = Url.getOsdRes(data.marketPlan.icon);
+            let icon = data.marketPlan.icon !== "" ? data.marketPlan.icon : data.marketPlan.requirements[0].display.texturePath;
+            if ((icon === "" || !icon) && data.marketPlan.requirements && data.marketPlan.requirements.length > 0) {
+                icon = data.marketPlan.requirements[0].display.texturePath;
+            }
+            const url = Url.getOsdRes(icon);
             this.planIcon.load(url, this, () => {
                 this.planIcon.displayWidth = 30 * this.dpr;
                 this.planIcon.scaleY = this.planIcon.scaleX;
@@ -298,9 +303,10 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         const minute = Math.floor(time / 60000) % 60;
         const second = Math.floor(time / 1000) % 60;
         let text = "";
-        if (day > 0) text = `${day} Days ${hour}:${minute}:${second}`;
-        else if (hour > 0) text = `${hour}:${minute}:${second}`;
-        else text = `${minute}:${second}`;
+        if (day > 0) text = `${day} Days ${hour}:${minute}`;
+        else if (hour > 0) text = `${hour}:${minute}`;
+        else if (minute > 0) text = `${minute}`;
+        else text = `剩余${second}`;
         return text;
     }
 }
