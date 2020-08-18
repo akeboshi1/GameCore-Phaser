@@ -600,6 +600,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.uiManager.destroy();
                 this.mElementStorage.destroy();
                 this.mLoadingManager.destroy();
+                this.game.scene.destroy();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
                     resolve();

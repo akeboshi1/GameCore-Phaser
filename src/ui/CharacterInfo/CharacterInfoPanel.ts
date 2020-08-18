@@ -265,7 +265,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.setText(data.like + "");
         const likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
         this.likeBtn.x = likeposx - 20 * this.dpr;
-        this.lvText.text = "Lv" + levle + "";
+        this.lvText.text = levle + "";
         const subArr: Map<any, any[]> = new Map();
         subArr.set(CharacterOptionType.Skill, data.lifeSkills);
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {

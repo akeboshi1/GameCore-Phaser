@@ -35,6 +35,8 @@ export class PlayScene extends BasicScene {
             this.scene.launch(MainUIScene.name, {
                 room: this.mRoom,
             });
+        } else {
+            this.mRoom.initUI();
         }
         this.scene.sendToBack();
         this.scale.on("orientationchange", this.checkOriention, this);
