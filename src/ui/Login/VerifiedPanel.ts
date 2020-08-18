@@ -30,14 +30,11 @@ export class VerifiedPanel extends BasePanel {
     }
 
     protected init() {
-        let { width, height } = this.scene.cameras.main;
-        width /= this.scale;
-        height /= this.scale;
-
+        const { width, height } = this.scene.cameras.main;
         const mask = this.scene.make.graphics(undefined, false);
         mask.fillStyle(0, 0.6);
-        mask.fillRect(-width * this.scale * 0.5, -height * this.scale * 0.5, width * this.scale, height * this.scale)
-            .setInteractive(new Phaser.Geom.Rectangle(-width * this.scale * 0.5, -height * this.scale * 0.5, width * this.scale, height * this.scale), Phaser.Geom.Rectangle.Contains);
+        mask.fillRect(-width * 0.5, -height * 0.5, width, height)
+            .setInteractive(new Phaser.Geom.Rectangle(-width * 0.5, -height * 0.5, width, height), Phaser.Geom.Rectangle.Contains);
 
         const container = this.scene.make.container({  }, false);
 
@@ -125,8 +122,10 @@ export class VerifiedPanel extends BasePanel {
         container.add([bg, title_bg, title, nameContainer, idcardContainer, tips, tips2, this.mVerifiedBtn]);
         super.init();
 
-        this.x = width * this.scale * this.originX;
-        this.y = height * this.scale * this.originY * 0.7;
+        this.x = width * this.originX;
+        this.y = height * this.originY;
+
+        container.y = -this.y * 0.3;
     }
 
     private onVerifiedHandler() {
