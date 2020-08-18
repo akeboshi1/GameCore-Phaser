@@ -36,7 +36,8 @@ export class VerifiedPanel extends BasePanel {
 
         const mask = this.scene.make.graphics(undefined, false);
         mask.fillStyle(0, 0.6);
-        mask.fillRect(-width * this.scale * 0.5, -height * this.scale * 0.5, width * this.scale, height * this.scale);
+        mask.fillRect(-width * this.scale * 0.5, -height * this.scale * 0.5, width * this.scale, height * this.scale)
+            .setInteractive(new Phaser.Geom.Rectangle(-width * this.scale * 0.5, -height * this.scale * 0.5, width * this.scale, height * this.scale), Phaser.Geom.Rectangle.Contains);
 
         const container = this.scene.make.container({  }, false);
 
@@ -125,7 +126,7 @@ export class VerifiedPanel extends BasePanel {
         super.init();
 
         this.x = width * this.scale * this.originX;
-        this.y = height * this.scale * this.originY;
+        this.y = height * this.scale * this.originY * 0.7;
     }
 
     private onVerifiedHandler() {
