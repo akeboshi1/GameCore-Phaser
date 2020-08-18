@@ -38,7 +38,8 @@
     "refresh": "刷新",
     "buy": "购买",
     "sold": "售出",
-    "add": "添加"
+    "add": "添加",
+    "source": "来源："
   },
   "player_info": {
     "title": "信息详情",
@@ -95,7 +96,6 @@
     "unlock": "立即解锁",
     "repair": "D: 立即修复",
     "needMaterials": "解锁所需材料",
-    "source": "D: 来源：",
     "sold": "D: 可售卖：",
     "notrading": "D: 不可交易"
   },
