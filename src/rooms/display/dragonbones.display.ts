@@ -7,8 +7,6 @@ import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
 import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
 import { IFramesModel } from "./frames.model";
-import { CampNode } from "game-capsule";
-import { Logger } from "../../utils/log";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -92,6 +90,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private mLoadMap: Map<string, any> = new Map();
     private mErrorLoadMap: Map<string, any> = new Map();
     private mNeedReplaceTexture: boolean = false;
+    private mPlaceholder: Phaser.GameObjects.Image;
 
     private readonly UNPACKSLOTS = [AvatarSlotType.WeapFarm, AvatarSlotType.WeapBarm];
     private readonly UNCHECKAVATARPROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
@@ -236,6 +235,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 this.dragonBonesName,
             );
             this.mArmatureDisplay.visible = false;
+            this.showPlaceholder();
             this.add(this.mArmatureDisplay);
         }
         this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
@@ -920,6 +920,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             });
         }
 
+        this.closePlaceholder();
         this.mArmatureDisplay.visible = true;
     }
 
@@ -988,5 +989,20 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             if (preAvatar[key] !== newAvatar[key]) return true;
         }
         return false;
+    }
+
+    private showPlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = this.scene.make.image({key: "avatar_placeholder", x: -22, y: -68}).setOrigin(0);
+        this.add(this.mPlaceholder);
+    }
+
+    private closePlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = undefined;
     }
 }
