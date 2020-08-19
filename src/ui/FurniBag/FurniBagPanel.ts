@@ -368,7 +368,8 @@ export class FurniBagPanel extends BasePanel {
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
-        zoom: this.scale
+        zoom: this.scale,
+        mask: false
       },
       scrollMode: 1,
       clamplChildOY: false,
