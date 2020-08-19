@@ -52,10 +52,8 @@ class WorkerClient extends SocketConnection {
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().info(`NetWorker[接收] <<< ${protobuf_packet.toString()} `);
         // Send the packet to parent thread
-        ctx.postMessage({
-            method: "onData",
-            buffer: protobuf_packet.Serialization(),
-        });
+        const buffer = protobuf_packet.Serialization();
+        ctx.postMessage(buffer.buffer, [buffer.buffer]);
     }
 }
 
