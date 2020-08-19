@@ -276,7 +276,7 @@ class MainContainer extends FriendContainer {
     private friendTabel: GameGridTable;
     private showingFriends: FriendData[];
     private friendDatas: Map<FriendChannel, FriendData[]>;
-    private searchInput: LabelInput;
+    private searchInput: SearchInput;
     // private friendList: FriendList;
     private uiScale: number;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, uiScale: number) {
@@ -388,15 +388,15 @@ class MainContainer extends FriendContainer {
         this.addFriendBtn = new Button(this.scene, this.key, "add");
         this.addFriendBtn.x = topbg.width * 0.5 - 7.33 * this.dpr - this.addFriendBtn.width * 0.5;
 
-        this.searchInput = new LabelInput(this.scene, {
+        this.searchInput = new SearchInput(this.scene, {
             x: 0,
             y: 0,
-            width: 160 * this.dpr,
-            height: 30 * this.dpr,
+            width: 80 * this.dpr,
+            height: 22 * this.dpr,
             placeholder: i18n.t("friendlist.search_friends_notes"),
-            fontSize: 14 * this.dpr + "px",
+            fontSize: 12 * this.dpr + "px",
             color: "#666666",
-        }).setOrigin(0, 0.5);
+        }, this.key, this.dpr).setOrigin(0, 0.5);
         this.topContent.add([topbg, this.onlineCheckBox, this.searchInput, this.searchBtn, this.addFriendBtn]);
 
         const tableFont = {
@@ -799,7 +799,7 @@ class SubFriendContainer extends FriendContainer {
 }
 
 class SearchContainer extends SubFriendContainer {
-    private searchInput: LabelInput;
+    private searchInput: SearchInput;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene, width, height, key, dpr);
         this.friendType = FriendChannel.Search;
@@ -818,15 +818,15 @@ class SearchContainer extends SubFriendContainer {
         });
         topbg.setPosition(0, 73.67 * this.dpr + (topbg.height - this.height) * 0.5);
 
-        this.searchInput = new LabelInput(this.scene, {
+        this.searchInput = new SearchInput(this.scene, {
             x: 0,
             y: 0,
-            width: 160 * this.dpr,
-            height: 30 * this.dpr,
+            width: 80 * this.dpr,
+            height: 22 * this.dpr,
             placeholder: i18n.t("friendlist.search_friends_notes"),
             fontSize: 12 * this.dpr + "px",
             color: "#666666",
-        }).setOrigin(0, 0.5);
+        }, this.key, this.dpr).setOrigin(0, 0.5);
         this.searchInput.setPosition(0, topbg.y);
 
         this.gridTable.y = topbg.height;
@@ -891,11 +891,23 @@ class NewFriendContainer extends SubFriendContainer {
 
 class SearchInput extends LabelInput {
     private searchBtn: Button;
-    constructor(scene: Phaser.Scene, config: any, key: string) {
+    constructor(scene: Phaser.Scene, config: any, key: string, dpr: number) {
         super(scene, config);
 
-        this.searchBtn = new Button(this.scene, key, "search");
+        this.searchBtn = new Button(this.scene, key, "search_blue");
+        this.searchBtn.x = config.width + 4 * dpr + this.searchBtn.width * 0.5;
+        this.searchBtn.on(CoreUI.MouseEvent.Tap, this.onSearchHandler, this);
         this.add(this.searchBtn);
+
+        const background = scene.make.graphics(undefined, false);
+        background.fillStyle(0xFFFFFF);
+        background.fillRoundedRect(-5 * dpr, -config.height * 0.5, config.width + 14 * dpr + this.searchBtn.width, config.height, config.height * 0.5);
+        this.addAt(background, 0);
+        this.setOrigin(0, 0.5);
+    }
+
+    private onSearchHandler() {
+        this.setBlur();
     }
 }
 
