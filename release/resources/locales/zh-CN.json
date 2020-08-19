@@ -94,10 +94,10 @@
   },
   "furni_unlock": {
     "unlock": "立即解锁",
-    "repair": "D: 立即修复",
+    "repair": "立即修复",
     "needMaterials": "解锁所需材料",
-    "sold": "D: 可售卖：",
-    "notrading": "D: 不可交易"
+    "sold": "可售卖：",
+    "notrading": "不可交易"
   },
   "room_upgrade": {
     "clicktocontinue": "点击任意处继续"
