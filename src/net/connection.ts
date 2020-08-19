@@ -153,18 +153,21 @@ export default class Connection implements ConnectionService {
             case "reConnect":
                 this.reConnect();
                 break;
-            case "onData":
-                const buf = data.buffer;
-                if (buf) {
-                    this._onData(buf);
-                }
-                break;
+            // case "onData":
+            //     const buf = data.buffer;
+            //     if (buf) {
+            //         this._onData(buf);
+            //     }
+            //     break;
             default:
+                if (data) {
+                    this._onData(data);
+                }
                 break;
         }
     }
 
-    private _onData(data: any) {
+    private _onData(data: ArrayBuffer) {
         const protobufPacket: PBpacket = new PBpacket();
         protobufPacket.Deserialization(new Buffer(data));
         const handlers = this.mPacketHandlers;

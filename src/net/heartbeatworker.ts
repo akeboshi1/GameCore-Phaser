@@ -1,5 +1,4 @@
 import { Logger } from "../utils/log";
-
 const heartWorker: Worker = self as any;
 const delayTime: number = 20000;
 let reConnectCount: number = 0;
