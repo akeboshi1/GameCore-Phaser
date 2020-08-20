@@ -44,10 +44,12 @@ export class Bubble extends Phaser.GameObjects.Container {
         });
         this.add(this.mChatContent);
 
-        this.mMinHeight = this.mChatContent.height + 26;
-        this.mMinHeight = this.mMinHeight < 54 ? 54 : this.mMinHeight;
-        this.mMinWidth = this.mChatContent.width + 40;
-        this.mMinWidth = this.mMinWidth < 69 ? 69 : this.mMinWidth;
+        const _minH = 36 * this.mScale;
+        const _minW = 60 * this.mScale;
+        this.mMinHeight = this.mChatContent.height + 6 * this.mScale;
+        this.mMinHeight = this.mMinHeight < _minH ? _minH : this.mMinHeight;
+        this.mMinWidth = this.mChatContent.width + 20 * this.mScale;
+        this.mMinWidth = this.mMinWidth < _minW ? _minW : this.mMinWidth;
 
         this.mBubbleBg = new DynamicNinepatch(this.scene, this);
         const res = Url.getOsdRes(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png");
