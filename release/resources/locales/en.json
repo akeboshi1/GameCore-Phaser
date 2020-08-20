@@ -38,7 +38,8 @@
     "buy": "BUY",
     "sold": "Sell",
     "add": "Add",
-    "remove": "Remove"
+    "remove": "Remove",
+    "source": "Source:"
   },
   "player_info": {
     "title": "Personal Data",
@@ -95,7 +96,6 @@
     "unlock": "Unlock",
     "repair": "D: REPAIR",
     "needMaterials": "Materials",
-    "source": "D: Source",
     "sold": "D: Price",
     "notrading": "D: Not Trading"
   },

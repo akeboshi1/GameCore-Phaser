@@ -115,12 +115,18 @@ export class PicaNavigatePanel extends BasePanel {
     this.mGoHomeBtn = this.createImage(this.key_lang, "home_btn").setInteractive();
     this.mTestBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(UIAtlasKey.commonKey, "close_1").setInteractive();
-    const list = [this.mMapBtn, this.mMapBtn, this.mShopBtn, this.mBagBtn,this.mTestBtn,this.mGoHomeBtn];
+    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mTestBtn, this.mGoHomeBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
+    let pad = 0;
     for (let i = 0; i < list.length; i++) {
-      list[i].x = i * 50 * this.dpr - list[i].width / 2;
+      if (i > 0) {
+        pad = list[i - 1].width * 0.5;
+      } else {
+        pad = list[i].width * 0.5;
+      }
+      list[i].x = i * 50 * this.dpr + list[i].width * 0.5 + pad;
     }
     const zoom = this.scale;
     this.resize(this.mBackground.width * zoom, this.mBackground.height * zoom);

@@ -336,7 +336,12 @@ export class MarketPanel extends BasePanel {
         reuseCellContainer: true,
         cellOriginX: 0,
         cellOriginY: 0,
-        zoom: this.scale
+        zoom: this.scale,
+        mask: false
+      },
+      scroller: {
+        backDeceleration: false,
+        slidingDeceleration: false
       },
       scrollMode: 1,
       clamplChildOY: false,

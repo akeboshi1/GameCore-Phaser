@@ -27,6 +27,7 @@ import { SelectorElement } from "./decorate/selector.element";
 import { IBlockObject } from "./cameras/block.object";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { IScenery } from "./sky.box/scenery";
+import { PlayerDataManager } from "./data/PlayerDataManager";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -52,6 +53,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mTerrainManager: DecorateTerrainManager;
     private mElementManager: DecorateElementManager;
     private mLayerManager: LayerManager;
+    private mPlayerDataManager: PlayerDataManager;
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
     private mSelectorElement: SelectorElement;
@@ -146,6 +148,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         });
     }
 
+    initUI() {
+        if (this.world.uiManager) {
+            this.world.uiManager.showDecorateUI();
+        }
+    }
+
     destroy() {
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
@@ -222,10 +230,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         // this.mCameraService.centerCameas();
-
-        if (this.world.uiManager) {
-            this.world.uiManager.showDecorateUI();
-        }
 
         this.world.emitter.on(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         this.world.emitter.on(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
@@ -690,7 +694,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     get elementManager(): DecorateElementManager {
         return this.mElementManager;
     }
-
+    get playerDataManager(): PlayerDataManager {
+        return this.mPlayerDataManager;
+    }
     get layerManager(): LayerManager {
         return this.mLayerManager;
     }

@@ -142,6 +142,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+        this.mAccount = new Account();
+        this.mAccount.enterGame(this.mConfig.game_id, this.mConfig.virtual_world_id);
 
         initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
 
@@ -420,6 +422,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public exitUser() {
         this.mConfig.token_expire = this.mConfig.token_fingerprint = this.mConfig.user_id = this.mConfig.auth_token = null;
+        if (this.mAccount) {
+            this.mAccount.destroy();
+        }
         this._createAnotherGame(this.mConfig.game_id, this.mConfig.virtual_world_id);
     }
 
@@ -549,8 +554,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mClock.destroy();
             this.mClock = null;
         }
-        this.mConfig.game_id = gameId;
-        this.mConfig.virtual_world_id = worldId;
+        if (this.mAccount) {
+            this.mAccount.enterGame(gameId, worldId);
+        }
+        // this.mConfig.game_id = gameId;
+        // this.mConfig.virtual_world_id = worldId;
         this.mConnection.addPacketListener(this);
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
@@ -600,6 +608,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.uiManager.destroy();
                 this.mElementStorage.destroy();
                 this.mLoadingManager.destroy();
+                this.game.scene.destroy();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
                     resolve();
@@ -682,7 +691,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         if (this.mConfig && this.mConnection) {
-            this.mAccount = new Account();
             // this.mLoadingManager.start();
             // test login and verified
             if (!this.mConfig.auth_token) {
@@ -707,7 +715,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         // Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
-        content.virtualWorldUuid = `${this.mConfig.virtual_world_id}`;
+        let game_id = this.mConfig.game_id;
+        let virtualWorldUuid = this.mConfig.virtual_world_id;
+        if (this.mAccount) {
+            if (this.mAccount.gameID && this.mAccount !== undefined) {
+                game_id = this.mAccount.gameID;
+                virtualWorldUuid = this.mAccount.virtualWorldId;
+            }
+        }
+        content.virtualWorldUuid = virtualWorldUuid;
         if (
             !this.mConfig.game_id ||
             !this.mAccount ||
@@ -720,7 +736,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             if (this.mGame) this.mGame.destroy(true);
             return;
         }
-        content.gameId = this.mConfig.game_id;
+        content.gameId = game_id;
         // const accountObj = JSON.parse();
         content.userToken = this.mConfig.auth_token = this.mAccount.accountData.token; // auth_token;
         content.expire = this.mConfig.token_expire = this.mAccount.accountData.expire + "";
@@ -740,12 +756,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.initgameConfigUrls(configUrls);
 
         if (!configUrls || configUrls.length <= 0) {
-            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mConfig.game_id}`);
+            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
             this.createGame(content.keyEvents);
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
-        let game_id = this.mConfig.game_id;
+        let game_id = this.mAccount.gameID;
         if (game_id.indexOf(".") > -1) {
             game_id = game_id.split(".")[1];
         }

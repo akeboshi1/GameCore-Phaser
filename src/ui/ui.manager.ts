@@ -114,7 +114,7 @@ export class UiManager extends PacketHandler {
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
         this.mUILayerManager.setScene(scene);
-        if (this.mCacheUI) {
+        if (scene && this.mCacheUI) {
             this.mCacheUI();
             this.mCacheUI = undefined;
         }

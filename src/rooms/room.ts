@@ -33,6 +33,7 @@ import { FrameManager } from "./element/frame.manager";
 import { IScenery } from "./sky.box/scenery";
 import { State } from "./state/state.group";
 import { EffectManager } from "./effect/effect.manager";
+import { PlayerDataManager } from "./data/PlayerDataManager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -45,6 +46,7 @@ export interface IRoomService {
     readonly layerManager: LayerManager;
     readonly cameraService: ICameraService;
     readonly effectManager: EffectManager;
+    readonly playerDataManager: PlayerDataManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly blocks: ViewblockService;
@@ -97,6 +99,8 @@ export interface IRoomService {
 
     update(time: number, delta: number): void;
 
+    initUI(): void;
+
     destroy();
 }
 
@@ -115,6 +119,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mFrameManager: FrameManager;
     protected mSkyboxManager: SkyBoxManager;
     protected mEffectManager: EffectManager;
+    protected mPlayerDataManager: PlayerDataManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -213,6 +218,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
         this.mEffectManager = new EffectManager(this);
+        this.mPlayerDataManager = new PlayerDataManager(this);
         if (this.scene) {
             const camera = this.scene.cameras.main;
             setTimeout(() => {
@@ -220,7 +226,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }, 6000);
             this.mCameraService.camera = camera;
             const padding = 199 * this.mScaleRatio;
-            this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio  + padding * 2);
+            this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
             // init block
             this.mBlocks.int(this.mSize);
 
@@ -234,7 +240,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         if (loadingScene) loadingScene.sleep();
         this.world.changeRoom(this);
-        if (this.world.uiManager) this.world.uiManager.showMainUI();
+        // if (this.world.uiManager) this.world.uiManager.showMainUI();
 
         if (this.connection) {
             this.cameraService.syncCamera();
@@ -244,7 +250,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);
-
         // const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
         // this.world.playSound({
         //     urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
@@ -253,6 +258,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // });
 
         this.initSkyBox();
+        this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
     }
 
     public pause() {
@@ -408,7 +414,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mStateMap) this.mStateMap = new Map();
         let state: State;
         for (const sta of states) {
-            switch(sta.execCode) {
+            switch (sta.execCode) {
                 case op_def.ExecCode.EXEC_CODE_ADD:
                 case op_def.ExecCode.EXEC_CODE_UPDATE:
                     state = new State(sta);
@@ -420,6 +426,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     break;
             }
         }
+    }
+
+    public initUI() {
+        if (this.world.uiManager) this.world.uiManager.showMainUI();
     }
 
     public clear() {
@@ -498,7 +508,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     protected handlerState(state: State) {
-        switch(state.name) {
+        switch (state.name) {
             case "skyBoxAnimation":
                 this.mSkyboxManager.setState(state);
                 break;
@@ -539,6 +549,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get effectManager(): EffectManager {
         return this.mEffectManager;
+    }
+    get playerDataManager(): PlayerDataManager {
+        return this.playerDataManager;
     }
 
     get id(): number {

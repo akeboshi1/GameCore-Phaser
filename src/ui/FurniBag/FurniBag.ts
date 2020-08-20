@@ -160,7 +160,7 @@ export class FurniBag extends PacketHandler {
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
     content.category = this.categoryType;
     content.page = 1;
-    content.perPage = 30;
+    content.perPage = 1000000;
     content.subcategory = key;
     content.queryString = queryString;
     this.connection.send(packet);
@@ -171,7 +171,7 @@ export class FurniBag extends PacketHandler {
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
     content.category = this.categoryType;
     content.page = 1;
-    content.perPage = 30;
+    content.perPage = 1000000;
     content.subcategory = key;
     content.queryString = queryString;
     this.connection.send(packet);

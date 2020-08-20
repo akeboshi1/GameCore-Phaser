@@ -154,7 +154,11 @@ export class FurniBagPanel extends BasePanel {
             this.mSelectedItemData.push(prop);
           }
         }
-        this.updateAvatarItems();
+        if (this.mSelectedItemData.length === 0) {
+          this.displayAvatar();
+        } else {
+          this.updateAvatarItems();
+        }
       }
     }
   }
@@ -364,7 +368,8 @@ export class FurniBagPanel extends BasePanel {
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
-        zoom: this.scale
+        zoom: this.scale,
+        mask: false
       },
       scrollMode: 1,
       clamplChildOY: false,
