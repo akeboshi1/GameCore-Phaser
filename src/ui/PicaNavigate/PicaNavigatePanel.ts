@@ -47,7 +47,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
+    // this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
@@ -58,7 +58,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
+    // this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
