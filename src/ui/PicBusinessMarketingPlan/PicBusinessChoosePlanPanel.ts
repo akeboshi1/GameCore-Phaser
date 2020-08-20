@@ -211,7 +211,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         text += source + "\n";
         if (data.sellingPrice) {
             let price = i18n.t("common.sold");
-            price += data.sellingPrice.price + Coin.getName(data.sellingPrice.coinType);
+            price += `${Coin.getName(data.sellingPrice.coinType)} x ${data.sellingPrice.price}`;
             price = `[stroke=#333333][color=#333333]${price}[/color][/stroke]`;
             text += price + "\n";
         }

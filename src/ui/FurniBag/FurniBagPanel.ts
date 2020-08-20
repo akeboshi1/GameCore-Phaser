@@ -869,7 +869,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mNickName = this.scene.make.text({
       x: 7 * this.dpr,
       y: 9 * this.dpr,
-      text: "背包里空空如也",
       style: {
         fontSize: 12 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -881,7 +880,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mPriceText = this.scene.make.text({
       x: 7 * this.dpr,
       y: 28 * this.dpr,
-      text: "不可交易",
       style: {
         fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -892,7 +890,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mSource = this.scene.make.text({
       x: 8 * dpr,
       y: 47 * dpr,
-      text: "可通过商城购物获得",
       style: {
         fontSize: 10 * dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -919,7 +916,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
 
   setProp(prop: op_client.ICountablePackageItem): this {
     if (!prop) {
-      this.mNickName.setText("背包里空空如也");
+      this.mNickName.setText(i18n.t("furni_bag.empty_backpack"));
       this.mPriceText.text = "";
       this.mSource.text = "";
       this.mDesText.text = "";
@@ -932,17 +929,17 @@ class DetailBubble extends Phaser.GameObjects.Container {
       if (prop.recyclable) {
         posY += offsetY;
         this.mPriceText.y = posY;
-        if (prop.sellingPrice) this.mPriceText.setText(`可售出：${prop.sellingPrice.price} ${Coin.getName(prop.sellingPrice.coinType)}`);
+        if (prop.sellingPrice) this.mPriceText.setText(`${i18n.t("furni_bag.sale_price")}：${Coin.getName(prop.sellingPrice.coinType)} x ${prop.sellingPrice.price}`);
       } else {
         posY += offsetY;
         this.mPriceText.y = posY;
-        this.mPriceText.setText(`不可售出`);
+        this.mPriceText.setText(i18n.t("furni_bag.not_sale"));
       }
       // if (prop.tradable) {
       //   this.mPriceText.setText(`可交易`);
       // }
       if (prop.source) {
-        this.mSource.setText(`来源： ${prop.source}`);
+        this.mSource.setText(`${i18n.t("furni_bag.source")}： ${prop.source}`);
         posY += offsetY;
         this.mSource.y = posY;
       } else {
