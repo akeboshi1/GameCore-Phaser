@@ -46,7 +46,7 @@ export class FurniBagPanel extends BasePanel {
   private mSceneType: op_def.SceneTypeEnum;
   private mEnableEdit: boolean = false;
   private mInputBoo: boolean = false;
-  private categoryType: op_def.EditModePackageCategory;
+  private categoryType: op_pkt_def.PKT_PackageType;
   private mSelectedItemData: op_client.ICountablePackageItem[] = [];
   private mSelectedItems: Item[] = [];
   private dressAvatarIDS: string[];
@@ -141,7 +141,7 @@ export class FurniBagPanel extends BasePanel {
       props = props.concat(new Array(24 - len));
     }
     this.mPropGrid.setItems(props);
-    if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+    if (this.categoryType !== op_pkt_def.PKT_PackageType.AvatarPackage) {
       const cell = this.mPropGrid.getCell(0);
       this.onSelectItemHandler(cell.container);
     } else {
@@ -323,10 +323,10 @@ export class FurniBagPanel extends BasePanel {
       color: "#FFFFFF"
     };
     this.topCheckBox = new CheckboxGroup();
-    let topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_ITEM, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE, op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR];
+    let topCategorys = [op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage];
     let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
     if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
-      topCategorys = [op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE];
+      topCategorys = [op_pkt_def.PKT_PackageType.FurniturePackage];
       topBtnTexts = [i18n.t("furni_bag.furni")];
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1) - 20 * this.dpr;
@@ -348,7 +348,7 @@ export class FurniBagPanel extends BasePanel {
       this.add(btn);
     });
     if (this.mEnableEdit) {
-      const index = topCategorys.indexOf(op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE);
+      const index = topCategorys.indexOf(op_pkt_def.PKT_PackageType.FurniturePackage);
       this.topCheckBox.selectIndex(index);
     } else {
       this.topCheckBox.selectIndex(0);
@@ -442,7 +442,7 @@ export class FurniBagPanel extends BasePanel {
     }
   }
   private replaceSelectItem(data: op_client.ICountablePackageItem, cell: Item) {
-    if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+    if (this.categoryType !== op_pkt_def.PKT_PackageType.AvatarPackage) {
       cell.isSelect = true;
       if (this.mSelectedItems.length > 0) {
         this.mSelectedItems[0].isSelect = false;
@@ -514,7 +514,7 @@ export class FurniBagPanel extends BasePanel {
     this.sellBtn.enable = prop.recyclable;
     this.useBtn.enable = prop.executable;
     this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
-    if (this.categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+    if (this.categoryType === op_pkt_def.PKT_PackageType.AvatarPackage) {
       this.saveBtn.enable = true;
       this.resetBtn.enable = true;
     }
@@ -585,7 +585,7 @@ export class FurniBagPanel extends BasePanel {
       this.replaceSelectItem(item, cell);
       this.setSelectedItem(item);
     } else {
-      if (this.categoryType !== op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR && this.mSelectedItemData.length === 0) {
+      if (this.categoryType !== op_pkt_def.PKT_PackageType.AvatarPackage && this.mSelectedItemData.length === 0) {
         this.sellBtn.enable = false;
         this.useBtn.enable = false;
         this.mAdd.enable = false;
@@ -618,13 +618,13 @@ export class FurniBagPanel extends BasePanel {
     // this.mDetailDisplay.setNearest();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
-      if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_FURNITURE) {
+      if (categoryType === op_pkt_def.PKT_PackageType.FurniturePackage) {
         this.sellBtn.visible = true;
         this.mAdd.visible = true;
         this.useBtn.visible = false;
         this.saveBtn.visible = false;
         this.resetBtn.visible = false;
-      } else if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+      } else if (categoryType === op_pkt_def.PKT_PackageType.AvatarPackage) {
         this.sellBtn.visible = false;
         this.saveBtn.visible = true;
         this.resetBtn.visible = true;
@@ -676,7 +676,7 @@ export class FurniBagPanel extends BasePanel {
 
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
-    if (categoryType === op_def.EditModePackageCategory.EDIT_MODE_PACKAGE_CATEGORY_AVATAR) {
+    if (categoryType === op_pkt_def.PKT_PackageType.AvatarPackage) {
       // this.displayAvatar();
       this.emit("queryDressAvatarIDS");
     }
