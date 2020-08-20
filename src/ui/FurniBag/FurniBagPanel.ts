@@ -722,8 +722,8 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private onResetBtnHandler() {
-    if (this.mSelectedItemData.length > 0)
-      this.emit("queryResetAvatar");
+    // if (this.mSelectedItemData.length > 0)
+    this.emit("queryResetAvatar");
   }
   private onSellPropsHandler(category: number, prop: op_client.CountablePackageItem, count: number) {
     this.mCategoryScroll.addListen();

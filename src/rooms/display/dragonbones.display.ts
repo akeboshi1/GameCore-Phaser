@@ -107,7 +107,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     public set displayInfo(val: IDragonbonesModel | undefined) {
-        if (this.mLoadMap.size === 0 && this.mNeedReplaceTexture === false) {
+        if (this.mNeedReplaceTexture === false) {
 
             this.mNeedReplaceTexture = this.checkNeedReplaceTexture(this.mDisplayInfo, val);
             // console.log("ZW-- set displayInfo:", val, this.mNeedReplaceTexture);
@@ -198,7 +198,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     public destroy() {
-        this.displayInfo = null;
+        // this.displayInfo = null;
+        this.mDisplayInfo = null;
+        this.mNeedReplaceTexture = false;
         if (this.mArmatureDisplay) {
             this.mArmatureDisplay.dispose(true);
             this.mArmatureDisplay = null;
