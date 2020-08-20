@@ -9,6 +9,7 @@ import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/Scr
 import { Logger } from "../../utils/log";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 
 export class PicaRoomListPanel extends BasePanel {
   private readonly key: string = "pica_roomlist";
@@ -73,6 +74,7 @@ export class PicaRoomListPanel extends BasePanel {
   }
 
   protected preload() {
+    this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
     this.addAtlas(this.key, "pica_roomlist/pica_roomlist.png", "pica_roomlist/pica_roomlist.json");
     super.preload();
   }
@@ -748,7 +750,7 @@ class RoomItem extends Phaser.GameObjects.Container {
       if (room.playerCount) this.mCounter.setText(room.playerCount.toString());
     }
     this.mCounterIcon.x = this.mCounter.x - this.mCounter.width / 2 - this.mCounterIcon.width / 2 - 4 * this.mDpr;
-    this.crateLabel(op_def.EditModeRoomPrivacy.EDIT_MODE_ROOM_LOCKED);
+    // this.crateLabel(op_def.EditModeRoomPrivacy.EDIT_MODE_ROOM_LOCKED);
     this.mRoom = room;
   }
 
@@ -780,8 +782,8 @@ class RoomItem extends Phaser.GameObjects.Container {
     this.mNickName.y = -(this.mNickName.height) / 2;
 
     this.mCounterIcon = this.scene.make.image({
-      key,
-      frame: "counter_icon.png"
+      key: UIAtlasKey.commonKey,
+      frame: "home_persons"
     }, false);
 
     this.mCounter = this.scene.make.text({

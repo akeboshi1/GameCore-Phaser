@@ -34,7 +34,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBackground.x = width / 2;
     this.mBackground.setInteractive();
     this.mCloseBtn.x = width - this.mCloseBtn.width / 2 - 3 * this.dpr;
-    this.mGoHomeBtn.x = this.mCloseBtn.x - this.mCloseBtn.width * 0.5 - this.mGoHomeBtn.width * 0.5 - 10 * this.dpr;
+    this.mGoHomeBtn.x = this.mCloseBtn.x - this.mCloseBtn.width * 0.5 - this.mGoHomeBtn.width * 0.5 - 24 * this.dpr;
 
     this.y = height - this.height / 2;
     super.resize(w, h);
@@ -47,7 +47,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
+    // this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
@@ -58,7 +58,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
+    // this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -113,20 +113,22 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn = this.createImage(this.key_lang, "bag_btn").setInteractive();
     this.mFamilyBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
     this.mGoHomeBtn = this.createImage(this.key_lang, "home_btn").setInteractive();
-    this.mTestBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
+    // this.mTestBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(UIAtlasKey.commonKey, "close_1").setInteractive();
-    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mTestBtn, this.mGoHomeBtn];
+    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
-    let pad = 0;
+    let preItem: Phaser.GameObjects.Image;
     for (let i = 0; i < list.length; i++) {
-      if (i > 0) {
-        pad = list[i - 1].width * 0.5;
+      if (i === 0) {
+        list[i].x = 10.33 * this.dpr + list[i].width * 0.5;
       } else {
-        pad = list[i].width * 0.5;
+        preItem = list[i - 1];
+        list[i].x = preItem.x + 12 * this.dpr + (list[i].width + preItem.width) * 0.5;
+        // pad = list[i].width * 0.5;
       }
-      list[i].x = i * 50 * this.dpr + list[i].width * 0.5 + pad;
+      // list[i].x = i * 50 * this.dpr + list[i].width * 0.5 + pad;
     }
     const zoom = this.scale;
     this.resize(this.mBackground.width * zoom, this.mBackground.height * zoom);

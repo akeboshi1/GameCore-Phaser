@@ -317,8 +317,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public reconnect() {
-        const gameID: string = this.mConfig.game_id;
-        const worldID: string = this.mConfig.virtual_world_id;
+        let gameID: string = this.mConfig.game_id;
+        let worldID: string = this.mConfig.virtual_world_id;
+        if (this.mAccount.gameID && this.mAccount.virtualWorldId) {
+            gameID = this.mAccount.gameID;
+            worldID = this.mAccount.virtualWorldId;
+        }
         this._createAnotherGame(gameID, worldID);
     }
 

@@ -26,6 +26,7 @@ export class LoadingScene extends BasicScene {
     if (this.mWorld) {
       dpr = this.mWorld.uiRatio || 2;
     }
+    this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
     this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
     this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
     // this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));

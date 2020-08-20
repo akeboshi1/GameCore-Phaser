@@ -226,10 +226,10 @@ export class MineCarPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new PackageItem(scene, this.key, this.dpr);
         }
-        if (cellContainer.itemData !== item) {
-          cellContainer.setData({ item });
-          cellContainer.setProp(item);
-        }
+        // if (cellContainer.itemData !== item) {
+        cellContainer.setData({ item });
+        cellContainer.setProp(item);
+        // }
         return cellContainer;
       },
     };
@@ -480,6 +480,8 @@ class PackageItem extends Phaser.GameObjects.Container {
     );
     this.mSelectedIcon.x = border.width - 2 * dpr - (this.mSelectedIcon.width) / 2;
     this.mSelectedIcon.y = 2 * dpr + (this.mSelectedIcon.height) / 2;
+    // this.mSelectedIcon.x = 0;
+    // this.mSelectedIcon.y = 0;
     this.add(border);
     this.add([this.mItemImage, this.mCounter, this.mSelectedIcon]);
   }
