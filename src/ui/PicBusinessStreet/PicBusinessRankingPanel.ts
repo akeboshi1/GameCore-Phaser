@@ -277,9 +277,9 @@ class PicRankingItem extends Phaser.GameObjects.Container {
         this.add(this.titleText);
         this.storebg = new NineSlicePatch(this.scene, 0, 0, 72 * dpr, 17 * dpr, this.key2, "store_name_bg_s", {
             left: 6 * this.dpr,
-            top: 0 * this.dpr,
+            top: 1 * this.dpr,
             right: 6 * this.dpr,
-            bottom: 0 * this.dpr
+            bottom: 1 * this.dpr
         });
         this.storebg.y = this.titleText.y + 10 * dpr;
         this.add(this.storebg);

@@ -220,7 +220,7 @@ export class PicPropFunPanel extends BasePanel {
             this.priceBg.visible = true;
             this.mCoinIcon.visible = true;
             this.slider.y = 70 * this.dpr;
-            this.pricText.text = prop.sellingPrice.price * this.itemCount + "  银币";
+            this.pricText.text = prop.sellingPrice.price * this.itemCount + " " + Coin.getName(prop.sellingPrice.coinType);
             const coinIcon = Coin.getIcon(prop.sellingPrice.coinType);
             this.mCoinIcon.setFrame(coinIcon);
         } else {
@@ -258,7 +258,7 @@ export class PicPropFunPanel extends BasePanel {
         if (this.itemCountText)
             this.itemCountText.text = this.itemCount + "";
         if (this.pricText && this.itemData && this.itemData.sellingPrice)
-            this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + "  银币";
+            this.pricText.text = this.itemData.sellingPrice.price * this.itemCount + " " + Coin.getName(this.itemData.sellingPrice.coinType);
     }
 
     private onCancelBtnHandler() {
