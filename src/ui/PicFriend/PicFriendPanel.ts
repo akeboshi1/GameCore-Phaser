@@ -221,7 +221,7 @@ class FriendContainer extends Container {
                 columns: 1,
                 cellWidth: capW,
                 cellHeight: capH,
-                reuseCellContainer: true
+                reuseCellContainer: true,
               },
             scrollMode: 0,
             clamplChildOY: false,
@@ -243,6 +243,7 @@ class FriendContainer extends Container {
                 cellContainer.setSize(cell.width, cell.height);
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item);
+                // Logger.getInstance().log("=======<<<<<", cell, cellContainer, item);
                 return cellContainer;
             }
         };
@@ -327,6 +328,10 @@ class MainContainer extends FriendContainer {
             if (target) result.push({ type, id: target._id, nickname: target.nickname});
         }
         this.sortByName(result);
+        const len = result.length;
+        // for (let i = 0; i < 10000; i++) {
+        //     result.push(result[i % len]);
+        // }
         let title = "";
         let friendType = "";
         switch(type) {

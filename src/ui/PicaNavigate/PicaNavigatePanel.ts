@@ -34,7 +34,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBackground.x = width / 2;
     this.mBackground.setInteractive();
     this.mCloseBtn.x = width - this.mCloseBtn.width / 2 - 3 * this.dpr;
-    this.mGoHomeBtn.x = this.mCloseBtn.x - this.mCloseBtn.width * 0.5 - this.mGoHomeBtn.width * 0.5 - 10 * this.dpr;
+    this.mGoHomeBtn.x = this.mCloseBtn.x - this.mCloseBtn.width * 0.5 - this.mGoHomeBtn.width * 0.5 - 24 * this.dpr;
 
     this.y = height - this.height / 2;
     super.resize(w, h);
@@ -119,14 +119,16 @@ export class PicaNavigatePanel extends BasePanel {
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
-    let pad = 0;
+    let preItem: Phaser.GameObjects.Image;
     for (let i = 0; i < list.length; i++) {
-      if (i > 0) {
-        pad = list[i - 1].width * 0.5;
+      if (i === 0) {
+        list[i].x = 10.33 * this.dpr + list[i].width * 0.5;
       } else {
-        pad = list[i].width * 0.5;
+        preItem = list[i - 1];
+        list[i].x = preItem.x + 12 * this.dpr + (list[i].width + preItem.width) * 0.5;
+        // pad = list[i].width * 0.5;
       }
-      list[i].x = i * 50 * this.dpr + list[i].width * 0.5 + pad;
+      // list[i].x = i * 50 * this.dpr + list[i].width * 0.5 + pad;
     }
     const zoom = this.scale;
     this.resize(this.mBackground.width * zoom, this.mBackground.height * zoom);
