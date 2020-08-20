@@ -9,9 +9,12 @@ import { Url } from "../../utils/resUtil";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { i18n } from "../../i18n";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 export class MineSettlePanel extends BasePanel {
     private key: string = "mine_settle";
-    private confirmBtn: NinePatchButton;
+    private confirmBtn: NineSliceButton;
     private mPropGrid: GameGridTable;
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: NinePatch;
@@ -62,16 +65,17 @@ export class MineSettlePanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.on("click", this.onConfirmBtnClick, this);
+        this.confirmBtn.on(CoreUI.MouseEvent.Tap, this.onConfirmBtnClick, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.off("click", this.onConfirmBtnClick, this);
+        this.confirmBtn.off(CoreUI.MouseEvent.Tap, this.onConfirmBtnClick, this);
     }
 
     preload() {
         this.addAtlas(this.key, "minesettle/settlement.png", "minesettle/settlement.json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
 
@@ -132,11 +136,11 @@ export class MineSettlePanel extends BasePanel {
             x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("minesettle.settle"),
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
-        this.confirmBtn = new NinePatchButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, this.key, "button", i18n.t("minesettle.savebag"), {
-            left: 20,
-            top: 20,
-            right: 20,
-            bottom: 20
+        this.confirmBtn = new NineSliceButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("minesettle.savebag"), this.dpr, this.scale, {
+            left: 10 * this.dpr,
+            top: 10 * this.dpr,
+            right: 10 * this.dpr,
+            bottom: 10 * this.dpr
         });
         this.confirmBtn.setTextStyle({
             color: "#976400",
