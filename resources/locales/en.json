@@ -39,7 +39,8 @@
     "sold": "Sell",
     "add": "Add",
     "remove": "Remove",
-    "source": "Source:"
+    "source": "Source:",
+    "all":"All"
   },
   "player_info": {
     "title": "Personal Data",

@@ -59,7 +59,7 @@ export class CutInMenuPanel extends BasePanel {
         const posx = width + this.rightPopButton.width * 0.5 - 15 * this.dpr;
         const bounds = this.getActivityBounds();
         if (bounds) {
-            this.rightPopButton.setPosition(posx, bounds.bottom+this.rightPopButton.height);
+            this.rightPopButton.setPosition(posx, bounds.bottom + this.rightPopButton.height);
         } else {
             this.rightPopButton.setPosition(posx, height * 0.5);
         }
@@ -75,7 +75,8 @@ export class CutInMenuPanel extends BasePanel {
 
     private onRightClickHandler() {
         const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
-        this.emit("rightButton", data.id, data.button[0].node.id);
+        // this.emit("rightButton", data.id, data.button[0].node.id);
+        this.emit("openmed", "MineCar");
     }
 
     private getActivityBounds() {

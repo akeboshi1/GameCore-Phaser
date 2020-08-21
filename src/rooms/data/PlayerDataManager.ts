@@ -5,14 +5,14 @@ import { ConnectionService } from "../../net/connection.service";
 import { PlayerData } from "./PlayerData";
 import { Room, IRoomService } from "../room";
 export class PlayerDataManager extends PacketHandler {
-    public readonly playerData: PlayerData;
+    private readonly mPlayerData: PlayerData;
     private readonly mRoom: IRoomService;
     private mEvent: Phaser.Events.EventEmitter;
     constructor(room: IRoomService) {
         super();
         this.mRoom = room;
         this.mEvent = new Phaser.Events.EventEmitter();
-        this.playerData = new PlayerData();
+        this.mPlayerData = new PlayerData();
         this.register();
     }
     register() {
@@ -42,11 +42,18 @@ export class PlayerDataManager extends PacketHandler {
     destroy() {
         this.unregister();
         this.mEvent.destroy();
+        this.playerData.destroy();
     }
 
     get connection(): ConnectionService {
         if (this.mRoom) {
             return this.mRoom.connection;
+        }
+    }
+
+    get playerData(): PlayerData {
+        if (this.mPlayerData) {
+            return this.mPlayerData;
         }
     }
 
@@ -63,10 +70,14 @@ export class PlayerDataManager extends PacketHandler {
     }
     private onSYNC_PACKAHE(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE = packet.content;
-        this.playerData.syncPackage(content);
+        const bag = this.playerData.syncPackage(content);
+        if (bag.syncFinish) {
+            this.mEvent.emit("syncfinish", content.packageName);
+        }
     }
     private onUPDATE_PACKAGE(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE = packet.content;
         this.playerData.updatePackage(content);
+        this.mEvent.emit("update", content.packageName);
     }
 }

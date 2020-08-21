@@ -8,7 +8,7 @@ import { AlertView, Buttons } from "../components/alert.view";
 
 export class LoginMediator extends BaseMediator {
     private verifiedPanel: VerifiedPanel;
-    private readonly onVerified: boolean = true;
+    private readonly onVerified: boolean = false;
     constructor(private layerManager: LayerManager, scene: Phaser.Scene, private world: WorldService) {
         super();
     }

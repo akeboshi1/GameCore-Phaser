@@ -25,6 +25,7 @@ export class CutInMenuMediator extends BaseMediator {
             this.mView = new CutInMenuPanel(this.scene, this.world);
             this.mView.on("hide", this.onHideView, this);
             this.mView.on("rightButton", this.onRightButtonHandler, this);
+            this.mView.on("openmed", this.openPanelMediator, this);
         }
         if (!this.cutInMenu) {
             this.cutInMenu = new CutInMenu(this.world);
@@ -51,6 +52,13 @@ export class CutInMenuMediator extends BaseMediator {
 
     private onRightButtonHandler(uiid: number, btnid: number) {
         this.cutInMenu.reqRightButton(uiid, btnid);
+    }
+
+    private openPanelMediator(panel: string, data: any) {
+        const uiManager = this.world.uiManager;
+        if (data)
+            uiManager.showMed(panel, data);
+        else uiManager.showMed(panel);
     }
     private onHideView() {
         this.destroy();

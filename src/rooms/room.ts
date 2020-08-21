@@ -446,6 +446,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mStateMap) this.mStateMap = null;
         if (this.mCameraService) this.mCameraService.destroy();
         if (this.mEffectManager) this.mEffectManager.destroy();
+        if (this.mPlayerDataManager) this.mPlayerDataManager.destroy();
     }
 
     public destroy() {
@@ -551,7 +552,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mEffectManager;
     }
     get playerDataManager(): PlayerDataManager {
-        return this.playerDataManager;
+        return this.mPlayerDataManager;
     }
 
     get id(): number {

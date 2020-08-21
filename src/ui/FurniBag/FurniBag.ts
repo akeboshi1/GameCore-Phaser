@@ -7,7 +7,7 @@ export class FurniBag extends PacketHandler {
   private readonly world: WorldService;
   private mEvent: Phaser.Events.EventEmitter;
   private mSceneType: op_def.SceneTypeEnum;
-  private categoryType: op_def.EditModePackageCategory;
+  private categoryType: op_pkt_def.PKT_PackageType;
   constructor($world: WorldService, sceneType: op_def.SceneTypeEnum) {
     super();
     this.world = $world;
