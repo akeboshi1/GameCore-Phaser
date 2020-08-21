@@ -139,10 +139,10 @@ export class VerifiedPanel extends BasePanel {
             this.emit("error", "[color=#F9361B]证件格式有误[/color]");
             return;
         }
-        // if (!this.checkIdCard()) {
-        //     this.emit("error", "[color=#F9361B]证件验证失败[/color]");
-        //     return;
-        // }
+        if (!this.checkIdCard()) {
+            this.emit("error", "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]");
+            return;
+        }
         this.emit("verified", name, idCard);
     }
 

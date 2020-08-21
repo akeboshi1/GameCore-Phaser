@@ -27,7 +27,11 @@
     "furni": "家具",
     "Props": "道具",
     "decorate": "装扮",
-    "reset": "还原"
+    "reset": "还原",
+    "sale_price": "售卖价格",
+    "not_sale": "不可售卖",
+    "source": "来源",
+    "empty_backpack": "背包里空空如也"
   },
   "common": {
     "cancel": "取消",
@@ -170,5 +174,10 @@
     "downloading_scene_config": "下载场景配置...",
     "parse_config": "解析配置...",
     "wait_enter_room": "等待进入房间"
+  },
+  "coin": {
+    "coin": "银币",
+    "diamond": "钻石",
+    "gold_coin": "金币"
   }
 }

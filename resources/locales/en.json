@@ -26,7 +26,11 @@
     "furni": "Furnitures",
     "Props": "Items",
     "decorate": "Avatars",
-    "reset": "Reset"
+    "reset": "Reset",
+    "sale_price": "Sale price",
+    "not_sale": "Not for sale",
+    "source": "Source",
+    "empty_backpack": "Empty in the backpack"
   },
   "common": {
     "cancel": "Cancel",
@@ -170,5 +174,10 @@
     "downloading_scene_config": "downloading scene config",
     "parse_config": "parse config",
     "wait_enter_room": "wait enter room"
+  },
+  "coin": {
+    "coin": "coin",
+    "diamond": "diamond",
+    "gold_coin": "gold coin"
   }
 }

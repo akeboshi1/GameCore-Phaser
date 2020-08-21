@@ -93,7 +93,7 @@ export class LoginMediator extends BaseMediator {
     private onShowErrorHandler(error) {
         this.verifiedPanel.setVerifiedEnable(false);
         new AlertView(this.layerManager.scene, this.world).setOKText("重新输入").show({
-            text: "[color=#F9361B]证件格式有误[/color]",
+            text: error ? error : "[color=#F9361B]证件格式有误[/color]",
             title: "提示",
             callback: () => {
                 this.verifiedPanel.setVerifiedEnable(true);
@@ -120,12 +120,12 @@ export class LoginMediator extends BaseMediator {
             if (code === 200 || code === 201 || code === 0) {
                 // this.enterGame(data.adult);
                 this.enterGame(true);
-            } else if (code === 10001) {
+            } else if (code === 10001 || code >= 400) {
                 // 验证失败
                 this.verifiedPanel.setVerifiedEnable(false);
                 // this.verifiedPanel.setVisible(false);
                 new AlertView(this.layerManager.scene, this.world).setOKText("重新认证").show({
-                    text: "[color=#F9361B]实名认证失败，身份证号码有误，\n请如实进行实名认证！[/color]",
+                    text: "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]",
                     title: "提示",
                     callback: () => {
                         this.verifiedPanel.setVerifiedEnable(true);

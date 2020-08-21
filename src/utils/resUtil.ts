@@ -1,5 +1,6 @@
 import { HTTP_REGEX } from "../const/constants";
 import { op_def } from "pixelpai_proto";
+import { i18n } from "../i18n";
 export class Url {
     static OSD_PATH = "";
     static RES_PATH: string = "";
@@ -255,11 +256,11 @@ export class Coin {
         let res = "银币";
         const type = <op_def.CoinType>coinType;
         if (type === op_def.CoinType.COIN) {
-            res = "银币";
+            res = i18n.t("coin.coin");
         } else if (type === op_def.CoinType.DIAMOND) {
-            res = "钻石";
+            res = i18n.t("coin.diamond");
         } else if (type === op_def.CoinType.GOLD_COIN) {
-             res = "金币";
+             res = i18n.t("coin.gold_coin");
         } else if (type === op_def.CoinType.QING_SONG_TANG) {
             // res = "";
         } else if (type === op_def.CoinType.TU_DING_COIN) {

@@ -280,6 +280,7 @@ class PicRankingItem extends Phaser.GameObjects.Container {
             top: 0 * this.dpr,
             right: 8 * this.dpr,
             bottom: 0 * this.dpr
+            bottom: 1 * this.dpr
         });
         this.storebg.y = this.titleText.y + 10 * dpr;
         this.add(this.storebg);

@@ -6,20 +6,17 @@ import { Font } from "../../utils/font";
 import { op_client, op_def, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { TextButton } from "../components/TextButton";
-import { Url } from "../../utils/resUtil";
+import { Url, Coin } from "../../utils/resUtil";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { NinePatch } from "../components/nine.patch";
 import { Handler } from "../../Handler/Handler";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { IAvatar } from "../../rooms/display/dragonbones.model";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
-import { UiManager } from "../ui.manager";
 import { Logger } from "../../utils/log";
 
 export class FurniBagPanel extends BasePanel {
@@ -208,6 +205,7 @@ export class FurniBagPanel extends BasePanel {
     content.avatar = avatar.avatar;
     const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
     this.mDetailDisplay.loadAvatar(content, 2, offset);
+    this.mSelectedItemData.length = 0;
   }
 
   public addListen() {
@@ -718,21 +716,21 @@ export class FurniBagPanel extends BasePanel {
     }
   }
   private onSaveBtnHandler() {
-    if (this.mSelectedItemData.length > 0) {
-      this.dressAvatarIDS.length = 0;
-      const idsArr = [];
-      for (const item of this.mSelectedItemData) {
-        idsArr.push(item.id);
-        this.dressAvatarIDS.push(item.id);
-      }
-      this.emit("querySaveAvatar", idsArr);
-      this.queryPackege();
+    // if (this.mSelectedItemData.length > 0) {
+    this.dressAvatarIDS.length = 0;
+    const idsArr = [];
+    for (const item of this.mSelectedItemData) {
+      idsArr.push(item.id);
+      this.dressAvatarIDS.push(item.id);
     }
+    this.emit("querySaveAvatar", idsArr);
+    this.queryPackege();
+    // }
   }
 
   private onResetBtnHandler() {
-    if (this.mSelectedItemData.length > 0)
-      this.emit("queryResetAvatar");
+    // if (this.mSelectedItemData.length > 0)
+    this.emit("queryResetAvatar");
   }
   private onSellPropsHandler(category: number, prop: op_client.CountablePackageItem, count: number) {
     this.mCategoryScroll.addListen();
@@ -891,7 +889,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mNickName = this.scene.make.text({
       x: 7 * this.dpr,
       y: 9 * this.dpr,
-      text: "背包里空空如也",
       style: {
         fontSize: 12 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -903,7 +900,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mPriceText = this.scene.make.text({
       x: 7 * this.dpr,
       y: 28 * this.dpr,
-      text: "不可交易",
       style: {
         fontSize: 10 * this.dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -914,7 +910,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.mSource = this.scene.make.text({
       x: 8 * dpr,
       y: 47 * dpr,
-      text: "可通过商城购物获得",
       style: {
         fontSize: 10 * dpr,
         fontFamily: Font.DEFULT_FONT,
@@ -941,7 +936,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
 
   setProp(prop: op_client.ICountablePackageItem): this {
     if (!prop) {
-      this.mNickName.setText("背包里空空如也");
+      this.mNickName.setText(i18n.t("furni_bag.empty_backpack"));
       this.mPriceText.text = "";
       this.mSource.text = "";
       this.mDesText.text = "";
@@ -954,17 +949,17 @@ class DetailBubble extends Phaser.GameObjects.Container {
       if (prop.recyclable) {
         posY += offsetY;
         this.mPriceText.y = posY;
-        this.mPriceText.setText(`可售出：${prop.sellingPrice.price} 银币`);
+        if (prop.sellingPrice) this.mPriceText.setText(`${i18n.t("furni_bag.sale_price")}：${Coin.getName(prop.sellingPrice.coinType)} x ${prop.sellingPrice.price}`);
       } else {
         posY += offsetY;
         this.mPriceText.y = posY;
-        this.mPriceText.setText(`不可售出`);
+        this.mPriceText.setText(i18n.t("furni_bag.not_sale"));
       }
       // if (prop.tradable) {
       //   this.mPriceText.setText(`可交易`);
       // }
       if (prop.source) {
-        this.mSource.setText(`来源： ${prop.source}`);
+        this.mSource.setText(`${i18n.t("furni_bag.source")}： ${prop.source}`);
         posY += offsetY;
         this.mSource.y = posY;
       } else {
