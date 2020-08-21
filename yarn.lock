@@ -1932,15 +1932,15 @@ function-bind@^1.1.1:
   resolved "https://registry.npm.taobao.org/function-bind/download/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha1-pWiZ0+o8m6uHS7l3O3xe3pL0iV0=
 
-"game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#master":
+"game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
   version "1.2.164"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#83554d85e43e095becd800349ad095d6639b4ff6"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#feb56cf6eba829269c9770de9a3af0c8679d496f"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
     lodash "^4.17.19"
     phaser "^3.23.0"
-    pixelpai_proto "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript"
+    pixelpai_proto "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev"
     protobufjs "^6.8.8"
     treeify "^1.1.0"
 
@@ -2634,6 +2634,11 @@ jest-worker@^25.4.0:
   dependencies:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
+
+js-base64@^3.4.5:
+  version "3.4.5"
+  resolved "https://registry.npmjs.org/js-base64/-/js-base64-3.4.5.tgz#6d1921e65a172cfd924604e1416dfaff45752c3e"
+  integrity sha512-Ub/AANierdcT8nm4ndBn3KzpZQ3MdHX4a+bwoVdjgeHCZ0ZEcP+UB4nmR4Z5lR6SH3Y+qAPmgVR0RxKJNHNHEg==
 
 js-tokens@^4.0.0:
   version "4.0.0"
