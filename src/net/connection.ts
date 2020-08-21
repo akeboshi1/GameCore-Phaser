@@ -10,9 +10,12 @@ import { Logger } from "../utils/log";
 // PBpacket.addProtocol(op_gameconfig);
 // PBpacket.addProtocol(op_virtual_world);
 // PBpacket.addProtocol(op_gameconfig_01);
+import { Base64, decode, encode } from "js-base64";
 import NetWorker from "worker-loader?name=js/[hash].[name].js!./networker";
 import HeartBeatWorker from "worker-loader?name=js/[hash].[name].js!./heartbeatworker";
 import * as protos from "pixelpai_proto";
+import { load } from "../utils/http";
+import { Lite } from "game-capsule";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -97,6 +100,10 @@ export default class Connection implements ConnectionService {
         }
     }
 
+    loadRes(paths: string[]) {
+        if (this.mHeartBeatWorker) this.mHeartBeatWorker.postMessage({ "method": "load", "data": paths });
+    }
+
     private _doConnect() {
         // Logger.getInstance().info(`_doConnect `, this.mCachedServerAddress);
         const self = this;
@@ -160,11 +167,38 @@ export default class Connection implements ConnectionService {
             //     }
             //     break;
             default:
-                if (data) {
+                if (data instanceof ArrayBuffer) {
                     this._onData(data);
+                } else if (data instanceof Blob) {
+                    this._onBlob(data);
                 }
                 break;
         }
+    }
+
+    private _onBlob(data: Blob) {
+        const self = this;
+        const p = new Promise(function(resolve, reject) {
+            const reader = new FileReader();
+            reader.readAsDataURL(data);
+            reader.onload = function(e) {
+                const type = data.type;
+                switch (type) {
+                    case "image/png":
+                        break;
+                    case "application/json":
+                        const arrayBuffer = new Response(data).arrayBuffer().then((response) => {
+                            const gameConfig = new Lite();
+                            gameConfig.deserialize(new Uint8Array(response));
+                            (<any>self.mListener).elementStorage.setGameConfig(gameConfig);
+                        });
+                        break;
+                }
+                // const resList = String(e.target.result).split(",");
+                // resolve(resList[1]);
+            };
+
+        });
     }
 
     private _onData(data: ArrayBuffer) {

@@ -23,6 +23,24 @@ function endBeat() {
     postMessage({ "method": "endHeartBeat" });
 }
 
+function load(paths: string[]) {
+    const len: number = paths.length;
+    const path = paths.slice(0, 1)[0];
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", path, true);
+    xhr.responseType = "blob";
+    xhr.onload = function() {
+        if (xhr.readyState === 4) {
+            postMessage(xhr.response, [xhr.response]);
+            if (len > 0) {
+                load(paths.slice(0, 1));
+            }
+            close();
+        }
+    };
+    xhr.send(null);
+}
+
 heartWorker.onmessage = (ev) => {
     const data: any = ev.data;
     switch (data.method) {
@@ -35,6 +53,9 @@ heartWorker.onmessage = (ev) => {
             break;
         case "endBeat":
             endBeat();
+            break;
+        case "load":
+            load(data.data);
             break;
     }
 };
