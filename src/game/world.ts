@@ -317,6 +317,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public reconnect() {
+        if (!this.game || this.isPause) return;
         let gameID: string = this.mConfig.game_id;
         let worldID: string = this.mConfig.virtual_world_id;
         if (this.mAccount.gameID && this.mAccount.virtualWorldId) {
@@ -916,8 +917,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         this.isPause = false;
-        this.mRoomMamager.onFocus();
         if (this.mGame) {
+            this.mRoomMamager.onFocus();
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
             if (pauseScene) {
                 (pauseScene as GamePauseScene).sleep();
@@ -931,8 +932,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             return;
         }
         this.isPause = true;
-        this.mRoomMamager.onBlur();
         if (this.mGame) {
+            this.mRoomMamager.onBlur();
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
