@@ -2,7 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { Bubble } from "./bubble";
 import { DynamicImage } from "../../ui/components/dynamic.image";
 import { Url } from "../../utils/resUtil";
-import { Logger } from "../../utils/log";
+import { IElement } from "../element/element";
 
 export class BubbleContainer extends Phaser.GameObjects.Container {
     private mBubbles: Bubble[] = [];
@@ -32,7 +32,18 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
         this.mArrow.y = 4 * this.mScale;
     }
 
-    updatePos(x: number, y: number) {
+    public follow(target: IElement) {
+        if (this.mBubbles.length === 0) {
+            return;
+        }
+        const position = target.getPosition();
+        if (!position) {
+            return;
+        }
+        this.updatePos(position.x, position.y - 110);
+    }
+
+    public updatePos(x: number, y: number) {
         this.x = x * this.mScale;
         this.y = y * this.mScale;
     }
