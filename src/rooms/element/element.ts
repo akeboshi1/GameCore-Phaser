@@ -489,7 +489,7 @@ export class Element extends BlockObject implements IElement {
             this.mBubble = new BubbleContainer(scene, this.roomService.world.scaleRatio);
         }
         this.mBubble.addBubble(text, setting);
-        this.updateBubble();
+        this.mBubble.follow(this);
         this.roomService.addToSceneUI(this.mBubble);
     }
     public clearBubble() {
@@ -782,17 +782,6 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    protected updateBubble() {
-        if (!this.mBubble) {
-            return;
-        }
-        const position = this.getPosition();
-        if (!position) {
-            return;
-        }
-        this.mBubble.updatePos(position.x, position.y - 80);
-    }
-
     protected onMoveStart() {
         this.mMoving = true;
     }
@@ -811,7 +800,9 @@ export class Element extends BlockObject implements IElement {
             // }
             this.setDepth(0);
             this.mMoveData.tweenLastUpdate = now;
-            this.updateBubble();
+            if (this.mBubble) {
+                this.mBubble.follow(this);
+            }
             // if (this.mDisplay) this.mDisplay.emit("posChange", this.scene);
             if (this.mBlockable) {
                 this.roomService.updateBlockObject(this);

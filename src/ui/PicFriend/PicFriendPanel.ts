@@ -171,7 +171,7 @@ export default class PicFriendPanel extends BasePanel {
         }
         const classType = this.mSubContanerMap.get(type);
         if (!classType) return;
-        this.mShowingSubContainer = new classType(this.scene, this.bg.width, this.bg.height, this.key, this.dpr);
+        this.mShowingSubContainer = new classType(this.scene, this.bg.width, this.bg.height, this.key, this.dpr, this.scale);
         this.mShowingSubContainer.resize();
         this.mShowingSubContainer.register();
         this.mShowingSubContainer.on("hide", this.onHideSearchHandler, this);
@@ -199,7 +199,7 @@ export default class PicFriendPanel extends BasePanel {
 
 class FriendContainer extends Container {
     protected titleText: Text;
-    constructor(scene: Phaser.Scene, width: number, height: number, protected key: string, protected dpr: number) {
+    constructor(scene: Phaser.Scene, width: number, height: number, protected key: string, protected dpr: number, protected uiScale: number) {
         super(scene, 0, 0);
         this.setSize(width, height);
     }
@@ -211,7 +211,7 @@ class FriendContainer extends Container {
         this.add(this.titleText);
     }
 
-    protected createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler, ) {
+    protected createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler) {
         const tableConfig: GridTableConfig = {
             x,
             y,
@@ -222,6 +222,7 @@ class FriendContainer extends Container {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
+                zoom: this.uiScale
               },
             scrollMode: 0,
             clamplChildOY: false,
@@ -279,11 +280,9 @@ class MainContainer extends FriendContainer {
     private friendDatas: Map<FriendChannel, FriendData[]>;
     private searchInput: SearchInput;
     // private friendList: FriendList;
-    private uiScale: number;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, uiScale: number) {
-        super(scene, width, height, key, dpr);
+        super(scene, width, height, key, dpr, uiScale);
         this.friendDatas = new Map();
-        this.uiScale = uiScale;
         this.draw();
     }
 
@@ -329,9 +328,11 @@ class MainContainer extends FriendContainer {
         }
         this.sortByName(result);
         const len = result.length;
-        // for (let i = 0; i < 10000; i++) {
-        //     result.push(result[i % len]);
-        // }
+        if (len > 0) {
+            for (let i = 0; i < 10000; i++) {
+                result.push(result[i % len]);
+            }
+        }
         let title = "";
         let friendType = "";
         switch(type) {
@@ -637,8 +638,8 @@ class NullRenderer implements IRenderer {
     constructor(scene: Phaser.Scene, private owner: PicFriendItem) {
         this.graphics = scene.make.graphics(undefined, false);
         this.graphics.fillStyle(0xF5F5F5);
-        // this.graphics.fillRect(-this.owner.width * 0.5, -this.owner.height * 0.5, this.owner.width, this.owner.height);
-        this.graphics.fillRect(0, 0, this.owner.width * 2, this.owner.height * 2);
+        this.graphics.fillRect(-this.owner.width * 0.5, -18 * owner.dpr, this.owner.width, this.owner.height);
+        // this.graphics.fillRect(0, 0, this.owner.width * 2, this.owner.height * 2);
         owner.add(this.graphics);
     }
 
@@ -701,10 +702,10 @@ class FansRenderer extends FriendRenderer {
         const btnW = 48 * dpr;
         const btnH = 24 * dpr;
         const button =  new NineSliceButton(this.scene, (width - btnW) * 0.5 - 18 * dpr, 0, btnW, btnH, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("common.add"), dpr, 1, {
-            left: 10 * 1,
-            top: 10 * 1,
-            right: 10 * 1,
-            bottom: 10 * 1
+            left: 10 * dpr,
+            top: 6 * dpr,
+            right: 10 * dpr,
+            bottom: 6 * dpr
         });
         button.setTextStyle({
             fontSize: 9 * dpr,
@@ -744,8 +745,8 @@ class SubFriendContainer extends FriendContainer {
     protected backBtn: Button;
     protected gridTable: GameGridTable;
     protected friendType: FriendChannel;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
-        super(scene, width, height, key, dpr);
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, uiScale: number) {
+        super(scene, width, height, key, dpr, uiScale);
         this.draw();
     }
 
@@ -805,8 +806,8 @@ class SubFriendContainer extends FriendContainer {
 
 class SearchContainer extends SubFriendContainer {
     private searchInput: SearchInput;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
-        super(scene, width, height, key, dpr);
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, uiScale: number) {
+        super(scene, width, height, key, dpr, uiScale);
         this.friendType = FriendChannel.Search;
     }
 
@@ -842,8 +843,8 @@ class SearchContainer extends SubFriendContainer {
 }
 
 class BlackContainer extends SubFriendContainer {
-    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number) {
-        super(scene, width, heigth, key, dpr);
+    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number, uiScale: number) {
+        super(scene, width, heigth, key, dpr, uiScale);
         this.friendType = FriendChannel.Blacklist;
     }
 
@@ -871,8 +872,8 @@ class BlackContainer extends SubFriendContainer {
 }
 
 class NewFansContainer extends SubFriendContainer {
-    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number) {
-        super(scene, width, heigth, key, dpr);
+    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number, uiScale: number) {
+        super(scene, width, heigth, key, dpr, uiScale);
         this.friendType = FriendChannel.Blacklist;
     }
 
@@ -883,8 +884,8 @@ class NewFansContainer extends SubFriendContainer {
 }
 
 class NewFriendContainer extends SubFriendContainer {
-    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number) {
-        super(scene, width, heigth, key, dpr);
+    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number, uiScale: number) {
+        super(scene, width, heigth, key, dpr, uiScale);
         this.friendType = FriendChannel.Blacklist;
     }
 

@@ -4,6 +4,7 @@ import { Handler } from "../../Handler/Handler";
 import { Logger } from "../../utils/log";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
@@ -33,7 +34,7 @@ export class ActivityPanel extends BasePanel {
             return;
         }
         if (active.name === "activity.taskbtn") {
-            const btn = <Phaser.GameObjects.Image>this.content.list[3];
+            const btn = <Button>this.content.list[3];
             btn.visible = active.visible;
             if (!active.disabled) {
                 btn.setInteractive();
@@ -50,11 +51,11 @@ export class ActivityPanel extends BasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.add(this.content);
         for (let i = 0; i < 4; i++) {
-            const img = this.scene.make.image({
-                key: this.key,
-                frame: `icon_${i + 1}`
-            }, false);
-            this.content.add(img);
+            // const img = this.scene.make.image({
+            //     key: this.key,
+            //     frame: `icon_${i + 1}`
+            // }, false);
+            this.content.add(new Button(this.scene, this.key, `icon_${i + 1}`));
         }
 
         const subList = this.content.list;
@@ -63,11 +64,11 @@ export class ActivityPanel extends BasePanel {
         let height: number = 0;
         const handler = new Handler(this, this.onClickHandler);
         for (let i = 0; i < subList.length; i++) {
-            const button = <Phaser.GameObjects.Image>subList[i];
+            const button = <Button>subList[i];
             button.y = button.height * button.originY + height;
             height += button.height + offsetY;
             tmpWid = button.width;
-            button.on("pointerup", () => {
+            button.on(CoreUI.MouseEvent.Tap, () => {
                 handler.runWith(i + 1);
             }, this);
             button.setInteractive();
@@ -85,7 +86,7 @@ export class ActivityPanel extends BasePanel {
         if (name === 4) {
             this.emit("showPanel", "Task");
         } else if (name === 3) {
-            // this.emit("showPanel", "PicFriend");
+            this.emit("showPanel", "PicFriend");
         } else if (name === 2) {
             // this.emit("showPanel", "FriendInvite");
         }
