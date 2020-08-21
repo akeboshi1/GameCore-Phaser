@@ -134,30 +134,34 @@ export class FurniBagPanel extends BasePanel {
     this.updateCategeoriesLoc(false);
   }
 
-  public setProp(props: op_client.ICountablePackageItem[]) {
+  public setProp(props: op_client.ICountablePackageItem[], isupdate: boolean = false) {
     props = !props ? [] : props;
-    this.mSelectedItemData.length = 0;
     this.mSelectedItems.length = 0;
+    if (!isupdate) this.mSelectedItemData.length = 0;
     const len = props.length;
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
+    if (!isupdate) this.mPropGrid.setT(0);
     this.mPropGrid.setItems(props);
     if (this.categoryType !== op_pkt_def.PKT_PackageType.AvatarPackage) {
-      const cell = this.mPropGrid.getCell(0);
-      this.onSelectItemHandler(cell.container);
+      if (this.mSelectedItems.length === 0) {
+        this.mPropGrid.setT(0);
+        this.mSelectedItemData.length = 0;
+        const cell = this.mPropGrid.getCell(0);
+        this.onSelectItemHandler(cell.container);
+      }
     } else {
+      this.mSelectedItemData.length = 0;
+      for (const prop of props) {
+        if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+          this.mSelectedItemData.push(prop);
+        }
+      }
       if (this.mSelectedItemData.length === 0) {
-        for (const prop of props) {
-          if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-            this.mSelectedItemData.push(prop);
-          }
-        }
-        if (this.mSelectedItemData.length === 0) {
-          this.displayAvatar();
-        } else {
-          this.updateAvatarItems();
-        }
+        this.displayAvatar();
+      } else {
+        this.updateAvatarItems();
       }
     }
   }
@@ -240,8 +244,8 @@ export class FurniBagPanel extends BasePanel {
     super.destroy();
   }
 
-  queryRefreshPackage() {
-    this.queryPackege();
+  queryRefreshPackage(isupdate: boolean = false) {
+    this.queryPackege(isupdate);
   }
 
   protected preload() {
@@ -287,8 +291,9 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    this.mDetailDisplay.setTexture(this.key, "ghost");
-    this.mDetailDisplay.setNearest();
+    // this.mDetailDisplay.setTexture(this.key, "ghost");
+    // this.mDetailDisplay.setNearest();
+    this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
     this.mDetailDisplay.scale = this.dpr;
 
@@ -385,16 +390,14 @@ export class FurniBagPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr);
         }
-        if (cellContainer.propData !== item) {
-          cellContainer.setData({ item });
-          cellContainer.setProp(item);
-          if (item && this.isSelectedItemData(item)) {
-            cellContainer.isSelect = true;
-            this.mSelectedItems.push(cellContainer);
-          } else {
-            const index = this.mSelectedItems.indexOf(cellContainer);
-            if (index !== -1) this.mSelectedItems.splice(index, 1);
-          }
+        cellContainer.setData({ item });
+        cellContainer.setProp(item);
+        if (item && this.isSelectedItemData(item)) {
+          cellContainer.isSelect = true;
+          this.mSelectedItems.push(cellContainer);
+        } else {
+          const index = this.mSelectedItems.indexOf(cellContainer);
+          if (index !== -1) this.mSelectedItems.splice(index, 1);
         }
         return cellContainer;
       },
@@ -450,7 +453,6 @@ export class FurniBagPanel extends BasePanel {
   }
   private replaceSelectItem(data: op_client.ICountablePackageItem, cell: Item) {
     if (this.categoryType !== op_pkt_def.PKT_PackageType.AvatarPackage) {
-      cell.isSelect = true;
       if (this.mSelectedItems.length > 0) {
         this.mSelectedItems[0].isSelect = false;
       }
@@ -458,13 +460,13 @@ export class FurniBagPanel extends BasePanel {
       this.mSelectedItems.length = 0;
       this.mSelectedItemData.push(data);
       this.mSelectedItems.push(cell);
+      cell.isSelect = true;
     } else {
       const dataAvatar = data.avatar;
       if (!dataAvatar) {
         Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
         return;
       }
-      cell.isSelect = true;
       const removeArr = [];
       for (const item of this.mSelectedItemData) {
         const avatar = item.avatar;
@@ -487,6 +489,7 @@ export class FurniBagPanel extends BasePanel {
 
       this.mSelectedItemData.push(data);
       this.mSelectedItems.push(cell);
+      cell.isSelect = true;
     }
   }
 
@@ -530,8 +533,10 @@ export class FurniBagPanel extends BasePanel {
     //   this.mDetailDisplay.loadUrl(url);
     // }
     // this.mDetailDisplay.visible = false;
-    this.mDetailDisplay.setTexture(this.key, "ghost");
-    this.mDetailDisplay.setNearest();
+    // this.mDetailDisplay.setTexture(this.key, "ghost");
+    // this.mDetailDisplay.setNearest();
+
+    this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
@@ -577,9 +582,9 @@ export class FurniBagPanel extends BasePanel {
     this.emit("close");
   }
 
-  private queryPackege() {
+  private queryPackege(isupdate: boolean = false) {
     if (this.mSelectedCategeories) {
-      this.emit("queryPackage", this.categoryType, this.mSelectedCategeories.key);
+      this.emit("queryPackage", this.categoryType, this.mSelectedCategeories.key, isupdate);
     }
   }
 
@@ -598,7 +603,8 @@ export class FurniBagPanel extends BasePanel {
         this.mAdd.enable = false;
         this.saveBtn.enable = false;
         this.resetBtn.enable = false;
-        this.mDetailDisplay.setTexture(this.key, "ghost");
+        // this.mDetailDisplay.setTexture(this.key, "ghost");
+        this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
         this.mDetailDisplay.setNearest();
       }
     }

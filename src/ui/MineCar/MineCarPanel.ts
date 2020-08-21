@@ -277,17 +277,15 @@ export class MineCarPanel extends BasePanel {
           });
           cellContainer.setFontStyle("bold");
         }
-        const data = cellContainer.getData("data");
-        if (data !== item) {
-          cellContainer.setText(item.value);
-          cellContainer.setData("data", item);
-          if (this.mPreSelectedCategorieData === item) {
-            cellContainer.changeDown();
-            this.mPreSelectedCategorie = cellContainer;
-          } else {
-            cellContainer.changeNormal();
-          }
+        cellContainer.setText(item.value);
+        cellContainer.setData("data", item);
+        if (this.mPreSelectedCategorieData === item) {
+          cellContainer.changeDown();
+          this.mPreSelectedCategorie = cellContainer;
+        } else {
+          cellContainer.changeNormal();
         }
+
         if (!this.mPreSelectedCategorie) {
           this.onClickCategoryHandler(cellContainer);
         }

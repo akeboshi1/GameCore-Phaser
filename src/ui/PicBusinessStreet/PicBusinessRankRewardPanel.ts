@@ -83,10 +83,8 @@ export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicRankRewardItem(this.scene, 0, 0, capW, capH, this.key, this.key2, this.dpr, this.zoom);
                     grid.add(cellContainer);
                 }
-                if (cellContainer.rewardData !== item) {
-                    cellContainer.setData({ item });
-                    cellContainer.setRankRewardData(item);
-                }
+                cellContainer.setData({ item });
+                cellContainer.setRankRewardData(item);
                 return cellContainer;
             },
         };

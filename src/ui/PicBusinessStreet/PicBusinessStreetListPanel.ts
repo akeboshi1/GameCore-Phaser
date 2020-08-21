@@ -174,10 +174,8 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicStreetItem(this.scene, 0, 0, capW, capH, this.key, this.key2, this.dpr, this.zoom);
                     grid.add(cellContainer);
                 }
-                if (cellContainer.storeData !== item) {
-                    cellContainer.setData({ item });
-                    cellContainer.setStoreData(item);
-                }
+                cellContainer.setData({ item });
+                cellContainer.setStoreData(item);
                 return cellContainer;
             },
         };

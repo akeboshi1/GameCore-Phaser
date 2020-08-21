@@ -240,12 +240,10 @@ export class ComposePanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = new ComposeItem(scene, this.key, this.dpr);
                 }
-                if (cellContainer.itemData !== item) {
-                    cellContainer.setItemData(item);
-                    if (item && this.mSelectItemData && item.skill.id === this.mSelectItemData.skill.id) {
-                        cellContainer.select = true;
-                        this.mSelectItem = cellContainer;
-                    }
+                cellContainer.setItemData(item);
+                if (item && this.mSelectItemData && item.skill.id === this.mSelectItemData.skill.id) {
+                    cellContainer.select = true;
+                    this.mSelectItem = cellContainer;
                 }
                 return cellContainer;
             },
@@ -271,8 +269,8 @@ export class ComposePanel extends BasePanel {
     public setComposeData(datas: op_client.IPKT_CRAFT_SKILL[]) {
         if (datas && datas.length > 0) {
             this.mGrideTable.setItems(datas);
-            const cell = this.mGrideTable.getCell(0);
-            this.onSelectItemHandler(cell.container);
+            const cell = this.mSelectItem ? this.mSelectItem : this.mGrideTable.getCell(0).container;
+            this.onSelectItemHandler(cell);
         }
     }
 
@@ -305,11 +303,11 @@ export class ComposePanel extends BasePanel {
     private onSelectItemHandler(item: ComposeItem) {
         const data = item.itemData;
         // this.emit("reqformula", data.id);
-        item.select = true;
         this.mSelectItemData = item.itemData;
         this.makeBtn.enable = data.skill.active && data.skill.qualified;
         if (this.mSelectItem) this.mSelectItem.select = false;
         this.mSelectItem = item;
+        item.select = true;
         this.setComposeDetialData(data);
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {

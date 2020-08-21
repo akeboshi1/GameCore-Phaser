@@ -74,7 +74,7 @@ export class PicFurniFunMediator extends BaseMediator {
         if (this.playerData) {
             if (materials) {
                 for (const data of materials) {
-                    const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id);
+                    const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
                     data.count = count;
                 }
             }

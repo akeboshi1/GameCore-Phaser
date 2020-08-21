@@ -351,10 +351,8 @@ export class MarketPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr);
         }
-        if (cellContainer.mProp !== item) {
-          cellContainer.setData({ item });
-          cellContainer.setProp(item);
-        }
+        cellContainer.setData({ item });
+        cellContainer.setProp(item);
         return cellContainer;
       },
     };

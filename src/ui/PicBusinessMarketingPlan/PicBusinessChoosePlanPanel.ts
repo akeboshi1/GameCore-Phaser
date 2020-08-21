@@ -146,14 +146,12 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
                 if (cellContainer === null) {
                     cellContainer = new PlanTypeItem(this.scene, 0, 0, capW, capH, this.key, this.dpr, this.zoom);
                 }
-                if (cellContainer.palnData !== item) {
-                    cellContainer.setData({ item });
-                    cellContainer.setPlanData(item);
-                    if (this.curSelectData && item === this.curSelectData) {
-                        cellContainer.select = true;
-                    } else
-                        cellContainer.select = false;
-                }
+                cellContainer.setData({ item });
+                cellContainer.setPlanData(item);
+                if (this.curSelectData && item === this.curSelectData) {
+                    cellContainer.select = true;
+                } else
+                    cellContainer.select = false;
                 return cellContainer;
             },
         };
@@ -200,7 +198,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         const worldpos = gameobj.getWorldTransformMatrix();
         const worldpos1 = this.gameScroll.getWorldTransformMatrix();
         this.iteminfoTips.x = worldpos.tx - worldpos1.tx;
-        this.iteminfoTips.y = this.gameScroll.y-20*this.dpr;
+        this.iteminfoTips.y = this.gameScroll.y - 20 * this.dpr;
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };

@@ -123,7 +123,7 @@ export class ComposeMediator extends BaseMediator {
             const materials = item.materials;
             if (materials) {
                 for (const data of materials) {
-                    const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id);
+                    const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
                     data.count = count;
                     if (count < data.neededCount) {
                         qualified = false;

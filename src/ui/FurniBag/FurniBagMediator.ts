@@ -100,7 +100,7 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     private onUpdateHandler() {
-        if (this.mView) this.mView.queryRefreshPackage();
+        if (this.mView) this.mView.queryRefreshPackage(true);
     }
 
     private onPackageCategoryHandler(subcategory: op_def.IStrPair[]) {
@@ -126,11 +126,11 @@ export class FurniBagMediator extends BaseMediator {
         this.mView.setProp(content.items);
     }
 
-    private onQueryPackage(packType: op_pkt_def.PKT_PackageType, key: string) {
+    private onQueryPackage(packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean) {
         // this.mFurniBag.queryPackage(key);
         if (this.playerData) {
             const items = this.playerData.getItemsByCategory(packType, key);
-            this.mView.setProp(items);
+            this.mView.setProp(items, isupdate);
         }
     }
 

@@ -83,7 +83,9 @@ export class PackageData {
         this.subMap = new Map<string, Map<string, op_client.ICountablePackageItem>>();
     }
     public getItemsByCategory(subType: string) {
-        if (subType === "alltype") return this.list;
+        if (subType === "alltype") {
+            return Array.from(this.list);
+        }
         if (this.subMap.has(subType)) {
             const tempMap = this.subMap.get(subType);
             if (tempMap) {
@@ -163,19 +165,28 @@ export class PackageData {
     public updatePackage(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE) {
         const items = content.items;
         for (const tempItem of items) {
-            const subcategory = tempItem.subcategory !== undefined ? tempItem.subcategory : "default";
-            let packMap = this.subMap.get(subcategory);
             if (tempItem.id === "-1") {
-                if (packMap && packMap.has(tempItem.indexId)) {
-                    const item = packMap.get(tempItem.indexId);
-                    packMap.delete(tempItem.indexId);
-                    const listIndex = this.list.indexOf(item);
-                    if (listIndex !== -1) {
-                        this.list.splice(listIndex, 1);
+                let item: op_client.ICountablePackageItem;
+                let index = -1;
+                for (const temp of this.list) {
+                    index++;
+                    if (temp.indexId === tempItem.indexId) {
+                        item = temp;
+                        break;
+                    }
+                }
+                if (item) {
+                    this.list.splice(index, 1);
+                    const subcategory = item.subcategory !== undefined ? item.subcategory : "default";
+                    const packMap = this.subMap.get(subcategory);
+                    if (packMap && packMap.has(item.indexId)) {
+                        packMap.delete(item.indexId);
                     }
                 }
 
             } else {
+                const subcategory = tempItem.subcategory !== undefined ? tempItem.subcategory : "default";
+                let packMap = this.subMap.get(subcategory);
                 if (!packMap) {
                     packMap = new Map<string, op_client.ICountablePackageItem>();
                     this.subMap.set(subcategory, packMap);

@@ -157,9 +157,7 @@ export class PicHandheldPanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = new HandheldItem(scene, 0, 0, this.key, this.dpr);
                 }
-                if (cellContainer.itemData !== item) {
-                    cellContainer.setItemData(item);
-                }
+                cellContainer.setItemData(item);
                 return cellContainer;
             },
         };
