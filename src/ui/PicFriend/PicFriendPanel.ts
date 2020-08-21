@@ -211,7 +211,7 @@ class FriendContainer extends Container {
         this.add(this.titleText);
     }
 
-    protected createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler) {
+    protected createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler, createCallback?: Function) {
         const tableConfig: GridTableConfig = {
             x,
             y,
@@ -222,15 +222,12 @@ class FriendContainer extends Container {
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                zoom: this.uiScale
+                zoom: this.uiScale,
               },
             scrollMode: 0,
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene,
-                    item = cell.item,
-                    w = cell.width,
-                    h = cell.height;
+                const item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = createFun(this.scene, cell);
                 }
@@ -244,7 +241,9 @@ class FriendContainer extends Container {
                 cellContainer.setSize(cell.width, cell.height);
                 cellContainer.setData({ item });
                 cellContainer.setItemData(item);
-                // Logger.getInstance().log("=======<<<<<", cell, cellContainer, item);
+                if (createCallback) {
+                    createCallback(cell, cellContainer);
+                }
                 return cellContainer;
             }
         };
@@ -279,6 +278,7 @@ class MainContainer extends FriendContainer {
     private showingFriends: FriendData[];
     private friendDatas: Map<FriendChannel, FriendData[]>;
     private searchInput: SearchInput;
+    private navigate: NavigateContaienr;
     // private friendList: FriendList;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, uiScale: number) {
         super(scene, width, height, key, dpr, uiScale);
@@ -329,7 +329,7 @@ class MainContainer extends FriendContainer {
         this.sortByName(result);
         const len = result.length;
         if (len > 0) {
-            for (let i = 0; i < 10000; i++) {
+            for (let i = 0; i < 100; i++) {
                 result.push(result[i % len]);
             }
         }
@@ -420,7 +420,9 @@ class MainContainer extends FriendContainer {
         followsTab.setTextStyle(tableFont);
         friendsTab.x = (-fansTab.width - friendsTab.width) * 0.5 - 0.67 * this.dpr;
         followsTab.x = (fansTab.width + followsTab.width) * 0.5 + 0.67 * this.dpr;
-        this.add([friendsTab, fansTab, followsTab]);
+
+        this.navigate = new NavigateContaienr(this.scene, this.width * 0.5 - 23 * this.dpr, 53 * this.dpr, 10 * this.dpr, 330 * this.dpr, this.dpr);
+        this.add([friendsTab, fansTab, followsTab, this.navigate]);
 
         this.channelGroup = new CheckboxGroup();
         this.channelGroup.on("selected", this.onSelectChannelHandler, this);
@@ -432,7 +434,7 @@ class MainContainer extends FriendContainer {
             item.on(PicFriendEvent.FOLLOW, this.onReqFollowFriendHandler, this);
             item.on(PicFriendEvent.UNFOLLOW, this.onReqUnfollowFriendHandler, this);
             return item;
-        }, new Handler(this, this.onSelectItemHandler));
+        }, new Handler(this, this.onSelectItemHandler), this.createCallback.bind(this));
     }
 
     private onFtechPlayerHandler(friend: FriendData) {
@@ -501,6 +503,24 @@ class MainContainer extends FriendContainer {
 
     private onTextChangeHandler() {
         this.onSeachHandler();
+    }
+
+    private createCallback(cell) {
+        const table = cell.parent;
+        if (table) {
+            let rowIdx = table.heightToRowIndex(-cell.parentContainer.tableOY);
+            if (rowIdx < 0) {
+                rowIdx = 0;
+            }
+            const cellIdx = table.colRowToCellIndex(0, rowIdx);
+            const firstCell = table.getCell(cellIdx);
+
+            if (firstCell) {
+                if (firstCell.container && firstCell.container.itemData) this.navigate.checkSlider(firstCell.container.itemData.nickname);
+                else this.navigate.checkSlider("");
+            }
+            // if (firstCell.container) Logger.getInstance().log("index: ", cellIdx, firstCell.container.itemData);
+        }
     }
 }
 
@@ -914,6 +934,66 @@ class SearchInput extends LabelInput {
 
     private onSearchHandler() {
         this.setBlur();
+    }
+}
+
+class NavigateContaienr extends Container {
+    private selected: Phaser.GameObjects.Graphics;
+    private chars: string[];
+    private texts: Phaser.GameObjects.Text[];
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number) {
+        super(scene, x, y);
+        this.setSize(width, height);
+        this.chars = [];
+        for (let i = 0; i < 26; i++) {
+            this.chars.push(String.fromCharCode(i + 65));
+        }
+        this.chars.push("#");
+        this.texts = [];
+        const pading = height / this.chars.length;
+        const style = {
+            color: "#0",
+            fontSize: 8 * dpr,
+            fontFamily: Font.DEFULT_FONT
+        };
+        let _w = 0;
+        let _h = 0;
+        for (let i = 0; i < this.chars.length; i++) {
+            const text = this.scene.make.text({
+                y: i * pading - this.height * 0.5,
+                text: this.chars[i],
+                style,
+            }).setOrigin(0.5);
+            this.texts[i] = text;
+            if (!_w) {
+                _w = text.width + 8 * dpr;
+                _h = text.height + 2 * dpr;
+            }
+        }
+
+        this.selected = this.scene.make.graphics(undefined, false);
+        this.selected.fillStyle(0x2F87FA);
+        this.selected.fillRect(-_w * 0.5, -_h * 0.5, _w, _h);
+        this.add(this.selected);
+        this.selected.x = this.texts[0].x;
+        this.selected.y = this.texts[0].y;
+        this.add(this.texts);
+    }
+
+    checkSlider(nickname: string) {
+        if (!nickname) {
+            this.selected.visible = false;
+            return;
+        }
+        this.selected.visible = true;
+        for (let i = 0; i < this.chars.length; i++) {
+            // Logger.getInstance().log("====>>: ", this.chars[i], nickname, nickname.localeCompare(this.chars[i]));
+            if (nickname.localeCompare(this.chars[i]) > -1) {
+                this.selected.x = this.texts[i].x;
+                this.selected.y = this.texts[i].y;
+                return;
+            }
+        }
     }
 }
 
