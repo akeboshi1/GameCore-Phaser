@@ -90,13 +90,10 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.setInteractive();
         this.mScrollBtn.setInteractive();
         this.mNavigateBtn.setInteractive();
-        this.mTitleBg.setInteractive();
         this.mTextArea.childrenMap.child.setInteractive();
 
         this.mScrollBtn.on("drag", this.onDragHandler, this);
-        this.mTitleBg.on("drag", this.onDragHandler, this);
         this.scene.input.setDraggable(this.mScrollBtn, true);
-        this.scene.input.setDraggable(this.mTitleBg, true);
         this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
     }
@@ -107,11 +104,9 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.disableInteractive();
         this.mScrollBtn.disableInteractive();
         this.mNavigateBtn.disableInteractive();
-        this.mTitleBg.disableInteractive();
         this.mTextArea.childrenMap.child.disableInteractive();
 
         this.mScrollBtn.off("drag", this.onDragHandler, this);
-        this.mTitleBg.off("drag", this.onDragHandler, this);
         this.mNavigateBtn.off("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
     }
