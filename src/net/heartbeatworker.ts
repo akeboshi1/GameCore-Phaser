@@ -31,6 +31,9 @@ function load(paths: string[]) {
     xhr.responseType = "blob";
     xhr.onload = function() {
         if (xhr.readyState === 4) {
+            // const blob = xhr.response;
+            // blob.arrayBuffer().then(buffer => /* 处理 ArrayBuffer 数据的代码……*/);
+            // const buffer = await blob.arrayBuffer();
             postMessage(xhr.response, [xhr.response]);
             if (len > 0) {
                 load(paths.slice(0, 1));

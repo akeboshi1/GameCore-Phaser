@@ -1,5 +1,5 @@
 
-import { Tweens } from "phaser";
+import { Tweens } from "tooqinggamephaser";
 import { IAbstractPanel } from "../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
 
 export class LoadingView implements IAbstractPanel {

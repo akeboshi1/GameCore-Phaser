@@ -6,7 +6,7 @@ import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
 import { IDragonbonesModel } from "../display/dragonbones.model";
 import { op_client, op_def } from "pixelpai_proto";
-import { Tweens } from "phaser";
+import { Tweens } from "tooqinggamephaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";
 import { ISprite } from "./sprite";

@@ -43,7 +43,8 @@
     "buy": "购买",
     "sold": "售出",
     "add": "添加",
-    "source": "来源："
+    "source": "来源：",
+    "all":"全部"
   },
   "player_info": {
     "title": "信息详情",
