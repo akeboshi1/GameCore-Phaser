@@ -539,11 +539,10 @@ export class FurniBagPanel extends BasePanel {
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     if (prop.avatar) {
       content.avatar = prop.avatar;
-    } else if (prop.animations) {
-      content.animations = prop.animations;
     } else {
       content.display = prop.display;
     }
+    content.animations = prop.animations;
     this.setSelectedResource(content);
   }
 
