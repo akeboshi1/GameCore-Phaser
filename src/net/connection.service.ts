@@ -5,7 +5,7 @@ export interface ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void;
 
     closeConnect(): void;
-
+    loadRes(paths: string[]);
     clearHeartBeat();
 
     addPacketListener(listener: PacketHandler): void;
