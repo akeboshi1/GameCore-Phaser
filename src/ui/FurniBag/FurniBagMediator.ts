@@ -11,6 +11,7 @@ export class FurniBagMediator extends BaseMediator {
     private mFurniBag: FurniBag;
     private mScneType: op_def.SceneTypeEnum;
     private world: WorldService;
+    private timeID: any;
     constructor(private layerManager: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.world = worldService;
@@ -130,6 +131,11 @@ export class FurniBagMediator extends BaseMediator {
         // this.mFurniBag.queryPackage(key);
         if (this.playerData) {
             const items = this.playerData.getItemsByCategory(packType, key);
+            // if (this.timeID) clearTimeout(this.timeID);
+            // this.timeID = setTimeout(() => {
+            //     this.mView.setProp(items, isupdate);
+            //     this.timeID = undefined;
+            // }, 20);
             this.mView.setProp(items, isupdate);
         }
     }
