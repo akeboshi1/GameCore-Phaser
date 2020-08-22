@@ -774,16 +774,16 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const mainGameConfigUrl = this.gameConfigUrl;
 
         this.mLoadingManager.start(LoadingTips.downloadGameConfig());
-        this.mConnection.loadRes([mainGameConfigUrl]);
-        // this.loadGameConfig(mainGameConfigUrl)
-        //     .then((gameConfig: Lite) => {
-        //         this.mElementStorage.setGameConfig(gameConfig);
-        //         this.createGame(content.keyEvents);
-        //         Logger.getInstance().debug("created game suc");
-        //     })
-        //     .catch((err: any) => {
-        //         Logger.getInstance().log(err);
-        //     });
+        // this.mConnection.loadRes([mainGameConfigUrl]);
+        this.loadGameConfig(mainGameConfigUrl)
+            .then((gameConfig: Lite) => {
+                this.mElementStorage.setGameConfig(gameConfig);
+                this.createGame(content.keyEvents);
+                Logger.getInstance().debug("created game suc");
+            })
+            .catch((err: any) => {
+                Logger.getInstance().log(err);
+            });
     }
 
     private _newGame(): Phaser.Game {
