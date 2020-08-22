@@ -193,8 +193,8 @@ export class FurniBagPanel extends BasePanel {
         }
       }
     }
-    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, 2, offset);
+    const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
   }
   public setSelectedResource(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE) {
     if (content.display) {
@@ -207,8 +207,8 @@ export class FurniBagPanel extends BasePanel {
   public resetAvatar(avatar: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
     content.avatar = avatar.avatar;
-    const offset = new Phaser.Geom.Point(0, 20 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, 2, offset);
+    const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
     this.mSelectedItemData.length = 0;
   }
 
@@ -287,16 +287,15 @@ export class FurniBagPanel extends BasePanel {
     this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY - btnHeight - 5 * this.dpr, 38 * this.dpr, 38 * this.dpr, this.commonkey, "red_btn");
     const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
     this.resetBtn.add(reseticon);
-    this.mDetailDisplay = new DetailDisplay(this.scene);
+    this.mDetailDisplay = new DetailDisplay(this.scene, true);
+    this.mDetailDisplay.setSize(110 * this.dpr, 110 * this.dpr);
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    // this.mDetailDisplay.setTexture(this.key, "ghost");
-    // this.mDetailDisplay.setNearest();
-    this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
+    this.mDetailDisplay.setTexture(this.key, "ghost");
+    this.mDetailDisplay.setNearest();
+    //  this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
-    this.mDetailDisplay.scale = this.dpr;
-
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 10 * this.dpr;
 
@@ -603,8 +602,7 @@ export class FurniBagPanel extends BasePanel {
         this.mAdd.enable = false;
         this.saveBtn.enable = false;
         this.resetBtn.enable = false;
-        // this.mDetailDisplay.setTexture(this.key, "ghost");
-        this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
+        this.mDetailDisplay.setTexture(this.key, "ghost");
         this.mDetailDisplay.setNearest();
       }
     }

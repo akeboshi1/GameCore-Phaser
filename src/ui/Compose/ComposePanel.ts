@@ -107,9 +107,10 @@ export class ComposePanel extends BasePanel {
         backBtn.on("Tap", this.onBackHandler, this);
         this.content.add(backBtn);
 
-        this.mDetailDisplay = new DetailDisplay(this.scene);
-        this.mDetailDisplay.y = -120 * this.dpr;
-        this.mDetailDisplay.scale = this.dpr * 2;
+        this.mDetailDisplay = new DetailDisplay(this.scene, true);
+        this.mDetailDisplay.y = -140 * this.dpr;
+        this.mDetailDisplay.setSize(126 * this.dpr, 126 * this.dpr);
+        // this.mDetailDisplay.scale = this.dpr * 2;
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;
@@ -287,6 +288,7 @@ export class ComposePanel extends BasePanel {
     }
 
     private setDetailDisplay(data: op_client.IPKT_CRAFT_SKILL) {
+        this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
         const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
         resData.animations = data.productAnimations;
         resData.display = data.productDisplay;
@@ -294,7 +296,10 @@ export class ComposePanel extends BasePanel {
         if (resData.display) {
             this.mDetailDisplay.loadDisplay(resData);
         } else if (resData.avatar) {
-            this.mDetailDisplay.loadAvatar(resData);
+            const point = new Phaser.Geom.Point();
+            point.x = 0;
+            point.y = 20 * this.dpr;
+            this.mDetailDisplay.loadAvatar(resData, 2 * this.dpr, point);
         } else {
             // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
         }

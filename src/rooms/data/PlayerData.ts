@@ -98,11 +98,13 @@ export class PackageData {
         const items = [];
         if (subType !== undefined && subType !== "alltype") {
             const temMap = this.subMap.get(subType);
-            temMap.forEach((value) => {
-                if (value.id === baseID) {
-                    items.push(value);
-                }
-            });
+            if (temMap) {
+                temMap.forEach((value) => {
+                    if (value.id === baseID) {
+                        items.push(value);
+                    }
+                });
+            }
         } else {
             this.list.forEach((value) => {
                 if (value.id === baseID) {

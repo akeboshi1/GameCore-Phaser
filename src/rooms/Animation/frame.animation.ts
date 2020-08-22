@@ -1,5 +1,6 @@
 import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
 import { Logger } from "../../utils/log";
+import { Handler } from "../../Handler/Handler";
 export class FrameAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
     public resName: string;
     public resUrl: string;
@@ -9,13 +10,15 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
     public loop: boolean = false;
     public curAniName: string;
     private frameAnim: Phaser.GameObjects.Sprite;
+    private complHandler: Handler;
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
 
-    public load(resName: string, resUrl: string, data?: string) {
+    public load(resName: string, resUrl: string, data?: string, compl?: Handler) {
         this.resName = resName ? resName : resUrl;
         this.resUrl = resUrl;
+        this.complHandler = compl;
         this.animUrlData = new AnimationUrlData();
         if (resName)
             this.animUrlData.setData(this.resName, this.resUrl);
@@ -41,6 +44,7 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
         if (this.animUrlData) this.animUrlData.dispose();
         this.frameAnim = null;
         this.animUrlData = null;
+        this.complHandler = undefined;
     }
 
     private onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
@@ -59,8 +63,13 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
             this.frameAnim = this.scene.add.sprite(0, 0, this.resName);
             this.add(this.frameAnim);
         }
-        const scale = this.width === 0 ? 1 : this.width / this.frameAnim.width;
-        this.frameAnim.setScale(scale);
+        if (this.width === 0) {
+            this.setSize(this.frameAnim.width, this.frameAnim.height);
+            this.scale = 1;
+        } else {
+            this.scale = this.width / this.frameAnim.displayWidth;
+        }
         if (!this.isPlaying) this.play(this.curAniName);
+        if (this.complHandler) this.complHandler.run();
     }
 }

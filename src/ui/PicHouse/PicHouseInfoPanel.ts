@@ -31,8 +31,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
             nexExp = data.roomLevel.nextLevelExp ? data.roomLevel.nextLevelExp : 0;
         }
         this.roomlevel.setImageInfo(i18n.t("room_info.roomlevel"), UIAtlasKey.common2Key, this.getLevelImgs(level));
-        let expvalue = `[color=#0D8288]${curExp}[/color]/${nexExp}`;
-        if (nexExp === 0) expvalue = "MAX";
+        const expvalue = `[color=#0D8288]${curExp}[/color]/${nexExp}`;
         this.expvalue.setTextInfo(i18n.t("room_info.expvalue"), expvalue);
         this.popvalue.setTextInfo(i18n.t("room_info.popvalue"), "666");
         this.goodvalue.setTextInfo(i18n.t("room_info.goodvalue"), data.praise + "");
