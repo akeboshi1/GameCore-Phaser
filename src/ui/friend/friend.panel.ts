@@ -6,7 +6,7 @@ import { NinePatch } from "../components/nine.patch";
 import { IListItemComponent } from "../bag/IListItemRender";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
-import { Geom } from "phaser";
+import { Geom } from "tooqinggamephaser";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { IconBtn } from "../baseView/icon.btn";
 import { FriendMediator } from "./friend.mediator";

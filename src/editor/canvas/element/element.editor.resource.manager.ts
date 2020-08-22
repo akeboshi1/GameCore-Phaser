@@ -8,7 +8,6 @@ import { MaxRectsPacker } from "maxrects-packer";
 import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
 import ElementEditorAnimations from "./element.editor.animations";
 import { Logger } from "../../../utils/log";
-import { Events } from "phaser";
 
 // export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
 export const WEB_HOME_PATH: string = "https://osd.tooqing.com/";

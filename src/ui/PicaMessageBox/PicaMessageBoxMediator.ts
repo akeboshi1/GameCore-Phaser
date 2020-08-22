@@ -4,7 +4,6 @@ import { PicaMessageBoxPanel } from "./PicaMessageBoxPanel";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { Sound } from "phaser";
 
 export class PicaMessageBoxMediator extends BaseMediator {
   private scene: Phaser.Scene;
