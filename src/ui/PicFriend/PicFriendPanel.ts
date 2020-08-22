@@ -261,25 +261,35 @@ class FriendContainer extends Container {
     }
 
     protected sortByName(array: FriendData[]) {
-        const chinese = ["啊", "把", "拆", "打", "厄", "发", "尬", "哈", "几", "卡", "拉", "马", "那", "噢", "叭", "七", "呥", "卅", "它", "瓦", "夕", "ㄚ", "杂"];
-        const chineseName = [];
-        const englishName = [];
-        for (const name of array) {
-            const code = name.nickname.charCodeAt(0);
-            if (code >= 0x4E00 && code <= 0x9FA5) {
-                chineseName.push(name);
-            } else {
-                englishName.push(name);
-            }
-        }
-        chineseName.sort((a: FriendData, b: FriendData) => {
-            return a.nickname.localeCompare(b.nickname, i18n.language);
-        });
+        // const chinese = ["啊", "把", "拆", "打", "厄", "发", "尬", "哈", "几", "卡", "拉", "马", "那", "噢", "叭", "七", "呥", "卅", "它", "瓦", "夕", "ㄚ", "杂"];
+        // const english = [];
+        // const chineseName: FriendData[] = [];
+        // const englishName: FriendData[] = [];
+        // for (const name of array) {
+        //     const code = name.nickname.charCodeAt(0);
+        //     if (code >= 0x4E00 && code <= 0x9FA5) {
+        //         chineseName.push(name);
+        //     } else {
+        //         englishName.push(name);
+        //     }
+        // }
+        // chineseName.sort((a: FriendData, b: FriendData) => {
+        //     return a.nickname.localeCompare(b.nickname, i18n.language);
+        // });
 
-        englishName.sort((a: FriendData, b: FriendData) => {
-            return a.nickname.localeCompare(b.nickname, i18n.language);
-        });
-        Logger.getInstance().log(chineseName, englishName);
+        // englishName.sort((a: FriendData, b: FriendData) => {
+        //     return a.nickname.localeCompare(b.nickname, i18n.language);
+        // });
+        // for (const f of chineseName) {
+        //     for (let i = 0; i < chinese.length; i++) {
+        //         const index = f.nickname.localeCompare(chinese[i]);
+        //         if (index === -1) {
+        //             f.username = (i).toString();
+        //             break;
+        //         }
+        //     }
+        // }
+        // Logger.getInstance().log(chineseName, englishName);
         return array.sort((a: FriendData, b: FriendData) => {
             return a.nickname.localeCompare(b.nickname, i18n.language);
         });
