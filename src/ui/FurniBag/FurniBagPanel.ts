@@ -114,6 +114,10 @@ export class FurniBagPanel extends BasePanel {
     seachBtn.setData("item", { key: this.seachKey, value: "搜索" });
     seachBtn.y = capH - 40 * this.dpr;
     this.mCategoryScroll.addItem(seachBtn);
+    const allCategory = new op_def.StrPair();
+    allCategory.value = i18n.t("common.all");
+    allCategory.key = "alltype";
+    subcategorys.unshift(allCategory);
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].value, 0, 0);
       item.x = i * capW;
@@ -130,32 +134,34 @@ export class FurniBagPanel extends BasePanel {
     this.updateCategeoriesLoc(false);
   }
 
-  public setProp(props: op_client.ICountablePackageItem[]) {
-    if (!props) {
-      return;
-    }
-    this.mSelectedItemData.length = 0;
+  public setProp(props: op_client.ICountablePackageItem[], isupdate: boolean = false) {
+    props = !props ? [] : props;
     this.mSelectedItems.length = 0;
+    if (!isupdate) this.mSelectedItemData.length = 0;
     const len = props.length;
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
+    if (!isupdate) this.mPropGrid.setT(0);
     this.mPropGrid.setItems(props);
     if (this.categoryType !== op_pkt_def.PKT_PackageType.AvatarPackage) {
-      const cell = this.mPropGrid.getCell(0);
-      this.onSelectItemHandler(cell.container);
+      if (this.mSelectedItems.length === 0) {
+        this.mPropGrid.setT(0);
+        this.mSelectedItemData.length = 0;
+        const cell = this.mPropGrid.getCell(0);
+        this.onSelectItemHandler(cell.container);
+      }
     } else {
+      this.mSelectedItemData.length = 0;
+      for (const prop of props) {
+        if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+          this.mSelectedItemData.push(prop);
+        }
+      }
       if (this.mSelectedItemData.length === 0) {
-        for (const prop of props) {
-          if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-            this.mSelectedItemData.push(prop);
-          }
-        }
-        if (this.mSelectedItemData.length === 0) {
-          this.displayAvatar();
-        } else {
-          this.updateAvatarItems();
-        }
+        this.displayAvatar();
+      } else {
+        this.updateAvatarItems();
       }
     }
   }
@@ -238,6 +244,10 @@ export class FurniBagPanel extends BasePanel {
     super.destroy();
   }
 
+  queryRefreshPackage(isupdate: boolean = false) {
+    this.queryPackege(isupdate);
+  }
+
   protected preload() {
     this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
     this.addAtlas(this.commonkey, "common/ui_base.png", "common/ui_base.json");
@@ -263,7 +273,8 @@ export class FurniBagPanel extends BasePanel {
       frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
-    }).setInteractive();
+    });
+    this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
     const btnwidth = 90 * this.dpr;
     const btnHeight = 38 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
@@ -280,8 +291,9 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    this.mDetailDisplay.setTexture(this.key, "ghost");
-    this.mDetailDisplay.setNearest();
+    // this.mDetailDisplay.setTexture(this.key, "ghost");
+    // this.mDetailDisplay.setNearest();
+    this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
     this.mDetailDisplay.scale = this.dpr;
 
@@ -326,7 +338,7 @@ export class FurniBagPanel extends BasePanel {
     let topCategorys = [op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage];
     let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni"), i18n.t("furni_bag.decorate")];
     if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
-      topCategorys = [op_pkt_def.PKT_PackageType.FurniturePackage];
+      topCategorys = [op_pkt_def.PKT_PackageType.EditFurniturePackage];
       topBtnTexts = [i18n.t("furni_bag.furni")];
     }
     const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1) - 20 * this.dpr;
@@ -348,7 +360,7 @@ export class FurniBagPanel extends BasePanel {
       this.add(btn);
     });
     if (this.mEnableEdit) {
-      const index = topCategorys.indexOf(op_pkt_def.PKT_PackageType.FurniturePackage);
+      const index = topCategorys.indexOf(op_pkt_def.PKT_PackageType.EditFurniturePackage);
       this.topCheckBox.selectIndex(index);
     } else {
       this.topCheckBox.selectIndex(0);
@@ -378,16 +390,14 @@ export class FurniBagPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new Item(scene, 0, 0, this.key, this.dpr);
         }
-        if (cellContainer.propData !== item) {
-          cellContainer.setData({ item });
-          cellContainer.setProp(item);
-          if (item && this.isSelectedItemData(item)) {
-            cellContainer.isSelect = true;
-            this.mSelectedItems.push(cellContainer);
-          } else {
-            const index = this.mSelectedItems.indexOf(cellContainer);
-            if (index !== -1) this.mSelectedItems.splice(index, 1);
-          }
+        cellContainer.setData({ item });
+        cellContainer.setProp(item);
+        if (item && this.isSelectedItemData(item)) {
+          cellContainer.isSelect = true;
+          this.mSelectedItems.push(cellContainer);
+        } else {
+          const index = this.mSelectedItems.indexOf(cellContainer);
+          if (index !== -1) this.mSelectedItems.splice(index, 1);
         }
         return cellContainer;
       },
@@ -443,7 +453,6 @@ export class FurniBagPanel extends BasePanel {
   }
   private replaceSelectItem(data: op_client.ICountablePackageItem, cell: Item) {
     if (this.categoryType !== op_pkt_def.PKT_PackageType.AvatarPackage) {
-      cell.isSelect = true;
       if (this.mSelectedItems.length > 0) {
         this.mSelectedItems[0].isSelect = false;
       }
@@ -451,13 +460,13 @@ export class FurniBagPanel extends BasePanel {
       this.mSelectedItems.length = 0;
       this.mSelectedItemData.push(data);
       this.mSelectedItems.push(cell);
+      cell.isSelect = true;
     } else {
       const dataAvatar = data.avatar;
       if (!dataAvatar) {
         Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
         return;
       }
-      cell.isSelect = true;
       const removeArr = [];
       for (const item of this.mSelectedItemData) {
         const avatar = item.avatar;
@@ -480,6 +489,7 @@ export class FurniBagPanel extends BasePanel {
 
       this.mSelectedItemData.push(data);
       this.mSelectedItems.push(cell);
+      cell.isSelect = true;
     }
   }
 
@@ -523,8 +533,10 @@ export class FurniBagPanel extends BasePanel {
     //   this.mDetailDisplay.loadUrl(url);
     // }
     // this.mDetailDisplay.visible = false;
-    this.mDetailDisplay.setTexture(this.key, "ghost");
-    this.mDetailDisplay.setNearest();
+    // this.mDetailDisplay.setTexture(this.key, "ghost");
+    // this.mDetailDisplay.setNearest();
+
+    this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
@@ -570,9 +582,9 @@ export class FurniBagPanel extends BasePanel {
     this.emit("close");
   }
 
-  private queryPackege() {
+  private queryPackege(isupdate: boolean = false) {
     if (this.mSelectedCategeories) {
-      this.emit("queryPackage", this.mSelectedCategeories.key);
+      this.emit("queryPackage", this.categoryType, this.mSelectedCategeories.key, isupdate);
     }
   }
 
@@ -591,7 +603,8 @@ export class FurniBagPanel extends BasePanel {
         this.mAdd.enable = false;
         this.saveBtn.enable = false;
         this.resetBtn.enable = false;
-        this.mDetailDisplay.setTexture(this.key, "ghost");
+        // this.mDetailDisplay.setTexture(this.key, "ghost");
+        this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
         this.mDetailDisplay.setNearest();
       }
     }
@@ -618,7 +631,7 @@ export class FurniBagPanel extends BasePanel {
     // this.mDetailDisplay.setNearest();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
-      if (categoryType === op_pkt_def.PKT_PackageType.FurniturePackage) {
+      if (categoryType === op_pkt_def.PKT_PackageType.FurniturePackage || categoryType === op_pkt_def.PKT_PackageType.EditFurniturePackage) {
         this.sellBtn.visible = true;
         this.mAdd.visible = true;
         this.useBtn.visible = false;
@@ -790,10 +803,12 @@ class SeachInput extends Phaser.GameObjects.Container {
   private mInputText: InputPanel;
   private mWorldService: WorldService;
   private bg: Phaser.GameObjects.Image;
+  private mText: string = "";
+  private dpr: number;
   constructor(scene: Phaser.Scene, world: WorldService, key: string, dpr: number) {
     super(scene);
     this.mWorldService = world;
-
+    this.dpr = dpr;
     this.bg = scene.make.image({
       key,
       frame: "seach_bg"
@@ -805,9 +820,8 @@ class SeachInput extends Phaser.GameObjects.Container {
       style: {
         fontFamily: Font.DEFULT_FONT,
         fontSize: 14 * dpr,
-        wordWrap: { width: 200, useAdvancedWrap: true },
       }
-    }, false).setData("type", "label").setOrigin(0, 0.5);
+    }, false).setOrigin(0, 0.5);
     this.mLabelInput.setSize(this.bg.width, this.bg.height);
     this.mLabelInput.setInteractive();
     this.mSeachBtn = scene.make.image({
@@ -819,20 +833,32 @@ class SeachInput extends Phaser.GameObjects.Container {
       this.add([this.bg, this.mLabelInput, this.mSeachBtn]);
     this.disableInteractive();
     this.setSize(this.bg.width, this.bg.height);
+    this.setData("type", "label");
   }
 
   public showInputPanel() {
     if (this.mInputText) {
       return;
     }
-    this.mInputText = new InputPanel(this.scene, this.mWorldService, this.mLabelInput.text);
+    this.mInputText = new InputPanel(this.scene, this.mWorldService, this.mText);
     this.mInputText.once("close", this.sendChat, this);
   }
 
   private sendChat(val: string) {
+    this.mText = val;
     this.mInputText.destroy();
     this.mInputText = null;
-    this.mLabelInput.setText(val);
+    if (val.length > 10) {
+      const maxWidth = this.bg.width - 20 * this.dpr;
+      for (let i = 10; i < val.length; i++) {
+        const text = val.slice(0, i);
+        const width = this.mLabelInput.setText(text).width;
+        if (width > maxWidth) {
+          break;
+        }
+      }
+    } else
+      this.mLabelInput.setText(val);
     this.mLabelInput.setSize(this.bg.width, this.bg.height);
   }
 
@@ -845,7 +871,7 @@ class SeachInput extends Phaser.GameObjects.Container {
   }
 
   get seachText(): string {
-    return this.mLabelInput.text;
+    return this.mText;
   }
 }
 

@@ -3,7 +3,7 @@ import { Font } from "../../utils/font";
 import { op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { BasePanel } from "../components/BasePanel";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Url, CloseButton } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
@@ -21,8 +21,7 @@ export class MineCarPanel extends BasePanel {
   // private mCategorieContainer: Phaser.GameObjects.Container;
   private mTips: Tips;
   private mDiscardBtn: DiscardButton;
-  private mAllItem: IPackageItem[];
-  private mFilterItem: IPackageItem[];
+  private mFilterItem: IPackageItem[] = [];
   private mLimit: number;
   private categoriesBg: Phaser.GameObjects.Image;
   private mCategoryTable: GameGridTable;
@@ -67,16 +66,6 @@ export class MineCarPanel extends BasePanel {
 
   public show(param?: any) {
     super.show(param);
-    if (this.mInitialized && !this.mPreLoad) {
-      this.refreshData();
-    }
-  }
-
-  public update(param?: any) {
-    super.update(param);
-    if (this.mInitialized && this.mShow) {
-      this.refreshData();
-    }
   }
 
   setCategories(subcategorys: op_def.IStrPair[]) {
@@ -84,7 +73,10 @@ export class MineCarPanel extends BasePanel {
     this.mPreSelectedCategorieData = undefined;
     this.mCategoryTable.setItems(subcategorys);
   }
-
+  public setCategoriesData(subcategorys: op_def.IStrPair[]) {
+    this.mDiscardBtn.changeState(DiscardEnum.Discard);
+    this.setCategories(subcategorys);
+  }
   addListen() {
     if (!this.mInitialized) return;
     this.removeListen();
@@ -98,19 +90,35 @@ export class MineCarPanel extends BasePanel {
     this.mDiscardBtn.off("Tap", this.enterDiscardMode, this);
   }
 
-  setProp() { }
+  setProp(items: op_client.ICountablePackageItem[], limit: number) {
+    const mineItem = items || [];
+    this.mLimit = limit || 0;
+    this.mFilterItem.length = 0;
+    for (const item of mineItem) {
+      this.mFilterItem.push({ item });
+    }
+    const len = this.mLimit - this.mFilterItem.length;
+    for (let i = 0; i < len; i++) {
+      this.mFilterItem.push({ item: null });
+    }
+    this.mPropGrid.setItems(this.mFilterItem);
+    this.mCounter.setText(`${mineItem.length}/${this.mLimit}`);
+  }
 
   destroy() {
     if (this.mPropGrid) {
       this.mPropGrid.destroy();
     }
-    // if (this.mPanel) {
-    //   this.mPanel.removeAll(true);
-    // }
     if (this.mCategoryTable) {
       this.mCategoryTable.destroy();
     }
     super.destroy();
+  }
+
+  queryRefreshPackage() {
+    if (this.mPreSelectedCategorieData) {
+      this.emit("querypackage", op_pkt_def.PKT_PackageType.MinePackage, this.mPreSelectedCategorieData.key);
+    }
   }
 
   protected preload() {
@@ -122,8 +130,6 @@ export class MineCarPanel extends BasePanel {
     const w = this.scaleWidth;
     const h = this.scaleHeight;
     this.setSize(w, h);
-    // this.mPanel = this.scene.make.container(undefined, false);
-    // this.mMask = this.scene.make.graphics(undefined, false);
     this.mBackGround = this.scene.make.graphics(undefined, false);
     this.mBackGround.clear();
     this.mBackGround.fillStyle(0x6AE2FF, 0);
@@ -271,17 +277,15 @@ export class MineCarPanel extends BasePanel {
           });
           cellContainer.setFontStyle("bold");
         }
-        const data = cellContainer.getData("data");
-        if (data !== item) {
-          cellContainer.setText(item.value);
-          cellContainer.setData("data", item);
-          if (this.mPreSelectedCategorieData === item) {
-            cellContainer.changeDown();
-            this.mPreSelectedCategorie = cellContainer;
-          } else {
-            cellContainer.changeNormal();
-          }
+        cellContainer.setText(item.value);
+        cellContainer.setData("data", item);
+        if (this.mPreSelectedCategorieData === item) {
+          cellContainer.changeDown();
+          this.mPreSelectedCategorie = cellContainer;
+        } else {
+          cellContainer.changeNormal();
         }
+
         if (!this.mPreSelectedCategorie) {
           this.onClickCategoryHandler(cellContainer);
         }
@@ -307,42 +311,12 @@ export class MineCarPanel extends BasePanel {
     ]);
     this.resize(this.scene.cameras.main.width, this.scene.cameras.main.height);
     super.init();
-  }
-
-  private refreshData() {
-    const minePackage: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_QUERY_MINE_PACKAGE = this.mShowData;
-    const mineItem = minePackage.items || [];
-    this.mLimit = minePackage.limit || 0;
-    this.mAllItem = [];
-    for (const item of mineItem) {
-      this.mAllItem.push({ item });
-    }
-
-    this.mDiscardBtn.changeState(DiscardEnum.Discard);
-    this.mCounter.setText(`${mineItem.length}/${this.mLimit}`);
-    this.setCategories(minePackage.subcategories);
+    this.emit("querycategory");
   }
 
   private onCloseHandler() {
     this.emit("close");
   }
-
-  private onSelectedCategory(subcategory: string) {
-    this.mFilterItem = [];
-    let pkgItem = null;
-    for (const item of this.mAllItem) {
-      pkgItem = item.item;
-      if (pkgItem && (pkgItem.subcategory === subcategory || subcategory === "all")) {
-        this.mFilterItem.push(item);
-      }
-    }
-    const len = this.mLimit - this.mFilterItem.length;
-    for (let i = 0; i < len; i++) {
-      this.mFilterItem.push({ item: null });
-    }
-    this.mPropGrid.setItems(this.mFilterItem);
-  }
-
   private onSelectItemHandler(packageItem: PackageItem) {
     if (this.mDiscardBtn && this.mDiscardBtn.buttonState !== DiscardEnum.Discard) {
       packageItem.switchSelect();
@@ -362,7 +336,7 @@ export class MineCarPanel extends BasePanel {
   private onClickCategoryHandler(item: CategorieButton) {
     const data = item.getData("data");
     if (data) {
-      this.onSelectedCategory(data.key);
+      this.emit("querypackage", op_pkt_def.PKT_PackageType.MinePackage, data.key);
       if (this.mPreSelectedCategorie) {
         this.mPreSelectedCategorie.changeNormal();
       }

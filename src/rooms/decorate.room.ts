@@ -27,7 +27,6 @@ import { SelectorElement } from "./decorate/selector.element";
 import { IBlockObject } from "./cameras/block.object";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { IScenery } from "./sky.box/scenery";
-import { PlayerDataManager } from "./data/PlayerDataManager";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -53,7 +52,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mTerrainManager: DecorateTerrainManager;
     private mElementManager: DecorateElementManager;
     private mLayerManager: LayerManager;
-    private mPlayerDataManager: PlayerDataManager;
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
     private mSelectorElement: SelectorElement;
@@ -694,9 +692,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     get elementManager(): DecorateElementManager {
         return this.mElementManager;
     }
-    get playerDataManager(): PlayerDataManager {
-        return this.mPlayerDataManager;
-    }
+
     get layerManager(): LayerManager {
         return this.mLayerManager;
     }

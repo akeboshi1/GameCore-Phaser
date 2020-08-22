@@ -172,21 +172,21 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottombg = this.scene.make.graphics(undefined, false);
         const bottomBtnPosx = - 60 * this.dpr;
         const bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
-        this.addFriendBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"),this.dpr,this.scale, {
+        this.addFriendBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), this.dpr, this.scale, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
         this.addFriendBtn.setFrameNormal("button_g");
-        this.privaCharBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"),this.dpr,this.scale, {
+        this.privaCharBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "yellow_btn", i18n.t("player_info.private_chat"), this.dpr, this.scale, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
             bottom: 12 * this.dpr
         });
 
-        this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"),this.dpr,this.scale, {
+        this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), this.dpr, this.scale, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -239,6 +239,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const attrHeigth = 149 * this.dpr;
         this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY - 5 * this.dpr, 260 * this.dpr, attrHeigth, this.key, this.dpr);
         this.content.add(this.mAttrPanel);
+        this.content.visible = false;
         this.resize(wid, hei);
         super.init();
         this.reqPlayerInfo();
@@ -248,6 +249,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.emit("queryOwnerInfo");
     }
     public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+        this.content.visible = true;
         const nickname = data.nickname;
         const current_title = data.currentTitle;
         const exp = data.level.currentLevelExp;
@@ -333,10 +335,8 @@ export default class CharacterInfoPanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = createFun();
                 }
-                if (cellContainer.itemData !== item) {
-                    cellContainer.setData({ item });
-                    cellContainer.setItemData(item, this.isOwner);
-                }
+                cellContainer.setData({ item });
+                cellContainer.setItemData(item, this.isOwner);
                 return cellContainer;
             },
         };

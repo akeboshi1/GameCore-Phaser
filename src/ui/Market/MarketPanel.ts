@@ -217,8 +217,8 @@ export class MarketPanel extends BasePanel {
       frame: "back_arrow",
       x: 21 * this.dpr,
       y: 30 * this.dpr
-    }).setInteractive();
-
+    });
+    this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
@@ -351,10 +351,8 @@ export class MarketPanel extends BasePanel {
         if (cellContainer === null) {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr);
         }
-        if (cellContainer.mProp !== item) {
-          cellContainer.setData({ item });
-          cellContainer.setProp(item);
-        }
+        cellContainer.setData({ item });
+        cellContainer.setProp(item);
         return cellContainer;
       },
     };

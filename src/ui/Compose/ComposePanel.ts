@@ -24,7 +24,7 @@ export class ComposePanel extends BasePanel {
     private mDetailBubble: DetailBubble;
     private materialCon: Phaser.GameObjects.Container;
     private mGrideTable: GameGridTable;
-    private mSelectItemData: op_pkt_def.IPKT_Skill;
+    private mSelectItemData: op_client.IPKT_CRAFT_SKILL;
     private mSelectItem: ComposeItem;
     private materialGameScroll: GameScroller;
     private makeBtn: NineSliceButton;
@@ -240,12 +240,10 @@ export class ComposePanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = new ComposeItem(scene, this.key, this.dpr);
                 }
-                if (cellContainer.itemData !== item) {
-                    cellContainer.setItemData(item);
-                    if (item && this.mSelectItemData && item.id === this.mSelectItemData.id) {
-                        cellContainer.select = true;
-                        this.mSelectItem = cellContainer;
-                    }
+                cellContainer.setItemData(item);
+                if (item && this.mSelectItemData && item.skill.id === this.mSelectItemData.skill.id) {
+                    cellContainer.select = true;
+                    this.mSelectItem = cellContainer;
                 }
                 return cellContainer;
             },
@@ -268,21 +266,27 @@ export class ComposePanel extends BasePanel {
         super.destroy();
     }
 
-    public setComposeData(datas: op_pkt_def.IPKT_Skill[]) {
+    public setComposeData(datas: op_client.IPKT_CRAFT_SKILL[]) {
         if (datas && datas.length > 0) {
             this.mGrideTable.setItems(datas);
-            const cell = this.mGrideTable.getCell(0);
-            this.onSelectItemHandler(cell.container);
+            const cell = this.mSelectItem ? this.mSelectItem : this.mGrideTable.getCell(0).container;
+            this.onSelectItemHandler(cell);
         }
     }
 
-    public setComposeDetialData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
+    // public setComposeDetialData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
+    //     this.mDetailBubble.setDetailData(data.productName, data.productDes);
+    //     this.setDetailDisplay(data);
+    //     this.setMaterialItems(data.materials);
+    // }
+
+    public setComposeDetialData(data: op_client.IPKT_CRAFT_SKILL) {
         this.mDetailBubble.setDetailData(data.productName, data.productDes);
         this.setDetailDisplay(data);
         this.setMaterialItems(data.materials);
     }
 
-    private setDetailDisplay(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
+    private setDetailDisplay(data: op_client.IPKT_CRAFT_SKILL) {
         const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
         resData.animations = data.productAnimations;
         resData.display = data.productDisplay;
@@ -298,12 +302,13 @@ export class ComposePanel extends BasePanel {
 
     private onSelectItemHandler(item: ComposeItem) {
         const data = item.itemData;
-        this.emit("reqformula", data.id);
-        item.select = true;
+        // this.emit("reqformula", data.id);
         this.mSelectItemData = item.itemData;
-        this.makeBtn.enable = data.active && data.qualified;
+        this.makeBtn.enable = data.skill.active && data.skill.qualified;
         if (this.mSelectItem) this.mSelectItem.select = false;
         this.mSelectItem = item;
+        item.select = true;
+        this.setComposeDetialData(data);
     }
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
@@ -337,7 +342,7 @@ export class ComposePanel extends BasePanel {
         if (this.mSelectItemData) {
             const content = {
                 text: [{
-                    text: `您确定要合成${this.mSelectItemData.name}吗？`
+                    text: `您确定要合成${this.mSelectItemData.productName}吗？`
                 }],
                 title: [{
                     text: i18n.t("compose.synthesis")
@@ -347,7 +352,7 @@ export class ComposePanel extends BasePanel {
                         text: i18n.t("common.confirm"),
                         local: true,
                         clickhandler: new Handler(this, () => {
-                            this.emit("reqUseFormula", this.mSelectItemData.id);
+                            this.emit("reqUseFormula", this.mSelectItemData.skill.id);
                         })
                     },
                     {
@@ -433,7 +438,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
 }
 
 class ComposeItem extends Phaser.GameObjects.Container {
-    public itemData: op_pkt_def.PKT_Skill;
+    public itemData: op_client.IPKT_CRAFT_SKILL;
     private readonly dpr: number;
     private readonly key: string;
     private bg: Phaser.GameObjects.Image;
@@ -487,22 +492,22 @@ class ComposeItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.itemIcon, this.newIcon, this.newText, this.qualityIcon, this.qualityTex, this.qualifiedIcon, this.lockbg, this.lockIcon]);
     }
 
-    public setItemData(data: op_pkt_def.PKT_Skill) {
+    public setItemData(data: op_client.IPKT_CRAFT_SKILL) {
         this.itemData = data;
-        const active = data.active;
+        const skill = data.skill;
+        const active = skill.active;
         this.newIcon.visible = active;
         this.newText.visible = active;
         this.qualityIcon.visible = active;
         this.qualityTex.visible = active;
-        this.qualityTex.text = data.quality;
-        this.qualifiedIcon.visible = active && data.qualified;
-        this.lockbg.visible = !data.active;
-        this.lockIcon.visible = !data.active;
-        this.setQualityTexture(data.quality);
-        if (data.display) this.setItemIcon(data.display);
+        this.qualityTex.text = skill.quality;
+        this.qualifiedIcon.visible = active && skill.qualified;
+        this.lockbg.visible = !skill.active;
+        this.lockIcon.visible = !skill.active;
+        this.setQualityTexture(skill.quality);
+        if (skill.display) this.setItemIcon(skill.display);
         this.select = false;
     }
-
     public set select(value: boolean) {
         if (value)
             this.bg.setFrame("bprint_bg_2");

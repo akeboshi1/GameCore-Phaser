@@ -51,6 +51,12 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
             this.mView = undefined;
         }
     }
+    get playerData() {
+        if (this.world.playerDataManager) {
+            return this.world.playerDataManager.playerData;
+        }
+        return null;
+    }
 
     private onHidePanel() {
         this.destroy();
@@ -73,9 +79,26 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
         this.picPlan.query_SELECT_MARKET_PLAN(room_id, marketPlanId);
     }
     private onEquiped_MARKET_PLAN(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
+        // const materials = content.marketPlanPairs.
+        if (content.marketPlanPairs) {
+            for (const plan of content.marketPlanPairs) {
+                const requirements = plan.marketPlan.requirements;
+                this.updateMaterials(requirements);
+            }
+        }
         this.mView.setEquipedPlan(content);
     }
     private onMARKET_PLAN_MODELS_BY_TYPE(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN_MODELS_BY_TYPE) {
         this.mView.setPlanModels(content);
+    }
+    private updateMaterials(materials: op_client.ICountablePackageItem[]) {
+        if (this.playerData) {
+            if (materials) {
+                for (const data of materials) {
+                    const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
+                    data.count = count;
+                }
+            }
+        }
     }
 }

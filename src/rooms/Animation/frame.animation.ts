@@ -46,15 +46,21 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
     private onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
         this.loaded = true;
         // this.scene.anims.generateFrameNames(this.resName, { prefix: "diamond_", end: 15, zeroPad: 4 }),
-        this.scene.anims.create({
-            key: this.resName,
-            frames: this.scene.anims.generateFrameNames(this.resName),
-            repeat: -1
-        });
-        this.frameAnim = this.scene.add.sprite(0, 0, this.resName);
-        this.add(this.frameAnim);
-        const scale = this.width / this.frameAnim.width;
+
+        if (!this.scene.anims.exists(this.resName)) {
+            this.scene.anims.create({
+                key: this.resName,
+                frames: this.scene.anims.generateFrameNames(this.resName),
+                // frames: this.scene.anims.generateFrameNames(this.resName, { prefix: "loading_ui_", start: 1, end: 45, zeroPad: 2 }),
+                repeat: -1
+            });
+        }
+        if (!this.frameAnim) {
+            this.frameAnim = this.scene.add.sprite(0, 0, this.resName);
+            this.add(this.frameAnim);
+        }
+        const scale = this.width === 0 ? 1 : this.width / this.frameAnim.width;
         this.frameAnim.setScale(scale);
-        if (this.isPlaying) this.play(this.curAniName);
+        if (!this.isPlaying) this.play(this.curAniName);
     }
 }

@@ -12,8 +12,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   private mDragonboneDisplay: DragonbonesDisplay;
   private complHandler: Handler;
   private frameAni: FrameAnimation;
-  constructor(scene: Phaser.Scene) {
+  private mKeepScale = false;
+  constructor(scene: Phaser.Scene, keepscale: boolean = false) {
     super(scene);
+    this.mKeepScale = keepscale;
   }
 
   loadDisplay(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
@@ -50,6 +52,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
     this.mDragonboneDisplay.once("initialized", () => {
       this.mDragonboneDisplay.play({ name: "idle", flip: false });
+      if (this.mKeepScale) {
+        const spritWidth = this.mDragonboneDisplay.spriteWidth;
+        this.mDragonboneDisplay.scale = spritWidth / this.width;
+      }
     });
     this.mDragonboneDisplay.load(new DragonbonesModel({
       id: 0,
@@ -131,7 +137,12 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       this.mImage.setTexture(this.mUrl);
     }
     this.setNearest();
-    this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
+    if (this.mKeepScale) {
+      this.mImage.displayWidth = this.width;
+      this.mImage.scaleY = this.mImage.scaleX;
+    } else {
+      this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
+    }
     this.emit("show", this.mImage);
     if (this.complHandler) this.complHandler.run();
   }

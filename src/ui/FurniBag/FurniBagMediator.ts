@@ -2,7 +2,7 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { FurniBagPanel } from "./FurniBagPanel";
 import { FurniBag } from "./FurniBag";
-import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
+import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 
 export class FurniBagMediator extends BaseMediator {
@@ -25,6 +25,7 @@ export class FurniBagMediator extends BaseMediator {
     show() {
         if ((this.mView && this.mView.isShow()) || this.mShow) {
             this.layerManager.addToUILayer(this.mView);
+            this.addLisenter();
             return;
         }
 
@@ -53,6 +54,7 @@ export class FurniBagMediator extends BaseMediator {
         }
         this.mView.show();
         this.layerManager.addToUILayer(this.mView);
+        this.addLisenter();
     }
 
     destroy() {
@@ -61,10 +63,44 @@ export class FurniBagMediator extends BaseMediator {
             this.mFurniBag = undefined;
         }
         super.destroy();
+        this.removeLisenter();
+    }
+
+    get playerData() {
+        if (this.world.playerDataManager) {
+            return this.world.playerDataManager.playerData;
+        }
+        return null;
     }
 
     private onCloseHandler() {
         this.destroy();
+    }
+
+    private addLisenter() {
+        if (!this.world.playerDataManager) return;
+        const mgr = this.world.playerDataManager;
+        if (mgr) {
+            mgr.on("syncfinish", this.onSyncFinishHandler, this);
+            mgr.on("update", this.onUpdateHandler, this);
+        }
+    }
+
+    private removeLisenter() {
+        if (!this.world.playerDataManager) return;
+        const mgr = this.world.playerDataManager;
+        if (mgr) {
+            mgr.off("syncfinish", this.onSyncFinishHandler, this);
+            mgr.off("update", this.onUpdateHandler, this);
+        }
+    }
+
+    private onSyncFinishHandler() {
+        if (this.mView) this.mView.queryRefreshPackage();
+    }
+
+    private onUpdateHandler() {
+        if (this.mView) this.mView.queryRefreshPackage(true);
     }
 
     private onPackageCategoryHandler(subcategory: op_def.IStrPair[]) {
@@ -90,8 +126,12 @@ export class FurniBagMediator extends BaseMediator {
         this.mView.setProp(content.items);
     }
 
-    private onQueryPackage(key: string) {
-        this.mFurniBag.queryPackage(key);
+    private onQueryPackage(packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean) {
+        // this.mFurniBag.queryPackage(key);
+        if (this.playerData) {
+            const items = this.playerData.getItemsByCategory(packType, key);
+            this.mView.setProp(items, isupdate);
+        }
     }
 
     private onQueryPropResourceHandler(prop: op_client.IMarketCommodity) {

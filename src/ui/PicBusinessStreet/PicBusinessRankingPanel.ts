@@ -276,10 +276,10 @@ class PicRankingItem extends Phaser.GameObjects.Container {
         this.titleText = this.scene.make.text({ x: 0, y: posy, text: "Restaurant", style: { color: "#0555AF", fontSize: 14 * dpr, fontFamily: Font.BOLD_FONT } }).setOrigin(0.5);
         this.add(this.titleText);
         this.storebg = new NineSlicePatch(this.scene, 0, 0, 72 * dpr, 17 * dpr, this.key2, "store_name_bg_s", {
-            left: 6 * this.dpr,
-            top: 1 * this.dpr,
-            right: 6 * this.dpr,
-            bottom: 1 * this.dpr
+            left: 8 * this.dpr,
+            top: 0 * this.dpr,
+            right: 8 * this.dpr,
+            bottom: 0 * this.dpr
         });
         this.storebg.y = this.titleText.y + 10 * dpr;
         this.add(this.storebg);

@@ -115,10 +115,8 @@ export class MineSettlePanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = new MineSettleItem(scene, this.dpr);
                 }
-                if (cellContainer.itemData !== item) {
-                    cellContainer.setData({ item });
-                    cellContainer.setItemData(item);
-                }
+                cellContainer.setData({ item });
+                cellContainer.setItemData(item);
                 return cellContainer;
             },
         };

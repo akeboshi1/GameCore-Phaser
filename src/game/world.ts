@@ -42,6 +42,7 @@ import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { LoadingTips } from "../loading/loading.tips";
+import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -71,6 +72,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private gameConfigUrls: Map<string, string> = new Map();
     private gameConfigUrl: string = "";
     private mLoadingManager: ILoadingManager;
+    private mPlayerDataManager: PlayerDataManager;
 
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
@@ -142,6 +144,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+        this.mPlayerDataManager = new PlayerDataManager(this);
         this.mAccount = new Account();
         this.mAccount.enterGame(this.mConfig.game_id, this.mConfig.virtual_world_id);
 
@@ -154,7 +157,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
         this.mSoundManager.addPackListener();
-
+        this.mPlayerDataManager.addPackListener();
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
             // connect to game server.
@@ -355,6 +358,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get roomManager(): RoomManager | undefined {
         return this.mRoomMamager;
+    }
+    get playerDataManager(): PlayerDataManager {
+        return this.mPlayerDataManager;
     }
 
     get orientation(): number {
@@ -592,6 +598,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
         content.localeCode = i18n.language;
         this.connection.send(i18Packet);
+        this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
     }
 
     private clearGame(): Promise<void> {
@@ -614,6 +621,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mElementStorage.destroy();
                 this.mLoadingManager.destroy();
                 this.game.scene.destroy();
+                this.mPlayerDataManager.clear();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
                     resolve();
@@ -859,6 +867,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
         if (this.mSoundManager) this.mSoundManager.addPackListener();
+        if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
         if (this.mElementStorage) {
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }
