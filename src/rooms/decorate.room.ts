@@ -158,6 +158,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mLayerManager) this.mLayerManager.destroy();
+        if (this.mPlayerDataManager) this.mPlayerDataManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         this.removePointerMoveHandler();
