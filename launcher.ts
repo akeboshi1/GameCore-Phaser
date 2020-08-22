@@ -8,10 +8,9 @@ import { version } from "./version";
 // import { Capsule, PaletteNode, MossNode } from "game-capsule";
 // import { EditorLauncher, EditorCanvasType } from "./src/editor/editor.launcher";
 // import { ElementEditorEmitType, ElementEditorBrushType } from "./src/editor/canvas/element/element.editor.canvas";
-import { Logger } from "./src/utils/log";
-import { load } from "./src/utils/http";
 
 export interface ILauncherConfig {
+    api_root: string;
     auth_token: string;
     token_expire: string | null;
     token_fingerprint: string;
@@ -101,6 +100,7 @@ export class Launcher {
     private mReload: Function;
     private mCompleteFunc: Function;
     private mConfig: ILauncherConfig = {
+        api_root: CONFIG.api_root,
         auth_token: CONFIG.auth_token,
         token_expire: CONFIG.token_expire,
         token_fingerprint: CONFIG.token_fingerprint,

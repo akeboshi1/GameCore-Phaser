@@ -1,7 +1,10 @@
 import { WorldService } from "../game/world.service";
 
 export class HttpService {
-    constructor(private mWorld: WorldService) { }
+    private api_root: string;
+    constructor(private mWorld: WorldService) {
+        this.api_root = this.mWorld.getConfig().api_root;
+    }
     /**
      * 用户关注其他用户
      * @param uids
@@ -32,7 +35,7 @@ export class HttpService {
      * @param password
      */
     login(account: string, password: string): Promise<Response> {
-        return fetch(`${CONFIG.api_root}${`account/signin`}`, {
+        return fetch(`${this.mWorld.getConfig().api_root}${`account/signin`}`, {
             body: JSON.stringify({ account, password }),
             method: "POST",
             headers: {
@@ -46,7 +49,7 @@ export class HttpService {
      * @param name
      */
     requestPhoneCode(phone: string, areaCode: string): Promise<Response> {
-        return fetch(`${CONFIG.api_root}${`account/sms_code`}`, {
+        return fetch(`${this.api_root}${`account/sms_code`}`, {
             body: JSON.stringify({ phone, areaCode }),
             method: "POST",
             headers: {
@@ -56,7 +59,7 @@ export class HttpService {
     }
 
     loginByPhoneCode(phone: string, code: string, areaCode: string): Promise<Response> {
-        return fetch(`${CONFIG.api_root}${`account/phone_signin`}`, {
+        return fetch(`${this.api_root}${`account/phone_signin`}`, {
             body: JSON.stringify({ phone, code, areaCode }),
             method: "POST",
             headers: {
@@ -66,13 +69,13 @@ export class HttpService {
     }
 
     quickLogin(): Promise<Response> {
-        return fetch(`${CONFIG.api_root}${`account/quick_signin`}`, {
+        return fetch(`${this.api_root}${`account/quick_signin`}`, {
             method: "POST",
         }).then((response) => response.json());
     }
 
     verified(realName: string, identifcationCode: string) {
-        // return fetch(`${CONFIG.api_root}${`game/real_name_authentication`}`, {
+        // return fetch(`${this.api_root}${`game/real_name_authentication`}`, {
         //     body: JSON.stringify({ realName, identifcationCode  }),
         //     method: "POST",
         // }).then((response) => response.json());
@@ -123,7 +126,7 @@ export class HttpService {
             method: "POST",
             headers,
         };
-        return fetch(`${CONFIG.api_root}${uri}`, data).then((response) => response.json());
+        return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
     }
 
     public get(uri: string) {
@@ -140,6 +143,6 @@ export class HttpService {
                 "X-Pixelpai-TK": account.accountData.token
             }
         };
-        return fetch(`${CONFIG.api_root}${uri}`, data).then((response) => response.json());
+        return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
     }
 }
