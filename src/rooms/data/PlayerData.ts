@@ -146,6 +146,7 @@ export class PackageData {
     }
     public syncPackage(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE) {
         this.packageName = content.packageName;
+        if (this.syncFinish) this.clear();
         for (const tempItem of content.items) {
             const subcategory = tempItem.subcategory !== undefined ? tempItem.subcategory : "default";
             let packMap = this.subMap.get(subcategory);
@@ -214,5 +215,12 @@ export class PackageData {
         this.subMap.clear();
         this.list = null;
         this.subMap = null;
+    }
+    clear() {
+        this.list.length = 0;
+        this.subMap.forEach((values) => {
+            values.clear();
+        });
+        this.subMap.clear();
     }
 }
