@@ -27,7 +27,6 @@ import { SelectorElement } from "./decorate/selector.element";
 import { IBlockObject } from "./cameras/block.object";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { IScenery } from "./sky.box/scenery";
-import { PlayerDataManager } from "./data/PlayerDataManager";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -53,7 +52,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mTerrainManager: DecorateTerrainManager;
     private mElementManager: DecorateElementManager;
     private mLayerManager: LayerManager;
-    private mPlayerDataManager: PlayerDataManager;
     private mCameraService: ICameraService;
     private mScene: Phaser.Scene | undefined;
     private mSelectorElement: SelectorElement;
@@ -158,7 +156,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mLayerManager) this.mLayerManager.destroy();
-        if (this.mPlayerDataManager) this.mPlayerDataManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         this.removePointerMoveHandler();
@@ -211,7 +208,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mTerrainManager = new DecorateTerrainManager(this);
         this.mElementManager = new DecorateElementManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
-        this.mPlayerDataManager = new PlayerDataManager(this);
         this.mSkyboxManager = new SkyBoxManager(this);
         this.mBlocks.int(this.mSize);
         this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
@@ -696,9 +692,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     get elementManager(): DecorateElementManager {
         return this.mElementManager;
     }
-    get playerDataManager(): PlayerDataManager {
-        return this.mPlayerDataManager;
-    }
+
     get layerManager(): LayerManager {
         return this.mLayerManager;
     }

@@ -6,31 +6,28 @@ import { PlayerData } from "./PlayerData";
 import { Room, IRoomService } from "../room";
 export class PlayerDataManager extends PacketHandler {
     private readonly mPlayerData: PlayerData;
-    private readonly mRoom: IRoomService;
+    private readonly mWorld: WorldService;
     private mEvent: Phaser.Events.EventEmitter;
-    constructor(room: IRoomService) {
+    constructor(world: WorldService) {
         super();
-        this.mRoom = room;
+        this.mWorld = world;
         this.mEvent = new Phaser.Events.EventEmitter();
         this.mPlayerData = new PlayerData();
-        this.register();
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE, this.onSYNC_PACKAHE);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
     }
-    register() {
-        const connection = this.connection;
-        if (connection) {
+
+    public addPackListener() {
+        if (this.connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE, this.onSYNC_PACKAHE);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
         }
     }
 
-    unregister() {
-        const connection = this.connection;
-        if (connection) {
+    public removePackListener() {
+        if (this.connection) {
             this.connection.removePacketListener(this);
         }
     }
-
     on(event: string | symbol, fn: Function, context?: any) {
         this.mEvent.on(event, fn, context);
     }
@@ -39,15 +36,21 @@ export class PlayerDataManager extends PacketHandler {
         this.mEvent.off(event, fn, context);
     }
 
+    clear() {
+        this.removePackListener();
+        this.playerData.destroy();
+        this.mEvent.removeAllListeners();
+    }
+
     destroy() {
-        this.unregister();
+        this.removePackListener();
         this.mEvent.destroy();
         this.playerData.destroy();
     }
 
     get connection(): ConnectionService {
-        if (this.mRoom) {
-            return this.mRoom.connection;
+        if (this.mWorld) {
+            return this.mWorld.connection;
         }
     }
 

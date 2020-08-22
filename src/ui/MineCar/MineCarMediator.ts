@@ -50,14 +50,14 @@ export class MineCarMediator extends BaseMediator {
     this.removeLisenter();
   }
   get playerData() {
-    if (this.world.roomManager && this.world.roomManager.currentRoom) {
-      return this.world.roomManager.currentRoom.playerDataManager.playerData;
+    if (this.world.playerDataManager) {
+      return this.world.playerDataManager.playerData;
     }
     return null;
   }
   private addLisenter() {
-    if (!this.world.roomManager.currentRoom) return;
-    const mgr = this.world.roomManager.currentRoom.playerDataManager;
+    if (!this.world.playerDataManager) return;
+    const mgr = this.world.playerDataManager;
     if (mgr) {
       mgr.on("syncfinish", this.onSyncFinishHandler, this);
       mgr.on("update", this.onUpdateHandler, this);
@@ -65,8 +65,8 @@ export class MineCarMediator extends BaseMediator {
   }
 
   private removeLisenter() {
-    if (!this.world.roomManager.currentRoom) return;
-    const mgr = this.world.roomManager.currentRoom.playerDataManager;
+    if (!this.world.playerDataManager) return;
+    const mgr = this.world.playerDataManager;
     if (mgr) {
       mgr.off("syncfinish", this.onSyncFinishHandler, this);
       mgr.off("update", this.onUpdateHandler, this);

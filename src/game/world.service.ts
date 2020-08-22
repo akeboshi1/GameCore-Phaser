@@ -13,6 +13,7 @@ import { Clock } from "../rooms/clock";
 import { MouseManager } from "./mouse.manager";
 import { ISoundConfig } from "./sound.manager";
 import { HttpClock } from "../rooms/http.clock";
+import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -25,6 +26,7 @@ export interface WorldService {
     readonly uiManager: UiManager;
     readonly inputManager: InputManager;
     readonly mouseManager: MouseManager;
+    readonly playerDataManager: PlayerDataManager;
     readonly httpService: HttpService;
     readonly uiScale: number;
     readonly scaleRatio: number;

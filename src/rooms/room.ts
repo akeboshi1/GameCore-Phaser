@@ -33,7 +33,6 @@ import { FrameManager } from "./element/frame.manager";
 import { IScenery } from "./sky.box/scenery";
 import { State } from "./state/state.group";
 import { EffectManager } from "./effect/effect.manager";
-import { PlayerDataManager } from "./data/PlayerDataManager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -46,7 +45,6 @@ export interface IRoomService {
     readonly layerManager: LayerManager;
     readonly cameraService: ICameraService;
     readonly effectManager: EffectManager;
-    readonly playerDataManager: PlayerDataManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly blocks: ViewblockService;
@@ -119,7 +117,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mFrameManager: FrameManager;
     protected mSkyboxManager: SkyBoxManager;
     protected mEffectManager: EffectManager;
-    protected mPlayerDataManager: PlayerDataManager;
     protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -218,7 +215,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
         this.mEffectManager = new EffectManager(this);
-        this.mPlayerDataManager = new PlayerDataManager(this);
         if (this.scene) {
             const camera = this.scene.cameras.main;
             setTimeout(() => {
@@ -258,7 +254,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // });
 
         this.initSkyBox();
-        this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
     }
 
     public pause() {
@@ -446,7 +441,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mStateMap) this.mStateMap = null;
         if (this.mCameraService) this.mCameraService.destroy();
         if (this.mEffectManager) this.mEffectManager.destroy();
-        if (this.mPlayerDataManager) this.mPlayerDataManager.destroy();
     }
 
     public destroy() {
@@ -550,9 +544,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get effectManager(): EffectManager {
         return this.mEffectManager;
-    }
-    get playerDataManager(): PlayerDataManager {
-        return this.mPlayerDataManager;
     }
 
     get id(): number {

@@ -53,8 +53,8 @@ export class PicFurniFunMediator extends BaseMediator {
         super.destroy();
     }
     get playerData() {
-        if (this.world.roomManager && this.world.roomManager.currentRoom) {
-            return this.world.roomManager.currentRoom.playerDataManager.playerData;
+        if (this.world.playerDataManager) {
+            return this.world.playerDataManager.playerData;
         }
         return null;
     }

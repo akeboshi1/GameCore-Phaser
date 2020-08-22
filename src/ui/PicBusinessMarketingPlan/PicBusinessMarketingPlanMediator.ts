@@ -52,8 +52,8 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
         }
     }
     get playerData() {
-        if (this.world.roomManager && this.world.roomManager.currentRoom) {
-            return this.world.roomManager.currentRoom.playerDataManager.playerData;
+        if (this.world.playerDataManager) {
+            return this.world.playerDataManager.playerData;
         }
         return null;
     }
