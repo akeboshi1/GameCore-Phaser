@@ -45,6 +45,7 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
         this.frameAnim = null;
         this.animUrlData = null;
         this.complHandler = undefined;
+        this.isPlaying = false;
     }
 
     private onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {

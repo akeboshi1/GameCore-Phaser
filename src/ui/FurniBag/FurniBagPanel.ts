@@ -519,7 +519,7 @@ export class FurniBagPanel extends BasePanel {
     return false;
   }
   private setSelectedItem(prop: op_client.ICountablePackageItem) {
-    this.emit("queryPropResource", prop);
+    // this.emit("queryPropResource", prop);
     this.sellBtn.enable = prop.recyclable;
     this.useBtn.enable = prop.executable;
     this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
@@ -536,6 +536,15 @@ export class FurniBagPanel extends BasePanel {
     // this.mDetailDisplay.setNearest();
 
     this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
+    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+    if (prop.avatar) {
+      content.avatar = prop.avatar;
+    } else if (prop.animations) {
+      content.animations = prop.animations;
+    } else {
+      content.display = prop.display;
+    }
+    this.setSelectedResource(content);
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {

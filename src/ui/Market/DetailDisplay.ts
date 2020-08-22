@@ -59,7 +59,8 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }));
     this.mDragonboneDisplay.scale = scale;
     this.add(this.mDragonboneDisplay);
-    this.scale = 1;
+    if (this.mKeepScale)
+      this.scale = 1;
   }
 
   loadUrl(url: string) {
