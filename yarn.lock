@@ -32,47 +32,27 @@
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
->>>>>>> dev
   integrity sha1-m4sMxmPWaafY9vXQiToU00jzD78=
 
 "@protobufjs/base64@^1.1.2":
   version "1.1.2"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/base64/-/base64-1.1.2.tgz#4c85730e59b9a1f1f349047dbf24296034bb2735"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/base64/-/base64-1.1.2.tgz#4c85730e59b9a1f1f349047dbf24296034bb2735"
->>>>>>> dev
   integrity sha512-AZkcAA5vnN/v4PDqKyMR5lx7hZttPDgClv83E//FMNhR2TMcLUhfRUBHCmSl0oi9zMgDDqRUJkSxO3wm85+XLg==
 
 "@protobufjs/codegen@^2.0.4":
   version "2.0.4"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/codegen/-/codegen-2.0.4.tgz#7ef37f0d010fb028ad1ad59722e506d9262815cb"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/codegen/-/codegen-2.0.4.tgz#7ef37f0d010fb028ad1ad59722e506d9262815cb"
->>>>>>> dev
   integrity sha512-YyFaikqM5sH0ziFZCN3xDC7zeGaB/d0IUb9CATugHWbd1FRFwWwt4ld4OYMPWu5a3Xe01mGAULCdqhMlPl29Jg==
 
 "@protobufjs/eventemitter@^1.1.0":
   version "1.1.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/eventemitter/-/eventemitter-1.1.0.tgz#355cbc98bafad5978f9ed095f397621f1d066b70"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/eventemitter/-/eventemitter-1.1.0.tgz#355cbc98bafad5978f9ed095f397621f1d066b70"
->>>>>>> dev
   integrity sha1-NVy8mLr61ZePntCV85diHx0Ga3A=
 
 "@protobufjs/fetch@^1.1.0":
   version "1.1.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/fetch/-/fetch-1.1.0.tgz#ba99fb598614af65700c1619ff06d454b0d84c45"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/fetch/-/fetch-1.1.0.tgz#ba99fb598614af65700c1619ff06d454b0d84c45"
->>>>>>> dev
   integrity sha1-upn7WYYUr2VwDBYZ/wbUVLDYTEU=
   dependencies:
     "@protobufjs/aspromise" "^1.1.1"
@@ -80,47 +60,27 @@
 
 "@protobufjs/float@^1.0.2":
   version "1.0.2"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/float/-/float-1.0.2.tgz#5e9e1abdcb73fc0a7cb8b291df78c8cbd97b87d1"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/float/-/float-1.0.2.tgz#5e9e1abdcb73fc0a7cb8b291df78c8cbd97b87d1"
->>>>>>> dev
   integrity sha1-Xp4avctz/Ap8uLKR33jIy9l7h9E=
 
 "@protobufjs/inquire@^1.1.0":
   version "1.1.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/inquire/-/inquire-1.1.0.tgz#ff200e3e7cf2429e2dcafc1140828e8cc638f089"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/inquire/-/inquire-1.1.0.tgz#ff200e3e7cf2429e2dcafc1140828e8cc638f089"
->>>>>>> dev
   integrity sha1-/yAOPnzyQp4tyvwRQIKOjMY48Ik=
 
 "@protobufjs/path@^1.1.2":
   version "1.1.2"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/path/-/path-1.1.2.tgz#6cc2b20c5c9ad6ad0dccfd21ca7673d8d7fbf68d"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/path/-/path-1.1.2.tgz#6cc2b20c5c9ad6ad0dccfd21ca7673d8d7fbf68d"
->>>>>>> dev
   integrity sha1-bMKyDFya1q0NzP0hynZz2Nf79o0=
 
 "@protobufjs/pool@^1.1.0":
   version "1.1.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/pool/-/pool-1.1.0.tgz#09fd15f2d6d3abfa9b65bc366506d6ad7846ff54"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/pool/-/pool-1.1.0.tgz#09fd15f2d6d3abfa9b65bc366506d6ad7846ff54"
->>>>>>> dev
   integrity sha1-Cf0V8tbTq/qbZbw2ZQbWrXhG/1Q=
 
 "@protobufjs/utf8@^1.1.0":
   version "1.1.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
-=======
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
->>>>>>> dev
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
 "@types/anymatch@*":
@@ -148,11 +108,7 @@
 
 "@types/long@^4.0.1":
   version "4.0.1"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
-=======
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
->>>>>>> dev
   integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
 
 "@types/minimatch@*":
@@ -167,11 +123,7 @@
 
 "@types/node@^13.7.0":
   version "13.13.15"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/@types/node/-/node-13.13.15.tgz#fe1cc3aa465a3ea6858b793fd380b66c39919766"
-=======
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.15.tgz#fe1cc3aa465a3ea6858b793fd380b66c39919766"
->>>>>>> dev
   integrity sha512-kwbcs0jySLxzLsa2nWUAGOd/s21WU1jebrEdtzhsj1D4Yps1EOuyI1Qcu+FD56dL7NRNIJtDDjcqIG22NwkgLw==
 
 "@types/source-list-map@*":
@@ -1238,11 +1190,7 @@ crypto-browserify@^3.11.0:
 
 crypto-js@^3.1.9-1:
   version "3.3.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
-=======
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
->>>>>>> dev
   integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
 
 css-select@^1.1.0:
@@ -2390,11 +2338,7 @@ imports-loader@^0.8.0:
 
 imports-loader@^1.1.0:
   version "1.1.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/imports-loader/-/imports-loader-1.1.0.tgz#1c3a388d0c5cd7f9eb08f3646d4aae3b70e57933"
-=======
   resolved "https://registry.yarnpkg.com/imports-loader/-/imports-loader-1.1.0.tgz#1c3a388d0c5cd7f9eb08f3646d4aae3b70e57933"
->>>>>>> dev
   integrity sha512-HcPM6rULdQ6EBLVq+5O+CF9xb7qiUjsRm6V28bTG/c3IU5sQkVZzUDwYY0r4jHvSAmVFdO9WA/vLAURR5WQSeQ==
   dependencies:
     loader-utils "^2.0.0"
@@ -2691,11 +2635,6 @@ jest-worker@^25.4.0:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-base64@^3.4.5:
-  version "3.4.5"
-  resolved "https://registry.npmjs.org/js-base64/-/js-base64-3.4.5.tgz#6d1921e65a172cfd924604e1416dfaff45752c3e"
-  integrity sha512-Ub/AANierdcT8nm4ndBn3KzpZQ3MdHX4a+bwoVdjgeHCZ0ZEcP+UB4nmR4Z5lR6SH3Y+qAPmgVR0RxKJNHNHEg==
-
 js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npm.taobao.org/js-tokens/download/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -2837,11 +2776,7 @@ loglevel@^1.6.8:
 
 long@^4.0.0:
   version "4.0.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
-=======
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
->>>>>>> dev
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
 lower-case@^1.1.1:
@@ -3560,15 +3495,9 @@ pinkie@^2.0.0:
   resolved "https://registry.npm.taobao.org/pinkie/download/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-<<<<<<< HEAD
-"pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.285"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#82203d919d7f8097c711e32f11b0f4bab4b4d970"
-=======
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescript":
   version "1.0.264"
   resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#e7f0e30b2dea975016e1b3b8c8bc85eec4ab69fc"
->>>>>>> dev
   dependencies:
     protobufjs "^6.8.8"
 
@@ -3625,11 +3554,7 @@ promise-inflight@^1.0.1:
 
 protobufjs@^6.8.8:
   version "6.10.1"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/protobufjs/-/protobufjs-6.10.1.tgz#e6a484dd8f04b29629e9053344e3970cccf13cd2"
-=======
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.1.tgz#e6a484dd8f04b29629e9053344e3970cccf13cd2"
->>>>>>> dev
   integrity sha512-pb8kTchL+1Ceg4lFd5XUpK8PdWacbvV5SK2ULH2ebrYtl4GjJmS24m6CKME67jzV53tbJxHlnNOSqQHbTsR9JQ==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
@@ -4382,11 +4307,7 @@ strip-ansi@^5.0.0, strip-ansi@^5.1.0, strip-ansi@^5.2.0:
 
 strip-comments@^2.0.1:
   version "2.0.1"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/strip-comments/-/strip-comments-2.0.1.tgz#4ad11c3fbcac177a67a40ac224ca339ca1c1ba9b"
-=======
   resolved "https://registry.yarnpkg.com/strip-comments/-/strip-comments-2.0.1.tgz#4ad11c3fbcac177a67a40ac224ca339ca1c1ba9b"
->>>>>>> dev
   integrity sha512-ZprKx+bBLXv067WTCALv8SSz5l2+XhpYCsVtSqlMnkAXMWDq+/ekVbl1ghqP9rUHTzv6sm/DwCOiYutU/yp1fw==
 
 strip-eof@^1.0.0:
@@ -4556,11 +4477,7 @@ toposort@^1.0.0:
 
 treeify@^1.1.0:
   version "1.1.0"
-<<<<<<< HEAD
-  resolved "https://registry.npmjs.org/treeify/-/treeify-1.1.0.tgz#4e31c6a463accd0943879f30667c4fdaff411bb8"
-=======
   resolved "https://registry.yarnpkg.com/treeify/-/treeify-1.1.0.tgz#4e31c6a463accd0943879f30667c4fdaff411bb8"
->>>>>>> dev
   integrity sha512-1m4RA7xVAJrSGrrXGs0L3YTwyvBs2S8PbRHaLZAkFw7JR8oIFwYtysxlBZhYIa7xSyiYJKZ3iGrrk55cGA3i9A==
 
 ts-loader@^6.0.4:
