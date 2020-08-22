@@ -261,6 +261,25 @@ class FriendContainer extends Container {
     }
 
     protected sortByName(array: FriendData[]) {
+        const chinese = ["啊", "把", "拆", "打", "厄", "发", "尬", "哈", "几", "卡", "拉", "马", "那", "噢", "叭", "七", "呥", "卅", "它", "瓦", "夕", "ㄚ", "杂"];
+        const chineseName = [];
+        const englishName = [];
+        for (const name of array) {
+            const code = name.nickname.charCodeAt(0);
+            if (code >= 0x4E00 && code <= 0x9FA5) {
+                chineseName.push(name);
+            } else {
+                englishName.push(name);
+            }
+        }
+        chineseName.sort((a: FriendData, b: FriendData) => {
+            return a.nickname.localeCompare(b.nickname, i18n.language);
+        });
+
+        englishName.sort((a: FriendData, b: FriendData) => {
+            return a.nickname.localeCompare(b.nickname, i18n.language);
+        });
+        Logger.getInstance().log(chineseName, englishName);
         return array.sort((a: FriendData, b: FriendData) => {
             return a.nickname.localeCompare(b.nickname, i18n.language);
         });
@@ -328,11 +347,11 @@ class MainContainer extends FriendContainer {
         }
         this.sortByName(result);
         const len = result.length;
-        if (len > 0) {
-            for (let i = 0; i < 100; i++) {
-                result.push(result[i % len]);
-            }
-        }
+        // if (len > 0) {
+        //     for (let i = 0; i < 100; i++) {
+        //         result.push(result[i % len]);
+        //     }
+        // }
         let title = "";
         let friendType = "";
         switch(type) {
@@ -358,7 +377,7 @@ class MainContainer extends FriendContainer {
         // this.friendList.setItems(this.showingFriends);
         this.friendTabel.setItems(this.showingFriends);
         if (title) this.titleText.setText(title);
-        this.friendNum.setText(`Number of ${friendType}: ${data.length}`);
+        this.friendNum.setText(`${friendType}: ${data.length}`);
     }
 
     public filterById(id: string) {
@@ -422,7 +441,7 @@ class MainContainer extends FriendContainer {
         followsTab.x = (fansTab.width + followsTab.width) * 0.5 + 0.67 * this.dpr;
 
         this.navigate = new NavigateContaienr(this.scene, this.width * 0.5 - 23 * this.dpr, 53 * this.dpr, 10 * this.dpr, 330 * this.dpr, this.dpr);
-        this.add([friendsTab, fansTab, followsTab, this.navigate]);
+        this.add([friendsTab, fansTab, followsTab]);
 
         this.channelGroup = new CheckboxGroup();
         this.channelGroup.on("selected", this.onSelectChannelHandler, this);
@@ -435,6 +454,8 @@ class MainContainer extends FriendContainer {
             item.on(PicFriendEvent.UNFOLLOW, this.onReqUnfollowFriendHandler, this);
             return item;
         }, new Handler(this, this.onSelectItemHandler), this.createCallback.bind(this));
+
+        this.add(this.navigate);
     }
 
     private onFtechPlayerHandler(friend: FriendData) {
@@ -633,15 +654,15 @@ class MenuRenderer implements IRenderer {
         switch(menudata.type) {
             case FriendChannel.NewFans:
                 this.icon.setFrame("new_fans");
-                this.text.text = "Fans";
+                this.text.text = i18n.t("friendlist.new_fans");
                 break;
             case FriendChannel.Blacklist:
                 this.icon.setFrame("black_list");
-                this.text.text = "Blacklist";
+                this.text.text = i18n.t("friendlist.blacklist");
                 break;
             case FriendChannel.NewFriend:
                 this.icon.setFrame("friend_add");
-                this.text.text = "Add Buddy";
+                this.text.text = i18n.t("friendlist.new_friend");
                 break;
         }
     }
