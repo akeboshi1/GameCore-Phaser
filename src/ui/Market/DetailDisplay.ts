@@ -138,11 +138,9 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
     this.setNearest();
     if (this.mKeepScale) {
-      this.mImage.displayWidth = this.width;
-      this.mImage.scaleY = this.mImage.scaleX;
-    } else {
-      this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
+      this.scale = this.width / this.mImage.displayWidth;
     }
+    this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     this.emit("show", this.mImage);
     if (this.complHandler) this.complHandler.run();
   }
