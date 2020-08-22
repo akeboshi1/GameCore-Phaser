@@ -1,8 +1,8 @@
-import "phaser";
+import "tooqinggamephaser";
 import "dragonBones";
 import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "phaser";
+import { Game } from "tooqinggamephaser";
 import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
 import { ConnectionService } from "../net/connection.service";
 import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
