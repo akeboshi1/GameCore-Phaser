@@ -5,6 +5,7 @@ import { Url } from "../utils/resUtil";
 import { Logger } from "../utils/log";
 import { BasicScene } from "./basic.scene";
 import { Font } from "../utils/font";
+import verion from "../../version";
 
 export class LoadingScene extends BasicScene {
   private mWorld: WorldService;
@@ -15,6 +16,7 @@ export class LoadingScene extends BasicScene {
   private progressText: Phaser.GameObjects.Text;
   private mRequestCom: boolean = false;
   private tipsText: string;
+
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -76,6 +78,11 @@ export class LoadingScene extends BasicScene {
       fontFamily: Font.DEFULT_FONT
     }
     ).setOrigin(0.5);
+
+    const debug = this.add.text(width - 4 * dpr, height - 4 * dpr, `v${verion} ${this.getDebug()}`, {
+      fontSize: 12 * dpr,
+      fontFamily: Font.DEFULT_FONT
+    }).setOrigin(1);
 
     this.checkSize(new Size(width, height));
     if (this.mCallback) {
@@ -140,6 +147,31 @@ export class LoadingScene extends BasicScene {
 
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+  }
+
+  private getDebug() {
+    let renderType = "WebGL";
+    const config = this.game.config;
+
+    if (config.renderType === Phaser.CANVAS) {
+      renderType = "Canvas";
+    } else if (config.renderType === Phaser.HEADLESS) {
+      renderType = "Headless";
+    }
+
+    const audioConfig = config.audio;
+    const deviceAudio = this.game.device.audio;
+
+    let audioType;
+
+    if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio)) {
+        audioType = "Web Audio";
+    } else if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData)) {
+        audioType = "No Audio";
+    } else {
+        audioType = "HTML5 Audio";
+    }
+    return `(${ renderType } | ${audioType})`;
   }
 
   private checkSize(size: Size) {
