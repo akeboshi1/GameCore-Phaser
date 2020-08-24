@@ -301,10 +301,19 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         const minute = Math.floor(time / 60000) % 60;
         const second = Math.floor(time / 1000) % 60;
         let text = "";
-        if (day > 0) text = `${day} Days ${this.stringFormat(hour)}:${this.stringFormat(minute)}`;
-        else if (hour > 0) text = `${this.stringFormat(hour)}:${this.stringFormat(minute)}`;
-        else if (minute > 0) text = `${this.stringFormat(minute)}`;
-        else text = `剩余${this.stringFormat(second)}`;
+        if (day > 0) {
+            text = `${day}  ${i18n.t("business_street.day")}`;
+            if (hour > 0 || minute > 0) {
+                text += `${this.stringFormat(hour)}:${this.stringFormat(minute)}`;
+            }
+        } else if (hour > 0) {
+            if (minute > 0) {
+                text = `${this.stringFormat(hour)}:${this.stringFormat(minute)}`;
+            } else {
+                text = `${this.stringFormat(hour)} ${i18n.t("business_street.hour")}`;
+            }
+        } else if (minute > 0) text = `${this.stringFormat(minute)} ${i18n.t("business_street.minute")}`;
+        else text = `${this.stringFormat(second)} ${i18n.t("business_street.second")}`;
         return text;
     }
     private stringFormat(num: number) {

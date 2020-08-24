@@ -736,7 +736,7 @@ export class FurniBagPanel extends BasePanel {
       this.dressAvatarIDS.push(item.id);
     }
     this.emit("querySaveAvatar", idsArr);
-    this.queryPackege();
+    // this.queryPackege();
     // }
   }
 
