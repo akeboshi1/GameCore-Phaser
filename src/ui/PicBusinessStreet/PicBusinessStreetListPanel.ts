@@ -195,8 +195,10 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
 
     private onCategoryHandler(data) {
         this.curCategoryType = data.categoryType;
-        if (this.subCategory !== undefined) this.queryHandler.runWith([this.curCategoryType, this.subCategory]);
-
+        if (this.subCategory !== undefined) {
+            const type = this.curCategoryType === CategoryType.popularity ? "popularity" : "praise";
+            this.queryHandler.runWith([type, this.subCategory]);
+        }
     }
 
     private onSubCategoryHandle(item) {
@@ -205,7 +207,8 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         item.changeDown();
         this.curSubCategoryItem = item;
         this.subCategory = data.type;
-        if (this.queryHandler) this.queryHandler.runWith([this.curCategoryType, this.subCategory]);
+        const type = this.curCategoryType === CategoryType.popularity ? "popularity" : "praise";
+        if (this.queryHandler) this.queryHandler.runWith([type, this.subCategory]);
     }
 
     private onSelectItemHandler(cell: PicStreetItem) {
