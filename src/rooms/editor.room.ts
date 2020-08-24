@@ -20,7 +20,7 @@ import { EditorCamerasManager } from "./cameras/editor.cameras.manager";
 import { EditorMossManager } from "./element/editor.moss.manager";
 import { DisplayObjectPool } from "./display-object.pool";
 import { EditorSkyBoxManager } from "./sky.box/editor.sky.box.manager";
-import { CamerasManager } from "./cameras/cameras.manager";
+import { LoadingScene } from "../scenes/loading";
 
 export interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
@@ -99,7 +99,8 @@ export class EditorRoom extends Room implements EditorRoomService {
         this.displayObjectPool = new DisplayObjectPool();
 
         // this.mWorld.game.scene.start(EditScene.name, { room: this });
-        this.mWorld.game.scene.add(EditScene.name, EditScene, true, { room: this });
+        this.mWorld.game.scene.add(EditScene.name, EditScene, false, { room: this });
+        this.mWorld.game.scene.start(EditScene.name, { room: this });
     }
 
     public startPlay() {
@@ -116,6 +117,9 @@ export class EditorRoom extends Room implements EditorRoomService {
             this.mSize.sceneWidth * zoom + camera.width,
             this.mSize.sceneHeight * zoom + camera.height
         );
+
+        const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+        if (loadingScene) loadingScene.sleep();
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         this.mCameraService.centerCameas();
