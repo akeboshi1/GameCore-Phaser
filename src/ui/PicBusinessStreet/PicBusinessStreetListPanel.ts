@@ -24,6 +24,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private rankHandler: Handler;
     private backHandler: Handler;
     private queryHandler: Handler;
+    private enterHandler: Handler;
     private secondaryPanel: SecondaryMenuPanel;
     private curCategoryType: CategoryType = CategoryType.popularity;
     private subCategory: string;
@@ -68,11 +69,12 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.gridtable.setItems(datas);
     }
 
-    public setHandler(history: Handler, rank: Handler, back: Handler, query: Handler) {
+    public setHandler(history: Handler, rank: Handler, back: Handler, query: Handler, enter: Handler) {
         this.historyHandler = history;
         this.rankHandler = rank;
         this.backHandler = back;
         this.queryHandler = query;
+        this.enterHandler = enter;
     }
 
     public resetMask() {
@@ -175,11 +177,16 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                     grid.add(cellContainer);
                 }
                 cellContainer.setData({ item });
-                cellContainer.setStoreData(item);
+                cellContainer.setStoreData(item, this.curCategoryType);
                 return cellContainer;
             },
         };
         const grid = new GameGridTable(this.scene, tableConfig);
+        grid.on("cellTap", (cell) => {
+            if (cell) {
+                this.onSelectItemHandler(cell);
+            }
+        });
         grid.layout();
         this.add(grid);
 
@@ -200,6 +207,12 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.subCategory = data.type;
         if (this.queryHandler) this.queryHandler.runWith([this.curCategoryType, this.subCategory]);
     }
+
+    private onSelectItemHandler(cell: PicStreetItem) {
+        const storeData = cell.storeData;
+        if (this.enterHandler) this.enterHandler.runWith(storeData.roomId);
+    }
+
     private onHistoryHandler() {
         if (this.historyHandler) this.historyHandler.run();
     }
@@ -214,7 +227,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
 }
 
 class PicStreetItem extends Phaser.GameObjects.Container {
-    public storeData: any;
+    public storeData: op_client.IEditModeRoom;
     private key: string;
     private key2: string;
     private dpr: number;
@@ -224,7 +237,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
     private praiseCount: Phaser.GameObjects.Text;
     private industryIcon: Phaser.GameObjects.Image;
     private bg: NineSlicePatch;
-
+    private praiseIcon: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, key2: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -254,23 +267,26 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.industryIcon = this.scene.make.image({ key: this.key2, frame: "entertainment_tag_s" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
         this.add(this.industryIcon);
-        const praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
-        praiseIcon.x = -posx - 80 * dpr;
-        this.add(praiseIcon);
-        this.praiseCount = this.scene.make.text({ x: praiseIcon.x + praiseIcon.width * 0.5 + 10 * dpr, y: praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
+        this.praiseIcon.x = -posx - 80 * dpr;
+        this.add(this.praiseIcon);
+        this.praiseCount = this.scene.make.text({ x: this.praiseIcon.x + this.praiseIcon.width * 0.5 + 10 * dpr, y: this.praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.add(this.praiseCount);
     }
 
-    public setStoreData(data: op_client.IEditModeRoom) {
+    public setStoreData(data: op_client.IEditModeRoom, categoriesType: CategoryType) {
         const industry = data.industry;
         const storeType = data.storeType;
         this.bg.setFrame(industry + "_bg");
         this.storeIcon.setTexture(this.key2, storeType + "_icon_s");
+        this.praiseIcon.setFrame(categoriesType === CategoryType.praise ? "praise" : "store_popularity");
         this.storeName.text = data.name;
         this.playerName.text = data.ownerName;
         this.praiseCount.text = data.praise + "";
         this.industryIcon.setFrame(industry + "_tag_s");
         this.storeData = data;
+        this.storeName.removeInteractive();
+        this.storeName.setInteractive();
     }
 }
 

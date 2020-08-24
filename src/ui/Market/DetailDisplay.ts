@@ -160,9 +160,9 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
 
   setNearest() {
-    // if (this.mImage) {
-    //   this.mImage.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-    // }
+    if (this.mImage) {
+      this.mImage.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+    }
   }
 
   setComplHandler(handler: Handler) {
@@ -187,7 +187,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     } else {
       this.mImage.setTexture(this.mUrl);
     }
-    this.setNearest();
     if (this.mKeepScale) {
       this.mImage.scale = 1;
       const scaleX = this.width / this.mImage.displayWidth;

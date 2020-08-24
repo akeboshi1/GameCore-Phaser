@@ -583,7 +583,7 @@
 		"restaurant_bg": {
 			"frame": {
 				"x": 100,
-				"y": 261,
+				"y": 134,
 				"w": 43,
 				"h": 179
 			},
@@ -900,9 +900,29 @@
 				"h": 56
 			}
 		},
-		"title": {
+		"store_popularity": {
 			"frame": {
 				"x": 296,
+				"y": 530,
+				"w": 47,
+				"h": 67
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 47,
+				"h": 67
+			},
+			"sourceSize": {
+				"w": 47,
+				"h": 67
+			}
+		},
+		"title": {
+			"frame": {
+				"x": 345,
 				"y": 530,
 				"w": 105,
 				"h": 9

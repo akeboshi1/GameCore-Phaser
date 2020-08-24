@@ -292,6 +292,8 @@ export default class PicBusinessStreetPanel extends BasePanel {
                 this.openMyStreet();
             }), new Handler(this, (storeby, storetype) => {
                 this.emit("querystreet", storeby, storetype);
+            }), new Handler(this, (roomid, password) => {
+                this.emit("queryenterroom", roomid, password);
             }));
         }
         this.content.add(this.picStreetListPanel);
