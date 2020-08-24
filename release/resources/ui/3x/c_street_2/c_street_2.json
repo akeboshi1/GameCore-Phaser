@@ -900,9 +900,29 @@
 				"h": 42
 			}
 		},
-		"title": {
+		"store_popularity": {
 			"frame": {
 				"x": 224,
+				"y": 398,
+				"w": 35,
+				"h": 50
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 35,
+				"h": 50
+			},
+			"sourceSize": {
+				"w": 35,
+				"h": 50
+			}
+		},
+		"title": {
+			"frame": {
+				"x": 261,
 				"y": 398,
 				"w": 79,
 				"h": 7
