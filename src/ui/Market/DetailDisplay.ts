@@ -32,7 +32,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       if (animation.length > 0) {
         this.loadElement(content);
       } else {
-        this.loadSprite(display.texturePath, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
+        this.loadUrl(Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
       }
     } else {
       this.loadUrl(display.texturePath, display.dataPath);
@@ -52,10 +52,17 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       const anis = [];
       const aniName = animation[0].node.name;
       for (const ani of animation) {
-          anis.push(new Animation(ani));
+        anis.push(new Animation(ani));
       }
       this.mFramesDisplay.once("initialized", () => {
         this.mFramesDisplay.play({ name: aniName, flip: false });
+        if (this.mKeepScale) {
+          const scaleX = this.width / this.mFramesDisplay.spriteWidth;
+          const scaleY = this.height / this.mFramesDisplay.spriteHeight;
+          this.mFramesDisplay.scale = scaleX > scaleY ? scaleY : scaleX;
+        } else {
+          this.mFramesDisplay.scale = 1;
+        }
       });
       this.mFramesDisplay.load(new FramesModel({
         animations: {
@@ -86,8 +93,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }));
     this.mDragonboneDisplay.scale = scale;
     this.add(this.mDragonboneDisplay);
-    if (this.mKeepScale)
-      this.scale = 1;
   }
 
   loadUrl(url: string, data?: string) {
@@ -123,9 +128,9 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       if (keepscale) {
         const scaleX = this.width / this.frameAni.width;
         const scaleY = this.height / this.frameAni.height;
-        this.scale = scaleX > scaleY ? scaleY : scaleX;
+        this.frameAni.scale = scaleX > scaleY ? scaleY : scaleX;
       } else {
-        this.scale = 1;
+        this.frameAni.scale = 1;
       }
     }));
     this.add(this.frameAni);
@@ -144,18 +149,20 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.add(this.mImage);
     this.emit("show", this.mImage);
     if (this.mKeepScale) {
+      this.mImage.scale = 1;
       const scaleX = this.width / this.mImage.displayWidth;
-      const scaleY = this.height / this.mImage.height;
-      this.scale = scaleX > scaleY ? scaleY : scaleX;
+      const scaleY = this.height / this.mImage.displayHeight;
+      this.mImage.scale = scaleX > scaleY ? scaleY : scaleX;
     } else {
+      this.mImage.scale = 1;
       this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     }
   }
 
   setNearest() {
-    if (this.mImage) {
-      this.mImage.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-    }
+    // if (this.mImage) {
+    //   this.mImage.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+    // }
   }
 
   setComplHandler(handler: Handler) {
@@ -182,9 +189,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
     this.setNearest();
     if (this.mKeepScale) {
+      this.mImage.scale = 1;
       const scaleX = this.width / this.mImage.displayWidth;
-      const scaleY = this.height / this.mImage.height;
-      this.scale = scaleX > scaleY ? scaleY : scaleX;
+      const scaleY = this.height / this.mImage.displayHeight;
+      this.mImage.scale = scaleX > scaleY ? scaleY : scaleX;
     } else {
       this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     }
@@ -207,5 +215,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       this.remove(this.frameAni);
       this.frameAni.destroy();
     }
+    this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
   }
 }

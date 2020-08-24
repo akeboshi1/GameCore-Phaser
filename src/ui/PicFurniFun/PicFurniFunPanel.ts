@@ -112,11 +112,10 @@ export class PicFurniFunPanel extends BasePanel {
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" }).setScale(1.3);
         this.closeBtn.setInteractive();
         this.content.add([this.titleimage, this.titleName, this.closeBtn]);
-        this.mDetailDisplay = new DetailDisplay(this.scene, true);
+        this.mDetailDisplay = new DetailDisplay(this.scene);
         this.mDetailDisplay.setTexture(this.key, "bg_f");
-        // this.mDetailDisplay.setNearest();
         this.mDetailDisplay.y = this.bgicon.y;// this.bgicon.height / 2;
-        // this.mDetailDisplay.scale = this.dpr * 0.8;
+        this.mDetailDisplay.scale = this.dpr;
         this.mDetailDisplay.setSize(72 * this.dpr, 72 * this.dpr);
         this.content.add(this.mDetailDisplay);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
