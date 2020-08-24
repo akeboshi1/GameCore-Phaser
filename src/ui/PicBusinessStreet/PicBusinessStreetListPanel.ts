@@ -285,7 +285,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.praiseIcon.setFrame(categoriesType === CategoryType.praise ? "praise" : "store_popularity");
         this.storeName.text = data.name;
         this.playerName.text = data.ownerName;
-        this.praiseCount.text = data.praise + "";
+        this.praiseCount.text = (categoriesType === CategoryType.praise ? data.praise : data.popularity) + "";
         this.industryIcon.setFrame(industry + "_tag_s");
         this.storeData = data;
         this.storeName.removeInteractive();
