@@ -52,13 +52,20 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       const anis = [];
       const aniName = animation[0].node.name;
       for (const ani of animation) {
+        ani.baseLoc = "0,0";
+        for (const layer of ani.layer) {
+          layer.offsetLoc = {x: 0, y: 0};
+        }
         anis.push(new Animation(ani));
       }
       this.mFramesDisplay.once("initialized", () => {
         this.mFramesDisplay.play({ name: aniName, flip: false });
+        const { spriteWidth, spriteHeight } = this.mFramesDisplay;
+        this.mFramesDisplay.x = -spriteWidth * 0.5;
+        this.mFramesDisplay.y = -spriteHeight * 0.5;
         if (this.mKeepScale) {
-          const scaleX = this.width / this.mFramesDisplay.spriteWidth;
-          const scaleY = this.height / this.mFramesDisplay.spriteHeight;
+          const scaleX = this.width / spriteWidth;
+          const scaleY = this.height / spriteHeight;
           this.mFramesDisplay.scale = scaleX > scaleY ? scaleY : scaleX;
         } else {
           this.mFramesDisplay.scale = 1;
