@@ -44,7 +44,7 @@
     "add": "Add",
     "remove": "Remove",
     "source": "Source:",
-    "all":"All"
+    "all": "All"
   },
   "player_info": {
     "title": "Personal Data",
@@ -148,7 +148,11 @@
     "onrank": "N/A",
     "history": "HISTORY",
     "ranking": "RANKING",
-    "rankreward": "REWARD"
+    "rankreward": "REWARD",
+    "day": "Days",
+    "hour": "Hour",
+    "minutes": "Minute",
+    "second": "Second"
   },
   "friendlist": {
     "title": "MY FRIEND",

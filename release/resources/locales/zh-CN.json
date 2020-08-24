@@ -148,7 +148,11 @@
     "onrank": "未上榜",
     "history": "历史记录",
     "ranking": "排行榜",
-    "rankreward": "奖励"
+    "rankreward": "奖励",
+    "day":"天",
+    "hour":"小时",
+    "minutes":"分钟",
+    "second":"秒"
   },
   "friendlist": {
     "title": "我的好友",
