@@ -115,7 +115,7 @@ export class PicFurniFunPanel extends BasePanel {
         this.mDetailDisplay = new DetailDisplay(this.scene);
         this.mDetailDisplay.setTexture(this.key, "bg_f");
         this.mDetailDisplay.y = this.bgicon.y;// this.bgicon.height / 2;
-        this.mDetailDisplay.scale = this.dpr;
+        this.mDetailDisplay.scale = this.dpr/this.scale;
         this.mDetailDisplay.setSize(72 * this.dpr, 72 * this.dpr);
         this.content.add(this.mDetailDisplay);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
