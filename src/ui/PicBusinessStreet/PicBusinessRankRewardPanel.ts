@@ -1,16 +1,13 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
 import { DynamicImage } from "../components/dynamic.image";
-import { NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;

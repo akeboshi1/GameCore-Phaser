@@ -311,8 +311,8 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.typeBg.setPosition(posx + this.typeBg.width * 0.5, posy + this.typeBg.height * 0.5 - 2 * dpr);
         this.typeTex = scene.make.text({ x: 0, y: 0, text: i18n.t("task.m"), style: { color: "#ffffff", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         this.typeTex.setOrigin(0.5).setPosition(this.typeBg.x - 1 * dpr, this.typeBg.y);
-        this.taskName = scene.make.text({ x: this.headIcon.x + 20 * dpr, y: -9 * dpr, text: "获得两把钥匙", style: { color: "#ffffff", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.taskDes = scene.make.text({ x: this.headIcon.x + 25 * dpr, y: 10 * dpr, text: "任务要求获得两把钥匙", style: { color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.taskName = scene.make.text({ x: this.headIcon.x + 20 * dpr, y: -9 * dpr, text: "", style: { color: "#ffffff", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.taskDes = scene.make.text({ x: this.headIcon.x + 25 * dpr, y: 10 * dpr, text: "", style: { color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.finish = scene.make.image({ key, frame: "done" });
         this.finish.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.finish.setPosition(width * 0.5 - 30 * dpr, 4 * dpr);
@@ -416,7 +416,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         if (questType === op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION) {
             typeTag[0] = "tag_main";
             typeTag[1] = i18n.t("task.m");
-            typeTag[2] = "【主线】";
+            typeTag[2] = `${i18n.t("task.main")}`;
             typeTag[3] = "main_bg";
             typeTag[4] = "#4C42C8";
             typeTag[5] = "#8780E0";
@@ -424,7 +424,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         } else if (questType === op_pkt_def.PKT_Quest_Type.QUEST_SIDE_MISSION) {
             typeTag[0] = "tag_side";
             typeTag[1] = i18n.t("task.s");
-            typeTag[2] = "【支线】";
+            typeTag[2] = i18n.t("task.side");
             typeTag[3] = "side_bg";
             typeTag[4] = "#CB0A1D";
             typeTag[5] = "#F4919B";
@@ -432,7 +432,7 @@ class TaskItem extends Phaser.GameObjects.Container {
         } else if (questType === op_pkt_def.PKT_Quest_Type.QUEST_DAILY_GOAL) {
             typeTag[0] = "tag_daly";
             typeTag[1] = i18n.t("task.d");
-            typeTag[2] = "【每日】";
+            typeTag[2] = i18n.t("task.daily");
             typeTag[3] = "daly_bg";
             typeTag[4] = "#866107";
             typeTag[5] = "#F1D56C";

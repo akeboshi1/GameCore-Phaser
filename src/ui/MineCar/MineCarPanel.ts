@@ -10,6 +10,7 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
+import { i18n } from "../../i18n";
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   // private mPanel: Phaser.GameObjects.Container;
@@ -374,8 +375,8 @@ export class MineCarPanel extends BasePanel {
     }
 
     new AlertView(this.scene, this.mWorld).show({
-      text: `您确定要丢弃 [color=#0157BC]${label.join("、")}[/color] 吗？`,
-      title: "丢弃",
+      text: i18n.t("minecar.confirmation", { name: `[color=#0157BC]${label.join("、")}[/color]` }),
+      title: i18n.t("minecar.discard"),
       oy: 302 * this.dpr * this.mWorld.uiScale,
       callback: () => {
         this.emit("discard", selected);

@@ -10,12 +10,10 @@ import { Font } from "../../utils/font";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
-import { Logger } from "../../utils/log";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { FramesModel } from "../../rooms/display/frames.model";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;

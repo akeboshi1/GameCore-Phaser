@@ -1,5 +1,4 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
@@ -9,8 +8,7 @@ import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButto
 import { i18n } from "../../i18n";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { Coin } from "../../utils/resUtil";
-import { op_def } from "pixelpai_proto";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_pkt_def } from "pixelpai_proto";
 
 export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
     private recommendedText: Phaser.GameObjects.Text;
@@ -110,7 +108,7 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
             this.coinImg = this.scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" });
             this.coinImg.setPosition(this.coinBg.x - this.coinImg.width * 0.5 - 15 * this.dpr, this.coinBg.y);
             this.add(this.coinImg);
-            this.coinCount = this.scene.make.text({ x: this.coinImg.x + this.coinImg.width * 0.5 + 10 * this.dpr, y: this.coinImg.y, text: "10000000", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0, 0.5);
+            this.coinCount = this.scene.make.text({ x: this.coinImg.x + this.coinImg.width * 0.5 + 10 * this.dpr, y: this.coinImg.y, text: "0", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0, 0.5);
             this.add(this.coinCount);
             this.describleText2 = this.scene.make.text({
                 x: 0, y: this.coinCount.y + 50 * this.dpr,

@@ -33,13 +33,13 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.roomlevel.setImageInfo(i18n.t("room_info.roomlevel"), UIAtlasKey.common2Key, this.getLevelImgs(level));
         const expvalue = `[color=#0D8288]${curExp}[/color]/${nexExp}`;
         this.expvalue.setTextInfo(i18n.t("room_info.expvalue"), expvalue);
-        this.popvalue.setTextInfo(i18n.t("room_info.popvalue"), "666");
+        this.popvalue.setTextInfo(i18n.t("room_info.popvalue"), data.popularity + "");
         this.goodvalue.setTextInfo(i18n.t("room_info.goodvalue"), data.praise + "");
         if (data.roomType === "store") {
             this.compviness.visible = true;
             this.turnover.visible = true;
-            this.compviness.setTextInfo(i18n.t("room_info.compveness"), "16525");
-            this.turnover.setTextInfo(i18n.t("room_info.turnover"), "68");
+            this.compviness.setTextInfo(i18n.t("room_info.compveness"), data.competitiveness + "");
+            this.turnover.setTextInfo(i18n.t("room_info.turnover"), data.turnover + "");
         } else {
             this.compviness.visible = false;
             this.turnover.visible = false;

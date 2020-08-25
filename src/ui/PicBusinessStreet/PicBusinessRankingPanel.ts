@@ -112,21 +112,15 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
 
     private onScrollValueChange(value: number) {
         if (this.gameScroll) {
-            const rightBound = this.gameScroll.bounds[1];
-            const interValue = rightBound - value;
-            const index = Math.floor((interValue + 66 * this.dpr) / (133 * this.dpr + 20 * this.dpr));
-            const allLen = this.gameScroll.getItemList().length;
-            if (index >= 0 && index < allLen - 1) {
-                const item = <PicRankingItem>this.gameScroll.getItemAt(index + 1);
-                const dis = item.getWorldTransformMatrix().tx - this.getWorldTransformMatrix().tx;
-                const radio = 1 - Math.abs(dis) / (133 * this.dpr / 2);
+            const cellWidth = 133 * this.dpr;
+            const tempRadus = (this.gameScroll.width - cellWidth) * 0.25;
+            const items = this.gameScroll.getItemList();
+            for (const item of items) {
+                let dis = Math.abs((<PicRankingItem>item).getWorldTransformMatrix().tx - this.getWorldTransformMatrix().tx) - cellWidth * 0.25;
+                if (dis < 0) dis = 0;
+                const radio = 1 - Math.abs(dis) / tempRadus;
                 if (item instanceof PicRankingItem)
                     item.setRadio(radio);
-                const before = <PicRankingItem>this.gameScroll.getItemAt(index);
-                if (before instanceof PicRankingItem)
-                    before.setRadio(-1);
-                const after = <PicRankingItem>this.gameScroll.getItemAt(index + 2);
-                if (after && after instanceof PicRankingItem) after.setRadio(-1);
             }
             this.gameScroll.Sort(true, false);
         }
@@ -150,22 +144,22 @@ export class PicBusinessRankingPanel extends Phaser.GameObjects.Container {
                         value += 10 * this.dpr;
                         this.gameScroll.setValue(value);
                         if (value >= max) {
-                            this.gameScroll.setValue(value);
+                            this.gameScroll.setValue(max);
                             clearInterval(this.timerID);
                             this.timerID = undefined;
                         }
-                    }, 30);
+                    }, 20);
                 } else {
                     const mix = value - Math.abs(dis);
                     this.timerID = setInterval(() => {
                         value -= 10 * this.dpr;
                         this.gameScroll.setValue(value);
                         if (value <= mix) {
-                            this.gameScroll.setValue(value);
+                            this.gameScroll.setValue(mix);
                             clearInterval(this.timerID);
                             this.timerID = undefined;
                         }
-                    }, 30);
+                    }, 20);
                 }
             }
             this.gameScroll.Sort(true, false);
@@ -299,6 +293,7 @@ class PicRankingItem extends Phaser.GameObjects.Container {
 
     public setRadio(radio: number) {
         let type = 1;
+        if (radio > 1) radio = 1;
         if (radio > 0) {
             type = 2;
         }
@@ -332,6 +327,12 @@ class PicRankingItem extends Phaser.GameObjects.Container {
             storefont = 10 * this.dpr;
             storeiconres = imgname + "_rank_icon_s";
             curWidth = 133 * this.dpr;
+            this.storebg.setConfig({
+                left: 8 * this.dpr,
+                top: 0 * this.dpr,
+                right: 8 * this.dpr,
+                bottom: 0 * this.dpr
+            });
         } else {
             bgres = imgname + "_rank_bg_m";
             titleFont = 18 * this.dpr;
@@ -341,6 +342,12 @@ class PicRankingItem extends Phaser.GameObjects.Container {
             storefont = 12 * this.dpr;
             storeiconres = imgname + "_rank_icon_m";
             curWidth = 163 * this.dpr;
+            this.storebg.setConfig({
+                left: 11 * this.dpr,
+                top: 0 * this.dpr,
+                right: 11 * this.dpr,
+                bottom: 0 * this.dpr
+            });
         }
         ratio = curWidth / smallWidth;
         this.radio = ratio;

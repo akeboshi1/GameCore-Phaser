@@ -187,7 +187,7 @@ export class ComposePanel extends BasePanel {
         const tipsName = this.scene.make.text({
             x: 0,
             y: -materialConHeight * 0.5 + 12 * this.dpr,
-            text: "蓝矿石",
+            text: "",
             style: {
                 color: "#844ED5",
                 fontSize: 13 * this.dpr,
@@ -202,7 +202,7 @@ export class ComposePanel extends BasePanel {
         const tipsText = this.scene.make.text({
             x: 0,
             y: -materialConHeight * 0.5 + 12 * this.dpr,
-            text: "的肌肤委屈饿换热器我和佛前",
+            text: "",
             style: {
                 color: "#333333",
                 fontSize: 13 * this.dpr,
@@ -347,7 +347,8 @@ export class ComposePanel extends BasePanel {
         if (this.mSelectItemData) {
             const content = {
                 text: [{
-                    text: `您确定要合成${this.mSelectItemData.productName}吗？`
+                    // text: `您确定要合成${this.mSelectItemData.productName}吗？`
+                    text: i18n.t("compose.confirmation", { name: this.mSelectItemData.productName})
                 }],
                 title: [{
                     text: i18n.t("compose.synthesis")

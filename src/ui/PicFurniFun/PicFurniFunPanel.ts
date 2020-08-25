@@ -1,17 +1,16 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
-import { op_client, op_gameconfig } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { Url, Coin } from "../../utils/resUtil";
 import { i18n } from "../../i18n";
-import { BBCodeText, Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
+import { BBCodeText, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { Element } from "../../rooms/element/element";
 import { DetailDisplay } from "../Market/DetailDisplay";
-import { IFramesModel, FramesModel } from "../../rooms/display/frames.model";
+import { FramesModel } from "../../rooms/display/frames.model";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
     private confirmBtn: NineSliceButton;
@@ -112,11 +111,10 @@ export class PicFurniFunPanel extends BasePanel {
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" }).setScale(1.3);
         this.closeBtn.setInteractive();
         this.content.add([this.titleimage, this.titleName, this.closeBtn]);
-        this.mDetailDisplay = new DetailDisplay(this.scene, true);
+        this.mDetailDisplay = new DetailDisplay(this.scene);
         this.mDetailDisplay.setTexture(this.key, "bg_f");
-        // this.mDetailDisplay.setNearest();
         this.mDetailDisplay.y = this.bgicon.y;// this.bgicon.height / 2;
-        // this.mDetailDisplay.scale = this.dpr * 0.8;
+        this.mDetailDisplay.scale = this.dpr/this.scale;
         this.mDetailDisplay.setSize(72 * this.dpr, 72 * this.dpr);
         this.content.add(this.mDetailDisplay);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
@@ -172,7 +170,7 @@ export class PicFurniFunPanel extends BasePanel {
         });
         tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);
         this.tipsbg = tipsbg;
-        const tipsText = new BBCodeText(this.scene, -28 * this.dpr, -tipsHeight + 60 * this.dpr, "微软我让他委任他为回复", {
+        const tipsText = new BBCodeText(this.scene, -28 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
             color: "#333333",
             fontSize: 13 * this.dpr,
             fontFamily: Font.DEFULT_FONT,

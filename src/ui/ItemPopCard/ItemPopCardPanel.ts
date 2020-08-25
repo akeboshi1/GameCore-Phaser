@@ -64,18 +64,6 @@ export class ItemPopCardPanel extends BasePanel {
     this.mCloseBtn.x = centerX;
     this.mCloseBtn.y = centerY + this.mCardContainer.height / 2 + 48 * this.dpr;
 
-    // this.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    // this.mDetailDisplay.scale = 1 / scale;
-
-    // this.mCloseBtn.x = centerX;
-    // this.mCloseBtn.y = centerY;
-
-    // const graphics = this.scene.make.graphics(undefined, false);
-    // graphics.fillStyle(0xFF9900, 0.7);
-    // graphics.fillRect(0, 0, centerX, centerY);
-    // this.add(graphics);
-
-    // this.setSize(width, height);
     super.resize(w, h);
   }
 
@@ -198,14 +186,6 @@ export class ItemPopCardPanel extends BasePanel {
   }
 
   private onPointerNickNameHandler() {
-    // if (this.mNickNameDown) {
-    //   copy(this.mNickName.text);
-
-    //   const content = {
-    //     noticeContext: "复制名字成功"
-    //   };
-    //   this.mWorld.emitter.emit(MessageType.SHOW_NOTICE, { content });
-    // }
     clearTimeout(this.mPressTime);
     this.mNickNameDown = false;
   }

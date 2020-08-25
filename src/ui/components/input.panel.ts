@@ -17,7 +17,7 @@ export class InputPanel extends Phaser.Events.EventEmitter {
         this.mBackground = scene.add.graphics();
         this.mBackground.fillStyle(0x0, 0.6);
         this.mBackground.fillRect(0, 0, width, height).setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-        this.mTextArea = this.scene.add.text(width / 2, height, "请问人情味人情味请问热情大方给我答复", { fontSize: 11 * world.uiRatio, bold: true, fontFamily: Font.DEFULT_FONT, color: "#356EE3" }).setOrigin(1, 0);
+        this.mTextArea = this.scene.add.text(width / 2, height, "", { fontSize: 11 * world.uiRatio, bold: true, fontFamily: Font.DEFULT_FONT, color: "#356EE3" }).setOrigin(1, 0);
         this.mInput = (<any>scene.add).rexInputText(6 * world.uiRatio, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
             fontSize: `${20 * world.uiRatio}px`,
             color: "#0",

@@ -1,6 +1,7 @@
 import { HttpService } from "../net/http.service";
 import { WorldService } from "../game/world.service";
 import { AlertView, Buttons } from "../ui/components/alert.view";
+import { i18n } from "../i18n";
 
 /**
  * 每5min发送一次心跳包
@@ -82,7 +83,7 @@ export class HttpClock {
             text,
             callback,
             btns: Buttons.Ok,
-            title: "提示"
+            title: i18n.t("common.tips")
         });
     }
 

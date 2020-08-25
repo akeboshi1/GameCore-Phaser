@@ -217,9 +217,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mEffectManager = new EffectManager(this);
         if (this.scene) {
             const camera = this.scene.cameras.main;
-            setTimeout(() => {
-                camera.flash(6000, 1, 1, 1, true, undefined, this.scene);
-            }, 6000);
+            // setTimeout(() => {
+            //     camera.flash(6000, 1, 1, 1, true, undefined, this.scene);
+            // }, 6000);
             this.mCameraService.camera = camera;
             const padding = 199 * this.mScaleRatio;
             this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
@@ -506,6 +506,21 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         switch (state.name) {
             case "skyBoxAnimation":
                 this.mSkyboxManager.setState(state);
+                break;
+            case "setCameraBounds":
+                if (this.mCameraService) {
+                    const bounds = state.packet;
+                    if (!bounds || !bounds.width || !bounds.height) {
+                        Logger.getInstance().log("setCameraBounds error", bounds);
+                        return;
+                    }
+                    let { x, y, width, height } = bounds;
+                    x *= this.mScaleRatio;
+                    y *= this.mScaleRatio;
+                    width *= this.mScaleRatio;
+                    height *= this.mScaleRatio;
+                    this.mCameraService.setBounds(x, y, width, height);
+                }
                 break;
         }
     }

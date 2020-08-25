@@ -1,13 +1,11 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { i18n } from "../../i18n";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText";
 import { Font } from "../../utils/font";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import i18next from "i18next";
 
 export class FriendInvitePanel extends BasePanel {
     private bg: Phaser.GameObjects.Graphics;
@@ -79,7 +77,7 @@ export class FriendInvitePanel extends BasePanel {
             clearInterval(this.interval);
         }
         this.x = -this.width;
-        this.text.text = `[color=#FFFF00]1323[/color] focus on you`;
+        this.text.text = `[color=#FFFF00][/color]`;
         this.countdown = 10;
         this.setAgressText();
         this.tween = this.scene.tweens.add({
