@@ -1,8 +1,48 @@
 {
 	"frames": {
-		"chat_icon": {
+		"chat_Input": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 120,
+				"h": 137
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 120,
+				"h": 137
+			},
+			"sourceSize": {
+				"w": 120,
+				"h": 137
+			}
+		},
+		"chat_Input_bg": {
+			"frame": {
+				"x": 123,
+				"y": 1,
+				"w": 21,
+				"h": 184
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 21,
+				"h": 184
+			},
+			"sourceSize": {
+				"w": 21,
+				"h": 184
+			}
+		},
+		"chat_icon": {
+			"frame": {
+				"x": 146,
 				"y": 1,
 				"w": 187,
 				"h": 182
@@ -20,10 +60,30 @@
 				"h": 182
 			}
 		},
+		"chat_quick_2": {
+			"frame": {
+				"x": 1,
+				"y": 185,
+				"w": 119,
+				"h": 106
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 119,
+				"h": 106
+			},
+			"sourceSize": {
+				"w": 119,
+				"h": 106
+			}
+		},
 		"emoji": {
 			"frame": {
-				"x": 190,
-				"y": 1,
+				"x": 146,
+				"y": 185,
 				"w": 175,
 				"h": 174
 			},
@@ -42,7 +102,7 @@
 		},
 		"horn_icon": {
 			"frame": {
-				"x": 367,
+				"x": 335,
 				"y": 1,
 				"w": 265,
 				"h": 226
@@ -62,7 +122,7 @@
 		},
 		"more_btn": {
 			"frame": {
-				"x": 1,
+				"x": 323,
 				"y": 229,
 				"w": 159,
 				"h": 158
@@ -82,8 +142,8 @@
 		},
 		"scroll_btn": {
 			"frame": {
-				"x": 162,
-				"y": 229,
+				"x": 602,
+				"y": 1,
 				"w": 109,
 				"h": 112
 			},
@@ -102,8 +162,8 @@
 		},
 		"title_bg": {
 			"frame": {
-				"x": 634,
-				"y": 1,
+				"x": 602,
+				"y": 115,
 				"w": 2,
 				"h": 54
 			},
@@ -127,7 +187,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 637,
+			"w": 712,
 			"h": 388
 		},
 		"scale": "1"

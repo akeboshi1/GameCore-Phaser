@@ -139,7 +139,7 @@
     "choosestorelike": "Choose store type",
     "street": "All Stores",
     "back": "BACK",
-    "history_title": "LAST ${} STORES VISITED",
+    "history_title": "LAST {{name}} STORES VISITED",
     "ranking_list": "RANKING",
     "rank_reward": "Reward",
     "savings": "D: Savings",

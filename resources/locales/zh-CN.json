@@ -139,7 +139,7 @@
     "choosestorelike": "选择喜欢的商店",
     "street": "商业街",
     "back": "返回",
-    "history_title": "最近参观的 ${} 个店铺",
+    "history_title": "最近参观的 {{name}} 个店铺",
     "ranking_list": "排行榜列表",
     "rank_reward": "排行榜奖励",
     "savings": "存款金额",

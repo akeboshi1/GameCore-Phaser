@@ -88,7 +88,11 @@ export class Animation implements IAnimationData {
         ani.walkableArea = this.arrayToString(this.mWalkableArea, ",", "&");
         ani.collisionArea = this.arrayToString(this.mCollisionArea, ",", "&");
         ani.interactiveArea = this.mInteractiveArea;
-        ani.layer = this.mLayer;
+        const layers = [];
+        for (const layer of this.mLayer) {
+            layers.push(op_gameconfig_01.AnimationLayer.create(layer));
+        }
+        ani.layer = layers;
         ani.mountLayer = this.mMountLayer;
         return ani;
     }
