@@ -287,7 +287,7 @@ export default class CharacterInfoPanel extends BasePanel {
             this.mSkillGrideTable.setColumnCount(3);
             this.isOwner = true;
         } else {
-            const remark = (data.remark ? data.remark : "备注好友昵称");
+            const remark = (data.remark ? data.remark : i18n.t("player_info.note_nickname"));
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname + ` (${remark})`);
             this.idText.setText(this.getRichLabel("I   D") + spaceOffset + cid);
             this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);

@@ -1,6 +1,3 @@
-import { CheckboxGroup } from "../components/checkbox.group";
-import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
-import { IPatchesConfig } from "../../../lib/rexui/lib/ui/interface/baseUI/Patches.config";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";

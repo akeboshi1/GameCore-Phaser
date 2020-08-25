@@ -6,6 +6,7 @@ import { PicaChat } from "./PicaChat";
 import { op_client, op_def } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { IElement } from "../../rooms/element/element";
+import { i18n } from "../../i18n";
 
 export class PicaChatMediator extends BaseMediator {
     public static NAME: string = "PicaChatMediator";
@@ -80,7 +81,7 @@ export class PicaChatMediator extends BaseMediator {
             speaker = `${player.model.nickname}`;
         } else {
             if (content.chatSenderid) {
-                speaker = "神秘人";
+                speaker = i18n.t("chat.mystery");
             }
         }
         let color = "#ffffff";
@@ -110,11 +111,11 @@ export class PicaChatMediator extends BaseMediator {
     private getChannel(channel: op_def.ChatChannel) {
         switch (channel) {
             case op_def.ChatChannel.CurrentScene:
-                return "当前";
+                return i18n.t("chat.current");
             case op_def.ChatChannel.World:
-                return "世界";
+                return i18n.t("chat.world");
             default:
-                return "系统";
+                return i18n.t("chat.system");
         }
     }
 

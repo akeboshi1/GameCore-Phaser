@@ -3,6 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { i18n } from "../../i18n";
 
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";
@@ -71,7 +72,7 @@ export class AlertView extends BasePanel {
         title.y = -bg.height / 2;
 
         this.mTitleLabel = this.scene.make.text({
-            text: "丢弃",
+            text: i18n.t("common.tips"),
             style: {
                 fontFamily: Font.DEFULT_FONT,
                 fontSize: 12 * this.dpr * zoom,
@@ -91,7 +92,7 @@ export class AlertView extends BasePanel {
         });
         this.mContent.setOrigin(0.5, 0.5);
 
-        this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, this.mOkText || "确定");
+        this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, this.mOkText || i18n.t("common.confirm"));
         this.mOkBtn.setTextStyle({
             color: "#905B06",
             fontFamily: Font.DEFULT_FONT,
@@ -101,7 +102,7 @@ export class AlertView extends BasePanel {
         this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
         this.mOkBtn.on("Tap", this.onOkHandler, this);
 
-        this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, "取消");
+        this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, i18n.t("common.cancel"));
         this.mCancelBtn.setTextStyle({
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom

@@ -13,7 +13,6 @@ import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
 import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
 import { CheckboxGroup } from "../components/checkbox.group";
-import { Logger } from "../../utils/log";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
@@ -261,35 +260,6 @@ class FriendContainer extends Container {
     }
 
     protected sortByName(array: FriendData[]) {
-        // const chinese = ["啊", "把", "拆", "打", "厄", "发", "尬", "哈", "几", "卡", "拉", "马", "那", "噢", "叭", "七", "呥", "卅", "它", "瓦", "夕", "ㄚ", "杂"];
-        // const english = [];
-        // const chineseName: FriendData[] = [];
-        // const englishName: FriendData[] = [];
-        // for (const name of array) {
-        //     const code = name.nickname.charCodeAt(0);
-        //     if (code >= 0x4E00 && code <= 0x9FA5) {
-        //         chineseName.push(name);
-        //     } else {
-        //         englishName.push(name);
-        //     }
-        // }
-        // chineseName.sort((a: FriendData, b: FriendData) => {
-        //     return a.nickname.localeCompare(b.nickname, i18n.language);
-        // });
-
-        // englishName.sort((a: FriendData, b: FriendData) => {
-        //     return a.nickname.localeCompare(b.nickname, i18n.language);
-        // });
-        // for (const f of chineseName) {
-        //     for (let i = 0; i < chinese.length; i++) {
-        //         const index = f.nickname.localeCompare(chinese[i]);
-        //         if (index === -1) {
-        //             f.username = (i).toString();
-        //             break;
-        //         }
-        //     }
-        // }
-        // Logger.getInstance().log(chineseName, englishName);
         return array.sort((a: FriendData, b: FriendData) => {
             return a.nickname.localeCompare(b.nickname, i18n.language);
         });
@@ -356,12 +326,6 @@ class MainContainer extends FriendContainer {
             if (target) result.push({ type, id: target._id, nickname: target.nickname});
         }
         this.sortByName(result);
-        const len = result.length;
-        // if (len > 0) {
-        //     for (let i = 0; i < 100; i++) {
-        //         result.push(result[i % len]);
-        //     }
-        // }
         let title = "";
         let friendType = "";
         switch(type) {
@@ -450,7 +414,7 @@ class MainContainer extends FriendContainer {
         friendsTab.x = (-fansTab.width - friendsTab.width) * 0.5 - 0.67 * this.dpr;
         followsTab.x = (fansTab.width + followsTab.width) * 0.5 + 0.67 * this.dpr;
 
-        this.navigate = new NavigateContaienr(this.scene, this.width * 0.5 - 23 * this.dpr, 53 * this.dpr, 10 * this.dpr, 330 * this.dpr, this.dpr);
+        // this.navigate = new NavigateContaienr(this.scene, this.width * 0.5 - 23 * this.dpr, 53 * this.dpr, 10 * this.dpr, 330 * this.dpr, this.dpr);
         this.add([friendsTab, fansTab, followsTab]);
 
         this.channelGroup = new CheckboxGroup();
@@ -465,7 +429,7 @@ class MainContainer extends FriendContainer {
             return item;
         }, new Handler(this, this.onSelectItemHandler), this.createCallback.bind(this));
 
-        this.add(this.navigate);
+        // this.add(this.navigate);
     }
 
     private onFtechPlayerHandler(friend: FriendData) {
@@ -485,12 +449,6 @@ class MainContainer extends FriendContainer {
             return;
         }
         this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
-        // const data = this.friendDatas.get(this.channelGroup.selectedIndex);
-        // if (!data) {
-        //     this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
-        // } else {
-        //     this.showFriend(this.channelGroup.selectedIndex, data);
-        // }
     }
 
     private onSelectItemHandler(item) {
@@ -537,21 +495,20 @@ class MainContainer extends FriendContainer {
     }
 
     private createCallback(cell) {
-        const table = cell.parent;
-        if (table) {
-            let rowIdx = table.heightToRowIndex(-cell.parentContainer.tableOY);
-            if (rowIdx < 0) {
-                rowIdx = 0;
-            }
-            const cellIdx = table.colRowToCellIndex(0, rowIdx);
-            const firstCell = table.getCell(cellIdx);
+        // const table = cell.parent;
+        // if (table) {
+        //     let rowIdx = table.heightToRowIndex(-cell.parentContainer.tableOY);
+        //     if (rowIdx < 0) {
+        //         rowIdx = 0;
+        //     }
+        //     const cellIdx = table.colRowToCellIndex(0, rowIdx);
+        //     const firstCell = table.getCell(cellIdx);
 
-            if (firstCell) {
-                if (firstCell.container && firstCell.container.itemData) this.navigate.checkSlider(firstCell.container.itemData.nickname);
-                else this.navigate.checkSlider("");
-            }
-            // if (firstCell.container) Logger.getInstance().log("index: ", cellIdx, firstCell.container.itemData);
-        }
+        //     if (firstCell) {
+        //         if (firstCell.container && firstCell.container.itemData) this.navigate.checkSlider(firstCell.container.itemData.nickname);
+        //         else this.navigate.checkSlider("");
+        //     }
+        // }
     }
 }
 

@@ -12,7 +12,7 @@ import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
 import { TextButton } from "../components/TextButton";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client, } from "pixelpai_proto";
 
 export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
@@ -260,9 +260,9 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.storeIcon = new DynamicImage(this.scene, iconbg.x, 0);
         this.add(this.storeIcon);
         const storeX = iconbg.x + iconbg.width * 0.5 + 10 * dpr;
-        this.storeName = this.scene.make.text({ x: storeX, y: posy + 10 * dpr, text: "Restaurant", style: { color: "#FFE11A", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.storeName = this.scene.make.text({ x: storeX, y: posy + 10 * dpr, text: "", style: { color: "#FFE11A", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.storeName);
-        this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "Savings: 13000", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
+        this.playerName = this.scene.make.text({ x: storeX, y: this.storeName.y + this.storeName.height * 0.5 + 10 * dpr, text: "", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         this.add(this.playerName);
         this.industryIcon = this.scene.make.image({ key: this.key2, frame: "entertainment_tag_s" });
         this.industryIcon.x = this.width * 0.5 - this.industryIcon.width * 0.5;
@@ -270,7 +270,7 @@ class PicStreetItem extends Phaser.GameObjects.Container {
         this.praiseIcon = this.scene.make.image({ key: key2, frame: "praise" });
         this.praiseIcon.x = -posx - 80 * dpr;
         this.add(this.praiseIcon);
-        this.praiseCount = this.scene.make.text({ x: this.praiseIcon.x + this.praiseIcon.width * 0.5 + 10 * dpr, y: this.praiseIcon.y, text: "66666666", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.praiseCount = this.scene.make.text({ x: this.praiseIcon.x + this.praiseIcon.width * 0.5 + 10 * dpr, y: this.praiseIcon.y, text: "", style: { color: "#ffffff", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.add(this.praiseCount);
     }
 

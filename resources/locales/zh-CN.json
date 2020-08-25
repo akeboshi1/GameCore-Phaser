@@ -44,7 +44,9 @@
     "sold": "售出",
     "add": "添加",
     "source": "来源：",
-    "all":"全部"
+    "all":"全部",
+    "search": "搜索",
+    "tips": "提示"
   },
   "player_info": {
     "title": "信息详情",
@@ -65,13 +67,15 @@
     "birthday": "生   日",
     "city": "地   区",
     "signature": "个性签名",
-    "input_signature": "填写个性签名获得别人关注哦！"
+    "input_signature": "填写个性签名获得别人关注哦！",
+    "note_nickname": "备注好友昵称"
   },
   "compose": {
     "title": "合成",
     "make": "合成",
     "needMaterials": "合成所需材料",
-    "synthesis": "合成"
+    "synthesis": "合成",
+    "confirmation": "确认要合成{{name}}吗？"
   },
   "minesettle": {
     "settle": "获得物品",
@@ -95,7 +99,10 @@
     "rewards": "任务奖励：",
     "collect_materials": "收集物资：",
     "submit_task": "提交任务",
-    "task_quest": "任务要求："
+    "task_quest": "任务要求：",
+    "main": "【主线】",
+    "side": "【支线】",
+    "daily": "【每日】"
   },
   "furni_unlock": {
     "unlock": "立即解锁",
@@ -183,5 +190,19 @@
     "coin": "银币",
     "diamond": "钻石",
     "gold_coin": "金币"
+  },
+  "create_role": {
+    "enter_nick": "请输入昵称",
+    "commit": "提 交"
+  },
+  "chat": {
+    "mystery": "神秘人",
+    "world": "世界",
+    "current": "当前",
+    "system": "系统"
+  },
+  "minecar": {
+    "discard": "丢弃",
+    "confirmation": "您确定要丢弃 {{name}} 吗?"
   }
 }

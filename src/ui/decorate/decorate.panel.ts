@@ -196,11 +196,6 @@ export class DecoratePanel extends BasePanel {
 
         const zoom = this.scale;
 
-        // this.add(this.mMenuGroup);
-        // this.mMenuGroup.addMultiple([this.mOkBtn, this.mTurnBtn, this.mRecycleBtn, this.mCancelBtn])
-
-        // this.mMainMenus = ;
-        // this.mSubMenus = ;
         this.add([this.mMenuContainer, this.mSubMenus]);
         this.mMenuContainer.add([this.mOkBtn, this.mTurnBtn, this.mRecycleBtn, this.mCancelBtn]);
         this.mSubMenus.add([this.mHorizontalBtn, this.mMoveBtn, this.mRepeatBtn, this.mExtendBtn]);
@@ -236,54 +231,10 @@ export class DecoratePanel extends BasePanel {
             this.mOkBtn.setTint(0x666666);
         }
 
-        // this.mControllContainer.add([border, this.mTurnBtn, this.mRecycleBtn, this.mConfirmBtn]);
         super.init();
 
         this.setElement(this.mDisplayObject);
     }
-
-    // protected register() {
-    //     if (!this.mInitialized) {
-    //         return;
-    //     }
-    //     this.mCancelBtn.on("pointerup", this.onCancelHandler, this);
-    //     this.mOkBtn.on("pointerup", this.onAddHandler, this);
-    //     this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
-    //     this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
-    //     this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
-    //     this.mRepeatBtn.on("pointerup", this.onShowRepeatHandler, this);
-    //     this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
-    //     this.mMoveMenuContainer.register();
-    //     this.mMoveMenuContainer.on("move", this.onMoveHandler, this);
-    //     this.mRepeatMenuContainer.register();
-    //     this.mRepeatMenuContainer.on("move", this.onRepeatHandler, this);
-    //     this.mRepeatMenuContainer.on("hold", this.onHoldRepeatHandler, this);
-    //     // this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
-    //     // this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
-    //     // this.mOkBtn.on("pointerup", this.onPutHandler, this);
-    // }
-
-    // protected unregister() {
-    //     if (!this.mInitialized) {
-    //         return;
-    //     }
-    //     this.mCancelBtn.off("pointerup", this.onCancelHandler, this);
-    //     this.mOkBtn.off("pointerup", this.onAddHandler, this);
-    //     this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
-    //     this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
-    //     this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
-    //     this.mRepeatBtn.off("pointerup", this.onShowRepeatHandler, this);
-    //     this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
-    //     this.mMoveMenuContainer.off("move", this.onMoveHandler, this);
-    //     this.mMoveMenuContainer.unRegister();
-    //     this.mRepeatMenuContainer.off("move", this.onRepeatHandler, this);
-    //     this.mRepeatMenuContainer.off("hold", this.onHoldRepeatHandler, this);
-    //     this.mRepeatMenuContainer.unRegister();
-
-    //     // this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
-    //     // this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
-    //     // this.mOkBtn.off("pointerup", this.onPutHandler, this);
-    // }
 
     private onLeftUpHandler() {
         if (!this.mDisplayObject) {
@@ -424,37 +375,10 @@ export class DecoratePanel extends BasePanel {
             tileHeight: miniSize.tileHeight / 2,
         };
 
-        // const reference = ele.getElement("reference");
-        // if (!reference) {
-        //     return;
-        // }
         const sprite = ele.model;
         const pos = Position45.transformTo90(new Pos(cols - sprite.currentCollisionPoint.y, rows - sprite.currentCollisionPoint.x), position);
         this.offset.y = pos.y;
 
-        // let pos = Position45.transformTo90(new Pos(cols, (rows / 2)), position);
-        // if (this.mArrow5) {
-        //     this.mArrow5.x = pos.x + reference.x;
-        //     this.mArrow5.y = pos.y + reference.y;
-        // }
-
-        // pos = Position45.transformTo90(new Pos((cols / 2), rows), position);
-        // if (this.mArrow3) {
-        //     this.mArrow3.x = pos.x - this.mArrow3.width + reference.x;
-        //     this.mArrow3.y = pos.y + reference.y;
-        // }
-
-        // pos = Position45.transformTo90(new Pos(0, (rows / 2)), position);
-        // if (this.mArrow1) {
-        //     this.mArrow1.x = pos.x - this.mArrow1.width + reference.x;
-        //     this.mArrow1.y = pos.y - this.mArrow1.height + reference.y;
-        // }
-
-        // pos = Position45.transformTo90(new Pos((cols / 2), 0), position);
-        // if (this.mArrow7) {
-        //     this.mArrow7.x = pos.x + reference.x;
-        //     this.mArrow7.y = pos.y - this.mArrow7.height + reference.y;
-        // }
     }
 
     private onTurnHandler() {
@@ -579,23 +503,6 @@ class MoveMenu extends Phaser.GameObjects.Container {
         }, false);
         this.setSize(bg.displayWidth, bg.displayHeight);
 
-        // this.mArrow1 = scene.make.image({
-        //     key,
-        //     frame: "arrow_1.png"
-        // }, false).setInteractive().setData("dir", 1);
-
-        // this.mArrow3 = scene.make.image({
-        //     key,
-        //     frame: "arrow_3.png"
-        // }, false).setInteractive().setData("dir", 3);
-        // this.mArrow5 = scene.make.image({
-        //     key,
-        //     frame: "arrow_5.png"
-        // }, false).setInteractive().setData("dir", 5);
-        // this.mArrow7 = scene.make.image({
-        //     key,
-        //     frame: "arrow_7.png"
-        // }, false).setInteractive().setData("dir", 7);
         this.mArrow1 = new Button(this.scene, key, "arrow_1.png");
         this.mArrow1.setData("dir", Direction.north_west);
         this.mArrow3 = new Button(this.scene, key, "arrow_3.png");

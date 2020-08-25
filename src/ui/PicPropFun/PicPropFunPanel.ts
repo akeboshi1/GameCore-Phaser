@@ -239,16 +239,7 @@ export class PicPropFunPanel extends BasePanel {
             if (content.display) {
                 this.mDetailDisplay.loadDisplay(content);
             } else if (content.avatar) {
-                // const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
-                // const avatar = player.model.avatar;
-                // for (const key in avatar) {
-                //     if (avatar.hasOwnProperty(key)) {
-                //         const element = avatar[key];
-                //         if (element && !content.avatar[key]) content.avatar[key] = element;
-                //     }
-                // }
-                const offset = new Phaser.Geom.Point(0, 35 * 2);
-                this.mDetailDisplay.loadAvatar(content, 2, offset);
+                this.mDetailDisplay.loadAvatar(content, 2, new Phaser.Geom.Point(0, 35 * 2));
             }
         } else {
             this.mDetailDisplay.loadUrl(this.itemData.display.texturePath);

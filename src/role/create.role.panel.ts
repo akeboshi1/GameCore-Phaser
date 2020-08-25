@@ -7,6 +7,7 @@ import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragonbonesModel } from "../rooms/display/dragonbones.model";
 import { Font } from "../utils/font";
+import { i18n } from "../i18n";
 
 export class CreateRolePanel extends BasePanel {
   private readonly key = "createCharacter";
@@ -129,11 +130,11 @@ export class CreateRolePanel extends BasePanel {
       fontSize: 18 * this.dpr + "px",
       color: "#717171",
       align: "center",
-      placeholder: "请输入昵称"
+      placeholder: i18n.t("create_role.enter_nick")
     }).setOrigin(0.5);
     this.add(this.inputText);
 
-    let text = "提 交";
+    let text = i18n.t("create_role.commit");
     if (this.mShowData && this.mShowData.button) {
       text = this.mShowData.button.text;
     }

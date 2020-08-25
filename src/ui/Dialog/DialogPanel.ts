@@ -1,11 +1,10 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { NinePatch } from "../components/nine.patch";
 import { DynamicImage } from "../components/dynamic.image";
 import { Font } from "../../utils/font";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
-import { op_def, op_client, op_virtual_world, op_gameconfig_01 } from "pixelpai_proto";
+import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 export class DialogPanel extends BasePanel {
     public key: string = "commonkey";
@@ -82,7 +81,7 @@ export class DialogPanel extends BasePanel {
         whiteGraphic.fillStyle(0xffffff, 1);
         whiteGraphic.fillRoundedRect(0, 0, graphicWidth, graphicHeight, 8 * this.dpr);
         this.text = this.scene.make.text({
-            x: -graphicWidth * 0.5 + 20 * this.dpr, y: -graphicHeight * 0.5 + 30 * this.dpr, text: "五七二五",
+            x: -graphicWidth * 0.5 + 20 * this.dpr, y: -graphicHeight * 0.5 + 30 * this.dpr, text: "",
             style: { color: "#000000", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0).setWordWrapWidth(graphicWidth - 35 * this.dpr, true);
         const iconPosx = -width * 0.5 + 38 * this.dpr;
@@ -90,7 +89,7 @@ export class DialogPanel extends BasePanel {
         this.npcIcon = new DynamicImage(this.scene, iconPosx, iconPosy - 20 * this.dpr);
         const nameBg = this.scene.make.image({ x: iconPosx + 135 * this.dpr, y: iconPosy, key: this.key, frame: "name_bg" });
         this.npcName = this.scene.make.text({
-            x: nameBg.x, y: nameBg.y, text: "尼古拉斯.赵二",
+            x: nameBg.x, y: nameBg.y, text: "",
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5);
 
@@ -219,7 +218,7 @@ class NpcDialogueItem extends Phaser.GameObjects.Container {
         this.selectBg = this.scene.make.image({ x: 0, y: 0, key, frame: "select_bg" });
         this.arrImg = this.scene.make.image({ x: -this.selectBg.width * 0.5, y: 0, key, frame: "arrow_r" });
         this.content = this.scene.make.text({
-            x: 0, y: 0, text: "购买物品",
+            x: 0, y: 0, text: "",
             style: { color: "#000000", fontSize: 15 * dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0, 0.5);
         this.add([this.selectBg, this.arrImg, this.content]);

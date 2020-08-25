@@ -23,4 +23,25 @@ export class StateParse {
         }
     }
 
+    static setCameraBounds(packet: Uint8Array) {
+        const buf = Buffer.from(packet);
+        if (!buf) {
+            return;
+        }
+        let x = 0;
+        let y = 0;
+        let width = buf.readDoubleBE(0);
+        let height = buf.readDoubleBE(8);
+        if (buf.length >= 24) {
+            x = buf.readDoubleBE(0);
+            y = buf.readDoubleBE(8);
+            width = buf.readDoubleBE(16);
+            height = buf.readDoubleBE(24);
+        } else {
+            x = -width * 0.5;
+            y = -height * 0.5;
+        }
+        return { x, y, width, height };
+    }
+
 }

@@ -1,11 +1,6 @@
 import { WorldService } from "../../game/world.service";
-import { Font } from "../../utils/font";
-import { DynamicImage } from "../components/dynamic.image";
-import { op_client, op_gameconfig } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
-import { NinePatch } from "../components/nine.patch";
-import { Url } from "../../utils/resUtil";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
 export class CutInMenuPanel extends BasePanel {
     private key: string = "cutinmenupanel";
@@ -118,27 +113,12 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         minecarbg.on("pointerup", this.onClickHandler, this);
         minecarbg.setInteractive();
         this.setSize(minecarbg.width, minecarbg.height);
-        // this.scene.anims.create({
-        //     key: "minecarFrame",
-        //     frames: [{ key: this.key, frame: "minebag_bg" }, { key: this.key, frame: "minebag_bg_brth" }],
-        //     repeat: -1,
-        //     duration: 150
-        // });
+
         this.tween = this.scene.tweens.add({
             targets: this.bgSprite,
             alpha: { value: 0, duration: 500, ease: "Power1", yoyo: true },
             repeat: -1
         });
-        // this.tween = this.scene.tweens.addCounter({
-        //     from: 1,
-        //     to: 0,
-        //     duration: 300,
-        //     yoyo: true,
-        //     onUpdate: () => {
-        //         this.bgSprite.alpha = this.tween.getValue();
-        //     }
-        // });
-        // this.play();
     }
     public setClickHandler(handler: Handler) {
         this.clickHandler = handler;
