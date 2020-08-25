@@ -173,6 +173,7 @@ export class PicHousePanel extends BasePanel {
         const eidtorimg = this.scene.make.image({ x: editorx, y: -3 * this.dpr, key: this.key, frame: "renovation" });
         this.editorRoomBtn.add(eidtorimg);
         this.content.add(this.editorRoomBtn);
+        this.editorRoomBtn.visible = false;
         this.topCheckBox.selectIndex(0);
         this.add(this.content);
         this.resize(0, 0);

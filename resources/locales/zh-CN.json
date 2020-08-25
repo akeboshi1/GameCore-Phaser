@@ -123,7 +123,7 @@
     "expvalue": "经验值",
     "popvalue": "热度",
     "goodvalue": "点赞",
-    "compveness": "排名",
+    "compveness": "竞争力",
     "turnover": "营业额",
     "closeshop": "关闭商店"
   },
@@ -156,10 +156,10 @@
     "history": "历史记录",
     "ranking": "排行榜",
     "rankreward": "奖励",
-    "day":"天",
-    "hour":"小时",
-    "minutes":"分钟",
-    "second":"秒"
+    "day": "天",
+    "hour": "小时",
+    "minutes": "分钟",
+    "second": "秒"
   },
   "friendlist": {
     "title": "我的好友",

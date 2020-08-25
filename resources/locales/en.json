@@ -45,7 +45,8 @@
     "remove": "Remove",
     "source": "Source:",
     "all": "All",
-    "search": "搜索"
+    "search": "search",
+    "tips": "tips"
   },
   "player_info": {
     "title": "Personal Data",
