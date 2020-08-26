@@ -5,8 +5,6 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
 import { BaseScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
-import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
-import { Logger } from "../../utils/log";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
@@ -24,6 +22,7 @@ export class PicaRoomListPanel extends BasePanel {
   private mBackGround: Phaser.GameObjects.Graphics;
   private content: Phaser.GameObjects.Container;
   private preTabButton: Button;
+  private mSelectIndex: number = 0;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     // this.scale = 1;
@@ -119,6 +118,7 @@ export class PicaRoomListPanel extends BasePanel {
     const checkbox = new CheckboxGroup();
     checkbox.appendItemAll([this.mRoomDeleBtn, this.mMyRoomDeleBtn]);
     checkbox.on("selected", this.onSelectedHandler, this);
+    this.mSelectIndex = 0;
     this.mRoomContainer = this.scene.make.container(undefined, false);
     this.mRoomContainer.setSize(282 * this.dpr, 362 * this.dpr);
     this.mRoomContainer.y = -background.height / 2 + 11 * this.dpr * zoom;
@@ -156,7 +156,7 @@ export class PicaRoomListPanel extends BasePanel {
     this.resize(0, 0);
     const w = this.mRoomContainer.width * this.scale;
     const h = this.mRoomContainer.height * this.scale;
-    const config: ScrollerConfig = {
+    const config: any = {
       x: this.scaleWidth - w / this.scale >> 1,
       y: this.content.y - this.content.height / 2 + 20 * this.dpr * this.scale,
       clickX: 0,
@@ -176,6 +176,11 @@ export class PicaRoomListPanel extends BasePanel {
       },
       cellupCallBack: (gameobject: RoomItem) => {
         gameobject.onEnterRoomHandler();
+      },
+      overminCallbackScope: this,
+      overminCallback: () => {
+        if (this.mRoomDele && this.mSelectIndex === 0) this.mRoomDele.overminHandler();
+        if (!this.mMyRoomDele && this.mSelectIndex === 1) this.mMyRoomDele.overminHandler();
       }
     };
     this.mScroller = new BaseScroller(this.scene, this.mRoomContainer, config);
@@ -217,9 +222,11 @@ export class PicaRoomListPanel extends BasePanel {
     switch (gameobject) {
       case this.mRoomDeleBtn:
         this.showRoomList();
+        this.mSelectIndex = 0;
         break;
       case this.mMyRoomDeleBtn:
         this.showMyRoomList();
+        this.mSelectIndex = 1;
         break;
     }
     (gameobject).setTextColor("#996600");
@@ -304,6 +311,24 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
     super.destroy();
   }
 
+  overminHandler() {
+    const hei = this.mPlayerRoom.updateItem();
+    if (!hei) return;
+    if (this.mPlayerRoom.mRefreshRooms) {
+      this.mHeight += hei;
+      this.mContainer.add(this.mPlayerRoom.mRefreshRooms);
+      this.setUpdateScrollInteractive(this.mPlayerRoom.mRefreshRooms);
+    }
+  }
+
+  setUpdateScrollInteractive(roomList: RoomItem[]) {
+    for (let i: number = 0, len = roomList.length; i < len; i++) {
+      const roomItem: RoomItem = roomList[i];
+      this.mScroller.setInteractiveObject(roomItem);
+    }
+    this.mScroller.refreshBound(this.mHeight);
+  }
+
   protected init() {
     this.activity = this.mScene.make.image({
       key: this.mKey,
@@ -338,7 +363,9 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       if (this.mPopularityRoom.showList) {
         this.mContainer.add(this.mPopularityRoom.showList);
         if (this.mPopularityRoom.roomList) {
-          this.mContainer.add(this.mPopularityRoom.roomList);
+          this.mPopularityRoom.roomList.forEach((item) => {
+            this.mContainer.add(item);
+          });
         }
       }
     }
@@ -346,7 +373,9 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
       if (this.mPlayerRoom.showList) {
         this.mContainer.add(this.mPlayerRoom.showList);
         if (this.mPlayerRoom.roomList) {
-          this.mContainer.add(this.mPlayerRoom.roomList);
+          this.mPlayerRoom.roomList.forEach((item) => {
+            this.mContainer.add(item);
+          });
         }
       }
     }
@@ -417,6 +446,16 @@ class MyRoomDelegate extends RoomDelegate {
     this.mMyRoom.addItem(content.selfRooms, this.mChildPad);
   }
 
+  overminHandler() {
+    const hei: number = this.mMyHistory.updateItem();
+    if (!hei) return;
+    if (this.mMyHistory.mRefreshRooms) {
+      this.mHeight += hei;
+      this.mContainer.add(this.mMyHistory.mRefreshRooms);
+      this.setUpdateScrollInteractive(this.mMyHistory.mRefreshRooms);
+    }
+  }
+
   destroy() {
     if (this.mMyRoom) this.mMyRoom.destroy();
     if (this.mMyHistory) this.mMyHistory.destroy();
@@ -431,13 +470,21 @@ class MyRoomDelegate extends RoomDelegate {
     if (this.mMyRoom) {
       if (this.mMyRoom.showList) {
         this.mContainer.add(this.mMyRoom.showList);
-        if (this.mMyRoom.roomList) this.mContainer.add(this.mMyRoom.roomList);
+        if (this.mMyRoom.roomList) {
+          this.mMyRoom.roomList.forEach((item) => {
+            this.mContainer.add(item);
+          });
+        }
       }
     }
     if (this.mMyHistory) {
       if (this.mMyHistory.showList) {
         this.mContainer.add(this.mMyHistory.showList);
-        if (this.mMyHistory.roomList) this.mContainer.add(this.mMyHistory.roomList);
+        if (this.mMyHistory.roomList) {
+          this.mMyHistory.roomList.forEach((item) => {
+            this.mContainer.add(item);
+          });
+        }
       }
     }
     // const zoom: number = this.mWorld.uiScale;
@@ -485,6 +532,7 @@ class MyRoomDelegate extends RoomDelegate {
 }
 
 export class RoomZoon extends Phaser.Events.EventEmitter {
+  public mRefreshRooms: RoomItem[];
   protected mShowList: any[];
   protected mRooms: RoomItem[];
   protected mKey: string;
@@ -500,6 +548,8 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
   protected text: Phaser.GameObjects.Text;
   protected mLabel: string;
   protected uiScale: number;
+  protected mRoomDatas: any[];
+  protected mPad1: number = 0;
   /**
    *
    * @param scene
@@ -574,27 +624,64 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
     this.mShowList.push(this.text);
     this.mHeight = this.icon.height;
     this.mPad = pad ? pad : this.mPad;
-    const len = rooms.length;
+    this.mPad1 = pad;
     const zoom: number = this.uiScale;
     const tmpWid: number = this.mOrientaction ? this.mPad + pad : 0;
     const tmpHei: number = 6 * this.mDpr * zoom;
-    if (len > 0) {
+    if (rooms.length > 0) {
+      const len: number = rooms.length;
+      // Logger.getInstance().log("len:" + len);
       this.mPad += this.icon.height + 12 * this.mDpr * zoom;
       for (let i = 0; i < len; i++) {
-        const room = new RoomItem(this.mScene, this.mKey, this.mDpr);
-        room.setInfo(rooms[i]);
-        room.on("enterRoom", this.onEnterRoomHandler, this);
-        room.x = tmpWid;
-        const roomY: number = i * (room.height + tmpHei) + this.mPad;
-        room.y = roomY;
-        this.mHeight += room.height + tmpHei;
-        this.mRooms[i] = room;
+        if (i * (RoomItem.Hei + tmpHei) + this.mPad <= 362 * this.mDpr + RoomItem.Hei + tmpHei) {
+          const room = new RoomItem(this.mScene, this.mKey, this.mDpr);
+          room.setInfo(rooms[0]);
+          rooms.splice(0, 1);
+          room.on("enterRoom", this.onEnterRoomHandler, this);
+          room.x = tmpWid;
+          const roomY: number = i * (RoomItem.Hei + tmpHei) + this.mPad;
+          this.mRooms.push(room);
+          room.y = roomY;
+          this.mHeight += RoomItem.Hei + tmpHei;
+        }
+        // this.mHeight += RoomItem.Hei + tmpHei;
       }
+      this.mRoomDatas = rooms;
     }
     this.mHeight += tmpHei;
     if (this.mAddCallBack) {
       this.mAddCallBack(this.mHeight);
     }
+  }
+
+  updateItem(): number {
+    const dataList = this.mRoomDatas.slice(0, 10);
+    const len = dataList.length;
+    if (len < 1) return 0;
+    const zoom: number = this.uiScale;
+    const tmpWid: number = this.mOrientaction ? this.mPad + this.mPad1 : 0;
+    const tmpHei: number = 6 * this.mDpr * zoom;
+    const roomLen: number = this.mRooms.length;
+    this.mRefreshRooms = [];
+    let hei: number = 0;
+    for (let i: number = 0; i < len; i++) {
+      const room = new RoomItem(this.mScene, this.mKey, this.mDpr);
+      room.setInfo(dataList[i]);
+      room.on("enterRoom", this.onEnterRoomHandler, this);
+      room.x = tmpWid;
+      const roomY: number = (i + roomLen) * (RoomItem.Hei + tmpHei) + this.mPad;
+      room.y = roomY;
+      this.mRefreshRooms.push(room);
+      this.mRooms.push(room);
+      this.mHeight += RoomItem.Hei + tmpHei;
+      hei += RoomItem.Hei + tmpHei;
+    }
+    // Logger.getInstance().log(roomLen);
+    this.mRoomDatas.splice(0, 10);
+    return hei;
+    // if (this.mAddCallBack) {
+    //   this.mAddCallBack(this.mHeight);
+    // }
   }
 
   get width(): number {
@@ -663,15 +750,15 @@ class MyRoomZoon extends RoomZoon {
         room.setInfo(rooms[i]);
         room.on("enterRoom", this.onEnterRoomHandler, this);
         room.x = tmpWid;
-        const roomY: number = i * (room.height + tmpHei) + this.mPad;
+        const roomY: number = i * (RoomItem.Hei + tmpHei) + this.mPad;
         room.y = roomY;
-        this.mHeight += room.height + tmpHei;
         this.mRooms[i] = room;
+        this.mHeight += RoomItem.Hei + tmpHei;
       }
     }
     this.mHeight += tmpHei;
     if (this.mAddCallBack) {
-      Logger.getInstance().log("myroomheight:" + this.mHeight);
+      // Logger.getInstance().log("myroomheight:" + this.mHeight);
       this.mAddCallBack(this.mHeight);
     }
   }
@@ -720,7 +807,7 @@ class PopularRoomZoon extends RoomZoon {
     }
     this.mHeight += tmpHei;
     if (this.mAddCallBack) {
-      Logger.getInstance().log("popheight:" + this.mHeight);
+      // Logger.getInstance().log("popheight:" + this.mHeight);
       this.mAddCallBack(this.mHeight);
     }
     return this.mHeight;
@@ -728,6 +815,7 @@ class PopularRoomZoon extends RoomZoon {
 }
 
 class RoomItem extends Phaser.GameObjects.Container {
+  public static Hei: number;
   protected mBackground: Phaser.GameObjects.Image;
   protected mNickName: Phaser.GameObjects.Text;
   protected mCounter: Phaser.GameObjects.Text;
@@ -770,7 +858,7 @@ class RoomItem extends Phaser.GameObjects.Container {
       frame: "room_gray.png"
     }, false).setInteractive();
     this.setSize(this.mBackground.width, this.mBackground.height);
-
+    RoomItem.Hei = this.mBackground.height;
     this.mNickName = this.scene.make.text({
       style: {
         color: "#000000",
