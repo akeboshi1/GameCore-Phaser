@@ -46,7 +46,7 @@ export class Bubble extends Phaser.GameObjects.Container {
 
         const _minH = 36 * this.mScale;
         const _minW = 60 * this.mScale;
-        this.mMinHeight = this.mChatContent.height + 6 * this.mScale;
+        this.mMinHeight = this.mChatContent.height + 18  * this.mScale;
         this.mMinHeight = this.mMinHeight < _minH ? _minH : this.mMinHeight;
         this.mMinWidth = this.mChatContent.width + 20 * this.mScale;
         this.mMinWidth = this.mMinWidth < _minW ? _minW : this.mMinWidth;
