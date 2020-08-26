@@ -17,7 +17,7 @@ export class CharacterAttributePanel extends Phaser.GameObjects.Container {
     setAttributeData(datas: op_pkt_def.IPKT_Property[]) {
         const len = datas.length;
         const scaleRadio = (len > 4 ? 2 : 1);
-        const width = this.width - 28 * this.dpr;
+        const width = this.width + 16 * this.dpr;
         const height = this.height;
         const cheight = 20 * this.dpr;
         const cwidth = width / 2;
@@ -55,7 +55,7 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.icon = new DynamicImage(this.scene, 0, 0);
         this.icon.x = -22 * dpr;
-        this.icon.setTexture(key, "health");
+        // this.icon.setTexture(key, "health");
         this.nameText = this.scene.make.text({
             x: this.icon.x + 13 * dpr, y: 0, text: "Attack:",
             style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * dpr, color: "#131313" }
@@ -74,7 +74,7 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
             this.icon.displayWidth = 17 * this.dpr;
             this.icon.scaleY = this.icon.scaleX;
         });
-        this.icon.setFrame(data.display.texturePath);
+        // this.icon.setFrame(data.display.texturePath);
         this.nameText.text = data.name + ":";
         this.valueText.text = data.value + (data.tempValue ? this.getRichLabel(data.tempValue) : "");
         this.valueText.x = this.nameText.x + this.nameText.width + 3 * this.dpr;

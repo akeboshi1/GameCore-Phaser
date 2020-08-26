@@ -164,7 +164,6 @@ export class BlockManager implements IBlockManager {
       const { width, height } = room.getMaxScene();
       const rows = Math.floor(width / this.mScenery.width);
       const cols = Math.floor(height / this.mScenery.height);
-      const offset = this.offset;
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
           const block = new Block(this.scene, this.mUris[0][0]);
