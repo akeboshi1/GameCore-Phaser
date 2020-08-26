@@ -6,6 +6,8 @@ import { Font } from "../../utils/font";
 import { InputPanel } from "../components/input.panel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { PicChatInputPanel } from "./PicChatInputPanel";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 
 export class PicaChatPanel extends BasePanel {
     private readonly key: string = "pica_chat";
@@ -21,7 +23,7 @@ export class PicaChatPanel extends BasePanel {
     private mNavigateBtn: Phaser.GameObjects.Image;
     private mOutputText: BBCodeText;
     private mTextArea: TextArea;
-    private mInputText: InputPanel;
+    private mInputText: InputPanel | PicChatInputPanel;
 
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
@@ -76,6 +78,10 @@ export class PicaChatPanel extends BasePanel {
         if (this.mTextArea) {
             this.mTextArea.appendText(val);
             this.mTextArea.scrollToBottom();
+        }
+
+        if (this.mInputText) {
+            (<PicChatInputPanel>this.mInputText).appendChat(val);
         }
     }
 
@@ -133,11 +139,8 @@ export class PicaChatPanel extends BasePanel {
     }
 
     protected preload() {
-        this.addAtlas(
-            this.key,
-            "pica_chat/pica_chat.png",
-            "pica_chat/pica_chat.json"
-        );
+        this.addAtlas(this.key, "pica_chat/pica_chat.png", "pica_chat/pica_chat.json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
 
@@ -251,8 +254,14 @@ export class PicaChatPanel extends BasePanel {
         if (this.mInputText) {
             return;
         }
-        this.mInputText = new InputPanel(this.scene, this.mWorld);
-        this.mInputText.once("close", this.sendChat, this);
+        //  if (navigator.userAgent.match(/Cordova/i)) {
+        this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.mTextArea.text);
+        this.mInputText.once("close", this.appCloseChat, this);
+        this.mInputText.on("send", this.appSendChat, this);
+        // } else {
+        //     this.mInputText = new InputPanel(this.scene, this.mWorld);
+        //     this.mInputText.once("close", this.sendChat, this);
+        // }
     }
 
     private sendChat(val: string) {
@@ -261,6 +270,18 @@ export class PicaChatPanel extends BasePanel {
             return;
         }
         this.emit("chat", val);
+    }
+
+    private appSendChat(val: string) {
+        if (!val) {
+            return;
+        }
+        this.emit("chat", val);
+    }
+
+    private appCloseChat() {
+        this.mInputText = undefined;
+        this.mInputText.off("send", this.appSendChat, this);
     }
     private checkUpdateActive() {
         const arr = this.mWorld.uiManager.getActiveUIData("PicaChat");
