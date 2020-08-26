@@ -152,13 +152,16 @@ export default class CharacterInfoPanel extends BasePanel {
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
         this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
-        const line1 = this.scene.make.image({ x: 0, y: this.nickName.y + 10 * this.dpr, key: this.key, frame: "splitters" });
+        const line1 = this.scene.make.image({ x: 0, y: this.nickName.y + 12 * this.dpr, key: this.key, frame: "splitters" });
+        line1.scaleY = this.dpr;
         this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
             .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
-        const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr, key: this.key, frame: "splitters" });
+        const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 12 * this.dpr, key: this.key, frame: "splitters" });
+        line2.scaleY = this.dpr;
         this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY * 2)
             .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
-        const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr, key: this.key, frame: "splitters" });
+        const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 12 * this.dpr, key: this.key, frame: "splitters" });
+        line3.scaleY = this.dpr;
         const lvbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "level_bg" });
         this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.lvCon = this.scene.make.container(undefined, false);
