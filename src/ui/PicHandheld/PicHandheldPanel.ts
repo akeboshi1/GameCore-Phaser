@@ -1,14 +1,11 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { i18n } from "../../i18n";
-import { op_client, op_def } from "pixelpai_proto";
-import { Font } from "../../utils/font";
+import { op_client } from "pixelpai_proto";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { DynamicImage } from "../components/dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url } from "../../utils/resUtil";
-import { Logger } from "../../utils/log";
 export class PicHandheldPanel extends BasePanel {
     private readonly key = "pichandheldpanel";
     private gridContent: Phaser.GameObjects.Container;
@@ -18,7 +15,6 @@ export class PicHandheldPanel extends BasePanel {
     private isExtendsGrid: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
-        // this.scale = 1;
     }
 
     public resize(w: number, h: number) {

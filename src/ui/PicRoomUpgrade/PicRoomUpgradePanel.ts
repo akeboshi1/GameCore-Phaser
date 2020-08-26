@@ -2,9 +2,7 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { i18n } from "../../i18n";
 import { Font } from "../../utils/font";
-import { DynamicImage } from "../components/dynamic.image";
-import { op_client, op_def } from "pixelpai_proto";
-import { Url } from "../../utils/resUtil";
+import { op_client } from "pixelpai_proto";
 export class PicRoomUpgradePanel extends BasePanel {
     private readonly key = "picroomupgradepanel";
     private content: Phaser.GameObjects.Container;

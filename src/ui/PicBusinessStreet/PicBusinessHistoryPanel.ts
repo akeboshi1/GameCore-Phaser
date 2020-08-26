@@ -30,7 +30,7 @@ export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
 
     public setHistoryeData(datas: op_client.IEditModeRoom[]) {
         this.gridtable.setItems(datas);
-        this.titleText.text = i18n.t("business_street.history_title").replace("${}", "10");
+        this.titleText.text = i18n.t("business_street.history_title", { name: datas.length });
     }
 
     public setHandler(back: Handler) {

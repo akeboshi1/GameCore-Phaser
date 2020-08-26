@@ -236,17 +236,6 @@ export class ElementStoragePanel extends BasePanel {
 
         this.mDragBtn = new NineSliceButton(this.scene, 0, -20, 80, 40, "button", "", "物件容器", this.dpr, this.scale, config);
 
-        // this.mTabs = [];
-
-        // const button = new NineSliceButton(this.scene, 280, 40, 60, 30, "button", "地块",  config);
-
-        // const button2 = new NineSliceButton(this.scene, 280, 80, 60, 30, "button", "物件",  config);
-
-        // const checkbox = new CheckboxGroup().appendItemAll([button, button2]);
-        // checkbox.on("selected", this.onSelectedHandler, this);
-        // this.mTabs.push(button);
-        // this.mTabs.push(button2);
-
         this.mPrePageBtn = this.scene.make.sprite({
             key: "slip"
         }, false);

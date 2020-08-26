@@ -111,7 +111,7 @@ export class FurniBagPanel extends BasePanel {
       this.closeSeach(null);
     this.mCategoryScroll.clearItems();
     const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
-    seachBtn.setData("item", { key: this.seachKey, value: "搜索" });
+    seachBtn.setData("item", { key: this.seachKey, value: i18n.t("common.search") });
     seachBtn.y = capH - 40 * this.dpr;
     this.mCategoryScroll.addItem(seachBtn);
     const allCategory = new op_def.StrPair();

@@ -44,7 +44,9 @@
     "add": "Add",
     "remove": "Remove",
     "source": "Source:",
-    "all": "All"
+    "all": "All",
+    "search": "search",
+    "tips": "tips"
   },
   "player_info": {
     "title": "Personal Data",
@@ -65,13 +67,15 @@
     "birthday": "D: Birthday",
     "city": "City",
     "signature": "D: Signature",
-    "input_signature": "D: Fill in personality signature to get others attention!"
+    "input_signature": "D: Fill in personality signature to get others attention!",
+    "note_nickname": "Remark friend nickname"
   },
   "compose": {
     "title": "Produce",
     "make": "Produce",
     "needMaterials": "Materials",
-    "synthesis": "Produce"
+    "synthesis": "Produce",
+    "confirmation": "Are you sure you want to synthesize {{name}} ？"
   },
   "minesettle": {
     "settle": "Summary",
@@ -95,7 +99,10 @@
     "rewards": "Rewards",
     "collect_materials": "Collect:",
     "submit_task": "Submit",
-    "task_quest": "Quest:"
+    "task_quest": "Quest:",
+    "main": "[main]",
+    "side": "[side]",
+    "daily": "[daily]"
   },
   "furni_unlock": {
     "unlock": "Unlock",
@@ -132,7 +139,7 @@
     "choosestorelike": "Choose store type",
     "street": "All Stores",
     "back": "BACK",
-    "history_title": "LAST ${} STORES VISITED",
+    "history_title": "LAST {{name}} STORES VISITED",
     "ranking_list": "RANKING",
     "rank_reward": "Reward",
     "savings": "D: Savings",
@@ -166,6 +173,7 @@
     "unfollow": "unfollow",
     "new_friend": "New Friend",
     "new_fans": "New Fans"
+    
   },
   "friend_invite": {
     "refused": "refused",
@@ -183,5 +191,19 @@
     "coin": "coin",
     "diamond": "diamond",
     "gold_coin": "gold coin"
+  },
+  "create_role": {
+    "enter_nick": "Please en ter a nickname",
+    "commit": "commit"
+  },
+  "chat": {
+    "mystery": "Mystery",
+    "world": "World",
+    "current": "Current",
+    "system": "System"
+  },
+  "minecar": {
+    "discard": "discard",
+    "confirmation": "Are you sure you want to discard {{name}} ？"
   }
 }
