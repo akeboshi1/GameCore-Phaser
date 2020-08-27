@@ -42,6 +42,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
         this.mBackground.fillRect(0, 0, width, height);
+        this.mBackground.setInteractive();
         this.bottomCon = scene.add.container();
         this.bottomCon.setPosition(width * 0.5, height * 0.5);
         const inputBg = new NineSlicePatch(scene, 0, 0, width, 47 * this.dpr, this.key, "chat_Input_bg", {
@@ -155,14 +156,15 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     public setKeywordHeight(height: number) {
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
-        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5 - 10 * this.dpr;
-        this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5 - 10 * this.dpr;
+        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5;// - 10 * this.dpr;
+        this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5;// - 10 * this.dpr;
         this.contentCon.x = camWidth * 0.5;
         this.gamescroll.refreshMask();
         this.keyboardHeight = height;
         const startText = this.chatArr.shift();
         this.appendChat(startText);
         this.setQuickChatDatas();
+        this.mInput.text = height + "";
     }
 
     public setQuickChatData(datas: string[]) {
@@ -222,6 +224,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.quickChatScroll.y = this.quickBg.y;
         this.quickChatScroll.setSize(camWidth, this.keyboardHeight);
         this.mInput.setBlur();
+        this.mInput.text = "onQuickSendHandler";
     }
     private onSentChat() {
         const chat = this.mInput.text;
@@ -239,18 +242,19 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onCancelHandler() {
-        this.emit("close");
+        this.mInput.setBlur();
         this.mBackground.destroy();
         this.mInput.destroy();
         this.bottomCon.destroy();
         this.contentCon.destroy();
         this.quickCon.destroy();
-        this.destroy();
         this.scene = undefined;
         this.world = undefined;
         this.gamescroll = undefined;
         this.mOutputText = undefined;
         this.gamescroll = undefined;
+        this.emit("close");
+        this.destroy();
     }
 }
 

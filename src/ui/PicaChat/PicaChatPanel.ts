@@ -284,7 +284,7 @@ export class PicaChatPanel extends BasePanel {
             this.mInputText.on("send", this.appSendChat, this);
             this.mInputText.setQuickChatData(this.scene.cache.json.get("quickchat"));
             if (this.parentContainer) this.parentContainer.visible = false;
-            this.scene.load.off(Phaser.Loader.Events.FILE_KEY_COMPLETE, this.openAppInputPanel, this);
+            this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
         }
     }
     private appSendChat(val: string) {
