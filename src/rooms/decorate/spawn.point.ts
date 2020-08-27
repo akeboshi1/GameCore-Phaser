@@ -101,6 +101,10 @@ export class SpawnPoint implements ISprite {
         animation.baseLoc = "-30,-30";
         animation.originPoint = [0, 0];
         animation.frameName = ["switch_0027_3_01.png"];
+        animation.node = op_gameconfig_01.Node.create();
+        animation.node.id = 0;
+        animation.node.name = "idle";
+        animation.node.Parent = 0;
         return animation;
     }
 
