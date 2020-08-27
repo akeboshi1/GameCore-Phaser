@@ -62,8 +62,8 @@
 		},
 		"chat_quick_2": {
 			"frame": {
-				"x": 1,
-				"y": 139,
+				"x": 253,
+				"y": 1,
 				"w": 89,
 				"h": 79
 			},
@@ -82,8 +82,8 @@
 		},
 		"emoji": {
 			"frame": {
-				"x": 111,
-				"y": 139,
+				"x": 344,
+				"y": 1,
 				"w": 131,
 				"h": 130
 			},
@@ -100,10 +100,50 @@
 				"h": 130
 			}
 		},
+		"home_divider": {
+			"frame": {
+				"x": 1,
+				"y": 143,
+				"w": 993,
+				"h": 1
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 993,
+				"h": 1
+			},
+			"sourceSize": {
+				"w": 993,
+				"h": 1
+			}
+		},
+		"home_quick chat _bg": {
+			"frame": {
+				"x": 477,
+				"y": 1,
+				"w": 39,
+				"h": 37
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 39,
+				"h": 37
+			},
+			"sourceSize": {
+				"w": 39,
+				"h": 37
+			}
+		},
 		"horn_icon": {
 			"frame": {
-				"x": 253,
-				"y": 1,
+				"x": 1,
+				"y": 146,
 				"w": 199,
 				"h": 170
 			},
@@ -122,8 +162,8 @@
 		},
 		"more_btn": {
 			"frame": {
-				"x": 244,
-				"y": 173,
+				"x": 518,
+				"y": 1,
 				"w": 119,
 				"h": 118
 			},
@@ -142,7 +182,7 @@
 		},
 		"scroll_btn": {
 			"frame": {
-				"x": 454,
+				"x": 639,
 				"y": 1,
 				"w": 81,
 				"h": 83
@@ -162,8 +202,8 @@
 		},
 		"title_bg": {
 			"frame": {
-				"x": 454,
-				"y": 86,
+				"x": 722,
+				"y": 1,
 				"w": 2,
 				"h": 40
 			},
@@ -187,8 +227,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 536,
-			"h": 292
+			"w": 995,
+			"h": 317
 		},
 		"scale": "1"
 	}

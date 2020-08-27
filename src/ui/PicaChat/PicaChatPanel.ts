@@ -253,15 +253,15 @@ export class PicaChatPanel extends BasePanel {
         if (this.mInputText) {
             return;
         }
-        // if (navigator.userAgent.match(/Cordova/i)) {
-        //     this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.mTextArea.text);
-        //     this.mInputText.once("close", this.appCloseChat, this);
-        //     this.mInputText.on("send", this.appSendChat, this);
-        //     if (this.parentContainer) this.parentContainer.visible = false;
-        // } else {
-        this.mInputText = new InputPanel(this.scene, this.mWorld);
-        this.mInputText.once("close", this.sendChat, this);
-        // }
+        if (navigator.userAgent.match(/Cordova/i)) {
+            this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.mTextArea.text);
+            this.mInputText.once("close", this.appCloseChat, this);
+            this.mInputText.on("send", this.appSendChat, this);
+            if (this.parentContainer) this.parentContainer.visible = false;
+        } else {
+            this.mInputText = new InputPanel(this.scene, this.mWorld);
+            this.mInputText.once("close", this.sendChat, this);
+        }
     }
 
     private sendChat(val: string) {
