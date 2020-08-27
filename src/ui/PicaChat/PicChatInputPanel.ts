@@ -28,6 +28,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private keyboardHeight: number;
     private quickBg: Phaser.GameObjects.Image;
     private isOpenQuickPanel: boolean = false;
+    private quickChatAtt: string[] = [];
     constructor(scene: Phaser.Scene, world: WorldService, key: string, outtext: string) {
         super();
         this.key = key;
@@ -141,13 +142,14 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
                 this.onSentChat();
+                if (this.mInput.text !== "")
+                    this.quickChatAtt[0] = this.mInput.text;
             }
         });
         window.addEventListener("native.keyboardshow", keyboardShowHandler);
         function keyboardShowHandler(e) {
             this.setKeywordHeight(e.keyboardHeight);
         }
-        this.setQuickChatDatas();
     }
 
     public setKeywordHeight(height: number) {
@@ -160,8 +162,14 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.keyboardHeight = height;
         const startText = this.chatArr.shift();
         this.appendChat(startText);
+        this.setQuickChatDatas();
     }
 
+    public setQuickChatData(datas: string[]) {
+        if (datas) this.quickChatAtt = datas;
+        this.quickChatAtt.unshift(undefined);
+        this.mInput.setFocus();
+    }
     public appendChat(val: string) {
         this.chatArr.push(val);
         if (this.chatArr.length > this.maxChatLength) this.chatArr.shift();
@@ -176,11 +184,13 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private setQuickChatDatas() {
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
-        const arr = [];
-        for (let i = 0; i < 12; i++) {
-            const item = new QuickChatItem(this.scene, camWidth, 30 * this.dpr, this.key, this.dpr, (i === 0 ? true : false));
-            this.quickChatScroll.addItem(item);
-            item.setText("这是一段话再来十遍");
+        for (let i = 0; i < this.quickChatAtt.length; i++) {
+            const text = this.quickChatAtt[i];
+            if (text) {
+                const item = new QuickChatItem(this.scene, camWidth, 30 * this.dpr, this.key, this.dpr, (i === 0 ? true : false));
+                this.quickChatScroll.addItem(item);
+                item.setText(text);
+            }
         }
         this.quickChatScroll.Sort();
         this.quickCon.visible = false;
