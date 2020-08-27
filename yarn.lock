@@ -876,7 +876,12 @@ chalk@^2.0.0, chalk@^2.1.0, chalk@^2.3.0, chalk@^2.4.2:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chance@^1.0.18, chance@^1.1.3:
+chance@^1.0.18:
+  version "1.1.7"
+  resolved "https://registry.npmjs.org/chance/-/chance-1.1.7.tgz#e99dde5ac16681af787b5ba94c8277c090d6cfe8"
+  integrity sha512-bua/2cZEfzS6qPm0vi3JEvGNbriDLcMj9lKxCQOjUcCJRcyjA7umP0zZm6bKWWlBN04vA0L99QGH/CZQawr0eg==
+
+chance@^1.1.3:
   version "1.1.6"
   resolved "https://registry.npm.taobao.org/chance/download/chance-1.1.6.tgz#967a0a129e0f342f7c65cd5d20f5ae870a26b8af"
   integrity sha1-lnoKEp4PNC98Zc1dIPWuhwomuK8=
@@ -1615,9 +1620,9 @@ eventemitter3@^4.0.0:
   integrity sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==
 
 eventemitter3@^4.0.4:
-  version "4.0.5"
-  resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.5.tgz#51d81e4f1ccc8311a04f0c20121ea824377ea6d9"
-  integrity sha512-QR0rh0YiPuxuDQ6+T9GAO/xWTExXpxIes1Nl9RykNGTnE1HJmkuEfxJH9cubjIOQZ/GH4qNBR4u8VSHaKiWs4g==
+  version "4.0.6"
+  resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.6.tgz#1258f6fa51b4908aadc2cd624fcd6e64f99f49d6"
+  integrity sha512-s3GJL04SQoM+gn2c14oyqxvZ3Pcq7cduSDqy3sBFXx6UPSUmgVYwQM9zwkTn9je0lrfg0gHEwR42pF3Q2dCQkQ==
 
 events@^3.0.0:
   version "3.2.0"
@@ -3599,8 +3604,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.285"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#82203d919d7f8097c711e32f11b0f4bab4b4d970"
+  version "1.0.290"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#4c278e2b544993840eb2fbd30436e4ef251344e4"
   dependencies:
     protobufjs "^6.8.8"
 
