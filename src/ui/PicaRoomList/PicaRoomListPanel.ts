@@ -312,8 +312,10 @@ export class RoomDelegate extends Phaser.Events.EventEmitter {
   }
 
   overminHandler() {
-    if (!this.mPlayerRoom.updateItem()) return;
+    const hei = this.mPlayerRoom.updateItem();
+    if (!hei) return;
     if (this.mPlayerRoom.mRefreshRooms) {
+      this.mHeight += hei;
       this.mContainer.add(this.mPlayerRoom.mRefreshRooms);
       this.setUpdateScrollInteractive(this.mPlayerRoom.mRefreshRooms);
     }
@@ -445,8 +447,10 @@ class MyRoomDelegate extends RoomDelegate {
   }
 
   overminHandler() {
-    if (!this.mMyHistory.updateItem()) return;
+    const hei: number = this.mMyHistory.updateItem();
+    if (!hei) return;
     if (this.mMyHistory.mRefreshRooms) {
+      this.mHeight += hei;
       this.mContainer.add(this.mMyHistory.mRefreshRooms);
       this.setUpdateScrollInteractive(this.mMyHistory.mRefreshRooms);
     }
@@ -638,9 +642,9 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
           const roomY: number = i * (RoomItem.Hei + tmpHei) + this.mPad;
           this.mRooms.push(room);
           room.y = roomY;
-          // this.mHeight += RoomItem.Hei + tmpHei;
+          this.mHeight += RoomItem.Hei + tmpHei;
         }
-        this.mHeight += RoomItem.Hei + tmpHei;
+        // this.mHeight += RoomItem.Hei + tmpHei;
       }
       this.mRoomDatas = rooms;
     }
@@ -650,15 +654,16 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
     }
   }
 
-  updateItem(): boolean {
+  updateItem(): number {
     const dataList = this.mRoomDatas.slice(0, 10);
     const len = dataList.length;
-    if (len < 1) return false;
+    if (len < 1) return 0;
     const zoom: number = this.uiScale;
     const tmpWid: number = this.mOrientaction ? this.mPad + this.mPad1 : 0;
     const tmpHei: number = 6 * this.mDpr * zoom;
     const roomLen: number = this.mRooms.length;
     this.mRefreshRooms = [];
+    let hei: number = 0;
     for (let i: number = 0; i < len; i++) {
       const room = new RoomItem(this.mScene, this.mKey, this.mDpr);
       room.setInfo(dataList[i]);
@@ -669,10 +674,11 @@ export class RoomZoon extends Phaser.Events.EventEmitter {
       this.mRefreshRooms.push(room);
       this.mRooms.push(room);
       this.mHeight += RoomItem.Hei + tmpHei;
+      hei += RoomItem.Hei + tmpHei;
     }
     // Logger.getInstance().log(roomLen);
     this.mRoomDatas.splice(0, 10);
-    return true;
+    return hei;
     // if (this.mAddCallBack) {
     //   this.mAddCallBack(this.mHeight);
     // }

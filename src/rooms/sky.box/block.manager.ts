@@ -66,7 +66,10 @@ export class BlockManager implements IBlockManager {
   check(time?: number, delta?: number) {
     const worldView = this.mMainCamera.worldView;
     const viewPort = new Phaser.Geom.Rectangle(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2, worldView.width * 2, worldView.height * 2);
+    const camera = this.scene.cameras.main;
     for (const block of this.mGrids) {
+      block.rectangle.x += camera.x;
+      block.rectangle.y += camera.y;
       block.checkCamera(Phaser.Geom.Intersects.RectangleToRectangle(viewPort, block.rectangle));
     }
   }

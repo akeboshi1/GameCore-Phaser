@@ -15,7 +15,7 @@ import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { Url } from "../../utils/resUtil";
+import { Url, ResUtils } from "../../utils/resUtil";
 // import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
@@ -145,28 +145,31 @@ export default class CharacterInfoPanel extends BasePanel {
         });
 
         const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
-        const nickPosY = Math.round(this.bg.height * 0.5 - 306 * this.dpr);
+        const nickPosY = Math.round(this.bg.height * 0.5 - 324 * this.dpr);
         const nickOffsetY = 30 * this.dpr;
         const fontSize = Math.round(13 * this.dpr);
         this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
         this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
-        const line1 = this.scene.make.image({ x: 0, y: nickPosY + 10 * this.dpr, key: this.key, frame: "splitters" });
+        const line1 = this.scene.make.image({ x: 0, y: this.nickName.y + 12 * this.dpr, key: this.key, frame: "splitters" });
+        line1.scaleY = this.dpr;
         this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
             .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
-        const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 10 * this.dpr, key: this.key, frame: "splitters" });
+        const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 12 * this.dpr, key: this.key, frame: "splitters" });
+        line2.scaleY = this.dpr;
         this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY * 2)
             .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
-        const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 10 * this.dpr, key: this.key, frame: "splitters" });
+        const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 12 * this.dpr, key: this.key, frame: "splitters" });
+        line3.scaleY = this.dpr;
         const lvbg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "level_bg" });
         this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.lvCon = this.scene.make.container(undefined, false);
         this.lvCon.setSize(lvbg.width, lvbg.height);
         this.lvCon.add([lvbg, this.lvText]);
 
-        const bottomWidth = 234 * this.dpr;
-        const bottomHeight = 195 * this.dpr;
+        const bottomWidth = 260 * this.dpr;
+        const bottomHeight = 204 * this.dpr;
         this.bottomCon = this.scene.make.container(undefined, false).setSize(bottomWidth, bottomHeight);
         this.bottomCon.setPosition(0, (this.mainContent.height - bottomHeight) * 0.5 - 30 * this.dpr);
         this.bottombg = this.scene.make.graphics(undefined, false);
@@ -213,8 +216,8 @@ export default class CharacterInfoPanel extends BasePanel {
         this.content.add(this.mainContent);
         this.mainContent.add(this.mExitBtn);
         this.add([this.mBackGround, this.content]);
-        const scrollY = 62 * this.dpr;
-        const scrollHeight = 80 * this.dpr;
+        const scrollY = 54 * this.dpr;
+        const scrollHeight = 78 * this.dpr;
         this.mCategoryScroll = new GameScroller(this.scene, {
             x: 0,
             y: scrollY,

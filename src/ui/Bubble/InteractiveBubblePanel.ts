@@ -74,7 +74,11 @@ export class InteractiveBubblePanel extends BasePanel {
     updateBubblePos(gameObject: any, scene: Phaser.Scene) {
         const dpr = this.dpr;
         const zoom = this.world.uiScale;
-        const position = gameObject.getDisplay().getWorldTransformMatrix();
+        const display = gameObject.getDisplay();
+        if (!display) {
+            return;
+        }
+        const position = display.getWorldTransformMatrix();
         if (position) {
             const pos = Tool.getPosByScenes(scene, new Pos(position.tx, (position.ty - 33 * dpr * zoom)));
             this.mBubble.setPosition(pos.x, pos.y);

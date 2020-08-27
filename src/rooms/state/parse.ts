@@ -28,18 +28,15 @@ export class StateParse {
         if (!buf) {
             return;
         }
-        let x = 0;
-        let y = 0;
+        let x = null;
+        let y = null;
         let width = buf.readDoubleBE(0);
         let height = buf.readDoubleBE(8);
         if (buf.length >= 24) {
-            x = buf.readDoubleBE(0);
-            y = buf.readDoubleBE(8);
+            x = width;
+            y = height;
             width = buf.readDoubleBE(16);
             height = buf.readDoubleBE(24);
-        } else {
-            x = -width * 0.5;
-            y = -height * 0.5;
         }
         return { x, y, width, height };
     }

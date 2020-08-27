@@ -246,12 +246,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.world.emitter.on("Tap", this.onTapHandler, this);
-        // const list = ["forestBgm1.mp3", "mineBgm1.mp3", "fisheryBgm1.mp3", "generalBgm1.mp3"];
-        // this.world.playSound({
-        //     urls: "https://osd.tooqing.com/b4368e3b7aea51d106044127f9cae95e",
-        //     field: SoundField.Element,
-        //     soundConfig: { loop: true },
-        // });
 
         this.initSkyBox();
     }
@@ -515,6 +509,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                         return;
                     }
                     let { x, y, width, height } = bounds;
+                    if (x === null || y === null) {
+                        x = (this.mSize.sceneWidth - width) * 0.5;
+                        y = (this.mSize.sceneHeight - height) * 0.5;
+                    }
                     x *= this.mScaleRatio;
                     y *= this.mScaleRatio;
                     width *= this.mScaleRatio;
