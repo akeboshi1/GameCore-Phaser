@@ -24,7 +24,6 @@ export class PicaChatPanel extends BasePanel {
     private mOutputText: BBCodeText;
     private mTextArea: TextArea;
     private mInputText: InputPanel | PicChatInputPanel;
-
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.MAX_HEIGHT = 460 * this.dpr;
@@ -254,14 +253,15 @@ export class PicaChatPanel extends BasePanel {
         if (this.mInputText) {
             return;
         }
-        //  if (navigator.userAgent.match(/Cordova/i)) {
-        this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.mTextArea.text);
-        this.mInputText.once("close", this.appCloseChat, this);
-        this.mInputText.on("send", this.appSendChat, this);
-        // } else {
-        //     this.mInputText = new InputPanel(this.scene, this.mWorld);
-        //     this.mInputText.once("close", this.sendChat, this);
-        // }
+        if (navigator.userAgent.match(/Cordova/i)) {
+            this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.mTextArea.text);
+            this.mInputText.once("close", this.appCloseChat, this);
+            this.mInputText.on("send", this.appSendChat, this);
+            if (this.parentContainer) this.parentContainer.visible = false;
+        } else {
+            this.mInputText = new InputPanel(this.scene, this.mWorld);
+            this.mInputText.once("close", this.sendChat, this);
+        }
     }
 
     private sendChat(val: string) {
@@ -280,8 +280,9 @@ export class PicaChatPanel extends BasePanel {
     }
 
     private appCloseChat() {
-        this.mInputText = undefined;
         this.mInputText.off("send", this.appSendChat, this);
+        this.mInputText = undefined;
+        if (this.parentContainer) this.parentContainer.visible = true;
     }
     private checkUpdateActive() {
         const arr = this.mWorld.uiManager.getActiveUIData("PicaChat");
