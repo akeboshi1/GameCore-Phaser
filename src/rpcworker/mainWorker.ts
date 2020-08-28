@@ -7,6 +7,7 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import { Logger } from "../utils/log";
 import { ServerAddress } from "../net/address";
 import * as protos from "pixelpai_proto";
+import { WorkerLoop, ILoop } from "./workerLoop";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -62,7 +63,7 @@ worker.onmessage = (e: MessageEvent) => {
             break;
         case "send":
             const buf = data.buffer;
-            socket.send(new Buffer(buf));
+            socket.sendList(new Buffer(buf));
             break;
         case "startBeat":
             context.peer.execute(HEARTBEAT_WORKER,
@@ -217,14 +218,27 @@ class ConnListener implements IConnectListener {
     }
 }
 
-class WorkerClient extends SocketConnection {
+class WorkerClient extends SocketConnection implements ILoop {
     protected mUuid: number = 0;
-    send(data: any): void {
+    private _loop: WorkerLoop;
+    private _socketSendList: any[];
+    constructor($listener: IConnectListener) {
+        super($listener);
+        this._socketSendList = [];
+        const loop: WorkerLoop = new WorkerLoop();
+        loop.add("workerClient", this);
+        loop.start();
+    }
+    sendList(data: any) {
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         protobuf_packet.header.uuid = this.mUuid || 0;
-        super.send(protobuf_packet.Serialization());
-        Logger.getInstance().info(`MainWorker[发送] >>> ${protobuf_packet.toString()}`);
+        const buffer = protobuf_packet.Serialization();
+        this._socketSendList.push(buffer);
+    }
+    send(data: any): void {
+        super.send(data);
+        Logger.getInstance().info(`MainWorker[发送] >>> ${data}`);
     }
 
     onData(data: any) {
@@ -236,8 +250,22 @@ class WorkerClient extends SocketConnection {
         const buffer = protobuf_packet.Serialization();
         context.onData(buffer);
     }
+
+    update() {
+        if (!this._socketSendList || !this._socketSendList.length) return;
+        // Logger.getInstance().log("loop update");
+        let len: number = this._socketSendList.length;
+        let count: number = 0;
+        while (count < 3) {
+            const buffer = this._socketSendList[0];
+            this.send(buffer);
+            this._socketSendList.splice(0, 1);
+            len = this._socketSendList.length;
+            count++;
+        }
+    }
 }
 // run socket client through web-worker
-const socket: SocketConnection = new WorkerClient(new ConnListener());
+const socket: WorkerClient = new WorkerClient(new ConnListener());
 const MAIN_WORKER = "mainworker";
 const HEARTBEAT_WORKER = "heartbeatworker";
