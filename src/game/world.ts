@@ -454,6 +454,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public onFocus() {
+        Logger.getInstance().log("#BlackSceneFromBackground; world.onFocus()");
         if (this.connection) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
@@ -468,6 +469,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public onBlur() {
+        Logger.getInstance().log("#BlackSceneFromBackground; world.onBlur()");
         if (this.connection) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
@@ -923,6 +925,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private resumeScene() {
+        Logger.getInstance().log(`#BlackSceneFromBackground; world.resumeScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
         if (this.mConfig.isEditor || !this.isPause) {
             return;
         }
@@ -938,6 +941,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private pauseScene() {
+        Logger.getInstance().log(`#BlackSceneFromBackground; world.pauseScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
         if (this.mConfig.isEditor || this.isPause) {
             return;
         }

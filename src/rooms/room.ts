@@ -251,11 +251,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public pause() {
+        Logger.getInstance().log(`#BlackSceneFromBackground; room.pause(); mScene:${this.mScene}`);
         if (this.mScene) this.mScene.scene.pause();
         if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = false;
     }
 
     public resume(name: string) {
+        Logger.getInstance().log(`#BlackSceneFromBackground; room.resume(); name:${name}; mScene:${this.mScene}`);
         if (this.mScene) this.mScene.scene.resume(name);
         if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = true;
         // this.mClock.sync(-1);
@@ -441,6 +443,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.world.emitter.off("Tap", this.onTapHandler, this);
         if (this.connection) this.connection.removePacketListener(this);
         this.clear();
+        Logger.getInstance().log("#BlackSceneFromBackground; remove scene: ", PlayScene.name);
         this.mWorld.game.scene.remove(PlayScene.name);
         this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         // if (this.mScene) {
