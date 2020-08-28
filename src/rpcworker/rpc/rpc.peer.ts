@@ -120,8 +120,8 @@ export class RPCPeer {
         port.onmessage = (ev: MessageEvent) => {
             const { key } = ev.data;
             if (!key) {
-                // tslint:disable-next-line:no-console
-                console.warn("<key> not in ev.data");
+                // socket.send no key
+                // console.warn("<key> not in ev.data");
                 return;
             }
             switch (key) {
