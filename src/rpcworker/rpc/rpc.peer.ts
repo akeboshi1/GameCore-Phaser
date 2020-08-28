@@ -144,7 +144,7 @@ export class RPCPeer {
         const { data } = ev.data;
         if (!data) {
             // tslint:disable-next-line:no-console
-            console.warn("<data> not in ev.data");
+            // console.warn("<data> not in ev.data");
             return;
         }
         const port = ev.ports[0];
@@ -156,7 +156,7 @@ export class RPCPeer {
         const { dataExecutor } = ev.data;
         if (!dataExecutor) {
             // tslint:disable-next-line:no-console
-            console.warn("<data> not in ev.data");
+            // console.warn("<data> not in ev.data");
             return;
         }
         if (!RPCExecutor.checkType(dataExecutor)) {
@@ -172,7 +172,7 @@ export class RPCPeer {
         const { dataPackage } = ev.data;
         if (!dataPackage) {
             // tslint:disable-next-line:no-console
-            console.warn("<data> not in ev.data");
+            // console.warn("<data> not in ev.data");
             return;
         }
         if (!RPCExecutePacket.checkType(dataPackage)) {
