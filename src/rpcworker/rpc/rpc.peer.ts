@@ -35,7 +35,7 @@ export class RPCPeer {
             const { key } = ev.data;
             if (!key) {
                 // tslint:disable-next-line:no-console
-                console.warn("<key> not in ev.data");
+                // console.warn("<key> not in ev.data");
                 return;
             }
 
