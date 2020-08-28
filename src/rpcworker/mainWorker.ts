@@ -1,5 +1,4 @@
-import NetWorker from "worker-loader?name=dist/[name].js!./netWorker";
-import HeartBeatWorker from "worker-loader?name=dist/[name].js!./heartBeatworker";
+import HeartBeatWorker from "worker-loader?name=js/[name].js!./heartBeatworker";
 import { RPCPeer } from "./rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCExecutor, RPCExecutePacket } from "./rpc/rpc.message";
@@ -16,13 +15,12 @@ const worker: Worker = self as any;
 worker.onmessage = (e: MessageEvent) => {
     const data = e.data;
     const method = data.method;
+    context.peer = new RPCPeer("mainWorker", worker);
     switch (method) {
         case "init":
             Logger.getInstance().log("mainWorker onmessage: init");
             if (context.inited) return;
             context.inited = true;
-
-            context.peer = new RPCPeer("mainWorker", worker);
             const heartBeatworker = new HeartBeatWorker();
             // 增加worker引用
             context.addWorker(HEARTBEAT_WORKER, heartBeatworker);
@@ -226,14 +224,14 @@ class WorkerClient extends SocketConnection {
         protobuf_packet.Deserialization(new Buffer(data));
         protobuf_packet.header.uuid = this.mUuid || 0;
         super.send(protobuf_packet.Serialization());
-        Logger.getInstance().info(`NetWorker[发送] >>> ${protobuf_packet.toString()}`);
+        Logger.getInstance().info(`MainWorker[发送] >>> ${protobuf_packet.toString()}`);
     }
 
     onData(data: any) {
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         this.mUuid = protobuf_packet.header.uuid;
-        Logger.getInstance().info(`NetWorker[接收] <<< ${protobuf_packet.toString()} `);
+        Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
         // Send the packet to parent thread
         const buffer = protobuf_packet.Serialization();
         context.onData(buffer);
