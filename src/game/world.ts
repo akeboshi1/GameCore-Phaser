@@ -146,7 +146,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mLoadingManager = new LoadingManager(this);
         this.mPlayerDataManager = new PlayerDataManager(this);
         this.mAccount = new Account();
-        this.mAccount.enterGame(this.mConfig.game_id, this.mConfig.virtual_world_id);
+        this.mAccount.enterGame(this.mConfig.game_id, this.mConfig.virtual_world_id, null, null);
 
         initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
 
@@ -306,7 +306,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        this._createAnotherGame(content.gameId, content.virtualWorldId);
+        this._createAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc);
     }
 
     public async changeScene() {
@@ -327,7 +327,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             gameID = this.mAccount.gameID;
             worldID = this.mAccount.virtualWorldId;
         }
-        this._createAnotherGame(gameID, worldID);
+        this._createAnotherGame(gameID, worldID, null, null);
     }
 
     public startHeartBeat() {
@@ -436,7 +436,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mAccount) {
             this.mAccount.destroy();
         }
-        this._createAnotherGame(this.mConfig.game_id, this.mConfig.virtual_world_id);
+        this._createAnotherGame(this.mConfig.game_id, this.mConfig.virtual_world_id, null, null);
     }
 
     public showLoading() {
@@ -557,7 +557,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
-    private async _createAnotherGame(gameId, worldId) {
+    private async _createAnotherGame(gameId, worldId, sceneId, loc) {
         await this.clearGame();
         this.isPause = false;
         if (this.mConnection) {
@@ -568,7 +568,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mClock = null;
         }
         if (this.mAccount) {
-            this.mAccount.enterGame(gameId, worldId);
+            this.mAccount.enterGame(gameId, worldId, sceneId, loc);
         }
         // this.mConfig.game_id = gameId;
         // this.mConfig.virtual_world_id = worldId;
@@ -732,10 +732,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         let game_id = this.mConfig.game_id;
         let virtualWorldUuid = this.mConfig.virtual_world_id;
+        let sceneId = null;
+        let loc = null;
         if (this.mAccount) {
             if (this.mAccount.gameID && this.mAccount !== undefined) {
                 game_id = this.mAccount.gameID;
                 virtualWorldUuid = this.mAccount.virtualWorldId;
+                sceneId = this.mAccount.sceneId;
+                loc = this.mAccount.loc;
             }
         }
         content.virtualWorldUuid = virtualWorldUuid;
@@ -756,6 +760,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         content.userToken = this.mConfig.auth_token = this.mAccount.accountData.token; // auth_token;
         content.expire = this.mConfig.token_expire = this.mAccount.accountData.expire + "";
         content.fingerprint = this.mConfig.token_fingerprint = this.mAccount.accountData.fingerprint;
+        content.sceneId = sceneId;
+        content.loc = loc;
         this.mConnection.send(pkt);
     }
 
