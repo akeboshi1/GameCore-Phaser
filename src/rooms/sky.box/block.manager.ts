@@ -81,10 +81,10 @@ export class BlockManager implements IBlockManager {
 
   setSize(imageW: number, imageH: number, gridW?: number, gridH?: number) {
     // TODO 部分场景超过大小未分块
-    const cols = imageW / 1080;
-    const rows = imageH / 1920;
-    this.mCols = cols > 1.5 ? Math.ceil(cols) : cols;
-    this.mRows = rows > 1.5 ? Math.ceil(rows) : rows;
+    const cols = imageW / 1024;
+    const rows = imageH / 1024;
+    this.mCols = Math.round(cols);
+    this.mRows = Math.round(rows);
     this.mGridWidth = imageW / this.mCols;
     this.mGridHeight = imageH / this.mRows;
   }
