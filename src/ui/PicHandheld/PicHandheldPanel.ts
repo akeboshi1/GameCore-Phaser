@@ -96,9 +96,9 @@ export class PicHandheldPanel extends BasePanel {
             if (curr) {
                 const cells = this.mPropGrid.getCells();
                 for (const cell of cells) {
-                    if (cell) {
+                    if (cell && cell.container) {
                         const container = cell.container;
-                        if (container && container.itemData === curr) {
+                        if (container.itemData === curr) {
                             container.isSelect = true;
                             this.curHandheldItem = cell;
                         } else container.isSelect = false;
