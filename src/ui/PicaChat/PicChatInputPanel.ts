@@ -44,7 +44,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
         this.mBackground.fillRect(0, 0, width, height);
-        this.mBackground.setInteractive();
+        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         this.bottomCon = scene.add.container();
         this.bottomCon.setPosition(width * 0.5, height * 0.5);
         const inputBg = new NineSlicePatch(scene, 0, 0, width, 47 * this.dpr, this.key, "chat_Input_bg", {
