@@ -151,9 +151,13 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             }
         });
         window.addEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
+        this.bottomCon.visible = false;
+        this.contentCon.visible = false;
     }
 
     public setKeywordHeight(height: number) {
+        this.bottomCon.visible = true;
+        this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
         this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5;// - 10 * this.dpr;
@@ -184,8 +188,8 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onKeyboardHandler(e) {
-        Logger.getInstance().log("******************", e.keyboardHeight);
-        this.setKeywordHeight(e.keyboardHeight);
+        Logger.getInstance().log("******************", e.keyboardHeight*this.dpr);
+        this.setKeywordHeight(e.keyboardHeight * this.dpr);
     }
 
     private setQuickChatDatas() {
