@@ -146,8 +146,6 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             if (keycode === 13) {
                 this.isSendChat = true;
                 this.onSentChat();
-                if (this.mInput.text !== "")
-                    this.quickChatAtt[0] = this.mInput.text;
             }
         });
         window.addEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
@@ -160,8 +158,8 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
-        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5 - 10 * this.dpr;
-        this.contentCon.height = camheight - this.bottomCon.y - this.bottomCon.height * 0.5 - 20 * this.dpr;
+        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5 - 20 * this.dpr;
+        this.contentCon.height = this.bottomCon.y - this.bottomCon.height * 0.5 - 20 * this.dpr;
         this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5 - 10 * this.dpr;
         this.contentCon.x = camWidth * 0.5;
         this.gamescroll.setSize(camWidth, this.contentCon.height);
@@ -169,7 +167,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.keyboardHeight = height;
         const startText = this.chatArr.shift();
         this.appendChat(startText);
-        this.setQuickChatDatas();
+        this.setQuickChatItems();
         this.mInput.text = camheight + "   " + this.gamescroll.height;
     }
 
@@ -186,7 +184,8 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             text += chat;
         }
         this.mOutputText.text = text;
-        this.gamescroll.Sort();
+        this.quickChatAtt[0] = val;
+        this.setFirstQuickItem();
     }
 
     private onKeyboardHandler(e) {
@@ -195,7 +194,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.setKeywordHeight(e.keyboardHeight * this.dpr);
     }
 
-    private setQuickChatDatas() {
+    private setQuickChatItems() {
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
         for (let i = 0; i < this.quickChatAtt.length; i++) {
@@ -208,6 +207,20 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         }
         this.quickChatScroll.Sort();
         this.quickCon.visible = false;
+    }
+
+    private setFirstQuickItem() {
+        if (this.quickChatScroll.getItemList().length === this.quickChatAtt.length) {
+            const list = this.quickChatScroll.getItemList();
+            if (list && list.length > 0) {
+                (<QuickChatItem>list[0]).setText(this.quickChatAtt[0]);
+            }
+        } else {
+            const camWidth = this.scene.cameras.main.width;
+            const item = new QuickChatItem(this.scene, camWidth, 30 * this.dpr, this.key, this.dpr, true);
+            this.quickChatScroll.addItemAt(item, 0);
+            this.quickChatScroll.Sort();
+        }
     }
 
     private onBlurHandler() {
@@ -260,6 +273,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.bottomCon.destroy();
         this.contentCon.destroy();
         this.quickCon.destroy();
+        this.gamescroll.clearItems();
         this.scene = undefined;
         this.world = undefined;
         this.gamescroll = undefined;
