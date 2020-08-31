@@ -41,6 +41,7 @@ export class MouseManager extends PacketHandler {
 
     public changeRoom(room: IRoomService) {
         this.pause();
+        this.mGameObject = null;
         this.mScene = room.scene;
         this.mRoom = <Room>room;
         if (!this.mScene) return;
