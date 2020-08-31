@@ -1,5 +1,5 @@
 export class WorkerLoop {
-    private _delta: number = 100;
+    private _delta: number = 200;
     private _loopMap: Map<string, ILoop>;
     private _timeID;
     private _isRuning: boolean = false;

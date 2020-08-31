@@ -233,12 +233,10 @@ class WorkerClient extends SocketConnection implements ILoop {
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         protobuf_packet.header.uuid = this.mUuid || 0;
-        const buffer = protobuf_packet.Serialization();
-        this._socketSendList.push(buffer);
+        this._socketSendList.push(protobuf_packet);
     }
     send(data: any): void {
         super.send(data);
-        Logger.getInstance().info(`MainWorker[发送] >>> ${data}`);
     }
 
     onData(data: any) {
@@ -257,8 +255,12 @@ class WorkerClient extends SocketConnection implements ILoop {
         let len: number = this._socketSendList.length;
         let count: number = 0;
         while (count < 3) {
-            const buffer = this._socketSendList[0];
-            this.send(buffer);
+            const protobuf_packet = this._socketSendList[0];
+            if (protobuf_packet) {
+                const buffer = protobuf_packet.Serialization();
+                this.send(buffer);
+                Logger.getInstance().info(`MainWorker[发送] >>> ${protobuf_packet.toString()}`);
+            }
             this._socketSendList.splice(0, 1);
             len = this._socketSendList.length;
             count++;
