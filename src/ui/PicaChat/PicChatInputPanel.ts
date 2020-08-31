@@ -7,6 +7,7 @@ import { WorldService } from "../../game/world.service";
 import { UIAtlasKey } from "../ui.atals.name";
 import { Font } from "../../utils/font";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { Logger } from "../../utils/log";
 
 export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -28,6 +29,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private keyboardHeight: number;
     private quickBg: Phaser.GameObjects.Image;
     private isOpenQuickPanel: boolean = false;
+    private isSendChat: boolean = false;
     private quickChatAtt: string[] = [];
     constructor(scene: Phaser.Scene, world: WorldService, key: string, outtext: string) {
         super();
@@ -142,6 +144,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mInput.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
+                this.isSendChat = true;
                 this.onSentChat();
                 if (this.mInput.text !== "")
                     this.quickChatAtt[0] = this.mInput.text;
@@ -150,6 +153,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         window.addEventListener("native.keyboardshow", keyboardShowHandler);
         function keyboardShowHandler(e) {
             this.setKeywordHeight(e.keyboardHeight);
+            Logger.getInstance().log("******************", e.keyboardHeight);
         }
     }
 
@@ -199,9 +203,10 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onBlurHandler() {
-        if (!this.isOpenQuickPanel) {
+        if (!this.isOpenQuickPanel && !this.isSendChat) {
             this.onCancelHandler();
         }
+        this.isSendChat = false;
     }
     private onFocusHandler() {
         if (this.isOpenQuickPanel) {
