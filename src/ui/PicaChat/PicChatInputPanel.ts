@@ -150,12 +150,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
                     this.quickChatAtt[0] = this.mInput.text;
             }
         });
-        window.addEventListener("native.keyboardshow", keyboardShowHandler);
-        const thisObj = this;
-        function keyboardShowHandler(e) {
-            thisObj.setKeywordHeight(e.keyboardHeight);
-            Logger.getInstance().log("******************", e.keyboardHeight);
-        }
+        window.addEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
     }
 
     public setKeywordHeight(height: number) {
@@ -186,6 +181,11 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         }
         this.mOutputText.text = text;
         this.gamescroll.Sort();
+    }
+
+    private onKeyboardHandler(e) {
+        Logger.getInstance().log("******************", e.keyboardHeight);
+        this.setKeywordHeight(e.keyboardHeight);
     }
 
     private setQuickChatDatas() {
@@ -248,6 +248,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onCancelHandler() {
+        window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
         this.mInput.setBlur();
         this.mBackground.destroy();
         this.mInput.destroy();
