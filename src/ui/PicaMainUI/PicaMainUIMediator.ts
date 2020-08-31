@@ -71,7 +71,19 @@ export class PicaMainUIMediator extends BaseMediator {
         if (this.mRoomInfo) this.mView.updateRoomInfo(this.mRoomInfo);
     }
     private onUpdatePlayerHandler(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
-        this.mPlayerInfo = content;
+        if (!this.mPlayerInfo) this.mPlayerInfo = content;
+        else {
+            for (const key in content) {
+                if (content.hasOwnProperty(key)) {
+                    const value = content[key];
+                    if (value !== undefined) {
+                        if (value instanceof Array) {
+                            if (value.length > 0) this.mPlayerInfo[key] = value;
+                        } else this.mPlayerInfo[key] = value;
+                    }
+                }
+            }
+        }
         if (this.mView)
             this.mView.updatePlayerInfo(content);
     }

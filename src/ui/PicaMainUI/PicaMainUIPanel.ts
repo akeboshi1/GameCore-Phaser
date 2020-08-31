@@ -513,7 +513,7 @@ class ProgressValue extends ValueContainer {
         this.setSize(bg.width, bg.height);
         this.mLeft.x = -this.width * this.originX + 13 * dpr;
         this.mAddBtn.x = this.width * this.originX - 10 * dpr;
-      //  this.mText.y = (this.height - this.mText.height) / 2;
+        //  this.mText.y = (this.height - this.mText.height) / 2;
         this.add([bg, this.mProgress, this.mLeft, this.mText, this.mAddBtn]);
     }
 

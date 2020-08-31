@@ -151,8 +151,9 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             }
         });
         window.addEventListener("native.keyboardshow", keyboardShowHandler);
+        const thisObj = this;
         function keyboardShowHandler(e) {
-            this.setKeywordHeight(e.keyboardHeight);
+            thisObj.setKeywordHeight(e.keyboardHeight);
             Logger.getInstance().log("******************", e.keyboardHeight);
         }
     }

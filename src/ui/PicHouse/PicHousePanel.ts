@@ -155,7 +155,7 @@ export class PicHousePanel extends BasePanel {
         const shopBtnY = this.houseInfoPanel.y + this.houseInfoPanel.height * 0.5 + this.closeShopBtn.height * 0.5 + 20 * this.dpr;
         this.closeShopBtn.y = shopBtnY;
         this.houseInfoPanel.add(this.closeShopBtn);
-
+        this.closeShopBtn.visible = false;
         const btnY = this.content.height * 0.5;
         this.editorRoomBtn = new NineSliceButton(this.scene, 0, btnY - 30 * this.dpr, 100 * this.dpr, 35 * this.dpr, UIAtlasKey.commonKey, "button_g", i18n.t("room_info.editorroom"), this.dpr, this.scale, {
             left: 16 * this.dpr,
