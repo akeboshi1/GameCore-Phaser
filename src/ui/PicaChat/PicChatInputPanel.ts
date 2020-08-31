@@ -161,8 +161,10 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
         this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5;// - 10 * this.dpr;
+        this.contentCon.height = camheight - this.bottomCon.y - this.bottomCon.height * 0.5 - 20 * this.dpr;
         this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5;// - 10 * this.dpr;
         this.contentCon.x = camWidth * 0.5;
+        this.gamescroll.setSize(camWidth, this.contentCon.height);
         this.gamescroll.refreshMask();
         this.keyboardHeight = height;
         const startText = this.chatArr.shift();
@@ -188,7 +190,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onKeyboardHandler(e) {
-        Logger.getInstance().log("******************", e.keyboardHeight*this.dpr);
+        if (this.keyboardHeight > 0) return;
         this.setKeywordHeight(e.keyboardHeight * this.dpr);
     }
 
