@@ -160,9 +160,9 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
-        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5;// - 10 * this.dpr;
+        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5 - 10 * this.dpr;
         this.contentCon.height = camheight - this.bottomCon.y - this.bottomCon.height * 0.5 - 20 * this.dpr;
-        this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5;// - 10 * this.dpr;
+        this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5 - 10 * this.dpr;
         this.contentCon.x = camWidth * 0.5;
         this.gamescroll.setSize(camWidth, this.contentCon.height);
         this.gamescroll.refreshMask();
@@ -170,7 +170,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         const startText = this.chatArr.shift();
         this.appendChat(startText);
         this.setQuickChatDatas();
-        this.mInput.text = height + "";
+        this.mInput.text = camheight + "   " + this.gamescroll.height;
     }
 
     public setQuickChatData(datas: string[]) {
@@ -191,6 +191,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
 
     private onKeyboardHandler(e) {
         if (this.keyboardHeight > 0) return;
+        window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
         this.setKeywordHeight(e.keyboardHeight * this.dpr);
     }
 
@@ -236,7 +237,6 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.quickChatScroll.y = this.quickBg.y;
         this.quickChatScroll.setSize(camWidth, this.keyboardHeight);
         this.mInput.setBlur();
-        this.mInput.text = "onQuickSendHandler";
     }
     private onSentChat() {
         const chat = this.mInput.text;
@@ -254,7 +254,6 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onCancelHandler() {
-        window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
         this.mInput.setBlur();
         this.mBackground.destroy();
         this.mInput.destroy();
