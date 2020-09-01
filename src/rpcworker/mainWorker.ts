@@ -1,4 +1,4 @@
-import HeartBeatWorker from "worker-loader?filename=[hash].[name].js!../rpcworker/heartBeatWorker";
+import HeartBeatWorker from "worker-loader?filename=[name].js!../rpcworker/heartBeatWorker";
 import { RPCPeer } from "./rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCExecutor, RPCExecutePacket } from "./rpc/rpc.message";
