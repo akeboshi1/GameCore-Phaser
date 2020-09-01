@@ -155,7 +155,9 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     public setKeywordHeight(height: number) {
-        const offsetHeight = window.screen.height * this.dpr - height;
+        const screenHeight = window.screen.height;
+        const statusHeight = 0;
+        const offsetHeight = screenHeight - height - statusHeight;
         this.bottomCon.visible = true;
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
