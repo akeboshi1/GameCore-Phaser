@@ -11,8 +11,7 @@ import { Logger } from "../utils/log";
 // PBpacket.addProtocol(op_virtual_world);
 // PBpacket.addProtocol(op_gameconfig_01);
 // import NetWorker from "worker-loader?name=js/[hash].[name].js!./networker";
-// import HeartBeatWorker from "worker-loader?name=js/[hash].[name].js!./heartbeatworker";
-import MainWorker from "worker-loader?name=js/[hash].[name].js!../rpcworker/mainWorker";
+import MainWorker from "worker-loader?filename=js/[hash].[name].js!../rpcworker/mainWorker";
 import * as protos from "pixelpai_proto";
 import { load } from "../utils/http";
 import { Lite } from "game-capsule";
@@ -25,7 +24,7 @@ for (const key in protos) {
 export default class Connection implements ConnectionService {
     protected mPacketHandlers: PacketHandler[] = [];
     private mListener: IConnectListener;
-    private mMainWorket: MainWorker;
+    private mMainWorker: MainWorker;
     // private mWorker: NetWorker;
     // private mHeartBeatWorker: HeartBeatWorker;
     private mReConnectCount: number = 0;
@@ -39,7 +38,8 @@ export default class Connection implements ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
         try {
-            this.mMainWorket = new MainWorker();
+            this.mMainWorker = new MainWorker();
+            this.mMainWorker.postMessage({ method: "init" });
             // this.mHeartBeatWorker = new HeartBeatWorker();
             // this.mWorker = new NetWorker();
             this._doConnect();
@@ -49,7 +49,7 @@ export default class Connection implements ConnectionService {
     }
 
     closeConnect(): void {
-        this.mMainWorket.terminate();
+        this.mMainWorker.terminate();
         // this.mWorker.terminate();
         // this.mHeartBeatWorker.terminate();
         this.mCachedServerAddress = undefined;
@@ -59,8 +59,8 @@ export default class Connection implements ConnectionService {
     }
 
     clearHeartBeat() {
-        if (this.mMainWorket) {
-            this.mMainWorket.postMessage({ method: "clearBeat" });
+        if (this.mMainWorker) {
+            this.mMainWorker.postMessage({ method: "clearBeat" });
         }
     }
 
@@ -69,18 +69,18 @@ export default class Connection implements ConnectionService {
     }
 
     send(packet: PBpacket) {
-        if (!this.mMainWorket) {
+        if (!this.mMainWorker) {
             throw new Error(`NetWorker is undefined.`);
         }
 
-        this.mMainWorket.postMessage({
+        this.mMainWorker.postMessage({
             "method": "send",
             "buffer": packet.Serialization(),
         });
     }
 
     clearReconnectCount() {
-        this.mMainWorket.postMessage("clearBeat");
+        this.mMainWorker.postMessage("clearBeat");
     }
 
     removePacketListener(listener: PacketHandler) {
@@ -103,18 +103,25 @@ export default class Connection implements ConnectionService {
         }
     }
 
-    loadRes(paths: string[]) {
-        if (this.mMainWorket) this.mMainWorket.postMessage({ "method": "load", "data": paths });
+    onFocus() {
+        if (this.mMainWorker) this.mMainWorker.postMessage({ "method": "focus" });
+    }
+
+    onBlur() {
+        if (this.mMainWorker) this.mMainWorker.postMessage({ "method": "blur" });
+    }
+    loadRes(path: string) {
+        if (this.mMainWorker) this.mMainWorker.postMessage({ "method": "loadRes", "url": path });
     }
 
     private _doConnect() {
         // Logger.getInstance().info(`_doConnect `, this.mCachedServerAddress);
         const self = this;
-        if (this.mMainWorket) {
-            this.mMainWorket.onmessage = (event: any) => {
+        if (this.mMainWorker) {
+            this.mMainWorker.onmessage = (event: any) => {
                 self.onWorkerMessage(event.data);
             };
-            this.mMainWorket.postMessage({
+            this.mMainWorker.postMessage({
                 "method": "connect",
                 "address": self.mCachedServerAddress,
             });
@@ -128,8 +135,9 @@ export default class Connection implements ConnectionService {
             case "onConnected":
                 this.mReConnectCount = 0;
                 this.mListener.onConnected();
-                if (this.mMainWorket) {
-                    this.mMainWorket.postMessage({ method: "startBeat" });
+                if (this.mMainWorker) {
+                    this.mMainWorker.postMessage({ method: "register" });
+                    this.mMainWorker.postMessage({ method: "startBeat" });
                 }
                 break;
             case "onDisConnected":
@@ -209,7 +217,7 @@ export default class Connection implements ConnectionService {
     }
 
     private reConnect() {
-        this.mMainWorket.postMessage({ method: "endHeartBeat" });
+        this.mMainWorker.postMessage({ method: "endHeartBeat" });
         const world: any = this.mPacketHandlers[0];
         world.reconnect();
     }
@@ -220,8 +228,8 @@ export default class Connection implements ConnectionService {
     }
 
     private endHeartBeat() {
-        if (this.mMainWorket) {
-            this.mMainWorket.postMessage({ method: "endHeartBeat" });
+        if (this.mMainWorker) {
+            this.mMainWorker.postMessage({ method: "endHeartBeat" });
         }
     }
 }

@@ -1,6 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/phaser");
+const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -15,6 +15,7 @@ const config = {
         tooqing: path.join(__dirname, "./launcher.ts"),
     },
     output: {
+        // This is required so workers are known where to be loaded from
         path: path.resolve(__dirname, "dist"),
         filename: "js/[name].js",
         chunkFilename: `js/[name]_v${appVer}.js`,
@@ -78,8 +79,8 @@ const config = {
             files: ["./src/**/*.ts"],
         }),
         new webpack.DefinePlugin({
-            WEBGL_RENDERER: true, // I did this to make webpack work, but I'm not really sure it should always be true
-            CANVAS_RENDERER: true, // I did this to make webpack work, but I'm not really sure it should always be true
+            WEBGL_RENDERER: true, // I did this to make webpack work, but I"m not really sure it should always be true
+            CANVAS_RENDERER: true, // I did this to make webpack work, but I"m not really sure it should always be true
         }),
     ],
     devServer: {

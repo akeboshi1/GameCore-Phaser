@@ -904,7 +904,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private loadGameConfig(remotePath): Promise<Lite> {
         const configPath = ResUtils.getGameConfig(remotePath);
-
+        this.mConnection.loadRes(configPath);
         return load(configPath, "arraybuffer").then((req: any) => {
             Logger.getInstance().log("start decodeConfig");
             this.mLoadingManager.start(LoadingTips.parseConfig());
@@ -937,6 +937,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = false;
         if (this.mGame) {
+            this.mConnection.onFocus();
             this.mRoomMamager.onFocus();
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
             if (pauseScene) {
@@ -953,6 +954,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = true;
         if (this.mGame) {
+            this.mConnection.onBlur();
             this.mRoomMamager.onBlur();
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
