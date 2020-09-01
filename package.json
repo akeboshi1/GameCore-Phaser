@@ -3,7 +3,7 @@
     "version": "1.0.334",
     "main": "release/js/tooqing.js",
     "scripts": {
-        "dev": "webpack-dev-server --mode development",
+        "dev": "webpack-dev-server --mode development && mv dist/heartBeatWorker.js dist/js/heartBeatWorker.js && mv dist/heartBeatWorker.js.LICENSE.txt dist/js/heartBeatWorker.js.LICENSE.txt",
         "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
         "ver": "genversion version.js"
@@ -29,8 +29,7 @@
         "typescript": "^3.5.2",
         "webpack": "^4.35.2",
         "webpack-cli": "^3.3.5",
-        "webpack-dev-server": "^3.7.2",
-        "worker-loader": "^2.0.0"
+        "webpack-dev-server": "^3.7.2"
     },
     "dependencies": {
         "buffer": "^5.2.1",
@@ -43,6 +42,7 @@
         "maxrects-packer": "^2.6.0",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "simple-sha1": "^3.0.1",
-        "tooqinggamephaser": "^0.2.0"
+        "tooqinggamephaser": "^0.2.0",
+        "worker-loader": "^3.0.2"
     }
 }

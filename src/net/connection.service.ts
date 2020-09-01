@@ -3,9 +3,10 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 
 export interface ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void;
-
+    onFocus();
+    onBlur();
     closeConnect(): void;
-    loadRes(paths: string[]);
+    loadRes(path: string);
     clearHeartBeat();
 
     addPacketListener(listener: PacketHandler): void;
