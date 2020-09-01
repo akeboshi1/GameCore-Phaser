@@ -1,5 +1,6 @@
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCMessage, RPCExecutor, RPCExecutePacket } from "./rpc.message";
+import { Logger } from "../../utils/log";
 
 export const MESSAGEKEY_LINK: string = "link";
 export const MESSAGEKEY_ADDREGISTRY: string = "addRegistry";
@@ -32,6 +33,7 @@ export class RPCPeer {
         this.contexts = new Map();
 
         this.worker.addEventListener("message", (ev: MessageEvent) => {
+            Logger.getInstance().log(this.name + "-----" , ev.data);
             const { key } = ev.data;
             if (!key) {
                 // tslint:disable-next-line:no-console
