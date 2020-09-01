@@ -1,5 +1,5 @@
 import { ILayerManager } from "../layer.manager";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";
@@ -35,9 +35,13 @@ export class PicFriendMediator extends BaseMediator {
             this.mView.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
             this.mView.on(PicFriendEvent.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
             this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
+            this.mView.on(PicFriendEvent.SEARCH_FRIEND, this.onSearchHandler, this);
+            this.mView.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
         }
         if (!this.picFriend) {
             this.picFriend = new PicFriend(this.world);
+            this.picFriend.on(PicFriendEvent.PLAYER_LIST, this.onPlayerListHandler, this);
+            this.picFriend.on(PicFriendEvent.SEARCH_RESULT, this.onSearchResultHandler, this);
             this.picFriend.register();
         }
         this.layerMgr.addToUILayer(this.mView);
@@ -100,13 +104,17 @@ export class PicFriendMediator extends BaseMediator {
         });
     }
 
-    private onFollowHandler(id: string) {
+    private onFollowHandler(args: string) {
+        if (!args || args.length < 0) return;
+        const id = args[0];
         this.picFriend.follow(id).then((response) => {
             this.mView.filterById(id);
         });
     }
 
-    private onUnfollowHandler(id: string) {
+    private onUnfollowHandler(args: string) {
+        if (!args || args.length < 0) return;
+        const id = args[0];
         this.picFriend.unfollow(id).then((response) => {
             this.mView.filterById(id);
         });
@@ -139,9 +147,32 @@ export class PicFriendMediator extends BaseMediator {
         });
     }
 
+    private fetchPlayerList(data) {
+        if (!data) return;
+        const ids = data.map((friend: any) => friend.id);
+        this.picFriend.fetchFriendList(ids);
+    }
+
+    private onPlayerListHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+        this.mView.updateFriend(content);
+    }
+
     private onReqFriendAttributesHandler(id: string) {
         // TODO 点击好友头像，显示属性面板
-        Logger.getInstance().log("Req friend attributes: ", id);
+        this.picFriend.fetchFriendInfo(id);
+        // Logger.getInstance().log("Req friend attributes: ", id);
+    }
+
+    private onSearchHandler(text) {
+        if (text && text.length > 0) this.picFriend.searchFriend(text[0]);
+    }
+
+    private onSearchResultHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SEARCH_PLAYER) {
+        this.mView.setFriend(FriendChannel.Search, content.playerInfos);
+    }
+
+    private onReqPlayerListHanlder(ids) {
+        this.picFriend.fetchFriendList(ids);
     }
 
     private onHidePanel() {

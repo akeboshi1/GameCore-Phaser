@@ -19,8 +19,8 @@ export class FriendInvitePanel extends BasePanel {
         super(scene, world);
     }
 
-    show() {
-        super.show();
+    show(params?: any) {
+        super.show(params);
         if (this.mInitialized) {
             this.showInvite();
         }
@@ -76,8 +76,20 @@ export class FriendInvitePanel extends BasePanel {
         if (this.interval) {
             clearInterval(this.interval);
         }
+        if (!this.showData || this.showData.length < 0) {
+            return;
+        }
+        const data = this.showData[0];
+        const buttons = data.button;
+        if (buttons.length < 2) {
+            return;
+        }
         this.x = -this.width;
-        this.text.text = `[color=#FFFF00][/color]`;
+        this.text.text = `[color=#FFFF00]${data.text[0].text}[/color]`;
+        this.agree.setText(buttons[1].text);
+        this.agree.setData("data", buttons[1]);
+        this.refused.setText(buttons[0].text);
+        this.refused.setData("data", buttons[0]);
         this.countdown = 10;
         this.setAgressText();
         this.tween = this.scene.tweens.add({
@@ -98,7 +110,14 @@ export class FriendInvitePanel extends BasePanel {
     }
 
     private onAgreeHandler() {
-        this.emit("agree");
+        if (!this.mShowData || this.mShowData.length < 1) {
+            return;
+        }
+        const data = this.agree.getData("data");
+        if (!data || !data.node) {
+            return;
+        }
+        this.emit("targetUI", this.mShowData[0].id, data.node.id);
         this.close();
     }
 
@@ -116,14 +135,19 @@ export class FriendInvitePanel extends BasePanel {
             props: { x: -this.width },
             duration: 200,
             onComplete: () => {
-                this.emit("hide");
+                const data = this.refused.getData("data");
+                if (data && data.node) this.emit("targetUI", this.mShowData[0].id, data.node.id);
+                // this.emit("hide");
             }
         });
     }
 
     private setAgressText() {
         if (this.agree) {
-            this.agree.setText(`${i18n.t("friend_invite.agree")}(${this.countdown})`);
+            const data = this.agree.getData("data");
+            if (data) {
+                this.agree.setText(`${data.text}(${this.countdown})`);
+            }
         }
     }
 }

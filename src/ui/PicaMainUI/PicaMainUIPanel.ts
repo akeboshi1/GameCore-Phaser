@@ -10,6 +10,7 @@ import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { NineSlicePatch, Button } from "../../../lib/rexui/lib/ui/ui-components";
 import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { i18n } from "../../i18n";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -266,8 +267,7 @@ export class PicaMainUIPanel extends BasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         const energy = this.showData.energy;
-        const text = "当前精力值" + `${energy.currentValue}/${energy.max}\n` + "精力不满时，每10分钟恢复1点";
-        this.textToolTip.setTextData(text, 3000);
+        this.textToolTip.setTextData(i18n.t("main_ui.energy_tips", {"name": `${energy.currentValue}/${energy.max}\n`}), 3000);
         this.textToolTip.setPosition(120 * this.dpr, 80 * this.dpr);
     }
     private checkUpdateActive() {
@@ -277,7 +277,6 @@ export class PicaMainUIPanel extends BasePanel {
                 this.updateUIState(data);
             }
         }
-
     }
 
     private onPraiseHandler(pointer: any, box: CheckBox) {

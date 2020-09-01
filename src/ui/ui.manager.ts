@@ -33,6 +33,7 @@ import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 import { PicFurniFunMediator } from "./PicFurniFun/PicFurniFunMediator";
 import { PicHandheldMediator } from "./PicHandheld/PicHandheldMediator";
 import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
+import { CharacterInfoMediator } from "./CharacterInfo/CharacterInfoMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -156,6 +157,7 @@ export class UiManager extends PacketHandler {
             this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
             this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
             this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
+            this.mMedMap.set(CharacterInfoMediator.name, new CharacterInfoMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(ComposeMediator.name, new ComposeMediator(this.mUILayerManager,scene, this.worldService));
             // this.mMedMap.set(CharacterInfoMediator.name, new CharacterInfoMediator(this.mUILayerManager, scene, this.worldService));
             // this.mMedMap.set(NpcDialogueMediator.name, new NpcDialogueMediator(this.mUILayerManager,scene, this.worldService));

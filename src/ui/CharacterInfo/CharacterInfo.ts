@@ -1,7 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { WorldService } from "../../game/world.service";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_def, op_pkt_def } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
+import { Logger } from "../../utils/log";
 
 export class CharacterInfo extends PacketHandler {
     private readonly world: WorldService;
@@ -50,6 +51,26 @@ export class CharacterInfo extends PacketHandler {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELF_PLAYER_INFO);
         this.connection.send(packet);
     }
+
+    public track(id: string) {
+        this.playerInteraction(id, op_pkt_def.PKT_PlayerInteraction.PKT_tracePlayer);
+    }
+
+    public invite(id: string) {
+        this.playerInteraction(id, op_pkt_def.PKT_PlayerInteraction.PKT_invitePlayer);
+    }
+
+    private playerInteraction(id: string, method: op_pkt_def.PKT_PlayerInteraction) {
+        const param = op_def.GeneralParam.create();
+        param.t = op_def.GeneralParamType.str;
+        param.valStr = id;
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_PLAYER_INTERACTION);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_PLAYER_INTERACTION = packet.content;
+        content.method = method;
+        content.param = param;
+        this.connection.send(packet);
+    }
+
     private onOwnerCharacterInfo(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO = packge.content;
         this.mEvent.emit("ownerInfo", content);
@@ -58,5 +79,12 @@ export class CharacterInfo extends PacketHandler {
     private onOtherCharacterInfo(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO = packge.content;
         this.mEvent.emit("otherInfo", content);
+
+        this.world.httpService.post("user/check_relation", {
+            userA: this.world.account.accountData.id,
+            userB: content.cid
+        }).then((response) => {
+            Logger.getInstance().log("=====>>", response);
+        });
     }
 }
