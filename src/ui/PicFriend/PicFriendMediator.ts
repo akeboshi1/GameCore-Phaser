@@ -107,7 +107,7 @@ export class PicFriendMediator extends BaseMediator {
     private onFollowHandler(args: string) {
         if (!args || args.length < 0) return;
         const id = args[0];
-        this.picFriend.follow(id).then((response) => {
+        this.world.httpService.follow(id).then((response) => {
             this.mView.filterById(id);
         });
     }
@@ -115,19 +115,19 @@ export class PicFriendMediator extends BaseMediator {
     private onUnfollowHandler(args: string) {
         if (!args || args.length < 0) return;
         const id = args[0];
-        this.picFriend.unfollow(id).then((response) => {
+        this.world.httpService.unfollow(id).then((response) => {
             this.mView.filterById(id);
         });
     }
 
     private onBanUserHandler(fuid: string) {
-        this.picFriend.banUser(fuid).then(() => {
+        this.world.httpService.banUser(fuid).then(() => {
             this.mView.filterById(fuid);
         });
     }
 
     private onRemoveBanUserHandler(fuid: string) {
-        this.picFriend.removeBanUser(fuid).then((response) => {
+        this.world.httpService.removeBanUser(fuid).then((response) => {
             this.mView.filterById(fuid);
         });
     }
@@ -142,7 +142,7 @@ export class PicFriendMediator extends BaseMediator {
         if (!args || args.length < 1) {
             return;
         }
-        this.picFriend.removeBanUser(args[0]).then((response) => {
+        this.world.httpService.removeBanUser(args[0]).then((response) => {
             this.mView.filterById(args[0]);
         });
     }

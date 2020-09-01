@@ -53,6 +53,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private mExitBtn: NineSliceButton;
     private mFirendMenu: FriendMenu;
     private mCharacterData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO;
+    private mRelation: FriendRelation;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -232,7 +233,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mainContent.add(this.mExitBtn);
         this.add([this.mBackGround, this.content]);
         const scrollY = 54 * this.dpr;
-        const scrollHeight = 78 * this.dpr;
+        const scrollHeight = 75 * this.dpr;
         this.mCategoryScroll = new GameScroller(this.scene, {
             x: 0,
             y: scrollY,
@@ -249,13 +250,13 @@ export default class CharacterInfoPanel extends BasePanel {
         const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
         const capW = propFrame.width + 5 * this.dpr;
         const capH = propFrame.height + 2 * this.dpr;
-        const gridX = 0, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 200 * this.dpr;
-        const gridY = scrollY + scrollHeight * 0.5 + 60 * this.dpr;
+        const gridX = 0, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 150 * this.dpr;
+        const gridY = scrollY + scrollHeight * 0.5 + 34 * this.dpr;
         this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
             return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr);
         }, new Handler(this, this.onSelectItemHandler));
-        const attrHeigth = 149 * this.dpr;
-        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY - 5 * this.dpr, 260 * this.dpr, attrHeigth, this.key, this.dpr);
+        const attrHeigth = 150 * this.dpr;
+        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY + 15 * this.dpr, 260 * this.dpr, attrHeigth, this.key, this.dpr);
         this.content.add(this.mAttrPanel);
         this.content.visible = false;
         this.resize(wid, hei);
@@ -305,6 +306,9 @@ export default class CharacterInfoPanel extends BasePanel {
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
+            this.mSkillGrideTable.setSize(this.mSkillGrideTable.width, 200 * this.dpr);
+            // this.mSkillGrideTable.setPosition();
+            this.mSkillGrideTable.refreshPos(this.mSkillGrideTable.x, this.mSkillGrideTable.y + 26 * this.dpr);
             this.mSkillGrideTable.setColumnCount(3);
             this.isOwner = true;
         } else {
@@ -327,10 +331,15 @@ export default class CharacterInfoPanel extends BasePanel {
         }
         this.mFirendMenu.visible = false;
         this.setSubCategory(subArr);
+        this.setFriendRelation(FriendRelation.Null);
     }
 
     public setFriendRelation(relation: FriendRelation) {
+        this.mRelation = relation;
         this.mFirendMenu.visible = relation === FriendRelation.Friend;
+        if (relation === FriendRelation.Null) {
+            return;
+        }
         if (relation === FriendRelation.Followed || relation === FriendRelation.Friend) {
             this.addFriendBtn.setText(i18n.t("friendlist.unfollow"));
         } else {
@@ -451,7 +460,18 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private onAddFriendHandler() {
-
+        if (!this.mCharacterData) {
+            return;
+        }
+        switch(this.mRelation) {
+            case FriendRelation.Friend:
+            case FriendRelation.Followed:
+                this.emit("unfollow", this.mCharacterData.cid);
+                break;
+            case FriendRelation.Fans:
+                this.emit("follow", this.mCharacterData.cid);
+                break;
+        }
     }
 
     private onTradingHandler() {
@@ -680,6 +700,7 @@ class FriendMenu extends Container {
 }
 
 export enum FriendRelation {
+    Null,
     Friend,
     Fans,
     Followed

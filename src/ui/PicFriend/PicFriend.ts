@@ -49,22 +49,6 @@ export class PicFriend extends PacketHandler {
         this.mEvent.destroy();
     }
 
-    follow(fuid: string) {
-        return this.httpService.post(`user/follow`, { fuid });
-    }
-
-    unfollow(fuid: string) {
-        return this.httpService.post(`user/unfollow`, { fuid });
-    }
-
-    banUser(fuid: string) {
-        return this.httpService.post(`user/ban`, { fuid });
-    }
-
-    removeBanUser(fuid: string) {
-        return this.httpService.post(`user/unban`, { fuid });
-    }
-
     fetchFriendInfo(id: string) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_ANOTHER_PLAYER_INFO);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_ANOTHER_PLAYER_INFO = packet.content;

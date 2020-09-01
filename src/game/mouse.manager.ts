@@ -27,7 +27,7 @@ export class MouseManager extends PacketHandler {
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
     private mGameObject: Phaser.GameObjects.GameObject;
-    private mDownDelay: number = 2000;
+    private mDownDelay: number = 1000;
     private mDownTime: any;
     private readonly zoom: number;
     private mRoom: Room;

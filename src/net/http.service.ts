@@ -9,7 +9,7 @@ export class HttpService {
      * 用户关注其他用户
      * @param uids
      */
-    follow(fuid: string[]): Promise<Response> {
+    follow(fuid: string): Promise<Response> {
         return this.post("user/follow", { fuid });
     }
 
@@ -19,6 +19,22 @@ export class HttpService {
      */
     unfollow(fuid: string): Promise<Response> {
         return this.post("user/unfollow", { fuid });
+    }
+
+    /**
+     * 添加到黑名单
+     * @param fuid
+     */
+    banUser(fuid: string) {
+        return this.post(`user/ban`, { fuid });
+    }
+
+    /**
+     * 移除黑名单
+     * @param fuid
+     */
+    removeBanUser(fuid: string) {
+        return this.post(`user/unban`, { fuid });
     }
 
     /**

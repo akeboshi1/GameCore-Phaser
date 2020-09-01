@@ -34,6 +34,8 @@ export class CharacterInfoMediator extends BaseMediator {
             this.mView.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
             this.mView.on("track", this.onTrackHandler, this);
             this.mView.on("invite", this.onInviteHandler, this);
+            this.mView.on("follow", this.onFollowHandler, this);
+            this.mView.on("unfollow", this.onUnfollowHandler, this);
         }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show(params);
@@ -72,6 +74,26 @@ export class CharacterInfoMediator extends BaseMediator {
 
         this.checkRelation(content.cid);
         // this.mView.setPlayerData(content);
+    }
+
+    private onFollowHandler(id: string) {
+        this.world.httpService.follow(id).then((response: any) => {
+            const { code, data } = response;
+            if (code === 200 || code === 201) {
+                if (this.mView) {
+                    this.checkRelation(id);
+                }
+            }
+        });
+    }
+
+    private onUnfollowHandler(id: string) {
+        this.world.httpService.unfollow(id).then((response: any) => {
+            const { code, data } = response;
+            if (code === 200 || code === 201) {
+                this.checkRelation(id);
+            }
+        });
     }
 
     private checkRelation(cid: string) {
