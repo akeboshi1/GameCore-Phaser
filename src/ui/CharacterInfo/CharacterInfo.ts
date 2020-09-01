@@ -79,12 +79,5 @@ export class CharacterInfo extends PacketHandler {
     private onOtherCharacterInfo(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO = packge.content;
         this.mEvent.emit("otherInfo", content);
-
-        this.world.httpService.post("user/check_relation", {
-            userA: this.world.account.accountData.id,
-            userB: content.cid
-        }).then((response) => {
-            Logger.getInstance().log("=====>>", response);
-        });
     }
 }

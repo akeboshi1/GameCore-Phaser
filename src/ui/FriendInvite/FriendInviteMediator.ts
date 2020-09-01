@@ -2,7 +2,7 @@ import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { FriendInvitePanel } from "./FriendInvitePanel";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 
 export class FriendInviteMediator extends BaseMediator {
@@ -39,8 +39,6 @@ export class FriendInviteMediator extends BaseMediator {
         content.uiId = uiId;
         content.componentId = componentId;
         this.world.connection.send(pkt);
-
-        this.destroy();
     }
 
     private onAgreeHandler() {

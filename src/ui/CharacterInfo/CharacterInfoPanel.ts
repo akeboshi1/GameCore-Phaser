@@ -324,9 +324,18 @@ export default class CharacterInfoPanel extends BasePanel {
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
             this.mSkillGrideTable.setColumnCount(2);
             this.isOwner = false;
-            this.mFirendMenu.visible = true;
         }
+        this.mFirendMenu.visible = false;
         this.setSubCategory(subArr);
+    }
+
+    public setFriendRelation(relation: FriendRelation) {
+        this.mFirendMenu.visible = relation === FriendRelation.Friend;
+        if (relation === FriendRelation.Followed || relation === FriendRelation.Friend) {
+            this.addFriendBtn.setText(i18n.t("friendlist.unfollow"));
+        } else {
+            this.addFriendBtn.setText(i18n.t("friendlist.follow"));
+        }
     }
 
     public destroy() {
@@ -668,4 +677,10 @@ class FriendMenu extends Container {
     private onInviteHandler() {
         this.emit("invite");
     }
+}
+
+export enum FriendRelation {
+    Friend,
+    Fans,
+    Followed
 }

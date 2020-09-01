@@ -38,6 +38,13 @@ export class FriendInvitePanel extends BasePanel {
         this.agree.off(CoreUI.MouseEvent.Tap,this.onAgreeHandler, this);
     }
 
+    public destroy() {
+        if (this.tween) {
+            this.tween.stop();
+        }
+        super.destroy();
+    }
+
     protected preload() {
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
