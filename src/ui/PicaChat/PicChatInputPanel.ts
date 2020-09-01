@@ -155,23 +155,24 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     public setKeywordHeight(height: number) {
+        const offsetHeight = window.screen.height*this.dpr - height;
         this.bottomCon.visible = true;
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
-        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5 - 17 * this.dpr;
+        this.bottomCon.y = offsetHeight - this.bottomCon.height * 0.5;
         this.contentCon.height = this.bottomCon.y - this.bottomCon.height * 0.5 - 20 * this.dpr;
         this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5 - 5 * this.dpr;
         this.contentCon.x = camWidth * 0.5;
         this.gamescroll.resetSize(camWidth, this.contentCon.height);
         this.gamescroll.refreshMask();
-        const conHeight = height + 20 * this.dpr;
+        const conHeight = camheight - offsetHeight;// height + 20 * this.dpr;
         this.quickCon.y = this.bottomCon.y + this.bottomCon.height * 0.5;
         this.quickBg.y = conHeight * 0.5;
         this.quickBg.displayWidth = camWidth + 10 * this.dpr;
         this.quickBg.displayHeight = conHeight;
         this.quickChatScroll.y = this.quickBg.y;
-        this.quickChatScroll.resetSize(camWidth, height);
+        this.quickChatScroll.resetSize(camWidth, conHeight);
         this.keyboardHeight = height;
         this.setQuickChatItems();
     }
