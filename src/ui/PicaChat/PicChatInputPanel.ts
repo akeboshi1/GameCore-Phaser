@@ -7,6 +7,7 @@ import { WorldService } from "../../game/world.service";
 import { UIAtlasKey } from "../ui.atals.name";
 import { Font } from "../../utils/font";
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { Logger } from "../../utils/log";
 
 export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -28,6 +29,9 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private keyboardHeight: number;
     private quickBg: Phaser.GameObjects.Image;
     private isOpenQuickPanel: boolean = false;
+    private isSendChat: boolean = false;
+    private quickChatAtt: string[] = [];
+    private isDispose: boolean = false;
     constructor(scene: Phaser.Scene, world: WorldService, key: string, outtext: string) {
         super();
         this.key = key;
@@ -41,6 +45,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.6);
         this.mBackground.fillRect(0, 0, width, height);
+        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         this.bottomCon = scene.add.container();
         this.bottomCon.setPosition(width * 0.5, height * 0.5);
         const inputBg = new NineSlicePatch(scene, 0, 0, width, 47 * this.dpr, this.key, "chat_Input_bg", {
@@ -140,28 +145,46 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mInput.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
+                this.isSendChat = true;
                 this.onSentChat();
             }
         });
-        window.addEventListener("native.keyboardshow", keyboardShowHandler);
-        function keyboardShowHandler(e) {
-            this.setKeywordHeight(e.keyboardHeight);
-        }
-        this.setQuickChatDatas();
+        window.addEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
+        this.bottomCon.visible = false;
+        this.contentCon.visible = false;
     }
 
     public setKeywordHeight(height: number) {
+        const screenHeight = window.screen.height;
+        const statusHeight = 0;
+        const offsetHeight = screenHeight - height - statusHeight;
+        this.bottomCon.visible = true;
+        this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
-        this.bottomCon.y = camheight - height - this.bottomCon.height * 0.5 - 10 * this.dpr;
-        this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5 - 10 * this.dpr;
+        this.bottomCon.y = offsetHeight - this.bottomCon.height * 0.5;
+        this.contentCon.height = this.bottomCon.y - this.bottomCon.height * 0.5 - 20 * this.dpr;
+        this.contentCon.y = this.bottomCon.y - this.bottomCon.height * 0.5 - this.contentCon.height * 0.5 - 5 * this.dpr;
         this.contentCon.x = camWidth * 0.5;
+        this.gamescroll.resetSize(camWidth, this.contentCon.height);
         this.gamescroll.refreshMask();
+        const conHeight = camheight - offsetHeight;// height + 20 * this.dpr;
+        this.quickCon.y = this.bottomCon.y + this.bottomCon.height * 0.5;
+        this.quickBg.y = conHeight * 0.5;
+        this.quickBg.displayWidth = camWidth + 10 * this.dpr;
+        this.quickBg.displayHeight = conHeight;
+        this.quickChatScroll.y = this.quickBg.y;
+        this.quickChatScroll.resetSize(camWidth, conHeight);
         this.keyboardHeight = height;
-        const startText = this.chatArr.shift();
-        this.appendChat(startText);
+        this.mInput.text = window.screen.height + "   " + height;
+        this.setQuickChatItems();
     }
 
+    public setQuickChatData(datas: string[]) {
+        if (datas) this.quickChatAtt = datas;
+        this.quickChatAtt.unshift(undefined);
+        this.mInput.setFocus();
+    }
     public appendChat(val: string) {
         this.chatArr.push(val);
         if (this.chatArr.length > this.maxChatLength) this.chatArr.shift();
@@ -173,23 +196,47 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.gamescroll.Sort();
     }
 
-    private setQuickChatDatas() {
+    private onKeyboardHandler(e) {
+        if (this.keyboardHeight > 0) return;
+        window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
+        this.setKeywordHeight(e.keyboardHeight * this.dpr);
+    }
+
+    private setQuickChatItems() {
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
-        const arr = [];
-        for (let i = 0; i < 12; i++) {
-            const item = new QuickChatItem(this.scene, camWidth, 30 * this.dpr, this.key, this.dpr, (i === 0 ? true : false));
-            this.quickChatScroll.addItem(item);
-            item.setText("这是一段话再来十遍");
+        for (let i = 0; i < this.quickChatAtt.length; i++) {
+            const text = this.quickChatAtt[i];
+            if (text) {
+                const item = new QuickChatItem(this.scene, camWidth, 30 * this.dpr, this.key, this.dpr, (i === 0 ? true : false));
+                this.quickChatScroll.addItem(item);
+                item.setText(text);
+            }
         }
         this.quickChatScroll.Sort();
         this.quickCon.visible = false;
     }
 
+    private setFirstQuickItem() {
+        if (this.quickChatScroll.getItemList().length === this.quickChatAtt.length) {
+            const list = this.quickChatScroll.getItemList();
+            if (list && list.length > 0) {
+                (<QuickChatItem>list[0]).setText(this.quickChatAtt[0]);
+            }
+        } else {
+            const camWidth = this.scene.cameras.main.width;
+            const item = new QuickChatItem(this.scene, camWidth, 30 * this.dpr, this.key, this.dpr, true);
+            this.quickChatScroll.addItemAt(item, 0);
+            this.quickChatScroll.Sort();
+            item.setText(this.quickChatAtt[0]);
+        }
+    }
+
     private onBlurHandler() {
-        if (!this.isOpenQuickPanel) {
+        if (!this.isOpenQuickPanel && !this.isSendChat) {
             this.onCancelHandler();
         }
+        this.isSendChat = false;
     }
     private onFocusHandler() {
         if (this.isOpenQuickPanel) {
@@ -201,20 +248,16 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
 
     private onQuickSendHandler() {
         this.isOpenQuickPanel = true;
-        this.quickChatScroll.addListen();
-        const camWidth = this.scene.cameras.main.width;
-        const conHeight = this.keyboardHeight + 20 * this.dpr;
-        this.quickCon.y = this.bottomCon.y + this.bottomCon.height * 0.5;
-        this.quickBg.y = conHeight * 0.5;
         this.quickCon.visible = true;
-        this.quickBg.displayWidth = camWidth + 10 * this.dpr;
-        this.quickBg.displayHeight = conHeight;
-        this.quickChatScroll.y = this.quickBg.y;
-        this.quickChatScroll.setSize(camWidth, this.keyboardHeight);
+        this.quickChatScroll.addListen();
         this.mInput.setBlur();
     }
     private onSentChat() {
         const chat = this.mInput.text;
+        if (chat !== "") {
+            this.quickChatAtt[0] = chat;
+            this.setFirstQuickItem();
+        }
         this.mInput.text = "";
         this.mInput.setBlur();
         this.sendChat(chat);
@@ -229,18 +272,22 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onCancelHandler() {
-        this.emit("close");
+        if (this.isDispose) return;
+        this.isDispose = true;
+        this.mInput.setBlur();
         this.mBackground.destroy();
         this.mInput.destroy();
         this.bottomCon.destroy();
         this.contentCon.destroy();
         this.quickCon.destroy();
-        this.destroy();
+        this.gamescroll.clearItems();
         this.scene = undefined;
         this.world = undefined;
         this.gamescroll = undefined;
         this.mOutputText = undefined;
-        this.gamescroll = undefined;
+        this.quickChatScroll = undefined;
+        this.emit("close");
+        this.destroy();
     }
 }
 
@@ -253,7 +300,7 @@ class QuickChatItem extends Phaser.GameObjects.Container {
         super(scene);
         this.key = key;
         this.setSize(width, height);
-        this.text = this.scene.make.text({ x: 0, y: 0, text: "testsdfasdfasdfasdfasdfasdf", style: { fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT, color: "#6F6F6F" } }).setOrigin(0, 0.5);
+        this.text = this.scene.make.text({ x: 0, y: 0, text: "", style: { fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT, color: "#6F6F6F" } }).setOrigin(0, 0.5);
         this.text.x = -width * 0.5 + 20 * dpr;
         this.add(this.text);
         if (first) {

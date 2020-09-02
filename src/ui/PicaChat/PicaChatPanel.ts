@@ -8,6 +8,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 import { PicChatInputPanel } from "./PicChatInputPanel";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { i18n } from "../../i18n";
 
 export class PicaChatPanel extends BasePanel {
     private readonly key: string = "pica_chat";
@@ -254,13 +255,17 @@ export class PicaChatPanel extends BasePanel {
             return;
         }
         // if (navigator.userAgent.match(/Cordova/i)) {
-        //     this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.mTextArea.text);
-        //     this.mInputText.once("close", this.appCloseChat, this);
-        //     this.mInputText.on("send", this.appSendChat, this);
-        //     if (this.parentContainer) this.parentContainer.visible = false;
+        if (this.scene.cache.json.has("quickchat")) {
+            this.openAppInputPanel();
+        } else {
+            const jsonUrl = `../../resources/ui/quickchat/${i18n.language}.json`;
+            this.scene.load.json("quickchat", jsonUrl);
+            this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
+            this.scene.load.start();
+        }
         // } else {
-        this.mInputText = new InputPanel(this.scene, this.mWorld);
-        this.mInputText.once("close", this.sendChat, this);
+        //     this.mInputText = new InputPanel(this.scene, this.mWorld);
+        //     this.mInputText.once("close", this.sendChat, this);
         // }
     }
 
@@ -272,6 +277,16 @@ export class PicaChatPanel extends BasePanel {
         this.emit("chat", val);
     }
 
+    private openAppInputPanel() {
+        if (this.scene.cache.json.has("quickchat")) {
+            this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.mTextArea.text);
+            this.mInputText.once("close", this.appCloseChat, this);
+            this.mInputText.on("send", this.appSendChat, this);
+            this.mInputText.setQuickChatData(this.scene.cache.json.get("quickchat"));
+            if (this.parentContainer) this.parentContainer.visible = false;
+            this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
+        }
+    }
     private appSendChat(val: string) {
         if (!val) {
             return;
