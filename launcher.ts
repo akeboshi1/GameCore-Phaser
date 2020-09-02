@@ -53,7 +53,7 @@ export interface GameMain {
     onBlur();
     updateMoss(moss): void;
 
-    destroy(): void;
+    destroy(): Promise<void>;
 }
 
 export class Launcher {
@@ -96,7 +96,7 @@ export class Launcher {
     readonly maxHeight = 1080;
     readonly keyboardHeight = 256;
     private world: GameMain;
-    private intervalId: any;
+    // private intervalId: any;
     private mReload: Function;
     private mCompleteFunc: Function;
     private mConfig: ILauncherConfig = {
@@ -126,21 +126,21 @@ export class Launcher {
             Object.assign(this.mConfig, config);
         }
 
-        this.intervalId = setInterval(() => {
-            const xhr = new XMLHttpRequest(); // TODO
-            xhr.open("GET", "./package.json", true);
-            xhr.addEventListener("load", () => {
-                const manifest = JSON.parse(xhr.response);
-                const newVersion = manifest.version;
-                if (version !== newVersion) {
-                    const result = confirm("检测到新版本，是否刷新更新到最新版？");
-                    if (result && this.mReload) {
-                        this.mReload();
-                    }
+        // this.intervalId = setInterval(() => {
+        const xhr = new XMLHttpRequest(); // TODO
+        xhr.open("GET", "./package.json", true);
+        xhr.addEventListener("load", () => {
+            const manifest = JSON.parse(xhr.response);
+            const newVersion = manifest.version;
+            if (version !== newVersion) {
+                const result = confirm("检测到新版本，是否刷新更新到最新版？");
+                if (result && this.mReload) {
+                    this.mReload();
                 }
-            });
-            xhr.send(null);
-        }, 4 * 60 * 60 * 1000 /* ms */);
+            }
+        });
+        xhr.send(null);
+        // }, 4 * 60 * 60 * 1000 /* ms */);
 
         import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
             this.world = new game.World(this.config, this.mCompleteFunc);
@@ -227,9 +227,9 @@ export class Launcher {
         this.world.onOrientationChange(orientation, width, height);
     }
 
-    public destroy(): void {
-        if (this.intervalId) clearInterval(this.intervalId);
-        if (this.world) this.world.destroy();
+    public destroy(): Promise<void> {
+        if (this.world) return this.world.destroy();
+        return null;
     }
 }
 

@@ -199,10 +199,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.elementStorage.updateMoss(moss);
     }
 
-    destroy(): void {
-        this.mConnection.closeConnect();
-        document.body.removeEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
-        this.clearGame();
+    public destroy(): Promise<void> {
+        return new Promise((reslove, reject) => {
+            this.mConnection.closeConnect();
+            document.body.removeEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
+            this.clearGame(() => {
+                reslove();
+            });
+        });
     }
 
     onConnected(connection?: SocketConnection): void {
@@ -611,7 +615,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
     }
 
-    private clearGame(): Promise<void> {
+    private clearGame(callBack?: Function): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.mGame) {
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
@@ -634,6 +638,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mPlayerDataManager.clear();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
+                    if (callBack) callBack();
                     resolve();
                 });
                 this.mGame.destroy(true);
@@ -927,7 +932,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private loadGameConfig(remotePath): Promise<Lite> {
         const configPath = ResUtils.getGameConfig(remotePath);
-        this.mConnection.loadRes(configPath);
         return load(configPath, "arraybuffer").then((req: any) => {
             Logger.getInstance().log("start decodeConfig");
             this.mLoadingManager.start(LoadingTips.parseConfig());
