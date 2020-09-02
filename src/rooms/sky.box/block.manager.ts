@@ -81,8 +81,15 @@ export class BlockManager implements IBlockManager {
 
   setSize(imageW: number, imageH: number, gridW?: number, gridH?: number) {
     // TODO 部分场景超过大小未分块
-    const cols = imageW / 1024;
-    const rows = imageH / 1024;
+    if (this.mUris.length === 0) {
+      return;
+    }
+    let cols = 1;
+    let rows = 1;
+    if (this.mUris.length > 1 || this.mUris[0].length > 1) {
+      cols = imageW / 1024;
+      rows = imageH / 1024;
+    }
     this.mCols = Math.round(cols);
     this.mRows = Math.round(rows);
     this.mGridWidth = imageW / this.mCols;
@@ -197,6 +204,11 @@ export class BlockManager implements IBlockManager {
       props,
       duration,
       loop: -1,
+      onUpdate: () => {
+        for (const block of this.mGrids) {
+          block.updatePosition();
+        }
+      }
     });
     if (resetProps) {
       this.tween.once("loop", () => {
@@ -284,7 +296,7 @@ class Block extends DynamicImage {
   checkCamera(val: boolean) {
     if (this.mInCamera !== val) {
       this.mInCamera = val;
-      // this.visible = val;
+      this.visible = val;
       if (this.mLoaded) {
         // TODO
         // this.setActive(val);
@@ -313,6 +325,10 @@ class Block extends DynamicImage {
 
   get rectangle(): Phaser.Geom.Rectangle {
     return this.mRectangle;
+  }
+
+  get key(): string {
+    return this.mKey;
   }
 
   protected onLoadComplete(file) {
