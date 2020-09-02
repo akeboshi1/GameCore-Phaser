@@ -74,6 +74,17 @@ export class HttpService {
         }).then((response) => response.json());
     }
 
+    /**
+     * 检查token是否可用
+     */
+    tokenCheck() {
+        return this.get("account/tokencheck");
+    }
+
+    refreshToekn(refreshToken: string, uid: string) {
+        return this.post("account/refresh_token", { refreshToken, uid });
+    }
+
     loginByPhoneCode(phone: string, code: string, areaCode: string): Promise<Response> {
         return fetch(`${this.api_root}${`account/phone_signin`}`, {
             body: JSON.stringify({ phone, code, areaCode }),

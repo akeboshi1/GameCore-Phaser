@@ -709,8 +709,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             // this.mLoadingManager.start();
             // test login and verified
             if (!this.mConfig.auth_token) {
-                this.login();
-                return;
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    this.login();
+                    return;
+                }
             } else {
                 // this.mGame.scene.start(LoadingScene.name, { world: this });
                 // this.mLoadingManager.start();
