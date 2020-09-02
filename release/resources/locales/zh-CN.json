@@ -68,7 +68,9 @@
     "city": "地   区",
     "signature": "个性签名",
     "input_signature": "填写个性签名获得别人关注哦！",
-    "note_nickname": "备注好友昵称"
+    "note_nickname": "备注好友昵称",
+    "invite": "邀请",
+    "track": "追踪"
   },
   "compose": {
     "title": "合成",
@@ -204,5 +206,8 @@
   "minecar": {
     "discard": "丢弃",
     "confirmation": "您确定要丢弃 {{name}} 吗?"
+  },
+  "main_ui": {
+    "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点"
   }
 }

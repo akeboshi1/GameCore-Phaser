@@ -127,6 +127,16 @@ export class DecoratePanel extends BasePanel {
         return this;
     }
 
+    public destroy() {
+        if (this.mRepeatMenuContainer) {
+            this.mRepeatMenuContainer.destroy();
+        }
+        if (this.mMoveMenuContainer) {
+            this.mMoveMenuContainer.destroy();
+        }
+        super.destroy();
+    }
+
     protected preload() {
         // this.scene.load.image(Border.getName(), Border.getPNG());
         // this.scene.load.image("arrow", Url.getRes("ui/common/common_arrow.png"));

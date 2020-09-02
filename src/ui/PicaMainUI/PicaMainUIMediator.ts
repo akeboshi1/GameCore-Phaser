@@ -95,13 +95,14 @@ export class PicaMainUIMediator extends BaseMediator {
     }
 
     private onShowPanelHandler(panel: string, data?: any) {
-        if (!panel || !this.world) {
+        if (!this.mainUI || !this.world) {
             return;
         }
-        const uiManager = this.world.uiManager;
-        if (data)
-            uiManager.showMed(panel, data);
-        else uiManager.showMed(panel);
+        this.mainUI.fetchPlayerInfo();
+        // const uiManager = this.world.uiManager;
+        // if (data)
+        //     uiManager.showMed(panel, data);
+        // else uiManager.showMed(panel);
     }
 
     private onQuery_PRAISE_ROOM(praise: boolean) {

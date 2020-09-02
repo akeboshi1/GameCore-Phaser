@@ -37,9 +37,9 @@ export class Scenery implements IScenery {
         }
         for (let i = 0; i < uris.length; i++) {
             const val = uris[i].value || uris;
-            this.mUris[i] = new Array(val.length);
-            for (let j = 0; j < val.length; j++) {
-                this.mUris[i][j] = val[j];
+            this.mUris[i] = new Array(val[i].length);
+            for (let j = 0; j < val[i].length; j++) {
+                this.mUris[i][j] = val[i][j];
             }
         }
         this.mSpeed = scenery.speed || 1;

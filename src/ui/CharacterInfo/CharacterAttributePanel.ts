@@ -69,11 +69,13 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
         this.add([this.icon, this.nameText, this.valueText]);
     }
     public setInfo(data: op_pkt_def.IPKT_Property) {
-        const url = Url.getOsdRes(data.display.texturePath);
-        this.icon.load(url, this, () => {
-            this.icon.displayWidth = 17 * this.dpr;
-            this.icon.scaleY = this.icon.scaleX;
-        });
+        if (data.display) {
+            const url = Url.getOsdRes(data.display.texturePath);
+            this.icon.load(url, this, () => {
+                this.icon.displayWidth = 17 * this.dpr;
+                this.icon.scaleY = this.icon.scaleX;
+            });
+        }
         // this.icon.setFrame(data.display.texturePath);
         this.nameText.text = data.name + ":";
         this.valueText.text = data.value + (data.tempValue ? this.getRichLabel(data.tempValue) : "");

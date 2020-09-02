@@ -1,3 +1,4 @@
+
 export interface IAccountData {
     token: string;
     expire: number;
@@ -8,6 +9,8 @@ export interface IAccountData {
 export class Account {
     private mGameId: string;
     private mVirtualWorldId: string;
+    private mSceneID: number;
+    private mLoc: any;
     private mCurAccountData: IAccountData;
     constructor() {
         // TODO
@@ -31,16 +34,18 @@ export class Account {
 
     public destroy() {
         this.clear();
-        this.enterGame(undefined, undefined);
+        this.enterGame(undefined, undefined, undefined, undefined);
     }
 
     public get accountData(): IAccountData | undefined {
         return this.mCurAccountData;
     }
 
-    public enterGame(gameId: string, virtualWorldId: string) {
+    public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any) {
         this.mGameId = gameId;
         this.mVirtualWorldId = virtualWorldId;
+        this.mSceneID = sceneId;
+        this.mLoc = loc;
     }
 
     get gameID(): string {
@@ -49,5 +54,13 @@ export class Account {
 
     get virtualWorldId(): string {
         return this.mVirtualWorldId;
+    }
+
+    get sceneId(): number {
+        return this.mSceneID;
+    }
+
+    get loc(): any {
+        return this.mLoc;
     }
 }

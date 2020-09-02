@@ -48,4 +48,24 @@ export namespace PicFriendEvent {
      * renderer emit event
      */
     export const RENDERER_EVENT: string = "rendererEvent";
+
+    /**
+     * 请求游戏好友
+     */
+    export const REQ_PLAYER_LIST: string = "reqPlayerList";
+
+    /**
+     * 游戏好友列表
+     */
+    export const PLAYER_LIST: string = "playerList";
+
+    /**
+     * 搜索好友
+     */
+    export const SEARCH_FRIEND: string = "searchFriend";
+
+    /**
+     * Server返回的搜索结果
+     */
+    export const SEARCH_RESULT: string = "searchResult";
 }

@@ -46,6 +46,12 @@ export class PicaMainUI extends PacketHandler {
         content.praise = praise;
         this.connection.send(packet);
     }
+
+    fetchPlayerInfo() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELF_PLAYER_INFO);
+        this.connection.send(packet);
+    }
+
     private onUpdatePlayerInfo(packet: PBpacket) {
         this.mEvent.emit("updateplayer", packet.content);
     }

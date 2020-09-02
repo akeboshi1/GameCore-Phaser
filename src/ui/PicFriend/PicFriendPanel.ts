@@ -16,6 +16,7 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Image;
@@ -73,8 +74,11 @@ export default class PicFriendPanel extends BasePanel {
         this.friendContainer.on("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.friendContainer.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
-        this.friendContainer.on(PicFriendEvent.FOLLOW, this.onReqFollowFriendHandler, this);
-        this.friendContainer.on(PicFriendEvent.UNFOLLOW, this.onUnfollowFriendHanlder, this);
+        this.friendContainer.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
+        this.friendContainer.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqFriendListHandler, this);
+
+        // this.friendContainer.on(PicFriendEvent.FOLLOW, this.onReqFollowFriendHandler, this);
+        // this.friendContainer.on(PicFriendEvent.UNFOLLOW, this.onUnfollowFriendHanlder, this);
     }
 
     public removeListen() {
@@ -83,8 +87,10 @@ export default class PicFriendPanel extends BasePanel {
         this.friendContainer.off("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
-        this.friendContainer.off(PicFriendEvent.FOLLOW, this.onReqFollowFriendHandler, this);
-        this.friendContainer.off(PicFriendEvent.UNFOLLOW, this.onUnfollowFriendHanlder, this);
+        this.friendContainer.off(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
+        this.friendContainer.off(PicFriendEvent.REQ_PLAYER_LIST, this.onReqFriendListHandler, this);
+        // this.friendContainer.off(PicFriendEvent.FOLLOW, this.onReqFollowFriendHandler, this);
+        // this.friendContainer.off(PicFriendEvent.UNFOLLOW, this.onUnfollowFriendHanlder, this);
 
         this.friendContainer.unregister();
     }
@@ -98,6 +104,10 @@ export default class PicFriendPanel extends BasePanel {
         if (this.friendContainer) {
             this.friendContainer.showFriend(type, data);
         }
+    }
+
+    public updateFriend(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+        this.friendContainer.updateFriends(content);
     }
 
     filterById(id: string) {
@@ -191,7 +201,11 @@ export default class PicFriendPanel extends BasePanel {
         }
     }
 
-    private onRendererEventHandler(event: string, ...args) {
+    private onReqFriendListHandler(ids: number[]) {
+        this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+    }
+
+    private onRendererEventHandler(event: string, args) {
         if (event) this.emit(event, args);
     }
 }
@@ -311,10 +325,24 @@ class MainContainer extends FriendContainer {
         }
     }
 
+    public updateFriends(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+        const playerInfos = content.playerInfos;
+        let platformFriend: FriendData = null;
+        for (const player of playerInfos) {
+            platformFriend = this.showingFriends.find((friend) => friend.id === player.platformId);
+            if (platformFriend) {
+                platformFriend.nickname = player.nickname;
+                if (player.level) platformFriend.lv = player.level.level;
+            }
+        }
+        this.friendTabel.setItems(this.showingFriends);
+    }
+
     public showFriend(type: FriendChannel, data: any[]) {
         let result: FriendData[] = [];
         let target = null;
         this.friendDatas.set(type, data);
+        const ids = [];
         for (const friend of data) {
             if (type === FriendChannel.Followes) {
                 target = friend.followed_user;
@@ -323,8 +351,14 @@ class MainContainer extends FriendContainer {
             } else {
                 target = friend;
             }
-            if (target) result.push({ type, id: target._id, nickname: target.nickname});
+            if (target) {
+                result.push({ type, id: target._id, nickname: target.nickname});
+                ids.push(target._id);
+            }
         }
+
+        this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+
         this.sortByName(result);
         let title = "";
         let friendType = "";
@@ -424,12 +458,17 @@ class MainContainer extends FriendContainer {
         this.friendTabel = this.createGrideTable(0,this.topContent.y + this.topContent.height + 380 * this.dpr * 0.5 + 18 * this.dpr, 275 * this.dpr, 380 * this.dpr, 275 * this.dpr, 36 * this.dpr, (scene, cell) => {
             const item = new PicFriendItem(this.scene, 0, 0, this.key, this.dpr);
             item.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onFtechPlayerHandler, this);
-            item.on(PicFriendEvent.FOLLOW, this.onReqFollowFriendHandler, this);
-            item.on(PicFriendEvent.UNFOLLOW, this.onReqUnfollowFriendHandler, this);
+            // item.on(PicFriendEvent.FOLLOW, this.onReqFollowFriendHandler, this);
+            // item.on(PicFriendEvent.UNFOLLOW, this.onReqUnfollowFriendHandler, this);
+            item.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
             return item;
         }, new Handler(this, this.onSelectItemHandler), this.createCallback.bind(this));
 
         // this.add(this.navigate);
+    }
+
+    protected onRendererEventHandler(event: string, ...args) {
+        this.emit(PicFriendEvent.RENDERER_EVENT, event, args);
     }
 
     private onFtechPlayerHandler(friend: FriendData) {
@@ -567,6 +606,7 @@ class PicFriendItem extends Container {
             case FriendChannel.Followes:
                 return new FollowRenderer(this.scene, this);
             case FriendChannel.Fans:
+            case FriendChannel.Search:
                 return new FansRenderer(this.scene, this);
             case FriendChannel.Blacklist:
                 return new BlacklistRenderer(this.scene, this);
@@ -663,20 +703,34 @@ class FriendRenderer implements IRenderer {
     protected icon: Image;
     protected nameText: Text;
     protected itemData: any;
+    protected level: Text;
     constructor(scene: Phaser.Scene, protected owner: PicFriendItem) {
         this.icon = scene.make.image({x: 7.44 * owner.dpr - owner.width * 0.5, key: owner.key, frame: "offline_head"}).setOrigin(0, 0.5).setInteractive().on("pointerup", this.onHeadhandler, this);
-        this.nameText = scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * owner.dpr, y: -this.icon.height * 0.5 + 1 * owner.dpr, text: "Natasha Romanoff", style: {
+        this.nameText = scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * owner.dpr, y: -this.icon.height * 0.5 + 1 * owner.dpr, style: {
             fontSize: 10 * owner.dpr,
             fontFamily: Font.DEFULT_FONT,
             color: "#6F75FF"
         } }, false);
 
-        owner.add([this.icon, this.nameText]);
+        this.level = scene.make.text({
+            x: this.nameText.x,
+            y: this.nameText.y + 18 * owner.dpr,
+            text: "",
+            style: {
+                fontSize: 8 * owner.dpr,
+                fontFamily: Font.DEFULT_FONT,
+                color: "#6F75FF"
+            }
+        });
+
+        owner.add([this.icon, this.nameText, this.level]);
     }
 
     public setItemData(data: FriendData) {
         this.itemData = data;
         this.nameText.text = data.nickname;
+        const lv = data.lv ? `等级：${data.lv}` : "";
+        this.level.setText(lv);
     }
 
     public destroy() {
@@ -723,7 +777,8 @@ class FansRenderer extends FriendRenderer {
     }
 
     protected onAddHandler() {
-        this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
+        if (this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.FOLLOW, this.itemData.id);
+        // this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
     }
 }
 
@@ -734,7 +789,8 @@ class FollowRenderer extends FansRenderer {
     }
 
     protected onAddHandler() {
-        this.owner.emit(PicFriendEvent.UNFOLLOW, this.itemData);
+        if (this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.UNFOLLOW, this.itemData.id);
+        // this.owner.emit(PicFriendEvent.UNFOLLOW, this.itemData);
     }
 }
 
@@ -819,6 +875,19 @@ class SearchContainer extends SubFriendContainer {
         this.friendType = FriendChannel.Search;
     }
 
+    public setItems(data: any[]) {
+        // const players = data
+        if (!data) {
+            return;
+        }
+        const result: FriendData[] = [];
+        for (const player of data) {
+            const { platformId, nickname, level } = player;
+            result.push({ type: this.friendType, nickname, id: platformId, lv: level.level });
+        }
+        this.gridTable.setItems(result);
+    }
+
     protected draw() {
         super.draw();
 
@@ -842,11 +911,17 @@ class SearchContainer extends SubFriendContainer {
             color: "#666666",
         }, this.key, this.dpr).setOrigin(0, 0.5);
         this.searchInput.setPosition(0, topbg.y);
+        this.searchInput.on("search", this.onSearchHandler, this);
 
         this.gridTable.y = topbg.height;
         this.gridTable.layout();
 
         this.add([topbg, this.searchInput]);
+    }
+
+    private onSearchHandler(text) {
+        this.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.SEARCH_FRIEND, text);
+        this.resize();
     }
 }
 
@@ -922,6 +997,7 @@ class SearchInput extends LabelInput {
 
     private onSearchHandler() {
         this.setBlur();
+        this.emit("search", this.text);
     }
 }
 
@@ -992,6 +1068,7 @@ interface MenuData {
 export interface FriendData {
     type: FriendChannel;
     id?: string;
+    lv?: number;
     online?: boolean;
     nickname?: string;
     username?: string;

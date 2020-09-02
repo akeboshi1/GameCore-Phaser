@@ -51,6 +51,8 @@ export default class CharacterInfoPanel extends BasePanel {
     private isOwner: boolean = true;
     private mBackGround: Phaser.GameObjects.Graphics;
     private mExitBtn: NineSliceButton;
+    private mFirendMenu: FriendMenu;
+    private mCharacterData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -82,6 +84,9 @@ export default class CharacterInfoPanel extends BasePanel {
         } else {
             this.mShow = true;
         }
+        if (param) {
+            this.setPlayerData(param);
+        }
         this.setInteractive();
         this.addListen();
     }
@@ -92,8 +97,11 @@ export default class CharacterInfoPanel extends BasePanel {
         this.nickEditor.on(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
         this.privaCharBtn.on(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
         this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
-        this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
+        // this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
         this.mExitBtn.on(CoreUI.MouseEvent.Tap, this.onExitHandler, this);
+        this.mFirendMenu.register();
+        this.mFirendMenu.on("track", this.onTrackHandler, this);
+        this.mFirendMenu.on("invite", this.onIntiveHandler, this);
     }
 
     public removeListen() {
@@ -102,8 +110,11 @@ export default class CharacterInfoPanel extends BasePanel {
         this.nickEditor.off(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
         this.privaCharBtn.off(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
         this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
-        this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
+        // this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
         this.mExitBtn.off(CoreUI.MouseEvent.Tap, this.onExitHandler, this);
+        this.mFirendMenu.register();
+        this.mFirendMenu.off("track", this.onTrackHandler, this);
+        this.mFirendMenu.off("invite", this.onIntiveHandler, this);
     }
 
     preload() {
@@ -175,7 +186,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.bottombg = this.scene.make.graphics(undefined, false);
         const bottomBtnPosx = - 60 * this.dpr;
         const bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
-        this.addFriendBtn = new NineSliceButton(this.scene, bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), this.dpr, this.scale, {
+        this.addFriendBtn = new NineSliceButton(this.scene, 0, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), this.dpr, this.scale, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 12 * this.dpr,
@@ -189,12 +200,16 @@ export default class CharacterInfoPanel extends BasePanel {
             bottom: 12 * this.dpr
         });
 
-        this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), this.dpr, this.scale, {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
+        // this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), this.dpr, this.scale, {
+        //     left: 12 * this.dpr,
+        //     top: 12 * this.dpr,
+        //     right: 12 * this.dpr,
+        //     bottom: 12 * this.dpr
+        // });
+
+        this.mFirendMenu = new FriendMenu(this.scene, this.dpr, this.scale);
+        this.mFirendMenu.x = this.bg.width * 0.5 - this.mFirendMenu.width - 14 * this.dpr;
+        this.mFirendMenu.y = -this.bg.height * 0.5 + 100 * this.dpr;
 
         this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 26 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
             left: 8 * this.dpr,
@@ -208,9 +223,9 @@ export default class CharacterInfoPanel extends BasePanel {
         });
         this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
-        this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
-        this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn, this.tradeBtn]);
-        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon]);
+        // this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
+        this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn]);
+        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon, this.mFirendMenu]);
         this.mainContent.add(this.avatar);
         this.content.add(this.bg);
         this.content.add(this.mainContent);
@@ -245,19 +260,20 @@ export default class CharacterInfoPanel extends BasePanel {
         this.content.visible = false;
         this.resize(wid, hei);
         super.init();
-        this.reqPlayerInfo();
+        // this.reqPlayerInfo();
     }
 
     reqPlayerInfo() {
         this.emit("queryOwnerInfo");
     }
     public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+        this.mCharacterData = data;
         this.content.visible = true;
         const nickname = data.nickname;
         const current_title = data.currentTitle;
         const exp = data.level.currentLevelExp;
         const nexExp = data.level.nextLevelExp;
-        const cid = data.id;
+        const cid = data.cid;
         const levle = data.level.level;
         const spaceOffset = this.getspaceStr(1 * this.dpr);
         if (this.avatar) {
@@ -283,7 +299,9 @@ export default class CharacterInfoPanel extends BasePanel {
             //   subArr.set(CharacterOptionType.Title, data.titles);
             this.addFriendBtn.visible = false;
             this.privaCharBtn.visible = false;
-            this.tradeBtn.visible = false;
+            // this.tradeBtn.visible = false;
+            this.mFirendMenu.visible = false;
+            this.mExitBtn.visible = true;
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
@@ -299,14 +317,25 @@ export default class CharacterInfoPanel extends BasePanel {
             // subArr.set(CharacterOptionType.Avatar, data.avatar);
             this.addFriendBtn.visible = !data.friend;
             this.privaCharBtn.visible = data.friend;
-            this.tradeBtn.visible = true;
+            // this.tradeBtn.visible = true;
+            this.mExitBtn.visible = false;
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
             this.mSkillGrideTable.setColumnCount(2);
             this.isOwner = false;
         }
+        this.mFirendMenu.visible = false;
         this.setSubCategory(subArr);
+    }
+
+    public setFriendRelation(relation: FriendRelation) {
+        this.mFirendMenu.visible = relation === FriendRelation.Friend;
+        if (relation === FriendRelation.Followed || relation === FriendRelation.Friend) {
+            this.addFriendBtn.setText(i18n.t("friendlist.unfollow"));
+        } else {
+            this.addFriendBtn.setText(i18n.t("friendlist.follow"));
+        }
     }
 
     public destroy() {
@@ -479,6 +508,20 @@ export default class CharacterInfoPanel extends BasePanel {
         }
         return title;
     }
+
+    private onTrackHandler() {
+        if (!this.mCharacterData) {
+            return;
+        }
+        this.emit("track", this.mCharacterData.cid);
+    }
+
+    private onIntiveHandler() {
+        if (!this.mCharacterData) {
+            return;
+        }
+        this.emit("invite", this.mCharacterData.cid);
+    }
 }
 
 enum CharacterOptionType {
@@ -499,8 +542,8 @@ class CharacterOwnerItem extends Container {
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         const bg = this.scene.make.image({ x: 0, y: 0, key, frame: "skill_bg" });
-        this.nameText = this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
-        this.lvText = this.scene.make.text({ x: -1 * dpr, y: 0, text: "lv 98", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.nameText = this.scene.make.text({ x: -1 * dpr, y: 0, text: "", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
+        this.lvText = this.scene.make.text({ x: -1 * dpr, y: 0, text: "", style: { color: "#996600", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0, 0.5);
         this.progressBar = new ProgressBar(this.scene, {
             x: 48 * dpr / 2,
             y: 15 * dpr,
@@ -571,4 +614,73 @@ class CharacterOwnerItem extends Container {
         });
 
     }
+}
+
+class FriendMenu extends Container {
+    private inviteBtn: NineSliceButton;
+    private trackBtn: NineSliceButton;
+    constructor(scene: Phaser.Scene, dpr: number, scale: number) {
+        super(scene);
+        // this.setSize(58 * dpr, 112 * dpr);
+        this.setSize(58 * dpr, 68 * dpr);
+
+        const radius = 8 * dpr;
+        const background = this.scene.make.graphics(undefined, false);
+        background.fillStyle(0, 0.6);
+        background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
+
+        this.inviteBtn = new NineSliceButton(this.scene, 0, 0, 48 * dpr, 26 * dpr, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("player_info.invite"), dpr, scale, {
+            left: 8 * dpr,
+            top: 8 * dpr,
+            right: 8 * dpr,
+            bottom: 10 * dpr
+        });
+        this.inviteBtn.setTextStyle({
+            color: "#996600",
+            fontSize: 10 * dpr,
+            fontFamily: Font.DEFULT_FONT
+        });
+        this.inviteBtn.x = this.width * 0.5;
+        this.inviteBtn.y = 6 * dpr + this.inviteBtn.height * 0.5;
+
+        this.trackBtn = new NineSliceButton(this.scene, -0, 0, 48 * dpr, 26 * dpr, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("player_info.track"), dpr, scale, {
+            left: 8 * dpr,
+            top: 8 * dpr,
+            right: 8 * dpr,
+            bottom: 10 * dpr
+        });
+        this.trackBtn.setTextStyle({
+            color: "#996600",
+            fontSize: 10 * dpr,
+            fontFamily: Font.DEFULT_FONT
+        });
+        this.trackBtn.x = this.width * 0.5;
+        this.trackBtn.y = this.inviteBtn.y + this.inviteBtn.height * 0.5 + 18 * dpr;
+
+        this.add([background, this.inviteBtn, this.trackBtn]);
+    }
+
+    register() {
+        this.trackBtn.on(CoreUI.MouseEvent.Tap, this.onTrackHandler, this);
+        this.inviteBtn.on(CoreUI.MouseEvent.Tap, this.onInviteHandler, this);
+    }
+
+    unregister() {
+        this.trackBtn.off(CoreUI.MouseEvent.Tap, this.onTrackHandler, this);
+        this.inviteBtn.off(CoreUI.MouseEvent.Tap, this.onInviteHandler, this);
+    }
+
+    private onTrackHandler() {
+        this.emit("track");
+    }
+
+    private onInviteHandler() {
+        this.emit("invite");
+    }
+}
+
+export enum FriendRelation {
+    Friend,
+    Fans,
+    Followed
 }

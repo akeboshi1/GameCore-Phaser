@@ -66,10 +66,7 @@ export class BlockManager implements IBlockManager {
   check(time?: number, delta?: number) {
     const worldView = this.mMainCamera.worldView;
     const viewPort = new Phaser.Geom.Rectangle(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2, worldView.width * 2, worldView.height * 2);
-    const camera = this.scene.cameras.main;
     for (const block of this.mGrids) {
-      block.rectangle.x += camera.x;
-      block.rectangle.y += camera.y;
       block.checkCamera(Phaser.Geom.Intersects.RectangleToRectangle(viewPort, block.rectangle));
     }
   }
@@ -83,12 +80,13 @@ export class BlockManager implements IBlockManager {
   }
 
   setSize(imageW: number, imageH: number, gridW?: number, gridH?: number) {
-    if (gridW === undefined) gridW = imageW;
-    if (gridH === undefined) gridH = imageH;
-    this.mRows = Math.ceil(imageW / gridW);
-    this.mCols = Math.ceil(imageH / gridH);
-    this.mGridWidth = gridW;
-    this.mGridHeight = gridH;
+    // TODO 部分场景超过大小未分块
+    const cols = imageW / 1024;
+    const rows = imageH / 1024;
+    this.mCols = Math.round(cols);
+    this.mRows = Math.round(rows);
+    this.mGridWidth = imageW / this.mCols;
+    this.mGridHeight = imageH / this.mRows;
   }
 
   updatePosition() {
@@ -96,6 +94,10 @@ export class BlockManager implements IBlockManager {
     const { offset } = this.mScenery;
     const loc = this.fixPosition({ x: offset.x, y: offset.y });
     camera.setPosition(loc.x, loc.y);
+
+    for (const block of this.mGrids) {
+      block.updatePosition();
+    }
   }
 
   destroy() {
@@ -166,8 +168,8 @@ export class BlockManager implements IBlockManager {
       const cols = Math.floor(height / this.mScenery.height);
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
-          const block = new Block(this.scene, this.mUris[0][0]);
-          block.setRectangle(i * this.mRows * this.mGridWidth, j * this.mRows * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
+          const block = new Block(this.scene, this.mUris[0][0], this.mScaleRatio);
+          block.setRectangle(j * this.mGridWidth, i * this.mGridHeight, this.mGridWidth, this.mGridHeight);
           this.mGrids.push(block);
         }
       }
@@ -175,8 +177,8 @@ export class BlockManager implements IBlockManager {
       for (let i = 0; i < len; i++) {
         const l = this.mUris[i].length;
         for (let j = 0; j < l; j++) {
-          const block = new Block(this.scene, this.mUris[i][j]);
-          block.setRectangle(i * this.mRows * this.mGridWidth, j * this.mRows * this.mGridHeight, this.mGridWidth, this.mGridHeight, this.mScaleRatio);
+          const block = new Block(this.scene, this.mUris[i][j], this.mScaleRatio);
+          block.setRectangle(j * this.mGridWidth, i * this.mGridHeight, this.mGridWidth, this.mGridHeight);
           this.mGrids.push(block);
         }
       }
@@ -195,9 +197,6 @@ export class BlockManager implements IBlockManager {
       props,
       duration,
       loop: -1,
-      onUpdate: () => {
-        // Logger.getInstance().log("scenery: ", targets, targets.scrollX, targets.scrollY, this);
-      }
     });
     if (resetProps) {
       this.tween.once("loop", () => {
@@ -205,15 +204,8 @@ export class BlockManager implements IBlockManager {
           targets.x = resetProps.x;
           targets.y = resetProps.y;
         }
-        // else {
-        //   const { x, y } = this.mScenery.offset;
-        //   offset = this.fixPosition({ x, y });
-        //   targets.x = offset.x;
-        //   targets.y = offset.y;
-        // }
         this.tween.stop();
         this.move(targets, props, resetDuration);
-        // tween.duration = resetDuration;
       });
     }
   }
@@ -280,9 +272,11 @@ class Block extends DynamicImage {
   private mInCamera: boolean = false;
   private mKey: string;
   private mRectangle: Phaser.Geom.Rectangle;
-  constructor(scene: Phaser.Scene, key: string) {
+  private mScale: number;
+  constructor(scene: Phaser.Scene, key: string, scale: number) {
     super(scene, 0, 0);
     this.mKey = key;
+    this.mScale = scale;
     this.setOrigin(0);
     // this.mRectangle = new Phaser.Geom.Rectangle(this.x, this.y, 1, 1);
   }
@@ -290,6 +284,7 @@ class Block extends DynamicImage {
   checkCamera(val: boolean) {
     if (this.mInCamera !== val) {
       this.mInCamera = val;
+      // this.visible = val;
       if (this.mLoaded) {
         // TODO
         // this.setActive(val);
@@ -299,10 +294,21 @@ class Block extends DynamicImage {
     }
   }
 
-  setRectangle(x: number, y: number, width: number, height: number, scale: number = 1) {
+  setRectangle(x: number, y: number, width: number, height: number) {
     this.x = x;
     this.y = y;
-    this.mRectangle = new Phaser.Geom.Rectangle(x * scale, y * scale, width * scale, height * scale);
+    this.setSize(width, height);
+    const camera = this.scene.cameras.main;
+    this.mRectangle = new Phaser.Geom.Rectangle(x * this.mScale + camera.x, y * this.mScale + camera.y, width * this.mScale, height * this.mScale);
+    Logger.getInstance().log(this.x, this.y, width, height);
+  }
+
+  updatePosition() {
+    if (this.mRectangle) {
+      const camera = this.scene.cameras.main;
+      this.mRectangle.x = this.x * this.mScale + camera.x;
+      this.mRectangle.y = this.y * this.mScale + camera.y;
+    }
   }
 
   get rectangle(): Phaser.Geom.Rectangle {
@@ -314,7 +320,7 @@ class Block extends DynamicImage {
     if (this.texture) {
       this.mLoaded = true;
       this.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-      this.mRectangle.setSize(this.width, this.height);
+      // this.mRectangle.setSize(this.width, this.height);
     }
   }
 }

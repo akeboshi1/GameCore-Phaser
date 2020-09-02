@@ -68,7 +68,9 @@
     "city": "City",
     "signature": "D: Signature",
     "input_signature": "D: Fill in personality signature to get others attention!",
-    "note_nickname": "Remark friend nickname"
+    "note_nickname": "Remark friend nickname",
+    "invite": "invite",
+    "track": "track"
   },
   "compose": {
     "title": "Produce",
@@ -204,5 +206,8 @@
   "minecar": {
     "discard": "discard",
     "confirmation": "Are you sure you want to discard {{name}} ？"
+  },
+  "main_ui": {
+    "energy_tips": "Current energy value {{name}} When energy is insufficient, restore 1 point every 10 minutes"
   }
 }
