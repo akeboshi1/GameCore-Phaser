@@ -62,7 +62,7 @@
     <script>
         window.addEventListener('load', (event) => {
             const launcher = TooqingCore.Launcher;
-            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
+            const app = launcher.start({ width: window.screen.width, height: window.screen.height, screenWidth: window.screen.width, screenHeight: window.screen.height });
             app.registerReload(window.reload);
             app.registerComplete(() => {
                 const loadingImg = document.getElementById('loading_img');
@@ -70,48 +70,11 @@
                 const loadingGif = document.getElementById('loading_gif');
                 if (loadingGif) loadingGif.remove();
             })
-            if (!window.navigator) {
-                // FR.Msg.alert("提示", "当前设备：移动端APP")
-                window.addEventListener("resize", (e) => {
-                    app.onResize(window.innerWidth, window.innerHeight);
-                });
-            }
-            else {
-                // if (/Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)) {
-                //     window.addEventListener('orientationchange', (e) => {
-                //         // window.orientation === 0 为竖屏，1为横屏
-                //         app.onOrientationChange(window.orientation, window.innerWidth, window.innerHeight);
-                //     });
-                // }
-                // else {
-                window.addEventListener("resize", (e) => {
-                    app.onResize(window.innerWidth, window.innerHeight);
-                    // if (window.orientation) {
-                    //     window.addEventListener('deviceorientation', (e) => {
-                    //         // window.orientation === 0 为竖屏，1为横屏
-                    //         app.onOrientationChange(window.innerWidth, window.innerHeight);
-                    //     });
-                    // } else {
-                    //     window.addEventListener("resize", (e) => {
-                    //         app.onResize(window.innerWidth, window.innerHeight);
-                    //     });
-                    // }
-                    // window.addEventListener(window.ori ? "deviceorientation" : "reisze", function () {
-                    //     window.ondeviceorientation ? app.onOrientationChange(window.orientation) :
-                    //         app.onResize(window.innerWidth, window.innerHeight);
-                    // }, false);
-                    // window.addEventListener("resize", (e) => {
-                    //     app.onResize(window.innerWidth, window.innerHeight);
-                    // });
-                    // window.addEventListener("orientationchange", (e) => {
-                    //     // window.orientation === 0 为竖屏，1为横屏
-                    //     app.onOrientationChange(window.orientation);
-                    // });
-                    // console.log(document.fullscreen(Element.ALLOW_KEYBOARD_INPUT));
+            
+            window.addEventListener("resize", (e) => {
+                app.onResize(window.screen.width, window.screen.height);
 
-                });
-                //}
-            }
+            });
         });
     </script>
 </body>
