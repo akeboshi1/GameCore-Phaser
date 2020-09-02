@@ -96,6 +96,25 @@ export class BlockManager implements IBlockManager {
     this.mGridHeight = imageH / this.mRows;
   }
 
+  resize(width: number, height: number) {
+    if (!this.scene || !this.mMainCamera) {
+      return;
+    }
+    const camera = this.scene.cameras.main;
+    if (!camera) {
+      return;
+    }
+    this.mScaleRatio = this.mWorld.scaleRatio;
+    this.updatePosition();
+    this._bound = this.mMainCamera.getBounds();
+    camera.setBounds(this._bound.x, this._bound.y, this._bound.width, this._bound.height);
+
+    for (const grid of this.mGrids) {
+      grid.setScaleRatio(this.mScaleRatio);
+      grid.resize(width, height);
+    }
+  }
+
   updatePosition() {
     const camera = this.scene.cameras.main;
     const { offset } = this.mScenery;
@@ -321,6 +340,15 @@ class Block extends DynamicImage {
       this.mRectangle.x = this.x * this.mScale + camera.x;
       this.mRectangle.y = this.y * this.mScale + camera.y;
     }
+  }
+
+  resize(width: number, height: number) {
+    const camera = this.scene.cameras.main;
+    this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + camera.x, this.y * this.mScale + camera.y, this.width * this.mScale, this.height * this.mScale);
+  }
+
+  setScaleRatio(val: number) {
+    this.mScale = val;
   }
 
   get rectangle(): Phaser.Geom.Rectangle {

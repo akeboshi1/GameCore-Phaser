@@ -137,7 +137,11 @@ export class LayerManager {
     }
 
     public resize(width: number, height: number) {
-        // todo
+        const zoom = this.room.world.scaleRatio;
+        this.mGroundLayer.setScale(zoom);
+        this.mTileLayer.setScale(zoom);
+        this.mMiddleLayer.setScale(zoom);
+        this.mSurfaceLayer.setScale(zoom);
     }
 
     public addMouseListen() {

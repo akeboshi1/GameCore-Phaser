@@ -249,12 +249,20 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const w = width * window.devicePixelRatio;
         const h = height * window.devicePixelRatio;
         if (this.mGame) {
+            this.mScaleRatio = Math.ceil(window.devicePixelRatio || 1);
+            this.mUIRatio = Math.round(window.devicePixelRatio || 1);
+            const scaleW = (width / this.DEFAULT_WIDTH) * (window.devicePixelRatio / this.mUIRatio);
+            // const scaleH = config.height / this.DEFAULT_HEIGHT;
+            this.mUIScale = scaleW;
+            this.mGame.scale.zoom = 1 / window.devicePixelRatio;
             this.mGame.scale.resize(w, h);
             const scenes = this.mGame.scene.scenes;
-            // for (const scene of scenes) {
-            //     scene.setViewPort(0, 0, w, h);
-            //     // scene.cameras.main.setViewport(0, 0, w, h);
-            // }
+            for (const scene of scenes) {
+                const camera = scene.cameras.main;
+                if (camera.setPixelRatio) camera.setPixelRatio(this.mScaleRatio);
+                // scene.setViewPort(camera.x, camera.y, w, h);
+                // scene.cameras.main.setViewport(0, 0, w, h);
+            }
         }
         if (this.mRoomMamager) {
             this.mRoomMamager.resize(w, h);

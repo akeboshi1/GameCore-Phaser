@@ -50,10 +50,10 @@ export class PlayScene extends BasicScene {
         }
     }
 
-    setViewPort(x: number, y: number, width: number, height: number) {
-        super.setViewPort(x, y, width, height);
-        this.cameras.main.zoom = Math.ceil(window.devicePixelRatio);
-    }
+    // setViewPort(x: number, y: number, width: number, height: number) {
+    //     super.setViewPort(x, y, width, height);
+    //     this.cameras.main.zoom = Math.ceil(window.devicePixelRatio);
+    // }
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;

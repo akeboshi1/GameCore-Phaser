@@ -22,6 +22,7 @@ export class PicHandheldPanel extends BasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.setSize(width, height);
+        this.updateLayout();
         this.isExtendsGrid = false;
     }
     show(param?: any) {

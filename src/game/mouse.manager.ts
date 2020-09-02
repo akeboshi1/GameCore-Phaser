@@ -29,7 +29,7 @@ export class MouseManager extends PacketHandler {
     private mGameObject: Phaser.GameObjects.GameObject;
     private mDownDelay: number = 1000;
     private mDownTime: any;
-    private readonly zoom: number;
+    private zoom: number;
     private mRoom: Room;
     constructor(private worldService: WorldService) {
         super();
@@ -56,7 +56,7 @@ export class MouseManager extends PacketHandler {
     }
 
     public resize(width: number, height: number) {
-
+        this.zoom = this.worldService.scaleRatio || 1;
     }
 
     public pause(): void {

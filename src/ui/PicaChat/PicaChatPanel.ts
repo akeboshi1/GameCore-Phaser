@@ -52,10 +52,12 @@ export class PicaChatPanel extends BasePanel {
     }
 
     resize(w: number, h: number) {
-        this.setSize(w, h);
         const zoom = this.scale;
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
+        w = width;
+        h = 133 * this.dpr;
+        this.setSize(width, 133 * this.dpr);
         const frame = this.scene.textures.getFrame(this.key, "title_bg");
         const scaleRatio = frame ? (width / this.scale) / frame.width : 1;
         this.mTitleBg.scaleX = scaleRatio;
@@ -71,6 +73,8 @@ export class PicaChatPanel extends BasePanel {
         const textMask = this.mTextArea.childrenMap.text;
         textMask.y = 8 * this.dpr;
         this.mTextArea.scrollToBottom();
+
+        this.mNavigateBtn.x = width / this.scale - this.mNavigateBtn.width * 0.5 - 5 * this.dpr;
         super.resize(w, h);
     }
 
@@ -174,7 +178,6 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
         this.mEmojiBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
-        this.mNavigateBtn.x = width / this.scale - this.mNavigateBtn.width * 0.5 - 5 * this.dpr;
         this.mNavigateBtn.y = -this.mNavigateBtn.height / 2 + this.mTitleBg.height;
         this.mNavigateBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
@@ -225,7 +228,7 @@ export class PicaChatPanel extends BasePanel {
         ]);
         this.mTextArea.setSliderEnable(false);
         // this.mTextArea.childrenMap.child.disableInteractive();
-        this.resize(this.width, 400);
+        this.resize(this.width, 133 * this.dpr);
         super.init();
         this.removeInteractive();
         // this.addActionListener();

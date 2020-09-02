@@ -1,7 +1,7 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IRoomService} from "../room";
 import {ConnectionService} from "../../net/connection.service";
-import {op_editor, op_virtual_world, op_client, op_def} from "pixelpai_proto";
+import {op_editor, op_virtual_world, op_def} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {Rectangle45} from "../../utils/rectangle45";
 import {Pos} from "../../utils/pos";
@@ -100,6 +100,9 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     public resize(width: number, height: number) {
         this.resetCameraSize(width, height);
+        if (this.mTarget) {
+            this.startFollow(this.mTarget);
+        }
     }
 
     public setScroll(x: number, y: number) {
@@ -119,6 +122,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         for (const camera of this.mCameras) {
             camera.scrollX += x / this.camera.zoom;
             camera.scrollY += y / this.camera.zoom;
+            Logger.getInstance().log("view: ", camera.x, camera.y, camera.width, camera.height);
         }
         this.moving = true;
         // this.mCamera.setScroll(x, y);

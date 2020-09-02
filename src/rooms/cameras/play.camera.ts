@@ -10,6 +10,10 @@ export class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
         this.moveRatio = moveRatio || 1;
     }
 
+    setPixelRatio(val: number) {
+        this.pixelRatio = val;
+    }
+
     startFollow(target: any, roundPixels: boolean, lerpX: number, lerpY: number, offsetX: number, offsetY: number) {
         if (roundPixels === undefined) { roundPixels = false; }
         if (lerpX === undefined) { lerpX = 1; }

@@ -58,6 +58,15 @@ export class SkyBoxManager extends PacketHandler {
     });
   }
 
+  resize(width: number, height: number) {
+    if (!this.mScenetys) {
+      return;
+    }
+    this.mScenetys.forEach((scenety) => {
+      scenety.resize(width, height);
+    });
+  }
+
   destroy() {
     if (this.mRoom) {
       const connection = this.mRoom.connection;
