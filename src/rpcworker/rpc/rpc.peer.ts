@@ -1,6 +1,6 @@
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCMessage, RPCExecutor, RPCExecutePacket } from "./rpc.message";
-import { Logger } from "../../utils/log";
+// import { Logger } from "../../utils/log";
 
 export const MESSAGEKEY_LINK: string = "link";
 export const MESSAGEKEY_ADDREGISTRY: string = "addRegistry";
@@ -17,12 +17,12 @@ export class RPCPeer {
     constructor(name: string, w: Worker) {
         if (!w) {
             // tslint:disable-next-line:no-console
-            console.error("param <worker> error");
+            // console.error("param <worker> error");
             return;
         }
         if (!name) {
             // tslint:disable-next-line:no-console
-            console.error("param <name> error");
+            // console.error("param <name> error");
             return;
         }
 
@@ -33,7 +33,7 @@ export class RPCPeer {
         this.contexts = new Map();
 
         this.worker.addEventListener("message", (ev: MessageEvent) => {
-            Logger.getInstance().log(this.name + "-----" , ev.data);
+            // Logger.getInstance().log(this.name + "-----" , ev.data);
             const { key } = ev.data;
             if (!key) {
                 // tslint:disable-next-line:no-console
@@ -42,7 +42,7 @@ export class RPCPeer {
             }
 
             // tslint:disable-next-line:no-console
-            console.log("peer on message:", ev.data);
+            // console.log("peer on message:", ev.data);
             switch (key) {
                 case MESSAGEKEY_LINK:
                     this.onMessage_Link(ev);
@@ -50,7 +50,7 @@ export class RPCPeer {
 
                 default:
                     // tslint:disable-next-line:no-console
-                    console.warn("got message outof control: ", ev.data);
+                    // console.warn("got message outof control: ", ev.data);
                     break;
             }
         });
@@ -70,12 +70,12 @@ export class RPCPeer {
     // worker之间注册方法，并通知其他worker更新回调注册表
     public registerExecutor(context: any, executor: RPCExecutor) {
         // tslint:disable-next-line:no-console
-        console.log("registerMethod: ", this);
+        // console.log("registerMethod: ", this);
 
         this.registry.push(executor);
         if (this.contexts.has(executor.context) && this.contexts.get(executor.context) !== context) {
             // tslint:disable-next-line:no-console
-            console.warn("<" + executor.context + "> changed");
+            // console.warn("<" + executor.context + "> changed");
         }
         this.contexts.set(executor.context, context);
 
@@ -87,19 +87,19 @@ export class RPCPeer {
         const ports = Array.from(this.channels.values());
         for (const port of ports) {
             // tslint:disable-next-line:no-console
-            console.log("buffer:::" + [].concat(buf.slice(0)));
+            // console.log("buffer:::" + [].concat(buf.slice(0)));
             port.postMessage(messageData, [].concat(buf.slice(0)));
         }
     }
     // worker调用其他worker方法
     public execute(worker: string, packet: RPCExecutePacket) {
         // tslint:disable-next-line:no-console
-        console.log("callMethod: ", this);
+        // console.log("callMethod: ", this);
         const executor = this.registry.find((x) => x.context === packet.header.remoteExecutor.context &&
             x.method === packet.header.remoteExecutor.method);
         if (executor === null) {
             // tslint:disable-next-line:no-console
-            console.error("method <" + packet.header.remoteExecutor.method + "> not register");
+            // console.error("method <" + packet.header.remoteExecutor.method + "> not register");
             return;
         }
 
@@ -110,7 +110,7 @@ export class RPCPeer {
         // console.log("postMessage: ", MESSAGEKEY_RUNMETHOD, messageData, buf);
         if (this.channels.has(worker)) {
             // tslint:disable-next-line:no-console
-            console.log("buffer:::" + [].concat(buf.slice(0)));
+            // console.log("buffer:::" + [].concat(buf.slice(0)));
             this.channels.get(worker).postMessage(messageData, [].concat(buf.slice(0)));
         }
     }
@@ -118,7 +118,7 @@ export class RPCPeer {
     public addLink(worker: string, port: MessagePort) {
         this.channels.set(worker, port);
         // tslint:disable-next-line:no-console
-        console.log("onMessage_Link:", this.channels);
+        // console.log("onMessage_Link:", this.channels);
         port.onmessage = (ev: MessageEvent) => {
             const { key } = ev.data;
             if (!key) {
@@ -136,7 +136,7 @@ export class RPCPeer {
 
                 default:
                     // tslint:disable-next-line:no-console
-                    console.warn("got message outof control: ", ev.data);
+                    // console.warn("got message outof control: ", ev.data);
                     break;
             }
         };
@@ -154,7 +154,7 @@ export class RPCPeer {
     }
     private onMessage_AddRegistry(ev: MessageEvent) {
         // tslint:disable-next-line:no-console
-        console.log("onMessage_AddRegistry:", ev.data);
+        // console.log("onMessage_AddRegistry:", ev.data);
         const { dataExecutor } = ev.data;
         if (!dataExecutor) {
             // tslint:disable-next-line:no-console
@@ -163,14 +163,14 @@ export class RPCPeer {
         }
         if (!RPCExecutor.checkType(dataExecutor)) {
             // tslint:disable-next-line:no-console
-            console.warn("<data> type error: ", dataExecutor);
+            // console.warn("<data> type error: ", dataExecutor);
             return;
         }
         this.registry.push(dataExecutor as RPCExecutor);
     }
     private onMessage_RunMethod(ev: MessageEvent) {
         // tslint:disable-next-line:no-console
-        console.log("onMessage_RunMethod:", ev.data);
+        // console.log("onMessage_RunMethod:", ev.data);
         const { dataPackage } = ev.data;
         if (!dataPackage) {
             // tslint:disable-next-line:no-console
@@ -179,7 +179,7 @@ export class RPCPeer {
         }
         if (!RPCExecutePacket.checkType(dataPackage)) {
             // tslint:disable-next-line:no-console
-            console.warn("<data> type error: ", dataPackage);
+            // console.warn("<data> type error: ", dataPackage);
             return;
         }
         const packet: RPCExecutePacket = dataPackage as RPCExecutePacket;

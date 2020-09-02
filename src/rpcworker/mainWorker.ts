@@ -162,10 +162,10 @@ class MainWorkerContext {
         worker.postMessage(state, [port]);
     }
     public registerExecutor(state: WorkerState) {
-        Logger.getInstance().log("register worker");
+        // Logger.getInstance().log("register worker");
         this.workerMap.forEach((value: Worker) => {
             value.postMessage(state);
-            Logger.getInstance().log("register" + "state");
+            // Logger.getInstance().log("register" + "state");
         });
     }
 
@@ -196,7 +196,7 @@ class MainWorkerContext {
     }
 
     public startBeat(method: string) {
-        Logger.getInstance().log("mainwork");
+        // Logger.getInstance().log("mainwork");
         worker.postMessage({ "method": method });
     }
     public endHeartBeat() {

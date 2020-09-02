@@ -1,7 +1,7 @@
 import { RPCPeer } from "./rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCExecutor, RPCExecutePacket } from "./rpc/rpc.message";
-import { Logger } from "../utils/log";
+
 onmessage = (e) => {
     const { key } = e.data;
     if (key === "init") {
@@ -44,7 +44,7 @@ class HeartBeatWorkerContext {
             }
             this.reConnectCount++;
             param.valStr = "heartBeat";
-            Logger.getInstance().log("heartBeatWorker startBeat");
+            // Logger.getInstance().log("heartBeatWorker startBeat");
             peer.execute(MAIN_WORKER, new RPCExecutePacket(HEARTBEAT_WORKER, "startBeat", "context", [param]));
         }, this.delayTime);
     }
@@ -54,13 +54,13 @@ class HeartBeatWorkerContext {
         if (this.startDelay) {
             clearInterval(this.startDelay);
         }
-        Logger.getInstance().log("heartBeatWorker endBeat");
+        // Logger.getInstance().log("heartBeatWorker endBeat");
         peer.execute(MAIN_WORKER, new RPCExecutePacket(HEARTBEAT_WORKER, "endHeartBeat", "context"));
     }
 
     public clearBeat() {
         this.reConnectCount = 0;
-        Logger.getInstance().log("heartBeatWorker clearBeat");
+        // Logger.getInstance().log("heartBeatWorker clearBeat");
         peer.execute(MAIN_WORKER, new RPCExecutePacket(HEARTBEAT_WORKER, "clearBeat", "context"));
     }
 
