@@ -95,14 +95,14 @@ export default class PicFriendPanel extends BasePanel {
         this.friendContainer.unregister();
     }
 
-    public setFriend(type: FriendChannel, data) {
+    public setFriend(type: FriendChannel, friends: any[]) {
         const subContaienr = this.mSubContanerMap.get(type);
         if (subContaienr) {
-            if (this.mShowingSubContainer) this.mShowingSubContainer.setItems(data);
+            if (this.mShowingSubContainer) this.mShowingSubContainer.setItems(friends);
             return;
         }
         if (this.friendContainer) {
-            this.friendContainer.showFriend(type, data);
+            this.friendContainer.setFriends(type, friends);
         }
     }
 
@@ -278,6 +278,14 @@ class FriendContainer extends Container {
             return a.nickname.localeCompare(b.nickname, i18n.language);
         });
     }
+
+    protected sortByOnlien(array: FriendData[]) {
+        return array.sort((a: FriendData, b: FriendData) => {
+            const aLv = a.lv ? 1 : 0;
+            const bLv = b.lv ? 1 : 0;
+            return bLv - aLv;
+        });
+    }
 }
 
 class MainContainer extends FriendContainer {
@@ -328,20 +336,24 @@ class MainContainer extends FriendContainer {
     public updateFriends(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
         const playerInfos = content.playerInfos;
         let platformFriend: FriendData = null;
+        const friends = this.friendDatas.get(this.channelGroup.selectedIndex);
+        if (!friends) {
+            return;
+        }
         for (const player of playerInfos) {
-            platformFriend = this.showingFriends.find((friend) => friend.id === player.platformId);
+            platformFriend = friends.find((friend) => friend.id === player.platformId);
             if (platformFriend) {
                 platformFriend.nickname = player.nickname;
                 if (player.level) platformFriend.lv = player.level.level;
             }
         }
-        this.friendTabel.setItems(this.showingFriends);
+        this.showFriend(this.channelGroup.selectedIndex, friends);
+        // this.friendTabel.setItems(this.showingFriends);
     }
 
-    public showFriend(type: FriendChannel, data: any[]) {
-        let result: FriendData[] = [];
+    public setFriends(type: FriendChannel, data: any[]) {
+        const result: FriendData[] = [];
         let target = null;
-        this.friendDatas.set(type, data);
         const ids = [];
         for (const friend of data) {
             if (type === FriendChannel.Followes) {
@@ -356,10 +368,15 @@ class MainContainer extends FriendContainer {
                 ids.push(target._id);
             }
         }
-
+        this.friendDatas.set(type, result);
         this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+    }
 
-        this.sortByName(result);
+    public showFriend(type: FriendChannel, data: FriendData[]) {
+        // let result: FriendData[] = [];
+
+        this.sortByName(data);
+        this.sortByOnlien(data);
         let title = "";
         let friendType = "";
         switch(type) {
@@ -367,7 +384,7 @@ class MainContainer extends FriendContainer {
                 title = i18n.t("friendlist.title");
                 friendType = i18n.t("friendlist.friends");
                 const menu: FriendData[] = [{ type: FriendChannel.Menu, menuData: { type: FriendChannel.NewFans } }, { type: FriendChannel.Menu, menuData: { type: FriendChannel.NewFriend } }, { type: FriendChannel.Menu, menuData: { type: FriendChannel.Blacklist } }, { type: FriendChannel.Null }];
-                result = menu.concat(result);
+                data = menu.concat(data);
                 break;
             case FriendChannel.Fans:
                 title = i18n.t("friendlist.fans");
@@ -381,7 +398,7 @@ class MainContainer extends FriendContainer {
                 title = i18n.t("friendlist.blacklist");
                 break;
         }
-        this.showingFriends = result;
+        this.showingFriends = data;
         // this.friendList.setItems(this.showingFriends);
         this.friendTabel.setItems(this.showingFriends);
         if (title) this.titleText.setText(title);
@@ -828,7 +845,7 @@ class SubFriendContainer extends FriendContainer {
         }
     }
 
-    public setItems(items: any[]) {
+    public setItems(items: FriendData[]) {
         if (this.gridTable) this.gridTable.setItems(items);
     }
 
@@ -838,6 +855,9 @@ class SubFriendContainer extends FriendContainer {
 
     public destroy() {
         this.unregister();
+        if (this.gridTable) {
+            this.gridTable.destroy();
+        }
         super.destroy();
     }
 

@@ -4,7 +4,6 @@ import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";
 import { PicFriend } from "./PicFriend";
-import { Logger } from "../../utils/log";
 import { PicFriendEvent } from "./PicFriendEvent";
 
 export class PicFriendMediator extends BaseMediator {
@@ -168,6 +167,7 @@ export class PicFriendMediator extends BaseMediator {
     }
 
     private onSearchResultHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SEARCH_PLAYER) {
+        // this.mView.setFriend(FriendChannel.Search, content.playerInfos);
         this.mView.setFriend(FriendChannel.Search, content.playerInfos);
     }
 
