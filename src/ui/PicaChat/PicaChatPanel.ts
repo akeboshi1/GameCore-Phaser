@@ -255,18 +255,18 @@ export class PicaChatPanel extends BasePanel {
             return;
         }
         // if (navigator.userAgent.match(/Cordova/i)) {
-        if (this.scene.cache.json.has("quickchat")) {
-            this.openAppInputPanel();
-        } else {
-            const jsonUrl = `../../resources/ui/quickchat/${i18n.language}.json`;
-            this.scene.load.json("quickchat", jsonUrl);
-            this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
-            this.scene.load.start();
-        }
+        //     if (this.scene.cache.json.has("quickchat")) {
+        //         this.openAppInputPanel();
+        //     } else {
+        //         const jsonUrl = `../../resources/ui/quickchat/${i18n.language}.json`;
+        //         this.scene.load.json("quickchat", jsonUrl);
+        //         this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
+        //         this.scene.load.start();
+        //     }
         // } else {
-        //     this.mInputText = new InputPanel(this.scene, this.mWorld);
-        //     this.mInputText.once("close", this.sendChat, this);
-        // }
+        this.mInputText = new InputPanel(this.scene, this.mWorld);
+        this.mInputText.once("close", this.sendChat, this);
+        //  }
     }
 
     private sendChat(val: string) {
