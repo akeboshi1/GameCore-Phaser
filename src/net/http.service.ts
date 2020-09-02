@@ -81,8 +81,8 @@ export class HttpService {
         return this.get("account/tokencheck");
     }
 
-    refreshToekn(refreshToken: string, uid: string) {
-        return this.post("account/refresh_token", { refreshToken, uid });
+    refreshToekn(refreshToken: string, token: string) {
+        return this.post("account/refresh_token", { refreshToken, token });
     }
 
     loginByPhoneCode(phone: string, code: string, areaCode: string): Promise<Response> {

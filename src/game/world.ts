@@ -248,23 +248,23 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public resize(width: number, height: number) {
         const w = width * window.devicePixelRatio;
         const h = height * window.devicePixelRatio;
-        // if (this.mGame) {
-        //     this.mGame.scale.resize(w, h);
-        //     const scenes = this.mGame.scene.scenes;
-        //     for (const scene of scenes) {
-        //         scene.setViewPort(0, 0, w, h);
-        //         // scene.cameras.main.setViewport(0, 0, w, h);
-        //     }
-        // }
-        // if (this.mRoomMamager) {
-        //     this.mRoomMamager.resize(w, h);
-        // }
-        // if (this.mUiManager) {
-        //     this.mUiManager.resize(w, h);
-        // }
-        // if (this.mInputManager) {
-        //     this.mInputManager.resize(w, h);
-        // }
+        if (this.mGame) {
+            this.mGame.scale.resize(w, h);
+            const scenes = this.mGame.scene.scenes;
+            // for (const scene of scenes) {
+            //     scene.setViewPort(0, 0, w, h);
+            //     // scene.cameras.main.setViewport(0, 0, w, h);
+            // }
+        }
+        if (this.mRoomMamager) {
+            this.mRoomMamager.resize(w, h);
+        }
+        if (this.mUiManager) {
+            this.mUiManager.resize(w, h);
+        }
+        if (this.mInputManager) {
+            this.mInputManager.resize(w, h);
+        }
         Logger.getInstance().log(`resize${w}|${h}`);
     }
 
@@ -714,6 +714,18 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     this.login();
                     return;
                 }
+                const account = JSON.parse(token);
+                this.mAccount.setAccount(account);
+                this.httpService.refreshToekn(account.refreshToken, account.token)
+                    .then((response: any) => {
+                        if (response.code === 200) {
+                            this.mAccount.refreshToken(response);
+                            this.loginEnterWorld();
+                        } else {
+                            this.login();
+                            return;
+                        }
+                    });
             } else {
                 // this.mGame.scene.start(LoadingScene.name, { world: this });
                 // this.mLoadingManager.start();
@@ -723,8 +735,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     fingerprint: this.mConfig.token_fingerprint,
                     id: this.mConfig.user_id,
                 });
+                this.loginEnterWorld();
             }
-            this.loginEnterWorld();
         }
     }
 

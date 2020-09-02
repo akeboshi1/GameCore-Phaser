@@ -65,13 +65,13 @@ export class HttpClock {
         if (data.in_allowed_period) {
             return true;
         }
-        this.showAlert(`[color=#ff0000][size=${16 * this.world.uiRatio}]您的账号属于未成年[/size][/color]\n每日22:00~次日8:00是休息时间，根据相关规定，该时间不可登录游戏，请注意休息哦！`, callback);
+        this.showAlert(`[color=#ff0000][size=${14 * this.world.uiRatio}]您的账号属于未成年人[/size][/color]\n每日22:00~次日8:00是休息时间，根据相关规定，该时间不可登录游戏，请注意休息哦！`, callback);
         return false;
     }
 
     private checkTimeAllowed(data: any, callback?: () => void) {
         if (data.time_played >= data.max_time_allowed) {
-            this.showAlert(`[color=#ff0000][size=${16 * this.world.uiRatio}]您的账号属于未成年[/size][/color]\n今日累计时长已超过${(data.time_played / 3600).toFixed(1)}小时！`, callback);
+            this.showAlert(`[color=#ff0000][size=${14 * this.world.uiRatio}]您的账号属于未成年人[/size][/color]\n今日累计时长已超过${(data.max_time_allowed / 3600).toFixed(1)}小时！\n不可登录`, callback);
             return false;
         }
         return true;

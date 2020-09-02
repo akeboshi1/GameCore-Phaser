@@ -1,6 +1,7 @@
 
 export interface IAccountData {
     token: string;
+    refreshToken: string;
     expire: number;
     fingerprint: string;
     id: string;
@@ -21,6 +22,25 @@ export class Account {
     public setAccount(val: any) {
         this.clear();
         Object.assign(this.mCurAccountData, val);
+        this.saveLocalStorage();
+    }
+
+    public refreshToken(data: any) {
+        if (this.mCurAccountData) {
+            const { newExpire, newFingerprint, newToken } = data;
+            this.mCurAccountData.expire = newExpire;
+            this.mCurAccountData.fingerprint = newFingerprint;
+            this.mCurAccountData.token = newToken;
+            this.saveLocalStorage();
+        }
+    }
+
+    public saveLocalStorage() {
+        if (!this.mCurAccountData) {
+            return;
+        }
+        const { id, fingerprint, refreshToken, expire, token } = this.mCurAccountData;
+        localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, token  }));
     }
 
     public clear() {
@@ -28,12 +48,14 @@ export class Account {
             token: "",
             expire: 0,
             fingerprint: "",
-            id: ""
+            id: "",
+            refreshToken: ""
         };
     }
 
     public destroy() {
         this.clear();
+        localStorage.removeItem("token");
         this.enterGame(undefined, undefined, undefined, undefined);
     }
 
