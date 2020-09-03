@@ -5,7 +5,7 @@ export interface ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void;
     onFocus();
     onBlur();
-    move(any);
+    move(point, any);
     closeConnect(): void;
     loadRes(path: string);
     clearHeartBeat();
