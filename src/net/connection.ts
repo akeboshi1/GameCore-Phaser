@@ -30,14 +30,17 @@ export default class Connection implements ConnectionService {
     private mReConnectCount: number = 0;
     private mCachedServerAddress: ServerAddress | undefined;
     private mTimeout: any;
-
+    private _isConnect: boolean = false;
     constructor(listener: IConnectListener) {
         this.mListener = listener;
     }
-
+    isConnect(): boolean {
+        return this._isConnect;
+    }
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
         try {
+            if (this.mMainWorker) this.mMainWorker.postMessage({ method: "close" });
             this.mMainWorker = new MainWorker();
             this.mMainWorker.postMessage({ method: "init" });
             // this.mHeartBeatWorker = new HeartBeatWorker();
@@ -49,6 +52,7 @@ export default class Connection implements ConnectionService {
     }
 
     closeConnect(): void {
+        this._isConnect = false;
         this.mMainWorker.terminate();
         // this.mWorker.terminate();
         // this.mHeartBeatWorker.terminate();
@@ -113,6 +117,9 @@ export default class Connection implements ConnectionService {
     loadRes(path: string) {
         if (this.mMainWorker) this.mMainWorker.postMessage({ "method": "loadRes", "url": path });
     }
+    move(data: any) {
+        if (this.mMainWorker) this.mMainWorker.postMessage({ "method": "move", "data": data });
+    }
 
     private _doConnect() {
         // Logger.getInstance().info(`_doConnect `, this.mCachedServerAddress);
@@ -135,12 +142,14 @@ export default class Connection implements ConnectionService {
             case "onConnected":
                 this.mReConnectCount = 0;
                 this.mListener.onConnected();
+                this._isConnect = true;
                 if (this.mMainWorker) {
                     this.mMainWorker.postMessage({ method: "register" });
                     this.mMainWorker.postMessage({ method: "startBeat" });
                 }
                 break;
-            case "onDisConnected":
+            case "onD_isConnected":
+                this._isConnect = false;
                 if (!this.mTimeout) {
                     if (this.mReConnectCount < 10)
                         this.mReConnectCount++;
