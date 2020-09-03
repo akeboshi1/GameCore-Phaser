@@ -34,6 +34,7 @@ export interface ILauncherConfig {
     readonly isEditor?: boolean;
     readonly osd?: string;
     readonly closeGame: Function;
+    readonly connectFail: Function;
     readonly parent?: string;
 }
 
@@ -118,6 +119,7 @@ export class Launcher {
         baseHeight: this.maxHeight,
         ui_scale: undefined,
         closeGame: null,
+        connectFail: null,
         platform: "pc",
     };
 

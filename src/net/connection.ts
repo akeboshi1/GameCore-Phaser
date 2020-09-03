@@ -40,6 +40,7 @@ export default class Connection implements ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
         try {
+            if (this.mMainWorker) this.mMainWorker.postMessage({ method: "close" });
             this.mMainWorker = new MainWorker();
             this.mMainWorker.postMessage({ method: "init" });
             // this.mHeartBeatWorker = new HeartBeatWorker();
