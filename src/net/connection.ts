@@ -117,7 +117,7 @@ export default class Connection implements ConnectionService {
     loadRes(path: string) {
         if (this.mMainWorker) this.mMainWorker.postMessage({ "method": "loadRes", "url": path });
     }
-    move(data: any) {
+    move(point: Phaser.Geom.Point, data: any) {
         if (this.mMainWorker) this.mMainWorker.postMessage({ "method": "move", "data": data });
     }
 
@@ -162,6 +162,7 @@ export default class Connection implements ConnectionService {
                 }
                 break;
             case "onConnectError":
+                this._isConnect = false;
                 Logger.getInstance().error("error" + data.error);
                 // TODO
                 this.reConnect();
