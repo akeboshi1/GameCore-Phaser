@@ -219,10 +219,15 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onDisConnected(connection?: SocketConnection): void {
+        Logger.getInstance().log("app connectFail=====");
         if (!this.game || this.isPause) return;
-        this.clearGame().then(() => {
-            this.initWorld(this.mConfig, this.mCallBack);
-        });
+        if (this.mConfig.connectFail) {
+            this.onError();
+        } else {
+            this.clearGame().then(() => {
+                this.initWorld(this.mConfig, this.mCallBack);
+            });
+        }
     }
 
     onError(reason?: SocketConnectionError): void {
