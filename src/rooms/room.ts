@@ -747,7 +747,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
 
-        const step = moveData.step;
+        const step = moveData.step || 0;
         if (step >= pos.length) {
             return;
         }
