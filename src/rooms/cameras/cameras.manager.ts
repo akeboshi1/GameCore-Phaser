@@ -122,7 +122,6 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         for (const camera of this.mCameras) {
             camera.scrollX += x / this.camera.zoom;
             camera.scrollY += y / this.camera.zoom;
-            Logger.getInstance().log("view: ", camera.x, camera.y, camera.width, camera.height);
         }
         this.moving = true;
         // this.mCamera.setScroll(x, y);
