@@ -90,6 +90,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
+        this.initWorld(config, callBack);
+    }
+    public initWorld(config: ILauncherConfig, callBack?: Function) {
         this.mCallBack = callBack;
         this.mConfig = config;
         // TODO 检测config内的必要参数如确实抛异常.
@@ -215,7 +218,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void { }
+    onDisConnected(connection?: SocketConnection): void {
+        if (!this.game || this.isPause) return;
+        this.clearGame().then(() => {
+            this.initWorld(this.mConfig, this.mCallBack);
+        });
+    }
 
     onError(reason: SocketConnectionError | undefined): void { }
 
@@ -964,6 +972,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = false;
         if (this.mGame) {
+            if (!this.mConnection.isConnect) { return this.onDisConnected(); }
             this.mConnection.onFocus();
             this.mRoomMamager.onFocus();
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
