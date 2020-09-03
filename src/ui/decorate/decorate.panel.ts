@@ -6,22 +6,23 @@ import { MessageType } from "../../const/MessageType";
 import { Direction, IElement } from "../../rooms/element/element";
 import { ISprite } from "../../rooms/element/sprite";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";
     private readonly minGrid: number = 2;
     private readonly maxGrid: number = 10;
     private mControllContainer: Phaser.GameObjects.Container;
-    private mTurnBtn: Phaser.GameObjects.Image;
-    private mRecycleBtn: Phaser.GameObjects.Image;
-    private mOkBtn: Phaser.GameObjects.Image;
-    private mCancelBtn: Phaser.GameObjects.Image;
+    private mTurnBtn: Button;
+    private mRecycleBtn: Button;
+    private mOkBtn: Button;
+    private mCancelBtn: Button;
     private mMenuContainer: Phaser.GameObjects.Container;
-    private mMainMenus: Phaser.GameObjects.Image[];
+    private mMainMenus: Button[];
 
-    private mHorizontalBtn: Phaser.GameObjects.Image;
-    private mMoveBtn: Phaser.GameObjects.Image;
-    private mRepeatBtn: Phaser.GameObjects.Image;
-    private mExtendBtn: Phaser.GameObjects.Image;
+    private mHorizontalBtn: Button;
+    private mMoveBtn: Button;
+    private mRepeatBtn: Button;
+    private mExtendBtn: Button;
     private mSubMenus: Phaser.GameObjects.Container;
 
     private mMoveMenuContainer: MoveMenu;
@@ -55,13 +56,13 @@ export class DecoratePanel extends BasePanel {
     }
 
     public addListen() {
-        if (this.mCancelBtn) this.mCancelBtn.on("pointerup", this.onCancelHandler, this);
-        if (this.mOkBtn) this.mOkBtn.on("pointerup", this.onAddHandler, this);
-        if (this.mRecycleBtn) this.mRecycleBtn.on("pointerup", this.onRecycleHandler, this);
-        if (this.mTurnBtn) this.mTurnBtn.on("pointerup", this.onTurnHandler, this);
-        if (this.mMoveBtn) this.mMoveBtn.on("pointerup", this.onShowMoveMenuHandler, this);
-        if (this.mRepeatBtn) this.mRepeatBtn.on("pointerup", this.onShowRepeatHandler, this);
-        if (this.mExtendBtn) this.mExtendBtn.on("pointerup", this.onShowExtendsHandler, this);
+        if (this.mCancelBtn) this.mCancelBtn.on(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
+        if (this.mOkBtn) this.mOkBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        if (this.mRecycleBtn) this.mRecycleBtn.on(CoreUI.MouseEvent.Tap, this.onRecycleHandler, this);
+        if (this.mTurnBtn) this.mTurnBtn.on(CoreUI.MouseEvent.Tap, this.onTurnHandler, this);
+        if (this.mMoveBtn) this.mMoveBtn.on(CoreUI.MouseEvent.Tap, this.onShowMoveMenuHandler, this);
+        if (this.mRepeatBtn) this.mRepeatBtn.on(CoreUI.MouseEvent.Tap, this.onShowRepeatHandler, this);
+        if (this.mExtendBtn) this.mExtendBtn.on(CoreUI.MouseEvent.Tap, this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.register();
             this.mMoveMenuContainer.on("tap", this.onMoveHandler, this);
@@ -74,13 +75,13 @@ export class DecoratePanel extends BasePanel {
     }
 
     public removeListen() {
-        if (this.mCancelBtn) this.mCancelBtn.off("pointerup", this.onCancelHandler, this);
-        if (this.mOkBtn) this.mOkBtn.off("pointerup", this.onAddHandler, this);
-        if (this.mRecycleBtn) this.mRecycleBtn.off("pointerup", this.onRecycleHandler, this);
-        if (this.mTurnBtn) this.mTurnBtn.off("pointerup", this.onTurnHandler, this);
-        if (this.mMoveBtn) this.mMoveBtn.off("pointerup", this.onShowMoveMenuHandler, this);
-        if (this.mRepeatBtn) this.mRepeatBtn.off("pointerup", this.onShowRepeatHandler, this);
-        if (this.mExtendBtn) this.mExtendBtn.off("pointerup", this.onShowExtendsHandler, this);
+        if (this.mCancelBtn) this.mCancelBtn.off(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
+        if (this.mOkBtn) this.mOkBtn.off(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        if (this.mRecycleBtn) this.mRecycleBtn.off(CoreUI.MouseEvent.Tap, this.onRecycleHandler, this);
+        if (this.mTurnBtn) this.mTurnBtn.off(CoreUI.MouseEvent.Tap, this.onTurnHandler, this);
+        if (this.mMoveBtn) this.mMoveBtn.off(CoreUI.MouseEvent.Tap, this.onShowMoveMenuHandler, this);
+        if (this.mRepeatBtn) this.mRepeatBtn.off(CoreUI.MouseEvent.Tap, this.onShowRepeatHandler, this);
+        if (this.mExtendBtn) this.mExtendBtn.off(CoreUI.MouseEvent.Tap, this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.unRegister();
             this.mMoveMenuContainer.off("tap", this.onMoveHandler, this);
@@ -112,11 +113,12 @@ export class DecoratePanel extends BasePanel {
             if (!this.mOkBtn) {
                 return;
             }
-            if (val) {
-                this.mOkBtn.clearTint();
-            } else {
-                this.mOkBtn.setTint(0x666666);
-            }
+            this.mOkBtn.enable = val;
+            // if (val) {
+            //     this.mOkBtn.clearTint();
+            // } else {
+            //     this.mOkBtn.setTint(0x666666);
+            // }
         }
     }
 
@@ -158,48 +160,59 @@ export class DecoratePanel extends BasePanel {
             y: 60 * this.dpr
         }, false);
 
-        this.mOkBtn = this.scene.make.image({
-            key: this.key,
-            frame: "ok_btn.png"
-        }, false).setInteractive().setOrigin(0);
+        this.mOkBtn = new Button(this.scene, this.key, "ok_btn.png");
+        this.mRecycleBtn = new Button(this.scene, this.key, "recycly_btn.png");
+        this.mTurnBtn = new Button(this.scene, this.key, "turn_btn.png");
+        this.mCancelBtn = new Button(this.scene, this.key, "cancel_btn.png");
+        this.mMenuContainer.y = this.mOkBtn.height * 0.5;
+        this.mSubMenus.y = this.mMenuContainer.y + 60 * this.dpr;
 
-        this.mRecycleBtn = this.scene.make.image({
-            key: this.key,
-            frame: "recycly_btn.png"
-        }, false).setInteractive().setOrigin(0);
-        this.mTurnBtn = this.scene.make.image({
-            key: this.key,
-            frame: "turn_btn.png"
-        }, false).setInteractive().setOrigin(0);
+        // this.mOkBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "ok_btn.png"
+        // }, false).setInteractive().setOrigin(0);
 
-        this.mCancelBtn = this.scene.make.image({
-            key: this.key,
-            frame: "cancel_btn.png"
-        }, false).setInteractive().setOrigin(0);
+        // this.mRecycleBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "recycly_btn.png"
+        // }, false).setInteractive().setOrigin(0);
+        // this.mTurnBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "turn_btn.png"
+        // }, false).setInteractive().setOrigin(0);
+
+        // this.mCancelBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "cancel_btn.png"
+        // }, false).setInteractive().setOrigin(0);
         // this.add([this.mControllContainer, this.mArrow1, this.mArrow7, this.mArrow3, this.mArrow5]);
 
-        this.mHorizontalBtn = this.scene.make.image({
-            key: this.key,
-            frame: "horizontal_btn.png"
-        }, false).setInteractive().setOrigin(0);
+        this.mHorizontalBtn = new Button(this.scene, this.key, "horizontal_btn.png");
+        this.mMoveBtn = new Button(this.scene, this.key, "move_btn.png");
+        this.mRepeatBtn = new Button(this.scene, this.key, "repeat_btn.png");
+        this.mExtendBtn = new Button(this.scene, this.key, "extend_btn.png");
+        // this.mHorizontalBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "horizontal_btn.png"
+        // }, false).setInteractive().setOrigin(0);
 
-        this.mMoveBtn = this.scene.make.image({
-            key: this.key,
-            frame: "move_btn.png"
-        }, false).setInteractive().setOrigin(0);
+        // this.mMoveBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "move_btn.png"
+        // }, false).setInteractive().setOrigin(0);
 
-        this.mRepeatBtn = this.scene.make.image({
-            key: this.key,
-            frame: "repeat_btn.png"
-        }, false).setInteractive().setOrigin(0);
+        // this.mRepeatBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "repeat_btn.png"
+        // }, false).setInteractive().setOrigin(0);
 
-        this.mExtendBtn = this.scene.make.image({
-            key: this.key,
-            frame: "extend_btn.png"
-        }, false).setInteractive().setOrigin(0);
+        // this.mExtendBtn = this.scene.make.image({
+        //     key: this.key,
+        //     frame: "extend_btn.png"
+        // }, false).setInteractive().setOrigin(0);
 
         this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
-        this.mMoveMenuContainer.y = this.mSubMenus.y + 60 * this.dpr + this.mMoveMenuContainer.height / 2;
+        this.mMoveMenuContainer.y = this.mSubMenus.y + 15 * this.dpr + this.mMoveMenuContainer.height;
 
         this.mRepeatMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
         this.mRepeatMenuContainer.y = this.mMoveMenuContainer.y;
@@ -232,14 +245,15 @@ export class DecoratePanel extends BasePanel {
             button.x = preButton.width + preButton.x + margin;
         }
 
-        this.mMoveMenuContainer.x = this.mSubMenus.x + this.mMoveBtn.x + this.mMoveBtn.width / 2 + 29 * this.dpr;
-        this.mRepeatMenuContainer.x = this.mSubMenus.x + this.mRepeatBtn.x + this.mRepeatBtn.width / 2 + 29 * this.dpr;
+        this.mMoveMenuContainer.x = this.mSubMenus.x + this.mMoveBtn.x + 29 * this.dpr;
+        this.mRepeatMenuContainer.x = this.mSubMenus.x + this.mRepeatBtn.x + 29 * this.dpr;
 
-        if (this.mCanPut) {
-            this.mOkBtn.clearTint();
-        } else {
-            this.mOkBtn.setTint(0x666666);
-        }
+        // if (this.mCanPut) {
+        //     this.mOkBtn.clearTint();
+        // } else {
+        //     this.mOkBtn.setTint(0x666666);
+        // }
+        this.mOkBtn.enable = this.mCanPut;
 
         super.init();
 
