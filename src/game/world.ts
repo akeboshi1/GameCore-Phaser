@@ -275,6 +275,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public resize(width: number, height: number) {
+        if (this.mConfig) {
+            this.mConfig.width = width;
+            this.mConfig.height = height;
+        }
         const w = width * window.devicePixelRatio;
         const h = height * window.devicePixelRatio;
         if (this.mGame) {
