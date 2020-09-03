@@ -129,7 +129,7 @@ export class PicaMainUIPanel extends BasePanel {
         }
         if (room.playerCount) {
             // TODO 多语言适配
-            this.mCounter.setText(`${room.playerCount}人`);
+            this.mCounter.setText(`${room.playerCount}`);
             this.mCounter.x = this.mSceneName.x + this.mSceneName.rightbound + 5 * this.dpr;
         }
         this.praiseBtn.visible = false;
@@ -235,13 +235,13 @@ export class PicaMainUIPanel extends BasePanel {
         this.mSceneName.setText("");
         this.mSceneName.x = 18 * this.dpr;
         this.mCounter = new IconText(this.scene, this.key, "home_persons", this.dpr);
-        this.mCounter.setText("1人");
+        this.mCounter.setText("");
         this.mCounter.x = this.mSceneName.x + this.mSceneName.rightbound + 5 * this.dpr;
         this.mCounter.y = this.mSceneName.y;
         this.mCounter.setColor("#28D5F5");
         this.textToolTip = new TextToolTips(this.scene, UIAtlasKey.commonKey, "tips_bg", this.dpr, this.scale);
         this.textToolTip.setSize(160 * this.dpr, 45).visible = false;
-        this.praiseBtn = new CheckBox(this.scene, this.key, "praise_before_bg", "praise_after_bg", "998");
+        this.praiseBtn = new CheckBox(this.scene, this.key, "praise_before_bg", "praise_after_bg", "1");
         this.praiseBtn.y = this.mSceneName.y + this.mSceneName.height + this.praiseBtn.height * 0.5 + 20 * this.dpr;
         this.praiseBtn.x = 8 * this.dpr + this.praiseBtn.width * 0.5;
         this.praiseBtn.setTextStyle({ fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT });
@@ -428,7 +428,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
         this.mProgressBar.setProgress(progres, scale);
         this.mProgressBar.setRatio(0.5);
         this.mCurrentLv = scene.make.text({
-            text: "Lv. 57",
+            text: "57",
             style: {
                 fontSize: 10 * dpr,
                 fontFamily: Font.DEFULT_FONT
@@ -437,7 +437,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
         this.mCurrentLv.setStroke("#000000", 1 * dpr);
 
         this.mNextLv = scene.make.text({
-            text: "Lv. 58",
+            text: "58",
             style: {
                 fontSize: 10 * dpr,
                 fontFamily: Font.DEFULT_FONT

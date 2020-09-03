@@ -230,9 +230,9 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this._errorCount > 3) {
             if (!this.mConnection.isConnect) {
                 if (this.mConfig.connectFail) {
+                    this._errorCount = 0;
+                    Logger.getInstance().log("app connectFail");
                     return this.mConfig.connectFail();
-                } else {
-                    return this.onDisConnected();
                 }
             }
         }
@@ -772,6 +772,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
                     fingerprint: this.mConfig.token_fingerprint,
+                    refreshToken: this.mAccount.accountData ? this.mAccount.accountData.refreshToken : "",
                     id: this.mConfig.user_id,
                 });
                 this.loginEnterWorld();

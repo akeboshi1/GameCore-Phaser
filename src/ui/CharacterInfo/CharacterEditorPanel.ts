@@ -41,10 +41,10 @@ export class CharacterEditorPanel extends Phaser.GameObjects.Container {
         const line = this.createLine(-230 * this.dpr * 0.5, posy + 32 * this.dpr);
         this.add(bg);
         this.add([this.title, nameText, this.inputText, line]);
-        this.idText = this.createText("I        D:", "49855555", posx, posy + offsetY);
-        this.constellationText = this.createText(this.geti18n("constellation") + ":", "双子座", posx, posy + offsetY * 2);
-        this.birthdayText = this.createText(this.geti18n("birthday") + ":", "1998-04-24", posx, posy + offsetY * 3);
-        this.cityText = this.createText(this.geti18n("city") + ":", "中国·上海", posx, posy + offsetY * 4);
+        this.idText = this.createText("I        D:", "", posx, posy + offsetY);
+        this.constellationText = this.createText(this.geti18n("constellation") + ":", "", posx, posy + offsetY * 2);
+        this.birthdayText = this.createText(this.geti18n("birthday") + ":", "", posx, posy + offsetY * 3);
+        this.cityText = this.createText(this.geti18n("city") + ":", "", posx, posy + offsetY * 4);
         const signText = this.scene.make.text({ x: posx, y: posy + offsetY * 5, style: { blod: true, color: "#0062BB", fontSize: 15 * dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0);
         signText.setText(this.geti18n("signature") + ":");
         this.signInput = new InputText(this.scene, posx + signText.width + 20 * dpr, posy + offsetY * 5, 162 * dpr, 76 * dpr, {

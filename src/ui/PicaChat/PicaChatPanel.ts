@@ -56,8 +56,8 @@ export class PicaChatPanel extends BasePanel {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         w = width;
-        h = 133 * this.dpr;
-        this.setSize(width, 133 * this.dpr);
+        h = h ? h : 133 * this.dpr;
+        this.setSize(width, h);
         const frame = this.scene.textures.getFrame(this.key, "title_bg");
         const scaleRatio = frame ? (width / this.scale) / frame.width : 1;
         this.mTitleBg.scaleX = scaleRatio;
