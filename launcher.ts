@@ -35,7 +35,7 @@ export interface ILauncherConfig {
     readonly isEditor?: boolean;
     readonly osd?: string;
     readonly closeGame: Function;
-    readonly connectFail: Function;
+    readonly connectFail?: Function;
     readonly parent?: string;
 }
 
