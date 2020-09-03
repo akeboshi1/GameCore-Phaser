@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.347",
+    "version": "1.0.348",
     "main": "release/js/tooqing.js",
     "scripts": {
         "dev": "webpack-dev-server --mode development && mv dist/heartBeatWorker.js dist/js/heartBeatWorker.js",
