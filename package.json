@@ -7,7 +7,8 @@
         "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
         "ver": "genversion version.js",
-        "mv": "mv dist/heartBeatWorker.js dist/js/heartBeatWorker.js"
+        "mv-dev": "mv dist/heartBeatWorker.js dist/js/heartBeatWorker.js",
+        "mv": "mv release/heartBeatWorker.js release/js/heartBeatWorker.js"
     },
     "repository": "git@code.apowo.com:PixelPai/game-core.git",
     "author": "Seven <seven@apowo.com>",
