@@ -403,7 +403,8 @@ class MainContainer extends FriendContainer {
         // this.friendList.setItems(this.showingFriends);
         this.friendTabel.setItems(this.showingFriends);
         if (title) this.titleText.setText(title);
-        this.friendNum.setText(`${friendType}: ${data.length}`);
+        const friends = this.friendDatas.get(this.channelGroup.selectedIndex);
+        if (friends) this.friendNum.setText(`${friendType}: ${friends.length}`);
     }
 
     public filterById(id: string) {

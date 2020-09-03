@@ -116,6 +116,8 @@ export class CharacterInfoMediator extends BaseMediator {
                             this.mView.setFriendRelation(FriendRelation.Friend);
                         }
                     }
+                } else {
+                    this.mView.setFriendRelation(FriendRelation.Null);
                 }
             }
         });

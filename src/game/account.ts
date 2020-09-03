@@ -1,3 +1,4 @@
+import { Logger } from "../utils/log";
 
 export interface IAccountData {
     token: string;
