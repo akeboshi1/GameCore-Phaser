@@ -232,7 +232,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onError(reason?: SocketConnectionError): void {
         this._errorCount++;
-        if (this._errorCount > 3) {
+        if (this._errorCount > 0) {
             if (!this.mConnection.isConnect) {
                 if (this.mConfig.connectFail) {
                     this._errorCount = 0;
@@ -273,13 +273,23 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    public restart() {
-        this.clearGame().then(() => {
-            this.initWorld(this.mConfig, this.mCallBack);
-        });
+    public restart(config?: ILauncherConfig, callBack?: Function) {
+        if (config) this.mConfig = config;
+        if (callBack) this.mCallBack = callBack;
+        let gameID: string = this.mConfig.game_id;
+        let worldID: string = this.mConfig.virtual_world_id;
+        if (this.mAccount.gameID && this.mAccount.virtualWorldId) {
+            gameID = this.mAccount.gameID;
+            worldID = this.mAccount.virtualWorldId;
+        }
+        this._createAnotherGame(gameID, worldID, null, null);
     }
 
     public resize(width: number, height: number) {
+        if (this.mConfig) {
+            this.mConfig.width = width;
+            this.mConfig.height = height;
+        }
         const w = width * window.devicePixelRatio;
         const h = height * window.devicePixelRatio;
         if (this.mGame) {
@@ -362,6 +372,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public reconnect() {
+        if (this.mConfig.connectFail) return this.mConfig.connectFail();
         if (!this.game || this.isPause) return;
         let gameID: string = this.mConfig.game_id;
         let worldID: string = this.mConfig.virtual_world_id;

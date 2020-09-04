@@ -12,7 +12,7 @@ onmessage = (e) => {
         if (heartBeatWorkerContext.inited) return;
         heartBeatWorkerContext.inited = true;
 
-        const  ports  = e.ports;
+        const ports = e.ports;
         for (let i = 0; i < ports.length; i++) {
             const port = ports[i];
             const w = worker[i];

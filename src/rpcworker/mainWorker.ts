@@ -260,8 +260,12 @@ worker.onmessage = (e: MessageEvent) => {
         // move
         case "move":
             // const movePath = data.data;
+            // const lastPos = data.point;
             // let point = null;
-            // let
+            // let now: number = 0;
+            // let duration: number = 0;
+            // let angle: number = 0;
+            // let paths: any[] = [];
             // for (const path of movePath) {
             //     point = path.point3f;
             //     if (!(point.y === lastPos.y && point.x === lastPos.x)) {
