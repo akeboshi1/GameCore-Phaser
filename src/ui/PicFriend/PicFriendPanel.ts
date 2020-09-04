@@ -369,7 +369,8 @@ class MainContainer extends FriendContainer {
             }
         }
         this.friendDatas.set(type, result);
-        this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+        if (ids.length > 0) this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+        this.showFriend(type, result);
     }
 
     public showFriend(type: FriendChannel, data: FriendData[]) {
@@ -402,15 +403,20 @@ class MainContainer extends FriendContainer {
         // this.friendList.setItems(this.showingFriends);
         this.friendTabel.setItems(this.showingFriends);
         if (title) this.titleText.setText(title);
-        this.friendNum.setText(`${friendType}: ${data.length}`);
+        const friends = this.friendDatas.get(this.channelGroup.selectedIndex);
+        if (friends) this.friendNum.setText(`${friendType}: ${friends.length}`);
     }
 
     public filterById(id: string) {
         if (!this.showingFriends) {
             return;
         }
-        const result = this.showingFriends.filter((friend: FriendData) => friend.id !== id);
-        this.friendTabel.setItems(result);
+        let friends = this.friendDatas.get(this.channelGroup.selectedIndex);
+        if (friends) {
+            friends = friends.filter((friend: FriendData) => friend.id !== id);
+        }
+        this.showingFriends = this.showingFriends.filter((friend: FriendData) => friend.id !== id);
+        this.friendTabel.setItems(this.showingFriends);
     }
 
     protected draw() {

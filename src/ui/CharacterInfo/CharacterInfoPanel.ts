@@ -337,9 +337,6 @@ export default class CharacterInfoPanel extends BasePanel {
     public setFriendRelation(relation: FriendRelation) {
         this.mRelation = relation;
         this.mFirendMenu.visible = relation === FriendRelation.Friend;
-        if (relation === FriendRelation.Null) {
-            return;
-        }
         if (relation === FriendRelation.Followed || relation === FriendRelation.Friend) {
             this.addFriendBtn.setText(i18n.t("friendlist.unfollow"));
         } else {
@@ -469,6 +466,7 @@ export default class CharacterInfoPanel extends BasePanel {
                 this.emit("unfollow", this.mCharacterData.cid);
                 break;
             case FriendRelation.Fans:
+            case FriendRelation.Null:
                 this.emit("follow", this.mCharacterData.cid);
                 break;
         }

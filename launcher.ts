@@ -3,6 +3,7 @@
 // 2. 做设备兼容
 
 import version from "./version";
+import { Logger } from "./src/utils/log";
 // import { ServerAddress } from "./src/net/address";
 // import { ConnectionService } from "./src/net/connection.service";
 // import { Capsule, PaletteNode, MossNode } from "game-capsule";
@@ -34,6 +35,7 @@ export interface ILauncherConfig {
     readonly isEditor?: boolean;
     readonly osd?: string;
     readonly closeGame: Function;
+    readonly connectFail?: Function;
     readonly parent?: string;
 }
 
@@ -52,7 +54,7 @@ export interface GameMain {
     onFocus();
     onBlur();
     updateMoss(moss): void;
-
+    restart(config?: ILauncherConfig, callBack?: Function);
     destroy(): Promise<void>;
 }
 
@@ -96,7 +98,7 @@ export class Launcher {
     readonly maxHeight = 1080;
     readonly keyboardHeight = 256;
     private world: GameMain;
-    // private intervalId: any;
+    private intervalId: any;
     private mReload: Function;
     private mCompleteFunc: Function;
     private mConfig: ILauncherConfig = {
@@ -118,6 +120,7 @@ export class Launcher {
         baseHeight: this.maxHeight,
         ui_scale: undefined,
         closeGame: null,
+        connectFail: null,
         platform: "pc",
     };
 
@@ -126,21 +129,21 @@ export class Launcher {
             Object.assign(this.mConfig, config);
         }
 
-        // this.intervalId = setInterval(() => {
-        const xhr = new XMLHttpRequest(); // TODO
-        xhr.open("GET", "./package.json", true);
-        xhr.addEventListener("load", () => {
-            const manifest = JSON.parse(xhr.response);
-            const newVersion = manifest.version;
+        this.intervalId = setInterval(() => {
+            // const xhr = new XMLHttpRequest(); // TODO
+            // xhr.open("GET", "./package.json", true);
+            // xhr.addEventListener("load", () => {
+            // const manifest = JSON.parse(xhr.response);
+            const newVersion = version;
             if (version !== newVersion) {
                 const result = confirm("检测到新版本，是否刷新更新到最新版？");
                 if (result && this.mReload) {
                     this.mReload();
                 }
             }
-        });
-        xhr.send(null);
-        // }, 4 * 60 * 60 * 1000 /* ms */);
+            // });
+            // xhr.send(null);
+        }, 4 * 60 * 60 * 1000 /* ms */);
 
         import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
             this.world = new game.World(this.config, this.mCompleteFunc);
@@ -198,6 +201,10 @@ export class Launcher {
         this.world.updatePalette(palette);
     }
 
+    public restart(config?: ILauncherConfig, callBack?: Function) {
+        if (this.world) this.world.restart(config, callBack);
+    }
+
     public updateMoss(moss) {
         if (!this.world) return;
         this.world.updateMoss(moss);
@@ -228,6 +235,7 @@ export class Launcher {
     }
 
     public destroy(): Promise<void> {
+        if (this.intervalId) clearInterval(this.intervalId);
         if (this.world) return this.world.destroy();
         return null;
     }

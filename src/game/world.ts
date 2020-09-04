@@ -87,9 +87,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      */
     private mUIScale: number;
     private _isIOS = -1;
-
+    private _errorCount: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
+        this.initWorld(config, callBack);
+    }
+    public initWorld(config: ILauncherConfig, callBack?: Function) {
         this.mCallBack = callBack;
         this.mConfig = config;
         // TODO 检测config内的必要参数如确实抛异常.
@@ -215,9 +218,30 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.login();
     }
 
-    onDisConnected(connection?: SocketConnection): void { }
+    onDisConnected(connection?: SocketConnection): void {
+        Logger.getInstance().log("app connectFail=====");
+        if (!this.game || this.isPause) return;
+        if (this.mConfig.connectFail) {
+            this.onError();
+        } else {
+            this.clearGame().then(() => {
+                this.initWorld(this.mConfig, this.mCallBack);
+            });
+        }
+    }
 
-    onError(reason: SocketConnectionError | undefined): void { }
+    onError(reason?: SocketConnectionError): void {
+        this._errorCount++;
+        if (this._errorCount > 0) {
+            if (!this.mConnection.isConnect) {
+                if (this.mConfig.connectFail) {
+                    this._errorCount = 0;
+                    Logger.getInstance().log("app connectFail");
+                    return this.mConfig.connectFail();
+                }
+            }
+        }
+    }
 
     onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -249,7 +273,24 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
+    public restart(config?: ILauncherConfig, callBack?: Function) {
+        Logger.getInstance().log("restart game");
+        if (config) this.mConfig = config;
+        if (callBack) this.mCallBack = callBack;
+        let gameID: string = this.mConfig.game_id;
+        let worldID: string = this.mConfig.virtual_world_id;
+        if (this.mAccount.gameID && this.mAccount.virtualWorldId) {
+            gameID = this.mAccount.gameID;
+            worldID = this.mAccount.virtualWorldId;
+        }
+        this._createAnotherGame(gameID, worldID, null, null);
+    }
+
     public resize(width: number, height: number) {
+        if (this.mConfig) {
+            this.mConfig.width = width;
+            this.mConfig.height = height;
+        }
         const w = width * window.devicePixelRatio;
         const h = height * window.devicePixelRatio;
         if (this.mGame) {
@@ -332,6 +373,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public reconnect() {
+        if (this.mConfig.connectFail) return this.mConfig.connectFail();
         if (!this.game || this.isPause) return;
         let gameID: string = this.mConfig.game_id;
         let worldID: string = this.mConfig.virtual_world_id;
@@ -616,6 +658,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private clearGame(callBack?: Function): Promise<void> {
+        this._errorCount = 0;
         return new Promise((resolve, reject) => {
             if (this.mGame) {
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
@@ -746,6 +789,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
                     fingerprint: this.mConfig.token_fingerprint,
+                    refreshToken: this.mAccount.accountData ? this.mAccount.accountData.refreshToken : "",
                     id: this.mConfig.user_id,
                 });
                 this.loginEnterWorld();
@@ -964,6 +1008,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = false;
         if (this.mGame) {
+            if (!this.mConnection.isConnect) {
+                if (this.mConfig.connectFail) {
+                    return this.mConfig.connectFail();
+                } else {
+                    return this.onDisConnected();
+                }
+            }
             this.mConnection.onFocus();
             this.mRoomMamager.onFocus();
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);

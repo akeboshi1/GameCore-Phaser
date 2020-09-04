@@ -747,7 +747,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
 
-        const step = moveData.step;
+        const step = moveData.step || 0;
         if (step >= pos.length) {
             return;
         }
@@ -757,6 +757,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         position.x = playerPosition.x;
         position.y = playerPosition.y;
 
+        if (pos[step] === undefined) {
+            Logger.getInstance().log("move error", pos, step);
+        }
         const nextPosition = op_def.PBPoint3f.create();
         nextPosition.x = pos[step].x;
         nextPosition.y = pos[step].y;

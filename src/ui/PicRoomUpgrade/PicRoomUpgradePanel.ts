@@ -9,6 +9,8 @@ export class PicRoomUpgradePanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private mTitleName: Phaser.GameObjects.Text;
     private roomIcon: Phaser.GameObjects.Sprite;
+    private mPlayedTimes: number;
+    private readonly MAX_TIMES: number = 4;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         // this.scale = 1;
@@ -47,6 +49,8 @@ export class PicRoomUpgradePanel extends BasePanel {
         const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
         this.mTitleName.text = data.text[0].text;
         const lv = data.data[0];
+        this.roomIcon.on(Phaser.Animations.Events.SPRITE_ANIMATION_REPEAT, this.animationRepeat, this);
+        this.mPlayedTimes = 0;
         this.roomIcon.play("lv" + lv);
     }
     public addListen() {
@@ -62,7 +66,7 @@ export class PicRoomUpgradePanel extends BasePanel {
     }
 
     public destroy() {
-
+        this.mPlayedTimes = 0;
         super.destroy();
     }
 
@@ -88,7 +92,7 @@ export class PicRoomUpgradePanel extends BasePanel {
         titleBg.y = -this.content.height * 0.5;
         const font = `${22 * this.dpr}px ${Font.BOLD_FONT}`;
         this.mTitleName = this.scene.make.text({
-            x: 0, y: titleBg.y, text: "Room upgrade to Lv3",
+            x: 0, y: titleBg.y, text: "",
             style: { font, fill: "#FFF36D" }
         }).setOrigin(0.5);
         this.mTitleName.setStroke("#471C1E", 8);
@@ -108,6 +112,9 @@ export class PicRoomUpgradePanel extends BasePanel {
         super.init();
     }
     private onClickHandler() {
+        if (this.mPlayedTimes < this.MAX_TIMES) {
+            return;
+        }
         const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
         this.emit("querytargetui", data.id);
     }
@@ -115,6 +122,13 @@ export class PicRoomUpgradePanel extends BasePanel {
     private createAnimations() {
         for (let i = 1; i <= 4; i++) {
             this.scene.anims.create({ key: "lv" + i, frames: this.scene.anims.generateFrameNames(this.key, { prefix: "lv", frames: [i - 1, i] }), duration: 500, repeat: -1 });
+        }
+    }
+
+    private animationRepeat() {
+        this.mPlayedTimes++;
+        if (this.mPlayedTimes >= this.MAX_TIMES) {
+            this.roomIcon.off(Phaser.Animations.Events.SPRITE_ANIMATION_REPEAT, this.animationRepeat, this);
         }
     }
 }
