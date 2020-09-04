@@ -209,5 +209,12 @@
   },
   "main_ui": {
     "energy_tips": "Current energy value {{name}} When energy is insufficient, restore 1 point every 10 minutes"
+  },
+  "order": {
+    "title": "ORDER",
+    "send": "DELIVERY",
+    "accele": "ACCELERATE",
+    "receive": "RECEIVE",
+    "deliverying": "DELIVERYING..."
   }
 }

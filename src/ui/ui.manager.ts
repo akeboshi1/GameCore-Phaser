@@ -592,6 +592,8 @@ export class UiManager extends PacketHandler {
                 return "PicaChat";
             case "picanavigate":
                 return "PicaNavigate";
+            case "PicHandheld":
+                return "PicHandheld";
         }
         return tag;
     }

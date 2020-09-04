@@ -15,7 +15,6 @@ export class PicaNavigatePanel extends BasePanel {
   private mFamilyBtn: Phaser.GameObjects.Image;
   private mGoHomeBtn: Phaser.GameObjects.Image;
   private mCloseBtn: Phaser.GameObjects.Image;
-  private mTestBtn: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
     this.UIType = UIType.Scene;
@@ -47,7 +46,6 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.on("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.on("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    // this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
@@ -58,7 +56,6 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn.off("pointerup", this.onShowBagHandler, this);
     this.mFamilyBtn.off("pointerup", this.onShowFamilyHandler, this);
     this.mGoHomeBtn.on("pointerup", this.onShowGoHomeHandler, this);
-    // this.mTestBtn.on("pointerup", this.onShowTestHandler, this);
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
   }
 
@@ -113,7 +110,6 @@ export class PicaNavigatePanel extends BasePanel {
     this.mBagBtn = this.createImage(this.key_lang, "bag_btn").setInteractive();
     this.mFamilyBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
     this.mGoHomeBtn = this.createImage(this.key_lang, "home_btn").setInteractive();
-    // this.mTestBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
     this.mCloseBtn = this.createImage(UIAtlasKey.commonKey, "close_1").setInteractive();
     const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn];
     this.add([this.mBackground]);
@@ -156,14 +152,12 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowFamilyHandler() {
-    this.emit("showPanel", "CharacterInfo");
+    this.emit("showPanel", "PicOrder");
   }
   private onShowGoHomeHandler() {
     this.emit("goHome");
   }
-  private onShowTestHandler() {
-    this.emit("showPanel", "PicBusinessMarketingPlan");
-  }
+
   private onCloseHandler() {
     this.emit("close");
   }
