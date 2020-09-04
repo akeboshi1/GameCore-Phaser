@@ -46,7 +46,8 @@
     "source": "来源：",
     "all": "全部",
     "search": "搜索",
-    "tips": "提示"
+    "tips": "提示",
+    "offline": "您的账号在另一地点登录，您已被迫下线"
   },
   "player_info": {
     "title": "信息详情",
@@ -205,7 +206,7 @@
   },
   "minecar": {
     "discard": "丢弃",
-    "confirmation": "您确定要丢弃 {{name}} 吗?"
+    "confirmation": "您确定要丢弃[color=#0157BC] {{name}} [/color]吗?"
   },
   "main_ui": {
     "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点"

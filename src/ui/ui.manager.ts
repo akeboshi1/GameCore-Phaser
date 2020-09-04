@@ -34,6 +34,9 @@ import { PicFurniFunMediator } from "./PicFurniFun/PicFurniFunMediator";
 import { PicHandheldMediator } from "./PicHandheld/PicHandheldMediator";
 import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
 import { CharacterInfoMediator } from "./CharacterInfo/CharacterInfoMediator";
+import { AlertView, Buttons } from "./components/alert.view";
+import { i18n } from "../i18n";
+import { Button } from "../../lib/rexui/lib/ui/button/Button";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -73,6 +76,7 @@ export class UiManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_MARKET, this.onEnableMarket);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_FORCE_OFFLINE, this.onForceOfflineHandler);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
     }
@@ -582,6 +586,16 @@ export class UiManager extends PacketHandler {
             }
         }
     }
+
+    private onForceOfflineHandler(packet: PBpacket) {
+        const alert = new AlertView(this.mScene, this.worldService).show({
+            text: i18n.t("common.offline"),
+            callback: () => {
+            },
+            btns: Buttons.Ok
+        });
+    }
+
     private getPanelNameByStateTag(tag: string) {
         switch (tag) {
             case "mainui":
