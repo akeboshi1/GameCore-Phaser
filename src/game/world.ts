@@ -274,6 +274,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     public restart(config?: ILauncherConfig, callBack?: Function) {
+        Logger.getInstance().log("restart game");
         if (config) this.mConfig = config;
         if (callBack) this.mCallBack = callBack;
         let gameID: string = this.mConfig.game_id;

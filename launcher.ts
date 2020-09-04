@@ -54,7 +54,7 @@ export interface GameMain {
     onFocus();
     onBlur();
     updateMoss(moss): void;
-
+    restart(config?: ILauncherConfig, callBack?: Function);
     destroy(): Promise<void>;
 }
 
@@ -130,10 +130,10 @@ export class Launcher {
         }
 
         this.intervalId = setInterval(() => {
-        // const xhr = new XMLHttpRequest(); // TODO
-        // xhr.open("GET", "./package.json", true);
-        // xhr.addEventListener("load", () => {
-        // const manifest = JSON.parse(xhr.response);
+            // const xhr = new XMLHttpRequest(); // TODO
+            // xhr.open("GET", "./package.json", true);
+            // xhr.addEventListener("load", () => {
+            // const manifest = JSON.parse(xhr.response);
             const newVersion = version;
             if (version !== newVersion) {
                 const result = confirm("检测到新版本，是否刷新更新到最新版？");
@@ -141,8 +141,8 @@ export class Launcher {
                     this.mReload();
                 }
             }
-        // });
-        // xhr.send(null);
+            // });
+            // xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
         import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
@@ -199,6 +199,10 @@ export class Launcher {
     public updatePalette(palette) {
         if (!this.world) return;
         this.world.updatePalette(palette);
+    }
+
+    public restart(config?: ILauncherConfig, callBack?: Function) {
+        if (this.world) this.world.restart(config, callBack);
     }
 
     public updateMoss(moss) {
