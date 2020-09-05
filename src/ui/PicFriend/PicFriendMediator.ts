@@ -21,6 +21,7 @@ export class PicFriendMediator extends BaseMediator {
 
     show() {
         if (this.mView) {
+            this.mView.show();
             return;
         }
         if (!this.mView) {

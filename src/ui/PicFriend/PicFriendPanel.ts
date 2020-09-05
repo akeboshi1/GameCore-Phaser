@@ -111,7 +111,9 @@ export default class PicFriendPanel extends BasePanel {
     }
 
     filterById(id: string) {
-        if (this.friendContainer) {
+        if (this.mShowingSubContainer) {
+            this.mShowingSubContainer.filterById(id);
+        } else if (this.friendContainer) {
             this.friendContainer.filterById(id);
         }
     }
@@ -181,12 +183,13 @@ export default class PicFriendPanel extends BasePanel {
         const classType = this.mSubContanerMap.get(type);
         if (!classType) return;
         this.mShowingSubContainer = new classType(this.scene, this.bg.width, this.bg.height, this.key, this.dpr, this.scale);
-        this.mShowingSubContainer.resize();
         this.mShowingSubContainer.register();
         this.mShowingSubContainer.on("hide", this.onHideSearchHandler, this);
+        this.mShowingSubContainer.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
         this.mShowingSubContainer.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
         this.content.remove(this.friendContainer);
         this.content.add(this.mShowingSubContainer);
+        this.mShowingSubContainer.resize();
 
         const eventName = this.mShowingSubContainer.fetchEventName();
         if (eventName) this.emit(eventName);
@@ -752,7 +755,7 @@ class FriendRenderer implements IRenderer {
     public setItemData(data: FriendData) {
         this.itemData = data;
         this.nameText.text = data.nickname;
-        const lv = data.lv ? `等级：${data.lv}` : "";
+        const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : "";
         this.level.setText(lv);
     }
 
@@ -820,7 +823,7 @@ class FollowRenderer extends FansRenderer {
 class BlacklistRenderer extends FansRenderer {
     constructor(scene: Phaser.Scene, owner: PicFriendItem) {
         super(scene, owner);
-        this.addBtn.setText(i18n.t("common.remove"));
+        this.addBtn.setText(i18n.t("friendlist.remove"));
     }
 
     protected onAddHandler() {
@@ -832,6 +835,7 @@ class SubFriendContainer extends FriendContainer {
     protected backBtn: Button;
     protected gridTable: GameGridTable;
     protected friendType: FriendChannel;
+    protected items: FriendData[];
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, uiScale: number) {
         super(scene, width, height, key, dpr, uiScale);
         this.draw();
@@ -852,7 +856,18 @@ class SubFriendContainer extends FriendContainer {
     }
 
     public setItems(items: FriendData[]) {
+        this.items = items;
         if (this.gridTable) this.gridTable.setItems(items);
+    }
+
+    public filterById(id: string) {
+        if (!this.items || this.items.length < 1) {
+            return;
+        }
+        if (this.items) {
+            this.items = this.items.filter((friend: FriendData) => friend.id !== id);
+        }
+        if (this.gridTable) this.gridTable.setItems(this.items);
     }
 
     public fetchEventName() {
@@ -874,6 +889,7 @@ class SubFriendContainer extends FriendContainer {
 
         this.gridTable = this.createGrideTable(0, 18 * this.dpr, 275 * this.dpr, 400 * this.dpr, 275 * this.dpr, 36 * this.dpr, () => {
             const item = new PicFriendItem(this.scene, 0, 0, this.key, this.dpr);
+            item.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onFtechPlayerHandler, this);
             item.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
             return item;
         }, new Handler(this.onItemClickHandler));
@@ -887,6 +903,10 @@ class SubFriendContainer extends FriendContainer {
 
     protected onItemClickHandler() {
 
+    }
+
+    protected onFtechPlayerHandler(friend: FriendData) {
+        this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
     }
 
     protected onRendererEventHandler(event: string, ...args) {
@@ -972,6 +992,7 @@ class BlackContainer extends SubFriendContainer {
             followed_user = friend.followed_user;
             if (followed_user) result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname });
         }
+        this.items = result;
         this.gridTable.setItems(result);
     }
 

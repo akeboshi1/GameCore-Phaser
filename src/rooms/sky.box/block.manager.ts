@@ -331,7 +331,6 @@ class Block extends DynamicImage {
     this.setSize(width, height);
     const camera = this.scene.cameras.main;
     this.mRectangle = new Phaser.Geom.Rectangle(x * this.mScale + camera.x, y * this.mScale + camera.y, width * this.mScale, height * this.mScale);
-    Logger.getInstance().log(this.x, this.y, width, height);
   }
 
   updatePosition() {

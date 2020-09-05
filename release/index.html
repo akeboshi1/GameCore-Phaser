@@ -62,7 +62,7 @@
     <script>
         window.addEventListener('load', (event) => {
             const launcher = TooqingCore.Launcher;
-            const app = launcher.start({ width: window.screen.width, height: window.screen.height, screenWidth: window.screen.width, screenHeight: window.screen.height });
+            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
             app.registerReload(window.reload);
             app.registerComplete(() => {
                 const loadingImg = document.getElementById('loading_img');
@@ -72,7 +72,7 @@
             })
             
             window.addEventListener("resize", (e) => {
-                app.onResize(window.screen.width, window.screen.height);
+                app.onResize(window.innerWidth, window.innerHeight);
 
             });
         });

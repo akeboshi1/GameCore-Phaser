@@ -71,7 +71,10 @@
     "input_signature": "D: Fill in personality signature to get others attention!",
     "note_nickname": "Remark friend nickname",
     "invite": "invite",
-    "track": "track"
+    "track": "track",
+    "add_black": "Add blacklist",
+    "remove_black": "Rdd blacklist",
+    "operation": "Operation"
   },
   "compose": {
     "title": "Produce",
@@ -175,7 +178,9 @@
     "search_friends_notes": "Search",
     "unfollow": "unfollow",
     "new_friend": "New Friend",
-    "new_fans": "New Fans"
+    "new_fans": "New Fans",
+    "lv": "Lv",
+    "remove": "Remove"
   },
   "friend_invite": {
     "refused": "refused",

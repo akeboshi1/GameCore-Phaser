@@ -7,7 +7,6 @@ import { BBCodeText, Button } from "../../../lib/rexui/lib/ui/ui-components";
 import { i18n } from "../../i18n";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { Logger } from "../../utils/log";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
 import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
@@ -15,13 +14,14 @@ import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { Url, ResUtils } from "../../utils/resUtil";
+import { Url } from "../../utils/resUtil";
 // import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
 import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { Logger } from "../../utils/log";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -52,6 +52,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private mBackGround: Phaser.GameObjects.Graphics;
     private mExitBtn: NineSliceButton;
     private mFirendMenu: FriendMenu;
+    private mCharacterMenu: CharacterMenu;
     private mCharacterData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO;
     private mRelation: FriendRelation;
     constructor(scene: Phaser.Scene, world: WorldService) {
@@ -103,6 +104,10 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mFirendMenu.register();
         this.mFirendMenu.on("track", this.onTrackHandler, this);
         this.mFirendMenu.on("invite", this.onIntiveHandler, this);
+        this.mCharacterMenu.register();
+        this.mCharacterMenu.on("addBlack", this.onAddBlacklistHandler, this);
+        this.mCharacterMenu.on("removeBlack", this.onRemoveBlacklistHandler, this);
+
     }
 
     public removeListen() {
@@ -113,9 +118,13 @@ export default class CharacterInfoPanel extends BasePanel {
         this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
         // this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
         this.mExitBtn.off(CoreUI.MouseEvent.Tap, this.onExitHandler, this);
-        this.mFirendMenu.register();
+        this.mFirendMenu.unregister();
         this.mFirendMenu.off("track", this.onTrackHandler, this);
         this.mFirendMenu.off("invite", this.onIntiveHandler, this);
+        this.mCharacterMenu.unregister();
+        this.mCharacterMenu.off("addBlack", this.onAddBlacklistHandler, this);
+        this.mCharacterMenu.off("removeBlack", this.onRemoveBlacklistHandler, this);
+
     }
 
     preload() {
@@ -157,8 +166,7 @@ export default class CharacterInfoPanel extends BasePanel {
         });
 
         const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
-        const nickPosY = Math.round(this.bg.height * 0.5 - 324 * this.dpr);
-        const nickOffsetY = 30 * this.dpr;
+        const nickPosY = Math.round(this.bg.height * 0.5 - 324 * this.dpr) + 30 * this.dpr;
         const fontSize = Math.round(13 * this.dpr);
         this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
@@ -166,11 +174,11 @@ export default class CharacterInfoPanel extends BasePanel {
         this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
         const line1 = this.scene.make.image({ x: 0, y: this.nickName.y + 12 * this.dpr, key: this.key, frame: "splitters" });
         line1.scaleY = this.dpr;
-        this.idText = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY)
-            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
+        this.idText = new BBCodeText(this.scene, nickPosX, nickPosY)
+            .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT).setColor("#0062BC");
         const line2 = this.scene.make.image({ x: 0, y: this.idText.y + 12 * this.dpr, key: this.key, frame: "splitters" });
         line2.scaleY = this.dpr;
-        this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + nickOffsetY * 2)
+        this.titleName = new BBCodeText(this.scene, nickPosX, nickPosY + 30 * this.dpr)
             .setFontSize(fontSize).setOrigin(0, 0.5).setFontFamily(Font.DEFULT_FONT);
         const line3 = this.scene.make.image({ x: 0, y: this.titleName.y + 12 * this.dpr, key: this.key, frame: "splitters" });
         line3.scaleY = this.dpr;
@@ -210,7 +218,11 @@ export default class CharacterInfoPanel extends BasePanel {
 
         this.mFirendMenu = new FriendMenu(this.scene, this.dpr, this.scale);
         this.mFirendMenu.x = this.bg.width * 0.5 - this.mFirendMenu.width - 14 * this.dpr;
-        this.mFirendMenu.y = -this.bg.height * 0.5 + 100 * this.dpr;
+        this.mFirendMenu.y = -this.bg.height * 0.5 + 200 * this.dpr;
+
+        this.mCharacterMenu = new CharacterMenu(this.scene, this.dpr, this.scale);
+        this.mCharacterMenu.x = this.bg.width * 0.5 - this.mCharacterMenu.width - 14 * this.dpr;
+        this.mCharacterMenu.y = -this.bg.height * 0.5 + 100 * this.dpr;
 
         this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 26 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
             left: 8 * this.dpr,
@@ -226,7 +238,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
         // this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
         this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn]);
-        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon, this.mFirendMenu]);
+        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon, this.mCharacterMenu, this.mFirendMenu]);
         this.mainContent.add(this.avatar);
         this.content.add(this.bg);
         this.content.add(this.mainContent);
@@ -311,10 +323,12 @@ export default class CharacterInfoPanel extends BasePanel {
             this.mSkillGrideTable.refreshPos(this.mSkillGrideTable.x, this.mSkillGrideTable.y + 26 * this.dpr);
             this.mSkillGrideTable.setColumnCount(3);
             this.isOwner = true;
+            this.mCharacterMenu.visible = false;
         } else {
             const remark = (data.remark ? data.remark : i18n.t("player_info.note_nickname"));
-            this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname + ` (${remark})`);
-            this.idText.setText(this.getRichLabel("I   D") + spaceOffset + cid);
+            this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
+            // this.idText.setText(`(${cid})`);
+            this.idText.setText("(52365404)");
             this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
             subArr.set(CharacterOptionType.Badge, data.badges);
@@ -328,13 +342,15 @@ export default class CharacterInfoPanel extends BasePanel {
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
             this.mSkillGrideTable.setColumnCount(2);
             this.isOwner = false;
+            this.mCharacterMenu.visible = true;
         }
+        this.idText.x = this.nickName.x + this.nickName.width * (1 - this.nickName.originX) + 8 * this.dpr;
         this.mFirendMenu.visible = false;
         this.setSubCategory(subArr);
         this.setFriendRelation(FriendRelation.Null);
     }
 
-    public setFriendRelation(relation: FriendRelation) {
+    public setFriendRelation(relation: FriendRelation, isban?: boolean) {
         this.mRelation = relation;
         this.mFirendMenu.visible = relation === FriendRelation.Friend;
         if (relation === FriendRelation.Followed || relation === FriendRelation.Friend) {
@@ -342,6 +358,7 @@ export default class CharacterInfoPanel extends BasePanel {
         } else {
             this.addFriendBtn.setText(i18n.t("friendlist.follow"));
         }
+        this.mCharacterMenu.setIsBlack(isban);
     }
 
     public destroy() {
@@ -540,6 +557,20 @@ export default class CharacterInfoPanel extends BasePanel {
         }
         this.emit("invite", this.mCharacterData.cid);
     }
+
+    private onAddBlacklistHandler() {
+        if (!this.mCharacterData) {
+            return;
+        }
+        this.emit("addBlack", this.mCharacterData.cid);
+    }
+
+    private onRemoveBlacklistHandler() {
+        if (!this.mCharacterData) {
+            return;
+        }
+        this.emit("removeBlack", this.mCharacterData.cid);
+    }
 }
 
 enum CharacterOptionType {
@@ -634,66 +665,244 @@ class CharacterOwnerItem extends Container {
     }
 }
 
-class FriendMenu extends Container {
+class Menu extends Container {
+    protected background: Phaser.GameObjects.Graphics;
+    constructor(scene: Phaser.Scene, protected mDpr: number, protected mScale: number, width: number, height: number) {
+        super(scene);
+        this.setSize(width, height);
+        this.draw();
+    }
+
+    public register() {
+    }
+
+    public unregister() {
+    }
+
+    protected draw() {
+        this.createBackground();
+    }
+
+    protected createBackground() {
+        if (!this.background) {
+            this.background = this.scene.make.graphics(undefined, false);
+        }
+        const radius = 8 * this.mDpr;
+        this.background.fillStyle(0, 0.6);
+        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
+        this.addAt(this.background, 0);
+    }
+}
+
+class FriendMenu extends Menu {
     private inviteBtn: NineSliceButton;
     private trackBtn: NineSliceButton;
+    private buttons: NineSliceButton[];
+    private operation: Text;
+    private operationContaienr: Container;
+    private isExpand: boolean = false;
+    private tween: Phaser.Tweens.Tween;
+    private autoCollapseTime: any;
     constructor(scene: Phaser.Scene, dpr: number, scale: number) {
-        super(scene);
-        // this.setSize(58 * dpr, 112 * dpr);
-        this.setSize(58 * dpr, 68 * dpr);
-
-        const radius = 8 * dpr;
-        const background = this.scene.make.graphics(undefined, false);
-        background.fillStyle(0, 0.6);
-        background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
-
-        this.inviteBtn = new NineSliceButton(this.scene, 0, 0, 48 * dpr, 26 * dpr, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("player_info.invite"), dpr, scale, {
-            left: 8 * dpr,
-            top: 8 * dpr,
-            right: 8 * dpr,
-            bottom: 10 * dpr
-        });
-        this.inviteBtn.setTextStyle({
-            color: "#996600",
-            fontSize: 10 * dpr,
-            fontFamily: Font.DEFULT_FONT
-        });
-        this.inviteBtn.x = this.width * 0.5;
-        this.inviteBtn.y = 6 * dpr + this.inviteBtn.height * 0.5;
-
-        this.trackBtn = new NineSliceButton(this.scene, -0, 0, 48 * dpr, 26 * dpr, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("player_info.track"), dpr, scale, {
-            left: 8 * dpr,
-            top: 8 * dpr,
-            right: 8 * dpr,
-            bottom: 10 * dpr
-        });
-        this.trackBtn.setTextStyle({
-            color: "#996600",
-            fontSize: 10 * dpr,
-            fontFamily: Font.DEFULT_FONT
-        });
-        this.trackBtn.x = this.width * 0.5;
-        this.trackBtn.y = this.inviteBtn.y + this.inviteBtn.height * 0.5 + 18 * dpr;
-
-        this.add([background, this.inviteBtn, this.trackBtn]);
+        super(scene, dpr, scale, 58 * dpr, 29 * dpr);
     }
 
     register() {
         this.trackBtn.on(CoreUI.MouseEvent.Tap, this.onTrackHandler, this);
         this.inviteBtn.on(CoreUI.MouseEvent.Tap, this.onInviteHandler, this);
+        this.operation.setInteractive();
+        this.operation.on("pointerup", this.onSwitchOperationHandler, this);
     }
 
     unregister() {
         this.trackBtn.off(CoreUI.MouseEvent.Tap, this.onTrackHandler, this);
         this.inviteBtn.off(CoreUI.MouseEvent.Tap, this.onInviteHandler, this);
+        this.operation.disableInteractive();
+        this.operation.on("pointerup", this.onSwitchOperationHandler, this);
+
+    }
+
+    destroy() {
+        if (this.operationContaienr) this.operationContaienr.destroy();
+        if (this.operation) this.operation.destroy();
+        if (this.inviteBtn) this.inviteBtn.destroy();
+        if (this.trackBtn) this.trackBtn.destroy();
+        if (this.tween) this.tween.stop();
+        if (this.autoCollapseTime) {
+            clearTimeout(this.autoCollapseTime);
+        }
+        this.buttons = [];
+    }
+
+    protected expand() {
+        if (this.tween && this.tween.isPlaying()) {
+            return;
+        }
+        this.operationContaienr.remove(this.operation);
+        this.operationContaienr.remove(this.background);
+        this.operationContaienr.add(this.buttons);
+        const bound = this.getBounds();
+        this.isExpand = true;
+        if (bound) {
+            const width = bound.width + 8 * this.mDpr;
+            this.setSize(width, this.height);
+            this.createBackground();
+            this.operationContaienr.addAt(this.background, 0);
+            this.operationContaienr.x = bound.width * 0.5;
+            this.tween = this.scene.tweens.add({
+                targets: this.operationContaienr,
+                props: { x: -bound.width * 0.5, alpha: 1 },
+                duration: 100,
+            });
+
+            this.autoCollapseTime = setTimeout(() => {
+                this.autoCollapseTime = null;
+                this.collapse();
+            }, 3000);
+        }
+    }
+
+    protected collapse() {
+        if (this.tween && this.tween.isPlaying()) {
+            return;
+        }
+        if (this.autoCollapseTime) {
+            clearTimeout(this.autoCollapseTime);
+        }
+        this.tween = this.scene.tweens.add({
+            targets: this.operationContaienr,
+            props: { x: this.width * 0.5 },
+            duration: 100,
+            onComplete: () => {
+                this.operationContaienr.remove([...this.buttons], false);
+                this.operationContaienr.add(this.operation);
+                this.setSize(58 * this.mDpr, 29 * this.mDpr);
+                this.createBackground();
+                this.operationContaienr.addAt(this.background, 0);
+                this.operationContaienr.x = 0;
+                this.isExpand = false;
+            }
+        });
+    }
+
+    protected draw() {
+        // super.draw();
+        this.operationContaienr = this.scene.make.container(undefined, false);
+        this.add(this.operationContaienr);
+
+        this.buttons = [];
+        this.inviteBtn = this.createButton(i18n.t("player_info.invite"));
+        this.buttons.push(this.inviteBtn);
+
+        this.trackBtn = this.createButton(i18n.t("player_info.track"));
+        this.buttons.push(this.trackBtn);
+
+        this.operation = this.scene.make.text({
+            x: this.width * 0.5,
+            y: this.height * 0.5,
+            text: i18n.t("player_info.operation"),
+            style: {
+                color: "#FFD248",
+                fontSize: 10 * this.mDpr,
+                fontFamily: Font.DEFULT_FONT,
+            }
+        }, false).setOrigin(0.5);
+
+        for (let i = 0; i < this.buttons.length; i++) {
+            if (i === 0) {
+                this.buttons[i].x = this.buttons[i].width * 0.5 + 6 * this.mDpr;
+            } else {
+                this.buttons[i].x = this.buttons[i - 1].x + (this.buttons[i - 1].width + this.buttons[i].width) * 0.5 + 6 * this.mDpr;
+            }
+            this.buttons[i].y = this.height * 0.5;
+        }
+        this.collapse();
+        // this.add(this.operation);
+        // const bound = this.getBounds();
+    }
+
+    protected createBackground() {
+        if (!this.background) {
+            this.background = this.scene.make.graphics(undefined, false);
+        }
+        const radius = 8 * this.mDpr;
+        this.background.clear();
+        this.background.fillStyle(0, 0.6);
+        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
     }
 
     private onTrackHandler() {
         this.emit("track");
+        this.collapse();
     }
 
     private onInviteHandler() {
         this.emit("invite");
+        this.collapse();
+    }
+
+    private onSwitchOperationHandler() {
+        this.isExpand ? this.collapse() : this.expand();
+    }
+
+    private createButton(text: string) {
+        const dpr = this.mDpr;
+        const scale = this.mScale;
+        const btn = new NineSliceButton(this.scene, -0, 0, 48 * dpr, 26 * dpr, UIAtlasKey.commonKey, "yellow_btn_normal_s", text, dpr, scale, {
+            left: 8 * dpr,
+            top: 8 * dpr,
+            right: 8 * dpr,
+            bottom: 10 * dpr
+        });
+        btn.setTextStyle({
+            color: "#996600",
+            fontSize: 10 * dpr,
+            fontFamily: Font.DEFULT_FONT
+        });
+        return btn;
+    }
+}
+
+class CharacterMenu extends Menu {
+    private addBlacklistBtn: NineSliceButton;
+    private isBlack: boolean;
+    constructor(scene: Phaser.Scene, dpr: number, scale: number) {
+        super(scene, dpr, scale, 58 * dpr, 38 * dpr);
+    }
+
+    public register() {
+        this.addBlacklistBtn.on(CoreUI.MouseEvent.Tap, this.onAddBlackHandler, this);
+    }
+
+    public unregister() {
+        this.addBlacklistBtn.off(CoreUI.MouseEvent.Tap, this.onAddBlackHandler, this);
+    }
+
+    setIsBlack(val: boolean) {
+        this.isBlack = val;
+        this.addBlacklistBtn.setText(i18n.t(val ? "player_info.remove_black" : "player_info.add_black"));
+    }
+
+    protected draw() {
+        super.draw();
+        this.addBlacklistBtn = new NineSliceButton(this.scene, 0, 0, 55 * this.mDpr, 24 * this.mDpr, UIAtlasKey.commonKey, "red_btn_normal", i18n.t("player_info.add_black"), this.mDpr, this.mScale, {
+            left: 12 * this.mDpr,
+            top: 12 * this.mDpr,
+            right: 12 * this.mDpr,
+            bottom: 12 * this.mDpr
+        });
+        this.addBlacklistBtn.setTextStyle({
+            color: "#FFFFFF",
+            fontSize: 10 * this.mDpr,
+            fontFamily: Font.DEFULT_FONT
+        });
+        this.addBlacklistBtn.x = this.width * 0.5;
+        this.addBlacklistBtn.y = 6 * this.mDpr + this.addBlacklistBtn.height * 0.5;
+        this.add(this.addBlacklistBtn);
+    }
+
+    private onAddBlackHandler() {
+        this.emit(this.isBlack ? "removeBlack" : "addBlack");
     }
 }
 
@@ -701,5 +910,5 @@ export enum FriendRelation {
     Null,
     Friend,
     Fans,
-    Followed
+    Followed,
 }
