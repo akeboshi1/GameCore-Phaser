@@ -16,6 +16,7 @@ import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Clock } from "../../rooms/clock";
+import { ItemInfoTips } from "../tips/ItemInfoTips";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -28,6 +29,7 @@ export class PicOrderPanel extends BasePanel {
     private orderProgressPanel: OrderProgressPanel;
     private goldImageValue: ImageValue;
     private royalOrderLimit: op_def.IValueBar;
+    private itemtips: ItemInfoTips;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -98,11 +100,10 @@ export class PicOrderPanel extends BasePanel {
         this.titlebg.y = posY - this.titlebg.height * 0.5 + 2 * this.dpr;
         const titlebg2 = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "order_title" });
         titlebg2.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        titlebg2.y = this.titlebg.y + 20 * this.dpr;
-        const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
-        this.tilteName = this.scene.make.text({ x: 0, y: posY - 12 * this.dpr, text: i18n.t("order.title"), style: { font: mfont, color: "#905B06", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
+        titlebg2.y = this.titlebg.y + 34 * this.dpr;
+        this.tilteName = this.scene.make.text({ x: 0, y: posY - 18 * this.dpr, text: i18n.t("order.title"), style: { color: "#905B06", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.closeBtn = this.scene.make.image({ x: conWdith * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" });
-        this.tilteName.setStroke("#8F4300", 1);
+        this.tilteName.setStroke("#8F4300", 2);
         this.tilteName.setResolution(this.dpr);
         this.closeBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.closeBtn.setInteractive();
@@ -124,13 +125,13 @@ export class PicOrderPanel extends BasePanel {
             clamplChildOY: false,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene,
+                const scene = cell.scene, index = cell.index,
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new OrderItem(this.scene, this.key, this.dpr);
-                    cellContainer.setHandler(new Handler(this, this.onSendHandler), new Handler(this, this.onAcceleHandler));
+                    cellContainer.setHandler(new Handler(this, this.onSendHandler), new Handler(this, this.onItemInfoTips));
                 }
-                cellContainer.setOrderData(item, Math.floor(Math.random() * 3.3) + 1);
+                cellContainer.setOrderData(item, index);
                 return cellContainer;
             },
         };
@@ -141,24 +142,22 @@ export class PicOrderPanel extends BasePanel {
         this.goldImageValue.setTextStyle({
             color: "#144B99", fontSize: 10 * this.dpr, bold: true,
             stroke: "#144B99",
-            strokeThickness: 1 * this.dpr,
-            shadow: {
-                offsetX: 0,
-                offsetY: 0,
-                color: "#144B99",
-                blur: 4,
-                stroke: true,
-                fill: true
-            },
+            strokeThickness: 4,
         });
         this.goldImageValue.y = conHeight * 0.5 - 25 * this.dpr;
-        this.content.add([this.bg, this.closeBtn, this.titlebg, titlebg2, this.tilteName, this.orderProgressPanel, this.mGameGrid, this.goldImageValue]);
+        this.goldImageValue.visible = false;
+        this.orderProgressPanel.visible = false;
+        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
+        this.itemtips.visible = false;
+        this.content.add([this.bg, this.closeBtn, this.titlebg, titlebg2, this.tilteName, this.orderProgressPanel, this.mGameGrid, this.goldImageValue, this.itemtips]);
         this.resize();
         super.init();
-        this.setOrderDataList(null);
+        this.emit("questlist");
     }
 
     public setOrderDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST) {
+        this.goldImageValue.visible = true;
+        this.orderProgressPanel.visible = true;
         const orders = content.orders;
         this.mGameGrid.setItems(orders);
         this.royalOrderLimit = content.royalOrderLimit;
@@ -175,11 +174,11 @@ export class PicOrderPanel extends BasePanel {
         this.emit("hide");
     }
 
-    private onSendHandler() {
-
+    private onSendHandler(index: number, orderOperator: op_pkt_def.PKT_Order_Operator) {
+        this.emit("changeorder", orderOperator);
     }
 
-    private onAcceleHandler() {
+    private onItemInfoTips(data: op_client.ICountablePackageItem) {
 
     }
 }
@@ -201,8 +200,10 @@ class OrderItem extends Phaser.GameObjects.Container {
     private imageValues: ImageValue[] = [];
     private orderRewards: OrderRewardItem[] = [];
     private deliverybg: Phaser.GameObjects.Image;
-    private acceleHandler: Handler;
     private sendHandler: Handler;
+    private tipsHandler: Handler;
+    private index: number;
+    private orderOperator: op_pkt_def.PKT_Order_Operator;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
@@ -213,6 +214,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.headbg = scene.make.image({ key, frame: "order_ordinary_head_bg" });
         this.add(this.headbg);
         this.headbg.x = -this.width * 0.5 + this.headbg.width * 0.5 + 4 * dpr;
+        this.headbg.y = 5 * dpr;
         this.headIcon = new DynamicImage(scene, this.headbg.x, 0);
         this.add(this.headIcon);
         this.refreshBtn = new Button(scene, this.key, "order_delete_bg", "order_delete_bg");
@@ -255,40 +257,58 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.calcuTime.y = this.acceleBtn.y + this.acceleBtn.height * 0.5 + 10 * dpr;
         this.sendBtn.on(CoreUI.MouseEvent.Tap, this.onSendHandler, this);
         this.acceleBtn.on(CoreUI.MouseEvent.Tap, this.onAcceleHandler, this);
+        this.refreshBtn.on(CoreUI.MouseEvent.Tap, this.onRefreshHandler, this);
     }
 
-    public setHandler(accele: Handler, send: Handler) {
-        this.acceleHandler = accele;
+    public setHandler(send: Handler, tips: Handler) {
         this.sendHandler = send;
+        this.tipsHandler = tips;
     }
-    public setOrderData(data: op_client.IPKT_Quest) {
+    public setOrderData(data: op_client.IPKT_Quest, index: number) {
         this.orderData = data;
+        this.index = index;
         this.hideAllElement();
         if (data.stage !== op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             const url = Url.getOsdRes(data.display.texturePath);
             this.headIcon.load(url, this, () => {
                 this.headIcon.scale = 1;
-                this.headIcon.scaleX = 43 * this.dpr / this.headIcon.displayWidth;
-                this.headIcon.scaleY = this.headIcon.scaleX;
+                this.headIcon.scaleY = 49 * this.dpr / this.headIcon.displayHeight;
+                this.headIcon.scaleX = this.headIcon.scaleY;
             });
         }
         if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_ACCEPTABLE) {
             this.deliveryState(data);
+            this.orderOperator = op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELIVERY;
         } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
             this.deliveryingState(data);
         } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
             this.rewardState(data);
+            this.orderOperator = op_pkt_def.PKT_Order_Operator.PKT_ORDER_GET_REWARD;
+
         } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             this.cooldownState(data);
+            this.orderOperator = op_pkt_def.PKT_Order_Operator.PKT_ORDER_SPEED_UP;
         }
     }
 
     private onAcceleHandler() {
-        if (this.acceleHandler) this.acceleHandler.run();
+        if (this.sendHandler) this.sendHandler.runWith([this.index, this.orderOperator]);
     }
 
     private onSendHandler() {
-        if (this.sendHandler) this.sendHandler.run();
+        if (this.sendHandler) this.sendHandler.runWith([this.index, this.orderOperator]);
+    }
+
+    private onRefreshHandler() {
+        if (this.sendHandler) this.sendHandler.runWith([this.index, op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE]);
+    }
+
+    private onItemDownHandler() {
+        // if (this.tipsHandler) this.tipsHandler.runWith([]);
+    }
+
+    private onItemUpHandler() {
+
     }
 
     private deliveryState(data: op_client.IPKT_Quest) {
@@ -300,6 +320,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         let offsetpos = -this.width * 0.5 + 58 * this.dpr;
         let isenough = true;
         for (let i = 0; i < data.targets.length; i++) {
+            const itemData = data.targets[i];
             let item: MaterialItem;
             if (i < this.materialItems.length) {
                 item = this.materialItems[i];
@@ -308,12 +329,14 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.materialItems.push(item);
             }
-            item.setMaterialData(data.targets[i]);
+            item.on("pointerdown", this.onItemDownHandler, this);
+            item.on("pointerup", this.onItemUpHandler, this);
+            item.setMaterialData(itemData);
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 8 * this.dpr;
             item.y = -10 * this.dpr;
             item.visible = true;
-            isenough = true;
+            isenough = itemData.count >= itemData.neededCount;
         }
         if (isenough) {
             this.sendBtn.setFrameNormal("order_green_butt");
@@ -332,11 +355,11 @@ class OrderItem extends Phaser.GameObjects.Container {
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr);
+                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr, this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath);
+            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath = "iv_coin");
             item.setTextStyle({ color: questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "#ffffff" : "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
@@ -366,7 +389,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr);
+                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr, this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
@@ -432,6 +455,8 @@ class OrderItem extends Phaser.GameObjects.Container {
         if (this.deliverybg) this.deliverybg.visible = false;
         for (const item of this.materialItems) {
             item.visible = false;
+            item.off("pointerdown", this.onItemDownHandler, this);
+            item.off("pointerup", this.onItemUpHandler, this);
         }
         for (const item of this.orderRewards) {
             item.visible = false;
@@ -462,8 +487,8 @@ class MaterialItem extends Phaser.GameObjects.Container {
             fontFamily: Font.DEFULT_FONT,
         }).setOrigin(0.5);
         this.add([this.bg, this.icon, this.value]);
+        this.setInteractive();
     }
-
     public setMaterialData(data: op_client.ICountablePackageItem) {
         const url = Url.getOsdRes(data.display.texturePath);
         this.icon.load(url, this, () => {
@@ -479,12 +504,12 @@ class ImageValue extends Phaser.GameObjects.Container {
     private dpr: number;
     private icon: DynamicImage;
     private value: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, offsetx: number = 0) {
         super(scene);
         this.dpr = dpr;
         this.setSize(width, height);
         this.icon = new DynamicImage(scene, 0, 0);
-        this.value = scene.make.text({ x: 0, y: 0, text: "10", style: { color: "#ffffff", fontSize: 8 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.value = scene.make.text({ x: 0, y: offsetx, text: "10", style: { color: "#ffffff", fontSize: 8 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0, 0.5);
         this.add([this.icon, this.value]);
     }
