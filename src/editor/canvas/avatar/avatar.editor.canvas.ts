@@ -90,6 +90,14 @@ export class AvatarEditorCanvas extends EditorCanvas {
     public batchGenerateShopIcon(sizes: Array<{ width: number, height: number }>, datas: IAvatarSet[]) {
         if (this.mDragonbone) this.mDragonbone.batchGenerateShopIcon(sizes, datas);
     }
+
+    // 监听事件
+    public on(event: AvatarEditorEmitType, fn: Function, context?: any) {
+        this.mEmitter.on(event, fn, context);
+    }
+    public off(event: AvatarEditorEmitType, fn?: Function, context?: any, once?: boolean) {
+        this.mEmitter.off(event, fn, context, once);
+    }
 }
 
 class AvatarEditorScene extends Phaser.Scene {
