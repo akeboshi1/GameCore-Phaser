@@ -91,9 +91,12 @@ export class PicOrderPanel extends BasePanel {
             right: 30 * this.dpr,
         });
         const posY = -conHeight * 0.5;
-        this.titlebg = this.scene.make.image({ x: 0, y: posY, key: this.key, frame: "title" });
+        this.titlebg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "order_title_bg" });
         this.titlebg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.titlebg.y = posY - this.titlebg.height * 0.5 + 20 * this.dpr;
+        this.titlebg.y = posY - this.titlebg.height * 0.5 + 2 * this.dpr;
+        const titlebg2 = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "order_title" });
+        titlebg2.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        titlebg2.y = this.titlebg.y + 20 * this.dpr;
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.tilteName = this.scene.make.text({ x: 0, y: posY - 12 * this.dpr, text: i18n.t("order.title"), style: { font: mfont, color: "#905B06", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.closeBtn = this.scene.make.image({ x: conWdith * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" });
@@ -109,10 +112,9 @@ export class PicOrderPanel extends BasePanel {
                 width: conWdith - 40 * this.dpr,
                 height: conHeight - 110 * this.dpr,
                 columns: 1,
-                cellWidth: conWdith,
+                cellWidth: conWdith - 40 * this.dpr,
                 cellHeight: 70 * this.dpr,
                 reuseCellContainer: true,
-                tableOX: 19 * this.dpr,
                 zoom: this.scale
             },
             scrollMode: 0,
@@ -147,9 +149,10 @@ export class PicOrderPanel extends BasePanel {
             },
         });
         this.goldImageValue.y = conHeight * 0.5 - 40 * this.dpr;
-        this.content.add([this.bg, this.closeBtn, this.titlebg, this.tilteName, this.orderProgressPanel, this.mGameGrid, this.goldImageValue]);
+        this.content.add([this.bg, this.closeBtn, this.titlebg, titlebg2, this.tilteName, this.orderProgressPanel, this.mGameGrid, this.goldImageValue]);
         this.resize();
         super.init();
+        this.setOrderDatas(null);
     }
 
     public setOrderDatas(datas) {
@@ -190,9 +193,9 @@ class OrderItem extends Phaser.GameObjects.Container {
     private acceleBtn: Button;
     private acceleSpend: ImageValue;
     private calcuTime: ImageValue;
-    private materialItems: MaterialItem[];
-    private imageValues: ImageValue[];
-    private orderRewards: OrderRewardItem[];
+    private materialItems: MaterialItem[] = [];
+    private imageValues: ImageValue[] = [];
+    private orderRewards: OrderRewardItem[] = [];
     private deliverybg: Phaser.GameObjects.Image;
     private acceleHandler: Handler;
     private sendHandler: Handler;
@@ -205,23 +208,27 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.setSize(this.bg.width, this.bg.height);
         this.headbg = scene.make.image({ key, frame: "order_ordinary_head_bg" });
         this.add(this.headbg);
-        this.headbg.x = -this.width * 0.5 + this.headbg.width * 0.5 + 10 * dpr;
+        this.headbg.x = -this.width * 0.5 + this.headbg.width * 0.5 + 4 * dpr;
         this.headIcon = new DynamicImage(scene, this.headbg.x, 0);
         this.add(this.headIcon);
         this.refreshBtn = new Button(scene, this.key, "order_delete_bg", "order_delete_bg");
         this.refreshBtn.x = this.width * 0.5 - this.refreshBtn.width * 0.5;
-        this.refreshBtn.y = -this.headbg * 0.5 + this.refreshBtn.height * 0.5;
+        this.refreshBtn.y = -this.height * 0.5 + this.refreshBtn.height * 0.5;
         this.add(this.refreshBtn);
         const deleteicon = scene.make.image({ key, frame: "order_delete" });
         this.refreshBtn.add(deleteicon);
         this.sendBtn = new Button(scene, UIAtlasKey.commonKey, "order_green_butt", "order_green_butt", i18n.t("order.send"));
-        this.sendBtn.x = this.width * 0.5 - this.sendBtn.width * 0.5 - 10 * dpr;
+        this.sendBtn.x = this.width * 0.5 - this.sendBtn.width * 0.5 - 5 * dpr;
+        this.sendBtn.setTextStyle({ fontSize: 10 * dpr });
         this.add(this.sendBtn);
-        this.sendTitle = scene.make.text({ x: this.width * 0.5 - 10 * dpr, y: 0, text: i18n.t("order.deliverying"), style: { color: "#ffffff", fontSize: 8 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.sendTitle = scene.make.text({ x: this.width * 0.5 - 5 * dpr, y: 0, text: i18n.t("order.deliverying"), style: { color: "#ffffff", fontSize:13 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.sendTitle.setOrigin(1, 0.5);
+        this.add(this.sendTitle);
         this.acceleBtn = new Button(scene, UIAtlasKey.commonKey, "order_red_butt", "order_red_butt", i18n.t("order.ACCELERATE"));
         this.acceleBtn.x = 20 * dpr;
-        this.acceleBtn.y = -10 * dpr;
+        this.acceleBtn.y = -5 * dpr;
+        this.acceleBtn.setTextStyle({ fontSize: 10 * dpr });
+        this.add(this.acceleBtn);
         this.acceleSpend = new ImageValue(scene, 30 * dpr, 10 * dpr, this.dpr);
         this.acceleSpend.x = this.acceleBtn.x;
         this.acceleSpend.y = this.acceleBtn.y - this.acceleBtn.height * 0.5 - 10 * dpr;
@@ -282,7 +289,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.refreshBtn.visible = true;
         this.refreshBtn.setInteractive();
         this.refreshBtn.setFrameNormal(gold === 1 ? "order_delete_bg" : "order_precious_delete_bg");
-        let offsetpos = -this.width * 0.5 + 50 * this.dpr;
+        let offsetpos = -this.width * 0.5 + 58 * this.dpr;
         let isenough = true;
         for (let i = 0; i < 4; i++) {
             let item: MaterialItem;
@@ -294,22 +301,23 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.materialItems.push(item);
             }
             item.setMaterialData();
-            item.x = offsetpos + i * item.width * 0.5;
-            offsetpos += item.width + 10 * this.dpr;
-            item.y = -20 * this.dpr;
+            item.x = offsetpos + item.width * 0.5;
+            offsetpos += item.width + 8 * this.dpr;
+            item.y = -10 * this.dpr;
             item.visible = true;
             isenough = true;
         }
         if (isenough) {
             this.sendBtn.setFrameNormal("order_green_butt");
             this.sendBtn.setInteractive();
-            this.sendBtn.setText(i18n.t("order.send"));
         } else {
             this.sendBtn.setFrameNormal("order_gray_butt");
             this.sendBtn.disInteractive();
-            this.sendBtn.setText(i18n.t("order.send"));
         }
-        offsetpos = -this.width * 0.5 + 60 * this.dpr;
+        this.sendBtn.visible = true;
+        this.sendBtn.setText(i18n.t("order.send"));
+        this.sendBtn.setTextColor("#ffffff");
+        offsetpos = -this.width * 0.5 + 58 * this.dpr;
         for (let i = 0; i < 4; i++) {
             let item: ImageValue;
             if (i < this.imageValues.length) {
@@ -321,9 +329,9 @@ class OrderItem extends Phaser.GameObjects.Container {
             }
             item.setFrameValue("x1000", UIAtlasKey.commonKey, "iv_coin");
             item.setTextStyle({ color: gold === 1 ? "#2154BD" : "#ffffff" });
-            item.x = offsetpos + i * item.width * 0.5;
-            offsetpos += item.width + 10 * this.dpr;
-            item.y = this.height * 0.5 - item.height - 5 * this.dpr;
+            item.x = offsetpos + item.width * 0.5;
+            offsetpos += item.width + 20 * this.dpr;
+            item.y = this.height * 0.5 - item.height * 0.5 - 4 * this.dpr;
             item.visible = true;
         }
     }
@@ -354,9 +362,9 @@ class OrderItem extends Phaser.GameObjects.Container {
             }
             item.setFrameValue("x1000", UIAtlasKey.commonKey, "iv_coin");
             item.setTextStyle({ color: "#2154BD" });
-            item.x = offsetpos + i * item.width * 0.5;
-            offsetpos += item.width + 10 * this.dpr;
-            item.y = this.height * 0.5 - item.height - 5 * this.dpr;
+            item.x = offsetpos + item.width * 0.5;
+            offsetpos += item.width + 20 * this.dpr;
+            item.y = this.height * 0.5 - item.height * 0.5 - 4 * this.dpr;
             item.visible = true;
         }
     }
@@ -370,6 +378,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.sendBtn.setInteractive();
         this.sendBtn.setFrameNormal("order_yellow_butt");
         this.sendBtn.setText(i18n.t("order.receive"));
+        this.sendBtn.setTextColor("#9A6600");
         let offsetpos = -this.width * 0.5 + 60 * this.dpr;
         for (let i = 0; i < 4; i++) {
             let item: OrderRewardItem;
@@ -380,9 +389,9 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.orderRewards.push(item);
             }
-            item.x = offsetpos + i * item.width * 0.5;
+            item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
-            item.y = -20 * this.dpr;
+            item.y = -6 * this.dpr;
             item.visible = true;
             item.setItemData();
         }
@@ -433,11 +442,12 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.bg = scene.make.image({ key, frame: "order_demand_icon" });
         this.setSize(this.bg.width, this.bg.height);
         this.icon = new DynamicImage(scene, 0, -5 * dpr);
-        this.value = new BBCodeText(this.scene, 0, -10 * dpr, "60/30", {
+        this.value = new BBCodeText(this.scene, 0, 6 * dpr, "60/30", {
             color: "#0",
-            fontSize: 10 * this.dpr,
+            fontSize: 8 * this.dpr,
             fontFamily: Font.DEFULT_FONT,
-        });
+        }).setOrigin(0.5);
+        this.add([this.bg, this.icon, this.value]);
     }
 
     public setMaterialData() {
@@ -456,10 +466,12 @@ class ImageValue extends Phaser.GameObjects.Container {
         this.icon = new DynamicImage(scene, 0, 0);
         this.value = scene.make.text({ x: 0, y: 0, text: "10", style: { color: "#ffffff", fontSize: 8 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0, 0.5);
+        this.add([this.icon, this.value]);
     }
     public setFrameValue(text: string, key: string, frame: string) {
         this.icon.setTexture(key, frame);
-        this.icon.scaleY = this.icon.displayHeight / this.height;
+        this.icon.scale = 1;
+        this.icon.scaleY = this.height / this.icon.displayHeight;
         this.icon.scaleX = this.icon.scaleY;
         this.value.text = text;
         this.resetPosition();
@@ -469,7 +481,8 @@ class ImageValue extends Phaser.GameObjects.Container {
         this.value.text = text;
         const osurl = Url.getOsdRes(url);
         this.icon.load(osurl, this, () => {
-            this.icon.scaleY = this.icon.displayHeight / this.height;
+            this.icon.scale = 1;
+            this.icon.scaleY = this.height / this.icon.displayHeight;
             this.icon.scaleX = this.icon.scaleY;
             this.resetPosition();
         });
@@ -494,7 +507,7 @@ class ImageValue extends Phaser.GameObjects.Container {
     }
     private resetPosition() {
         this.icon.x = -this.width * 0.5 + this.icon.displayWidth * 0.5;
-        this.value.x = this.icon.x + this.icon.displayWidth * 0.5 + 10 * this.dpr;
+        this.value.x = this.icon.x + this.icon.displayWidth * 0.5 + 4 * this.dpr;
     }
 }
 
@@ -509,13 +522,13 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
         this.bg = scene.make.image({ key, frame: "order_reward" });
         this.setSize(this.bg.width, this.bg.height);
         this.icon = new DynamicImage(scene, 0, 0);
-        this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 20 * dpr, text: "10", style: { color: "#2154BD", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 13 * dpr, text: "10", style: { color: "#2154BD", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.text.setOrigin(0.5);
         this.add([this.bg, this.icon, this.text]);
     }
 
     public setItemData() {
-        this.text.text = "金币*100000";
+        this.text.text = "金币*1000";
     }
 }
 
@@ -566,6 +579,8 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
             textConfig: undefined
         };
         this.progress = new ProgressBar(scene, barConfig);
+        this.add(this.progress);
+        this.setProgressDatas();
     }
 
     public setProgressDatas() {

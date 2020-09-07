@@ -111,7 +111,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.mFamilyBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
     this.mGoHomeBtn = this.createImage(this.key_lang, "home_btn").setInteractive();
     this.mCloseBtn = this.createImage(UIAtlasKey.commonKey, "close_1").setInteractive();
-    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mGoHomeBtn];
+    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn,this.mGoHomeBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
