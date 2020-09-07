@@ -18,11 +18,13 @@ export class LabelInput extends Phaser.GameObjects.Container {
         this.mLabel = this.scene.make.text({
             text: config.placeholder,
             style: Object.assign(labelConfig, config)
-        }, false).setInteractive(new Phaser.Geom.Rectangle(-(clickW >> 1), -(clickH >> 1), clickW, clickH), Phaser.Geom.Rectangle.Contains);
+        }, false).setInteractive(new Phaser.Geom.Rectangle(-clickW * 0.5, -clickH * 0.5, clickW, clickH), Phaser.Geom.Rectangle.Contains);
         this.mOriginX = this.mLabel.originX;
         this.mOriginY = this.mLabel.originY;
         this.mLabel.on("pointerup", this.onShowInputHandler, this);
         this.add(this.mLabel);
+
+        this.setSize(clickW, clickH);
 
         this.mInputConfig = config;
     }
@@ -40,6 +42,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         this.mOriginX = x;
         this.mOriginY = y;
         if (this.mInputText) this.mInputText.setOrigin(x, y);
+        this.mLabel.input.hitArea = new Phaser.Geom.Rectangle(-this.width * x, -this.height * y, this.width, this.height);
         return this;
     }
 
