@@ -1,7 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
@@ -15,6 +15,7 @@ import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
+import { Clock } from "../../rooms/clock";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -26,6 +27,7 @@ export class PicOrderPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private orderProgressPanel: OrderProgressPanel;
     private goldImageValue: ImageValue;
+    private royalOrderLimit: op_def.IValueBar;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -105,9 +107,10 @@ export class PicOrderPanel extends BasePanel {
         this.closeBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.closeBtn.setInteractive();
         this.orderProgressPanel = new OrderProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, this.key, this.dpr);
+        this.orderProgressPanel.y = -conHeight * 0.5 + 20 * this.dpr;
         const tableConfig: GridTableConfig = {
             x: 0,
-            y: 0,
+            y: 15 * this.dpr,
             table: {
                 width: conWdith - 40 * this.dpr,
                 height: conHeight - 110 * this.dpr,
@@ -148,17 +151,18 @@ export class PicOrderPanel extends BasePanel {
                 fill: true
             },
         });
-        this.goldImageValue.y = conHeight * 0.5 - 40 * this.dpr;
+        this.goldImageValue.y = conHeight * 0.5 - 25 * this.dpr;
         this.content.add([this.bg, this.closeBtn, this.titlebg, titlebg2, this.tilteName, this.orderProgressPanel, this.mGameGrid, this.goldImageValue]);
         this.resize();
         super.init();
-        this.setOrderDatas(null);
+        this.setOrderDataList(null);
     }
 
-    public setOrderDatas(datas) {
-        const arr = new Array<any>(50);
-        this.mGameGrid.setItems(arr);
-        this.goldImageValue.setText("1/10");
+    public setOrderDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST) {
+        const orders = content.orders;
+        this.mGameGrid.setItems(orders);
+        this.royalOrderLimit = content.royalOrderLimit;
+        this.goldImageValue.setText(`${this.royalOrderLimit.currentValue}/${this.royalOrderLimit.currentValue}`);
         this.goldImageValue.resetSize();
         this.goldImageValue.x = this.content.width * 0.5 - this.goldImageValue.width * 0.5 - 20 * this.dpr;
     }
@@ -181,7 +185,7 @@ export class PicOrderPanel extends BasePanel {
 }
 
 class OrderItem extends Phaser.GameObjects.Container {
-    private orderData: any;
+    private orderData: op_client.IPKT_Quest;
     private key: string;
     private dpr: number;
     private bg: Phaser.GameObjects.Image;
@@ -221,7 +225,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.sendBtn.x = this.width * 0.5 - this.sendBtn.width * 0.5 - 5 * dpr;
         this.sendBtn.setTextStyle({ fontSize: 10 * dpr });
         this.add(this.sendBtn);
-        this.sendTitle = scene.make.text({ x: this.width * 0.5 - 5 * dpr, y: 0, text: i18n.t("order.deliverying"), style: { color: "#ffffff", fontSize:13 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.sendTitle = scene.make.text({ x: this.width * 0.5 - 5 * dpr, y: 0, text: i18n.t("order.deliverying"), style: { color: "#ffffff", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.sendTitle.setOrigin(1, 0.5);
         this.add(this.sendTitle);
         this.acceleBtn = new Button(scene, UIAtlasKey.commonKey, "order_red_butt", "order_red_butt", i18n.t("order.ACCELERATE"));
@@ -236,8 +240,8 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.calcuTime = new ImageValue(scene, 30 * dpr, 10 * dpr, dpr);
         this.calcuTime.setTextStyle({
             color: "#144B99", fontSize: 10 * dpr, bold: true,
-            stroke: "#144B99",
-            strokeThickness: 1 * this.dpr,
+            //   stroke: "#144B99",
+            //   strokeThickness: 1 * this.dpr,
             shadow: {
                 offsetX: 0,
                 offsetY: 0,
@@ -257,20 +261,20 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.acceleHandler = accele;
         this.sendHandler = send;
     }
-    public setOrderData(data: any, type: number) {
+    public setOrderData(data: op_client.IPKT_Quest) {
         this.orderData = data;
         this.hideAllElement();
-        // const url = Url.getOsdRes("");
-        // this.headIcon.load(url, this, () => {
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.headIcon.load(url, this, () => {
 
-        // });
-        if (type === 1) {
+        });
+        if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_ACCEPTABLE) {
             this.deliveryState(data);
-        } else if (type === 2) {
+        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
             this.deliveryingState(data);
-        } else if (type === 3) {
+        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
             this.rewardState(data);
-        } else if (type === 4) {
+        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             this.cooldownState(data);
         }
     }
@@ -283,15 +287,15 @@ class OrderItem extends Phaser.GameObjects.Container {
         if (this.sendHandler) this.sendHandler.run();
     }
 
-    private deliveryState(data) {
-        const gold = 1;
-        this.headbg.setFrame(gold === 1 ? "order_ordinary_head_bg" : "order_precious_head_bg");
+    private deliveryState(data: op_client.IPKT_Quest) {
+        const questType = data.questType;
+        this.headbg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_head_bg" : "order_ordinary_head_bg");
         this.refreshBtn.visible = true;
         this.refreshBtn.setInteractive();
-        this.refreshBtn.setFrameNormal(gold === 1 ? "order_delete_bg" : "order_precious_delete_bg");
+        this.refreshBtn.setFrameNormal(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_delete_bg" : "order_delete_bg");
         let offsetpos = -this.width * 0.5 + 58 * this.dpr;
         let isenough = true;
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < data.targets.length; i++) {
             let item: MaterialItem;
             if (i < this.materialItems.length) {
                 item = this.materialItems[i];
@@ -300,7 +304,7 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.materialItems.push(item);
             }
-            item.setMaterialData();
+            item.setMaterialData(data.targets[i]);
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 8 * this.dpr;
             item.y = -10 * this.dpr;
@@ -318,7 +322,8 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.sendBtn.setText(i18n.t("order.send"));
         this.sendBtn.setTextColor("#ffffff");
         offsetpos = -this.width * 0.5 + 58 * this.dpr;
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < data.rewards.length; i++) {
+            const reward = data.rewards[i];
             let item: ImageValue;
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
@@ -327,8 +332,8 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue("x1000", UIAtlasKey.commonKey, "iv_coin");
-            item.setTextStyle({ color: gold === 1 ? "#2154BD" : "#ffffff" });
+            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath);
+            item.setTextStyle({ color: questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "#ffffff" : "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
             item.y = this.height * 0.5 - item.height * 0.5 - 4 * this.dpr;
@@ -336,7 +341,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         }
     }
 
-    private deliveryingState(data) {
+    private deliveryingState(data: op_client.IPKT_Quest) {
         if (!this.deliverybg) {
             this.deliverybg = this.scene.make.image({ key: this.key, frame: "order_transport" });
             this.addAt(this.deliverybg, 1);
@@ -351,7 +356,8 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.calcuTime.x = this.width * 0.5 - this.calcuTime.width * 0.5;
         this.calcuTime.y = -this.height * 0.5 + this.calcuTime.height * 0.5 + 10 * this.dpr;
         let offsetpos = -this.width * 0.5 + 60 * this.dpr;
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < data.rewards.length; i++) {
+            const reward = data.rewards[i];
             let item: ImageValue;
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
@@ -360,7 +366,7 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue("x1000", UIAtlasKey.commonKey, "iv_coin");
+            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath = "iv_coin");
             item.setTextStyle({ color: "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
@@ -369,7 +375,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         }
     }
 
-    private rewardState(data) {
+    private rewardState(data: op_client.IPKT_Quest) {
         this.headbg.setFrame("order_ordinary_head_bg");
         this.refreshBtn.visible = true;
         this.refreshBtn.setInteractive();
@@ -380,7 +386,8 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.sendBtn.setText(i18n.t("order.receive"));
         this.sendBtn.setTextColor("#9A6600");
         let offsetpos = -this.width * 0.5 + 60 * this.dpr;
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < data.rewards.length; i++) {
+            const reward = data.rewards[i];
             let item: OrderRewardItem;
             if (i < this.orderRewards.length) {
                 item = this.orderRewards[i];
@@ -393,12 +400,12 @@ class OrderItem extends Phaser.GameObjects.Container {
             offsetpos += item.width + 20 * this.dpr;
             item.y = -6 * this.dpr;
             item.visible = true;
-            item.setItemData();
+            item.setItemData(reward);
         }
 
     }
 
-    private cooldownState(data) {
+    private cooldownState(data: op_client.IPKT_Quest) {
         this.headbg.setFrame("order_unknown_head");
         this.refreshBtn.visible = false;
         this.refreshBtn.disInteractive();
@@ -442,6 +449,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.bg = scene.make.image({ key, frame: "order_demand_icon" });
         this.setSize(this.bg.width, this.bg.height);
         this.icon = new DynamicImage(scene, 0, -5 * dpr);
+        this.icon.setSize(15 * dpr, 15 * dpr);
         this.value = new BBCodeText(this.scene, 0, 6 * dpr, "60/30", {
             color: "#0",
             fontSize: 8 * this.dpr,
@@ -450,8 +458,14 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.icon, this.value]);
     }
 
-    public setMaterialData() {
-
+    public setMaterialData(data: op_client.ICountablePackageItem) {
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.icon.load(url, this, () => {
+            this.icon.scale = 1;
+            this.icon.scaleX = this.icon.displayWidth / this.icon.width;
+            this.icon.scaleY = this.icon.scaleX;
+        });
+        this.value.text = `${data.count}/${data.neededCount}`;
     }
 }
 
@@ -521,14 +535,15 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
         super(scene);
         this.bg = scene.make.image({ key, frame: "order_reward" });
         this.setSize(this.bg.width, this.bg.height);
-        this.icon = new DynamicImage(scene, 0, 0);
-        this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 13 * dpr, text: "10", style: { color: "#2154BD", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.icon = scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" });
+        this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 13 * dpr, text: "10", style: { color: "#144B99", fontSize: 9 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.text.setOrigin(0.5);
         this.add([this.bg, this.icon, this.text]);
     }
 
-    public setItemData() {
-        this.text.text = "金币*1000";
+    public setItemData(data: op_client.ICountablePackageItem) {
+        this.text.text = `${data.name}*${data.count}`;
+        this.icon.setFrame(data.display.texturePath="iv_coin");
     }
 }
 
@@ -595,7 +610,8 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.progressItems.push(item);
             }
-            item.x = -this.width * 0.5 + this.width * (i + 1) / len;
+            item.x = -this.width * 0.5 + this.width * (i + 1) / len - 16 * this.dpr;
+            item.y = 15 * this.dpr;
         }
     }
 }
@@ -609,7 +625,8 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.bg = scene.make.image({ key, frame: "order_progress_unfinished" });
         this.icon = new DynamicImage(scene, 0, 0);
-        this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 20 * dpr, text: "10", style: { color: "#2154BD", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 10 * dpr, text: "10", style: { color: "#2154BD", fontSize: 12 * dpr, bold: true, fontFamily: Font.DEFULT_FONT } });
+        this.text.setStroke("#2154BD", 4);
         this.text.setOrigin(0.5);
         this.add([this.bg, this.icon, this.text]);
     }

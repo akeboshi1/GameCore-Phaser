@@ -1,7 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { ConnectionService } from "../../net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 
 export class PicOrder extends PacketHandler {
     private readonly world: WorldService;
@@ -15,8 +15,7 @@ export class PicOrder extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_LIST, this.onRetQuestList);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_DETAIL, this.onRetQuestDetail);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST, this.on_ORDER_LIST);
         }
     }
 
@@ -46,15 +45,19 @@ export class PicOrder extends PacketHandler {
         }
     }
 
-    // public queryQuestDetail(id: string) {
-    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_DETAIL);
-    //     const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_DETAIL = packet.content;
-    //     content.id = id;
-    //     this.connection.send(packet);
-    // }
-
-    // private onRetQuestList(packet: PBpacket) {
-    //     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_LIST = packet.content;
-    //     this.mEvent.emit("questlist", content.quests);
-    // }
+    public query_ORDER_LIST() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_ORDER_LIST);
+        this.connection.send(packet);
+    }
+    public query_CHANGE_ORDER_STAGE(index: number, state: op_pkt_def.PKT_Order_Operator) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_ORDER_STAGE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_ORDER_STAGE = packet.content;
+        content.index = index;
+        content.op = state;
+        this.connection.send(packet);
+    }
+    private on_ORDER_LIST(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = packet.content;
+        this.mEvent.emit("questlist", content);
+    }
 }
