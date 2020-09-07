@@ -36,6 +36,8 @@ export class CharacterInfoMediator extends BaseMediator {
             this.mView.on("invite", this.onInviteHandler, this);
             this.mView.on("follow", this.onFollowHandler, this);
             this.mView.on("unfollow", this.onUnfollowHandler, this);
+            this.mView.on("addBlack", this.onAddBlackHandler, this);
+            this.mView.on("removeBlack", this.onRemoveBlackHandler, this);
         }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show(params);
@@ -105,20 +107,40 @@ export class CharacterInfoMediator extends BaseMediator {
             const { code, data } = response;
             if (code === 200) {
                 if (data.length >= 1) {
+                    const isBan = data[0].ban;
                     if (data[0].followed_user === cid) {
-                        this.mView.setFriendRelation(FriendRelation.Followed);
-                    }
-                    if (data[0].followed_user === me) {
-                        this.mView.setFriendRelation(FriendRelation.Fans);
+                        this.mView.setFriendRelation(FriendRelation.Followed, isBan);
+                    } else if (data[0].followed_user === me) {
+                        this.mView.setFriendRelation(FriendRelation.Fans, isBan);
+                    } else {
+                        this.mView.setFriendRelation(FriendRelation.Null, isBan);
                     }
                     if (data.length >= 2) {
                         if (data[0].user === data[1].followed_user && data[1].followed_user === data[0].user) {
-                            this.mView.setFriendRelation(FriendRelation.Friend);
+                            this.mView.setFriendRelation(FriendRelation.Friend, data[0].ban);
                         }
                     }
                 } else {
                     this.mView.setFriendRelation(FriendRelation.Null);
                 }
+            }
+        });
+    }
+
+    private onAddBlackHandler(id: string) {
+        this.world.httpService.banUser(id).then((response: any) => {
+            const { code, data } = response;
+            if (code === 200 || code === 201) {
+                this.checkRelation(id);
+            }
+        });
+    }
+
+    private onRemoveBlackHandler(id: string) {
+        this.world.httpService.removeBanUser(id).then((response: any) => {
+            const { code, data } = response;
+            if (code === 200 || code === 201) {
+                this.checkRelation(id);
             }
         });
     }

@@ -46,7 +46,8 @@
     "source": "Source:",
     "all": "All",
     "search": "search",
-    "tips": "tips"
+    "tips": "tips",
+    "offline": "Your account is logged in at another location and you have been forced to go offline"
   },
   "player_info": {
     "title": "Personal Data",
@@ -70,7 +71,10 @@
     "input_signature": "D: Fill in personality signature to get others attention!",
     "note_nickname": "Remark friend nickname",
     "invite": "invite",
-    "track": "track"
+    "track": "track",
+    "add_black": "Add blacklist",
+    "remove_black": "Rdd blacklist",
+    "operation": "Operation"
   },
   "compose": {
     "title": "Produce",
@@ -174,7 +178,9 @@
     "search_friends_notes": "Search",
     "unfollow": "unfollow",
     "new_friend": "New Friend",
-    "new_fans": "New Fans"
+    "new_fans": "New Fans",
+    "lv": "Lv",
+    "remove": "Remove"
   },
   "friend_invite": {
     "refused": "refused",
@@ -205,7 +211,7 @@
   },
   "minecar": {
     "discard": "discard",
-    "confirmation": "Are you sure you want to discard {{name}} ？"
+    "confirmation": "Are you sure you want to discard [color=#0157BC] {{name}} [/color] ？"
   },
   "main_ui": {
     "energy_tips": "Current energy value {{name}} When energy is insufficient, restore 1 point every 10 minutes"

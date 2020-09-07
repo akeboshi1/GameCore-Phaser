@@ -46,7 +46,8 @@
     "source": "来源：",
     "all": "全部",
     "search": "搜索",
-    "tips": "提示"
+    "tips": "提示",
+    "offline": "您的账号在另一地点登录，您已被迫下线"
   },
   "player_info": {
     "title": "信息详情",
@@ -70,7 +71,10 @@
     "input_signature": "填写个性签名获得别人关注哦！",
     "note_nickname": "备注好友昵称",
     "invite": "邀请",
-    "track": "追踪"
+    "track": "追踪",
+    "add_black": "拉黑",
+    "remove_black": "移除黑名单",
+    "operation": "操作"
   },
   "compose": {
     "title": "合成",
@@ -174,7 +178,9 @@
     "unfollow": "取消关注",
     "search": "搜索",
     "new_friend": "新的好友",
-    "new_fans": "新增粉丝"
+    "new_fans": "新增粉丝",
+    "lv": "等级",
+    "remove": "移除"
   },
   "friend_invite": {
     "refused": "拒绝",
@@ -205,7 +211,7 @@
   },
   "minecar": {
     "discard": "丢弃",
-    "confirmation": "您确定要丢弃 {{name}} 吗?"
+    "confirmation": "您确定要丢弃[color=#0157BC] {{name}} [/color]吗?"
   },
   "main_ui": {
     "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点"

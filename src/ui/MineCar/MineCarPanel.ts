@@ -375,7 +375,7 @@ export class MineCarPanel extends BasePanel {
     }
 
     new AlertView(this.scene, this.mWorld).show({
-      text: i18n.t("minecar.confirmation", { name: `[color=#0157BC]${label.join("、")}[/color]` }),
+      text: i18n.t("minecar.confirmation", { name: `${label.join("、")}` }),
       title: i18n.t("minecar.discard"),
       oy: 302 * this.dpr * this.mWorld.uiScale,
       callback: () => {
