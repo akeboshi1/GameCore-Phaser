@@ -14,13 +14,6 @@ export class RPCMessage extends webworker_rpc.WebWorkerMessage {
 }
 
 export class RPCRegistryPacket extends webworker_rpc.RegistryPacket {
-    constructor(service: string, executors: webworker_rpc.Executor[]) {
-        super();
-
-        this.serviceName = service;
-        this.executors = executors;
-    }
-
     static checkType(obj) {
         if (!obj) return false;
         if (!("serviceName" in obj)) return false;
@@ -35,22 +28,17 @@ export class RPCRegistryPacket extends webworker_rpc.RegistryPacket {
 
         return true;
     }
+
+    constructor(service: string, executors: webworker_rpc.Executor[]) {
+        super();
+
+        this.serviceName = service;
+        this.executors = executors;
+    }
 }
 
 // worker调用其他worker方法的数据结构
 export class RPCExecutePacket extends webworker_rpc.ExecutePacket {
-    constructor(service: string, method: string, context?: string, params?: webworker_rpc.Param[], callback?: webworker_rpc.Executor) {
-        super();
-
-        this.header = new webworker_rpc.Header();
-        this.header.serviceName = service;
-        this.header.remoteExecutor = new webworker_rpc.Executor();
-        this.header.remoteExecutor.method = method;
-        if (context) this.header.remoteExecutor.context = context;
-        if (params) this.header.remoteExecutor.params = params;
-        if (callback) this.header.callbackExecutor = callback;
-    }
-
     static checkType(obj) {
         if (!obj) return false;
         if (!("header" in obj)) return false;
@@ -62,18 +50,22 @@ export class RPCExecutePacket extends webworker_rpc.ExecutePacket {
 
         return true;
     }
+
+    constructor(service: string, method: string, context?: string, params?: webworker_rpc.Param[], callback?: webworker_rpc.Executor) {
+        super();
+
+        this.header = new webworker_rpc.Header();
+        this.header.serviceName = service;
+        this.header.remoteExecutor = new webworker_rpc.Executor();
+        this.header.remoteExecutor.method = method;
+        if (context) this.header.remoteExecutor.context = context;
+        if (params) this.header.remoteExecutor.params = params;
+        if (callback) this.header.callbackExecutor = callback;
+    }
 }
 
 // worker更新方法注册表后通知其他worker的数据结构
 export class RPCExecutor extends webworker_rpc.Executor {
-    constructor(method: string, context: string, params?: webworker_rpc.Param[]) {
-        super();
-
-        this.method = method;
-        if (context) this.context = context;
-        if (params) this.params = params;
-    }
-
     static checkType(obj) {
         if (!obj) return false;
         if (!("method" in obj)) return false;
@@ -88,9 +80,37 @@ export class RPCExecutor extends webworker_rpc.Executor {
 
         return true;
     }
+
+    constructor(method: string, context: string, params?: webworker_rpc.Param[]) {
+        super();
+
+        this.method = method;
+        if (context) this.context = context;
+        if (params) this.params = params;
+    }
 }
 
 export class RPCParam extends webworker_rpc.Param {
+    static checkType(obj) {
+        if (!obj) return false;
+        if (!("t" in obj)) return false;
+
+        return true;
+    }
+
+    static typeOf(val): webworker_rpc.ParamType {
+        if (typeof val === "string") {
+            return webworker_rpc.ParamType.str;
+        } else if (typeof val === "boolean") {
+            return webworker_rpc.ParamType.boolean;
+        } else if (typeof val === "number") {
+            return webworker_rpc.ParamType.num;
+        } else if (val.constructor === Uint8Array) {
+            return webworker_rpc.ParamType.unit8array;
+        }
+
+        return webworker_rpc.ParamType.UNKNOWN;
+    }
 
     constructor(t: webworker_rpc.ParamType, val?: any) {
         super();
@@ -131,26 +151,5 @@ export class RPCParam extends webworker_rpc.Param {
                     break;
             }
         }
-    }
-
-    static checkType(obj) {
-        if (!obj) return false;
-        if (!("t" in obj)) return false;
-
-        return true;
-    }
-
-    static typeOf(val): webworker_rpc.ParamType {
-        if (typeof val === "string") {
-            return webworker_rpc.ParamType.str;
-        } else if (typeof val === "boolean") {
-            return webworker_rpc.ParamType.boolean;
-        } else if (typeof val === "number") {
-            return webworker_rpc.ParamType.num;
-        } else if (val.constructor === Uint8Array) {
-            return webworker_rpc.ParamType.unit8array;
-        }
-
-        return webworker_rpc.ParamType.UNKNOWN;
     }
 }

@@ -69,12 +69,12 @@ class HeartBeatWorkerContext {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.responseType = "blob";
-        xhr.onload = function () {
+        xhr.onload = () => {
             if (xhr.readyState === 4) {
                 const blob = xhr.response;
                 const reader = new FileReader();
                 reader.readAsArrayBuffer(blob);
-                reader.onload = function (e) {
+                reader.onload = (e) => {
                     peer.remote[MAIN_WORKER].MainWorkerContext.loadRes(null, new Uint8Array(<any>reader.result));
                     // postMessage({ "method": "completeHandler", "data": xhr.response });
                     close();
