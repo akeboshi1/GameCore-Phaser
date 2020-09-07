@@ -931,7 +931,7 @@ class SearchContainer extends SubFriendContainer {
             const { platformId, nickname, level } = player;
             result.push({ type: this.friendType, nickname, id: platformId, lv: level.level });
         }
-        this.gridTable.setItems(result);
+        super.setItems(result);
     }
 
     protected draw() {
@@ -992,8 +992,7 @@ class BlackContainer extends SubFriendContainer {
             followed_user = friend.followed_user;
             if (followed_user) result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname });
         }
-        this.items = result;
-        this.gridTable.setItems(result);
+        super.setItems(result);
     }
 
     fetchEventName() {
