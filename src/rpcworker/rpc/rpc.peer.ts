@@ -12,7 +12,7 @@ export class RPCPeer {
                 [method: string]: (callback: webworker_rpc.Executor, ...args) => {}
             }
         };
-    }// 解决编译时execute报错，并添加提示
+    };// 解决编译时execute报错，并添加提示
 
     public name: string;
 
@@ -38,16 +38,16 @@ export class RPCPeer {
         this.channels = new Map();
 
         // works in Chrome 18 but not Firefox 10 or 11
-        if (!ArrayBuffer.prototype.slice)
-            ArrayBuffer.prototype.slice = function (start, end) {
-                const that = new Uint8Array(this);
-                if (!end) end = that.length;
-                const result = new ArrayBuffer(end - start);
-                const resultArray = new Uint8Array(result);
-                for (let i = 0; i < resultArray.length; i++)
-                    resultArray[i] = that[i + start];
-                return result;
-            }
+        // if (!ArrayBuffer.prototype.slice)
+        //     ArrayBuffer.prototype.slice = function (start, end) {
+        //         const that = new Uint8Array(this);
+        //         if (!end) end = that.length;
+        //         const result = new ArrayBuffer(end - start);
+        //         const resultArray = new Uint8Array(result);
+        //         for (let i = 0; i < resultArray.length; i++)
+        //             resultArray[i] = that[i + start];
+        //         return result;
+        //     }
     }
     // 增加worker之间的通道联系
     public addLink(worker: string, port: MessagePort) {
@@ -74,7 +74,7 @@ export class RPCPeer {
                     console.warn("got message outof control: ", ev.data);
                     break;
             }
-        }
+        };
 
         // post registry
         this.postRegistry(worker, new RPCRegistryPacket(this.name, RPCFunctions));
@@ -112,11 +112,13 @@ export class RPCPeer {
         const remoteParams = packet.header.remoteExecutor.params;
         if (regParams && regParams.length > 0) {
             if (!remoteParams || remoteParams.length === 0) {
+                // tslint:disable-next-line:no-console
                 console.error("execute param error! ", "param.length = 0");
                 return;
             }
 
             if (regParams.length > remoteParams.length) {
+                // tslint:disable-next-line:no-console
                 console.error("execute param error! ", "param not enough");
                 return;
             }
@@ -125,6 +127,7 @@ export class RPCPeer {
                 const regP = regParams[i];
                 const remoteP = remoteParams[i];
                 if (regP.t !== remoteP.t) {
+                    // tslint:disable-next-line:no-console
                     console.error("execute param error! ", "type not match, registry: <", regP.t, ">; execute: <", remoteP.t, ">");
                     return;
                 }
@@ -218,7 +221,7 @@ export class RPCPeer {
         if (result && result instanceof Promise) {
             // tslint:disable-next-line:no-shadowed-variable
             result.then((...args) => {
-                let callbackParams: webworker_rpc.Param[] = [];
+                const callbackParams: webworker_rpc.Param[] = [];
                 for (const arg of args) {
                     const t = RPCParam.typeOf(arg);
                     if (t !== webworker_rpc.ParamType.UNKNOWN) {
@@ -254,6 +257,7 @@ export class RPCPeer {
 
     private executeFunctionByName(functionName: string, context: string, args?: any[]) {
         if (!RPCContexts.has(context)) {
+            // tslint:disable-next-line:no-console
             console.error("no context exit: ", context);
             return null;
         }
@@ -265,7 +269,7 @@ export class RPCPeer {
     private addRegistryProperty(packet: RPCRegistryPacket) {
         const service = packet.serviceName;
         const executors = packet.executors;
-        let serviceProp = {};
+        const serviceProp = {};
         for (const executor of executors) {
             if (!(executor.context in serviceProp)) {
                 addProperty(serviceProp, executor.context, {});
@@ -276,6 +280,7 @@ export class RPCPeer {
                 for (const arg of args) {
                     const t = RPCParam.typeOf(arg);
                     if (t === webworker_rpc.ParamType.UNKNOWN) {
+                        // tslint:disable-next-line:no-console
                         console.warn("unknown param type: ", arg);
                         continue;
                     }
@@ -298,16 +303,16 @@ export class RPCPeer {
     }
 }
 
-let RPCFunctions: RPCExecutor[] = [];
-let RPCContexts: Map<string, any> = new Map();
+const RPCFunctions: RPCExecutor[] = [];
+const RPCContexts: Map<string, any> = new Map();
 
 // decorater
 export function RPCFunction(paramTypes?: webworker_rpc.ParamType[]) {
-    return function (target, name, descriptor) {
+    return (target, name, descriptor) => {
         const context = target.constructor.name;
         if (!RPCContexts.has(context)) RPCContexts.set(context, target);
 
-        let params: RPCParam[] = [];
+        const params: RPCParam[] = [];
         if (paramTypes) {
             for (const pt of paramTypes) {
                 params.push(new RPCParam(pt));
