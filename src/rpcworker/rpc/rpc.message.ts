@@ -1,4 +1,4 @@
-import { webworker_rpc } from "pixelpai_proto"
+import { webworker_rpc } from "pixelpai_proto";
 
 export class RPCMessage extends webworker_rpc.WebWorkerMessage {
     constructor(key: string, data: webworker_rpc.ExecutePacket | webworker_rpc.RegistryPacket) {
@@ -120,6 +120,7 @@ export class RPCParam extends webworker_rpc.Param {
             switch (t) {
                 case webworker_rpc.ParamType.str:
                     if (typeof val !== "string") {
+                        // tslint:disable-next-line:no-console
                         console.error(`${val} is not type of string`);
                         return;
                     }
@@ -127,6 +128,7 @@ export class RPCParam extends webworker_rpc.Param {
                     break;
                 case webworker_rpc.ParamType.boolean:
                     if (typeof val !== "boolean") {
+                        // tslint:disable-next-line:no-console
                         console.error(`${val} is not type of boolean`);
                         return;
                     }
@@ -134,6 +136,7 @@ export class RPCParam extends webworker_rpc.Param {
                     break;
                 case webworker_rpc.ParamType.num:
                     if (typeof val !== "number") {
+                        // tslint:disable-next-line:no-console
                         console.error(`${val} is not type of number`);
                         return;
                     }
@@ -141,12 +144,14 @@ export class RPCParam extends webworker_rpc.Param {
                     break;
                 case webworker_rpc.ParamType.unit8array:
                     if (val.constructor !== Uint8Array) {
+                        // tslint:disable-next-line:no-console
                         console.error(`${val} is not type of Uint8Array`);
                         return;
                     }
                     this.valBytes = val;
                     break;
                 default:
+                    // tslint:disable-next-line:no-console
                     console.error("unkonw type : ", t);
                     break;
             }
