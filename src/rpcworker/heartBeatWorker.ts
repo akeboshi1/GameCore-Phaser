@@ -1,4 +1,4 @@
-import { RPCPeer } from "./rpc/rpc.peer";
+import { RPCPeer, RPCFunction } from "./rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCExecutor, RPCExecutePacket } from "./rpc/rpc.message";
 
@@ -19,12 +19,13 @@ onmessage = (e) => {
             peer.addLink(w, port);
         }
 
-    } else if (key === "register") {
-        peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("startBeat", "heartBeatWorkerContext"));
-        peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("endBeat", "heartBeatWorkerContext"));
-        peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("clearBeat", "heartBeatWorkerContext"));
-        peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("loadRes", "heartBeatWorkerContext"));
     }
+    // else if (key === "register") {
+    //     peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("startBeat", "heartBeatWorkerContext"));
+    //     peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("endBeat", "heartBeatWorkerContext"));
+    //     peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("clearBeat", "heartBeatWorkerContext"));
+    //     peer.registerExecutor(heartBeatWorkerContext, new RPCExecutor("loadRes", "heartBeatWorkerContext"));
+    // }
 };
 
 class HeartBeatWorkerContext {
@@ -33,51 +34,48 @@ class HeartBeatWorkerContext {
     private reConnectCount: number = 0;
     private startDelay: any;
 
+    @RPCFunction()
     public startBeat() {
         this.startDelay = setInterval(() => {
-            const param = new webworker_rpc.Param();
-            param.t = webworker_rpc.ParamType.str;
             if (this.reConnectCount >= 8) {
-                param.valStr = "reConnect";
-                peer.execute(MAIN_WORKER, new RPCExecutePacket(HEARTBEAT_WORKER, "startBeat", "context", [param]));
+                peer.remote[MAIN_WORKER].MainWorkerContext.startBeat(null, "reConnect");
                 return;
             }
             this.reConnectCount++;
-            param.valStr = "heartBeat";
             // Logger.getInstance().log("heartBeatWorker startBeat");
-            peer.execute(MAIN_WORKER, new RPCExecutePacket(HEARTBEAT_WORKER, "startBeat", "context", [param]));
+            peer.remote[MAIN_WORKER].MainWorkerContext.startBeat(null, "heartBeat");
         }, this.delayTime);
     }
 
+    @RPCFunction()
     public endBeat() {
         this.reConnectCount = 0;
         if (this.startDelay) {
             clearInterval(this.startDelay);
         }
         // Logger.getInstance().log("heartBeatWorker endBeat");
-        peer.execute(MAIN_WORKER, new RPCExecutePacket(HEARTBEAT_WORKER, "endHeartBeat", "context"));
+        peer.remote[MAIN_WORKER].MainWorkerContext.endHeartBeat(null);
     }
 
+    @RPCFunction()
     public clearBeat() {
         this.reConnectCount = 0;
         // Logger.getInstance().log("heartBeatWorker clearBeat");
-        peer.execute(MAIN_WORKER, new RPCExecutePacket(HEARTBEAT_WORKER, "clearBeat", "context"));
+        peer.remote[MAIN_WORKER].MainWorkerContext.clearBeat(null);
     }
 
+    @RPCFunction([webworker_rpc.ParamType.str])
     public loadRes(url: string) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.responseType = "blob";
-        xhr.onload = function() {
+        xhr.onload = () => {
             if (xhr.readyState === 4) {
                 const blob = xhr.response;
                 const reader = new FileReader();
                 reader.readAsArrayBuffer(blob);
-                reader.onload = function(e) {
-                    const param = new webworker_rpc.Param();
-                    param.t = webworker_rpc.ParamType.arrayBuffer;
-                    param.valBytes = new Uint8Array(<any>reader.result);
-                    peer.execute(MAIN_WORKER, new RPCExecutePacket(MAIN_WORKER, "loadRes", "heartBeatWorkerContext", [param]));
+                reader.onload = (e) => {
+                    peer.remote[MAIN_WORKER].MainWorkerContext.loadRes(null, new Uint8Array(<any>reader.result));
                     // postMessage({ "method": "completeHandler", "data": xhr.response });
                     close();
                 };
