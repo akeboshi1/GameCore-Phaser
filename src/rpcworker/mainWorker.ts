@@ -1,5 +1,5 @@
 import HeartBeatWorker from "worker-loader?filename=[name].js!../rpcworker/heartBeatWorker";
-import { RPCPeer } from "./rpc/rpc.peer";
+import { RPCPeer, RPCFunction } from "./rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCExecutor, RPCExecutePacket } from "./rpc/rpc.message";
 import { SocketConnection, IConnectListener, SocketConnectionError } from "../net/socket";
@@ -205,20 +205,20 @@ worker.onmessage = (e: MessageEvent) => {
 
             // const callBackParam = new webworker_rpc.Param();
             // callBackParam.t = webworker_rpc.ParamType.str;
-            const startParam = new webworker_rpc.Param();
-            startParam.t = webworker_rpc.ParamType.str;
-            const loadParam = new webworker_rpc.Param();
-            loadParam.t = webworker_rpc.ParamType.arrayBuffer;
+            // const startParam = new webworker_rpc.Param();
+            // startParam.t = webworker_rpc.ParamType.str;
+            // const loadParam = new webworker_rpc.Param();
+            // loadParam.t = webworker_rpc.ParamType.unit8array;
             // // 注册peer桥梁可被调用方法
-            context.peer.registerExecutor(context, new RPCExecutor("startBeat", "context", [startParam]));
-            context.peer.registerExecutor(context, new RPCExecutor("endHeartBeat", "context"));
-            context.peer.registerExecutor(context, new RPCExecutor("clearBeat", "context"));
-            context.peer.registerExecutor(context, new RPCExecutor("loadRes", "context", [loadParam]));
-            // 通知自己的子worker注册各自方法
-            const registerState: WorkerState = {
-                "key": "register"
-            };
-            context.registerExecutor(registerState);
+            // context.peer.registerExecutor(context, new RPCExecutor("startBeat", "context", [startParam]));
+            // context.peer.registerExecutor(context, new RPCExecutor("endHeartBeat", "context"));
+            // context.peer.registerExecutor(context, new RPCExecutor("clearBeat", "context"));
+            // context.peer.registerExecutor(context, new RPCExecutor("loadRes", "context", [loadParam]));
+            // // 通知自己的子worker注册各自方法
+            // const registerState: WorkerState = {
+            //     "key": "register"
+            // };
+            // context.registerExecutor(registerState);
             break;
         case "connect":
             const addr: ServerAddress = data.address;
@@ -229,23 +229,17 @@ worker.onmessage = (e: MessageEvent) => {
             socket.sendList(new Buffer(buf));
             break;
         case "startBeat":
-            context.peer.execute(HEARTBEAT_WORKER,
-                new RPCExecutePacket(MAIN_WORKER, "startBeat", "heartBeatWorkerContext"));
+            context.peer.remote[HEARTBEAT_WORKER].HeartBeatWorkerContext.startBeat(null);
             break;
         case "endBeat":
-            context.peer.execute(HEARTBEAT_WORKER,
-                new RPCExecutePacket(MAIN_WORKER, "endBeat", "heartBeatWorkerContext"));
+            context.peer.remote[HEARTBEAT_WORKER].HeartBeatWorkerContext.endBeat(null);
             break;
         case "clearBeeat":
-            context.peer.execute(HEARTBEAT_WORKER,
-                new RPCExecutePacket(MAIN_WORKER, "clearBeat", "heartBeatWorkerContext"));
+            context.peer.remote[HEARTBEAT_WORKER].HeartBeatWorkerContext.clearBeat(null);
             break;
         case "loadRes":
             const url: string = data.url;
-            const param = new webworker_rpc.Param();
-            param.t = webworker_rpc.ParamType.str;
-            param.valStr = url;
-            context.peer.execute(HEARTBEAT_WORKER, new RPCExecutePacket(MAIN_WORKER, "loadRes", "heartBeatWorkerContext", [param]));
+            context.peer.remote[HEARTBEAT_WORKER].HeartBeatWorkerContext.loadRes(null, url);
             break;
         case "focus":
             socket.pause = false;
@@ -398,15 +392,19 @@ class MainWorkerContext {
         worker.postMessage(buffer.buffer, [buffer.buffer]);
     }
 
+    @RPCFunction([webworker_rpc.ParamType.str])
     public startBeat(method: string) {
         // Logger.getInstance().log("mainwork");
         worker.postMessage({ "method": method });
     }
+    @RPCFunction()
     public endHeartBeat() {
         worker.postMessage({ "method": "endHeartBeat" });
     }
+    @RPCFunction()
     public clearBeat() {
     }
+    @RPCFunction([webworker_rpc.ParamType.unit8array])
     public loadRes(bytes: Uint8Array) {
         Logger.getInstance().log("workerload" + bytes);
     }

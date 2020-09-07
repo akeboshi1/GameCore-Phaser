@@ -86,6 +86,10 @@ export class AvatarEditorCanvas extends EditorCanvas {
             return this.mDragonbone.generateShopIcon(width, height);
         }
     }
+
+    public batchGenerateShopIcon(sizes: Array<{ width: number, height: number }>, datas: IAvatarSet[]) {
+        if (this.mDragonbone) this.mDragonbone.batchGenerateShopIcon(sizes, datas);
+    }
 }
 
 class AvatarEditorScene extends Phaser.Scene {

@@ -264,10 +264,14 @@ class OrderItem extends Phaser.GameObjects.Container {
     public setOrderData(data: op_client.IPKT_Quest) {
         this.orderData = data;
         this.hideAllElement();
-        const url = Url.getOsdRes(data.display.texturePath);
-        this.headIcon.load(url, this, () => {
-
-        });
+        if (data.stage !== op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
+            const url = Url.getOsdRes(data.display.texturePath);
+            this.headIcon.load(url, this, () => {
+                this.headIcon.scale = 1;
+                this.headIcon.scaleX = 43 * this.dpr / this.headIcon.displayWidth;
+                this.headIcon.scaleY = this.headIcon.scaleX;
+            });
+        }
         if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_ACCEPTABLE) {
             this.deliveryState(data);
         } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
@@ -411,6 +415,8 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.refreshBtn.disInteractive();
         this.acceleBtn.visible = true;
         this.acceleBtn.setInteractive();
+        this.acceleSpend.visible = true;
+        this.acceleSpend.setFrameValue("", this.key, "");
         this.calcuTime.x = this.acceleBtn.x;
         this.calcuTime.y = this.acceleBtn.y + this.acceleBtn.height * 0.5 + 10 * this.dpr;
         this.calcuTime.setText("09:42");
@@ -543,7 +549,7 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
 
     public setItemData(data: op_client.ICountablePackageItem) {
         this.text.text = `${data.name}*${data.count}`;
-        this.icon.setFrame(data.display.texturePath="iv_coin");
+        this.icon.setFrame(data.display.texturePath = "iv_coin");
     }
 }
 
