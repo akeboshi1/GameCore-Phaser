@@ -3,7 +3,6 @@ import { RPCMessage, RPCExecutor, RPCExecutePacket, RPCParam, RPCRegistryPacket 
 
 export const MESSAGEKEY_ADDREGISTRY: string = "addRegistry";
 export const MESSAGEKEY_RUNMETHOD: string = "runMethod";
-export const MESSAGEKEY_CHANNELREADY: string = "channelReady";
 
 // 各个worker之间通信桥梁
 export class RPCPeer {
@@ -170,8 +169,6 @@ export class RPCPeer {
         const packet: RPCRegistryPacket = dataRegistry as RPCRegistryPacket;
         this.registry.set(packet.serviceName, packet.executors);
         this.addRegistryProperty(packet);
-
-        this.worker.postMessage({ key: MESSAGEKEY_CHANNELREADY, data: packet.serviceName });
     }
     private onMessage_RunMethod(ev: MessageEvent) {
         // tslint:disable-next-line:no-console
