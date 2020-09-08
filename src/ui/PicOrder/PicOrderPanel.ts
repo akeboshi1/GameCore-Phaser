@@ -164,7 +164,7 @@ export class PicOrderPanel extends BasePanel {
         const orders = content.orders;
         this.mGameGrid.setItems(orders);
         this.royalOrderLimit = content.royalOrderLimit;
-        this.goldImageValue.setText(`${this.royalOrderLimit.currentValue}/${this.royalOrderLimit.currentValue}`);
+        this.goldImageValue.setText(`${this.royalOrderLimit.currentValue}/${this.royalOrderLimit.max}`);
         this.goldImageValue.resetSize();
         this.goldImageValue.x = this.content.width * 0.5 - this.goldImageValue.width * 0.5 - 20 * this.dpr;
     }
@@ -338,7 +338,6 @@ class OrderItem extends Phaser.GameObjects.Container {
     }
 
     private onSendHandler() {
-        Logger.getInstance().log("onSendHandler*******************************************");
         if (this.sendHandler) this.sendHandler.runWith([this.index, this.orderOperator]);
     }
 
@@ -356,6 +355,7 @@ class OrderItem extends Phaser.GameObjects.Container {
     private deliveryState(data: op_client.IPKT_Quest) {
         const questType = data.questType;
         this.headbg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_head_bg" : "order_ordinary_head_bg");
+        this.bg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_bg" : "order_ordinary_bg");
         this.refreshBtn.visible = true;
         this.refreshBtn.setInteractive();
         this.refreshBtn.setFrameNormal(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_delete_bg" : "order_delete_bg");
