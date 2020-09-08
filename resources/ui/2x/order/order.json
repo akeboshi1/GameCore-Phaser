@@ -60,6 +60,26 @@
 				"h": 71
 			}
 		},
+		"order_favorability": {
+			"frame": {
+				"x": 122,
+				"y": 1,
+				"w": 31,
+				"h": 25
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 31,
+				"h": 25
+			},
+			"sourceSize": {
+				"w": 31,
+				"h": 25
+			}
+		},
 		"order_ordinary_bg": {
 			"frame": {
 				"x": 1,
@@ -102,7 +122,7 @@
 		},
 		"order_precious": {
 			"frame": {
-				"x": 122,
+				"x": 155,
 				"y": 1,
 				"w": 30,
 				"h": 28
@@ -142,7 +162,7 @@
 		},
 		"order_precious_delete_bg": {
 			"frame": {
-				"x": 154,
+				"x": 187,
 				"y": 1,
 				"w": 34,
 				"h": 34
@@ -182,7 +202,7 @@
 		},
 		"order_progress_bottom": {
 			"frame": {
-				"x": 190,
+				"x": 223,
 				"y": 1,
 				"w": 31,
 				"h": 21
@@ -202,7 +222,7 @@
 		},
 		"order_progress_finished": {
 			"frame": {
-				"x": 223,
+				"x": 256,
 				"y": 1,
 				"w": 70,
 				"h": 70
@@ -222,7 +242,7 @@
 		},
 		"order_progress_top": {
 			"frame": {
-				"x": 295,
+				"x": 328,
 				"y": 1,
 				"w": 32,
 				"h": 21
@@ -242,7 +262,7 @@
 		},
 		"order_progress_unfinished": {
 			"frame": {
-				"x": 329,
+				"x": 362,
 				"y": 1,
 				"w": 70,
 				"h": 70
@@ -262,7 +282,7 @@
 		},
 		"order_reward": {
 			"frame": {
-				"x": 401,
+				"x": 434,
 				"y": 1,
 				"w": 64,
 				"h": 64
@@ -280,10 +300,30 @@
 				"h": 64
 			}
 		},
+		"order_silver": {
+			"frame": {
+				"x": 500,
+				"y": 1,
+				"w": 31,
+				"h": 25
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 31,
+				"h": 25
+			},
+			"sourceSize": {
+				"w": 31,
+				"h": 25
+			}
+		},
 		"order_time": {
 			"frame": {
-				"x": 467,
-				"y": 1,
+				"x": 122,
+				"y": 28,
 				"w": 20,
 				"h": 20
 			},
@@ -322,7 +362,7 @@
 		},
 		"order_title_bg": {
 			"frame": {
-				"x": 515,
+				"x": 533,
 				"y": 1,
 				"w": 378,
 				"h": 159
@@ -360,9 +400,29 @@
 				"h": 128
 			}
 		},
-		"order_unknown_head": {
+		"order_treasure_box": {
 			"frame": {
 				"x": 766,
+				"y": 162,
+				"w": 31,
+				"h": 25
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 31,
+				"h": 25
+			},
+			"sourceSize": {
+				"w": 31,
+				"h": 25
+			}
+		},
+		"order_unknown_head": {
+			"frame": {
+				"x": 799,
 				"y": 162,
 				"w": 81,
 				"h": 81
@@ -387,7 +447,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 894,
+			"w": 912,
 			"h": 416
 		},
 		"scale": "1"
