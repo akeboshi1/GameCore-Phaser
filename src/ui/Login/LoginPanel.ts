@@ -45,6 +45,15 @@ export class LoginPanel extends BasePanel {
         }
     }
 
+    public setLoginEnable(val) {
+        // if (val) {
+        //     this.loginBtn.setInteractive();
+        // } else {
+        //     this.loginBtn.disableInteractive();
+        // }
+        this.loginBtn.enable = val;
+    }
+
     protected preload() {
         this.addAtlas(this.key, "./login/login.png", "./login/login.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
