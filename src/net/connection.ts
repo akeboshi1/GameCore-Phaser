@@ -43,8 +43,6 @@ export default class Connection implements ConnectionService {
             if (this.mMainWorker) this.mMainWorker.postMessage({ method: "close" });
             this.mMainWorker = new MainWorker();
             this.mMainWorker.postMessage({ method: "init" });
-            // this.mHeartBeatWorker = new HeartBeatWorker();
-            // this.mWorker = new NetWorker();
             this._doConnect();
         } catch (e) {
             throw new Error(`startConnect Error: ${e}`);
@@ -139,33 +137,35 @@ export default class Connection implements ConnectionService {
         const self = this;
         const method = data.method;
         switch (method) {
+            case "canStartBeat":
+                Logger.getInstance().log("canStartBeat");
+                if (this.mMainWorker) {
+                    this.mMainWorker.postMessage({ method: "startBeat" });
+                }
+                break;
             case "onConnected":
                 this.mReConnectCount = 0;
                 this.mListener.onConnected();
                 this._isConnect = true;
-                if (this.mMainWorker) {
-                    this.mMainWorker.postMessage({ method: "register" });
-                    this.mMainWorker.postMessage({ method: "startBeat" });
-                }
                 break;
             case "onDisConnected":
                 this._isConnect = false;
-                if (!this.mTimeout) {
-                    if (this.mReConnectCount < 10)
-                        this.mReConnectCount++;
-                    const delay = this.mReConnectCount ** 2;
-                    Logger.getInstance().info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
-                    this.mTimeout = setTimeout(() => {
-                        self.mTimeout = undefined;
-                        self._doConnect();
-                    }, delay * 1000);
-                }
+                this.mListener.onDisConnected();
+                // if (!this.mTimeout) {
+                //     if (this.mReConnectCount < 10)
+                //         this.mReConnectCount++;
+                //     const delay = this.mReConnectCount ** 2;
+                //     Logger.getInstance().info(`ReConnect: delay = ${delay * 1000}[c/${this.mReConnectCount}]`);
+                //     this.mTimeout = setTimeout(() => {
+                //         self.mTimeout = undefined;
+                //         self._doConnect();
+                //     }, delay * 1000);
+                // }
                 break;
             case "onConnectError":
                 this._isConnect = false;
+                this.mListener.onError();
                 Logger.getInstance().error("error" + data.error);
-                // TODO
-                this.reConnect();
                 break;
             case "heartBeat":
                 this.worldStartHeartBeat();

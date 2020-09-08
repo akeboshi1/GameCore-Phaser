@@ -73,7 +73,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private gameConfigUrl: string = "";
     private mLoadingManager: ILoadingManager;
     private mPlayerDataManager: PlayerDataManager;
-
+    private reconnectIng: boolean = false;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
@@ -87,7 +87,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      */
     private mUIScale: number;
     private _isIOS = -1;
-    private _errorCount: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.initWorld(config, callBack);
@@ -125,9 +124,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
         this.mConnection.addPacketListener(this);
-
-        this.mClock = new Clock(this.mConnection, this);
-        this.mHttpClock = new HttpClock(this);
 
         // add Packet listener.
         this.addHandlerFun(
@@ -213,6 +209,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onConnected(connection?: SocketConnection): void {
+        if (!this.mClock) this.mClock = new Clock(this.mConnection, this);
+        if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
         this.enterVirtualWorld();
         // this.login();
@@ -231,14 +229,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onError(reason?: SocketConnectionError): void {
-        this._errorCount++;
-        if (this._errorCount > 0) {
-            if (!this.mConnection.isConnect) {
-                if (this.mConfig.connectFail) {
-                    this._errorCount = 0;
-                    Logger.getInstance().log("app connectFail");
-                    return this.mConfig.connectFail();
-                }
+        Logger.getInstance().log("socket error");
+        if (!this.mConnection.isConnect) {
+            if (this.mConfig.connectFail) {
+                Logger.getInstance().log("app connectFail");
+                return this.mConfig.connectFail();
+            } else {
+                this.reconnect();
             }
         }
     }
@@ -374,7 +371,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public reconnect() {
         if (this.mConfig.connectFail) return this.mConfig.connectFail();
-        if (!this.game || this.isPause) return;
+        if (!this.game || this.isPause || this.reconnectIng) return;
+        this.reconnectIng = true;
         let gameID: string = this.mConfig.game_id;
         let worldID: string = this.mConfig.virtual_world_id;
         if (this.mAccount.gameID && this.mAccount.virtualWorldId) {
@@ -611,35 +609,38 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // this.mGame.scene.start(LoadingScene.name, { world: this });
     }
 
-    private async _createAnotherGame(gameId, worldId, sceneId, loc) {
-        await this.clearGame();
-        this.isPause = false;
-        if (this.mConnection) {
-            this.mConnection.closeConnect();
-        }
-        if (this.mClock) {
-            this.mClock.destroy();
-            this.mClock = null;
-        }
-        if (this.mAccount) {
-            this.mAccount.enterGame(gameId, worldId, sceneId, loc);
-        }
-        // this.mConfig.game_id = gameId;
-        // this.mConfig.virtual_world_id = worldId;
-        this.mConnection.addPacketListener(this);
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
-        if (gateway) {
-            // connect to game server.
-            this.mConnection.startConnect(gateway);
-        }
-        this.mClock = new Clock(this.mConnection, this);
-        // setTimeout(() => {
-        this._newGame();
-        // }, 1000);
-        const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-        if (loginScene) this.mGame.scene.remove(LoginScene.name);
-        this.mLoadingManager.start();
-        // this.mGame.scene.start(LoadingScene.name, { world: this });
+    private _createAnotherGame(gameId, worldId, sceneId, loc) {
+        this.clearGame().then(() => {
+            this.isPause = false;
+            if (this.mConnection) {
+                this.mConnection.closeConnect();
+            }
+            if (this.mClock) {
+                this.mClock.destroy();
+                this.mClock = null;
+            }
+            if (this.mAccount) {
+                this.mAccount.enterGame(gameId, worldId, sceneId, loc);
+            }
+            // this.mConfig.game_id = gameId;
+            // this.mConfig.virtual_world_id = worldId;
+            this.mConnection.addPacketListener(this);
+            const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+            if (gateway) {
+                // connect to game server.
+                this.mConnection.startConnect(gateway);
+            }
+            this.mClock = new Clock(this.mConnection, this);
+            // setTimeout(() => {
+            this._newGame();
+            // }, 1000);
+            const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+            if (loginScene) this.mGame.scene.remove(LoginScene.name);
+            this.mLoadingManager.start().then(() => {
+                this.reconnectIng = false;
+            });
+            // this.mGame.scene.start(LoadingScene.name, { world: this }););
+        });
     }
 
     private onFullScreenChange() {
@@ -658,7 +659,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     private clearGame(callBack?: Function): Promise<void> {
-        this._errorCount = 0;
         return new Promise((resolve, reject) => {
             if (this.mGame) {
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);

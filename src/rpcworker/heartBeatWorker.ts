@@ -1,6 +1,5 @@
 import { RPCPeer, RPCFunction } from "./rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
-import { RPCExecutor, RPCExecutePacket } from "./rpc/rpc.message";
 
 onmessage = (e) => {
     const { key } = e.data;
@@ -8,7 +7,7 @@ onmessage = (e) => {
         const { worker } = e.data;
 
         // tslint:disable-next-line:no-console
-        console.log("heartBeatWorker onmessage: init");
+        // console.log("heartBeatWorker onmessage: init");
         if (heartBeatWorkerContext.inited) return;
         heartBeatWorkerContext.inited = true;
 

@@ -15,7 +15,6 @@ import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { Clock } from "../../rooms/clock";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
 import { Logger } from "../../utils/log";
 export class PicOrderPanel extends BasePanel {

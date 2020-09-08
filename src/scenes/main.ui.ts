@@ -28,6 +28,7 @@ export class MainUIScene extends BasicScene {
   }
 
   public create() {
+    super.create();
     const world = this.mRoom.world;
     const gameSize = world.getSize();
     const width = gameSize.width;

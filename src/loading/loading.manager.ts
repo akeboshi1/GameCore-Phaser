@@ -30,16 +30,20 @@ export class LoadingManager {
         if (!sceneManager) {
             return Promise.reject("start faild. SceneManager does not exist");
         }
-        const loading: LoadingScene = <LoadingScene> sceneManager.getScene(LoadingScene.name);
+        const loading: LoadingScene = <LoadingScene>sceneManager.getScene(LoadingScene.name);
         if (!loading) {
             sceneManager.add(LoadingScene.name, LoadingScene);
         }
-        if (loading) {
-            loading.awake({
-                world: this.world,
-                text,
-                callBack: this.sceneCallback.bind(this)
-            });
+        if (loading && loading.sceneInitialize()) {
+            if (!loading.getShow()) {
+                loading.awake({
+                    world: this.world,
+                    text,
+                    callBack: this.sceneCallback.bind(this)
+                });
+            } else {
+                loading.appendProgress(text);
+            }
         } else {
             sceneManager.start(LoadingScene.name, {
                 world: this.world,
