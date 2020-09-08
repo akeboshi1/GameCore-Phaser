@@ -280,9 +280,29 @@
 				"h": 70
 			}
 		},
-		"order_progress_top": {
+		"order_progress_ok": {
 			"frame": {
 				"x": 411,
+				"y": 1,
+				"w": 44,
+				"h": 33
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 44,
+				"h": 33
+			},
+			"sourceSize": {
+				"w": 44,
+				"h": 33
+			}
+		},
+		"order_progress_top": {
+			"frame": {
+				"x": 457,
 				"y": 1,
 				"w": 32,
 				"h": 21
@@ -302,8 +322,8 @@
 		},
 		"order_progress_unfinished": {
 			"frame": {
-				"x": 445,
-				"y": 1,
+				"x": 167,
+				"y": 204,
 				"w": 70,
 				"h": 70
 			},
@@ -322,7 +342,7 @@
 		},
 		"order_reward": {
 			"frame": {
-				"x": 167,
+				"x": 239,
 				"y": 204,
 				"w": 64,
 				"h": 64
@@ -342,7 +362,7 @@
 		},
 		"order_silver": {
 			"frame": {
-				"x": 517,
+				"x": 491,
 				"y": 1,
 				"w": 31,
 				"h": 25
@@ -362,7 +382,7 @@
 		},
 		"order_silver_middle": {
 			"frame": {
-				"x": 233,
+				"x": 305,
 				"y": 204,
 				"w": 46,
 				"h": 46
@@ -382,8 +402,8 @@
 		},
 		"order_time": {
 			"frame": {
-				"x": 122,
-				"y": 28,
+				"x": 524,
+				"y": 1,
 				"w": 20,
 				"h": 20
 			},
@@ -422,7 +442,7 @@
 		},
 		"order_title_bg": {
 			"frame": {
-				"x": 550,
+				"x": 546,
 				"y": 1,
 				"w": 378,
 				"h": 159
@@ -507,7 +527,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 929,
+			"w": 925,
 			"h": 489
 		},
 		"scale": "1"

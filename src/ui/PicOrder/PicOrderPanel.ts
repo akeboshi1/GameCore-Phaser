@@ -772,6 +772,8 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
     private icon: DynamicImage;
     private text: Phaser.GameObjects.Text;
     private receiveHandler: Handler;
+    private finishIcon: Phaser.GameObjects.Image;
+    private balckgraphic: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -781,7 +783,13 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 10 * dpr, text: "10", style: { color: "#2154BD", fontSize: 12 * dpr, bold: true, fontFamily: Font.DEFULT_FONT } });
         this.text.setStroke("#2154BD", 4);
         this.text.setOrigin(0.5);
-        this.add([this.bg, this.icon, this.text]);
+        this.finishIcon = scene.make.image({ key, frame: "order_progress_ok" });
+        this.balckgraphic = scene.make.graphics(undefined, false);
+        this.balckgraphic.clear();
+        this.balckgraphic.fillStyle(0, 0.5);
+        this.balckgraphic.fillCircle(0, 0, 16 * dpr);
+        this.add([this.bg, this.icon, this.text, this.balckgraphic, this.finishIcon]);
+        this.finishIcon.visible = false;
     }
 
     public setItemData(data: op_client.IPKT_Progress, index: number, curvalue: number) {
@@ -796,11 +804,17 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
                 this.icon.scaleX = this.icon.scaleY;
             });
         }
+        this.finishIcon.visible = false;
+        this.balckgraphic.visible = false;
         if (data.targetValue < curvalue) {
             this.bg.setFrameNormal("order_progress_finished", "order_progress_finished");
             if (!data.received)
                 this.bg.on(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
-            else this.bg.off(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+            else {
+                this.finishIcon.visible = true;
+                this.balckgraphic.visible = true;
+                this.bg.off(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+            }
         } else {
             this.bg.setFrameNormal("order_progress_unfinished", "order_progress_unfinished");
             this.bg.off(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
