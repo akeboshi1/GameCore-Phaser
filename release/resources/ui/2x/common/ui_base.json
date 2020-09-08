@@ -120,6 +120,26 @@
 				"h": 70
 			}
 		},
+		"home_persons": {
+			"frame": {
+				"x": 712,
+				"y": 1,
+				"w": 20,
+				"h": 30
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 20,
+				"h": 30
+			},
+			"sourceSize": {
+				"w": 20,
+				"h": 30
+			}
+		},
 		"increase": {
 			"frame": {
 				"x": 642,
@@ -142,7 +162,7 @@
 		},
 		"input_bg": {
 			"frame": {
-				"x": 712,
+				"x": 734,
 				"y": 1,
 				"w": 156,
 				"h": 70
@@ -162,8 +182,8 @@
 		},
 		"iv_coin": {
 			"frame": {
-				"x": 870,
-				"y": 1,
+				"x": 1,
+				"y": 73,
 				"w": 31,
 				"h": 33
 			},
@@ -182,7 +202,7 @@
 		},
 		"iv_diamond": {
 			"frame": {
-				"x": 1,
+				"x": 694,
 				"y": 73,
 				"w": 34,
 				"h": 36
@@ -202,8 +222,8 @@
 		},
 		"menu_bg": {
 			"frame": {
-				"x": 870,
-				"y": 36,
+				"x": 892,
+				"y": 1,
 				"w": 2,
 				"h": 113
 			},
@@ -222,8 +242,8 @@
 		},
 		"menu_bg_l": {
 			"frame": {
-				"x": 874,
-				"y": 36,
+				"x": 896,
+				"y": 1,
 				"w": 7,
 				"h": 345
 			},
@@ -242,8 +262,8 @@
 		},
 		"name_bg": {
 			"frame": {
-				"x": 1,
-				"y": 693,
+				"x": 642,
+				"y": 348,
 				"w": 267,
 				"h": 38
 			},
@@ -262,7 +282,7 @@
 		},
 		"next_button": {
 			"frame": {
-				"x": 712,
+				"x": 730,
 				"y": 73,
 				"w": 73,
 				"h": 75
@@ -280,10 +300,90 @@
 				"h": 75
 			}
 		},
+		"order_gray_butt": {
+			"frame": {
+				"x": 805,
+				"y": 73,
+				"w": 84,
+				"h": 43
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 84,
+				"h": 43
+			},
+			"sourceSize": {
+				"w": 84,
+				"h": 43
+			}
+		},
+		"order_green_butt": {
+			"frame": {
+				"x": 805,
+				"y": 118,
+				"w": 84,
+				"h": 43
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 84,
+				"h": 43
+			},
+			"sourceSize": {
+				"w": 84,
+				"h": 43
+			}
+		},
+		"order_red_butt": {
+			"frame": {
+				"x": 712,
+				"y": 163,
+				"w": 136,
+				"h": 47
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 136,
+				"h": 47
+			},
+			"sourceSize": {
+				"w": 136,
+				"h": 47
+			}
+		},
+		"order_yellow_butt": {
+			"frame": {
+				"x": 703,
+				"y": 212,
+				"w": 84,
+				"h": 43
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 84,
+				"h": 43
+			},
+			"sourceSize": {
+				"w": 84,
+				"h": 43
+			}
+		},
 		"price_bg": {
 			"frame": {
 				"x": 642,
-				"y": 383,
+				"y": 258,
 				"w": 250,
 				"h": 45
 			},
@@ -302,8 +402,8 @@
 		},
 		"red_btn_normal": {
 			"frame": {
-				"x": 787,
-				"y": 73,
+				"x": 642,
+				"y": 388,
 				"w": 68,
 				"h": 68
 			},
@@ -318,32 +418,12 @@
 			"sourceSize": {
 				"w": 68,
 				"h": 68
-			}
-		},
-		"red_btn_s": {
-			"frame": {
-				"x": 787,
-				"y": 143,
-				"w": 55,
-				"h": 59
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 55,
-				"h": 59
-			},
-			"sourceSize": {
-				"w": 55,
-				"h": 59
 			}
 		},
 		"reduce": {
 			"frame": {
-				"x": 703,
-				"y": 204,
+				"x": 712,
+				"y": 388,
 				"w": 59,
 				"h": 61
 			},
@@ -362,7 +442,7 @@
 		},
 		"select_bg": {
 			"frame": {
-				"x": 270,
+				"x": 1,
 				"y": 693,
 				"w": 590,
 				"h": 55
@@ -383,7 +463,7 @@
 		"tips_bg": {
 			"frame": {
 				"x": 642,
-				"y": 267,
+				"y": 458,
 				"w": 217,
 				"h": 83
 			},
@@ -402,8 +482,8 @@
 		},
 		"yellow_btn_down": {
 			"frame": {
-				"x": 642,
-				"y": 430,
+				"x": 773,
+				"y": 388,
 				"w": 64,
 				"h": 63
 			},
@@ -422,8 +502,8 @@
 		},
 		"yellow_btn_normal": {
 			"frame": {
-				"x": 708,
-				"y": 430,
+				"x": 839,
+				"y": 388,
 				"w": 64,
 				"h": 63
 			},
@@ -443,7 +523,7 @@
 		"yellow_btn_normal_s": {
 			"frame": {
 				"x": 1,
-				"y": 383,
+				"y": 118,
 				"w": 26,
 				"h": 28
 			},
@@ -462,8 +542,8 @@
 		},
 		"yellow_btn_over": {
 			"frame": {
-				"x": 774,
-				"y": 430,
+				"x": 642,
+				"y": 543,
 				"w": 64,
 				"h": 63
 			},
@@ -487,7 +567,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 902,
+			"w": 910,
 			"h": 749
 		},
 		"scale": "1"
