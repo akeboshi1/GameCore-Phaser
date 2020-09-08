@@ -62,6 +62,7 @@ export class CutInMenuPanel extends BasePanel {
         this.add(this.rightPopButton);
         this.resize(width, height);
         super.init();
+        this.rightPopButton.onClickHandler();
     }
 
     destroy() {
@@ -141,7 +142,7 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         this.bgSprite.alpha = 0;
         this.isPop = true;
     }
-    private onClickHandler() {
+    public onClickHandler() {
         if (!this.isPlaying && !this.isPop) {
             this.popAnim();
         } else if (!this.isPlaying && this.isPop) {
@@ -160,9 +161,9 @@ class RightPopContainer extends Phaser.GameObjects.Container {
             onComplete: () => {
                 target.stop();
                 target.isPlaying = false;
-                target.timeID = setTimeout(() => {
-                    target.takeback();
-                }, 3000);
+                // target.timeID = setTimeout(() => {
+                //     target.takeback();
+                // }, 3000);
             }
         });
     }
