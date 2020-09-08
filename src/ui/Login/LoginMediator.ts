@@ -56,6 +56,7 @@ export class LoginMediator extends BaseMediator {
     }
 
     private onLoginHandler(phone: string, code: string, areaCode: string) {
+        (<LoginPanel>this.mView).setLoginEnable(false);
         this.world.httpService.loginByPhoneCode(phone, code, areaCode).then((response: any) => {
             if (response.code === 200 || response.code === 201) {
                 const data = response.data;
@@ -74,6 +75,7 @@ export class LoginMediator extends BaseMediator {
             } else if (response.code >= 400) {
                 this.onLoginErrorHanler(response.msg || "服务器错误");
             }
+            (<LoginPanel>this.mView).setLoginEnable(true);
         });
     }
 
