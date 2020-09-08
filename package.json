@@ -44,7 +44,7 @@
         "maxrects-packer": "^2.6.0",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "simple-sha1": "^3.0.1",
-        "tooqinggamephaser": "^0.2.0",
+        "tooqinggamephaser": "0.1.4",
         "worker-loader": "^3.0.2"
     }
 }
