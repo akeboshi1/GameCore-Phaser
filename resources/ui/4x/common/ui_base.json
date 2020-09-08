@@ -120,6 +120,26 @@
 				"h": 143
 			}
 		},
+		"home_persons": {
+			"frame": {
+				"x": 1419,
+				"y": 1,
+				"w": 40,
+				"h": 60
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 40,
+				"h": 60
+			},
+			"sourceSize": {
+				"w": 40,
+				"h": 60
+			}
+		},
 		"increase": {
 			"frame": {
 				"x": 1279,
@@ -142,7 +162,7 @@
 		},
 		"input_bg": {
 			"frame": {
-				"x": 1419,
+				"x": 1461,
 				"y": 1,
 				"w": 311,
 				"h": 139
@@ -162,8 +182,8 @@
 		},
 		"iv_coin": {
 			"frame": {
-				"x": 1732,
-				"y": 1,
+				"x": 1,
+				"y": 142,
 				"w": 61,
 				"h": 65
 			},
@@ -182,8 +202,8 @@
 		},
 		"iv_diamond": {
 			"frame": {
-				"x": 1732,
-				"y": 68,
+				"x": 1380,
+				"y": 142,
 				"w": 65,
 				"h": 69
 			},
@@ -202,8 +222,8 @@
 		},
 		"menu_bg": {
 			"frame": {
-				"x": 1,
-				"y": 139,
+				"x": 1774,
+				"y": 1,
 				"w": 2,
 				"h": 225
 			},
@@ -222,8 +242,8 @@
 		},
 		"menu_bg_l": {
 			"frame": {
-				"x": 5,
-				"y": 139,
+				"x": 1778,
+				"y": 1,
 				"w": 13,
 				"h": 689
 			},
@@ -242,8 +262,8 @@
 		},
 		"name_bg": {
 			"frame": {
-				"x": 1,
-				"y": 1383,
+				"x": 1279,
+				"y": 692,
 				"w": 533,
 				"h": 76
 			},
@@ -262,7 +282,7 @@
 		},
 		"next_button": {
 			"frame": {
-				"x": 1420,
+				"x": 1447,
 				"y": 142,
 				"w": 145,
 				"h": 149
@@ -280,10 +300,90 @@
 				"h": 149
 			}
 		},
+		"order_gray_butt": {
+			"frame": {
+				"x": 1594,
+				"y": 142,
+				"w": 167,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 167,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 167,
+				"h": 86
+			}
+		},
+		"order_green_butt": {
+			"frame": {
+				"x": 1594,
+				"y": 230,
+				"w": 167,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 167,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 167,
+				"h": 86
+			}
+		},
+		"order_red_butt": {
+			"frame": {
+				"x": 1420,
+				"y": 318,
+				"w": 271,
+				"h": 93
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 271,
+				"h": 93
+			},
+			"sourceSize": {
+				"w": 271,
+				"h": 93
+			}
+		},
+		"order_yellow_butt": {
+			"frame": {
+				"x": 1399,
+				"y": 413,
+				"w": 167,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 167,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 167,
+				"h": 86
+			}
+		},
 		"price_bg": {
 			"frame": {
 				"x": 1279,
-				"y": 511,
+				"y": 770,
 				"w": 499,
 				"h": 89
 			},
@@ -302,8 +402,8 @@
 		},
 		"red_btn_normal": {
 			"frame": {
-				"x": 1567,
-				"y": 142,
+				"x": 1568,
+				"y": 413,
 				"w": 138,
 				"h": 138
 			},
@@ -318,32 +418,12 @@
 			"sourceSize": {
 				"w": 138,
 				"h": 138
-			}
-		},
-		"red_btn_s": {
-			"frame": {
-				"x": 1567,
-				"y": 282,
-				"w": 109,
-				"h": 118
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 109,
-				"h": 118
-			},
-			"sourceSize": {
-				"w": 109,
-				"h": 118
 			}
 		},
 		"reduce": {
 			"frame": {
-				"x": 1678,
-				"y": 282,
+				"x": 1279,
+				"y": 553,
 				"w": 118,
 				"h": 122
 			},
@@ -362,7 +442,7 @@
 		},
 		"select_bg": {
 			"frame": {
-				"x": 536,
+				"x": 1,
 				"y": 1383,
 				"w": 1179,
 				"h": 109
@@ -383,7 +463,7 @@
 		"tips_bg": {
 			"frame": {
 				"x": 1279,
-				"y": 602,
+				"y": 861,
 				"w": 434,
 				"h": 166
 			},
@@ -403,7 +483,7 @@
 		"yellow_btn_down": {
 			"frame": {
 				"x": 1279,
-				"y": 770,
+				"y": 1029,
 				"w": 151,
 				"h": 148
 			},
@@ -423,7 +503,7 @@
 		"yellow_btn_normal": {
 			"frame": {
 				"x": 1432,
-				"y": 770,
+				"y": 1029,
 				"w": 151,
 				"h": 148
 			},
@@ -442,8 +522,8 @@
 		},
 		"yellow_btn_normal_s": {
 			"frame": {
-				"x": 20,
-				"y": 139,
+				"x": 1,
+				"y": 692,
 				"w": 51,
 				"h": 55
 			},
@@ -463,7 +543,7 @@
 		"yellow_btn_over": {
 			"frame": {
 				"x": 1585,
-				"y": 770,
+				"y": 1029,
 				"w": 151,
 				"h": 148
 			},
@@ -487,7 +567,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1798,
+			"w": 1813,
 			"h": 1493
 		},
 		"scale": "1"

@@ -148,7 +148,7 @@ export default class Connection implements ConnectionService {
                     this.mMainWorker.postMessage({ method: "startBeat" });
                 }
                 break;
-            case "onD_isConnected":
+            case "onDisConnected":
                 this._isConnect = false;
                 if (!this.mTimeout) {
                     if (this.mReConnectCount < 10)
