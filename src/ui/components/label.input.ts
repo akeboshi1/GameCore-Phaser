@@ -38,6 +38,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
     }
 
     setOrigin(x?: number, y?: number) {
+        if (y === undefined) y = x;
         this.mLabel.setOrigin(x, y);
         this.mOriginX = x;
         this.mOriginY = y;

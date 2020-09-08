@@ -37,8 +37,8 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mLabelInput = new LabelInput(this.scene, {
       x: 0,
       y: 0,
-      width: 160,
-      height: 80,
+      width: this.mBackground.height,
+      height: 26 * dpr,
       fontSize: 14 * dpr + "px",
       color: "#666666",
       align: "center",
