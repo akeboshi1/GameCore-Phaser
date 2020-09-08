@@ -327,6 +327,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private replaceDisplay(): Promise<boolean> {
         return new Promise((resolve, reject) => {
             const parts = this.mParts;
+            Logger.getInstance().log("ZW-- replaceDisplay mParts: ", this.mParts);
             let slotName = "";
             let uri = "";
             for (const partName in parts) {
@@ -352,7 +353,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             this.mReplaceDisplayTimeOutID = setTimeout(() => {
                 if (this.mRunningBatchGenerateShopIcon) this.generateShopIconAndEmit();
                 resolve(true);
-            }, 100);
+            }, 1000);
         });
     }
 
