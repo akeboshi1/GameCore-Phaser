@@ -38,8 +38,6 @@ export class GMToolsPanel extends BasePanel {
         this.commitBtn.off(CoreUI.MouseEvent.Tap, this.onCommitCmdHandler, this);
     }
 
-    public destroy() {}
-
     public resize() {
         const {width, height} = this.scene.cameras.main;
         this.setSize(width, height);
