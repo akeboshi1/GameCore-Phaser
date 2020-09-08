@@ -16,6 +16,7 @@ export class PicOrder extends PacketHandler {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST, this.on_ORDER_LIST);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS, this.on_PLAYER_PROGRESS);
         }
     }
 
@@ -56,8 +57,23 @@ export class PicOrder extends PacketHandler {
         content.op = state;
         this.connection.send(packet);
     }
+    public query_PLAYER_PROGRESS() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_PLAYER_PROGRESS);
+        this.connection.send(packet);
+    }
+
+    public query_PLAYER_PROGRESS_REWARD(index: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_PLAYER_PROGRESS_REWARD);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_PLAYER_PROGRESS_REWARD = packet.content;
+        content.index = index;
+        this.connection.send(packet);
+    }
     private on_ORDER_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = packet.content;
         this.mEvent.emit("questlist", content);
+    }
+    private on_PLAYER_PROGRESS(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
+        this.mEvent.emit("progresslist", content);
     }
 }
