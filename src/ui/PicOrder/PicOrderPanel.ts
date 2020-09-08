@@ -17,6 +17,7 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Clock } from "../../rooms/clock";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
+import { Logger } from "../../utils/log";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -109,6 +110,7 @@ export class PicOrderPanel extends BasePanel {
         this.closeBtn.setInteractive();
         this.orderProgressPanel = new OrderProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, this.key, this.dpr);
         this.orderProgressPanel.y = -conHeight * 0.5 + 20 * this.dpr;
+        this.orderProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
         const tableConfig: GridTableConfig = {
             x: 0,
             y: 15 * this.dpr,
@@ -153,6 +155,7 @@ export class PicOrderPanel extends BasePanel {
         this.resize();
         super.init();
         this.emit("questlist");
+        this.emit("questprogress");
     }
 
     public setOrderDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST) {
@@ -166,6 +169,9 @@ export class PicOrderPanel extends BasePanel {
         this.goldImageValue.x = this.content.width * 0.5 - this.goldImageValue.width * 0.5 - 20 * this.dpr;
     }
 
+    public setOrderProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
+        this.orderProgressPanel.setProgressDatas(content);
+    }
     destroy() {
         super.destroy();
     }
@@ -178,6 +184,9 @@ export class PicOrderPanel extends BasePanel {
         this.emit("changeorder", index, orderOperator);
     }
 
+    private onProgressHandler(index: number) {
+        this.emit("questreward", index);
+    }
     private onItemInfoTips(data: op_client.ICountablePackageItem, isdown: boolean, pos: Phaser.Geom.Point) {
         this.itemtips.visible = isdown;
         this.itemtips.x = pos.x;
@@ -227,6 +236,7 @@ class OrderItem extends Phaser.GameObjects.Container {
     private tipsHandler: Handler;
     private index: number;
     private orderOperator: op_pkt_def.PKT_Order_Operator;
+    private timeID: any;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
@@ -253,9 +263,9 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.sendTitle = scene.make.text({ x: this.width * 0.5 - 5 * dpr, y: 0, text: i18n.t("order.deliverying"), style: { color: "#ffffff", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.sendTitle.setOrigin(1, 0.5);
         this.add(this.sendTitle);
-        this.acceleBtn = new Button(scene, UIAtlasKey.commonKey, "order_red_butt", "order_red_butt", i18n.t("order.ACCELERATE"));
+        this.acceleBtn = new Button(scene, UIAtlasKey.commonKey, "order_red_butt", "order_red_butt", i18n.t("order.accele"));
         this.acceleBtn.x = 20 * dpr;
-        this.acceleBtn.y = -5 * dpr;
+        this.acceleBtn.y = 0;
         this.acceleBtn.setTextStyle({ fontSize: 10 * dpr });
         this.add(this.acceleBtn);
         this.acceleSpend = new ImageValue(scene, 30 * dpr, 10 * dpr, this.dpr);
@@ -299,6 +309,7 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.headIcon.scaleY = 49 * this.dpr / this.headIcon.displayHeight;
                 this.headIcon.scaleX = this.headIcon.scaleY;
             });
+            this.headIcon.visible = true;
         }
         if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_ACCEPTABLE) {
             this.deliveryState(data);
@@ -315,11 +326,19 @@ class OrderItem extends Phaser.GameObjects.Container {
         }
     }
 
+    destroy(fromScene?: boolean) {
+        if (this.timeID) {
+            clearTimeout(this.timeID);
+            this.timeID = undefined;
+        }
+        super.destroy(fromScene);
+    }
     private onAcceleHandler() {
         if (this.sendHandler) this.sendHandler.runWith([this.index, this.orderOperator]);
     }
 
     private onSendHandler() {
+        Logger.getInstance().log("onSendHandler*******************************************");
         if (this.sendHandler) this.sendHandler.runWith([this.index, this.orderOperator]);
     }
 
@@ -383,7 +402,7 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.imageValues.push(item);
             }
             item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath = "iv_coin");
-            item.setTextStyle({ color: questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "#ffffff" : "#2154BD"});
+            item.setTextStyle({ color: questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "#ffffff" : "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
             item.y = this.height * 0.5 - item.height * 0.5 - 4 * this.dpr;
@@ -402,14 +421,29 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.refreshBtn.setInteractive();
         this.refreshBtn.setFrameNormal("order_delete_bg");
         this.sendTitle.visible = true;
-        const minute = Math.floor(data.deliveryDeadline / 60);
-        const second = data.refreshDeadline % 60;
-        const timetext = `${minute < 10 ? "0" + minute : minute + ""}:${second < 10 ? "0" + second : second + ""}`;
-        this.calcuTime.visible = true;
-        this.calcuTime.setFrameValue(timetext, this.key, "order_time");
-        this.calcuTime.resetSize();
-        this.calcuTime.x = this.width * 0.5 - this.calcuTime.width * 0.5 - 10 * this.dpr;
-        this.calcuTime.y = this.height * 0.5 - this.calcuTime.height * 0.5 - 5 * this.dpr;
+        if (this.timeID) {
+            clearTimeout(this.timeID);
+            this.timeID = undefined;
+        }
+        const timeextu = () => {
+            let intervalTime = Math.ceil(data.deliveryDeadline - new Date().getTime() / 1000);
+            if (intervalTime < 0) intervalTime = 0;
+            const minute = Math.floor(intervalTime / 60);
+            const second = intervalTime % 60;
+            const timetext = `${minute < 10 ? "0" + minute : minute + ""}:${second < 10 ? "0" + second : second + ""}`;
+            this.calcuTime.visible = true;
+            this.calcuTime.setFrameValue(timetext, this.key, "order_time");
+            this.calcuTime.resetSize();
+            this.calcuTime.x = this.width * 0.5 - this.calcuTime.width * 0.5 - 10 * this.dpr;
+            this.calcuTime.y = this.height * 0.5 - this.calcuTime.height * 0.5 - 5 * this.dpr;
+            if (intervalTime > 0) this.timeID = setTimeout(() => {
+                timeextu();
+            }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
+            else {
+                this.timeID = undefined;
+            }
+        };
+        timeextu();
         let offsetpos = -this.width * 0.5 + 60 * this.dpr;
         for (let i = 0; i < data.rewards.length; i++) {
             const reward = data.rewards[i];
@@ -462,18 +496,37 @@ class OrderItem extends Phaser.GameObjects.Container {
 
     private cooldownState(data: op_client.IPKT_Quest) {
         this.headbg.setFrame("order_unknown_head");
+        this.headIcon.visible = false;
         this.refreshBtn.visible = false;
         this.refreshBtn.disInteractive();
         this.acceleBtn.visible = true;
         this.acceleBtn.setInteractive();
         this.acceleSpend.visible = true;
-        this.calcuTime.x = this.acceleBtn.x;
+        this.calcuTime.visible = true;
         this.calcuTime.y = this.acceleBtn.y + this.acceleBtn.height * 0.5 + 10 * this.dpr;
-        const minute = Math.floor(data.refreshDeadline / 60);
-        const second = data.refreshDeadline % 60;
-        const timetext = `${minute < 10 ? "0" + minute : minute + ""}:${second < 10 ? "0" + second : second + ""}`;
-        this.calcuTime.setText(timetext);
-        this.acceleSpend.setFrameValue(minute + "", this.key, "");
+        if (this.timeID) {
+            clearTimeout(this.timeID);
+            this.timeID = undefined;
+        }
+        const timeextu = () => {
+            let intervalTime = Math.ceil(data.refreshDeadline - new Date().getTime() / 1000);
+            if (intervalTime < 0) intervalTime = 0;
+            const minute = Math.floor(intervalTime / 60);
+            const second = intervalTime % 60;
+            const timetext = `${minute < 10 ? "0" + minute : minute + ""}:${second < 10 ? "0" + second : second + ""}`;
+            this.calcuTime.visible = true;
+            this.calcuTime.setFrameValue(timetext, this.key, "order_time");
+            this.calcuTime.resetSize();
+            this.calcuTime.x = this.acceleBtn.x;
+            this.acceleSpend.setFrameValue(minute + "", this.key, "order_diamond");
+            if (intervalTime > 0) this.timeID = setTimeout(() => {
+                timeextu();
+            }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
+            else {
+                this.timeID = undefined;
+            }
+        };
+        timeextu();
     }
     private hideAllElement() {
         this.sendBtn.visible = false;
@@ -493,6 +546,10 @@ class OrderItem extends Phaser.GameObjects.Container {
         }
         for (const item of this.imageValues) {
             item.visible = false;
+        }
+        if (this.timeID) {
+            clearTimeout(this.timeID);
+            this.timeID = undefined;
         }
     }
 }
@@ -538,14 +595,18 @@ class MaterialItem extends Phaser.GameObjects.Container {
 
     public addListen() {
         this.on("pointerdown", this.onClickDownHandler, this);
-        this.on("pointerup", this.onClickUpHandler, this);
+        this.scene.input.on("pointerup", this.onClickUpHandler, this);
     }
 
     public removeListen() {
         this.off("pointerdown", this.onClickDownHandler, this);
-        this.off("pointerup", this.onClickUpHandler, this);
+        this.scene.input.off("pointerup", this.onClickUpHandler, this);
     }
 
+    destroy(fromScene?: boolean) {
+        this.removeListen();
+        super.destroy(fromScene);
+    }
     private onClickDownHandler() {
         if (this.tipsHandler) this.tipsHandler.runWith([this, true]);
     }
@@ -557,37 +618,22 @@ class MaterialItem extends Phaser.GameObjects.Container {
 
 class ImageValue extends Phaser.GameObjects.Container {
     private dpr: number;
-    private icon: DynamicImage;
+    private icon: Phaser.GameObjects.Image;
     private value: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, offsetx: number = 0) {
         super(scene);
         this.dpr = dpr;
         this.setSize(width, height);
-        this.icon = new DynamicImage(scene, 0, 0);
-        this.value = scene.make.text({ x: 0, y: offsetx, text: "10", style: { color: "#ffffff", fontSize: 10 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.icon = scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" });
+        this.value = scene.make.text({ x: 0, y: offsetx, text: "10", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0, 0.5);
         this.add([this.icon, this.value]);
     }
     public setFrameValue(text: string, key: string, frame: string) {
         this.icon.setTexture(key, frame);
-        this.icon.scale = 1;
-        this.icon.scaleY = this.height / this.icon.displayHeight;
-        this.icon.scaleX = this.icon.scaleY;
         this.value.text = text;
         this.resetPosition();
     }
-
-    public setUrlValue(text: string, url: string) {
-        this.value.text = text;
-        const osurl = Url.getOsdRes(url);
-        this.icon.load(osurl, this, () => {
-            this.icon.scale = 1;
-            this.icon.scaleY = this.height / this.icon.displayHeight;
-            this.icon.scaleX = this.icon.scaleY;
-            this.resetPosition();
-        });
-    }
-
     public setText(tex: string) {
         this.value.text = tex;
     }
@@ -621,7 +667,7 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
         super(scene);
         this.bg = scene.make.image({ key, frame: "order_reward" });
         this.setSize(this.bg.width, this.bg.height);
-        this.icon = scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" });
+        this.icon = scene.make.image({ key, frame: "order_silver_middle" });
         this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 13 * dpr, text: "10", style: { color: "#144B99", fontSize: 9 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.text.setOrigin(0.5);
         this.add([this.bg, this.icon, this.text]);
@@ -629,7 +675,11 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
 
     public setItemData(data: op_client.ICountablePackageItem) {
         this.text.text = `${data.name}*${data.count}`;
-        this.icon.setFrame(data.display.texturePath = "iv_coin");
+        const texturepath = data.display.texturePath;
+        const lastindex = texturepath.lastIndexOf("/");
+        const lastindex2 = texturepath.lastIndexOf(".");
+        const frame = data.display.texturePath.slice(lastindex + 1, lastindex2);
+        this.icon.setFrame(frame);
     }
 }
 
@@ -638,6 +688,7 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private progress: ProgressBar;
     private progressItems: OrderProgressItem[] = [];
+    private receiveHandler: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
         this.setSize(width, height);
@@ -681,13 +732,13 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
         };
         this.progress = new ProgressBar(scene, barConfig);
         this.add(this.progress);
-        this.setProgressDatas();
     }
 
-    public setProgressDatas() {
-        const len = 4;
+    public setProgressDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
+        const len = content.steps.length;
+        let maxvalue = 100;
         for (let i = 0; i < len; i++) {
-            const prevalue = Math.floor(100 * (i + 1) / len);
+            const data = content.steps[i];
             let item: OrderProgressItem;
             if (i < this.progressItems.length) {
                 item = this.progressItems[i];
@@ -695,21 +746,37 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
                 item = new OrderProgressItem(this.scene, 0, 0, this.key, this.dpr);
                 this.add(item);
                 this.progressItems.push(item);
+                item.setHandler(new Handler(this, this.onReceiveHandler));
             }
             item.x = -this.width * 0.5 + this.width * (i + 1) / len - 16 * this.dpr;
             item.y = 15 * this.dpr;
+            item.setItemData(data, i, content.currentProgressValue);
+            maxvalue = data.targetValue;
         }
+        this.progress.setProgress(content.currentProgressValue, maxvalue);
+    }
+
+    public setHandler(handler: Handler) {
+        this.receiveHandler = handler;
+    }
+    private onReceiveHandler(index: number) {
+        if (this.receiveHandler) this.receiveHandler.runWith(index);
     }
 }
 class OrderProgressItem extends Phaser.GameObjects.Container {
+    public progressData: op_client.IPKT_Progress;
+    public index: number;
     private key: string;
     private dpr: number;
-    private bg: Phaser.GameObjects.Image;
-    private icon: Phaser.GameObjects.Image;
+    private bg: Button;
+    private icon: DynamicImage;
     private text: Phaser.GameObjects.Text;
+    private receiveHandler: Handler;
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
-        this.bg = scene.make.image({ key, frame: "order_progress_unfinished" });
+        this.dpr = dpr;
+        this.key = key;
+        this.bg = new Button(scene, key, "order_progress_unfinished", "order_progress_unfinished");
         this.icon = new DynamicImage(scene, 0, 0);
         this.text = scene.make.text({ x: 0, y: this.bg.height * 0.5 + 10 * dpr, text: "10", style: { color: "#2154BD", fontSize: 12 * dpr, bold: true, fontFamily: Font.DEFULT_FONT } });
         this.text.setStroke("#2154BD", 4);
@@ -717,7 +784,35 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.icon, this.text]);
     }
 
-    public setItemData() {
+    public setItemData(data: op_client.IPKT_Progress, index: number, curvalue: number) {
+        this.progressData = data;
+        this.index = index;
+        this.text.text = data.targetValue + "";
+        if (data.rewards) {
+            const url = Url.getOsdRes(data.rewards[0].display.texturePath);
+            this.icon.load(url, this, () => {
+                this.icon.scale = 1;
+                this.icon.scaleY = 29 * this.dpr / this.icon.displayHeight;
+                this.icon.scaleX = this.icon.scaleY;
+            });
+        }
+        if (data.targetValue < curvalue) {
+            this.bg.setFrameNormal("order_progress_finished", "order_progress_finished");
+            if (!data.received)
+                this.bg.on(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+            else this.bg.off(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+        } else {
+            this.bg.setFrameNormal("order_progress_unfinished", "order_progress_unfinished");
+            this.bg.off(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+        }
 
+    }
+
+    public setHandler(receive: Handler) {
+        this.receiveHandler = receive;
+    }
+
+    private onReceiveHandler() {
+        if (this.receiveHandler) this.receiveHandler.runWith(this.index);
     }
 }

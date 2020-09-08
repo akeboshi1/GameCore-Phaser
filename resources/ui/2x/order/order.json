@@ -60,9 +60,49 @@
 				"h": 71
 			}
 		},
-		"order_favorability": {
+		"order_diamond": {
 			"frame": {
 				"x": 122,
+				"y": 1,
+				"w": 31,
+				"h": 25
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 31,
+				"h": 25
+			},
+			"sourceSize": {
+				"w": 31,
+				"h": 25
+			}
+		},
+		"order_diamond_middle": {
+			"frame": {
+				"x": 155,
+				"y": 1,
+				"w": 48,
+				"h": 46
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 48,
+				"h": 46
+			},
+			"sourceSize": {
+				"w": 48,
+				"h": 46
+			}
+		},
+		"order_favorability": {
+			"frame": {
+				"x": 205,
 				"y": 1,
 				"w": 31,
 				"h": 25
@@ -122,7 +162,7 @@
 		},
 		"order_precious": {
 			"frame": {
-				"x": 155,
+				"x": 238,
 				"y": 1,
 				"w": 30,
 				"h": 28
@@ -162,7 +202,7 @@
 		},
 		"order_precious_delete_bg": {
 			"frame": {
-				"x": 187,
+				"x": 270,
 				"y": 1,
 				"w": 34,
 				"h": 34
@@ -202,7 +242,7 @@
 		},
 		"order_progress_bottom": {
 			"frame": {
-				"x": 223,
+				"x": 306,
 				"y": 1,
 				"w": 31,
 				"h": 21
@@ -222,7 +262,7 @@
 		},
 		"order_progress_finished": {
 			"frame": {
-				"x": 256,
+				"x": 339,
 				"y": 1,
 				"w": 70,
 				"h": 70
@@ -242,7 +282,7 @@
 		},
 		"order_progress_top": {
 			"frame": {
-				"x": 328,
+				"x": 411,
 				"y": 1,
 				"w": 32,
 				"h": 21
@@ -262,7 +302,7 @@
 		},
 		"order_progress_unfinished": {
 			"frame": {
-				"x": 362,
+				"x": 445,
 				"y": 1,
 				"w": 70,
 				"h": 70
@@ -282,8 +322,8 @@
 		},
 		"order_reward": {
 			"frame": {
-				"x": 434,
-				"y": 1,
+				"x": 167,
+				"y": 204,
 				"w": 64,
 				"h": 64
 			},
@@ -302,7 +342,7 @@
 		},
 		"order_silver": {
 			"frame": {
-				"x": 500,
+				"x": 517,
 				"y": 1,
 				"w": 31,
 				"h": 25
@@ -318,6 +358,26 @@
 			"sourceSize": {
 				"w": 31,
 				"h": 25
+			}
+		},
+		"order_silver_middle": {
+			"frame": {
+				"x": 233,
+				"y": 204,
+				"w": 46,
+				"h": 46
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 46,
+				"h": 46
+			},
+			"sourceSize": {
+				"w": 46,
+				"h": 46
 			}
 		},
 		"order_time": {
@@ -342,8 +402,8 @@
 		},
 		"order_title": {
 			"frame": {
-				"x": 167,
-				"y": 204,
+				"x": 1,
+				"y": 417,
 				"w": 269,
 				"h": 71
 			},
@@ -362,7 +422,7 @@
 		},
 		"order_title_bg": {
 			"frame": {
-				"x": 533,
+				"x": 550,
 				"y": 1,
 				"w": 378,
 				"h": 159
@@ -447,8 +507,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 912,
-			"h": 416
+			"w": 929,
+			"h": 489
 		},
 		"scale": "1"
 	}
