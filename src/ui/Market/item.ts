@@ -2,6 +2,7 @@ import { op_def, op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url, Coin } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
+import { Logger } from "../../utils/log";
 export class MarketItem extends Phaser.GameObjects.Container {
   private mBackground: Phaser.GameObjects.Image;
   private mBorder: Phaser.GameObjects.Image;
@@ -78,7 +79,11 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
   setProp(content: op_client.IMarketCommodity) {
     this.mProp = content;
-    this.mPropImage.load(Url.getOsdRes(content.icon), this, this.onPropLoadComplete);
+    if (content.icon) {
+      this.mPropImage.load(Url.getOsdRes(content.icon), this, this.onPropLoadComplete);
+    } else {
+      Logger.getInstance().error(`${content.name} : ${content.id} icon value is empty`);
+    }
     this.mPropImage.x = this.mBorder.x + this.mBorder.displayWidth / 2;
     this.mPropImage.y = this.mBorder.y + this.mBorder.displayHeight / 2;
     let nickname = content.shortName || content.name;
