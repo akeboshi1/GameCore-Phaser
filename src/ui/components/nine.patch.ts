@@ -194,8 +194,6 @@ export class NinePatch extends Phaser.GameObjects.Container {
                 // info.push({ x: patchImg.x, y: patchImg.y, w: patchImg.width, h: patchImg.height, s: patchImg.scale, sx: patchImg.scaleX, sy: patchImg.scaleY });
             }
         }
-        // Logger.getInstance().log("ZW-- drawPatches: ", info);
-        // Logger.getInstance().log("ZW-- lines: " + (info[0].w * info[0].sx + info[0].x) + "; " + (info[1].w * info[1].sx + info[1].x));
     }
 
     private createPatchFrame(patch: string, x: number, y: number, width: number, height: number) {

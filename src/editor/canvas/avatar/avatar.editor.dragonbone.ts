@@ -61,7 +61,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     // batch generate shop icon
     private mRunningBatchGenerateShopIcon: boolean = false;
     private mLeftGenerateShopIconData: IAvatarSet[] = [];
-    private mGenerateShopIconSizes: Array<{ width: number, height: number }> = [];
+    private mGenerateShopIconSize: { width: number, height: number } = null;
+    private mReplaceDisplayTimeOutID = null;
 
     constructor(scene: Phaser.Scene, webHomePath: string, emitter: Phaser.Events.EventEmitter) {
         super(scene);
@@ -102,7 +103,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             this.onResourcesLoaded();
         } else {
             this.scene.textures.addBase64(uri, img.url);
-            Logger.getInstance().log("ZW-- load img: ", uri);
 
             this.scene.textures.on("onload", this.onResourcesLoaded, this);
         }
@@ -170,21 +170,20 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         });
     }
 
-    public batchGenerateShopIcon(sizes: Array<{ width: number, height: number }>, datas: IAvatarSet[]) {
+    public batchGenerateShopIcon(size: { width: number, height: number }, datas: IAvatarSet[]) {
         if (this.mRunningBatchGenerateShopIcon) {
             Logger.getInstance().error("task not finished");
             return;
         }
 
         this.mLeftGenerateShopIconData = [].concat(datas);
-        this.mGenerateShopIconSizes = [].concat(sizes);
+        this.mGenerateShopIconSize = size;
 
         this.mRunningBatchGenerateShopIcon = true;
         this.batchStep();
     }
 
     public onResourcesLoaded() {
-        Logger.getInstance().log("ZW-- dragonbone.onResourcesLoaded");
         this.scene.textures.off("onload", this.onResourcesLoaded, this, false);
         this.replaceDisplay();
     }
@@ -327,7 +326,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private replaceDisplay(): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            Logger.getInstance().log("ZW-- replaceDisplay() mParts: ", this.mParts);
             const parts = this.mParts;
             let slotName = "";
             let uri = "";
@@ -343,15 +341,18 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     uri = "";
                 }
                 this.replaceSlotDisplay(`${slotName}`, uri);
-                Logger.getInstance().log("ZW-- replaceSlot() ", slotName, uri);
             }
 
             this.mArmatureDisplay.animation.play(this.mCurAnimationName);
 
-            setTimeout(() => {
+            if (this.mReplaceDisplayTimeOutID) {
+                clearTimeout(this.mReplaceDisplayTimeOutID);
+                this.mReplaceDisplayTimeOutID = null;
+            }
+            this.mReplaceDisplayTimeOutID = setTimeout(() => {
                 if (this.mRunningBatchGenerateShopIcon) this.generateShopIconAndEmit();
                 resolve(true);
-            }, 100, true);
+            }, 100);
         });
     }
 
@@ -363,7 +364,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private loadPart(key: string, path: string) {
-        Logger.getInstance().log("ZW-- loadPart() ", key, path);
         if (!this.scene.cache.obj.has(key)) {
             this.scene.load.image(key, path);
         }
@@ -460,14 +460,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private generateShopIconAndEmit() {
-        const tasks: Array<Promise<string>> = [];
-        for (const size of this.mGenerateShopIconSizes) {
-            tasks.push(this.generateShopIcon(size.width, size.height));
-        }
-
-        Promise.all(tasks)
-            .then((urls) => {
-                this.mEmitter.emit(AvatarEditorEmitType.Shop_Icon_Generated, { id: this.mSets[0].id, urls });
+        this.mRunningBatchGenerateShopIcon = false;
+        this.generateShopIcon(this.mGenerateShopIconSize.width, this.mGenerateShopIconSize.height)
+            .then((data) => {
+                this.mRunningBatchGenerateShopIcon = true;
+                this.mEmitter.emit(AvatarEditorEmitType.Shop_Icon_Generated, { id: this.mSets[0].id, url: data });
                 this.batchStep();
             });
     }

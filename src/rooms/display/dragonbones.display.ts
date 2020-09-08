@@ -756,7 +756,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     }
 
     private hideUnreplacedParts() {
-        // console.log("ZW-- replaceArr:", this.replaceArr);
         const replaceSlots = [];
         for (const rep of this.replaceArr) {
             const part: string = rep.slot.replace("$", rep.dir.toString());
@@ -851,7 +850,6 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
                 const img = new dragonBones.phaser.display.SlotImage(this.scene, slot.display.x, slot.display.y, partName);
                 // slot.replaceDisplay(img);
                 slot.display = img;
-                // console.log("ZW-- slot.replaceDisplay: ", slot, partName);
             }
         }
 
@@ -998,7 +996,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (this.mPlaceholder) {
             this.mPlaceholder.destroy();
         }
-        this.mPlaceholder = this.scene.make.image({key: "avatar_placeholder", x: -22, y: -68}).setOrigin(0);
+        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
         this.add(this.mPlaceholder);
     }
 

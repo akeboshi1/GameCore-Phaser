@@ -87,8 +87,8 @@ export class AvatarEditorCanvas extends EditorCanvas {
         }
     }
 
-    public batchGenerateShopIcon(sizes: Array<{ width: number, height: number }>, datas: IAvatarSet[]) {
-        if (this.mDragonbone) this.mDragonbone.batchGenerateShopIcon(sizes, datas);
+    public batchGenerateShopIcon(size: { width: number, height: number }, datas: IAvatarSet[]) {
+        if (this.mDragonbone) this.mDragonbone.batchGenerateShopIcon(size, datas);
     }
 
     // 监听事件
