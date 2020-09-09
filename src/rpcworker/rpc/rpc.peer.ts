@@ -1,5 +1,6 @@
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCMessage, RPCExecutor, RPCExecutePacket, RPCParam, RPCRegistryPacket } from "./rpc.message";
+import { Logger } from "../../utils/log";
 
 export const MESSAGEKEY_ADDREGISTRY: string = "addRegistry";
 export const MESSAGEKEY_RUNMETHOD: string = "runMethod";
@@ -22,11 +23,11 @@ export class RPCPeer {
     private channels: Map<string, MessagePort>;
     constructor(name: string, w: Worker) {
         if (!w) {
-            // Logger.getInstance().error("param <worker> error");
+            Logger.getInstance().error("param <worker> error");
             return;
         }
         if (!name) {
-            // Logger.getInstance().error("param <name> error");
+            Logger.getInstance().error("param <name> error");
             return;
         }
 
@@ -88,13 +89,13 @@ export class RPCPeer {
     private execute(worker: string, packet: RPCExecutePacket) {
         // Logger.getInstance().log(this.name + " execute: ", worker, packet);
         if (!this.registry.has(worker)) {
-            // Logger.getInstance().error("worker <" + worker + "> not registed");
+            Logger.getInstance().error("worker <" + worker + "> not registed");
             return;
         }
         const executor = this.registry.get(worker).find((x) => x.context === packet.header.remoteExecutor.context &&
             x.method === packet.header.remoteExecutor.method);
         if (!executor) {
-            // Logger.getInstance().error("method <" + packet.header.remoteExecutor.method + "> not registed");
+            Logger.getInstance().error("method <" + packet.header.remoteExecutor.method + "> not registed");
             return;
         }
 
@@ -102,13 +103,12 @@ export class RPCPeer {
         const remoteParams = packet.header.remoteExecutor.params;
         if (regParams && regParams.length > 0) {
             if (!remoteParams || remoteParams.length === 0) {
-                // tslint:disable-next-line:no-console
-                // console.error("execute param error! ", "param.length = 0");
+                Logger.getInstance().error("execute param error! ", "param.length = 0");
                 return;
             }
 
             if (regParams.length > remoteParams.length) {
-                // Logger.getInstance().error("execute param error! ", "param not enough");
+                Logger.getInstance().error("execute param error! ", "param not enough");
                 return;
             }
 
@@ -116,7 +116,7 @@ export class RPCPeer {
                 const regP = regParams[i];
                 const remoteP = remoteParams[i];
                 if (regP.t !== remoteP.t) {
-                    // Logger.getInstance().error("execute param error! ", "type not match, registry: <", regP.t, ">; execute: <", remoteP.t, ">");
+                    Logger.getInstance().error("execute param error! ", "type not match, registry: <", regP.t, ">; execute: <", remoteP.t, ">");
                     return;
                 }
             }
@@ -130,8 +130,7 @@ export class RPCPeer {
     }
     // 通知其他worker添加回调注册表
     private postRegistry(worker: string, registry: RPCRegistryPacket) {
-        // tslint:disable-next-line:no-console
-        // console.log(this.name + " postRegistry: ", worker, registry);
+        // Logger.getInstance().log(this.name + " postRegistry: ", worker, registry);
 
         const messageData = new RPCMessage(MESSAGEKEY_ADDREGISTRY, registry);
         const buf = webworker_rpc.WebWorkerMessage.encode(messageData).finish().buffer;
@@ -141,17 +140,14 @@ export class RPCPeer {
         }
     }
     private onMessage_AddRegistry(ev: MessageEvent) {
-        // tslint:disable-next-line:no-console
-        // console.log(this.name + " onMessage_AddRegistry:", ev.data);
+        // Logger.getInstance().log(this.name + " onMessage_AddRegistry:", ev.data);
         const { dataRegistry } = ev.data;
         if (!dataRegistry) {
-            // tslint:disable-next-line:no-console
-            // console.warn("<data> not in ev.data");
+            // Logger.getInstance().warn("<data> not in ev.data");
             return;
         }
         if (!RPCRegistryPacket.checkType(dataRegistry)) {
-            // tslint:disable-next-line:no-console
-            // console.warn("<data> type error: ", dataRegistry);
+            Logger.getInstance().warn("<data> type error: ", dataRegistry);
             return;
         }
         const packet: RPCRegistryPacket = dataRegistry as RPCRegistryPacket;
@@ -159,21 +155,19 @@ export class RPCPeer {
         this.addRegistryProperty(packet);
 
         if (this.onChannelReady) {
+            Logger.getInstance().log("ZW-- onChannelReady ", packet.serviceName);
             this.onChannelReady(packet.serviceName);
         }
     }
     private onMessage_RunMethod(ev: MessageEvent) {
-        // tslint:disable-next-line:no-console
-        // console.log(this.name + " onMessage_RunMethod:", ev.data);
+        // Logger.getInstance().log(this.name + " onMessage_RunMethod:", ev.data);
         const { dataExecute } = ev.data;
         if (!dataExecute) {
-            // tslint:disable-next-line:no-console
-            // console.warn("<data> not in ev.data");
+            // Logger.getInstance().warn("<data> not in ev.data");
             return;
         }
         if (!RPCExecutePacket.checkType(dataExecute)) {
-            // tslint:disable-next-line:no-console
-            // console.warn("<data> type error: ", dataExecute);
+            Logger.getInstance().warn("<data> type error: ", dataExecute);
             return;
         }
         const packet: RPCExecutePacket = dataExecute as RPCExecutePacket;
@@ -225,16 +219,14 @@ export class RPCPeer {
                     const callback = packet.header.callbackExecutor;
                     if (callback.params) {
                         if (callbackParams.length < callback.params.length) {
-                            // tslint:disable-next-line:no-console
-                            // console.error(`not enough data from promise`);
+                            Logger.getInstance().error(`not enough data from promise`);
                             return;
                         }
                         for (let i = 0; i < callback.params.length; i++) {
                             const p = callback.params[i];
                             const cp = callbackParams[i];
                             if (p.t !== cp.t) {
-                                // tslint:disable-next-line:no-console
-                                // console.error(`param type not match: <${p.t}> <${cp.t}>`);
+                                Logger.getInstance().error(`param type not match: <${p.t}> <${cp.t}>`);
                                 return;
                             }
                         }
@@ -249,7 +241,7 @@ export class RPCPeer {
 
     private executeFunctionByName(functionName: string, context: string, args?: any[]) {
         if (!RPCContexts.has(context)) {
-            // Logger.getInstance().error("no context exit: ", context);
+            Logger.getInstance().error("no context exit: ", context);
             return null;
         }
 
@@ -288,8 +280,7 @@ export class RPCPeer {
 
         addProperty(this.remote, service, serviceProp);
 
-        // tslint:disable-next-line:no-console
-        // console.log(this.name + "addRegistryProperty", this);
+        // Logger.getInstance().log(this.name + "addRegistryProperty", this);
     }
 }
 
@@ -318,8 +309,7 @@ export function RPCFunction(paramTypes?: webworker_rpc.ParamType[]) {
 
 function addProperty(obj: any, key: string, val: any) {
     if (key in obj) {
-        // tslint:disable-next-line:no-console
-        // console.error("key exits, add property failed!", obj, key);
+        Logger.getInstance().error("key exits, add property failed!", obj, key);
         return obj;
     }
     obj[key] = val;
