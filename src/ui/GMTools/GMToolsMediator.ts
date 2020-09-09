@@ -4,7 +4,6 @@ import { WorldService } from "../../game/world.service";
 import { GMToolsPanel } from "./GMToolsPanel";
 import { op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Logger } from "../../utils/log";
 
 export class GMToolsMediator extends BaseMediator {
     private scene: Phaser.Scene;
@@ -26,7 +25,6 @@ export class GMToolsMediator extends BaseMediator {
         }
         this.mView = new GMToolsPanel(this.scene, this.world);
         this.mView.on("close", this.onCloseHandler, this);
-        this.mView.on("command", this.onCommandHandler, this);
         this.mView.on("targetUI", this.onTargetUIHandler, this);
         this.mView.show(params);
         this.layerMgr.addToUILayer(this.mView);
@@ -38,7 +36,7 @@ export class GMToolsMediator extends BaseMediator {
         }
     }
 
-    private onTargetUIHandler(uiId, componentId) {
+    private onTargetUIHandler(uiId, componentId, str?) {
         if (!this.world) {
             return;
         }
@@ -47,11 +45,7 @@ export class GMToolsMediator extends BaseMediator {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
         content.uiId = uiId;
         content.componentId = componentId;
+        content.strData = str;
         this.world.connection.send(pkt);
-    }
-
-    private onCommandHandler(text: string) {
-        // TODO
-        Logger.getInstance().log("send command ", text);
     }
 }

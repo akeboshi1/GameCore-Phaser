@@ -2,6 +2,7 @@ import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/Inpu
 import { Font } from "../../utils/font";
 
 export class LabelInput extends Phaser.GameObjects.Container {
+    private mBackground: Phaser.GameObjects.Graphics;
     private mLabel: Phaser.GameObjects.Text;
     private mInputText: InputText;
     private mInputConfig: any;
@@ -45,6 +46,16 @@ export class LabelInput extends Phaser.GameObjects.Container {
         if (this.mInputText) this.mInputText.setOrigin(x, y);
         this.mLabel.input.hitArea = new Phaser.Geom.Rectangle(-this.width * x, -this.height * y, this.width, this.height);
         return this;
+    }
+
+    createBackground(padding: number, radius: number) {
+        if (!this.mBackground) {
+            this.mBackground = this.scene.make.graphics(undefined, false);
+        }
+        this.mBackground.clear();
+        this.mBackground.fillStyle(0xFFFFFF);
+        this.mBackground.fillRoundedRect(-padding + this.width * this.mLabel.originX, -padding + this.height * this.mLabel.originY, this.width + padding * 2, this.height + padding * 2, radius);
+        this.addAt(this.mBackground, 0);
     }
 
     public setBlur() {

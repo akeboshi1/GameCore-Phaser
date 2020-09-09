@@ -180,7 +180,8 @@
     "new_friend": "New Friend",
     "new_fans": "New Fans",
     "lv": "Lv",
-    "remove": "Remove"
+    "remove": "Remove",
+    "unregistered_game": "Unregistered game"
   },
   "friend_invite": {
     "refused": "refused",

@@ -755,7 +755,7 @@ class FriendRenderer implements IRenderer {
     public setItemData(data: FriendData) {
         this.itemData = data;
         this.nameText.text = data.nickname;
-        const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : "";
+        const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : i18n.t("friendlist.unregistered_game");
         this.level.setText(lv);
     }
 
