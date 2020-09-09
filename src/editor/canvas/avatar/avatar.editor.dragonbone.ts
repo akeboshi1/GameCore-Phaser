@@ -1,8 +1,8 @@
 import { AvatarNode, IImage } from "game-capsule";
 import { op_gameconfig_01 } from "pixelpai_proto";
 import * as url from "url";
-import { AvatarDirEnum, IAvatarSet } from "game-capsule/lib/configobjects/avatar";
-import * as _ from "lodash";
+// import * as _ from "lodash";
+import { AvatarDirEnum, IAvatarSet } from "game-capsule";
 import { Logger } from "../../../utils/log";
 import { AvatarEditorEmitType } from "./avatar.editor.canvas";
 
@@ -234,10 +234,14 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     const parts = set.parts;
                     for (const part of parts) {
                         if (part === key) {
-                            _.remove(this.mSets, (n) => {
-                                return part === key;
-                            });
-                            this.mParts = _.omit(this.mParts, this.BACKMAP[key]);
+                            // 删除mSets和mParts中相应数据
+                            this.removePartsInSets([part], this.mSets);
+                            this.removePartsInCurParts(this.BACKMAP[part]);
+
+                            // _.remove(this.mSets, (n) => {
+                            //     return part === key;
+                            // });
+                            // this.mParts = _.omit(this.mParts, this.BACKMAP[key]);
                         }
                     }
                 }
@@ -435,7 +439,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         return `${_part}_${dir}`;
     }
 
-    private findPartSet(part: string, sets: IAvatarSet[]): IAvatarSet {
+    private findPartInSets(part: string, sets: IAvatarSet[]): IAvatarSet {
         for (const set of sets) {
             if (set.parts.includes(part)) {
                 return set;
@@ -443,6 +447,25 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
 
         return null;
+    }
+
+    private removePartsInSets(parts: string[], sets: IAvatarSet[]): IAvatarSet[] {
+        for (const set of sets) {
+            for (const part of parts) {
+                const idx = set.parts.indexOf(part);
+                if (idx >= 0) set.parts.splice(idx, 1);
+            }
+        }
+
+        return sets;
+    }
+
+    private removePartsInCurParts(parts: string[]) {
+        for (const part of parts) {
+            if (this.mParts.hasOwnProperty(part)) {
+                delete this.mParts[part];
+            }
+        }
     }
 
     private batchStep() {

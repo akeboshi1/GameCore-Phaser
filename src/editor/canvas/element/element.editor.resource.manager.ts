@@ -1,5 +1,5 @@
 import Atlas from "../../utils/atlas";
-import AnimationsNode, { IImage } from "game-capsule/lib/configobjects/animations";
+import { IImage } from "game-capsule";
 import { DisplayNode, ElementNode } from "game-capsule";
 import * as path from "path";
 import * as os from "os";

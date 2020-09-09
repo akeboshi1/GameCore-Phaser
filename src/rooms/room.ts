@@ -24,7 +24,7 @@ import { DisplayObject } from "./display/display.object";
 import { ReferenceArea } from "./editor/reference.area";
 import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 import { FallEffect } from "./fall.effect/fall.effect";
-import { IPoint } from "game-capsule/lib/helpers";
+import { IPoint } from "game-capsule";
 import { Logger } from "../utils/log";
 import { WallManager } from "./wall/wall.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";

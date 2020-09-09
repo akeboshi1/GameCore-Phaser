@@ -1,4 +1,4 @@
-import { IRectangle } from "game-capsule/lib/helpers";
+import { IRectangle } from "game-capsule";
 
 export interface IEditorCanvasConfig {
     width: number;

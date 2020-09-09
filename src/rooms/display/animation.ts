@@ -1,5 +1,5 @@
 import { op_gameconfig_01, op_def } from "pixelpai_proto";
-import { IPoint } from "game-capsule/lib/helpers";
+import { IPoint } from "game-capsule";
 export interface IAnimationData {
     name: string;
     frameName: string[];
