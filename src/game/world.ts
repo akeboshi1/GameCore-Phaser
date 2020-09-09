@@ -772,7 +772,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 }
                 const account = JSON.parse(token);
                 this.mAccount.setAccount(account);
-                this.httpService.refreshToekn(account.refreshToken, account.token)
+                this.httpService.refreshToekn(account.refreshToken, account.accessToken)
                     .then((response: any) => {
                         if (response.code === 200) {
                             this.mAccount.refreshToken(response);
@@ -819,7 +819,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             !this.mConfig.game_id ||
             !this.mAccount ||
             !this.mAccount.accountData ||
-            !this.mAccount.accountData.token ||
+            !this.mAccount.accountData.accessToken ||
             !this.mAccount.accountData.expire ||
             !this.mAccount.accountData.fingerprint
         ) {
@@ -829,7 +829,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         content.gameId = game_id;
         // const accountObj = JSON.parse();
-        content.userToken = this.mConfig.auth_token = this.mAccount.accountData.token; // auth_token;
+        content.userToken = this.mConfig.auth_token = this.mAccount.accountData.accessToken; // auth_token;
         content.expire = this.mConfig.token_expire = this.mAccount.accountData.expire + "";
         content.fingerprint = this.mConfig.token_fingerprint = this.mAccount.accountData.fingerprint;
         content.sceneId = sceneId;
