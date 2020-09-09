@@ -2,6 +2,7 @@ import { webworker_rpc } from "pixelpai_proto";
 import { RPCMessage, RPCExecutor, RPCExecutePacket, RPCParam, RPCRegistryPacket } from "./rpc.message";
 import { Logger } from "../../src/utils/log";
 
+export const MESSAGEKEY_INIT: string = "init";
 export const MESSAGEKEY_ADDREGISTRY: string = "addRegistry";
 export const MESSAGEKEY_RUNMETHOD: string = "runMethod";
 
@@ -10,7 +11,7 @@ export class RPCPeer {
     ["remote"]: {
         [worker: string]: {
             [context: string]: {
-                [method: string]: (callback: webworker_rpc.Executor, ...args) => {}
+                [method: string]: (callback?: webworker_rpc.Executor, ...args) => {}
             }
         };
     };// 解决编译时execute报错，并添加提示
@@ -21,11 +22,7 @@ export class RPCPeer {
     private worker: Worker;
     private registry: Map<string, webworker_rpc.IExecutor[]>;
     private channels: Map<string, MessagePort>;
-    constructor(name: string, w?: any) {
-        if (!w) {
-            Logger.getInstance().error("param <worker> error");
-            return;
-        }
+    constructor(name: string, w?: Worker) {
         if (!name) {
             Logger.getInstance().error("param <name> error");
             return;
@@ -36,6 +33,20 @@ export class RPCPeer {
         this.registry = new Map();
         this.channels = new Map();
 
+        if (w) {
+            w.onmessage = (ev: MessageEvent) => {
+                const { key } = ev.data;
+                if (key === MESSAGEKEY_INIT) {
+                    const { worker } = ev.data;
+                    const ports = ev.ports;
+                    for (let i = 0; i < ports.length; i++) {
+                        const port = ports[i];
+                        const w = worker[i];
+                        this.addLink(w, port);
+                    }
+                }
+            };
+        }
         // works in Chrome 18 but not Firefox 10 or 11
         // if (!ArrayBuffer.prototype.slice)
         //     ArrayBuffer.prototype.slice = function (start, end) {
@@ -50,6 +61,9 @@ export class RPCPeer {
     }
     // 增加worker之间的通道联系
     public addLink(worker: string, port: MessagePort) {
+        if (this.channels.has(worker)) {
+            return;
+        }
         this.channels.set(worker, port);
         // Logger.getInstance().log(this.name + " addLink:", worker);
         port.onmessage = (ev: MessageEvent) => {
@@ -258,15 +272,17 @@ export class RPCPeer {
                 addProperty(serviceProp, executor.context, {});
             }
 
-            addProperty(serviceProp[executor.context], executor.method, (callback: webworker_rpc.Executor, ...args) => {
+            addProperty(serviceProp[executor.context], executor.method, (callback?: webworker_rpc.Executor, ...args) => {
                 const params: RPCParam[] = [];
-                for (const arg of args) {
-                    const t = RPCParam.typeOf(arg);
-                    if (t === webworker_rpc.ParamType.UNKNOWN) {
-                        // Logger.getInstance().warn("unknown param type: ", arg);
-                        continue;
+                if (args) {
+                    for (const arg of args) {
+                        const t = RPCParam.typeOf(arg);
+                        if (t === webworker_rpc.ParamType.UNKNOWN) {
+                            // Logger.getInstance().warn("unknown param type: ", arg);
+                            continue;
+                        }
+                        params.push(new RPCParam(t, arg));
                     }
-                    params.push(new RPCParam(t, arg));
                 }
                 if (callback) {
                     this.execute(service, new RPCExecutePacket(this.name, executor.method, executor.context, params, callback));

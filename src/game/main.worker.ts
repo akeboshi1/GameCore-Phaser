@@ -179,7 +179,7 @@ class MainWorkerContext {
         worker.postMessage(buffer.buffer, [buffer.buffer]);
     }
 
-    @RPCFunction([webworker_rpc.ParamType.str])
+    @RPCFunction()
     public startBeat() {
         // Logger.getInstance().log("mainwork");
         worker.postMessage({ "method": "startBeat" });

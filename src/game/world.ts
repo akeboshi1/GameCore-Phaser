@@ -43,6 +43,10 @@ import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { LoadingTips } from "../loading/loading.tips";
 import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
+import { Render } from "../render/render";
+import MainWorker from "worker-loader?filename=[name].js!./main.worker";
+import HeartBeatWorker from "worker-loader?filename=[name].js!./heartBeat.worker";
+import { MESSAGEKEY_INIT } from "../../lib/rpc/rpc.peer";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -167,6 +171,28 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
 
         document.body.addEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
+
+        // workers创建
+        const renderPeer = new Render();
+        const mainWorker = new MainWorker();
+        const heartBeatWorker = new HeartBeatWorker();
+
+        const r2mChannel = new MessageChannel();
+        const r2hbChannel = new MessageChannel();
+        const m2hbChannel = new MessageChannel();
+
+        renderPeer.addLink("mainWorker", r2mChannel.port1);
+        renderPeer.addLink("heartBeatWorker", r2hbChannel.port1);
+        mainWorker.postMessage({ key: MESSAGEKEY_INIT, worker: ["render", "heartBeatWorker"] }, [r2mChannel.port2, m2hbChannel.port1]);
+        heartBeatWorker.postMessage({ key: MESSAGEKEY_INIT, worker: ["render", "mainWorker"] }, [r2hbChannel.port2, m2hbChannel.port2]);
+
+        renderPeer.onChannelReady = (w: string) => {
+            if (w === "mainWorker") {
+                // renderPeer.remote["mainWorker"].MainWorkerContext.MainWorkerMethod();
+            } else if (w === "heartBeatWorker") {
+                // renderPeer.remote["heartBeatWorker"].HeartBeatWorkerContext.HeartBeatWorkerMethod();
+            }
+        };
     }
 
     // 软键盘弹出的事件处理
