@@ -1,4 +1,4 @@
-import { IRectangle, IPoint } from "game-capsule/lib/helpers";
+import { IPoint } from "game-capsule";
 import { AnimationDataNode } from "game-capsule";
 import Position45Utils from "../../utils/position45.utils";
 import { Logger } from "../../../utils/log";

@@ -4,7 +4,7 @@ import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
 import { Logger } from "../../../utils/log";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
-import { IImage } from "game-capsule/lib/configobjects/animations";
+import { IImage } from "game-capsule";
 
 export enum ElementEditorBrushType {
     Drag,
