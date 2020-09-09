@@ -789,7 +789,7 @@ class FansRenderer extends FriendRenderer {
         const { width, height, key, dpr } = this.owner;
         const btnW = 48 * dpr;
         const btnH = 24 * dpr;
-        const button =  new NineSliceButton(this.scene, (width - btnW) * 0.5 - 18 * dpr, 0, btnW, btnH, UIAtlasKey.commonKey, "yellow_btn_normal_s", i18n.t("common.add"), dpr, 1, {
+        const button =  new NineSliceButton(this.scene, (width - btnW) * 0.5 - 18 * dpr, 0, btnW, btnH, UIAtlasKey.commonKey, "yellow_btn_normal_s", text, dpr, 1, {
             left: 10 * dpr,
             top: 6 * dpr,
             right: 10 * dpr,
