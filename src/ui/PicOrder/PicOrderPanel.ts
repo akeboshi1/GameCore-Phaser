@@ -129,8 +129,8 @@ export class PicOrderPanel extends BasePanel {
                 const scene = cell.scene, index = cell.index,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new OrderItem(this.scene, this.key, this.dpr);
-                    cellContainer.setHandler(new Handler(this, this.onSendHandler), new Handler(this, this.onItemInfoTips));
+                    cellContainer = new OrderItem(this.scene, this.mWorld, this.key, this.dpr);
+                    cellContainer.setHandler(new Handler(this, this.onSendHandler), new Handler(this, this.onRefreshOrderList), new Handler(this, this.onItemInfoTips));
                 }
                 cellContainer.setOrderData(item, index);
                 return cellContainer;
@@ -186,6 +186,9 @@ export class PicOrderPanel extends BasePanel {
     private onProgressHandler(index: number) {
         this.emit("questreward", index);
     }
+    private onRefreshOrderList() {
+        this.emit("questlist");
+    }
     private onItemInfoTips(data: op_client.ICountablePackageItem, isdown: boolean, pos: Phaser.Geom.Point) {
         this.itemtips.visible = isdown;
         this.itemtips.x = pos.x;
@@ -233,13 +236,16 @@ class OrderItem extends Phaser.GameObjects.Container {
     private deliverybg: Phaser.GameObjects.Image;
     private sendHandler: Handler;
     private tipsHandler: Handler;
+    private refreshHandler: Handler;
     private index: number;
     private orderOperator: op_pkt_def.PKT_Order_Operator;
     private timeID: any;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
+    private mworld: WorldService;
+    constructor(scene: Phaser.Scene, world: WorldService, key: string, dpr: number) {
         super(scene);
         this.key = key;
         this.dpr = dpr;
+        this.mworld = world;
         this.bg = scene.make.image({ key, frame: "order_ordinary_bg" });
         this.add(this.bg);
         this.setSize(this.bg.width, this.bg.height);
@@ -265,7 +271,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.acceleBtn = new Button(scene, UIAtlasKey.commonKey, "order_red_butt", "order_red_butt", i18n.t("order.accele"));
         this.acceleBtn.x = 20 * dpr;
         this.acceleBtn.y = 0;
-        this.acceleBtn.setTextStyle({ fontSize: 10 * dpr });
+        this.acceleBtn.setTextStyle({ fontSize: 11 * dpr });
         this.add(this.acceleBtn);
         this.acceleSpend = new ImageValue(scene, 30 * dpr, 10 * dpr, this.dpr);
         this.acceleSpend.x = this.acceleBtn.x;
@@ -293,9 +299,10 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.refreshBtn.on(CoreUI.MouseEvent.Tap, this.onRefreshHandler, this);
     }
 
-    public setHandler(send: Handler, tips: Handler) {
+    public setHandler(send: Handler, refresh: Handler, tips: Handler) {
         this.sendHandler = send;
         this.tipsHandler = tips;
+        this.refreshHandler = refresh;
     }
     public setOrderData(data: op_client.IPKT_Quest, index: number) {
         this.orderData = data;
@@ -331,6 +338,10 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.timeID = undefined;
         }
         super.destroy(fromScene);
+    }
+
+    private get serviceTimestamp() {
+        return this.mworld.clock.unixTime;
     }
     private onAcceleHandler() {
         if (this.sendHandler) this.sendHandler.runWith([this.index, this.orderOperator]);
@@ -425,7 +436,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.timeID = undefined;
         }
         const timeextu = () => {
-            let intervalTime = Math.ceil(data.deliveryDeadline - new Date().getTime() / 1000);
+            let intervalTime = Math.ceil(data.deliveryDeadline - this.serviceTimestamp / 1000);
             if (intervalTime < 0) intervalTime = 0;
             const minute = Math.floor(intervalTime / 60);
             const second = intervalTime % 60;
@@ -439,6 +450,7 @@ class OrderItem extends Phaser.GameObjects.Container {
                 timeextu();
             }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
             else {
+                if (this.timeID && this.refreshHandler) this.refreshHandler.run();
                 this.timeID = undefined;
             }
         };
@@ -508,7 +520,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.timeID = undefined;
         }
         const timeextu = () => {
-            let intervalTime = Math.ceil(data.refreshDeadline - new Date().getTime() / 1000);
+            let intervalTime = Math.ceil(data.refreshDeadline - this.serviceTimestamp / 1000);
             if (intervalTime < 0) intervalTime = 0;
             const minute = Math.floor(intervalTime / 60);
             const second = intervalTime % 60;
@@ -522,6 +534,7 @@ class OrderItem extends Phaser.GameObjects.Container {
                 timeextu();
             }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
             else {
+                if (this.timeID && this.refreshHandler) this.refreshHandler.run();
                 this.timeID = undefined;
             }
         };
