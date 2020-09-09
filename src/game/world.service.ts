@@ -58,3 +58,14 @@ export interface WorldService {
     enterGame();
     exitUser();
 }
+
+export enum GameState {
+    GAME_INIT,
+    SOCKET_CONNECT,
+    PLAYER_INIT,
+    WORLD_INIT,
+    LOAD_PI,
+    PI_COMPLETE,
+    GAME_CREATE,
+
+}

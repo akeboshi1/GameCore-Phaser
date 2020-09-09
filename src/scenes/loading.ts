@@ -16,7 +16,6 @@ export class LoadingScene extends BasicScene {
   private progressText: Phaser.GameObjects.Text;
   private mRequestCom: boolean = false;
   private tipsText: string;
-
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -102,6 +101,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public async close() {
+    this.mShow = false;
     if (!this.curtain) {
       return;
     }
@@ -110,6 +110,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public awake(data?: any) {
+    this.mShow = true;
     this.scale.on("resize", this.checkSize, this);
     this.scene.wake();
     if (!data) {
@@ -165,13 +166,13 @@ export class LoadingScene extends BasicScene {
     let audioType;
 
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio)) {
-        audioType = "Web Audio";
+      audioType = "Web Audio";
     } else if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData)) {
-        audioType = "No Audio";
+      audioType = "No Audio";
     } else {
-        audioType = "HTML5 Audio";
+      audioType = "HTML5 Audio";
     }
-    return `(${ renderType } | ${audioType})`;
+    return `(${renderType} | ${audioType})`;
   }
 
   private checkSize(size: Size) {

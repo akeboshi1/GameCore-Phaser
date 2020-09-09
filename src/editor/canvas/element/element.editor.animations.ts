@@ -1,6 +1,5 @@
 import { ElementNode, AnimationsNode, AnimationDataNode, DisplayNode } from "game-capsule";
 import { Logger } from "../../../utils/log";
-import { IPoint } from "game-capsule/lib/helpers";
 import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";

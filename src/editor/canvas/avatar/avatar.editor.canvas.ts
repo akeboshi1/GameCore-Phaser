@@ -2,7 +2,7 @@ import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { Logger } from "../../../utils/log";
 import { AvatarNode, IImage } from "game-capsule";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
-import { IAvatarSet } from "game-capsule/lib/configobjects/avatar";
+import { IAvatarSet } from "game-capsule";
 
 export class AvatarEditorCanvas extends EditorCanvas {
 

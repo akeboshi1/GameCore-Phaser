@@ -7,7 +7,7 @@ export interface IConnectListener {
 
     onDisConnected(connection?: SocketConnection): void;
 
-    onError(reason: SocketConnectionError | undefined): void;
+    onError(reason?: SocketConnectionError | undefined): void;
 }
 
 export class SocketConnectionError extends Error {
