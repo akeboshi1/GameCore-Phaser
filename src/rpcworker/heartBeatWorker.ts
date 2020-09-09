@@ -32,9 +32,9 @@ class HeartBeatWorkerContext {
     private delayTime: number = 20000;
     private reConnectCount: number = 0;
     private startDelay: any;
-
     @RPCFunction()
     public startBeat() {
+        if (this.startDelay) return;
         this.startDelay = setInterval(() => {
             if (this.reConnectCount >= 8) {
                 peer.remote[MAIN_WORKER].MainWorkerContext.startBeat(null, "reConnect");

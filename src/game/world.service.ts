@@ -20,6 +20,7 @@ export interface WorldService {
     clock: Clock;
     moveStyle: number;
     orientation: number;
+    gameState: GameState;
     readonly game: Phaser.Game;
     readonly roomManager: RoomManager;
     readonly elementStorage: IElementStorage;
@@ -34,7 +35,6 @@ export interface WorldService {
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
     readonly httpClock: HttpClock;
-
     reconnect();
     startHeartBeat();
     changeScene();
@@ -60,12 +60,21 @@ export interface WorldService {
 }
 
 export enum GameState {
+    NONE,
     GAME_INIT,
     SOCKET_CONNECT,
+    LOGIN,
     PLAYER_INIT,
     WORLD_INIT,
     LOAD_PI,
     PI_COMPLETE,
+    DECODE_PI,
     GAME_CREATE,
-
+    CHARACTER_CREATED,
+    ENTER_SCENE,
+    SCENE_CREATE,
+    PAUSE,
+    PLAYING,
+    SOCKET_DISCONNECT,
+    SOCKET_ERROR,
 }

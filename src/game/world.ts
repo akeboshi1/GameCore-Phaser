@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { WorldService } from "./world.service";
+import { WorldService, GameState } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "tooqinggamephaser";
 import { IConnectListener, SocketConnection, SocketConnectionError } from "../net/socket";
@@ -46,6 +46,7 @@ import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
+    public gameState: GameState;
     public isPause: boolean = false;
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
@@ -89,6 +90,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private _isIOS = -1;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
+        this.gameState = GameState.NONE;
         this.initWorld(config, callBack);
     }
     public initWorld(config: ILauncherConfig, callBack?: Function) {
@@ -157,6 +159,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mUiManager.addPackListener();
         this.mSoundManager.addPackListener();
         this.mPlayerDataManager.addPackListener();
+        this.gameState = GameState.GAME_INIT;
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
             // connect to game server.
@@ -209,6 +212,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onConnected(connection?: SocketConnection): void {
+        this.gameState = GameState.SOCKET_CONNECT;
         if (!this.mClock) this.mClock = new Clock(this.mConnection, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
@@ -217,6 +221,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onDisConnected(connection?: SocketConnection): void {
+        this.gameState = GameState.SOCKET_DISCONNECT;
         Logger.getInstance().log("app connectFail=====");
         if (!this.game || this.isPause) return;
         if (this.mConfig.connectFail) {
@@ -229,6 +234,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     }
 
     onError(reason?: SocketConnectionError): void {
+        this.gameState = GameState.SOCKET_ERROR;
         Logger.getInstance().log("socket error");
         if (!this.mConnection.isConnect) {
             if (this.mConfig.connectFail) {
@@ -660,6 +666,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     private clearGame(callBack?: Function): Promise<void> {
         return new Promise((resolve, reject) => {
+            if (this.mClock) {
+                this.mClock.destroy();
+                this.mClock = null;
+            }
             if (this.mGame) {
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
                 this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
@@ -761,6 +771,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.reconnect();
             return;
         }
+        this.gameState = GameState.LOGIN;
         if (this.mConfig && this.mConnection) {
             // this.mLoadingManager.start();
             // test login and verified
