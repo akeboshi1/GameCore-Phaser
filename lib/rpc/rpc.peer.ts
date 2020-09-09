@@ -1,6 +1,6 @@
 import { webworker_rpc } from "pixelpai_proto";
 import { RPCMessage, RPCExecutor, RPCExecutePacket, RPCParam, RPCRegistryPacket } from "./rpc.message";
-import { Logger } from "../../utils/log";
+import { Logger } from "../../src/utils/log";
 
 export const MESSAGEKEY_ADDREGISTRY: string = "addRegistry";
 export const MESSAGEKEY_RUNMETHOD: string = "runMethod";
@@ -21,7 +21,7 @@ export class RPCPeer {
     private worker: Worker;
     private registry: Map<string, webworker_rpc.IExecutor[]>;
     private channels: Map<string, MessagePort>;
-    constructor(name: string, w: Worker) {
+    constructor(name: string, w?: any) {
         if (!w) {
             Logger.getInstance().error("param <worker> error");
             return;

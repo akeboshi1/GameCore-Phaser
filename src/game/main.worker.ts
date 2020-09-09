@@ -1,9 +1,9 @@
-import HeartBeatWorker from "worker-loader?filename=[name].js!../rpcworker/heartBeatWorker";
-import { RPCPeer, RPCFunction } from "./rpc/rpc.peer";
+import HeartBeatWorker from "worker-loader?filename=[name].js!./heartBeat.worker";
+import { RPCPeer, RPCFunction } from "../../lib/rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
-import { SocketConnection, IConnectListener, SocketConnectionError } from "../net/socket";
+import { SocketConnection, IConnectListener, SocketConnectionError } from "../../lib/net/socket";
 import { PBpacket, Buffer } from "net-socket-packet";
-import { ServerAddress } from "../net/address";
+import { ServerAddress } from "../../lib/net/address";
 import * as protos from "pixelpai_proto";
 import { Logger } from "../utils/log";
 for (const key in protos) {

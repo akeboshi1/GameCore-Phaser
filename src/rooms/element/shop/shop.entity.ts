@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IEntity } from "../../entity";
-import { ConnectionService } from "../../../net/connection.service";
+import { ConnectionService } from "../../../../lib/net/connection.service";
 import { ShopModel } from "./shop.model";
 import { WorldService } from "../../../game/world.service";
 import { op_client } from "pixelpai_proto";

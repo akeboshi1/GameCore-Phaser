@@ -1,7 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { ConnectionService } from "../../net/connection.service";
+import { ConnectionService } from "../../../lib/net/connection.service";
 import { PlayerData } from "./PlayerData";
 import { Room, IRoomService } from "../room";
 export class PlayerDataManager extends PacketHandler {

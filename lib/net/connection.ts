@@ -3,7 +3,7 @@ import { ServerAddress } from "./address";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IConnectListener } from "./socket";
 import { Buffer } from "buffer/";
-import { Logger } from "../utils/log";
+import { Logger } from "../../src/utils/log";
 // import {op_client, op_gameconfig, op_gameconfig_01, op_gateway, op_virtual_world} from "pixelpai_proto";
 // PBpacket.addProtocol(op_client);
 // PBpacket.addProtocol(op_gateway);
@@ -11,9 +11,9 @@ import { Logger } from "../utils/log";
 // PBpacket.addProtocol(op_virtual_world);
 // PBpacket.addProtocol(op_gameconfig_01);
 // import NetWorker from "worker-loader?name=js/[hash].[name].js!./networker";
-import MainWorker from "worker-loader?filename=js/[hash].[name].js!../rpcworker/mainWorker";
+import MainWorker from "worker-loader?filename=js/[hash].[name].js!../../src/game/main.worker";
 import * as protos from "pixelpai_proto";
-import { load } from "../utils/http";
+import { load } from "../../src/utils/http";
 import { Lite } from "game-capsule";
 
 for (const key in protos) {

@@ -1,4 +1,4 @@
-import { HttpService } from "../net/http.service";
+import { HttpService } from "../../lib/net/http.service";
 import { WorldService } from "../game/world.service";
 import { AlertView, Buttons } from "../ui/components/alert.view";
 import { i18n } from "../i18n";

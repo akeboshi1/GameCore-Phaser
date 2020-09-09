@@ -1,7 +1,7 @@
 import { PacketHandler } from "net-socket-packet";
 import { IEntity } from "../../entity";
 import { WorldService } from "../../../game/world.service";
-import { ConnectionService } from "../../../net/connection.service";
+import { ConnectionService } from "../../../../lib/net/connection.service";
 import { op_client } from "pixelpai_proto";
 
 export class ItemDetailEntity extends PacketHandler implements IEntity {

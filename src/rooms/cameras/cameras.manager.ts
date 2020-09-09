@@ -1,6 +1,6 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {IRoomService} from "../room";
-import {ConnectionService} from "../../net/connection.service";
+import {ConnectionService} from "../../../lib/net/connection.service";
 import {op_editor, op_virtual_world, op_def} from "pixelpai_proto";
 import {Logger} from "../../utils/log";
 import {Rectangle45} from "../../utils/rectangle45";

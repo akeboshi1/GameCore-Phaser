@@ -1,4 +1,4 @@
-import { RPCPeer, RPCFunction } from "./rpc/rpc.peer";
+import { RPCPeer, RPCFunction } from "../../lib/rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
 
 onmessage = (e) => {

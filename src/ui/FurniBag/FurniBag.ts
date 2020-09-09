@@ -1,5 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { ConnectionService } from "../../net/connection.service";
+import { ConnectionService } from "../../../lib/net/connection.service";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { WorldService } from "../../game/world.service";
 

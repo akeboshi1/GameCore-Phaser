@@ -1,5 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { ConnectionService } from "../../net/connection.service";
+import { ConnectionService } from "../../../lib/net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { IRoomService, SpriteAddCompletedListener } from "../room";

@@ -1,7 +1,7 @@
 import { IElementManager } from "../element/element.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../net/connection.service";
+import { ConnectionService } from "../../../lib/net/connection.service";
 import { IRoomService, Room } from "../room";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../utils/pos";

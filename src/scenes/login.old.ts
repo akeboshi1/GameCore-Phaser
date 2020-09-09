@@ -1,4 +1,4 @@
-import { ConnectionService } from "../net/connection.service";
+import { ConnectionService } from "../../lib/net/connection.service";
 import InputText from "../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { PopUpTextUI } from "../ui/alert/PopUpTextUI";
 import { WorldService } from "../game/world.service";

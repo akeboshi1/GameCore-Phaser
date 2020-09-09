@@ -1,5 +1,5 @@
 import { webworker_rpc } from "pixelpai_proto";
-import { Logger } from "../../utils/log";
+import { Logger } from "../../src/utils/log";
 
 export class RPCMessage extends webworker_rpc.WebWorkerMessage {
     constructor(key: string, data: webworker_rpc.ExecutePacket | webworker_rpc.RegistryPacket) {

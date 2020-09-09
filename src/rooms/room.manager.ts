@@ -1,5 +1,5 @@
 import { WorldService } from "../game/world.service";
-import { ConnectionService } from "../net/connection.service";
+import { ConnectionService } from "../../lib/net/connection.service";
 import { Room, IRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";

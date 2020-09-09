@@ -1,8 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../net/connection.service";
-import { HttpService } from "../../net/http.service";
+import { ConnectionService } from "../../../lib/net/connection.service";
+import { HttpService } from "../../../lib/net/http.service";
 import { Logger } from "../../utils/log";
 import { PicFriendEvent } from "./PicFriendEvent";
 

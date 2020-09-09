@@ -1,4 +1,4 @@
-import { WorldService } from "../game/world.service";
+import { WorldService } from "../../src/game/world.service";
 
 export class HttpService {
     private api_root: string;

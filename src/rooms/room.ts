@@ -3,7 +3,7 @@ import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.manager";
 import { LayerManager } from "./layer/layer.manager";
 import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../net/connection.service";
+import { ConnectionService } from "../../lib/net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { ICameraService, CamerasManager } from "./cameras/cameras.manager";

@@ -2,7 +2,7 @@ import { IRoomService } from "./room";
 import { IRoomManager } from "./room.manager";
 import { ViewblockService, ViewblockManager } from "./cameras/viewblock.manager";
 import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { ConnectionService } from "../net/connection.service";
+import { ConnectionService } from "../../lib/net/connection.service";
 import { LayerManager } from "./layer/layer.manager";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { TerrainManager } from "./terrain/terrain.manager";

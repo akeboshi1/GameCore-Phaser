@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { WorldService } from "../../game/world.service";
-import { ConnectionService } from "../../net/connection.service";
+import { ConnectionService } from "../../../lib/net/connection.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 
 export class RoomList extends PacketHandler {
