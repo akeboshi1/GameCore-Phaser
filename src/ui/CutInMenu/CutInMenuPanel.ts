@@ -62,7 +62,7 @@ export class CutInMenuPanel extends BasePanel {
         this.add(this.rightPopButton);
         this.resize(width, height);
         super.init();
-        this.rightPopButton.onClickHandler();
+        this.rightPopButton.onTakeBack();
     }
 
     destroy() {
@@ -88,7 +88,7 @@ class RightPopContainer extends Phaser.GameObjects.Container {
     public isPop: boolean = false;
     private readonly dpr: number;
     private readonly key: string;
-    private minecarBtn: Phaser.GameObjects.Image;
+    private minecar: Phaser.GameObjects.Image;
     private teximg: Phaser.GameObjects.Image;
     private bgSprite: Phaser.GameObjects.Image;
     private clickHandler: Handler;
@@ -104,15 +104,21 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         this.scaleWidth = width;
         const minecarbg = this.scene.make.image({ key: this.key, frame: "minebag_bg" });
         this.bgSprite = this.scene.make.image({ key: this.key, frame: "minebag_bg_brth" }, false);
-        this.minecarBtn = this.scene.make.image({ key: this.key, frame: "minecar" });// new Button(this.scene, this.key, "minecar", "minecar");
-        this.minecarBtn.setPosition(-12 * dpr, -this.minecarBtn.height * 0.5);
+        this.minecar = this.scene.make.image({ key: this.key, frame: "minecar" });// new Button(this.scene, this.key, "minecar", "minecar");
+        this.minecar.setPosition(-12 * dpr, -this.minecar.height * 0.5);
         this.teximg = this.scene.make.image({ key: this.key, frame: "text_minebag" });
-        this.teximg.setPosition(this.minecarBtn.x, 2 * dpr);
+        this.teximg.setPosition(this.minecar.x, 2 * dpr);
         const arrow = this.scene.make.image({ key: this.key, frame: "arow" });
-        arrow.setPosition(-minecarbg.width * 0.5 + 10 * dpr, 0);
-        this.add([this.bgSprite, minecarbg, this.minecarBtn, this.teximg, arrow]);
+        // arrow.setPosition(-minecarbg.width * 0.5 + 10 * dpr, 0);
+        const arrowcon = scene.make.container(undefined, false);
+        arrowcon.setSize(25 * dpr, 31 * dpr);
+        arrowcon.add(arrow);
+        arrowcon.setPosition(-minecarbg.width * 0.5 + 10 * dpr, 0);
+        this.add([this.bgSprite, minecarbg, this.minecar, this.teximg, arrowcon]);
         minecarbg.on("pointerup", this.onClickHandler, this);
         minecarbg.setInteractive();
+        arrowcon.on("pointerup", this.onTakeBack, this);
+        arrowcon.setInteractive();
         this.setSize(minecarbg.width, minecarbg.height);
 
         this.tween = this.scene.tweens.add({
@@ -143,14 +149,16 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         this.isPop = true;
     }
     public onClickHandler() {
+        if (this.clickHandler) this.clickHandler.runWith(this.popData);
+    }
+
+    public onTakeBack() {
         if (!this.isPlaying && !this.isPop) {
             this.popAnim();
         } else if (!this.isPlaying && this.isPop) {
             this.takeback();
-            if (this.clickHandler) this.clickHandler.runWith(this.popData);
         }
     }
-
     private popAnim() {
         this.isPlaying = true;
         const posTx = this.scaleWidth - 15 * this.dpr;
@@ -161,9 +169,6 @@ class RightPopContainer extends Phaser.GameObjects.Container {
             onComplete: () => {
                 target.stop();
                 target.isPlaying = false;
-                // target.timeID = setTimeout(() => {
-                //     target.takeback();
-                // }, 3000);
             }
         });
     }
