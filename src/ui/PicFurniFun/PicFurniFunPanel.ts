@@ -11,6 +11,7 @@ import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { FramesModel } from "../../rooms/display/frames.model";
+import I18NextXhrBackend from "i18next-xhr-backend";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
     private confirmBtn: NineSliceButton;
@@ -27,6 +28,7 @@ export class PicFurniFunPanel extends BasePanel {
     private materialTipsCon: Phaser.GameObjects.Container;
     private materialTipsDes: BBCodeText;
     private tipsbg: NineSlicePatch;
+    private itemName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -89,7 +91,7 @@ export class PicFurniFunPanel extends BasePanel {
         this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width / this.scale, height / this.scale), Phaser.Geom.Rectangle.Contains);
         this.add(this.blackGraphic);
         this.content = this.scene.make.container(undefined, false);
-        const bgwidth = 295 * this.dpr, bgheight = 369 * this.dpr;
+        const bgwidth = 295 * this.dpr, bgheight = 400 * this.dpr;
         this.content.setSize(bgwidth, bgheight);
         this.add(this.content);
         this.bg = new NineSlicePatch(this.scene, 0, 0, bgwidth, bgheight, UIAtlasKey.common2Key, "bg", {
@@ -98,36 +100,41 @@ export class PicFurniFunPanel extends BasePanel {
             right: 20 * this.dpr,
             bottom: 40 * this.dpr
         });
-        this.bgicon = this.scene.make.image({ key: this.key, frame: "bg_f" });
+        this.content.add(this.bg);
         const posY = -this.bg.height * 0.5;
-        this.bgicon.y = posY + this.bgicon.height * 0.5 + 30 * this.dpr;
-        this.content.add([this.bg, this.bgicon]);
         this.titleimage = this.scene.make.image({ x: 0, y: posY + 5 * this.dpr, key: UIAtlasKey.common2Key, frame: "title" }, false);
-        const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.titleName = this.scene.make.text({
-            x: 0, y: this.titleimage.y + 2 * this.dpr, text: "沙滩躺椅",
-            style: { font: mfont, color: "#905B06" }
-        }).setOrigin(0.5, 0.5);
+            x: 0, y: this.titleimage.y + 2 * this.dpr, text: i18n.t("furni_unlock.title"),
+            style: { color: "#905B06", fontFamily: Font.EN_BOLD, bold: true, fontSize: 16 * this.dpr }
+        }).setOrigin(0.5, 0.5).setStroke("#905B06", 2);
         this.closeBtn = this.scene.make.image({ x: this.bg.width * 0.5 - this.dpr * 5, y: posY + this.dpr * 5, key: UIAtlasKey.commonKey, frame: "close" }).setScale(1.3);
         this.closeBtn.setInteractive();
         this.content.add([this.titleimage, this.titleName, this.closeBtn]);
+        this.itemName = this.scene.make.text({
+            x: 0, y: this.titleimage.y + this.titleimage.height * 0.5 + 13 * this.dpr, text: "",
+            style: { color: "#FFC51A", fontFamily: Font.DEFULT_FONT, bold: true, fontSize: 14 * this.dpr }
+        }).setStroke("#FFC51A", 4).setShadow(0, 0, "#000000", 2, true).setOrigin(0.5);
+        this.content.add(this.itemName);
+        this.bgicon = this.scene.make.image({ key: this.key, frame: "bg_f" });
+        this.bgicon.y = this.itemName.y + this.bgicon.height * 0.5 + 13 * this.dpr;
+        this.content.add([this.bg, this.bgicon]);
         this.mDetailDisplay = new DetailDisplay(this.scene);
         this.mDetailDisplay.setTexture(this.key, "bg_f");
         this.mDetailDisplay.y = this.bgicon.y;// this.bgicon.height / 2;
-        this.mDetailDisplay.scale = this.dpr/this.scale;
+        this.mDetailDisplay.scale = this.dpr / this.scale;
         this.mDetailDisplay.setSize(72 * this.dpr, 72 * this.dpr);
         this.content.add(this.mDetailDisplay);
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
         this.materialCon = this.scene.make.container(undefined, false).setSize(materialConWdith, materialConHeight);
         this.content.add(this.materialCon);
-        this.materialCon.setPosition(0, 50 * this.dpr);
+        this.materialCon.setPosition(0, -posY - materialConHeight * 0.5 - 66 * this.dpr);
         const materialTitle = this.scene.make.text({
             x: 0,
             y: -materialConHeight * 0.5 + 12 * this.dpr,
             text: i18n.t("furni_unlock.needMaterials"),
             style: {
                 color: "#253FCA",
-                fontSize: 10 * this.dpr,
+                fontSize: 12 * this.dpr,
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
@@ -139,7 +146,7 @@ export class PicFurniFunPanel extends BasePanel {
         this.materialCon.add([materialTitle, materialLine, materialLine2]);
         this.materialGameScroll = new GameScroller(this.scene, {
             x: 0,
-            y: 8 * this.dpr,
+            y: 2 * this.dpr,
             width: 240 * this.dpr,
             height: 90 * this.dpr,
             zoom: this.scale,
@@ -148,42 +155,37 @@ export class PicFurniFunPanel extends BasePanel {
             orientation: 1,
             space: 20 * this.dpr,
             valuechangeCallback: undefined,
-            celldownCallBack: (gameobject) => {
-                this.materialTipsCon.visible = true;
-                this.onMaterialItemHandler(gameobject);
-            },
             cellupCallBack: (gameobject) => {
-                this.materialTipsCon.visible = false;
+                this.onMaterialItemHandler(gameobject.itemData);
             }
         });
         this.materialCon.add(this.materialGameScroll);
-        this.materialTipsCon = this.scene.make.container(undefined, false).setPosition(0, -60 * this.dpr);
-        this.materialTipsCon.visible = false;
-        this.materialCon.add(this.materialTipsCon);
-        const tipsWidth = 121 * this.dpr;
-        const tipsHeight = 46 * this.dpr;
-        const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.commonKey, "tips_bg", {
-            left: 20 * this.dpr,
-            top: 20 * this.dpr,
-            right: 20 * this.dpr,
-            bottom: 20 * this.dpr
+        const tipsWidth = 145 * this.dpr;
+        const tipsHeight = 50 * this.dpr;
+        this.materialTipsCon = this.scene.make.container(undefined, false);
+        this.content.add(this.materialTipsCon);
+        this.materialTipsCon.setPosition(-bgwidth * 0.5 + tipsWidth * 0.5 - 5 * this.dpr, this.materialCon.y - tipsHeight * 0.5 - 20 * this.dpr);
+        const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", {
+            left: 10 * this.dpr,
+            top: 10 * this.dpr,
+            right: 10 * this.dpr,
+            bottom: 10 * this.dpr
         });
         tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);
         this.tipsbg = tipsbg;
-        const tipsText = new BBCodeText(this.scene, -28 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
+        const tipsText = new BBCodeText(this.scene, -35 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
             color: "#333333",
             fontSize: 13 * this.dpr,
             fontFamily: Font.DEFULT_FONT,
             wrap: {
-                width: 110 * this.dpr,
+                width: tipsWidth - 5 * this.dpr,
                 mode: "string"
             }
         }).setOrigin(0);
 
         this.materialTipsDes = tipsText;
         this.materialTipsCon.add([tipsbg, tipsText]);
-
-        this.confirmBtn = new NineSliceButton(this.scene, 0, -posY - 30 * this.dpr, 100 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn_over", i18n.t("furni_unlock.unlock"), this.dpr, this.scale, {
+        this.confirmBtn = new NineSliceButton(this.scene, 0, -posY - 35 * this.dpr, 100 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn_over", i18n.t("furni_unlock.unlock"), this.dpr, this.scale, {
             left: 15 * this.dpr,
             top: 15 * this.dpr,
             right: 15 * this.dpr,
@@ -191,9 +193,16 @@ export class PicFurniFunPanel extends BasePanel {
         });
         this.confirmBtn.setTextStyle({
             color: "#976400",
-            fontSize: 10 * this.dpr,
-            fontFamily: Font.DEFULT_FONT
+            fontSize: 12 * this.dpr,
+            fontFamily: Font.BOLD_FONT,
+            bold: true,
+            stroke: "#976400",
+            strokeThickness: 2,
         });
+        this.confirmBtn.setTextOffset(10 * this.dpr, 0);
+        const repairicon = this.scene.make.image({ key: this.key, frame: "repair_icon" });
+        repairicon.x = -28 * this.dpr;
+        this.confirmBtn.add(repairicon);
         this.content.add(this.confirmBtn);
         this.resize(0, 0);
         super.init();
@@ -229,7 +238,7 @@ export class PicFurniFunPanel extends BasePanel {
             resData.animations = animas;
         }
         this.mDetailDisplay.loadDisplay(resData);
-        this.titleName.text = ele.model.nickname;
+        this.itemName.text = ele.model.nickname;
         this.setMaterialItems(content.materials);
     }
 
@@ -244,6 +253,7 @@ export class PicFurniFunPanel extends BasePanel {
             this.materialGameScroll.addItem(item);
         }
         this.materialGameScroll.Sort();
+        this.onMaterialItemHandler(datas[0]);
     }
 
     private onConfirmBtnClick() {
@@ -256,34 +266,23 @@ export class PicFurniFunPanel extends BasePanel {
         this.emit("close");
     }
 
-    private onMaterialItemHandler(item: MaterialItem) {
-        const pos = item.getWorldTransformMatrix();
-        this.materialTipsCon.x = pos.tx - this.scaleWidth * 0.5;
-        this.materialTipsDes.text = this.getDesText(item.itemData);
-        const tipsHeight = this.materialTipsDes.height + 20 * this.dpr;
+    private onMaterialItemHandler(data: op_client.ICountablePackageItem) {
+        this.materialTipsDes.text = this.getDesText(data);
+        const tipsHeight = this.materialTipsDes.height + 10 * this.dpr;
         const tipsWidth = this.tipsbg.width;
         this.tipsbg.resize(tipsWidth, tipsHeight);
         this.tipsbg.y = -this.tipsbg.height * 0.5;
-        this.materialTipsDes.y = -tipsHeight + 10 * this.dpr;
+        this.materialTipsDes.y = -tipsHeight + 5 * this.dpr;
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
-        let text: string = data.name + "\n";
-        let source = i18n.t("common.source");
+        let text: string = `[stroke=#2640CA][color=#2640CA][b]${data.name}[/b][/color][/stroke]` + "\n";
+        let source = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.source")}[/color][/stroke]：`;
         source += data.source;
-        source = `[stroke=#333333][color=#333333]${source}[/color][/stroke]`;
         text += source + "\n";
-        if (data.sellingPrice) {
-            let price = i18n.t("common.sold");
-            price += `${Coin.getName(data.sellingPrice.coinType)} x ${data.sellingPrice.price}`;
-            price = `[stroke=#333333][color=#333333]${price}[/color][/stroke]`;
-            text += price + "\n";
-        }
-        if (!data.tradable) {
-            let trade = i18n.t("furni_unlock.notrading");
-            trade = `[stroke=#333333][color=#ff0000]*${trade}[/color][/stroke]`;
-            text += trade;
-        }
+        let description = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.description")}[/color][/stroke]：`;
+        description += data.des;
+        text += description;
         return text;
     }
 
@@ -305,7 +304,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
             .setOrigin(0.5).setFontSize(11 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add([bg, this.itemIcon, this.itemCount]);
         this.setSize(bg.width, bg.height);
-        this.itemCount.y = this.height * 0.5 + 10 * dpr;
+        this.itemCount.y = this.height * 0.5 + 8 * dpr;
     }
     public setItemData(data: op_client.ICountablePackageItem) {
         this.itemData = data;

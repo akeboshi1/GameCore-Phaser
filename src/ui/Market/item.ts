@@ -30,7 +30,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     }, false).setOrigin(0);
     this.mBorder.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = this.dpr;
+    this.mPropImage.scale = this.dpr * 2;
 
     this.mNickName = this.scene.make.text({
       x: 62 * this.dpr,
@@ -80,7 +80,8 @@ export class MarketItem extends Phaser.GameObjects.Container {
   setProp(content: op_client.IMarketCommodity) {
     this.mProp = content;
     if (content.icon) {
-      this.mPropImage.load(Url.getOsdRes(content.icon), this, this.onPropLoadComplete);
+      const url = Url.getOsdRes(content.icon);
+      this.mPropImage.load(url, this, this.onPropLoadComplete);
     } else {
       Logger.getInstance().error(`${content.name} : ${content.id} icon value is empty`);
     }
