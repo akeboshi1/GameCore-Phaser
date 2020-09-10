@@ -71,7 +71,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.content.setInteractive();
         this.mCategoryScroll.refreshMask();
         const pos = this.mFirendMenu.getWorldTransformMatrix();
-        this.mFirendMenu.addMask(pos.tx - 42 * this.dpr * this.scale, pos.ty, 200 * this.dpr * this.scale, 60 * this.dpr * this.scale);
+        this.mFirendMenu.addMask(pos.tx - 42 * this.dpr * this.scale, pos.ty, 200 * this.dpr * this.scale, 80 * this.dpr * this.scale);
     }
 
     public show(param?: any) {
@@ -729,7 +729,7 @@ class FriendMenu extends Menu {
     private tween: Phaser.Tweens.Tween;
     private autoCollapseTime: any;
     constructor(scene: Phaser.Scene, dpr: number, scale: number) {
-        super(scene, dpr, scale, 58 * dpr, 36 * dpr);
+        super(scene, dpr, scale, 58 * dpr, 40 * dpr);
     }
 
     register() {
@@ -801,7 +801,7 @@ class FriendMenu extends Menu {
             onComplete: () => {
                 this.operationContaienr.remove([...this.buttons], false);
                 this.operationContaienr.add(this.operation);
-                this.setSize(58 * this.mDpr, 29 * this.mDpr);
+                this.setSize(58 * this.mDpr, 40 * this.mDpr);
                 this.createBackground();
                 this.operationContaienr.addAt(this.background, 0);
                 this.operationContaienr.x = 0;

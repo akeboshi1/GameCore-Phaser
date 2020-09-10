@@ -505,6 +505,7 @@ class MainContainer extends FriendContainer {
 
     private onFtechPlayerHandler(friend: FriendData) {
         this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        this.searchInput.setBlur();
     }
 
     private onReqFollowFriendHandler(friend: FriendData) {
@@ -543,6 +544,7 @@ class MainContainer extends FriendContainer {
 
     private onShowAddFriendHandler() {
         this.emit("shwoAddFriend", FriendChannel.Search);
+        this.searchInput.setBlur();
     }
 
     private onSeachHandler() {
