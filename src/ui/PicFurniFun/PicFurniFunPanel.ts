@@ -161,7 +161,7 @@ export class PicFurniFunPanel extends BasePanel {
         });
         this.materialCon.add(this.materialGameScroll);
         const tipsWidth = 145 * this.dpr;
-        const tipsHeight = 50 * this.dpr;
+        const tipsHeight = 55 * this.dpr;
         this.materialTipsCon = this.scene.make.container(undefined, false);
         this.content.add(this.materialTipsCon);
         this.materialTipsCon.setPosition(-bgwidth * 0.5 + tipsWidth * 0.5 - 5 * this.dpr, this.materialCon.y - tipsHeight * 0.5 - 20 * this.dpr);
@@ -170,7 +170,7 @@ export class PicFurniFunPanel extends BasePanel {
             top: 10 * this.dpr,
             right: 10 * this.dpr,
             bottom: 10 * this.dpr
-        });
+        }, undefined, undefined, 2);
         tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);
         this.tipsbg = tipsbg;
         const tipsText = new BBCodeText(this.scene, -35 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
@@ -268,11 +268,11 @@ export class PicFurniFunPanel extends BasePanel {
 
     private onMaterialItemHandler(data: op_client.ICountablePackageItem) {
         this.materialTipsDes.text = this.getDesText(data);
-        const tipsHeight = this.materialTipsDes.height + 10 * this.dpr;
+        const tipsHeight = this.materialTipsDes.height + 15 * this.dpr;
         const tipsWidth = this.tipsbg.width;
         this.tipsbg.resize(tipsWidth, tipsHeight);
         this.tipsbg.y = -this.tipsbg.height * 0.5;
-        this.materialTipsDes.y = -tipsHeight + 5 * this.dpr;
+        this.materialTipsDes.y = -tipsHeight + 10 * this.dpr;
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };

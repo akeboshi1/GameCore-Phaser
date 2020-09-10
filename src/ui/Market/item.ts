@@ -30,7 +30,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     }, false).setOrigin(0);
     this.mBorder.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = this.dpr * 2;
+    this.mPropImage.scale = this.dpr;
 
     this.mNickName = this.scene.make.text({
       x: 62 * this.dpr,
