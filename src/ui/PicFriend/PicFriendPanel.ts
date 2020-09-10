@@ -16,7 +16,8 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
+import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Image;
@@ -462,13 +463,13 @@ class MainContainer extends FriendContainer {
             fontSize: 14 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         };
-        const friendsTab = new Button(this.scene, this.key, "friend_default", "friend_select", i18n.t("friendlist.friends"));
+        const friendsTab = new TabButton(this.scene, this.key, "friend_default", "friend_select", i18n.t("friendlist.friends"));
         friendsTab.y = this.height * 0.5 - 14 * this.dpr - friendsTab.height * 0.5;
         friendsTab.setTextStyle(tableFont);
-        const fansTab = new Button(this.scene, this.key, "fans_default", "fans_select", i18n.t("friendlist.fans"));
+        const fansTab = new TabButton(this.scene, this.key, "fans_default", "fans_select", i18n.t("friendlist.fans"));
         fansTab.y = friendsTab.y;
         fansTab.setTextStyle(tableFont);
-        const followsTab = new Button(this.scene, this.key, "follow_default", "follow_select", i18n.t("friendlist.follow"));
+        const followsTab = new TabButton(this.scene, this.key, "follow_default", "follow_select", i18n.t("friendlist.follow"));
         followsTab.y = friendsTab.y;
         followsTab.setTextStyle(tableFont);
         friendsTab.x = (-fansTab.width - friendsTab.width) * 0.5 - 0.67 * this.dpr;
