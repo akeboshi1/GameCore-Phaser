@@ -1,5 +1,5 @@
-import {ServerAddress} from "./address";
-import {WSWrapper} from "./transport/websocket";
+import { ServerAddress } from "./address";
+import { WSWrapper, ReadyState } from "./transport/websocket";
 import { Logger } from "../utils/log";
 
 export interface IConnectListener {
@@ -22,7 +22,7 @@ export class SocketConnectionError extends Error {
 // 实际工作在Web-Worker内的WebSocket客户端
 export class SocketConnection {
     protected mTransport: WSWrapper;
-    protected mServerAddr: ServerAddress = {host: "localhost", port: 80};
+    protected mServerAddr: ServerAddress = { host: "localhost", port: 80 };
     protected mConnectListener?: IConnectListener;
 
     constructor($listener: IConnectListener) {
@@ -59,7 +59,7 @@ export class SocketConnection {
 
     send(data: any): void {
         if (!this.mTransport) {
-            return  Logger.getInstance().error(`Empty transport.`);
+            return Logger.getInstance().error(`Empty transport.`);
         }
         this.mTransport.Send(data);
     }
@@ -73,7 +73,7 @@ export class SocketConnection {
 
     protected onConnected() {
         if (!this.mTransport) {
-            return  Logger.getInstance().error(`Empty transport.`);
+            return Logger.getInstance().error(`Empty transport.`);
         }
         this.mTransport.on("packet", this.onData);
     }
@@ -85,8 +85,9 @@ export class SocketConnection {
 
     private doConnect() {
         if (!this.mTransport) {
-            return  Logger.getInstance().error(`Empty transport.`);
+            return Logger.getInstance().error(`Empty transport.`);
         }
+        if (this.mTransport.readyState() === ReadyState.OPEN) return this.mTransport.Close();
         if (this.mServerAddr.secure !== undefined) this.mTransport.secure = this.mServerAddr.secure;
         this.mTransport.Open(this.mServerAddr.host, this.mServerAddr.port);
     }

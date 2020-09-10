@@ -182,7 +182,8 @@
     "new_friend": "新的好友",
     "new_fans": "新增粉丝",
     "lv": "等级",
-    "remove": "移除"
+    "remove": "移除",
+    "unregistered_game": "未注册游戏"
   },
   "friend_invite": {
     "refused": "拒绝",

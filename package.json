@@ -1,10 +1,10 @@
 {
     "name": "game-core",
-    "version": "1.0.354",
+    "version": "1.0.357",
     "main": "release/js/tooqing.js",
     "scripts": {
-        "dev": "webpack-dev-server --mode development && mv dist/heartBeatWorker.js dist/js/heartBeatWorker.js",
-        "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
+        "dev": "webpack-dev-server --mode development",
+        "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress && yarn mv",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
         "ver": "genversion version.js",
         "mv-dev": "mv dist/heartBeatWorker.js dist/js/heartBeatWorker.js",
@@ -44,7 +44,7 @@
         "maxrects-packer": "^2.6.0",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "simple-sha1": "^3.0.1",
-        "tooqinggamephaser": "0.1.4",
+        "tooqinggamephaser": "^0.2.2",
         "worker-loader": "^3.0.2"
     }
 }

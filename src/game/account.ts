@@ -1,7 +1,7 @@
 import { Logger } from "../utils/log";
 
 export interface IAccountData {
-    token: string;
+    accessToken: string;
     refreshToken: string;
     expire: number;
     fingerprint: string;
@@ -21,8 +21,15 @@ export class Account {
     }
 
     public setAccount(val: any) {
-        this.clear();
-        Object.assign(this.mCurAccountData, val);
+        // this.clear();
+        // Object.assign(this.mCurAccountData, val);
+        this.mCurAccountData = {
+            id: val.id,
+            fingerprint: val.fingerprint,
+            refreshToken: val.refreshToken,
+            expire: val.expire,
+            accessToken: val.token || val.accessToken
+        };
         this.saveLocalStorage();
     }
 
@@ -31,7 +38,7 @@ export class Account {
             const { newExpire, newFingerprint, newToken } = data;
             this.mCurAccountData.expire = newExpire;
             this.mCurAccountData.fingerprint = newFingerprint;
-            this.mCurAccountData.token = newToken;
+            this.mCurAccountData.accessToken = newToken;
             this.saveLocalStorage();
         }
     }
@@ -40,13 +47,13 @@ export class Account {
         if (!this.mCurAccountData) {
             return;
         }
-        const { id, fingerprint, refreshToken, expire, token } = this.mCurAccountData;
-        localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, token  }));
+        const { id, fingerprint, refreshToken, expire, accessToken } = this.mCurAccountData;
+        localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken }));
     }
 
     public clear() {
         this.mCurAccountData = {
-            token: "",
+            accessToken: "",
             expire: 0,
             fingerprint: "",
             id: "",

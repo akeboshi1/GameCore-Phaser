@@ -6,7 +6,6 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { LabelInput } from "../components/label.input";
-import { Label } from "../../../lib/rexui/lib/ui/ui-components";
 
 export class GMToolsPanel extends BasePanel {
     private background: Phaser.GameObjects.Graphics;
@@ -84,10 +83,11 @@ export class GMToolsPanel extends BasePanel {
         }).setOrigin(0, 0);
         this.command.x = -this.width * 0.5 + 20 * this.dpr;
         this.command.y = -this.height * 0.5 + 60 * this.dpr;
+        this.command.createBackground(6 * this.dpr, 10 * this.dpr);
 
-        const inputBg = this.scene.make.graphics(undefined, false);
-        inputBg.fillStyle(0xFFFFFF);
-        inputBg.fillRoundedRect(this.command.x - 6 * this.dpr, this.command.y - 6 * this.dpr, this.command.width + 12 * this.dpr, this.command.height + 12 * this.dpr, 10 * this.dpr);
+        // const inputBg = this.scene.make.graphics(undefined, false);
+        // inputBg.fillStyle(0xFFFFFF);
+        // inputBg.fillRoundedRect(this.command.x - 6 * this.dpr, this.command.y - 6 * this.dpr, this.command.width + 12 * this.dpr, this.command.height + 12 * this.dpr, 10 * this.dpr);
 
         if (!this.scene.textures.exists("gmtools_commit")) {
             graphics.clear();
@@ -136,7 +136,7 @@ export class GMToolsPanel extends BasePanel {
         this.gridtable.layout();
 
         this.closeBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
-        this.add([this.background, this.gridtable, this.closeBtn, inputBg, this.command, this.commitBtn]);
+        this.add([this.background, this.gridtable, this.closeBtn, this.command, this.commitBtn]);
         super.init();
 
         this.resize();
@@ -148,12 +148,16 @@ export class GMToolsPanel extends BasePanel {
         }
         const data = this.showData[0];
         const buttons = data.button;
-        if (buttons.length < 1) {
-            return;
+        if (buttons.length > 1) {
+            this.gridtable.setItems(buttons);
+            this.buttons = [];
+            this.add(this.buttons);
         }
-        this.gridtable.setItems(buttons);
-        this.buttons = [];
-        this.add(this.buttons);
+
+        const inputText = data.inputText;
+        if (inputText && inputText.length > 0) {
+            this.command.setData({ item: inputText[0] });
+        }
     }
 
     private onTargetUIHandler(id: number) {
@@ -168,11 +172,15 @@ export class GMToolsPanel extends BasePanel {
     }
 
     private onCommitCmdHandler() {
+        if (!this.mShowData || this.mShowData.length < 1) {
+            return;
+        }
         const text = this.command.text;
         if (!text) {
             return;
         }
-        this.emit("command", text);
+        const item = this.command.getData("item");
+        if (item && item.node) this.emit("targetUI", this.mShowData[0].id, item.node.id, text);
     }
 }
 

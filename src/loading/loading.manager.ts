@@ -34,16 +34,13 @@ export class LoadingManager {
         if (!loading) {
             sceneManager.add(LoadingScene.name, LoadingScene);
         }
-        if (loading && loading.sceneInitialize()) {
-            if (!loading.getShow()) {
-                loading.awake({
-                    world: this.world,
-                    text,
-                    callBack: this.sceneCallback.bind(this)
-                });
-            } else {
-                loading.appendProgress(text);
-            }
+        if (loading) {
+            // if (!loading.getShow()) {
+            loading.awake({
+                world: this.world,
+                text,
+                callBack: this.sceneCallback.bind(this)
+            });
         } else {
             sceneManager.start(LoadingScene.name, {
                 world: this.world,

@@ -146,7 +146,7 @@ export class HttpService {
         }
         headers = Object.assign({
             "Content-Type": "application/json",
-            "X-Pixelpai-TK": account.accountData.token
+            "X-Pixelpai-TK": account.accountData.accessToken
         }, headers);
         const data = {
             body: JSON.stringify(body),
@@ -167,7 +167,7 @@ export class HttpService {
         const data = {
             method: "GET",
             headers: {
-                "X-Pixelpai-TK": account.accountData.token
+                "X-Pixelpai-TK": account.accountData.accessToken
             }
         };
         return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());

@@ -4,7 +4,7 @@ import { Buffer } from "buffer/";
 // @ts-ignore
 const Socket: any = WebSocket || MozWebSocket;
 
-enum ReadyState {
+export enum ReadyState {
     CONNECTING = 0,
     OPEN = 1,
     CLOSING = 2,
@@ -42,6 +42,10 @@ export class WSWrapper extends EventEmitter {
             this._port = port;
         }
         this.doOpen();
+    }
+
+    public readyState(): number {
+        return this._readyState;
     }
 
     public Close() {
