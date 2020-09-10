@@ -40,10 +40,30 @@
 				"h": 188
 			}
 		},
+		"repair_icon": {
+			"frame": {
+				"x": 574,
+				"y": 191,
+				"w": 63,
+				"h": 64
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 63,
+				"h": 64
+			},
+			"sourceSize": {
+				"w": 63,
+				"h": 64
+			}
+		},
 		"sourcelist_title": {
 			"frame": {
-				"x": 1,
-				"y": 574,
+				"x": 574,
+				"y": 257,
 				"w": 229,
 				"h": 27
 			},
@@ -59,6 +79,26 @@
 				"w": 229,
 				"h": 27
 			}
+		},
+		"tips_bg": {
+			"frame": {
+				"x": 574,
+				"y": 286,
+				"w": 95,
+				"h": 102
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 95,
+				"h": 102
+			},
+			"sourceSize": {
+				"w": 95,
+				"h": 102
+			}
 		}
 	},
 	"meta": {
@@ -67,8 +107,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 763,
-			"h": 602
+			"w": 804,
+			"h": 573
 		},
 		"scale": "1"
 	}

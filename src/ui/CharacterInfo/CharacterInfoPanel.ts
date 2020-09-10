@@ -186,6 +186,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.lvCon = this.scene.make.container(undefined, false);
         this.lvCon.setSize(lvbg.width, lvbg.height);
+        this.lvCon.setPosition(-this.content.width * 0.5 + this.lvCon.width * 0.5 + 20 * this.dpr, -this.content.height * 0.5 + 70 * this.dpr);
         this.lvCon.add([lvbg, this.lvText]);
 
         const bottomWidth = 260 * this.dpr;
@@ -299,13 +300,12 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.setText(data.like + "");
         const likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
         this.likeBtn.x = likeposx - 20 * this.dpr;
-        this.lvText.text = levle + "";
+        this.lvText.text = "lv   " + levle;
         const subArr: Map<any, any[]> = new Map();
         subArr.set(CharacterOptionType.Skill, data.lifeSkills);
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
-            this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(20) + exp + "/" + nexExp);
-            this.lvCon.setPosition(this.idText.x + 58 * this.dpr, this.idText.y);
+            //  this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(20) + exp + "/" + nexExp);
             this.likeBtn.setFrame("praise_aft");
             subArr.set(CharacterOptionType.Attribute, data.properties);
             subArr.set(CharacterOptionType.Badge, data.badges);
@@ -477,7 +477,7 @@ export default class CharacterInfoPanel extends BasePanel {
         if (!this.mCharacterData) {
             return;
         }
-        switch(this.mRelation) {
+        switch (this.mRelation) {
             case FriendRelation.Friend:
             case FriendRelation.Followed:
                 this.emit("unfollow", this.mCharacterData.cid);
@@ -689,7 +689,7 @@ class Menu extends Container {
         }
         const radius = 8 * this.mDpr;
         this.background.fillStyle(0, 0.6);
-        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
+        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius });
         this.addAt(this.background, 0);
     }
 }
@@ -828,7 +828,7 @@ class FriendMenu extends Menu {
         const radius = 8 * this.mDpr;
         this.background.clear();
         this.background.fillStyle(0, 0.6);
-        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
+        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius });
     }
 
     private onTrackHandler() {
