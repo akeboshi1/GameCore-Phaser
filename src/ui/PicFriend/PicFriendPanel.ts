@@ -108,7 +108,11 @@ export default class PicFriendPanel extends BasePanel {
     }
 
     public updateFriend(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
-        this.friendContainer.updateFriends(content);
+        if (this.mShowingSubContainer) {
+            this.mShowingSubContainer.updateFriends(content);
+        } else {
+            this.friendContainer.updateFriends(content);
+        }
     }
 
     filterById(id: string) {
@@ -188,6 +192,7 @@ export default class PicFriendPanel extends BasePanel {
         this.mShowingSubContainer.on("hide", this.onHideSearchHandler, this);
         this.mShowingSubContainer.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
         this.mShowingSubContainer.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
+        this.mShowingSubContainer.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqFriendListHandler, this);
         this.content.remove(this.friendContainer);
         this.content.add(this.mShowingSubContainer);
         this.mShowingSubContainer.resize();
@@ -871,6 +876,9 @@ class SubFriendContainer extends FriendContainer {
         if (this.gridTable) this.gridTable.setItems(this.items);
     }
 
+    public updateFriends(data: any) {
+    }
+
     public fetchEventName() {
         return "";
     }
@@ -989,11 +997,31 @@ class BlackContainer extends SubFriendContainer {
         }
         const result = [];
         let followed_user = null;
+        const ids = [];
         for (const friend of data) {
             followed_user = friend.followed_user;
-            if (followed_user) result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname });
+            if (followed_user) {
+                ids.push(followed_user._id);
+                result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname });
+            }
         }
         super.setItems(result);
+        if (ids.length > 0) {
+            this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+        }
+    }
+
+    updateFriends(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+        const playerInfos = content.playerInfos;
+        let platformFriend = null;
+        for (const player of playerInfos) {
+            platformFriend = this.items.find((friend) => friend.id === player.platformId);
+            if (platformFriend) {
+                platformFriend.nickname = player.nickname;
+                if (player.level) platformFriend.lv = player.level.level;
+            }
+        }
+        if (this.gridTable) this.gridTable.setItems(this.items);
     }
 
     fetchEventName() {
