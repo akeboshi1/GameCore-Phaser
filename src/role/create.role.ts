@@ -4,6 +4,7 @@ import { CreateRoleScene } from "../scenes/create.character";
 import { CreateRolePanel } from "./create.role.panel";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
+import { RPCFunction } from "../../lib/rpc/rpc.peer";
 
 export interface ICreateRole {
   enter();
@@ -13,7 +14,7 @@ export interface ICreateRole {
 
 export class CreateRole extends PacketHandler {
   private readonly roleManager: RoleManager;
-  private createPanel: CreateRolePanel;
+  // private createPanel: CreateRolePanel;
   private world: WorldService;
   private mAvatars: op_gameconfig.IAvatar[];
   private mParam: any;
@@ -69,13 +70,14 @@ export class CreateRole extends PacketHandler {
     content.avatar = avatar;
     connection.send(packet);
   }
-
-  private onCreateErrorHandler(packet: PBpacket) {
+  private onCreateErrorHandler(buffer: Buffer) {
+    
     if (!this.createPanel) {
       return;
     }
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CREATE_ROLE_ERROR_MESSAGE = packet.content;
-    this.createPanel.showError(content.errorMsg);
+    // this.createPanel.showError(content.errorMsg);
+    Peer.remote["render"].CreatePanel.showError(null, content);
   }
 
   private onGenerateNameHandler(packet: PBpacket) {

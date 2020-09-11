@@ -44,20 +44,15 @@ import { HttpClock } from "../rooms/http.clock";
 import { LoadingTips } from "../loading/loading.tips";
 import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 import { Render } from "../render/render";
-import MainWorker from "worker-loader?filename=[name].js!./main.worker";
-import HeartBeatWorker from "worker-loader?filename=[name].js!./heartBeat.worker";
-import { MESSAGEKEY_INIT } from "../../lib/rpc/rpc.peer";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
-    public gameState: GameState;
     public isPause: boolean = false;
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
     private mClock: Clock;
     private mHttpClock: HttpClock;
     private mMoveStyle: number = 1;
-    private mConnection: ConnectionService | undefined;
     private mGame: Phaser.Game | undefined;
     private mRoomMamager: RoomManager;
     private mMouseManager: MouseManager;
@@ -92,12 +87,14 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      */
     private mUIScale: number;
     private _isIOS = -1;
+    private _peer: Render;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.gameState = GameState.NONE;
-        this.initWorld(config, callBack);
-    }
-    public initWorld(config: ILauncherConfig, callBack?: Function) {
+        // 建立render peer
+        this._peer = new Render(this);
+        // 与worker双向连接成功
+        this._peer.linkTo("mainWorker", "").onReady(() => { }, this);
         this.mCallBack = callBack;
         this.mConfig = config;
         // TODO 检测config内的必要参数如确实抛异常.
@@ -116,85 +113,26 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mScaleRatio = Math.ceil(config.devicePixelRatio || 1);
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
         const scaleW = (config.width / this.DEFAULT_WIDTH) * (config.devicePixelRatio / this.mUIRatio);
-        // const scaleH = config.height / this.DEFAULT_HEIGHT;
         this.mUIScale = scaleW;
-        // if (!config.scale_ratio) {
-        // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
-        // }
-
-        // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
 
         this._newGame();
-        this.mConnection = config.connection || new Connection(this);
-        this.mConnection.addPacketListener(this);
-
-        // add Packet listener.
-        this.addHandlerFun(
-            op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT,
-            this.onInitVirtualWorldPlayerInit
-        );
-        this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
-        this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
-        this.mGameEmitter = new Phaser.Events.EventEmitter();
-        this.mRoomMamager = new RoomManager(this);
-        this.mUiManager = new UiManager(this);
-        this.mMouseManager = new MouseManager(this);
-        this.mElementStorage = new ElementStorage();
-        this.mHttpService = new HttpService(this);
-        this.mRoleManager = new RoleManager(this);
-        this.mSoundManager = new SoundManager(this);
-        this.mLoadingManager = new LoadingManager(this);
-        this.mPlayerDataManager = new PlayerDataManager(this);
-        this.mAccount = new Account();
-        this.mAccount.enterGame(this.mConfig.game_id, this.mConfig.virtual_world_id, null, null);
-
-        initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
-
-        this.mRoleManager.register();
-        // this.mCharacterManager = new CharacterManager(this);
-        // this.mCharacterManager.register();
-
-        this.mRoomMamager.addPackListener();
-        this.mUiManager.addPackListener();
-        this.mSoundManager.addPackListener();
-        this.mPlayerDataManager.addPackListener();
         this.gameState = GameState.GAME_INIT;
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
             // connect to game server.
-            this.mConnection.startConnect(gateway);
+            this._peer.startConnect(gateway);
         }
-
+        this._peer.initWorld();
+        this.mGameEmitter = new Phaser.Events.EventEmitter();
+        initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
         document.body.addEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
-
-        // workers创建
-        const renderPeer = new Render();
-        const mainWorker = new MainWorker();
-        const heartBeatWorker = new HeartBeatWorker();
-
-        const r2mChannel = new MessageChannel();
-        const r2hbChannel = new MessageChannel();
-        const m2hbChannel = new MessageChannel();
-
-        renderPeer.addLink("mainWorker", r2mChannel.port1);
-        renderPeer.addLink("heartBeatWorker", r2hbChannel.port1);
-        mainWorker.postMessage({ key: MESSAGEKEY_INIT, worker: ["render", "heartBeatWorker"] }, [r2mChannel.port2, m2hbChannel.port1]);
-        heartBeatWorker.postMessage({ key: MESSAGEKEY_INIT, worker: ["render", "mainWorker"] }, [r2hbChannel.port2, m2hbChannel.port2]);
-
-        renderPeer.onChannelReady = (w: string) => {
-            if (w === "mainWorker") {
-                // renderPeer.remote["mainWorker"].MainWorkerContext.MainWorkerMethod();
-            } else if (w === "heartBeatWorker") {
-                // renderPeer.remote["heartBeatWorker"].HeartBeatWorkerContext.HeartBeatWorkerMethod();
-            }
-        };
     }
-
+    public render(): Render {
+        return this._peer;
+    }
     // 软键盘弹出的事件处理
     public focusoutFunc = () => {
         // isIOS函数在前面
@@ -229,52 +167,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     public destroy(): Promise<void> {
         return new Promise((reslove, reject) => {
-            this.mConnection.closeConnect();
+            this._peer.closeConnect();
             document.body.removeEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
             this.clearGame(() => {
                 reslove();
             });
         });
-    }
-
-    onConnected(connection?: SocketConnection): void {
-        this.gameState = GameState.SOCKET_CONNECT;
-        if (!this.mClock) this.mClock = new Clock(this.mConnection, this);
-        if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
-        // Logger.getInstance().info(`enterVirtualWorld`);
-        this.enterVirtualWorld();
-        // this.login();
-    }
-
-    onDisConnected(connection?: SocketConnection): void {
-        this.gameState = GameState.SOCKET_DISCONNECT;
-        Logger.getInstance().log("app connectFail=====");
-        if (!this.game || this.isPause) return;
-        if (this.mConfig.connectFail) {
-            this.onError();
-        } else {
-            this.clearGame().then(() => {
-                this.initWorld(this.mConfig, this.mCallBack);
-            });
-        }
-    }
-
-    onError(reason?: SocketConnectionError): void {
-        this.gameState = GameState.SOCKET_ERROR;
-        Logger.getInstance().log("socket error");
-        if (!this.mConnection.isConnect) {
-            if (this.mConfig.connectFail) {
-                Logger.getInstance().log("app connectFail");
-                return this.mConfig.connectFail();
-            } else {
-                this.reconnect();
-            }
-        }
-    }
-
-    onClientErrorHandler(packet: PBpacket): void {
-        const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
 
     /**
@@ -386,9 +284,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scale.stopFullscreen();
     }
 
-    public onGotoAnotherGame(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        this._createAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc);
+    public onGotoAnotherGame(gameId, worldId, sceneId, loc) {
+        this._createAnotherGame(gameId, worldId, sceneId, loc);
     }
 
     public async changeScene() {
@@ -792,47 +689,47 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
     }
 
-    private enterVirtualWorld() {
-        if (!this.mGame) {
-            this.reconnect();
-            return;
-        }
-        this.gameState = GameState.LOGIN;
-        if (this.mConfig && this.mConnection) {
-            // this.mLoadingManager.start();
-            // test login and verified
-            if (!this.mConfig.auth_token) {
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    this.login();
-                    return;
-                }
-                const account = JSON.parse(token);
-                this.mAccount.setAccount(account);
-                this.httpService.refreshToekn(account.refreshToken, account.accessToken)
-                    .then((response: any) => {
-                        if (response.code === 200) {
-                            this.mAccount.refreshToken(response);
-                            this.loginEnterWorld();
-                        } else {
-                            this.login();
-                            return;
-                        }
-                    });
-            } else {
-                // this.mGame.scene.start(LoadingScene.name, { world: this });
-                // this.mLoadingManager.start();
-                this.mAccount.setAccount({
-                    token: this.mConfig.auth_token,
-                    expire: this.mConfig.token_expire,
-                    fingerprint: this.mConfig.token_fingerprint,
-                    refreshToken: this.mAccount.accountData ? this.mAccount.accountData.refreshToken : "",
-                    id: this.mConfig.user_id,
-                });
-                this.loginEnterWorld();
-            }
-        }
-    }
+    // private enterVirtualWorld() {
+    //     if (!this.mGame) {
+    //         this.reconnect();
+    //         return;
+    //     }
+    //     this.gameState = GameState.LOGIN;
+    //     if (this.mConfig && this.mConnection) {
+    //         // this.mLoadingManager.start();
+    //         // test login and verified
+    //         if (!this.mConfig.auth_token) {
+    //             const token = localStorage.getItem("token");
+    //             if (!token) {
+    //                 this.login();
+    //                 return;
+    //             }
+    //             const account = JSON.parse(token);
+    //             this.mAccount.setAccount(account);
+    //             this.httpService.refreshToekn(account.refreshToken, account.accessToken)
+    //                 .then((response: any) => {
+    //                     if (response.code === 200) {
+    //                         this.mAccount.refreshToken(response);
+    //                         this.loginEnterWorld();
+    //                     } else {
+    //                         this.login();
+    //                         return;
+    //                     }
+    //                 });
+    //         } else {
+    //             // this.mGame.scene.start(LoadingScene.name, { world: this });
+    //             // this.mLoadingManager.start();
+    //             this.mAccount.setAccount({
+    //                 token: this.mConfig.auth_token,
+    //                 expire: this.mConfig.token_expire,
+    //                 fingerprint: this.mConfig.token_fingerprint,
+    //                 refreshToken: this.mAccount.accountData ? this.mAccount.accountData.refreshToken : "",
+    //                 id: this.mConfig.user_id,
+    //             });
+    //             this.loginEnterWorld();
+    //         }
+    //     }
+    // }
 
     private async loginEnterWorld() {
         this.mLoadingManager.start(LoadingTips.enterGame());
@@ -872,43 +769,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         content.sceneId = sceneId;
         content.loc = loc;
         this.mConnection.send(pkt);
-    }
-
-    private onInitVirtualWorldPlayerInit(packet: PBpacket) {
-        // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
-        // TODO 进游戏前预加载资源
-        const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
-        const configUrls = content.configUrls;
-        this.mMoveStyle = content.moveStyle;
-
-        this.clock.sync(-1);
-
-        this.initgameConfigUrls(configUrls);
-
-        if (!configUrls || configUrls.length <= 0) {
-            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
-            this.createGame(content.keyEvents);
-            return;
-        }
-        Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
-        let game_id = this.mAccount.gameID;
-        if (game_id.indexOf(".") > -1) {
-            game_id = game_id.split(".")[1];
-        }
-
-        const mainGameConfigUrl = this.gameConfigUrl;
-
-        this.mLoadingManager.start(LoadingTips.downloadGameConfig());
-        // this.mConnection.loadRes([mainGameConfigUrl]);
-        this.loadGameConfig(mainGameConfigUrl)
-            .then((gameConfig: Lite) => {
-                this.mElementStorage.setGameConfig(gameConfig);
-                this.createGame(content.keyEvents);
-                Logger.getInstance().debug("created game suc");
-            })
-            .catch((err: any) => {
-                Logger.getInstance().log(err);
-            });
     }
 
     private _newGame(): Phaser.Game {
@@ -980,14 +840,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mGame.device.os.desktop) {
             this.mUIScale = 1;
         }
-        if (this.mRoomMamager) this.mRoomMamager.addPackListener();
-        if (this.mUiManager) this.mUiManager.addPackListener();
-        if (this.mRoleManager) this.mRoleManager.register();
-        if (this.mSoundManager) this.mSoundManager.addPackListener();
-        if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
-        if (this.mElementStorage) {
-            this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
-        }
+        this._peer.initWorld();
         // if (this.mCharacterManager) this.mCharacterManager.register();
         return this.mGame;
     }
@@ -1009,33 +862,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
         // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
-    }
-
-    private loadGameConfig(remotePath): Promise<Lite> {
-        const configPath = ResUtils.getGameConfig(remotePath);
-        return load(configPath, "arraybuffer").then((req: any) => {
-            Logger.getInstance().log("start decodeConfig");
-            this.mLoadingManager.start(LoadingTips.parseConfig());
-            return this.decodeConfigs(req);
-        });
-    }
-
-    private decodeConfigs(req): Promise<Lite> {
-        return new Promise((resolve, reject) => {
-            const arraybuffer = req.response;
-            if (arraybuffer) {
-                try {
-                    const gameConfig = new Lite();
-                    gameConfig.deserialize(new Uint8Array(arraybuffer));
-                    Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
-                    resolve(gameConfig);
-                } catch (error) {
-                    reject(error);
-                }
-            } else {
-                reject("error");
-            }
-        });
     }
 
     private resumeScene() {

@@ -14,6 +14,7 @@ import { MouseManager } from "./mouse.manager";
 import { ISoundConfig } from "./sound.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
+import { Render } from "../render/render";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -35,6 +36,7 @@ export interface WorldService {
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
     readonly httpClock: HttpClock;
+    render(): Render;
     reconnect();
     startHeartBeat();
     changeScene();

@@ -1,18 +1,13 @@
-import { ServerAddress } from "./address";
 import { PacketHandler, PBpacket } from "net-socket-packet";
+import { ServerAddress } from "./address";
 
 export interface ConnectionService {
-    startConnect(addr: ServerAddress, keepalive?: boolean): void;
-    onFocus();
-    onBlur();
-    move(point, any);
+    connect: boolean;
+    startConnect(addr: ServerAddress, keepalive?: boolean);
     closeConnect(): void;
-    loadRes(path: string);
-    clearHeartBeat();
-    isConnect(): boolean;
     addPacketListener(listener: PacketHandler): void;
     removePacketListener(listener: PacketHandler): void;
     clearPacketListeners(): void;
-
     send(packet: PBpacket): void;
+    onData(data: ArrayBuffer);
 }

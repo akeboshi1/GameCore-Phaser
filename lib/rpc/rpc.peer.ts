@@ -19,7 +19,7 @@ export class RPCPeer {
 
     public name: string;
 
-    private worker: Worker;
+    protected worker: any;
     private registry: Map<string, webworker_rpc.IExecutor[]>;
     private channels: Map<string, MessagePort>;
     private linkListeners: Map<string, LinkListener>;
