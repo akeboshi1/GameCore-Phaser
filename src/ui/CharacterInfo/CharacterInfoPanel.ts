@@ -366,15 +366,19 @@ export default class CharacterInfoPanel extends BasePanel {
         this.setFriendRelation(FriendRelation.Null);
     }
 
-    public setFriendRelation(relation: FriendRelation, isban?: boolean) {
+    public setFriendRelation(relation: FriendRelation) {
+        if (this.isOwner) {
+            return;
+        }
         this.mRelation = relation;
         this.mFirendMenu.visible = relation === FriendRelation.Friend;
+        this.mCharacterMenu.setIsBlack(relation === FriendRelation.Blacklist);
+        this.addFriendBtn.visible = relation !== FriendRelation.Blacklist;
         if (relation === FriendRelation.Followed || relation === FriendRelation.Friend) {
             this.addFriendBtn.setText(i18n.t("friendlist.unfollow"));
         } else {
             this.addFriendBtn.setText(i18n.t("friendlist.follow"));
         }
-        this.mCharacterMenu.setIsBlack(isban);
     }
 
     public destroy() {
@@ -936,4 +940,5 @@ export enum FriendRelation {
     Friend,
     Fans,
     Followed,
+    Blacklist,
 }

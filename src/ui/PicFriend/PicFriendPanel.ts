@@ -18,6 +18,7 @@ import { LabelInput } from "../components/label.input";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { op_client } from "pixelpai_proto";
 import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
+import { Renderer } from "tooqinggamephaser";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Image;
@@ -193,6 +194,7 @@ export default class PicFriendPanel extends BasePanel {
         this.mShowingSubContainer.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
         this.mShowingSubContainer.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
         this.mShowingSubContainer.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqFriendListHandler, this);
+        this.mShowingSubContainer.on(PicFriendEvent.REQ_FRIEND_RELATION, this.onReqFriendRelationHandler, this);
         this.content.remove(this.friendContainer);
         this.content.add(this.mShowingSubContainer);
         this.mShowingSubContainer.resize();
@@ -216,6 +218,13 @@ export default class PicFriendPanel extends BasePanel {
 
     private onRendererEventHandler(event: string, args) {
         if (event) this.emit(event, args);
+    }
+
+    private onReqFriendRelationHandler(friends: FriendData[]) {
+        for (const friend of friends) {
+            friend.relation = this.friendContainer.checkRelation(friend);
+        }
+        this.mShowingSubContainer.updateFriends(friends);
     }
 }
 
@@ -364,16 +373,20 @@ class MainContainer extends FriendContainer {
         const result: FriendData[] = [];
         let target = null;
         const ids = [];
+        let relation: FriendType;
         for (const friend of data) {
             if (type === FriendChannel.Followes) {
                 target = friend.followed_user;
+                relation = FriendType.Follows;
             } else if (type === FriendChannel.Fans) {
                 target = friend.user;
+                relation = FriendType.Fans;
             } else {
                 target = friend;
+                relation = FriendType.Friend;
             }
             if (target) {
-                result.push({ type, id: target._id, nickname: target.nickname});
+                result.push({ type, id: target._id, nickname: target.nickname, relation });
                 ids.push(target._id);
             }
         }
@@ -414,6 +427,9 @@ class MainContainer extends FriendContainer {
         if (title) this.titleText.setText(title);
         const friends = this.friendDatas.get(this.channelGroup.selectedIndex);
         if (friends) this.friendNum.setText(`${friendType}: ${friends.length}`);
+        if (this.friendTabel) {
+            this.friendTabel.setT(0);
+        }
     }
 
     public filterById(id: string) {
@@ -426,6 +442,15 @@ class MainContainer extends FriendContainer {
         }
         this.showingFriends = this.showingFriends.filter((friend: FriendData) => friend.id !== id);
         this.friendTabel.setItems(this.showingFriends);
+    }
+
+    public checkRelation(friend: FriendData) {
+        const friends = this.friendDatas.get(FriendChannel.Friends);
+        const index = friends.findIndex((f) => f.id === friend.id);
+        if (index > -1) {
+            return FriendType.Friend;
+        }
+        return FriendType.Null;
     }
 
     protected draw() {
@@ -494,7 +519,7 @@ class MainContainer extends FriendContainer {
             // item.on(PicFriendEvent.UNFOLLOW, this.onReqUnfollowFriendHandler, this);
             item.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
             return item;
-        }, new Handler(this, this.onSelectItemHandler), this.createCallback.bind(this));
+        }, new Handler(this, this.onSelectItemHandler));
 
         // this.add(this.navigate);
     }
@@ -630,20 +655,17 @@ class PicFriendItem extends Container {
     private createRenderer(type: FriendChannel) {
         // TODO 改成反射
         switch(type) {
+            case FriendChannel.Fans:
+            case FriendChannel.Search:
             case FriendChannel.Friends:
+            case FriendChannel.Followes:
             case FriendChannel.NewFriend:
+            case FriendChannel.Blacklist:
                 return new FriendRenderer(this.scene, this);
             case FriendChannel.Null:
                 return new NullRenderer(this.scene, this);
             case FriendChannel.Menu:
                 return new MenuRenderer(this.scene, this);
-            case FriendChannel.Followes:
-                return new FollowRenderer(this.scene, this);
-            case FriendChannel.Fans:
-            case FriendChannel.Search:
-                return new FansRenderer(this.scene, this);
-            case FriendChannel.Blacklist:
-                return new BlacklistRenderer(this.scene, this);
         }
     }
 
@@ -738,7 +760,9 @@ class FriendRenderer implements IRenderer {
     protected nameText: Text;
     protected itemData: any;
     protected level: Text;
-    constructor(scene: Phaser.Scene, protected owner: PicFriendItem) {
+    protected addBtn: NineSliceButton;
+    protected curRelation: FriendType;
+    constructor(protected scene: Phaser.Scene, protected owner: PicFriendItem) {
         this.icon = scene.make.image({x: 7.44 * owner.dpr - owner.width * 0.5, key: owner.key, frame: "offline_head"}).setOrigin(0, 0.5).setInteractive().on("pointerup", this.onHeadhandler, this);
         this.nameText = scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * owner.dpr, y: -this.icon.height * 0.5 + 1 * owner.dpr, style: {
             fontSize: 10 * owner.dpr,
@@ -757,7 +781,11 @@ class FriendRenderer implements IRenderer {
             }
         });
 
-        owner.add([this.icon, this.nameText, this.level]);
+        this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
+        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        this.owner.add(this.addBtn);
+
+        owner.add([this.icon, this.nameText, this.level, this.addBtn]);
     }
 
     public setItemData(data: FriendData) {
@@ -765,6 +793,10 @@ class FriendRenderer implements IRenderer {
         this.nameText.text = data.nickname;
         const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : i18n.t("friendlist.unregistered_game");
         this.level.setText(lv);
+        if (this.curRelation !== data.relation) {
+            this.curRelation = data.relation;
+            this.updateRelation();
+        }
     }
 
     public destroy() {
@@ -777,19 +809,31 @@ class FriendRenderer implements IRenderer {
         }
     }
 
-    protected onHeadhandler() {
-        this.owner.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.itemData);
+    protected updateRelation() {
+        if (this.curRelation && this[this.curRelation]) {
+            this[this.curRelation]();
+        } else {
+            this.addBtn.visible = false;
+        }
     }
-}
 
-class FansRenderer extends FriendRenderer {
-    protected addBtn: NineSliceButton;
-    constructor(protected scene: Phaser.Scene, owner: PicFriendItem) {
-        super(scene, owner);
+    protected fans() {
+        this.addBtn.visible = true;
+        this.addBtn.setText(i18n.t("friendlist.follow"));
+    }
 
-        this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
-        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
-        this.owner.add(this.addBtn);
+    protected follows() {
+        this.addBtn.visible = true;
+        this.addBtn.setText(i18n.t("friendlist.unfollow"));
+    }
+
+    protected blacklist() {
+        this.addBtn.visible = true;
+        this.addBtn.setText(i18n.t("friendlist.remove"));
+    }
+
+    protected null() {
+        this.fans();
     }
 
     protected createAddBtn(text: string) {
@@ -808,6 +852,21 @@ class FansRenderer extends FriendRenderer {
             fontFamily: Font.DEFULT_FONT
         });
         return button;
+    }
+
+    protected onHeadhandler() {
+        this.owner.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.itemData);
+    }
+
+    protected onAddHandler() {
+        if (this.curRelation && this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, this.curRelation, this.itemData.id);
+        // this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
+    }
+}
+
+class FansRenderer extends FriendRenderer {
+    constructor(scene: Phaser.Scene, owner: PicFriendItem) {
+        super(scene, owner);
     }
 
     protected onAddHandler() {
@@ -938,11 +997,18 @@ class SearchContainer extends SubFriendContainer {
             return;
         }
         const result: FriendData[] = [];
+        const ids = [];
         for (const player of data) {
             const { platformId, nickname, level } = player;
             result.push({ type: this.friendType, nickname, id: platformId, lv: level.level });
         }
-        super.setItems(result);
+        this.emit(PicFriendEvent.REQ_FRIEND_RELATION, result);
+        // super.setItems(result);
+    }
+
+    updateFriends(items: any) {
+        this.items = items;
+        if (this.gridTable) this.gridTable.setItems(items);
     }
 
     protected draw() {
@@ -1004,7 +1070,7 @@ class BlackContainer extends SubFriendContainer {
             followed_user = friend.followed_user;
             if (followed_user) {
                 ids.push(followed_user._id);
-                result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname });
+                result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname, relation: FriendType.Blacklist });
             }
         }
         super.setItems(result);
@@ -1150,6 +1216,7 @@ export interface FriendData {
     nickname?: string;
     username?: string;
     menuData?: MenuData;
+    relation?: FriendType;
 }
 
 export enum FriendChannel {
@@ -1162,4 +1229,12 @@ export enum FriendChannel {
     Menu,
     NewFans,
     Null
+}
+
+export enum FriendType {
+    Null = "null",
+    Friend = "friend",
+    Fans = "fans",
+    Follows = "follows",
+    Blacklist = "blacklist"
 }

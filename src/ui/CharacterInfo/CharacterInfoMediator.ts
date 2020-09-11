@@ -109,21 +109,22 @@ export class CharacterInfoMediator extends BaseMediator {
                 if (data.length >= 1) {
                     let relation = FriendRelation.Null;
                     const isBan = data[0].ban;
+                    if (isBan) {
+                        this.mView.setFriendRelation(FriendRelation.Blacklist);
+                        return;
+                    }
                     if (data[0].followed_user === cid) {
-                        if (data[0].user === me) {
-                            relation = FriendRelation.Followed;
-                        }
+                        relation = FriendRelation.Followed;
                     } else if (data[0].followed_user === me) {
                         relation = FriendRelation.Fans;
                     }
                     if (data.length >= 2) {
                         if (data[0].user === data[1].followed_user && data[1].followed_user === data[0].user) {
                             relation = FriendRelation.Friend;
-                            // this.mView.setFriendRelation(FriendRelation.Friend, data[0].ban);
                         }
                     }
                     if (relation) {
-                        this.mView.setFriendRelation(relation, isBan);
+                        this.mView.setFriendRelation(relation);
                     }
                 } else {
                     this.mView.setFriendRelation(FriendRelation.Null);
