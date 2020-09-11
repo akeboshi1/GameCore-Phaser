@@ -4,6 +4,7 @@ import { Logger } from "../../src/utils/log";
 
 export const MESSAGEKEY_INIT: string = "init";
 export const MESSAGEKEY_ADDREGISTRY: string = "addRegistry";
+export const MESSAGEKEY_GOTREGISTRY: string = "gotRegistry";
 export const MESSAGEKEY_RUNMETHOD: string = "runMethod";
 
 // 各个worker之间通信桥梁
@@ -17,11 +18,12 @@ export class RPCPeer {
     };// 解决编译时execute报错，并添加提示
 
     public name: string;
-    public onChannelReady: (workerName: string) => any;
 
     private worker: Worker;
     private registry: Map<string, webworker_rpc.IExecutor[]>;
     private channels: Map<string, MessagePort>;
+    private linkListeners: Map<string, LinkListener>;
+
     constructor(name: string, w?: Worker) {
         if (!name) {
             Logger.getInstance().error("param <name> error");
@@ -32,17 +34,18 @@ export class RPCPeer {
         this.worker = w;
         this.registry = new Map();
         this.channels = new Map();
+        this.linkListeners = new Map();
 
         if (w) {
             w.onmessage = (ev: MessageEvent) => {
                 const { key } = ev.data;
                 if (key === MESSAGEKEY_INIT) {
-                    const { worker } = ev.data;
+                    const { workers } = ev.data;
                     const ports = ev.ports;
                     for (let i = 0; i < ports.length; i++) {
-                        const port = ports[i];
-                        const w = worker[i];
-                        this.addLink(w, port);
+                        const onePort = ports[i];
+                        const oneWorker = workers[i];
+                        this.addLink(oneWorker, onePort);
                     }
                 }
             };
@@ -59,8 +62,24 @@ export class RPCPeer {
         //         return result;
         //     }
     }
+
+    public linkTo(workerName: string, workerUrl: string): LinkListener {
+        // TODO: 添加重复创建判定
+
+        const listener = new LinkListener(this.name, workerName);
+        this.linkListeners.set(workerName, listener);
+
+        const worker = new Worker(workerUrl);
+        const channel = new MessageChannel();
+
+        worker.postMessage({ key: MESSAGEKEY_INIT, workers: [this.name] }, [channel.port2]);
+        this.addLink(workerName, channel.port1);
+
+        return listener;
+    }
+
     // 增加worker之间的通道联系
-    public addLink(worker: string, port: MessagePort) {
+    private addLink(worker: string, port: MessagePort) {
         if (this.channels.has(worker)) {
             return;
         }
@@ -76,6 +95,9 @@ export class RPCPeer {
                 case MESSAGEKEY_ADDREGISTRY:
                     this.onMessage_AddRegistry(ev);
                     break;
+                case MESSAGEKEY_GOTREGISTRY:
+                    this.onMessage_GotRegistry(ev);
+                    break;
                 case MESSAGEKEY_RUNMETHOD:
                     this.onMessage_RunMethod(ev);
                     break;
@@ -86,17 +108,6 @@ export class RPCPeer {
         };
         // post registry
         this.postRegistry(worker, new RPCRegistryPacket(this.name, RPCFunctions));
-    }
-    // 返回是否所有已连接worker准备完毕（可调用execute）。注意：未连接的worker不会包含在内
-    public isAllChannelReady(): boolean {
-        for (const w of Array.from(this.channels.keys())) {
-            if (!this.isChannelReady(w)) return false;
-        }
-        return true;
-    }
-    // 返回单个worker是否准备完毕（可调用execute）
-    public isChannelReady(worker: string): boolean {
-        return this.registry.has(worker);
     }
 
     // worker调用其他worker方法
@@ -168,9 +179,18 @@ export class RPCPeer {
         this.registry.set(packet.serviceName, packet.executors);
         this.addRegistryProperty(packet);
 
-        if (this.onChannelReady) {
-            Logger.getInstance().log("ZW-- onChannelReady ", packet.serviceName);
-            this.onChannelReady(packet.serviceName);
+        if (this.channels.has(packet.serviceName)) {
+            const port = this.channels.get(packet.serviceName);
+            port.postMessage({ key: MESSAGEKEY_GOTREGISTRY, worker: this.name });
+        }
+        if (this.linkListeners.has(packet.serviceName)) {
+            this.linkListeners.get(packet.serviceName).setPortReady(this.name);
+        }
+    }
+    private onMessage_GotRegistry(ev: MessageEvent) {
+        const { worker } = ev.data;
+        if (this.linkListeners.has(worker)) {
+            this.linkListeners.get(worker).setPortReady(worker);
         }
     }
     private onMessage_RunMethod(ev: MessageEvent) {
@@ -297,6 +317,36 @@ export class RPCPeer {
         addProperty(this.remote, service, serviceProp);
 
         // Logger.getInstance().log(this.name + "addRegistryProperty", this);
+    }
+}
+
+class LinkListener {
+    private readyFunc: () => any;
+    private port1: string = "";
+    private port2: string = "";
+    private port1Ready: boolean = false;
+    private port2Ready: boolean = false;
+
+    constructor(port1: string, port2: string) {
+        this.port1 = port1;
+        this.port2 = port2;
+    }
+
+    public onReady(f: () => any) {
+        this.readyFunc = f;
+    }
+
+    public setPortReady(port: string) {
+        if (this.port1 !== port && this.port2 !== port) return;
+
+        if (!this.port1Ready) this.port1Ready = this.port1 === port;
+        if (!this.port2Ready) this.port2Ready = this.port2 === port;
+
+        if (this.port1Ready && this.port2Ready) {
+            if (this.readyFunc) {
+                this.readyFunc();
+            }
+        }
     }
 }
 
