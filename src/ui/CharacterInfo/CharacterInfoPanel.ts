@@ -30,7 +30,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private closeBtn: Button;
     private avatar: DragonbonesDisplay;
     private content: Container;
-    private mainContent: Container;
+    private mainCon: Container;
     private lvCon: Container;
     private lvText: Text;
     private nickName: BBCodeText;
@@ -70,6 +70,8 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mSkillGrideTable.resetMask();
         this.content.setInteractive();
         this.mCategoryScroll.refreshMask();
+        const pos = this.mFirendMenu.getWorldTransformMatrix();
+        this.mFirendMenu.addMask(pos.tx - 42 * this.dpr * this.scale, pos.ty, 200 * this.dpr * this.scale, 80 * this.dpr * this.scale);
     }
 
     public show(param?: any) {
@@ -141,17 +143,22 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mBackGround.fillStyle(0x6AE2FF, 0);
         this.mBackGround.fillRect(0, 0, wid, hei);
         this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
+        this.add(this.mBackGround);
         this.bg = this.scene.make.image({ x: 0, y: 0, key: this.key, frame: "bg" });
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(this.bg.width, this.bg.height);
-        this.mainContent = this.scene.make.container(undefined, false);
-        this.mainContent.setSize(this.bg.width, this.bg.height);
+        this.add(this.content);
+        this.content.add(this.bg);
+        this.mainCon = this.scene.make.container(undefined, false);
+        this.mainCon.setSize(this.bg.width, this.bg.height);
+        this.content.add(this.mainCon);
+
         const posY = -this.bg.height * 0.5 + 43 * this.dpr;
         const mfont = `bold ${15 * this.dpr}px Source Han Sans`;
         this.labelText = this.scene.make.text({ x: 0, y: posY, text: i18n.t("player_info.title"), style: { font: mfont, bold: true, color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0);
         this.labelText.setStroke("#8F4300", 1);
         this.closeBtn = new Button(this.scene, this.commonkey, "close");
-        this.closeBtn.setPosition(this.mainContent.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
+        this.closeBtn.setPosition(this.mainCon.width * 0.5 - this.dpr * 30, posY - this.dpr * 10);
         this.likeBtn = new Button(this.scene, this.key, "praise_bef", "praise_bef", "999");
         this.likeBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT });
         this.likeBtn.text.setOrigin(0, 0.5).x += 10 * this.dpr;
@@ -164,6 +171,26 @@ export default class CharacterInfoPanel extends BasePanel {
         this.avatar.once("initialized", () => {
             this.avatar.play({ name: "idle", flip: false });
         });
+        this.mainCon.add([this.labelText, this.closeBtn, this.likeBtn, this.avatar]);
+
+        this.mFirendMenu = new FriendMenu(this.scene, this.dpr, this.scale);
+        this.mFirendMenu.x = this.bg.width * 0.5 - this.mFirendMenu.width - 14 * this.dpr;
+        this.mFirendMenu.y = -this.bg.height * 0.5 + 200 * this.dpr;
+        this.mCharacterMenu = new CharacterMenu(this.scene, this.dpr, this.scale);
+        this.mCharacterMenu.x = this.bg.width * 0.5 - this.mCharacterMenu.width - 14 * this.dpr;
+        this.mCharacterMenu.y = -this.bg.height * 0.5 + 100 * this.dpr;
+        this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 26 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
+            left: 8 * this.dpr,
+            top: 8 * this.dpr,
+            right: 8 * this.dpr,
+            bottom: 10 * this.dpr
+        });
+        this.mExitBtn.setTextStyle({
+            fontSize: 10 * this.dpr,
+            fontFamily: Font.DEFULT_FONT
+        });
+
+        this.mainCon.add([this.mFirendMenu, this.mCharacterMenu, this.mExitBtn]);
 
         const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
         const nickPosY = Math.round(this.bg.height * 0.5 - 324 * this.dpr) + 30 * this.dpr;
@@ -186,13 +213,47 @@ export default class CharacterInfoPanel extends BasePanel {
         this.lvText = this.scene.make.text({ x: 0, y: 0, text: "lv 98", style: { color: "#996600", fontSize, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
         this.lvCon = this.scene.make.container(undefined, false);
         this.lvCon.setSize(lvbg.width, lvbg.height);
+        this.lvCon.setPosition(-this.content.width * 0.5 + this.lvCon.width * 0.5 + 20 * this.dpr, -this.content.height * 0.5 + 90 * this.dpr);
         this.lvCon.add([lvbg, this.lvText]);
 
+        this.mainCon.add([this.nickName, this.nickEditor, line1, line2, line3, this.titleName, this.lvCon]);
+
         const bottomWidth = 260 * this.dpr;
-        const bottomHeight = 204 * this.dpr;
-        this.bottomCon = this.scene.make.container(undefined, false).setSize(bottomWidth, bottomHeight);
-        this.bottomCon.setPosition(0, (this.mainContent.height - bottomHeight) * 0.5 - 30 * this.dpr);
+        const bottomHeight = 210 * this.dpr;
+        this.bottomCon = this.scene.make.container(undefined, false);
+        this.bottomCon.setSize(bottomWidth, bottomHeight);
+        this.bottomCon.setPosition(0, this.bg.height * 0.5 - bottomHeight * 0.5 - 30 * this.dpr);
+        this.mainCon.add(this.bottomCon);
+
         this.bottombg = this.scene.make.graphics(undefined, false);
+        const scrollHeight = 32 * this.dpr;
+        const scrollY = -bottomHeight * 0.5 + scrollHeight * 0.5 - 3 * this.dpr;
+        this.mCategoryScroll = new GameScroller(this.scene, {
+            x: 0,
+            y: scrollY,
+            width: bottomWidth,
+            height: scrollHeight,
+            zoom: this.scale,
+            orientation: 1,
+            dpr: this.dpr,
+            space: 10 * this.dpr,
+            cellupCallBack: (gameobject) => {
+                this.onSelectSubCategoryHandler(gameobject);
+            }
+        });
+
+        const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
+        const capW = propFrame.width + 5 * this.dpr;
+        const capH = propFrame.height + 8 * this.dpr;
+        const gridX = 0, gridwidth = (this.bottomCon.width), gridheight = 200 * this.dpr;
+        const gridY = scrollY + scrollHeight * 0.5 + gridheight * 0.5;
+        this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
+            return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr);
+        }, new Handler(this, this.onSelectItemHandler));
+        const attrHeigth = 150 * this.dpr;
+        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY, gridwidth - 30 * this.dpr, attrHeigth, this.key, this.dpr);
+        this.bottomCon.add([this.bottombg, this.mCategoryScroll, this.mSkillGrideTable, this.mAttrPanel]);
+
         const bottomBtnPosx = - 60 * this.dpr;
         const bottomBtnPosy = this.bottomCon.height * 0.5 - 20 * this.dpr;
         this.addFriendBtn = new NineSliceButton(this.scene, 0, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.key, "button_g", i18n.t("player_info.add_friend"), this.dpr, this.scale, {
@@ -216,60 +277,10 @@ export default class CharacterInfoPanel extends BasePanel {
         //     bottom: 12 * this.dpr
         // });
 
-        this.mFirendMenu = new FriendMenu(this.scene, this.dpr, this.scale);
-        this.mFirendMenu.x = this.bg.width * 0.5 - this.mFirendMenu.width - 14 * this.dpr;
-        this.mFirendMenu.y = -this.bg.height * 0.5 + 200 * this.dpr;
-
-        this.mCharacterMenu = new CharacterMenu(this.scene, this.dpr, this.scale);
-        this.mCharacterMenu.x = this.bg.width * 0.5 - this.mCharacterMenu.width - 14 * this.dpr;
-        this.mCharacterMenu.y = -this.bg.height * 0.5 + 100 * this.dpr;
-
-        this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 26 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
-            left: 8 * this.dpr,
-            top: 8 * this.dpr,
-            right: 8 * this.dpr,
-            bottom: 10 * this.dpr
-        });
-        this.mExitBtn.setTextStyle({
-            fontSize: 10 * this.dpr,
-            fontFamily: Font.DEFULT_FONT
-        });
         this.addFriendBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#000000" });
         this.privaCharBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
         // this.tradeBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ffffff" });
-        this.bottomCon.add([this.bottombg, this.addFriendBtn, this.privaCharBtn]);
-        this.mainContent.add([this.closeBtn, this.likeBtn, this.labelText, line1, line2, line3, this.nickName, this.nickEditor, this.idText, this.titleName, this.lvCon, this.bottomCon, this.mCharacterMenu, this.mFirendMenu]);
-        this.mainContent.add(this.avatar);
-        this.content.add(this.bg);
-        this.content.add(this.mainContent);
-        this.mainContent.add(this.mExitBtn);
-        this.add([this.mBackGround, this.content]);
-        const scrollY = 54 * this.dpr;
-        const scrollHeight = 75 * this.dpr;
-        this.mCategoryScroll = new GameScroller(this.scene, {
-            x: 0,
-            y: scrollY,
-            width: bottomWidth,
-            height: scrollHeight,
-            zoom: this.scale,
-            orientation: 1,
-            dpr: this.dpr,
-            cellupCallBack: (gameobject) => {
-                this.onSelectSubCategoryHandler(gameobject);
-            }
-        });
-        this.content.add(this.mCategoryScroll);
-        const propFrame = this.scene.textures.getFrame(this.key, "skill_bg");
-        const capW = propFrame.width + 5 * this.dpr;
-        const capH = propFrame.height + 2 * this.dpr;
-        const gridX = 0, gridwidth = (this.bottomCon.width - 10 * this.dpr), gridheight = 150 * this.dpr;
-        const gridY = scrollY + scrollHeight * 0.5 + 34 * this.dpr;
-        this.mSkillGrideTable = this.createGrideTable(gridX, gridY, gridwidth, gridheight, capW, capH, () => {
-            return new CharacterOwnerItem(this.scene, 0, 0, this.key, this.dpr);
-        }, new Handler(this, this.onSelectItemHandler));
-        const attrHeigth = 150 * this.dpr;
-        this.mAttrPanel = new CharacterAttributePanel(this.scene, gridX, gridY + 15 * this.dpr, 260 * this.dpr, attrHeigth, this.key, this.dpr);
-        this.content.add(this.mAttrPanel);
+        this.bottomCon.add([this.addFriendBtn, this.privaCharBtn]);
         this.content.visible = false;
         this.resize(wid, hei);
         super.init();
@@ -299,50 +310,55 @@ export default class CharacterInfoPanel extends BasePanel {
         this.likeBtn.setText(data.like + "");
         const likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
         this.likeBtn.x = likeposx - 20 * this.dpr;
-        this.lvText.text = levle + "";
+        this.lvText.text = "lv " + levle;
+        this.idText.setText("(52365404)");
         const subArr: Map<any, any[]> = new Map();
         subArr.set(CharacterOptionType.Skill, data.lifeSkills);
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
-            this.idText.setText(this.getRichLabel(i18n.t("player_info.player_lv")) + this.getspaceStr(20) + exp + "/" + nexExp);
-            this.lvCon.setPosition(this.idText.x + 58 * this.dpr, this.idText.y);
             this.likeBtn.setFrame("praise_aft");
             subArr.set(CharacterOptionType.Attribute, data.properties);
             subArr.set(CharacterOptionType.Badge, data.badges);
-            //   subArr.set(CharacterOptionType.Title, data.titles);
             this.addFriendBtn.visible = false;
             this.privaCharBtn.visible = false;
-            // this.tradeBtn.visible = false;
             this.mFirendMenu.visible = false;
             this.mExitBtn.visible = true;
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height);
-            this.mSkillGrideTable.setSize(this.mSkillGrideTable.width, 200 * this.dpr);
-            // this.mSkillGrideTable.setPosition();
-            this.mSkillGrideTable.refreshPos(this.mSkillGrideTable.x, this.mSkillGrideTable.y + 26 * this.dpr);
+            const gridHeight = 200 * this.dpr;
+            this.mSkillGrideTable.setSize(this.mSkillGrideTable.width, gridHeight);
+            const gridx = 0, gridy = this.mCategoryScroll.y + gridHeight * 0.5 + 0 * this.dpr;
+            this.mSkillGrideTable.refreshPos(gridx, gridy);
             this.mSkillGrideTable.setColumnCount(3);
             this.isOwner = true;
             this.mCharacterMenu.visible = false;
+            this.mAttrPanel.setSize(this.mAttrPanel.width, gridHeight);
+            this.mAttrPanel.y = gridy + 15 * this.dpr;
+            this.mAttrPanel.space = 20 * this.dpr;
         } else {
             const remark = (data.remark ? data.remark : i18n.t("player_info.note_nickname"));
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
-            // this.idText.setText(`(${cid})`);
-            this.idText.setText("(52365404)");
-            this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainContent.height * 0.5 + 100 * this.dpr);
+            this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainCon.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
+            subArr.set(CharacterOptionType.Attribute, data.properties);
             subArr.set(CharacterOptionType.Badge, data.badges);
-            // subArr.set(CharacterOptionType.Avatar, data.avatar);
             this.addFriendBtn.visible = !data.friend;
             this.privaCharBtn.visible = data.friend;
-            // this.tradeBtn.visible = true;
             this.mExitBtn.visible = false;
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
             this.bottombg.fillRect(-this.bottomCon.width * 0.5, -this.bottomCon.height * 0.5, this.bottomCon.width, this.bottomCon.height - 55 * this.dpr);
+            const gridHeight = 150 * this.dpr;
+            this.mSkillGrideTable.setSize(this.mSkillGrideTable.width, gridHeight);
+            const gridx = 0, gridy = this.mCategoryScroll.y + gridHeight * 0.5 + 0 * this.dpr;
+            this.mSkillGrideTable.refreshPos(gridx, gridy);
             this.mSkillGrideTable.setColumnCount(2);
             this.isOwner = false;
             this.mCharacterMenu.visible = true;
+            this.mAttrPanel.setSize(this.mAttrPanel.width, gridHeight);
+            this.mAttrPanel.y = gridy + 15 * this.dpr;
+            this.mAttrPanel.space = 10 * this.dpr;
         }
         this.idText.x = this.nickName.x + this.nickName.width * (1 - this.nickName.originX) + 8 * this.dpr;
         this.mFirendMenu.visible = false;
@@ -402,7 +418,6 @@ export default class CharacterInfoPanel extends BasePanel {
                 callback.runWith(cell);
             }
         });
-        this.content.add(grid);
         return grid;
     }
 
@@ -477,7 +492,7 @@ export default class CharacterInfoPanel extends BasePanel {
         if (!this.mCharacterData) {
             return;
         }
-        switch(this.mRelation) {
+        switch (this.mRelation) {
             case FriendRelation.Friend:
             case FriendRelation.Followed:
                 this.emit("unfollow", this.mCharacterData.cid);
@@ -502,7 +517,7 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private onEditorPanelHideHandler() {
-        this.mainContent.visible = true;
+        this.mainCon.visible = true;
         this.remove(this.editorPanel);
         this.editorPanel.off("editorHide", this.onEditorPanelHideHandler, this);
         this.editorPanel.destroy();
@@ -514,7 +529,7 @@ export default class CharacterInfoPanel extends BasePanel {
         this.avatar.visible = value;
         this.mCategoryScroll.visible = value;
         this.mSkillGrideTable.visible = value;
-        this.mainContent.visible = value;
+        this.mainCon.visible = value;
 
     }
 
@@ -667,6 +682,7 @@ class CharacterOwnerItem extends Container {
 
 class Menu extends Container {
     protected background: Phaser.GameObjects.Graphics;
+    protected maskGraphic: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, protected mDpr: number, protected mScale: number, width: number, height: number) {
         super(scene);
         this.setSize(width, height);
@@ -679,6 +695,15 @@ class Menu extends Container {
     public unregister() {
     }
 
+    public addMask(x: number, y: number, width: number, height: number) {
+        if (!this.maskGraphic) {
+            this.maskGraphic = this.scene.make.graphics(undefined, false);
+        }
+        this.maskGraphic.x = x;
+        this.maskGraphic.y = y;
+        this.maskGraphic.fillRect(-width * 0.5, -height * 0.5, width, height);
+        this.setMask(this.maskGraphic.createGeometryMask());
+    }
     protected draw() {
         this.createBackground();
     }
@@ -687,9 +712,9 @@ class Menu extends Container {
         if (!this.background) {
             this.background = this.scene.make.graphics(undefined, false);
         }
-        const radius = 8 * this.mDpr;
-        this.background.fillStyle(0, 0.6);
-        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
+        const radius = 3 * this.mDpr;
+        this.background.fillStyle(0x001D9F, 0.2);
+        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius });
         this.addAt(this.background, 0);
     }
 }
@@ -704,7 +729,7 @@ class FriendMenu extends Menu {
     private tween: Phaser.Tweens.Tween;
     private autoCollapseTime: any;
     constructor(scene: Phaser.Scene, dpr: number, scale: number) {
-        super(scene, dpr, scale, 58 * dpr, 29 * dpr);
+        super(scene, dpr, scale, 58 * dpr, 40 * dpr);
     }
 
     register() {
@@ -776,7 +801,7 @@ class FriendMenu extends Menu {
             onComplete: () => {
                 this.operationContaienr.remove([...this.buttons], false);
                 this.operationContaienr.add(this.operation);
-                this.setSize(58 * this.mDpr, 29 * this.mDpr);
+                this.setSize(58 * this.mDpr, 40 * this.mDpr);
                 this.createBackground();
                 this.operationContaienr.addAt(this.background, 0);
                 this.operationContaienr.x = 0;
@@ -825,10 +850,10 @@ class FriendMenu extends Menu {
         if (!this.background) {
             this.background = this.scene.make.graphics(undefined, false);
         }
-        const radius = 8 * this.mDpr;
+        const radius = 3 * this.mDpr;
         this.background.clear();
-        this.background.fillStyle(0, 0.6);
-        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius});
+        this.background.fillStyle(0x001D9F, 0.2);
+        this.background.fillRoundedRect(0, 0, this.width, this.height, { tl: radius, tr: 0, br: 0, bl: radius });
     }
 
     private onTrackHandler() {
@@ -867,7 +892,7 @@ class CharacterMenu extends Menu {
     private addBlacklistBtn: NineSliceButton;
     private isBlack: boolean;
     constructor(scene: Phaser.Scene, dpr: number, scale: number) {
-        super(scene, dpr, scale, 58 * dpr, 38 * dpr);
+        super(scene, dpr, scale, 58 * dpr, 36 * dpr);
     }
 
     public register() {

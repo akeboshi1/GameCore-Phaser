@@ -20,7 +20,8 @@ export class SelectedElement {
     setElement(display: FramesDisplay | DragonbonesDisplay) {
         if (this.mDisplay) {
             this.mDisplay.hideRefernceArea();
-            this.mDisplay.showNickname("");
+            // this.mDisplay.showNickname();
+            if (this.mDisplay.element) this.mDisplay.element.hideNickname();
             this.mSprite = undefined;
         }
         this.mDisplay = display;
@@ -49,7 +50,6 @@ export class SelectedElement {
         }
         if (this.mDisplay.parentContainer) {
             this.mDisplay.hideRefernceArea();
-            this.mDisplay.showNickname("");
         }
         this.mDisplay = null;
         this.mSprite = undefined;
@@ -62,6 +62,10 @@ export class SelectedElement {
         const baseLoc = this.mDisplay.baseLoc;
         this.mEffecte.x = this.mDisplay.x + baseLoc.x;
         this.mEffecte.y = this.mDisplay.y + baseLoc.y - (this.mDisplayHeight >> 1);
+        const ele = this.mDisplay.element;
+        if (ele) {
+            ele.update();
+        }
     }
 
     setDisplayPos(x: number, y: number) {

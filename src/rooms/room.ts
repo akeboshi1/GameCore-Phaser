@@ -89,10 +89,6 @@ export interface IRoomService {
 
     addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
 
-    addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]);
-
-    addMouseListen();
-
     getElement(id: number): IElement;
 
     update(time: number, delta: number): void;
@@ -297,10 +293,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.layerManager.addToSceneToUI(element);
     }
 
-    public addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]) {
-        this.layerManager.addToUI(element);
-    }
-
     public resize(width: number, height: number) {
         this.mScaleRatio = this.mWorld.scaleRatio;
         if (this.layerManager) this.layerManager.resize(width, height);
@@ -342,10 +334,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
         return Position45.transformTo45(p, this.mMiniSize);
-    }
-
-    public addMouseListen() {
-        this.layerManager.addMouseListen();
     }
 
     public getElement(id: number): IElement {

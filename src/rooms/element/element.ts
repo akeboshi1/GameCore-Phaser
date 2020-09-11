@@ -16,6 +16,7 @@ import { ShopEntity } from "./shop/shop.entity";
 import { DisplayObject, DisplayField } from "../display/display.object";
 import { AI } from "../action/AI";
 import { Buffer } from "buffer/";
+import { Font } from "../../utils/font";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -53,6 +54,8 @@ export interface IElement {
 
     model: ISprite;
 
+    update();
+
     setModel(model: ISprite);
 
     updateModel(model: op_client.ISprite);
@@ -74,6 +77,8 @@ export interface IElement {
     showEffected(displayInfo: IFramesModel);
 
     showNickname();
+
+    hideNickname();
 
     scaleTween();
 
@@ -168,6 +173,7 @@ export class Element extends BlockObject implements IElement {
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mDisplay: DisplayObject | undefined;
     protected mBubble: BubbleContainer;
+    protected mFollowObjects: Map<any, FollowObject>;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
@@ -341,6 +347,18 @@ export class Element extends BlockObject implements IElement {
         return this.mDisplay;
     }
 
+    public update() {
+        if (this.mBubble) {
+            this.mBubble.follow(this);
+        }
+        if (this.mBlockable) {
+            this.roomService.updateBlockObject(this);
+        }
+        if (this.mFollowObjects) {
+            this.mFollowObjects.forEach((follow) => follow.update());
+        }
+    }
+
     public move(moveData: op_client.IMoveData) {
         if (!this.mElementManager) {
             return; // Logger.getInstance().error(`Element::move - Empty element-manager.`);
@@ -499,10 +517,34 @@ export class Element extends BlockObject implements IElement {
         this.mBubble.destroy();
         this.mBubble = null;
     }
+
     public showNickname() {
-        if (this.mDisplay && this.model) {
-            this.mDisplay.showNickname(this.model.nickname);
+        if (!this.mDisplay || !this.model) {
+            return;
         }
+        const ratio = this.mRoomService.world.scaleRatio;
+        let follow = this.getFollowObject(FollowEnum.Nickname);
+        let nickname = null;
+        if (!follow || !follow.object) {
+            nickname = this.scene.make.text({
+                style: {
+                    fontSize: 12 * ratio,
+                    fontFamily: Font.DEFULT_FONT
+                }
+            }).setOrigin(0.5).setStroke("0x0", 2 * ratio);
+            follow = new FollowObject(nickname, this.mDisplay, ratio);
+            follow.setOffset(0, -84);
+            this.addFollowObject(FollowEnum.Nickname, follow);
+        } else {
+            nickname = follow.object;
+        }
+        nickname.text = this.mModel.nickname;
+        follow.update();
+        if (this.mDisplay.parentContainer) this.roomService.addToSceneUI(nickname);
+    }
+
+    public hideNickname() {
+        this.removeFollowObject(FollowEnum.Nickname);
     }
 
     public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
@@ -624,6 +666,11 @@ export class Element extends BlockObject implements IElement {
             this.mAi.destroy();
             this.mAi = null;
         }
+        if (this.mFollowObjects) {
+            this.mFollowObjects.forEach((follow) => follow.destroy());
+            this.mFollowObjects.clear();
+            this.mFollowObjects = undefined;
+        }
         // if (this.concomitants) {
         //     for (const ele of this.concomitants) {
         //         ele.destroy();
@@ -742,7 +789,19 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
+        if (this.mFollowObjects) {
+            this.mFollowObjects.forEach((follow) => {
+                if (follow.object) room.addToSceneUI(<any> follow.object);
+            });
+        }
         this.setDepth(depth);
+    }
+
+    protected removeDisplay() {
+        super.removeDisplay();
+        if (this.mFollowObjects) {
+            this.mFollowObjects.forEach((follow) => follow.remove());
+        }
     }
 
     protected setDepth(depth: number) {
@@ -800,14 +859,7 @@ export class Element extends BlockObject implements IElement {
             // }
             this.setDepth(0);
             this.mMoveData.tweenLastUpdate = now;
-            if (this.mBubble) {
-                this.mBubble.follow(this);
-            }
-            // if (this.mDisplay) this.mDisplay.emit("posChange", this.scene);
-            if (this.mBlockable) {
-                this.roomService.updateBlockObject(this);
-                // this.roomService.addBlockObject()
-            }
+            this.update();
         }
     }
 
@@ -903,4 +955,73 @@ export class Element extends BlockObject implements IElement {
                 break;
         }
     }
+
+    protected addFollowObject(key: FollowEnum, obj: FollowObject) {
+        if (!this.mFollowObjects) {
+            this.mFollowObjects = new Map();
+        }
+        this.mFollowObjects.set(key, obj);
+    }
+
+    protected removeFollowObject(key: FollowEnum) {
+        if (!this.mFollowObjects) return;
+        const follow = this.mFollowObjects.get(key);
+        if (follow) {
+            follow.destroy();
+            this.mFollowObjects.delete(key);
+        }
+    }
+
+    protected getFollowObject(key: FollowEnum): FollowObject {
+        if (!this.mFollowObjects) {
+            return;
+        }
+        return this.mFollowObjects.get(key);
+    }
+}
+
+export class FollowObject {
+    private mObject: Phaser.GameObjects.Components.Transform;
+    private mTarget: Phaser.GameObjects.Components.Transform | Pos;
+    private mDpr: number;
+    private mOffset: Phaser.Geom.Point;
+    constructor(object: Phaser.GameObjects.Components.Transform, target: Phaser.GameObjects.Components.Transform | Pos, dpr: number = 1) {
+        this.mDpr = dpr;
+        this.mOffset = new Phaser.Geom.Point();
+        this.mObject = object;
+        this.mTarget = target;
+    }
+
+    setOffset(x: number, y: number) {
+        this.mOffset.setTo(x, y);
+    }
+
+    update() {
+        if (!this.mTarget || !this.mObject) {
+            return;
+        }
+        this.mObject.x = (this.mTarget.x + this.mOffset.x) * this.mDpr;
+        this.mObject.y = (this.mTarget.y + this.mOffset.y) * this.mDpr;
+    }
+
+    remove() {
+        if (!this.mObject) {
+            return;
+        }
+        const display = <any> this.mObject;
+        if (display.parentContainer) display.parentContainer.remove(display);
+    }
+
+    destroy() {
+        if (this.mObject) (<any> this.mObject).destroy();
+        this.mObject = undefined;
+    }
+
+    get object() {
+        return this.mObject;
+    }
+}
+
+export enum FollowEnum {
+    Nickname
 }

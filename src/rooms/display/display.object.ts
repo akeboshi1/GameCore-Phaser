@@ -117,20 +117,6 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         super.destroy(fromScene);
     }
 
-    public showNickname(val: string) {
-        if (!this.mNickname) {
-            this.mNickname = this.scene.make.text({ style: { font: Font.YAHEI_14_BOLD } }, false).setOrigin(0.5, 0.5);
-            this.mNickname.setStroke("#0", 2);
-            if (this.mAntial) {
-                this.mNickname.setShadow(2, 2, "#0", 4, true, true);
-            }
-            this.flagContainer.add(this.mNickname);
-            this.addChildMap("nickname", this.mNickname);
-        }
-        this.mNickname.setText(val);
-        this.layouFlag();
-    }
-
     public setDisplayBadges(cards: op_def.IBadgeCard[]) {
         if (!this.mBadges) this.mBadges = [];
         else this.clearBadges();

@@ -23,7 +23,6 @@ export interface ElementDisplay extends Phaser.GameObjects.Container {
     fadeIn(callback?: () => void);
     fadeOut(callback?: () => void);
 
-    showNickname(val: string);
     setDisplayBadges(cards: op_def.IBadgeCard[]);
     showRefernceArea();
     hideRefernceArea();

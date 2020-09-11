@@ -1,7 +1,6 @@
 import { ElementDisplay } from "../display/element.display";
 import { IRoomService, Room } from "../room";
 import { GridLayer } from "./grid.layer";
-import { Logger } from "../../utils/log";
 
 export class LayerManager {
     // ================ 背景层
@@ -45,11 +44,6 @@ export class LayerManager {
      */
     protected mSceneUILayer: Phaser.GameObjects.Container;
 
-    /**
-     * ui层(该层不跟随相机移动)
-     */
-    protected mUILayer: Phaser.GameObjects.Container;
-
     protected mMiddleLayer: Phaser.GameObjects.Container;
 
     private mScene: Phaser.Scene;
@@ -88,11 +82,7 @@ export class LayerManager {
 
         this.mAtmosphere = this.mScene.add.container(0, 0);
 
-        // ==========UI层
-
         this.mSceneUILayer = this.mScene.add.container(0, 0);
-
-        this.mUILayer = this.mScene.add.container(0, 0).setScrollFactor(0);
         // this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
@@ -124,10 +114,6 @@ export class LayerManager {
         this.mSceneUILayer.add(child);
     }
 
-    public addToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
-        this.mUILayer.add(child);
-    }
-
     public addToAtmosphere(child: Phaser.GameObjects.GameObject) {
         this.mAtmosphere.add(child);
     }
@@ -142,10 +128,6 @@ export class LayerManager {
         this.mTileLayer.setScale(zoom);
         this.mMiddleLayer.setScale(zoom);
         this.mSurfaceLayer.setScale(zoom);
-    }
-
-    public addMouseListen() {
-        // this.mGroundClickLayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
     }
 
     public sortSurface() {
@@ -215,7 +197,6 @@ export class LayerManager {
         this.clearLayer(this.mGroundLayer);
         this.clearLayer(this.mSurfaceLayer);
         this.clearLayer(this.mUGroundLayer2);
-        this.clearLayer(this.mUILayer);
         this.clearLayer(this.mAtmosphere);
         this.mTileLayer.destroy(true);
     }

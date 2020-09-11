@@ -43,11 +43,12 @@
     "sold": "Sell",
     "add": "Add",
     "remove": "Remove",
-    "source": "Source:",
+    "source": "Source",
     "all": "All",
     "search": "search",
     "tips": "tips",
-    "offline": "Your account is logged in at another location and you have been forced to go offline"
+    "offline": "Your account is logged in at another location and you have been forced to go offline",
+    "description": "Description"
   },
   "player_info": {
     "title": "Personal Data",
@@ -115,7 +116,8 @@
     "repair": "D: REPAIR",
     "needMaterials": "Materials",
     "sold": "D: Price",
-    "notrading": "D: Not Trading"
+    "notrading": "D: Not Trading",
+    "title": "REPAIR"
   },
   "room_upgrade": {
     "clicktocontinue": "Click to continue"

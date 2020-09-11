@@ -68,4 +68,9 @@ export namespace PicFriendEvent {
      * Server返回的搜索结果
      */
     export const SEARCH_RESULT: string = "searchResult";
+
+    /**
+     * 请求好友关系
+     */
+    export const REQ_FRIEND_RELATION: string = "reqFriendRelation";
 }
