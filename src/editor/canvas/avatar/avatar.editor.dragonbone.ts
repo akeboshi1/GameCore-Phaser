@@ -5,6 +5,7 @@ import * as url from "url";
 import { AvatarDirEnum, IAvatarSet } from "game-capsule";
 import { Logger } from "../../../utils/log";
 import { AvatarEditorEmitType } from "./avatar.editor.canvas";
+import { BlendModes } from "tooqinggamephaser";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
@@ -47,6 +48,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "weap_barm",
         "shld_barm"
     ];
+    private readonly DEFAULTSCALEGAMESIZE = 86;
+    private readonly ARMATUREHEIGHT = 61;
+    private readonly ARMATUREBOTTOMAREA = 0.32;
 
     private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
 
@@ -63,6 +67,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mLeftGenerateShopIconData: IAvatarSet[] = [];
     private mGenerateShopIconSize: { width: number, height: number } = null;
     private mReplaceDisplayTimeOutID = null;
+    private mArmatureBottomArea: number = 0;
 
     constructor(scene: Phaser.Scene, webHomePath: string, emitter: Phaser.Events.EventEmitter) {
         super(scene);
@@ -148,10 +153,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 this.setBaseSets(this.MODELSETS);
                 this.replaceDisplay()
                     .then(() => {
+                        const gameWidth = this.scene.game.scale.width;
+                        const gameHeight = this.scene.game.scale.height;
                         const rt = this.scene.make.renderTexture({ x: 0, y: 0, width, height }, false);
                         this.mArmatureDisplay.scaleY *= -1;
-                        rt.draw(this.mArmatureDisplay, this.mArmatureDisplay.x, 30);
-                        // snapshot
+                        rt.draw(this.mArmatureDisplay, this.mArmatureDisplay.x, this.mArmatureBottomArea);
                         rt.snapshot((img: HTMLImageElement) => {
                             this.mArmatureDisplay.scaleY *= -1;
                             // reverse parts
@@ -159,9 +165,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                             this.replaceDisplay()
                                 .then(() => {
                                     resolve(img.src);
-                                    Logger.getInstance().log("ZW-- generateShopIcon: ", img);
+                                    Logger.getInstance().log("ZW-- generateShopIcon: ", img.src);
                                 });
-                        }, "image/png", 1);
+                        });
                     })
                     .catch(() => {
                         reject(null);
@@ -189,7 +195,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private loadDragonbone() {
-        const root = "assets/avatar/";
+        const root = "resources/dragonbones/";
         const dbName = this.DRAGONBONENAME;
         this.scene.load.dragonbone(
             dbName,
@@ -208,11 +214,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         if (this.mArmatureDisplay) {
             this.mArmatureDisplay.destroy();
         }
+        const gameHeight = this.scene.game.scale.height;
+        this.mArmatureBottomArea = this.ARMATUREBOTTOMAREA * (gameHeight - this.ARMATUREHEIGHT * gameHeight / this.DEFAULTSCALEGAMESIZE);
         this.mArmatureDisplay = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME);
         this.mArmatureDisplay.animation.play(this.mCurAnimationName);
-        this.mArmatureDisplay.scale = 2;
+        this.mArmatureDisplay.scale = gameHeight / this.DEFAULTSCALEGAMESIZE;
         this.mArmatureDisplay.x = this.scene.scale.width >> 1;
-        this.mArmatureDisplay.y = this.scene.scale.height - 30;
+        this.mArmatureDisplay.y = this.scene.scale.height - this.mArmatureBottomArea;
         this.add(this.mArmatureDisplay);
 
         this.reloadParts();
@@ -305,7 +313,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.cleanUp();
         const resources = this.getResourcesByDir(this.mCurDir);
         for (const resource of resources) {
-            this.loadPart(resource, url.resolve(this.mWebHomePath, resource));
+            const path = url.resolve(this.mWebHomePath, resource);
+            this.loadPart(resource, path);
+            Logger.getInstance().log("ZW-- loadPart: ", path);
         }
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.replaceDisplay, this);
         this.scene.load.start();
@@ -357,7 +367,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             this.mReplaceDisplayTimeOutID = setTimeout(() => {
                 if (this.mRunningBatchGenerateShopIcon) this.generateShopIconAndEmit();
                 resolve(true);
-            }, 1000);
+            }, 100);
         });
     }
 
@@ -491,5 +501,33 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 this.mEmitter.emit(AvatarEditorEmitType.Shop_Icon_Generated, { id: this.mSets[0].id, url: data });
                 this.batchStep();
             });
+    }
+
+    private resizedataURL(datas: string, wantedWidth: number, wantedHeight: number): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            // We create an image to receive the Data URI
+            const img = document.createElement("img");
+
+            // When the event "onload" is triggered we can resize the image.
+            img.onload = () => {
+                // We create a canvas and get its context.
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                // We set the dimensions at the wanted size.
+                canvas.width = wantedWidth;
+                canvas.height = wantedHeight;
+
+                // We resize the image with the canvas method drawImage();
+                ctx.drawImage(img, 0, 0, wantedWidth, wantedHeight);
+
+                const dataURI = canvas.toDataURL("image/png", 1);
+
+                resolve(dataURI);
+            };
+
+            // We put the Data URI in the image's src attribute
+            img.src = datas;
+        });
     }
 }
