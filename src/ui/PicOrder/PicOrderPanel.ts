@@ -138,7 +138,7 @@ export class PicOrderPanel extends BasePanel {
         };
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
-        this.goldImageValue = new ImageValue(this.scene, 50 * this.dpr, 14 * this.dpr, this.dpr);
+        this.goldImageValue = new ImageValue(this.scene, 50 * this.dpr, 14 * this.dpr, this.key, this.dpr);
         this.goldImageValue.setFrameValue("", this.key, "order_precious");
         this.goldImageValue.setTextStyle({
             color: "#144B99", fontSize: 10 * this.dpr, bold: true,
@@ -273,11 +273,11 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.acceleBtn.y = 0;
         this.acceleBtn.setTextStyle({ fontSize: 11 * dpr });
         this.add(this.acceleBtn);
-        this.acceleSpend = new ImageValue(scene, 30 * dpr, 10 * dpr, this.dpr);
+        this.acceleSpend = new ImageValue(scene, 30 * dpr, 10 * dpr, this.key, this.dpr);
         this.acceleSpend.x = this.acceleBtn.x;
         this.acceleSpend.y = this.acceleBtn.y - this.acceleBtn.height * 0.5 - 10 * dpr;
         this.add(this.acceleSpend);
-        this.calcuTime = new ImageValue(scene, 30 * dpr, 10 * dpr, dpr);
+        this.calcuTime = new ImageValue(scene, 30 * dpr, 10 * dpr, this.key, dpr);
         this.add(this.calcuTime);
         this.calcuTime.setTextStyle({
             color: "#144B99", fontSize: 10 * dpr, bold: true,
@@ -407,11 +407,11 @@ class OrderItem extends Phaser.GameObjects.Container {
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr, this.dpr);
+                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, this.dpr, this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath = "iv_coin");
+            item.setFrameValue(`x${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
             item.setTextStyle({ color: questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "#ffffff" : "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
@@ -462,11 +462,11 @@ class OrderItem extends Phaser.GameObjects.Container {
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr, this.dpr);
+                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, this.dpr, this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath = "iv_coin");
+            item.setFrameValue(`x${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
             item.setTextStyle({ color: "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
@@ -529,7 +529,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.calcuTime.setFrameValue(timetext, this.key, "order_time");
             this.calcuTime.resetSize();
             this.calcuTime.x = this.acceleBtn.x;
-            this.acceleSpend.setFrameValue(minute + "", this.key, "order_diamond");
+            this.acceleSpend.setFrameValue(minute + "", this.key, "iv_diamond_s");
             if (intervalTime > 0) this.timeID = setTimeout(() => {
                 timeextu();
             }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
@@ -539,6 +539,14 @@ class OrderItem extends Phaser.GameObjects.Container {
             }
         };
         timeextu();
+    }
+
+    private getIconName(url: string) {
+        const texturepath = url;
+        const lastindex = texturepath.lastIndexOf("/");
+        const lastindex2 = texturepath.lastIndexOf(".");
+        const frame = texturepath.slice(lastindex + 1, lastindex2);
+        return frame;
     }
     private hideAllElement() {
         this.sendBtn.visible = false;
@@ -632,11 +640,11 @@ class ImageValue extends Phaser.GameObjects.Container {
     private dpr: number;
     private icon: Phaser.GameObjects.Image;
     private value: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, offsetx: number = 0) {
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, offsetx: number = 0) {
         super(scene);
         this.dpr = dpr;
         this.setSize(width, height);
-        this.icon = scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" });
+        this.icon = scene.make.image({ key, frame: "iv_coin_s" });
         this.value = scene.make.text({ x: 0, y: offsetx, text: "10", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0, 0.5);
         this.add([this.icon, this.value]);
