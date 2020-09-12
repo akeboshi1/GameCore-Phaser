@@ -80,7 +80,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
   setProp(content: op_client.IMarketCommodity) {
     this.mProp = content;
     if (content.icon) {
-      const url = Url.getOsdRes(content.icon);
+      const url = "https://osd-alpha.tooqing.com/avatar/model/test07/5cc3fffb3a00751e798a239f.png";// Url.getOsdRes(content.icon);
       this.mPropImage.load(url, this, this.onPropLoadComplete);
     } else {
       Logger.getInstance().error(`${content.name} : ${content.id} icon value is empty`);
