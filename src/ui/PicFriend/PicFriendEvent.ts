@@ -15,11 +15,6 @@ export namespace PicFriendEvent {
     export const UNFOLLOW: string = "unfollow";
 
     /**
-     * 添加黑名单
-     */
-    export const BanUser: string = "banUser";
-
-    /**
      * 移除黑名单
      */
     export const REMOVE_BAN_USER: string = "removeBanUser";

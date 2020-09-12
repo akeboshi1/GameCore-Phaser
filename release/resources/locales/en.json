@@ -112,7 +112,7 @@
     "daily": "[daily]"
   },
   "furni_unlock": {
-    "unlock": "Unlock",
+    "unlock": "REPAIR",
     "repair": "D: REPAIR",
     "needMaterials": "Materials",
     "sold": "D: Price",

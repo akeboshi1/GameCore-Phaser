@@ -775,13 +775,13 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mConfig && this.mConnection) {
             // this.mLoadingManager.start();
             // test login and verified
+            const token = localStorage.getItem("token");
+            const account = token ? JSON.parse(token) : null;
             if (!this.mConfig.auth_token) {
-                const token = localStorage.getItem("token");
-                if (!token) {
+                if (!account) {
                     this.login();
                     return;
                 }
-                const account = JSON.parse(token);
                 this.mAccount.setAccount(account);
                 this.httpService.refreshToekn(account.refreshToken, account.accessToken)
                     .then((response: any) => {
@@ -800,7 +800,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     token: this.mConfig.auth_token,
                     expire: this.mConfig.token_expire,
                     fingerprint: this.mConfig.token_fingerprint,
-                    refreshToken: this.mAccount.accountData ? this.mAccount.accountData.refreshToken : "",
+                    refreshToken: account ? account.refreshToken : "",
                     id: this.mConfig.user_id,
                 });
                 this.loginEnterWorld();

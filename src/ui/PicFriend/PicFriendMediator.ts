@@ -5,6 +5,7 @@ import { WorldService } from "../../game/world.service";
 import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";
 import { PicFriend } from "./PicFriend";
 import { PicFriendEvent } from "./PicFriendEvent";
+import { FriendType } from "./PicFriendPanel";
 
 export class PicFriendMediator extends BaseMediator {
     protected mView: PicFriendPanel;
@@ -28,10 +29,9 @@ export class PicFriendMediator extends BaseMediator {
             this.mView = new PicFriendPanel(this.scene, this.world);
             this.mView.on("hide", this.onHidePanel, this);
             this.mView.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
-            this.mView.on(PicFriendEvent.UNFOLLOW, this.onUnfollowHandler, this);
-            this.mView.on(PicFriendEvent.FOLLOW, this.onFollowHandler, this);
-            this.mView.on(PicFriendEvent.BanUser, this.onBanUserHandler, this);
-            this.mView.on(PicFriendEvent.REMOVE_BAN_USER, this.onRemoveBanUserHandler, this);
+            this.mView.on(FriendType.Follows, this.onUnfollowHandler, this);
+            this.mView.on(FriendType.Fans, this.onFollowHandler, this);
+            this.mView.on(FriendType.Blacklist, this.onRemoveBanUserHandler, this);
             this.mView.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
             this.mView.on(PicFriendEvent.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
             this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
@@ -79,11 +79,6 @@ export class PicFriendMediator extends BaseMediator {
         });
     }
 
-    private getBanlist() {
-        this.picFriend.getBanlist().then((response) => {
-        });
-    }
-
     private getFans() {
         this.picFriend.getFans().then((response) => {
             const data = response.data;
@@ -120,15 +115,14 @@ export class PicFriendMediator extends BaseMediator {
         });
     }
 
-    private onBanUserHandler(fuid: string) {
-        this.world.httpService.banUser(fuid).then(() => {
-            this.mView.filterById(fuid);
-        });
-    }
-
-    private onRemoveBanUserHandler(fuid: string) {
-        this.world.httpService.removeBanUser(fuid).then((response) => {
-            this.mView.filterById(fuid);
+    private onRemoveBanUserHandler(args) {
+        if (!args || args.length < 1) {
+            return;
+        }
+        this.world.httpService.removeBanUser(args[0]).then((response: any) => {
+            if (response.code === 201) {
+                this.mView.filterById(args[0]);
+            }
         });
     }
 
