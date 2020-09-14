@@ -230,6 +230,7 @@
     "title": "WORK",
     "vim": "VIM",
     "worktimes": "WORKTIME",
-    "salary": "SALARY"
+    "salary": "SALARY",
+    "attri": "*{{name}}need more than{{value}}to take this job"
   }
 }
