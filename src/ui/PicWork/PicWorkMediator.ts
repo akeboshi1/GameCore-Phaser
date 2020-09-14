@@ -55,7 +55,7 @@ export class PicWorkMediator extends BaseMediator {
     }
     get playerInfo() {
         if (!this.mPlayerInfo) {
-            const med = <PicaMainUIMediator>(this.world.uiManager.getMediator("PicaMainUI"));
+            const med = <PicaMainUIMediator>(this.world.uiManager.getMediator("PicaMainUIMediator"));
             if (med) {
                 this.mPlayerInfo = med.playerInfo;
             }

@@ -62,17 +62,30 @@ export class CutInMenuPanel extends BasePanel {
         this.add(this.rightPopButton);
         this.resize(width, height);
         super.init();
-        this.rightPopButton.onTakeBack();
+        this.opneButton();
     }
 
     destroy() {
         super.destroy();
     }
-
+    public opneButton() {
+        this.rightPopButton.onTakeBack();
+        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
+        const button = data.button[0];
+        if (button.text === "work") {
+            this.rightPopButton.setIconFrame("work");
+        } else if (button.text === "minecar") {
+            this.rightPopButton.setIconFrame("minecar");
+        }
+    }
     private onRightClickHandler() {
         const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
-        // this.emit("rightButton", data.id, data.button[0].node.id);
-        this.emit("openmed", "MineCar");
+        const button = data.button[0];
+        if (button.text === "work") {
+            this.emit("openmed", "PicWork");
+        } else if (button.text === "minecar") {
+            this.emit("openmed", "MineCar");
+        }
     }
 
     private getActivityBounds() {
@@ -130,7 +143,9 @@ class RightPopContainer extends Phaser.GameObjects.Container {
     public setClickHandler(handler: Handler) {
         this.clickHandler = handler;
     }
-
+    public setIconFrame(frame: string) {
+        this.minecar.setFrame(frame);
+    }
     public setPopData(data: any) {
         this.popData = data;
     }

@@ -152,7 +152,7 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowFamilyHandler() {
-    this.emit("showPanel", "PicWork");
+    this.emit("showPanel", "PicOrder");
   }
   private onShowGoHomeHandler() {
     this.emit("goHome");
