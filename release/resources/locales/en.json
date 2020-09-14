@@ -225,5 +225,11 @@
     "accele": "ACCELERATE",
     "receive": "RECEIVE",
     "deliverying": "DELIVERYING..."
+  },
+  "work": {
+    "title": "WORK",
+    "vim": "VIM",
+    "worktimes": "WORKTIME",
+    "salary": "SALARY"
   }
 }

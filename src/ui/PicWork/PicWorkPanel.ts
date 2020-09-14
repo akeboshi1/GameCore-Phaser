@@ -145,7 +145,7 @@ export class PicWorkPanel extends BasePanel {
 
     public setWorkDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
         const datas = content.jobs;
-        this.mGameScroll.getItemList().length = 0;
+        this.mGameScroll.clearItems(false);
         for (const item of this.workItems) {
             (<WorkItem>item).visible = false;
         }
@@ -182,9 +182,10 @@ export class PicWorkPanel extends BasePanel {
         if (this.selectItem) this.selectItem.setExtend(false);
         gameobject.setExtend(true);
         this.selectItem = gameobject;
+        this.mGameScroll.Sort(true);
     }
-    private onSendHandler(index: number, orderOperator: op_pkt_def.PKT_Order_Operator) {
-        this.emit("changeorder", index, orderOperator);
+    private onSendHandler(id: string) {
+        this.emit("questwork", id);
     }
 
     private onItemInfoTips(data: op_client.ICountablePackageItem, isdown: boolean, pos: Phaser.Geom.Point) {
@@ -242,26 +243,28 @@ class WorkItem extends Phaser.GameObjects.Container {
         this.topCon = scene.make.container(undefined, false);
         this.add(this.topCon);
         this.topCon.setSize(width, height);
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasKey.commonKey, "bg_default", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, this.key, "bg_default", {
             left: 6 * this.dpr,
             top: 0 * this.dpr,
             bottom: 0 * this.dpr,
             right: 6 * dpr
         });
         this.headIcon = new DynamicImage(scene, 0, 0);
-        this.title = scene.make.text({ x: -this.width * 0.5 + 40 * dpr, y: -height * 0.5 - 20 * dpr, text: "", style: { color: "#ffffff", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.title = scene.make.text({ x: -this.width * 0.5 + 60 * dpr, y: -height * 0.5 + 5 * dpr, text: "", style: { color: "#ffffff", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.salaryvalue = new ImageValue(scene, 60 * dpr, 20 * dpr, this.key, this.dpr);
+        this.salaryvalue.setFrameValue("", UIAtlasKey.commonKey, "iv_coin");
         this.salaryvalue.x = this.width * 0.5 - 30 * dpr;
-        this.salaryLabel.y = -this.height * 0.5 + 10 * dpr;
-        this.salaryLabel = scene.make.text({ x: this.salaryvalue.x - this.salaryvalue.width * 0.5 - 5 * dpr, y: this.salaryLabel.y, text: i18n.t("work.salary") + ":", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
-        this.worklabel = scene.make.text({ x: -this.width * 0.5 + 40 * dpr, y: this.height * 0.5 - 10 * dpr, text: "", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.salaryvalue.y = -this.height * 0.5 + 10 * dpr;
+        this.salaryLabel = scene.make.text({ x: this.salaryvalue.x - this.salaryvalue.width * 0.5 - 5 * dpr, y: this.salaryvalue.y, text: i18n.t("work.salary") + ":", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.salaryLabel.setOrigin(1, 0.5);
+        this.worklabel = scene.make.text({ x: -this.width * 0.5 + 60 * dpr, y: this.height * 0.5 - 12 * dpr, text: "", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.worklabel.setOrigin(0, 0.5);
         this.topCon.add([this.bg, this.headIcon, this.title, this.salaryvalue, this.salaryLabel, this.worklabel]);
 
         const bottomHeight = 46 * dpr;
         this.bottomCon = scene.make.container(undefined, false);
         this.bottomCon.setSize(width, bottomHeight);
-        this.workbg = new NineSlicePatch(this.scene, 0, 0, this.width, bottomHeight, UIAtlasKey.commonKey, "bg_a_unfold", {
+        this.workbg = new NineSlicePatch(this.scene, 0, 0, this.width, bottomHeight, this.key, "bg_a_unfold", {
             left: 6 * this.dpr,
             top: 0 * this.dpr,
             bottom: 0 * this.dpr,
@@ -273,8 +276,8 @@ class WorkItem extends Phaser.GameObjects.Container {
             bottom: 14 * this.dpr,
             right: 14 * dpr
         });
-        this.workBtn.x = this.width * 0.5 - this.workBtn.width * 0.5 - 5 * dpr;
-        this.workBtn.setTextStyle({ fontSize: 10 * dpr });
+        this.workBtn.x = 0;
+        this.workBtn.setTextStyle({ fontSize: 12 * dpr, color: "#996600", bold: true });
         this.bottomCon.add([this.workbg, this.workBtn]);
         this.workBtn.on(CoreUI.MouseEvent.Tap, this.onWorkHandler, this);
     }
@@ -285,23 +288,38 @@ class WorkItem extends Phaser.GameObjects.Container {
     }
     public setJobData(data: op_client.IPKT_Quest) {
         this.jobData = data;
+        const url = Url.getOsdRes(data.display.texturePath);
+        this.headIcon.load(url, this, () => {
+            this.headIcon.scale = 1;
+            this.headIcon.scaleX = 45 * this.dpr / this.headIcon.displayHeight;
+            this.headIcon.scaleY = this.headIcon.scaleX;
+            this.headIcon.x = -this.width * 0.5 + this.headIcon.displayWidth * 0.5 + 10 * this.dpr;
+        });
+        this.title.text = "服务员";// data.name;
+        let rewardTex = "0";
+        if (data.rewards) {
+            const countRange = data.rewards[0].countRange;
+            rewardTex = `${countRange.start}~${countRange.start}`;
+        }
+        this.salaryvalue.setText(rewardTex);
+        this.worklabel.text = data.detail;
         const matrr = data.targets;
         for (const item of this.imageValues) {
             item.visible = false;
         }
-        let posx = -this.width * 0.5 + 60 * this.dpr;
+        let posx = -this.width * 0.5 + 55 * this.dpr;
         for (let i = 0; i < matrr.length; i++) {
             let item: PointerImageValue;
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new PointerImageValue(this.scene, 80 * this.dpr, 15 * this.dpr, this.key, this.dpr);
-                this.add(item);
+                item = new PointerImageValue(this.scene, 35 * this.dpr, 15 * this.dpr, this.key, this.dpr);
+                this.topCon.add(item);
                 this.imageValues.push(item);
                 item.setHandler(new Handler(this, this.onTipsandler));
             }
-            const url = Url.getOsdRes(matrr[i].display.texturePath);
-            item.setUrlValue(url, matrr[i].count);
+            const tempurl = Url.getOsdRes(matrr[i].display.texturePath);
+            item.setUrlValue(tempurl, matrr[i].count);
             item.visible = true;
             item.x = posx + item.width * 0.5;
             item.y = 0;
@@ -319,11 +337,13 @@ class WorkItem extends Phaser.GameObjects.Container {
             this.setSize(this.width, height);
             this.topCon.y = -height * 0.5 + this.topCon.height * 0.5;
             this.bottomCon.y = this.topCon.y + this.topCon.height * 0.5 + this.bottomCon.height * 0.5;
+            this.bg.setFrame("bg_click");
         } else {
             this.remove(this.bottomCon);
             const height = this.topCon.height;
             this.setSize(this.width, height);
             this.topCon.y = 0;
+            this.bg.setFrame("bg_default");
         }
     }
     destroy(fromScene?: boolean) {
@@ -331,7 +351,7 @@ class WorkItem extends Phaser.GameObjects.Container {
     }
 
     private onWorkHandler() {
-        if (this.sendHandler) this.sendHandler.runWith(this.jobData);
+        if (this.sendHandler) this.sendHandler.runWith(this.jobData.id);
     }
     private onTipsandler(item: PointerImageValue) {
         if (this.tipsHandler) this.tipsHandler.runWith(item.imageData);
@@ -375,7 +395,7 @@ class ImageValue extends Phaser.GameObjects.Container {
     }
 
     protected create() {
-        this.icon = this.scene.make.image({ key: this.key, frame: "iv_coin_s" });
+        this.icon = this.scene.make.image(undefined);
         this.value = this.scene.make.text({ x: 0, y: this.offsetx, text: "10", style: { color: "#ffffff", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0, 0.5);
         this.add([this.icon, this.value]);
@@ -401,7 +421,7 @@ class PointerImageValue extends ImageValue {
         this.value.text = value;
         this.icon.load(url, this, () => {
             this.icon.scale = 1;
-            this.icon.scaleY = this.icon.displayHeight / 14 * this.dpr;
+            this.icon.scaleY = 14 * this.dpr / this.icon.displayHeight;
             this.icon.scaleX = this.icon.scaleY;
             this.value.x = this.icon.x + this.icon.displayWidth * 0.5 + 10 * this.dpr;
             this.resetSize();
@@ -478,7 +498,7 @@ class ProgressItem extends Phaser.GameObjects.Container {
                 height: height - 4 * dpr,
                 config: {
                     top: 0 * dpr,
-                    left:7 * dpr,
+                    left: 7 * dpr,
                     right: 7 * dpr,
                     bottom: 0 * dpr,
                 },
@@ -493,7 +513,7 @@ class ProgressItem extends Phaser.GameObjects.Container {
         this.imgvalue = new ImageValue(scene, this.width - 20 * dpr, this.height, key, dpr);
         this.imgvalue.y = dpr;
         this.add(this.imgvalue);
-        this.imgvalue.setTextStyle({ fontFamily: Font.BOLD_FONT });
+        this.imgvalue.setTextStyle({ fontSize: 10 * dpr, fontFamily: Font.NUMBER });
         this.title = scene.make.text({ x: -this.progress.width * 0.5 - 3 * dpr, y: 0, text: title, style: { color: "#6A7AFF", fontSize: 9 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.title.setOrigin(1, 0.5);
         this.add(this.title);

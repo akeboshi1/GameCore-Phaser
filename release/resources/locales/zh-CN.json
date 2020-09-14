@@ -225,5 +225,11 @@
     "accele": "加速",
     "receive": "领取",
     "deliverying": "送货中..."
+  },
+  "work": {
+    "title": "打 工",
+    "vim": "精力值",
+    "worktimes": "打工次数",
+    "salary": "报酬"
   }
 }
