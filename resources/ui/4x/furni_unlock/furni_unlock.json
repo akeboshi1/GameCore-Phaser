@@ -40,10 +40,30 @@
 				"h": 188
 			}
 		},
-		"repair_icon": {
+		"bg_select": {
 			"frame": {
 				"x": 574,
 				"y": 191,
+				"w": 189,
+				"h": 189
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 189,
+				"h": 189
+			},
+			"sourceSize": {
+				"w": 189,
+				"h": 189
+			}
+		},
+		"repair_icon": {
+			"frame": {
+				"x": 764,
+				"y": 1,
 				"w": 63,
 				"h": 64
 			},
@@ -63,7 +83,7 @@
 		"sourcelist_title": {
 			"frame": {
 				"x": 574,
-				"y": 257,
+				"y": 382,
 				"w": 229,
 				"h": 27
 			},
@@ -83,7 +103,7 @@
 		"tips_bg": {
 			"frame": {
 				"x": 574,
-				"y": 286,
+				"y": 411,
 				"w": 95,
 				"h": 102
 			},
@@ -107,7 +127,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 804,
+			"w": 828,
 			"h": 573
 		},
 		"scale": "1"

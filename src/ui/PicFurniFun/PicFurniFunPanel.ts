@@ -27,6 +27,7 @@ export class PicFurniFunPanel extends BasePanel {
     private closeBtn: Phaser.GameObjects.Image;
     private materialTipsCon: Phaser.GameObjects.Container;
     private materialTipsDes: BBCodeText;
+    private selectMaterial: MaterialItem;
     private tipsbg: NineSlicePatch;
     private itemName: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {
@@ -156,7 +157,7 @@ export class PicFurniFunPanel extends BasePanel {
             space: 20 * this.dpr,
             valuechangeCallback: undefined,
             cellupCallBack: (gameobject) => {
-                this.onMaterialItemHandler(gameobject.itemData);
+                this.onMaterialItemHandler(gameobject);
             }
         });
         this.materialCon.add(this.materialGameScroll);
@@ -253,7 +254,7 @@ export class PicFurniFunPanel extends BasePanel {
             this.materialGameScroll.addItem(item);
         }
         this.materialGameScroll.Sort();
-        this.onMaterialItemHandler(datas[0]);
+        // this.onMaterialItemHandler(datas[0]);
     }
 
     private onConfirmBtnClick() {
@@ -266,13 +267,17 @@ export class PicFurniFunPanel extends BasePanel {
         this.emit("close");
     }
 
-    private onMaterialItemHandler(data: op_client.ICountablePackageItem) {
+    private onMaterialItemHandler(item: MaterialItem) {
+        if (this.selectMaterial) this.selectMaterial.select = false;
+        const data: op_client.ICountablePackageItem = item.itemData;
         this.materialTipsDes.text = this.getDesText(data);
         const tipsHeight = this.materialTipsDes.height + 15 * this.dpr;
         const tipsWidth = this.tipsbg.width;
         this.tipsbg.resize(tipsWidth, tipsHeight);
         this.tipsbg.y = -this.tipsbg.height * 0.5;
         this.materialTipsDes.y = -tipsHeight + 10 * this.dpr;
+        item.select = true;
+        this.selectMaterial = item;
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
@@ -294,16 +299,17 @@ class MaterialItem extends Phaser.GameObjects.Container {
     private readonly key: string;
     private itemIcon: DynamicImage;
     private itemCount: BBCodeText;
+    private bg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
-        const bg = this.scene.make.image({ key: this.key, frame: "bg_m" });
+        this.bg = this.scene.make.image({ key: this.key, frame: "bg_m" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemCount = new BBCodeText(this.scene, 0, 15 * dpr, "10/20", { color: "#000000" })
             .setOrigin(0.5).setFontSize(11 * dpr).setFontFamily(Font.DEFULT_FONT);
-        this.add([bg, this.itemIcon, this.itemCount]);
-        this.setSize(bg.width, bg.height);
+        this.add([this.bg, this.itemIcon, this.itemCount]);
+        this.setSize(this.bg.width, this.bg.height);
         this.itemCount.y = this.height * 0.5 + 8 * dpr;
     }
     public setItemData(data: op_client.ICountablePackageItem) {
@@ -316,6 +322,9 @@ class MaterialItem extends Phaser.GameObjects.Container {
         });
     }
 
+    public set select(value: boolean) {
+        this.bg.setFrame(value ? "bg_select" : "bg_m");
+    }
     private getCountText(count: number, needcount: number) {
         const color = (count >= needcount ? "#000000" : "#ff0000");
         const text = `[stroke=${color}][color=${color}]${count}[/color][/stroke]/` + needcount;
