@@ -226,6 +226,7 @@ export class Element extends BlockObject implements IElement {
         if (model.mountSprites && model.mountSprites.length > 0) {
             this.updateMounth(model.mountSprites);
         }
+        this.update();
     }
 
     public updateModel(model: op_client.ISprite) {
@@ -257,6 +258,7 @@ export class Element extends BlockObject implements IElement {
             const pos = model.point3f;
             this.setPosition(new Pos(pos.x, pos.y, pos.z));
         }
+        this.update();
     }
 
     scaleTween(): void {
@@ -492,6 +494,7 @@ export class Element extends BlockObject implements IElement {
             this.setDepth(depth);
         }
         this.updateBlock();
+        this.update();
     }
 
     public getRootPosition(): Pos {
@@ -532,7 +535,7 @@ export class Element extends BlockObject implements IElement {
                     fontFamily: Font.DEFULT_FONT
                 }
             }).setOrigin(0.5).setStroke("0x0", 2 * ratio);
-            follow = new FollowObject(nickname, this.mDisplay, ratio);
+            follow = new FollowObject(nickname, this, ratio);
             follow.setOffset(0, -84);
             this.addFollowObject(FollowEnum.Nickname, follow);
         } else {
@@ -982,10 +985,10 @@ export class Element extends BlockObject implements IElement {
 
 export class FollowObject {
     private mObject: Phaser.GameObjects.Components.Transform;
-    private mTarget: Phaser.GameObjects.Components.Transform | Pos;
+    private mTarget: IElement;
     private mDpr: number;
     private mOffset: Phaser.Geom.Point;
-    constructor(object: Phaser.GameObjects.Components.Transform, target: Phaser.GameObjects.Components.Transform | Pos, dpr: number = 1) {
+    constructor(object: Phaser.GameObjects.Components.Transform, target: IElement, dpr: number = 1) {
         this.mDpr = dpr;
         this.mOffset = new Phaser.Geom.Point();
         this.mObject = object;
@@ -1000,8 +1003,9 @@ export class FollowObject {
         if (!this.mTarget || !this.mObject) {
             return;
         }
-        this.mObject.x = (this.mTarget.x + this.mOffset.x) * this.mDpr;
-        this.mObject.y = (this.mTarget.y + this.mOffset.y) * this.mDpr;
+        const pos = this.mTarget.getPosition();
+        this.mObject.x = (pos.x + this.mOffset.x) * this.mDpr;
+        this.mObject.y = (pos.y + this.mOffset.y) * this.mDpr;
     }
 
     remove() {
