@@ -47,7 +47,7 @@ export default class PicFriendPanel extends BasePanel {
         this.mBackGround.fillStyle(0x000000, 0.66);
         this.mBackGround.fillRect(0, 0, w, h);
         this.content.setPosition(w / 2, h / 2);
-        this.friendContainer.resize();
+        if (this.friendContainer.parentContainer) this.friendContainer.resize();
     }
 
     public show(param?: any) {
@@ -121,6 +121,12 @@ export default class PicFriendPanel extends BasePanel {
             this.mShowingSubContainer.filterById(id);
         } else if (this.friendContainer) {
             this.friendContainer.filterById(id);
+        }
+    }
+
+    fetchCurrentFriend() {
+        if (this.friendContainer) {
+            this.friendContainer.fetchCurrentFriend();
         }
     }
 
@@ -210,6 +216,7 @@ export default class PicFriendPanel extends BasePanel {
             this.mShowingSubContainer.destroy();
             this.mShowingSubContainer = null;
         }
+        this.friendContainer.fetchCurrentFriend();
     }
 
     private onReqFriendListHandler(ids: number[]) {
@@ -450,7 +457,14 @@ class MainContainer extends FriendContainer {
         if (index > -1) {
             return FriendType.Friend;
         }
-        return FriendType.Null;
+        return FriendType.Fans;
+    }
+
+    public fetchCurrentFriend() {
+        if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
+            return;
+        }
+        this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
     }
 
     protected draw() {
@@ -542,10 +556,7 @@ class MainContainer extends FriendContainer {
     }
 
     private onSelectChannelHandler(item) {
-        if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
-            return;
-        }
-        this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
+        this.fetchCurrentFriend();
     }
 
     private onSelectItemHandler(item) {
