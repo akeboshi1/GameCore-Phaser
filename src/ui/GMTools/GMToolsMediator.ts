@@ -20,7 +20,8 @@ export class GMToolsMediator extends BaseMediator {
     public show(params?: any) {
         super.show(params);
         if (this.mView) {
-            this.mView.show();
+            this.mView.show(params);
+            this.layerMgr.addToUILayer(this.mView);
             return;
         }
         this.mView = new GMToolsPanel(this.scene, this.world);
@@ -30,10 +31,12 @@ export class GMToolsMediator extends BaseMediator {
         this.layerMgr.addToUILayer(this.mView);
     }
 
+    public hide() {
+        this.destroy();
+    }
+
     private onCloseHandler() {
-        if (this.mView) {
-            this.destroy();
-        }
+        this.hide();
     }
 
     private onTargetUIHandler(uiId, componentId, str?) {
