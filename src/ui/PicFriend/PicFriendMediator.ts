@@ -59,6 +59,12 @@ export class PicFriendMediator extends BaseMediator {
         }
     }
 
+    fetchCurrentFriend() {
+        if (this.mView) {
+            this.mView.fetchCurrentFriend();
+        }
+    }
+
     private onFetchFriendHandler(type: FriendChannel) {
         switch (type) {
             case FriendChannel.Friends:

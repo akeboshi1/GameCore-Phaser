@@ -4,7 +4,7 @@ import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import CharacterInfoPanel, { FriendRelation } from "./CharacterInfoPanel";
 import { CharacterInfo } from "./CharacterInfo";
-import { Logger } from "../../utils/log";
+import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
 
 export class CharacterInfoMediator extends BaseMediator {
     protected mView: CharacterInfoPanel;
@@ -84,6 +84,7 @@ export class CharacterInfoMediator extends BaseMediator {
             if (code === 200 || code === 201) {
                 if (this.mView) {
                     this.checkRelation(id);
+                    this.updateFrind();
                 }
             }
         });
@@ -94,6 +95,7 @@ export class CharacterInfoMediator extends BaseMediator {
             const { code, data } = response;
             if (code === 200 || code === 201) {
                 this.checkRelation(id);
+                this.updateFrind();
             }
         });
     }
@@ -161,5 +163,13 @@ export class CharacterInfoMediator extends BaseMediator {
 
     private onInviteHandler(id: string) {
         this.characterInfo.invite(id);
+    }
+
+    private updateFrind() {
+        const uimanager = this.world.uiManager;
+        const picFriend: PicFriendMediator = <PicFriendMediator> uimanager.getMediator(PicFriendMediator.name);
+        if (picFriend) {
+            picFriend.fetchCurrentFriend();
+        }
     }
 }

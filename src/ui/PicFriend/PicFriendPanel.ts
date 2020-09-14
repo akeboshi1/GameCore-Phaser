@@ -124,6 +124,12 @@ export default class PicFriendPanel extends BasePanel {
         }
     }
 
+    fetchCurrentFriend() {
+        if (this.friendContainer) {
+            this.friendContainer.fetchCurrentFriend();
+        }
+    }
+
     preload() {
         this.addAtlas(this.key, "friend_list/friend_list.png", "friend_list/friend_list.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
@@ -210,6 +216,7 @@ export default class PicFriendPanel extends BasePanel {
             this.mShowingSubContainer.destroy();
             this.mShowingSubContainer = null;
         }
+        this.friendContainer.fetchCurrentFriend();
     }
 
     private onReqFriendListHandler(ids: number[]) {
@@ -450,7 +457,14 @@ class MainContainer extends FriendContainer {
         if (index > -1) {
             return FriendType.Friend;
         }
-        return FriendType.Null;
+        return FriendType.Fans;
+    }
+
+    public fetchCurrentFriend() {
+        if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
+            return;
+        }
+        this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
     }
 
     protected draw() {
@@ -542,10 +556,7 @@ class MainContainer extends FriendContainer {
     }
 
     private onSelectChannelHandler(item) {
-        if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
-            return;
-        }
-        this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
+        this.fetchCurrentFriend();
     }
 
     private onSelectItemHandler(item) {
