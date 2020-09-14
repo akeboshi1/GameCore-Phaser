@@ -32,14 +32,14 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
             right: 20 * this.dpr,
             bottom: 20 * this.dpr
         });
-        tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);
+        tipsbg.setPosition(0, -tipsHeight * 0.5);
         this.tipsbg = tipsbg;
-        const tipsText = new BBCodeText(this.scene, -28 * this.dpr, -tipsHeight + 60 * this.dpr, "微软我让他委任他为回复", {
+        const tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
             color: "#333333",
             fontSize: 13 * this.dpr,
             fontFamily: Font.DEFULT_FONT,
             wrap: {
-                width: 110 * this.dpr,
+                width: this.width - 15 * this.dpr,
                 mode: "string"
             }
         }).setOrigin(0);
