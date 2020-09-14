@@ -230,6 +230,7 @@
     "title": "打 工",
     "vim": "精力值",
     "worktimes": "打工次数",
-    "salary": "报酬"
+    "salary": "报酬",
+    "attri":"*{{name}}需要大于{{value}}才可以任职这份工作"
   }
 }

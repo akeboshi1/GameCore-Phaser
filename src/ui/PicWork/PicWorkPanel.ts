@@ -128,14 +128,14 @@ export class PicWorkPanel extends BasePanel {
             dpr: this.dpr,
             align: 2,
             orientation: 0,
-            space: 20 * this.dpr,
+            space: 10 * this.dpr,
             selfevent: true,
             cellupCallBack: (gameobject) => {
                 this.onPointerUpHandler(gameobject);
             }
         });
 
-        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
+        this.itemtips = new ItemInfoTips(this.scene, 150 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
         this.itemtips.visible = false;
         this.content.add([this.bg, this.closeBtn, this.titlebg, this.tilteName, this.timesPorgress, this.powerProgress, this.helpBtn, this.mGameScroll, this.itemtips]);
         this.resize();
@@ -166,8 +166,10 @@ export class PicWorkPanel extends BasePanel {
     }
 
     public setProgressData(enery: op_def.IValueBar, work: op_def.IValueBar) {
-        this.timesPorgress.setProgressDatas(work);
-        this.powerProgress.setProgressDatas(enery);
+        if (work)
+            this.timesPorgress.setProgressDatas(work);
+        if (enery)
+            this.powerProgress.setProgressDatas(enery);
     }
 
     destroy() {
@@ -190,28 +192,13 @@ export class PicWorkPanel extends BasePanel {
 
     private onItemInfoTips(data: op_client.ICountablePackageItem, isdown: boolean, pos: Phaser.Geom.Point) {
         this.itemtips.visible = isdown;
-        this.itemtips.x = pos.x;
-        this.itemtips.y = pos.y;
+        this.itemtips.x = pos.x * this.scale - this.content.x;
+        this.itemtips.y = pos.y * this.scale - this.content.y - 30 * this.dpr;
         this.itemtips.setText(this.getDesText(data));
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
-        let text: string = data.name + "\n";
-        let source = i18n.t("common.source") + ":";
-        source += data.source;
-        source = `[stroke=#333333][color=#333333]${source}[/color][/stroke]`;
-        text += source + "\n";
-        if (data.sellingPrice) {
-            let price = i18n.t("common.sold");
-            price += `${Coin.getName(data.sellingPrice.coinType)} x ${data.sellingPrice.price}`;
-            price = `[stroke=#333333][color=#333333]${price}[/color][/stroke]`;
-            text += price + "\n";
-        }
-        if (!data.tradable) {
-            let trade = i18n.t("furni_unlock.notrading");
-            trade = `[stroke=#333333][color=#ff0000]*${trade}[/color][/stroke]`;
-            text += trade;
-        }
+        const text: string = i18n.t("work.attri", { "name": `${data.name}`, "value": data.neededCount });
         return text;
     }
 }
@@ -295,13 +282,15 @@ class WorkItem extends Phaser.GameObjects.Container {
             this.headIcon.scaleY = this.headIcon.scaleX;
             this.headIcon.x = -this.width * 0.5 + this.headIcon.displayWidth * 0.5 + 10 * this.dpr;
         });
-        this.title.text = "服务员";// data.name;
+        this.title.text = data.name;
         let rewardTex = "0";
         if (data.rewards) {
             const countRange = data.rewards[0].countRange;
-            rewardTex = `${countRange.start}~${countRange.start}`;
+            rewardTex = `${countRange.start}~${countRange.stop}`;
         }
         this.salaryvalue.setText(rewardTex);
+        this.salaryvalue.x = this.width * 0.5 - this.salaryvalue.width * 0.5 - 10 * this.dpr;
+        this.salaryLabel.x = this.salaryvalue.x - this.salaryvalue.width * 0.5 - 5 * this.dpr;
         this.worklabel.text = data.detail;
         const matrr = data.targets;
         for (const item of this.imageValues) {
@@ -310,6 +299,7 @@ class WorkItem extends Phaser.GameObjects.Container {
         let posx = -this.width * 0.5 + 55 * this.dpr;
         for (let i = 0; i < matrr.length; i++) {
             let item: PointerImageValue;
+            const tempdata = matrr[i];
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
@@ -318,8 +308,10 @@ class WorkItem extends Phaser.GameObjects.Container {
                 this.imageValues.push(item);
                 item.setHandler(new Handler(this, this.onTipsandler));
             }
-            const tempurl = Url.getOsdRes(matrr[i].display.texturePath);
-            item.setUrlValue(tempurl, matrr[i].count);
+            const tempurl = Url.getOsdRes(tempdata.display.texturePath);
+            item.setUrlValue(tempurl, tempdata.neededCount);
+            item.setTextStyle({ color: (tempdata.count >= tempdata.neededCount ? "#000000" : "#E71313") });
+            item.setImageData(tempdata);
             item.visible = true;
             item.x = posx + item.width * 0.5;
             item.y = 0;
@@ -353,8 +345,9 @@ class WorkItem extends Phaser.GameObjects.Container {
     private onWorkHandler() {
         if (this.sendHandler) this.sendHandler.runWith(this.jobData.id);
     }
-    private onTipsandler(item: PointerImageValue) {
-        if (this.tipsHandler) this.tipsHandler.runWith(item.imageData);
+    private onTipsandler(item: PointerImageValue, isdown: boolean) {
+        const worldpos = item.getWorldTransformMatrix();
+        if (this.tipsHandler) this.tipsHandler.runWith([item.imageData, isdown, new Phaser.Geom.Point(worldpos.tx, worldpos.ty)]);
     }
 }
 class ImageValue extends Phaser.GameObjects.Container {
@@ -374,10 +367,11 @@ class ImageValue extends Phaser.GameObjects.Container {
     public setFrameValue(text: string, key: string, frame: string) {
         this.icon.setTexture(key, frame);
         this.value.text = text;
-        this.resetPosition();
+        this.resetSize();
     }
     public setText(tex: string) {
         this.value.text = tex;
+        this.resetSize();
     }
     public setTextStyle(style: object) {
         this.value.setStyle(style);
@@ -412,6 +406,7 @@ class PointerImageValue extends ImageValue {
     private tipsHandler: Handler;
     public constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, offsetx: number = 0) {
         super(scene, width, height, key, dpr, offsetx);
+        this.addListen();
     }
 
     public setImageData(data: op_client.ICountablePackageItem) {
@@ -453,6 +448,7 @@ class PointerImageValue extends ImageValue {
         this.add([this.icon, this.value]);
     }
     private onClickDownHandler() {
+        const pos = new Phaser.Geom.Point();
         if (this.tipsHandler) this.tipsHandler.runWith([this, true]);
     }
 
