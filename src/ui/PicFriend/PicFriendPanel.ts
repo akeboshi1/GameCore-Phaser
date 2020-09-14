@@ -47,7 +47,7 @@ export default class PicFriendPanel extends BasePanel {
         this.mBackGround.fillStyle(0x000000, 0.66);
         this.mBackGround.fillRect(0, 0, w, h);
         this.content.setPosition(w / 2, h / 2);
-        this.friendContainer.resize();
+        if (this.friendContainer.parentContainer) this.friendContainer.resize();
     }
 
     public show(param?: any) {
