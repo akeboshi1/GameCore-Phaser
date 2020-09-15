@@ -45,6 +45,7 @@
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "simple-sha1": "^3.0.1",
         "tooqinggamephaser": "^0.2.2",
+        "webworker-rpc": "git://github.com/ApowoGames/webworker-rpc",
         "worker-loader": "^3.0.2"
     }
 }
