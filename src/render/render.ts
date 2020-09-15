@@ -12,8 +12,11 @@ export class Render extends RPCPeer {
         const mainWorker = new MainWorker();
         this.linkTo(MAIN_WORKER, "../game/main.worker");
     }
+    public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
+        this.remote[MAIN_WORKER].MainPeer.startConnect(null, gameID, worldID, sceneID, loc);
+    }
     public startConnect(gateway: ServerAddress) {
-        this.remote[MAIN_WORKER].MainPeer.startConnect(null, [gateway.host, gateway.port, gateway.secure]);
+        this.remote[MAIN_WORKER].MainPeer.startConnect(null, gateway.host, gateway.port, gateway.secure);
     }
 
     public closeConnect() {

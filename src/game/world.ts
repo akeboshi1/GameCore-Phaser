@@ -109,7 +109,32 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
-
+        this._peer.initGameConfig(
+            {
+            api_root: this.mConfig.api_root,
+            auth_token: this.mConfig.auth_token,
+            token_expire: string | null;
+            token_fingerprint: string;
+            user_id: string;
+            game_id: string;
+            virtual_world_id: string;
+            ui_scale?: number;
+            devicePixelRatio?: number;
+            scale_ratio?: number;
+            platform?: string;
+            keyboardHeight: number;
+            width: number;
+            height: number;
+            readonly screenWidth: number;
+            readonly screenHeight: number;
+            readonly baseWidth: number;
+            readonly baseHeight: number;
+            readonly game_created?: boolean;
+            readonly isEditor?: boolean;
+            readonly osd?: string;
+            readonly closeGame: boolean;
+            readonly connectFail?: boolean;
+            readonly parent?: string;});
         this._newGame();
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {

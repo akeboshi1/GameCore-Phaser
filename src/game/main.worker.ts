@@ -25,12 +25,14 @@ import { Brush, BrushEnum } from "../const/brush";
 import { MouseFollow } from "./editor/mouse.follow";
 import { SelectedElement } from "./editor/selected.element";
 import { DisplayObjectPool } from "./display-object.pool";
+import { AlertView, Buttons } from "../ui/components/alert.view";
 import { Algorithm } from "../utils/algorithm";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 
 import * as protos from "pixelpai_proto";
 import { i18n } from "../i18n";
+
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -126,59 +128,69 @@ class Connection {
 class MainPeer extends RPCPeer {
     private heartBeatWorker: HeartBeatWorker;
     private mRoomManager: RoomManager;
+    private world: LogicWorld;
+    private socket: WorkerClient;
+    private render: any;
     constructor() {
         const t = self as any;
         super("mainWorker", t);
+        this.world = new LogicWorld();
+        this.socket = new WorkerClient(new ConnListener());
         this.heartBeatWorker = new HeartBeatWorker();
         this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
-
+            this.render = this.remote[RENDER_PEER].Rener;
         });
     }
     // ============= connection调用主进程
     public onConnected(moveStyle: number) {
         // 告诉主进程链接成功
-        this.remote[RENDER_PEER].Rener.onConnected(null, moveStyle);
+        this.render.onConnected(null, moveStyle);
         // 调用心跳
         this.startBeat();
         // 逻辑层world链接成功
-        world.onConnected();
+        this.world.onConnected();
     }
 
     public onDisConnected() {
         // 告诉主进程断开链接
-        this.remote[RENDER_PEER].Rener.onDisConnected(null);
+        this.render.onDisConnected();
         // 停止心跳
         this.endBeat();
-        world.onDisConnected();
+        this.world.onDisConnected();
     }
 
     public onConnectError(error: string) {
         // 告诉主进程链接错误
-        this.remote[RENDER_PEER].Render.onConnectError(null, error);
+        this.render.onConnectError(null, error);
         // 停止心跳
         this.endBeat();
-        world.onError();
+        this.world.onError();
     }
 
     public onData(buffer: Buffer) {
-        world.onData(buffer);
+        this.socket.onData(buffer);
+    }
+
+    public showAlert(text: string, title: string) {
+        // 告诉render显示警告框
+        this.render.showAlert(null, text, title);
     }
 
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
-        this.remote[RENDER_PEER].Render.createAnotherGame(null, gameId, worldId, sceneId, px, py, pz);
+        this.render.createAnotherGame(null, gameId, worldId, sceneId, px, py, pz);
     }
     public enterVirtualWorld() {
-        this.remote[RENDER_PEER].Render.enterVirtualWorld();
+        this.render.enterVirtualWorld();
     }
 
     public onClockReady() {
-        this.remote[RENDER_PEER].Render.onClockReady();
+        this.render.onClockReady();
     }
     public renderReconnect() {
-        this.remote[RENDER_PEER].Render.reconnect();
+        this.render.reconnect();
     }
     public createGame(buffer: Buffer) {
-        this.remote[RENDER_PEER].Render.createGame(null, buffer);
+        this.render.createGame(null, buffer);
     }
     // ============= 主进程调用心跳
     public startBeat() {
@@ -192,65 +204,73 @@ class MainPeer extends RPCPeer {
     }
 
     // ============== render调用主进程
+    @RPCFunction()
+    public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
+        this.world.createAccount(gameID, worldID, sceneID, loc);
+    }
     @RPCFunction([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
-        socket.startConnect(addr);
+        this.socket.startConnect(addr);
     }
 
     @RPCFunction()
     public closeConnect() {
-        socket.stopConnect();
+        this.socket.stopConnect();
     }
     @RPCFunction()
     public focus() {
-        socket.pause = false;
+        this.socket.pause = false;
     }
     @RPCFunction()
     public blur() {
-        socket.pause = true;
+        this.socket.pause = true;
     }
     /**
      * 初始化world中的各个管理器,并添加socket事件监听
      */
     @RPCFunction()
     public initWorld() {
-        world.initWorld();
+        this.world.initWorld();
     }
     /**
      * 添加world中的socket消息监听
      */
     @RPCFunction()
     public initGame() {
-        world.initGame();
+        this.world.initGame();
     }
     @RPCFunction([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setSize(width, height) {
-        world.setSize(width, height);
+        this.world.setSize(width, height);
+    }
+    @RPCFunction([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public setGameConfig(root: string, gameID: string) {
+        this.world.setGameConfig(root, gameID);
     }
     @RPCFunction([webworker_rpc.ParamType.unit8array])
     public send(buffer: Buffer) {
-        socket.send(buffer);
+        this.socket.send(buffer);
     }
     // ============= 心跳调用主进程
     @RPCFunction()
     public heartBeat() {
         // ==========同步心跳
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
-        socket.send(pkt.Serialization());
+        this.socket.send(pkt.Serialization());
     }
     @RPCFunction()
     public reconnect() {
         // 告诉主进程重新连接
-        this.remote[RENDER_PEER].render.reconnect();
+        this.render.reconnect();
     }
     @RPCFunction([webworker_rpc.ParamType.num])
     public syncClock(times: number) {
-        world.syncClock(times);
+        this.world.syncClock(times);
     }
     @RPCFunction()
     public clearClock() {
-        world.clearClock();
+        this.world.clearClock();
     }
     // ==== todo
     public terminate() {
@@ -264,12 +284,45 @@ interface ISize {
     width: number;
     height: number;
 }
-
+export interface ILogiclauncherConfig {
+    api_root: string;
+    auth_token: string;
+    token_expire: string | null;
+    token_fingerprint: string;
+    user_id: string;
+    game_id: string;
+    virtual_world_id: string;
+    ui_scale?: number;
+    devicePixelRatio?: number;
+    scale_ratio?: number;
+    platform?: string;
+    keyboardHeight: number;
+    width: number;
+    height: number;
+    readonly screenWidth: number;
+    readonly screenHeight: number;
+    readonly baseWidth: number;
+    readonly baseHeight: number;
+    readonly game_created?: boolean;
+    readonly isEditor?: boolean;
+    readonly osd?: string;
+    readonly closeGame: boolean;
+    readonly connectFail?: boolean;
+    readonly parent?: string;
+}
 class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyListener {
     public connect: Connection;
     private mMoveStyle: number = -1;
     private mSize: ISize;
     private mClock: Clock;
+    private mHttpClock: HttpClock;
+    private mHttpService: HttpService;
+    private mConfig: any;
+    private mAccount: Account;
+    public createAccount(gameID: string, worldID: string, sceneId?: number, loc?: any) {
+        this.mAccount = new Account();
+        this.mAccount.enterGame(gameID, worldID, sceneId, loc);
+    }
     public initWorld() {
         this.connect = new Connection();
         this.connect.addPacketListener(this);
@@ -336,9 +389,6 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
             }
         }
     }
-    public onData(buffer: Buffer) {
-        world.connect.onData(buffer.buffer);
-    }
 
     public onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
@@ -352,6 +402,12 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
     }
     public getSize(): ISize {
         return this.mSize;
+    }
+    public setGameConfig(root: string, gameID: string) {
+        this.mConfig={};
+    }
+    public getGameConfig(): string {
+        return this.mApiRoot;
     }
     public clearClock() {
         if (this.mClock) {
@@ -369,6 +425,14 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
 
     get moveStyle(): number {
         return this.mMoveStyle;
+    }
+
+    get httpService(): HttpService {
+        return this.mHttpService;
+    }
+
+    get account(): Account {
+        return this.mAccount;
     }
 
     private onGotoAnotherGame(packet: PBpacket) {
@@ -676,9 +740,9 @@ interface IRoomService {
 
     addToSurface(element: ElementDisplay | ElementDisplay[]);
 
-    addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
+    addToSceneUI(element: render.GameObjects.GameObject | render.GameObjects.GameObject[]);
 
-    addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]);
+    addToUI(element: render.GameObjects.Container | render.GameObjects.Container[]);
 
     addMouseListen();
 
@@ -691,7 +755,7 @@ interface IRoomService {
     destroy();
 }
 
-// 这一层管理数据和Phaser之间的逻辑衔接
+// 这一层管理数据和render之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
 class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     protected mID: number;
@@ -704,7 +768,7 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
     protected mFrameManager: FrameManager;
     protected mSkyboxManager: SkyBoxManager;
     protected mEffectManager: EffectManager;
-    protected mScene: Phaser.Scene | undefined;
+    protected mScene: render.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
@@ -874,11 +938,11 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
         this.layerManager.addToSurface(element);
     }
 
-    public addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
+    public addToSceneUI(element: render.GameObjects.GameObject | render.GameObjects.GameObject[]) {
         this.layerManager.addToSceneToUI(element);
     }
 
-    public addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]) {
+    public addToUI(element: render.GameObjects.Container | render.GameObjects.Container[]) {
         this.layerManager.addToUI(element);
     }
 
@@ -1053,11 +1117,11 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
         this.mSkyboxManager.add(scenery);
     }
 
-    protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+    protected onPointerDownHandler(pointer: render.Input.Pointer) {
         this.addPointerMoveHandler();
     }
 
-    protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+    protected onPointerUpHandler(pointer: render.Input.Pointer) {
         this.removePointerMoveHandler();
     }
 
@@ -1075,7 +1139,7 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
         }
     }
 
-    protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
+    protected onPointerMoveHandler(pointer: render.Input.Pointer) {
         if (!this.mCameraService.targetFollow) {
             this.cameraService.offsetScroll(
                 pointer.prevPosition.x - pointer.position.x,
@@ -1115,7 +1179,7 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
         }
     }
 
-    get scene(): Phaser.Scene | undefined {
+    get scene(): render.Scene | undefined {
         return this.mScene || undefined;
     }
 
@@ -1223,7 +1287,7 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
             }
             // num[i] = intArray[i];
         }
-        area.draw(num, new Phaser.Geom.Point(0, 0));
+        area.draw(num, new render.Geom.Point(0, 0));
         area.setAlpha(0.1);
         if (area.size) {
             area.setPosition(area.size.sceneWidth / 2, 0);
@@ -1277,7 +1341,7 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
         }
     }
 
-    private move(x: number, y: number, gameObject: Phaser.GameObjects.GameObject) {
+    private move(x: number, y: number, gameObject: render.GameObjects.GameObject) {
         if (this.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
             return;
         }
@@ -1354,7 +1418,7 @@ class Room extends PacketHandler implements IRoomService, SpriteAddCompletedList
     }
 
     // Move through the location returned by the server
-    private onTapHandler(pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) {
+    private onTapHandler(pointer: render.Input.Pointer, gameObject: render.GameObjects.GameObject) {
         this.move(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio, gameObject);
     }
 
@@ -1591,7 +1655,7 @@ class EditorRoom extends Room implements EditorRoomService {
         this.addPointerMoveHandler();
     }
 
-    protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+    protected onPointerUpHandler(pointer: render.Input.Pointer) {
         this.removePointerMoveHandler();
         switch (this.brush.mode) {
             case BrushEnum.BRUSH:
@@ -1871,7 +1935,7 @@ class EditorRoom extends Room implements EditorRoomService {
         this.layerManager.depthSurfaceDirty = true;
     }
 
-    private moveElement(pointer: Phaser.Input.Pointer) {
+    private moveElement(pointer: render.Input.Pointer) {
         if (!this.mSelectedElementEffect) {
             return;
         }
@@ -1886,8 +1950,8 @@ class EditorRoom extends Room implements EditorRoomService {
         }
 
         if (!this.mPointerDelta) {
-            const matrix = new Phaser.GameObjects.Components.TransformMatrix();
-            const parentMatrix = new Phaser.GameObjects.Components.TransformMatrix();
+            const matrix = new render.GameObjects.Components.TransformMatrix();
+            const parentMatrix = new render.GameObjects.Components.TransformMatrix();
             this.mSelectedElementEffect.display.getWorldTransformMatrix(matrix, parentMatrix);
 
             this.mPointerDelta = new Pos(
@@ -1983,7 +2047,7 @@ class Clock extends PacketHandler {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
             const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
             ct.clientStartTs = this.sysUnixTime;
-            socket.send(pkt.Serialization);
+            mainPeer.send(pkt.Serialization());
         }
     }
 
@@ -2070,8 +2134,356 @@ class Clock extends PacketHandler {
     }
 }
 
-const world: LogicWorld = new LogicWorld();
-const socket: WorkerClient = new WorkerClient(new ConnListener());
+/**
+ * 每5min发送一次心跳包
+ */
+class HttpClock {
+    // private readonly interval = 300000;
+    private readonly interval = 60000;
+    private mTimestamp: number = 0;
+    private httpService: HttpService;
+    private mEnable: boolean = false;
+    constructor(private world: LogicWorld) {
+        this.httpService = world.httpService;
+    }
+
+    update(time: number, delta: number) {
+        if (this.mEnable === false) {
+            return;
+        }
+        if (this.mTimestamp > this.interval) {
+            this.sync();
+            this.mTimestamp = 0;
+        }
+        this.mTimestamp += delta;
+    }
+
+    allowLogin(callback: () => void) {
+        return new Promise((resolve, reject) => {
+            this.fetch().then((response: any) => {
+                const { code, data } = response;
+                if (code === 0) {
+                    if (!this.allowedPeriod(data, callback)) {
+                        resolve(false);
+                        return;
+                    }
+                    if (!this.checkTimeAllowed(data, callback)) {
+                        resolve(false);
+                        return;
+                    }
+                    resolve(true);
+                }
+            });
+        });
+    }
+
+    fetch() {
+        return this.httpService.playedDuration("831dabefd919aa6259c25f9322fa57b88050d526", this.world.getConfig().game_id);
+    }
+
+    sync() {
+        this.fetch().then((response: any) => {
+            const { code, data } = response;
+            if (code === 0) {
+                if (!this.checkTimeAllowed(data) || !this.allowedPeriod(data)) {
+                    mainPeer.closeConnect();
+                }
+            }
+        });
+    }
+
+    private allowedPeriod(data: any, callback?: () => void) {
+        if (data.in_allowed_period) {
+            return true;
+        }
+        this.showAlert(`[color=#ff0000][size=${14 * this.world.uiRatio}]您的账号属于未成年人[/size][/color]\n每日22:00~次日8:00是休息时间，根据相关规定，该时间不可登录游戏，请注意休息哦！`, callback);
+        return false;
+    }
+
+    private checkTimeAllowed(data: any, callback?: () => void) {
+        if (data.time_played >= data.max_time_allowed) {
+            this.showAlert(`[color=#ff0000][size=${14 * this.world.uiRatio}]您的账号属于未成年人[/size][/color]\n今日累计时长已超过${(data.max_time_allowed / 3600).toFixed(1)}小时！\n不可登录`, callback);
+            return false;
+        }
+        return true;
+    }
+
+    private showAlert(text: string, callback?: () => void) {
+        mainPeer.showAlert(text, i18n.t("common.tips"));
+    }
+
+    set enable(val: boolean) {
+        this.mEnable = val;
+    }
+}
+
+class HttpService {
+    private api_root: string;
+    constructor(private mWorld: LogicWorld) {
+        this.api_root = this.mWorld.getApiRoot();
+    }
+    /**
+     * 用户关注其他用户
+     * @param uids
+     */
+    follow(fuid: string): Promise<Response> {
+        return this.post("user/follow", { fuid });
+    }
+
+    /**
+     * 用户取消关注其他用户
+     * @param fuid
+     */
+    unfollow(fuid: string): Promise<Response> {
+        return this.post("user/unfollow", { fuid });
+    }
+
+    /**
+     * 添加到黑名单
+     * @param fuid
+     */
+    banUser(fuid: string) {
+        return this.post(`user/ban`, { fuid });
+    }
+
+    /**
+     * 移除黑名单
+     * @param fuid
+     */
+    removeBanUser(fuid: string) {
+        return this.post(`user/unban`, { fuid });
+    }
+
+    /**
+     * 检查用户列表是否有关注的用户
+     * @param uids
+     */
+    checkFollowed(uids: string[]): Promise<Response> {
+        return this.post(`user/check_followed`, { "uids": uids });
+    }
+
+    /**
+     * 登录
+     * @param name
+     * @param password
+     */
+    login(account: string, password: string): Promise<Response> {
+        return fetch(`${this.mWorld.getApiRoot()}${`account/signin`}`, {
+            body: JSON.stringify({ account, password }),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((response) => response.json());
+    }
+
+    /**
+     * 请求手机验证码
+     * @param name
+     */
+    requestPhoneCode(phone: string, areaCode: string): Promise<Response> {
+        return fetch(`${this.api_root}${`account/sms_code`}`, {
+            body: JSON.stringify({ phone, areaCode }),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((response) => response.json());
+    }
+
+    /**
+     * 检查token是否可用
+     */
+    tokenCheck() {
+        return this.get("account/tokencheck");
+    }
+
+    refreshToekn(refreshToken: string, token: string) {
+        return this.post("account/refresh_token", { refreshToken, token });
+    }
+
+    loginByPhoneCode(phone: string, code: string, areaCode: string): Promise<Response> {
+        return fetch(`${this.api_root}${`account/phone_signin`}`, {
+            body: JSON.stringify({ phone, code, areaCode }),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((response) => response.json());
+    }
+
+    quickLogin(): Promise<Response> {
+        return fetch(`${this.api_root}${`account/quick_signin`}`, {
+            method: "POST",
+        }).then((response) => response.json());
+    }
+
+    verified(realName: string, identifcationCode: string) {
+        // return fetch(`${this.api_root}${`game/real_name_authentication`}`, {
+        //     body: JSON.stringify({ realName, identifcationCode  }),
+        //     method: "POST",
+        // }).then((response) => response.json());
+        return this.post(`game/real_name_authentication`, { realName, identifcationCode });
+    }
+
+    /**
+     *
+     * 获取用户好友列表
+     */
+    firend() {
+        return this.get("user/friends");
+    }
+    /**
+     * 获取用户信息
+     * @param uid
+     */
+    userDetail(uid: string) {
+        return this.get(`account/${uid}/detail`);
+    }
+
+    /**
+     * 用户徽章
+     * @param uid
+     */
+    badgecards(uid: string) {
+        return this.get(`userpackage/${uid}/badgecards`);
+    }
+
+    playedDuration(Appid: string, gameId: string) {
+        return this.post("game/played_duration", { gameId }, { Appid });
+    }
+
+    public post(uri: string, body: any, headers?: any): Promise<Response> {
+        const account = this.mWorld.account;
+        if (!account) {
+            return Promise.reject("account does not exist");
+        }
+        if (!account.accountData) {
+            return Promise.reject("token does not exist");
+        }
+        headers = Object.assign({
+            "Content-Type": "application/json",
+            "X-Pixelpai-TK": account.accountData.accessToken
+        }, headers);
+        const data = {
+            body: JSON.stringify(body),
+            method: "POST",
+            headers,
+        };
+        return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
+    }
+
+    public get(uri: string) {
+        const account = this.mWorld.account;
+        if (!account) {
+            return Promise.reject("account does not exist");
+        }
+        if (!account.accountData) {
+            return Promise.reject("token does not exist");
+        }
+        const data = {
+            method: "GET",
+            headers: {
+                "X-Pixelpai-TK": account.accountData.accessToken
+            }
+        };
+        return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
+    }
+}
+interface IAccountData {
+    accessToken: string;
+    refreshToken: string;
+    expire: number;
+    fingerprint: string;
+    id: string;
+}
+class Account {
+    private mGameId: string;
+    private mVirtualWorldId: string;
+    private mSceneID: number;
+    private mLoc: any;
+    private mCurAccountData: IAccountData;
+    constructor() {
+        // TODO
+        // 1. 登陆注册的逻辑在这里做
+        // 2. 缓存用户登陆后的帐号咨讯
+    }
+
+    public setAccount(val: any) {
+        // this.clear();
+        // Object.assign(this.mCurAccountData, val);
+        this.mCurAccountData = {
+            id: val.id,
+            fingerprint: val.fingerprint,
+            refreshToken: val.refreshToken,
+            expire: val.expire,
+            accessToken: val.token || val.accessToken
+        };
+        this.saveLocalStorage();
+    }
+
+    public refreshToken(data: any) {
+        if (this.mCurAccountData) {
+            const { newExpire, newFingerprint, newToken } = data;
+            this.mCurAccountData.expire = newExpire;
+            this.mCurAccountData.fingerprint = newFingerprint;
+            this.mCurAccountData.accessToken = newToken;
+            this.saveLocalStorage();
+        }
+    }
+
+    public saveLocalStorage() {
+        if (!this.mCurAccountData) {
+            return;
+        }
+        const { id, fingerprint, refreshToken, expire, accessToken } = this.mCurAccountData;
+        localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken }));
+    }
+
+    public clear() {
+        this.mCurAccountData = {
+            accessToken: "",
+            expire: 0,
+            fingerprint: "",
+            id: "",
+            refreshToken: ""
+        };
+    }
+
+    public destroy() {
+        this.clear();
+        localStorage.removeItem("token");
+        this.enterGame(undefined, undefined, undefined, undefined);
+    }
+
+    public get accountData(): IAccountData | undefined {
+        return this.mCurAccountData;
+    }
+
+    public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any) {
+        this.mGameId = gameId;
+        this.mVirtualWorldId = virtualWorldId;
+        this.mSceneID = sceneId;
+        this.mLoc = loc;
+    }
+
+    get gameID(): string {
+        return this.mGameId;
+    }
+
+    get virtualWorldId(): string {
+        return this.mVirtualWorldId;
+    }
+
+    get sceneId(): number {
+        return this.mSceneID;
+    }
+
+    get loc(): any {
+        return this.mLoc;
+    }
+}
+
 const RENDER_PEER = "renderPeer";
 const MAIN_WORKER = "mainWorker";
 const HEARTBEAT_WORKER = "heartBeatWorker";
