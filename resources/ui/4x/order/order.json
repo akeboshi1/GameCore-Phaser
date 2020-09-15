@@ -1,8 +1,88 @@
 {
 	"frames": {
-		"order_delete": {
+		"iv_coin": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 92,
+				"h": 92
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 92,
+				"h": 92
+			},
+			"sourceSize": {
+				"w": 92,
+				"h": 92
+			}
+		},
+		"iv_coin_s": {
+			"frame": {
+				"x": 95,
+				"y": 1,
+				"w": 61,
+				"h": 50
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 61,
+				"h": 50
+			},
+			"sourceSize": {
+				"w": 61,
+				"h": 50
+			}
+		},
+		"iv_diamond": {
+			"frame": {
+				"x": 158,
+				"y": 1,
+				"w": 95,
+				"h": 92
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 95,
+				"h": 92
+			},
+			"sourceSize": {
+				"w": 95,
+				"h": 92
+			}
+		},
+		"iv_diamond_s": {
+			"frame": {
+				"x": 255,
+				"y": 1,
+				"w": 61,
+				"h": 49
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 61,
+				"h": 49
+			},
+			"sourceSize": {
+				"w": 61,
+				"h": 49
+			}
+		},
+		"order_delete": {
+			"frame": {
+				"x": 318,
 				"y": 1,
 				"w": 37,
 				"h": 42
@@ -22,7 +102,7 @@
 		},
 		"order_delete_bg": {
 			"frame": {
-				"x": 40,
+				"x": 357,
 				"y": 1,
 				"w": 68,
 				"h": 65
@@ -42,7 +122,7 @@
 		},
 		"order_demand_icon": {
 			"frame": {
-				"x": 110,
+				"x": 427,
 				"y": 1,
 				"w": 124,
 				"h": 141
@@ -58,51 +138,11 @@
 			"sourceSize": {
 				"w": 124,
 				"h": 141
-			}
-		},
-		"order_diamond": {
-			"frame": {
-				"x": 236,
-				"y": 1,
-				"w": 61,
-				"h": 49
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 61,
-				"h": 49
-			},
-			"sourceSize": {
-				"w": 61,
-				"h": 49
-			}
-		},
-		"order_diamond_middle": {
-			"frame": {
-				"x": 299,
-				"y": 1,
-				"w": 95,
-				"h": 92
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 95,
-				"h": 92
-			},
-			"sourceSize": {
-				"w": 95,
-				"h": 92
 			}
 		},
 		"order_favorability": {
 			"frame": {
-				"x": 396,
+				"x": 553,
 				"y": 1,
 				"w": 61,
 				"h": 49
@@ -162,7 +202,7 @@
 		},
 		"order_precious": {
 			"frame": {
-				"x": 459,
+				"x": 616,
 				"y": 1,
 				"w": 59,
 				"h": 55
@@ -202,7 +242,7 @@
 		},
 		"order_precious_delete_bg": {
 			"frame": {
-				"x": 520,
+				"x": 677,
 				"y": 1,
 				"w": 68,
 				"h": 68
@@ -242,7 +282,7 @@
 		},
 		"order_progress_bottom": {
 			"frame": {
-				"x": 590,
+				"x": 747,
 				"y": 1,
 				"w": 61,
 				"h": 41
@@ -262,7 +302,7 @@
 		},
 		"order_progress_finished": {
 			"frame": {
-				"x": 653,
+				"x": 810,
 				"y": 1,
 				"w": 140,
 				"h": 140
@@ -282,7 +322,7 @@
 		},
 		"order_progress_ok": {
 			"frame": {
-				"x": 795,
+				"x": 952,
 				"y": 1,
 				"w": 87,
 				"h": 66
@@ -302,8 +342,8 @@
 		},
 		"order_progress_top": {
 			"frame": {
-				"x": 884,
-				"y": 1,
+				"x": 255,
+				"y": 69,
 				"w": 63,
 				"h": 42
 			},
@@ -322,8 +362,8 @@
 		},
 		"order_progress_unfinished": {
 			"frame": {
-				"x": 949,
-				"y": 1,
+				"x": 327,
+				"y": 402,
 				"w": 140,
 				"h": 140
 			},
@@ -342,7 +382,7 @@
 		},
 		"order_reward": {
 			"frame": {
-				"x": 327,
+				"x": 469,
 				"y": 402,
 				"w": 128,
 				"h": 128
@@ -358,52 +398,12 @@
 			"sourceSize": {
 				"w": 128,
 				"h": 128
-			}
-		},
-		"order_silver": {
-			"frame": {
-				"x": 1026,
-				"y": 143,
-				"w": 61,
-				"h": 50
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 61,
-				"h": 50
-			},
-			"sourceSize": {
-				"w": 61,
-				"h": 50
-			}
-		},
-		"order_silver_middle": {
-			"frame": {
-				"x": 457,
-				"y": 402,
-				"w": 92,
-				"h": 92
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 92,
-				"h": 92
-			},
-			"sourceSize": {
-				"w": 92,
-				"h": 92
 			}
 		},
 		"order_time": {
 			"frame": {
-				"x": 1026,
-				"y": 195,
+				"x": 1041,
+				"y": 1,
 				"w": 39,
 				"h": 39
 			},
@@ -422,8 +422,8 @@
 		},
 		"order_title": {
 			"frame": {
-				"x": 551,
-				"y": 402,
+				"x": 1,
+				"y": 823,
 				"w": 537,
 				"h": 141
 			},
@@ -442,7 +442,7 @@
 		},
 		"order_title_bg": {
 			"frame": {
-				"x": 1091,
+				"x": 1082,
 				"y": 1,
 				"w": 756,
 				"h": 317
@@ -462,7 +462,7 @@
 		},
 		"order_transport": {
 			"frame": {
-				"x": 1090,
+				"x": 1026,
 				"y": 320,
 				"w": 497,
 				"h": 256
@@ -482,7 +482,7 @@
 		},
 		"order_treasure_box": {
 			"frame": {
-				"x": 1026,
+				"x": 1525,
 				"y": 320,
 				"w": 61,
 				"h": 49
@@ -502,7 +502,7 @@
 		},
 		"order_unknown_head": {
 			"frame": {
-				"x": 1589,
+				"x": 1588,
 				"y": 320,
 				"w": 161,
 				"h": 161
@@ -527,8 +527,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1848,
-			"h": 822
+			"w": 1839,
+			"h": 965
 		},
 		"scale": "1"
 	}

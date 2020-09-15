@@ -40,10 +40,50 @@
 				"h": 188
 			}
 		},
+		"bg_select": {
+			"frame": {
+				"x": 574,
+				"y": 191,
+				"w": 189,
+				"h": 189
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 189,
+				"h": 189
+			},
+			"sourceSize": {
+				"w": 189,
+				"h": 189
+			}
+		},
+		"repair_icon": {
+			"frame": {
+				"x": 764,
+				"y": 1,
+				"w": 63,
+				"h": 64
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 63,
+				"h": 64
+			},
+			"sourceSize": {
+				"w": 63,
+				"h": 64
+			}
+		},
 		"sourcelist_title": {
 			"frame": {
-				"x": 1,
-				"y": 574,
+				"x": 574,
+				"y": 382,
 				"w": 229,
 				"h": 27
 			},
@@ -59,6 +99,26 @@
 				"w": 229,
 				"h": 27
 			}
+		},
+		"tips_bg": {
+			"frame": {
+				"x": 574,
+				"y": 411,
+				"w": 95,
+				"h": 102
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 95,
+				"h": 102
+			},
+			"sourceSize": {
+				"w": 95,
+				"h": 102
+			}
 		}
 	},
 	"meta": {
@@ -67,8 +127,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 763,
-			"h": 602
+			"w": 828,
+			"h": 573
 		},
 		"scale": "1"
 	}

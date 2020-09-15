@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"bag_btn": {
+		"bag_btn_1": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,10 +20,90 @@
 				"h": 87
 			}
 		},
-		"family_btn": {
+		"bag_btn_2": {
 			"frame": {
 				"x": 93,
 				"y": 1,
+				"w": 90,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 90,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 90,
+				"h": 87
+			}
+		},
+		"bag_btn_3": {
+			"frame": {
+				"x": 185,
+				"y": 1,
+				"w": 90,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 90,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 90,
+				"h": 87
+			}
+		},
+		"family_btn_1": {
+			"frame": {
+				"x": 1,
+				"y": 90,
+				"w": 89,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 89,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 89,
+				"h": 87
+			}
+		},
+		"family_btn_2": {
+			"frame": {
+				"x": 92,
+				"y": 90,
+				"w": 89,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 89,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 89,
+				"h": 87
+			}
+		},
+		"family_btn_3": {
+			"frame": {
+				"x": 183,
+				"y": 90,
 				"w": 89,
 				"h": 87
 			},
@@ -43,7 +123,7 @@
 		"home_btn": {
 			"frame": {
 				"x": 1,
-				"y": 90,
+				"y": 179,
 				"w": 86,
 				"h": 78
 			},
@@ -60,10 +140,10 @@
 				"h": 78
 			}
 		},
-		"map_btn": {
+		"map_btn_1": {
 			"frame": {
 				"x": 89,
-				"y": 90,
+				"y": 179,
 				"w": 70,
 				"h": 87
 			},
@@ -80,10 +160,90 @@
 				"h": 87
 			}
 		},
-		"shop_btn": {
+		"map_btn_2": {
 			"frame": {
-				"x": 184,
+				"x": 161,
+				"y": 179,
+				"w": 70,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 70,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 70,
+				"h": 87
+			}
+		},
+		"map_btn_3": {
+			"frame": {
+				"x": 233,
+				"y": 179,
+				"w": 70,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 70,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 70,
+				"h": 87
+			}
+		},
+		"shop_btn_1": {
+			"frame": {
+				"x": 277,
 				"y": 1,
+				"w": 68,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 68,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 68,
+				"h": 87
+			}
+		},
+		"shop_btn_2": {
+			"frame": {
+				"x": 274,
+				"y": 90,
+				"w": 68,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 68,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 68,
+				"h": 87
+			}
+		},
+		"shop_btn_3": {
+			"frame": {
+				"x": 305,
+				"y": 179,
 				"w": 68,
 				"h": 87
 			},
@@ -107,8 +267,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 253,
-			"h": 178
+			"w": 374,
+			"h": 267
 		},
 		"scale": "1"
 	}

@@ -43,11 +43,12 @@
     "buy": "购买",
     "sold": "售出",
     "add": "添加",
-    "source": "来源：",
+    "source": "来源",
     "all": "全部",
     "search": "搜索",
     "tips": "提示",
-    "offline": "您的账号在另一地点登录，您已被迫下线"
+    "offline": "您的账号在另一地点登录，您已被迫下线",
+    "description": "描述"
   },
   "player_info": {
     "title": "信息详情",
@@ -111,11 +112,12 @@
     "daily": "【每日】"
   },
   "furni_unlock": {
-    "unlock": "立即解锁",
+    "unlock": "修复",
     "repair": "立即修复",
     "needMaterials": "解锁所需材料",
     "sold": "可售卖：",
-    "notrading": "不可交易"
+    "notrading": "不可交易",
+    "title": "家具修复"
   },
   "room_upgrade": {
     "clicktocontinue": "点击任意处继续"
@@ -180,7 +182,8 @@
     "new_friend": "新的好友",
     "new_fans": "新增粉丝",
     "lv": "等级",
-    "remove": "移除"
+    "remove": "移除",
+    "unregistered_game": "未注册游戏"
   },
   "friend_invite": {
     "refused": "拒绝",
@@ -221,6 +224,15 @@
     "send": "送货",
     "accele": "加速",
     "receive": "领取",
-    "deliverying":"送货中..."
+    "deliverying": "送货中...",
+    "refreshtips": "确定刷新订单吗？",
+    "refreshtitle": "订单刷新"
+  },
+  "work": {
+    "title": "打 工",
+    "vim": "精力值",
+    "worktimes": "打工次数",
+    "salary": "报酬",
+    "attri": "*{{name}}需要大于{{value}}才可以任职这份工作"
   }
 }

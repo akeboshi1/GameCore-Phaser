@@ -89,6 +89,8 @@ export class Terrain extends BlockObject implements IElement {
 
     public showNickname() {}
 
+    public hideNickname() {}
+
     public showEffected() {}
 
     public turn() {}
@@ -98,6 +100,8 @@ export class Terrain extends BlockObject implements IElement {
     public scaleTween() {}
 
     public setQueue() { }
+
+    public update() { }
 
     public mount() {
         return this;

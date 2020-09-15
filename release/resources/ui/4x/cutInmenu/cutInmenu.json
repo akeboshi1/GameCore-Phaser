@@ -99,6 +99,26 @@
 				"w": 109,
 				"h": 60
 			}
+		},
+		"work": {
+			"frame": {
+				"x": 1,
+				"y": 395,
+				"w": 221,
+				"h": 250
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 221,
+				"h": 250
+			},
+			"sourceSize": {
+				"w": 221,
+				"h": 250
+			}
 		}
 	},
 	"meta": {
@@ -108,7 +128,7 @@
 		"format": "RGBA8888",
 		"size": {
 			"w": 753,
-			"h": 394
+			"h": 646
 		},
 		"scale": "1"
 	}

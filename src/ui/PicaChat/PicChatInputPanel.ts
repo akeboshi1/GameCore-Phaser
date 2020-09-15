@@ -46,7 +46,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mBackground.fillStyle(0, 0.6);
         this.mBackground.fillRect(0, 0, width, height);
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-        this.bottomCon = scene.add.container();
+        this.bottomCon = scene.add.container(0, 0);
         this.bottomCon.setPosition(width * 0.5, height * 0.5);
         const inputBg = new NineSlicePatch(scene, 0, 0, width, 47 * this.dpr, this.key, "chat_Input_bg", {
             left: 2 * this.dpr,
@@ -87,7 +87,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         });
         this.mInput.setOrigin(0, 0.5);
         this.bottomCon.add(this.mInput);
-        this.contentCon = scene.add.container();
+        this.contentCon = scene.add.container(0, 0);
         this.contentCon.setSize(width, 200 * this.dpr);
         this.mOutputText = new BBCodeText(scene, -width * 0.5 + 10 * this.dpr, 0, "", {
             fontSize: 14 * this.dpr + "px",
@@ -122,7 +122,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.contentCon.add(this.gamescroll);
         this.gamescroll.addItem(this.mOutputText);
 
-        this.quickCon = this.scene.add.container();
+        this.quickCon = this.scene.add.container(0, 0);
         this.quickBg = this.scene.make.image({ key: this.key, frame: "home_quick chat _bg" });
         this.quickCon.add(this.quickBg);
         this.quickCon.x = width * 0.5;

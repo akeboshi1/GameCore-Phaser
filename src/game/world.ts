@@ -684,6 +684,48 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
         }
     }
 
+    // private enterVirtualWorld() {
+    //     if (!this.mGame) {
+    //         this.reconnect();
+    //         return;
+    //     }
+    //     this.gameState = GameState.LOGIN;
+    //     if (this.mConfig && this.mConnection) {
+    //         // this.mLoadingManager.start();
+    //         // test login and verified
+    //         const token = localStorage.getItem("token");
+    //         const account = token ? JSON.parse(token) : null;
+    //         if (!this.mConfig.auth_token) {
+    //             if (!account) {
+    //                 this.login();
+    //                 return;
+    //             }
+    //             this.mAccount.setAccount(account);
+    //             this.httpService.refreshToekn(account.refreshToken, account.accessToken)
+    //                 .then((response: any) => {
+    //                     if (response.code === 200) {
+    //                         this.mAccount.refreshToken(response);
+    //                         this.loginEnterWorld();
+    //                     } else {
+    //                         this.login();
+    //                         return;
+    //                     }
+    //                 });
+    //         } else {
+    //             // this.mGame.scene.start(LoadingScene.name, { world: this });
+    //             // this.mLoadingManager.start();
+    //             this.mAccount.setAccount({
+    //                 token: this.mConfig.auth_token,
+    //                 expire: this.mConfig.token_expire,
+    //                 fingerprint: this.mConfig.token_fingerprint,
+    //                 refreshToken: account ? account.refreshToken : "",
+    //                 id: this.mConfig.user_id,
+    //             });
+    //             this.loginEnterWorld();
+    //         }
+    //     }
+    // }
+
     private async loginEnterWorld() {
         this.mLoadingManager.start(LoadingTips.enterGame());
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);

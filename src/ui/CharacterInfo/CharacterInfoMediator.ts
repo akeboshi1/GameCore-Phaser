@@ -4,7 +4,7 @@ import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import CharacterInfoPanel, { FriendRelation } from "./CharacterInfoPanel";
 import { CharacterInfo } from "./CharacterInfo";
-import { Logger } from "../../utils/log";
+import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
 
 export class CharacterInfoMediator extends BaseMediator {
     protected mView: CharacterInfoPanel;
@@ -84,6 +84,7 @@ export class CharacterInfoMediator extends BaseMediator {
             if (code === 200 || code === 201) {
                 if (this.mView) {
                     this.checkRelation(id);
+                    this.updateFrind();
                 }
             }
         });
@@ -94,6 +95,7 @@ export class CharacterInfoMediator extends BaseMediator {
             const { code, data } = response;
             if (code === 200 || code === 201) {
                 this.checkRelation(id);
+                this.updateFrind();
             }
         });
     }
@@ -107,18 +109,24 @@ export class CharacterInfoMediator extends BaseMediator {
             const { code, data } = response;
             if (code === 200) {
                 if (data.length >= 1) {
+                    let relation = FriendRelation.Null;
                     const isBan = data[0].ban;
+                    if (isBan) {
+                        this.mView.setFriendRelation(FriendRelation.Blacklist);
+                        return;
+                    }
                     if (data[0].followed_user === cid) {
-                        this.mView.setFriendRelation(FriendRelation.Followed, isBan);
+                        relation = FriendRelation.Followed;
                     } else if (data[0].followed_user === me) {
-                        this.mView.setFriendRelation(FriendRelation.Fans, isBan);
-                    } else {
-                        this.mView.setFriendRelation(FriendRelation.Null, isBan);
+                        relation = FriendRelation.Fans;
                     }
                     if (data.length >= 2) {
                         if (data[0].user === data[1].followed_user && data[1].followed_user === data[0].user) {
-                            this.mView.setFriendRelation(FriendRelation.Friend, data[0].ban);
+                            relation = FriendRelation.Friend;
                         }
+                    }
+                    if (relation) {
+                        this.mView.setFriendRelation(relation);
                     }
                 } else {
                     this.mView.setFriendRelation(FriendRelation.Null);
@@ -155,5 +163,13 @@ export class CharacterInfoMediator extends BaseMediator {
 
     private onInviteHandler(id: string) {
         this.characterInfo.invite(id);
+    }
+
+    private updateFrind() {
+        const uimanager = this.world.uiManager;
+        const picFriend: PicFriendMediator = <PicFriendMediator> uimanager.getMediator(PicFriendMediator.name);
+        if (picFriend) {
+            picFriend.fetchCurrentFriend();
+        }
     }
 }
