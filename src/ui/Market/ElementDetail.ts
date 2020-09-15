@@ -74,7 +74,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       x: 0,
       style: {
         fontSize: 14 * this.dpr,
-        fontFamily: Font.DEFULT_FONT
+        fontFamily: Font.NUMBER
       }
     }).setOrigin(0.5);
 
