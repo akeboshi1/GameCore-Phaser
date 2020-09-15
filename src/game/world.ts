@@ -801,7 +801,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                     expire: this.mConfig.token_expire,
                     fingerprint: this.mConfig.token_fingerprint,
                     refreshToken: account ? account.refreshToken : "",
-                    id: this.mConfig.user_id,
+                    id: this.mConfig.user_id ? this.mConfig.user_id : account ? account.id : "",
                 });
                 this.loginEnterWorld();
             }
