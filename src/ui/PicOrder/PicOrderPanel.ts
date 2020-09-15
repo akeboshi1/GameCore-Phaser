@@ -444,9 +444,9 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.deliverybg.x = this.width * 0.5 - this.deliverybg.width * 0.5 - 10 * this.dpr;
         } else this.deliverybg.visible = true;
         this.headbg.setFrame("order_ordinary_head_bg");
-        this.refreshBtn.visible = true;
-        this.refreshBtn.setInteractive();
-        this.refreshBtn.setFrameNormal("order_delete_bg");
+        // this.refreshBtn.visible = true;
+        // this.refreshBtn.setInteractive();
+        // this.refreshBtn.setFrameNormal("order_delete_bg");
         this.sendTitle.visible = true;
         if (this.timeID) {
             clearTimeout(this.timeID);
@@ -494,9 +494,9 @@ class OrderItem extends Phaser.GameObjects.Container {
 
     private rewardState(data: op_client.IPKT_Quest) {
         this.headbg.setFrame("order_ordinary_head_bg");
-        this.refreshBtn.visible = true;
-        this.refreshBtn.setInteractive();
-        this.refreshBtn.setFrameNormal("order_delete_bg");
+        // this.refreshBtn.visible = true;
+        // this.refreshBtn.setInteractive();
+        // this.refreshBtn.setFrameNormal("order_delete_bg");
         this.sendBtn.visible = true;
         this.sendBtn.setInteractive();
         this.sendBtn.setFrameNormal("order_yellow_butt");
@@ -525,8 +525,8 @@ class OrderItem extends Phaser.GameObjects.Container {
     private cooldownState(data: op_client.IPKT_Quest) {
         this.headbg.setFrame("order_unknown_head");
         this.headIcon.visible = false;
-        this.refreshBtn.visible = false;
-        this.refreshBtn.disInteractive();
+        // this.refreshBtn.visible = false;
+        // this.refreshBtn.disInteractive();
         this.acceleBtn.visible = true;
         this.acceleBtn.setInteractive();
         this.acceleSpend.visible = true;
@@ -566,6 +566,8 @@ class OrderItem extends Phaser.GameObjects.Container {
         return frame;
     }
     private hideAllElement() {
+        this.refreshBtn.visible = false;
+        this.refreshBtn.disInteractive();
         this.sendBtn.visible = false;
         this.sendBtn.disInteractive();
         this.sendTitle.visible = false;

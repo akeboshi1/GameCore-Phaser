@@ -347,7 +347,7 @@ class WorkItem extends Phaser.GameObjects.Container {
     private onWorkHandler() {
         const curTimestamp = new Date().getTime();
         if (this.pointTimestamp > curTimestamp) return;
-        this.pointTimestamp = curTimestamp + 500;
+        this.pointTimestamp = curTimestamp + 1000;
         if (this.sendHandler) this.sendHandler.runWith(this.jobData.id);
     }
     private onTipsandler(item: PointerImageValue, isdown: boolean) {
