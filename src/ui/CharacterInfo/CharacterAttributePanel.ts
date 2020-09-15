@@ -7,6 +7,7 @@ export class CharacterAttributePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private attriItems: PlayerAttributeValue[] = [];
+    private mspace: number = 10 * this.dpr;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.setSize(width, height);
@@ -14,14 +15,16 @@ export class CharacterAttributePanel extends Phaser.GameObjects.Container {
         this.dpr = dpr;
     }
 
+    public set space(value: number) {
+        this.mspace = value;
+    }
     setAttributeData(datas: op_pkt_def.IPKT_Property[]) {
         const len = datas.length;
         const scaleRadio = (len > 4 ? 2 : 1);
-        const width = this.width + 16 * this.dpr;
+        const width = this.width;
         const height = this.height;
         const cheight = 20 * this.dpr;
         const cwidth = width / 2;
-        const offsetY = 20 * this.dpr;
         const posy: number = -height * 0.5 + 10 * this.dpr;
         for (const item of this.attriItems) {
             item.visible = false;
@@ -36,7 +39,7 @@ export class CharacterAttributePanel extends Phaser.GameObjects.Container {
                 this.attriItems.push(item);
             }
             const x = (width - width / scaleRadio) * 0.5 * (i < 4 ? -1 : 1);
-            const y = posy + cheight * 0.5 + (cheight + offsetY) * (i % 4);
+            const y = posy + cheight * 0.5 + (cheight + this.mspace) * (i % 4);
             item.setPosition(x, y);
             item.setInfo(datas[i]);
             item.visible = true;
@@ -54,7 +57,7 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.setSize(width, height);
         this.icon = new DynamicImage(this.scene, 0, 0);
-        this.icon.x = -22 * dpr;
+        this.icon.x = -width * 0.5 + 10 * dpr;
         // this.icon.setTexture(key, "health");
         this.nameText = this.scene.make.text({
             x: this.icon.x + 13 * dpr, y: 0, text: "Attack:",
@@ -72,7 +75,7 @@ class PlayerAttributeValue extends Phaser.GameObjects.Container {
         if (data.display) {
             const url = Url.getOsdRes(data.display.texturePath);
             this.icon.load(url, this, () => {
-                this.icon.displayWidth = 17 * this.dpr;
+                this.icon.displayWidth = 20 * this.dpr;
                 this.icon.scaleY = this.icon.scaleX;
             });
         }

@@ -17,6 +17,9 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
 import { Logger } from "../../utils/log";
+import { MessageBox } from "../../../lib/rexui/lib/ui/messageBox/MessageBox";
+import { MessageBoxView } from "../MessageBox/MessageBoxView";
+import { AlertView } from "../components/alert.view";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -30,6 +33,7 @@ export class PicOrderPanel extends BasePanel {
     private goldImageValue: ImageValue;
     private royalOrderLimit: op_def.IValueBar;
     private itemtips: ItemInfoTips;
+    private alertView: AlertView;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -138,7 +142,7 @@ export class PicOrderPanel extends BasePanel {
         };
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
-        this.goldImageValue = new ImageValue(this.scene, 50 * this.dpr, 14 * this.dpr, this.dpr);
+        this.goldImageValue = new ImageValue(this.scene, 50 * this.dpr, 14 * this.dpr, this.key, this.dpr);
         this.goldImageValue.setFrameValue("", this.key, "order_precious");
         this.goldImageValue.setTextStyle({
             color: "#144B99", fontSize: 10 * this.dpr, bold: true,
@@ -180,7 +184,20 @@ export class PicOrderPanel extends BasePanel {
     }
 
     private onSendHandler(index: number, orderOperator: op_pkt_def.PKT_Order_Operator) {
-        this.emit("changeorder", index, orderOperator);
+        if (orderOperator === op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE) {
+            if (!this.alertView) this.alertView = new AlertView(this.scene, this.mWorld);
+            this.parentContainer.add(this.alertView);
+            this.alertView.show({
+                text: i18n.t("order.refreshtips"),
+                title: i18n.t("order.refreshtitle"),
+                oy: 302 * this.dpr * this.mWorld.uiScale,
+                callback: () => {
+                    this.emit("changeorder", index, orderOperator);
+                },
+            });
+        } else {
+            this.emit("changeorder", index, orderOperator);
+        }
     }
 
     private onProgressHandler(index: number) {
@@ -198,7 +215,7 @@ export class PicOrderPanel extends BasePanel {
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
         let text: string = data.name + "\n";
-        let source = i18n.t("common.source");
+        let source = i18n.t("common.source") + ":";
         source += data.source;
         source = `[stroke=#333333][color=#333333]${source}[/color][/stroke]`;
         text += source + "\n";
@@ -273,11 +290,11 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.acceleBtn.y = 0;
         this.acceleBtn.setTextStyle({ fontSize: 11 * dpr });
         this.add(this.acceleBtn);
-        this.acceleSpend = new ImageValue(scene, 30 * dpr, 10 * dpr, this.dpr);
+        this.acceleSpend = new ImageValue(scene, 30 * dpr, 10 * dpr, this.key, this.dpr);
         this.acceleSpend.x = this.acceleBtn.x;
         this.acceleSpend.y = this.acceleBtn.y - this.acceleBtn.height * 0.5 - 10 * dpr;
         this.add(this.acceleSpend);
-        this.calcuTime = new ImageValue(scene, 30 * dpr, 10 * dpr, dpr);
+        this.calcuTime = new ImageValue(scene, 30 * dpr, 10 * dpr, this.key, dpr);
         this.add(this.calcuTime);
         this.calcuTime.setTextStyle({
             color: "#144B99", fontSize: 10 * dpr, bold: true,
@@ -308,6 +325,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.orderData = data;
         this.index = index;
         this.hideAllElement();
+        this.bg.setFrame(data.questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_bg" : "order_ordinary_bg");
         if (data.stage !== op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             const url = Url.getOsdRes(data.display.texturePath);
             this.headIcon.load(url, this, () => {
@@ -365,7 +383,6 @@ class OrderItem extends Phaser.GameObjects.Container {
     private deliveryState(data: op_client.IPKT_Quest) {
         const questType = data.questType;
         this.headbg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_head_bg" : "order_ordinary_head_bg");
-        this.bg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_bg" : "order_ordinary_bg");
         this.refreshBtn.visible = true;
         this.refreshBtn.setInteractive();
         this.refreshBtn.setFrameNormal(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_delete_bg" : "order_delete_bg");
@@ -407,11 +424,11 @@ class OrderItem extends Phaser.GameObjects.Container {
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr, this.dpr);
+                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, this.dpr, this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath = "iv_coin");
+            item.setFrameValue(`x${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
             item.setTextStyle({ color: questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "#ffffff" : "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
@@ -427,9 +444,9 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.deliverybg.x = this.width * 0.5 - this.deliverybg.width * 0.5 - 10 * this.dpr;
         } else this.deliverybg.visible = true;
         this.headbg.setFrame("order_ordinary_head_bg");
-        this.refreshBtn.visible = true;
-        this.refreshBtn.setInteractive();
-        this.refreshBtn.setFrameNormal("order_delete_bg");
+        // this.refreshBtn.visible = true;
+        // this.refreshBtn.setInteractive();
+        // this.refreshBtn.setFrameNormal("order_delete_bg");
         this.sendTitle.visible = true;
         if (this.timeID) {
             clearTimeout(this.timeID);
@@ -448,7 +465,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.calcuTime.y = this.height * 0.5 - this.calcuTime.height * 0.5 - 5 * this.dpr;
             if (intervalTime > 0) this.timeID = setTimeout(() => {
                 timeextu();
-            }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
+            }, 1000);// intervalTime >= 60 ? 60000 : intervalTime * 1000
             else {
                 if (this.timeID && this.refreshHandler) this.refreshHandler.run();
                 this.timeID = undefined;
@@ -462,11 +479,11 @@ class OrderItem extends Phaser.GameObjects.Container {
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.dpr, this.dpr);
+                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, this.dpr, this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue(`x${reward.count}`, UIAtlasKey.commonKey, reward.display.texturePath = "iv_coin");
+            item.setFrameValue(`x${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
             item.setTextStyle({ color: "#2154BD" });
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
@@ -477,9 +494,9 @@ class OrderItem extends Phaser.GameObjects.Container {
 
     private rewardState(data: op_client.IPKT_Quest) {
         this.headbg.setFrame("order_ordinary_head_bg");
-        this.refreshBtn.visible = true;
-        this.refreshBtn.setInteractive();
-        this.refreshBtn.setFrameNormal("order_delete_bg");
+        // this.refreshBtn.visible = true;
+        // this.refreshBtn.setInteractive();
+        // this.refreshBtn.setFrameNormal("order_delete_bg");
         this.sendBtn.visible = true;
         this.sendBtn.setInteractive();
         this.sendBtn.setFrameNormal("order_yellow_butt");
@@ -508,8 +525,8 @@ class OrderItem extends Phaser.GameObjects.Container {
     private cooldownState(data: op_client.IPKT_Quest) {
         this.headbg.setFrame("order_unknown_head");
         this.headIcon.visible = false;
-        this.refreshBtn.visible = false;
-        this.refreshBtn.disInteractive();
+        // this.refreshBtn.visible = false;
+        // this.refreshBtn.disInteractive();
         this.acceleBtn.visible = true;
         this.acceleBtn.setInteractive();
         this.acceleSpend.visible = true;
@@ -529,10 +546,10 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.calcuTime.setFrameValue(timetext, this.key, "order_time");
             this.calcuTime.resetSize();
             this.calcuTime.x = this.acceleBtn.x;
-            this.acceleSpend.setFrameValue(minute + "", this.key, "order_diamond");
+            this.acceleSpend.setFrameValue(minute + "", this.key, "iv_diamond_s");
             if (intervalTime > 0) this.timeID = setTimeout(() => {
                 timeextu();
-            }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
+            }, 1000);// intervalTime >= 60 ? 60000 : intervalTime * 1000
             else {
                 if (this.timeID && this.refreshHandler) this.refreshHandler.run();
                 this.timeID = undefined;
@@ -540,7 +557,17 @@ class OrderItem extends Phaser.GameObjects.Container {
         };
         timeextu();
     }
+
+    private getIconName(url: string) {
+        const texturepath = url;
+        const lastindex = texturepath.lastIndexOf("/");
+        const lastindex2 = texturepath.lastIndexOf(".");
+        const frame = texturepath.slice(lastindex + 1, lastindex2);
+        return frame;
+    }
     private hideAllElement() {
+        this.refreshBtn.visible = false;
+        this.refreshBtn.disInteractive();
         this.sendBtn.visible = false;
         this.sendBtn.disInteractive();
         this.sendTitle.visible = false;
@@ -632,11 +659,11 @@ class ImageValue extends Phaser.GameObjects.Container {
     private dpr: number;
     private icon: Phaser.GameObjects.Image;
     private value: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, offsetx: number = 0) {
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, offsetx: number = 0) {
         super(scene);
         this.dpr = dpr;
         this.setSize(width, height);
-        this.icon = scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" });
+        this.icon = scene.make.image({ key, frame: "iv_coin_s" });
         this.value = scene.make.text({ x: 0, y: offsetx, text: "10", style: { color: "#ffffff", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0, 0.5);
         this.add([this.icon, this.value]);

@@ -1,8 +1,88 @@
 {
 	"frames": {
-		"order_delete": {
+		"iv_coin": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 46,
+				"h": 46
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 46,
+				"h": 46
+			},
+			"sourceSize": {
+				"w": 46,
+				"h": 46
+			}
+		},
+		"iv_coin_s": {
+			"frame": {
+				"x": 49,
+				"y": 1,
+				"w": 31,
+				"h": 25
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 31,
+				"h": 25
+			},
+			"sourceSize": {
+				"w": 31,
+				"h": 25
+			}
+		},
+		"iv_diamond": {
+			"frame": {
+				"x": 82,
+				"y": 1,
+				"w": 48,
+				"h": 46
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 48,
+				"h": 46
+			},
+			"sourceSize": {
+				"w": 48,
+				"h": 46
+			}
+		},
+		"iv_diamond_s": {
+			"frame": {
+				"x": 132,
+				"y": 1,
+				"w": 31,
+				"h": 25
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 31,
+				"h": 25
+			},
+			"sourceSize": {
+				"w": 31,
+				"h": 25
+			}
+		},
+		"order_delete": {
+			"frame": {
+				"x": 165,
 				"y": 1,
 				"w": 19,
 				"h": 21
@@ -22,7 +102,7 @@
 		},
 		"order_delete_bg": {
 			"frame": {
-				"x": 22,
+				"x": 186,
 				"y": 1,
 				"w": 34,
 				"h": 33
@@ -42,7 +122,7 @@
 		},
 		"order_demand_icon": {
 			"frame": {
-				"x": 58,
+				"x": 222,
 				"y": 1,
 				"w": 62,
 				"h": 71
@@ -58,51 +138,11 @@
 			"sourceSize": {
 				"w": 62,
 				"h": 71
-			}
-		},
-		"order_diamond": {
-			"frame": {
-				"x": 122,
-				"y": 1,
-				"w": 31,
-				"h": 25
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 31,
-				"h": 25
-			},
-			"sourceSize": {
-				"w": 31,
-				"h": 25
-			}
-		},
-		"order_diamond_middle": {
-			"frame": {
-				"x": 155,
-				"y": 1,
-				"w": 48,
-				"h": 46
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 48,
-				"h": 46
-			},
-			"sourceSize": {
-				"w": 48,
-				"h": 46
 			}
 		},
 		"order_favorability": {
 			"frame": {
-				"x": 205,
+				"x": 286,
 				"y": 1,
 				"w": 31,
 				"h": 25
@@ -162,7 +202,7 @@
 		},
 		"order_precious": {
 			"frame": {
-				"x": 238,
+				"x": 319,
 				"y": 1,
 				"w": 30,
 				"h": 28
@@ -202,7 +242,7 @@
 		},
 		"order_precious_delete_bg": {
 			"frame": {
-				"x": 270,
+				"x": 351,
 				"y": 1,
 				"w": 34,
 				"h": 34
@@ -242,7 +282,7 @@
 		},
 		"order_progress_bottom": {
 			"frame": {
-				"x": 306,
+				"x": 387,
 				"y": 1,
 				"w": 31,
 				"h": 21
@@ -262,7 +302,7 @@
 		},
 		"order_progress_finished": {
 			"frame": {
-				"x": 339,
+				"x": 420,
 				"y": 1,
 				"w": 70,
 				"h": 70
@@ -282,7 +322,7 @@
 		},
 		"order_progress_ok": {
 			"frame": {
-				"x": 411,
+				"x": 492,
 				"y": 1,
 				"w": 44,
 				"h": 33
@@ -302,8 +342,8 @@
 		},
 		"order_progress_top": {
 			"frame": {
-				"x": 457,
-				"y": 1,
+				"x": 132,
+				"y": 36,
 				"w": 32,
 				"h": 21
 			},
@@ -360,50 +400,10 @@
 				"h": 64
 			}
 		},
-		"order_silver": {
-			"frame": {
-				"x": 491,
-				"y": 1,
-				"w": 31,
-				"h": 25
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 31,
-				"h": 25
-			},
-			"sourceSize": {
-				"w": 31,
-				"h": 25
-			}
-		},
-		"order_silver_middle": {
-			"frame": {
-				"x": 305,
-				"y": 204,
-				"w": 46,
-				"h": 46
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 46,
-				"h": 46
-			},
-			"sourceSize": {
-				"w": 46,
-				"h": 46
-			}
-		},
 		"order_time": {
 			"frame": {
-				"x": 524,
-				"y": 1,
+				"x": 49,
+				"y": 36,
 				"w": 20,
 				"h": 20
 			},
@@ -442,7 +442,7 @@
 		},
 		"order_title_bg": {
 			"frame": {
-				"x": 546,
+				"x": 538,
 				"y": 1,
 				"w": 378,
 				"h": 159
@@ -527,7 +527,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 925,
+			"w": 917,
 			"h": 489
 		},
 		"scale": "1"

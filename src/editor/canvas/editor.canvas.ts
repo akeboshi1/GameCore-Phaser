@@ -24,7 +24,8 @@ export class EditorCanvas {
             backgroundColor: "#464646",
             render: {
                 pixelArt: true,
-                roundPixels: true
+                roundPixels: true,
+                premultipliedAlpha: false,
             },
             plugins: {
                 scene: [

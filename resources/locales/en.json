@@ -43,11 +43,12 @@
     "sold": "Sell",
     "add": "Add",
     "remove": "Remove",
-    "source": "Source:",
+    "source": "Source",
     "all": "All",
     "search": "search",
     "tips": "tips",
-    "offline": "Your account is logged in at another location and you have been forced to go offline"
+    "offline": "Your account is logged in at another location and you have been forced to go offline",
+    "description": "Description"
   },
   "player_info": {
     "title": "Personal Data",
@@ -111,11 +112,12 @@
     "daily": "[daily]"
   },
   "furni_unlock": {
-    "unlock": "Unlock",
+    "unlock": "REPAIR",
     "repair": "D: REPAIR",
     "needMaterials": "Materials",
     "sold": "D: Price",
-    "notrading": "D: Not Trading"
+    "notrading": "D: Not Trading",
+    "title": "REPAIR"
   },
   "room_upgrade": {
     "clicktocontinue": "Click to continue"
@@ -180,7 +182,8 @@
     "new_friend": "New Friend",
     "new_fans": "New Fans",
     "lv": "Lv",
-    "remove": "Remove"
+    "remove": "Remove",
+    "unregistered_game": "Unregistered game"
   },
   "friend_invite": {
     "refused": "refused",
@@ -221,6 +224,15 @@
     "send": "DELIVERY",
     "accele": "ACCELERATE",
     "receive": "RECEIVE",
-    "deliverying": "DELIVERYING..."
+    "deliverying": "DELIVERYING...",
+    "refreshtips": "Are you sure to refresh the order",
+    "refreshtitle": "ORDER REFRESH"
+  },
+  "work": {
+    "title": "WORK",
+    "vim": "VIM",
+    "worktimes": "WORKTIME",
+    "salary": "SALARY",
+    "attri": "*{{name}}need more than{{value}}to take this job"
   }
 }

@@ -16,7 +16,9 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
+import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
+import { Renderer } from "tooqinggamephaser";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Image;
@@ -45,7 +47,7 @@ export default class PicFriendPanel extends BasePanel {
         this.mBackGround.fillStyle(0x000000, 0.66);
         this.mBackGround.fillRect(0, 0, w, h);
         this.content.setPosition(w / 2, h / 2);
-        this.friendContainer.resize();
+        if (this.friendContainer.parentContainer) this.friendContainer.resize();
     }
 
     public show(param?: any) {
@@ -107,7 +109,11 @@ export default class PicFriendPanel extends BasePanel {
     }
 
     public updateFriend(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
-        this.friendContainer.updateFriends(content);
+        if (this.mShowingSubContainer) {
+            this.mShowingSubContainer.updateFriends(content);
+        } else {
+            this.friendContainer.updateFriends(content);
+        }
     }
 
     filterById(id: string) {
@@ -115,6 +121,12 @@ export default class PicFriendPanel extends BasePanel {
             this.mShowingSubContainer.filterById(id);
         } else if (this.friendContainer) {
             this.friendContainer.filterById(id);
+        }
+    }
+
+    fetchCurrentFriend() {
+        if (this.friendContainer) {
+            this.friendContainer.fetchCurrentFriend();
         }
     }
 
@@ -187,6 +199,8 @@ export default class PicFriendPanel extends BasePanel {
         this.mShowingSubContainer.on("hide", this.onHideSearchHandler, this);
         this.mShowingSubContainer.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
         this.mShowingSubContainer.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
+        this.mShowingSubContainer.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqFriendListHandler, this);
+        this.mShowingSubContainer.on(PicFriendEvent.REQ_FRIEND_RELATION, this.onReqFriendRelationHandler, this);
         this.content.remove(this.friendContainer);
         this.content.add(this.mShowingSubContainer);
         this.mShowingSubContainer.resize();
@@ -202,6 +216,7 @@ export default class PicFriendPanel extends BasePanel {
             this.mShowingSubContainer.destroy();
             this.mShowingSubContainer = null;
         }
+        this.friendContainer.fetchCurrentFriend();
     }
 
     private onReqFriendListHandler(ids: number[]) {
@@ -210,6 +225,13 @@ export default class PicFriendPanel extends BasePanel {
 
     private onRendererEventHandler(event: string, args) {
         if (event) this.emit(event, args);
+    }
+
+    private onReqFriendRelationHandler(friends: FriendData[]) {
+        for (const friend of friends) {
+            friend.relation = this.friendContainer.checkRelation(friend);
+        }
+        this.mShowingSubContainer.updateFriends(friends);
     }
 }
 
@@ -358,16 +380,20 @@ class MainContainer extends FriendContainer {
         const result: FriendData[] = [];
         let target = null;
         const ids = [];
+        let relation: FriendType;
         for (const friend of data) {
             if (type === FriendChannel.Followes) {
                 target = friend.followed_user;
+                relation = FriendType.Follows;
             } else if (type === FriendChannel.Fans) {
                 target = friend.user;
+                relation = FriendType.Fans;
             } else {
                 target = friend;
+                relation = FriendType.Friend;
             }
             if (target) {
-                result.push({ type, id: target._id, nickname: target.nickname});
+                result.push({ type, id: target._id, nickname: target.nickname, relation });
                 ids.push(target._id);
             }
         }
@@ -408,6 +434,9 @@ class MainContainer extends FriendContainer {
         if (title) this.titleText.setText(title);
         const friends = this.friendDatas.get(this.channelGroup.selectedIndex);
         if (friends) this.friendNum.setText(`${friendType}: ${friends.length}`);
+        if (this.friendTabel) {
+            this.friendTabel.setT(0);
+        }
     }
 
     public filterById(id: string) {
@@ -420,6 +449,22 @@ class MainContainer extends FriendContainer {
         }
         this.showingFriends = this.showingFriends.filter((friend: FriendData) => friend.id !== id);
         this.friendTabel.setItems(this.showingFriends);
+    }
+
+    public checkRelation(friend: FriendData) {
+        const friends = this.friendDatas.get(FriendChannel.Friends);
+        const index = friends.findIndex((f) => f.id === friend.id);
+        if (index > -1) {
+            return FriendType.Friend;
+        }
+        return FriendType.Fans;
+    }
+
+    public fetchCurrentFriend() {
+        if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
+            return;
+        }
+        this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
     }
 
     protected draw() {
@@ -462,13 +507,13 @@ class MainContainer extends FriendContainer {
             fontSize: 14 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         };
-        const friendsTab = new Button(this.scene, this.key, "friend_default", "friend_select", i18n.t("friendlist.friends"));
+        const friendsTab = new TabButton(this.scene, this.key, "friend_default", "friend_select", i18n.t("friendlist.friends"));
         friendsTab.y = this.height * 0.5 - 14 * this.dpr - friendsTab.height * 0.5;
         friendsTab.setTextStyle(tableFont);
-        const fansTab = new Button(this.scene, this.key, "fans_default", "fans_select", i18n.t("friendlist.fans"));
+        const fansTab = new TabButton(this.scene, this.key, "fans_default", "fans_select", i18n.t("friendlist.fans"));
         fansTab.y = friendsTab.y;
         fansTab.setTextStyle(tableFont);
-        const followsTab = new Button(this.scene, this.key, "follow_default", "follow_select", i18n.t("friendlist.follow"));
+        const followsTab = new TabButton(this.scene, this.key, "follow_default", "follow_select", i18n.t("friendlist.follow"));
         followsTab.y = friendsTab.y;
         followsTab.setTextStyle(tableFont);
         friendsTab.x = (-fansTab.width - friendsTab.width) * 0.5 - 0.67 * this.dpr;
@@ -488,7 +533,7 @@ class MainContainer extends FriendContainer {
             // item.on(PicFriendEvent.UNFOLLOW, this.onReqUnfollowFriendHandler, this);
             item.on(PicFriendEvent.RENDERER_EVENT, this.onRendererEventHandler, this);
             return item;
-        }, new Handler(this, this.onSelectItemHandler), this.createCallback.bind(this));
+        }, new Handler(this, this.onSelectItemHandler));
 
         // this.add(this.navigate);
     }
@@ -499,6 +544,7 @@ class MainContainer extends FriendContainer {
 
     private onFtechPlayerHandler(friend: FriendData) {
         this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        this.searchInput.setBlur();
     }
 
     private onReqFollowFriendHandler(friend: FriendData) {
@@ -510,10 +556,7 @@ class MainContainer extends FriendContainer {
     }
 
     private onSelectChannelHandler(item) {
-        if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
-            return;
-        }
-        this.emit(PicFriendEvent.FETCH_FRIEND, this.channelGroup.selectedIndex);
+        this.fetchCurrentFriend();
     }
 
     private onSelectItemHandler(item) {
@@ -537,6 +580,7 @@ class MainContainer extends FriendContainer {
 
     private onShowAddFriendHandler() {
         this.emit("shwoAddFriend", FriendChannel.Search);
+        this.searchInput.setBlur();
     }
 
     private onSeachHandler() {
@@ -622,20 +666,17 @@ class PicFriendItem extends Container {
     private createRenderer(type: FriendChannel) {
         // TODO 改成反射
         switch(type) {
+            case FriendChannel.Fans:
+            case FriendChannel.Search:
             case FriendChannel.Friends:
+            case FriendChannel.Followes:
             case FriendChannel.NewFriend:
+            case FriendChannel.Blacklist:
                 return new FriendRenderer(this.scene, this);
             case FriendChannel.Null:
                 return new NullRenderer(this.scene, this);
             case FriendChannel.Menu:
                 return new MenuRenderer(this.scene, this);
-            case FriendChannel.Followes:
-                return new FollowRenderer(this.scene, this);
-            case FriendChannel.Fans:
-            case FriendChannel.Search:
-                return new FansRenderer(this.scene, this);
-            case FriendChannel.Blacklist:
-                return new BlacklistRenderer(this.scene, this);
         }
     }
 
@@ -730,7 +771,9 @@ class FriendRenderer implements IRenderer {
     protected nameText: Text;
     protected itemData: any;
     protected level: Text;
-    constructor(scene: Phaser.Scene, protected owner: PicFriendItem) {
+    protected addBtn: NineSliceButton;
+    protected curRelation: FriendType;
+    constructor(protected scene: Phaser.Scene, protected owner: PicFriendItem) {
         this.icon = scene.make.image({x: 7.44 * owner.dpr - owner.width * 0.5, key: owner.key, frame: "offline_head"}).setOrigin(0, 0.5).setInteractive().on("pointerup", this.onHeadhandler, this);
         this.nameText = scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * owner.dpr, y: -this.icon.height * 0.5 + 1 * owner.dpr, style: {
             fontSize: 10 * owner.dpr,
@@ -749,14 +792,22 @@ class FriendRenderer implements IRenderer {
             }
         });
 
-        owner.add([this.icon, this.nameText, this.level]);
+        this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
+        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        this.owner.add(this.addBtn);
+
+        owner.add([this.icon, this.nameText, this.level, this.addBtn]);
     }
 
     public setItemData(data: FriendData) {
         this.itemData = data;
         this.nameText.text = data.nickname;
-        const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : "";
+        const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : i18n.t("friendlist.unregistered_game");
         this.level.setText(lv);
+        if (this.curRelation !== data.relation) {
+            this.curRelation = data.relation;
+            this.updateRelation();
+        }
     }
 
     public destroy() {
@@ -769,19 +820,31 @@ class FriendRenderer implements IRenderer {
         }
     }
 
-    protected onHeadhandler() {
-        this.owner.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.itemData);
+    protected updateRelation() {
+        if (this.curRelation && this[this.curRelation]) {
+            this[this.curRelation]();
+        } else {
+            this.addBtn.visible = false;
+        }
     }
-}
 
-class FansRenderer extends FriendRenderer {
-    protected addBtn: NineSliceButton;
-    constructor(protected scene: Phaser.Scene, owner: PicFriendItem) {
-        super(scene, owner);
+    protected fans() {
+        this.addBtn.visible = true;
+        this.addBtn.setText(i18n.t("friendlist.follow"));
+    }
 
-        this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
-        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
-        this.owner.add(this.addBtn);
+    protected follows() {
+        this.addBtn.visible = true;
+        this.addBtn.setText(i18n.t("friendlist.unfollow"));
+    }
+
+    protected blacklist() {
+        this.addBtn.visible = true;
+        this.addBtn.setText(i18n.t("friendlist.remove"));
+    }
+
+    protected null() {
+        this.fans();
     }
 
     protected createAddBtn(text: string) {
@@ -800,6 +863,21 @@ class FansRenderer extends FriendRenderer {
             fontFamily: Font.DEFULT_FONT
         });
         return button;
+    }
+
+    protected onHeadhandler() {
+        this.owner.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.itemData);
+    }
+
+    protected onAddHandler() {
+        if (this.curRelation && this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, this.curRelation, this.itemData.id);
+        // this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
+    }
+}
+
+class FansRenderer extends FriendRenderer {
+    constructor(scene: Phaser.Scene, owner: PicFriendItem) {
+        super(scene, owner);
     }
 
     protected onAddHandler() {
@@ -870,6 +948,9 @@ class SubFriendContainer extends FriendContainer {
         if (this.gridTable) this.gridTable.setItems(this.items);
     }
 
+    public updateFriends(data: any) {
+    }
+
     public fetchEventName() {
         return "";
     }
@@ -927,11 +1008,18 @@ class SearchContainer extends SubFriendContainer {
             return;
         }
         const result: FriendData[] = [];
+        const ids = [];
         for (const player of data) {
             const { platformId, nickname, level } = player;
             result.push({ type: this.friendType, nickname, id: platformId, lv: level.level });
         }
-        super.setItems(result);
+        this.emit(PicFriendEvent.REQ_FRIEND_RELATION, result);
+        // super.setItems(result);
+    }
+
+    updateFriends(items: any) {
+        this.items = items;
+        if (this.gridTable) this.gridTable.setItems(items);
     }
 
     protected draw() {
@@ -988,11 +1076,31 @@ class BlackContainer extends SubFriendContainer {
         }
         const result = [];
         let followed_user = null;
+        const ids = [];
         for (const friend of data) {
             followed_user = friend.followed_user;
-            if (followed_user) result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname });
+            if (followed_user) {
+                ids.push(followed_user._id);
+                result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname, relation: FriendType.Blacklist });
+            }
         }
         super.setItems(result);
+        if (ids.length > 0) {
+            this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+        }
+    }
+
+    updateFriends(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+        const playerInfos = content.playerInfos;
+        let platformFriend = null;
+        for (const player of playerInfos) {
+            platformFriend = this.items.find((friend) => friend.id === player.platformId);
+            if (platformFriend) {
+                platformFriend.nickname = player.nickname;
+                if (player.level) platformFriend.lv = player.level.level;
+            }
+        }
+        if (this.gridTable) this.gridTable.setItems(this.items);
     }
 
     fetchEventName() {
@@ -1119,6 +1227,7 @@ export interface FriendData {
     nickname?: string;
     username?: string;
     menuData?: MenuData;
+    relation?: FriendType;
 }
 
 export enum FriendChannel {
@@ -1131,4 +1240,12 @@ export enum FriendChannel {
     Menu,
     NewFans,
     Null
+}
+
+export enum FriendType {
+    Null = "null",
+    Friend = "friend",
+    Fans = "fans",
+    Follows = "follows",
+    Blacklist = "blacklist"
 }

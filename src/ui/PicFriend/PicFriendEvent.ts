@@ -15,11 +15,6 @@ export namespace PicFriendEvent {
     export const UNFOLLOW: string = "unfollow";
 
     /**
-     * 添加黑名单
-     */
-    export const BanUser: string = "banUser";
-
-    /**
      * 移除黑名单
      */
     export const REMOVE_BAN_USER: string = "removeBanUser";
@@ -68,4 +63,9 @@ export namespace PicFriendEvent {
      * Server返回的搜索结果
      */
     export const SEARCH_RESULT: string = "searchResult";
+
+    /**
+     * 请求好友关系
+     */
+    export const REQ_FRIEND_RELATION: string = "reqFriendRelation";
 }

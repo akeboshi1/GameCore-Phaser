@@ -113,10 +113,10 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
             {
             api_root: this.mConfig.api_root,
             auth_token: this.mConfig.auth_token,
-            token_expire: string | null;
-            token_fingerprint: string;
-            user_id: string;
-            game_id: string;
+            token_expire: this.mConfig.token_expire,
+            token_fingerprint: this.mConfig.token_fingerprint,
+            user_id: this.mConfig.user_id,
+            game_id: this.mConfig.game_id,
             virtual_world_id: string;
             ui_scale?: number;
             devicePixelRatio?: number;
@@ -683,6 +683,48 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
             this.mInputManager.resize(width, height);
         }
     }
+
+    // private enterVirtualWorld() {
+    //     if (!this.mGame) {
+    //         this.reconnect();
+    //         return;
+    //     }
+    //     this.gameState = GameState.LOGIN;
+    //     if (this.mConfig && this.mConnection) {
+    //         // this.mLoadingManager.start();
+    //         // test login and verified
+    //         const token = localStorage.getItem("token");
+    //         const account = token ? JSON.parse(token) : null;
+    //         if (!this.mConfig.auth_token) {
+    //             if (!account) {
+    //                 this.login();
+    //                 return;
+    //             }
+    //             this.mAccount.setAccount(account);
+    //             this.httpService.refreshToekn(account.refreshToken, account.accessToken)
+    //                 .then((response: any) => {
+    //                     if (response.code === 200) {
+    //                         this.mAccount.refreshToken(response);
+    //                         this.loginEnterWorld();
+    //                     } else {
+    //                         this.login();
+    //                         return;
+    //                     }
+    //                 });
+    //         } else {
+    //             // this.mGame.scene.start(LoadingScene.name, { world: this });
+    //             // this.mLoadingManager.start();
+    //             this.mAccount.setAccount({
+    //                 token: this.mConfig.auth_token,
+    //                 expire: this.mConfig.token_expire,
+    //                 fingerprint: this.mConfig.token_fingerprint,
+    //                 refreshToken: account ? account.refreshToken : "",
+    //                 id: this.mConfig.user_id,
+    //             });
+    //             this.loginEnterWorld();
+    //         }
+    //     }
+    // }
 
     private async loginEnterWorld() {
         this.mLoadingManager.start(LoadingTips.enterGame());

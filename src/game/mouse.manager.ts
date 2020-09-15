@@ -44,10 +44,6 @@ export class MouseManager extends PacketHandler {
         this.mScene = room.scene;
         this.mRoom = <Room>room;
         if (!this.mScene) return;
-        try {
-            room.addMouseListen();
-        } catch (e) {
-        }
         room.scene.input.on("gameobjectdown", this.groundDown, this);
         // room.scene.input.on("gameobjectup", this.groundUp, this);
         room.scene.input.on("pointerdown", this.pointerDownHandler, this);

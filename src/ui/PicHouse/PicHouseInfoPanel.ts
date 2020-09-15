@@ -115,8 +115,8 @@ class HouseAttributeValue extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.nameText = this.scene.make.text({
             x: -width * 0.5 + 15 * dpr, y: 0, text: "",
-            style: { fontFamily: Font.BOLD_FONT, fontSize: 14 * dpr, color: "#FFC51A" }
-        }).setOrigin(0, 0.5).setStroke("#0", 4).setResolution(dpr);
+            style: { fontFamily: Font.BOLD_FONT, fontSize: 14 * dpr, bold: true, color: "#FFC51A" }
+        }).setOrigin(0, 0.5).setResolution(dpr);
         this.valueText = new BBCodeText(this.scene, 0, 0, "", {
             color: "#000000",
             fontSize: 13 * this.dpr,
