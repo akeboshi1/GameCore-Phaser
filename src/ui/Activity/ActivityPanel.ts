@@ -5,10 +5,12 @@ import { Logger } from "../../utils/log";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { Button } from "../../../lib/rexui/lib/ui/button/Button";
+import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
     private content: Phaser.GameObjects.Container;
+    private mGameScroll: GameScroller;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
     }
@@ -17,8 +19,9 @@ export class ActivityPanel extends BasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.content.x = width - 20 * this.dpr;
-        this.content.y = 90 * this.dpr;
+        this.content.y = this.content.height * 0.5 + 90 * this.dpr;
         this.setSize(w, h);
+        this.mGameScroll.refreshMask();
     }
 
     show(param?: any) {
@@ -34,11 +37,9 @@ export class ActivityPanel extends BasePanel {
             return;
         }
         if (active.name === "activity.taskbtn") {
-            const btn = <Button>this.content.list[3];
+            const btn = <Phaser.GameObjects.Image>(this.mGameScroll.getItemAt(3));
             btn.visible = active.visible;
-            if (!active.disabled) {
-                btn.setInteractive();
-            } else btn.removeInteractive();
+            this.mGameScroll.Sort();
         }
     }
 
@@ -48,52 +49,47 @@ export class ActivityPanel extends BasePanel {
     }
 
     protected init() {
+        const conWidth = 60 * this.dpr, conHeight = 300 * this.dpr;
         this.content = this.scene.make.container(undefined, false);
+        this.content.setSize(conWidth, conHeight);
+        const img = this.scene.make.image({ key: this.key, frame: "home_more" });
+        this.content.add(img);
+        img.y = -conHeight * 0.5 + img.height * 0.5;
         this.add(this.content);
+        this.mGameScroll = new GameScroller(this.scene, {
+            x: 0,
+            y: 0,
+            width: this.content.width,
+            height: this.content.height - 50 * this.dpr,
+            zoom: this.scale,
+            dpr: this.dpr,
+            align: 2,
+            orientation: 0,
+            space: 10 * this.dpr,
+            cellupCallBack: (gameobject) => {
+                this.onPointerUpHandler(gameobject);
+            }
+        });
+        this.content.add(this.mGameScroll);
         for (let i = 0; i < 4; i++) {
-            // const img = this.scene.make.image({
-            //     key: this.key,
-            //     frame: `icon_${i + 1}`
-            // }, false);
-            this.content.add(new Button(this.scene, this.key, `icon_${i + 1}`));
+            const frame = `icon_${i + 1}`;
+            const image = this.scene.make.image({ key: this.key, frame });
+            image.name = i + 1 + "";
+            this.mGameScroll.addItem(image);
         }
-
-        const subList = this.content.list;
-        const offsetY: number = 15 * this.dpr;
-        let tmpWid: number = 0;
-        let height: number = 0;
-        const handler = new Handler(this, this.onClickHandler);
-        for (let i = 0; i < subList.length; i++) {
-            const button = <Button>subList[i];
-            button.y = button.height * button.originY + height;
-            height += button.height + offsetY;
-            tmpWid = button.width;
-            button.on(CoreUI.MouseEvent.Tap, () => {
-                handler.runWith(i + 1);
-            }, this);
-            button.setInteractive();
-        }
-
-        // const foldBtn = this.scene.make.image({ key: this.key, frame: "home_more" });
-        // this.content.add(foldBtn);
-        // foldBtn.setInteractive();
-        // foldBtn.on("pointerup", this.onFoldBtnHandler, this);
-        this.resize(tmpWid, height);
+        this.mGameScroll.Sort();
+        this.resize(conWidth, conHeight);
         super.init();
     }
 
-    private onClickHandler(name: number) {
-        if (name === 4) {
+    private onClickHandler(name: string) {
+        if (name === "4") {
             this.emit("showPanel", "Task");
-        } else if (name === 3) {
+        } else if (name === "3") {
             this.emit("showPanel", "PicFriend");
-        } else if (name === 2) {
+        } else if (name === "2") {
             // this.emit("showPanel", "GMTools");
         }
-    }
-
-    private onFoldBtnHandler() {
-
     }
     private checkUpdateActive() {
         const arr = this.mWorld.uiManager.getActiveUIData("Activity");
@@ -103,5 +99,10 @@ export class ActivityPanel extends BasePanel {
             }
         }
 
+    }
+
+    private onPointerUpHandler(gameobject) {
+        const name = gameobject.name;
+        this.onClickHandler(name);
     }
 }

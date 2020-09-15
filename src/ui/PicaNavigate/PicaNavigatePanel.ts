@@ -5,15 +5,16 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 import { i18n } from "../../i18n";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { ResUtils } from "../../utils/resUtil";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";
   private readonly key_lang: string = "key_lang";
   private mBackground: Phaser.GameObjects.Image;
-  private mMapBtn: Phaser.GameObjects.Image;
-  private mShopBtn: Phaser.GameObjects.Image;
-  private mBagBtn: Phaser.GameObjects.Image;
-  private mFamilyBtn: Phaser.GameObjects.Image;
-  private mGoHomeBtn: Phaser.GameObjects.Image;
+  private mMapBtn: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+  private mShopBtn: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+  private mBagBtn: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+  private mFamilyBtn: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+  private mGoHomeBtn: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
   private mCloseBtn: Phaser.GameObjects.Image;
   constructor(scene: Phaser.Scene, world: WorldService) {
     super(scene, world);
@@ -92,10 +93,16 @@ export class PicaNavigatePanel extends BasePanel {
       else this.mGoHomeBtn.removeInteractive();
     }
   }
+  public get isZh_CN() {
+    if (i18n.language !== "zh-CN") {
+      return false;
+    }
+    return true;
+  }
   protected preload() {
     this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
     let lang = "cn";
-    if (i18n.language !== "zh-CN") {
+    if (!this.isZh_CN) {
       lang = "en";
     }
     this.addAtlas(this.key_lang, "pica_navigate/pica_navigate" + `_${lang}.png`, "pica_navigate/pica_navigate" + `_${lang}.json`);
@@ -105,13 +112,13 @@ export class PicaNavigatePanel extends BasePanel {
   protected init() {
     this.mBackground = this.createImage(UIAtlasKey.commonKey, "menu_bg");
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    this.mMapBtn = this.createImage(this.key_lang, "map_btn").setInteractive();
-    this.mShopBtn = this.createImage(this.key_lang, "shop_btn").setInteractive();
-    this.mBagBtn = this.createImage(this.key_lang, "bag_btn").setInteractive();
-    this.mFamilyBtn = this.createImage(this.key_lang, "family_btn").setInteractive();
+    this.mMapBtn = this.createButton(this.key_lang, "map_btn");
+    this.mShopBtn = this.createButton(this.key_lang, "shop_btn");
+    this.mBagBtn = this.createButton(this.key_lang, "bag_btn");
+    this.mFamilyBtn = this.createButton(this.key_lang, "family_btn");
     this.mGoHomeBtn = this.createImage(this.key_lang, "home_btn").setInteractive();
     this.mCloseBtn = this.createImage(UIAtlasKey.commonKey, "close_1").setInteractive();
-    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn,this.mGoHomeBtn];
+    const list = [this.mMapBtn, this.mShopBtn, this.mBagBtn, this.mFamilyBtn, this.mGoHomeBtn];
     this.add([this.mBackground]);
     this.add(list);
     this.add(this.mCloseBtn);
@@ -131,11 +138,25 @@ export class PicaNavigatePanel extends BasePanel {
     super.init();
   }
 
+  private createButton(key: string, frame: string) {
+    let button: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+    if (this.isZh_CN) button = this.createImage(key, frame);
+    else button = this.createSprite(key, frame);
+    button.setInteractive();
+    return button;
+  }
   private createImage(key: string, frame: string) {
     return this.scene.make.image({
       key,
       frame
     }, false);
+  }
+
+  private createSprite(key: string, frame: string) {
+    const sprite = this.scene.make.sprite({ key: this.key_lang, frame: frame + "_1" });
+    this.scene.anims.create({ key: frame, frames: this.scene.anims.generateFrameNames(this.key_lang, { prefix: frame + "_", frames: [1, 3] }), duration: 500, repeat: -1 });
+    sprite.play(frame);
+    return sprite;
   }
 
   private onShowMapHandler() {
@@ -168,6 +189,5 @@ export class PicaNavigatePanel extends BasePanel {
         this.updateUIState(data);
       }
     }
-
   }
 }
