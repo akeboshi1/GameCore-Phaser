@@ -113,10 +113,10 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
             {
             api_root: this.mConfig.api_root,
             auth_token: this.mConfig.auth_token,
-            token_expire: string | null;
-            token_fingerprint: string;
-            user_id: string;
-            game_id: string;
+            token_expire: this.mConfig.token_expire,
+            token_fingerprint: this.mConfig.token_fingerprint,
+            user_id: this.mConfig.user_id,
+            game_id: this.mConfig.game_id,
             virtual_world_id: string;
             ui_scale?: number;
             devicePixelRatio?: number;
