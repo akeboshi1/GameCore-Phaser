@@ -17,28 +17,20 @@ import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 import { Render } from "../render/render";
 
 export interface WorldService {
-    connection: ConnectionService;
-    clock: Clock;
-    moveStyle: number;
     orientation: number;
-    gameState: GameState;
     readonly game: Phaser.Game;
-    readonly roomManager: RoomManager;
     readonly elementStorage: IElementStorage;
     readonly uiManager: UiManager;
     readonly inputManager: InputManager;
     readonly mouseManager: MouseManager;
-    readonly playerDataManager: PlayerDataManager;
     readonly httpService: HttpService;
     readonly uiScale: number;
     readonly scaleRatio: number;
     readonly uiRatio: number;
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
-    readonly httpClock: HttpClock;
     render(): Render;
     reconnect();
-    startHeartBeat();
     changeScene();
     getSize(): Size;
     getConfig(): ILauncherConfig;
@@ -47,7 +39,7 @@ export interface WorldService {
     onBlur();
     setKeyBoardHeight(height: number);
     changeRoom(room: IRoomService);
-
+    enterVirtualWorld();
     startFullscreen();
     stopFullscreen();
 

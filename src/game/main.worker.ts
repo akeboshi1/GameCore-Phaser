@@ -5,8 +5,6 @@ import { IConnectListener, SocketConnection, SocketConnectionError } from "../..
 import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
 import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/heartBeat.worker";
-import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
-import { Connection } from "../../lib/net/connection.service";
 import { Lite } from "game-capsule";
 import { IPosition45Obj, Position45 } from "../utils/position45";
 import { ICameraService, CamerasManager } from "./cameras/cameras.manager";
@@ -14,7 +12,6 @@ import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
 import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
 import { Pos } from "../utils/pos";
-import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Element, IElement } from "./element/element";
 import { IBlockObject } from "./cameras/block.object";
@@ -28,20 +25,23 @@ import { Brush, BrushEnum } from "../const/brush";
 import { MouseFollow } from "./editor/mouse.follow";
 import { SelectedElement } from "./editor/selected.element";
 import { DisplayObjectPool } from "./display-object.pool";
+import { Algorithm } from "../utils/algorithm";
+import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
+import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 
 import * as protos from "pixelpai_proto";
-import Connection from "../../lib/net/connection";
+import { i18n } from "../i18n";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
 class ConnListener implements IConnectListener {
     onConnected(): void {
-        mainPeer.onConnected();
+        world.onConnected();
         Logger.getInstance().info(`MainWorker[已连接]`);
     }
 
     onDisConnected(): void {
-        mainPeer.onDisConnected();
+        world.onDisConnected();
         Logger.getInstance().info(`MainWorker[已断开]`);
     }
 
@@ -135,10 +135,9 @@ class MainPeer extends RPCPeer {
         });
     }
     // ============= connection调用主进程
-    public onConnected() {
-        connect.isConnect = true;
+    public onConnected(moveStyle: number) {
         // 告诉主进程链接成功
-        this.remote[RENDER_PEER].Rener.onConnected(null);
+        this.remote[RENDER_PEER].Rener.onConnected(null, moveStyle);
         // 调用心跳
         this.startBeat();
         // 逻辑层world链接成功
@@ -146,7 +145,6 @@ class MainPeer extends RPCPeer {
     }
 
     public onDisConnected() {
-        connect.isConnect = false;
         // 告诉主进程断开链接
         this.remote[RENDER_PEER].Rener.onDisConnected(null);
         // 停止心跳
@@ -155,7 +153,6 @@ class MainPeer extends RPCPeer {
     }
 
     public onConnectError(error: string) {
-        connect.isConnect = false;
         // 告诉主进程链接错误
         this.remote[RENDER_PEER].Render.onConnectError(null, error);
         // 停止心跳
@@ -168,9 +165,21 @@ class MainPeer extends RPCPeer {
     }
 
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
-        this.remote[RENDER_PEER].Render.createAnotherGame(gameId, worldId, sceneId, px, py, pz);
+        this.remote[RENDER_PEER].Render.createAnotherGame(null, gameId, worldId, sceneId, px, py, pz);
+    }
+    public enterVirtualWorld() {
+        this.remote[RENDER_PEER].Render.enterVirtualWorld();
     }
 
+    public onClockReady() {
+        this.remote[RENDER_PEER].Render.onClockReady();
+    }
+    public renderReconnect() {
+        this.remote[RENDER_PEER].Render.reconnect();
+    }
+    public createGame(buffer: Buffer) {
+        this.remote[RENDER_PEER].Render.createGame(null, buffer);
+    }
     // ============= 主进程调用心跳
     public startBeat() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.startBeat(null);
@@ -187,6 +196,11 @@ class MainPeer extends RPCPeer {
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
         socket.startConnect(addr);
+    }
+
+    @RPCFunction()
+    public closeConnect() {
+        socket.stopConnect();
     }
     @RPCFunction()
     public focus() {
@@ -214,28 +228,32 @@ class MainPeer extends RPCPeer {
     public setSize(width, height) {
         world.setSize(width, height);
     }
+    @RPCFunction([webworker_rpc.ParamType.unit8array])
+    public send(buffer: Buffer) {
+        socket.send(buffer);
+    }
     // ============= 心跳调用主进程
     @RPCFunction()
     public heartBeat() {
         // ==========同步心跳
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
-        socket.send(pkt.Serialization);
+        socket.send(pkt.Serialization());
     }
     @RPCFunction()
     public reconnect() {
         // 告诉主进程重新连接
         this.remote[RENDER_PEER].render.reconnect();
     }
+    @RPCFunction([webworker_rpc.ParamType.num])
+    public syncClock(times: number) {
+        world.syncClock(times);
+    }
     @RPCFunction()
-    public syncClock() {
-        // ==========同步clock时间
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
-        const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
-        ct.clientStartTs = new Date().getTime();
-        socket.send(pkt.Serialization);
+    public clearClock() {
+        world.clearClock();
     }
     // ==== todo
-    protected terminate() {
+    public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();
         this.terminate();
         // super.terminate();
@@ -247,11 +265,11 @@ interface ISize {
     height: number;
 }
 
-class LogicWorld extends PacketHandler implements IConnectListener {
+class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyListener {
     public connect: Connection;
     private mMoveStyle: number = -1;
     private mSize: ISize;
-
+    private mClock: Clock;
     public initWorld() {
         this.connect = new Connection();
         this.connect.addPacketListener(this);
@@ -289,10 +307,10 @@ class LogicWorld extends PacketHandler implements IConnectListener {
         }
     }
     public onConnected() {
-        if (!this.mClock) this.mClock = new Clock(connect, this);
+        if (!this.mClock) this.mClock = new Clock(this.connect, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
-        this.enterVirtualWorld();
+        mainPeer.enterVirtualWorld();
         // this.login();
     }
     public onDisConnected() {
@@ -309,12 +327,12 @@ class LogicWorld extends PacketHandler implements IConnectListener {
     public onError() {
         this.gameState = GameState.SOCKET_ERROR;
         Logger.getInstance().log("socket error");
-        if (!this.mConnection.connect) {
+        if (!this.connect.isConnect) {
             if (this.mConfig.connectFail) {
                 Logger.getInstance().log("app connectFail");
                 return this.mConfig.connectFail();
             } else {
-                this.reconnect();
+                mainPeer.reconnect();
             }
         }
     }
@@ -335,6 +353,23 @@ class LogicWorld extends PacketHandler implements IConnectListener {
     public getSize(): ISize {
         return this.mSize;
     }
+    public clearClock() {
+        if (this.mClock) {
+            this.mClock.destroy();
+            this.mClock = null;
+        }
+        this.mClock = new Clock(this.connect, this);
+    }
+    onClockReady(): void {
+        mainPeer.onClockReady();
+    }
+    syncClock(times: number = 1) {
+        this.mClock.sync(times);
+    }
+
+    get moveStyle(): number {
+        return this.mMoveStyle;
+    }
 
     private onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
@@ -348,13 +383,15 @@ class LogicWorld extends PacketHandler implements IConnectListener {
         const configUrls = content.configUrls;
         this.mMoveStyle = content.moveStyle;
 
-        this.clock.sync(-1);
+        this.mClock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
 
+        const keyBoardPacket: PBpacket = new PBpacket();
+        keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
-            this.createGame(content.keyEvents);
+            mainPeer.createGame(keyBoardPacket);
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
@@ -370,12 +407,23 @@ class LogicWorld extends PacketHandler implements IConnectListener {
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
-                this.createGame(content.keyEvents);
+                mainPeer.createGame(new Buffer(content.keyEvents));
                 Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {
                 Logger.getInstance().log(err);
             });
+    }
+
+    private onSelectCharacter() {
+        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
+        mainPeer.send(pkt.Serialization());
+
+        const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
+        content.localeCode = i18n.language;
+        mainPeer.send(i18Packet.Serialization());
+        this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
     }
 
     private loadGameConfig(remotePath): Promise<Lite> {
@@ -404,8 +452,9 @@ class LogicWorld extends PacketHandler implements IConnectListener {
             }
         });
     }
-
-
+    private heartBeatCallBack() {
+        mainPeer.clearBeat();
+    }
 }
 
 interface IRoomManager {
@@ -1885,7 +1934,141 @@ class EditorRoom extends Room implements EditorRoomService {
     }
 }
 
+const LATENCY_SAMPLES = 7; // Latency Array length
+const MIN_READY_SAMPLES = 2;
+const CHECK_INTERVAL = 8000; // (ms)
+const MAX_DELAY = 500; // (ms)
 
+interface ClockReadyListener {
+    onClockReady(): void;
+}
+
+class Clock extends PacketHandler {
+    // clock是否同步完成
+    private mClockSync: boolean = false;
+    private mAutoSync: boolean = false;
+    protected get sysUnixTime(): number {
+        return new Date().getTime();
+    }
+
+    set unixTime(t: number) {
+        this.mTimestamp = t;
+    }
+
+    get unixTime(): number {
+        return this.mTimestamp;
+    }
+
+    private mTimestamp: number = 0; // The timestamp in JavaScript is expressed in milliseconds.
+    private mConn: Connection;
+    private mLatency: number[] = [];
+    private mIntervalId: any;
+    private mListener: ClockReadyListener;
+
+    constructor(con: Connection, listener?: ClockReadyListener) {
+        super();
+        this.mConn = con;
+        this.mConn.addPacketListener(this);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME, this.proof);
+        this.mListener = listener;
+        this._check();
+    }
+
+    public sync(times: number = 1): void {
+        if (!this.mConn) return;
+        if (times < 0) {
+            times = 1;
+        }
+        for (let i = 0; i < times; ++i) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
+            const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
+            ct.clientStartTs = this.sysUnixTime;
+            socket.send(pkt.Serialization);
+        }
+    }
+
+    public update(time: number, delta: number) {
+        if (!this.mTimestamp) this.mTimestamp = time;
+        else
+            this.mTimestamp += delta;
+    }
+
+    public clearTime() {
+        this.mClockSync = false;
+        if (this.mIntervalId) {
+            clearInterval(this.mIntervalId);
+        }
+        this.mTimestamp = 0;
+        this._check();
+    }
+
+    public destroy(): void {
+        if (this.mConn) {
+            this.mConn.removePacketListener(this);
+            this.mConn = undefined;
+        }
+        if (this.mIntervalId) {
+            clearInterval(this.mIntervalId);
+        }
+        this.mLatency = undefined;
+    }
+
+    public get clockSync(): boolean {
+        return this.mClockSync;
+    }
+
+    protected _check(): void {
+        const self = this;
+        this.mIntervalId = setInterval(() => {
+            self.sync();
+        }, CHECK_INTERVAL);
+    }
+
+    private proof(packet: PBpacket) {
+        const ct: IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = packet.content;
+        const local_receive = this.sysUnixTime
+            , local_send = ct.clientStartTs
+            , remote_receive = ct.serverReceiveTs
+            , remote_send = ct.serverSendTs
+            , server_run = remote_send - remote_receive
+            , total_delay = (local_receive - local_send) - server_run
+            , latency = Math.round(total_delay / 2);
+        let timeSychronDelta: number = 0;
+        if (latency < 0) return;
+
+        this.mLatency.push(latency);
+        if (this.mLatency.length > LATENCY_SAMPLES) {
+            this.mLatency.shift();
+        }
+        const median_latency = Algorithm.median(this.mLatency);
+        timeSychronDelta = median_latency + server_run;
+
+        const remote_time = remote_send - timeSychronDelta; // the real remote-time.
+        const mistake = Math.abs(remote_time - this.mTimestamp);
+        // update timesychron
+        if (mistake > MAX_DELAY) {
+            this.mTimestamp = remote_time;
+            this.mAutoSync = true;
+            // Logger.getInstance().debug("正在同步clock");
+            // if (this.mAutoSync) {
+            this.sync(-1);
+            return;
+            //  }
+        }
+        this.mAutoSync = false;
+        if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES && !this.mAutoSync) {
+            this.mClockSync = true;
+            // Logger.getInstance().debug("clock同步完成");
+            this.mListener.onClockReady();
+        }
+        // Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
+
+    }
+
+    get medianLatency() {
+        return Algorithm.median(this.mLatency);
+    }
+}
 
 const world: LogicWorld = new LogicWorld();
 const socket: WorkerClient = new WorkerClient(new ConnListener());

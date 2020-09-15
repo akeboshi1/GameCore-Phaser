@@ -4,6 +4,7 @@ import { op_virtual_world, op_def } from "pixelpai_proto";
 import { WorldService } from "./world.service";
 import { IRoomService, Room } from "../rooms/room";
 import { InputManager, InputListener } from "./input.service";
+import { Render } from "../render/render";
 
 export class KeyBoardManager extends PacketHandler implements InputManager {
     // 获取的需要监听的key值列表
@@ -21,7 +22,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
     // ==============================
     private mRoom: IRoomService;
     private mScene: Phaser.Scene;
-    private mConnect: ConnectionService;
+    private mConnect: Render;
     private mKeyEvents: op_def.IKeyCodeEvent[];
     private mKeyEventMap: Map<op_def.TQ_EVENT, op_def.IKeyCodeEvent>;
 
@@ -37,7 +38,7 @@ export class KeyBoardManager extends PacketHandler implements InputManager {
         this.mTmpUpKeysStr = "";
         this.mTmpDownKeyStr = "";
         this.mKeyEventMap = new Map();
-        this.mConnect = this.worldService.connection;
+        this.mConnect = this.worldService.render();
     }
     /**
      * world中当scene发生变化时，传入当前激活的scene

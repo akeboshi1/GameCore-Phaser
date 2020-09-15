@@ -1,17 +1,16 @@
-import { RPCExecutePacket } from "../../lib/rpc/rpc.message";
 import { RPCPeer, RPCFunction } from "../../lib/rpc/rpc.peer";
 import { webworker_rpc } from "pixelpai_proto";
 import MainWorker from "worker-loader?filename=[hash][name].js!../game/main.worker";
 import { ServerAddress } from "../../lib/net/address";
-import { IConnectListener } from "../../lib/net/socket";
 import { World } from "../game/world";
 import { PBpacket } from "net-socket-packet";
-import { CreateRolePanel } from "../role/create.role.panel";
 export class Render extends RPCPeer {
+    public isConnect: boolean = false;
+    public moveStyle: number = 0;
     constructor(private mWorld: World) {
         super("render");
         const mainWorker = new MainWorker();
-        this.linkTo(MAIN_WORKER, "worker-loader?filename=[hash][name].js!../game/main.worker");
+        this.linkTo(MAIN_WORKER, "../game/main.worker");
     }
     public startConnect(gateway: ServerAddress) {
         this.remote[MAIN_WORKER].MainPeer.startConnect(null, [gateway.host, gateway.port, gateway.secure]);
@@ -29,10 +28,6 @@ export class Render extends RPCPeer {
         this.remote[MAIN_WORKER].MainPeer.initGame();
     }
 
-    public clearHeartBeat() {
-        this.remote[MAIN_WORKER].MainPeer.clearBeat();
-    }
-
     public send(packet: PBpacket) {
         this.remote[MAIN_WORKER].MainPeer.send(null, packet.Serialization);
     }
@@ -41,23 +36,38 @@ export class Render extends RPCPeer {
         this.remote[MAIN_WORKER].MainPeer.terminate();
     }
 
-    @RPCFunction()
-    public onConnected() {
-        this.mWorld.connection.connect = true;
-        this.mWorld.onConnected();
+    public onFocus() {
+        this.remote[MAIN_WORKER].MainPeer.focus();
+    }
+
+    public onBlur() {
+        this.remote[MAIN_WORKER].MainPeer.blur();
+    }
+
+    public syncClock(times: number) {
+        this.remote[MAIN_WORKER].MainPeer.syncClock(null, times);
+    }
+
+    public clearClock() {
+        this.remote[MAIN_WORKER].MainPeer.clearClock();
+    }
+
+    @RPCFunction([webworker_rpc.ParamType.num])
+    public onConnected(moveStyle: number) {
+        this.isConnect = true;
+        this.moveStyle = moveStyle;
     }
 
     @RPCFunction()
     public onDisConnected() {
-        this.mWorld.connection.connect = false;
-        this.mWorld.onDisConnected();
+        this.isConnect = false;
     }
 
     @RPCFunction([webworker_rpc.ParamType.str])
     public onConnectError(error: string) {
-        this.mWorld.connection.connect = false;
-        this.mWorld.onError();
+        this.isConnect = false;
     }
+
     @RPCFunction()
     public reconnect() {
         this.mWorld.reconnect();
@@ -67,10 +77,13 @@ export class Render extends RPCPeer {
     public onGotoAnotherGame(gameId: string, worldId: string, sceneId?: number, x?: number, y?: number, z?: number) {
         this.mWorld.onGotoAnotherGame(gameId, worldId, sceneId, { x, y, z });
     }
-
-    @RPCFunction([webworker_rpc.ParamType.str])
-    public onData(buffer: Buffer) {
-        this.mWorld.connection.onData(buffer.buffer);
+    @RPCFunction()
+    public enterVirtualWorld() {
+        this.mWorld.enterVirtualWorld();
+    }
+    @RPCFunction()
+    public onClockReady() {
+        this.mWorld.onClockReady();
     }
 }
 const MAIN_WORKER = "mainWorker";

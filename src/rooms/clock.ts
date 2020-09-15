@@ -1,9 +1,9 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../lib/net/connection.service";
 import { Algorithm } from "../utils/algorithm";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
+import { Render } from "../render/render";
 
 const LATENCY_SAMPLES = 7; // Latency Array length
 const MIN_READY_SAMPLES = 2;
@@ -31,14 +31,14 @@ export class Clock extends PacketHandler {
     }
 
     private mTimestamp: number = 0; // The timestamp in JavaScript is expressed in milliseconds.
-    private mConn: ConnectionService;
+    private mConn: Render;
     private mLatency: number[] = [];
     private mIntervalId: any;
     private mListener: ClockReadyListener;
 
-    constructor(conn: ConnectionService, listener?: ClockReadyListener) {
+    constructor(peer: Render, listener?: ClockReadyListener) {
         super();
-        this.mConn = conn;
+        this.mConn = peer;
         this.mConn.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME, this.proof);
         this.mListener = listener;
