@@ -1,11 +1,12 @@
 import { SocketConnection, IConnectListener, SocketConnectionError } from "../../lib/net/socket";
 import { PBpacket, Buffer } from "net-socket-packet";
 import { Logger } from "../utils/log";
+import { MainPeer } from "./main.worker";
 
 export class WorkerClient extends SocketConnection {
     protected mUuid: number = 0;
     private _pause: boolean = false;
-    constructor($listener: IConnectListener) {
+    constructor(private mainPeer: MainPeer, $listener: IConnectListener) {
         super($listener);
     }
     send(data: any): void {
@@ -24,7 +25,7 @@ export class WorkerClient extends SocketConnection {
         Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
         // Send the packet to parent thread
         const buffer = protobuf_packet.Serialization();
-        mainPeer.onData(buffer);
+        this.mainPeer.onData(buffer);
     }
 
     set pause(value: boolean) {
@@ -33,20 +34,24 @@ export class WorkerClient extends SocketConnection {
 }
 
 export class ConnListener implements IConnectListener {
+    private mainPeer: MainPeer;
+    constructor(peer: MainPeer) {
+        this.mainPeer = peer;
+    }
     onConnected(): void {
-        mainPeer.onConnected();
+        this.mainPeer.onConnected();
         Logger.getInstance().info(`MainWorker[已连接]`);
     }
 
     onDisConnected(): void {
-        mainPeer.onDisConnected();
+        this.mainPeer.onDisConnected();
         Logger.getInstance().info(`MainWorker[已断开]`);
     }
 
     // reason: SocketConnectionError | undefined
     onError(reason: SocketConnectionError | undefined): void {
         if (reason) {
-            mainPeer.onConnectError(reason.message);
+            this.mainPeer.onConnectError(reason.message);
             Logger.getInstance().error(`MainWorker[错误]:${reason.message}`);
         } else {
             Logger.getInstance().error(`MainWorker[错误]:${reason}`);

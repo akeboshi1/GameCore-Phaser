@@ -1,3 +1,11 @@
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Connection } from "./connection";
+import { op_virtual_world, op_client } from "pixelpai_proto";
+import { Algorithm } from "../utils/algorithm";
+import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
+import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
+import { MainPeer } from "./main.worker";
+
 const LATENCY_SAMPLES = 7; // Latency Array length
 const MIN_READY_SAMPLES = 2;
 const CHECK_INTERVAL = 8000; // (ms)
@@ -7,7 +15,7 @@ interface ClockReadyListener {
     onClockReady(): void;
 }
 
-class Clock extends PacketHandler {
+export class Clock extends PacketHandler {
     // clock是否同步完成
     private mClockSync: boolean = false;
     private mAutoSync: boolean = false;
@@ -28,13 +36,14 @@ class Clock extends PacketHandler {
     private mLatency: number[] = [];
     private mIntervalId: any;
     private mListener: ClockReadyListener;
-
-    constructor(con: Connection, listener?: ClockReadyListener) {
+    private mainPeer: MainPeer;
+    constructor(con: Connection, mainPeer: MainPeer, listener?: ClockReadyListener) {
         super();
         this.mConn = con;
         this.mConn.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME, this.proof);
         this.mListener = listener;
+        this.mainPeer = mainPeer;
         this._check();
     }
 
@@ -47,7 +56,7 @@ class Clock extends PacketHandler {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME);
             const ct: IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = pkt.content;
             ct.clientStartTs = this.sysUnixTime;
-            mainPeer.send(pkt.Serialization());
+            this.mainPeer.send(pkt.Serialization());
         }
     }
 

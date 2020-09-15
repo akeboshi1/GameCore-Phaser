@@ -1,3 +1,5 @@
+import { Brush } from "../rooms/decorate/brush";
+
 interface EditorRoomService extends IRoomService {
     readonly brush: Brush;
     readonly miniSize: IPosition45Obj;

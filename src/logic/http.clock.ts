@@ -1,7 +1,11 @@
+import { HttpService } from "./http.service";
+import { LogicWorld } from "./world";
+import { i18n } from "../i18n";
+
 /**
  * 每5min发送一次心跳包
  */
-class HttpClock {
+export class HttpClock {
     // private readonly interval = 300000;
     private readonly interval = 60000;
     private mTimestamp: number = 0;
@@ -42,7 +46,7 @@ class HttpClock {
     }
 
     fetch() {
-        return this.httpService.playedDuration("831dabefd919aa6259c25f9322fa57b88050d526", this.world.getConfig().game_id);
+        return this.httpService.playedDuration("831dabefd919aa6259c25f9322fa57b88050d526", this.world.getGameConfig().game_id);
     }
 
     sync() {
@@ -50,7 +54,7 @@ class HttpClock {
             const { code, data } = response;
             if (code === 0) {
                 if (!this.checkTimeAllowed(data) || !this.allowedPeriod(data)) {
-                    mainPeer.closeConnect();
+                    this.world.peer.closeConnect();
                 }
             }
         });
@@ -60,20 +64,20 @@ class HttpClock {
         if (data.in_allowed_period) {
             return true;
         }
-        this.showAlert(`[color=#ff0000][size=${14 * this.world.uiRatio}]您的账号属于未成年人[/size][/color]\n每日22:00~次日8:00是休息时间，根据相关规定，该时间不可登录游戏，请注意休息哦！`, callback);
+        this.showAlert(`[color=#ff0000][size=${14 * this.world.getGameConfig().ui_scale}]您的账号属于未成年人[/size][/color]\n每日22:00~次日8:00是休息时间，根据相关规定，该时间不可登录游戏，请注意休息哦！`, callback);
         return false;
     }
 
     private checkTimeAllowed(data: any, callback?: () => void) {
         if (data.time_played >= data.max_time_allowed) {
-            this.showAlert(`[color=#ff0000][size=${14 * this.world.uiRatio}]您的账号属于未成年人[/size][/color]\n今日累计时长已超过${(data.max_time_allowed / 3600).toFixed(1)}小时！\n不可登录`, callback);
+            this.showAlert(`[color=#ff0000][size=${14 * this.world.getGameConfig().ui_scale}]您的账号属于未成年人[/size][/color]\n今日累计时长已超过${(data.max_time_allowed / 3600).toFixed(1)}小时！\n不可登录`, callback);
             return false;
         }
         return true;
     }
 
     private showAlert(text: string, callback?: () => void) {
-        mainPeer.showAlert(text, i18n.t("common.tips"));
+        this.world.peer.showAlert(text, i18n.t("common.tips"));
     }
 
     set enable(val: boolean) {

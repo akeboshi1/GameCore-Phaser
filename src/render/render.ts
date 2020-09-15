@@ -12,6 +12,9 @@ export class Render extends RPCPeer {
         const mainWorker = new MainWorker();
         this.linkTo(MAIN_WORKER, "../game/main.worker");
     }
+    public initGameConfig(config: any) {
+        this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
+    }
     public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
         this.remote[MAIN_WORKER].MainPeer.startConnect(null, gameID, worldID, sceneID, loc);
     }
@@ -55,10 +58,9 @@ export class Render extends RPCPeer {
         this.remote[MAIN_WORKER].MainPeer.clearClock();
     }
 
-    @RPCFunction([webworker_rpc.ParamType.num])
-    public onConnected(moveStyle: number) {
+    @RPCFunction()
+    public onConnected() {
         this.isConnect = true;
-        this.moveStyle = moveStyle;
     }
 
     @RPCFunction()
@@ -79,6 +81,11 @@ export class Render extends RPCPeer {
     @RPCFunction([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public onGotoAnotherGame(gameId: string, worldId: string, sceneId?: number, x?: number, y?: number, z?: number) {
         this.mWorld.onGotoAnotherGame(gameId, worldId, sceneId, { x, y, z });
+    }
+
+    @RPCFunction([webworker_rpc.ParamType.num])
+    public setMoveStyle(moveStyle: number) {
+        this.moveStyle = moveStyle;
     }
     @RPCFunction()
     public enterVirtualWorld() {

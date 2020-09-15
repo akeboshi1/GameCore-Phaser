@@ -1,7 +1,9 @@
-class HttpService {
+import { LogicWorld } from "./world";
+
+export class HttpService {
     private api_root: string;
     constructor(private mWorld: LogicWorld) {
-        this.api_root = this.mWorld.getApiRoot();
+        this.api_root = this.mWorld.getGameConfig().api_root;
     }
     /**
      * 用户关注其他用户
@@ -49,7 +51,7 @@ class HttpService {
      * @param password
      */
     login(account: string, password: string): Promise<Response> {
-        return fetch(`${this.mWorld.getApiRoot()}${`account/signin`}`, {
+        return fetch(`${this.mWorld.getGameConfig().api_root}${`account/signin`}`, {
             body: JSON.stringify({ account, password }),
             method: "POST",
             headers: {

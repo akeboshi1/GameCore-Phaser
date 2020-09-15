@@ -1,3 +1,13 @@
+import { Clock } from "./clock";
+import { Connection } from "./connection";
+import { PBpacket, PacketHandler } from "net-socket-packet";
+import { MainPeer } from "./main.worker";
+import { IConnectListener } from "../../lib/net/socket";
+import { ClockReadyListener } from "../game/heartBeat.worker";
+import { Logger } from "../utils/log";
+import { HttpService } from "./http.service";
+import { op_client, op_virtual_world } from "pixelpai_proto";
+import { HttpClock } from "./http.clock";
 interface ISize {
     width: number;
     height: number;
@@ -28,18 +38,24 @@ export interface ILogiclauncherConfig {
     readonly connectFail?: boolean;
     readonly parent?: string;
 }
-class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyListener {
+export class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyListener {
     public connect: Connection;
     private mMoveStyle: number = -1;
     private mSize: ISize;
     private mClock: Clock;
     private mHttpClock: HttpClock;
     private mHttpService: HttpService;
-    private mConfig: any;
+    private mConfig: ILogiclauncherConfig;
     private mAccount: Account;
+    constructor(private mainPeer: MainPeer) {
+        super();
+    }
     public createAccount(gameID: string, worldID: string, sceneId?: number, loc?: any) {
         this.mAccount = new Account();
         this.mAccount.enterGame(gameID, worldID, sceneId, loc);
+    }
+    public initGameConfig(config: any) {
+        this.mConfig = config;
     }
     public initWorld() {
         this.connect = new Connection();
@@ -78,10 +94,10 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
         }
     }
     public onConnected() {
-        if (!this.mClock) this.mClock = new Clock(this.connect, this);
+        if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
-        mainPeer.enterVirtualWorld();
+        this.mainPeer.enterVirtualWorld();
         // this.login();
     }
     public onDisConnected() {
@@ -103,7 +119,7 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
                 Logger.getInstance().log("app connectFail");
                 return this.mConfig.connectFail();
             } else {
-                mainPeer.reconnect();
+                this.mainPeer.reconnect();
             }
         }
     }
@@ -121,24 +137,28 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
     public getSize(): ISize {
         return this.mSize;
     }
-    public setGameConfig(root: string, gameID: string) {
-        this.mConfig = {};
+    public setGameConfig(config: any) {
+        this.mConfig = config;
     }
-    public getGameConfig(): string {
-        return this.mApiRoot;
+    public getGameConfig(): ILogiclauncherConfig {
+        return this.mConfig;
     }
     public clearClock() {
         if (this.mClock) {
             this.mClock.destroy();
             this.mClock = null;
         }
-        this.mClock = new Clock(this.connect, this);
+        this.mClock = new Clock(this.connect, this.mainPeer, this);
     }
     onClockReady(): void {
-        mainPeer.onClockReady();
+        this.mainPeer.onClockReady();
     }
     syncClock(times: number = 1) {
         this.mClock.sync(times);
+    }
+
+    set moveStyle(moveStyle: number) {
+        this.mainPeer.setMoveStyle(moveStyle);
     }
 
     get moveStyle(): number {
@@ -153,9 +173,13 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
         return this.mAccount;
     }
 
+    get peer(): MainPeer {
+        return this.mainPeer;
+    }
+
     private onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        mainPeer.createAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc.x, content.loc.y, content.loc.z);
+        this.mainPeer.createAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc.x, content.loc.y, content.loc.z);
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
@@ -163,17 +187,16 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
-        this.mMoveStyle = content.moveStyle;
+        this.moveStyle = content.moveStyle;
 
         this.mClock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
-
         const keyBoardPacket: PBpacket = new PBpacket();
         keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
-            mainPeer.createGame(keyBoardPacket);
+            this.mainPeer.createGame(keyBoardPacket);
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
@@ -189,7 +212,7 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
-                mainPeer.createGame(new Buffer(content.keyEvents));
+                this.mainPeer.createGame(new Buffer(content.keyEvents));
                 Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {
@@ -199,12 +222,12 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
 
     private onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
-        mainPeer.send(pkt.Serialization());
+        this.mainPeer.send(pkt.Serialization());
 
         const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
         content.localeCode = i18n.language;
-        mainPeer.send(i18Packet.Serialization());
+        this.mainPeer.send(i18Packet.Serialization());
         this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
     }
 
@@ -235,6 +258,6 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
         });
     }
     private heartBeatCallBack() {
-        mainPeer.clearBeat();
+        this.mainPeer.clearBeat();
     }
 }

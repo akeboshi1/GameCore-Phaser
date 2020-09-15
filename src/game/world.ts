@@ -111,31 +111,32 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
         Url.RESUI_PATH = "./resources/ui/";
         this._peer.initGameConfig(
             {
-            api_root: this.mConfig.api_root,
-            auth_token: this.mConfig.auth_token,
-            token_expire: this.mConfig.token_expire,
-            token_fingerprint: this.mConfig.token_fingerprint,
-            user_id: this.mConfig.user_id,
-            game_id: this.mConfig.game_id,
-            virtual_world_id: string;
-            ui_scale?: number;
-            devicePixelRatio?: number;
-            scale_ratio?: number;
-            platform?: string;
-            keyboardHeight: number;
-            width: number;
-            height: number;
-            readonly screenWidth: number;
-            readonly screenHeight: number;
-            readonly baseWidth: number;
-            readonly baseHeight: number;
-            readonly game_created?: boolean;
-            readonly isEditor?: boolean;
-            readonly osd?: string;
-            readonly closeGame: boolean;
-            readonly connectFail?: boolean;
-            readonly parent?: string;});
-        this._newGame();
+                api_root: this.mConfig.api_root,
+                auth_token: this.mConfig.auth_token,
+                token_expire: this.mConfig.token_expire,
+                token_fingerprint: this.mConfig.token_fingerprint,
+                user_id: this.mConfig.user_id,
+                game_id: this.mConfig.game_id,
+                virtual_world_id: this.mConfig.virtual_world_id,
+                ui_scale: this.mConfig.ui_scale || 1,
+                devicePixelRatio?: this.mConfig.devicePixelRatio || 1,
+                scale_ratio: this.mConfig.scale_ratio || 1,
+                platform: this.mConfig.platform,
+                keyboardHeight: this.mConfig.keyboardHeight,
+                width: this.mConfig.width,
+                height: this.mConfig.height,
+                screenWidth: this.mConfig.screenWidth,
+                screenHeight: this.mConfig.screenHeight,
+                baseWidth: this.mConfig.baseWidth,
+                baseHeight: this.mConfig.baseHeight,
+                game_created: this.mConfig.game_created ? true : false,
+                isEditor: this.mConfig.isEditor || false,
+                osd: this.mConfig.osd || false,
+                closeGame: this.mConfig.closeGame ? true : false,
+                connectFail: this.mConfig.connectFail ? true : false,
+                parent: this.mConfig.parent || "";
+            }),
+            this._newGame();
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
             // connect to game server.

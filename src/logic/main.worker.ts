@@ -1,43 +1,18 @@
 import { RPCPeer, RPCFunction } from "../../lib/rpc/rpc.peer";
 import { webworker_rpc, op_gateway, op_virtual_world, op_editor, op_client, op_def } from "pixelpai_proto";
 import { PBpacket, Buffer, PacketHandler } from "net-socket-packet";
-import { IConnectListener, SocketConnection, SocketConnectionError } from "../../lib/net/socket";
-import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
 import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/heartBeat.worker";
-import { Lite } from "game-capsule";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { ICameraService, CamerasManager } from "./cameras/cameras.manager";
-import { WorldService } from "../game/world.service";
-import { PlayScene } from "../scenes/play";
-import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
-import { Pos } from "../utils/pos";
-import IActor = op_client.IActor;
-import { Element, IElement } from "./element/element";
-import { IBlockObject } from "./cameras/block.object";
-import { Size } from "../utils/size";
-import { MessageType } from "../const/MessageType";
-import { ReferenceArea } from "./editor/reference.area";
-import { IPoint } from "game-capsule";
-import { IScenery } from "./sky.box/scenery";
-import { State } from "./state/state.group";
-import { Brush, BrushEnum } from "../const/brush";
-import { MouseFollow } from "./editor/mouse.follow";
-import { SelectedElement } from "./editor/selected.element";
-import { DisplayObjectPool } from "./display-object.pool";
-import { AlertView, Buttons } from "../ui/components/alert.view";
-import { Algorithm } from "../utils/algorithm";
-import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
-import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
-
 import * as protos from "pixelpai_proto";
 import { i18n } from "../i18n";
+import { LogicWorld } from "./world";
+import { WorkerClient, ConnListener } from "./worker.client";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
 
-class MainPeer extends RPCPeer {
+export class MainPeer extends RPCPeer {
     private heartBeatWorker: HeartBeatWorker;
     private mRoomManager: RoomManager;
     private world: LogicWorld;
@@ -46,17 +21,17 @@ class MainPeer extends RPCPeer {
     constructor() {
         const t = self as any;
         super("mainWorker", t);
-        this.world = new LogicWorld();
-        this.socket = new WorkerClient(new ConnListener());
+        this.world = new LogicWorld(this);
+        this.socket = new WorkerClient(this, new ConnListener(this));
         this.heartBeatWorker = new HeartBeatWorker();
         this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
             this.render = this.remote[RENDER_PEER].Rener;
         });
     }
     // ============= connection调用主进程
-    public onConnected(moveStyle: number) {
+    public onConnected() {
         // 告诉主进程链接成功
-        this.render.onConnected(null, moveStyle);
+        this.render.onConnected();
         // 调用心跳
         this.startBeat();
         // 逻辑层world链接成功
@@ -77,6 +52,10 @@ class MainPeer extends RPCPeer {
         // 停止心跳
         this.endBeat();
         this.world.onError();
+    }
+
+    public setMoveStyle(moveStyle: number) {
+        this.render.setMoveStyle(null, moveStyle);
     }
 
     public onData(buffer: Buffer) {
@@ -116,6 +95,11 @@ class MainPeer extends RPCPeer {
     }
 
     // ============== render调用主进程
+    @RPCFunction([webworker_rpc.ParamType.str])
+    public initGameConfig(str: string) {
+        const config = JSON.parse(str);
+        this.world.initGameConfig(config);
+    }
     @RPCFunction()
     public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
         this.world.createAccount(gameID, worldID, sceneID, loc);
@@ -156,9 +140,9 @@ class MainPeer extends RPCPeer {
     public setSize(width, height) {
         this.world.setSize(width, height);
     }
-    @RPCFunction([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public setGameConfig(root: string, gameID: string) {
-        this.world.setGameConfig(root, gameID);
+    @RPCFunction([webworker_rpc.ParamType.str])
+    public setGameConfig(configStr: string) {
+        this.world.setGameConfig(configStr);
     }
     @RPCFunction([webworker_rpc.ParamType.unit8array])
     public send(buffer: Buffer) {
