@@ -221,6 +221,7 @@ class WorkItem extends Phaser.GameObjects.Container {
     private sendHandler: Handler;
     private tipsHandler: Handler;
     private isExtend: boolean = false;
+    private pointTimestamp: number = 0;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
@@ -239,6 +240,7 @@ class WorkItem extends Phaser.GameObjects.Container {
         this.headIcon = new DynamicImage(scene, 0, 0);
         this.title = scene.make.text({ x: -this.width * 0.5 + 60 * dpr, y: -height * 0.5 + 5 * dpr, text: "", style: { color: "#ffffff", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.salaryvalue = new ImageValue(scene, 60 * dpr, 20 * dpr, this.key, this.dpr);
+        this.salaryvalue.setTextStyle({ color: "#FFEA00" });
         this.salaryvalue.setFrameValue("", UIAtlasKey.commonKey, "iv_coin");
         this.salaryvalue.x = this.width * 0.5 - 30 * dpr;
         this.salaryvalue.y = -this.height * 0.5 + 10 * dpr;
@@ -343,6 +345,9 @@ class WorkItem extends Phaser.GameObjects.Container {
     }
 
     private onWorkHandler() {
+        const curTimestamp = new Date().getTime();
+        if (this.pointTimestamp > curTimestamp) return;
+        this.pointTimestamp = curTimestamp + 500;
         if (this.sendHandler) this.sendHandler.runWith(this.jobData.id);
     }
     private onTipsandler(item: PointerImageValue, isdown: boolean) {
