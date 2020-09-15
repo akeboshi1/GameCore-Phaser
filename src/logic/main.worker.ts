@@ -1,4 +1,3 @@
-import { RPCPeer, RPCFunction } from "../../lib/rpc/rpc.peer";
 import { webworker_rpc, op_gateway, op_virtual_world, op_editor, op_client, op_def } from "pixelpai_proto";
 import { PBpacket, Buffer, PacketHandler } from "net-socket-packet";
 import { ServerAddress } from "../../lib/net/address";
