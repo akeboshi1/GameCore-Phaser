@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="45249d44-ebf7-40ba-8fd1-8d91290eaeff" name="Default Changelist" comment="merge">
-      <change afterPath="$PROJECT_DIR$/src/scenes/create.player.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/SEVEN-WIN.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/SEVEN-WIN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FavoritesManager">
-    <favorites_list name="game-core" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -33,6 +33,12 @@
       </map>
     </option>
   </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
@@ -41,26 +47,36 @@
     <OptionsSetting value="false" id="Update" />
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/pixelpai_proto/protocols.d.ts&#10;true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../game-editor-v2" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.18.0" />
+    <property name="javascript.nodejs.core.library.typings.version" value="12.12.58" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../net-socket-packet" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path" value="wsl://UBUNTU1804@/usr/bin/node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="settings.nodejs" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="ts.rename.search.for.js.occurrences" value="false" />
+    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -76,18 +92,6 @@
       <recent name="C:\Users\Seven\git\game-core\src\net" />
       <recent name="C:\Users\Seven\git\game-core\net" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="npm.dev">
     <configuration name="build:dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -111,6 +115,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="StructureViewFactory">
     <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED" />
   </component>
@@ -189,6 +194,9 @@
       <workItem from="1576051405429" duration="11451000" />
       <workItem from="1576721350798" duration="16786000" />
       <workItem from="1579141016555" duration="1117000" />
+      <workItem from="1599875071420" duration="152000" />
+      <workItem from="1600069988817" duration="3737000" />
+      <workItem from="1600083548770" duration="614000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch 'phaser3' of code.apowo.com:PixelPai/game-core into phaser3&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <created>1567132047108</created>
@@ -537,7 +545,65 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/tab/TabGroup.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/tab/TabButton.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/tab/NinePatchTabButton.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/tool/Tool.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/panel/Panel.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/baseUI/BaseUI.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/baseUI/BaseMediator.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/button/NineSliceButton.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/button/Button.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/textBox/TextBox.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/combobox/Combobox.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/scroller/Scroller.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/scroller/GameScroller.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/gridtable/GridTableConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/gridtable/GameGridTable.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/pos/Transform.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/pos/Align.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/pos/OrientationType.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/list/IScrollerConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/list/ISliderConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/list/ITableConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/list/ITreeNode.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/list/ICellConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/list/IListConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/text/TextConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/text/TextType.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/event/InputTextEvent.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/event/MouseEvent.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/panel/IAbstractPanel.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/sound/ISoundConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/IAbstructInteractiveObject.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/IAbstructItem.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/ISound.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/UIType.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/ISetInteractive.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/IAbstructUI.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/Patches.config.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/UIProvider.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/baseUI/ResourceData.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/button/IButtonState.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/button/FrameSkin.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/combobox/IComboboxConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/scroller/ScrollerConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/textedit/TexteditConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/inputtext/IInputPanelConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/ninepatch/NinePatchSkin.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/ninepatch/INinePatchConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/ninepatch/NineResourceData.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/ninepatch/INinePatchSkinData.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/progressbar/IProgressBarSkinData.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/interface/progressbar/IProgressBarConfig.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/ninepatch/NineSlicePatch.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/messageBox/MessageBox.js" />
+        <option value="$PROJECT_DIR$/lib/rexui/lib/ui/progressbar/ProgressBar.js" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -551,13 +617,12 @@
                   <entry key="user">
                     <value>
                       <list>
-                        <option value="me" />
+                        <option value="*" />
                       </list>
                     </value>
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -570,7 +635,7 @@
             <list>
               <RecentGroup>
                 <option name="FILTER_VALUES">
-                  <option value="me" />
+                  <option value="*" />
                 </option>
               </RecentGroup>
             </list>
@@ -578,6 +643,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="排行榜优化" />
@@ -607,11 +673,34 @@
     <MESSAGE value="fixed bug game-editor#362" />
     <option name="LAST_COMMIT_MESSAGE" value="fixed bug game-editor#362" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <default-breakpoints>
-        <breakpoint type="dart-exception" />
-      </default-breakpoints>
-    </breakpoint-manager>
+  <component name="WindowStateProjectService">
+    <state x="1945" y="351" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600081218790">
+      <screen x="0" y="0" width="3440" height="1410" />
+    </state>
+    <state x="1945" y="351" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.3440.1410@0.0.3440.1410" timestamp="1600081218790" />
+    <state x="693" y="401" key="FileChooserDialogImpl" timestamp="1599875240196">
+      <screen x="0" y="0" width="3440" height="1410" />
+    </state>
+    <state x="693" y="401" key="FileChooserDialogImpl/0.0.3440.1410@0.0.3440.1410" timestamp="1599875240196" />
+    <state width="1437" height="439" key="GridCell.Tab.0.bottom" timestamp="1600083305236">
+      <screen x="0" y="0" width="3440" height="1410" />
+    </state>
+    <state width="1437" height="439" key="GridCell.Tab.0.bottom/0.0.3440.1410@0.0.3440.1410" timestamp="1600083305236" />
+    <state width="1437" height="439" key="GridCell.Tab.0.center" timestamp="1600083305233">
+      <screen x="0" y="0" width="3440" height="1410" />
+    </state>
+    <state width="1437" height="439" key="GridCell.Tab.0.center/0.0.3440.1410@0.0.3440.1410" timestamp="1600083305233" />
+    <state width="1437" height="439" key="GridCell.Tab.0.left" timestamp="1600083305232">
+      <screen x="0" y="0" width="3440" height="1410" />
+    </state>
+    <state width="1437" height="439" key="GridCell.Tab.0.left/0.0.3440.1410@0.0.3440.1410" timestamp="1600083305232" />
+    <state width="1437" height="439" key="GridCell.Tab.0.right" timestamp="1600083305235">
+      <screen x="0" y="0" width="3440" height="1410" />
+    </state>
+    <state width="1437" height="439" key="GridCell.Tab.0.right/0.0.3440.1410@0.0.3440.1410" timestamp="1600083305235" />
+    <state x="443" y="265" key="SettingsEditor" timestamp="1600070296502">
+      <screen x="0" y="0" width="3440" height="1410" />
+    </state>
+    <state x="443" y="265" key="SettingsEditor/0.0.3440.1410@0.0.3440.1410" timestamp="1600070296502" />
   </component>
 </project>
