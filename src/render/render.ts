@@ -1,5 +1,4 @@
-import { RPCPeer, RPCFunction } from "../../lib/rpc/rpc.peer";
-import { webworker_rpc } from "pixelpai_proto";
+import { RPCPeer, RPCFunction, webworker_rpc } from "webworker-rpc";
 import MainWorker from "worker-loader?filename=[hash][name].js!../game/main.worker";
 import { ServerAddress } from "../../lib/net/address";
 import { World } from "../game/world";

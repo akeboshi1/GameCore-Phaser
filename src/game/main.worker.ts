@@ -1,5 +1,5 @@
-import { RPCPeer, RPCFunction } from "../../lib/rpc/rpc.peer";
-import { webworker_rpc, op_gateway, op_virtual_world, op_editor, op_client, op_def } from "pixelpai_proto";
+import { RPCPeer, RPCFunction, webworker_rpc } from "webworker-rpc";
+import { op_gateway, op_virtual_world, op_editor, op_client, op_def } from "pixelpai_proto";
 import { PBpacket, Buffer, PacketHandler } from "net-socket-packet";
 import { IConnectListener, SocketConnection, SocketConnectionError } from "../../lib/net/socket";
 import { Logger } from "../utils/log";
@@ -404,7 +404,7 @@ class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyLi
         return this.mSize;
     }
     public setGameConfig(root: string, gameID: string) {
-        this.mConfig={};
+        this.mConfig = {};
     }
     public getGameConfig(): string {
         return this.mApiRoot;
