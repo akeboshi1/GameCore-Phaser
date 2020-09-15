@@ -6,6 +6,7 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { LabelInput } from "../components/label.input";
+import { Logger } from "../../utils/log";
 
 export class GMToolsPanel extends BasePanel {
     private background: Phaser.GameObjects.Graphics;
@@ -63,7 +64,7 @@ export class GMToolsPanel extends BasePanel {
         this.setSize(width, height);
         this.background = this.scene.make.graphics(undefined, false);
 
-        const w = 91 * this.dpr;
+        const w = width - 30 * this.dpr;
         const h = 46 * this.dpr;
 
         let graphics = null;
@@ -102,7 +103,7 @@ export class GMToolsPanel extends BasePanel {
         this.commitBtn.x = this.command.x + this.command.width + this.commitBtn.width * 0.5 + 16 * this.dpr;
         this.commitBtn.y = this.command.y + this.command.height * 0.5;
 
-        const capW = 112 * this.dpr;
+        const capW = w;
         const capH = 54 * this.dpr;
         const tableConfig: GridTableConfig = {
             x: 0,
@@ -110,12 +111,12 @@ export class GMToolsPanel extends BasePanel {
             table: {
                 width,
                 height: height - 110 * this.dpr,
-                columns: 3,
-                cellWidth: capW,
+                columns: 1,
+                cellWidth: width,
                 cellHeight: capH,
                 reuseCellContainer: true,
                 zoom: this.scale,
-                cellPadX: 10 * this.dpr,
+                cellPadX: 0,
                 cellPadY: 10 * this.dpr
               },
             scrollMode: 0,
@@ -133,6 +134,14 @@ export class GMToolsPanel extends BasePanel {
             }
         };
         this.gridtable = new GameGridTable(this.scene, tableConfig);
+        this.gridtable.on("cellTap", (cell) => {
+            if (cell) {
+                const data = cell.item;
+                if (data && data.node) {
+                    this.onTargetUIHandler(data.node.id);
+                }
+            }
+        });
         this.gridtable.layout();
 
         this.closeBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
@@ -148,7 +157,7 @@ export class GMToolsPanel extends BasePanel {
         }
         const data = this.showData[0];
         const buttons = data.button;
-        if (buttons.length > 1) {
+        if (buttons.length >= 1) {
             this.gridtable.setItems(buttons);
             this.buttons = [];
             this.add(this.buttons);
@@ -195,6 +204,7 @@ class Item extends Phaser.GameObjects.Container {
         this.btn.setTextStyle({
             fontSize: 12 * dpr
         });
+        this.btn.removeInteractive();
         this.add(this.btn);
     }
 
