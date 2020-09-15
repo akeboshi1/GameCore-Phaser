@@ -291,6 +291,10 @@ export default class CharacterInfoPanel extends BasePanel {
         this.emit("queryOwnerInfo");
     }
     public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+        if (!this.mInitialized) {
+            this.mShowData = data;
+            return;
+        }
         this.mCharacterData = data;
         this.content.visible = true;
         const nickname = data.nickname;

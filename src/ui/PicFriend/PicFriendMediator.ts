@@ -6,6 +6,7 @@ import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";
 import { PicFriend } from "./PicFriend";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { FriendType } from "./PicFriendPanel";
+import { UiManager } from "../ui.manager";
 
 export class PicFriendMediator extends BaseMediator {
     protected mView: PicFriendPanel;
@@ -159,6 +160,8 @@ export class PicFriendMediator extends BaseMediator {
 
     private onReqFriendAttributesHandler(id: string) {
         // TODO 点击好友头像，显示属性面板
+        const uimanager = this.world.uiManager;
+        uimanager.showMed("CharacterInfo");
         this.picFriend.fetchFriendInfo(id);
         // Logger.getInstance().log("Req friend attributes: ", id);
     }

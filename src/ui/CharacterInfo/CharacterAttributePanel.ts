@@ -7,12 +7,13 @@ export class CharacterAttributePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private attriItems: PlayerAttributeValue[] = [];
-    private mspace: number = 10 * this.dpr;
+    private mspace: number;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.setSize(width, height);
         this.key = key;
         this.dpr = dpr;
+        this.mspace = 10 * dpr;
     }
 
     public set space(value: number) {

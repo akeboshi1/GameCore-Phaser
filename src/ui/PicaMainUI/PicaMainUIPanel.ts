@@ -264,11 +264,13 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     private onStrengthHandler() {
-        const width = this.scaleWidth;
-        const height = this.scaleHeight;
-        const energy = this.showData.energy;
-        this.textToolTip.setTextData(i18n.t("main_ui.energy_tips", {"name": `${energy.currentValue}/${energy.max}\n`}), 3000);
-        this.textToolTip.setPosition(120 * this.dpr, 80 * this.dpr);
+        if (this.playerInfo) {
+            const energy = this.playerInfo.energy;
+            const rep = `${energy.currentValue}/${energy.max}\n`;
+            const text = i18n.t("main_ui.energy_tips", { "name": rep, "interpolation": { "escapeValue": false } });
+            this.textToolTip.setTextData(text, 3000);
+            this.textToolTip.setPosition(120 * this.dpr, 20 * this.dpr);
+        }
     }
     private checkUpdateActive() {
         const arr = this.mWorld.uiManager.getActiveUIData("PicaMainUI");

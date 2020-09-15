@@ -25,7 +25,7 @@ export class CharacterInfoMediator extends BaseMediator {
 
     show(params?: any) {
         if (this.mView) {
-            this.mView.show(params);
+            this.mView.show();
             return;
         }
         if (!this.mView) {
@@ -40,7 +40,7 @@ export class CharacterInfoMediator extends BaseMediator {
             this.mView.on("removeBlack", this.onRemoveBlackHandler, this);
         }
         this.layerMgr.addToUILayer(this.mView);
-        this.mView.show(params);
+        this.mView.show();
     }
 
     isSceneUI() {
@@ -67,15 +67,15 @@ export class CharacterInfoMediator extends BaseMediator {
     }
 
     private onOwnerCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
-        this.show(content);
-        // this.mView.setPlayerData(content);
+        if (this.mView)
+            this.mView.setPlayerData(content);
     }
 
     private onOtherCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-        this.show(content);
-
-        this.checkRelation(content.cid);
-        // this.mView.setPlayerData(content);
+        if (this.mView) {
+            this.mView.setPlayerData(content);
+            this.checkRelation(content.cid);
+        }
     }
 
     private onFollowHandler(id: string) {
@@ -167,7 +167,7 @@ export class CharacterInfoMediator extends BaseMediator {
 
     private updateFrind() {
         const uimanager = this.world.uiManager;
-        const picFriend: PicFriendMediator = <PicFriendMediator> uimanager.getMediator(PicFriendMediator.name);
+        const picFriend: PicFriendMediator = <PicFriendMediator>uimanager.getMediator(PicFriendMediator.name);
         if (picFriend) {
             picFriend.fetchCurrentFriend();
         }

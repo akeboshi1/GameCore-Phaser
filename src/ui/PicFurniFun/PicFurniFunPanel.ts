@@ -186,6 +186,7 @@ export class PicFurniFunPanel extends BasePanel {
 
         this.materialTipsDes = tipsText;
         this.materialTipsCon.add([tipsbg, tipsText]);
+        this.materialTipsCon.visible = false;
         this.confirmBtn = new NineSliceButton(this.scene, 0, -posY - 35 * this.dpr, 100 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn_over", i18n.t("furni_unlock.unlock"), this.dpr, this.scale, {
             left: 15 * this.dpr,
             top: 15 * this.dpr,
@@ -268,6 +269,7 @@ export class PicFurniFunPanel extends BasePanel {
     }
 
     private onMaterialItemHandler(item: MaterialItem) {
+        this.materialTipsCon.visible = true;
         if (this.selectMaterial) this.selectMaterial.select = false;
         const data: op_client.ICountablePackageItem = item.itemData;
         this.materialTipsDes.text = this.getDesText(data);

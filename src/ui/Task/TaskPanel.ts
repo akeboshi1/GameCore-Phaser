@@ -616,9 +616,9 @@ class TaskCell extends Phaser.GameObjects.Container {
     }
     private getCountText(count: number, needcount: number) {
         const color = (count >= needcount ? "#0054FF" : "#FF2B2B");
-        const countText = `[stroke=${color}][color=${color}]${count}[/color][/stroke]/`;
-        const needText = `[stroke=#2D2D2D][color=#2D2D2D]${needcount}[/color][/stroke]/`;
-        const text = countText + needText;
+        const countText = `[stroke=${color}][color=${color}]${count}[/color][/stroke]`;
+        const needText = `[stroke=#2D2D2D][color=#2D2D2D]${needcount}[/color][/stroke]`;
+        const text = `${countText}/${needText}`;
         return text;
     }
 }
