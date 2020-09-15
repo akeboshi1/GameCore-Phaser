@@ -17,6 +17,9 @@ import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable
 import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
 import { Logger } from "../../utils/log";
+import { MessageBox } from "../../../lib/rexui/lib/ui/messageBox/MessageBox";
+import { MessageBoxView } from "../MessageBox/MessageBoxView";
+import { AlertView } from "../components/alert.view";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -30,6 +33,7 @@ export class PicOrderPanel extends BasePanel {
     private goldImageValue: ImageValue;
     private royalOrderLimit: op_def.IValueBar;
     private itemtips: ItemInfoTips;
+    private alertView: AlertView;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -180,7 +184,20 @@ export class PicOrderPanel extends BasePanel {
     }
 
     private onSendHandler(index: number, orderOperator: op_pkt_def.PKT_Order_Operator) {
-        this.emit("changeorder", index, orderOperator);
+        if (orderOperator === op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE) {
+            if (!this.alertView) this.alertView = new AlertView(this.scene, this.mWorld);
+            this.parentContainer.add(this.alertView);
+            this.alertView.show({
+                text: i18n.t("order.refreshtips"),
+                title: i18n.t("order.refreshtitle"),
+                oy: 302 * this.dpr * this.mWorld.uiScale,
+                callback: () => {
+                    this.emit("changeorder", index, orderOperator);
+                },
+            });
+        } else {
+            this.emit("changeorder", index, orderOperator);
+        }
     }
 
     private onProgressHandler(index: number) {
@@ -308,6 +325,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.orderData = data;
         this.index = index;
         this.hideAllElement();
+        this.bg.setFrame(data.questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_bg" : "order_ordinary_bg");
         if (data.stage !== op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             const url = Url.getOsdRes(data.display.texturePath);
             this.headIcon.load(url, this, () => {
@@ -365,7 +383,6 @@ class OrderItem extends Phaser.GameObjects.Container {
     private deliveryState(data: op_client.IPKT_Quest) {
         const questType = data.questType;
         this.headbg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_head_bg" : "order_ordinary_head_bg");
-        this.bg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_bg" : "order_ordinary_bg");
         this.refreshBtn.visible = true;
         this.refreshBtn.setInteractive();
         this.refreshBtn.setFrameNormal(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_delete_bg" : "order_delete_bg");
@@ -448,7 +465,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.calcuTime.y = this.height * 0.5 - this.calcuTime.height * 0.5 - 5 * this.dpr;
             if (intervalTime > 0) this.timeID = setTimeout(() => {
                 timeextu();
-            }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
+            }, 1000);// intervalTime >= 60 ? 60000 : intervalTime * 1000
             else {
                 if (this.timeID && this.refreshHandler) this.refreshHandler.run();
                 this.timeID = undefined;
@@ -532,7 +549,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             this.acceleSpend.setFrameValue(minute + "", this.key, "iv_diamond_s");
             if (intervalTime > 0) this.timeID = setTimeout(() => {
                 timeextu();
-            }, intervalTime >= 60 ? 60000 : intervalTime * 1000);
+            }, 1000);// intervalTime >= 60 ? 60000 : intervalTime * 1000
             else {
                 if (this.timeID && this.refreshHandler) this.refreshHandler.run();
                 this.timeID = undefined;
