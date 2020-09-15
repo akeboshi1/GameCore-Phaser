@@ -39,7 +39,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
             this.compviness.visible = true;
             this.turnover.visible = true;
             this.compviness.setTextInfo(i18n.t("room_info.compveness"), data.competitiveness + "");
-            this.turnover.setTextInfo(i18n.t("room_info.turnover"), data.turnover + "");
+            this.turnover.setTextInfo(i18n.t("room_info.turnover"), 0 + "");
         } else {
             this.compviness.visible = false;
             this.turnover.visible = false;
