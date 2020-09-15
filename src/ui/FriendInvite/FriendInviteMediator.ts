@@ -17,8 +17,9 @@ export class FriendInviteMediator extends BaseMediator {
     }
 
     show(param?: any): void {
-        if (this.mView && this.mView.isShow()) {
+        if (this.mView) {
             this.mView.show(param);
+            this.mLayerManager.addToDialogLayer(this.mView);
             return;
         }
         this.mView = new FriendInvitePanel(this.mScene, this.world);
@@ -39,6 +40,7 @@ export class FriendInviteMediator extends BaseMediator {
         content.uiId = uiId;
         content.componentId = componentId;
         this.world.connection.send(pkt);
+        this.destroy();
     }
 
     private onAgreeHandler() {

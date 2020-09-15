@@ -743,7 +743,8 @@ class FriendMenu extends Menu {
     register() {
         this.trackBtn.on(CoreUI.MouseEvent.Tap, this.onTrackHandler, this);
         this.inviteBtn.on(CoreUI.MouseEvent.Tap, this.onInviteHandler, this);
-        this.operation.setInteractive();
+        const { width, height } = this.operation;
+        this.operation.setInteractive(new Phaser.Geom.Rectangle(-width * 0.5, height * 0.5, width * 2, height * 2), Phaser.Geom.Rectangle.Contains);
         this.operation.on("pointerup", this.onSwitchOperationHandler, this);
     }
 
