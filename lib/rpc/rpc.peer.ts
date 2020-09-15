@@ -11,9 +11,7 @@ export const MESSAGEKEY_RUNMETHOD: string = "runMethod";
 export class RPCPeer {
     ["remote"]: {
         [worker: string]: {
-            [context: string]: {
-                [method: string]: (callback?: webworker_rpc.Executor, ...args) => {}
-            }
+            [context: string]: any
         };
     };// 解决编译时execute报错，并添加提示
 
@@ -292,7 +290,7 @@ export class RPCPeer {
                 addProperty(serviceProp, executor.context, {});
             }
 
-            addProperty(serviceProp[executor.context], executor.method, (callback?: webworker_rpc.Executor, ...args) => {
+            addProperty(serviceProp[executor.context], executor.method, (...args) => {
                 const params: RPCParam[] = [];
                 if (args) {
                     for (const arg of args) {
@@ -303,6 +301,10 @@ export class RPCPeer {
                         }
                         params.push(new RPCParam(t, arg));
                     }
+                }
+                let callback = null;
+                if (args.length > 0 && args[length - 1] instanceof webworker_rpc.Executor) {
+                    callback = args[length - 1] as webworker_rpc.Executor;
                 }
                 if (callback) {
                     this.execute(service, new RPCExecutePacket(this.name, executor.method, executor.context, params, callback));
