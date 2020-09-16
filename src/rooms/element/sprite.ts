@@ -47,6 +47,7 @@ export interface ISprite {
 export interface AnimationData {
     name: string;
     flip: boolean;
+    times?: number;
     playingQueue?: AnimationQueue;
 }
 

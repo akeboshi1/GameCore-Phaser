@@ -1,4 +1,3 @@
-import { Font } from "../../utils/font";
 import { DynamicSprite } from "../../ui/components/dynamic.sprite";
 import { DynamicImage } from "../../ui/components/dynamic.image";
 import { op_def } from "pixelpai_proto";
@@ -217,8 +216,8 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
         this.mChildMap.delete(key);
     }
 
-    get baseLoc(): Phaser.Geom.Point {
-        return this.mBaseLoc || new Phaser.Geom.Point();
+    get topPoint(): Phaser.Geom.Point {
+        return undefined;
     }
 
     get sortX(): number {

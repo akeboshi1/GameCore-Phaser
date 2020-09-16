@@ -5,6 +5,7 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
 import { PBpacket } from "net-socket-packet";
+import { FramesDisplay } from "../display/frames.display";
 
 export class Player extends Element {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -201,6 +202,11 @@ export class Player extends Element {
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
         return this.mOffsetY;
+    }
+
+    protected onDisplayReady(field?: FramesDisplay ) {
+        super.onDisplayReady(field);
+        this.showNickname();
     }
 
     private mCheckStateHandle(val: string): boolean {
