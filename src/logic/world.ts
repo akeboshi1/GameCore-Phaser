@@ -92,8 +92,6 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         if (this.mElementStorage) {
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }
-
-        
     }
     public onConnected() {
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);

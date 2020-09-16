@@ -1,4 +1,5 @@
-import { webworker_rpc, op_gateway, op_virtual_world, op_editor, op_client, op_def } from "pixelpai_proto";
+import { RPCPeer, RPCFunction, webworker_rpc } from "webworker-rpc";
+import { op_gateway, op_virtual_world, op_editor, op_client, op_def } from "pixelpai_proto";
 import { PBpacket, Buffer, PacketHandler } from "net-socket-packet";
 import { ServerAddress } from "../../lib/net/address";
 import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/heartBeat.worker";
@@ -10,14 +11,6 @@ import { Connection } from "./connection";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
-const t = self as any;
-
-export class Connection extends RPCEmiter{
-
-
-    this.emit("xx");
-    
-}
 
 export class MainPeer extends RPCPeer {
     private mRoomManager: RoomManager;
@@ -27,13 +20,14 @@ export class MainPeer extends RPCPeer {
     private conn: Connection = new Connection();
     private heartBearPeer: any;
     constructor() {
-        super("mainWorker", t);
+        super("mainWorker");
+
         this.world = new LogicWorld(this);
         this.socket = new WorkerClient(this, new ConnListener(this));
-        (<any>this).linkTo(RENDER_PEER).onReady(() => {
+        this.linkTo(RENDER_PEER,"").onReady(() => {
             this.render = this.remote[RENDER_PEER].Rener;
         });
-        (<any>this).linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
+        this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
             this.heartBearPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         });
     }

@@ -2,6 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
+const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
+const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
 const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -28,12 +30,14 @@ const config = {
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
+            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
         ],
     },
     resolve: {
         extensions: [".ts", ".js"],
         alias: {
             phaser: phaser,
+            webworkerrpc: webworkerrpc,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
         },
     },

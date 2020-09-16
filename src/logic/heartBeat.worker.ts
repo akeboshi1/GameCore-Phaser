@@ -1,4 +1,3 @@
-const t = self as any;
 class HeartBeatPeer extends RPCPeer {
     public inited: boolean = false;
     private delayTime: number = 20000;
@@ -6,7 +5,7 @@ class HeartBeatPeer extends RPCPeer {
     private startDelay: any;
     private mainPeer;
     constructor() {
-        super("hearBeatWorker", t);
+        super("hearBeatWorker");
         (<any>this).linkTo(MAIN_WORKER, "worker-loader?filename=[hash][name].js!../game/main.worker").onReady(() => {
             this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
         });
