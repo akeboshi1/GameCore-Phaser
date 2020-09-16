@@ -182,7 +182,7 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
         return new Promise((reslove, reject) => {
             this._peer.closeConnect();
             document.body.removeEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
-            this.clearGame(() => {
+            this._clearGame(() => {
                 reslove();
             });
         });
@@ -301,7 +301,7 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
     public async changeScene() {
         const gameID: string = this.mConfig.game_id;
         const worldID: string = this.mConfig.virtual_world_id;
-        await this.clearGame();
+        await this._clearGame();
         this.mConfig.game_id = gameID;
         this.mConfig.virtual_world_id = worldID;
         this._newGame();
@@ -559,8 +559,47 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
         }
     }
 
+    public clearGame() {
+        this._clearGame(() => {
+            this._peer.clearGameComplete();
+        });
+    }
+
+    private _clearGame(callBack?: Function): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this._peer.destroyClock();
+            if (this.mGame) {
+                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
+                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
+                this.mGame.plugins.removeGlobalPlugin("rexButton");
+                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexInputText");
+                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                this.mGame.plugins.removeScenePlugin("DragonBones");
+                this.mGame.plugins.removeScenePlugin("rexUI");
+                this.mGameEmitter.destroy();
+                this.uiManager.destroy();
+                this.mElementStorage.destroy();
+                this.mLoadingManager.destroy();
+                this.game.scene.destroy();
+                this.mPlayerDataManager.clear();
+                this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                    this.mGame = undefined;
+                    if (callBack) callBack();
+                    resolve();
+                });
+                this.mGame.destroy(true);
+            } else {
+                resolve();
+            }
+        });
+    }
+
     private _createAnotherGame(gameId, worldId, sceneId, loc) {
-        this.clearGame().then(() => {
+        this._clearGame().then(() => {
             this.isPause = false;
             if (this._peer) {
                 this._peer.closeConnect();
@@ -590,42 +629,6 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
 
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
-    }
-
-    private clearGame(callBack?: Function): Promise<void> {
-        return new Promise((resolve, reject) => {
-            if (this.mClock) {
-                this.mClock.destroy();
-                this.mClock = null;
-            }
-            if (this.mGame) {
-                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
-                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
-                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
-                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
-                this.mGame.plugins.removeGlobalPlugin("rexButton");
-                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexInputText");
-                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
-                this.mGame.plugins.removeScenePlugin("DragonBones");
-                this.mGame.plugins.removeScenePlugin("rexUI");
-                this.mGameEmitter.destroy();
-                this.uiManager.destroy();
-                this.mElementStorage.destroy();
-                this.mLoadingManager.destroy();
-                this.game.scene.destroy();
-                this.mPlayerDataManager.clear();
-                this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
-                    this.mGame = undefined;
-                    if (callBack) callBack();
-                    resolve();
-                });
-                this.mGame.destroy(true);
-            } else {
-                resolve();
-            }
-        });
     }
 
     // private initUiScale() {

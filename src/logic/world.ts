@@ -3,11 +3,12 @@ import { Connection } from "./connection";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.worker";
 import { IConnectListener } from "../../lib/net/socket";
-import { ClockReadyListener } from "../game/heartBeat.worker";
+import { ClockReadyListener } from "./heartBeat.worker";
 import { Logger } from "../utils/log";
 import { HttpService } from "./http.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { HttpClock } from "./http.clock";
+import { i18n } from "../i18n";
 interface ISize {
     width: number;
     height: number;
@@ -106,9 +107,7 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         if (this.mConfig.connectFail) {
             this.onError();
         } else {
-            this.clearGame().then(() => {
-                this.initWorld(this.mConfig, this.mCallBack);
-            });
+            this.mainPeer.clearGame();
         }
     }
     public onError() {
@@ -127,6 +126,15 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
     public onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+    }
+    public destroyClock() {
+        if (this.mClock) {
+            this.mClock.destroy();
+            this.mClock = null;
+        }
+    }
+    public clearGameComplete() {
+        this.initWorld();
     }
     public setSize(width, height) {
         this.mSize = {

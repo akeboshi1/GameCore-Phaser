@@ -3,28 +3,28 @@ import { PBpacket, Buffer, PacketHandler } from "net-socket-packet";
 import { ServerAddress } from "../../lib/net/address";
 import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/heartBeat.worker";
 import * as protos from "pixelpai_proto";
-import { i18n } from "../i18n";
 import { LogicWorld } from "./world";
 import { WorkerClient, ConnListener } from "./worker.client";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
-
-export class MainPeer extends RPCPeer {
-    private heartBeatWorker: HeartBeatWorker;
+const t = self as any;
+class MainPeer extends RPCPeer {
     private mRoomManager: RoomManager;
     private world: LogicWorld;
     private socket: WorkerClient;
     private render: any;
+    private heartBearPeer: any;
     constructor() {
-        const t = self as any;
         super("mainWorker", t);
         this.world = new LogicWorld(this);
         this.socket = new WorkerClient(this, new ConnListener(this));
-        this.heartBeatWorker = new HeartBeatWorker();
-        this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
+        (<any>this).linkTo(RENDER_PEER).onReady(() => {
             this.render = this.remote[RENDER_PEER].Rener;
+        });
+        (<any>this).linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
+            this.heartBearPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         });
     }
     // ============= connection调用主进程
@@ -82,6 +82,9 @@ export class MainPeer extends RPCPeer {
     public createGame(buffer: Buffer) {
         this.render.createGame(null, buffer);
     }
+    public clearGame() {
+        this.render.clearGame();
+    }
     // ============= 主进程调用心跳
     public startBeat() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.startBeat(null);
@@ -111,6 +114,7 @@ export class MainPeer extends RPCPeer {
 
     @RPCFunction()
     public closeConnect() {
+        mainPeer.terminate();
         this.socket.stopConnect();
     }
     @RPCFunction()
@@ -147,6 +151,14 @@ export class MainPeer extends RPCPeer {
     public send(buffer: Buffer) {
         this.socket.send(buffer);
     }
+    @RPCFunction()
+    public destroyClock() {
+        this.world.destroyClock();
+    }
+    @RPCFunction()
+    public clearGameComplete() {
+        this.world.clearGameComplete();
+    }
     // ============= 心跳调用主进程
     @RPCFunction()
     public heartBeat() {
@@ -170,7 +182,7 @@ export class MainPeer extends RPCPeer {
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();
-        this.terminate();
+        self.close();
         // super.terminate();
     }
 }

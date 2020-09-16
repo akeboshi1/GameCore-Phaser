@@ -54,7 +54,7 @@ export class SocketConnection {
     }
 
     stopConnect(): void {
-        // TODO Maybe not necessary.
+        if (this.mTransport && this.mTransport.readyState() === ReadyState.OPEN) return this.mTransport.Close();
     }
 
     send(data: any): void {

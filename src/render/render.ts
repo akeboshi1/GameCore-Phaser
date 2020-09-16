@@ -8,7 +8,6 @@ export class Render extends RPCPeer {
     public moveStyle: number = 0;
     constructor(private mWorld: World) {
         super("render");
-        const mainWorker = new MainWorker();
         this.linkTo(MAIN_WORKER, "../game/main.worker");
     }
     public initGameConfig(config: any) {
@@ -57,6 +56,14 @@ export class Render extends RPCPeer {
         this.remote[MAIN_WORKER].MainPeer.clearClock();
     }
 
+    public destroyClock() {
+        this.remote[MAIN_WORKER].MainPeer.destroyClock();
+    }
+
+    public clearGameComplete() {
+        this.remote[MAIN_WORKER].MainPeer.clearGameComplete();
+    }
+
     @RPCFunction()
     public onConnected() {
         this.isConnect = true;
@@ -93,6 +100,10 @@ export class Render extends RPCPeer {
     @RPCFunction()
     public onClockReady() {
         this.mWorld.onClockReady();
+    }
+    @RPCFunction()
+    public clearGame() {
+        this.mWorld.clearGame();
     }
 }
 const MAIN_WORKER = "mainWorker";
