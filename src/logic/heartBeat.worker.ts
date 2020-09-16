@@ -1,3 +1,5 @@
+import { RPCPeer, RPCExecutor, RPCFunction, webworker_rpc } from "webworker-rpc";
+
 class HeartBeatPeer extends RPCPeer {
     public inited: boolean = false;
     private delayTime: number = 20000;
