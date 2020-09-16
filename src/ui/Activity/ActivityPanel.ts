@@ -66,6 +66,7 @@ export class ActivityPanel extends BasePanel {
             align: 2,
             orientation: 0,
             space: 10 * this.dpr,
+            selfevent: true,
             cellupCallBack: (gameobject) => {
                 this.onPointerUpHandler(gameobject);
             }
