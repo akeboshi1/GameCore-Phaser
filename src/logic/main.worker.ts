@@ -5,16 +5,26 @@ import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/hear
 import * as protos from "pixelpai_proto";
 import { LogicWorld } from "./world";
 import { WorkerClient, ConnListener } from "./worker.client";
+import { Connection } from "./connection";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
 const t = self as any;
-class MainPeer extends RPCPeer {
+
+export class Connection extends RPCEmiter{
+
+
+    this.emit("xx");
+    
+}
+
+export class MainPeer extends RPCPeer {
     private mRoomManager: RoomManager;
     private world: LogicWorld;
     private socket: WorkerClient;
     private render: any;
+    private conn: Connection = new Connection();
     private heartBearPeer: any;
     constructor() {
         super("mainWorker", t);

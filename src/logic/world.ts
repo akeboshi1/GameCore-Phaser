@@ -3,7 +3,6 @@ import { Connection } from "./connection";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.worker";
 import { IConnectListener } from "../../lib/net/socket";
-import { ClockReadyListener } from "./heartBeat.worker";
 import { Logger } from "../utils/log";
 import { HttpService } from "./http.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
@@ -93,6 +92,8 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         if (this.mElementStorage) {
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }
+
+        
     }
     public onConnected() {
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
@@ -116,7 +117,7 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         if (!this.connect.isConnect) {
             if (this.mConfig.connectFail) {
                 Logger.getInstance().log("app connectFail");
-                return this.mConfig.connectFail();
+                if(this.mConfig.connectFail)return this.mConfig.connectFail();
             } else {
                 this.mainPeer.reconnect();
             }

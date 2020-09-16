@@ -10,6 +10,8 @@ class HeartBeatPeer extends RPCPeer {
         (<any>this).linkTo(MAIN_WORKER, "worker-loader?filename=[hash][name].js!../game/main.worker").onReady(() => {
             this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
         });
+
+        this.remote[MAIN_WORKER].Connection.on("xx", new RPCExecutor("HeartBeatPeer", "startBeat"));
     }
 
     @RPCFunction()
