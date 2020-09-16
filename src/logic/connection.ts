@@ -1,13 +1,47 @@
+
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Buffer } from "buffer/";
+import * as protos from "pixelpai_proto";
+import { ConnectionService } from "../../lib/net/connection.service";
+import { IConnectListener } from "../../lib/net/socket";
+import { ServerAddress } from "../../lib/net/address";
+import { WorkerClient } from "./worker.client";
+
+for (const key in protos) {
+    PBpacket.addProtocol(protos[key]);
+}
 // 网络连接器
-
-import { PacketHandler, PBpacket, Buffer } from "net-socket-packet";
-
 // 使用webworker启动socket，无webworker时直接启动socket
-export class Connection {
-    public isConnect: boolean = false;
+export default class Connection implements ConnectionService {
     protected mPacketHandlers: PacketHandler[] = [];
+    private mCachedServerAddress: ServerAddress | undefined;
+    private mSocket: WorkerClient;
+    private isConnect: boolean = false;
+    private isPause: boolean = false;
+    constructor(socket: WorkerClient) {
+        this.mSocket = socket;
+    }
+    get connect(): boolean {
+        return this.isConnect;
+    }
+    startConnect(addr: ServerAddress, keepalive?: boolean): void {
+        this.mCachedServerAddress = addr;
+        this.mSocket.startConnect(this.mCachedServerAddress);
+    }
+
+    closeConnect(): void {
+        this.isConnect = false;
+        this.mCachedServerAddress = undefined;
+        this.mSocket.stopConnect();
+        this.clearPacketListeners();
+    }
+
     addPacketListener(listener: PacketHandler) {
         this.mPacketHandlers.push(listener);
+    }
+
+    send(packet: PBpacket) {
+        this.mSocket.send(packet.Serialization());
     }
 
     removePacketListener(listener: PacketHandler) {
@@ -37,5 +71,19 @@ export class Connection {
         handlers.forEach((handler: PacketHandler) => {
             handler.onPacketArrived(protobufPacket);
         });
+    }
+
+    onFocus() {
+        this.isPause = false;
+    }
+
+    onBlur() {
+        this.isPause = true;
+    }
+
+    private reConnect() {
+        this.mMainWorker.postMessage({ method: "endHeartBeat" });
+        const world: any = this.mPacketHandlers[0];
+        world.reconnect();
     }
 }

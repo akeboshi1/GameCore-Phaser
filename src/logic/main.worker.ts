@@ -6,7 +6,7 @@ import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/hear
 import * as protos from "pixelpai_proto";
 import { LogicWorld } from "./world";
 import { WorkerClient, ConnListener } from "./worker.client";
-import { Connection } from "./connection";
+import Connection from "./connection";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -17,14 +17,15 @@ export class MainPeer extends RPCPeer {
     private world: LogicWorld;
     private socket: WorkerClient;
     private render: any;
-    private conn: Connection = new Connection();
+    private connect: Connection;
     private heartBearPeer: any;
     constructor() {
         super("mainWorker");
 
         this.world = new LogicWorld(this);
         this.socket = new WorkerClient(this, new ConnListener(this));
-        this.linkTo(RENDER_PEER,"").onReady(() => {
+        this.connect = new Connection(this.socket);
+        this.linkTo(RENDER_PEER, "").onReady(() => {
             this.render = this.remote[RENDER_PEER].Rener;
         });
         this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
@@ -113,13 +114,13 @@ export class MainPeer extends RPCPeer {
     @RPCFunction([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
-        this.socket.startConnect(addr);
+        this.connect.startConnect(addr);
     }
 
     @RPCFunction()
     public closeConnect() {
         mainPeer.terminate();
-        this.socket.stopConnect();
+        this.connect.closeConnect();
     }
     @RPCFunction()
     public focus() {

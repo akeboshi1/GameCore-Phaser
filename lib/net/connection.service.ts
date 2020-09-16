@@ -10,4 +10,6 @@ export interface ConnectionService {
     clearPacketListeners(): void;
     send(packet: PBpacket): void;
     onData(data: ArrayBuffer);
+    onFocus();
+    onBlur();
 }
