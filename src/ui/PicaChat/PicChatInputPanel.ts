@@ -187,6 +187,8 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         if (datas) this.quickChatAtt = datas;
         this.quickChatAtt.unshift(undefined);
         this.mInput.setFocus();
+        // tslint:disable-next-line:no-console
+        console.log(datas);
     }
     public appendChat(val: string) {
         this.chatArr.push(val);
