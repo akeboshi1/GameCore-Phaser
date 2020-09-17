@@ -127,6 +127,7 @@ class MainWorkerContext {
         worker.postMessage(state, ports);
     }
     public terminate() {
+        self.close();
         if (!this.workerMap) return;
         this.workerMap.forEach((subWorker) => {
             subWorker.terminate();
