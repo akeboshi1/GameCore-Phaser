@@ -22,6 +22,7 @@ import { Handler } from "../../Handler/Handler";
 import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { Logger } from "../../utils/log";
+import { FriendRelationEnum } from "../PicFriend/PicFriendRelation";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -54,7 +55,7 @@ export default class CharacterInfoPanel extends BasePanel {
     private mFirendMenu: FriendMenu;
     private mCharacterMenu: CharacterMenu;
     private mCharacterData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO;
-    private mRelation: FriendRelation;
+    private mRelation: FriendRelationEnum;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -367,18 +368,18 @@ export default class CharacterInfoPanel extends BasePanel {
         this.idText.x = this.nickName.x + this.nickName.width * (1 - this.nickName.originX) + 8 * this.dpr;
         this.mFirendMenu.visible = false;
         this.setSubCategory(subArr);
-        this.setFriendRelation(FriendRelation.Null);
+        this.setFriendRelation(FriendRelationEnum.Null);
     }
 
-    public setFriendRelation(relation: FriendRelation) {
+    public setFriendRelation(relation: FriendRelationEnum) {
         if (this.isOwner) {
             return;
         }
         this.mRelation = relation;
-        this.mFirendMenu.visible = relation === FriendRelation.Friend;
-        this.mCharacterMenu.setIsBlack(relation === FriendRelation.Blacklist);
-        this.addFriendBtn.visible = relation !== FriendRelation.Blacklist;
-        if (relation === FriendRelation.Followed || relation === FriendRelation.Friend) {
+        this.mFirendMenu.visible = relation === FriendRelationEnum.Friend;
+        this.mCharacterMenu.setIsBlack(relation === FriendRelationEnum.Blacklist);
+        this.addFriendBtn.visible = relation !== FriendRelationEnum.Blacklist;
+        if (relation === FriendRelationEnum.Followed || relation === FriendRelationEnum.Friend) {
             this.addFriendBtn.setText(i18n.t("friendlist.unfollow"));
         } else {
             this.addFriendBtn.setText(i18n.t("friendlist.follow"));
@@ -501,12 +502,12 @@ export default class CharacterInfoPanel extends BasePanel {
             return;
         }
         switch (this.mRelation) {
-            case FriendRelation.Friend:
-            case FriendRelation.Followed:
+            case FriendRelationEnum.Friend:
+            case FriendRelationEnum.Followed:
                 this.emit("unfollow", this.mCharacterData.cid);
                 break;
-            case FriendRelation.Fans:
-            case FriendRelation.Null:
+            case FriendRelationEnum.Fans:
+            case FriendRelationEnum.Null:
                 this.emit("follow", this.mCharacterData.cid);
                 break;
         }
@@ -938,12 +939,4 @@ class CharacterMenu extends Menu {
     private onAddBlackHandler() {
         this.emit(this.isBlack ? "removeBlack" : "addBlack");
     }
-}
-
-export enum FriendRelation {
-    Null,
-    Friend,
-    Fans,
-    Followed,
-    Blacklist,
 }

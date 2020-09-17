@@ -10,7 +10,6 @@ import { Logger } from "../../utils/log";
 
 export class GMToolsPanel extends BasePanel {
     private background: Phaser.GameObjects.Graphics;
-    private buttons: Phaser.GameObjects.Sprite[];
     private gridtable: GameGridTable;
     private closeBtn: Button;
     private command: LabelInput;
@@ -159,8 +158,6 @@ export class GMToolsPanel extends BasePanel {
         const buttons = data.button;
         if (buttons.length >= 1) {
             this.gridtable.setItems(buttons);
-            this.buttons = [];
-            this.add(this.buttons);
         }
 
         const inputText = data.inputText;

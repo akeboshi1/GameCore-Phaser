@@ -31,6 +31,12 @@ export class GMToolsMediator extends BaseMediator {
         this.layerMgr.addToUILayer(this.mView);
     }
 
+    public update(params?: any) {
+        if (this.mView) {
+            this.mView.show(params);
+        }
+    }
+
     public hide() {
         this.destroy();
     }

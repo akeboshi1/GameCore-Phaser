@@ -2,9 +2,10 @@ import { ILayerManager } from "../layer.manager";
 import { op_client } from "pixelpai_proto";
 import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
-import CharacterInfoPanel, { FriendRelation } from "./CharacterInfoPanel";
 import { CharacterInfo } from "./CharacterInfo";
 import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
+import { PicFriendRelation } from "../PicFriend/PicFriendRelation";
+import CharacterInfoPanel from "./CharacterInfoPanel";
 
 export class CharacterInfoMediator extends BaseMediator {
     protected mView: CharacterInfoPanel;
@@ -102,34 +103,15 @@ export class CharacterInfoMediator extends BaseMediator {
 
     private checkRelation(cid: string) {
         const me = this.world.account.accountData.id;
-        this.world.httpService.post("user/check_relation", {
+        this.world.httpService.post("user/check_relation", {relations: [{
             userA: me,
             userB: cid
-        }).then((response: any) => {
+        }]}).then((response: any) => {
             const { code, data } = response;
             if (code === 200) {
-                if (data.length >= 1) {
-                    let relation = FriendRelation.Null;
-                    const isBan = data[0].ban;
-                    if (isBan) {
-                        this.mView.setFriendRelation(FriendRelation.Blacklist);
-                        return;
-                    }
-                    if (data[0].followed_user === cid) {
-                        relation = FriendRelation.Followed;
-                    } else if (data[0].followed_user === me) {
-                        relation = FriendRelation.Fans;
-                    }
-                    if (data.length >= 2) {
-                        if (data[0].user === data[1].followed_user && data[1].followed_user === data[0].user) {
-                            relation = FriendRelation.Friend;
-                        }
-                    }
-                    if (relation) {
-                        this.mView.setFriendRelation(relation);
-                    }
-                } else {
-                    this.mView.setFriendRelation(FriendRelation.Null);
+                for (const key in data) {
+                    const ids = key.split("_");
+                    this.mView.setFriendRelation(PicFriendRelation.check(ids[0], ids[1], data[key]).relation);
                 }
             }
         });
