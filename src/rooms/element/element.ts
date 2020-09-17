@@ -185,6 +185,7 @@ export class Element extends BlockObject implements IElement {
     protected mMoving: boolean = false;
     protected mRootMount: IElement;
     protected mMounts: IElement[];
+    protected mDirty: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -351,6 +352,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     public update() {
+        if (this.mDirty === false) {
+            return;
+        }
+        this.mDirty = true;
         if (this.mBubble) {
             this.mBubble.follow(this);
         }
@@ -867,8 +872,8 @@ export class Element extends BlockObject implements IElement {
             // }
             this.setDepth(0);
             this.mMoveData.tweenLastUpdate = now;
-            this.update();
         }
+        this.mDirty = true;
     }
 
     protected get offsetY(): number {
@@ -1010,8 +1015,8 @@ export class FollowObject {
             return;
         }
         const pos = this.mTarget.getPosition();
-        this.mObject.x = (pos.x + this.mOffset.x) * this.mDpr;
-        this.mObject.y = (pos.y + this.mOffset.y) * this.mDpr;
+        this.mObject.x = Math.round((pos.x + this.mOffset.x) * this.mDpr);
+        this.mObject.y = Math.round((pos.y + this.mOffset.y) * this.mDpr);
     }
 
     remove() {
@@ -1029,6 +1034,10 @@ export class FollowObject {
 
     get object() {
         return this.mObject;
+    }
+
+    private linear(p0, p1, t) {
+        return (p1 - p0) * t + p0;
     }
 }
 
