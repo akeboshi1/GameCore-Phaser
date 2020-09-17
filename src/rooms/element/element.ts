@@ -212,7 +212,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(this.mModel.pos);
         }
         this.mDisplay.changeAlpha(this.mModel.alpha);
-        if (this.mDisplay.getElement("nickname")) this.showNickname();
+        if (this.getFollowObject(FollowEnum.Nickname)) this.showNickname();
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
         const frameModel = <IFramesModel>this.mDisplayInfo;
@@ -276,6 +276,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.currentAnimationName !== animationName) {
             // this.mAnimationName = animationName;
             this.mModel.currentAnimationName = animationName;
+
             if (this.mDisplay) {
                 this.mDisplay.play(this.model.currentAnimation);
             }
@@ -525,6 +526,9 @@ export class Element extends BlockObject implements IElement {
         if (!this.mDisplay || !this.model) {
             return;
         }
+        if (!this.mDisplay.topPoint) {
+            return;
+        }
         const ratio = this.mRoomService.world.scaleRatio;
         let follow = this.getFollowObject(FollowEnum.Nickname);
         let nickname = null;
@@ -536,13 +540,12 @@ export class Element extends BlockObject implements IElement {
                 }
             }).setOrigin(0.5).setStroke("0x0", 2 * ratio);
             follow = new FollowObject(nickname, this, ratio);
-            follow.setOffset(0, -84);
             this.addFollowObject(FollowEnum.Nickname, follow);
         } else {
             nickname = follow.object;
         }
         nickname.text = this.mModel.nickname;
-        follow.update();
+        follow.setOffset(0, this.mDisplay.topPoint.y);
         if (this.mDisplay.parentContainer) this.roomService.addToSceneUI(nickname);
     }
 
@@ -999,6 +1002,7 @@ export class FollowObject {
 
     setOffset(x: number, y: number) {
         this.mOffset.setTo(x, y);
+        this.update();
     }
 
     update() {

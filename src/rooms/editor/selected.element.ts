@@ -59,9 +59,9 @@ export class SelectedElement {
         if (!this.mDisplay) {
             return;
         }
-        const baseLoc = this.mDisplay.baseLoc;
-        this.mEffecte.x = this.mDisplay.x + baseLoc.x;
-        this.mEffecte.y = this.mDisplay.y + baseLoc.y - (this.mDisplayHeight >> 1);
+        // const baseLoc = this.mDisplay.baseLoc;
+        this.mEffecte.x = this.mDisplay.x;
+        this.mEffecte.y = this.mDisplay.y - (this.mDisplayHeight >> 1);
         const ele = this.mDisplay.element;
         if (ele) {
             ele.update();
