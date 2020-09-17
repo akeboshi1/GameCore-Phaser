@@ -205,6 +205,8 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onKeyboardHandler(e) {
+        // tslint:disable-next-line:no-console
+        console.log(e.keyboardHeight);
         if (this.keyboardHeight > 0 && e.keyboardHeight === this.keyboardHeight) return;
         window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
         this.setKeywordHeight(e.keyboardHeight);
