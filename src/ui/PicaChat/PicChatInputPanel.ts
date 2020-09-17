@@ -21,6 +21,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private mOutputText: BBCodeText;
     private world: WorldService;
     private dpr: number;
+    private zoom: number;
     private scene: Phaser.Scene;
     private gamescroll: GameScroller;
     private chatArr: string[] = [];
@@ -37,6 +38,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.key = key;
         this.world = world;
         this.dpr = world.uiRatio;
+        this.zoom = world.uiScale;
         this.scene = scene;
         this.chatArr.push(outtext);
         const width = scene.cameras.main.width;
@@ -158,7 +160,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         const pktGlobal: any = window["pktGlobal"];
         const screenHeight = pktGlobal.deviceHeight;
         const statusHeight = pktGlobal.toolbarHeight;
-        const offsetHeight = (screenHeight - height - statusHeight) * this.dpr;
+        const offsetHeight = (screenHeight - height - statusHeight) * this.dpr / this.zoom;
         this.bottomCon.visible = true;
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
@@ -213,6 +215,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private setQuickChatItems() {
+        this.quickChatScroll.clearItems(true);
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
         for (let i = 0; i < this.quickChatAtt.length; i++) {
