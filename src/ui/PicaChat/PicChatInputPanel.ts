@@ -187,7 +187,8 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         if (datas) this.quickChatAtt = datas;
         this.quickChatAtt.unshift(undefined);
         this.mInput.setFocus();
-        this.setKeywordHeight(0);
+        const keyboardHeight = window["$game"].keyboardHeight;
+        this.setKeywordHeight(keyboardHeight);
         // tslint:disable-next-line:no-console
         console.log(datas);
     }
