@@ -21,7 +21,6 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private mOutputText: BBCodeText;
     private world: WorldService;
     private dpr: number;
-    private zoom: number;
     private scene: Phaser.Scene;
     private gamescroll: GameScroller;
     private chatArr: string[] = [];
@@ -37,8 +36,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         super();
         this.key = key;
         this.world = world;
-        this.dpr = world.uiRatio;
-        this.zoom = world.uiScale;
+        this.dpr = window.devicePixelRatio;
         this.scene = scene;
         this.chatArr.push(outtext);
         const width = scene.cameras.main.width;
@@ -160,7 +158,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         const pktGlobal: any = window["pktGlobal"];
         const screenHeight = pktGlobal.deviceHeight;
         const statusHeight = pktGlobal.toolbarHeight;
-        const offsetHeight = (screenHeight - height - statusHeight) * this.dpr / this.zoom;
+        const offsetHeight = (screenHeight - height - statusHeight) * this.dpr;
         this.bottomCon.visible = true;
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
