@@ -155,10 +155,10 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     public setKeywordHeight(height: number) {
-        const pktGlobal = window["pktGlobal"];
+        const pktGlobal: any = window["pktGlobal"];
         const screenHeight = pktGlobal.deviceHeight;
         const statusHeight = pktGlobal.toolbarHeight;
-        const offsetHeight = screenHeight - height - statusHeight;
+        const offsetHeight = (screenHeight - height - statusHeight) * this.dpr;
         this.bottomCon.visible = true;
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
@@ -179,7 +179,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.keyboardHeight = height;
         this.mInput.text = screenHeight + "   " + height + "   " + statusHeight;
         // tslint:disable-next-line:no-console
-        console.log(this.mInput.text+"    "+pktGlobal);
+        console.log(this.mInput.text + "    " + pktGlobal);
         this.setQuickChatItems();
     }
 
@@ -202,7 +202,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private onKeyboardHandler(e) {
         if (this.keyboardHeight > 0) return;
         window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
-        this.setKeywordHeight(e.keyboardHeight * this.dpr);
+        this.setKeywordHeight(e.keyboardHeight);
     }
 
     private setQuickChatItems() {
