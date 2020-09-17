@@ -257,7 +257,8 @@ export class PicaChatPanel extends BasePanel {
         if (this.mInputText) {
             return;
         }
-        if (navigator.userAgent.match(/Cordova/i)) {
+        const pktGlobal = window["pktGlobal"];
+        if (pktGlobal && pktGlobal.envPlatform === "Cordova") {
             if (this.scene.cache.json.has("quickchat")) {
                 this.openAppInputPanel();
             } else {
