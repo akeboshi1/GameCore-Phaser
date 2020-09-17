@@ -113,7 +113,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mUIRatio = Math.round(config.devicePixelRatio || 1);
         const scaleW = (config.width / this.DEFAULT_WIDTH) * (config.devicePixelRatio / this.mUIRatio);
         // const scaleH = config.height / this.DEFAULT_HEIGHT;
-        this.mUIScale = this.game.device.os.desktop ? 1 : scaleW;
+        this.mUIScale = scaleW;
         // if (!config.scale_ratio) {
         // config.scale_ratio = Math.round(window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio);
         // }
