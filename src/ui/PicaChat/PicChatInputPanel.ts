@@ -189,6 +189,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mInput.setFocus();
         const keyboardHeight = window["$game"].keyboardHeight;
         this.setKeywordHeight(keyboardHeight);
+        this.onQuickSendHandler();
         // tslint:disable-next-line:no-console
         console.log(datas);
     }
@@ -204,7 +205,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onKeyboardHandler(e) {
-        if (this.keyboardHeight > 0) return;
+        if (this.keyboardHeight > 0 && e.keyboardHeight === this.keyboardHeight) return;
         window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
         this.setKeywordHeight(e.keyboardHeight);
     }
