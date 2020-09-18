@@ -177,7 +177,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.quickChatScroll.y = this.quickBg.y;
         this.quickChatScroll.resetSize(camWidth, conHeight);
         this.keyboardHeight = height;
-        this.mInput.text = screenHeight + "   " + height + "   " + statusHeight;
+        this.mInput.text = screenHeight + "   " + height + "   " + statusHeight + "   " + this.dpr + "   " + camheight;
         // tslint:disable-next-line:no-console
         console.log(this.mInput.text + "    " + pktGlobal);
         this.setQuickChatItems();
