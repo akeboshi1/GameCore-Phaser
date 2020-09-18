@@ -53,7 +53,7 @@ export interface WorldService {
 
     loadSceneConfig(sceneId: string): Promise<any>;
 
-    playSound(config: ISoundConfig);
+    playSound(config: any);
     showLoading();
     enterGame();
     exitUser();
