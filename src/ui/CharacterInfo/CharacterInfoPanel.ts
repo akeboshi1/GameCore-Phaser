@@ -3,26 +3,18 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { BBCodeText, Button } from "../../../lib/rexui/lib/ui/ui-components";
 import { i18n } from "../../i18n";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
-import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { Url } from "../../utils/resUtil";
-// import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
 import { CharacterAttributePanel } from "./CharacterAttributePanel";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { Logger } from "../../utils/log";
 import { FriendRelationEnum } from "../PicFriend/PicFriendRelation";
+import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";
@@ -98,12 +90,12 @@ export default class CharacterInfoPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
-        this.nickEditor.on(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
-        this.privaCharBtn.on(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
-        this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
-        // this.tradeBtn.on(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
-        this.mExitBtn.on(CoreUI.MouseEvent.Tap, this.onExitHandler, this);
+        this.closeBtn.on(String(ClickEvent.Tap), this.OnClosePanel, this);
+        this.nickEditor.on(String(ClickEvent.Tap), this.onEditorHandler, this);
+        this.privaCharBtn.on(String(ClickEvent.Tap), this.onPrivateChatHandler, this);
+        this.addFriendBtn.on(String(ClickEvent.Tap), this.onAddFriendHandler, this);
+        // this.tradeBtn.on(String(ClickEvent.Tap), this.onTradingHandler, this);
+        this.mExitBtn.on(String(ClickEvent.Tap), this.onExitHandler, this);
         this.mFirendMenu.register();
         this.mFirendMenu.on("track", this.onTrackHandler, this);
         this.mFirendMenu.on("invite", this.onIntiveHandler, this);
@@ -115,12 +107,12 @@ export default class CharacterInfoPanel extends BasePanel {
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
-        this.nickEditor.off(CoreUI.MouseEvent.Tap, this.onEditorHandler, this);
-        this.privaCharBtn.off(CoreUI.MouseEvent.Tap, this.onPrivateChatHandler, this);
-        this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onAddFriendHandler, this);
-        // this.tradeBtn.off(CoreUI.MouseEvent.Tap, this.onTradingHandler, this);
-        this.mExitBtn.off(CoreUI.MouseEvent.Tap, this.onExitHandler, this);
+        this.closeBtn.off(String(ClickEvent.Tap), this.OnClosePanel, this);
+        this.nickEditor.off(String(ClickEvent.Tap), this.onEditorHandler, this);
+        this.privaCharBtn.off(String(ClickEvent.Tap), this.onPrivateChatHandler, this);
+        this.addFriendBtn.off(String(ClickEvent.Tap), this.onAddFriendHandler, this);
+        // this.tradeBtn.off(String(ClickEvent.Tap), this.onTradingHandler, this);
+        this.mExitBtn.off(String(ClickEvent.Tap), this.onExitHandler, this);
         this.mFirendMenu.unregister();
         this.mFirendMenu.off("track", this.onTrackHandler, this);
         this.mFirendMenu.off("invite", this.onIntiveHandler, this);
@@ -196,7 +188,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const nickPosX = Math.round(-this.bg.width * 0.5 + 25 * this.dpr);
         const nickPosY = Math.round(this.bg.height * 0.5 - 324 * this.dpr) + 30 * this.dpr;
         const fontSize = Math.round(13 * this.dpr);
-        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, {})
+        this.nickName = new BBCodeText(this.scene, nickPosX, nickPosY, "", {})
             .setOrigin(0, 0.5).setFontSize(fontSize).setFontFamily(Font.DEFULT_FONT);
         this.nickEditor = new Button(this.scene, this.key, "edit", "edit");
         this.nickEditor.setPosition(this.bg.width * 0.5 - 30 * this.dpr, nickPosY).visible = false;
@@ -393,7 +385,7 @@ export default class CharacterInfoPanel extends BasePanel {
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {
@@ -742,16 +734,16 @@ class FriendMenu extends Menu {
     }
 
     register() {
-        this.trackBtn.on(CoreUI.MouseEvent.Tap, this.onTrackHandler, this);
-        this.inviteBtn.on(CoreUI.MouseEvent.Tap, this.onInviteHandler, this);
+        this.trackBtn.on(String(ClickEvent.Tap), this.onTrackHandler, this);
+        this.inviteBtn.on(String(ClickEvent.Tap), this.onInviteHandler, this);
         const { width, height } = this.operation;
         this.operation.setInteractive(new Phaser.Geom.Rectangle(-width * 0.5, height * 0.5, width * 2, height * 2), Phaser.Geom.Rectangle.Contains);
         this.operation.on("pointerup", this.onSwitchOperationHandler, this);
     }
 
     unregister() {
-        this.trackBtn.off(CoreUI.MouseEvent.Tap, this.onTrackHandler, this);
-        this.inviteBtn.off(CoreUI.MouseEvent.Tap, this.onInviteHandler, this);
+        this.trackBtn.off(String(ClickEvent.Tap), this.onTrackHandler, this);
+        this.inviteBtn.off(String(ClickEvent.Tap), this.onInviteHandler, this);
         this.operation.disableInteractive();
         this.operation.on("pointerup", this.onSwitchOperationHandler, this);
 
@@ -906,11 +898,11 @@ class CharacterMenu extends Menu {
     }
 
     public register() {
-        this.addBlacklistBtn.on(CoreUI.MouseEvent.Tap, this.onAddBlackHandler, this);
+        this.addBlacklistBtn.on(String(ClickEvent.Tap), this.onAddBlackHandler, this);
     }
 
     public unregister() {
-        this.addBlacklistBtn.off(CoreUI.MouseEvent.Tap, this.onAddBlackHandler, this);
+        this.addBlacklistBtn.off(String(ClickEvent.Tap), this.onAddBlackHandler, this);
     }
 
     setIsBlack(val: boolean) {

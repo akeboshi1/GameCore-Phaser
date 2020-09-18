@@ -1,19 +1,18 @@
-import { IButtonState } from "../../../lib/rexui/lib/ui/interface/button/IButtonState";
 
 export class CheckboxGroup extends Phaser.Events.EventEmitter {
-  private mList: IButtonState[] = [];
-  private mSelectedButton: IButtonState;
+  private mList: any[] = [];
+  private mSelectedButton: any;
   constructor() {
     super();
   }
 
-  public appendItem(item: IButtonState): this {
+  public appendItem(item: any): this {
     this.mList.push(item);
     item.on("Tap", this.onGameObjectUpHandler, this);
     return this;
   }
 
-  public appendItemAll(items: IButtonState[]): this {
+  public appendItemAll(items: any[]): this {
     this.mList = this.mList.concat(items);
     for (const item of items) {
       item.on("Tap", this.onGameObjectUpHandler, this);
@@ -21,7 +20,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     return this;
   }
 
-  public removeItem(item: IButtonState): this {
+  public removeItem(item: any): this {
     this.mList = this.mList.filter((button) => button !== item);
     item.removeAllListeners();
     return this;
@@ -40,7 +39,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     return this;
   }
 
-  public select(item: IButtonState) {
+  public select(item: any) {
     if (this.mSelectedButton === item) {
       return;
     }

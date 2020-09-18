@@ -1,14 +1,11 @@
 import { Font } from "../../utils/font";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
 import { DynamicImage } from "../components/dynamic.image";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { op_client } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
+import { GameGridTable, NineSliceButton, ClickEvent } from "apowophaserui";
 export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
     private dpr: number;
@@ -53,11 +50,11 @@ export class PicBusinessRankRewardPanel extends Phaser.GameObjects.Container {
         });
         this.add(backBtn);
         backBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        backBtn.on(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {

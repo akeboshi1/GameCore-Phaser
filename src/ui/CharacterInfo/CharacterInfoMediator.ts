@@ -1,11 +1,11 @@
 import { ILayerManager } from "../layer.manager";
 import { op_client } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import { CharacterInfo } from "./CharacterInfo";
 import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
 import { PicFriendRelation } from "../PicFriend/PicFriendRelation";
 import CharacterInfoPanel from "./CharacterInfoPanel";
+import { BaseMediator } from "apowophaserui";
 
 export class CharacterInfoMediator extends BaseMediator {
     protected mView: CharacterInfoPanel;

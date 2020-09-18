@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { NinePatch } from "../components/nine.patch";
 import { Font } from "../../utils/font";
 import { NinePatchButton } from "../components/ninepatch.button";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
+import { BBCodeText } from "apowophaserui";
 
 export class PicaMessageBoxPanel extends BasePanel {
   private key: string = "pica_message_box";

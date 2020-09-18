@@ -2,10 +2,10 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { DynamicImage } from "../components/dynamic.image";
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { Handler } from "../../Handler/Handler";
 import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
+import { Button } from "apowophaserui";
 export class DialogPanel extends BasePanel {
     public key: string = "commonkey";
     private npcName: Phaser.GameObjects.Text;

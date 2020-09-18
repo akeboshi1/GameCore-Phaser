@@ -1,6 +1,6 @@
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { WorldService } from "../../game/world.service";
 import { MainUIScene } from "../../scenes/main.ui";
+import { InputText } from "apowophaserui";
 export class InputTextFactory {
     private mWorld: WorldService;
     constructor(world: WorldService) {
@@ -56,11 +56,11 @@ export class InputTextField extends Phaser.Events.EventEmitter {
     }
 
     public onBlur() {
-        this.mInputText.onBlur();
+        (<any>this.mInputText).onBlur();
     }
 
     public onFocus() {
-        this.mInputText.onFocus();
+        (<any>this.mInputText).onFocus();
     }
 
     public getText(): string {

@@ -5,18 +5,10 @@ import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { Handler } from "../../Handler/Handler";
 import { Url, Coin } from "../../utils/resUtil";
-import { BBCodeText, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
-import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
-import { Logger } from "../../utils/log";
+import { NineSlicePatch, Button, GameScroller, NineSliceButton, ClickEvent, ProgressBar } from "apowophaserui";
 export class PicWorkPanel extends BasePanel {
     private key = "work_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -268,7 +260,7 @@ class WorkItem extends Phaser.GameObjects.Container {
         this.workBtn.x = 0;
         this.workBtn.setTextStyle({ fontSize: 12 * dpr, color: "#996600", bold: true });
         this.bottomCon.add([this.workbg, this.workBtn]);
-        this.workBtn.on(CoreUI.MouseEvent.Tap, this.onWorkHandler, this);
+        this.workBtn.on(String(ClickEvent.Tap), this.onWorkHandler, this);
     }
 
     public setHandler(send: Handler, tips: Handler) {

@@ -2,10 +2,10 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicHandheld } from "./PicHandheld";
 import { PicHandheldPanel } from "./PicHandheldPanel";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
+import { BaseMediator } from "apowophaserui";
 
 export class PicHandheldMediator extends BaseMediator {
     protected mView: PicHandheldPanel;

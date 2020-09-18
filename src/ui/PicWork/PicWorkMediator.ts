@@ -1,10 +1,10 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicWorkPanel } from "./PicWorkPanel";
 import { PicWork } from "./PicWork";
 import { PicaMainUIMediator } from "../PicaMainUI/PicaMainUIMediator";
+import { BaseMediator } from "apowophaserui";
 export class PicWorkMediator extends BaseMediator {
     protected mView: PicWorkPanel;
     private scene: Phaser.Scene;

@@ -5,21 +5,11 @@ import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { Handler } from "../../Handler/Handler";
 import { Url, Coin } from "../../utils/resUtil";
-import { BBCodeText, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
-import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { ItemInfoTips } from "../tips/ItemInfoTips";
-import { Logger } from "../../utils/log";
-import { MessageBox } from "../../../lib/rexui/lib/ui/messageBox/MessageBox";
-import { MessageBoxView } from "../MessageBox/MessageBoxView";
 import { AlertView } from "../components/alert.view";
+import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
+import { ItemInfoTips } from "../tips/ItemInfoTips";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -114,7 +104,7 @@ export class PicOrderPanel extends BasePanel {
         this.orderProgressPanel = new OrderProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, this.key, this.dpr);
         this.orderProgressPanel.y = -conHeight * 0.5 + 20 * this.dpr;
         this.orderProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x: 0,
             y: 15 * this.dpr,
             table: {
@@ -311,9 +301,9 @@ class OrderItem extends Phaser.GameObjects.Container {
         });
         this.calcuTime.x = this.acceleBtn.x;
         this.calcuTime.y = this.acceleBtn.y + this.acceleBtn.height * 0.5 + 10 * dpr;
-        this.sendBtn.on(CoreUI.MouseEvent.Tap, this.onSendHandler, this);
-        this.acceleBtn.on(CoreUI.MouseEvent.Tap, this.onAcceleHandler, this);
-        this.refreshBtn.on(CoreUI.MouseEvent.Tap, this.onRefreshHandler, this);
+        this.sendBtn.on(String(ClickEvent.Tap), this.onSendHandler, this);
+        this.acceleBtn.on(String(ClickEvent.Tap), this.onAcceleHandler, this);
+        this.refreshBtn.on(String(ClickEvent.Tap), this.onRefreshHandler, this);
     }
 
     public setHandler(send: Handler, refresh: Handler, tips: Handler) {
@@ -848,15 +838,15 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         if (data.targetValue < curvalue) {
             this.bg.setFrameNormal("order_progress_finished", "order_progress_finished");
             if (!data.received)
-                this.bg.on(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+                this.bg.on(String(ClickEvent.Tap), this.onReceiveHandler, this);
             else {
                 this.finishIcon.visible = true;
                 this.balckgraphic.visible = true;
-                this.bg.off(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+                this.bg.off(String(ClickEvent.Tap), this.onReceiveHandler, this);
             }
         } else {
             this.bg.setFrameNormal("order_progress_unfinished", "order_progress_unfinished");
-            this.bg.off(CoreUI.MouseEvent.Tap, this.onReceiveHandler, this);
+            this.bg.off(String(ClickEvent.Tap), this.onReceiveHandler, this);
         }
 
     }

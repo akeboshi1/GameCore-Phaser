@@ -1,19 +1,12 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
-import { NineSlicePatch, BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { Coin, Url } from "../../utils/resUtil";
-import { op_def } from "pixelpai_proto";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { ProgressBar } from "../../../lib/rexui/lib/ui/progressbar/ProgressBar";
 import { WorldService } from "../../game/world.service";
 import { DynamicImage } from "../components/dynamic.image";
+import { BBCodeText, GameGridTable, NineSlicePatch, NineSliceButton, ProgressBar, Button, ClickEvent } from "apowophaserui";
+import { Url } from "../../utils/resUtil";
 
 export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
     private planBuffText: BBCodeText;
@@ -74,7 +67,7 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         this.planBuffText = new BBCodeText(this.scene, 0, this.topbg.y + 15 * this.dpr, "Store prosperity -10%", { fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#ffffff" })
             .setOrigin(0.5);
         this.add(this.planBuffText);
-        this.planBuffText.setWrapWidth(200 * this.dpr, true);
+        this.planBuffText.setWrapWidth(200 * this.dpr);
 
         const titlebg = new NineSlicePatch(this.scene, 0, 0, 135 * this.dpr, 17 * this.dpr, this.key, "subtitle", {
             left: 13 * this.dpr,
@@ -102,11 +95,11 @@ export class PicBusinessPlanPanel extends Phaser.GameObjects.Container {
         });
         this.add(cancelBtn);
         cancelBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        cancelBtn.on(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
+        cancelBtn.on(String(ClickEvent.Tap), this.onCancelHandler, this);
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {
@@ -246,20 +239,20 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
         this.add(this.progress);
         this.addBtn = new Button(this.scene, this.key, "add_plan", "add_plan");
         this.addBtn.x = this.width * 0.5 - this.addBtn.width * 0.5 - 20 * dpr;
-        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddBtnHandler, this);
+        this.addBtn.on(String(ClickEvent.Tap), this.onAddBtnHandler, this);
         this.add(this.addBtn);
     }
 
     public setPlanData(data: op_client.MarketPlanPair, unixTime: number) {
         if (!data.marketPlan) {
             this.planName.visible = false;
-            this.planAtt.visible = false;
+            (<any>this.planAtt).visible = false;
             this.progress.visible = false;
             this.add(this.addBtn);
             this.bg.setFrame("no_plan_bg");
         } else {
             this.planName.visible = true;
-            this.planAtt.visible = true;
+            (<any>this.planAtt).visible = true;
             this.progress.visible = true;
             this.planText.visible = false;
             this.bg.setFrame("has_plan_bg");

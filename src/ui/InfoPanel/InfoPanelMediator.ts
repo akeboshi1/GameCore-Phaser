@@ -3,8 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { MessageType } from "../../const/MessageType";
 import { InfoPanel } from "./InfoPanel";
 import { Tool } from "../../utils/tool";
-import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "apowophaserui";
 
 export class InfoPanelMediator extends BaseMediator {
     public static NAME: string = "InfoPanelMediator";

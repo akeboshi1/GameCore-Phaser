@@ -1,7 +1,6 @@
 import { Font } from "../../utils/font";
-import { IButtonState } from "../../../lib/rexui/lib/ui/interface/button/IButtonState";
 
-export class TextButton extends Phaser.GameObjects.Container implements IButtonState {
+export class TextButton extends Phaser.GameObjects.Container {
   private mText: Phaser.GameObjects.Text;
   private normalColor: string = "#FFFFFF";
   private changeColor: string = "#0099cc";

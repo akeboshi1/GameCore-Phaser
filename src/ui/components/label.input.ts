@@ -1,5 +1,5 @@
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { Font } from "../../utils/font";
+import { InputText } from "apowophaserui";
 
 export class LabelInput extends Phaser.GameObjects.Container {
     private mBackground: Phaser.GameObjects.Graphics;

@@ -10,8 +10,8 @@ import { PlayScene } from "../../scenes/play";
 import { Tool } from "../../utils/tool";
 import { Url } from "../../utils/resUtil";
 import { Room } from "../../rooms/room";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { InteractiveBubble } from "./InteractiveBubble";
+import { BaseMediator } from "apowophaserui";
 
 export class InteractiveBubbleMediator extends BaseMediator {
     protected mView: InteractiveBubblePanel;

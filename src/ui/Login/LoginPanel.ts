@@ -1,14 +1,10 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { LoadingScene } from "../../scenes/loading";
 import { Font } from "../../utils/font";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
-import { BBCodeText, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import Helpers from "../../utils/helpers";
+import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 
 export class LoginPanel extends BasePanel {
     private readonly key = "login";
@@ -189,8 +185,8 @@ export class LoginPanel extends BasePanel {
             fontFamily: Font.DEFULT_FONT
         });
         this.loginBtn.setFontStyle("bold");
-        this.loginBtn.on(CoreUI.MouseEvent.Down, this.LoginDownHandler, this);
-        this.loginBtn.on(CoreUI.MouseEvent.Tap, this.tryLogin, this);
+        this.loginBtn.on(String(ClickEvent.Down), this.LoginDownHandler, this);
+        this.loginBtn.on(String(ClickEvent.Tap), this.tryLogin, this);
 
         const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#FFEC48]《用户服务协议》[/color][/area]和[area=privacy][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
             color: "#ffffff",
@@ -206,7 +202,7 @@ export class LoginPanel extends BasePanel {
         });
         label.setResolution(this.dpr);
 
-        this.acceptBtn = new CheckBox(this.scene, this.key, "accept_unchecked", "accept_checked").on(CoreUI.MouseEvent.Tap, this.onCheckboxHandler, this);
+        this.acceptBtn = new CheckBox(this.scene, this.key, "accept_unchecked", "accept_checked").on(String(ClickEvent.Tap), this.onCheckboxHandler, this);
         label.x = this.loginBtn.x + 8 * this.dpr;
         label.y = this.loginBtn.y + this.loginBtn.height * 0.5 + 24 * this.dpr;
 

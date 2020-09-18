@@ -1,10 +1,7 @@
 import { WorldService } from "../../../game/world.service";
 import { StoragePanel } from "./storagePanel";
 import { ILayerManager } from "../../layer.manager";
-import { BasePanel } from "../../components/BasePanel";
-import { BaseMediator } from "../../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../../lib/rexui/lib/ui/interface/baseUI/UIType";
-
+import { BaseMediator, UIType } from "apowophaserui";
 export class StorageMediator extends BaseMediator {
     public static NAME: string = "StorageMediator";
     private world: WorldService;

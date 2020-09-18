@@ -1,10 +1,10 @@
 import { Logger } from "../../utils/log";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { LoginPanel } from "./LoginPanel";
 import { LayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { VerifiedPanel } from "./VerifiedPanel";
 import { AlertView, Buttons } from "../components/alert.view";
+import { BaseMediator } from "apowophaserui";
 
 export class LoginMediator extends BaseMediator {
     private verifiedPanel: VerifiedPanel;

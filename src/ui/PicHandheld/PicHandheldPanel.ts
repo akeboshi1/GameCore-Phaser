@@ -1,11 +1,10 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { DynamicImage } from "../components/dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url } from "../../utils/resUtil";
+import { GameGridTable } from "apowophaserui";
 export class PicHandheldPanel extends BasePanel {
     private readonly key = "pichandheldpanel";
     private gridContent: Phaser.GameObjects.Container;
@@ -132,7 +131,7 @@ export class PicHandheldPanel extends BasePanel {
         const propFrame = this.scene.textures.getFrame(this.key, "equp_bg");
         const cellWidth = propFrame.width + 10 * this.dpr;
         const cellHeight = propFrame.height + 10 * this.dpr;
-        const propGridConfig: GridTableConfig = {
+        const propGridConfig = {
             x: 0,
             y: 0,
             table: {

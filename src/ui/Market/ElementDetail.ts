@@ -6,8 +6,7 @@ import { DetailDisplay } from "./DetailDisplay";
 import { Font } from "../../utils/font";
 import { WorldService } from "../../game/world.service";
 import { Coin } from "../../utils/resUtil";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { NineSliceButton, ClickEvent } from "apowophaserui";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;
@@ -52,7 +51,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       fontFamily: Font.DEFULT_FONT
     });
     this.mBuyBtn.setFontStyle("bold");
-    this.mBuyBtn.on(CoreUI.MouseEvent.Tap, this.onBuyHandler, this);
+    this.mBuyBtn.on(String(ClickEvent.Tap), this.onBuyHandler, this);
     this.mNickName = this.scene.make.text({
       x: 7 * this.dpr,
       y: 9 * this.dpr,

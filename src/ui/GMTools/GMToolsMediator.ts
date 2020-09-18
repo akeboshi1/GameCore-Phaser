@@ -1,11 +1,11 @@
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { GMToolsPanel } from "./GMToolsPanel";
 import { op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { BaseMediator } from "apowophaserui";
 
-export class GMToolsMediator extends BaseMediator {
+export class GMToolsMediator extends BaseMediator  {
     private scene: Phaser.Scene;
     private layerMgr: ILayerManager;
     private world: WorldService;

@@ -4,9 +4,7 @@ import { ILayerManager } from "../layer.manager";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { NinePatchButton } from "../components/ninepatch.button";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
-
+import { BaseMediator, UIType } from "apowophaserui";
 export class ItemDetailMediator extends BaseMediator {
     private world: WorldService;
     private mLayerManager: ILayerManager;

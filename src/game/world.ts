@@ -22,11 +22,6 @@ import { load } from "../utils/http";
 import { Url, ResUtils } from "../utils/resUtil";
 import { Lite, Capsule, PaletteNode, MossNode } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
-import NinePatchPlugin from "../../lib/rexui/lib/plugins/ninepatch-plugin.js";
-import InputTextPlugin from "../../lib/rexui/lib/plugins/inputtext-plugin.js";
-import BBCodeTextPlugin from "../../lib/rexui/lib/plugins/bbcodetext-plugin.js";
-import ButtonPlugin from "../../lib/rexui/lib/plugins/button-plugin.js";
-import UIPlugin from "../../lib/rexui/lib/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
 import { LoginScene } from "../scenes/login";
 import { Account } from "./account";
@@ -681,7 +676,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
                 this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
                 this.mGame.plugins.removeScenePlugin("DragonBones");
-                this.mGame.plugins.removeScenePlugin("rexUI");
                 this.mGameEmitter.destroy();
                 this.roomManager.destroy();
                 this.uiManager.destroy();
@@ -906,35 +900,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 createContainer: true,
             },
             plugins: {
-                global: [
-                    {
-                        key: "rexButton",
-                        plugin: ButtonPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexNinePatchPlugin",
-                        plugin: NinePatchPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexInputText",
-                        plugin: InputTextPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexBBCodeTextPlugin",
-                        plugin: BBCodeTextPlugin,
-                        start: true,
-                    },
-                ],
                 scene: [
                     {
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone",
                     },
-                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
                 ],
             },
             render: {

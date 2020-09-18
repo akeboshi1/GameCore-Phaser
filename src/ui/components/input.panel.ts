@@ -1,6 +1,5 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { World } from "../../game/world";
 
 export class InputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;

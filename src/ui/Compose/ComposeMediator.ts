@@ -3,10 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { ComposePanel } from "./ComposePanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Compose } from "./Compose";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { Logger } from "../../utils/log";
-import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
-
+import { BaseMediator } from "apowophaserui";
 export class ComposeMediator extends BaseMediator {
     protected mView: ComposePanel;
     private scene: Phaser.Scene;

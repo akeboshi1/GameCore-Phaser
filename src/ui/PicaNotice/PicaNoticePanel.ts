@@ -1,8 +1,8 @@
 import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../components/BasePanel";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
+import { BBCodeText } from "apowophaserui";
 
 export class PicaNoticePanel extends BasePanel {
     private mContent: BBCodeText;

@@ -5,8 +5,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { PlayerState } from "../../rooms/element/element";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType } from "apowophaserui";
 export class ControlFMediator extends BaseMediator {
     public static NAME: string = "ControlFMediator";
     private world: WorldService;

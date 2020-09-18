@@ -1,8 +1,8 @@
 import { Font } from "../../utils/font";
 import { op_client, op_def, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { i18n } from "../../i18n";
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
+import { BBCodeText } from "apowophaserui";
 export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
@@ -143,6 +143,6 @@ class HouseAttributeValue extends Phaser.GameObjects.Container {
             posX += image.width * 0.5 + space;
             this.imgCon.add(image);
         }
-        this.valueText.visible = false;
+        (<any>this.valueText).visible = false;
     }
 }

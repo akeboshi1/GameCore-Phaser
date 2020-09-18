@@ -5,12 +5,9 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { Handler } from "../../Handler/Handler";
 import { Url } from "../../utils/resUtil";
-import { BBCodeText, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
+import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText } from "apowophaserui";
 export class TaskPanel extends BasePanel {
     private key = "task_ui";
     private blackBg: Phaser.GameObjects.Graphics;
@@ -594,9 +591,9 @@ class TaskCell extends Phaser.GameObjects.Container {
         this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.countTex = new BBCodeText(this.scene, 0, 0, {})
+        this.countTex = new BBCodeText(this.scene, 0, 0)
             .setOrigin(0.5).setFontSize(12 * dpr).setFontFamily(Font.DEFULT_FONT);
-        this.countTex.setPosition(this.width * 0.5, this.height * 0.5 - 2 * dpr);
+        (<any>this.countTex).setPosition(this.width * 0.5, this.height * 0.5 - 2 * dpr);
         this.add([this.bg, this.itemIcon, this.countTex]);
     }
 

@@ -4,18 +4,12 @@ import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { NinePatch } from "../components/nine.patch";
 import { Url } from "../../utils/resUtil";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { DynamicImage } from "../components/dynamic.image";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { Handler } from "../../Handler/Handler";
+import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, Button, BBCodeText } from "apowophaserui";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;
@@ -67,13 +61,13 @@ export class ComposePanel extends BasePanel {
     addListen() {
         if (!this.mInitialized) return;
         this.scene.input.on("pointerup", this.onInputPointUp, this);
-        this.makeBtn.on(CoreUI.MouseEvent.Tap, this.onMakeHandler, this);
+        this.makeBtn.on(String(ClickEvent.Tap), this.onMakeHandler, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
         this.scene.input.off("pointerup", this.onInputPointUp, this);
-        this.makeBtn.off(CoreUI.MouseEvent.Tap, this.onMakeHandler, this);
+        this.makeBtn.off(String(ClickEvent.Tap), this.onMakeHandler, this);
     }
 
     preload() {
@@ -220,7 +214,7 @@ export class ComposePanel extends BasePanel {
         const capH = propFrame.height + 12 * this.dpr;
         const gridHeight = 190 * this.dpr;
         const gridY = height * 0.5 - gridHeight * 0.5 + 10 * this.dpr;
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x: 0,
             y: gridY,
             table: {
@@ -318,7 +312,7 @@ export class ComposePanel extends BasePanel {
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
         const items = [];
-        this.materialGameScroll.clearItems();
+        (<any>this.materialGameScroll).clearItems();
         for (let i = 0; i < len; i++) {
             const item = new ComposeMaterialItem(this.scene, this.key, this.dpr);
             item.y = 0;
@@ -348,7 +342,7 @@ export class ComposePanel extends BasePanel {
             const content = {
                 text: [{
                     // text: `您确定要合成${this.mSelectItemData.productName}吗？`
-                    text: i18n.t("compose.confirmation", { name: this.mSelectItemData.productName})
+                    text: i18n.t("compose.confirmation", { name: this.mSelectItemData.productName })
                 }],
                 title: [{
                     text: i18n.t("compose.synthesis")
@@ -548,7 +542,7 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
         this.key = key;
         const bg = this.scene.make.image({ key: this.key, frame: "source_bg" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.itemCount = new BBCodeText(this.scene, 0, 0, {})
+        this.itemCount = new BBCodeText(this.scene, 0, 0, "", {})
             .setOrigin(0.5).setFontSize(11 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add([bg, this.itemIcon, this.itemCount]);
         this.setSize(bg.width, bg.height);

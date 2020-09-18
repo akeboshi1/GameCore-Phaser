@@ -7,10 +7,8 @@ import { Handler } from "../../Handler/Handler";
 import { TextToolTips } from "../tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
-import { NineSlicePatch, Button } from "../../../lib/rexui/lib/ui/ui-components";
-import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { i18n } from "../../i18n";
+import { CheckBox, NineSlicePatch, ClickEvent } from "apowophaserui";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -246,7 +244,7 @@ export class PicaMainUIPanel extends BasePanel {
         this.praiseBtn.x = 8 * this.dpr + this.praiseBtn.width * 0.5;
         this.praiseBtn.setTextStyle({ fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT });
         this.praiseBtn.setTextOffset(10 * this.dpr, 0);
-        this.praiseBtn.on(CoreUI.MouseEvent.Tap, this.onPraiseHandler, this);
+        this.praiseBtn.on(String(ClickEvent.Tap), this.onPraiseHandler, this);
         this.praiseImg = this.scene.make.image({ key: this.key, frame: "praise_before" });
         this.praiseImg.x = -10 * this.dpr;
         this.praiseBtn.add(this.praiseImg);

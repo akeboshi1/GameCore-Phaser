@@ -4,13 +4,10 @@ import { i18n } from "../../i18n";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Font } from "../../utils/font";
 import { Logger } from "../../utils/log";
-import { NineSlicePatch, Button } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { PicHouseInfoPanel } from "./PicHouseInfoPanel";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { NineSlicePatch, NineSliceButton, TabButton, ClickEvent } from "apowophaserui";
 export class PicHousePanel extends BasePanel {
     private readonly key = "pichousepanel";
     private content: Phaser.GameObjects.Container;
@@ -92,7 +89,7 @@ export class PicHousePanel extends BasePanel {
             this.closeBtn.y = -this.bg.height * 0.5 + this.dpr * 5;
             this.editorRoomBtn.y = this.content.height * 0.5 - 30 * this.dpr;
             this.houseInfoPanel.y = -this.content.height * 0.5 + this.houseInfoPanel.height * 0.5 + 30 * this.dpr;
-            this.closeShopBtn.on(CoreUI.MouseEvent.Tap, this.onCloseShopHandler, this);
+            this.closeShopBtn.on(String(ClickEvent.Tap), this.onCloseShopHandler, this);
         } else {
             this.closeShopBtn.visible = false;
         }

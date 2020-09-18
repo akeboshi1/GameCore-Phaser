@@ -1,18 +1,14 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { DynamicImage } from "../components/dynamic.image";
-import { op_client, op_gameconfig } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
-import { Url, Coin } from "../../utils/resUtil";
+import { Coin } from "../../utils/resUtil";
 import { i18n } from "../../i18n";
-import { Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { Handler } from "../../Handler/Handler";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { GameSlider } from "../../../lib/rexui/lib/ui/slider/GameSlider";
-import { Logger } from "../../utils/log";
 import { PicPropFunConfig } from "./PicPropFunConfig";
 import { DetailDisplay } from "../Market/DetailDisplay";
+import { NineSliceButton, GameSlider, NineSlicePatch } from "apowophaserui";
 export class PicPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private key: string = "picpropfunpanel";

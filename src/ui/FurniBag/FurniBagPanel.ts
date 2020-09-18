@@ -10,14 +10,9 @@ import { Url, Coin } from "../../utils/resUtil";
 import { InputPanel } from "../components/input.panel";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { Handler } from "../../Handler/Handler";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Logger } from "../../utils/log";
+import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button } from "apowophaserui";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -109,7 +104,7 @@ export class FurniBagPanel extends BasePanel {
     const items = [];
     if (this.mSeachInput.parentContainer)
       this.closeSeach(null);
-    this.mCategoryScroll.clearItems();
+    (<any>this.mCategoryScroll).clearItems();
     const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
     seachBtn.setData("item", { key: this.seachKey, value: i18n.t("common.search") });
     seachBtn.y = capH - 40 * this.dpr;
@@ -367,7 +362,7 @@ export class FurniBagPanel extends BasePanel {
     const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
     const capW = (propFrame.width);
     const capH = (propFrame.height);
-    const tableConfig: GridTableConfig = {
+    const tableConfig = {
       x: 0,
       y: 0,
       table: {

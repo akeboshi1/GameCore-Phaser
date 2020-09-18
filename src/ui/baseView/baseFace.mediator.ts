@@ -1,8 +1,6 @@
 import { WorldService } from "../../game/world.service";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { Size } from "../../utils/size";
-import { Panel } from "../../../lib/rexui/lib/ui/panel/Panel";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType, Panel } from "apowophaserui";
 
 /**
  * 场景UImediator

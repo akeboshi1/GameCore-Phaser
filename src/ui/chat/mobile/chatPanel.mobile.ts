@@ -1,11 +1,9 @@
 import { BaseChatPanel } from "../base.chat.panel";
 import { WorldService } from "../../../game/world.service";
-import TextArea from "../../../../lib/rexui/lib/ui/textarea/TextArea.js";
-import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText.js";
 import { Url, Border, WhiteButton } from "../../../utils/resUtil";
 import { NinePatch } from "../../components/nine.patch";
-import BBCodeText from "../../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { NinePatchButton } from "../../components/ninepatch.button";
+import { TextArea, InputText, BBCodeText } from "apowophaserui";
 export class ChatPanelMobile extends BaseChatPanel {
     private mTextArea: TextArea;
     private mInputText: InputText;
@@ -146,7 +144,7 @@ export class ChatPanelMobile extends BaseChatPanel {
             // this.mTextArea.y = this.mTextArea.childrenMap.child.minHeight >> 1;
             this.clickContainer.x = size.width / (this.mWorld.uiScale * 2);
             this.clickContainer.y = -this.clickContainer.height >> 1;
-            const silder = this.mTextArea.getElement("slider");
+            const silder = (<any>this.mTextArea).getElement("slider");
             silder.y = this.height >> 1;
             this.clickContainer.rotation = Math.PI;
             this.arrow.rotation = Math.PI * 1.5;
@@ -154,7 +152,7 @@ export class ChatPanelMobile extends BaseChatPanel {
         }
         this.mTextArea.layout();
         this.add(this.mTextArea);
-        this.mTextArea.childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
+        (<any>this.mTextArea).childrenMap.child.textMask.setPosition(-5, size.height - this.height).resize(this.width + 18, this.height - this.mSendBtn.height);
         // this.mBorder = new NinePatch(this.scene, 0, 0, this.width / this.mWorld.uiScale, this.height / this.mWorld.uiScale, Border.getName(), null, Border.getConfig());
         this.mBorder.x = this.mBorder.width / 2;
         this.mBorder.y = this.mBorder.height / 2;

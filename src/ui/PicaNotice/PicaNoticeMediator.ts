@@ -1,7 +1,7 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicaNoticePanel } from "./PicaNoticePanel";
+import { BaseMediator } from "apowophaserui";
 
 export class PicaNoticeMediator extends BaseMediator {
   private world: WorldService;

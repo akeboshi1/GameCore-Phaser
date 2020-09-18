@@ -1,9 +1,9 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { Task } from "./Task";
 import { TaskPanel } from "./TaskPanel";
+import { BaseMediator } from "apowophaserui";
 
 export class TaskMediator extends BaseMediator {
     protected mView: TaskPanel;

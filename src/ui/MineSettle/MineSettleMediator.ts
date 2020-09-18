@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
 import { op_client } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "apowophaserui";
 
 export class MineSettleMediator extends BaseMediator {
     private scene: Phaser.Scene;
@@ -30,7 +30,7 @@ export class MineSettleMediator extends BaseMediator {
             this.mView = new MineSettlePanel(this.scene, this.world);
             this.mView.on("hide", this.onHideMineSettle, this);
         }
-        super.show();
+        super.show(param);
         this.layerMgr.addToUILayer(this.mView);
         if (this.mParam && this.mParam.length > 0)
             this.setMIneSettlePanel(this.mParam[0]);

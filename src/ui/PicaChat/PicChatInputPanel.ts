@@ -1,14 +1,8 @@
-import { NineSlicePatch, Button, TextArea, BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { WorldService } from "../../game/world.service";
 import { UIAtlasKey } from "../ui.atals.name";
 import { Font } from "../../utils/font";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { Logger } from "../../utils/log";
-
+import { Button, InputText, BBCodeText, GameScroller, ClickEvent, NineSlicePatch, NineSliceButton } from "apowophaserui";
 export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
     private bottomCon: Phaser.GameObjects.Container;
@@ -58,7 +52,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.bottomCon.add(inputBg);
         this.sendBtn = new Button(this.scene, this.key, "chat_quick_2");
         this.sendBtn.x = -width * 0.5 + this.sendBtn.width * 0.5 + 12 * this.dpr;
-        this.sendBtn.on(CoreUI.MouseEvent.Tap, this.onQuickSendHandler, this);
+        this.sendBtn.on(String(ClickEvent.Tap), this.onQuickSendHandler, this);
         this.bottomCon.add(this.sendBtn);
         this.cancelBtn = new NineSliceButton(this.scene, 0, 0, 63 * this.dpr, 28 * this.dpr, UIAtlasKey.commonKey, "red_btn_s", i18n.t("common.cancel"), this.dpr, 1, {
             left: 14 * this.dpr,
@@ -68,7 +62,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         });
         this.cancelBtn.setTextStyle({ color: "#ffffff", fontSize: 16 * this.dpr, fontFamily: Font.DEFULT_FONT });
         this.cancelBtn.x = width * 0.5 - this.cancelBtn.width * 0.5 - 12 * this.dpr;
-        this.cancelBtn.on(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
+        this.cancelBtn.on(String(ClickEvent.Tap), this.onCancelHandler, this);
         this.bottomCon.add(this.cancelBtn);
         const chatbgWidth = Math.abs(this.sendBtn.x - this.cancelBtn.x) - this.sendBtn.width * 0.5 - this.cancelBtn.width * 0.5 - 16 * this.dpr;
         const chatbgx = this.sendBtn.x + this.sendBtn.width * 0.5 + 8 * this.dpr + chatbgWidth * 0.5;
@@ -108,7 +102,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
                 width: width - 12 * this.dpr
             }
         }).setOrigin(0, 0.5);
-        this.mOutputText.setResolution(this.dpr);
+        (<any>this.mOutputText).setResolution(this.dpr);
         this.gamescroll = new GameScroller(scene, {
             x: 0,
             y: 0,
@@ -281,7 +275,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.bottomCon.destroy();
         this.contentCon.destroy();
         this.quickCon.destroy();
-        this.gamescroll.clearItems();
+        (<any>this.gamescroll).clearItems();
         this.scene = undefined;
         this.world = undefined;
         this.gamescroll = undefined;

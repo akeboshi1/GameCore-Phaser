@@ -7,13 +7,10 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { TextButton } from "../components/TextButton";
 import { MarketItem } from "./item";
 import { Font } from "../../utils/font";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { NinePatchTabButton } from "../../../lib/rexui/lib/ui/tab/NinePatchTabButton";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;
@@ -242,7 +239,7 @@ export class MarketPanel extends BasePanel {
 
     const capW = 56 * this.dpr;
     const capH = 41 * this.dpr;
-    const config: GridTableConfig = {
+    const config = {
       x: w / 2,
       y: 0,
       table: {
@@ -322,7 +319,7 @@ export class MarketPanel extends BasePanel {
     const propFrame = this.scene.textures.getFrame(this.key, "border");
     const cellWidth = propFrame.width + 10 * this.dpr;
     const cellHeight = propFrame.height + 10 * this.dpr;
-    const propGridConfig: GridTableConfig = {
+    const propGridConfig = {
       x: w / 2,
       y: 0,
       table: {

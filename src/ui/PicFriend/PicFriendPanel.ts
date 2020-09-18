@@ -1,24 +1,18 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { i18n } from "../../i18n";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import Text = Phaser.GameObjects.Text;
 import Image = Phaser.GameObjects.Image;
 import Container = Phaser.GameObjects.Container;
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
-import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { op_client } from "pixelpai_proto";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { FriendRelation, FriendRelationEnum } from "./PicFriendRelation";
+import { Button, ClickEvent, GameGridTable, CheckBox, NineSlicePatch, TabButton, NineSliceButton } from "apowophaserui";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Image;
@@ -71,7 +65,7 @@ export default class PicFriendPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.closeBtn.on(String(ClickEvent.Tap), this.OnClosePanel, this);
         this.friendContainer.register();
         this.friendContainer.on("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
@@ -85,7 +79,7 @@ export default class PicFriendPanel extends BasePanel {
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.closeBtn.off(String(ClickEvent.Tap), this.OnClosePanel, this);
         this.friendContainer.off("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
@@ -261,7 +255,7 @@ class FriendContainer extends Container {
     }
 
     protected createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler, createCallback?: Function) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {
@@ -345,16 +339,16 @@ class MainContainer extends FriendContainer {
 
     public register() {
         this.searchInput.on("textchange", this.onTextChangeHandler, this);
-        this.searchBtn.on(CoreUI.MouseEvent.Tap, this.onSeachHandler, this);
-        this.onlineCheckBox.on(CoreUI.MouseEvent.Tap, this.onCheckoutOnlineHandler, this);
-        this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onShowAddFriendHandler, this);
+        this.searchBtn.on(String(ClickEvent.Tap), this.onSeachHandler, this);
+        this.onlineCheckBox.on(String(ClickEvent.Tap), this.onCheckoutOnlineHandler, this);
+        this.addFriendBtn.on(String(ClickEvent.Tap), this.onShowAddFriendHandler, this);
     }
 
     public unregister() {
         this.searchInput.off("textchange", this.onTextChangeHandler, this);
-        this.searchBtn.off(CoreUI.MouseEvent.Tap, this.onSeachHandler, this);
-        this.onlineCheckBox.off(CoreUI.MouseEvent.Tap, this.onCheckoutOnlineHandler, this);
-        this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onShowAddFriendHandler, this);
+        this.searchBtn.off(String(ClickEvent.Tap), this.onSeachHandler, this);
+        this.onlineCheckBox.off(String(ClickEvent.Tap), this.onCheckoutOnlineHandler, this);
+        this.addFriendBtn.off(String(ClickEvent.Tap), this.onShowAddFriendHandler, this);
     }
 
     public resize() {
@@ -778,7 +772,7 @@ class FriendRenderer implements IRenderer {
         });
 
         this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
-        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        this.addBtn.on(String(ClickEvent.Tap), this.onAddHandler, this);
         this.owner.add(this.addBtn);
 
         owner.add([this.icon, this.nameText, this.level, this.addBtn]);
@@ -905,11 +899,11 @@ class SubFriendContainer extends FriendContainer {
     }
 
     public register() {
-        this.backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        this.backBtn.on(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     public unregister() {
-        this.backBtn.off(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        this.backBtn.off(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     public resize() {
@@ -1136,7 +1130,7 @@ class SearchInput extends LabelInput {
 
         this.searchBtn = new Button(this.scene, key, "search_blue");
         this.searchBtn.x = config.width + 4 * dpr + this.searchBtn.width * 0.5;
-        this.searchBtn.on(CoreUI.MouseEvent.Tap, this.onSearchHandler, this);
+        this.searchBtn.on(String(ClickEvent.Tap), this.onSearchHandler, this);
         this.add(this.searchBtn);
 
         const background = scene.make.graphics(undefined, false);

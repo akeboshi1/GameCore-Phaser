@@ -1,14 +1,12 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { Font } from "../../utils/font";
 import { InputPanel } from "../components/input.panel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
 import { PicChatInputPanel } from "./PicChatInputPanel";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
+import { BBCodeText, TextArea, UIType } from "apowophaserui";
 
 export class PicaChatPanel extends BasePanel {
     private readonly key: string = "pica_chat";
@@ -200,7 +198,7 @@ export class PicaChatPanel extends BasePanel {
                 width: width - 12 * this.dpr * zoom
             }
         });
-        this.mOutputText.setResolution(this.dpr);
+        (<any>this.mOutputText).setResolution(this.dpr);
         const background = this.scene.make.graphics(undefined, false);
         this.mTextArea = new TextArea(this.mScene, {
             x: width / 2 + 4 * this.dpr * zoom,

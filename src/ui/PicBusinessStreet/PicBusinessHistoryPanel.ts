@@ -1,15 +1,10 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
 import { DynamicImage } from "../components/dynamic.image";
-import { NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { GameGridTable, NineSliceButton, ClickEvent, NineSlicePatch } from "apowophaserui";
 export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
     private titleText: Phaser.GameObjects.Text;
     private gridtable: GameGridTable;
@@ -62,11 +57,11 @@ export class PicBusinessHistoryPanel extends Phaser.GameObjects.Container {
         });
         this.add(backBtn);
         backBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        backBtn.on(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {

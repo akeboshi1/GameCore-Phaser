@@ -1,8 +1,7 @@
-import { BBCodeText, Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { Font } from "../../utils/font";
+import { NineSlicePatch, BBCodeText } from "apowophaserui";
 
 export class ItemInfoTips extends Phaser.GameObjects.Container {
-
     private tipsbg: NineSlicePatch;
     private tipsText: Phaser.GameObjects.Text;
     private dpr: number;

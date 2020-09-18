@@ -1,6 +1,6 @@
 
 import { Tweens } from "tooqinggamephaser";
-import { IAbstractPanel } from "../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
+import { IAbstractPanel } from "apowophaserui";
 
 export class LoadingView implements IAbstractPanel {
     public id: number;

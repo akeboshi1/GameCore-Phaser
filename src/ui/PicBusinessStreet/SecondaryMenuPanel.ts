@@ -1,10 +1,5 @@
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { Handler } from "../../Handler/Handler";
-import { Button, NinePatchConfig } from "../../../lib/rexui/lib/ui/button/Button";
-import { ScrollerConfig } from "../../../lib/rexui/lib/ui/interface/scroller/ScrollerConfig";
-import { IButtonState } from "../../../lib/rexui/lib/ui/interface/button/IButtonState";
+import { GameScroller, GameGridTable, Button, NinePatchConfig } from "apowophaserui";
 
 export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
     public gameScroll: GameScroller;
@@ -14,8 +9,8 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
     private categoryHandler: Handler;
     private subCategoryHandler: Handler;
     private categoryBtn: Button;
-    private subCategoryBtn: IButtonState;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, scrollconfig: ScrollerConfig) {
+    private subCategoryBtn: Button;
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, scrollconfig: any) {
         super(scene, x, y);
         this.dpr = dpr;
         this.zoom = zoom;
@@ -30,7 +25,7 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         this.subCategoryHandler = subHandler;
     }
     public setCategories<T1 extends Button>(type: (new (...args: any[]) => T1), categorys: Array<{ text?: string, data: any }>, btnConfig: ButtonConfig) {
-        this.gameScroll.clearItems();
+        (<any>this.gameScroll).clearItems();
         const capW = btnConfig.width;
         const capH = btnConfig.height;
         const key = btnConfig.key;
@@ -73,8 +68,8 @@ export class SecondaryMenuPanel extends Phaser.GameObjects.Container {
         }
     }
 
-    public createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: (cell, cellContainer) => IButtonState, scrollMode: number = 1) {
-        const tableConfig: GridTableConfig = {
+    public createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: (cell, cellContainer) => Button, scrollMode: number = 1) {
+        const tableConfig = {
             x,
             y,
             table: {

@@ -1,11 +1,10 @@
 import { ConnectionService } from "../net/connection.service";
-import InputText from "../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { PopUpTextUI } from "../ui/alert/PopUpTextUI";
 import { WorldService } from "../game/world.service";
 import { Logger } from "../utils/log";
 import { Size } from "../utils/size";
 import { BasicScene } from "./basic.scene";
-import { ComboBox } from "../../lib/rexui/lib/ui/combobox/Combobox";
+import { InputText, ComboBox } from "apowophaserui";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {

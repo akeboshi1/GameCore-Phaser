@@ -1,14 +1,10 @@
 import { Font } from "../../utils/font";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
 import { DynamicImage } from "../components/dynamic.image";
-import { NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { GameGridTable, NineSliceButton, ClickEvent, NineSlicePatch } from "apowophaserui";
 
 export class PicBusinessRankingDetailPanel extends Phaser.GameObjects.Container {
     private timeText: Phaser.GameObjects.Text;
@@ -85,7 +81,7 @@ export class PicBusinessRankingDetailPanel extends Phaser.GameObjects.Container 
         });
         rankRewardBtn.x = -posx - rankRewardBtn.width * 0.5 - 30 * this.dpr;
         rankRewardBtn.setTextStyle({ fontSize: 10 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
-        rankRewardBtn.on(CoreUI.MouseEvent.Tap, this.onRankRewardHandler, this);
+        rankRewardBtn.on(String(ClickEvent.Tap), this.onRankRewardHandler, this);
         this.add(rankRewardBtn);
         const gridWdith = this.width;
         const gridHeight = this.height - 125 * this.dpr;
@@ -104,11 +100,11 @@ export class PicBusinessRankingDetailPanel extends Phaser.GameObjects.Container 
         });
         this.add(backBtn);
         backBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        backBtn.on(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {
