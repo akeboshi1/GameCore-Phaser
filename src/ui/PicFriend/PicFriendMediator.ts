@@ -29,9 +29,9 @@ export class PicFriendMediator extends BaseMediator {
             this.mView = new PicFriendPanel(this.scene, this.world);
             this.mView.on("hide", this.onHidePanel, this);
             this.mView.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
-            this.mView.on(FriendRelationEnum.Followed, this.onUnfollowHandler, this);
-            this.mView.on(FriendRelationEnum.Fans, this.onFollowHandler, this);
-            this.mView.on(FriendRelationEnum.Blacklist, this.onRemoveBanUserHandler, this);
+            this.mView.on(PicFriendEvent.UNFOLLOW, this.onUnfollowHandler, this);
+            this.mView.on(PicFriendEvent.FOLLOW, this.onFollowHandler, this);
+            this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
             this.mView.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
             this.mView.on(PicFriendEvent.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
             this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
