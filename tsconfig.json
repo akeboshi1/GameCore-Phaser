@@ -12,8 +12,9 @@
     "declaration": false,
     "sourceMap": true,
     "typeRoots": [
-      "node_modules/@types"
-    ]
+      "node_modules/@types",
+      "node_modules/apowophaserui/types"
+  ]
   },
   "exclude": [
     "node_modules",
