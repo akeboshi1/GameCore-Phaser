@@ -36,7 +36,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         super();
         this.key = key;
         this.world = world;
-        this.dpr = world.uiRatio;
+        this.dpr = window.devicePixelRatio;
         this.scene = scene;
         this.chatArr.push(outtext);
         const width = scene.cameras.main.width;
@@ -155,10 +155,10 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     public setKeywordHeight(height: number) {
-        const pktGlobal = window["pktGlobal"];
+        const pktGlobal: any = window["pktGlobal"];
         const screenHeight = pktGlobal.deviceHeight;
         const statusHeight = pktGlobal.toolbarHeight;
-        const offsetHeight = screenHeight - height - statusHeight;
+        const offsetHeight = (screenHeight - height - statusHeight) * this.dpr;
         this.bottomCon.visible = true;
         this.contentCon.visible = true;
         const camheight = this.scene.cameras.main.height;
@@ -177,7 +177,9 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.quickChatScroll.y = this.quickBg.y;
         this.quickChatScroll.resetSize(camWidth, conHeight);
         this.keyboardHeight = height;
-        this.mInput.text = screenHeight + "   " + height + "   " + statusHeight;
+        this.mInput.text = screenHeight + "   " + height + "   " + statusHeight + "   " + this.dpr + "   " + camheight;
+        // tslint:disable-next-line:no-console
+        console.log(this.mInput.text + "    " + pktGlobal);
         this.setQuickChatItems();
     }
 
@@ -185,6 +187,11 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         if (datas) this.quickChatAtt = datas;
         this.quickChatAtt.unshift(undefined);
         this.mInput.setFocus();
+        const keyboardHeight = window["$game"].keyboardHeight;
+        this.setKeywordHeight(keyboardHeight);
+        this.onQuickSendHandler();
+        // tslint:disable-next-line:no-console
+        console.log(datas);
     }
     public appendChat(val: string) {
         this.chatArr.push(val);
@@ -198,12 +205,15 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onKeyboardHandler(e) {
-        if (this.keyboardHeight > 0) return;
+        // tslint:disable-next-line:no-console
+        console.log(e.keyboardHeight);
+        if (this.keyboardHeight > 0 && e.keyboardHeight === this.keyboardHeight) return;
         window.removeEventListener("native.keyboardshow", this.onKeyboardHandler.bind(this));
-        this.setKeywordHeight(e.keyboardHeight * this.dpr);
+        this.setKeywordHeight(e.keyboardHeight);
     }
 
     private setQuickChatItems() {
+        this.quickChatScroll.clearItems(true);
         const camheight = this.scene.cameras.main.height;
         const camWidth = this.scene.cameras.main.width;
         for (let i = 0; i < this.quickChatAtt.length; i++) {
