@@ -389,7 +389,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mClock.sync(-1);
     }
 
-    public playSound(config: ISoundConfig) {
+    public playSound(config: any) {
         this.mSoundManager.play(config);
     }
 

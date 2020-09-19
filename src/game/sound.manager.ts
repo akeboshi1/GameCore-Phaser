@@ -50,7 +50,7 @@ export class SoundManager extends PacketHandler {
         this.mScene = room.scene;
     }
 
-    play(config: ISoundConfig) {
+    play(config: any) {
         if (!this.mScene) {
             Logger.getInstance().fatal(`${SoundManager.name} scene does not exist. play ${config.key} fatal`);
             return;
