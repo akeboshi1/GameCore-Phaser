@@ -431,9 +431,9 @@ anymatch@~3.1.1:
     picomatch "^2.0.4"
 
 apowophaserui@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.4.0.tgz#054bb0370f68c7caf5bb1602464755b99d913528"
-  integrity sha512-ihMSE3jtloDcKP4SHPWZp5S6K+lJAltKAxYbR21980Pkv/vJeZUAa4Rg1Z1U7KGZoDwqlSnUC2ZaiCB6EUOWuw==
+  version "0.4.2"
+  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.4.2.tgz#73faf0604956b5e32fa11591112d86af99e250cc"
+  integrity sha512-M8GXXqi7QU4GOalvXFEU+T7mHSG7J7b8XGqSanaEu6+RK87aoAT+je1Np//u2Nob25rKSUGY2Vgohw78/z/MMw==
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"
