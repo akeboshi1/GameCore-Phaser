@@ -1,6 +1,6 @@
 
 import { Tweens } from "tooqinggamephaser";
-import { IAbstractPanel } from "apowophaserui";
+import { IAbstractPanel, Patches_config, Tool, ButtonState } from "apowophaserui";
 
 export class LoadingView implements IAbstractPanel {
     public id: number;
