@@ -365,7 +365,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mDirty === false) {
             return;
         }
-        this.mDirty = true;
+        this.mDirty = false;
         if (this.mBubble) {
             this.mBubble.follow(this);
         }
@@ -593,25 +593,25 @@ export class Element extends BlockObject implements IElement {
 
     public mount(root: IElement) {
         this.mRootMount = root;
-        this.removeFromBlock(true);
-        this.mBlockable = false;
         if (this.mMoving) {
             this.stopMove();
         }
+        this.disableBlock();
+        this.mDirty = true;
         return this;
     }
 
     public unmount() {
         if (this.mRootMount && this.mDisplay) {
             // 先移除避免人物瞬移
-            this.removeDisplay();
+            // this.removeDisplay();
             const pos = this.mRootMount.getPosition();
             pos.x += this.mDisplay.x;
             pos.y += this.mDisplay.y;
             this.mRootMount = null;
             this.setPosition(pos);
-            this.mBlockable = true;
-            this.addToBlock();
+            this.enableBlock();
+            this.mDirty = true;
         }
         return this;
     }
