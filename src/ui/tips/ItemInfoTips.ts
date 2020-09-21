@@ -1,16 +1,25 @@
 import { Font } from "../../utils/font";
-import { NineSlicePatch, BBCodeText } from "apowophaserui";
+import { op_client } from "pixelpai_proto";
+import { NineSlicePatch, BBCodeText, IPatchesConfig } from "apowophaserui";
+import { i18n } from "../../i18n";
 
 export class ItemInfoTips extends Phaser.GameObjects.Container {
     private tipsbg: NineSlicePatch;
     private tipsText: Phaser.GameObjects.Text;
     private dpr: number;
     private key: string;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number) {
+    private config: IPatchesConfig;
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number, config?: IPatchesConfig) {
         super(scene);
         this.setSize(width, height);
         this.key = key;
         this.dpr = dpr;
+        this.config = config ? config : {
+            left: 20 * this.dpr,
+            top: 20 * this.dpr,
+            right: 20 * this.dpr,
+            bottom: 20 * this.dpr
+        };
         this.create(bg);
     }
     public setText(text: string) {
@@ -22,15 +31,14 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
         this.tipsbg.y = -this.tipsbg.height * 0.5;
         this.tipsText.y = -tipsHeight + 10 * this.dpr;
     }
+    public setItemData(data: op_client.ICountablePackageItem) {
+        const tex = this.getDesText(data);
+        this.setText(tex);
+    }
     private create(bg: string) {
         const tipsWidth = this.width;
         const tipsHeight = this.height;
-        const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, bg, {
-            left: 20 * this.dpr,
-            top: 20 * this.dpr,
-            right: 20 * this.dpr,
-            bottom: 20 * this.dpr
-        });
+        const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, bg, this.config, undefined, undefined, 0);
         tipsbg.setPosition(0, -tipsHeight * 0.5);
         this.tipsbg = tipsbg;
         const tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
@@ -45,5 +53,16 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
 
         this.tipsText = tipsText;
         this.add([tipsbg, tipsText]);
+    }
+    private getDesText(data: op_client.ICountablePackageItem) {
+        if (!data) data = <any>{ "sellingPrice": true, tradable: false };
+        let text: string = `[stroke=#2640CA][color=#2640CA][b]${data.name}[/b][/color][/stroke]` + "\n";
+        let source = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.source")}[/color][/stroke]：`;
+        source += data.source;
+        text += source + "\n";
+        let description = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.description")}[/color][/stroke]：`;
+        description += data.des;
+        text += description;
+        return text;
     }
 }

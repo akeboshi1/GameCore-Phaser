@@ -20,34 +20,30 @@ export enum MouseEvent {
 }
 
 export class MouseManager extends PacketHandler {
-    private mGroundLayer: Phaser.GameObjects.Container;
     private running = false;
     // ===============================
-    private mGame: Phaser.Game;
     private mScene: Phaser.Scene;
     private mConnect: ConnectionService;
     private mGameObject: Phaser.GameObjects.GameObject;
     private mDownDelay: number = 1000;
     private mDownTime: any;
     private zoom: number;
-    private mRoom: Room;
+    private readonly delay = 500;
+    private debounce: any;
     constructor(private worldService: WorldService) {
         super();
-        this.mGame = worldService.game;
-        this.zoom = this.worldService.scaleRatio || 1;
         this.mConnect = this.worldService.connection;
+        this.zoom = this.worldService.scaleRatio || 1;
     }
 
     public changeRoom(room: IRoomService) {
         this.pause();
         this.mGameObject = null;
         this.mScene = room.scene;
-        this.mRoom = <Room>room;
         if (!this.mScene) return;
         room.scene.input.on("gameobjectdown", this.groundDown, this);
         // room.scene.input.on("gameobjectup", this.groundUp, this);
         room.scene.input.on("pointerdown", this.pointerDownHandler, this);
-        room.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.resume();
     }
 
@@ -132,8 +128,8 @@ export class MouseManager extends PacketHandler {
     public destroy() {
         this.mScene = null;
         this.mConnect = null;
-        this.mGroundLayer = null;
         this.running = false;
+        this.debounce = null;
     }
 
     private groundDown(pointer, gameObject) {
@@ -147,6 +143,15 @@ export class MouseManager extends PacketHandler {
     }
 
     private pointerDownHandler(pointer, gameobject) {
+        if (this.debounce) {
+            this.mGameObject = null;
+            return;
+        }
+        this.debounce = setTimeout(() => {
+            this.debounce = null;
+        }, this.delay);
+        this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
+        this.mScene.input.once("pointerup", this.onPointerUpHandler, this);
         if (this.worldService) {
             if (this.worldService.emitter) {
                 this.worldService.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK, pointer);

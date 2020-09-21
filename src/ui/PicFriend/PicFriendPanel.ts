@@ -539,7 +539,9 @@ class MainContainer extends FriendContainer {
     }
 
     private onFtechPlayerHandler(friend: FriendData) {
-        this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        if (friend.lv !== undefined) {
+            this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        }
         this.searchInput.setBlur();
     }
 
@@ -752,6 +754,7 @@ class FriendRenderer implements IRenderer {
     protected level: Text;
     protected addBtn: NineSliceButton;
     protected curRelation: FriendRelationEnum;
+    protected friendEvnet: string;
     constructor(protected scene: Phaser.Scene, protected owner: PicFriendItem) {
         this.icon = scene.make.image({x: 7.44 * owner.dpr - owner.width * 0.5, key: owner.key, frame: "offline_head"}).setOrigin(0, 0.5).setInteractive().on("pointerup", this.onHeadhandler, this);
         this.nameText = scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * owner.dpr, y: -this.icon.height * 0.5 + 1 * owner.dpr, style: {
@@ -804,22 +807,26 @@ class FriendRenderer implements IRenderer {
             this[this.curRelation]();
         } else {
             this.addBtn.visible = false;
+            this.friendEvnet = null;
         }
     }
 
     protected fans() {
         this.addBtn.visible = true;
         this.addBtn.setText(i18n.t("friendlist.follow"));
+        this.friendEvnet = PicFriendEvent.FOLLOW;
     }
 
     protected followed() {
         this.addBtn.visible = true;
         this.addBtn.setText(i18n.t("friendlist.unfollow"));
+        this.friendEvnet = PicFriendEvent.UNFOLLOW;
     }
 
     protected blacklist() {
         this.addBtn.visible = true;
         this.addBtn.setText(i18n.t("friendlist.remove"));
+        this.friendEvnet = PicFriendEvent.REMOVE_FROM_BLACKLIST;
     }
 
     protected null() {
@@ -849,7 +856,7 @@ class FriendRenderer implements IRenderer {
     }
 
     protected onAddHandler() {
-        if (this.curRelation && this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, this.curRelation, this.itemData.id);
+        if (this.friendEvnet && this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, this.friendEvnet, this.itemData.id);
         // this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
     }
 }
@@ -862,29 +869,6 @@ class FansRenderer extends FriendRenderer {
     protected onAddHandler() {
         if (this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.FOLLOW, this.itemData.id);
         // this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
-    }
-}
-
-class FollowRenderer extends FansRenderer {
-    constructor(scene: Phaser.Scene, owner: PicFriendItem) {
-        super(scene, owner);
-        if (this.addBtn) this.addBtn.setText(i18n.t("friendlist.unfollow"));
-    }
-
-    protected onAddHandler() {
-        if (this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.UNFOLLOW, this.itemData.id);
-        // this.owner.emit(PicFriendEvent.UNFOLLOW, this.itemData);
-    }
-}
-
-class BlacklistRenderer extends FansRenderer {
-    constructor(scene: Phaser.Scene, owner: PicFriendItem) {
-        super(scene, owner);
-        this.addBtn.setText(i18n.t("friendlist.remove"));
-    }
-
-    protected onAddHandler() {
-        this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.REMOVE_FROM_BLACKLIST, this.itemData.id);
     }
 }
 

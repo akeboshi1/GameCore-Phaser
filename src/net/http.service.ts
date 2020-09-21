@@ -133,7 +133,7 @@ export class HttpService {
     }
 
     playedDuration(Appid: string, gameId: string) {
-        return this.post("game/played_duration", { gameId }, { Appid });
+        return this.post("game/played_duration", { gameId }, { "App-Key": Appid });
     }
 
     public post(uri: string, body: any, headers?: any): Promise<Response> {

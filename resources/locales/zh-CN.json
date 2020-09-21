@@ -31,7 +31,9 @@
     "sale_price": "售卖价格",
     "not_sale": "不可售卖",
     "source": "来源",
-    "empty_backpack": "背包里空空如也"
+    "empty_backpack": "背包里空空如也",
+    "expires": "已过期",
+    "timelimit": "限时"
   },
   "common": {
     "cancel": "取消",
@@ -133,7 +135,9 @@
     "goodvalue": "点赞",
     "compveness": "竞争力",
     "turnover": "营业额",
-    "closeshop": "关闭商店"
+    "closeshop": "关闭商店",
+    "renovate": "翻新",
+    "depreciation": "折旧"
   },
   "business_street": {
     "commercial_street": "商业街",

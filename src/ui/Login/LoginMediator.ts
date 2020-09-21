@@ -8,7 +8,6 @@ import { BaseMediator } from "apowophaserui";
 
 export class LoginMediator extends BaseMediator {
     private verifiedPanel: VerifiedPanel;
-    private readonly onVerified: boolean = true;
     constructor(private layerManager: LayerManager, scene: Phaser.Scene, private world: WorldService) {
         super();
     }
@@ -52,7 +51,10 @@ export class LoginMediator extends BaseMediator {
                     (<LoginPanel>this.mView).setInputVisible(false);
                 }
             })
-            .catch(Logger.getInstance().error);
+            .catch((err) => {
+                this.onLoginErrorHanler("服务器错误，请与管管联系！", "确定");
+                Logger.getInstance().error(err);
+            });
     }
 
     private onLoginHandler(phone: string, code: string, areaCode: string) {
@@ -62,8 +64,9 @@ export class LoginMediator extends BaseMediator {
                 const data = response.data;
                 this.world.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                if (!this.onVerified) {
-                    this.enterGame(!this.onVerified);
+                const verifiedEnable = CONFIG["verified_enable"];
+                if (verifiedEnable !== undefined && verifiedEnable === false) {
+                    this.enterGame(!verifiedEnable);
                     return;
                 }
                 if (data.hasIdentityInfo) {
@@ -72,6 +75,7 @@ export class LoginMediator extends BaseMediator {
                     (<LoginPanel>this.mView).setInputVisible(false);
                     this.onShowVerified();
                 }
+
             } else if (response.code >= 400) {
                 this.onLoginErrorHanler(response.msg || "服务器错误");
             }
@@ -92,9 +96,9 @@ export class LoginMediator extends BaseMediator {
         this.layerManager.addToDialogLayer(this.verifiedPanel);
     }
 
-    private onShowErrorHandler(error) {
+    private onShowErrorHandler(error, okText?: string) {
         this.verifiedPanel.setVerifiedEnable(false);
-        new AlertView(this.layerManager.scene, this.world).setOKText("重新输入").show({
+        new AlertView(this.layerManager.scene, this.world).setOKText(okText ? okText : "重新输入").show({
             text: error ? error : "[color=#F9361B]证件格式有误[/color]",
             title: "提示",
             callback: () => {
@@ -104,9 +108,9 @@ export class LoginMediator extends BaseMediator {
         });
     }
 
-    private onLoginErrorHanler(error: string) {
+    private onLoginErrorHanler(error: string, okText?: string) {
         (<LoginPanel>this.mView).setInputVisible(false);
-        new AlertView(this.layerManager.scene, this.world).setOKText("重新输入").show({
+        new AlertView(this.layerManager.scene, this.world).setOKText(okText ? okText : "重新输入").show({
             text: error,
             title: "提示",
             callback: () => {
@@ -125,16 +129,17 @@ export class LoginMediator extends BaseMediator {
             } else if (code === 10001 || code >= 400) {
                 // 验证失败
                 this.verifiedPanel.setVerifiedEnable(false);
+                this.onShowErrorHandler("[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]", "重新认证");
                 // this.verifiedPanel.setVisible(false);
-                new AlertView(this.layerManager.scene, this.world).setOKText("重新认证").show({
-                    text: "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]",
-                    title: "提示",
-                    callback: () => {
-                        this.verifiedPanel.setVerifiedEnable(true);
-                        // this.verifiedPanel.setVisible(true);
-                    },
-                    btns: Buttons.Ok
-                });
+                // new AlertView(this.layerManager.scene, this.world).setOKText("重新认证").show({
+                //     text: "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]",
+                //     title: "提示",
+                //     callback: () => {
+                //         this.verifiedPanel.setVerifiedEnable(true);
+                //         // this.verifiedPanel.setVisible(true);
+                //     },
+                //     btns: Buttons.Ok
+                // });
             }
         });
     }
