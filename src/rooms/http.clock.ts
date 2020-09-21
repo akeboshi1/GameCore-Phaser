@@ -41,13 +41,15 @@ export class HttpClock {
                        return;
                    }
                    resolve(true);
+               } else {
+                   reject(response.msg);
                }
            });
         });
     }
 
     fetch() {
-        return this.world.httpService.playedDuration("831dabefd919aa6259c25f9322fa57b88050d526", this.world.getConfig().game_id);
+        return this.world.httpService.playedDuration("831dab", this.world.getConfig().game_id);
     }
 
     sync() {

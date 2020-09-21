@@ -545,7 +545,9 @@ class MainContainer extends FriendContainer {
     }
 
     private onFtechPlayerHandler(friend: FriendData) {
-        this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        if (friend.lv !== undefined) {
+            this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        }
         this.searchInput.setBlur();
     }
 
