@@ -11,6 +11,8 @@ import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { PicHouseInfoPanel } from "./PicHouseInfoPanel";
 import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { Handler } from "../../Handler/Handler";
+import { ItemsConsumeFunPanel } from "../components/ItemsConsumeFunPanel";
 export class PicHousePanel extends BasePanel {
     private readonly key = "pichousepanel";
     private content: Phaser.GameObjects.Container;
@@ -24,6 +26,7 @@ export class PicHousePanel extends BasePanel {
     private topCheckBox: CheckboxGroup;
     private houseInfoPanel: PicHouseInfoPanel;
     private mRoomInfoData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
+    private itemsPanel: ItemsConsumeFunPanel;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         // this.scale = 1;
@@ -36,6 +39,8 @@ export class PicHousePanel extends BasePanel {
         this.content.x = width * 0.5;
         this.content.y = height * 0.5;
         this.setSize(width, height);
+        this.itemsPanel.y = this.height * 0.5 - 60 * this.dpr;
+        this.itemsPanel.x = this.width * 0.5;
     }
     show(param?: any) {
         this.mShowData = param;
@@ -83,7 +88,7 @@ export class PicHousePanel extends BasePanel {
         const bgwidth = 295 * this.dpr;
         let bgheight = 370 * this.dpr;
         if (content.roomType === "store") {
-            bgheight = 452 * this.dpr;
+            bgheight = 460 * this.dpr;
             this.content.setSize(bgwidth, bgheight);
             this.bg.resize(bgwidth, bgheight);
             this.closeShopBtn.visible = true;
@@ -92,6 +97,7 @@ export class PicHousePanel extends BasePanel {
             this.closeBtn.y = -this.bg.height * 0.5 + this.dpr * 5;
             this.editorRoomBtn.y = this.content.height * 0.5 - 30 * this.dpr;
             this.houseInfoPanel.y = -this.content.height * 0.5 + this.houseInfoPanel.height * 0.5 + 30 * this.dpr;
+            this.closeShopBtn.y = this.content.height * 0.5 - 40 * this.dpr;
             this.closeShopBtn.on(CoreUI.MouseEvent.Tap, this.onCloseShopHandler, this);
         } else {
             this.closeShopBtn.visible = false;
@@ -99,6 +105,9 @@ export class PicHousePanel extends BasePanel {
         this.houseInfoPanel.setAttributeData(content);
         this.roomSettingBtn.visible = isSelf;
         this.editorRoomBtn.visible = isSelf;
+    }
+    on_REFURBISH_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_ROOM_REFURBISH_REQUIREMENTS) {
+        this.itemsPanel.setItemDatas(content.requirements);
     }
     protected preload() {
         this.addAtlas(this.key, "room_information/room_information.png", "room_information/room_information.json");
@@ -140,6 +149,12 @@ export class PicHousePanel extends BasePanel {
         this.content.add([this.roomInfoBtn, this.roomSettingBtn]);
         this.houseInfoPanel = new PicHouseInfoPanel(this.scene, 0, 0, this.content.width - 40 * this.dpr, this.content.height - 70 * this.dpr, this.key, this.dpr);
         this.houseInfoPanel.y = -this.content.height * 0.5 + this.houseInfoPanel.height * 0.5 + 30 * this.dpr;
+        this.houseInfoPanel.setHandler(new Handler(this, () => {
+            this.emit("queryrequirements", this.mRoomInfoData.roomId);
+            this.itemsPanel.visible = true;
+            this.add(this.itemsPanel);
+            this.itemsPanel.resetMask();
+        }));
         this.content.add(this.houseInfoPanel);
         this.closeShopBtn = new NineSliceButton(this.scene, 0, this.houseInfoPanel.height - 30 * this.dpr, 94 * this.dpr, 29 * this.dpr, this.key, "close_shop", i18n.t("room_info.closeshop"), this.dpr, this.scale, {
             left: 14 * this.dpr,
@@ -175,6 +190,17 @@ export class PicHousePanel extends BasePanel {
         this.content.add(this.editorRoomBtn);
         this.editorRoomBtn.visible = false;
         this.topCheckBox.selectIndex(0);
+        this.itemsPanel = new ItemsConsumeFunPanel(this.scene, 278 * this.dpr, 198 * this.dpr, this.dpr, this.scale);
+        this.itemsPanel.setTextInfo(i18n.t("room_info.renovate").toUpperCase(), i18n.t("compose.needMaterials"));
+        this.itemsPanel.visible = false;
+        this.itemsPanel.setHandler(new Handler(this, () => {
+            this.emit("queryrefurbish", this.mRoomInfoData.roomId);
+        }));
+        const mblackbg = this.scene.make.graphics(undefined, false);
+        mblackbg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+        mblackbg.fillStyle(0, 0.66);
+        mblackbg.fillRect(-w * 0.5, -h * 0.5 + this.itemsPanel.y, w, h);
+        this.itemsPanel.addAt(mblackbg, 0);
         this.add(this.content);
         this.resize(0, 0);
         super.init();

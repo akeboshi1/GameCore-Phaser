@@ -18,6 +18,7 @@ import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Logger } from "../../utils/log";
+import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -446,7 +447,7 @@ export class FurniBagPanel extends BasePanel {
       this.mSelectedItemData = arr;
       this.displayAvatar();
     } else {
-      this.mDetailBubble.setProp(null);
+      this.mDetailBubble.setProp(null, this.serviceTimestamp);
       this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     }
   }
@@ -598,7 +599,7 @@ export class FurniBagPanel extends BasePanel {
   private onSelectItemHandler(cell: Item) {
     const item: op_client.ICountablePackageItem = cell.getData("item");
     if (this.mSelectedItemData.indexOf(item) !== -1) return;
-    this.mDetailBubble.setProp(item);
+    this.mDetailBubble.setProp(item, this.serviceTimestamp);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
       this.replaceSelectItem(item, cell);
@@ -801,6 +802,10 @@ export class FurniBagPanel extends BasePanel {
     const uimanager = this.mWorld.uiManager;
     uimanager.showMed("PicPropFun", config);
   }
+
+  private get serviceTimestamp() {
+    return Math.floor(this.mWorld.clock.unixTime / 1000);
+  }
 }
 
 class SeachInput extends Phaser.GameObjects.Container {
@@ -887,7 +892,9 @@ class DetailBubble extends Phaser.GameObjects.Container {
   private mPriceText: Phaser.GameObjects.Text;
   private mDesText: Phaser.GameObjects.Text;
   private mSource: Phaser.GameObjects.Text;
+  private mExpires: Phaser.GameObjects.Text;
   private dpr: number;
+  private timeID: any;
   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
     super(scene);
     this.dpr = dpr;
@@ -941,12 +948,15 @@ class DetailBubble extends Phaser.GameObjects.Container {
         }
       }
     }, false);
-
-    this.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource, this.mPriceText]);
+    this.mExpires = new BBCodeText(scene, 8 * dpr, 85 * dpr, "", {
+      fontSize: 10 * this.dpr,
+      fontFamily: Font.DEFULT_FONT,
+    });
+    this.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource, this.mPriceText, this.mExpires]);
     this.setSize(bubbleW, bubbleH);
   }
 
-  setProp(prop: op_client.ICountablePackageItem): this {
+  setProp(prop: op_client.ICountablePackageItem, servertime: number): this {
     if (!prop) {
       this.mNickName.setText(i18n.t("furni_bag.empty_backpack"));
       this.mPriceText.text = "";
@@ -987,11 +997,28 @@ class DetailBubble extends Phaser.GameObjects.Container {
       } else {
         this.mDesText.setText("");
       }
+      if (prop.expiredTime > 0) {
+        posY += offsetY;
+        this.mExpires.y = posY;
+        let interval = prop.expiredTime - servertime;
+        const timeout = () => {
+          this.mExpires.visible = true;
+          this.mExpires.text = this.getDataFormat(interval * 1000);
+          if (interval > 0) {
+            this.timeID = setTimeout(() => {
+              interval -= 1;
+              timeout();
+            }, 1000);
+          }
+        };
+        timeout();
+      } else {
+        this.mExpires.visible = false;
+      }
       this.resize(width);
     }
     return this;
   }
-
   private resize(w?: number, h?: number) {
     if (w === undefined) w = this.width;
     const bubbleH = this.mDesText.height + 80 * this.dpr;
@@ -1016,6 +1043,37 @@ class DetailBubble extends Phaser.GameObjects.Container {
     if (maxWidth < width) maxWidth = width;
     return maxWidth;
   }
+  private getDataFormat(time: number) {
+    const day = Math.floor(time / 86400000);
+    const hour = Math.floor(time / 3600000) % 24;
+    const minute = Math.floor(time / 60000) % 60;
+    const second = Math.floor(time / 1000) % 60;
+    let text = i18n.t("furni_bag.timelimit") + ":  ";
+    if (day > 0) {
+      const temptime = `${day}-${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    } else if (hour > 0) {
+      const temptime = `${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    } else if (minute > 0) {
+      const temptime = `${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    } else if (second > 0) {
+      const temptime = `${this.stringFormat(second)}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    } else {
+      const temptime = `${i18n.t("furni_bag.expires")}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    }
+    return text;
+  }
+  private stringFormat(num: number) {
+    let str = num + "";
+    if (str.length <= 1) {
+      str = "0" + str;
+    }
+    return str;
+  }
 }
 
 class Item extends Phaser.GameObjects.Container {
@@ -1024,6 +1082,7 @@ class Item extends Phaser.GameObjects.Container {
   private mPropImage: DynamicImage;
   private selectbg: Phaser.GameObjects.Image;
   private selectIcon: Phaser.GameObjects.Image;
+  private timeIcon: Phaser.GameObjects.Image;
   private dpr: number;
   private zoom: number;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
@@ -1045,7 +1104,8 @@ class Item extends Phaser.GameObjects.Container {
     }, false).setOrigin(1).setPosition(this.width * 0.5, this.height * 0.5);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
     this.mPropImage.scale = dpr;
-
+    this.timeIcon = scene.make.image({ key, frame: "time" });
+    this.timeIcon.setPosition(-this.width * 0.5 + this.timeIcon.width * 0.5, -this.height * 0.5 + this.timeIcon.height * 0.5);
     this.mCounter = scene.make.text({
       x: this.width * 0.5 - 2 * dpr,
       y: this.height * 0.5,
@@ -1054,7 +1114,7 @@ class Item extends Phaser.GameObjects.Container {
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(1);
-    this.add([background, this.selectbg, this.selectIcon, this.mPropImage, this.mCounter]);
+    this.add([background, this.selectbg, this.selectIcon, this.mPropImage, this.timeIcon, this.mCounter]);
     this.isSelect = false;
     this.isEquip = false;
   }
@@ -1067,10 +1127,12 @@ class Item extends Phaser.GameObjects.Container {
       // this.mPropImage.setFrame("");
       this.mCounter.visible = false;
       this.mPropImage.visible = false;
+      this.timeIcon.visible = false;
       return;
     }
     this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     this.mPropImage.visible = true;
+    this.timeIcon.visible = prop.expiredTime > 0;
     if (prop.count > 1) {
       this.mCounter.visible = true;
       this.mCounter.setText(prop.count.toString());

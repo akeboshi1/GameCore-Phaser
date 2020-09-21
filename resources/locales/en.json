@@ -30,7 +30,9 @@
     "sale_price": "Sale price",
     "not_sale": "Not for sale",
     "source": "Source",
-    "empty_backpack": "Empty in the backpack"
+    "empty_backpack": "Empty in the backpack",
+    "expires": "Expired",
+    "timelimit":"Expires"
   },
   "common": {
     "cancel": "Cancel",
@@ -133,7 +135,9 @@
     "goodvalue": "Like Count",
     "compveness": "D: Competitiveness",
     "turnover": "Income",
-    "closeshop": "Close Shop"
+    "closeshop": "Close Shop",
+    "renovate": "Renovate",
+    "depreciation": "Depreciation"
   },
   "business_street": {
     "commercial_street": "STORES",

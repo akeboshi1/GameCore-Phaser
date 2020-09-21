@@ -196,10 +196,13 @@ export class PackageData {
                 }
                 if (packMap.has(tempItem.indexId)) {
                     const item = packMap.get(tempItem.indexId);
-                    packMap.set(tempItem.indexId, tempItem);
-                    const listIndex = this.list.indexOf(item);
-                    if (listIndex !== -1) {
-                        this.list[listIndex] = tempItem;
+                    // packMap.set(tempItem.indexId, tempItem);
+                    // const listIndex = this.list.indexOf(item);
+                    // if (listIndex !== -1) {
+                    //     this.list[listIndex] = tempItem;
+                    // }
+                    for (const key in tempItem) {
+                        item[key] = tempItem[key];
                     }
                 } else {
                     packMap.set(tempItem.indexId, tempItem);

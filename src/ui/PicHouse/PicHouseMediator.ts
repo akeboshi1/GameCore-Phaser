@@ -30,6 +30,7 @@ export class PicHouseMediator extends BaseMediator {
         if (!this.picHouse) {
             this.picHouse = new PicHouse(this.world);
             this.picHouse.on("roominfo", this.onRoomInfoHandler, this);
+            this.picHouse.on("refurbish", this.on_REFURBISH_REQUIREMENTS, this);
             this.picHouse.register();
         }
 
@@ -37,6 +38,8 @@ export class PicHouseMediator extends BaseMediator {
             this.mView = new PicHousePanel(this.scene, this.world);
             this.mView.on("hide", this.onHideHandler, this);
             this.mView.on("scenedecorate", this.onSendEnterDecorate, this);
+            this.mView.on("queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
+            this.mView.on("queryrefurbish", this.query_ROOM_REFURBISH, this);
         }
 
         this.mView.show();
@@ -74,6 +77,17 @@ export class PicHouseMediator extends BaseMediator {
         if (roominfo) {
             this.picHouse.queryRoomInfo(roominfo.roomId);
         }
+    }
+
+    private query_REFURBISH_REQUIREMENTS(roomid) {
+        this.picHouse.query_REFURBISH_REQUIREMENTS(roomid);
+    }
+    private query_ROOM_REFURBISH(roomid) {
+        this.picHouse.query_ROOM_REFURBISH(roomid);
+    }
+
+    private on_REFURBISH_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_ROOM_REFURBISH_REQUIREMENTS) {
+        this.mView.on_REFURBISH_REQUIREMENTS(content);
     }
 
     private onHideHandler() {
