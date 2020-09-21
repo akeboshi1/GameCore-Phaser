@@ -6,11 +6,8 @@ import { BasePanel } from "../components/BasePanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Url, CloseButton } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { i18n } from "../../i18n";
+import { GameGridTable, Button, TabButton } from "apowophaserui";
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   // private mPanel: Phaser.GameObjects.Container;
@@ -208,7 +205,7 @@ export class MineCarPanel extends BasePanel {
     const capH = propFrame.height + 4 * this.dpr;
     // this.cellHeight = capH;
     const gridW = 236 * this.dpr;
-    const propConfig: GridTableConfig = {
+    const propConfig = {
       x: -7 * this.dpr,
       y: -16 * this.dpr,
       table: {
@@ -250,7 +247,7 @@ export class MineCarPanel extends BasePanel {
     });
 
     const btnFrame = this.scene.textures.getFrame(this.key, "nav_btn_normal.png");
-    const categoryTableConfig: GridTableConfig = {
+    const categoryTableConfig = {
       x: -9 * this.dpr,
       y: -155 * this.dpr,
       table: {
@@ -335,13 +332,13 @@ export class MineCarPanel extends BasePanel {
   }
 
   private onClickCategoryHandler(item: CategorieButton) {
-    const data = item.getData("data");
+    const data = (<any>item).getData("data");
     if (data) {
       this.emit("querypackage", op_pkt_def.PKT_PackageType.MinePackage, data.key);
       if (this.mPreSelectedCategorie) {
-        this.mPreSelectedCategorie.changeNormal();
+        (<any>this.mPreSelectedCategorie).changeNormal();
       }
-      item.changeDown();
+      (<any>item).changeDown();
       this.mPreSelectedCategorie = item;
       this.mPreSelectedCategorieData = data;
     }

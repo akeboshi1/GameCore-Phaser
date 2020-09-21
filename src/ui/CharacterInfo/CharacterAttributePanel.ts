@@ -1,18 +1,19 @@
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { Font } from "../../utils/font";
 import { op_pkt_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url } from "../../utils/resUtil";
+import { BBCodeText } from "apowophaserui";
 export class CharacterAttributePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private attriItems: PlayerAttributeValue[] = [];
-    private mspace: number = 10 * this.dpr;
+    private mspace: number;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.setSize(width, height);
         this.key = key;
         this.dpr = dpr;
+        this.mspace = 10 * dpr;
     }
 
     public set space(value: number) {

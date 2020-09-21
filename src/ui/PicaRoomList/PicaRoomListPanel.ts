@@ -4,10 +4,8 @@ import { Font } from "../../utils/font";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { i18n } from "../../i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { BaseScroller } from "../../../lib/rexui/lib/ui/scroller/Scroller";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { TabButton, BaseScroller, Button } from "apowophaserui";
 
 export class PicaRoomListPanel extends BasePanel {
   private readonly key: string = "pica_roomlist";

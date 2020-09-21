@@ -1,9 +1,8 @@
 import { BasePanel } from "./BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { i18n } from "../../i18n";
+import { Button, BBCodeText } from "apowophaserui";
 
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";

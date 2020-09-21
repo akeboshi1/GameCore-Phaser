@@ -6,12 +6,9 @@ import { BasePanel } from "../components/BasePanel";
 import { NinePatch } from "../components/nine.patch";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Url } from "../../utils/resUtil";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { i18n } from "../../i18n";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { NineSliceButton, GameGridTable, ClickEvent } from "apowophaserui";
 export class MineSettlePanel extends BasePanel {
     private key: string = "mine_settle";
     private confirmBtn: NineSliceButton;
@@ -65,12 +62,12 @@ export class MineSettlePanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.on(CoreUI.MouseEvent.Tap, this.onConfirmBtnClick, this);
+        this.confirmBtn.on(String(ClickEvent.Tap), this.onConfirmBtnClick, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.off(CoreUI.MouseEvent.Tap, this.onConfirmBtnClick, this);
+        this.confirmBtn.off(String(ClickEvent.Tap), this.onConfirmBtnClick, this);
     }
 
     preload() {
@@ -93,7 +90,7 @@ export class MineSettlePanel extends BasePanel {
         const propFrame = this.scene.textures.getFrame(this.key, "icon_test");
         const capW = (propFrame.width + 20 * this.dpr);
         const capH = (propFrame.height + 25 * this.dpr);
-        const config: GridTableConfig = {
+        const config = {
             x: 0,
             y: 0,
             table: {

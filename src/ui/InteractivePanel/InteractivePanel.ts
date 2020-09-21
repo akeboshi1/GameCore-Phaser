@@ -5,11 +5,8 @@ import { Url, Background, Border } from "../../utils/resUtil";
 import { NinePatch } from "../components/nine.patch";
 import { Radio } from "../components/radio";
 import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { ISelectCallItemdata } from "../../../lib/rexui/lib/ui/combobox/Combobox";
+import { BBCodeText, TextArea, BaseMediator } from "apowophaserui";
 export class InteractivePanel extends BasePanel {
     private static baseWidth: number = 720;
     private static baseHeight: number = 720;
@@ -110,7 +107,7 @@ export class InteractivePanel extends BasePanel {
                     completeBack: () => {
                         this.radioComplete();
                     },
-                    clickCallBack: (itemShowData: ISelectCallItemdata) => {
+                    clickCallBack: (itemShowData: any) => {
                         if (!itemShowData || !med) return;
                         (med as InteractivePanelMediator).componentClick(itemShowData.data);
                     }

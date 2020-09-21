@@ -1,8 +1,9 @@
 import { Font } from "../../utils/font";
 import { op_client, op_def, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { i18n } from "../../i18n";
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
+import { BBCodeText, Button, ClickEvent } from "apowophaserui";
+import { Handler } from "../../Handler/Handler";
 export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
@@ -13,12 +14,17 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private goodvalue: HouseAttributeValue;
     private compviness: HouseAttributeValue;
     private turnover: HouseAttributeValue;
+    private deprecia: HouseAttributeValue;
+    private renovateBtn: Button;
+    private help: Button;
+    private equirementsHandler: Handler;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.key = key;
         this.dpr = dpr;
         this.setSize(width, height);
         this.createAttribute();
+
     }
     public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
         this.roomname.setTextInfo(i18n.t("room_info.roomname"), data.name);
@@ -38,19 +44,29 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         if (data.roomType === "store") {
             this.compviness.visible = true;
             this.turnover.visible = true;
+            this.deprecia.visible = true;
             this.compviness.setTextInfo(i18n.t("room_info.compveness"), data.competitiveness + "");
-            this.turnover.setTextInfo(i18n.t("room_info.turnover"), data.turnover + "");
+            this.turnover.setTextInfo(i18n.t("room_info.turnover"), `${data.turnoverProp.value}(${data.turnoverProp.tempValue})`);
+            this.deprecia.setTextInfo(i18n.t("room_info.depreciation"), data.undepreciated * 100 + "%");
+            this.add([this.compviness, this.turnover, this.deprecia]);
         } else {
             this.compviness.visible = false;
             this.turnover.visible = false;
+            this.deprecia.visible = false;
+            this.remove([this.compviness, this.turnover, this.deprecia]);
         }
 
     }
+
+    public setHandler(equirements: Handler) {
+        this.equirementsHandler = equirements;
+    }
+
     createAttribute() {
         let posy = -this.height * 0.5 + 10 * this.dpr;
         const itemHeight = 20 * this.dpr;
         const itemWidth = this.width;
-        const space = 25 * this.dpr + itemHeight;
+        const space = 20 * this.dpr + itemHeight;
 
         this.roomname = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
@@ -65,8 +81,22 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.compviness = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
         this.turnover = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
-        this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue, this.compviness, this.turnover]);
+        posy += space;
+        this.deprecia = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.renovateBtn = new Button(this.scene, UIAtlasKey.commonKey, "order_yellow_butt", "order_yellow_butt", i18n.t("room_info.renovate"));
+        this.renovateBtn.scale = 1.1;
+        this.renovateBtn.setTextStyle({ fontSize: 12 * this.dpr, color: "#ED7814" });
+        this.renovateBtn.on(String(ClickEvent.Tap), this.onRenovateHandler, this);
+        this.renovateBtn.x = this.width * 0.5 - 60 * this.dpr;
+        this.help = new Button(this.scene, UIAtlasKey.common2Key, "icon_tips", "icon_tips");
+        this.help.x = this.width * 0.5 - 20 * this.dpr;
+        this.deprecia.add([this.renovateBtn, this.help]);
+        this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue]);
 
+    }
+
+    private onRenovateHandler() {
+        if (this.equirementsHandler) this.equirementsHandler.run();
     }
     private getLevelImgs(level: number) {
         const power = 4;
@@ -143,6 +173,6 @@ class HouseAttributeValue extends Phaser.GameObjects.Container {
             posX += image.width * 0.5 + space;
             this.imgCon.add(image);
         }
-        this.valueText.visible = false;
+        (<any>this.valueText).visible = false;
     }
 }

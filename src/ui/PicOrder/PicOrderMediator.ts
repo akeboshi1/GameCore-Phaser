@@ -1,9 +1,9 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicOrderPanel } from "./PicOrderPanel";
 import { PicOrder } from "./PicOrder";
+import { BaseMediator } from "apowophaserui";
 export class PicOrderMediator extends BaseMediator {
     protected mView: PicOrderPanel;
     private scene: Phaser.Scene;

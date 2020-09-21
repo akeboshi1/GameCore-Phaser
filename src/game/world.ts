@@ -1,11 +1,9 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { WorldService, GameState } from "./world.service";
+import { WorldService } from "./world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "tooqinggamephaser";
-import { IConnectListener } from "../../lib/net/socket";
-import { op_client, op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
-import { LoadingScene } from "../scenes/loading";
+import { op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import { Logger } from "../utils/log";
 import { RoomManager } from "../rooms/room.manager";
 import { ServerAddress } from "../../lib/net/address";
@@ -15,35 +13,26 @@ import { Size } from "../utils/size";
 import { IRoomService } from "../rooms/room";
 import { JoyStickManager } from "./joystick.manager";
 import { GameMain, ILauncherConfig } from "../../launcher";
-import { ElementStorage, IElementStorage } from "./element.storage";
-import { load } from "../utils/http";
-import { Url, ResUtils } from "../utils/resUtil";
-import { Lite, Capsule, PaletteNode, MossNode } from "game-capsule";
+import { IElementStorage } from "./element.storage";
+import { Url } from "../utils/resUtil";
+import { Capsule, PaletteNode, MossNode } from "game-capsule";
 import { UiManager } from "../ui/ui.manager";
-import NinePatchPlugin from "../../lib/rexui/lib/plugins/ninepatch-plugin.js";
-import InputTextPlugin from "../../lib/rexui/lib/plugins/inputtext-plugin.js";
-import BBCodeTextPlugin from "../../lib/rexui/lib/plugins/bbcodetext-plugin.js";
-import ButtonPlugin from "../../lib/rexui/lib/plugins/button-plugin.js";
-import UIPlugin from "../../lib/rexui/lib/ui/ui-plugin.js";
 import { InputManager } from "./input.service";
 import { LoginScene } from "../scenes/login";
-import { Account } from "./account";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import { HttpService } from "../../lib/net/http.service";
 import { GamePauseScene } from "../scenes/gamepause";
-import { Clock, ClockReadyListener } from "../rooms/clock";
 import { RoleManager } from "../role/role.manager";
-import { initLocales, i18n } from "../i18n";
+import { initLocales } from "../i18n";
 import * as path from "path";
 import { Tool } from "../utils/tool";
 import { SoundManager, ISoundConfig } from "./sound.manager";
-import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
-import { HttpClock } from "../rooms/http.clock";
+import { ILoadingManager } from "../loading/loading.manager";
 import { LoadingTips } from "../loading/loading.tips";
 import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 import { Render } from "../render/render";
+import { HttpService } from "../logic/http.service";
 // The World act as the global Phaser.World instance;
-export class World extends PacketHandler implements WorldService, GameMain, ClockReadyListener {
+export class World extends PacketHandler implements WorldService, GameMain {
     public static SCALE_CHANGE: string = "scale_change";
     public isPause: boolean = false;
     private readonly DEFAULT_WIDTH = 360;
@@ -119,7 +108,7 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
                 game_id: this.mConfig.game_id,
                 virtual_world_id: this.mConfig.virtual_world_id,
                 ui_scale: this.mConfig.ui_scale || 1,
-                devicePixelRatio?: this.mConfig.devicePixelRatio || 1,
+                devicePixelRatio: this.mConfig.devicePixelRatio || 1,
                 scale_ratio: this.mConfig.scale_ratio || 1,
                 platform: this.mConfig.platform,
                 keyboardHeight: this.mConfig.keyboardHeight,
@@ -134,7 +123,7 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
                 osd: this.mConfig.osd || false,
                 closeGame: this.mConfig.closeGame ? true : false,
                 connectFail: this.mConfig.connectFail ? true : false,
-                parent: this.mConfig.parent || "";
+                parent: this.mConfig.parent || ""
             }),
             this._newGame();
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
@@ -238,13 +227,13 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
             this.mUIRatio = Math.round(window.devicePixelRatio || 1);
             const scaleW = (width / this.DEFAULT_WIDTH) * (window.devicePixelRatio / this.mUIRatio);
             // const scaleH = config.height / this.DEFAULT_HEIGHT;
-            this.mUIScale = scaleW;
+            this.mUIScale = this.game.device.os.desktop ? 1 : scaleW;
             this.mGame.scale.zoom = 1 / window.devicePixelRatio;
             this.mGame.scale.resize(w, h);
             const scenes = this.mGame.scene.scenes;
             for (const scene of scenes) {
                 const camera = scene.cameras.main;
-                if (camera.setPixelRatio) camera.setPixelRatio(this.mScaleRatio);
+                if (camera && camera.setPixelRatio) camera.setPixelRatio(this.mScaleRatio);
                 // scene.setViewPort(camera.x, camera.y, w, h);
                 // scene.cameras.main.setViewport(0, 0, w, h);
             }
@@ -579,7 +568,6 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
                 this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
                 this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
                 this.mGame.plugins.removeScenePlugin("DragonBones");
-                this.mGame.plugins.removeScenePlugin("rexUI");
                 this.mGameEmitter.destroy();
                 this.uiManager.destroy();
                 this.mElementStorage.destroy();
@@ -791,35 +779,12 @@ export class World extends PacketHandler implements WorldService, GameMain, Cloc
                 createContainer: true,
             },
             plugins: {
-                global: [
-                    {
-                        key: "rexButton",
-                        plugin: ButtonPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexNinePatchPlugin",
-                        plugin: NinePatchPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexInputText",
-                        plugin: InputTextPlugin,
-                        start: true,
-                    },
-                    {
-                        key: "rexBBCodeTextPlugin",
-                        plugin: BBCodeTextPlugin,
-                        start: true,
-                    },
-                ],
                 scene: [
                     {
                         key: "DragonBones",
                         plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
                         mapping: "dragonbone",
                     },
-                    { key: "rexUI", plugin: UIPlugin, mapping: "rexUI" },
                 ],
             },
             render: {

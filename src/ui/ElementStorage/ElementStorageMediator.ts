@@ -5,7 +5,7 @@ import { ElementStorage } from "./ElementStorate";
 import { MessageType } from "../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "apowophaserui";
 
 export class ElementStorageMediator extends BaseMediator {
     public static NAME: string = "ElementStorageMediator";

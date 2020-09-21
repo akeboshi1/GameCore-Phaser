@@ -1,16 +1,12 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { LabelInput } from "../components/label.input";
 import { Logger } from "../../utils/log";
+import { GameGridTable, Button, ClickEvent } from "apowophaserui";
 
 export class GMToolsPanel extends BasePanel {
     private background: Phaser.GameObjects.Graphics;
-    private buttons: Phaser.GameObjects.Sprite[];
     private gridtable: GameGridTable;
     private closeBtn: Button;
     private command: LabelInput;
@@ -28,14 +24,14 @@ export class GMToolsPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.onCloseHandler, this);
-        this.commitBtn.on(CoreUI.MouseEvent.Tap, this.onCommitCmdHandler, this);
+        this.closeBtn.on(String(ClickEvent.Tap), this.onCloseHandler, this);
+        this.commitBtn.on(String(ClickEvent.Tap), this.onCommitCmdHandler, this);
     }
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off(CoreUI.MouseEvent.Tap, this.onCloseHandler, this);
-        this.commitBtn.off(CoreUI.MouseEvent.Tap, this.onCommitCmdHandler, this);
+        this.closeBtn.off(String(ClickEvent.Tap), this.onCloseHandler, this);
+        this.commitBtn.off(String(ClickEvent.Tap), this.onCommitCmdHandler, this);
     }
 
     public resize() {
@@ -105,7 +101,7 @@ export class GMToolsPanel extends BasePanel {
 
         const capW = w;
         const capH = 54 * this.dpr;
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x: 0,
             y: 60 * this.dpr,
             table: {
@@ -159,8 +155,6 @@ export class GMToolsPanel extends BasePanel {
         const buttons = data.button;
         if (buttons.length >= 1) {
             this.gridtable.setItems(buttons);
-            this.buttons = [];
-            this.add(this.buttons);
         }
 
         const inputText = data.inputText;
@@ -200,7 +194,7 @@ class Item extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
         super(scene);
         this.btn = new Button(this.scene, "gmtools_btn", "", "", "1");
-        this.btn.on(CoreUI.MouseEvent.Tap, this.onBtnHandler, this);
+        this.btn.on(String(ClickEvent.Tap), this.onBtnHandler, this);
         this.btn.setTextStyle({
             fontSize: 12 * dpr
         });

@@ -1,10 +1,8 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 
 export class VerifiedPanel extends BasePanel {
     private mVerifiedBtn: NineSliceButton;
@@ -115,8 +113,8 @@ export class VerifiedPanel extends BasePanel {
             fontSize: 14 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        this.mVerifiedBtn.on(CoreUI.MouseEvent.Down, this.onVerifiedDownHandler, this);
-        this.mVerifiedBtn.on(CoreUI.MouseEvent.Tap, this.onVerifiedHandler, this);
+        this.mVerifiedBtn.on(String(ClickEvent.Down), this.onVerifiedDownHandler, this);
+        this.mVerifiedBtn.on(String(ClickEvent.Tap), this.onVerifiedHandler, this);
         this.mVerifiedBtn.y -= this.mVerifiedBtn.height / 2;
         this.mVerifiedBtn.setFontStyle("bold");
         container.add([bg, title_bg, title, nameContainer, idcardContainer, tips, tips2, this.mVerifiedBtn]);

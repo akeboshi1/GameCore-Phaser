@@ -1,18 +1,12 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
 import { DynamicImage } from "../components/dynamic.image";
-import { NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
 import { TextButton } from "../components/TextButton";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
 import { op_client, } from "pixelpai_proto";
+import { GameGridTable, TabButton, Button, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
 
 export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
@@ -133,12 +127,12 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         const rankBtn = new Button(this.scene, this.key2, "ranking", "ranking");
         const btnX = -posx - rankBtn.width * 0.5 - 20 * this.dpr;
         rankBtn.setPosition(btnX, posy + 6 * this.dpr);
-        rankBtn.on(CoreUI.MouseEvent.Tap, this.onRankHandler, this);
+        rankBtn.on(String(ClickEvent.Tap), this.onRankHandler, this);
         this.add(rankBtn);
 
         const historyBtn = new Button(this.scene, this.key2, "history", "history");
         historyBtn.setPosition(btnX - rankBtn.width * 0.5 - historyBtn.width * 0.5 - 10 * this.dpr, posy + 6 * this.dpr);
-        historyBtn.on(CoreUI.MouseEvent.Tap, this.onHistoryHandler, this);
+        historyBtn.on(String(ClickEvent.Tap), this.onHistoryHandler, this);
         this.add(historyBtn);
 
         const backBtn = new NineSliceButton(this.scene, 0, this.height * 0.5 - 7 * this.dpr, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("business_street.back"), this.dpr, this.zoom, {
@@ -149,11 +143,11 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
         });
         this.add(backBtn);
         backBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        backBtn.on(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {

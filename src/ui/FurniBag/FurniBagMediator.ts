@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { FurniBagPanel } from "./FurniBagPanel";
 import { FurniBag } from "./FurniBag";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
+import { BaseMediator } from "apowophaserui";
 
 export class FurniBagMediator extends BaseMediator {
     protected mView: FurniBagPanel;

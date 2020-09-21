@@ -1,14 +1,10 @@
 import { Font } from "../../utils/font";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
-import { NineSlicePatch, BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { Coin } from "../../utils/resUtil";
 import { op_pkt_def } from "pixelpai_proto";
+import { BBCodeText, GameGridTable, NineSlicePatch, NineSliceButton, ClickEvent } from "apowophaserui";
 
 export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
     private recommendedText: Phaser.GameObjects.Text;
@@ -134,7 +130,7 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
         });
         this.add(cancelBtn);
         cancelBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        cancelBtn.on(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
+        cancelBtn.on(String(ClickEvent.Tap), this.onCancelHandler, this);
         const selectBtn = new NineSliceButton(this.scene, 60 * this.dpr, cancelBtn.y, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("business_street.select"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
@@ -142,12 +138,12 @@ export class PicBusinessStoreCreatePanel extends Phaser.GameObjects.Container {
             bottom: 10 * this.dpr
         });
         this.add(selectBtn);
-        selectBtn.on(CoreUI.MouseEvent.Tap, this.onSelectHandler, this);
+        selectBtn.on(String(ClickEvent.Tap), this.onSelectHandler, this);
         selectBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {

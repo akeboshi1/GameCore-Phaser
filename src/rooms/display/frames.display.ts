@@ -481,4 +481,8 @@ export class FramesDisplay extends DisplayObject {
         }
         return height;
     }
+
+    get topPoint() {
+        return new Phaser.Geom.Point(0, -this.spriteHeight);
+    }
 }

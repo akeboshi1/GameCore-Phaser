@@ -1,7 +1,6 @@
 import { NinePatch } from "./nine.patch";
 import { Background } from "../../utils/resUtil";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
-import { ISelectCallUI, ISelectCallItemdata } from "../../../lib/rexui/lib/ui/combobox/Combobox";
+import { BBCodeText } from "apowophaserui";
 export interface IRadioResConfig {
     wid: number;
     hei: number;
@@ -15,7 +14,7 @@ export interface IRadioResConfig {
     clickCallBack: Function;
 }
 
-export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI {
+export class Radio extends Phaser.GameObjects.Container {
     protected itemList: RadioItemRender[];
     private mScene: Phaser.Scene;
     private mConfig: IRadioResConfig;
@@ -74,7 +73,7 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
         this.mIsShow = value;
     }
 
-    public selectCall(itemData: ISelectCallItemdata) {
+    public selectCall(itemData: any) {
         if (this.mConfig.clickCallBack) {
             this.mConfig.clickCallBack.call(this, itemData);
         }
@@ -129,10 +128,10 @@ export class Radio extends Phaser.GameObjects.Container implements ISelectCallUI
 export class RadioItemRender extends Phaser.GameObjects.Container {
     protected mText: BBCodeText;
     protected mSelectBG: Phaser.GameObjects.Graphics;
-    protected mData: ISelectCallItemdata;
-    protected mSelectCallUI: ISelectCallUI;
+    protected mData: any;
+    protected mSelectCallUI: any;
     private mArrow: Phaser.GameObjects.Image;
-    constructor(scene: Phaser.Scene, selectCallUI: ISelectCallUI, wid: number, hei: number, resKey: string, arrowRes: string) {
+    constructor(scene: Phaser.Scene, selectCallUI: any, wid: number, hei: number, resKey: string, arrowRes: string) {
         super(scene);
         this.mSelectCallUI = selectCallUI;
         this.mText = new BBCodeText(scene, 0, 0, "", {
@@ -177,14 +176,14 @@ export class RadioItemRender extends Phaser.GameObjects.Container {
         this.off("pointerdown", this.selectHandler, this);
     }
 
-    public set itemData(val: ISelectCallItemdata) {
+    public set itemData(val: any) {
         this.mData = val;
         this.mText.text = this.mData.text;
         this.mText.x = -this.width >> 1;
         this.mText.y = -this.height / 2 + (this.height - this.mText.height >> 1);
     }
 
-    public get itemData(): ISelectCallItemdata {
+    public get itemData(): any {
         return this.mData;
     }
 

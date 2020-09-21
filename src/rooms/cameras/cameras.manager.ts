@@ -42,8 +42,8 @@ export interface ICameraService {
 
 export class CamerasManager extends PacketHandler implements ICameraService {
 
-    readonly MINI_VIEW_SIZE = 30;
-    readonly VIEW_PORT_SIZE = 30;
+    readonly MINI_VIEW_SIZE = 50;
+    readonly VIEW_PORT_SIZE = 50;
     protected mMain: Phaser.Cameras.Scene2D.Camera;
     protected viewPort = new Phaser.Geom.Rectangle();
     protected miniViewPort = new Phaser.Geom.Rectangle();
@@ -259,6 +259,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         }
         const viewW = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileWidth / 2);
         const viewH = (this.VIEW_PORT_SIZE + this.VIEW_PORT_SIZE) * (size.tileHeight / 2);
+        // const viewW = this.mMain.width * 2;
+        // const viewH = this.mMain.height * 2;
         this.viewPort.setSize(viewW, viewH);
 
         const miniViewW = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileWidth / 2);

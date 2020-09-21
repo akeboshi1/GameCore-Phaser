@@ -5,8 +5,8 @@ import { DisplayObject, DisplayField } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
-import { SoundField } from "../../../lib/rexui/lib/ui/interface/sound/ISoundConfig";
 import { IFramesModel } from "./frames.model";
+import { SoundField } from "apowophaserui";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -91,6 +91,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private mErrorLoadMap: Map<string, any> = new Map();
     private mNeedReplaceTexture: boolean = false;
     private mPlaceholder: Phaser.GameObjects.Image;
+    private mBoardPoint: Phaser.Geom.Point;
 
     private readonly UNPACKSLOTS = [AvatarSlotType.WeapFarm, AvatarSlotType.WeapBarm];
     private readonly UNCHECKAVATARPROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
@@ -133,6 +134,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         return 0;
     }
 
+    get topPoint() {
+        return this.mBoardPoint;
+    }
+
     get GameObject(): DisplayObject {
         return this;
     }
@@ -169,6 +174,15 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             }
             this.mArmatureDisplay.animation.play(val.name);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
+
+            if (this.mArmatureDisplay && this.mArmatureDisplay.armature) {
+                const bound = this.mArmatureDisplay.armature.getBone("board");
+                if (bound) {
+                    this.mBoardPoint = new Phaser.Geom.Point(bound.global.x, bound.global.y);
+                    return;
+                }
+            }
+            this.mBoardPoint = new Phaser.Geom.Point();
         }
     }
 
@@ -250,8 +264,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         this.showReplaceArmatrue();
 
         // this.play("idle");
-        this.mArmatureDisplay.x = this.baseLoc.x;
-        this.mArmatureDisplay.y = this.baseLoc.y;
+        // this.mArmatureDisplay.x = this.baseLoc.x;
+        // this.mArmatureDisplay.y = this.baseLoc.y;
         const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
 
         if (!this.mClickCon) {

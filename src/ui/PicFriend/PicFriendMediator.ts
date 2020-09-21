@@ -1,11 +1,11 @@
 import { ILayerManager } from "../layer.manager";
 import { op_client } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";
 import { PicFriend } from "./PicFriend";
 import { PicFriendEvent } from "./PicFriendEvent";
-import { FriendType } from "./PicFriendPanel";
+import { PicFriendRelation, FriendRelationEnum } from "./PicFriendRelation";
+import { BaseMediator } from "apowophaserui";
 
 export class PicFriendMediator extends BaseMediator {
     protected mView: PicFriendPanel;
@@ -29,14 +29,15 @@ export class PicFriendMediator extends BaseMediator {
             this.mView = new PicFriendPanel(this.scene, this.world);
             this.mView.on("hide", this.onHidePanel, this);
             this.mView.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
-            this.mView.on(FriendType.Follows, this.onUnfollowHandler, this);
-            this.mView.on(FriendType.Fans, this.onFollowHandler, this);
-            this.mView.on(FriendType.Blacklist, this.onRemoveBanUserHandler, this);
+            this.mView.on(PicFriendEvent.UNFOLLOW, this.onUnfollowHandler, this);
+            this.mView.on(PicFriendEvent.FOLLOW, this.onFollowHandler, this);
+            this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
             this.mView.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
             this.mView.on(PicFriendEvent.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
             this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
             this.mView.on(PicFriendEvent.SEARCH_FRIEND, this.onSearchHandler, this);
             this.mView.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
+            this.mView.on(PicFriendEvent.REQ_RELATION, this.onReRelationHandler, this);
         }
         if (!this.picFriend) {
             this.picFriend = new PicFriend(this.world);
@@ -63,6 +64,28 @@ export class PicFriendMediator extends BaseMediator {
         if (this.mView) {
             this.mView.fetchCurrentFriend();
         }
+    }
+
+    private onReRelationHandler(ids: number[]) {
+        const relations = [];
+        const me = this.world.account.accountData.id;
+        for (const id of ids) {
+            relations.push({
+                userA: me,
+                userB: id
+            });
+        }
+        this.world.httpService.post("user/check_relation", {relations}).then((response: any) => {
+            const { code, data } = response;
+            if (code === 200) {
+                const result = [];
+                for (const key in data) {
+                    const users = key.split("_");
+                    result.push(PicFriendRelation.check(users[0], users[1], data[key]));
+                }
+                this.mView.updateRelation(result);
+            }
+        });
     }
 
     private onFetchFriendHandler(type: FriendChannel) {
@@ -158,9 +181,9 @@ export class PicFriendMediator extends BaseMediator {
     }
 
     private onReqFriendAttributesHandler(id: string) {
-        // TODO 点击好友头像，显示属性面板
+        const uimanager = this.world.uiManager;
+        uimanager.showMed("CharacterInfo");
         this.picFriend.fetchFriendInfo(id);
-        // Logger.getInstance().log("Req friend attributes: ", id);
     }
 
     private onSearchHandler(text) {

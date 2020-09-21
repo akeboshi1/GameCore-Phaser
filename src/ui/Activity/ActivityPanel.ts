@@ -1,11 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Handler } from "../../Handler/Handler";
-import { Logger } from "../../utils/log";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { op_pkt_def } from "pixelpai_proto";
+import { GameScroller } from "apowophaserui";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
@@ -66,6 +62,7 @@ export class ActivityPanel extends BasePanel {
             align: 2,
             orientation: 0,
             space: 10 * this.dpr,
+            selfevent: true,
             cellupCallBack: (gameobject) => {
                 this.onPointerUpHandler(gameobject);
             }

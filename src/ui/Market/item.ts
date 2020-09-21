@@ -60,7 +60,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       y: 49 * this.dpr,
       style: {
         fontSize: 13 * this.dpr,
-        fontFamily: Font.DEFULT_FONT,
+        fontFamily: Font.NUMBER,
         color: "#996600"
       }
     }).setOrigin(0.5);

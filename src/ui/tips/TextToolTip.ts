@@ -1,6 +1,6 @@
 import { NinePatch } from "../components/nine.patch";
 import { Font } from "../../utils/font";
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
+import { BBCodeText } from "apowophaserui";
 export class TextToolTips extends Phaser.GameObjects.Container {
     private bg: NinePatch;
     private text: BBCodeText;
@@ -39,7 +39,7 @@ export class TextToolTips extends Phaser.GameObjects.Container {
         const textHeight = height - 16 * this.dpr;
         this.text.setSize(textWidth, textHeight);
         this.text.setWrapWidth(textWidth);
-        this.text.setPosition(-textWidth * 0.5, -textHeight * 0.5);
+        (<any>this.text).setPosition(-textWidth * 0.5, -textHeight * 0.5);
         return this;
     }
 

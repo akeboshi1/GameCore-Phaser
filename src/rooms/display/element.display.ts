@@ -7,7 +7,6 @@ import { AnimationData } from "../element/sprite";
 import { DisplayField } from "./display.object";
 
 export interface ElementDisplay extends Phaser.GameObjects.Container {
-    readonly baseLoc: Phaser.Geom.Point;
     readonly element: IElement;
 
     sortX: number;

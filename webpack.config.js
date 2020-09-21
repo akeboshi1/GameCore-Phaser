@@ -25,6 +25,7 @@ const config = {
         globalObject: "this",
         library: "TooqingCore",
     },
+    devtool: false,
     module: {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },

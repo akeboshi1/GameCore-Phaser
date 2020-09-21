@@ -1,8 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { DebugLogger } from "./DebugLoggerPanel";
 import { ILayerManager } from "../layer.manager";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType } from "apowophaserui";
 
 export class DebugLoggerMediator extends BaseMediator {
     public static NAME: string = "DebugLoggerMediator";

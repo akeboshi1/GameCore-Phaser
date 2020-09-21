@@ -6,10 +6,7 @@ import { IDropable } from "../idropable";
 import { op_gameconfig } from "pixelpai_proto";
 import { BagPanel } from "./bagPanel";
 import { ILayerManager } from "../../layer.manager";
-import InputText from "../../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
-import { BaseMediator } from "../../../../lib/rexui/lib/ui/baseUI/BaseMediator";
-import { IAbstractPanel } from "../../../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
-import { UIType } from "../../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType, InputText } from "apowophaserui";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,

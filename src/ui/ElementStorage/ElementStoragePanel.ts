@@ -3,11 +3,10 @@ import { NinePatch } from "../components/nine.patch";
 import { Background, Border, Url } from "../../utils/resUtil";
 import { Size } from "../../utils/size";
 import { WorldService } from "../../game/world.service";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { Item } from "./item/Item";
 import { op_client } from "pixelpai_proto";
 import { ElementStorageMediator } from "./ElementStorageMediator";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
+import { InputText, NineSliceButton } from "apowophaserui";
 
 export class ElementStoragePanel extends BasePanel {
     private mBackground: NinePatch;

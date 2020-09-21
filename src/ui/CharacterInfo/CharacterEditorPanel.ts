@@ -1,8 +1,7 @@
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { Font } from "../../utils/font";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
+import { InputText, Button } from "apowophaserui";
 export class CharacterEditorPanel extends Phaser.GameObjects.Container {
     private title: Phaser.GameObjects.Text;
     private inputText: InputText;

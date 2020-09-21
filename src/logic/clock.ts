@@ -1,10 +1,10 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Connection } from "./connection";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { Algorithm } from "../utils/algorithm";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 import { MainPeer } from "./main.worker";
+import Connection from "./connection";
 
 const LATENCY_SAMPLES = 7; // Latency Array length
 const MIN_READY_SAMPLES = 2;

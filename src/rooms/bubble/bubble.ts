@@ -1,9 +1,8 @@
-import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText";
 import { op_client } from "pixelpai_proto";
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { Url } from "../../utils/resUtil";
 import { Font } from "../../utils/font";
+import { BBCodeText, NinePatch } from "apowophaserui";
 
 export class Bubble extends Phaser.GameObjects.Container {
     private mChatContent: BBCodeText;

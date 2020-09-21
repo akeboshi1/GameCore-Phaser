@@ -1,11 +1,10 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { Logger } from "../../utils/log";
 import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicFurniFunPanel } from "./PicFurniFunPanel";
 import { PicFurniFun } from "./PicFurniFun";
+import { BaseMediator } from "apowophaserui";
 
 export class PicFurniFunMediator extends BaseMediator {
     protected mView: PicFurniFunPanel;

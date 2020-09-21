@@ -1,13 +1,10 @@
 import { WorldService } from "../../game/world.service";
-import RoundRectangle from "../../../lib/rexui/lib/plugins/gameobjects/shape/roundrectangle/RoundRectangle";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Border, Url } from "../../utils/resUtil";
 import { CheckButton } from "../components/check.button";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { NinePatch } from "../components/nine.patch";
 import { BaseChatPanel } from "./base.chat.panel";
+import { TextArea, InputText, RoundRectangle, BBCodeText } from "apowophaserui";
 
 export class ChatPanelPC extends BaseChatPanel {
     private mTextArea: TextArea;
@@ -55,7 +52,7 @@ export class ChatPanelPC extends BaseChatPanel {
             // this.mTextArea.childrenMap.child.setMinSize(width, (h - 16 * this.dpr) * zoom);
             // this.mTextArea.layout();
             // this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, this.y + this.mTextArea.height / 2 + 10 * this.dpr * zoom);
-            const textMask = this.mTextArea.childrenMap.text;
+            const textMask = (<any>this.mTextArea).childrenMap.text;
             textMask.y = size.height - this.height + 25 * this.dpr;
             this.mTextArea.scrollToBottom();
             // 每次resize更新textBlock中的textMask的位置
@@ -172,7 +169,7 @@ export class ChatPanelPC extends BaseChatPanel {
             .layout();
         this.outPut.add(this.mTextArea);
 
-        const tracks = this.mTextArea.getElement("child");
+        const tracks = (<any>this.mTextArea).getElement("child");
         if (tracks) {
             // tracks.x += 150;
         }

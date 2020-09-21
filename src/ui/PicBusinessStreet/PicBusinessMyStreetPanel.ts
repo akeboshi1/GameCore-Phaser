@@ -1,15 +1,10 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
 import { DynamicImage } from "../components/dynamic.image";
-import { NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { op_client } from "pixelpai_proto";
+import { Button, GameGridTable, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
 
 export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
     private storeCountText: Phaser.GameObjects.Text;
@@ -71,7 +66,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         this.newStoreBtn = new Button(this.scene, this.key, "new_store", "new_store");
         const btnX = -posx - this.newStoreBtn.width * 0.5 - 20 * this.dpr;
         this.newStoreBtn.setPosition(btnX, posy + 6 * this.dpr);
-        this.newStoreBtn.on(CoreUI.MouseEvent.Tap, this.onNewStoreHandler, this);
+        this.newStoreBtn.on(String(ClickEvent.Tap), this.onNewStoreHandler, this);
         this.add(this.newStoreBtn);
 
         this.storelimitText = this.scene.make.text({ x: btnX - this.newStoreBtn.width * 0.5 - 10 * this.dpr, y: posy + 5 * this.dpr, text: "store limit", style: { color: "#0", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(1, 0.5);
@@ -88,7 +83,7 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
         });
         this.add(talkAllBtn);
         talkAllBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        talkAllBtn.on(CoreUI.MouseEvent.Tap, this.onTalkAllHandler, this);
+        talkAllBtn.on(String(ClickEvent.Tap), this.onTalkAllHandler, this);
         const goOutBtn = new NineSliceButton(this.scene, 60 * this.dpr, talkAllBtn.y, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("business_street.goout"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
@@ -96,12 +91,12 @@ export class PicBusinessMyStreetPanel extends Phaser.GameObjects.Container {
             bottom: 10 * this.dpr
         });
         this.add(goOutBtn);
-        goOutBtn.on(CoreUI.MouseEvent.Tap, this.onGoOutHandler, this);
+        goOutBtn.on(String(ClickEvent.Tap), this.onGoOutHandler, this);
         goOutBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {
@@ -210,7 +205,7 @@ class MyStoreItem extends Phaser.GameObjects.Container {
         });
         enterBtn.setTextStyle({ fontSize: 10 * dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
         enterBtn.x = -posx - enterBtn.width * 0.5 - 10 * dpr;
-        enterBtn.on(CoreUI.MouseEvent.Tap, this.onEnterHandler, this);
+        enterBtn.on(String(ClickEvent.Tap), this.onEnterHandler, this);
         this.add(enterBtn);
     }
 

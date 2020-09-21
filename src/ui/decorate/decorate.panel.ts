@@ -5,8 +5,7 @@ import { DecorateRoom } from "../../rooms/decorate.room";
 import { MessageType } from "../../const/MessageType";
 import { Direction, IElement } from "../../rooms/element/element";
 import { ISprite } from "../../rooms/element/sprite";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { Button, ClickEvent } from "apowophaserui";
 export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";
     private readonly minGrid: number = 2;
@@ -56,13 +55,13 @@ export class DecoratePanel extends BasePanel {
     }
 
     public addListen() {
-        if (this.mCancelBtn) this.mCancelBtn.on(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
-        if (this.mOkBtn) this.mOkBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
-        if (this.mRecycleBtn) this.mRecycleBtn.on(CoreUI.MouseEvent.Tap, this.onRecycleHandler, this);
-        if (this.mTurnBtn) this.mTurnBtn.on(CoreUI.MouseEvent.Tap, this.onTurnHandler, this);
-        if (this.mMoveBtn) this.mMoveBtn.on(CoreUI.MouseEvent.Tap, this.onShowMoveMenuHandler, this);
-        if (this.mRepeatBtn) this.mRepeatBtn.on(CoreUI.MouseEvent.Tap, this.onShowRepeatHandler, this);
-        if (this.mExtendBtn) this.mExtendBtn.on(CoreUI.MouseEvent.Tap, this.onShowExtendsHandler, this);
+        if (this.mCancelBtn) this.mCancelBtn.on(String(ClickEvent.Tap), this.onCancelHandler, this);
+        if (this.mOkBtn) this.mOkBtn.on(String(ClickEvent.Tap), this.onAddHandler, this);
+        if (this.mRecycleBtn) this.mRecycleBtn.on(String(ClickEvent.Tap), this.onRecycleHandler, this);
+        if (this.mTurnBtn) this.mTurnBtn.on(String(ClickEvent.Tap), this.onTurnHandler, this);
+        if (this.mMoveBtn) this.mMoveBtn.on(String(ClickEvent.Tap), this.onShowMoveMenuHandler, this);
+        if (this.mRepeatBtn) this.mRepeatBtn.on(String(ClickEvent.Tap), this.onShowRepeatHandler, this);
+        if (this.mExtendBtn) this.mExtendBtn.on(String(ClickEvent.Tap), this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.register();
             this.mMoveMenuContainer.on("tap", this.onMoveHandler, this);
@@ -75,13 +74,13 @@ export class DecoratePanel extends BasePanel {
     }
 
     public removeListen() {
-        if (this.mCancelBtn) this.mCancelBtn.off(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
-        if (this.mOkBtn) this.mOkBtn.off(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
-        if (this.mRecycleBtn) this.mRecycleBtn.off(CoreUI.MouseEvent.Tap, this.onRecycleHandler, this);
-        if (this.mTurnBtn) this.mTurnBtn.off(CoreUI.MouseEvent.Tap, this.onTurnHandler, this);
-        if (this.mMoveBtn) this.mMoveBtn.off(CoreUI.MouseEvent.Tap, this.onShowMoveMenuHandler, this);
-        if (this.mRepeatBtn) this.mRepeatBtn.off(CoreUI.MouseEvent.Tap, this.onShowRepeatHandler, this);
-        if (this.mExtendBtn) this.mExtendBtn.off(CoreUI.MouseEvent.Tap, this.onShowExtendsHandler, this);
+        if (this.mCancelBtn) this.mCancelBtn.off(String(ClickEvent.Tap), this.onCancelHandler, this);
+        if (this.mOkBtn) this.mOkBtn.off(String(ClickEvent.Tap), this.onAddHandler, this);
+        if (this.mRecycleBtn) this.mRecycleBtn.off(String(ClickEvent.Tap), this.onRecycleHandler, this);
+        if (this.mTurnBtn) this.mTurnBtn.off(String(ClickEvent.Tap), this.onTurnHandler, this);
+        if (this.mMoveBtn) this.mMoveBtn.off(String(ClickEvent.Tap), this.onShowMoveMenuHandler, this);
+        if (this.mRepeatBtn) this.mRepeatBtn.off(String(ClickEvent.Tap), this.onShowRepeatHandler, this);
+        if (this.mExtendBtn) this.mExtendBtn.off(String(ClickEvent.Tap), this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.unRegister();
             this.mMoveMenuContainer.off("tap", this.onMoveHandler, this);

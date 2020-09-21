@@ -1,15 +1,12 @@
 import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../components/BasePanel";
 import { DynamicImage } from "../components/dynamic.image";
-import TextArea from "../../../lib/rexui/lib/ui/textarea/TextArea";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js";
 import { op_client } from "pixelpai_proto";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { Url, Border, Background, BlueButton } from "../../utils/resUtil";
-import NinePatch from "../../../lib/rexui/lib/plugins/gameobjects/ninepatch/NinePatch";
 import { Font } from "../../utils/font";
 import { InfoPanelMediator } from "./InfoPanelMediator";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
+import { GameScroller, BBCodeText, TextArea, NinePatch } from "apowophaserui";
 
 const GetValue = Phaser.Utils.Objects.GetValue;
 export class InfoPanel extends BasePanel {

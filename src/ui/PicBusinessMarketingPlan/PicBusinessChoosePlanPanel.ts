@@ -1,19 +1,13 @@
 import { Font } from "../../utils/font";
-import { Button } from "../../../lib/rexui/lib/ui/button/Button";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
 import { Handler } from "../../Handler/Handler";
-import { NineSlicePatch, BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
 import { UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { i18n } from "../../i18n";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { Coin, Url } from "../../utils/resUtil";
 import { op_def } from "pixelpai_proto";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { DynamicImage } from "../components/dynamic.image";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
+import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, BBCodeText } from "apowophaserui";
 
 export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
@@ -108,7 +102,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         });
         this.add(cancelBtn);
         cancelBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#ffffff" });
-        cancelBtn.on(CoreUI.MouseEvent.Tap, this.onCancelHandler, this);
+        cancelBtn.on(String(ClickEvent.Tap), this.onCancelHandler, this);
         const selectBtn = new NineSliceButton(this.scene, 60 * this.dpr, cancelBtn.y, 92 * this.dpr, 34 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("business_street.select"), this.dpr, this.zoom, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
@@ -116,7 +110,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             bottom: 10 * this.dpr
         });
         this.add(selectBtn);
-        selectBtn.on(CoreUI.MouseEvent.Tap, this.onSelectHandler, this);
+        selectBtn.on(String(ClickEvent.Tap), this.onSelectHandler, this);
         selectBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
         this.iteminfoTips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
         this.iteminfoTips.visible = false;
@@ -124,7 +118,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     }
 
     private createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {
@@ -170,7 +164,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         if (this.curSelectItem) this.curSelectItem.select = false;
         cell.select = true;
         const data = cell.palnData;
-        this.gameScroll.clearItems();
+        (<any>this.gameScroll).clearItems();
         for (const itemdata of data.requirements) {
             const item = new MaterialItem(this.scene, 0, 0, 36 * this.dpr, 36 * this.dpr, this.key, this.dpr, this.zoom);
             item.setItemData(itemdata);
@@ -285,7 +279,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.add(bg);
         this.itemIcon = new DynamicImage(this.scene, 0, 0);
         this.add(this.itemIcon);
-        this.countText = new BBCodeText(this.scene, bg.width * 0.5, bg.height * 0.5, {})
+        this.countText = new BBCodeText(this.scene, bg.width * 0.5, bg.height * 0.5)
             .setOrigin(1, 0.5).setFontSize(12 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add(this.countText);
     }

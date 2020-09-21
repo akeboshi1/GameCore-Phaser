@@ -5,13 +5,11 @@ import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../components/BasePanel";
 import { Url, Coin } from "../../utils/resUtil";
 import { i18n } from "../../i18n";
-import { BBCodeText, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
-import { GameScroller } from "../../../lib/rexui/lib/ui/scroller/GameScroller";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { FramesModel } from "../../rooms/display/frames.model";
 import I18NextXhrBackend from "i18next-xhr-backend";
+import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText } from "apowophaserui";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
     private confirmBtn: NineSliceButton;
@@ -186,6 +184,7 @@ export class PicFurniFunPanel extends BasePanel {
 
         this.materialTipsDes = tipsText;
         this.materialTipsCon.add([tipsbg, tipsText]);
+        this.materialTipsCon.visible = false;
         this.confirmBtn = new NineSliceButton(this.scene, 0, -posY - 35 * this.dpr, 100 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn_over", i18n.t("furni_unlock.unlock"), this.dpr, this.scale, {
             left: 15 * this.dpr,
             top: 15 * this.dpr,
@@ -245,7 +244,7 @@ export class PicFurniFunPanel extends BasePanel {
 
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
         const len = datas.length;
-        this.materialGameScroll.clearItems();
+        (<any>this.materialGameScroll).clearItems();
         for (let i = 0; i < len; i++) {
             const item = new MaterialItem(this.scene, this.key, this.dpr);
             item.y = 0;
@@ -268,6 +267,7 @@ export class PicFurniFunPanel extends BasePanel {
     }
 
     private onMaterialItemHandler(item: MaterialItem) {
+        this.materialTipsCon.visible = true;
         if (this.selectMaterial) this.selectMaterial.select = false;
         const data: op_client.ICountablePackageItem = item.itemData;
         this.materialTipsDes.text = this.getDesText(data);

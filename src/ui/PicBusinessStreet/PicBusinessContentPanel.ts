@@ -1,10 +1,9 @@
 import { Font } from "../../utils/font";
 import { op_client } from "pixelpai_proto";
-import { BBCodeText, Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
 import { i18n } from "../../i18n";
+import { NineSlicePatch, Button, ClickEvent } from "apowophaserui";
 export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
     private topbg: Phaser.GameObjects.Image;
@@ -49,7 +48,7 @@ export class PicBusinessContentPanel extends Phaser.GameObjects.Container {
         this.closeBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
         this.closeBtn.setDisplaySize(28 * this.dpr, 28 * this.dpr);
         this.closeBtn.setPosition(this.width * 0.5 - 6 * this.dpr, posY + this.dpr * 5);
-        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.onCloseHandler, this);
+        this.closeBtn.on(String(ClickEvent.Tap), this.onCloseHandler, this);
         this.add(this.closeBtn);
         this.setContentSize(width, height);
     }

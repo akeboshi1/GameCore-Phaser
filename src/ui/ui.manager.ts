@@ -21,9 +21,7 @@ import { ActivityMediator } from "./Activity/ActivityMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaNavigateMediator } from "./PicaNavigate/PicaNavigateMediator";
 import { MineCarMediator } from "./MineCar/MineCarMediator";
-import { BaseMediator } from "../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { UIMediatorType } from "./ui.mediatorType";
-import { UIType } from "../../lib/rexui/lib/ui/interface/baseUI/UIType";
 import { ReAwardTipsMediator } from "./ReAwardTips/ReAwardTipsMediator";
 import { ComposeMediator } from "./Compose/ComposeMediator";
 import { MineSettleMediator } from "./MineSettle/MineSettleMediator";
@@ -36,7 +34,7 @@ import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
 import { CharacterInfoMediator } from "./CharacterInfo/CharacterInfoMediator";
 import { AlertView, Buttons } from "./components/alert.view";
 import { i18n } from "../i18n";
-import { Button } from "../../lib/rexui/lib/ui/button/Button";
+import { BaseMediator, UIType } from "apowophaserui";
 
 // export const enum UIType {
 //     NoneUIType,

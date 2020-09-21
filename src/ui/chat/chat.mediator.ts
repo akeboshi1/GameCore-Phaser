@@ -6,10 +6,8 @@ import { IMessage } from "./message";
 import { ChatPanelPC } from "./chatPanel.pc";
 import { BaseChatPanel } from "./base.chat.panel";
 import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
-import { BasePanel } from "../components/BasePanel";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { Chat } from "./Chat";
-import { UIType } from "../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { BaseMediator, UIType } from "apowophaserui";
 export class ChatMediator extends BaseMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;

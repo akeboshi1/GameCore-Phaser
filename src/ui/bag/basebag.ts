@@ -1,5 +1,5 @@
 import { ItemSlot } from "./item.slot";
-import { IAbstractPanel } from "../../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
+import { IAbstractPanel } from "apowophaserui";
 
 export interface IBag extends IAbstractPanel {
     bagBtn;

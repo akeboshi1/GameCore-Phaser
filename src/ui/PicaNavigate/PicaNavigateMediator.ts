@@ -2,9 +2,9 @@ import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
 import { PicaNavigatePanel } from "./PicaNavigatePanel";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { PicaNavigate } from "./PicaNavigate";
 import { PicHandheldMediator } from "../PicHandheld/PicHandheldMediator";
+import { BaseMediator } from "apowophaserui";
 
 export class PicaNavigateMediator extends BaseMediator {
   public static NAME: string = "PicaNavigateMediator";

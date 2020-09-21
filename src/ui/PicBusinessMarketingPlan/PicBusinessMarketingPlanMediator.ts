@@ -1,11 +1,10 @@
 import { ILayerManager } from "../layer.manager";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
-import PicBusinessStreetPanel from "./PicBusinessMarketingPlanPanel";
 import { PicBusinessMarketingPlan } from "./PicBusinessMarketingPlan";
 import PicBusinessMarketingPlanPanel from "./PicBusinessMarketingPlanPanel";
 import { PicaMainUIMediator } from "../PicaMainUI/PicaMainUIMediator";
+import { BaseMediator } from "apowophaserui";
 export class PicBusinessMarketingPlanMediator extends BaseMediator {
     protected mView: PicBusinessMarketingPlanPanel;
     private scene: Phaser.Scene;

@@ -4,7 +4,7 @@ import { Size } from "../../../utils/size";
 import { MessageType } from "../../../const/MessageType";
 import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagGroup } from "./bag.group";
-import { UIType } from "../../../../lib/rexui/lib/ui/interface/baseUI/UIType";
+import { UIType } from "apowophaserui";
 
 /**
  * 背包场景UI，带背包slot，pc端用

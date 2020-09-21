@@ -1,8 +1,8 @@
-import { BaseMediator } from "../../../lib/rexui/lib/ui/baseUI/BaseMediator";
 import { WorldService } from "../../game/world.service";
 import { ReAwardTips } from "./ReAwardTip";
 import { op_client } from "pixelpai_proto";
 import { ReAwardTipsPanel } from "./ReAwardTipsPanel";
+import { BaseMediator } from "apowophaserui";
 
 export class ReAwardTipsMediator extends BaseMediator {
     private mReAwardTips: ReAwardTips;

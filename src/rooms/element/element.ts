@@ -185,6 +185,7 @@ export class Element extends BlockObject implements IElement {
     protected mMoving: boolean = false;
     protected mRootMount: IElement;
     protected mMounts: IElement[];
+    protected mDirty: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -212,7 +213,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(this.mModel.pos);
         }
         this.mDisplay.changeAlpha(this.mModel.alpha);
-        if (this.mDisplay.getElement("nickname")) this.showNickname();
+        if (this.getFollowObject(FollowEnum.Nickname)) this.showNickname();
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
         const frameModel = <IFramesModel>this.mDisplayInfo;
@@ -276,6 +277,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.currentAnimationName !== animationName) {
             // this.mAnimationName = animationName;
             this.mModel.currentAnimationName = animationName;
+
             if (this.mDisplay) {
                 this.mDisplay.play(this.model.currentAnimation);
             }
@@ -350,6 +352,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     public update() {
+        if (this.mDirty === false) {
+            return;
+        }
+        this.mDirty = true;
         if (this.mBubble) {
             this.mBubble.follow(this);
         }
@@ -525,6 +531,9 @@ export class Element extends BlockObject implements IElement {
         if (!this.mDisplay || !this.model) {
             return;
         }
+        if (!this.mDisplay.topPoint) {
+            return;
+        }
         const ratio = this.mRoomService.world.scaleRatio;
         let follow = this.getFollowObject(FollowEnum.Nickname);
         let nickname = null;
@@ -536,13 +545,12 @@ export class Element extends BlockObject implements IElement {
                 }
             }).setOrigin(0.5).setStroke("0x0", 2 * ratio);
             follow = new FollowObject(nickname, this, ratio);
-            follow.setOffset(0, -84);
             this.addFollowObject(FollowEnum.Nickname, follow);
         } else {
             nickname = follow.object;
         }
         nickname.text = this.mModel.nickname;
-        follow.update();
+        follow.setOffset(0, this.mDisplay.topPoint.y);
         if (this.mDisplay.parentContainer) this.roomService.addToSceneUI(nickname);
     }
 
@@ -576,6 +584,7 @@ export class Element extends BlockObject implements IElement {
     public mount(root: IElement) {
         this.mRootMount = root;
         this.removeFromBlock(true);
+        this.mBlockable = false;
         if (this.mMoving) {
             this.stopMove();
         }
@@ -591,6 +600,7 @@ export class Element extends BlockObject implements IElement {
             pos.y += this.mDisplay.y;
             this.mRootMount = null;
             this.setPosition(pos);
+            this.mBlockable = true;
             this.addToBlock();
         }
         return this;
@@ -862,8 +872,8 @@ export class Element extends BlockObject implements IElement {
             // }
             this.setDepth(0);
             this.mMoveData.tweenLastUpdate = now;
-            this.update();
         }
+        this.mDirty = true;
     }
 
     protected get offsetY(): number {
@@ -997,6 +1007,7 @@ export class FollowObject {
 
     setOffset(x: number, y: number) {
         this.mOffset.setTo(x, y);
+        this.update();
     }
 
     update() {
@@ -1004,8 +1015,8 @@ export class FollowObject {
             return;
         }
         const pos = this.mTarget.getPosition();
-        this.mObject.x = (pos.x + this.mOffset.x) * this.mDpr;
-        this.mObject.y = (pos.y + this.mOffset.y) * this.mDpr;
+        this.mObject.x = Math.round((pos.x + this.mOffset.x) * this.mDpr);
+        this.mObject.y = Math.round((pos.y + this.mOffset.y) * this.mDpr);
     }
 
     remove() {
@@ -1023,6 +1034,10 @@ export class FollowObject {
 
     get object() {
         return this.mObject;
+    }
+
+    private linear(p0, p1, t) {
+        return (p1 - p0) * t + p0;
     }
 }
 

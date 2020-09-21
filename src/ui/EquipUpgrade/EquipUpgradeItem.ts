@@ -2,11 +2,8 @@ import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { Url, Coin } from "../../utils/resUtil";
 import { op_client } from "pixelpai_proto";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import { NinePatch } from "../components/nine.patch";
-import { BBCodeText } from "../../../lib/rexui/lib/ui/ui-components";
-import { UIAtlasKey } from "../ui.atals.name";
+import { GameGridTable, BBCodeText } from "apowophaserui";
 export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -152,7 +149,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         const capH = (propFrame.height + 30 * this.dpr);
         this.cellWidth = capW;
         this.cellHeight = capH;
-        const config: GridTableConfig = {
+        const config = {
             x: 0,
             y: 0,
             scrollMode: 1,
@@ -219,12 +216,12 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
         if (data.owned) this.unlockbtn.visible = false;
         else this.unlockbtn.visible = true;
         if (data.qualified) {
-            this.unlockCondition.visible = false;
+            (<any>this.unlockCondition).visible = false;
             this.unlockbtn.setInteractive();
             this.unlockBg.clearTint();
             this.costNum.setColor("#ffffff");
         } else if (!data.owned) {
-            this.unlockCondition.visible = true;
+            (<any>this.unlockCondition).visible = true;
             this.unlockCondition.text = data.conditionDisplayNames[0];
             this.unlockbtn.disableInteractive();
             this.unlockBg.setTintFill(0x888888);
@@ -251,7 +248,7 @@ export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
 
     private createBtn() {
         // this.unlockCondition = this.mScene.make.text({ x: 0, y: -26 * this.dpr, text: "解锁条件", style: { color: "#000000", fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5, 0.5);
-        this.unlockCondition = new BBCodeText(this.mScene, 0, -26 * this.dpr, {})
+        this.unlockCondition = new BBCodeText(this.mScene, 0, -26 * this.dpr, "", {})
             .setOrigin(0.5).setFontSize(10 * this.dpr).setFontFamily(Font.DEFULT_FONT);
         this.unlockbtn = this.mScene.make.container(undefined, false);
         const btnBg = new NinePatch(this.mScene, 0, 0, 88 * this.dpr, 31 * this.dpr, this.commonKey, "yellow_btn_normal", {

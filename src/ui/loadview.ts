@@ -1,6 +1,6 @@
 
 import { Tweens } from "tooqinggamephaser";
-import { IAbstractPanel } from "../../lib/rexui/lib/ui/interface/panel/IAbstractPanel";
+import { IAbstractPanel, Patches_config, Tool, ButtonState } from "apowophaserui";
 
 export class LoadingView implements IAbstractPanel {
     public id: number;

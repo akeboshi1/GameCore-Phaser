@@ -2,10 +2,8 @@ import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
-import BBCodeText from "../../../lib/rexui/lib/plugins/gameobjects/text/bbcodetext/BBCodeText";
 import { Font } from "../../utils/font";
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
+import { NineSliceButton, BBCodeText, ClickEvent } from "apowophaserui";
 
 export class FriendInvitePanel extends BasePanel {
     private bg: Phaser.GameObjects.Graphics;
@@ -28,14 +26,14 @@ export class FriendInvitePanel extends BasePanel {
 
     public addListen() {
         super.addListen();
-        this.refused.on(CoreUI.MouseEvent.Tap, this.onRefusedHandler, this);
-        this.agree.on(CoreUI.MouseEvent.Tap,this.onAgreeHandler, this);
+        this.refused.on(String(ClickEvent.Tap), this.onRefusedHandler, this);
+        this.agree.on(String(ClickEvent.Tap), this.onAgreeHandler, this);
     }
 
     public removeListen() {
         super.removeListen();
-        this.refused.off(CoreUI.MouseEvent.Tap, this.onRefusedHandler, this);
-        this.agree.off(CoreUI.MouseEvent.Tap,this.onAgreeHandler, this);
+        this.refused.off(String(ClickEvent.Tap), this.onRefusedHandler, this);
+        this.agree.off(String(ClickEvent.Tap), this.onAgreeHandler, this);
     }
 
     public destroy() {
@@ -55,9 +53,9 @@ export class FriendInvitePanel extends BasePanel {
         const radius = 5 * this.dpr;
         this.bg = this.scene.make.graphics(undefined, false);
         this.bg.fillStyle(0, 0.6);
-        this.bg.fillRoundedRect(0, 0, this.width, this.height, { tl: 0, tr: radius, br: radius, bl: 0});
+        this.bg.fillRoundedRect(0, 0, this.width, this.height, { tl: 0, tr: radius, br: radius, bl: 0 });
 
-        this.text = new BBCodeText(this.scene, this.width * 0.5, 7 * this.dpr, {}).setOrigin(0.5, 0).setFontSize(10 * this.dpr).setFontFamily(Font.DEFULT_FONT);
+        this.text = new BBCodeText(this.scene, this.width * 0.5, 7 * this.dpr, "", {}).setOrigin(0.5, 0).setFontSize(10 * this.dpr).setFontFamily(Font.DEFULT_FONT);
 
         const width = 55 * this.dpr;
         const height = 24 * this.dpr;

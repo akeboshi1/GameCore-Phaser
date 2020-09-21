@@ -1,5 +1,5 @@
-import InputText from "../../../lib/rexui/lib/plugins/gameobjects/inputtext/InputText";
 import { LabelInput } from "../components/label.input";
+import { InputText } from "apowophaserui";
 
 export class NumberCounter extends Phaser.GameObjects.Container {
   private mBackground: Phaser.GameObjects.Image;

@@ -1,24 +1,18 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { Button, NineSlicePatch } from "../../../lib/rexui/lib/ui/ui-components";
 import { i18n } from "../../i18n";
-import { GameGridTable } from "../../../lib/rexui/lib/ui/gridtable/GameGridTable";
-import { GridTableConfig } from "../../../lib/rexui/lib/ui/gridtable/GridTableConfig";
 import Text = Phaser.GameObjects.Text;
 import Image = Phaser.GameObjects.Image;
 import Container = Phaser.GameObjects.Container;
-import { CoreUI } from "../../../lib/rexui/lib/ui/interface/event/MouseEvent";
-import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { Handler } from "../../Handler/Handler";
-import { CheckBox } from "../../../lib/rexui/lib/ui/checkbox/CheckBox";
 import { CheckboxGroup } from "../components/checkbox.group";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
-import { NineSliceButton } from "../../../lib/rexui/lib/ui/button/NineSliceButton";
 import { op_client } from "pixelpai_proto";
-import { TabButton } from "../../../lib/rexui/lib/ui/tab/TabButton";
-import { Renderer } from "tooqinggamephaser";
+import { FriendRelation, FriendRelationEnum } from "./PicFriendRelation";
+import { Button, ClickEvent, GameGridTable, CheckBox, NineSlicePatch, TabButton, NineSliceButton } from "apowophaserui";
+import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Image;
@@ -71,7 +65,7 @@ export default class PicFriendPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.closeBtn.on(String(ClickEvent.Tap), this.OnClosePanel, this);
         this.friendContainer.register();
         this.friendContainer.on("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
@@ -85,7 +79,7 @@ export default class PicFriendPanel extends BasePanel {
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off(CoreUI.MouseEvent.Tap, this.OnClosePanel, this);
+        this.closeBtn.off(String(ClickEvent.Tap), this.OnClosePanel, this);
         this.friendContainer.off("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
@@ -113,6 +107,12 @@ export default class PicFriendPanel extends BasePanel {
             this.mShowingSubContainer.updateFriends(content);
         } else {
             this.friendContainer.updateFriends(content);
+        }
+    }
+
+    public updateRelation(relations: FriendRelation[]) {
+        if (this.mShowingSubContainer && this.mShowingSubContainer instanceof SearchContainer) {
+            this.mShowingSubContainer.updateRelation(relations);
         }
     }
 
@@ -228,10 +228,15 @@ export default class PicFriendPanel extends BasePanel {
     }
 
     private onReqFriendRelationHandler(friends: FriendData[]) {
-        for (const friend of friends) {
-            friend.relation = this.friendContainer.checkRelation(friend);
+        if (!friends) {
+            return;
         }
-        this.mShowingSubContainer.updateFriends(friends);
+        const ids = friends.map((friend) => friend.id);
+        if (ids.length > 0) this.emit(PicFriendEvent.REQ_RELATION, ids);
+        // for (const friend of friends) {
+        //     friend.relation = this.friendContainer.checkRelation(friend);
+        // }
+        // this.mShowingSubContainer.updateFriends(friends);
     }
 }
 
@@ -250,7 +255,7 @@ class FriendContainer extends Container {
     }
 
     protected createGrideTable(x: number, y: number, width: number, height: number, capW: number, capH: number, createFun: Function, callback: Handler, createCallback?: Function) {
-        const tableConfig: GridTableConfig = {
+        const tableConfig = {
             x,
             y,
             table: {
@@ -334,16 +339,16 @@ class MainContainer extends FriendContainer {
 
     public register() {
         this.searchInput.on("textchange", this.onTextChangeHandler, this);
-        this.searchBtn.on(CoreUI.MouseEvent.Tap, this.onSeachHandler, this);
-        this.onlineCheckBox.on(CoreUI.MouseEvent.Tap, this.onCheckoutOnlineHandler, this);
-        this.addFriendBtn.on(CoreUI.MouseEvent.Tap, this.onShowAddFriendHandler, this);
+        this.searchBtn.on(String(ClickEvent.Tap), this.onSeachHandler, this);
+        this.onlineCheckBox.on(String(ClickEvent.Tap), this.onCheckoutOnlineHandler, this);
+        this.addFriendBtn.on(String(ClickEvent.Tap), this.onShowAddFriendHandler, this);
     }
 
     public unregister() {
         this.searchInput.off("textchange", this.onTextChangeHandler, this);
-        this.searchBtn.off(CoreUI.MouseEvent.Tap, this.onSeachHandler, this);
-        this.onlineCheckBox.off(CoreUI.MouseEvent.Tap, this.onCheckoutOnlineHandler, this);
-        this.addFriendBtn.off(CoreUI.MouseEvent.Tap, this.onShowAddFriendHandler, this);
+        this.searchBtn.off(String(ClickEvent.Tap), this.onSeachHandler, this);
+        this.onlineCheckBox.off(String(ClickEvent.Tap), this.onCheckoutOnlineHandler, this);
+        this.addFriendBtn.off(String(ClickEvent.Tap), this.onShowAddFriendHandler, this);
     }
 
     public resize() {
@@ -380,17 +385,17 @@ class MainContainer extends FriendContainer {
         const result: FriendData[] = [];
         let target = null;
         const ids = [];
-        let relation: FriendType;
+        let relation: FriendRelationEnum;
         for (const friend of data) {
             if (type === FriendChannel.Followes) {
                 target = friend.followed_user;
-                relation = FriendType.Follows;
+                relation = FriendRelationEnum.Followed;
             } else if (type === FriendChannel.Fans) {
                 target = friend.user;
-                relation = FriendType.Fans;
+                relation = FriendRelationEnum.Fans;
             } else {
                 target = friend;
-                relation = FriendType.Friend;
+                relation = FriendRelationEnum.Friend;
             }
             if (target) {
                 result.push({ type, id: target._id, nickname: target.nickname, relation });
@@ -449,15 +454,6 @@ class MainContainer extends FriendContainer {
         }
         this.showingFriends = this.showingFriends.filter((friend: FriendData) => friend.id !== id);
         this.friendTabel.setItems(this.showingFriends);
-    }
-
-    public checkRelation(friend: FriendData) {
-        const friends = this.friendDatas.get(FriendChannel.Friends);
-        const index = friends.findIndex((f) => f.id === friend.id);
-        if (index > -1) {
-            return FriendType.Friend;
-        }
-        return FriendType.Fans;
     }
 
     public fetchCurrentFriend() {
@@ -543,7 +539,9 @@ class MainContainer extends FriendContainer {
     }
 
     private onFtechPlayerHandler(friend: FriendData) {
-        this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        if (friend.lv !== undefined) {
+            this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, friend.id);
+        }
         this.searchInput.setBlur();
     }
 
@@ -601,23 +599,6 @@ class MainContainer extends FriendContainer {
 
     private onTextChangeHandler() {
         this.onSeachHandler();
-    }
-
-    private createCallback(cell) {
-        // const table = cell.parent;
-        // if (table) {
-        //     let rowIdx = table.heightToRowIndex(-cell.parentContainer.tableOY);
-        //     if (rowIdx < 0) {
-        //         rowIdx = 0;
-        //     }
-        //     const cellIdx = table.colRowToCellIndex(0, rowIdx);
-        //     const firstCell = table.getCell(cellIdx);
-
-        //     if (firstCell) {
-        //         if (firstCell.container && firstCell.container.itemData) this.navigate.checkSlider(firstCell.container.itemData.nickname);
-        //         else this.navigate.checkSlider("");
-        //     }
-        // }
     }
 }
 
@@ -772,7 +753,8 @@ class FriendRenderer implements IRenderer {
     protected itemData: any;
     protected level: Text;
     protected addBtn: NineSliceButton;
-    protected curRelation: FriendType;
+    protected curRelation: FriendRelationEnum;
+    protected friendEvnet: string;
     constructor(protected scene: Phaser.Scene, protected owner: PicFriendItem) {
         this.icon = scene.make.image({x: 7.44 * owner.dpr - owner.width * 0.5, key: owner.key, frame: "offline_head"}).setOrigin(0, 0.5).setInteractive().on("pointerup", this.onHeadhandler, this);
         this.nameText = scene.make.text({ x: this.icon.x + this.icon.width + 9.67 * owner.dpr, y: -this.icon.height * 0.5 + 1 * owner.dpr, style: {
@@ -793,7 +775,7 @@ class FriendRenderer implements IRenderer {
         });
 
         this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
-        this.addBtn.on(CoreUI.MouseEvent.Tap, this.onAddHandler, this);
+        this.addBtn.on(String(ClickEvent.Tap), this.onAddHandler, this);
         this.owner.add(this.addBtn);
 
         owner.add([this.icon, this.nameText, this.level, this.addBtn]);
@@ -825,22 +807,26 @@ class FriendRenderer implements IRenderer {
             this[this.curRelation]();
         } else {
             this.addBtn.visible = false;
+            this.friendEvnet = null;
         }
     }
 
     protected fans() {
         this.addBtn.visible = true;
         this.addBtn.setText(i18n.t("friendlist.follow"));
+        this.friendEvnet = PicFriendEvent.FOLLOW;
     }
 
-    protected follows() {
+    protected followed() {
         this.addBtn.visible = true;
         this.addBtn.setText(i18n.t("friendlist.unfollow"));
+        this.friendEvnet = PicFriendEvent.UNFOLLOW;
     }
 
     protected blacklist() {
         this.addBtn.visible = true;
         this.addBtn.setText(i18n.t("friendlist.remove"));
+        this.friendEvnet = PicFriendEvent.REMOVE_FROM_BLACKLIST;
     }
 
     protected null() {
@@ -870,7 +856,7 @@ class FriendRenderer implements IRenderer {
     }
 
     protected onAddHandler() {
-        if (this.curRelation && this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, this.curRelation, this.itemData.id);
+        if (this.friendEvnet && this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, this.friendEvnet, this.itemData.id);
         // this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
     }
 }
@@ -886,29 +872,6 @@ class FansRenderer extends FriendRenderer {
     }
 }
 
-class FollowRenderer extends FansRenderer {
-    constructor(scene: Phaser.Scene, owner: PicFriendItem) {
-        super(scene, owner);
-        if (this.addBtn) this.addBtn.setText(i18n.t("friendlist.unfollow"));
-    }
-
-    protected onAddHandler() {
-        if (this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.UNFOLLOW, this.itemData.id);
-        // this.owner.emit(PicFriendEvent.UNFOLLOW, this.itemData);
-    }
-}
-
-class BlacklistRenderer extends FansRenderer {
-    constructor(scene: Phaser.Scene, owner: PicFriendItem) {
-        super(scene, owner);
-        this.addBtn.setText(i18n.t("friendlist.remove"));
-    }
-
-    protected onAddHandler() {
-        this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.REMOVE_FROM_BLACKLIST, this.itemData.id);
-    }
-}
-
 class SubFriendContainer extends FriendContainer {
     protected backBtn: Button;
     protected gridTable: GameGridTable;
@@ -920,11 +883,11 @@ class SubFriendContainer extends FriendContainer {
     }
 
     public register() {
-        this.backBtn.on(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        this.backBtn.on(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     public unregister() {
-        this.backBtn.off(CoreUI.MouseEvent.Tap, this.onBackHandler, this);
+        this.backBtn.off(String(ClickEvent.Tap), this.onBackHandler, this);
     }
 
     public resize() {
@@ -1014,7 +977,19 @@ class SearchContainer extends SubFriendContainer {
             result.push({ type: this.friendType, nickname, id: platformId, lv: level.level });
         }
         this.emit(PicFriendEvent.REQ_FRIEND_RELATION, result);
+        this.items = result;
         // super.setItems(result);
+    }
+
+    public updateRelation(relations: FriendRelation[]) {
+        if (!this.items) {
+            return;
+        }
+        for (const relation of relations) {
+            const friend = this.items.find((f) => f.id === relation.id);
+            friend.relation = relation.relation;
+        }
+        this.updateFriends(this.items);
     }
 
     updateFriends(items: any) {
@@ -1075,13 +1050,13 @@ class BlackContainer extends SubFriendContainer {
             return;
         }
         const result = [];
-        let followed_user = null;
         const ids = [];
+        let banUser = null;
         for (const friend of data) {
-            followed_user = friend.followed_user;
-            if (followed_user) {
-                ids.push(followed_user._id);
-                result.push({ type: FriendChannel.Blacklist, id: followed_user._id, nickname: followed_user.nickname, relation: FriendType.Blacklist });
+            banUser = friend.ban_user;
+            if (banUser) {
+                ids.push(banUser._id);
+                result.push({ type: FriendChannel.Blacklist, id: banUser._id, nickname: banUser.nickname, relation: FriendRelationEnum.Blacklist });
             }
         }
         super.setItems(result);
@@ -1139,7 +1114,7 @@ class SearchInput extends LabelInput {
 
         this.searchBtn = new Button(this.scene, key, "search_blue");
         this.searchBtn.x = config.width + 4 * dpr + this.searchBtn.width * 0.5;
-        this.searchBtn.on(CoreUI.MouseEvent.Tap, this.onSearchHandler, this);
+        this.searchBtn.on(String(ClickEvent.Tap), this.onSearchHandler, this);
         this.add(this.searchBtn);
 
         const background = scene.make.graphics(undefined, false);
@@ -1227,7 +1202,7 @@ export interface FriendData {
     nickname?: string;
     username?: string;
     menuData?: MenuData;
-    relation?: FriendType;
+    relation?: FriendRelationEnum;
 }
 
 export enum FriendChannel {
@@ -1240,12 +1215,4 @@ export enum FriendChannel {
     Menu,
     NewFans,
     Null
-}
-
-export enum FriendType {
-    Null = "null",
-    Friend = "friend",
-    Fans = "fans",
-    Follows = "follows",
-    Blacklist = "blacklist"
 }
