@@ -40,7 +40,6 @@ export default class Connection implements ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
         try {
-            if (this.mMainWorker) this.mMainWorker.postMessage({ method: "close" });
             this.mMainWorker = new MainWorker();
             this.mMainWorker.postMessage({ method: "init" });
             this._doConnect();
@@ -51,7 +50,12 @@ export default class Connection implements ConnectionService {
 
     closeConnect(): void {
         this._isConnect = false;
-        this.mMainWorker.terminate();
+        if (this.mMainWorker) {
+            Logger.getInstance().log("close connect");
+            this.mMainWorker.postMessage({ method: "close" });
+            this.mMainWorker.terminate();
+            this.mMainWorker = null;
+        }
         // this.mWorker.terminate();
         // this.mHeartBeatWorker.terminate();
         this.mCachedServerAddress = undefined;
@@ -150,7 +154,12 @@ export default class Connection implements ConnectionService {
                 break;
             case "onDisConnected":
                 this._isConnect = false;
-                this.mListener.onDisConnected();
+                if (this.mReConnectCount > 3) {
+                    this.closeConnect();
+                    this.mListener.onDisConnected();
+                    return;
+                }
+                this.reConnect();
                 // if (!this.mTimeout) {
                 //     if (this.mReConnectCount < 10)
                 //         this.mReConnectCount++;
@@ -174,6 +183,12 @@ export default class Connection implements ConnectionService {
                 this.endHeartBeat();
                 break;
             case "reConnect":
+                if (this.mReConnectCount > 3) {
+                    this.closeConnect();
+                    this.mListener.onDisConnected();
+                    return;
+                }
+                this.mReConnectCount++;
                 this.reConnect();
                 break;
             // case "onData":
@@ -227,7 +242,7 @@ export default class Connection implements ConnectionService {
     }
 
     private reConnect() {
-        this.mMainWorker.postMessage({ method: "endHeartBeat" });
+        Logger.getInstance().log("reConnect");
         const world: any = this.mPacketHandlers[0];
         world.reconnect();
     }
