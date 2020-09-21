@@ -1,4 +1,4 @@
-import { RPCPeer, RPCExecutor, RPCFunction, webworker_rpc } from "webworker-rpc";
+import { RPCPeer, RPCExecutor, Export, webworker_rpc } from "webworker-rpc";
 
 class HeartBeatPeer extends RPCPeer {
     public inited: boolean = false;
@@ -15,7 +15,7 @@ class HeartBeatPeer extends RPCPeer {
         this.remote[MAIN_WORKER].Connection.on("xx", new RPCExecutor("HeartBeatPeer", "startBeat"));
     }
 
-    @RPCFunction()
+    @Export()
     public startBeat() {
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
@@ -29,7 +29,7 @@ class HeartBeatPeer extends RPCPeer {
         }, this.delayTime);
     }
 
-    @RPCFunction()
+    @Export()
     public endBeat() {
         this.reConnectCount = 0;
         if (this.startDelay) {
@@ -39,14 +39,14 @@ class HeartBeatPeer extends RPCPeer {
         this.mainPeer.endHeartBeat(null);
     }
 
-    @RPCFunction()
+    @Export()
     public clearBeat() {
         this.reConnectCount = 0;
         // Logger.getInstance().log("heartBeatWorker clearBeat");
         this.mainPeer.clearBeat(null);
     }
 
-    @RPCFunction([webworker_rpc.ParamType.str])
+    @Export([webworker_rpc.ParamType.str])
     public loadRes(url: string) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);

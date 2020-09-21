@@ -1,6 +1,6 @@
-import { RPCPeer, RPCFunction, webworker_rpc } from "webworker-rpc";
-import { op_gateway, op_virtual_world, op_editor, op_client, op_def } from "pixelpai_proto";
-import { PBpacket, Buffer, PacketHandler } from "net-socket-packet";
+import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
+import { op_gateway } from "pixelpai_proto";
+import { PBpacket, Buffer } from "net-socket-packet";
 import { ServerAddress } from "../../lib/net/address";
 import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/heartBeat.worker";
 import * as protos from "pixelpai_proto";
@@ -102,85 +102,85 @@ export class MainPeer extends RPCPeer {
     }
 
     // ============== render调用主进程
-    @RPCFunction([webworker_rpc.ParamType.str])
+    @Export([webworker_rpc.ParamType.str])
     public initGameConfig(str: string) {
         const config = JSON.parse(str);
         this.world.initGameConfig(config);
     }
-    @RPCFunction()
+    @Export()
     public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
         this.world.createAccount(gameID, worldID, sceneID, loc);
     }
-    @RPCFunction([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
         this.connect.startConnect(addr);
     }
 
-    @RPCFunction()
+    @Export()
     public closeConnect() {
         mainPeer.terminate();
         this.connect.closeConnect();
     }
-    @RPCFunction()
+    @Export()
     public focus() {
         this.socket.pause = false;
     }
-    @RPCFunction()
+    @Export()
     public blur() {
         this.socket.pause = true;
     }
     /**
      * 初始化world中的各个管理器,并添加socket事件监听
      */
-    @RPCFunction()
+    @Export()
     public initWorld() {
         this.world.initWorld();
     }
     /**
      * 添加world中的socket消息监听
      */
-    @RPCFunction()
+    @Export()
     public initGame() {
         this.world.initGame();
     }
-    @RPCFunction([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setSize(width, height) {
         this.world.setSize(width, height);
     }
-    @RPCFunction([webworker_rpc.ParamType.str])
+    @Export([webworker_rpc.ParamType.str])
     public setGameConfig(configStr: string) {
         this.world.setGameConfig(configStr);
     }
-    @RPCFunction([webworker_rpc.ParamType.unit8array])
+    @Export([webworker_rpc.ParamType.unit8array])
     public send(buffer: Buffer) {
         this.socket.send(buffer);
     }
-    @RPCFunction()
+    @Export()
     public destroyClock() {
         this.world.destroyClock();
     }
-    @RPCFunction()
+    @Export()
     public clearGameComplete() {
         this.world.clearGameComplete();
     }
     // ============= 心跳调用主进程
-    @RPCFunction()
+    @Export()
     public heartBeat() {
         // ==========同步心跳
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
         this.socket.send(pkt.Serialization());
     }
-    @RPCFunction()
+    @Export()
     public reconnect() {
         // 告诉主进程重新连接
         this.render.reconnect();
     }
-    @RPCFunction([webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.num])
     public syncClock(times: number) {
         this.world.syncClock(times);
     }
-    @RPCFunction()
+    @Export()
     public clearClock() {
         this.world.clearClock();
     }
