@@ -430,10 +430,10 @@ anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apowophaserui@^0.4.0:
-  version "0.4.8"
-  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.4.8.tgz#388f481fd5f335f8cef456a929f03ddc2c0584d5"
-  integrity sha512-3ZvI+Q3W3HtF2dY5vZ2MGCezSF2QQDmhojbl9aNN97AmfMyjMUlbltUvnXzd9+f54WN8WNep90RHP83Lym4BUQ==
+apowophaserui@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.5.4.tgz#372647ee3fcc191de61276a30488fdfb2b3ea612"
+  integrity sha512-oQcBft6DcSjpI2Vl50gRDZTq5V9w4sDIf6ZQU+08pfWq8bWLxfGZIoG/CtRYDODnjTm3mlfOubQ5NctoNdCAxA==
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"

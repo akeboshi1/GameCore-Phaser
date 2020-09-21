@@ -302,7 +302,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             const scenes = this.mGame.scene.scenes;
             for (const scene of scenes) {
                 const camera = scene.cameras.main;
-                if (camera.setPixelRatio) camera.setPixelRatio(this.mScaleRatio);
+                if (camera && camera.setPixelRatio) camera.setPixelRatio(this.mScaleRatio);
                 // scene.setViewPort(camera.x, camera.y, w, h);
                 // scene.cameras.main.setViewport(0, 0, w, h);
             }
