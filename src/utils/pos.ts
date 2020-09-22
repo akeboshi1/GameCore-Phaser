@@ -29,7 +29,7 @@ export class Pos {
     }
 
     public toPoint(): Phaser.Geom.Point {
-        return new Phaser.Geom.Point(this.x, this.y);
+        // return new Phaser.Geom.Point(this.x, this.y);
     }
 
 }

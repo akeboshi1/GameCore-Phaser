@@ -3,6 +3,8 @@ import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { LogicWorld } from "../world";
 import { ConnectionService } from "../../../lib/net/connection.service";
+import { DecorateRoom } from "./decorate.room";
+import { EditorRoom } from "./editor.room";
 export interface IRoomManager {
     readonly world: LogicWorld | undefined;
 
@@ -73,6 +75,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         if (idx >= 0) {
             const room: IRoomService = this.mRooms[idx];
+            if(room)
             if (room && room.scene) room.resume(room.scene.scene.key);
         }
     }
@@ -120,8 +123,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         const room = new Room(this);
         this.mRooms.push(room);
-        this.mWorld.addActor(scene.actor);
-        this.mWorld.enterScene(scene.scene);
         room.addActor(scene.actor);
         room.enter(scene.scene);
         this.mCurRoom = room;
@@ -147,10 +148,11 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.push(room);
     }
 
-    private async leaveScene(room: IRoomService) {
+    private leaveScene(room: IRoomService) {
         if (!room) return;
+        this.mWorld.leaveScene(room);
         return new Promise((resolve, reject) => {
-            const loading: LoadingScene = <LoadingScene> this.mWorld.game.scene.getScene(LoadingScene.name);
+            const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
             if (loading) {
                 loading.show().then(() => {
                     this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);

@@ -1,38 +1,10 @@
-import { IRoomManager } from "./room.manager";
-import { ElementManager } from "./element/element.manager";
-import { PlayerManager } from "./player/player.manager";
-import { LayerManager } from "./layer/layer.manager";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../../lib/net/connection.service";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { ICameraService, CamerasManager } from "./cameras/cameras.manager";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
-import { PlayScene } from "../scenes/play";
-import { ElementDisplay } from "./display/element.display";
-import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
-import { Pos } from "../utils/pos";
-import { LoadingScene } from "../scenes/loading";
-import { ClockReadyListener } from "./clock";
+import { op_client,op_def } from "pixelpai_proto";
 import IActor = op_client.IActor;
-import { Element, IElement } from "./element/element";
-import { IBlockObject } from "./cameras/block.object";
-import { Size } from "../utils/size";
-import { MessageType } from "../const/MessageType";
-import { DisplayObject } from "./display/display.object";
-import { ReferenceArea } from "./editor/reference.area";
-import { FallEffectContainer } from "./fall.effect/fall.effect.container";
-import { FallEffect } from "./fall.effect/fall.effect";
-import { IPoint } from "game-capsule";
-import { Logger } from "../utils/log";
-import { WallManager } from "./wall/wall.manager";
-import { SkyBoxManager } from "./sky.box/sky.box.manager";
-import { GroupManager } from "./group/GroupManager";
-import { FrameManager } from "./element/frame.manager";
-import { IScenery } from "./sky.box/scenery";
-import { State } from "./state/state.group";
-import { EffectManager } from "./effect/effect.manager";
+import { LogicWorld } from "../world";
+import { PacketHandler } from "net-socket-packet";
+import { IPosition45Obj } from "../../utils/position45";
+import { Pos } from "../../utils/pos";
+import { IRoomManager } from "./room.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -48,13 +20,10 @@ export interface IRoomService {
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly blocks: ViewblockService;
-    readonly world: WorldService;
+    readonly world: LogicWorld;
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
 
-    readonly scene: Phaser.Scene | undefined;
-
-    readonly connection: ConnectionService | undefined;
     now(): number;
 
     startLoad();
@@ -101,7 +70,7 @@ export interface IRoomService {
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
-    protected mWorld: WorldService;
+    protected mWorld: LogicWorld;
     // protected mMap: Map;
     protected mID: number;
     protected mTerrainManager: TerrainManager;
@@ -128,7 +97,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         super();
         this.mWorld = this.manager.world;
         this.moveStyle = this.mWorld.moveStyle;
-        this.mScaleRatio = this.mWorld.scaleRatio;
+        this.mScaleRatio = this.mWorld.;
         if (this.mWorld) {
             if (this.connection) {
                 this.connection.addPacketListener(this);
