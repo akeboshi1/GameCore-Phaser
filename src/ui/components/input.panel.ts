@@ -1,6 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { InputText } from "apowophaserui";
+import { Logger } from "../../utils/log";
 
 export class InputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -39,7 +40,12 @@ export class InputPanel extends Phaser.Events.EventEmitter {
                 this.onCloseHandler();
             }
         });
-        this.mInput.on("focus", this.onFoucesHandler, this);
+        this.scene.input.on("pointerdown", this.onFoucesHandler, this);
+        // if (this.world.game.device.os.iOS) {
+        //     this.mInput.on("click", this.onFoucesHandler, this);
+        // } else {
+        //     this.mInput.on("focus", this.onFoucesHandler, this);
+        // }
         this.mInput.setFocus();
     }
 
@@ -48,10 +54,12 @@ export class InputPanel extends Phaser.Events.EventEmitter {
         this.mBackground.destroy();
         this.mInput.destroy();
         this.destroy();
+        this.scene.input.off("pointerdown", this.onFoucesHandler, this);
         this.scene = undefined;
     }
     private onFoucesHandler() {
-
+        Logger.getInstance().log("fouces----log");
+        this.mInput.node.focus();
         // setTimeout(() => {
         //     const node = <HTMLInputElement>this.mInput.node;
         //     //  node.scrollIntoView();
@@ -65,6 +73,5 @@ export class InputPanel extends Phaser.Events.EventEmitter {
         //         this.mTextArea.y = pHeight - (scrollHieght) * this.world.uiRatio * this.world.uiScale;
         //     }, 600);
         // }, 600);
-
     }
 }
