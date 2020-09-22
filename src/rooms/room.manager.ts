@@ -6,11 +6,11 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Logger } from "../utils/log";
 import { EditorRoom } from "./editor.room";
 import { DecorateRoom } from "./decorate.room";
-import { Tool } from "../utils/tool";
 import { Lite } from "game-capsule";
 import { LoadingScene } from "../scenes/loading";
+import { LogicWorld } from "../logic/world";
 export interface IRoomManager {
-    readonly world: WorldService | undefined;
+    readonly world: LogicWorld | undefined;
 
     readonly currentRoom: IRoomService | undefined;
 
@@ -21,11 +21,11 @@ export interface IRoomManager {
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {
-    protected mWorld: WorldService;
+    protected mWorld: LogicWorld;
     private mRooms: IRoomService[] = [];
     private mCurRoom: IRoomService;
 
-    constructor(world: WorldService) {
+    constructor(world: LogicWorld) {
         super();
         this.mWorld = world;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
@@ -110,17 +110,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return idx >= 0;
     }
 
-    private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+    private onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
         const vw = scene;
         if (this.hasRoom(vw.scene.id)) {
             this.onEnterRoom(scene);
         } else {
-            // load this scene config in gameConfig
-            this.world.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
-                this.world.elementStorage.setSceneConfig(config);
-                this.onEnterRoom(scene);
-            });
+            this.mWorld.loadSceneConfig(vw.scene.id);
         }
     }
 
@@ -130,6 +126,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         const room = new Room(this);
         this.mRooms.push(room);
+        this.mWorld.addActor(scene.actor);
+        this.mWorld.enterScene(scene.scene);
         room.addActor(scene.actor);
         room.enter(scene.scene);
         this.mCurRoom = room;
@@ -182,7 +180,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    get world(): WorldService {
+    get world(): LogicWorld {
         return this.mWorld;
     }
 
@@ -194,6 +192,5 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (this.mWorld) {
             return this.mWorld.connection;
         }
-        Logger.getInstance().error("world manager is undefined");
     }
 }

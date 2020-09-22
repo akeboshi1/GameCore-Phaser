@@ -4,14 +4,14 @@ import { Algorithm } from "../utils/algorithm";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
 import { MainPeer } from "./main.worker";
-import Connection from "./connection";
+import { ConnectionService } from "../../lib/net/connection.service";
 
 const LATENCY_SAMPLES = 7; // Latency Array length
 const MIN_READY_SAMPLES = 2;
 const CHECK_INTERVAL = 8000; // (ms)
 const MAX_DELAY = 500; // (ms)
 
-interface ClockReadyListener {
+export interface ClockReadyListener {
     onClockReady(): void;
 }
 
@@ -32,12 +32,12 @@ export class Clock extends PacketHandler {
     }
 
     private mTimestamp: number = 0; // The timestamp in JavaScript is expressed in milliseconds.
-    private mConn: Connection;
+    private mConn: ConnectionService;
     private mLatency: number[] = [];
     private mIntervalId: any;
     private mListener: ClockReadyListener;
     private mainPeer: MainPeer;
-    constructor(con: Connection, mainPeer: MainPeer, listener?: ClockReadyListener) {
+    constructor(con: ConnectionService, mainPeer: MainPeer, listener?: ClockReadyListener) {
         super();
         this.mConn = con;
         this.mConn.addPacketListener(this);

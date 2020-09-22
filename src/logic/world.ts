@@ -1,5 +1,4 @@
-import { Clock } from "./clock";
-import { Connection } from "./connection";
+import { Clock, ClockReadyListener } from "./clock";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.worker";
 import { IConnectListener } from "../../lib/net/socket";
@@ -8,6 +7,9 @@ import { HttpService } from "./http.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { HttpClock } from "./http.clock";
 import { i18n } from "../i18n";
+import Connection from "./connection";
+import { ConnectionService } from "../../lib/net/connection.service";
+import { RoomManager } from "./rooms/room.manager";
 interface ISize {
     width: number;
     height: number;
@@ -39,7 +41,7 @@ export interface ILogiclauncherConfig {
     readonly parent?: string;
 }
 export class LogicWorld extends PacketHandler implements IConnectListener, ClockReadyListener {
-    public connect: Connection;
+    private connect: ConnectionService;
     private mMoveStyle: number = -1;
     private mSize: ISize;
     private mClock: Clock;
@@ -47,6 +49,7 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
     private mHttpService: HttpService;
     private mConfig: ILogiclauncherConfig;
     private mAccount: Account;
+    private mRoomManager: RoomManager;
     constructor(private mainPeer: MainPeer) {
         super();
     }
@@ -57,15 +60,17 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
     public initGameConfig(config: any) {
         this.mConfig = config;
     }
-    public initWorld() {
-        this.connect = new Connection();
+    public setConnect(connect: ConnectionService) {
+        this.connect = connect;
         this.connect.addPacketListener(this);
+    }
+    public initWorld() {
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
-        this.mRoomMamager = new RoomManager(this);
+        this.mRoomManager = new RoomManager(this);
         this.mUiManager = new UiManager(this);
         this.mMouseManager = new MouseManager(this);
         this.mElementStorage = new ElementStorage();
@@ -76,7 +81,7 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mRoleManager.register();
-        this.mRoomMamager.addPackListener();
+        this.mRoomManager.addPackListener();
         this.mUiManager.addPackListener();
         this.mSoundManager.addPackListener();
         this.mPlayerDataManager.addPackListener();
@@ -84,7 +89,7 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         this.mAccount.enterGame(this.mConfig.game_id, this.mConfig.virtual_world_id, null, null);
     }
     public initGame() {
-        if (this.mRoomMamager) this.mRoomMamager.addPackListener();
+        if (this.mRoomManager) this.mRoomManager.addPackListener();
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
         if (this.mSoundManager) this.mSoundManager.addPackListener();
@@ -112,16 +117,15 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
     public onError() {
         this.gameState = GameState.SOCKET_ERROR;
         Logger.getInstance().log("socket error");
-        if (!this.connect.isConnect) {
+        if (!this.connect.connect) {
             if (this.mConfig.connectFail) {
                 Logger.getInstance().log("app connectFail");
-                if(this.mConfig.connectFail)return this.mConfig.connectFail();
+                if (this.mConfig.connectFail) return this.mainPeer.connectFail();
             } else {
                 this.mainPeer.reconnect();
             }
         }
     }
-
     public onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
@@ -131,6 +135,9 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
             this.mClock.destroy();
             this.mClock = null;
         }
+    }
+    public loadSceneConfig(sceneID: number) {
+        this.mainPeer.loadSceneConfig(sceneID);
     }
     public clearGameComplete() {
         this.initWorld();
@@ -182,6 +189,10 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
 
     get peer(): MainPeer {
         return this.mainPeer;
+    }
+
+    get connection(): ConnectionService {
+        return this.connect;
     }
 
     private onGotoAnotherGame(packet: PBpacket) {

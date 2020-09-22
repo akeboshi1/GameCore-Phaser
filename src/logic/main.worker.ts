@@ -7,6 +7,7 @@ import * as protos from "pixelpai_proto";
 import { LogicWorld } from "./world";
 import { WorkerClient, ConnListener } from "./worker.client";
 import Connection from "./connection";
+import { RoomManager } from "../rooms/room.manager";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -25,6 +26,7 @@ export class MainPeer extends RPCPeer {
         this.world = new LogicWorld(this);
         this.socket = new WorkerClient(this, new ConnListener(this));
         this.connect = new Connection(this.socket);
+        this.world.setConnect(this.connect);
         this.linkTo(RENDER_PEER, "").onReady(() => {
             this.render = this.remote[RENDER_PEER].Rener;
         });
@@ -56,6 +58,18 @@ export class MainPeer extends RPCPeer {
         // 停止心跳
         this.endBeat();
         this.world.onError();
+    }
+
+    /**
+     * 告诉主进程加载场景pi
+     * @param sceneID
+     */
+    public loadSceneConfig(sceneID: number) {
+        this.render.loadSceneConfig(sceneID);
+    }
+
+    public connectFail() {
+        this.render.connectFail();
     }
 
     public setMoveStyle(moveStyle: number) {

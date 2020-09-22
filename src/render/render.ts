@@ -1,4 +1,4 @@
-import { RPCPeer, RPCFunction, webworker_rpc } from "webworker-rpc";
+import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import MainWorker from "worker-loader?filename=[hash][name].js!../game/main.worker";
 import { ServerAddress } from "../../lib/net/address";
 import { World } from "../game/world";
@@ -64,44 +64,54 @@ export class Render extends RPCPeer {
         this.remote[MAIN_WORKER].MainPeer.clearGameComplete();
     }
 
-    @RPCFunction()
+    @Export()
     public onConnected() {
         this.isConnect = true;
     }
 
-    @RPCFunction()
+    @Export()
     public onDisConnected() {
         this.isConnect = false;
     }
 
-    @RPCFunction([webworker_rpc.ParamType.str])
+    @Export([webworker_rpc.ParamType.str])
     public onConnectError(error: string) {
         this.isConnect = false;
     }
 
-    @RPCFunction()
+    @Export([webworker_rpc.ParamType.num])
+    public loadSceneConfig(sceneID: number) {
+        // todo world loadSceneConfig
+    }
+
+    @Export()
+    public connectFail() {
+        this.mWorld.connectFail();
+    }
+
+    @Export()
     public reconnect() {
         this.mWorld.reconnect();
     }
 
-    @RPCFunction([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public onGotoAnotherGame(gameId: string, worldId: string, sceneId?: number, x?: number, y?: number, z?: number) {
         this.mWorld.onGotoAnotherGame(gameId, worldId, sceneId, { x, y, z });
     }
 
-    @RPCFunction([webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.num])
     public setMoveStyle(moveStyle: number) {
         this.moveStyle = moveStyle;
     }
-    @RPCFunction()
+    @Export()
     public enterVirtualWorld() {
         this.mWorld.enterVirtualWorld();
     }
-    @RPCFunction()
+    @Export()
     public onClockReady() {
         this.mWorld.onClockReady();
     }
-    @RPCFunction()
+    @Export()
     public clearGame() {
         this.mWorld.clearGame();
     }

@@ -5,7 +5,6 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "tooqinggamephaser";
 import { op_def, op_gateway, op_virtual_world } from "pixelpai_proto";
 import { Logger } from "../utils/log";
-import { RoomManager } from "../rooms/room.manager";
 import { ServerAddress } from "../../lib/net/address";
 import { KeyBoardManager } from "./keyboard.manager";
 import { MouseManager } from "./mouse.manager";
@@ -546,6 +545,10 @@ export class World extends PacketHandler implements WorldService, GameMain {
                 this.loginEnterWorld();
             }
         }
+    }
+
+    public connectFail() {
+        if (this.mConfig && this.mConfig.connectFail) this.mConfig.connectFail();
     }
 
     public clearGame() {
