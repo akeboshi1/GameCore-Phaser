@@ -340,6 +340,26 @@
 				"h": 62
 			}
 		},
+		"time": {
+			"frame": {
+				"x": 1621,
+				"y": 1,
+				"w": 19,
+				"h": 22
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 19,
+				"h": 22
+			},
+			"sourceSize": {
+				"w": 19,
+				"h": 22
+			}
+		},
 		"title": {
 			"frame": {
 				"x": 687,
@@ -427,7 +447,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1632,
+			"w": 1641,
 			"h": 710
 		},
 		"scale": "1"

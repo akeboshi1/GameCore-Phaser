@@ -63,7 +63,7 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    public play(animation: AnimationData, field?: DisplayField) {
+    public play(animation: AnimationData, field?: DisplayField, times?: number) {
         if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
@@ -87,7 +87,10 @@ export class FramesDisplay extends DisplayObject {
             if (frameName.length > 1) {
                 const key = `${data.gene}_${animation.name}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
-                display = this.scene.make.sprite(undefined, false).play(key);
+                display = this.scene.make.sprite(undefined, false);
+                const anis = (<Phaser.GameObjects.Sprite> display).anims;
+                anis.play(key);
+                if (typeof times === "number") anis.setRepeat(times);
                 if (!this.mMainSprite) {
                     this.mMainSprite = <Phaser.GameObjects.Sprite>display;
                 }

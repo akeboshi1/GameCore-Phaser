@@ -340,6 +340,26 @@
 				"h": 125
 			}
 		},
+		"time": {
+			"frame": {
+				"x": 3214,
+				"y": 200,
+				"w": 37,
+				"h": 44
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 37,
+				"h": 44
+			},
+			"sourceSize": {
+				"w": 37,
+				"h": 44
+			}
+		},
 		"title": {
 			"frame": {
 				"x": 1370,

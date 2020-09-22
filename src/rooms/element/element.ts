@@ -269,19 +269,23 @@ export class Element extends BlockObject implements IElement {
         this.mDisplay.scaleTween();
     }
 
-    public play(animationName: string): void {
+    public play(animationName: string, times?: number): void {
         if (!this.mModel) {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
         if (this.mModel.currentAnimationName !== animationName) {
-            // this.mAnimationName = animationName;
             this.mModel.currentAnimationName = animationName;
-
-            if (this.mDisplay) {
-                this.mDisplay.play(this.model.currentAnimation);
-            }
         }
+        // 部分动画可能会重新播放
+        if (!this.mDisplay) {
+            return Logger.getInstance().warn("display can't initlized");
+        }
+
+        if (times !== undefined) {
+            times = times > 0 ? times - 1 : -1;
+        }
+        this.mDisplay.play(this.model.currentAnimation, undefined, times);
     }
 
     public setQueue(animations: op_client.IChangeAnimation[]) {
@@ -298,15 +302,21 @@ export class Element extends BlockObject implements IElement {
                 aq.complete = () => {
                     const anis = this.model.animationQueue;
                     anis.shift();
-                    const aniName = anis.length > 0 ? anis[0].name : PlayerState.IDLE;
-                    this.play(aniName);
+                    let aniName: string = PlayerState.IDLE;
+                    let playTiems;
+                    if (anis.length > 0) {
+                        aniName = anis[0].name;
+                        playTiems = anis[0].playTimes;
+                    }
+                    this.play(aniName, playTiems);
+                    // const aniName = anis.length > 0 ? anis[0].name : PlayerState.IDLE;
                 };
             }
             queue.push(aq);
         }
         this.mModel.setAnimationQueue(queue);
         if (queue.length > 0) {
-            this.play(animations[0].animationName);
+            this.play(animations[0].animationName, animations[0].times);
         }
     }
 
@@ -355,7 +365,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mDirty === false) {
             return;
         }
-        this.mDirty = true;
+        this.mDirty = false;
         if (this.mBubble) {
             this.mBubble.follow(this);
         }
@@ -583,25 +593,25 @@ export class Element extends BlockObject implements IElement {
 
     public mount(root: IElement) {
         this.mRootMount = root;
-        this.removeFromBlock(true);
-        this.mBlockable = false;
         if (this.mMoving) {
             this.stopMove();
         }
+        this.disableBlock();
+        this.mDirty = true;
         return this;
     }
 
     public unmount() {
         if (this.mRootMount && this.mDisplay) {
             // 先移除避免人物瞬移
-            this.removeDisplay();
+            // this.removeDisplay();
             const pos = this.mRootMount.getPosition();
             pos.x += this.mDisplay.x;
             pos.y += this.mDisplay.y;
             this.mRootMount = null;
             this.setPosition(pos);
-            this.mBlockable = true;
-            this.addToBlock();
+            this.enableBlock();
+            this.mDirty = true;
         }
         return this;
     }
