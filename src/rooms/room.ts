@@ -227,7 +227,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
         }
         // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
-        this.mPlayerManager.createActor(this.mActorData);
+        // this.mPlayerManager.createActor(this.mActorData);
+        this.mWorld.user.enterScene(this, this.mActorData);
         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         if (loadingScene) loadingScene.sleep();

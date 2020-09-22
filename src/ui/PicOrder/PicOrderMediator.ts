@@ -54,11 +54,13 @@ export class PicOrderMediator extends BaseMediator {
         }
     }
     get playerData() {
-        if (this.world.playerDataManager) {
-            return this.world.playerDataManager.playerData;
+        const user = this.world.user;
+        if (!user || !user.bag) {
+            return;
         }
-        return null;
+        return user.bag.playerData;
     }
+
     private query_ORDER_LIST() {
         this.picOrder.query_ORDER_LIST();
     }

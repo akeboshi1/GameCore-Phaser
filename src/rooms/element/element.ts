@@ -187,10 +187,13 @@ export class Element extends BlockObject implements IElement {
     protected mMounts: IElement[];
     protected mDirty: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(mElementManager.roomService);
+        super(mElementManager ? mElementManager.roomService : undefined);
+        this.mAi = new AI(this);
+        if (!sprite) {
+            return;
+        }
         this.mId = sprite.id;
         this.model = sprite;
-        this.mAi = new AI(this);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {

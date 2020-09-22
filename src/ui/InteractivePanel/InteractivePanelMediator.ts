@@ -3,6 +3,8 @@ import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { InteractivePanel } from "./InteractivePanel";
 import { BaseMediator, UIType, Panel } from "apowophaserui";
+import { op_virtual_world } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
 
 export class InteractivePanelMediator extends BaseMediator {
     public static NAME: string = "InteractivePanelMediator";
@@ -64,8 +66,13 @@ export class InteractivePanelMediator extends BaseMediator {
     }
 
     public componentClick(componentID: number) {
-        if (this.mParam) {
-            this.world.roomManager.currentRoom.playerManager.actor.getInteractive().requestTargetUI(this.mParam[0].id, componentID);
+        if (this.mParam && this.mParam.length > 0) {
+            // this.world.roomManager.currentRoom.playerManager.actor.getInteractive().requestTargetUI(this.mParam[0].id, componentID);
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
+            content.uiId = this.mParam[0].id;
+            content.componentId = componentID;
+            this.world.connection.send(pkt);
         }
     }
 }
