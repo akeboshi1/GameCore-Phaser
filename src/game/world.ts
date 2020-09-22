@@ -37,7 +37,6 @@ import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { LoadingTips } from "../loading/loading.tips";
-import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 import { User } from "./user";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {

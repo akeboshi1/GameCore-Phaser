@@ -6,8 +6,8 @@
     "port": 11100,
     "secure": true
   },
-  "game_id": "5f4471eebc09541a74d9a0dc",
+  "game_id": "5e719a0a68196e416ecf7aad",
   "user_id": "5cd8cf04cbcbf91a0afc3f96",
   "virtual_world_id": "0",
-  "verified_enable": true
+  "verified_enable": false
 }

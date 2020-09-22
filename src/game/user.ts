@@ -13,6 +13,7 @@ import { WorldService } from "./world.service";
 
 export class User extends Player implements InputListener {
     private mBag: PlayerDataManager;
+    private mMoveStyle: number;
     constructor(world: WorldService) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -21,6 +22,10 @@ export class User extends Player implements InputListener {
 
     addPackListener() {
         this.mBag.addPackListener();
+    }
+
+    removePackListener() {
+        this.mBag.removePackListener();
     }
 
     enterScene(room: IRoomService, actor: op_client.IActor) {
@@ -138,6 +143,13 @@ export class User extends Player implements InputListener {
         return undefined;
     }
 
+    public clear() {
+        this.removePackListener();
+        super.clear();
+        if (this.mBag) this.bag.destroy();
+        this.destroy();
+    }
+
     protected onMoveComplete() {
         this.preMoveComplete();
         if (this.mCurState !== PlayerState.WALK) {
@@ -225,5 +237,13 @@ export class User extends Player implements InputListener {
 
     get bag() {
         return this.mBag;
+    }
+
+    set moveStyle(val: number) {
+        this.mMoveStyle = val;
+    }
+
+    get moveStyle() {
+        return this.mMoveStyle;
     }
 }
