@@ -38,6 +38,7 @@ import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { LoadingTips } from "../loading/loading.tips";
 import { User } from "./user";
+import { LoginAccountScene } from "../scenes/login.account";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -225,6 +226,17 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.onError();
         } else {
             if (this.mReconnect > 2) {
+                const loginAccountScene: Phaser.Scene = this.mGame.scene.getScene(LoginAccountScene.name);
+                if (!loginAccountScene) {
+                    this.mGame.scene.add(LoginAccountScene.name, LoginAccountScene, false, {
+                        world: this, callBack: () => {
+                            this.clearGame().then(() => {
+                                this.initWorld(this.mConfig, this.mCallBack);
+                            });
+                        }
+                    });
+                }
+                this.mGame.scene.start(LoginAccountScene.name);
                 // todo reconnect Scene
             } else {
                 this.mReconnect++;
