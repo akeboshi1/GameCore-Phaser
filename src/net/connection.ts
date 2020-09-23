@@ -27,7 +27,7 @@ export default class Connection implements ConnectionService {
     private mMainWorker: MainWorker;
     // private mWorker: NetWorker;
     // private mHeartBeatWorker: HeartBeatWorker;
-    private mReConnectCount: number = 0;
+    // private mReConnectCount: number = 0;
     private mCachedServerAddress: ServerAddress | undefined;
     private mTimeout: any;
     private _isConnect: boolean = false;
@@ -59,7 +59,7 @@ export default class Connection implements ConnectionService {
         // this.mWorker.terminate();
         // this.mHeartBeatWorker.terminate();
         this.mCachedServerAddress = undefined;
-        this.mReConnectCount = 0;
+        // this.mReConnectCount = 0;
         this.mTimeout = null;
         this.clearPacketListeners();
     }
@@ -148,18 +148,19 @@ export default class Connection implements ConnectionService {
                 }
                 break;
             case "onConnected":
-                this.mReConnectCount = 0;
+                // this.mReConnectCount = 0;
                 this.mListener.onConnected();
                 this._isConnect = true;
                 break;
+            case "onReconnect":
+                this._isConnect = false;
+                this.closeConnect();
+                this.mListener.onReconnect();
+                break;
             case "onDisConnected":
                 this._isConnect = false;
-                if (this.mReConnectCount > 3) {
-                    this.closeConnect();
-                    this.mListener.onDisConnected();
-                    return;
-                }
-                this.reConnect();
+                this.closeConnect();
+                this.mListener.onDisConnected();
                 // if (!this.mTimeout) {
                 //     if (this.mReConnectCount < 10)
                 //         this.mReConnectCount++;
@@ -183,12 +184,7 @@ export default class Connection implements ConnectionService {
                 this.endHeartBeat();
                 break;
             case "reConnect":
-                if (this.mReConnectCount > 3) {
-                    this.closeConnect();
-                    this.mListener.onDisConnected();
-                    return;
-                }
-                this.mReConnectCount++;
+                this.closeConnect();
                 this.reConnect();
                 break;
             // case "onData":
@@ -242,7 +238,6 @@ export default class Connection implements ConnectionService {
     }
 
     private reConnect() {
-        Logger.getInstance().log("reConnect");
         const world: any = this.mPacketHandlers[0];
         world.reconnect();
     }
