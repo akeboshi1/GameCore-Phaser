@@ -37,7 +37,7 @@ import { SoundManager, ISoundConfig } from "./sound.manager";
 import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { LoadingTips } from "../loading/loading.tips";
-import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
+import { User } from "./user";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -68,7 +68,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private gameConfigUrls: Map<string, string> = new Map();
     private gameConfigUrl: string = "";
     private mLoadingManager: ILoadingManager;
-    private mPlayerDataManager: PlayerDataManager;
     private reconnectIng: boolean = false;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
@@ -82,6 +81,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      * 面板缩放系数
      */
     private mUIScale: number;
+    private mUser: User;
     private _isIOS = -1;
     private mReconnect: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
@@ -118,6 +118,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
+        this.mUser = new User(this);
 
         this._newGame();
         this.mConnection = config.connection || new Connection(this);
@@ -141,7 +142,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoleManager = new RoleManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
-        this.mPlayerDataManager = new PlayerDataManager(this);
         this.mAccount = new Account();
         this.mAccount.enterGame(this.mConfig.game_id, this.mConfig.virtual_world_id, null, null);
 
@@ -154,7 +154,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mRoomMamager.addPackListener();
         this.mUiManager.addPackListener();
         this.mSoundManager.addPackListener();
-        this.mPlayerDataManager.addPackListener();
+        this.user.addPackListener();
         this.gameState = GameState.GAME_INIT;
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
         if (gateway) {
@@ -433,9 +433,6 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     get roomManager(): RoomManager | undefined {
         return this.mRoomMamager;
     }
-    get playerDataManager(): PlayerDataManager {
-        return this.mPlayerDataManager;
-    }
 
     get orientation(): number {
         return this.mOrientation;
@@ -479,6 +476,10 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     get account(): Account {
         return this.mAccount;
+    }
+
+    get user() {
+        return this.mUser;
     }
 
     public enableClick() {
@@ -677,7 +678,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
         content.localeCode = i18n.language;
         this.connection.send(i18Packet);
-        this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
+        this.user.bag.querySYNC_ALL_PACKAGE();
     }
 
     private clearGame(callBack?: Function): Promise<void> {
@@ -703,7 +704,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
                 this.mElementStorage.destroy();
                 this.mLoadingManager.destroy();
                 this.game.scene.destroy();
-                this.mPlayerDataManager.clear();
+                this.user.clear();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
                     if (callBack) callBack();
@@ -950,7 +951,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         if (this.mUiManager) this.mUiManager.addPackListener();
         if (this.mRoleManager) this.mRoleManager.register();
         if (this.mSoundManager) this.mSoundManager.addPackListener();
-        if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
+        if (this.user) this.user.addPackListener();
         if (this.mElementStorage) {
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }

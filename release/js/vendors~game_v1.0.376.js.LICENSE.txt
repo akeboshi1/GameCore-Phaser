@@ -270,6 +270,10 @@
 
 /*! ../ui/interface/event/ClickEvent */
 
+/*! ../ui/interface/sound/ISoundConfig */
+
+/*! ../ui/interface/sound/SoundField */
+
 /*! ../ui/slider/GameSlider */
 
 /*! ../ui/textarea/AppendText.js */
@@ -733,6 +737,8 @@
 /*! exports provided: EachVisibleCell, IterateVisibleCell, EachCell, IterateCell */
 
 /*! exports provided: GetDisplayWidth, GetDisplayHeight */
+
+/*! exports provided: ISoundGroup, ISoundConfig */
 
 /*! exports provided: Patches_config, IPatchesConfig */
 
@@ -1341,6 +1347,10 @@
   \**********************************************/
 
 /*!**********************************************!*\
+  !*** ./lib/ui/interface/sound/SoundField.js ***!
+  \**********************************************/
+
+/*!**********************************************!*\
   !*** ./lib/ui/textblock/UpdateTextObject.js ***!
   \**********************************************/
 
@@ -1434,6 +1444,10 @@
 
 /*!************************************************!*\
   !*** ./lib/ui/gridtable/TableOnCellVisible.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./lib/ui/interface/sound/ISoundConfig.js ***!
   \************************************************/
 
 /*!************************************************!*\

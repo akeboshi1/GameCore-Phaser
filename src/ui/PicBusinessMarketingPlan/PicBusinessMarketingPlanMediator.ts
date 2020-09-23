@@ -51,10 +51,18 @@ export class PicBusinessMarketingPlanMediator extends BaseMediator {
         }
     }
     get playerData() {
-        if (this.world.playerDataManager) {
-            return this.world.playerDataManager.playerData;
+        if (this.bag) {
+            return this.bag.playerData;
         }
         return null;
+    }
+
+    get bag() {
+        const user = this.world.user;
+        if (!user || !user.bag) {
+            return;
+        }
+        return user.bag;
     }
 
     private onHidePanel() {

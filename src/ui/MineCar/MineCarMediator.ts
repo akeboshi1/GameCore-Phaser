@@ -2,7 +2,7 @@ import { MineCarPanel } from "./MineCarPanel";
 import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../layer.manager";
 import { MineCar } from "./MineCar";
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
+import { op_pkt_def, op_def } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";
 
 export class MineCarMediator extends BaseMediator {
@@ -50,14 +50,24 @@ export class MineCarMediator extends BaseMediator {
     this.removeLisenter();
   }
   get playerData() {
-    if (this.world.playerDataManager) {
-      return this.world.playerDataManager.playerData;
+    const bag = this.bag;
+    if (bag) {
+      return bag.playerData;
     }
     return null;
   }
+
+  get bag() {
+    const user = this.world.user;
+    if (!user || !user.bag) {
+      return;
+    }
+    return user.bag;
+  }
+
   private addLisenter() {
-    if (!this.world.playerDataManager) return;
-    const mgr = this.world.playerDataManager;
+    if (!this.bag) return;
+    const mgr = this.bag;
     if (mgr) {
       mgr.on("syncfinish", this.onSyncFinishHandler, this);
       mgr.on("update", this.onUpdateHandler, this);
@@ -65,8 +75,8 @@ export class MineCarMediator extends BaseMediator {
   }
 
   private removeLisenter() {
-    if (!this.world.playerDataManager) return;
-    const mgr = this.world.playerDataManager;
+    if (!this.bag) return;
+    const mgr = this.bag;
     if (mgr) {
       mgr.off("syncfinish", this.onSyncFinishHandler, this);
       mgr.off("update", this.onUpdateHandler, this);
