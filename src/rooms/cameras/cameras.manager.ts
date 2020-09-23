@@ -36,6 +36,8 @@ export interface ICameraService {
     syncCamera(): void;
     syncCameraScroll(): void;
 
+    pan(x: number, y: number, duration: number): Promise<any>;
+
     destroy(): void;
 
 }
@@ -86,6 +88,19 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.miniViewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.miniViewPort.height >> 1);
         const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x + (this.miniViewPort.width >> 1), this.miniViewPort.y));
         return new Rectangle45(pos.x, pos.y, this.MINI_VIEW_SIZE, this.MINI_VIEW_SIZE);
+    }
+
+    public pan(x: number, y: number, duration: number): Promise<any> {
+        x *= this.zoom;
+        y *= this.zoom;
+        for (const cam of this.mCameras) {
+            cam.pan(x, y, duration);
+        }
+        return new Promise((resolve, reject) => {
+            this.mMain.once(Phaser.Cameras.Scene2D.Events.PAN_COMPLETE, () => {
+                resolve();
+            });
+        });
     }
 
     public set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined) {

@@ -1034,7 +1034,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         if (key !== this.mDragonbonesName || type !== "image") {
             return;
         }
-        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD, this.onFileLoadHandler, this);
+        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
         this.onLoadCompleteHandler();
     }
 }
