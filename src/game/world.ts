@@ -38,6 +38,7 @@ import { ILoadingManager, LoadingManager } from "../loading/loading.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { LoadingTips } from "../loading/loading.tips";
 import { User } from "./user";
+import { LoginAccountScene } from "../scenes/login.account";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements IConnectListener, WorldService, GameMain, ClockReadyListener {
     public static SCALE_CHANGE: string = "scale_change";
@@ -83,6 +84,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     private mUIScale: number;
     private mUser: User;
     private _isIOS = -1;
+    private mReconnect: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.gameState = GameState.NONE;
@@ -208,6 +210,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onConnected(connection?: SocketConnection): void {
         this.gameState = GameState.SOCKET_CONNECT;
+        this.mReconnect = 0;
         if (!this.mClock) this.mClock = new Clock(this.mConnection, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
@@ -217,7 +220,37 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onDisConnected(connection?: SocketConnection): void {
         this.gameState = GameState.SOCKET_DISCONNECT;
-        Logger.getInstance().log("app connectFail=====");
+        Logger.getInstance().log("app connectFail=====disConnect");
+        if (!this.game || this.isPause) return;
+        if (this.mConfig.connectFail) {
+            this.onError();
+        } else {
+            if (this.mReconnect > 2) {
+                const loginAccountScene: Phaser.Scene = this.mGame.scene.getScene(LoginAccountScene.name);
+                if (!loginAccountScene) {
+                    this.mGame.scene.add(LoginAccountScene.name, LoginAccountScene, false, {
+                        world: this, callBack: () => {
+                            this.clearGame().then(() => {
+                                this.initWorld(this.mConfig, this.mCallBack);
+                            });
+                        }
+                    });
+                }
+                this.mGame.scene.start(LoginAccountScene.name);
+                // todo reconnect Scene
+            } else {
+                this.mReconnect++;
+                this.clearGame().then(() => {
+                    this.initWorld(this.mConfig, this.mCallBack);
+                });
+            }
+
+        }
+    }
+
+    onReconnect(connection?: SocketConnection) {
+        this.gameState = GameState.SOCKET_DISCONNECT;
+        Logger.getInstance().log("app connectFail=====reconnect");
         if (!this.game || this.isPause) return;
         if (this.mConfig.connectFail) {
             this.onError();

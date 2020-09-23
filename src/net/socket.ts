@@ -5,6 +5,8 @@ import { Logger } from "../utils/log";
 export interface IConnectListener {
     onConnected(connection?: SocketConnection): void;
 
+    onReconnect(connection?: SocketConnection): void;
+
     onDisConnected(connection?: SocketConnection): void;
 
     onError(reason?: SocketConnectionError | undefined): void;
@@ -24,11 +26,10 @@ export class SocketConnection {
     protected mTransport: WSWrapper;
     protected mServerAddr: ServerAddress = { host: "localhost", port: 80 };
     protected mConnectListener?: IConnectListener;
-
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
         this.mConnectListener = $listener;
-
+        Logger.getInstance().info(`SocketConnection init.`);
         // add connection event to listener
         if (typeof this.mTransport !== "undefined" && typeof this.mConnectListener !== "undefined") {
             const listener: IConnectListener = this.mConnectListener;
@@ -66,6 +67,7 @@ export class SocketConnection {
 
     // Frees all resources for garbage collection.
     destroy(): void {
+        Logger.getInstance().log("socket close");
         if (this.mTransport) {
             this.mTransport.destroy();
         }

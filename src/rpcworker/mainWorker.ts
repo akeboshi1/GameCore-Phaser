@@ -167,6 +167,12 @@ class MainWorkerContext {
             method: "onDisConnected",
         });
     }
+    public onReconnect() {
+        // 告诉主进程尝试重联
+        worker.postMessage({
+            method: "onReconnect",
+        });
+    }
     public onConnectError(error: string) {
         // 告诉主进程断开链接
         worker.postMessage({
@@ -223,6 +229,11 @@ class ConnListener implements IConnectListener {
         context.onDisConnected();
         // context.peer.execute(MAIN_WORKER, new RPCExecutePacket(NET_WORKER, "onDisConnected", "context"));
         Logger.getInstance().info(`MainWorker[已断开]`);
+    }
+
+    onReconnect() {
+        context.onReconnect();
+        Logger.getInstance().info(`MainWorker[正在重联]`);
     }
 
     // reason: SocketConnectionError | undefined

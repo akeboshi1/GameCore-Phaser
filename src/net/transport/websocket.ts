@@ -64,6 +64,7 @@ export class WSWrapper extends EventEmitter {
 
     // Frees all resources for garbage collection.
     public destroy(): void {
+        this.onClose();
         // TODO
     }
 
