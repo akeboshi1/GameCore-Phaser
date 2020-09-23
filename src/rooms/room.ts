@@ -679,10 +679,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             if (content.effect === "liner") {
                 const position = target.getPosition();
                 this.mCameraService.pan(position.x, position.y, 300).then(() => {
-                    this.mCameraService.startFollow(target.getDisplay());
+                    this.mCameraService.startFollow(target);
                 });
             } else {
-                this.mCameraService.startFollow(target.getDisplay());
+                this.mCameraService.startFollow(target);
             }
         } else {
             this.mCameraService.stopFollow();
