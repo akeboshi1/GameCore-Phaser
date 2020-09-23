@@ -83,6 +83,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      */
     private mUIScale: number;
     private _isIOS = -1;
+    private mReconnect: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
         this.gameState = GameState.NONE;
@@ -208,6 +209,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onConnected(connection?: SocketConnection): void {
         this.gameState = GameState.SOCKET_CONNECT;
+        this.mReconnect = 0;
         if (!this.mClock) this.mClock = new Clock(this.mConnection, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
@@ -217,7 +219,26 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onDisConnected(connection?: SocketConnection): void {
         this.gameState = GameState.SOCKET_DISCONNECT;
-        Logger.getInstance().log("app connectFail=====");
+        Logger.getInstance().log("app connectFail=====disConnect");
+        if (!this.game || this.isPause) return;
+        if (this.mConfig.connectFail) {
+            this.onError();
+        } else {
+            if (this.mReconnect > 2) {
+                // todo reconnect Scene
+            } else {
+                this.mReconnect++;
+                this.clearGame().then(() => {
+                    this.initWorld(this.mConfig, this.mCallBack);
+                });
+            }
+
+        }
+    }
+
+    onReconnect(connection?: SocketConnection) {
+        this.gameState = GameState.SOCKET_DISCONNECT;
+        Logger.getInstance().log("app connectFail=====reconnect");
         if (!this.game || this.isPause) return;
         if (this.mConfig.connectFail) {
             this.onError();
