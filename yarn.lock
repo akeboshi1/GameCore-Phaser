@@ -430,10 +430,10 @@ anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apowophaserui@^0.5.8:
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/apowophaserui/-/apowophaserui-0.5.8.tgz#5b7ebe82f89d50d4b4c9bb1bcfd10f852dae6741"
-  integrity sha512-AxJpvnwpbh5vytVOCQcqLKpkLCGGh77JTh0zPtyOeRyiYW4wRSqFzf+d167fiAWaC2A4YgEsFQ8uZp/iEJUCuw==
+apowophaserui@^0.5.9:
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/apowophaserui/-/apowophaserui-0.5.9.tgz#1d9360f307c84fc3f2ffe8b6ebdb6a44bdb9103f"
+  integrity sha512-RRrWpdEgxhL8zE/3TQp15CRr0N+NMEuuOACRVmPcE/mF0zGFpCdAXTJtJKbS3LN1OHAIXJAGz8VOehHKqLIn3g==
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"
