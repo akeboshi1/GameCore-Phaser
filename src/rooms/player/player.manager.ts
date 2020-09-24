@@ -1,6 +1,6 @@
 import { IElementManager } from "../element/element.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
 import { IRoomService, Room } from "../room";
 import { Logger } from "../../utils/log";
@@ -11,11 +11,11 @@ import { Player } from "./player";
 import { IElement } from "../element/element";
 import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
-import { PlayerModel } from "./player.model";
+import { User } from "../../game/user";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
-    private mActor: Actor;
+    private mActor: User;
     private mPlayerMap: Map<number, Player> = new Map();
     constructor(private mRoom: Room) {
         super();
@@ -33,27 +33,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollow);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
         }
     }
 
-    // public createActor(playModel: PlayerModel) {
+    // public createActor(actor: op_client.IActor) {
+    //     const playModel = new PlayerModel(actor);
     //     this.mActor = new Actor(playModel, this);
-    //     if (sprite.attrs) {
-    //         for (const attr of sprite.attrs) {
-    //             this._addSimulate(sprite.id, attr);
-    //         }
-    //     }
     // }
 
-    public createActor(actor: op_client.IActor) {
-        const playModel = new PlayerModel(actor);
-        this.mActor = new Actor(playModel, this);
-    }
-
-    get actor(): Actor {
-        return this.mActor;
+    get actor(): User {
+        return this.mRoom.world.user;
     }
 
     public destroy() {
@@ -78,41 +68,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public requestActorMove(dir: number, keyArr: number[]) {
-
-        this.startActorMove();
-        if (!this.roomService.world.game.device.os.desktop) {
-            // 按下键盘的时候已经发了一次了，如果再发一次后端会有问题
-            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
-            const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-            content.keyCodes = keyArr;
-            this.connection.send(pkt);
-        }
-    }
-
-    public startActorMove() {
-        if (!this.mActor) {
-            Logger.getInstance().error("MainHero miss");
-            return;
-        }
-        this.mActor.startMove();
-    }
-
-    public stopActorMove() {
-        if (!this.mActor) {
-            Logger.getInstance().error("MainHero miss");
-            return;
-        }
-        this.mActor.stopMove();
-    }
-
     public get(id: number): Player {
         if (!this.mPlayerMap) {
             return;
         }
         let player = this.mPlayerMap.get(id);
         if (!player) {
-            const actor = this.mActor;
+            const actor = this.actor;
             if (actor && actor.id === id) {
                 player = actor;
             }
@@ -134,6 +96,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.mActor = null;
         }
         return element;
+    }
+
+    public setMe(user: User) {
+        this.mActor = user;
+        this.mPlayerMap.set(user.id, user);
     }
 
     public getElements(): IElement[] {
@@ -360,20 +327,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             if (player) {
                 player.setQueue(content.changeAnimation);
             }
-        }
-    }
-
-    private onCameraFollow(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
-        const player = this.get(content.id);
-        const camera = this.roomService.cameraService;
-        if (!camera) {
-            return;
-        }
-        if (player) {
-            camera.startFollow(player.getDisplay());
-        } else {
-            camera.stopFollow();
         }
     }
 

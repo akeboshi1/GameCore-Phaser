@@ -68,10 +68,18 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     get playerData() {
-        if (this.world.playerDataManager) {
-            return this.world.playerDataManager.playerData;
+        const bag = this.bag;
+        if (!bag) {
+            return;
         }
-        return null;
+        return this.bag.playerData;
+    }
+
+    get bag() {
+        if (!this.world.user || !this.world.user.bag) {
+            return;
+        }
+        return this.world.user.bag;
     }
 
     private onCloseHandler() {
@@ -79,8 +87,8 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     private addLisenter() {
-        if (!this.world.playerDataManager) return;
-        const mgr = this.world.playerDataManager;
+        if (!this.bag) return;
+        const mgr = this.bag;
         if (mgr) {
             mgr.on("syncfinish", this.onSyncFinishHandler, this);
             mgr.on("update", this.onUpdateHandler, this);
@@ -88,8 +96,8 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     private removeLisenter() {
-        if (!this.world.playerDataManager) return;
-        const mgr = this.world.playerDataManager;
+        if (!this.bag) return;
+        const mgr = this.bag;
         if (mgr) {
             mgr.off("syncfinish", this.onSyncFinishHandler, this);
             mgr.off("update", this.onUpdateHandler, this);

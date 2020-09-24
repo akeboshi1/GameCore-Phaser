@@ -64,6 +64,7 @@ export class WSWrapper extends EventEmitter {
 
     // Frees all resources for garbage collection.
     public destroy(): void {
+        this.onClose();
         // TODO
     }
 
@@ -120,6 +121,10 @@ export class WSWrapper extends EventEmitter {
 
         const uri = this.uri();
         try {
+            if (this._connection) {
+                this._connection.close();
+                this._connection = null;
+            }
             this._connection = new Socket(uri);
             this._connection.binaryType = "arraybuffer";
             this.addCallBacks();

@@ -47,8 +47,8 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private addLisenter() {
-        if (!this.world.playerDataManager) return;
-        const mgr = this.world.playerDataManager;
+        if (!this.world.user || !this.world.user.bag) return;
+        const mgr = this.world.user.bag;
         if (mgr) {
             mgr.on("syncfinish", this.onSyncFinishHandler, this);
             mgr.on("update", this.onUpdateHandler, this);
@@ -56,8 +56,8 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private removeLisenter() {
-        if (!this.world.playerDataManager) return;
-        const mgr = this.world.playerDataManager;
+        if (!this.world.user || !this.world.user.bag) return;
+        const mgr = this.world.user.bag;
         if (mgr) {
             mgr.off("syncfinish", this.onSyncFinishHandler, this);
             mgr.off("update", this.onUpdateHandler, this);
@@ -80,8 +80,8 @@ export class ComposeMediator extends BaseMediator {
         }
     }
     get playerData() {
-        if (this.world.playerDataManager) {
-            return this.world.playerDataManager.playerData;
+        if (this.bag) {
+            return this.bag.playerData;
         }
         return null;
     }
@@ -130,5 +130,13 @@ export class ComposeMediator extends BaseMediator {
             return qualified;
         }
         return false;
+    }
+
+    get bag() {
+        const user = this.world.user;
+        if (!user || !user.bag) {
+            return;
+        }
+        return user.bag;
     }
 }

@@ -51,12 +51,15 @@ export class PicFurniFunMediator extends BaseMediator {
         }
         super.destroy();
     }
+
     get playerData() {
-        if (this.world.playerDataManager) {
-            return this.world.playerDataManager.playerData;
+        const user = this.world.user;
+        if (!user || !user.bag) {
+            return;
         }
-        return null;
+        return user.bag.playerData;
     }
+
     private onCloseHandler() {
         super.destroy();
     }

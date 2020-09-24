@@ -7,6 +7,7 @@ import { IElement } from "../element/element";
 import { AnimationData } from "../element/sprite";
 import { IFramesModel } from "./frames.model";
 import { SoundField } from "apowophaserui";
+import { Logger } from "../../utils/log";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -289,11 +290,12 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             null,
             { responseType: "arraybuffer" },
         );
-        this.scene.load.once(
-            Phaser.Loader.Events.COMPLETE,
-            this.onLoadCompleteHandler,
-            this,
-        );
+        // this.scene.load.once(
+        //     Phaser.Loader.Events.COMPLETE,
+        //     this.onLoadCompleteHandler,
+        //     this,
+        // );
+        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
         this.scene.load.start();
     }
 
@@ -1019,5 +1021,20 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.mPlaceholder.destroy();
         }
         this.mPlaceholder = undefined;
+    }
+
+    private onFileLoadHandler(key: string, type: string) {
+        // if (!file) {
+        //     return;
+        // }
+        // const multi = file.multiFile;
+        // if (!multi || multi.key !== this.mDragonbonesName || multi.pending !== 1) {
+        //     return;
+        // }
+        if (key !== this.mDragonbonesName || type !== "image") {
+            return;
+        }
+        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
+        this.onLoadCompleteHandler();
     }
 }

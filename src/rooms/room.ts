@@ -33,6 +33,7 @@ import { FrameManager } from "./element/frame.manager";
 import { IScenery } from "./sky.box/scenery";
 import { State } from "./state/state.group";
 import { EffectManager } from "./effect/effect.manager";
+import { Tool } from "../utils/tool";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -227,7 +228,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
         }
         // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
-        this.mPlayerManager.createActor(this.mActorData);
+        // this.mPlayerManager.createActor(this.mActorData);
+        this.mWorld.user.enterScene(this, this.mActorData);
         const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         if (loadingScene) loadingScene.sleep();
@@ -668,12 +670,22 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private onCameraFollowHandler(packet: PBpacket) {
+        if (!this.mCameraService) {
+            return;
+        }
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
         const target = this.getElement(content.id);
         if (target) {
-            if (this.mCameraService) this.mCameraService.startFollow(target.getDisplay());
+            if (content.effect === "liner") {
+                const position = target.getPosition();
+                this.mCameraService.pan(position.x, position.y, 300).then(() => {
+                    this.mCameraService.startFollow(target);
+                });
+            } else {
+                this.mCameraService.startFollow(target);
+            }
         } else {
-            if (this.mCameraService) this.mCameraService.stopFollow();
+            this.mCameraService.stopFollow();
         }
     }
 

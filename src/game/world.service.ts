@@ -14,6 +14,7 @@ import { MouseManager } from "./mouse.manager";
 import { ISoundConfig } from "./sound.manager";
 import { HttpClock } from "../rooms/http.clock";
 import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
+import { User } from "./user";
 
 export interface WorldService {
     connection: ConnectionService;
@@ -27,7 +28,6 @@ export interface WorldService {
     readonly uiManager: UiManager;
     readonly inputManager: InputManager;
     readonly mouseManager: MouseManager;
-    readonly playerDataManager: PlayerDataManager;
     readonly httpService: HttpService;
     readonly uiScale: number;
     readonly scaleRatio: number;
@@ -35,6 +35,7 @@ export interface WorldService {
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
     readonly httpClock: HttpClock;
+    readonly user: User;
     reconnect();
     startHeartBeat();
     changeScene();

@@ -35,8 +35,9 @@ export class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
         const originX = this.width / 2;
         const originY = this.height / 2;
 
-        const fx = target.x * this.pixelRatio * this.moveRatio - offsetX;
-        const fy = target.y * this.pixelRatio * this.moveRatio - offsetY;
+        const pos = this._follow.getPosition();
+        const fx = pos.x * this.pixelRatio * this.moveRatio - offsetX;
+        const fy = pos.y * this.pixelRatio * this.moveRatio - offsetY;
 
         this.midPoint.set(fx, fy);
 
@@ -75,8 +76,9 @@ export class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
         }
 
         if (follow && !this.panEffect.isRunning) {
-            const fx = (follow.x * this.pixelRatio * this.moveRatio - this.followOffset.x);
-            const fy = (follow.y * this.pixelRatio * this.moveRatio - this.followOffset.y);
+            const pos = follow.getPosition();
+            const fx = (pos.x * this.pixelRatio * this.moveRatio - this.followOffset.x);
+            const fy = (pos.y * this.pixelRatio * this.moveRatio - this.followOffset.y);
 
             if (deadzone) {
                 if (fx < deadzone.x) {

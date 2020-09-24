@@ -162,6 +162,17 @@ export abstract class BlockObject implements IBlockObject {
         }
     }
 
+    protected disableBlock() {
+        this.removeFromBlock();
+        this.mBlockable = false;
+        this.mRenderable = false;
+    }
+
+    protected enableBlock() {
+        this.mBlockable = true;
+        this.addToBlock();
+    }
+
     get id(): number {
         return -1;
     }
