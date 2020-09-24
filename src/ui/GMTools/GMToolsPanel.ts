@@ -35,18 +35,33 @@ export class GMToolsPanel extends BasePanel {
     }
 
     public resize() {
-        const {width, height} = this.scene.cameras.main;
-        this.setSize(width, height);
+        // const {width, height} = this.scene.cameras.main;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
+        Logger.getInstance().log("resize: ", this.cameraWidth, this.scaleHeight);
+        this.setSize(this.scaleWidth, this.scaleHeight);
         this.closeBtn.x = (width - this.closeBtn.width) * 0.5 - 16 * this.dpr;
         this.closeBtn.y = -(height - this.closeBtn.height) * 0.5 + 16 * this.dpr;
 
         this.background.clear();
         this.background.fillStyle(0x0, 0.6);
-        this.background.fillRect(-width * 0.5, -height * 0.5, width, height);
-        this.background.setInteractive(new Phaser.Geom.Rectangle(-width * 0.5, -height * 0.5, width, height), Phaser.Geom.Rectangle.Contains);
+        this.background.fillRect(0, 0, width, height);
+        this.background.x = -width * 0.5;
+        this.background.y = -height * 0.5;
+        this.background.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
 
-        this.x = width * 0.5;
-        this.y = height * 0.5;
+        this.command.x = -this.width * 0.5 + 20 * this.dpr;
+        this.command.y = -this.height * 0.5 + 60 * this.dpr;
+
+        this.x = this.cameraWidth * 0.5;
+        this.y = this.cameraHeight * 0.5;
+
+        this.commitBtn.x = this.command.x + this.command.width + this.commitBtn.width * 0.5 + 16 * this.dpr;
+        this.commitBtn.y = this.command.y + this.command.height * 0.5;
+
+        this.gridtable.setSize(this.width,  height - 110 * this.dpr);
+        this.gridtable.layout();
+
         this.gridtable.resetMask();
     }
 
@@ -56,10 +71,12 @@ export class GMToolsPanel extends BasePanel {
     }
 
     protected init() {
-        const {width, height} = this.scene.cameras.main;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
         this.setSize(width, height);
         this.background = this.scene.make.graphics(undefined, false);
 
+        const scale = this.scale;
         const w = width - 30 * this.dpr;
         const h = 46 * this.dpr;
 
@@ -96,8 +113,6 @@ export class GMToolsPanel extends BasePanel {
 
         this.commitBtn = new Button(this.scene, "gmtools_commit", "", "", "提交");
         this.commitBtn.setTextStyle({ fontSize: 12 * this.dpr });
-        this.commitBtn.x = this.command.x + this.command.width + this.commitBtn.width * 0.5 + 16 * this.dpr;
-        this.commitBtn.y = this.command.y + this.command.height * 0.5;
 
         const capW = w;
         const capH = 54 * this.dpr;
@@ -111,7 +126,7 @@ export class GMToolsPanel extends BasePanel {
                 cellWidth: width,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                zoom: this.scale,
+                zoom: scale,
                 cellPadX: 0,
                 cellPadY: 10 * this.dpr
               },
@@ -138,8 +153,6 @@ export class GMToolsPanel extends BasePanel {
                 }
             }
         });
-        this.gridtable.layout();
-
         this.closeBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
         this.add([this.background, this.gridtable, this.closeBtn, this.command, this.commitBtn]);
         super.init();
@@ -168,6 +181,7 @@ export class GMToolsPanel extends BasePanel {
             return;
         }
         this.emit("targetUI", this.mShowData[0].id, id);
+        this.command.setBlur();
     }
 
     private onCloseHandler() {
@@ -175,6 +189,7 @@ export class GMToolsPanel extends BasePanel {
     }
 
     private onCommitCmdHandler() {
+        this.command.setBlur();
         if (!this.mShowData || this.mShowData.length < 1) {
             return;
         }
