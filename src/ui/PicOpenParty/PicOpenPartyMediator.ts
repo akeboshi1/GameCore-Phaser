@@ -44,13 +44,6 @@ export class PicOpenPartyMediator extends BaseMediator {
         }
         super.destroy();
     }
-    get playerData() {
-        if (this.world.playerDataManager) {
-            return this.world.playerDataManager.playerData;
-        }
-        return null;
-    }
-
     private onCloseHandler() {
         this.destroy();
     }

@@ -8,8 +8,8 @@ import { i18n } from "../../i18n";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { FramesModel } from "../../rooms/display/frames.model";
-import I18NextXhrBackend from "i18next-xhr-backend";
 import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText } from "apowophaserui";
+import { ItemInfoTips } from "../tips/ItemInfoTips";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
     private confirmBtn: NineSliceButton;
@@ -23,11 +23,9 @@ export class PicFurniFunPanel extends BasePanel {
     private materialGameScroll: GameScroller;
     private content: Phaser.GameObjects.Container;
     private closeBtn: Phaser.GameObjects.Image;
-    private materialTipsCon: Phaser.GameObjects.Container;
-    private materialTipsDes: BBCodeText;
     private selectMaterial: MaterialItem;
-    private tipsbg: NineSlicePatch;
     private itemName: Phaser.GameObjects.Text;
+    private itemtips: ItemInfoTips;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -161,30 +159,16 @@ export class PicFurniFunPanel extends BasePanel {
         this.materialCon.add(this.materialGameScroll);
         const tipsWidth = 145 * this.dpr;
         const tipsHeight = 55 * this.dpr;
-        this.materialTipsCon = this.scene.make.container(undefined, false);
-        this.content.add(this.materialTipsCon);
-        this.materialTipsCon.setPosition(-bgwidth * 0.5 + tipsWidth * 0.5 - 5 * this.dpr, this.materialCon.y - tipsHeight * 0.5 - 20 * this.dpr);
-        const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", {
+        this.itemtips = new ItemInfoTips(this.scene, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", this.dpr, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,
             bottom: 10 * this.dpr
-        }, undefined, undefined, 2);
-        tipsbg.setPosition(26 * this.dpr, -tipsHeight * 0.5);
-        this.tipsbg = tipsbg;
-        const tipsText = new BBCodeText(this.scene, -35 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
-            color: "#333333",
-            fontSize: 13 * this.dpr,
-            fontFamily: Font.DEFULT_FONT,
-            wrap: {
-                width: tipsWidth - 5 * this.dpr,
-                mode: "string"
-            }
-        }).setOrigin(0);
-
-        this.materialTipsDes = tipsText;
-        this.materialTipsCon.add([tipsbg, tipsText]);
-        this.materialTipsCon.visible = false;
+        });
+        this.itemtips.x = -this.width * 0.5 + tipsWidth * 0.5 + 10 * this.dpr;
+        this.itemtips.y = -this.height * 0.5 + 70 * this.dpr;
+        this.itemtips.visible = false;
+        this.content.add(this.itemtips);
         this.confirmBtn = new NineSliceButton(this.scene, 0, -posY - 35 * this.dpr, 100 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn_over", i18n.t("furni_unlock.unlock"), this.dpr, this.scale, {
             left: 15 * this.dpr,
             top: 15 * this.dpr,
@@ -266,31 +250,48 @@ export class PicFurniFunPanel extends BasePanel {
         this.emit("close");
     }
 
-    private onMaterialItemHandler(item: MaterialItem) {
-        this.materialTipsCon.visible = true;
-        if (this.selectMaterial) this.selectMaterial.select = false;
-        const data: op_client.ICountablePackageItem = item.itemData;
-        this.materialTipsDes.text = this.getDesText(data);
-        const tipsHeight = this.materialTipsDes.height + 15 * this.dpr;
-        const tipsWidth = this.tipsbg.width;
-        this.tipsbg.resize(tipsWidth, tipsHeight);
-        this.tipsbg.y = -this.tipsbg.height * 0.5;
-        this.materialTipsDes.y = -tipsHeight + 10 * this.dpr;
-        item.select = true;
-        this.selectMaterial = item;
+    private onMaterialItemHandler(gameobject: MaterialItem) {
+        this.itemtips.visible = false;
+        if (this.selectMaterial && this.selectMaterial !== gameobject) {
+            this.selectMaterial.select = false;
+        }
+        gameobject.select = !gameobject.select;
+        if (gameobject.select) {
+            this.itemtips.setItemData(gameobject.itemData);
+            this.itemtips.visible = true;
+        }
+        this.selectMaterial = gameobject;
+        this.setTipsPosition(gameobject);
     }
-    private getDesText(data: op_client.ICountablePackageItem) {
-        if (!data) data = <any>{ "sellingPrice": true, tradable: false };
-        let text: string = `[stroke=#2640CA][color=#2640CA][b]${data.name}[/b][/color][/stroke]` + "\n";
-        let source = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.source")}[/color][/stroke]：`;
-        source += data.source;
-        text += source + "\n";
-        let description = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.description")}[/color][/stroke]：`;
-        description += data.des;
-        text += description;
-        return text;
+    // private getDesText(data: op_client.ICountablePackageItem) {
+    //     if (!data) data = <any>{ "sellingPrice": true, tradable: false };
+    //     let text: string = `[stroke=#2640CA][color=#2640CA][b]${data.name}[/b][/color][/stroke]` + "\n";
+    //     let source = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.source")}[/color][/stroke]：`;
+    //     source += data.source;
+    //     text += source + "\n";
+    //     let description = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.description")}[/color][/stroke]：`;
+    //     description += data.des;
+    //     text += description;
+    //     return text;
+    // }
+    private setTipsPosition(gameobject: MaterialItem) {
+        let posx: number = gameobject.x;
+        let posy: number = gameobject.y;
+        let tempobject = <Phaser.GameObjects.Container>gameobject;
+        while (tempobject.parentContainer !== this.content) {
+            posx += tempobject.parentContainer.x;
+            posy += tempobject.parentContainer.y;
+            tempobject = tempobject.parentContainer;
+        }
+        if (posx - this.itemtips.width * 0.5 < -this.content.width * 0.5) {
+            this.itemtips.x = this.itemtips.width * 0.5 - this.content.width * 0.5 + 20 * this.dpr;
+        } else if (posx + this.itemtips.width * 0.5 > this.content.width * 0.5) {
+            this.itemtips.x = this.content.width * 0.5 - this.itemtips.width * 0.5 - 20 * this.dpr;
+        } else {
+            this.itemtips.x = posx;
+        }
+        this.itemtips.y = posy - this.itemtips.height * 0.5 + 5 * this.dpr;
     }
-
 }
 
 class MaterialItem extends Phaser.GameObjects.Container {
@@ -300,6 +301,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
     private itemIcon: DynamicImage;
     private itemCount: BBCodeText;
     private bg: Phaser.GameObjects.Image;
+    private mselect: boolean = false;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
@@ -324,6 +326,10 @@ class MaterialItem extends Phaser.GameObjects.Container {
 
     public set select(value: boolean) {
         this.bg.setFrame(value ? "bg_select" : "bg_m");
+        this.mselect = value;
+    }
+    public get select() {
+        return this.mselect;
     }
     private getCountText(count: number, needcount: number) {
         const color = (count >= needcount ? "#000000" : "#ff0000");

@@ -44,12 +44,6 @@ export class PicPartyListMediator extends BaseMediator {
             this.picList = undefined;
         }
     }
-    get playerData() {
-        if (this.world.playerDataManager) {
-            return this.world.playerDataManager.playerData;
-        }
-        return null;
-    }
     private onCloseHandler() {
         this.destroy();
     }

@@ -20,11 +20,14 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private materialLine2: Phaser.GameObjects.Image;
     private confirmHandler: Handler;
     private materialItems: MaterialItem[] = [];
+    private curSelectItem: MaterialItem;
     private zoom: number;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+    private havebutton: boolean = true;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, havebutton: boolean = true) {
         super(scene);
         this.dpr = dpr;
         this.zoom = zoom;
+        this.havebutton = havebutton;
         this.setSize(width, height);
         this.create();
     }
@@ -39,7 +42,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         this.materialTitle.text = materialtitle;
         this.materialLine.x = this.materialTitle.x - this.materialTitle.width * 0.5 - 5 * this.dpr - this.materialLine.width * 0.5;
         this.materialLine2.x = this.materialTitle.x + this.materialTitle.width * 0.5 + 5 * this.dpr + this.materialLine2.width * 0.5;
-        if (buttontex !== undefined)
+        if (this.havebutton && buttontex !== undefined)
             this.confirmBtn.setText(buttontex);
     }
     public setItemDatas(datas: op_client.ICountablePackageItem[], handler?: Handler) {
@@ -81,9 +84,10 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         this.closeBtn.setPosition(this.width * 0.5 - this.dpr * 5, -this.height * 0.5 + this.dpr * 5).setScale(1.3);
         this.closeBtn.on(String(ClickEvent.Tap), this.onCloseHandler, this);
         this.add(this.closeBtn);
+        const offsetx = this.havebutton ? 0 : 20 * this.dpr;
         this.materialTitle = this.scene.make.text({
             x: 0,
-            y: -this.height * 0.5 + 45 * this.dpr,
+            y: -this.height * 0.5 + 45 * this.dpr + offsetx,
             text: "",
             bold: true,
             style: {
@@ -101,7 +105,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         this.add([this.materialTitle, this.materialLine, this.materialLine2]);
         this.gameScroll = new GameScroller(this.scene, {
             x: 0,
-            y: -10 * this.dpr,
+            y: -10 * this.dpr + offsetx,
             width: this.width - 40 * this.dpr,
             height: 90 * this.dpr,
             zoom: this.zoom,
@@ -113,16 +117,18 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
             }
         });
         this.add(this.gameScroll);
-        this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("common.confirm"), this.dpr, 1, {
-            left: 12 * this.dpr,
-            top: 12 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 12 * this.dpr
-        });
-        this.confirmBtn.y = this.height * 0.5 - this.confirmBtn.height * 0.5 - 15 * this.dpr;
-        this.confirmBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
-        this.confirmBtn.on(String(ClickEvent.Tap), this.onConfirmHandler, this);
-        this.add(this.confirmBtn);
+        if (this.havebutton) {
+            this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("common.confirm"), this.dpr, 1, {
+                left: 12 * this.dpr,
+                top: 12 * this.dpr,
+                right: 12 * this.dpr,
+                bottom: 12 * this.dpr
+            });
+            this.confirmBtn.y = this.height * 0.5 - this.confirmBtn.height * 0.5 - 15 * this.dpr;
+            this.confirmBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
+            this.confirmBtn.on(String(ClickEvent.Tap), this.onConfirmHandler, this);
+            this.add(this.confirmBtn);
+        }
         const tipsWidth = 145 * this.dpr;
         const tipsHeight = 55 * this.dpr;
         this.itemtips = new ItemInfoTips(this.scene, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", this.dpr, {
@@ -147,11 +153,35 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     }
     private onMaterialItemHandler(gameobject: MaterialItem) {
         this.itemtips.visible = false;
+        if (this.curSelectItem && this.curSelectItem !== gameobject) {
+            this.curSelectItem.select = false;
+        }
         gameobject.select = !gameobject.select;
         if (gameobject.select) {
             this.itemtips.setItemData(gameobject.itemData);
             this.itemtips.visible = true;
         }
+        this.curSelectItem = gameobject;
+        this.setTipsPosition(gameobject);
+    }
+
+    private setTipsPosition(gameobject: MaterialItem) {
+        let posx: number = gameobject.x;
+        let posy: number = gameobject.y;
+        let tempobject = <Phaser.GameObjects.Container>gameobject;
+        while (tempobject.parentContainer !== this) {
+            posx += tempobject.parentContainer.x;
+            posy += tempobject.parentContainer.y;
+            tempobject = tempobject.parentContainer;
+        }
+        if (posx - this.itemtips.width * 0.5 < -this.width * 0.5) {
+            this.itemtips.x = this.itemtips.width * 0.5 - this.width * 0.5;
+        } else if (posx + this.itemtips.width * 0.5 > this.width * 0.5) {
+            this.itemtips.x = this.width * 0.5 - this.itemtips.width * 0.5;
+        } else {
+            this.itemtips.x = posx;
+        }
+        this.itemtips.y = posy - this.itemtips.height * 0.5 + 5 * this.dpr;
     }
 }
 class MaterialItem extends Phaser.GameObjects.Container {
