@@ -50,7 +50,8 @@
     "search": "搜索",
     "tips": "提示",
     "offline": "您的账号在另一地点登录，您已被迫下线",
-    "description": "描述"
+    "description": "描述",
+    "setting": "设置"
   },
   "player_info": {
     "title": "信息详情",
@@ -221,7 +222,8 @@
     "confirmation": "您确定要丢弃[color=#0157BC] {{name}} [/color]吗?"
   },
   "main_ui": {
-    "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点"
+    "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点",
+    "party": "派对"
   },
   "order": {
     "title": "订单",
@@ -238,5 +240,19 @@
     "worktimes": "打工次数",
     "salary": "报酬",
     "attri": "*{{name}}需要大于{{value}}才可以任职这份工作"
+  },
+  "party": {
+    "partyname": "派对房间",
+    "partytheme": "派对主题",
+    "partydescrible": "派对描述",
+    "partytime": "派对时长",
+    "partyopen": "立即开启",
+    "partytitle": "派对房间名称",
+    "describletitle": "一起开派对吧！",
+    "partycardlabel": "您目前拥有派对时长卡：",
+    "navigation": "导航",
+    "mine": "我的",
+    "hotel": "酒店",
+    "picatown": "皮卡小镇"
   }
 }

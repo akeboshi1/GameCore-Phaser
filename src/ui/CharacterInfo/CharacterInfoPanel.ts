@@ -430,6 +430,7 @@ export default class CharacterInfoPanel extends BasePanel {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_attribute"), i18n.t("player_info.option_badge")];
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
         const items = [];
+        this.mCategoryScroll.clearItems(true);
         map.forEach((value, key) => {
             const titleName = this.getOptionName(key);
             const item = new Button(this.scene, this.key, "title_normal", "title_select", titleName);

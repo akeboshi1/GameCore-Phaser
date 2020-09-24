@@ -835,7 +835,7 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         }
         this.finishIcon.visible = false;
         this.balckgraphic.visible = false;
-        if (data.targetValue < curvalue) {
+        if (data.targetValue <= curvalue) {
             this.bg.setFrameNormal("order_progress_finished", "order_progress_finished");
             if (!data.received)
                 this.bg.on(String(ClickEvent.Tap), this.onReceiveHandler, this);

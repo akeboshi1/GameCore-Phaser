@@ -99,8 +99,10 @@ export class PicaMainUIMediator extends BaseMediator {
             return;
         }
         const uiManager = this.world.uiManager;
-        uiManager.showMed("CharacterInfo");
-        this.mainUI.fetchPlayerInfo();
+        uiManager.showMed(panel);
+        if (panel === "CharacterInfo") {
+            this.mainUI.fetchPlayerInfo();
+        }
         // const uiManager = this.world.uiManager;
         // if (data)
         //     uiManager.showMed(panel, data);

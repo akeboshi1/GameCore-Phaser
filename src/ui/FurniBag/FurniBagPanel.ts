@@ -1046,19 +1046,24 @@ class DetailBubble extends Phaser.GameObjects.Container {
     if (day > 0) {
       const temptime = `${day}-${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
       text += `[color=#FF0000]${temptime}[/color]`;
-    } else if (hour > 0) {
+    } else if (hour > 0 || minute > 0 || second > 0) {
       const temptime = `${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
-      text += `[color=#FF0000]${temptime}[/color]`;
-    } else if (minute > 0) {
-      const temptime = `${this.stringFormat(minute)}:${this.stringFormat(second)}`;
-      text += `[color=#FF0000]${temptime}[/color]`;
-    } else if (second > 0) {
-      const temptime = `${this.stringFormat(second)}`;
       text += `[color=#FF0000]${temptime}[/color]`;
     } else {
       const temptime = `${i18n.t("furni_bag.expires")}`;
       text += `[color=#FF0000]${temptime}[/color]`;
     }
+    // else if (minute > 0) {
+    //   const temptime = `${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+    //   text += `[color=#FF0000]${temptime}[/color]`;
+    // } else if (second > 0) {
+    //   const temptime = `${this.stringFormat(second)}`;
+    //   text += `[color=#FF0000]${temptime}[/color]`;
+    // }
+    //  else {
+    //   const temptime = `${i18n.t("furni_bag.expires")}`;
+    //   text += `[color=#FF0000]${temptime}[/color]`;
+    // }
     return text;
   }
   private stringFormat(num: number) {
