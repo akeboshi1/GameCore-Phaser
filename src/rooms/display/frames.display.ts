@@ -170,6 +170,10 @@ export class FramesDisplay extends DisplayObject {
         if (!this.mCurAnimation) {
             return;
         }
+        if (!this.mCurAnimation.mountLayer) {
+            Logger.getInstance().error(`mountLyaer does not exist ${this.element ? this.element.id : 0}`);
+            return;
+        }
         const { index, mountPoint } = this.mCurAnimation.mountLayer;
         if (targetIndex === undefined) targetIndex = 0;
         if (targetIndex >= mountPoint.length) {
