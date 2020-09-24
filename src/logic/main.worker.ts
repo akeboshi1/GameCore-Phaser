@@ -4,7 +4,7 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import { ServerAddress } from "../../lib/net/address";
 import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/heartBeat.worker";
 import * as protos from "pixelpai_proto";
-import { LogicWorld } from "./world";
+import { LogicWorld } from "./logic.world";
 import { WorkerClient, ConnListener } from "./worker.client";
 import Connection from "./connection";
 import { RoomManager } from "../rooms/room.manager";
@@ -95,14 +95,29 @@ export class MainPeer extends RPCPeer {
     public onClockReady() {
         this.render.onClockReady();
     }
+
     public renderReconnect() {
         this.render.reconnect();
     }
+
     public createGame(buffer: Buffer) {
         this.render.createGame(null, buffer);
     }
+
     public clearGame() {
         this.render.clearGame();
+    }
+
+    public roomResume() {
+        this.render.roomResume();
+    }
+
+    public roomPause() {
+        this.render.roomPause();
+    }
+
+    public showLoading() {
+        this.render.showLoading();
     }
     // ============= 主进程调用心跳
     public startBeat() {

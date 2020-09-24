@@ -1,4 +1,4 @@
-import { LogicWorld } from "./world";
+import { LogicWorld } from "./logic.world";
 
 export class HttpService {
     private api_root: string;

@@ -30,6 +30,7 @@ import { LoadingTips } from "../loading/loading.tips";
 import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
 import { Render } from "../render/render";
 import { HttpService } from "../logic/http.service";
+import { RoomManager } from "../rooms/room.manager";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements WorldService, GameMain {
     public static SCALE_CHANGE: string = "scale_change";
@@ -37,6 +38,7 @@ export class World extends PacketHandler implements WorldService, GameMain {
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
     private mGame: Phaser.Game | undefined;
+    private mRoomMamager: RoomManager;
     private mMouseManager: MouseManager;
     private mElementStorage: IElementStorage;
     private mUiManager: UiManager;
@@ -132,6 +134,17 @@ export class World extends PacketHandler implements WorldService, GameMain {
         }
         this._peer.initWorld();
         this.mGameEmitter = new Phaser.Events.EventEmitter();
+        this.mUiManager = new UiManager(this);
+        this.mMouseManager = new MouseManager(this);
+        this.mElementStorage = new ElementStorage();
+        this.mHttpService = new HttpService(this);
+        this.mRoleManager = new RoleManager(this);
+        this.mSoundManager = new SoundManager(this);
+        this.mLoadingManager = new LoadingManager(this);
+        this.mPlayerDataManager = new PlayerDataManager(this);
+        this.mRoomMamager = new RoomManager(this);
+
+        this.mRoomMamager.addPackListener();
         initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
         document.body.addEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
     }
@@ -240,6 +253,9 @@ export class World extends PacketHandler implements WorldService, GameMain {
         if (this.mUiManager) {
             this.mUiManager.resize(w, h);
         }
+        if (this.mRoomMamager) {
+            this.mRoomMamager.resize(w, h);
+        }
         if (this.mInputManager) {
             this.mInputManager.resize(w, h);
         }
@@ -311,6 +327,14 @@ export class World extends PacketHandler implements WorldService, GameMain {
 
     public playSound(config: ISoundConfig) {
         this.mSoundManager.play(config);
+    }
+
+    public resume(name: string) {
+        this.mRoomMamager.resume(name);
+    }
+
+    public pause() {
+        this.mRoomMamager.pause();
     }
 
     get uiScale(): number {
@@ -846,6 +870,7 @@ export class World extends PacketHandler implements WorldService, GameMain {
                 }
             }
             this._peer.onFocus();
+            this.mRoomMamager.onFocus();
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
             if (pauseScene) {
                 (pauseScene as GamePauseScene).sleep();
@@ -862,6 +887,7 @@ export class World extends PacketHandler implements WorldService, GameMain {
         this.isPause = true;
         if (this.mGame) {
             this._peer.onBlur();
+            this.mRoomMamager.onBlur();
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }

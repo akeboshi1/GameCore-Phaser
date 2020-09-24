@@ -1,25 +1,30 @@
-import { op_client,op_def } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import IActor = op_client.IActor;
-import { LogicWorld } from "../world";
+import { LogicWorld } from "../logic.world";
 import { PacketHandler } from "net-socket-packet";
-import { IPosition45Obj } from "../../utils/position45";
-import { Pos } from "../../utils/pos";
 import { IRoomManager } from "./room.manager";
+import { Logger } from "../../utils/log";
+import { ClockReadyListener } from "../clock";
+import { IPosition45Obj } from "../../utils/iposition45";
+import { LogicPos, IPos } from "../../utils/logic.pos";
+import { IBlockObject } from "../../rooms/cameras/iblock.object";
+import { Position45 } from "../../utils/position45";
+import { State } from "../../rooms/state/state.group";
+import { IElement } from "../../rooms/element/element";
+import { PlayerManager } from "../../rooms/player/player.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
 
-export interface IRoomService {
+export interface ILogicRoomService {
     readonly id: number;
     readonly terrainManager: TerrainManager;
     readonly elementManager: ElementManager;
     readonly playerManager: PlayerManager;
     readonly layerManager: LayerManager;
-    readonly cameraService: ICameraService;
     readonly effectManager: EffectManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
-    readonly blocks: ViewblockService;
     readonly world: LogicWorld;
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
@@ -28,23 +33,19 @@ export interface IRoomService {
 
     startLoad();
 
-    completeLoad();
-
-    startPlay();
-
     enter(room: op_client.IScene): void;
 
     pause(): void;
 
     resume(name: string | string[]): void;
 
-    transformTo45(p: Pos): Pos;
+    transformTo45(p: LogicPos): IPos;
 
-    transformTo90(p: Pos): Pos;
+    transformTo90(p: LogicPos): IPos;
 
-    transformToMini45(p: Pos): Pos;
+    transformToMini45(p: LogicPos): IPos;
 
-    transformToMini90(p: Pos): Pos;
+    transformToMini90(p: LogicPos): IPos;
 
     addBlockObject(object: IBlockObject);
 
@@ -52,11 +53,11 @@ export interface IRoomService {
 
     updateBlockObject(object: IBlockObject);
 
-    addToGround(element: ElementDisplay | ElementDisplay[], index?: number);
+    // addToGround(element: ElementDisplay | ElementDisplay[], index?: number);
 
-    addToSurface(element: ElementDisplay | ElementDisplay[]);
+    // addToSurface(element: ElementDisplay | ElementDisplay[]);
 
-    addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
+    // addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
 
     getElement(id: number): IElement;
 
@@ -69,7 +70,7 @@ export interface IRoomService {
 
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
-export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
+export class Room extends PacketHandler implements ILogicRoomService, SpriteAddCompletedListener, ClockReadyListener {
     protected mWorld: LogicWorld;
     // protected mMap: Map;
     protected mID: number;
@@ -82,22 +83,20 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mFrameManager: FrameManager;
     protected mSkyboxManager: SkyBoxManager;
     protected mEffectManager: EffectManager;
-    protected mScene: Phaser.Scene | undefined;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
-    protected mCameraService: ICameraService;
+    // protected mCameraService: ICameraService;
     protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
     private readonly moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
-    private mFallEffectContainer: FallEffectContainer;
     constructor(protected manager: IRoomManager) {
         super();
         this.mWorld = this.manager.world;
         this.moveStyle = this.mWorld.moveStyle;
-        this.mScaleRatio = this.mWorld.;
+        this.mScaleRatio = this.mWorld.getGameConfig().scale_ratio;
         if (this.mWorld) {
             if (this.connection) {
                 this.connection.addPacketListener(this);
@@ -111,9 +110,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public enter(data: op_client.IScene): void {
-        const size: Size = this.mWorld.getSize();
         if (!data) {
-            // Logger.getInstance().error("wrong room");
             return;
         }
         this.mID = data.id;
@@ -133,12 +130,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
-        // if (this.mMap) this.mMap.destroy();
-        // this.mMap = new Map(this.mWorld);
-        // this.mMap.setMapInfo(data);
-        this.world.showLoading().then(() => {
-            this.completeLoad();
-        });
+        this.mWorld.showLoading();
     }
 
     public onFullPacketReceived(sprite_t: op_def.NodeType): void {
@@ -153,79 +145,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public startLoad() { }
 
-    public completeLoad() {
-        if (this.mWorld.game.scene.getScene(PlayScene.name)) {
-            const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-            if (loadingScene) loadingScene.sleep();
-            return;
-        }
-        this.mWorld.game.scene.add(PlayScene.name, PlayScene, true, {
-            room: this,
-        });
-    }
-
-    public startPlay() {
-        if (this.mLayManager) {
-            this.layerManager.destroy();
-        }
-        this.mCameraService = new CamerasManager(this);
-        this.mScene = this.world.game.scene.getScene(PlayScene.name);
-        this.mTerrainManager = new TerrainManager(this, this);
-        this.mElementManager = new ElementManager(this);
-        this.mPlayerManager = new PlayerManager(this);
-        this.mWallManager = new WallManager(this);
-        this.mBlocks = new ViewblockManager(this.mCameraService);
-        this.mLayManager = new LayerManager(this);
-        this.mGroupManager = new GroupManager(this);
-        this.mFrameManager = new FrameManager();
-        this.mSkyboxManager = new SkyBoxManager(this);
-        this.mEffectManager = new EffectManager(this);
-        if (this.scene) {
-            const camera = this.scene.cameras.main;
-            // setTimeout(() => {
-            //     camera.flash(6000, 1, 1, 1, true, undefined, this.scene);
-            // }, 6000);
-            this.mCameraService.camera = camera;
-            const padding = 199 * this.mScaleRatio;
-            this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
-            // init block
-            this.mBlocks.int(this.mSize);
-
-            if (this.mWorld.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-                this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
-            }
-        }
-        // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
-        this.mPlayerManager.createActor(this.mActorData);
-        const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-        this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
-        if (loadingScene) loadingScene.sleep();
-        this.world.changeRoom(this);
-        // if (this.world.uiManager) this.world.uiManager.showMainUI();
-
-        if (this.connection) {
-            this.cameraService.syncCamera();
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        }
-
-        this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
-        this.scene.input.on("pointerup", this.onPointerUpHandler, this);
-        this.world.emitter.on("Tap", this.onTapHandler, this);
-
-        this.initSkyBox();
-    }
-
     public pause() {
-        Logger.getInstance().log(`#BlackSceneFromBackground; room.pause(); mScene:${this.mScene}`);
-        if (this.mScene) this.mScene.scene.pause();
-        if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = false;
+        this.mWorld.roomPause();
     }
 
-    public resume(name: string) {
-        Logger.getInstance().log(`#BlackSceneFromBackground; room.resume(); name:${name}; mScene:${this.mScene}`);
-        if (this.mScene) this.mScene.scene.resume(name);
-        if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = true;
-        // this.mClock.sync(-1);
+    public resume() {
+        this.mWorld.roomResume();
+        // if (this.mScene) this.mScene.scene.resume(name);
+        // if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = true;
     }
 
     public addActor(data: IActor): void {
@@ -250,55 +177,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public addToGround(element: ElementDisplay | ElementDisplay[], index?: number) {
-        this.layerManager.addToGround(element, index);
-    }
-
-    public addToSurface(element: ElementDisplay | ElementDisplay[]) {
-        this.layerManager.addToSurface(element);
-    }
-
-    public addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
-        this.layerManager.addToSceneToUI(element);
-    }
-
-    public resize(width: number, height: number) {
-        this.mScaleRatio = this.mWorld.scaleRatio;
-        if (this.layerManager) this.layerManager.resize(width, height);
-        if (this.mCameraService) {
-            const padding = 199 * this.mScaleRatio;
-            this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
-            this.mCameraService.resize(width, height);
-        }
-        if (this.mSkyboxManager) {
-            this.mSkyboxManager.resize(width, height);
-        }
-    }
-
-    public transformTo90(p: Pos) {
+    public transformTo90(p: LogicPos) {
         if (!this.mSize) {
-            // Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo90(p, this.mSize);
     }
 
-    public transformTo45(p: Pos) {
+    public transformTo45(p: LogicPos) {
         if (!this.mSize) {
-            // Logger.getInstance().error("position object is undefined");
             return;
         }
         return Position45.transformTo45(p, this.mSize);
     }
 
-    public transformToMini90(p: Pos) {
+    public transformToMini90(p: LogicPos) {
         if (!this.mMiniSize) {
             return;
         }
         return Position45.transformTo90(p, this.miniSize);
     }
 
-    public transformToMini45(p: Pos) {
+    public transformToMini45(p: LogicPos) {
         if (!this.mMiniSize) {
             return;
         }
@@ -314,18 +214,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             ele = this.elementManager.get(id);
         }
         return ele;
-    }
-
-    public moveable(pos: Pos): boolean {
-        const pos45 = this.transformToMini45(pos);
-        const map = this.mElementManager.map;
-        if (pos45.x < 0 || pos45.x > map.length || pos45.y < 0 || pos45.y > map[0].length) {
-            return false;
-        }
-        if (map[pos45.y][pos45.x] === 0) {
-            return false;
-        }
-        return true;
     }
 
     public update(time: number, delta: number) {
@@ -437,37 +325,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mSkyboxManager.add(scenery);
     }
 
-    protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
-        this.addPointerMoveHandler();
-    }
-
-    protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
-        this.removePointerMoveHandler();
-    }
-
-    protected addPointerMoveHandler() {
-        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.on("gameout", this.onGameOutHandler, this);
-    }
-
-    protected removePointerMoveHandler() {
-        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameout", this.onGameOutHandler, this);
-        if (this.cameraService.moving) {
-            this.cameraService.syncCameraScroll();
-            this.cameraService.moving = false;
-        }
-    }
-
-    protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        if (!this.mCameraService.targetFollow) {
-            this.cameraService.offsetScroll(
-                pointer.prevPosition.x - pointer.position.x,
-                pointer.prevPosition.y - pointer.position.y
-            );
-        }
-    }
-
     protected onGameOutHandler() {
         this.removePointerMoveHandler();
     }
@@ -497,10 +354,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 }
                 break;
         }
-    }
-
-    get scene(): Phaser.Scene | undefined {
-        return this.mScene || undefined;
     }
 
     get terrainManager(): TerrainManager {
@@ -551,7 +404,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mBlocks;
     }
 
-    get world(): WorldService | undefined {
+    get world(): LogicWorld | undefined {
         return this.mWorld;
     }
 
@@ -673,7 +526,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
         const pos45 = actor.getPosition45();
-        const click45 = this.transformTo45(new Pos(x, y));
+        const click45 = this.transformTo45(new LogicPos(x, y));
         if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
             this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
             return;

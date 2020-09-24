@@ -8,9 +8,8 @@ import { EditorRoom } from "./editor.room";
 import { DecorateRoom } from "./decorate.room";
 import { Lite } from "game-capsule";
 import { LoadingScene } from "../scenes/loading";
-import { LogicWorld } from "../logic/world";
 export interface IRoomManager {
-    readonly world: LogicWorld | undefined;
+    readonly world: WorldService | undefined;
 
     readonly currentRoom: IRoomService | undefined;
 
@@ -21,11 +20,11 @@ export interface IRoomManager {
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {
-    protected mWorld: LogicWorld;
+    protected mWorld: WorldService;
     private mRooms: IRoomService[] = [];
     private mCurRoom: IRoomService;
 
-    constructor(world: LogicWorld) {
+    constructor(world: WorldService) {
         super();
         this.mWorld = world;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
@@ -65,22 +64,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.forEach((room: Room) => {
             if (room && room.scene) room.pause();
         });
-    }
-
-    public pasuseRoom(id: number) {
-        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
-        if (idx >= 0) {
-            const room: IRoomService = this.mRooms[idx];
-            room.pause();
-        }
-    }
-
-    public resumeRoom(id: number) {
-        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
-        if (idx >= 0) {
-            const room: IRoomService = this.mRooms[idx];
-            if (room && room.scene) room.resume(room.scene.scene.key);
-        }
     }
 
     public stop() {
@@ -156,7 +139,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     private async leaveScene(room: IRoomService) {
         if (!room) return;
         return new Promise((resolve, reject) => {
-            const loading: LoadingScene = <LoadingScene> this.mWorld.game.scene.getScene(LoadingScene.name);
+            const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
             if (loading) {
                 loading.show().then(() => {
                     this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);

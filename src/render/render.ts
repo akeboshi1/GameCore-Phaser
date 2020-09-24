@@ -103,14 +103,27 @@ export class Render extends RPCPeer {
     public setMoveStyle(moveStyle: number) {
         this.moveStyle = moveStyle;
     }
+
     @Export()
     public enterVirtualWorld() {
         this.mWorld.enterVirtualWorld();
     }
+
     @Export()
     public onClockReady() {
         this.mWorld.onClockReady();
     }
+
+    @Export([webworker_rpc.ParamType.str])
+    public resume(name: string) {
+        this.mWorld.resume(name);
+    }
+
+    @Export()
+    public pause() {
+        this.mWorld.pause();
+    }
+
     @Export()
     public clearGame() {
         this.mWorld.clearGame();

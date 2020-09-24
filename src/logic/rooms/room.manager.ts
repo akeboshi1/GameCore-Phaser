@@ -1,14 +1,14 @@
-import { Room, IRoomService } from "./room";
+import { Room, ILogicRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { LogicWorld } from "../world";
+import { LogicWorld } from "../logic.world";
 import { ConnectionService } from "../../../lib/net/connection.service";
 import { DecorateRoom } from "./decorate.room";
 import { EditorRoom } from "./editor.room";
 export interface IRoomManager {
     readonly world: LogicWorld | undefined;
 
-    readonly currentRoom: IRoomService | undefined;
+    readonly currentRoom: ILogicRoomService | undefined;
 
     readonly connection: ConnectionService | undefined;
 
@@ -18,8 +18,8 @@ export interface IRoomManager {
 
 export class RoomManager extends PacketHandler implements IRoomManager {
     protected mWorld: LogicWorld;
-    private mRooms: IRoomService[] = [];
-    private mCurRoom: IRoomService;
+    private mRooms: ILogicRoomService[] = [];
+    private mCurRoom: ILogicRoomService;
 
     constructor(world: LogicWorld) {
         super();
@@ -41,7 +41,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    public getRoom(id: number): IRoomService | undefined {
+    public getRoom(id: number): ILogicRoomService | undefined {
         // const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         // if (idx >= 0) {
         //     return this.mRooms[idx];
@@ -53,31 +53,14 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public onFocus() {
         this.mRooms.forEach((room: Room) => {
-            if (room && room.scene) room.resume(room.scene.scene.key);
+            if (room) room.resume();
         });
     }
 
     public onBlur() {
         this.mRooms.forEach((room: Room) => {
-            if (room && room.scene) room.pause();
+            if (room) room.pause();
         });
-    }
-
-    public pasuseRoom(id: number) {
-        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
-        if (idx >= 0) {
-            const room: IRoomService = this.mRooms[idx];
-            room.pause();
-        }
-    }
-
-    public resumeRoom(id: number) {
-        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
-        if (idx >= 0) {
-            const room: IRoomService = this.mRooms[idx];
-            if(room)
-            if (room && room.scene) room.resume(room.scene.scene.key);
-        }
     }
 
     public stop() {
@@ -148,19 +131,19 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.push(room);
     }
 
-    private leaveScene(room: IRoomService) {
+    private leaveScene(room: ILogicRoomService) {
         if (!room) return;
         this.mWorld.leaveScene(room);
-        return new Promise((resolve, reject) => {
-            const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
-            if (loading) {
-                loading.show().then(() => {
-                    this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
-                    room.destroy();
-                    resolve();
-                });
-            }
-        });
+        // return new Promise((resolve, reject) => {
+        //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
+        //     if (loading) {
+        //         loading.show().then(() => {
+        //             this.mRooms = this.mRooms.filter((r: ILogicRoomService) => r.id !== room.id);
+        //             room.destroy();
+        //             resolve();
+        //         });
+        //     }
+        // });
     }
 
     private onEnterSceneHandler(packet: PBpacket) {

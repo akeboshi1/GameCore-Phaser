@@ -3,20 +3,7 @@ import { InputEnable } from "../element/element";
 import { ISprite } from "../element/sprite";
 import { Pos } from "../../utils/pos";
 import { IRoomService } from "../room";
-
-export interface IBlockObject {
-    readonly id: number;
-
-    getPosition(): Pos;
-
-    getPosition45(): Pos;
-
-    setRenderable(isRenderable: boolean, delay?: number): void;
-
-    getRenderable(): boolean;
-
-    setBlockable(val: boolean): this;
-}
+import { IBlockObject } from "./iblock.object";
 export abstract class BlockObject implements IBlockObject {
     public isUsed = false;
     protected mDisplay?: ElementDisplay;

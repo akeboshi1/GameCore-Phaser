@@ -1,5 +1,10 @@
-import { IPos } from "./logic.pos";
-export class Pos implements IPos {
+export interface IPos {
+    x: number;
+    y: number;
+    z?: number;
+    depth?: number;
+}
+export class LogicPos implements IPos {
     x: number;
     y: number;
     z?: number;
@@ -14,14 +19,14 @@ export class Pos implements IPos {
         this.depth = depth | 0;
     }
 
-    public add(x: number, y: number, z?: number): IPos {
+    public add(x: number, y: number, z?: number): LogicPos {
         this.x += x;
         this.x += y;
         this.z += z ? z : 0;
         return this;
     }
 
-    public equal(p: Pos): boolean {
+    public equal(p: LogicPos): boolean {
         return p.x === this.x && p.y === this.y && p.z === this.z && p.depth === this.depth;
     }
 
@@ -29,7 +34,7 @@ export class Pos implements IPos {
         return `Pos >> x: ${this.x}, y: ${this.y}, z: ${this.z}, depth: ${this.depth}`;
     }
 
-    public toPoint(): Phaser.Geom.Point {
-        return new Phaser.Geom.Point(this.x, this.y);
+    public toPoint(): IPos {
+        return { x: this.x, y: this.y };
     }
 }

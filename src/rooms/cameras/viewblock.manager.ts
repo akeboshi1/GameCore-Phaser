@@ -3,21 +3,7 @@ import { ICameraService } from "./cameras.manager";
 import { IPosition45Obj } from "../../utils/position45";
 import { Pos } from "../../utils/pos";
 import { IBlockObject } from "./block.object";
-
-export interface ViewblockService {
-    update(time: number, delta: number): void;
-
-    int(size: IPosition45Obj): void;
-
-    add(e: IBlockObject): boolean;
-
-    remove(e: IBlockObject): boolean;
-
-    check(e: IBlockObject): void;
-
-    destroy(): void;
-}
-
+import { ViewblockService } from "./viewblock.service";
 export class ViewblockManager implements ViewblockService {
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];

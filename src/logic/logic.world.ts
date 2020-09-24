@@ -10,6 +10,7 @@ import { i18n } from "../i18n";
 import Connection from "./connection";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { RoomManager } from "./rooms/room.manager";
+import { ILogicRoomService } from "./rooms/room";
 interface ISize {
     width: number;
     height: number;
@@ -98,6 +99,9 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
             this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         }
     }
+    public showLoading() {
+        this.mainPeer.showLoading();
+    }
     public onConnected() {
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
@@ -115,7 +119,6 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         }
     }
     public onError() {
-        this.gameState = GameState.SOCKET_ERROR;
         Logger.getInstance().log("socket error");
         if (!this.connect.connect) {
             if (this.mConfig.connectFail) {
@@ -164,9 +167,22 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         }
         this.mClock = new Clock(this.connect, this.mainPeer, this);
     }
+    public leaveScene(room: ILogicRoomService) {
+
+    }
+
+    public roomResume() {
+        this.mainPeer.roomResume();
+    }
+
+    public roomPause() {
+        this.mainPeer.roomPause();
+    }
+
     onClockReady(): void {
         this.mainPeer.onClockReady();
     }
+
     syncClock(times: number = 1) {
         this.mClock.sync(times);
     }

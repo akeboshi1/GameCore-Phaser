@@ -1,5 +1,5 @@
 import { HttpService } from "./http.service";
-import { LogicWorld } from "./world";
+import { LogicWorld } from "./logic.world";
 import { i18n } from "../i18n";
 
 /**
