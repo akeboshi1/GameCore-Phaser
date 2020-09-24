@@ -8,7 +8,7 @@ import { TextToolTips } from "../tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { i18n } from "../../i18n";
-import { CheckBox, NineSlicePatch, ClickEvent } from "apowophaserui";
+import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -26,6 +26,7 @@ export class PicaMainUIPanel extends BasePanel {
     private isSceneNameActive: boolean = false;
     private praiseBtn: CheckBox;
     private praiseImg: Phaser.GameObjects.Image;
+    private partyBtn: Button;
     private playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     private roomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
@@ -50,7 +51,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     preload() {
-        this.addAtlas(this.key, "main_ui/main_ui.png", "main_ui/main_ui.json");
+        this.addAtlas(this.key, "main_ui/mainui.png", "main_ui/mainui.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
@@ -232,7 +233,7 @@ export class PicaMainUIPanel extends BasePanel {
         this.mSceneName = new SceneName(this.scene, this.key, "room_icon", "setting_icon", this.dpr);
         this.mSceneName.setText("");
         this.mSceneName.x = 18 * this.dpr;
-        this.mCounter = new IconText(this.scene, this.key, "home_persons", this.dpr);
+        this.mCounter = new IconText(this.scene, UIAtlasKey.commonKey, "home_persons", this.dpr);
         this.mCounter.setText("");
         this.mCounter.x = this.mSceneName.x + this.mSceneName.rightbound + 5 * this.dpr;
         this.mCounter.y = this.mSceneName.y;
@@ -248,7 +249,13 @@ export class PicaMainUIPanel extends BasePanel {
         this.praiseImg = this.scene.make.image({ key: this.key, frame: "praise_before" });
         this.praiseImg.x = -10 * this.dpr;
         this.praiseBtn.add(this.praiseImg);
-        this.roomCon.add([this.mSceneName, this.mCounter, this.praiseBtn, this.textToolTip]);
+        this.partyBtn = new Button(this.scene, this.key, "home_party_bg", "home_party_bg", i18n.t("main_ui.party"));
+        this.partyBtn.x = this.praiseBtn.x + this.praiseBtn.width * 0.5 + this.partyBtn.width * 0.5 + 5 * this.dpr;
+        this.partyBtn.y = this.praiseBtn.y;
+        this.partyBtn.setTextOffset(8 * this.dpr, 0);
+        this.partyBtn.setTextStyle({ fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT });
+        this.partyBtn.on(String(ClickEvent.Tap), this.onPartyHandler, this);
+        this.roomCon.add([this.mSceneName, this.mCounter, this.praiseBtn, this.partyBtn, this.textToolTip]);
         this.roomCon.setSize(this.mSceneName.rightbound * 2, 30 * this.dpr);
         this.resize(w, h);
         super.init();
@@ -281,6 +288,10 @@ export class PicaMainUIPanel extends BasePanel {
 
     private onPraiseHandler(pointer: any, box: CheckBox) {
         this.emit("querypraise", box.selected);
+    }
+
+    private onPartyHandler() {
+        this.emit("showPanel", "PicOpenParty");
     }
 }
 
