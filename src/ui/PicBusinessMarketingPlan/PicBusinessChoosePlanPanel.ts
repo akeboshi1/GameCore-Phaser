@@ -62,7 +62,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         this.describleText.setWordWrapWidth(this.width - 45 * this.dpr, true);
         this.add(this.describleText);
         this.effectText = this.scene.make.text({
-            x: this.describleText.x, y: this.describleText.y + this.describleText.height + 10 * this.dpr,
+            x: this.describleText.x, y: this.describleText.y + this.describleText.height + 20 * this.dpr,
             text: "55225sadffqwerqwerqwer",
             style: {
                 fontSize: 10 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0",
@@ -78,7 +78,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
 
         this.gameScroll = new GameScroller(this.scene, {
             x: 0,
-            y: this.materialTitle.y + this.materialTitle.height + 20 * this.dpr,
+            y: this.materialTitle.y + this.materialTitle.height + 22 * this.dpr,
             width: this.width - 40 * this.dpr,
             height: 60 * this.dpr,
             zoom: this.zoom,
