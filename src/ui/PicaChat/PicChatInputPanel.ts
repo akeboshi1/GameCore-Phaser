@@ -75,7 +75,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             63 * this.dpr,
             28 * this.dpr,
             UIAtlasKey.commonKey,
-            "red_btn_s",
+            "red_btn_normal",
             i18n.t("common.cancel"),
             this.dpr,
             1,
@@ -173,6 +173,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             dpr: this.dpr,
             align: 0,
             orientation: 0,
+            selfevent: true
         });
         this.contentCon.add(this.gamescroll);
         this.gamescroll.addItem(this.mOutputText);
@@ -245,18 +246,18 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.quickChatScroll.y = this.quickBg.y;
         this.quickChatScroll.resetSize(camWidth, conHeight);
         this.keyboardHeight = height;
-        this.mInput.text =
-            screenHeight +
-            "   " +
-            height +
-            "   " +
-            statusHeight +
-            "   " +
-            this.dpr +
-            "   " +
-            camheight;
-        // tslint:disable-next-line:no-console
-        console.log(this.mInput.text + "    ");
+        // this.mInput.text =
+        //     screenHeight +
+        //     "   " +
+        //     height +
+        //     "   " +
+        //     statusHeight +
+        //     "   " +
+        //     this.dpr +
+        //     "   " +
+        //     camheight;
+        // // tslint:disable-next-line:no-console
+        // console.log(this.mInput.text + "    ");
         this.setQuickChatItems();
     }
 

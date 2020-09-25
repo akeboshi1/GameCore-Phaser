@@ -259,20 +259,22 @@ export class PicaChatPanel extends BasePanel {
         if (this.mInputText) {
             return;
         }
-        // const pktGlobal = window["pktGlobal"];
-        // if (pktGlobal && pktGlobal.envPlatform === "Cordova") {
-        if (this.scene.cache.json.has("quickchat")) {
-            this.openAppInputPanel();
+        const pktGlobal = window["pktGlobal"];
+        if (pktGlobal && pktGlobal.envPlatform === "Cordova") {
+            if (this.scene.cache.json.has("quickchat")) {
+                setTimeout(() => {
+                    this.openAppInputPanel();
+                }, 20);
+            } else {
+                const jsonUrl = `../../resources/ui/quickchat/${i18n.language}.json`;
+                this.scene.load.json("quickchat", jsonUrl);
+                this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
+                this.scene.load.start();
+            }
         } else {
-            const jsonUrl = `../../resources/ui/quickchat/${i18n.language}.json`;
-            this.scene.load.json("quickchat", jsonUrl);
-            this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
-            this.scene.load.start();
+            this.mInputText = new InputPanel(this.scene, this.mWorld);
+            this.mInputText.once("close", this.sendChat, this);
         }
-        // } else {
-        //     this.mInputText = new InputPanel(this.scene, this.mWorld);
-        //     this.mInputText.once("close", this.sendChat, this);
-        // }
     }
 
     private sendChat(val: string) {
