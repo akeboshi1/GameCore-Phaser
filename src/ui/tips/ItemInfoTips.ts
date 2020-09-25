@@ -15,10 +15,10 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
         this.key = key;
         this.dpr = dpr;
         this.config = config ? config : {
-            left: 20 * this.dpr,
-            top: 20 * this.dpr,
-            right: 20 * this.dpr,
-            bottom: 20 * this.dpr
+            left: 15 * this.dpr,
+            top: 15 * this.dpr,
+            right: 15 * this.dpr,
+            bottom: 15 * this.dpr
         };
         this.create(bg);
     }

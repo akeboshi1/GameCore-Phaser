@@ -197,6 +197,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
                 this.onQuickChatItemHandler(gameobject);
             },
         });
+        this.quickChatScroll.removeListen();
         this.quickCon.add(this.quickChatScroll);
         this.mInput.on("blur", this.onBlurHandler, this);
         this.mInput.on("focus", this.onFocusHandler, this);
@@ -236,8 +237,8 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.contentCon.x = camWidth * 0.5;
         this.gamescroll.resetSize(camWidth, this.contentCon.height);
         this.gamescroll.refreshMask();
-        const conHeight = 100 * this.dpr;// camheight - offsetHeight; // height + 20 * this.dpr;
-        this.quickCon.y = this.bottomCon.y + this.bottomCon.height * 0.5;
+        const conHeight = 200 * this.dpr;// camheight - offsetHeight; // height + 20 * this.dpr;
+        this.quickCon.y = this.bottomCon.y - this.bottomCon.height * 0.5;
         this.quickBg.y = -conHeight * 0.5;
         this.quickBg.displayWidth = camWidth + 10 * this.dpr;
         this.quickBg.displayHeight = conHeight;
