@@ -24,8 +24,8 @@ export class Render extends RPCPeer {
         this.remote[MAIN_WORKER].MainPeer.closeConnect();
     }
 
-    public initWorld() {
-        this.remote[MAIN_WORKER].MainPeer.initWorld();
+    public initWorld(desk: boolean) {
+        this.remote[MAIN_WORKER].MainPeer.initWorld(desk);
     }
 
     public initGame() {

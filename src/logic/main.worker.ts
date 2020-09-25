@@ -162,9 +162,9 @@ export class MainPeer extends RPCPeer {
     /**
      * 初始化world中的各个管理器,并添加socket事件监听
      */
-    @Export()
-    public initWorld() {
-        this.world.initWorld();
+    @Export([webworker_rpc.ParamType.boolean])
+    public initWorld(desk: boolean) {
+        this.world.initWorld(desk);
     }
     /**
      * 添加world中的socket消息监听

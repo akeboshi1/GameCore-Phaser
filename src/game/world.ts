@@ -124,7 +124,6 @@ export class World extends PacketHandler implements WorldService, GameMain {
                 osd: this.mConfig.osd || false,
                 closeGame: this.mConfig.closeGame ? true : false,
                 connectFail: this.mConfig.connectFail ? true : false,
-                parent: this.mConfig.parent || ""
             }),
             this._newGame();
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
@@ -132,7 +131,7 @@ export class World extends PacketHandler implements WorldService, GameMain {
             // connect to game server.
             this._peer.startConnect(gateway);
         }
-        this._peer.initWorld();
+        this._peer.initWorld(this.game.device.os.desktop);
         this.mGameEmitter = new Phaser.Events.EventEmitter();
         this.mUiManager = new UiManager(this);
         this.mMouseManager = new MouseManager(this);

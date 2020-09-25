@@ -10,8 +10,9 @@ import { LogicPos, IPos } from "../../utils/logic.pos";
 import { IBlockObject } from "../../rooms/cameras/iblock.object";
 import { Position45 } from "../../utils/position45";
 import { State } from "../../rooms/state/state.group";
-import { IElement } from "../../rooms/element/element";
-import { PlayerManager } from "../../rooms/player/player.manager";
+import { ILogicElement } from "./logic.element";
+import { PlayerManager } from "./player/player.manager";
+import { IPoint } from "game-capsule";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -59,7 +60,7 @@ export interface ILogicRoomService {
 
     // addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
 
-    getElement(id: number): IElement;
+    getElement(id: number): ILogicElement;
 
     update(time: number, delta: number): void;
 
@@ -205,7 +206,7 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
         return Position45.transformTo45(p, this.mMiniSize);
     }
 
-    public getElement(id: number): IElement {
+    public getElement(id: number): ILogicElement {
         let ele = null;
         if (this.mPlayerManager) {
             ele = this.mPlayerManager.get(id);
@@ -469,14 +470,15 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
     }
 
     private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        if (!this.scene) {
-            Logger.getInstance().log("Room scene  does not exist");
-            return;
-        }
-        const fall = new FallEffect(this.scene, this.mScaleRatio);
-        fall.show(status);
-        fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
-        this.addToSceneUI(fall);
+        // if (!this.scene) {
+        //     Logger.getInstance().log("Room scene  does not exist");
+        //     return;
+        // }
+        // const fall = new FallEffect(this.scene, this.mScaleRatio);
+        // fall.show(status);
+        // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
+        // this.addToSceneUI(fall);
+        this.mWorld.addFillEffect(pos,status);
     }
 
     private onMovePathHandler(packet: PBpacket) {

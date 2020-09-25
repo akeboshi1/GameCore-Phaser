@@ -44,20 +44,6 @@ export interface ISprite {
     toSprite(): op_client.ISprite;
 }
 
-export interface AnimationData {
-    name: string;
-    flip: boolean;
-    times?: number;
-    playingQueue?: AnimationQueue;
-}
-
-export interface AnimationQueue {
-    name: string;
-    playTimes?: number;
-    playedTimes?: number;
-    complete?: Function;
-}
-
 export class Sprite implements ISprite {
     protected mID: number;
     protected mPos: Pos;
@@ -103,13 +89,6 @@ export class Sprite implements ISprite {
         this.mAttrs = obj.attrs;
         if (obj.avatar) {
             this.updateAvatar(obj.avatar);
-            // if (attrs && attrs.length > 0) {
-            //     for (const att of attrs) {
-            //         if (att.key === "minecart") {
-            //             this.mAvatar.stalkerId = att.value;
-            //         }
-            //     }
-            // }
         }
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);

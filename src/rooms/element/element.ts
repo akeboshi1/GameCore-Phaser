@@ -1,5 +1,4 @@
 import { IElementManager, ElementManager } from "./element.manager";
-import { IFramesModel } from "../display/frames.model";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
@@ -17,6 +16,7 @@ import { DisplayObject, DisplayField } from "../display/display.object";
 import { AI } from "../action/AI";
 import { Buffer } from "buffer/";
 import { Font } from "../../utils/font";
+import { IFramesModel } from "../../logic/rooms/display/iframe.model";
 
 export enum PlayerState {
     IDLE = "idle",

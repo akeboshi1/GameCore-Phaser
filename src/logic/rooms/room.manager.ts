@@ -42,10 +42,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     public getRoom(id: number): ILogicRoomService | undefined {
-        // const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
-        // if (idx >= 0) {
-        //     return this.mRooms[idx];
-        // }
         return this.mRooms.find((room: Room) => {
             return room.id === id;
         });

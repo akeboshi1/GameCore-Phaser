@@ -4,13 +4,14 @@ import { MainPeer } from "./main.worker";
 import { IConnectListener } from "../../lib/net/socket";
 import { Logger } from "../utils/log";
 import { HttpService } from "./http.service";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
 import { HttpClock } from "./http.clock";
 import { i18n } from "../i18n";
 import Connection from "./connection";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { RoomManager } from "./rooms/room.manager";
 import { ILogicRoomService } from "./rooms/room";
+import { IPoint } from "game-capsule";
 interface ISize {
     width: number;
     height: number;
@@ -30,6 +31,7 @@ export interface ILogiclauncherConfig {
     keyboardHeight: number;
     width: number;
     height: number;
+    desktop: boolean;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;
@@ -65,7 +67,8 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         this.connect = connect;
         this.connect.addPacketListener(this);
     }
-    public initWorld() {
+    public initWorld(desk: boolean) {
+        this.mConfig.desktop = desk;
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
@@ -143,7 +146,10 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
         this.mainPeer.loadSceneConfig(sceneID);
     }
     public clearGameComplete() {
-        this.initWorld();
+        this.initWorld(this.mConfig.desktop || false);
+    }
+    public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+        this.mainPeer.addFillEffect(pos, status);
     }
     public setSize(width, height) {
         this.mSize = {
