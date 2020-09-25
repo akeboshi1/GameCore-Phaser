@@ -262,7 +262,9 @@ export class PicaChatPanel extends BasePanel {
         const pktGlobal = window["pktGlobal"];
         if (pktGlobal && pktGlobal.envPlatform === "Cordova") {
             if (this.scene.cache.json.has("quickchat")) {
-                this.openAppInputPanel();
+                setTimeout(() => {
+                    this.openAppInputPanel();
+                }, 20);
             } else {
                 const jsonUrl = `../../resources/ui/quickchat/${i18n.language}.json`;
                 this.scene.load.json("quickchat", jsonUrl);

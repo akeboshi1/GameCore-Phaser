@@ -232,7 +232,9 @@
     "receive": "RECEIVE",
     "deliverying": "DELIVERYING...",
     "refreshtips": "Are you sure to refresh the order",
-    "refreshtitle": "ORDER REFRESH"
+    "refreshtitle": "ORDER REFRESH",
+    "progresstitle": "PROGRESS REWARD",
+    "rewardtitle": "Progress reward"
   },
   "work": {
     "title": "WORK",

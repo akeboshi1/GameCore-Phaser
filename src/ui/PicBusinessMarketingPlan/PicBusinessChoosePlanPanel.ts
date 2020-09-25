@@ -59,6 +59,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         const gridY = -this.height * 0.5 + gridHeight * 0.5 + 10 * this.dpr;
         this.gridtable = this.createGrideTable(0, gridY, gridWdith, gridHeight, 90 * this.dpr, 100 * this.dpr);
         this.describleText = this.scene.make.text({ x: -this.width * 0.5 + 20 * this.dpr, y: gridY + gridHeight * 0.5 + 10 * this.dpr, text: "This industry has great development potential.", style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0);
+        this.describleText.setWordWrapWidth(this.width - 45 * this.dpr, true);
         this.add(this.describleText);
         this.effectText = this.scene.make.text({
             x: this.describleText.x, y: this.describleText.y + this.describleText.height + 10 * this.dpr,
@@ -72,13 +73,13 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             }
         }).setOrigin(0);
         this.add(this.effectText);
-        this.materialTitle = this.scene.make.text({ x: this.describleText.x, y: this.effectText.y + this.effectText.height + 10 * this.dpr, text: i18n.t("business_street.material_requirements"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0);
+        this.materialTitle = this.scene.make.text({ x: this.describleText.x, y: this.effectText.y + this.effectText.height + 5 * this.dpr, text: i18n.t("business_street.material_requirements"), style: { fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#0" } }).setOrigin(0);
         this.add(this.materialTitle);
 
         this.gameScroll = new GameScroller(this.scene, {
             x: 0,
-            y: this.materialTitle.y + this.materialTitle.height + 25 * this.dpr,
-            width: this.width - 30 * this.dpr,
+            y: this.materialTitle.y + this.materialTitle.height + 20 * this.dpr,
+            width: this.width - 40 * this.dpr,
             height: 60 * this.dpr,
             zoom: this.zoom,
             dpr: this.dpr,

@@ -186,16 +186,12 @@ export class PicHousePanel extends BasePanel {
         this.editorRoomBtn.visible = false;
         this.topCheckBox.selectIndex(0);
         this.itemsPanel = new ItemsConsumeFunPanel(this.scene, 278 * this.dpr, 198 * this.dpr, this.dpr, this.scale);
+        this.itemsPanel.createBackGrphaic(w, h);
         this.itemsPanel.setTextInfo(i18n.t("room_info.renovate").toUpperCase(), i18n.t("compose.needMaterials"));
         this.itemsPanel.visible = false;
         this.itemsPanel.setHandler(new Handler(this, () => {
             this.emit("queryrefurbish", this.mRoomInfoData.roomId);
         }));
-        const mblackbg = this.scene.make.graphics(undefined, false);
-        mblackbg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-        mblackbg.fillStyle(0, 0.66);
-        mblackbg.fillRect(-w * 0.5, -h * 0.5 + this.itemsPanel.y, w, h);
-        this.itemsPanel.addAt(mblackbg, 0);
         this.add(this.content);
         this.resize(0, 0);
         super.init();

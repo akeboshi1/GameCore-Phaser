@@ -23,6 +23,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private curSelectItem: MaterialItem;
     private zoom: number;
     private havebutton: boolean = true;
+    private mblackGraphic: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, havebutton: boolean = true) {
         super(scene);
         this.dpr = dpr;
@@ -30,6 +31,13 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         this.havebutton = havebutton;
         this.setSize(width, height);
         this.create();
+    }
+    public createBackGrphaic(width: number, height: number) {
+        this.mblackGraphic = this.scene.make.graphics(undefined, false);
+        this.mblackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
+        this.mblackGraphic.fillStyle(0, 0.66);
+        this.mblackGraphic.fillRect(-width * 0.5, -height * 0.5 + this.y, width, height);
+        this.addAt(this.mblackGraphic, 0);
     }
     public resetMask() {
         this.gameScroll.refreshMask();

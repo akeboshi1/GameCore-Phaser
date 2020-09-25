@@ -364,20 +364,20 @@
 			"frame": {
 				"x": 1144,
 				"y": 353,
-				"w": 71,
-				"h": 76
+				"w": 98,
+				"h": 99
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 71,
-				"h": 76
+				"w": 98,
+				"h": 99
 			},
 			"sourceSize": {
-				"w": 71,
-				"h": 76
+				"w": 98,
+				"h": 99
 			}
 		},
 		"title": {

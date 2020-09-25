@@ -10,6 +10,7 @@ import { Url, Coin } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
 import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
+import { ItemsConsumeFunPanel } from "../components/ItemsConsumeFunPanel";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;
@@ -24,6 +25,8 @@ export class PicOrderPanel extends BasePanel {
     private royalOrderLimit: op_def.IValueBar;
     private itemtips: ItemInfoTips;
     private alertView: AlertView;
+    // private itemsPanel: ItemsConsumeFunPanel;
+    private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -39,6 +42,8 @@ export class PicOrderPanel extends BasePanel {
         this.content.y = h * 0.5;
         this.mGameGrid.resetMask();
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+        // this.itemsPanel.y = this.height * 0.5 - 60 * this.dpr;
+        // this.itemsPanel.x = this.width * 0.5;
     }
 
     public show(param?: any) {
@@ -72,6 +77,7 @@ export class PicOrderPanel extends BasePanel {
     preload() {
         this.addAtlas(this.key, "order/order.png", "order/order.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
+        this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
         super.preload();
     }
     init() {
@@ -125,6 +131,7 @@ export class PicOrderPanel extends BasePanel {
                 if (cellContainer === null) {
                     cellContainer = new OrderItem(this.scene, this.mWorld, this.key, this.dpr);
                     cellContainer.setHandler(new Handler(this, this.onSendHandler), new Handler(this, this.onRefreshOrderList), new Handler(this, this.onItemInfoTips));
+                    cellContainer.on("pointerdown", this.onClickDownHandler, this);
                 }
                 cellContainer.setOrderData(item, index);
                 return cellContainer;
@@ -142,9 +149,16 @@ export class PicOrderPanel extends BasePanel {
         this.goldImageValue.y = conHeight * 0.5 - 25 * this.dpr;
         this.goldImageValue.visible = false;
         this.orderProgressPanel.visible = false;
-        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
+        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
         this.itemtips.visible = false;
         this.content.add([this.bg, this.closeBtn, this.titlebg, titlebg2, this.tilteName, this.orderProgressPanel, this.mGameGrid, this.goldImageValue, this.itemtips]);
+        // const width: number = this.scaleWidth;
+        // const height: number = this.scaleHeight;
+        // this.itemsPanel = new ItemsConsumeFunPanel(this.scene, 278 * this.dpr, 198 * this.dpr, this.dpr, this.scale);
+        // this.itemsPanel.createBackGrphaic(width, height);
+        // this.itemsPanel.setTextInfo(i18n.t("order.progresstitle").toUpperCase(), i18n.t("order.rewardtitle"));
+        // this.itemsPanel.visible = false;
+        // this.add(this.itemsPanel);
         this.resize();
         super.init();
         this.emit("questlist");
@@ -163,6 +177,7 @@ export class PicOrderPanel extends BasePanel {
     }
 
     public setOrderProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
+        this.progressData = content;
         this.orderProgressPanel.setProgressDatas(content);
     }
     destroy() {
@@ -190,17 +205,73 @@ export class PicOrderPanel extends BasePanel {
         }
     }
 
-    private onProgressHandler(index: number) {
-        this.emit("questreward", index);
+    private onProgressHandler(index: number, item: OrderProgressItem) {
+        if (!this.progressData) return;
+        const data = item.progressData;
+        if (!data.received) {
+            if (data.targetValue < this.progressData.currentProgressValue) {
+                this.emit("questreward", index);
+            } else {
+                this.itemtips.setItemData(data.rewards[0]);
+                this.showItemTipsState(item);
+            }
+        }
     }
+
     private onRefreshOrderList() {
         this.emit("questlist");
     }
-    private onItemInfoTips(data: op_client.ICountablePackageItem, isdown: boolean, pos: Phaser.Geom.Point) {
-        this.itemtips.visible = isdown;
-        this.itemtips.x = pos.x;
-        this.itemtips.y = pos.y;
+    private onItemInfoTips(item: MaterialItem) {
+        const data = item.itemData;
         this.itemtips.setText(this.getDesText(data));
+        this.showItemTipsState(item, 10 * this.dpr);
+    }
+
+    private onClickDownHandler() {
+        this.setItemTipsVisible(false);
+    }
+
+    private showItemTipsState(item: Phaser.GameObjects.Container, offsety: number = 0) {
+        const posx = this.itemtips.x;
+        const posy = this.itemtips.y;
+        this.setTipsPosition(item, offsety);
+        if (posx !== this.itemtips.x || posy !== this.itemtips.y) {
+            this.setItemTipsVisible(true);
+        } else {
+            if (!this.itemtips.visible) {
+                this.setItemTipsVisible(true);
+            } else {
+                this.setItemTipsVisible(false);
+            }
+        }
+    }
+
+    private setItemTipsVisible(visible: boolean) {
+        this.itemtips.visible = visible;
+        // if (visible) {
+        //     this.scene.input.on("pointerdown", this.onClickDownHandler, this);
+        // } else {
+        //     this.scene.input.off("pointerdown", this.onClickDownHandler, this);
+        // }
+    }
+
+    private setTipsPosition(gameobject: Phaser.GameObjects.Container, offsety: number = 0) {
+        let posx: number = gameobject.x;
+        let posy: number = gameobject.y;
+        let tempobject = <Phaser.GameObjects.Container>gameobject;
+        while (tempobject.parentContainer !== this.content) {
+            posx += tempobject.parentContainer.x;
+            posy += tempobject.parentContainer.y;
+            tempobject = tempobject.parentContainer;
+        }
+        if (posx - this.itemtips.width * 0.5 < -this.content.width * 0.5) {
+            this.itemtips.x = this.itemtips.width * 0.5 - this.content.width * 0.5 + 20 * this.dpr;
+        } else if (posx + this.itemtips.width * 0.5 > this.content.width * 0.5) {
+            this.itemtips.x = this.content.width * 0.5 - this.itemtips.width * 0.5 - 20 * this.dpr;
+        } else {
+            this.itemtips.x = posx;
+        }
+        this.itemtips.y = posy - this.itemtips.height * 0.5 + 10 * this.dpr + offsety;
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
@@ -304,6 +375,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.sendBtn.on(String(ClickEvent.Tap), this.onSendHandler, this);
         this.acceleBtn.on(String(ClickEvent.Tap), this.onAcceleHandler, this);
         this.refreshBtn.on(String(ClickEvent.Tap), this.onRefreshHandler, this);
+        this.setInteractive();
     }
 
     public setHandler(send: Handler, refresh: Handler, tips: Handler) {
@@ -363,13 +435,6 @@ class OrderItem extends Phaser.GameObjects.Container {
         if (this.sendHandler) this.sendHandler.runWith([this.index, op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE]);
     }
 
-    private onItemTipsHandler(item: MaterialItem, isdown: boolean) {
-        const data = item.itemData;
-        const pointx = this.x + item.x;
-        const pointy = this.y + item.y;
-        if (this.tipsHandler) this.tipsHandler.runWith([data, isdown, new Phaser.Geom.Point(pointx, pointy)]);
-    }
-
     private deliveryState(data: op_client.IPKT_Quest) {
         const questType = data.questType;
         this.headbg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_head_bg" : "order_ordinary_head_bg");
@@ -387,9 +452,9 @@ class OrderItem extends Phaser.GameObjects.Container {
                 item = new MaterialItem(this.scene, this.key, this.dpr);
                 this.add(item);
                 this.materialItems.push(item);
-                item.setHandler(new Handler(this, this.onItemTipsHandler));
+                item.setHandler(this.tipsHandler);
+                item.addListen();
             }
-            item.addListen();
             item.setMaterialData(itemData);
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 8 * this.dpr;
@@ -623,25 +688,19 @@ class MaterialItem extends Phaser.GameObjects.Container {
     }
 
     public addListen() {
-        this.on("pointerdown", this.onClickDownHandler, this);
-        this.scene.input.on("pointerup", this.onClickUpHandler, this);
+        this.on("pointerup", this.onClickHandler, this);
     }
 
     public removeListen() {
-        this.off("pointerdown", this.onClickDownHandler, this);
-        this.scene.input.off("pointerup", this.onClickUpHandler, this);
+        this.off("pointerdown", this.onClickHandler, this);
     }
 
     destroy(fromScene?: boolean) {
         this.removeListen();
         super.destroy(fromScene);
     }
-    private onClickDownHandler() {
-        if (this.tipsHandler) this.tipsHandler.runWith([this, true]);
-    }
-
-    private onClickUpHandler() {
-        if (this.tipsHandler) this.tipsHandler.runWith([this, false]);
+    private onClickHandler() {
+        if (this.tipsHandler) this.tipsHandler.runWith(this);
     }
 }
 
@@ -775,7 +834,7 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
                 item = new OrderProgressItem(this.scene, 0, 0, this.key, this.dpr);
                 this.add(item);
                 this.progressItems.push(item);
-                item.setHandler(new Handler(this, this.onReceiveHandler));
+                item.setHandler(this.receiveHandler);
             }
             item.x = -this.width * 0.5 + this.width * (i + 1) / len - 16 * this.dpr;
             item.y = 15 * this.dpr;
@@ -787,9 +846,6 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
 
     public setHandler(handler: Handler) {
         this.receiveHandler = handler;
-    }
-    private onReceiveHandler(index: number) {
-        if (this.receiveHandler) this.receiveHandler.runWith(index);
     }
 }
 class OrderProgressItem extends Phaser.GameObjects.Container {
@@ -837,18 +893,18 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         this.balckgraphic.visible = false;
         if (data.targetValue <= curvalue) {
             this.bg.setFrameNormal("order_progress_finished", "order_progress_finished");
-            if (!data.received)
-                this.bg.on(String(ClickEvent.Tap), this.onReceiveHandler, this);
-            else {
+            if (data.received) {
                 this.finishIcon.visible = true;
                 this.balckgraphic.visible = true;
-                this.bg.off(String(ClickEvent.Tap), this.onReceiveHandler, this);
             }
         } else {
             this.bg.setFrameNormal("order_progress_unfinished", "order_progress_unfinished");
+        }
+        if (!data.received)
+            this.bg.on(String(ClickEvent.Tap), this.onReceiveHandler, this);
+        else {
             this.bg.off(String(ClickEvent.Tap), this.onReceiveHandler, this);
         }
-
     }
 
     public setHandler(receive: Handler) {
@@ -856,6 +912,6 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
     }
 
     private onReceiveHandler() {
-        if (this.receiveHandler) this.receiveHandler.runWith(this.index);
+        if (this.receiveHandler) this.receiveHandler.runWith([this.index, this]);
     }
 }

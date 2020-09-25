@@ -75,7 +75,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             63 * this.dpr,
             28 * this.dpr,
             UIAtlasKey.commonKey,
-            "red_btn_s",
+            "red_btn_normal",
             i18n.t("common.cancel"),
             this.dpr,
             1,
@@ -173,6 +173,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             dpr: this.dpr,
             align: 0,
             orientation: 0,
+            selfevent: true
         });
         this.contentCon.add(this.gamescroll);
         this.gamescroll.addItem(this.mOutputText);
@@ -197,6 +198,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
                 this.onQuickChatItemHandler(gameobject);
             },
         });
+        this.quickChatScroll.removeListen();
         this.quickCon.add(this.quickChatScroll);
         this.mInput.on("blur", this.onBlurHandler, this);
         this.mInput.on("focus", this.onFocusHandler, this);
@@ -236,26 +238,26 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.contentCon.x = camWidth * 0.5;
         this.gamescroll.resetSize(camWidth, this.contentCon.height);
         this.gamescroll.refreshMask();
-        const conHeight = 100 * this.dpr;// camheight - offsetHeight; // height + 20 * this.dpr;
-        this.quickCon.y = this.bottomCon.y + this.bottomCon.height * 0.5;
+        const conHeight = 200 * this.dpr;// camheight - offsetHeight; // height + 20 * this.dpr;
+        this.quickCon.y = this.bottomCon.y - this.bottomCon.height * 0.5;
         this.quickBg.y = -conHeight * 0.5;
         this.quickBg.displayWidth = camWidth + 10 * this.dpr;
         this.quickBg.displayHeight = conHeight;
         this.quickChatScroll.y = this.quickBg.y;
         this.quickChatScroll.resetSize(camWidth, conHeight);
         this.keyboardHeight = height;
-        this.mInput.text =
-            screenHeight +
-            "   " +
-            height +
-            "   " +
-            statusHeight +
-            "   " +
-            this.dpr +
-            "   " +
-            camheight;
-        // tslint:disable-next-line:no-console
-        console.log(this.mInput.text + "    ");
+        // this.mInput.text =
+        //     screenHeight +
+        //     "   " +
+        //     height +
+        //     "   " +
+        //     statusHeight +
+        //     "   " +
+        //     this.dpr +
+        //     "   " +
+        //     camheight;
+        // // tslint:disable-next-line:no-console
+        // console.log(this.mInput.text + "    ");
         this.setQuickChatItems();
     }
 
