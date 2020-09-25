@@ -7,7 +7,7 @@ import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_
 
 const LATENCY_SAMPLES = 7; // Latency Array length
 const MIN_READY_SAMPLES = 2;
-const CHECK_INTERVAL = 8000; // (ms)
+const CHECK_INTERVAL = 600; // (ms)
 const MAX_DELAY = 500; // (ms)
 
 export interface ClockReadyListener {
