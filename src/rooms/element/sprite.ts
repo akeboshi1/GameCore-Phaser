@@ -118,7 +118,7 @@ export class Sprite implements ISprite {
             this.mSn = obj.sn;
         }
         this.tryRegisterAnimation(obj.animationRegistrationMap);
-        this.mCurrentAnimationName = obj.currentAnimationName || "idle";
+        this.mCurrentAnimationName = obj.currentAnimationName;
         this.direction = obj.direction || 3;
         this.mNickname = obj.nickname;
         this.mBindID = obj.bindId;
@@ -341,6 +341,8 @@ export class Sprite implements ISprite {
         if (this.currentAnimationName) {
             this.mDisplayInfo.animationName = this.currentAnimationName;
             this.setAnimationData(this.currentAnimationName, this.direction);
+        } else {
+            if (displayInfo.animationName) this.currentAnimationName = displayInfo.animationName;
         }
     }
 
@@ -453,7 +455,7 @@ export class Sprite implements ISprite {
     }
 
     private setAnimationData(animationName: string, direction: Direction) {
-        if (!this.displayInfo) {
+        if (!this.displayInfo || !animationName) {
             return;
         }
         let baseAniName = animationName.split(`_`)[0];
