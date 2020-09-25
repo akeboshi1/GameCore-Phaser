@@ -425,10 +425,10 @@ anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apowophaserui@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.npm.taobao.org/apowophaserui/download/apowophaserui-0.6.5.tgz#a2edeeb756d05f275c529e05938bb086256784a7"
-  integrity sha1-ou3ut1bQXydcUp4Fk4uwhiVnhKc=
+apowophaserui@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.npm.taobao.org/apowophaserui/download/apowophaserui-0.6.6.tgz#d18da31f40e6984de58da565e845f7c6ff077a87"
+  integrity sha1-0Y2jH0DmmE3ljaVl6EX3xv8Heoc=
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"
