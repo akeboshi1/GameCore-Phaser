@@ -232,7 +232,9 @@
     "receive": "领取",
     "deliverying": "送货中...",
     "refreshtips": "确定刷新订单吗？",
-    "refreshtitle": "订单刷新"
+    "refreshtitle": "订单刷新",
+    "progresstitle": "进度奖励",
+    "rewardtitle": "完成进度奖励"
   },
   "work": {
     "title": "打 工",
