@@ -124,6 +124,8 @@
 
 /*! ../../plugins/utils/input/IsPointerInBounds.js */
 
+/*! ../../plugins/utils/input/StopPropagationTouchEvents.js */
+
 /*! ../../plugins/utils/mask/DefaultMask.js */
 
 /*! ../../plugins/utils/mask/MaskToGameObject.js */
@@ -166,7 +168,7 @@
 
 /*! ../../utils/eventemitter/EventEmitterMethods.js */
 
-/*! ../../utils/input/StopPropagationTouchEvents */
+/*! ../../utils/input/StopPropagationTouchEvents.js */
 
 /*! ../../utils/mask/DefaultMask.js */
 
@@ -230,8 +232,6 @@
 
 /*! ../plugins/behaviors/textedit/Edit.js */
 
-/*! ../plugins/gameobjects/inputtext/InputText */
-
 /*! ../plugins/utils/input/IsPointerInBounds.js */
 
 /*! ../scrollableblock/ScrollableBlock.js */
@@ -261,6 +261,8 @@
 /*! ../ui/baseUI/BaseMediator */
 
 /*! ../ui/checkbox/CheckBox */
+
+/*! ../ui/inputText/InputText.js */
 
 /*! ../ui/interface/baseUI/Patches.config */
 
@@ -724,12 +726,6 @@
 
 /*! ./utils/Hide.js */
 
-/*! ./utils/Resize */
-
-/*! ./utils/RouteEvents */
-
-/*! ./utils/SetProperties */
-
 /*! ./utils/WaitEvent.js */
 
 /*! ./utils/struct/Stack.js */
@@ -1032,6 +1028,10 @@
 
 /*!***************************************!*\
   !*** ./lib/ui/gridtable/GridTable.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./lib/ui/inputText/InputText.js ***!
   \***************************************/
 
 /*!***************************************!*\
@@ -1795,10 +1795,6 @@
   \***********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./lib/plugins/gameobjects/inputtext/utils/Resize.js ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
   !*** ./lib/plugins/gameobjects/ninepatch/utils/IsEdge.js ***!
   \***********************************************************/
 
@@ -1879,10 +1875,6 @@
   \****************************************************************/
 
 /*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/inputtext/utils/RouteEvents.js ***!
-  \****************************************************************/
-
-/*!****************************************************************!*\
   !*** ./lib/plugins/gameobjects/shape/utils/FillStyleCanvas.js ***!
   \****************************************************************/
 
@@ -1928,10 +1920,6 @@
 
 /*!******************************************************************!*\
   !*** ./lib/plugins/gameobjects/gridtable/methods/SetGridSize.js ***!
-  \******************************************************************/
-
-/*!******************************************************************!*\
-  !*** ./lib/plugins/gameobjects/inputtext/utils/SetProperties.js ***!
   \******************************************************************/
 
 /*!********************************************************************!*\
