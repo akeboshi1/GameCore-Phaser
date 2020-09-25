@@ -209,7 +209,7 @@ export class PicOrderPanel extends BasePanel {
         if (!this.progressData) return;
         const data = item.progressData;
         if (!data.received) {
-            if (data.targetValue < this.progressData.currentProgressValue) {
+            if (data.targetValue <= this.progressData.currentProgressValue) {
                 this.emit("questreward", index);
             } else {
                 this.itemtips.setItemData(data.rewards[0]);
