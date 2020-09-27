@@ -98,7 +98,7 @@ export class ComposePanel extends BasePanel {
         this.content.add([titleBg, titleTex]);
         const backBtn = new Button(this.scene, UIAtlasKey.commonKey, "back_arrow", "back_arrow");
         backBtn.setPosition(-width * 0.5 + 20 * this.dpr, -height * 0.5 + 30 * this.dpr);
-        backBtn.on("Tap", this.onBackHandler, this);
+        backBtn.on(ClickEvent.Tap, this.onBackHandler, this);
         this.content.add(backBtn);
 
         this.mDetailDisplay = new DetailDisplay(this.scene, true);

@@ -8,7 +8,7 @@ import { Handler } from "../../Handler/Handler";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { PicPropFunConfig } from "./PicPropFunConfig";
 import { DetailDisplay } from "../Market/DetailDisplay";
-import { NineSliceButton, GameSlider, NineSlicePatch } from "apowophaserui";
+import { NineSliceButton, GameSlider, NineSlicePatch, ClickEvent } from "apowophaserui";
 export class PicPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private key: string = "picpropfunpanel";
@@ -67,15 +67,15 @@ export class PicPropFunPanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.cancelBtn.on("Tap", this.onCancelBtnHandler, this);
-        this.confirmBtn.on("Tap", this.onConfirmBtnHandler, this);
+        this.cancelBtn.on(ClickEvent.Tap, this.onCancelBtnHandler, this);
+        this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnHandler, this);
 
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        this.cancelBtn.off("Tap", this.onCancelBtnHandler, this);
-        this.confirmBtn.off("Tap", this.onConfirmBtnHandler, this);
+        this.cancelBtn.off(ClickEvent.Tap, this.onCancelBtnHandler, this);
+        this.confirmBtn.off(ClickEvent.Tap, this.onConfirmBtnHandler, this);
     }
 
     preload() {

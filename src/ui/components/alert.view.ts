@@ -2,7 +2,7 @@ import { BasePanel } from "./BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
 import { i18n } from "../../i18n";
-import { Button, BBCodeText } from "apowophaserui";
+import { Button, BBCodeText, ClickEvent } from "apowophaserui";
 
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";
@@ -99,7 +99,7 @@ export class AlertView extends BasePanel {
         });
         this.mOkBtn.x = (bg.width - this.mOkBtn.displayWidth) / 2 - 38 * this.dpr;
         this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
-        this.mOkBtn.on("Tap", this.onOkHandler, this);
+        this.mOkBtn.on(ClickEvent.Tap, this.onOkHandler, this);
 
         this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, i18n.t("common.cancel"));
         this.mCancelBtn.setTextStyle({
@@ -108,7 +108,7 @@ export class AlertView extends BasePanel {
         });
         this.mCancelBtn.x = -(bg.width - this.mCancelBtn.displayWidth) / 2 + 38 * this.dpr;
         this.mCancelBtn.y = this.mOkBtn.y;
-        this.mCancelBtn.on("Tap", this.onCancelHandler, this);
+        this.mCancelBtn.on(ClickEvent.Tap, this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);
         super.init();
     }

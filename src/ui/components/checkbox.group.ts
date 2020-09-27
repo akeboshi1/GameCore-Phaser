@@ -1,3 +1,4 @@
+import { ClickEvent } from "apowophaserui";
 
 export class CheckboxGroup extends Phaser.Events.EventEmitter {
   private mList: any[] = [];
@@ -8,14 +9,14 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
 
   public appendItem(item: any): this {
     this.mList.push(item);
-    item.on("Tap", this.onGameObjectUpHandler, this);
+    item.on(ClickEvent.Tap, this.onGameObjectUpHandler, this);
     return this;
   }
 
   public appendItemAll(items: any[]): this {
     this.mList = this.mList.concat(items);
     for (const item of items) {
-      item.on("Tap", this.onGameObjectUpHandler, this);
+      item.on(ClickEvent.Tap, this.onGameObjectUpHandler, this);
     }
     return this;
   }
@@ -48,7 +49,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
     }
     item.changeDown();
     this.mSelectedButton = item;
-    this.emit("selected", item);
+    this.emit(ClickEvent.Selected, item);
   }
 
   public reset() {

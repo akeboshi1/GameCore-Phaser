@@ -8,7 +8,7 @@ import { i18n } from "../../i18n";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { FramesModel } from "../../rooms/display/frames.model";
-import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText } from "apowophaserui";
+import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText, ClickEvent } from "apowophaserui";
 import { ItemInfoTips } from "../tips/ItemInfoTips";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
@@ -64,7 +64,7 @@ export class PicFurniFunPanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.on("Tap", this.onConfirmBtnClick, this);
+        this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnClick, this);
         this.closeBtn.on("pointerup", this.OnClosePanel, this);
     }
 

@@ -6,6 +6,7 @@ import { IRoomService, Room } from "../rooms/room";
 import { MessageType } from "../const/MessageType";
 import { FramesDisplay } from "../rooms/display/frames.display";
 import { Element } from "../rooms/element/element";
+import { ClickEvent } from "apowophaserui";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -91,7 +92,7 @@ export class MouseManager extends PacketHandler {
             const diffY = Math.abs(pointer.downY - pointer.upY);
             if (diffX < 10 && diffY < 10) {
                 // events.push(MouseEvent.Tap);
-                this.worldService.emitter.emit("Tap", pointer, gameobject);
+                this.worldService.emitter.emit(ClickEvent.Tap, pointer, gameobject);
                 if (pointer.isDown === false) {
                     if (com instanceof FramesDisplay) {
                         // com.element.scaleTween();

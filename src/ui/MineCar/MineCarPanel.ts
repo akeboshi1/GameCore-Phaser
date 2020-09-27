@@ -7,7 +7,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Url, CloseButton } from "../../utils/resUtil";
 import { AlertView } from "../components/alert.view";
 import { i18n } from "../../i18n";
-import { GameGridTable, Button, TabButton } from "apowophaserui";
+import { GameGridTable, Button, TabButton, ClickEvent } from "apowophaserui";
 export class MineCarPanel extends BasePanel {
   private readonly key = "mine_car";
   // private mPanel: Phaser.GameObjects.Container;
@@ -79,13 +79,13 @@ export class MineCarPanel extends BasePanel {
     if (!this.mInitialized) return;
     this.removeListen();
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mDiscardBtn.on("Tap", this.enterDiscardMode, this);
+    this.mDiscardBtn.on(ClickEvent.Tap, this.enterDiscardMode, this);
   }
 
   removeListen() {
     if (!this.mInitialized) return;
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
-    this.mDiscardBtn.off("Tap", this.enterDiscardMode, this);
+    this.mDiscardBtn.off(ClickEvent.Tap, this.enterDiscardMode, this);
   }
 
   setProp(items: op_client.ICountablePackageItem[], limit: number) {
