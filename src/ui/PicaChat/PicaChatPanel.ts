@@ -273,19 +273,20 @@ export class PicaChatPanel extends BasePanel {
         this.emit("showNavigate");
     }
     private onGiftHandler() {
-        if (this.giftPanel) {
-            if (this.giftPanel.visible) {
-                this.giftPanel.hide();
-            } else {
-                this.giftPanel.show();
+        if (!this.giftPanel || !this.giftPanel.visible) {
+            this.hideAllChildPanel();
+            if (!this.giftPanel) {
+                this.giftPanel = new PicGiftPanel(this.scene, 0, 0, this.width, 175 * this.dpr, this.key, this.dpr, this.scale);
+                this.giftPanel.y = this.height - this.giftPanel.height * 0.5;
+                this.giftPanel.x = this.width * 0.5;
+                this.add(this.giftPanel);
+                this.giftPanel.resize();
             }
-        }
-        if (!this.giftPanel) {
-            this.giftPanel = new PicGiftPanel(this.scene, 0, 0, this.width, 175 * this.dpr, this.key, this.dpr, this.scale);
-            this.giftPanel.y = this.height - this.giftPanel.height * 0.5;
-            this.giftPanel.x = this.width * 0.5;
-            this.add(this.giftPanel);
-            this.giftPanel.resize();
+            this.resize(this.width, 185 * this.dpr);
+            this.giftPanel.show();
+        } else {
+            this.giftPanel.hide();
+            this.showChatTextArea();
         }
     }
 
@@ -353,5 +354,11 @@ export class PicaChatPanel extends BasePanel {
     }
     private hideAllChildPanel() {
         if (this.giftPanel) this.giftPanel.hide();
+        if (this.mTextArea) this.mTextArea.visible = false;
+        this.mScrollBtn.disableInteractive();
+    }
+    private showChatTextArea() {
+        this.mTextArea.visible = true;
+        this.mScrollBtn.setInteractive();
     }
 }
