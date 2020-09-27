@@ -102,6 +102,9 @@ export class PicHousePanel extends BasePanel {
         this.editorRoomBtn.visible = isSelf;
     }
     on_REFURBISH_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_ROOM_REFURBISH_REQUIREMENTS) {
+        this.itemsPanel.setHandler(new Handler(this, () => {
+            this.emit("queryrefurbish", this.mRoomInfoData.roomId);
+        }));
         this.itemsPanel.setItemDatas(content.requirements);
     }
     protected preload() {
@@ -152,6 +155,7 @@ export class PicHousePanel extends BasePanel {
                 this.emit("queryrequirements", this.mRoomInfoData.roomId);
             } else {
                 this.itemsPanel.setContent(i18n.t("room_info.renovatetips"));
+                this.itemsPanel.setHandler(null);
             }
         }));
         this.content.add(this.houseInfoPanel);
@@ -193,9 +197,7 @@ export class PicHousePanel extends BasePanel {
         this.itemsPanel.createBackGrphaic(w, h);
         this.itemsPanel.setTextInfo(i18n.t("room_info.renovate").toUpperCase(), i18n.t("compose.needMaterials"));
         this.itemsPanel.visible = false;
-        this.itemsPanel.setHandler(new Handler(this, () => {
-            this.emit("queryrefurbish", this.mRoomInfoData.roomId);
-        }));
+
         this.add(this.content);
         this.resize(0, 0);
         super.init();

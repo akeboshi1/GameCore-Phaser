@@ -50,7 +50,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
             if (data.turnoverProp.tempValue > 0) {
                 turnovervalue = `${data.turnoverProp.value}(+${data.turnoverProp.tempValue})`;
             } else if (data.turnoverProp.tempValue < 0) {
-                turnovervalue = `${data.turnoverProp.value}[color="#ff0000](-${data.turnoverProp.tempValue})[/color]`;
+                turnovervalue = `${data.turnoverProp.value}[color=#ff0000](${data.turnoverProp.tempValue})[/color]`;
             } else {
                 turnovervalue = `${data.turnoverProp.value}`;
             }

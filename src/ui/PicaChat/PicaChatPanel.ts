@@ -79,6 +79,7 @@ export class PicaChatPanel extends BasePanel {
         this.mTextArea.scrollToBottom();
         this.mNavigateBtn.x = width / this.scale - this.mNavigateBtn.width * 0.5 - 5 * this.dpr;
         if (this.giftPanel) {
+            this.giftPanel.resize();
             this.giftPanel.y = this.height - this.giftPanel.height * 0.5;
             this.giftPanel.x = this.width * 0.5;
         }
@@ -158,6 +159,7 @@ export class PicaChatPanel extends BasePanel {
     protected preload() {
         this.addAtlas(this.key, "pica_chat/pica_chat.png", "pica_chat/pica_chat.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
+        this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
         super.preload();
     }
 
@@ -173,7 +175,7 @@ export class PicaChatPanel extends BasePanel {
         this.mChatBtn = this.scene.make.image({ x: 96 * this.dpr * zoom, key: this.key, frame: "chat_icon" }, false).setScale(zoom);
         this.mHornBtn = this.scene.make.image({ x: 159 * this.dpr * zoom, key: this.key, frame: "horn_icon" }, false).setScale(zoom);
         this.mEmojiBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "emoji" }, false).setScale(zoom);
-        this.mGiftBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "emoji" }, false).setScale(zoom);
+        this.mGiftBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "party_gift_icon" }, false).setScale(zoom);
         this.mNavigateBtn = this.scene.make.image({ x: 281 * this.dpr, key: this.key, frame: "more_btn" }, false).setScale(zoom);
         const space = 20 * this.dpr;
         this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
@@ -271,11 +273,19 @@ export class PicaChatPanel extends BasePanel {
         this.emit("showNavigate");
     }
     private onGiftHandler() {
+        if (this.giftPanel) {
+            if (this.giftPanel.visible) {
+                this.giftPanel.hide();
+            } else {
+                this.giftPanel.show();
+            }
+        }
         if (!this.giftPanel) {
             this.giftPanel = new PicGiftPanel(this.scene, 0, 0, this.width, 175 * this.dpr, this.key, this.dpr, this.scale);
             this.giftPanel.y = this.height - this.giftPanel.height * 0.5;
             this.giftPanel.x = this.width * 0.5;
             this.add(this.giftPanel);
+            this.giftPanel.resize();
         }
     }
 

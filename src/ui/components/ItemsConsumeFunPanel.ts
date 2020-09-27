@@ -25,6 +25,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private zoom: number;
     private havebutton: boolean = true;
     private mblackGraphic: Phaser.GameObjects.Graphics;
+    private isEnough: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, havebutton: boolean = true) {
         super(scene);
         this.dpr = dpr;
@@ -54,15 +55,16 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         if (this.havebutton && buttontex !== undefined)
             this.confirmBtn.setText(buttontex);
     }
-    public setItemDatas(datas: op_client.ICountablePackageItem[], handler?: Handler) {
+    public setItemDatas(datas: op_client.ICountablePackageItem[]) {
         this.gameScroll.visible = true;
-        this.confirmHandler = handler;
         this.gameScroll.clearItems(false);
         for (const item of this.materialItems) {
             item.visible = false;
         }
+        this.isEnough = true;
         for (let i = 0; i < datas.length; i++) {
             let item: MaterialItem;
+            const data = datas[i];
             if (i < this.materialItems.length) {
                 item = this.materialItems[i];
             } else {
@@ -70,16 +72,16 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
                 this.materialItems.push(item);
             }
             item.visible = true;
-            item.setItemData(datas[i]);
+            item.setItemData(data);
             this.gameScroll.addItem(item);
+            if (data.neededCount > data.count) { this.isEnough = false; }
         }
         this.gameScroll.Sort();
     }
 
-    public setContent(title: string, handler?: Handler) {
+    public setContent(title: string) {
         this.contentTitle.visible = true;
         this.contentTitle.text = title;
-        this.confirmHandler = handler;
         this.gameScroll.visible = false;
     }
 
@@ -175,7 +177,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
 
     private onConfirmHandler() {
         this.onCloseHandler();
-        if (this.confirmHandler) this.confirmHandler.run();
+        if (this.confirmHandler && this.isEnough) this.confirmHandler.run();
     }
     private onCloseHandler() {
         this.visible = false;

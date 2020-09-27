@@ -8,7 +8,7 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 export class PicGiftPanel extends Phaser.GameObjects.Container {
     private mPropGrid: GameGridTable;
-    private curHandheldItem: HandheldItem;
+    private curHandheldItem: PicGiftItem;
     private isExtendsGrid: boolean = false;
     private key: string;
     private dpr: number;
@@ -26,6 +26,9 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.init();
         this.setGiftDatas();
+    }
+    public resize() {
+        if (this.mPropGrid) this.mPropGrid.resetMask();
     }
     public destroy() {
         if (this.mPropGrid) {
@@ -53,12 +56,12 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         mBackground.fillStyle(0x333333, 0.5);
         mBackground.fillRect(-this.width * 0.5, -this.height * 0.5, this.width, this.height);
         this.add(mBackground);
-        const propFrame = this.scene.textures.getFrame(this.key, "equp_bg");
+        const propFrame = this.scene.textures.getFrame(UIAtlasKey.common2Key, "equp_bg");
         const cellWidth = propFrame.width + 10 * this.dpr;
         const cellHeight = propFrame.height + 10 * this.dpr;
         const propGridConfig = {
             x: 0,
-            y: 0,
+            y: -this.height * 0.5 + 60 * this.dpr,
             table: {
                 width: this.width - 20 * this.dpr,
                 height: 120 * this.dpr,
@@ -68,7 +71,8 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
                 reuseCellContainer: true,
                 cellOriginX: 0.5,
                 cellOriginY: 0.5,
-                zoom: this.scale
+                zoom: this.zoom,
+                mask: false
             },
             scrollMode: 1,
             clamplChildOY: false,
@@ -76,7 +80,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new HandheldItem(scene, 0, 0, this.key, this.dpr);
+                    cellContainer = new PicGiftItem(scene, 0, 0, this.key, this.dpr);
                 }
                 cellContainer.setItemData(item);
                 return cellContainer;
@@ -89,7 +93,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         });
         this.add(this.mPropGrid);
         this.giftName = this.scene.make.text({
-            x: 0, y: this.mPropGrid.y + this.mPropGrid.height * 0.5 + 10 * this.dpr, text: "",
+            x: -this.width * 0.5 + 10 * this.dpr, y: this.mPropGrid.y + this.mPropGrid.height * 0.5 - 0 * this.dpr, text: "",
             style: { fontSize: 16 * this.dpr, bold: true, fontFamily: Font.DEFULT_FONT, color: "#FFD248" }
         }).setOrigin(0, 0.5);
         this.add(this.giftName);
@@ -116,7 +120,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         this.add(this.giftDescr);
     }
 
-    private onSelectItemHandler(item: HandheldItem) {
+    private onSelectItemHandler(item: PicGiftItem) {
         const data = item.itemData;
         if (!data) return;
         if (this.curHandheldItem) this.curHandheldItem.isSelect = false;
@@ -134,7 +138,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
     }
 }
 
-class HandheldItem extends Phaser.GameObjects.Container {
+class PicGiftItem extends Phaser.GameObjects.Container {
     public itemData: op_client.CountablePackageItem;
     public bg: Phaser.GameObjects.Image;
     public selectbg: Phaser.GameObjects.Image;
@@ -146,8 +150,8 @@ class HandheldItem extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.dpr = dpr;
         this.key = key;
-        this.bg = this.scene.make.image({ key, frame: "equp_bg" });
-        this.selectbg = this.scene.make.image({ key, frame: "click_bg" });
+        this.bg = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "equp_bg" });
+        this.selectbg = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "selected_icon_bg" });
         this.icon = new DynamicImage(scene, 0, 0);
         this.add([this.bg, this.selectbg, this.icon]);
         this.setSize(this.selectbg.width, this.selectbg.height);
@@ -156,24 +160,24 @@ class HandheldItem extends Phaser.GameObjects.Container {
 
     public setItemData(data: op_client.CountablePackageItem) {
 
-        this.itemData = data;
-        if (!data) {
-            this.icon.visible = false;
-            this.selectbg.visible = false;
-            return;
-        }
-        this.icon.visible = true;
-        this.selectbg.visible = this.mIsSelect;
-        if (this.isEmptyHanded) {
-            this.icon.setTexture(this.key, "empty_handed");
-        } else {
-            const display = data.display;
-            const url = Url.getOsdRes(display.texturePath);
-            this.icon.load(url, this, () => {
-                this.icon.displayWidth = 34 * this.dpr;
-                this.icon.scaleY = this.icon.scaleX;
-            });
-        }
+        // this.itemData = data;
+        // if (!data) {
+        //     this.icon.visible = false;
+        //     this.selectbg.visible = false;
+        //     return;
+        // }
+        // this.icon.visible = true;
+        // this.selectbg.visible = this.mIsSelect;
+        // if (this.isEmptyHanded) {
+        //     this.icon.setTexture(this.key, "empty_handed");
+        // } else {
+        //     const display = data.display;
+        //     const url = Url.getOsdRes(display.texturePath);
+        //     this.icon.load(url, this, () => {
+        //         this.icon.displayWidth = 34 * this.dpr;
+        //         this.icon.scaleY = this.icon.scaleX;
+        //     });
+        // }
     }
 
     public get isSelect() {
