@@ -3,7 +3,7 @@
 // 2. 做设备兼容
 
 import version from "./version";
-import { Logger } from "./src/utils/log";
+import { Logger } from "./src/game/core/utils/log";
 // import { ServerAddress } from "./src/net/address";
 // import { ConnectionService } from "./src/net/connection.service";
 // import { Capsule, PaletteNode, MossNode } from "game-capsule";
@@ -145,7 +145,7 @@ export class Launcher {
             // xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
+        import(/* webpackChunkName: "game" */ "./src/game/core/world").then((game) => {
             this.world = new game.World(this.config, this.mCompleteFunc);
             if (config.isEditor) {
                 this.world.createGame();
@@ -241,4 +241,4 @@ export class Launcher {
     }
 }
 
-export * from "./src/editor";
+export * from "./src/game/core/editor";

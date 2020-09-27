@@ -11,13 +11,13 @@ import {
     MossNode,
     AssetsNode,
 } from "game-capsule";
-import { Logger } from "../utils/log";
+import { Logger } from "./core/utils/log";
 import { op_def } from "pixelpai_proto";
 import { Animation } from "../rooms/display/animation";
 import { MossCollectionNode } from "game-capsule";
 import { IScenery } from "../rooms/sky.box/scenery";
 import { IAsset } from "../loading/loading.manager";
-import { Url } from "../utils/resUtil";
+import { Url } from "./core/utils/resUtil";
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
