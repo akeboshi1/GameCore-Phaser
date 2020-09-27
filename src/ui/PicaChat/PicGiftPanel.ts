@@ -48,7 +48,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         this.giftPriceImage.x = this.giftName.x + this.giftName.width + 5 * this.dpr + this.giftPriceImage.width * 0.5;
         this.giftValue.text = 100 + "";
         this.giftValue.x = this.giftPriceImage.x + this.giftPriceImage.width * 0.5 + 5 * this.dpr;
-        this.giftValue.text = "热度值10，赠送666个可以触发世界喇叭！";
+        this.giftDescr.text = "热度值10，赠送666个可以触发世界喇叭！";
     }
 
     protected init() {
@@ -93,7 +93,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         });
         this.add(this.mPropGrid);
         this.giftName = this.scene.make.text({
-            x: -this.width * 0.5 + 10 * this.dpr, y: this.mPropGrid.y + this.mPropGrid.height * 0.5 - 0 * this.dpr, text: "",
+            x: -this.width * 0.5 + 10 * this.dpr, y: this.mPropGrid.y + this.mPropGrid.height * 0.5 + 15 * this.dpr, text: "",
             style: { fontSize: 16 * this.dpr, bold: true, fontFamily: Font.DEFULT_FONT, color: "#FFD248" }
         }).setOrigin(0, 0.5);
         this.add(this.giftName);
@@ -112,10 +112,12 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
             bottom: 10 * this.dpr
         });
         this.add(this.sendButton);
+        this.sendButton.setTextStyle({ fontSize: 16 * this.dpr, color: "#996600" });
+        this.sendButton.setPosition(this.width * 0.5 - this.sendButton.width * 0.5 - 10 * this.dpr, this.height * 0.5 - this.sendButton.height * 0.5 - 10 * this.dpr);
         this.sendButton.on(String(ClickEvent.Tap), this.onSendHandler, this);
         this.giftDescr = this.scene.make.text({
-            x: this.giftName.x, y: this.giftName.y + this.giftName.height * 0.5, text: "",
-            style: { fontSize: 16 * this.dpr, bold: true, fontFamily: Font.DEFULT_FONT, color: "#999999" }
+            x: this.giftName.x, y: this.giftName.y + this.giftName.height * 0.5 + 15 * this.dpr, text: "",
+            style: { fontSize: 14 * this.dpr, bold: true, fontFamily: Font.DEFULT_FONT, color: "#999999" }
         }).setOrigin(0, 0.5);
         this.add(this.giftDescr);
     }

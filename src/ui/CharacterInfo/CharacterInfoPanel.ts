@@ -336,7 +336,7 @@ export default class CharacterInfoPanel extends BasePanel {
         } else {
             const remark = (data.remark ? data.remark : i18n.t("player_info.note_nickname"));
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
-            this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainCon.height * 0.5 + 100 * this.dpr);
+            //   this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainCon.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
             subArr.set(CharacterOptionType.Attribute, data.properties);
             subArr.set(CharacterOptionType.Badge, data.badges);
@@ -429,26 +429,38 @@ export default class CharacterInfoPanel extends BasePanel {
     private setSubCategory(map: Map<CharacterOptionType, any[]>) {
         const subNames = [i18n.t("player_info.option_live"), i18n.t("player_info.option_attribute"), i18n.t("player_info.option_badge")];
         const itemWidth = this.mScene.textures.getFrame(this.key, "title_select").width;
-        const items = [];
-        this.mCategoryScroll.clearItems(true);
+        const list = this.mCategoryScroll.getItemList().concat();
+        this.mCategoryScroll.clearItems(false);
+        for (const item of list) {
+            (<Button>item).visible = false;
+        }
+        let index = 0;
         map.forEach((value, key) => {
+            let item: Button;
             const titleName = this.getOptionName(key);
-            const item = new Button(this.scene, this.key, "title_normal", "title_select", titleName);
-            item.width = itemWidth;
-            item.height = 41 * this.dpr;
-            items.push(item);
-            item.setTextStyle({ color: "#2B4BB5", fontSize: 12 * this.dpr, fontFamily: Font.BOLD_FONT });
-            item.disInteractive();
-            item.removeListen();
+            if (index < list.length) {
+                item = <Button>list[index];
+            } else {
+                item = new Button(this.scene, this.key, "title_normal", "title_select", titleName);
+                item.width = itemWidth;
+                item.height = 41 * this.dpr;
+                list.push(item);
+                item.setTextStyle({ color: "#2B4BB5", fontSize: 12 * this.dpr, fontFamily: Font.BOLD_FONT });
+                item.disInteractive();
+                item.removeListen();
+            }
+            item.visible = true;
+            item.setText(titleName);
             item.setData("subData", value);
             item.setData("optiontype", key);
             this.mCategoryScroll.addItem(item);
+            index++;
         });
-        if (items.length <= 3) this.mCategoryScroll.setAlign(1);
+        if (list.length <= 3) this.mCategoryScroll.setAlign(1);
         else {
             this.mCategoryScroll.setAlign(2);
         }
-        this.onSelectSubCategoryHandler(items[0]);
+        this.onSelectSubCategoryHandler(<Button>list[0]);
     }
     private onSelectSubCategoryHandler(obj: Button) {
         // Logger.getInstance().log(obj);

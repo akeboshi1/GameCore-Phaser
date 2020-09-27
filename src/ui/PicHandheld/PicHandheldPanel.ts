@@ -263,6 +263,7 @@ class HandheldItem extends Phaser.GameObjects.Container {
             const display = data.display;
             const url = Url.getOsdRes(display.texturePath);
             this.icon.load(url, this, () => {
+                this.icon.scale = 1;
                 this.icon.displayWidth = 34 * this.dpr;
                 this.icon.scaleY = this.icon.scaleX;
             });

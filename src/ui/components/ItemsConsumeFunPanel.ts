@@ -139,7 +139,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         this.add(this.gameScroll);
         this.contentTitle = this.scene.make.text({
             x: 0,
-            y: -this.height * 0.5 + 25 * this.dpr,
+            y: -10 * this.dpr + offsetx,
             text: "",
             style: {
                 color: "#FFC51A",

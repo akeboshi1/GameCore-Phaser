@@ -149,6 +149,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
                 stroke: "#000000",
                 strokeThickness: 1 * this.dpr,
                 textMask: false,
+                lineSpacing: 2 * this.dpr,
                 shadow: {
                     offsetX: 0,
                     offsetY: 0,
@@ -267,6 +268,12 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.mInput.setFocus();
         this.setKeywordHeight(0);
         this.onQuickSendHandler();
+        let text = "";
+        for (const chat of this.chatArr) {
+            text += chat;
+        }
+        this.mOutputText.text = text;
+        this.gamescroll.Sort();
         // tslint:disable-next-line:no-console
         console.log(datas);
     }
@@ -330,7 +337,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
             const item = new QuickChatItem(
                 this.scene,
                 camWidth,
-                30 * this.dpr,
+                40 * this.dpr,
                 this.key,
                 this.dpr,
                 true
@@ -359,7 +366,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.isOpenQuickPanel = true;
         this.quickCon.visible = true;
         this.quickChatScroll.addListen();
-        this.mInput.setBlur();
+        // this.mInput.setBlur();
     }
     private onSentChat() {
         const chat = this.mInput.text;
@@ -376,8 +383,12 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onQuickChatItemHandler(item: QuickChatItem) {
-        this.sendChat(item.dataChat);
+        // this.sendChat(item.dataChat);
+        this.mInput.text = item.dataChat;
         this.mInput.setFocus();
+        this.quickCon.visible = false;
+        this.quickChatScroll.removeListen();
+        this.isOpenQuickPanel = false;
     }
 
     private onCancelHandler() {
