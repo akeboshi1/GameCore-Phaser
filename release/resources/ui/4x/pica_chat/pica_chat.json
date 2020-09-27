@@ -1,8 +1,48 @@
 {
 	"frames": {
-		"chat_icon": {
+		"chat_Input": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 120,
+				"h": 137
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 120,
+				"h": 137
+			},
+			"sourceSize": {
+				"w": 120,
+				"h": 137
+			}
+		},
+		"chat_Input_bg": {
+			"frame": {
+				"x": 123,
+				"y": 1,
+				"w": 21,
+				"h": 184
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 21,
+				"h": 184
+			},
+			"sourceSize": {
+				"w": 21,
+				"h": 184
+			}
+		},
+		"chat_icon": {
+			"frame": {
+				"x": 146,
 				"y": 1,
 				"w": 187,
 				"h": 182
@@ -20,9 +60,29 @@
 				"h": 182
 			}
 		},
+		"chat_quick_2": {
+			"frame": {
+				"x": 335,
+				"y": 1,
+				"w": 119,
+				"h": 106
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 119,
+				"h": 106
+			},
+			"sourceSize": {
+				"w": 119,
+				"h": 106
+			}
+		},
 		"emoji": {
 			"frame": {
-				"x": 190,
+				"x": 456,
 				"y": 1,
 				"w": 175,
 				"h": 174
@@ -38,12 +98,52 @@
 			"sourceSize": {
 				"w": 175,
 				"h": 174
+			}
+		},
+		"home_divider": {
+			"frame": {
+				"x": 1,
+				"y": 187,
+				"w": 1324,
+				"h": 1
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 1324,
+				"h": 1
+			},
+			"sourceSize": {
+				"w": 1324,
+				"h": 1
+			}
+		},
+		"home_quick chat _bg": {
+			"frame": {
+				"x": 633,
+				"y": 1,
+				"w": 52,
+				"h": 49
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 52,
+				"h": 49
+			},
+			"sourceSize": {
+				"w": 52,
+				"h": 49
 			}
 		},
 		"horn_icon": {
 			"frame": {
 				"x": 1,
-				"y": 185,
+				"y": 190,
 				"w": 265,
 				"h": 226
 			},
@@ -62,8 +162,8 @@
 		},
 		"more_btn": {
 			"frame": {
-				"x": 268,
-				"y": 177,
+				"x": 687,
+				"y": 1,
 				"w": 159,
 				"h": 158
 			},
@@ -82,7 +182,7 @@
 		},
 		"party_gift_icon": {
 			"frame": {
-				"x": 367,
+				"x": 848,
 				"y": 1,
 				"w": 153,
 				"h": 174
@@ -102,8 +202,8 @@
 		},
 		"scroll_btn": {
 			"frame": {
-				"x": 429,
-				"y": 177,
+				"x": 1003,
+				"y": 1,
 				"w": 109,
 				"h": 112
 			},
@@ -122,7 +222,7 @@
 		},
 		"title_bg": {
 			"frame": {
-				"x": 522,
+				"x": 1114,
 				"y": 1,
 				"w": 2,
 				"h": 54
@@ -147,8 +247,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 539,
-			"h": 412
+			"w": 1326,
+			"h": 417
 		},
 		"scale": "1"
 	}
