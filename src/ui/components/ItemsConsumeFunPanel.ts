@@ -18,6 +18,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private materialTitle: Phaser.GameObjects.Text;
     private materialLine: Phaser.GameObjects.Image;
     private materialLine2: Phaser.GameObjects.Image;
+    private contentTitle: Phaser.GameObjects.Text;
     private confirmHandler: Handler;
     private materialItems: MaterialItem[] = [];
     private curSelectItem: MaterialItem;
@@ -54,7 +55,8 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
             this.confirmBtn.setText(buttontex);
     }
     public setItemDatas(datas: op_client.ICountablePackageItem[], handler?: Handler) {
-        if (handler !== undefined) this.confirmHandler = handler;
+        this.gameScroll.visible = true;
+        this.confirmHandler = handler;
         this.gameScroll.clearItems(false);
         for (const item of this.materialItems) {
             item.visible = false;
@@ -73,6 +75,14 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         }
         this.gameScroll.Sort();
     }
+
+    public setContent(title: string, handler?: Handler) {
+        this.contentTitle.visible = true;
+        this.contentTitle.text = title;
+        this.confirmHandler = handler;
+        this.gameScroll.visible = false;
+    }
+
     protected create() {
         const bg = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "universal_box" });
         this.add(bg);
@@ -125,6 +135,18 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
             }
         });
         this.add(this.gameScroll);
+        this.contentTitle = this.scene.make.text({
+            x: 0,
+            y: -this.height * 0.5 + 25 * this.dpr,
+            text: "",
+            style: {
+                color: "#FFC51A",
+                fontSize: 15 * this.dpr,
+                fontFamily: Font.BOLD_FONT,
+            }
+        }, false).setOrigin(0.5);
+        this.add(this.contentTitle);
+        this.contentTitle.visible = false;
         if (this.havebutton) {
             this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("common.confirm"), this.dpr, 1, {
                 left: 12 * this.dpr,
@@ -157,6 +179,9 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     }
     private onCloseHandler() {
         this.visible = false;
+        this.gameScroll.clearItems(false);
+        this.gameScroll.visible = false;
+        this.contentTitle.visible = false;
         if (this.parentContainer) this.parentContainer.remove(this);
     }
     private onMaterialItemHandler(gameobject: MaterialItem) {
