@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { NinePatch } from "../Components/Nine.patch";
 import { Logger } from "../../game/core/utils/log";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { TextToolTips } from "../Tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";

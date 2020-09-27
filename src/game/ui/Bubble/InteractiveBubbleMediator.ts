@@ -1,7 +1,7 @@
 import { Logger } from "../../game/core/utils/log";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { InteractiveBubblePanel } from "./InteractiveBubblePanel";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { IElement } from "../../rooms/element/element";
 import { ILayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";

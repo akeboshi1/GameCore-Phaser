@@ -5,7 +5,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
 import { DynamicImage } from "../Components/Dynamic.image";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { Url } from "../../game/core/utils/resUtil";
 import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText } from "apowophaserui";
 export class TaskPanel extends BasePanel {

@@ -4,7 +4,7 @@ import { BasePanel } from "../Components/BasePanel";
 import { IElement } from "../../rooms/element/element";
 import { Url } from "../../game/core/utils/resUtil";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { Pos } from "../../game/core/utils/pos";
 import { Tool } from "../../game/core/utils/tool";
 import { PlayScene } from "../../scenes/play";

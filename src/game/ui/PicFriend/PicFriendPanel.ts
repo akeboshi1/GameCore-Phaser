@@ -5,7 +5,7 @@ import { i18n } from "../../game/core/utils/i18n";
 import Text = Phaser.GameObjects.Text;
 import Image = Phaser.GameObjects.Image;
 import Container = Phaser.GameObjects.Container;
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { CheckboxGroup } from "../Components/Checkbox.group";
 import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../Components/Label.input";

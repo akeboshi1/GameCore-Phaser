@@ -11,7 +11,7 @@ import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { Url } from "../../game/core/utils/resUtil";
 import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { FriendRelationEnum } from "../PicFriend/PicFriendRelation";
 import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";

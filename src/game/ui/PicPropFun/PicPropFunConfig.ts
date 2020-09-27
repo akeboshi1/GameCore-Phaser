@@ -1,4 +1,4 @@
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { op_client } from "pixelpai_proto";
 export class PicPropFunConfig {
     cancelHandler?: Handler;

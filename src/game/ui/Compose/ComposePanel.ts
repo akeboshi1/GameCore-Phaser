@@ -8,7 +8,7 @@ import { DetailDisplay } from "../Market/DetailDisplay";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, Button, BBCodeText } from "apowophaserui";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";

@@ -5,7 +5,7 @@ import { UIAtlasKey } from "../Ui.atals.name";
 import { op_client } from "./node_modules/pixelpai_proto";
 import { DynamicImage } from "./Dynamic.image";
 import { Url } from "../../game/core/utils/resUtil";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { NineSliceButton, Button, GameScroller, ClickEvent, BBCodeText } from "./node_modules/apowophaserui";
 
 export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {

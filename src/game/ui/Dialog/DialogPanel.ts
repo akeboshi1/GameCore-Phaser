@@ -2,7 +2,7 @@ import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { Font } from "../../game/core/utils/font";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Url } from "../../game/core/utils/resUtil";
 import { Button } from "apowophaserui";

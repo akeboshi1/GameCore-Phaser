@@ -2,7 +2,7 @@ import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { PicBusinessContentPanel } from "./PicBusinessContentPanel";
 import { PicBusinessMyStreetPanel } from "./PicBusinessMyStreetPanel";
 import { PicBusinessStoreCreatePanel } from "./PicBusinessStoreCreatePanel";

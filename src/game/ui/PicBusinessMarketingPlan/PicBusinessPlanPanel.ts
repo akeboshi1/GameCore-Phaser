@@ -1,5 +1,5 @@
 import { Font } from "../../game/core/utils/font";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { UIAtlasKey } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
 import { op_client, op_pkt_def } from "pixelpai_proto";

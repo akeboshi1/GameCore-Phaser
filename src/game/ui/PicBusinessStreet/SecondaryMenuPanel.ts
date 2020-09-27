@@ -1,4 +1,4 @@
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { GameScroller, GameGridTable, Button, NinePatchConfig } from "apowophaserui";
 
 export class SecondaryMenuPanel extends Phaser.GameObjects.Container {

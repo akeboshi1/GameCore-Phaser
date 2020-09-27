@@ -9,7 +9,7 @@ import { TextButton } from "../Components/TextButton";
 import { Url, Coin } from "../../game/core/utils/resUtil";
 import { InputPanel } from "../Components/Input.panel";
 import { CheckboxGroup } from "../Components/Checkbox.group";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Logger } from "../../game/core/utils/log";
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text } from "apowophaserui";

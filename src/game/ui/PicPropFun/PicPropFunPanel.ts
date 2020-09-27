@@ -4,7 +4,7 @@ import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../Components/BasePanel";
 import { Coin } from "../../game/core/utils/resUtil";
 import { i18n } from "../../game/core/utils/i18n";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { PicPropFunConfig } from "./PicPropFunConfig";
 import { DetailDisplay } from "../Market/DetailDisplay";

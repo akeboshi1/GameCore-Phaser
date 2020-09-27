@@ -7,7 +7,7 @@ import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { CheckboxGroup } from "../Components/Checkbox.group";
 import { PicHouseInfoPanel } from "./PicHouseInfoPanel";
 import { NineSlicePatch, NineSliceButton, TabButton, ClickEvent } from "apowophaserui";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { ItemsConsumeFunPanel } from "../Components/ItemsConsumeFunPanel";
 export class PicHousePanel extends BasePanel {
     private readonly key = "pichousepanel";

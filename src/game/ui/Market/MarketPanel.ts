@@ -8,7 +8,7 @@ import { TextButton } from "../Components/TextButton";
 import { MarketItem } from "./Item";
 import { Font } from "../../game/core/utils/font";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
-import { Handler } from "../../Handler/Handler";
+import { Handler } from "../../../utils/Handler/Handler";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 export class MarketPanel extends BasePanel {

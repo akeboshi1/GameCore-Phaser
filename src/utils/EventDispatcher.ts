@@ -1,7 +1,7 @@
 import { Handler } from "./Handler";
 import { IDispose } from "../../rooms/action/IDispose";
 
-export class HandlerDispatcher implements IDispose {
+export class EventDispatcher implements IDispose {
 
     private _events: object;
 
