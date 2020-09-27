@@ -1,4 +1,4 @@
-import { NinePatch } from "apowophaserui";
+import { NinePatch } from "./node_modules/apowophaserui";
 
 export class DynamicNinepatch {
     protected mUrl: string;

@@ -1,9 +1,9 @@
-import { BasePanel } from "../components/BasePanel";
-import { NinePatch } from "../components/nine.patch";
+import { BasePanel } from "../Components/BasePanel";
+import { NinePatch } from "../Components/Nine.patch";
 import { Background, Border, Url } from "../../game/core/utils/resUtil";
 import { Size } from "../../game/core/utils/size";
 import { WorldService } from "../../game/world.service";
-import { Item } from "./item/Item";
+import { Item } from "./Item/Item";
 import { op_client } from "pixelpai_proto";
 import { ElementStorageMediator } from "./ElementStorageMediator";
 import { InputText, NineSliceButton } from "apowophaserui";

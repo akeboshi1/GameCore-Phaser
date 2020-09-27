@@ -1,5 +1,5 @@
 import { IElement } from "../element/element";
-import { DecorateManager } from "../../ui/decorate/decorate.manager";
+import { DecorateManager } from "../../ui/Decorate/Decorate.manager";
 import { Pos } from "../../game/core/utils/pos";
 import { DecorateRoomService } from "../decorate.room";
 import { MessageType } from "../../const/MessageType";

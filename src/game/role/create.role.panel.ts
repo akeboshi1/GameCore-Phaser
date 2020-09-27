@@ -1,7 +1,7 @@
-import { BasePanel } from "../ui/components/BasePanel";
+import { BasePanel } from "../ui/Components/BasePanel";
 import { WorldService } from "../game/world.service";
-import { NinePatchButton } from "../ui/components/ninepatch.button";
-import { NinePatch } from "../ui/components/nine.patch";
+import { NinePatchButton } from "../ui/Components/Ninepatch.button";
+import { NinePatch } from "../ui/Components/Nine.patch";
 import { DragonbonesDisplay } from "../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragonbonesModel } from "../rooms/display/dragonbones.model";

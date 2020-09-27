@@ -1,6 +1,6 @@
-import { NinePatchButton } from "../components/ninepatch.button";
-import { IPatchesConfig } from "../components/patches.config";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatchButton } from "../Components/Ninepatch.button";
+import { IPatchesConfig } from "../Components/Patches.config";
+import { NinePatch } from "../Components/Nine.patch";
 import { Border } from "../../game/core/utils/resUtil";
 
 export class MenuItem extends NinePatchButton {

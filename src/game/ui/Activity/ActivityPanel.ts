@@ -1,4 +1,4 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_pkt_def } from "pixelpai_proto";
 import { GameScroller } from "apowophaserui";

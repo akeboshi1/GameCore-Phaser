@@ -1,11 +1,11 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { op_client } from "pixelpai_proto";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { Url, Coin } from "../../game/core/utils/resUtil";
 import { i18n } from "../../game/core/utils/i18n";
-import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
+import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { FramesModel } from "../../rooms/display/frames.model";
 import I18NextXhrBackend from "i18next-xhr-backend";

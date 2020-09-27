@@ -1,12 +1,12 @@
 import { MessageType } from "../../../../const/MessageType";
 import { WorldService } from "../../../game/world.service";
 import { Logger } from "../../../game/core/utils/log";
-import { IDragable } from "../idragable";
-import { IDropable } from "../idropable";
-import { op_gameconfig } from "pixelpai_proto";
-import { BagPanel } from "./bagPanel";
-import { ILayerManager } from "../../layer.manager";
-import { BaseMediator, UIType, InputText } from "apowophaserui";
+import { IDragable } from "../Idragable";
+import { IDropable } from "../Idropable";
+import { op_gameconfig } from "./node_modules/pixelpai_proto";
+import { BagPanel } from "./BagPanel";
+import { ILayerManager } from "../../Layer.manager";
+import { BaseMediator, UIType, InputText } from "./node_modules/apowophaserui";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,

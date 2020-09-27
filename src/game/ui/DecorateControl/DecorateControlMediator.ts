@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { DecorateControlPanel } from "./DecorateControlPanel";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";

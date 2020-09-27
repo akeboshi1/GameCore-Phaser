@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { MarketPanel } from "./MarketPanel";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { Market } from "./Market";
 import { op_client, op_def } from "pixelpai_proto";
 import { MessageType } from "../../../const/MessageType";

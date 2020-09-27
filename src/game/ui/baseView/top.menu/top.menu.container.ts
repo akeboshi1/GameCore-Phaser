@@ -1,5 +1,5 @@
-import { BasePanel } from "../../components/BasePanel";
-import { IconBtn, IBtnData } from "../icon.btn";
+import { BasePanel } from "../../Components/BasePanel";
+import { IconBtn, IBtnData } from "../Icon.btn";
 import { WorldService } from "../../../game/world.service";
 import { Url } from "../../../game/core/utils/resUtil";
 

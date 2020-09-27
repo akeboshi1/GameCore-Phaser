@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { DebugLogger } from "./DebugLoggerPanel";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { BaseMediator, UIType } from "apowophaserui";
 
 export class DebugLoggerMediator extends BaseMediator {

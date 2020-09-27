@@ -1,10 +1,10 @@
 import { BasicRankPanel } from "./BasicRankPanel";
 import { WorldService } from "../../game/world.service";
 import { Url } from "../../game/core/utils/resUtil";
-import { IconBtn } from "../baseView/icon.btn";
+import { IconBtn } from "../BaseView/Icon.btn";
 import { Size } from "../../game/core/utils/size";
 import { RankMediator } from "./RankMediator";
-import { UIMediatorType } from "../ui.mediatorType";
+import { UIMediatorType } from "../Ui.mediatorType";
 
 export class RankPanel extends BasicRankPanel {
     private mZoonInBtn: Phaser.GameObjects.Image;

@@ -1,7 +1,7 @@
 import { Font } from "../../game/core/utils/font";
 import { op_client, op_def, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { i18n } from "../../game/core/utils/i18n";
-import { UIAtlasKey } from "../ui.atals.name";
+import { UIAtlasKey } from "../Ui.atals.name";
 import { BBCodeText, Button, ClickEvent } from "apowophaserui";
 import { Handler } from "../../Handler/Handler";
 export class PicHouseInfoPanel extends Phaser.GameObjects.Container {

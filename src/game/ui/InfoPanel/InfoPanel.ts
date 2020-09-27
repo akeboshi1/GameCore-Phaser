@@ -1,8 +1,8 @@
 import { WorldService } from "../../game/world.service";
-import { BasePanel } from "../components/BasePanel";
-import { DynamicImage } from "../components/dynamic.image";
+import { BasePanel } from "../Components/BasePanel";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { op_client } from "pixelpai_proto";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { NinePatchButton } from "../Components/Ninepatch.button";
 import { Url, Border, Background, BlueButton } from "../../game/core/utils/resUtil";
 import { Font } from "../../game/core/utils/font";
 import { InfoPanelMediator } from "./InfoPanelMediator";

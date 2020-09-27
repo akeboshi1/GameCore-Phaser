@@ -1,13 +1,13 @@
 import { WorldService } from "../../game/world.service";
-import { PBpacket } from "net-socket-packet";
-import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { PBpacket } from "./node_modules/net-socket-packet";
+import { op_client, op_virtual_world, op_def } from "./node_modules/pixelpai_proto";
 import { Logger } from "../../game/core/utils/log";
-import { IMessage } from "./message";
-import { ChatPanelPC } from "./chatPanel.pc";
-import { BaseChatPanel } from "./base.chat.panel";
-import { ChatPanelMobile } from "./mobile/chatPanel.mobile";
+import { IMessage } from "./Message";
+import { ChatPanelPC } from "./ChatPanel.pc";
+import { BaseChatPanel } from "./Base.chat.panel";
+import { ChatPanelMobile } from "./Mobile/ChatPanel.mobile";
 import { Chat } from "./Chat";
-import { BaseMediator, UIType } from "apowophaserui";
+import { BaseMediator, UIType } from "./node_modules/apowophaserui";
 export class ChatMediator extends BaseMediator {
     public static NAME: string = "ChatMediator";
     public world: WorldService;

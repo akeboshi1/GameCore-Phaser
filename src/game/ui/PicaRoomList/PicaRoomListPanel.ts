@@ -1,10 +1,10 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
-import { CheckboxGroup } from "../components/checkbox.group";
+import { CheckboxGroup } from "../Components/Checkbox.group";
 import { i18n } from "../../game/core/utils/i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { TabButton, BaseScroller, Button } from "apowophaserui";
 
 export class PicaRoomListPanel extends BasePanel {

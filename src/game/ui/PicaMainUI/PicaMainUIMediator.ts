@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { PicaMainUIPanel } from "./PicaMainUIPanel";
 import { op_client } from "pixelpai_proto";
 import { PicaMainUI } from "./PicaMainUI";

@@ -1,7 +1,7 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { Font } from "../../game/core/utils/font";
 import { Url } from "../../game/core/utils/resUtil";
 

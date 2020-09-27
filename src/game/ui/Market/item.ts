@@ -1,5 +1,5 @@
 import { op_def, op_client } from "pixelpai_proto";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { Url, Coin } from "../../game/core/utils/resUtil";
 import { Font } from "../../game/core/utils/font";
 import { Logger } from "../../game/core/utils/log";

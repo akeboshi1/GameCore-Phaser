@@ -1,5 +1,5 @@
-import { DynamicSprite } from "../../ui/components/dynamic.sprite";
-import { DynamicImage } from "../../ui/components/dynamic.image";
+import { DynamicSprite } from "../../ui/Components/Dynamic.sprite";
+import { DynamicImage } from "../../ui/Components/Dynamic.image";
 import { op_def } from "pixelpai_proto";
 import { Url } from "../../game/core/utils/resUtil";
 import { ReferenceArea } from "../editor/reference.area";

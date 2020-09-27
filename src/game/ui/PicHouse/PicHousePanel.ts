@@ -1,14 +1,14 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { i18n } from "../../game/core/utils/i18n";
 import { op_client } from "pixelpai_proto";
 import { Font } from "../../game/core/utils/font";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { CheckboxGroup } from "../components/checkbox.group";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
+import { CheckboxGroup } from "../Components/Checkbox.group";
 import { PicHouseInfoPanel } from "./PicHouseInfoPanel";
 import { NineSlicePatch, NineSliceButton, TabButton, ClickEvent } from "apowophaserui";
 import { Handler } from "../../Handler/Handler";
-import { ItemsConsumeFunPanel } from "../components/ItemsConsumeFunPanel";
+import { ItemsConsumeFunPanel } from "../Components/ItemsConsumeFunPanel";
 export class PicHousePanel extends BasePanel {
     private readonly key = "pichousepanel";
     private content: Phaser.GameObjects.Container;

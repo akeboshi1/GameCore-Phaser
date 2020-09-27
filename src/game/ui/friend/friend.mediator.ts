@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
-import { FriendPanel } from "./friend.panel";
-import { BaseMediator, UIType } from "apowophaserui";
+import { FriendPanel } from "./Friend.panel";
+import { BaseMediator, UIType } from "./node_modules/apowophaserui";
 
 export class FriendMediator extends BaseMediator {
     public static NAME: string = "FriendMediator";

@@ -1,9 +1,9 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { BlackButton, Border, TransparentButton, Url } from "../../game/core/utils/resUtil";
 import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { MenuItem } from "./MenuItem";
 import { WorldService } from "../../game/world.service";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "../Components/Nine.patch";
 
 export class UserMenuPanel extends BasePanel {
     private mBackground: NinePatch;

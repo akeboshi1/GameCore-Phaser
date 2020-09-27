@@ -2,7 +2,7 @@ import { BasePanel } from "./BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { i18n } from "../../game/core/utils/i18n";
-import { Button, BBCodeText } from "apowophaserui";
+import { Button, BBCodeText } from "./node_modules/apowophaserui";
 
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";

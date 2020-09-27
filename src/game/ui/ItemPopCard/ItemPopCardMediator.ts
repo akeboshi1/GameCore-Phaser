@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { ItemPopCardPanel } from "./ItemPopCardPanel";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { BaseMediator } from "apowophaserui";
 
 export class ItemPopCardMediator extends BaseMediator {

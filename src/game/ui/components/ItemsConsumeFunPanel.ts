@@ -1,12 +1,12 @@
 import { i18n } from "../../game/core/utils/i18n";
 import { Font } from "../../game/core/utils/font";
-import { ItemInfoTips } from "../tips/ItemInfoTips";
-import { UIAtlasKey } from "../ui.atals.name";
-import { op_client } from "pixelpai_proto";
-import { DynamicImage } from "./dynamic.image";
+import { ItemInfoTips } from "../Tips/ItemInfoTips";
+import { UIAtlasKey } from "../Ui.atals.name";
+import { op_client } from "./node_modules/pixelpai_proto";
+import { DynamicImage } from "./Dynamic.image";
 import { Url } from "../../game/core/utils/resUtil";
 import { Handler } from "../../Handler/Handler";
-import { NineSliceButton, Button, GameScroller, ClickEvent, BBCodeText } from "apowophaserui";
+import { NineSliceButton, Button, GameScroller, ClickEvent, BBCodeText } from "./node_modules/apowophaserui";
 
 export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private confirmBtn: NineSliceButton;

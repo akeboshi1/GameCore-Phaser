@@ -1,6 +1,6 @@
 import { MineCarPanel } from "./MineCarPanel";
 import { WorldService } from "../../game/world.service";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { MineCar } from "./MineCar";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";

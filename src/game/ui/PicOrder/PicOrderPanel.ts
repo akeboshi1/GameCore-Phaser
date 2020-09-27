@@ -1,15 +1,15 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url, Coin } from "../../game/core/utils/resUtil";
-import { AlertView } from "../components/alert.view";
+import { AlertView } from "../Components/Alert.view";
 import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
-import { ItemInfoTips } from "../tips/ItemInfoTips";
+import { ItemInfoTips } from "../Tips/ItemInfoTips";
 export class PicOrderPanel extends BasePanel {
     private key = "order_ui";
     private mBackground: Phaser.GameObjects.Graphics;

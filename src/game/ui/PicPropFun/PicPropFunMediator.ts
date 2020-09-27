@@ -1,6 +1,6 @@
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { PicPropFunPanel } from "./PicPropFunPanel";
 import { BaseMediator } from "apowophaserui";
 export class PicPropFunMediator extends BaseMediator {

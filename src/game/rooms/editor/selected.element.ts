@@ -1,6 +1,6 @@
 import { FramesDisplay } from "../display/frames.display";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { DynamicImage } from "../../ui/components/dynamic.image";
+import { DynamicImage } from "../../ui/Components/Dynamic.image";
 import { LayerManager } from "../layer/layer.manager";
 import { Url } from "../../game/core/utils/resUtil";
 import { Logger } from "../../game/core/utils/log";

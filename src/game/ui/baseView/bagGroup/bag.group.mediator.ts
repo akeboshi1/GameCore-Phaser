@@ -1,10 +1,10 @@
-import { BaseFaceMediator } from "../baseFace.mediator";
+import { BaseFaceMediator } from "../BaseFace.mediator";
 import { WorldService } from "../../../game/world.service";
 import { Size } from "../../../game/core/utils/size";
 import { MessageType } from "../../../../const/MessageType";
-import { op_gameconfig, op_client } from "pixelpai_proto";
-import { BagGroup } from "./bag.group";
-import { UIType } from "apowophaserui";
+import { op_gameconfig, op_client } from "./node_modules/pixelpai_proto";
+import { BagGroup } from "./Bag.group";
+import { UIType } from "./node_modules/apowophaserui";
 
 /**
  * 背包场景UI，带背包slot，pc端用

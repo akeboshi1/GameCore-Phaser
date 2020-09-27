@@ -1,11 +1,11 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { Url } from "../../game/core/utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../game/core/utils/size";
 import { Logger } from "../../game/core/utils/log";
 import { DebugLoggerMediator } from "./DebugLoggerMediator";
-import { IconBtn } from "../baseView/icon.btn";
-import { UIMediatorType } from "../ui.mediatorType";
+import { IconBtn } from "../BaseView/Icon.btn";
+import { UIMediatorType } from "../Ui.mediatorType";
 import { Font } from "../../game/core/utils/font";
 
 export class DebugLogger extends BasePanel {

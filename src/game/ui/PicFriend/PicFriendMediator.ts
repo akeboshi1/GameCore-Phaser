@@ -1,4 +1,4 @@
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { op_client } from "pixelpai_proto";
 import { WorldService } from "../../game/world.service";
 import PicFriendPanel, { FriendChannel } from "./PicFriendPanel";

@@ -1,4 +1,4 @@
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";
 import { CutInPanel } from "./CutInPanel";
 import { BaseMediator } from "apowophaserui";

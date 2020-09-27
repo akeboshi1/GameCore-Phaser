@@ -1,4 +1,4 @@
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
 import { op_client } from "pixelpai_proto";

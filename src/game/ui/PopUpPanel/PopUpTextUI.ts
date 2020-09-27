@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../game/core/utils/size";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 
 export class PopUpTextUI extends BasePanel {
     constructor(world: WorldService, scene: Phaser.Scene) {

@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { ElementStoragePanel } from "./ElementStoragePanel";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { ElementStorage } from "./ElementStorate";
 import { MessageType } from "../../../const/MessageType";
 import { PBpacket } from "net-socket-packet";

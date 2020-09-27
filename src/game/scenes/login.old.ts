@@ -1,5 +1,5 @@
 import { ConnectionService } from "../../lib/net/connection.service";
-import { PopUpTextUI } from "../ui/alert/PopUpTextUI";
+import { PopUpTextUI } from "../ui/PopUpPanel/PopUpTextUI";
 import { WorldService } from "../game/world.service";
 import { Logger } from "../game/core/utils/log";
 import { Size } from "../game/core/utils/size";

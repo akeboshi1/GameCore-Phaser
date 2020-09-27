@@ -1,10 +1,10 @@
-import { BasePanel } from "../../components/BasePanel";
+import { BasePanel } from "../../Components/BasePanel";
 import { WorldService } from "../../../game/world.service";
 import { Size } from "../../../game/core/utils/size";
 import { Url } from "../../../game/core/utils/resUtil";
-import { IconBtn, IBtnData } from "../icon.btn";
+import { IconBtn, IBtnData } from "../Icon.btn";
 import { DebugLoggerMediator } from "../../DebugLogger/DebugLoggerMediator";
-import { UIMediatorType } from "../../ui.mediatorType";
+import { UIMediatorType } from "../../Ui.mediatorType";
 
 export class TopBtnGroup extends BasePanel {
     // private mWid: number = 0;

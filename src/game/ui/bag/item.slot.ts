@@ -1,11 +1,11 @@
 import { IListItemComponent } from "./IListItemRender";
-import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
-import { DragDropIcon } from "./dragDropIcon";
+import { op_gameconfig, op_virtual_world } from "./node_modules/pixelpai_proto";
+import { DragDropIcon } from "./DragDropIcon";
 import { WorldService } from "../../game/world.service";
-import { PBpacket } from "net-socket-packet";
+import { PBpacket } from "./node_modules/net-socket-packet";
 import { Url } from "../../game/core/utils/resUtil";
-import { IToolTip } from "../tips/itoolTip";
-import { ToolTip } from "../tips/toolTip";
+import { IToolTip } from "../Tips/ItoolTip";
+import { ToolTip } from "../Tips/ToolTip";
 
 export class ItemSlot implements IListItemComponent {
     // public url: string;

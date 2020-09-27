@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { Font } from "../../game/core/utils/font";
 import { op_client } from "pixelpai_proto";
 import { BBCodeText } from "apowophaserui";

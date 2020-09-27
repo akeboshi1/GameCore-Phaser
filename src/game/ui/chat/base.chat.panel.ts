@@ -1,4 +1,4 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 
 export class BaseChatPanel extends BasePanel {

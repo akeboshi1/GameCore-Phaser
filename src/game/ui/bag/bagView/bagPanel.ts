@@ -1,16 +1,16 @@
 import { WorldService } from "../../../game/world.service";
-import { ItemSlot } from "../item.slot";
+import { ItemSlot } from "../Item.slot";
 import { Size } from "../../../game/core/utils/size";
 import { Logger } from "../../../game/core/utils/log";
 import { Url, Border, Background } from "../../../game/core/utils/resUtil";
-import { BagMediator } from "./bagMediator";
-import { NinePatch } from "../../components/nine.patch";
+import { BagMediator } from "./BagMediator";
+import { NinePatch } from "../../Components/Nine.patch";
 import { Tool } from "../../../game/core/utils/tool";
-import { op_gameconfig } from "pixelpai_proto";
-import { IconBtn } from "../../baseView/icon.btn";
-import { UIMediatorType } from "../../ui.mediatorType";
-import { BasePanel } from "../../components/BasePanel";
-import { InputText } from "apowophaserui";
+import { op_gameconfig } from "./node_modules/pixelpai_proto";
+import { IconBtn } from "../../BaseView/Icon.btn";
+import { UIMediatorType } from "../../Ui.mediatorType";
+import { BasePanel } from "../../Components/BasePanel";
+import { InputText } from "./node_modules/apowophaserui";
 export class BagPanel extends BasePanel {
     public static PageMaxCount: number = 32;
     public bagSlotList: ItemSlot[];

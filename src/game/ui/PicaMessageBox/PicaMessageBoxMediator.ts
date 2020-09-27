@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { PicaMessageBoxPanel } from "./PicaMessageBoxPanel";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";

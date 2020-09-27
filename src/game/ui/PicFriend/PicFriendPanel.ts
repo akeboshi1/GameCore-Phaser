@@ -1,4 +1,4 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { i18n } from "../../game/core/utils/i18n";
@@ -6,13 +6,13 @@ import Text = Phaser.GameObjects.Text;
 import Image = Phaser.GameObjects.Image;
 import Container = Phaser.GameObjects.Container;
 import { Handler } from "../../Handler/Handler";
-import { CheckboxGroup } from "../components/checkbox.group";
+import { CheckboxGroup } from "../Components/Checkbox.group";
 import { PicFriendEvent } from "./PicFriendEvent";
-import { LabelInput } from "../components/label.input";
+import { LabelInput } from "../Components/Label.input";
 import { op_client } from "pixelpai_proto";
 import { FriendRelation, FriendRelationEnum } from "./PicFriendRelation";
 import { Button, ClickEvent, GameGridTable, CheckBox, NineSlicePatch, TabButton, NineSliceButton } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
     private bg: Image;

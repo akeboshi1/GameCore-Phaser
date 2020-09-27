@@ -1,8 +1,8 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { LoadingScene } from "../../scenes/loading";
 import { Font } from "../../game/core/utils/font";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import Helpers from "../../game/core/utils/helpers";
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 

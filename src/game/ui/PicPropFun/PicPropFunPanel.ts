@@ -1,11 +1,11 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { op_client } from "pixelpai_proto";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { Coin } from "../../game/core/utils/resUtil";
 import { i18n } from "../../game/core/utils/i18n";
 import { Handler } from "../../Handler/Handler";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { PicPropFunConfig } from "./PicPropFunConfig";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { NineSliceButton, GameSlider, NineSlicePatch } from "apowophaserui";

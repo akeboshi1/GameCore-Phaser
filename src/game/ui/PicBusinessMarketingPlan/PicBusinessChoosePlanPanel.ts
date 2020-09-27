@@ -1,12 +1,12 @@
 import { Font } from "../../game/core/utils/font";
 import { Handler } from "../../Handler/Handler";
-import { UIAtlasKey } from "../ui.atals.name";
+import { UIAtlasKey } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
 import { Coin, Url } from "../../game/core/utils/resUtil";
 import { op_def } from "pixelpai_proto";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { DynamicImage } from "../components/dynamic.image";
-import { ItemInfoTips } from "../tips/ItemInfoTips";
+import { DynamicImage } from "../Components/Dynamic.image";
+import { ItemInfoTips } from "../Tips/ItemInfoTips";
 import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, BBCodeText } from "apowophaserui";
 
 export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {

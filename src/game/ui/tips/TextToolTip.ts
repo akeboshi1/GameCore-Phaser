@@ -1,6 +1,6 @@
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "../Components/Nine.patch";
 import { Font } from "../../game/core/utils/font";
-import { BBCodeText } from "apowophaserui";
+import { BBCodeText } from "./node_modules/apowophaserui";
 export class TextToolTips extends Phaser.GameObjects.Container {
     private bg: NinePatch;
     private text: BBCodeText;

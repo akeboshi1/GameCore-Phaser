@@ -1,5 +1,5 @@
-import { NinePatch } from "./nine.patch";
-import { IPatchesConfig } from "./patches.config";
+import { NinePatch } from "./Nine.patch";
+import { IPatchesConfig } from "./Patches.config";
 
 export class NinePatchButton extends Phaser.GameObjects.Container {
     protected mLabel: Phaser.GameObjects.Text;

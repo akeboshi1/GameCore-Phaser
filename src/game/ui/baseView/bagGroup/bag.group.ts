@@ -1,12 +1,12 @@
 import { WorldService } from "../../../game/world.service";
-import { ItemSlot } from "../../bag/item.slot";
+import { ItemSlot } from "../../Bag/Item.slot";
 import { Size } from "../../../game/core/utils/size";
-import { op_gameconfig } from "pixelpai_proto";
+import { op_gameconfig } from "./node_modules/pixelpai_proto";
 import { Url } from "../../../game/core/utils/resUtil";
-import { Radio } from "../../components/radio";
-import { ChatMediator } from "../../chat/chat.mediator";
-import { BagMediator } from "../../bag/bagView/bagMediator";
-import { BasePanel } from "../../components/BasePanel";
+import { Radio } from "../../Components/Radio";
+import { ChatMediator } from "../../Chat/Chat.mediator";
+import { BagMediator } from "../../Bag/BagView/BagMediator";
+import { BasePanel } from "../../Components/BasePanel";
 
 /**
  * 主界面ui pc版本

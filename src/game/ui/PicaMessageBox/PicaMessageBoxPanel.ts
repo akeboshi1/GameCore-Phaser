@@ -1,8 +1,8 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "../Components/Nine.patch";
 import { Font } from "../../game/core/utils/font";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { NinePatchButton } from "../Components/Ninepatch.button";
 import { BBCodeText } from "apowophaserui";
 
 export class PicaMessageBoxPanel extends BasePanel {

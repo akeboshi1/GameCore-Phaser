@@ -1,4 +1,4 @@
-import { IPatchesConfig, normalizePatchesConfig } from "./patches.config";
+import { IPatchesConfig, normalizePatchesConfig } from "./Patches.config";
 import { Logger } from "../../game/core/utils/log";
 
 export class NinePatch extends Phaser.GameObjects.Container {

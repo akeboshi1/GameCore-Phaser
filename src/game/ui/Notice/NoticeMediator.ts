@@ -1,9 +1,9 @@
 import { WorldService } from "../../game/world.service";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { NoticePanel } from "./NoticePanel";
 import { PBpacket } from "net-socket-packet";
 import { MessageType } from "../../../const/MessageType";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { Notice } from "./Notice";
 import { BaseMediator, UIType, Panel } from "apowophaserui";
 

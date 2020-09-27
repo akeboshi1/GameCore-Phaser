@@ -1,4 +1,4 @@
-import { DynamicImage } from "../../ui/components/dynamic.image";
+import { DynamicImage } from "../../ui/Components/Dynamic.image";
 import { WorldService } from "../../game/world.service";
 import { Logger } from "../../game/core/utils/log";
 import { Url } from "../../game/core/utils/resUtil";

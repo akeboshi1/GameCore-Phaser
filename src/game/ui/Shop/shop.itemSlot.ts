@@ -1,11 +1,11 @@
-import { ItemSlot } from "../bag/item.slot";
+import { ItemSlot } from "../Bag/Item.slot";
 import { WorldService } from "../../game/world.service";
-import { DragDropIcon } from "../bag/dragDropIcon";
+import { DragDropIcon } from "../Bag/DragDropIcon";
 import { op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { UI } from "../../../const/res.const";
 import { Url } from "../../game/core/utils/resUtil";
-import { DynamicImage } from "../components/dynamic.image";
-import { ToolTip } from "../tips/toolTip";
+import { DynamicImage } from "../Components/Dynamic.image";
+import { ToolTip } from "../Tips/ToolTip";
 import { PBpacket } from "net-socket-packet";
 
 export class ShopItemSlot extends ItemSlot {

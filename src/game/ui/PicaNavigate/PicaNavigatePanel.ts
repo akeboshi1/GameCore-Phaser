@@ -1,8 +1,8 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_pkt_def } from "pixelpai_proto";
 import { i18n } from "../../game/core/utils/i18n";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { UIType } from "apowophaserui";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key: string = "pica_navigate";

@@ -1,4 +1,4 @@
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicOrderPanel } from "./PicOrderPanel";

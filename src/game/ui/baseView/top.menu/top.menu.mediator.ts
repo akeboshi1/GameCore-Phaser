@@ -1,10 +1,10 @@
 import { WorldService } from "../../../game/world.service";
 import { MessageType } from "../../../../const/MessageType";
-import { TopMenuContainer } from "./top.menu.container";
-import { PBpacket } from "net-socket-packet";
-import { op_virtual_world, op_client } from "pixelpai_proto";
-import { IBtnData } from "../icon.btn";
-import { BaseMediator } from "apowophaserui";
+import { TopMenuContainer } from "./Top.menu.container";
+import { PBpacket } from "./node_modules/net-socket-packet";
+import { op_virtual_world, op_client } from "./node_modules/pixelpai_proto";
+import { IBtnData } from "../Icon.btn";
+import { BaseMediator } from "./node_modules/apowophaserui";
 
 export class TopMenuMediator extends BaseMediator {
   public static NAME: string = "TopMenuMediator";

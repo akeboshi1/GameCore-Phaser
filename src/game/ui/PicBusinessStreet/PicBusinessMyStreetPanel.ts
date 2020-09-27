@@ -1,7 +1,7 @@
 import { Font } from "../../game/core/utils/font";
 import { Handler } from "../../Handler/Handler";
-import { DynamicImage } from "../components/dynamic.image";
-import { UIAtlasKey } from "../ui.atals.name";
+import { DynamicImage } from "../Components/Dynamic.image";
+import { UIAtlasKey } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
 import { op_client } from "pixelpai_proto";
 import { Button, GameGridTable, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";

@@ -1,10 +1,10 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url } from "../../game/core/utils/resUtil";
 import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText } from "apowophaserui";

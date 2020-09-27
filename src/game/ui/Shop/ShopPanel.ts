@@ -1,13 +1,13 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Url, Border, Background } from "../../game/core/utils/resUtil";
-import { ShopItemSlot } from "./shop.itemSlot";
+import { ShopItemSlot } from "./Shop.itemSlot";
 import { Size } from "../../game/core/utils/size";
 import { op_client } from "pixelpai_proto";
 import { ShopMediator } from "./ShopMediator";
-import { NinePatch } from "../components/nine.patch";
-import { IconBtn } from "../baseView/icon.btn";
-import { UIMediatorType } from "../ui.mediatorType";
+import { NinePatch } from "../Components/Nine.patch";
+import { IconBtn } from "../BaseView/Icon.btn";
+import { UIMediatorType } from "../Ui.mediatorType";
 
 export class ShopPanel extends BasePanel {
     public static ShopSlotCount: number = 20;

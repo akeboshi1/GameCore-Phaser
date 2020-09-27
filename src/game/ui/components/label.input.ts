@@ -1,5 +1,5 @@
 import { Font } from "../../game/core/utils/font";
-import { InputText } from "apowophaserui";
+import { InputText } from "./node_modules/apowophaserui";
 
 export class LabelInput extends Phaser.GameObjects.Container {
     private mBackground: Phaser.GameObjects.Graphics;

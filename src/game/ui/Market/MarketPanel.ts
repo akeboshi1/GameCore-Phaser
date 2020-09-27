@@ -1,15 +1,15 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { ElementDetail } from "./ElementDetail";
 import { i18n } from "../../game/core/utils/i18n";
 import { op_client, op_def } from "pixelpai_proto";
-import { CheckboxGroup } from "../components/checkbox.group";
-import { TextButton } from "../components/TextButton";
-import { MarketItem } from "./item";
+import { CheckboxGroup } from "../Components/Checkbox.group";
+import { TextButton } from "../Components/TextButton";
+import { MarketItem } from "./Item";
 import { Font } from "../../game/core/utils/font";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Handler } from "../../Handler/Handler";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";

@@ -1,9 +1,9 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { Url, BlueButton } from "../../game/core/utils/resUtil";
 import { WorldService } from "../../game/world.service";
 import { Size } from "../../game/core/utils/size";
-import { DragDropIcon } from "../bag/dragDropIcon";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { DragDropIcon } from "../Bag/DragDropIcon";
+import { NinePatchButton } from "../Components/Ninepatch.button";
 import { op_gameconfig_01 } from "pixelpai_proto";
 
 export class ItemDetail extends BasePanel {

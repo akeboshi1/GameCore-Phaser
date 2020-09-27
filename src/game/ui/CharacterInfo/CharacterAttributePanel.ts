@@ -1,6 +1,6 @@
 import { Font } from "../../game/core/utils/font";
 import { op_pkt_def } from "pixelpai_proto";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { Url } from "../../game/core/utils/resUtil";
 import { BBCodeText } from "apowophaserui";
 export class CharacterAttributePanel extends Phaser.GameObjects.Container {

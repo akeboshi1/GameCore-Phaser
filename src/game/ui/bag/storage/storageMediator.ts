@@ -1,7 +1,7 @@
 import { WorldService } from "../../../game/world.service";
-import { StoragePanel } from "./storagePanel";
-import { ILayerManager } from "../../layer.manager";
-import { BaseMediator, UIType } from "apowophaserui";
+import { StoragePanel } from "./StoragePanel";
+import { ILayerManager } from "../../Layer.manager";
+import { BaseMediator, UIType } from "./node_modules/apowophaserui";
 export class StorageMediator extends BaseMediator {
     public static NAME: string = "StorageMediator";
     private world: WorldService;

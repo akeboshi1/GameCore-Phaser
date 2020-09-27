@@ -1,11 +1,11 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { op_def } from "pixelpai_proto";
-import { DynamicImage } from "../components/dynamic.image";
-import { BasePanel } from "../components/BasePanel";
+import { DynamicImage } from "../Components/Dynamic.image";
+import { BasePanel } from "../Components/BasePanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Url, CloseButton } from "../../game/core/utils/resUtil";
-import { AlertView } from "../components/alert.view";
+import { AlertView } from "../Components/Alert.view";
 import { i18n } from "../../game/core/utils/i18n";
 import { GameGridTable, Button, TabButton } from "apowophaserui";
 export class MineCarPanel extends BasePanel {

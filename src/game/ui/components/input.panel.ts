@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
-import { InputText } from "apowophaserui";
+import { InputText } from "./node_modules/apowophaserui";
 ../../game/core/utils/log
 export class InputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;

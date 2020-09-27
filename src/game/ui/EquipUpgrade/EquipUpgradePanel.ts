@@ -1,11 +1,11 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { EquipUpgradeItem } from "./EquipUpgradeItem";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "../Components/Nine.patch";
 import { op_client } from "pixelpai_proto";
 import { i18n } from "../../game/core/utils/i18n";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 
 export default class EquipUpgradePanel extends BasePanel {
     private key = "equip_upgrade";

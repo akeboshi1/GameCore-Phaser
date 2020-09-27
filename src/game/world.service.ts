@@ -2,7 +2,7 @@
 import { Size } from "./core/utils/size";
 import { IRoomService } from "../rooms/room";
 import { IElementStorage } from "./element.storage";
-import { UiManager } from "./ui/ui.manager";
+import { UiManager } from "./ui/Ui.manager";
 import { InputManager } from "./core/render/manager/input.manager";
 import { ILauncherConfig } from "../../launcher";
 import { MouseManager } from "./mouse.manager";

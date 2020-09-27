@@ -1,7 +1,7 @@
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { PicHandheld } from "./PicHandheld";
 import { PicHandheldPanel } from "./PicHandheldPanel";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";

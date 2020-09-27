@@ -1,9 +1,9 @@
 import { Logger } from "../../game/core/utils/log";
 import { LoginPanel } from "./LoginPanel";
-import { LayerManager } from "../layer.manager";
+import { LayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";
 import { VerifiedPanel } from "./VerifiedPanel";
-import { AlertView, Buttons } from "../components/alert.view";
+import { AlertView, Buttons } from "../Components/Alert.view";
 import { BaseMediator } from "apowophaserui";
 
 export class LoginMediator extends BaseMediator {

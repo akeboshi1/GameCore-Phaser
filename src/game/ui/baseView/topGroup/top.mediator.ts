@@ -1,9 +1,9 @@
-import { BaseFaceMediator } from "../baseFace.mediator";
+import { BaseFaceMediator } from "../BaseFace.mediator";
 import { WorldService } from "../../../game/world.service";
-import { TopBtnGroup } from "./top.btn.group";
+import { TopBtnGroup } from "./Top.btn.group";
 import { RankMediator } from "../../Rank/RankMediator";
-import { PBpacket } from "net-socket-packet";
-import { op_virtual_world } from "pixelpai_proto";
+import { PBpacket } from "./node_modules/net-socket-packet";
+import { op_virtual_world } from "./node_modules/pixelpai_proto";
 
 export class TopMediator extends BaseFaceMediator {
     public static NAME: string = "TopMediator";

@@ -1,4 +1,4 @@
-import {BasePanel } from "../ui/components/BasePanel";
+import {BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../game/world.service";
 import { Url } from "../game/core/utils/resUtil";
 

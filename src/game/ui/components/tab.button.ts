@@ -1,5 +1,5 @@
-import { NinePatchButton } from "./ninepatch.button";
-import { IPatchesConfig } from "./patches.config";
+import { NinePatchButton } from "./Ninepatch.button";
+import { IPatchesConfig } from "./Patches.config";
 
 export class TabButton extends NinePatchButton {
   constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, config?: IPatchesConfig, data?: any) {

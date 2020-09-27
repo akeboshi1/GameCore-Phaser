@@ -1,7 +1,7 @@
 import { WorldService } from "../../game/world.service";
 import { RankPanel } from "./RankPanel";
-import { ILayerManager } from "../layer.manager";
-import { BasePanel } from "../components/BasePanel";
+import { ILayerManager } from "../Layer.manager";
+import { BasePanel } from "../Components/BasePanel";
 import { BaseMediator, UIType } from "apowophaserui";
 export class RankMediator extends BaseMediator {
     public static NAME: string = "RankMediator";

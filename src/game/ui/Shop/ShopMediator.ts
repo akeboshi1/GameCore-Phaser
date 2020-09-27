@@ -3,8 +3,8 @@ import { MessageType } from "../../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_proto";
 import { ShopPanel } from "./ShopPanel";
-import { ILayerManager } from "../layer.manager";
-import { BasePanel } from "../components/BasePanel";
+import { ILayerManager } from "../Layer.manager";
+import { BasePanel } from "../Components/BasePanel";
 import { BaseMediator, UIType } from "apowophaserui";
 
 export class ShopMediator extends BaseMediator {

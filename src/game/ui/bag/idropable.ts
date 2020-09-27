@@ -1,4 +1,4 @@
-import { IDragable } from "./idragable";
+import { IDragable } from "./Idragable";
 
 export interface IDropable {
     dragDrop(dragable: IDragable): void;

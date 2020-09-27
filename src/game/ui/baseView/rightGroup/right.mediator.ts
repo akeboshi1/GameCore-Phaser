@@ -1,7 +1,7 @@
-import { BaseFaceMediator } from "../baseFace.mediator";
+import { BaseFaceMediator } from "../BaseFace.mediator";
 import { WorldService } from "../../../game/world.service";
-import { RightBtnGroup } from "./right.btn.group";
-import { op_gameconfig } from "pixelpai_proto";
+import { RightBtnGroup } from "./Right.btn.group";
+import { op_gameconfig } from "./node_modules/pixelpai_proto";
 import { MessageType } from "../../../../const/MessageType";
 export class RightMediator extends BaseFaceMediator {
     public static NAME: string = "RightMediator";

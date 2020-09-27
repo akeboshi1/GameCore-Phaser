@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import { DynamicImage } from "../../ui/components/dynamic.image";
+import { DynamicImage } from "../../ui/Components/Dynamic.image";
 
 export class BackgroundDisplay {
   private mKey: string;

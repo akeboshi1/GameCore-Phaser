@@ -1,9 +1,9 @@
 import { WorldService } from "../../game/world.service";
 import { ItemDetail } from "./ItemDetail";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { NinePatchButton } from "../components/ninepatch.button";
+import { NinePatchButton } from "../Components/Ninepatch.button";
 import { BaseMediator, UIType } from "apowophaserui";
 export class ItemDetailMediator extends BaseMediator {
     private world: WorldService;

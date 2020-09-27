@@ -1,5 +1,5 @@
 import { WorldService } from "../../game/world.service";
-import { ILayerManager } from "../layer.manager";
+import { ILayerManager } from "../Layer.manager";
 import { ComponentRankPanel } from "./ComponentRankPanel";
 import { BaseMediator, UIType } from "apowophaserui";
 

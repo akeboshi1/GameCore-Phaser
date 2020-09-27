@@ -1,13 +1,13 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
-import { DynamicImage } from "../components/dynamic.image";
+import { DynamicImage } from "../Components/Dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url, Coin } from "../../game/core/utils/resUtil";
-import { ItemInfoTips } from "../tips/ItemInfoTips";
+import { ItemInfoTips } from "../Tips/ItemInfoTips";
 import { NineSlicePatch, Button, GameScroller, NineSliceButton, ClickEvent, ProgressBar } from "apowophaserui";
 export class PicWorkPanel extends BasePanel {
     private key = "work_ui";

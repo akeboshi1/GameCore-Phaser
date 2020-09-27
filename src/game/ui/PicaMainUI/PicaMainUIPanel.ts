@@ -1,12 +1,12 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
-import { NinePatch } from "../components/nine.patch";
+import { NinePatch } from "../Components/Nine.patch";
 import { Logger } from "../../game/core/utils/log";
 import { Handler } from "../../Handler/Handler";
-import { TextToolTips } from "../tips/TextToolTip";
+import { TextToolTips } from "../Tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
+import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
 import { CheckBox, NineSlicePatch, ClickEvent } from "apowophaserui";
 

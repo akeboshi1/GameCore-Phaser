@@ -1,6 +1,6 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
+import { PacketHandler, PBpacket } from "./node_modules/net-socket-packet";
 import { WorldService } from "../../game/world.service";
-import { op_client } from "pixelpai_proto";
+import { op_client } from "./node_modules/pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 
 export class Chat extends PacketHandler {

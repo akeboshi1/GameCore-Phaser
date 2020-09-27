@@ -1,6 +1,6 @@
 import { op_client } from "pixelpai_proto";
 import { Bubble } from "./bubble";
-import { DynamicImage } from "../../ui/components/dynamic.image";
+import { DynamicImage } from "../../ui/Components/Dynamic.image";
 import { Url } from "../../game/core/utils/resUtil";
 import { IElement } from "../element/element";
 

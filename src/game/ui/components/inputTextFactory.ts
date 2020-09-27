@@ -1,6 +1,6 @@
 import { WorldService } from "../../game/world.service";
 import { MainUIScene } from "../../scenes/main.ui";
-import { InputText } from "apowophaserui";
+import { InputText } from "./node_modules/apowophaserui";
 export class InputTextFactory {
     private mWorld: WorldService;
     constructor(world: WorldService) {

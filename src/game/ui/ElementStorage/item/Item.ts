@@ -1,5 +1,5 @@
-import { DynamicImage } from "../../components/dynamic.image";
-import { op_client } from "pixelpai_proto";
+import { DynamicImage } from "../../Components/Dynamic.image";
+import { op_client } from "./node_modules/pixelpai_proto";
 import { Url } from "../../../game/core/utils/resUtil";
 
 export class Item extends Phaser.GameObjects.Container {

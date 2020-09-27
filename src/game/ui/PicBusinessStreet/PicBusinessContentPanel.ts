@@ -1,6 +1,6 @@
 import { Font } from "../../game/core/utils/font";
 import { op_client } from "pixelpai_proto";
-import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
+import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
 import { Handler } from "../../Handler/Handler";
 import { i18n } from "../../game/core/utils/i18n";
 import { NineSlicePatch, Button, ClickEvent } from "apowophaserui";

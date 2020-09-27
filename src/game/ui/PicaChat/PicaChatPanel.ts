@@ -1,10 +1,10 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../game/core/utils/font";
-import { InputPanel } from "../components/input.panel";
+import { InputPanel } from "../Components/Input.panel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicChatInputPanel } from "./PicChatInputPanel";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { i18n } from "../../game/core/utils/i18n";
 import { BBCodeText, TextArea, UIType } from "apowophaserui";
 
