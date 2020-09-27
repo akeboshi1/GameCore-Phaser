@@ -18,12 +18,14 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private materialTitle: Phaser.GameObjects.Text;
     private materialLine: Phaser.GameObjects.Image;
     private materialLine2: Phaser.GameObjects.Image;
+    private contentTitle: Phaser.GameObjects.Text;
     private confirmHandler: Handler;
     private materialItems: MaterialItem[] = [];
     private curSelectItem: MaterialItem;
     private zoom: number;
     private havebutton: boolean = true;
     private mblackGraphic: Phaser.GameObjects.Graphics;
+    private isEnough: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, havebutton: boolean = true) {
         super(scene);
         this.dpr = dpr;
@@ -53,14 +55,16 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         if (this.havebutton && buttontex !== undefined)
             this.confirmBtn.setText(buttontex);
     }
-    public setItemDatas(datas: op_client.ICountablePackageItem[], handler?: Handler) {
-        if (handler !== undefined) this.confirmHandler = handler;
+    public setItemDatas(datas: op_client.ICountablePackageItem[]) {
+        this.gameScroll.visible = true;
         this.gameScroll.clearItems(false);
         for (const item of this.materialItems) {
             item.visible = false;
         }
+        this.isEnough = true;
         for (let i = 0; i < datas.length; i++) {
             let item: MaterialItem;
+            const data = datas[i];
             if (i < this.materialItems.length) {
                 item = this.materialItems[i];
             } else {
@@ -68,11 +72,19 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
                 this.materialItems.push(item);
             }
             item.visible = true;
-            item.setItemData(datas[i]);
+            item.setItemData(data);
             this.gameScroll.addItem(item);
+            if (data.neededCount > data.count) { this.isEnough = false; }
         }
         this.gameScroll.Sort();
     }
+
+    public setContent(title: string) {
+        this.contentTitle.visible = true;
+        this.contentTitle.text = title;
+        this.gameScroll.visible = false;
+    }
+
     protected create() {
         const bg = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "universal_box" });
         this.add(bg);
@@ -125,6 +137,18 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
             }
         });
         this.add(this.gameScroll);
+        this.contentTitle = this.scene.make.text({
+            x: 0,
+            y: -this.height * 0.5 + 25 * this.dpr,
+            text: "",
+            style: {
+                color: "#FFC51A",
+                fontSize: 15 * this.dpr,
+                fontFamily: Font.BOLD_FONT,
+            }
+        }, false).setOrigin(0.5);
+        this.add(this.contentTitle);
+        this.contentTitle.visible = false;
         if (this.havebutton) {
             this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 106 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("common.confirm"), this.dpr, 1, {
                 left: 12 * this.dpr,
@@ -153,10 +177,13 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
 
     private onConfirmHandler() {
         this.onCloseHandler();
-        if (this.confirmHandler) this.confirmHandler.run();
+        if (this.confirmHandler && this.isEnough) this.confirmHandler.run();
     }
     private onCloseHandler() {
         this.visible = false;
+        this.gameScroll.clearItems(false);
+        this.gameScroll.visible = false;
+        this.contentTitle.visible = false;
         if (this.parentContainer) this.parentContainer.remove(this);
     }
     private onMaterialItemHandler(gameobject: MaterialItem) {

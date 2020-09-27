@@ -46,8 +46,16 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
             this.turnover.visible = true;
             this.deprecia.visible = true;
             this.compviness.setTextInfo(i18n.t("room_info.compveness"), data.competitiveness + "");
-            this.turnover.setTextInfo(i18n.t("room_info.turnover"), `${data.turnoverProp.value}(${data.turnoverProp.tempValue})`);
-            this.deprecia.setTextInfo(i18n.t("room_info.depreciation"), data.undepreciated * 100 + "%");
+            let turnovervalue = "";
+            if (data.turnoverProp.tempValue > 0) {
+                turnovervalue = `${data.turnoverProp.value}(+${data.turnoverProp.tempValue})`;
+            } else if (data.turnoverProp.tempValue < 0) {
+                turnovervalue = `${data.turnoverProp.value}[color=#ff0000](${data.turnoverProp.tempValue})[/color]`;
+            } else {
+                turnovervalue = `${data.turnoverProp.value}`;
+            }
+            this.turnover.setTextInfo(i18n.t("room_info.turnover"), turnovervalue);
+            this.deprecia.setTextInfo(i18n.t("room_info.depreciation"), Math.floor(data.undepreciated * 100) + "%");
             this.add([this.compviness, this.turnover, this.deprecia]);
         } else {
             this.compviness.visible = false;

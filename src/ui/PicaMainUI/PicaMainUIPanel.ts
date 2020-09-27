@@ -104,7 +104,7 @@ export class PicaMainUIPanel extends BasePanel {
             const curExp = (level.currentLevelExp === undefined ? 0 : level.currentLevelExp);
             this.playerLv.text = level.level + "";
         }
-        if (player.coin  !== undefined)  this.mCoinValue.setText(player.coin.toString());
+        if (player.coin !== undefined) this.mCoinValue.setText(player.coin.toString());
         if (player.diamond !== undefined) this.mDiamondValue.setText(player.diamond.toString());
         if (player.energy) {
             const energy = player.energy;
@@ -147,6 +147,7 @@ export class PicaMainUIPanel extends BasePanel {
             }
         }
         this.mSceneName.rightIcon.visible = this.isSelfRoom;
+        this.partyBtn.visible = this.isSelfRoom;
     }
 
     get isSelfRoom() {
