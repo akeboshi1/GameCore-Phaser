@@ -13,6 +13,7 @@ import { State } from "../../rooms/state/state.group";
 import { ILogicElement } from "./logic.element";
 import { PlayerManager } from "./player/player.manager";
 import { IPoint } from "game-capsule";
+import { ViewblockService } from "../../rooms/cameras/viewblock.service";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -115,7 +116,6 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
             return;
         }
         this.mID = data.id;
-
         this.mSize = {
             cols: data.cols,
             rows: data.rows,
@@ -152,8 +152,6 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
 
     public resume() {
         this.mWorld.roomResume();
-        // if (this.mScene) this.mScene.scene.resume(name);
-        // if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = true;
     }
 
     public addActor(data: IActor): void {
@@ -478,7 +476,7 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
         // fall.show(status);
         // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
         // this.addToSceneUI(fall);
-        this.mWorld.addFillEffect(pos,status);
+        this.mWorld.addFillEffect(pos, status);
     }
 
     private onMovePathHandler(packet: PBpacket) {

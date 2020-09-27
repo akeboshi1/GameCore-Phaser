@@ -1,20 +1,12 @@
-import { IElementManager } from "../element/element.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { ILogicRoomService, Room } from "../room";
-import { Logger } from "../../utils/log";
-import { ISprite, Sprite } from "../element/sprite";
-import { MessageType } from "../../const/MessageType";
-import { Player } from "./player";
-import { IElement } from "../element/element";
-import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
-import { PlayerModel } from "./player.model";
 import { LogicPos } from "../../../utils/logic.pos";
+import { IElementManager } from "../element/ielement.manager";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
-    private mActor: Actor;
     private mPlayerMap: Map<number, Player> = new Map();
     constructor(private mRoom: Room) {
         super();

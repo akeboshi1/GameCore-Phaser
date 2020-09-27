@@ -61,7 +61,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public stop() {
         this.mRooms.forEach((room: Room) => {
-            if (room && room.scene) room.destroy();
+            if (room) room.destroy();
         });
     }
 
