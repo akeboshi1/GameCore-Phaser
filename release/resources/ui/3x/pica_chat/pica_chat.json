@@ -1,49 +1,9 @@
 {
 	"frames": {
-		"chat_Input": {
+		"chat_icon": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 90,
-				"h": 103
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 90,
-				"h": 103
-			},
-			"sourceSize": {
-				"w": 90,
-				"h": 103
-			}
-		},
-		"chat_Input_bg": {
-			"frame": {
-				"x": 93,
-				"y": 1,
-				"w": 16,
-				"h": 140
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 16,
-				"h": 140
-			},
-			"sourceSize": {
-				"w": 16,
-				"h": 140
-			}
-		},
-		"chat_icon": {
-			"frame": {
-				"x": 111,
-				"y": 1,
 				"w": 140,
 				"h": 136
 			},
@@ -58,31 +18,11 @@
 			"sourceSize": {
 				"w": 140,
 				"h": 136
-			}
-		},
-		"chat_quick_2": {
-			"frame": {
-				"x": 253,
-				"y": 1,
-				"w": 89,
-				"h": 79
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 89,
-				"h": 79
-			},
-			"sourceSize": {
-				"w": 89,
-				"h": 79
 			}
 		},
 		"emoji": {
 			"frame": {
-				"x": 344,
+				"x": 143,
 				"y": 1,
 				"w": 131,
 				"h": 130
@@ -98,52 +38,12 @@
 			"sourceSize": {
 				"w": 131,
 				"h": 130
-			}
-		},
-		"home_divider": {
-			"frame": {
-				"x": 1,
-				"y": 143,
-				"w": 993,
-				"h": 1
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 993,
-				"h": 1
-			},
-			"sourceSize": {
-				"w": 993,
-				"h": 1
-			}
-		},
-		"home_quick chat _bg": {
-			"frame": {
-				"x": 477,
-				"y": 1,
-				"w": 39,
-				"h": 37
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 39,
-				"h": 37
-			},
-			"sourceSize": {
-				"w": 39,
-				"h": 37
 			}
 		},
 		"horn_icon": {
 			"frame": {
 				"x": 1,
-				"y": 146,
+				"y": 139,
 				"w": 199,
 				"h": 170
 			},
@@ -162,8 +62,8 @@
 		},
 		"more_btn": {
 			"frame": {
-				"x": 518,
-				"y": 1,
+				"x": 202,
+				"y": 133,
 				"w": 119,
 				"h": 118
 			},
@@ -180,10 +80,30 @@
 				"h": 118
 			}
 		},
+		"party_gift_icon": {
+			"frame": {
+				"x": 323,
+				"y": 1,
+				"w": 115,
+				"h": 131
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 115,
+				"h": 131
+			},
+			"sourceSize": {
+				"w": 115,
+				"h": 131
+			}
+		},
 		"scroll_btn": {
 			"frame": {
-				"x": 639,
-				"y": 1,
+				"x": 323,
+				"y": 134,
 				"w": 81,
 				"h": 83
 			},
@@ -202,7 +122,7 @@
 		},
 		"title_bg": {
 			"frame": {
-				"x": 722,
+				"x": 276,
 				"y": 1,
 				"w": 2,
 				"h": 40
@@ -227,8 +147,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 995,
-			"h": 317
+			"w": 439,
+			"h": 310
 		},
 		"scale": "1"
 	}

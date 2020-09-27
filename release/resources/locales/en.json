@@ -138,7 +138,8 @@
     "turnover": "Income",
     "closeshop": "Close Shop",
     "renovate": "Renovate",
-    "depreciation": "Depreciation"
+    "depreciation": "Depreciation",
+    "renovatetips": "Currently no refurbishment is required"
   },
   "business_street": {
     "commercial_street": "STORES",
@@ -215,7 +216,8 @@
     "mystery": "Mystery",
     "world": "World",
     "current": "Current",
-    "system": "System"
+    "system": "System",
+    "givegift": "GIVEGIFTS"
   },
   "minecar": {
     "discard": "discard",
