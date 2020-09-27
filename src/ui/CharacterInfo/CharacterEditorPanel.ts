@@ -1,7 +1,7 @@
 import { Font } from "../../utils/font";
 import { NinePatchButton } from "../components/ninepatch.button";
 import { i18n } from "../../i18n";
-import { InputText, Button } from "apowophaserui";
+import { InputText, Button, ClickEvent } from "apowophaserui";
 export class CharacterEditorPanel extends Phaser.GameObjects.Container {
     private title: Phaser.GameObjects.Text;
     private inputText: InputText;
@@ -63,8 +63,8 @@ export class CharacterEditorPanel extends Phaser.GameObjects.Container {
         });
         saveBtn.setTextStyle({ fontSize: 16 * this.dpr, color: "#ED7814" });
         backBtn.setPosition(posx + 8 * dpr, -height * 0.5 + 50 * dpr);
-        backBtn.on("Tap", this.onBackHandler, this);
-        saveBtn.on("Tap", this.onSaveHandler, this);
+        backBtn.on(ClickEvent.Tap, this.onBackHandler, this);
+        saveBtn.on(ClickEvent.Tap, this.onSaveHandler, this);
         this.add([backBtn, saveBtn]);
     }
 

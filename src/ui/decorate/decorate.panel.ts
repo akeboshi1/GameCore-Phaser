@@ -64,17 +64,17 @@ export class DecoratePanel extends BasePanel {
         if (this.mExtendBtn) this.mExtendBtn.on(String(ClickEvent.Tap), this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.register();
-            this.mMoveMenuContainer.on("tap", this.onMoveHandler, this);
+            this.mMoveMenuContainer.on(ClickEvent.Tap, this.onMoveHandler, this);
         }
         if (this.mRepeatMenuContainer) {
             this.mRepeatMenuContainer.register();
-            this.mRepeatMenuContainer.on("tap", this.onRepeatHandler, this);
-            this.mRepeatMenuContainer.on("hold", this.onHoldRepeatHandler, this);
+            this.mRepeatMenuContainer.on(ClickEvent.Tap, this.onRepeatHandler, this);
+            this.mRepeatMenuContainer.on(ClickEvent.Hold, this.onHoldRepeatHandler, this);
         }
     }
 
     public removeListen() {
-        if (this.mCancelBtn) this.mCancelBtn.off(String(ClickEvent.Tap), this.onCancelHandler, this);
+        if (this.mCancelBtn) this.mCancelBtn.off(ClickEvent.Tap, this.onCancelHandler, this);
         if (this.mOkBtn) this.mOkBtn.off(String(ClickEvent.Tap), this.onAddHandler, this);
         if (this.mRecycleBtn) this.mRecycleBtn.off(String(ClickEvent.Tap), this.onRecycleHandler, this);
         if (this.mTurnBtn) this.mTurnBtn.off(String(ClickEvent.Tap), this.onTurnHandler, this);
@@ -83,12 +83,12 @@ export class DecoratePanel extends BasePanel {
         if (this.mExtendBtn) this.mExtendBtn.off(String(ClickEvent.Tap), this.onShowExtendsHandler, this);
         if (this.mMoveMenuContainer) {
             this.mMoveMenuContainer.unRegister();
-            this.mMoveMenuContainer.off("tap", this.onMoveHandler, this);
+            this.mMoveMenuContainer.off(ClickEvent.Tap, this.onMoveHandler, this);
         }
         if (this.mRepeatMenuContainer) {
             this.mRepeatMenuContainer.unRegister();
-            this.mRepeatMenuContainer.off("tap", this.onRepeatHandler, this);
-            this.mRepeatMenuContainer.off("hold", this.onHoldRepeatHandler, this);
+            this.mRepeatMenuContainer.off(ClickEvent.Tap, this.onRepeatHandler, this);
+            this.mRepeatMenuContainer.off(ClickEvent.Hold, this.onHoldRepeatHandler, this);
         }
     }
 
@@ -558,32 +558,32 @@ class MoveMenu extends Phaser.GameObjects.Container {
         // for (const btn of this.mBtns) {
         //     btn.on("pointerup", this.onArrowHandler, this);
         // }
-        this.mArrow1.on("Hold", this.onHoldHandler, this);
-        this.mArrow1.on("Tap", this.onClickHandler, this);
-        this.mArrow3.on("Hold", this.onHoldHandler, this);
-        this.mArrow3.on("Tap", this.onClickHandler, this);
-        this.mArrow5.on("Hold", this.onHoldHandler, this);
-        this.mArrow5.on("Tap", this.onClickHandler, this);
-        this.mArrow7.on("Hold", this.onHoldHandler, this);
-        this.mArrow7.on("Tap", this.onClickHandler, this);
+        this.mArrow1.on(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow1.on(ClickEvent.Tap, this.onClickHandler, this);
+        this.mArrow3.on(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow3.on(ClickEvent.Tap, this.onClickHandler, this);
+        this.mArrow5.on(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow5.on(ClickEvent.Tap, this.onClickHandler, this);
+        this.mArrow7.on(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow7.on(ClickEvent.Tap, this.onClickHandler, this);
     }
 
     public unRegister() {
-        this.mArrow1.off("Hold", this.onHoldHandler, this);
-        this.mArrow1.off("Tap", this.onClickHandler, this);
-        this.mArrow3.off("Hold", this.onHoldHandler, this);
-        this.mArrow3.off("Tap", this.onClickHandler, this);
-        this.mArrow5.off("Hold", this.onHoldHandler, this);
-        this.mArrow5.off("Tap", this.onClickHandler, this);
-        this.mArrow7.off("Hold", this.onHoldHandler, this);
-        this.mArrow7.off("Tap", this.onClickHandler, this);
+        this.mArrow1.off(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow1.off(ClickEvent.Tap, this.onClickHandler, this);
+        this.mArrow3.off(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow3.off(ClickEvent.Tap, this.onClickHandler, this);
+        this.mArrow5.off(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow5.off(ClickEvent.Tap, this.onClickHandler, this);
+        this.mArrow7.off(ClickEvent.Hold, this.onHoldHandler, this);
+        this.mArrow7.off(ClickEvent.Tap, this.onClickHandler, this);
     }
 
     private onHoldHandler(gameobject) {
-        this.emit("hold", gameobject.getData("dir"));
+        this.emit(ClickEvent.Hold, gameobject.getData("dir"));
     }
 
     private onClickHandler(pointer, gameobject) {
-        this.emit("tap", gameobject.getData("dir"));
+        this.emit(ClickEvent.Tap, gameobject.getData("dir"));
     }
 }

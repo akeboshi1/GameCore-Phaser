@@ -7,7 +7,7 @@ import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
 import { Handler } from "../../Handler/Handler";
 import { Url } from "../../utils/resUtil";
-import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText } from "apowophaserui";
+import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText, ClickEvent } from "apowophaserui";
 export class TaskPanel extends BasePanel {
     private key = "task_ui";
     private blackBg: Phaser.GameObjects.Graphics;
@@ -319,8 +319,8 @@ class TaskItem extends Phaser.GameObjects.Container {
         this.closeBtn = new Button(scene, key, "close");
         this.setExtendBtn(this.closeBtn);
         this.closeBtn.setPosition(this.openBtn.x, this.openBtn.y).visible = false;
-        this.openBtn.on("Tap", this.onOpenHandler, this);
-        this.closeBtn.on("Tap", this.onCloseHandler, this);
+        this.openBtn.on(ClickEvent.Tap, this.onOpenHandler, this);
+        this.closeBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
         this.content.add([this.bg, headbg, this.headIcon, this.typeBg, this.typeTex, this.taskName, this.taskDes, this.finish, this.openBtn, this.closeBtn]);
         this.add(this.content);
         this.setSize(width, height);
@@ -493,7 +493,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
             bottom: 12 * this.dpr
         });
         this.finishBtn.setTextStyle({ fontSize: 12 * dpr, color: "#000000" });
-        this.finishBtn.on("Tap", this.onFinishHandler, this);
+        this.finishBtn.on(ClickEvent.Tap, this.onFinishHandler, this);
         this.add([bg, this.taskLabel, this.taskTex, this.rewardLabel, line, this.finishBtn]);
         this.setSize(width, height);
         this.key = key;
