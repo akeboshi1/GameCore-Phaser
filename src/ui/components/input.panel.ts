@@ -7,7 +7,7 @@ export class InputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
     private mInput;
     private scene: Phaser.Scene;
-    private mTextArea: Phaser.GameObjects.Text;
+    // private mTextArea: Phaser.GameObjects.Text;
     private world: WorldService;
     constructor(scene: Phaser.Scene, world: WorldService, text?: string) {
         super();
@@ -18,7 +18,7 @@ export class InputPanel extends Phaser.Events.EventEmitter {
         this.mBackground = scene.add.graphics();
         this.mBackground.fillStyle(0x0, 0.6);
         this.mBackground.fillRect(0, 0, width, height).setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-        this.mTextArea = this.scene.add.text(width / 2, height, "", { fontSize: 11 * world.uiRatio, bold: true, fontFamily: Font.DEFULT_FONT, color: "#356EE3" }).setOrigin(1, 0);
+        // this.mTextArea = this.scene.add.text(width / 2, height, "", { fontSize: 11 * world.uiRatio, bold: true, fontFamily: Font.DEFULT_FONT, color: "#356EE3" }).setOrigin(1, 0);
         this.mInput = new InputText(scene, 6 * world.uiRatio, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
             fontSize: `${20 * world.uiRatio}px`,
             color: "#0",
@@ -26,26 +26,21 @@ export class InputPanel extends Phaser.Events.EventEmitter {
             backgroundColor: "#FFFFFF",
             borderColor: "#FF9900"
         }).setOrigin(0, 0);
-        // (<any>scene.add).rexInputText(6 * world.uiRatio, 6 * world.uiRatio, width - 12 * world.uiRatio, 40 * world.uiRatio, {
-        //     fontSize: `${20 * world.uiRatio}px`,
-        //     color: "#0",
-        //     text,
-        //     backgroundColor: "#FFFFFF",
-        //     borderColor: "#FF9900"
-        // }).setOrigin(0, 0);
-        // this.mInput.y = -height / 2;
+        // this.scene.add.existing(this.mInput);
+
         this.mInput.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
                 this.onCloseHandler();
             }
         });
+        this.mInput.x = 6 * world.uiRatio;
         this.scene.input.on("pointerdown", this.onFoucesHandler, this);
-        // if (this.world.game.device.os.iOS) {
-        //     this.mInput.on("click", this.onFoucesHandler, this);
-        // } else {
-        //     this.mInput.on("focus", this.onFoucesHandler, this);
-        // }
+        if (this.world.game.device.os.iOS) {
+            this.mInput.on("click", this.onFoucesHandler, this);
+        } else {
+            this.mInput.on("focus", this.onFoucesHandler, this);
+        }
         this.mInput.setFocus();
     }
 
@@ -58,7 +53,7 @@ export class InputPanel extends Phaser.Events.EventEmitter {
         this.scene = undefined;
     }
     private onFoucesHandler() {
-        Logger.getInstance().log("fouces----log");
+        // Logger.getInstance().log("fouces----log");
         this.mInput.node.focus();
         // setTimeout(() => {
         //     const node = <HTMLInputElement>this.mInput.node;
