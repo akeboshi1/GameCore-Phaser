@@ -2,16 +2,18 @@ import { WorldService } from "../../game/world.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { ConnectionService } from "../../net/connection.service";
-import { PlayerData } from "./PlayerData";
+import { PlayerBag } from "./PlayerBag";
+import { PlayerProperty } from "./PlayerProperty";
 export class PlayerDataManager extends PacketHandler {
-    private readonly mPlayerData: PlayerData;
+    private readonly mPlayerBag: PlayerBag;
+    private readonly mProperty: PlayerProperty;
     private readonly mWorld: WorldService;
     private mEvent: Phaser.Events.EventEmitter;
     constructor(world: WorldService) {
         super();
         this.mWorld = world;
         this.mEvent = new Phaser.Events.EventEmitter();
-        this.mPlayerData = new PlayerData();
+        this.mPlayerBag = new PlayerBag();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE, this.onSYNC_PACKAHE);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
     }
@@ -37,14 +39,14 @@ export class PlayerDataManager extends PacketHandler {
 
     clear() {
         this.removePackListener();
-        this.playerData.destroy();
+        this.playerBag.destroy();
         this.mEvent.removeAllListeners();
     }
 
     destroy() {
         this.removePackListener();
         this.mEvent.destroy();
-        this.playerData.destroy();
+        this.playerBag.destroy();
     }
 
     get connection(): ConnectionService {
@@ -53,9 +55,15 @@ export class PlayerDataManager extends PacketHandler {
         }
     }
 
-    get playerData(): PlayerData {
-        if (this.mPlayerData) {
-            return this.mPlayerData;
+    get playerBag(): PlayerBag {
+        if (this.mPlayerBag) {
+            return this.mPlayerBag;
+        }
+    }
+
+    get playerProperty(): PlayerProperty {
+        if (this.mProperty) {
+            return this.mProperty;
         }
     }
 
@@ -72,14 +80,14 @@ export class PlayerDataManager extends PacketHandler {
     }
     private onSYNC_PACKAHE(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE = packet.content;
-        const bag = this.playerData.syncPackage(content);
+        const bag = this.playerBag.syncPackage(content);
         if (bag.syncFinish) {
             this.mEvent.emit("syncfinish", content.packageName);
         }
     }
     private onUPDATE_PACKAGE(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE = packet.content;
-        this.playerData.updatePackage(content);
+        this.playerBag.updatePackage(content);
         this.mEvent.emit("update", content.packageName);
     }
 }

@@ -195,7 +195,7 @@ export class PicHousePanel extends BasePanel {
         this.topCheckBox.selectIndex(0);
         this.itemsPanel = new ItemsConsumeFunPanel(this.scene, 278 * this.dpr, 198 * this.dpr, this.dpr, this.scale);
         this.itemsPanel.createBackGrphaic(w, h);
-        this.itemsPanel.setTextInfo(i18n.t("room_info.renovate").toUpperCase(), i18n.t("compose.needMaterials"));
+        this.itemsPanel.setTextInfo(i18n.t("room_info.renovate").toUpperCase(), i18n.t("room_info.needmaterials"));
         this.itemsPanel.visible = false;
 
         this.add(this.content);

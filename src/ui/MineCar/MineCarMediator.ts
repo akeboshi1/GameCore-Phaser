@@ -52,7 +52,7 @@ export class MineCarMediator extends BaseMediator {
   get playerData() {
     const bag = this.bag;
     if (bag) {
-      return bag.playerData;
+      return bag.playerBag;
     }
     return null;
   }

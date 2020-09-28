@@ -81,7 +81,7 @@ export class ComposeMediator extends BaseMediator {
     }
     get playerData() {
         if (this.bag) {
-            return this.bag.playerData;
+            return this.bag.playerBag;
         }
         return null;
     }

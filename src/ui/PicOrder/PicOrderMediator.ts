@@ -58,7 +58,7 @@ export class PicOrderMediator extends BaseMediator {
         if (!user || !user.bag) {
             return;
         }
-        return user.bag.playerData;
+        return user.bag.playerBag;
     }
 
     private query_ORDER_LIST() {
