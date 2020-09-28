@@ -139,6 +139,7 @@
     "closeshop": "Close Shop",
     "renovate": "Renovate",
     "depreciation": "Depreciation",
+    "needmaterials": "Materials needed for renovation",
     "renovatetips": "Currently no refurbishment is required"
   },
   "business_street": {
