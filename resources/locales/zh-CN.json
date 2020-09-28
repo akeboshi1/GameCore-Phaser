@@ -138,7 +138,8 @@
     "turnover": "营业额",
     "closeshop": "关闭商店",
     "renovate": "翻新",
-    "depreciation": "折旧"
+    "depreciation": "折旧",
+    "renovatetips": "当前无需翻新"
   },
   "business_street": {
     "commercial_street": "商业街",
