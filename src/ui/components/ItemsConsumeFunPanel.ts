@@ -86,7 +86,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     }
 
     protected create() {
-        const bg = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "universal_box" });
+        const bg = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "bg_universal_box" });
         this.add(bg);
         this.setSize(bg.width, bg.height);
         this.title = this.scene.make.text({
