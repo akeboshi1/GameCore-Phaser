@@ -1,10 +1,9 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { ConnectionService } from "../../lib/net/connection.service";
 import { op_virtual_world, op_def } from "pixelpai_proto";
-import { WorldService } from "./world.service";
 import { IRoomService, Room } from "../rooms/room";
 import { InputManager, InputListener } from "./input.manager";
-import { Render } from "../render/render";
+import { Render } from "../render";
+import { WorldService } from "../world.service";
 
 export class KeyBoardManager extends PacketHandler implements InputManager {
     // 获取的需要监听的key值列表

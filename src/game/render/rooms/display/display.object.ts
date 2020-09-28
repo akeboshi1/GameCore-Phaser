@@ -1,14 +1,14 @@
 import { DynamicSprite } from "../../ui/Components/Dynamic.sprite";
 import { DynamicImage } from "../../ui/Components/Dynamic.image";
 import { op_def } from "pixelpai_proto";
-import { Url } from "../../game/core/utils/resUtil";
 import { ReferenceArea } from "../editor/reference.area";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "./element.display";
-import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
 import { IElement } from "../element/element";
-import { AnimationData } from "../element/sprite";
+import { AnimationData } from "../../../logic/rooms/display/ianimation";
+import { IFramesModel } from "../../../logic/rooms/display/iframe.model";
+import { Url } from "../../../../utils/resUtil";
 
 export enum DisplayField {
     BACKEND = 0,

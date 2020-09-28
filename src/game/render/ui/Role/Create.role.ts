@@ -2,8 +2,8 @@ import { RoleManager } from "./Role.manager";
 import { WorldService } from "../game/world.service";
 import { CreateRoleScene } from "../../scenes/create.character";
 import { CreateRolePanel } from "./Create.role.panel";
-import { PBpacket, PacketHandler } from "./node_modules/net-socket-packet";
-import { op_virtual_world, op_client, op_gameconfig } from "./node_modules/pixelpai_proto";
+import { PBpacket, PacketHandler } from "net-socket-packet";
+import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
 import { RPCFunction } from "../../lib/rpc/rpc.peer";
 
 export interface ICreateRole {

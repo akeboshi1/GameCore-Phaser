@@ -1,6 +1,7 @@
-import { WorldService } from "../../game/world.service";
-import { Pos } from "../../game/core/utils/pos";
-import { Url } from "../../game/core/utils/resUtil";
+import { WorldService } from "../../world.service";
+import { Pos } from "../../../../utils/pos";
+import { Url } from "../../../../utils/resUtil";
+
 export interface IBtnData {
     readonly name?: string;
     key: string;

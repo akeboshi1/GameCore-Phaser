@@ -1,11 +1,11 @@
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
-import { Logger } from "../../game/core/utils/log";
 import * as sha1 from "simple-sha1";
-import { Animation, IAnimationData } from "./animation";
-import Helpers from "../../game/core/utils/helpers";
 import { Sprite } from "../element/sprite";
 import { Direction } from "../element/element";
-import { AnimationData } from "../element/sprite";
+import { IFramesModel, IDisplay } from "../../../logic/rooms/display/iframe.model";
+import { IAnimationData, AnimationData } from "../../../logic/rooms/display/ianimation";
+import Helpers from "../../../../utils/helpers";
+import { Logger } from "../../../../utils/log";
 
 export class FramesModel implements IFramesModel {
     avatarDir?: number;
@@ -181,7 +181,7 @@ export class FramesModel implements IFramesModel {
         this.mGen = sha1.sync(display.dataPath + display.texturePath);
     }
 
-    private setAnimationData(aniDatas: Animation[]) {
+    private setAnimationData(aniDatas: IAnimationData[]) {
         if (!aniDatas) {
             Logger.getInstance().error(`${this.id} animationData does not exist`);
             return;

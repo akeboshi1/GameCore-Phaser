@@ -1,7 +1,7 @@
 import { IRoomService } from "../room";
-import { Pos } from "../../game/core/utils/pos";
-import { Logger } from "../../game/core/utils/log";
-import { IPosition45Obj, Position45 } from "../../game/core/utils/position45";
+import { IPosition45Obj } from "../../../../utils/iposition45";
+import { Pos } from "../../../../utils/pos";
+import { Position45 } from "../../../../utils/position45";
 
 export class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize: IPosition45Obj;

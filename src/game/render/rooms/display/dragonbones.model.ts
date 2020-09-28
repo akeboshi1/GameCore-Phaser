@@ -1,6 +1,6 @@
 import { op_def } from "pixelpai_proto";
-import { AnimationData } from "../element/sprite";
 import { Direction } from "../element/element";
+import { AnimationData } from "../../../logic/rooms/display/ianimation";
 
 export interface IDragonbonesModel {
     readonly discriminator: string;

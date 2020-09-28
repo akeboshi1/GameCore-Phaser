@@ -1,5 +1,5 @@
-import { Rectangle45 } from "../../game/core/utils/rectangle45";
-import { IBlockObject } from "./block.object";
+import { IBlockObject } from "./iblock.object";
+import { Rectangle45 } from "../../../../utils/rectangle45";
 
 /**
  * 显示区域

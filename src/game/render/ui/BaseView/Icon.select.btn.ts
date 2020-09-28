@@ -1,5 +1,5 @@
-import { WorldService } from "../../game/world.service";
-import { Pos } from "../../game/core/utils/pos";
+import { WorldService } from "../../world.service";
+import { Pos } from "../../../../utils/pos";
 
 /**
  * 切换状态按钮(点击后状态改变的按钮，需要多帧资源)

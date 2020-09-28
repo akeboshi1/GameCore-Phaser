@@ -1,8 +1,7 @@
 import { BasePanel } from "../../Components/BasePanel";
 import { IconBtn, IBtnData } from "../Icon.btn";
-import { WorldService } from "../../../game/world.service";
-import { Url } from "../../../game/core/utils/resUtil";
-
+import { WorldService } from "../../../world.service";
+import { Url } from "../../../../../utils/resUtil";
 export class TopMenuContainer extends BasePanel {
   private readonly maxNum = 3;
   private turnBtn: IconBtn;

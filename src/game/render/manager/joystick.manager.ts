@@ -1,13 +1,11 @@
-import { WorldService } from "../../../../world.service";
 import { Logger } from "../../../utils/log";
 import { Size } from "../../../utils/size";
 import { InputListener, InputManager } from "./input.manager";
-import { IRoomService } from "../../../../../rooms/room";
-import { Direction } from "../../../../../rooms/element/element";
 import { op_def } from "pixelpai_proto";
-import { PlayScene } from "../../../../../scenes/play";
-import { DecorateRoom } from "../../../../../rooms/decorate.room";
-import { Tool } from "../../../utils/tool";
+import { IRoomService } from "../rooms/room";
+import { WorldService } from "../world.service";
+import { DecorateRoom } from "../rooms/decorate.room";
+import { Direction } from "../rooms/element/element";
 
 const TEMP_CONST = {
     MOUSE_DOWN: 0,

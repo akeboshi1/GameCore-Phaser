@@ -1,13 +1,12 @@
-import { ResUtils } from "../../game/core/utils/resUtil";
 import { ElementDisplay } from "./element.display";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
 import { DisplayObject, DisplayField } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
-import { AnimationData } from "../element/sprite";
-import { IFramesModel } from "./frames.model";
 import { SoundField } from "apowophaserui";
-../../game/core/utils/log
+import { AnimationData } from "../../../logic/rooms/display/ianimation";
+import { IFramesModel } from "../../../logic/rooms/display/iframe.model";
+import { ResUtils } from "../../../../utils/resUtil";
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
     BodyCost = "body_cost_$",
@@ -236,10 +235,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.onLoadCompleteHandler();
         } else {
             const res = "./resources/dragonbones";
-            const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
-            const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
-            const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
-            this.loadDragonBones(res, pngUrl, jsonUrl, dbbinUrl);
+            const pngResUtils = `${res}/${this.mDragonbonesName}_tex.png`;
+            const jsonResUtils = `${res}/${this.mDragonbonesName}_tex.json`;
+            const dbbinResUtils = `${res}/${this.mDragonbonesName}_ske.dbbin`;
+            this.loadDragonBones(res, pngResUtils, jsonResUtils, dbbinResUtils);
         }
     }
 
@@ -839,9 +838,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
         this.mLoadMap.forEach((data) => {
             const nextLoad: string[] = data;
-            const partUrl: string = ResUtils.getPartUrl(nextLoad[1]);
+            const partResUrl: string = ResUtils.getPartUrl(nextLoad[1]);
             const partName: string = ResUtils.getPartName(nextLoad[1]);
-            configList.push({ key: partName, url: partUrl });
+            configList.push({ key: partName, url: partResUrl });
         });
         this.scene.load.image(configList);
         this.scene.load.start();

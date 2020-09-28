@@ -1,9 +1,12 @@
-import { ISprite, AnimationData, AnimationQueue } from "../element/sprite";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import { IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
-import { Pos } from "../../game/core/utils/pos";
-import { IFramesModel, FramesModel } from "../display/frames.model";
 import { Animation } from "../display/animation";
+import { ISprite } from "../element/sprite";
+import { AnimationData } from "../../../logic/rooms/display/ianimation";
+import { IFramesModel } from "../../../logic/rooms/display/iframe.model";
+import { Pos } from "../../../../utils/pos";
+import { AnimationQueue } from "../element/element";
+import { FramesModel } from "../display/frames.model";
 
 export class SpawnPoint implements ISprite {
     id: number;

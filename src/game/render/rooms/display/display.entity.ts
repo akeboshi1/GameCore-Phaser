@@ -1,4 +1,5 @@
-import { IFramesModel } from "./frames.model";
+import { IFramesModel } from "../../../logic/rooms/display/iframe.model";
+
 export class DisplayEntity {
     public data: IFramesModel;
     public mDisplays: any[] = [];

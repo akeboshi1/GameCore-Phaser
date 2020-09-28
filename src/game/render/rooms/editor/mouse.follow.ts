@@ -1,4 +1,3 @@
-import { IFramesModel } from "../display/frames.model";
 import { FramesDisplay } from "../display/frames.display";
 import { LayerManager } from "../layer/layer.manager";
 import { EditorRoomService } from "../editor.room";
@@ -6,9 +5,11 @@ import { IElementManager } from "../element/element.manager";
 import { op_client, op_def } from "pixelpai_proto";
 import NodeType = op_def.NodeType;
 import { ISprite, Sprite } from "../element/sprite";
-import { Pos } from "../../game/core/utils/pos";
 import { IRoomService } from "../room";
-import { IPosition45Obj, Position45 } from "../../game/core/utils/position45";
+import { Pos } from "../../../../utils/pos";
+import { IPosition45Obj } from "../../../../utils/iposition45";
+import { IFramesModel } from "../../../logic/rooms/display/iframe.model";
+import { Position45 } from "../../../../utils/position45";
 
 export class MouseFollow {
     private mNodeType: NodeType;

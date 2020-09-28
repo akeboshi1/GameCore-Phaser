@@ -1,4 +1,4 @@
-import { LogicPos } from "../../game/core/utils/logic.pos";
+import { LogicPos } from "../../../../utils/logic.pos";
 
 export interface IBlockObject {
     readonly id: number;

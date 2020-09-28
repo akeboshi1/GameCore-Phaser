@@ -10,6 +10,7 @@ import { BaseMediator } from "apowophaserui";
 import { WorldService } from "../../../world.service";
 import { Size } from "../../../../../utils/size";
 import { JoyStickManager } from "../../../manager/joystick.manager";
+import { Url } from "../../../../../utils/resUtil";
 export class BottomBtnGroup extends BasePanel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;

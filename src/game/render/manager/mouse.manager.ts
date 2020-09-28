@@ -1,11 +1,11 @@
-import { ConnectionService } from "../../lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
-import { WorldService } from "./world.service";
 import { IRoomService, Room } from "../rooms/room";
-import { MessageType } from "./core/const/MessageType";
 import { FramesDisplay } from "../rooms/display/frames.display";
 import { Element } from "../rooms/element/element";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { WorldService } from "../world.service";
+import { MessageType } from "../../../const/MessageType";
 
 export enum MouseEvent {
     RightMouseDown = 1,

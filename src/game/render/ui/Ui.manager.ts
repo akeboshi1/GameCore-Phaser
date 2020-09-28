@@ -1,5 +1,4 @@
-import { WorldService } from "../game/world.service";
-import { ConnectionService } from "../../../lib/net/connection.service";
+
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ChatMediator } from "./Chat/Chat.mediator";
@@ -8,13 +7,11 @@ import { NoticeMediator } from "./Notice/NoticeMediator";
 import { BagMediator } from "./Bag/BagView/BagMediator";
 import { FriendMediator } from "./Friend/Friend.mediator";
 import { RankMediator } from "./Rank/RankMediator";
-import { Size } from "../game/core/utils/size";
 import { RightMediator } from "./BaseView/RightGroup/Right.mediator";
 import { LeftMediator } from "./BaseView/LeftGroup/Left.mediator";
 import { BottomMediator } from "./BaseView/BottomGroup/Bottom.mediator";
 import { BagGroupMediator } from "./BaseView/BagGroup/Bag.group.mediator";
 import { TopMenuMediator } from "./BaseView/Top.menu/Top.menu.mediator";
-import { MessageType } from "../../const/MessageType";
 import { InputTextFactory } from "./Components/InputTextFactory";
 import { DecorateControlMediator } from "./DecorateControl/DecorateControlMediator";
 import { ActivityMediator } from "./Activity/ActivityMediator";
@@ -33,8 +30,11 @@ import { PicHandheldMediator } from "./PicHandheld/PicHandheldMediator";
 import { InteractiveBubbleMediator } from "./Bubble/InteractiveBubbleMediator";
 import { CharacterInfoMediator } from "./CharacterInfo/CharacterInfoMediator";
 import { AlertView, Buttons } from "./Components/Alert.view";
-import { i18n } from "../game/core/utils/i18n";
 import { BaseMediator, UIType } from "apowophaserui";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { WorldService } from "../world.service";
+import { MessageType } from "../../../const/MessageType";
+import { i18n } from "../../../utils/i18n";
 
 // export const enum UIType {
 //     NoneUIType,

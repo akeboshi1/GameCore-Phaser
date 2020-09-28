@@ -1,10 +1,9 @@
-import { IFramesModel } from "./frames.model";
 import { IDragonbonesModel } from "./dragonbones.model";
-import { SortRectangle } from "../../game/core/utils/sort.rectangle";
 import { op_def } from "pixelpai_proto";
 import { IElement } from "../element/element";
-import { AnimationData } from "../element/sprite";
 import { DisplayField } from "./display.object";
+import { IFramesModel } from "../../../logic/rooms/display/iframe.model";
+import { AnimationData } from "../../../logic/rooms/display/ianimation";
 
 export interface ElementDisplay extends Phaser.GameObjects.Container {
     readonly element: IElement;

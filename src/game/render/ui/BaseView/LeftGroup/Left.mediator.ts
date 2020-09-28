@@ -1,6 +1,6 @@
 import { BaseFaceMediator } from "../BaseFace.mediator";
-import { WorldService } from "../../../game/world.service";
 import { LeftBtnGroup } from "./Left.btn.group";
+import { WorldService } from "../../../world.service";
 
 export class LeftMediator extends BaseFaceMediator {
     public static NAME: string = "LeftMediator";

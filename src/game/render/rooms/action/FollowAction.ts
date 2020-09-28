@@ -4,8 +4,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { IGroup } from "../group/IGroup";
 import { FollowGroup } from "../group/FollowGroup";
 import { Room } from "../room";
-import { Pos } from "../../game/core/utils/pos";
-import { Logger } from "../../game/core/utils/log";
+import { Pos } from "../../../../utils/pos";
 
 export class FollowAction extends AIAction {
 

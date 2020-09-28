@@ -1,9 +1,9 @@
 import { ElementDisplay } from "../display/element.display";
 import { InputEnable } from "../element/element";
 import { ISprite } from "../element/sprite";
-import { Pos } from "../../game/core/utils/pos";
 import { IRoomService } from "../room";
 import { IBlockObject } from "./iblock.object";
+import { Pos } from "../../../../utils/pos";
 export abstract class BlockObject implements IBlockObject {
     public isUsed = false;
     protected mDisplay?: ElementDisplay;

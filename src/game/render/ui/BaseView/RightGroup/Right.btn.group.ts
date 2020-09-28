@@ -1,13 +1,13 @@
 import { BasePanel } from "../../Components/BasePanel";
-import { WorldService } from "../../../game/world.service";
 import { IconBtn } from "../Icon.btn";
-import { Size } from "../../../game/core/utils/size";
 import { ItemSlot } from "../../Bag/Item.slot";
-import { Url } from "../../../game/core/utils/resUtil";
-import { op_gameconfig, op_virtual_world } from "./node_modules/pixelpai_proto";
-import { PBpacket } from "./node_modules/net-socket-packet";
+import { op_gameconfig, op_virtual_world } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
 import { BagMediator } from "../../Bag/BagView/BagMediator";
 import { BottomMediator } from "../BottomGroup/Bottom.mediator";
+import { WorldService } from "../../../world.service";
+import { Size } from "../../../../../utils/size";
+import { Url } from "../../../../../utils/resUtil";
 export class RightBtnGroup extends BasePanel {
     public static SlotMaxCount: number = 4;
     private mBtnY: number = 0;

@@ -1,7 +1,7 @@
-import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../Layer.manager";
 import { ActivityPanel } from "./ActivityPanel";
 import { BaseMediator, UIType } from "apowophaserui";
+import { WorldService } from "../../world.service";
 export class ActivityMediator extends BaseMediator {
     public static NAME: string = "ActivityMediator";
     private world: WorldService;

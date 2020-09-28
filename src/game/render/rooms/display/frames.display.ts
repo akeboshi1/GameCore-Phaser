@@ -1,9 +1,8 @@
-import { IFramesModel } from "./frames.model";
-import { Logger } from "../../game/core/utils/log";
 import { DisplayField, DisplayObject } from "./display.object";
-import { IAnimationData } from "./animation";
-import { Url } from "../../game/core/utils/resUtil";
-import { AnimationData } from "../element/sprite";
+import { IFramesModel } from "../../../logic/rooms/display/iframe.model";
+import { IAnimationData, AnimationData } from "../../../logic/rooms/display/ianimation";
+import { Url } from "../../../../utils/resUtil";
+import { Logger } from "../../../../utils/log";
 
 // export enum DisplayField {
 //     BACKEND = 1,

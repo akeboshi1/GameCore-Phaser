@@ -1,6 +1,5 @@
-import { WorldService } from "../game/world.service";
-import { LoadingScene } from "../../scenes/loading";
-import { Logger } from "../game/core/utils/log";
+import { WorldService } from "../world.service";
+import { LoadingScene } from "../scenes/loading";
 
 export interface IAsset {
     type: string;
