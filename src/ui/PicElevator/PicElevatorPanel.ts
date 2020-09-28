@@ -71,7 +71,7 @@ export class PicElevatorPanel extends BasePanel {
     }
     init() {
         this.mBackground = this.scene.make.graphics(undefined, false);
-        this.mBackground.on("pointerup", this.OnClosePanel, this);
+        //   this.mBackground.on("pointerup", this.OnClosePanel, this);
         this.add(this.mBackground);
         const conWdith = 295 * this.dpr;
         const conHeight = 405 * this.dpr;
@@ -167,12 +167,12 @@ class ElevatorItem extends Phaser.GameObjects.Container {
             top: 0 * this.dpr,
             right: 15 * this.dpr,
             bottom: 0 * this.dpr
-        });
+        }, undefined, undefined, 0);
         this.namebg.x = this.width * 0.5 - this.namebg.width * 0.5 - 10 * dpr;
         this.namebg.y = -this.height * 0.5 + this.namebg.height * 0.5 + 10 * dpr;
         this.add(this.namebg);
         this.nameTex = this.scene.make.text({
-            x: this.namebg.x, y: this.namebg.y + 2 * this.dpr, text: "",
+            x: this.namebg.x, y: this.namebg.y, text: "",
             style: { color: "#22E2FF", fontFamily: Font.DEFULT_FONT, bold: true, fontSize: 12 * this.dpr }
         }).setOrigin(0.5);
         this.add(this.nameTex);
@@ -181,7 +181,7 @@ class ElevatorItem extends Phaser.GameObjects.Container {
         this.levelbg.y = this.height * 0.5 - this.levelbg.height * 0.5 + 5 * dpr;
         this.add(this.levelbg);
         this.levelTex = this.scene.make.text({
-            x: this.levelbg.x, y: this.levelbg.y + 2 * this.dpr, text: "",
+            x: this.levelbg.x, y: this.levelbg.y, text: "",
             style: { color: "#FAD555", fontFamily: Font.NUMBER, bold: true, fontSize: 17 * this.dpr }
         }).setOrigin(0.5); // .setStroke("#FAD555", 2);
         this.add(this.levelTex);
