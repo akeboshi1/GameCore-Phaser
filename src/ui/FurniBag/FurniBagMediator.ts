@@ -72,7 +72,7 @@ export class FurniBagMediator extends BaseMediator {
         if (!bag) {
             return;
         }
-        return this.bag.playerData;
+        return this.bag.playerBag;
     }
 
     get bag() {

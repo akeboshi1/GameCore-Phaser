@@ -1,5 +1,5 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
-export class PlayerData {
+export class PlayerBag {
     itemBag: PackageData;
     furniBag: PackageData;
     avatarBag: PackageData;

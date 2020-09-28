@@ -57,7 +57,7 @@ export class PicFurniFunMediator extends BaseMediator {
         if (!user || !user.bag) {
             return;
         }
-        return user.bag.playerData;
+        return user.bag.playerBag;
     }
 
     private onCloseHandler() {
