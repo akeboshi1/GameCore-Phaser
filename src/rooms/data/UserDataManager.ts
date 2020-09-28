@@ -4,7 +4,7 @@ import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "
 import { ConnectionService } from "../../net/connection.service";
 import { PlayerBag } from "./PlayerBag";
 import { PlayerProperty } from "./PlayerProperty";
-export class PlayerDataManager extends PacketHandler {
+export class UserDataManager extends PacketHandler {
     private readonly mPlayerBag: PlayerBag;
     private readonly mProperty: PlayerProperty;
     private readonly mWorld: WorldService;
@@ -14,8 +14,10 @@ export class PlayerDataManager extends PacketHandler {
         this.mWorld = world;
         this.mEvent = new Phaser.Events.EventEmitter();
         this.mPlayerBag = new PlayerBag();
+        this.mProperty = new PlayerProperty();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE, this.onSYNC_PACKAHE);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUPDATE_PLAYER_INFO);
     }
 
     public addPackListener() {
@@ -89,5 +91,10 @@ export class PlayerDataManager extends PacketHandler {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE = packet.content;
         this.playerBag.updatePackage(content);
         this.mEvent.emit("update", content.packageName);
+    }
+    private onUPDATE_PLAYER_INFO(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO = packet.content;
+        this.playerProperty.syncData(content);
+        this.mEvent.emit("updateplayer", this.playerProperty);
     }
 }

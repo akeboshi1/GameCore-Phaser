@@ -690,7 +690,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
         content.localeCode = i18n.language;
         this.connection.send(i18Packet);
-        this.user.bag.querySYNC_ALL_PACKAGE();
+        this.user.userData.querySYNC_ALL_PACKAGE();
     }
 
     private clearGame(callBack?: Function): Promise<void> {

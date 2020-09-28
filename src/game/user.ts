@@ -8,24 +8,24 @@ import { ISprite } from "../rooms/element/sprite";
 import { PBpacket } from "net-socket-packet";
 import { Bag } from "../rooms/player/bag/bag";
 import { Friend } from "../rooms/player/friend/friend";
-import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
+import { UserDataManager } from "../rooms/data/UserDataManager";
 import { WorldService } from "./world.service";
 
 export class User extends Player implements InputListener {
-    private mBag: PlayerDataManager;
+    private mUserData: UserDataManager;
     private mMoveStyle: number;
     constructor(world: WorldService) {
         super(undefined, undefined);
         this.mBlockable = false;
-        this.mBag = new PlayerDataManager(world);
+        this.mUserData = new UserDataManager(world);
     }
 
     addPackListener() {
-        this.mBag.addPackListener();
+        this.mUserData.addPackListener();
     }
 
     removePackListener() {
-        this.mBag.removePackListener();
+        this.mUserData.removePackListener();
     }
 
     enterScene(room: IRoomService, actor: op_client.IActor) {
@@ -146,7 +146,7 @@ export class User extends Player implements InputListener {
     public clear() {
         this.removePackListener();
         super.clear();
-        if (this.mBag) this.bag.destroy();
+        if (this.mUserData) this.userData.destroy();
         this.destroy();
     }
 
@@ -235,8 +235,8 @@ export class User extends Player implements InputListener {
         return this.mMoveData;
     }
 
-    get bag() {
-        return this.mBag;
+    get userData() {
+        return this.mUserData;
     }
 
     set moveStyle(val: number) {

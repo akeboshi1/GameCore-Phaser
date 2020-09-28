@@ -76,10 +76,10 @@ export class FurniBagMediator extends BaseMediator {
     }
 
     get bag() {
-        if (!this.world.user || !this.world.user.bag) {
+        if (!this.world.user || !this.world.user.userData) {
             return;
         }
-        return this.world.user.bag;
+        return this.world.user.userData;
     }
 
     private onCloseHandler() {

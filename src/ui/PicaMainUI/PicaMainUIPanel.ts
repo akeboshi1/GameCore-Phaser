@@ -9,6 +9,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasName, UIAtlasKey } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
+import { PlayerProperty } from "../../rooms/data/PlayerProperty";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -27,7 +28,7 @@ export class PicaMainUIPanel extends BasePanel {
     private praiseBtn: CheckBox;
     private praiseImg: Phaser.GameObjects.Image;
     private partyBtn: Button;
-    private playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
+    private playerInfo: PlayerProperty;
     private roomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(scene: Phaser.Scene, worldService: WorldService) {
         super(scene, worldService);
@@ -74,6 +75,12 @@ export class PicaMainUIPanel extends BasePanel {
         this.roomCon.off("pointerup", this.onOpenRoomPanel, this);
     }
 
+    destroy() {
+        super.destroy();
+        this.playerInfo = undefined;
+        this.roomInfo = undefined;
+    }
+
     update(param) {
         super.update();
         let data: any;
@@ -81,7 +88,7 @@ export class PicaMainUIPanel extends BasePanel {
             data = param[0];
         }
         if (data) {
-            if (data instanceof op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+            if (data instanceof PlayerProperty) {
                 this.playerInfo = data;
             } else {
                 this.roomInfo = data;
@@ -96,20 +103,19 @@ export class PicaMainUIPanel extends BasePanel {
         }
     }
 
-    updatePlayerInfo(player: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+    updatePlayerInfo(player: PlayerProperty) {
         this.playerInfo = player;
         if (!this.mInitialized) return;
         if (player.level) {
-            const level: op_pkt_def.IPKT_Level = player.level;
-            const curExp = (level.currentLevelExp === undefined ? 0 : level.currentLevelExp);
-            this.playerLv.text = level.level + "";
+            const level: op_pkt_def.IPKT_Property = player.level;
+            this.playerLv.text = level.value + "";
         }
-        if (player.coin !== undefined) this.mCoinValue.setText(player.coin.toString());
-        if (player.diamond !== undefined) this.mDiamondValue.setText(player.diamond.toString());
+        if (player.coin !== undefined) this.mCoinValue.setText(player.coin.value + "");
+        if (player.diamond !== undefined) this.mDiamondValue.setText(player.diamond.value + "");
         if (player.energy) {
             const energy = player.energy;
             if (energy) {
-                this.mStrengthValue.setValue(energy.currentValue, energy.max);
+                this.mStrengthValue.setValue(energy.value, energy.max);
             } else {
                 this.mStrengthValue.setValue(0, 100);
             }
@@ -272,7 +278,7 @@ export class PicaMainUIPanel extends BasePanel {
     private onStrengthHandler() {
         if (this.playerInfo) {
             const energy = this.playerInfo.energy;
-            const rep = `${energy.currentValue}/${energy.max}\n`;
+            const rep = `${energy.value}/${energy.max}\n`;
             const text = i18n.t("main_ui.energy_tips", { "name": rep, "interpolation": { "escapeValue": false } });
             this.textToolTip.setTextData(text, 3000);
             this.textToolTip.setPosition(120 * this.dpr, 20 * this.dpr);

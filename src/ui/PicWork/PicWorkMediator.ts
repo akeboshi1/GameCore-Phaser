@@ -5,13 +5,14 @@ import { PicWorkPanel } from "./PicWorkPanel";
 import { PicWork } from "./PicWork";
 import { PicaMainUIMediator } from "../PicaMainUI/PicaMainUIMediator";
 import { BaseMediator } from "apowophaserui";
+import { PlayerProperty } from "../../rooms/data/PlayerProperty";
 export class PicWorkMediator extends BaseMediator {
     protected mView: PicWorkPanel;
     private scene: Phaser.Scene;
     private world: WorldService;
     private layerMgr: ILayerManager;
     private picWork: PicWork;
-    private mPlayerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
+    private mPlayerInfo: PlayerProperty;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.scene = scene;
@@ -32,7 +33,8 @@ export class PicWorkMediator extends BaseMediator {
         if (!this.picWork) {
             this.picWork = new PicWork(this.world);
             this.picWork.on("questlist", this.on_ORDER_LIST, this);
-            this.picWork.on("updateplayer", this.onUpdatePlayerInfo, this);
+            // this.picWork.on("updateplayer", this.onUpdatePlayerInfo, this);
+            this.world.user.userData.on("updateplayer", this.onUpdatePlayerInfo, this);
             this.picWork.register();
         }
         this.layerMgr.addToUILayer(this.mView);
@@ -52,14 +54,11 @@ export class PicWorkMediator extends BaseMediator {
             this.mView.hide();
             this.mView = undefined;
         }
+        this.world.user.userData.off("updateplayer", this.onUpdatePlayerInfo, this);
+        this.mPlayerInfo = undefined;
     }
     get playerInfo() {
-        if (!this.mPlayerInfo) {
-            const med = <PicaMainUIMediator>(this.world.uiManager.getMediator("PicaMainUIMediator"));
-            if (med) {
-                this.mPlayerInfo = med.playerInfo;
-            }
-        }
+        if (!this.mPlayerInfo) this.mPlayerInfo = this.world.user.userData.playerProperty;
         return this.mPlayerInfo;
     }
     private query_ORDER_LIST() {
@@ -74,7 +73,8 @@ export class PicWorkMediator extends BaseMediator {
         this.mView.setWorkDataList(content);
         this.onUpdatePlayerInfo(this.playerInfo);
     }
-    private onUpdatePlayerInfo(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+    private onUpdatePlayerInfo(content: PlayerProperty) {
+        this.mPlayerInfo = content;
         if (this.mView)
             this.mView.setProgressData(content.energy, content.workChance);
     }

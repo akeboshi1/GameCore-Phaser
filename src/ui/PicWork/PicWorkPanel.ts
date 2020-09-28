@@ -157,7 +157,7 @@ export class PicWorkPanel extends BasePanel {
         this.mGameScroll.Sort();
     }
 
-    public setProgressData(enery: op_def.IValueBar, work: op_def.IValueBar) {
+    public setProgressData(enery: op_pkt_def.IPKT_Property, work: op_pkt_def.IPKT_Property) {
         if (work)
             this.timesPorgress.setProgressDatas(work);
         if (enery)
@@ -515,8 +515,8 @@ class ProgressItem extends Phaser.GameObjects.Container {
     public setImageValue(key: string, frame: string) {
         this.imgvalue.setFrameValue("", key, frame);
     }
-    public setProgressDatas(value: op_def.IValueBar) {
-        this.progress.setProgress(value.currentValue, value.max);
-        this.imgvalue.setText(`${value.currentValue}/${value.max}`);
+    public setProgressDatas(value: op_pkt_def.IPKT_Property) {
+        this.progress.setProgress(value.value, value.max);
+        this.imgvalue.setText(`${value.value}/${value.max}`);
     }
 }

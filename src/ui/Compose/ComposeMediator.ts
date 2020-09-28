@@ -47,8 +47,8 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private addLisenter() {
-        if (!this.world.user || !this.world.user.bag) return;
-        const mgr = this.world.user.bag;
+        if (!this.world.user || !this.world.user.userData) return;
+        const mgr = this.world.user.userData;
         if (mgr) {
             mgr.on("syncfinish", this.onSyncFinishHandler, this);
             mgr.on("update", this.onUpdateHandler, this);
@@ -56,8 +56,8 @@ export class ComposeMediator extends BaseMediator {
     }
 
     private removeLisenter() {
-        if (!this.world.user || !this.world.user.bag) return;
-        const mgr = this.world.user.bag;
+        if (!this.world.user || !this.world.user.userData) return;
+        const mgr = this.world.user.userData;
         if (mgr) {
             mgr.off("syncfinish", this.onSyncFinishHandler, this);
             mgr.off("update", this.onUpdateHandler, this);
@@ -134,9 +134,9 @@ export class ComposeMediator extends BaseMediator {
 
     get bag() {
         const user = this.world.user;
-        if (!user || !user.bag) {
+        if (!user || !user.userData) {
             return;
         }
-        return user.bag;
+        return user.userData;
     }
 }

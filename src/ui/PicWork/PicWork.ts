@@ -16,7 +16,7 @@ export class PicWork extends PacketHandler {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST, this.on_JOB_LIST);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUpdatePlayerInfo);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUpdatePlayerInfo);
         }
     }
 
@@ -60,7 +60,7 @@ export class PicWork extends PacketHandler {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST = packet.content;
         this.mEvent.emit("questlist", content);
     }
-    private onUpdatePlayerInfo(packet: PBpacket) {
-        this.mEvent.emit("updateplayer", packet.content);
-    }
+    // private onUpdatePlayerInfo(packet: PBpacket) {
+    //     this.mEvent.emit("updateplayer", packet.content);
+    // }
 }

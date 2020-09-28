@@ -54,10 +54,10 @@ export class PicFurniFunMediator extends BaseMediator {
 
     get playerData() {
         const user = this.world.user;
-        if (!user || !user.bag) {
+        if (!user || !user.userData) {
             return;
         }
-        return user.bag.playerBag;
+        return user.userData.playerBag;
     }
 
     private onCloseHandler() {

@@ -13,7 +13,7 @@ import { Clock } from "../rooms/clock";
 import { MouseManager } from "./mouse.manager";
 import { ISoundConfig } from "./sound.manager";
 import { HttpClock } from "../rooms/http.clock";
-import { PlayerDataManager } from "../rooms/data/PlayerDataManager";
+import { UserDataManager } from "../rooms/data/UserDataManager";
 import { User } from "./user";
 
 export interface WorldService {

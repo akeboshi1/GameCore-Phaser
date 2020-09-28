@@ -59,10 +59,10 @@ export class MineCarMediator extends BaseMediator {
 
   get bag() {
     const user = this.world.user;
-    if (!user || !user.bag) {
+    if (!user || !user.userData) {
       return;
     }
-    return user.bag;
+    return user.userData;
   }
 
   private addLisenter() {
