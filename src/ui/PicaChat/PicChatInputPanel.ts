@@ -275,7 +275,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.gamescroll.Sort();
         // tslint:disable-next-line:no-console
         console.log(datas);
-        this.mInput.setFocus();
+        // this.mInput.setFocus();
     }
     public appendChat(val: string) {
         this.chatArr.push(val);
