@@ -265,7 +265,6 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     public setQuickChatData(datas: string[]) {
         if (datas) this.quickChatAtt = datas;
         this.quickChatAtt.unshift(undefined);
-        this.mInput.setFocus();
         this.setKeywordHeight(0);
         this.onQuickSendHandler();
         let text = "";
@@ -276,6 +275,7 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.gamescroll.Sort();
         // tslint:disable-next-line:no-console
         console.log(datas);
+        this.mInput.setFocus();
     }
     public appendChat(val: string) {
         this.chatArr.push(val);
@@ -355,11 +355,11 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
         this.isSendChat = false;
     }
     private onFocusHandler() {
-        if (this.isOpenQuickPanel) {
-            this.quickCon.visible = false;
-            this.quickChatScroll.removeListen();
-            this.isOpenQuickPanel = false;
-        }
+        // if (this.isOpenQuickPanel) {
+        //     this.quickCon.visible = false;
+        //     this.quickChatScroll.removeListen();
+        //     this.isOpenQuickPanel = false;
+        // }
     }
 
     private onQuickSendHandler() {

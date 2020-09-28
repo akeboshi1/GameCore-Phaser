@@ -72,13 +72,6 @@ export class DecorateControlPanel extends BasePanel {
         this.mStairBtn = new Button(this.scene, this.key, "stairBtn.png");
         this.mStairBtn.setPosition(64 * this.dpr + this.mStairBtn.width * 0.5, 83 * this.dpr + this.mStairBtn.height * 0.5);
 
-        // this.mStairBtn = this.scene.make.image({
-        //     x: 64 * this.dpr,
-        //     y: 83 * this.dpr,
-        //     key: this.key,
-        //     frame: "stairBtn.png"
-        // }, false).setOrigin(0);
-
         this.mTopBtns = [this.mExitBtn, this.mRecycleAllBtn, this.mRedoBtn, this.mFurniBtn, this.mSaveBtn];
         this.add(this.mBackground);
         this.add(this.mTopBtns);
