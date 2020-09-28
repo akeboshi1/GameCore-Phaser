@@ -1,14 +1,13 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
-import { NinePatch } from "../Components/Nine.patch";
-import { Logger } from "../../game/core/utils/log";
-import { Handler } from "../../../utils/Handler/Handler";
 import { TextToolTips } from "../Tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
-import { i18n } from "../../game/core/utils/i18n";
 import { CheckBox, NineSlicePatch, ClickEvent } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Logger } from "../../../../utils/log";
+import { Font } from "../../../../utils/font";
+import { i18n } from "../../../../utils/i18n";
+import { Handler } from "../../../../utils/Handler";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";

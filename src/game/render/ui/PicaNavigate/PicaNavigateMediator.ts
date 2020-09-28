@@ -1,10 +1,10 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
 import { PicaNavigatePanel } from "./PicaNavigatePanel";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
 import { PicaNavigate } from "./PicaNavigate";
 import { PicHandheldMediator } from "../PicHandheld/PicHandheldMediator";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class PicaNavigateMediator extends BaseMediator {
   public static NAME: string = "PicaNavigateMediator";

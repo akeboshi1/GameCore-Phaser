@@ -1,7 +1,7 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
 import { PicaNoticePanel } from "./PicaNoticePanel";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class PicaNoticeMediator extends BaseMediator {
   private world: WorldService;

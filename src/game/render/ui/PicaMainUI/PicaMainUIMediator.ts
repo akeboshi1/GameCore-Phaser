@@ -1,9 +1,10 @@
-import { WorldService } from "../../game/world.service";
+
 import { ILayerManager } from "../Layer.manager";
 import { PicaMainUIPanel } from "./PicaMainUIPanel";
 import { op_client } from "pixelpai_proto";
 import { PicaMainUI } from "./PicaMainUI";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class PicaMainUIMediator extends BaseMediator {
     public static NAME: string = "PicaMainUIMediator";
