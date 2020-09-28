@@ -1,8 +1,8 @@
 import { op_client } from "pixelpai_proto";
 import { Bubble } from "./bubble";
 import { DynamicImage } from "../../ui/Components/Dynamic.image";
-import { Url } from "../../game/core/utils/resUtil";
 import { IElement } from "../element/element";
+import { Url } from "../../../../utils/resUtil";
 
 export class BubbleContainer extends Phaser.GameObjects.Container {
     private mBubbles: Bubble[] = [];

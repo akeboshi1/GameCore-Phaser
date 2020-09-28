@@ -1,16 +1,15 @@
 import { BasePanel } from "../../Components/BasePanel";
-import { WorldService } from "../../../game/world.service";
-import { Url } from "../../../game/core/utils/resUtil";
 import { IconBtn } from "../Icon.btn";
-import { Size } from "../../../game/core/utils/size";
 import { UIMediatorType } from "../../Ui.mediatorType";
 import { ChatMediator } from "../../Chat/Chat.mediator";
-import { JoyStickManager } from "../../../game/core/render/manager/input/joystick.manager";
 import { CheckButton } from "../../Components/Check.button";
 import { BagMediator } from "../../Bag/BagView/BagMediator";
 import { RightMediator } from "../RightGroup/Right.mediator";
 import { ElementStorageMediator } from "../../ElementStorage/ElementStorageMediator";
-import { BaseMediator } from "./node_modules/apowophaserui";
+import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../../world.service";
+import { Size } from "../../../../../utils/size";
+import { JoyStickManager } from "../../../manager/joystick.manager";
 export class BottomBtnGroup extends BasePanel {
     private mResKey: string;
     private mChatContainer: Phaser.GameObjects.Container;

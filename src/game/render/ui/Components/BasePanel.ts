@@ -1,6 +1,6 @@
-import { WorldService } from "../../game/world.service";
-import { Url } from "../../game/core/utils/resUtil";
-import { Panel } from "./node_modules/apowophaserui";
+import { Panel } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Url } from "../../../../utils/resUtil";
 
 export class BasePanel extends Panel {
     protected mInitialized: boolean;

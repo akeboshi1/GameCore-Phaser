@@ -1,8 +1,8 @@
 import { MainUIScene } from "./main.ui";
 import { IRoomService } from "../rooms/room";
-import { Size } from "../game/core/utils/size";
 import { BasicScene } from "./basic.scene";
 import { PlayCamera } from "../rooms/cameras/play.camera";
+import { Size } from "../../../utils/size";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends BasicScene {

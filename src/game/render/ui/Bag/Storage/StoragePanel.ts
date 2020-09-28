@@ -1,12 +1,12 @@
 import { ItemSlot } from "../Item.slot";
-import { Size } from "../../../game/core/utils/size";
-import { WorldService } from "../../../game/world.service";
-import { Url, Border, Background } from "../../../game/core/utils/resUtil";
 import { IconBtn } from "../../BaseView/Icon.btn";
 import { NinePatch } from "../../Components/Nine.patch";
 import { StorageMediator } from "./StorageMediator";
 import { UIMediatorType } from "../../Ui.mediatorType";
 import { BasePanel } from "../../Components/BasePanel";
+import { WorldService } from "../../../world.service";
+import { Size } from "../../../../../utils/size";
+import { Background, Border, Url } from "../../../../../utils/resUtil";
 
 export class StoragePanel extends BasePanel {
     private mResStr: string;

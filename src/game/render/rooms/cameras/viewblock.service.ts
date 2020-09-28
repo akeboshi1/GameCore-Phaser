@@ -1,5 +1,5 @@
 import { IBlockObject } from "./iblock.object";
-import { IPosition45Obj } from "../../game/core/utils/iposition45";
+import { IPosition45Obj } from "../../../../utils/iposition45";
 
 export interface ViewblockService {
     update(time: number, delta: number): void;

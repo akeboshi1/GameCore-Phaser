@@ -1,4 +1,4 @@
-import { ViewblockManager } from "../rooms/cameras/viewblock.manager";
+import { ViewblockManager } from "./rooms/cameras/viewblock.manager";
 
 const blockcheckworker: Worker = self as any;
 const checkDelayTime: number = 800;

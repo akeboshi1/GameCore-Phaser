@@ -1,4 +1,4 @@
-import { World } from "../game/core/world";
+import { World } from "../world";
 
 export class SelectCharacter extends Phaser.Scene {
   private mWorld: World | undefined;

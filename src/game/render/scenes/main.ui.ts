@@ -1,9 +1,9 @@
 
 import { Room } from "../rooms/room";
-import { JoyStickManager } from "../game/core/render/manager/input/joystick.manager";
-import { Size } from "../game/core/utils/size";
-import { Font } from "../game/core/utils/font";
 import { BasicScene } from "./basic.scene";
+import { Font } from "../../../utils/font";
+import { JoyStickManager } from "../manager/joystick.manager";
+import { Size } from "../../../utils/size";
 
 export class MainUIScene extends BasicScene {
   private timeOutID = 0;

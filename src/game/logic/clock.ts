@@ -135,7 +135,6 @@ export class Clock extends PacketHandler {
             this.mListener.onClockReady();
         }
         // Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
-
     }
 
     get medianLatency() {

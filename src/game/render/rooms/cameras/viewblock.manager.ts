@@ -1,9 +1,9 @@
 import { Viewblock } from "./viewblock";
 import { ICameraService } from "./cameras.manager";
-import { IPosition45Obj } from "../../game/core/utils/position45";
-import { Pos } from "../../game/core/utils/pos";
-import { IBlockObject } from "./block.object";
 import { ViewblockService } from "./viewblock.service";
+import { IBlockObject } from "./iblock.object";
+import { Pos } from "../../../../utils/pos";
+import { IPosition45Obj } from "../../../../utils/iposition45";
 export class ViewblockManager implements ViewblockService {
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];

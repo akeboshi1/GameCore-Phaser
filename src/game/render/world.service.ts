@@ -1,13 +1,13 @@
 // World 作为所有模组的全局服务，Hold所有管理对象
-import { Size } from "./core/utils/size";
-import { IRoomService } from "../rooms/room";
+import { HttpService } from "../logic/http.service";
 import { IElementStorage } from "./element.storage";
 import { UiManager } from "./ui/Ui.manager";
-import { InputManager } from "./core/render/manager/input.manager";
-import { ILauncherConfig } from "../../launcher";
-import { MouseManager } from "./mouse.manager";
-import { Render } from "./core/render/render";
-import { HttpService } from "../logic/http.service";
+import { InputManager } from "./manager/input.manager";
+import { MouseManager } from "./manager/mouse.manager";
+import { Render } from "./render";
+import { Size } from "../../utils/size";
+import { ILauncherConfig } from "../../../launcher";
+import { IRoomService } from "./rooms/room";
 
 export interface WorldService {
     orientation: number;

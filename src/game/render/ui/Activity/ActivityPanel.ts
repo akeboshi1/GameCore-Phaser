@@ -1,7 +1,7 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
 import { op_pkt_def } from "pixelpai_proto";
 import { GameScroller } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";

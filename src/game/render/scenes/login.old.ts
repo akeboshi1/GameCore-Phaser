@@ -2,9 +2,9 @@ import { PopUpTextUI } from "../ui/PopUpPanel/PopUpTextUI";
 import { BasicScene } from "./basic.scene";
 import { InputText, ComboBox } from "apowophaserui";
 import { WorldService } from "../world.service";
-import { ConnectionService } from "../../../lib/net/connection.service";
-import { Size } from "../../utils/size";
-import { Logger } from "../../utils/log";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { Size } from "../../../utils/size";
+import { Logger } from "../../../utils/log";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {

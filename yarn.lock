@@ -150,9 +150,9 @@
   integrity sha512-tlFWakSzBITITJSxHV4hg4KvrhR/7h3xbJdSFbYJBVzKubrASbnnIFuSgolUh7qKGo/ZeJPKUfbZ0WS6Jp14DQ==
 
 "@types/node@^14.0.13":
-  version "14.11.1"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.11.1.tgz#56af902ad157e763f9ba63d671c39cda3193c835"
-  integrity sha512-oTQgnd0hblfLsJ6BvJzzSL+Inogp3lq9fGgqRkMB/ziKMgEUaFl801OncOzUmalfzt14N0oPHMK47ipl+wbTIw==
+  version "14.11.2"
+  resolved "https://registry.npmjs.org/@types/node/-/node-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
+  integrity sha512-jiE3QIxJ8JLNcb1Ps6rDbysDhN4xa8DJJvuC9prr6w+1tIh+QAbYyNF3tyiZNLDBIuBCf4KEcV2UvQm/V60xfA==
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -453,10 +453,10 @@ anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apowophaserui@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.5.4.tgz#372647ee3fcc191de61276a30488fdfb2b3ea612"
-  integrity sha512-oQcBft6DcSjpI2Vl50gRDZTq5V9w4sDIf6ZQU+08pfWq8bWLxfGZIoG/CtRYDODnjTm3mlfOubQ5NctoNdCAxA==
+apowophaserui@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.7.0.tgz#6e00e05bc3d1b5329ca59fa907686d215927bf09"
+  integrity sha512-5Y9b3xdZ7snvhK6HiMLdmYDtnpAGRNeT4+rdJ8iWL2k6ssXtstbSJRHP83T+ghceeCY/k/gG3U88bK9RHVsoRg==
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"

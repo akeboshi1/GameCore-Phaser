@@ -1,8 +1,8 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import MainWorker from "worker-loader?filename=[hash][name].js!../game/main.worker";
-import { ServerAddress } from "../../../../lib/net/address";
-import { World } from "../world";
 import { PBpacket } from "net-socket-packet";
+import { World } from "./world";
+import { ServerAddress } from "../../../lib/net/address";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
     public moveStyle: number = 0;

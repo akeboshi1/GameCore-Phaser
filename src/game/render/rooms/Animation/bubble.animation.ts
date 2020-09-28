@@ -1,5 +1,4 @@
 import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
-import { Logger } from "../../game/core/utils/log";
 
 export class BubbleAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
     public resName: string;

@@ -1,7 +1,7 @@
 import { WorldService } from "../../../../world.service";
 import { Logger } from "../../../utils/log";
 import { Size } from "../../../utils/size";
-import { InputListener, InputManager } from "../input.manager";
+import { InputListener, InputManager } from "./input.manager";
 import { IRoomService } from "../../../../../rooms/room";
 import { Direction } from "../../../../../rooms/element/element";
 import { op_def } from "pixelpai_proto";

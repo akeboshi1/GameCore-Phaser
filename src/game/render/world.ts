@@ -14,7 +14,7 @@ import { JoyStickManager } from "./render/manager/input/joystick.manager";
 import { GameMain, ILauncherConfig } from "../../../launcher";
 import { IElementStorage } from "../element.storage";
 import { Url } from "./utils/resUtil";
-import { Capsule, PaletteNode, MossNode } from "game-capsule";
+import { Capsule, PaletteNode, MossNode, Lite } from "game-capsule";
 import { UiManager } from "../../ui/ui.manager";
 import { InputManager } from "./render/manager/input.manager";
 import { LoginScene } from "../../scenes/login";
@@ -24,13 +24,15 @@ import { RoleManager } from "../../role/role.manager";
 import { initLocales } from "./utils/i18n";
 import * as path from "path";
 import { Tool } from "./utils/tool";
-import { SoundManager, ISoundConfig } from "./sound.manager";
-import { ILoadingManager } from "../../loading/loading.manager";
-import { LoadingTips } from "../../loading/loading.tips";
-import { PlayerDataManager } from "../../rooms/data/PlayerDataManager";
-import { Render } from "./render/render";
-import { HttpService } from "../../logic/http.service";
-import { RoomManager } from "../../rooms/room.manager";
+import { RoomManager } from "./rooms/room.manager";
+import { HttpService } from "../logic/http.service";
+import { SoundManager } from "./manager/sound.manager";
+import { ILoadingManager, LoadingManager } from "./loading/loading.manager";
+import { PlayerDataManager } from "./rooms/data/PlayerDataManager";
+import { Render } from "./render";
+import { ElementStorage } from "./element.storage";
+import { ISoundConfig } from "apowophaserui";
+import { LoadingTips } from "./loading/loading.tips";
 // The World act as the global Phaser.World instance;
 export class World extends PacketHandler implements WorldService, GameMain {
     public static SCALE_CHANGE: string = "scale_change";
@@ -484,7 +486,7 @@ export class World extends PacketHandler implements WorldService, GameMain {
         return this.loadGameConfig(url);
     }
 
-    public createGame(buffer?: Buffer) {
+    public async createGame(buffer?: Buffer) {
         // start the game. TODO 此方法会多次调用，所以先要卸载已经实例化的游戏再new！
         this._newGame();
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
@@ -674,6 +676,33 @@ export class World extends PacketHandler implements WorldService, GameMain {
         });
     }
 
+    private loadGameConfig(remotePath): Promise<Lite> {
+        const configPath = ResUtils.getGameConfig(remotePath);
+        return load(configPath, "arraybuffer").then((req: any) => {
+            Logger.getInstance().log("start decodeConfig");
+            this.mLoadingManager.start(LoadingTips.parseConfig());
+            return this.decodeConfigs(req);
+        });
+    }
+
+    private decodeConfigs(req): Promise<Lite> {
+        return new Promise((resolve, reject) => {
+            const arraybuffer = req.response;
+            if (arraybuffer) {
+                try {
+                    const gameConfig = new Lite();
+                    gameConfig.deserialize(new Uint8Array(arraybuffer));
+                    Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
+                    resolve(gameConfig);
+                } catch (error) {
+                    reject(error);
+                }
+            } else {
+                reject("error");
+            }
+        });
+    }
+
     private orientationResize(screenWidth, screenHeight, width, height) {
         if (this.mGame) {
             if (width < height) {
@@ -830,7 +859,7 @@ export class World extends PacketHandler implements WorldService, GameMain {
         if (this.mGame.device.os.desktop) {
             this.mUIScale = 1;
         }
-        this._peer.initWorld();
+        this._peer.initWorld(this.game.device.os.desktop);
         // if (this.mCharacterManager) this.mCharacterManager.register();
         return this.mGame;
     }

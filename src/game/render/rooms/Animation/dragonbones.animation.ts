@@ -1,5 +1,4 @@
 import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
-import { Logger } from "../../game/core/utils/log";
 
 export class DragonbonesAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
 
