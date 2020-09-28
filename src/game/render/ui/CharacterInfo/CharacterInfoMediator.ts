@@ -1,11 +1,11 @@
 import { ILayerManager } from "../Layer.manager";
 import { op_client } from "pixelpai_proto";
-import { WorldService } from "../../game/world.service";
 import { CharacterInfo } from "./CharacterInfo";
 import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
 import { PicFriendRelation } from "../PicFriend/PicFriendRelation";
 import CharacterInfoPanel from "./CharacterInfoPanel";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class CharacterInfoMediator extends BaseMediator {
     protected mView: CharacterInfoPanel;

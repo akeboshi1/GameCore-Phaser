@@ -1,8 +1,8 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Font } from "../../../../utils/font";
 
 export class VerifiedPanel extends BasePanel {
     private mVerifiedBtn: NineSliceButton;

@@ -1,20 +1,20 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../Components/Dynamic.image";
-import { i18n } from "../../game/core/utils/i18n";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
 import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
-import { Url } from "../../game/core/utils/resUtil";
 import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
-import { Handler } from "../../../utils/Handler/Handler";
 import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { FriendRelationEnum } from "../PicFriend/PicFriendRelation";
 import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { i18n } from "../../../../utils/i18n";
+import { Font } from "../../../../utils/font";
+import { Handler } from "../../../../utils/Handler";
+import { Url } from "../../../../utils/resUtil";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";

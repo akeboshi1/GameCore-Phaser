@@ -1,12 +1,12 @@
 import { BasePanel } from "../Components/BasePanel";
 import { NinePatch } from "../Components/Nine.patch";
-import { Background, Border, Url } from "../../game/core/utils/resUtil";
-import { Size } from "../../game/core/utils/size";
-import { WorldService } from "../../game/world.service";
 import { Item } from "./Item/Item";
 import { op_client } from "pixelpai_proto";
 import { ElementStorageMediator } from "./ElementStorageMediator";
 import { InputText, NineSliceButton } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Size } from "../../../../utils/size";
+import { Border, Url, Background } from "../../../../utils/resUtil";
 
 export class ElementStoragePanel extends BasePanel {
     private mBackground: NinePatch;

@@ -1,16 +1,16 @@
 import { BasePanel } from "../Components/BasePanel";
-import { Border, Url, Background } from "../../game/core/utils/resUtil";
-import { WorldService } from "../../game/world.service";
-import { Size } from "../../game/core/utils/size";
 import { NinePatch } from "../Components/Nine.patch";
 import { IListItemComponent } from "../Bag/IListItemRender";
-import { Font } from "../../game/core/utils/font";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { Geom } from "tooqinggamephaser";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { IconBtn } from "../BaseView/Icon.btn";
 import { FriendMediator } from "./Friend.mediator";
 import { UIMediatorType } from "../Ui.mediatorType";
+import { WorldService } from "../../world.service";
+import { Size } from "../../../../utils/size";
+import { Border, Background, Url } from "../../../../utils/resUtil";
+import { Font } from "../../../../utils/font";
 export interface IFriendIcon {
     res: string;
     name: string;

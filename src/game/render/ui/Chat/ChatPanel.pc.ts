@@ -1,10 +1,10 @@
-import { WorldService } from "../../game/world.service";
 import { NinePatchButton } from "../Components/Ninepatch.button";
-import { Border, Url } from "../../game/core/utils/resUtil";
 import { CheckButton } from "../Components/Check.button";
 import { NinePatch } from "../Components/Nine.patch";
 import { BaseChatPanel } from "./Base.chat.panel";
-import { TextArea, InputText, RoundRectangle, BBCodeText } from "./node_modules/apowophaserui";
+import { TextArea, InputText, RoundRectangle, BBCodeText } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Url, Border } from "../../../../utils/resUtil";
 
 export class ChatPanelPC extends BaseChatPanel {
     private mTextArea: TextArea;

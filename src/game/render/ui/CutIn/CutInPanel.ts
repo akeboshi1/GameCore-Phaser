@@ -1,8 +1,8 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { Url } from "../../game/core/utils/resUtil";
-import { Font } from "../../game/core/utils/font";
 import { op_client } from "pixelpai_proto";
+import { WorldService } from "../../world.service";
+import { Url } from "../../../../utils/resUtil";
+import { Font } from "../../../../utils/font";
 
 export class CutInPanel extends BasePanel {
   private readonly key = "cut_in";

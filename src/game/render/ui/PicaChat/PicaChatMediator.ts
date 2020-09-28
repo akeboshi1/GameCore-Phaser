@@ -1,12 +1,11 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
 import { PicaChatPanel } from "./PicaChatPanel";
-import { PicaNavigateMediator } from "../PicaNavigate/PicaNavigateMediator";
 import { PicaChat } from "./PicaChat";
 import { op_client, op_def } from "pixelpai_proto";
 import { IElement } from "../../rooms/element/element";
-import { i18n } from "../../game/core/utils/i18n";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { i18n } from "../../../../utils/i18n";
 
 export class PicaChatMediator extends BaseMediator {
     public static NAME: string = "PicaChatMediator";

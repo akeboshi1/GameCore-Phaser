@@ -1,9 +1,9 @@
-import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../Layer.manager";
 import { Dialog } from "./Dialog";
 import { DialogPanel } from "./DialogPanel";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 export class DialogMediator extends BaseMediator {
     private scene: Phaser.Scene;
     private world: WorldService;

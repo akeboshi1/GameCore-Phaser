@@ -1,8 +1,9 @@
-import { i18n } from "../../game/core/utils/i18n";
-import { WorldService } from "../../game/world.service";
+
 import { UIAtlasKey } from "../Ui.atals.name";
-import { Font } from "../../game/core/utils/font";
 import { Button, InputText, BBCodeText, GameScroller, ClickEvent, NineSlicePatch, NineSliceButton } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Font } from "../../../../utils/font";
+import { i18n } from "../../../../utils/i18n";
 export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
     private bottomCon: Phaser.GameObjects.Container;

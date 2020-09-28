@@ -1,9 +1,9 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
 import { ComposePanel } from "./ComposePanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Compose } from "./Compose";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 export class ComposeMediator extends BaseMediator {
     protected mView: ComposePanel;
     private scene: Phaser.Scene;

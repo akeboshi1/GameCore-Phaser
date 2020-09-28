@@ -1,14 +1,13 @@
-import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../Components/BasePanel";
 import { NinePatch } from "../Components/Nine.patch";
-import { NinePatchButton } from "../Components/Ninepatch.button";
-import { Url } from "../../game/core/utils/resUtil";
-import { i18n } from "../../game/core/utils/i18n";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { NineSliceButton, GameGridTable, ClickEvent } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { i18n } from "../../../../utils/i18n";
+import { Font } from "../../../../utils/font";
+import { Url } from "../../../../utils/resUtil";
 export class MineSettlePanel extends BasePanel {
     private key: string = "mine_settle";
     private confirmBtn: NineSliceButton;

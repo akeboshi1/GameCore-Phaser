@@ -1,12 +1,11 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
 import { InputPanel } from "../Components/Input.panel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicChatInputPanel } from "./PicChatInputPanel";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
-import { i18n } from "../../game/core/utils/i18n";
 import { BBCodeText, TextArea, UIType } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Font } from "../../../../utils/font";
 
 export class PicaChatPanel extends BasePanel {
     private readonly key: string = "pica_chat";

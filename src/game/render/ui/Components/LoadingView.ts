@@ -1,6 +1,6 @@
 import { BasePanel } from "./BasePanel";
-import { WorldService } from "../../game/world.service";
 import { FrameAnimation } from "../../rooms/Animation/frame.animation";
+import { WorldService } from "../../world.service";
 export class LoadingView extends BasePanel {
     private key: string = "loading_ui";
     private sprite: FrameAnimation;

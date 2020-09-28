@@ -1,4 +1,4 @@
-import { Font } from "../../game/core/utils/font";
+import { Font } from "../../../../utils/font";
 
 export class TextButton extends Phaser.GameObjects.Container {
   private mText: Phaser.GameObjects.Text;

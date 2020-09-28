@@ -1,18 +1,19 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { i18n } from "../../game/core/utils/i18n";
 import { DetailDisplay } from "../Market/DetailDisplay";
-import { Font } from "../../game/core/utils/font";
 import { op_client, op_def, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { TextButton } from "../Components/TextButton";
-import { Url, Coin } from "../../game/core/utils/resUtil";
 import { InputPanel } from "../Components/Input.panel";
 import { CheckboxGroup } from "../Components/Checkbox.group";
-import { Handler } from "../../../utils/Handler/Handler";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
-import { Logger } from "../../game/core/utils/log";
+
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { i18n } from "../../../../utils/i18n";
+import { Handler } from "../../../../utils/Handler";
+import { Font } from "../../../../utils/font";
+import { Logger } from "../../../../utils/log";
+import { Url, Coin } from "../../../../utils/resUtil";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";

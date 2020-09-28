@@ -1,11 +1,11 @@
-import { WorldService } from "../../game/world.service";
 import { ElementStoragePanel } from "./ElementStoragePanel";
 import { ILayerManager } from "../Layer.manager";
 import { ElementStorage } from "./ElementStorate";
-import { MessageType } from "../../../const/MessageType";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { MessageType } from "../../../../const/MessageType";
 
 export class ElementStorageMediator extends BaseMediator {
     public static NAME: string = "ElementStorageMediator";

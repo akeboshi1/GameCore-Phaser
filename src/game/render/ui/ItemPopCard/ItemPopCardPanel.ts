@@ -1,11 +1,11 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { i18n } from "../../game/core/utils/i18n";
 import * as copy from "copy-text-to-clipboard";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { op_client } from "pixelpai_proto";
-import { MessageType } from "../../../const/MessageType";
-import { Font } from "../../game/core/utils/font";
+import { WorldService } from "../../world.service";
+import { i18n } from "../../../../utils/i18n";
+import { Font } from "../../../../utils/font";
+import { MessageType } from "../../../../const/MessageType";
 
 export class ItemPopCardPanel extends BasePanel {
   private readonly key = "item_pop_card";

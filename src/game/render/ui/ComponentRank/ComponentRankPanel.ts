@@ -1,7 +1,7 @@
 import { BasicRankPanel } from "../Rank/BasicRankPanel";
-import { WorldService } from "../../game/world.service";
-import { CloseButton } from "../../game/core/utils/resUtil";
 import { ComponentRankMediator } from "./ComponentRankMediator";
+import { WorldService } from "../../world.service";
+import { CloseButton } from "../../../../utils/resUtil";
 
 export class ComponentRankPanel extends BasicRankPanel {
     private mCloseBtn: Phaser.GameObjects.Image;

@@ -1,9 +1,9 @@
-import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../Layer.manager";
 import { FriendInvitePanel } from "./FriendInvitePanel";
 import { op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class FriendInviteMediator extends BaseMediator {
     private world: WorldService;

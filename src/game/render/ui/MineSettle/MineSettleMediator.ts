@@ -1,9 +1,9 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
 import { MineSettlePanel } from "./MineSettlePanel";
 import { op_client } from "pixelpai_proto";
 import { MineSettle } from "./MineSettle";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class MineSettleMediator extends BaseMediator {
     private scene: Phaser.Scene;

@@ -1,5 +1,5 @@
-import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../Components/BasePanel";
+import { WorldService } from "../../world.service";
 
 export class DecorateControlPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;

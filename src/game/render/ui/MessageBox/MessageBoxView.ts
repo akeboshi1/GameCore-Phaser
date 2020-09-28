@@ -1,11 +1,11 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
 import { NinePatchButton } from "../Components/Ninepatch.button";
-import { Url, Border, BlueButton } from "../../game/core/utils/resUtil";
-import { Size } from "../../game/core/utils/size";
 import { NinePatch } from "../Components/Nine.patch";
 import { op_client } from "pixelpai_proto";
 import { BBCodeText } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Size } from "../../../../utils/size";
+import { BlueButton, Border } from "../../../../utils/resUtil";
 export class MessageBoxView extends BasePanel {
     private mTxt: BBCodeText;
     private mButtons: NinePatchButton[];

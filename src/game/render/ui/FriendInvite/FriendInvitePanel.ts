@@ -1,9 +1,9 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
-import { i18n } from "../../game/core/utils/i18n";
-import { Font } from "../../game/core/utils/font";
 import { NineSliceButton, BBCodeText, ClickEvent } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Font } from "../../../../utils/font";
+import { i18n } from "../../../../utils/i18n";
 
 export class FriendInvitePanel extends BasePanel {
     private bg: Phaser.GameObjects.Graphics;

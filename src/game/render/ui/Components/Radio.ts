@@ -1,6 +1,6 @@
 import { NinePatch } from "./Nine.patch";
-import { Background } from "../../game/core/utils/resUtil";
-import { BBCodeText } from "./node_modules/apowophaserui";
+import { BBCodeText } from "apowophaserui";
+import { Background } from "../../../../utils/resUtil";
 export interface IRadioResConfig {
     wid: number;
     hei: number;

@@ -1,12 +1,12 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { Size } from "../../game/core/utils/size";
-import { Url, Background, Border } from "../../game/core/utils/resUtil";
 import { NinePatch } from "../Components/Nine.patch";
 import { Radio } from "../Components/Radio";
 import { op_client, op_def, op_gameconfig_01 } from "pixelpai_proto";
 import { InteractivePanelMediator } from "./InteractivePanelMediator";
 import { BBCodeText, TextArea, BaseMediator } from "apowophaserui";
+import { Size } from "../../../../utils/size";
+import { Url, Background, Border } from "../../../../utils/resUtil";
+import { WorldService } from "../../world.service";
 export class InteractivePanel extends BasePanel {
     private static baseWidth: number = 720;
     private static baseHeight: number = 720;

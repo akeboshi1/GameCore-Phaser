@@ -1,10 +1,10 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
 import { MessageBoxView } from "./MessageBoxView";
 import { NinePatchButton } from "../Components/Ninepatch.button";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { BaseMediator, UIType } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class MessageBoxMediator extends BaseMediator {
     private world: WorldService;

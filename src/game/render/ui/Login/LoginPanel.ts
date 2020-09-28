@@ -1,10 +1,10 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
 import { LoadingScene } from "../../scenes/loading";
-import { Font } from "../../game/core/utils/font";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
-import Helpers from "../../game/core/utils/helpers";
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Font } from "../../../../utils/font";
+import Helpers from "../../../../utils/helpers";
 
 export class LoginPanel extends BasePanel {
     private readonly key = "login";

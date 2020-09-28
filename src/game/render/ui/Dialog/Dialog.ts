@@ -1,8 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { WorldService } from "../../game/world.service";
-import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-
+import { op_virtual_world } from "pixelpai_proto";
+import { WorldService } from "../../world.service";
+import { ConnectionService } from "../../../../../lib/net/connection.service";
 export class Dialog extends PacketHandler {
     private readonly world: WorldService;
     private mEvent: Phaser.Events.EventEmitter;

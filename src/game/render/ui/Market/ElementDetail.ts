@@ -1,12 +1,11 @@
 import { NumberCounter } from "./NumberCounter";
 import { op_client, op_def } from "pixelpai_proto";
-import { i18n } from "../../game/core/utils/i18n";
-import { Logger } from "../../game/core/utils/log";
 import { DetailDisplay } from "./DetailDisplay";
-import { Font } from "../../game/core/utils/font";
-import { WorldService } from "../../game/world.service";
-import { Coin } from "../../game/core/utils/resUtil";
 import { NineSliceButton, ClickEvent } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Font } from "../../../../utils/font";
+import { Coin } from "../../../../utils/resUtil";
+import { i18n } from "../../../../utils/i18n";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;

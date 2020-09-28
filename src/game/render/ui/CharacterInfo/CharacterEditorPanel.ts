@@ -1,7 +1,7 @@
-import { Font } from "../../game/core/utils/font";
 import { NinePatchButton } from "../Components/Ninepatch.button";
-import { i18n } from "../../game/core/utils/i18n";
 import { InputText, Button } from "apowophaserui";
+import { Font } from "../../../../utils/font";
+import { i18n } from "../../../../utils/i18n";
 export class CharacterEditorPanel extends Phaser.GameObjects.Container {
     private title: Phaser.GameObjects.Text;
     private inputText: InputText;

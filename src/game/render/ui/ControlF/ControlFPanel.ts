@@ -1,8 +1,7 @@
 import { BasePanel } from "../Components/BasePanel";
-import { Url } from "../../game/core/utils/resUtil";
-import { Font } from "../../game/core/utils/font";
-import { WorldService } from "../../game/world.service";
-
+import { WorldService } from "../../world.service";
+import { Url } from "../../../../utils/resUtil";
+import { Font } from "../../../../utils/font";
 export class ControlFPanel extends BasePanel {
     private mControlText: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, world: WorldService) {

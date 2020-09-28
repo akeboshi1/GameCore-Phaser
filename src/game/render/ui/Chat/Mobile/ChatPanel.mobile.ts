@@ -1,9 +1,9 @@
 import { BaseChatPanel } from "../Base.chat.panel";
-import { WorldService } from "../../../game/world.service";
-import { Url, Border, WhiteButton } from "../../../game/core/utils/resUtil";
 import { NinePatch } from "../../Components/Nine.patch";
 import { NinePatchButton } from "../../Components/Ninepatch.button";
-import { TextArea, InputText, BBCodeText } from "./node_modules/apowophaserui";
+import { TextArea, InputText, BBCodeText } from "apowophaserui";
+import { WorldService } from "../../../world.service";
+import { Url, Border, WhiteButton } from "../../../../../utils/resUtil";
 export class ChatPanelMobile extends BaseChatPanel {
     private mTextArea: TextArea;
     private mInputText: InputText;

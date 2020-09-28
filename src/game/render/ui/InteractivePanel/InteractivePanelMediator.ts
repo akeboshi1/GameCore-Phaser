@@ -1,8 +1,8 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { InteractivePanel } from "./InteractivePanel";
 import { BaseMediator, UIType, Panel } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class InteractivePanelMediator extends BaseMediator {
     public static NAME: string = "InteractivePanelMediator";

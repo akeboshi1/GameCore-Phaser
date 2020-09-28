@@ -1,12 +1,12 @@
 import { BasePanel } from "../Components/BasePanel";
-import { Url } from "../../game/core/utils/resUtil";
-import { WorldService } from "../../game/world.service";
-import { Size } from "../../game/core/utils/size";
-import { Logger } from "../../game/core/utils/log";
 import { DebugLoggerMediator } from "./DebugLoggerMediator";
 import { IconBtn } from "../BaseView/Icon.btn";
 import { UIMediatorType } from "../Ui.mediatorType";
-import { Font } from "../../game/core/utils/font";
+import { WorldService } from "../../world.service";
+import { Size } from "../../../../utils/size";
+import { Url } from "../../../../utils/resUtil";
+import { Font } from "../../../../utils/font";
+import { Logger } from "../../../../utils/log";
 
 export class DebugLogger extends BasePanel {
     private mBgWidth: number;

@@ -1,5 +1,4 @@
 import { IPatchesConfig, normalizePatchesConfig } from "./Patches.config";
-import { Logger } from "../../game/core/utils/log";
 
 export class NinePatch extends Phaser.GameObjects.Container {
     private static readonly __BASE: string = "__BASE";

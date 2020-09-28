@@ -1,9 +1,9 @@
 import { ILayerManager } from "../Layer.manager";
 import EquipUpgradePanel from "./EquipUpgradePanel";
-import { WorldService } from "../../game/world.service";
 import { EquipUpgrade } from "./EquipUpgrade";
 import { op_client } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class EquipUpgradeMediator extends BaseMediator {
     private scene: Phaser.Scene;

@@ -1,11 +1,11 @@
-import { WorldService } from "../../game/world.service";
 import { DecorateControlPanel } from "./DecorateControlPanel";
 import { ILayerManager } from "../Layer.manager";
-import { ConnectionService } from "../../../../lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
-import { MessageType } from "../../../const/MessageType";
 import { BaseMediator } from "apowophaserui";
+import { MessageType } from "../../../../const/MessageType";
+import { WorldService } from "../../world.service";
+import { ConnectionService } from "../../../../../lib/net/connection.service";
 
 export class DecorateControlMediator extends BaseMediator {
     public static NAME: string = "DecorateControlMediator";

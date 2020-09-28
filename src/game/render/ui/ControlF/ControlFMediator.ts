@@ -1,4 +1,3 @@
-import { WorldService } from "../../game/world.service";
 import { ILayerManager } from "../Layer.manager";
 import { ControlFPanel } from "./ControlFPanel";
 import { PBpacket } from "net-socket-packet";
@@ -6,6 +5,7 @@ import { op_virtual_world } from "pixelpai_proto";
 import { PlayerState } from "../../rooms/element/element";
 import { BasePanel } from "../Components/BasePanel";
 import { BaseMediator, UIType } from "apowophaserui";
+import { WorldService } from "../../world.service";
 export class ControlFMediator extends BaseMediator {
     public static NAME: string = "ControlFMediator";
     private world: WorldService;

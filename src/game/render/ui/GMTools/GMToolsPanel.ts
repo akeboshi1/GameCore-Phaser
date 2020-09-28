@@ -1,9 +1,8 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { LabelInput } from "../Components/Label.input";
-import { Logger } from "../../game/core/utils/log";
 import { GameGridTable, Button, ClickEvent } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class GMToolsPanel extends BasePanel {
     private background: Phaser.GameObjects.Graphics;

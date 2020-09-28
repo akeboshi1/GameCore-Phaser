@@ -1,10 +1,10 @@
-import { WorldService } from "../../game/world.service";
 import { MarketPanel } from "./MarketPanel";
 import { ILayerManager } from "../Layer.manager";
 import { Market } from "./Market";
 import { op_client, op_def } from "pixelpai_proto";
-import { MessageType } from "../../../const/MessageType";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { MessageType } from "../../../../const/MessageType";
 
 export class MarketMediator extends BaseMediator {
   protected mView: MarketPanel;

@@ -1,9 +1,9 @@
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
-import { MessageType } from "../../../const/MessageType";
 import { InfoPanel } from "./InfoPanel";
-import { Tool } from "../../game/core/utils/tool";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { MessageType } from "../../../../const/MessageType";
+import { Tool } from "../../../../utils/tool";
 
 export class InfoPanelMediator extends BaseMediator {
     public static NAME: string = "InfoPanelMediator";

@@ -1,17 +1,10 @@
-import { Logger } from "../../game/core/utils/log";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client} from "pixelpai_proto";
 import { InteractiveBubblePanel } from "./InteractiveBubblePanel";
-import { Handler } from "../../../utils/Handler/Handler";
-import { IElement } from "../../rooms/element/element";
 import { ILayerManager } from "../Layer.manager";
-import { WorldService } from "../../game/world.service";
-import { Pos } from "../../game/core/utils/pos";
-import { PlayScene } from "../../scenes/play";
-import { Tool } from "../../game/core/utils/tool";
-import { Url } from "../../game/core/utils/resUtil";
 import { Room } from "../../rooms/room";
 import { InteractiveBubble } from "./InteractiveBubble";
 import { BaseMediator } from "apowophaserui";
+import { WorldService } from "../../world.service";
 
 export class InteractiveBubbleMediator extends BaseMediator {
     protected mView: InteractiveBubblePanel;

@@ -1,12 +1,11 @@
 import { BasePanel } from "../Components/BasePanel";
-import { Border } from "../../game/core/utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { NinePatch } from "../Components/Nine.patch";
-import { WorldService } from "../../game/world.service";
+import { WorldService } from "../../world.service";
+import { Border } from "../../../../utils/resUtil";
 
 export class NoticePanel extends BasePanel {
     private mContentText: Phaser.GameObjects.Text;
-    private mTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.disInteractive();

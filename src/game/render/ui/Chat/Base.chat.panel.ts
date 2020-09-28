@@ -1,6 +1,5 @@
 import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
-
+import { WorldService } from "../../world.service";
 export class BaseChatPanel extends BasePanel {
     constructor(scene, world: WorldService) {
         super(scene, world);

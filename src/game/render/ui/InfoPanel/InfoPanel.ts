@@ -1,12 +1,12 @@
-import { WorldService } from "../../game/world.service";
 import { BasePanel } from "../Components/BasePanel";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { op_client } from "pixelpai_proto";
 import { NinePatchButton } from "../Components/Ninepatch.button";
-import { Url, Border, Background, BlueButton } from "../../game/core/utils/resUtil";
-import { Font } from "../../game/core/utils/font";
 import { InfoPanelMediator } from "./InfoPanelMediator";
 import { GameScroller, BBCodeText, TextArea, NinePatch } from "apowophaserui";
+import { WorldService } from "../../world.service";
+import { Url, Border, Background, BlueButton } from "../../../../utils/resUtil";
+import { Font } from "../../../../utils/font";
 
 const GetValue = Phaser.Utils.Objects.GetValue;
 export class InfoPanel extends BasePanel {

@@ -1,13 +1,13 @@
-import { WorldService } from "../../game/world.service";
 import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../Components/BasePanel";
 import { IElement } from "../../rooms/element/element";
-import { Url } from "../../game/core/utils/resUtil";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
-import { Handler } from "../../../utils/Handler/Handler";
-import { Pos } from "../../game/core/utils/pos";
-import { Tool } from "../../game/core/utils/tool";
 import { PlayScene } from "../../scenes/play";
+import { WorldService } from "../../world.service";
+import { Url } from "../../../../utils/resUtil";
+import { Handler } from "../../../../utils/Handler";
+import { Tool } from "../../../../utils/tool";
+import { Pos } from "../../../../utils/pos";
 export class InteractiveBubblePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private world: WorldService;

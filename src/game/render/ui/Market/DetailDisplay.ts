@@ -1,12 +1,12 @@
 import { op_client } from "pixelpai_proto";
-import { Url } from "../../game/core/utils/resUtil";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
-import { Handler } from "../../../utils/Handler/Handler";
 import { FrameAnimation } from "../../rooms/Animation/frame.animation";
 import { FramesDisplay } from "../../rooms/display/frames.display";
 import { FramesModel } from "../../rooms/display/frames.model";
 import { Animation } from "../../rooms/display/animation";
+import { Handler } from "../../../../utils/Handler";
+import { Url } from "../../../../utils/resUtil";
 
 export class DetailDisplay extends Phaser.GameObjects.Container {
   private mDisplay: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE;

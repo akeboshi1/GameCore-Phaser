@@ -1,9 +1,9 @@
-import { Font } from "../../game/core/utils/font";
 import { DynamicImage } from "../Components/Dynamic.image";
-import { Url, Coin } from "../../game/core/utils/resUtil";
 import { op_client } from "pixelpai_proto";
 import { NinePatch } from "../Components/Nine.patch";
 import { GameGridTable, BBCodeText } from "apowophaserui";
+import { Font } from "../../../../utils/font";
+import { Coin, Url } from "../../../../utils/resUtil";
 export class EquipUpgradeItem extends Phaser.Events.EventEmitter {
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
