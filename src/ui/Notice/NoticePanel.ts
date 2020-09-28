@@ -6,7 +6,6 @@ import { WorldService } from "../../game/world.service";
 
 export class NoticePanel extends BasePanel {
     private mContentText: Phaser.GameObjects.Text;
-    private mTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
         this.disInteractive();
