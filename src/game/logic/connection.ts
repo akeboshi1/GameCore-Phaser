@@ -2,10 +2,9 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Buffer } from "buffer/";
 import * as protos from "pixelpai_proto";
-import { ConnectionService } from "../../lib/net/connection.service";
-import { IConnectListener } from "../../lib/net/socket";
-import { ServerAddress } from "../../lib/net/address";
 import { WorkerClient } from "./worker.client";
+import { ConnectionService } from "../../../lib/net/connection.service";
+import { ServerAddress } from "../../../lib/net/address";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -21,9 +20,15 @@ export default class Connection implements ConnectionService {
     constructor(socket: WorkerClient) {
         this.mSocket = socket;
     }
+
+    get pause(): boolean {
+        return this.isPause;
+    }
+
     get connect(): boolean {
         return this.isConnect;
     }
+
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
         this.mSocket.startConnect(this.mCachedServerAddress);
@@ -79,11 +84,5 @@ export default class Connection implements ConnectionService {
 
     onBlur() {
         this.isPause = true;
-    }
-
-    private reConnect() {
-        this.mMainWorker.postMessage({ method: "endHeartBeat" });
-        const world: any = this.mPacketHandlers[0];
-        world.reconnect();
     }
 }

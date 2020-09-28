@@ -1,7 +1,7 @@
-import { SocketConnection, IConnectListener, SocketConnectionError } from "../../lib/net/socket";
 import { PBpacket, Buffer } from "net-socket-packet";
-import { Logger } from "../game/core/utils/log";
 import { MainPeer } from "./main.worker";
+import { SocketConnection, IConnectListener, SocketConnectionError } from "../../../lib/net/socket";
+import { Logger } from "../../utils/log";
 
 export class WorkerClient extends SocketConnection {
     protected mUuid: number = 0;

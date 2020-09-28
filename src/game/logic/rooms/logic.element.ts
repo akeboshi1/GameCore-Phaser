@@ -1,5 +1,5 @@
 import { ILogicRoomService } from "./room";
-import { ISprite } from "../../rooms/element/sprite";
+import { ISprite } from "../../render/rooms/element/sprite";
 import { LogicPos } from "../../game/core/utils/logic.pos";
 import { op_client } from "pixelpai_proto";
 import { IFramesModel } from "./display/iframe.model";

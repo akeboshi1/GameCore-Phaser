@@ -1,5 +1,5 @@
 import { ILogicElement } from "../logic.element";
-import { ISprite } from "../../../rooms/element/sprite";
+import { ISprite } from "../../../render/rooms/element/sprite";
 import { ILogicRoomService } from "../room";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 

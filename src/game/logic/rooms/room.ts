@@ -7,13 +7,13 @@ import { Logger } from "../../game/core/utils/log";
 import { ClockReadyListener } from "../clock";
 import { IPosition45Obj } from "../../game/core/utils/iposition45";
 import { LogicPos, IPos } from "../../game/core/utils/logic.pos";
-import { IBlockObject } from "../../rooms/cameras/iblock.object";
+import { IBlockObject } from "../../render/rooms/cameras/iblock.object";
 import { Position45 } from "../../game/core/utils/position45";
-import { State } from "../../rooms/state/state.group";
+import { State } from "../../render/rooms/state/state.group";
 import { ILogicElement } from "./logic.element";
 import { PlayerManager } from "./player/player.manager";
 import { IPoint } from "game-capsule";
-import { ViewblockService } from "../../rooms/cameras/viewblock.service";
+import { ViewblockService } from "../../render/rooms/cameras/viewblock.service";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }

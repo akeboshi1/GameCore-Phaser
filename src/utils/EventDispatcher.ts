@@ -1,5 +1,5 @@
 import { Handler } from "./Handler";
-import { IDispose } from "../../rooms/action/IDispose";
+import { IDispose } from "../game/render/rooms/action/IDispose";
 
 export class EventDispatcher implements IDispose {
 
@@ -35,15 +35,15 @@ export class EventDispatcher implements IDispose {
         return true;
     }
 
-    public on(type: string, caller: any, listener: Function, args: any[] = null): HandlerDispatcher {
+    public on(type: string, caller: any, listener: Function, args: any[] = null): EventDispatcher {
         return this._createListener(type, caller, listener, args, false);
     }
 
-    public once(type: string, caller: any, listener: Function, args: any[] = null): HandlerDispatcher {
+    public once(type: string, caller: any, listener: Function, args: any[] = null): EventDispatcher {
         return this._createListener(type, caller, listener, args, true);
     }
 
-    public off(type: string, caller: any, listener: Function, onceOnly: Boolean = false): HandlerDispatcher {
+    public off(type: string, caller: any, listener: Function, onceOnly: Boolean = false): EventDispatcher {
         if (!this._events || !this._events[type]) return this;
 
         const listeners: any = this._events[type];
@@ -71,7 +71,7 @@ export class EventDispatcher implements IDispose {
         return this;
     }
 
-    public offAll(type: string = null): HandlerDispatcher {
+    public offAll(type: string = null): EventDispatcher {
         const events: any = this._events;
         if (!events) return this;
         if (type) {
@@ -90,7 +90,7 @@ export class EventDispatcher implements IDispose {
         this.offAll();
     }
 
-    private _createListener(type: string, caller: any, listener: Function, args: any[], once: Boolean, offBefore: Boolean = true): HandlerDispatcher {
+    private _createListener(type: string, caller: any, listener: Function, args: any[], once: Boolean, offBefore: Boolean = true): EventDispatcher {
         if (offBefore)
             this.off(type, caller, listener, once);
         const handler: Handler = EventHandler.create(caller || this, listener, args, once);

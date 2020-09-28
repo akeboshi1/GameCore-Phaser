@@ -1,6 +1,6 @@
 import { HttpService } from "./http.service";
 import { LogicWorld } from "./logic.world";
-import { i18n } from "../game/core/utils/i18n";
+import { i18n } from "../../utils/i18n";
 
 /**
  * 每5min发送一次心跳包

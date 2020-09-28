@@ -3,6 +3,7 @@ import { ServerAddress } from "./address";
 
 export interface ConnectionService {
     connect: boolean;
+    pause: boolean;
     startConnect(addr: ServerAddress, keepalive?: boolean);
     closeConnect(): void;
     addPacketListener(listener: PacketHandler): void;

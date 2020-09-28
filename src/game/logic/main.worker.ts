@@ -1,13 +1,13 @@
-import { RPCPeer, Export, webworker_rpc } from "../game/core/render/node_modules/webworker-rpc";
 import { op_gateway } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
-import { ServerAddress } from "../../lib/net/address";
 import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/heartBeat.worker";
 import * as protos from "pixelpai_proto";
 import { LogicWorld } from "./logic.world";
 import { WorkerClient, ConnListener } from "./worker.client";
 import Connection from "./connection";
-import { RoomManager } from "../rooms/room.manager";
+import { RoomManager } from "../render/rooms/room.manager";
+import { RPCPeer, webworker_rpc, Export } from "webworker-rpc";
+import { ServerAddress } from "../../../lib/net/address";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -22,7 +22,6 @@ export class MainPeer extends RPCPeer {
     private heartBearPeer: any;
     constructor() {
         super("mainWorker");
-
         this.world = new LogicWorld(this);
         this.socket = new WorkerClient(this, new ConnListener(this));
         this.connect = new Connection(this.socket);

@@ -5871,8 +5871,8 @@ websocket-extensions@>=0.1.1:
   integrity sha1-f4RzvIOd/YdgituV1+sHUhFXikI=
 
 "webworker-rpc@git://github.com/ApowoGames/webworker-rpc":
-  version "0.0.12"
-  resolved "git://github.com/ApowoGames/webworker-rpc#35a150dfe03bbf9397aed50461d877b02dcd1639"
+  version "0.0.16"
+  resolved "git://github.com/ApowoGames/webworker-rpc#61aa8390a8d660f93fd1d8674301a3410cd4e776"
   dependencies:
     clean-webpack-plugin "^3.0.0"
     copy-webpack-plugin "^5.0.4"
