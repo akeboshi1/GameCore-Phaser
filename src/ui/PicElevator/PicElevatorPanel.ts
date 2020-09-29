@@ -108,7 +108,6 @@ export class PicElevatorPanel extends BasePanel {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new ElevatorItem(this.scene, this.key, this.dpr);
-                    cellContainer.setHandler(new Handler(this, this.onSendHandler));
                 }
                 cellContainer.setFloorData(item, index);
                 return cellContainer;
@@ -143,7 +142,7 @@ export class PicElevatorPanel extends BasePanel {
     }
     private onSelectItemHandler(floorData: op_gameconfig_01.IButton) {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.showData[0];
-        this.emit("", ui.id, floorData.node.id);
+        this.emit("queryui", ui.id, floorData.node.id);
     }
 }
 
@@ -201,7 +200,7 @@ class ElevatorItem extends Phaser.GameObjects.Container {
             this.levelTex.setColor("#BDBDBD");
             this.nameTex.setColor("#DDDDDD");
         }
-        this.levelTex.text = index + "f";
+        this.levelTex.text = (index + 1) + "f";
         this.nameTex.text = texs[0];
         const url = Url.getOsdRes(data.tips);
         this.bg.load(url, this, () => {
