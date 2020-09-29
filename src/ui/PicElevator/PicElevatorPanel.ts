@@ -108,7 +108,6 @@ export class PicElevatorPanel extends BasePanel {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new ElevatorItem(this.scene, this.key, this.dpr);
-                    cellContainer.setHandler(new Handler(this, this.onSendHandler));
                 }
                 cellContainer.setFloorData(item, index);
                 return cellContainer;
@@ -117,7 +116,7 @@ export class PicElevatorPanel extends BasePanel {
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
         this.mGameGrid.on("cellTap", (cell) => {
-            this.onSelectItemHandler();
+            this.onSelectItemHandler(cell.floorData);
         });
         this.content.add(this.mGameGrid);
         this.resize();
@@ -141,13 +140,14 @@ export class PicElevatorPanel extends BasePanel {
     private onSendHandler() {
 
     }
-    private onSelectItemHandler() {
-
+    private onSelectItemHandler(floorData: op_gameconfig_01.IButton) {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.showData[0];
+        this.emit("queryui", ui.id, floorData.node.id);
     }
 }
 
 class ElevatorItem extends Phaser.GameObjects.Container {
-    private floorData: op_client.IPKT_Quest;
+    private floorData: op_gameconfig_01.IButton;
     private key: string;
     private dpr: number;
     private bg: DynamicImage;
@@ -155,7 +155,6 @@ class ElevatorItem extends Phaser.GameObjects.Container {
     private nameTex: Phaser.GameObjects.Text;
     private levelbg: Phaser.GameObjects.Image;
     private levelTex: Phaser.GameObjects.Text;
-    private sendHandler: Handler;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
@@ -187,13 +186,11 @@ class ElevatorItem extends Phaser.GameObjects.Container {
         }).setOrigin(0.5); // .setStroke("#FAD555", 2);
         this.add(this.levelTex);
     }
-
-    public setHandler(send: Handler) {
-        this.sendHandler = send;
-    }
     public setFloorData(data: op_gameconfig_01.IButton, index: number) {
-        // this.floorData = data;
-        const bool = true;
+        this.floorData = data;
+        const texs = data.text.split("#");
+        const enabletag = texs[1];
+        const bool = Boolean(enabletag);
         if (bool) {
             this.levelbg.setFrame("floor_number_unlock");
             this.levelTex.setColor("#FAD555");
@@ -203,12 +200,11 @@ class ElevatorItem extends Phaser.GameObjects.Container {
             this.levelTex.setColor("#BDBDBD");
             this.nameTex.setColor("#DDDDDD");
         }
-        this.levelTex.text = "1f";
-        this.nameTex.text = "希尔顿酒店";
+        this.levelTex.text = (index + 1) + "f";
+        this.nameTex.text = texs[0];
+        const url = Url.getOsdRes(data.tips);
+        this.bg.load(url, this, () => {
+            this.bg.scale = this.dpr;
+        });
     }
-
-    private onSendHandler() {
-        if (this.sendHandler) this.sendHandler.run();
-    }
-
 }
