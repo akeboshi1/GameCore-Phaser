@@ -556,6 +556,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     public onFocus() {
         Logger.getInstance().log("#BlackSceneFromBackground; world.onFocus()");
         if (this.connection) {
+            if (!this.connection.isConnect) return this.onDisConnected();
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
             const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
             context.gameStatus = op_def.GameStatus.Focus;
@@ -564,6 +565,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.mClock.sync(-1);
         } else {
             Logger.getInstance().error("connection is undefined");
+            return this.onDisConnected();
         }
         this.resumeScene();
     }
