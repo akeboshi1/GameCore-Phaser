@@ -145,8 +145,7 @@ export class PicElevatorPanel extends BasePanel {
         const texs = floorData.text.split("#");
         const enabletag = texs[1];
         const bool = enabletag === "false" ? false : true;
-        if (bool)
-            this.emit("queryui", ui.id, floorData.node.id);
+        this.emit("queryui", ui.id, floorData.node.id);
     }
 }
 
