@@ -11,6 +11,9 @@
     "name": "name",
     "des": "description"
   },
+  "reconnect": {
+    "des": "Click to log in again"
+  },
   "room_list": {
     "player_room": "Others' Room",
     "popularity_room": "Most Popular",
