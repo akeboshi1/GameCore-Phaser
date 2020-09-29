@@ -22,7 +22,8 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
         };
         this.create(bg);
     }
-    public setText(text: string) {
+    public setText(text: string, apha: number = 0.9) {
+        this.tipsbg.alpha = apha;
         this.tipsText.text = text;
         const tipsHeight = this.tipsText.height + 20 * this.dpr;
         const tipsWidth = this.tipsbg.width;
@@ -56,9 +57,8 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
     private create(bg: string) {
         const tipsWidth = this.width;
         const tipsHeight = this.height;
-        const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, bg, this.config, undefined, undefined, 0);
+        const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, bg, this.config);
         tipsbg.setPosition(0, -tipsHeight * 0.5);
-        tipsbg.alpha = 0.9;
         this.tipsbg = tipsbg;
         const tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
             color: "#333333",

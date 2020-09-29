@@ -28,7 +28,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.createAttribute();
 
     }
-    public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, isSelf: boolean = true) {
+    public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, isSelf: boolean) {
         this.roomname.setTextInfo(i18n.t("room_info.roomname"), data.name);
         let level = 0;
         let curExp = 0;
@@ -109,7 +109,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.deprecia.add([this.renovateBtn, this.help]);
         this.helptips = new ItemInfoTips(this.scene, 140 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
         this.helptips.x = 60 * this.dpr;
-        this.helptips.setText(i18n.t("room_info.helptips"));
+        this.helptips.setText(i18n.t("room_info.helptips"), 1);
         this.helptips.y = this.deprecia.y - 20 * this.dpr;
         this.helptips.visible = false;
         this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue, this.helptips]);

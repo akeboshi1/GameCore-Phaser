@@ -97,7 +97,7 @@ export class PicHousePanel extends BasePanel {
         } else {
             this.closeShopBtn.visible = false;
         }
-        this.houseInfoPanel.setAttributeData(content);
+        this.houseInfoPanel.setAttributeData(content,isSelf);
         this.roomSettingBtn.visible = isSelf;
         this.editorRoomBtn.visible = isSelf;
     }
