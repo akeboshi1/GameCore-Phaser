@@ -142,7 +142,11 @@ export class PicElevatorPanel extends BasePanel {
     }
     private onSelectItemHandler(floorData: op_gameconfig_01.IButton) {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.showData[0];
-        this.emit("queryui", ui.id, floorData.node.id);
+        const texs = floorData.text.split("#");
+        const enabletag = texs[1];
+        const bool = enabletag === "false" ? false : true;
+        if (bool)
+            this.emit("queryui", ui.id, floorData.node.id);
     }
 }
 

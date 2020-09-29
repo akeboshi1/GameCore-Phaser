@@ -54,7 +54,7 @@ export class PicElevatorMediator extends BaseMediator {
             return;
         }
         this.picElevator.query_TARGET_UI(uiId, componentId);
-        this.destroy();
+        // this.destroy();
     }
     private onHideView() {
         this.destroy();
