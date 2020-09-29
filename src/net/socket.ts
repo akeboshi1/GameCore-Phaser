@@ -26,6 +26,7 @@ export class SocketConnection {
     protected mTransport: WSWrapper;
     protected mServerAddr: ServerAddress = { host: "localhost", port: 80 };
     protected mConnectListener?: IConnectListener;
+    private isConnect: boolean = false;
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
         this.mConnectListener = $listener;
@@ -37,14 +38,16 @@ export class SocketConnection {
                 Logger.getInstance().info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this);
                 this.onConnected();
+                this.isConnect = true;
             });
             this.mTransport.on("close", () => {
                 Logger.getInstance().info(`SocketConnection close.`);
                 listener.onDisConnected(this);
+                this.isConnect = false;
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
                 Logger.getInstance().info(`SocketConnection error.`);
-                listener.onError(reason);
+                if (this.isConnect) listener.onError(reason);
             });
         }
     }
