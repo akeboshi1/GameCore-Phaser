@@ -147,7 +147,7 @@ export class PicElevatorPanel extends BasePanel {
 }
 
 class ElevatorItem extends Phaser.GameObjects.Container {
-    private floorData: op_client.IPKT_Quest;
+    private floorData: op_gameconfig_01.IButton;
     private key: string;
     private dpr: number;
     private bg: DynamicImage;
@@ -192,8 +192,9 @@ class ElevatorItem extends Phaser.GameObjects.Container {
         this.sendHandler = send;
     }
     public setFloorData(data: op_gameconfig_01.IButton, index: number) {
-        // this.floorData = data;
-        const bool = true;
+        this.floorData = data;
+        const enabletag = data.text.split("#")[1];
+        const bool = Boolean(enabletag);
         if (bool) {
             this.levelbg.setFrame("floor_number_unlock");
             this.levelTex.setColor("#FAD555");
