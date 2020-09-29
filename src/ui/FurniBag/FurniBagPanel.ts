@@ -12,7 +12,10 @@ import { CheckboxGroup } from "../components/checkbox.group";
 import { Handler } from "../../Handler/Handler";
 import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { Logger } from "../../utils/log";
-import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text } from "apowophaserui";
+import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch } from "apowophaserui";
+import { ItemInfoTips } from "../tips/ItemInfoTips";
+import { UIAtlasKey } from "../ui.atals.name";
+import { PlayerProperty } from "../../rooms/data/PlayerProperty";
 
 export class FurniBagPanel extends BasePanel {
   private key: string = "furni_bag";
@@ -889,6 +892,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
   private mExpires: Text;
   private dpr: number;
   private timeID: any;
+  private itemtips: ItemInfoTips;
   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
     super(scene);
     this.dpr = dpr;
@@ -1074,6 +1078,187 @@ class DetailBubble extends Phaser.GameObjects.Container {
     return str;
   }
 }
+
+// class DetailBubble extends Phaser.GameObjects.Container {
+
+//   private dpr: number;
+//   private timeID: any;
+//   private tipsbg: NineSlicePatch;
+//   private tipsText: BBCodeText;
+//   private mExpires: BBCodeText;
+//   // private testText: Phaser.GameObjects.Text;
+//   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
+//     super(scene);
+//     this.dpr = dpr;
+//     const tipsWidth = 100 * dpr;
+//     const tipsHeight = 96 * dpr;
+//     this.setSize(tipsWidth, tipsHeight);
+//     const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.commonKey, "tips_bg", {
+//       left: 10 * this.dpr,
+//       top: 10 * this.dpr,
+//       right: 10 * this.dpr,
+//       bottom: 10 * this.dpr
+//     });
+//     tipsbg.setPosition(0, -tipsHeight * 0.5);
+//     this.tipsbg = tipsbg;
+//     this.tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
+//       color: "#333333",
+//       fontSize: 13 * this.dpr,
+//       fontFamily: Font.DEFULT_FONT,
+//     }).setOrigin(0);
+//     this.tipsText.setWrapMode("string");
+//     this.mExpires = new BBCodeText(scene, 8 * dpr, 85 * dpr, "", {
+//       fontSize: 10 * this.dpr,
+//       fontFamily: Font.DEFULT_FONT,
+//     });
+//     this.add([this.tipsbg, this.tipsText, this.mExpires]);
+//   }
+
+//   setProp(prop: op_client.ICountablePackageItem, servertime: number, property: PlayerProperty): this {
+//     if (!prop) {
+//       this.tipsText.setText(i18n.t("furni_bag.empty_backpack"));
+//       this.mExpires.text = "";
+//       this.resize();
+//     } else {
+//       this.tipsText.setWrapWidth(undefined);
+//       const name = prop.shortName || prop.name;
+//       let price = "";
+//       let source = "";
+//       let describle = "";
+//       let attri = "";
+//       let need = "";
+//       let tips = name + "\n";
+//       let maxWidth: number = 100 * this.dpr;
+//       if (prop.recyclable) {
+//         if (prop.sellingPrice) {
+//           price = `${i18n.t("furni_bag.sale_price")}：${Coin.getName(prop.sellingPrice.coinType)} x ${prop.sellingPrice.price}`;
+//           tips += price + "\n";
+//           this.tipsText.text = price;
+//           maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+//         }
+//       } else {
+//         price = i18n.t("furni_bag.not_sale");
+//         tips += price + "\n";
+//         this.tipsText.text = price;
+//         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+//       }
+//       if (prop.source) {
+//         source = `${i18n.t("furni_bag.source")}： ${prop.source}`;
+//         tips += source + "\n";
+//         this.tipsText.text = source;
+//         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+//       }
+//       if (prop.des) {
+//         describle = prop.des;
+//         tips += describle + "\n";
+//         this.tipsText.text = describle;
+//         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+//       }
+//       if (prop.affectValues) {
+//         for (const affect of prop.affectValues) {
+//           const proper = property.propertiesMap.get(affect.key);
+//           attri += `${proper.name}: ${affect.value}` + "\n";
+//         }
+//         tips += `${i18n.t("furni_bag.properties")}:\n ${attri}` + "\n";
+//       }
+//       if (prop.requireValues) {
+//         for (const require of prop.requireValues) {
+//           const proper = property.propertiesMap.get(require.key);
+//           need += `${proper.name}:${this.getComparTag(require.compareType)} ${require.value}` + "\n";
+//         }
+//         tips += `${i18n.t("furni_bag.needproper")}:\n ${need}` + "\n";
+//       }
+//       this.tipsText.setWrapWidth(maxWidth);
+//       this.tipsText.text = tips;
+//       if (prop.expiredTime > 0) {
+//         let interval = prop.expiredTime - servertime;
+//         const timeout = () => {
+//           (<any>this.mExpires).visible = true;
+//           this.mExpires.text = this.getDataFormat(interval * 1000);
+//           if (interval > 0) {
+//             this.timeID = setTimeout(() => {
+//               interval -= 1;
+//               timeout();
+//             }, 1000);
+//           } else {
+//             this.timeID = undefined;
+//           }
+//         };
+//         timeout();
+//       } else {
+//         (<any>this.mExpires).visible = false;
+//         if (this.timeID) clearTimeout(this.timeID);
+//       }
+//       this.resize();
+//     }
+//     return this;
+//   }
+//   private resize(w?: number, h?: number) {
+//     let height = 9 * this.dpr + this.tipsText.height;
+//     if ((<any>this.mExpires).visible) height += this.mExpires.height;
+//     this.setSize(this.tipsText.width, height);
+//     this.tipsbg.resize(this.width, this.height);
+
+//   }
+
+//   private getDataFormat(time: number) {
+//     const day = Math.floor(time / 86400000);
+//     const hour = Math.floor(time / 3600000) % 24;
+//     const minute = Math.floor(time / 60000) % 60;
+//     const second = Math.floor(time / 1000) % 60;
+//     let text = i18n.t("furni_bag.timelimit") + ":  ";
+//     if (day > 0) {
+//       const temptime = `${day}-${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+//       text += `[color=#FF0000]${temptime}[/color]`;
+//     } else if (hour > 0 || minute > 0 || second > 0) {
+//       const temptime = `${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+//       text += `[color=#FF0000]${temptime}[/color]`;
+//     } else {
+//       const temptime = `${i18n.t("furni_bag.expires")}`;
+//       text += `[color=#FF0000]${temptime}[/color]`;
+//     }
+//     // else if (minute > 0) {
+//     //   const temptime = `${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+//     //   text += `[color=#FF0000]${temptime}[/color]`;
+//     // } else if (second > 0) {
+//     //   const temptime = `${this.stringFormat(second)}`;
+//     //   text += `[color=#FF0000]${temptime}[/color]`;
+//     // }
+//     //  else {
+//     //   const temptime = `${i18n.t("furni_bag.expires")}`;
+//     //   text += `[color=#FF0000]${temptime}[/color]`;
+//     // }
+//     return text;
+//   }
+//   private stringFormat(num: number) {
+//     let str = num + "";
+//     if (str.length <= 1) {
+//       str = "0" + str;
+//     }
+//     return str;
+//   }
+
+//   private getComparTag(value: number) {
+//     let tag = "";
+//     switch (value) {
+//       case 1:
+//         tag = "=";
+//       case 2:
+//         tag = "!=";
+//       case 3:
+//         tag = "<=";
+//       case 4:
+//         tag = "<";
+//       case 5:
+//         tag = ">=";
+//       case 6:
+//         tag = ">";
+//       default:
+//         tag = "=";
+//     }
+//     return tag;
+//   }
+// }
 
 class Item extends Phaser.GameObjects.Container {
   public propData: op_client.ICountablePackageItem;

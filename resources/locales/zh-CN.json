@@ -36,7 +36,9 @@
     "source": "来源",
     "empty_backpack": "背包里空空如也",
     "expires": "已过期",
-    "timelimit": "限时"
+    "timelimit": "限时",
+    "properties": "道具属性",
+    "needproper": "需求属性"
   },
   "common": {
     "cancel": "取消",
@@ -263,5 +265,8 @@
     "mine": "我的",
     "hotel": "酒店",
     "picatown": "皮卡小镇"
+  },
+  "picelevator": {
+    "floor": "层"
   }
 }

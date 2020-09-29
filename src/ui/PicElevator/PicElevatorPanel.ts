@@ -96,7 +96,7 @@ export class PicElevatorPanel extends BasePanel {
                 height: conHeight - 30 * this.dpr,
                 columns: 1,
                 cellWidth: conWdith - 20 * this.dpr,
-                cellHeight: 81 * this.dpr,
+                cellHeight: 85 * this.dpr,
                 reuseCellContainer: true,
                 zoom: this.scale
             },
@@ -104,7 +104,7 @@ export class PicElevatorPanel extends BasePanel {
             clamplChildOY: false,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene, index = cell.index,
+                const scene = cell.scene, index = this.mGameGrid.items.length - cell.index,
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new ElevatorItem(this.scene, this.key, this.dpr);
@@ -178,7 +178,7 @@ class ElevatorItem extends Phaser.GameObjects.Container {
         this.add(this.nameTex);
         this.levelbg = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "floor_number_unlock" });
         this.levelbg.x = -this.width * 0.5 + this.levelbg.width * 0.5 + 5 * dpr;
-        this.levelbg.y = this.height * 0.5 - this.levelbg.height * 0.5 + 5 * dpr;
+        this.levelbg.y = this.height * 0.5 - this.levelbg.height * 0.5 - 5 * dpr;
         this.add(this.levelbg);
         this.levelTex = this.scene.make.text({
             x: this.levelbg.x, y: this.levelbg.y, text: "",
@@ -200,11 +200,14 @@ class ElevatorItem extends Phaser.GameObjects.Container {
             this.levelTex.setColor("#BDBDBD");
             this.nameTex.setColor("#DDDDDD");
         }
-        this.levelTex.text = (index + 1) + "f";
+        this.levelTex.text = (index) + i18n.t("picelevator.floor");
         this.nameTex.text = texs[0];
-        const url = Url.getOsdRes(data.tips);
+        const lastindex = data.tips.lastIndexOf("/");
+        const frame = data.tips.slice(lastindex + 1, data.tips.length);
+        const burl = data.tips.slice(0, lastindex + 1);
+        const url = Url.getOsdRes(burl + frame + `_${this.dpr}x` + ".png");
         this.bg.load(url, this, () => {
-            this.bg.scale = this.dpr;
+            // this.bg.scale = this.dpr;
         });
     }
 }

@@ -5,7 +5,7 @@ import { i18n } from "../../i18n";
 
 export class ItemInfoTips extends Phaser.GameObjects.Container {
     private tipsbg: NineSlicePatch;
-    private tipsText: Phaser.GameObjects.Text;
+    private tipsText: BBCodeText;
     private dpr: number;
     private key: string;
     private config: IPatchesConfig;
@@ -22,14 +22,24 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
         };
         this.create(bg);
     }
+
+    public resize(width: number, height: number) {
+        this.tipsText.setWrapWidth(width);
+        let tipsHeight = this.tipsText.height + 20 * this.dpr;
+        if (tipsHeight < height) tipsHeight = height;
+        this.setSize(width, tipsHeight);
+        this.tipsbg.resize(width, tipsHeight);
+        this.tipsbg.y = -tipsHeight * 0.5;
+        this.tipsText.y = -tipsHeight + 10 * this.dpr;
+    }
     public setText(text: string, apha: number = 0.9) {
-        this.tipsbg.alpha = apha;
+        //  this.tipsbg.alpha = apha;
         this.tipsText.text = text;
         const tipsHeight = this.tipsText.height + 20 * this.dpr;
         const tipsWidth = this.tipsbg.width;
         this.setSize(tipsWidth, tipsHeight);
         this.tipsbg.resize(tipsWidth, tipsHeight);
-        this.tipsbg.y = -this.tipsbg.height * 0.5;
+        this.tipsbg.y = -tipsHeight * 0.5;
         this.tipsText.y = -tipsHeight + 10 * this.dpr;
     }
     public setItemData(data: op_client.ICountablePackageItem) {

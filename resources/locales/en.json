@@ -35,7 +35,9 @@
     "source": "Source",
     "empty_backpack": "Empty in the backpack",
     "expires": "Expired",
-    "timelimit": "Expires"
+    "timelimit": "Expires",
+    "properties": "Prop Properties",
+    "needproper": "Need Properties"
   },
   "common": {
     "cancel": "Cancel",
@@ -144,7 +146,7 @@
     "depreciation": "Depreciation",
     "needmaterials": "Materials needed for renovation",
     "renovatetips": "Currently no refurbishment is required",
-    "helptips": "The depreciation degree will affect the daily income of the store"
+    "helptips": "**The depreciation degree will affect the daily income of the store"
   },
   "business_street": {
     "commercial_street": "STORES",
@@ -263,5 +265,8 @@
     "mine": "MINE",
     "hotel": "HOTEL",
     "picatown": "PICATOWN"
+  },
+  "picelevator": {
+    "floor": "f"
   }
 }

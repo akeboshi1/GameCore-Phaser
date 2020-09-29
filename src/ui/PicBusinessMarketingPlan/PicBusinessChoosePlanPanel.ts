@@ -188,7 +188,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         if (this.iteminfoTips.visible) {
             const data = gameobj.itemData;
             this.iteminfoTips.setText(this.getDesText(data));
-            this.iteminfoTips.setTipsPosition(gameobj, this, -10 * this.dpr);
+            this.iteminfoTips.setTipsPosition(gameobj, this, 10 * this.dpr);
         }
 
     }

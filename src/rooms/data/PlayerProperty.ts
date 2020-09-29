@@ -11,6 +11,7 @@ export class PlayerProperty {
     public rooms: op_client.IEditModeRoom[];
     public handheld: op_client.ICountablePackageItem;
     public command: op_def.OpCommand;
+    public propertiesMap: Map<string, op_pkt_def.IPKT_Property>;
     public properties: op_pkt_def.IPKT_Property[];
     public syncData(info: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
         if (!this.playerInfo) {
@@ -78,11 +79,13 @@ export class PlayerProperty {
         this.properties = this.playerInfo.properties;
         this.handheld = this.playerInfo.handheld;
         this.command = this.playerInfo.command;
+        this.propertiesMap = new Map<string, op_pkt_def.IPKT_Property>();
         for (const proper of this.properties) {
             if (!proper.hasOwnProperty("id")) {
                 Logger.getInstance().error(proper.key + "  缺少ID");
                 continue;
             }
+            this.propertiesMap.set(proper.id, proper);
             if (proper.id === "IV0000001") {
                 this.coin = proper;
             } else if (proper.id === "IV0000002") {

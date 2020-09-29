@@ -127,7 +127,7 @@ export class PicWorkPanel extends BasePanel {
             }
         });
 
-        this.itemtips = new ItemInfoTips(this.scene, 150 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
+        this.itemtips = new ItemInfoTips(this.scene, 150 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
         this.itemtips.visible = false;
         this.content.add([this.bg, this.closeBtn, this.titlebg, this.tilteName, this.timesPorgress, this.powerProgress, this.helpBtn, this.mGameScroll, this.itemtips]);
         this.resize();
