@@ -445,6 +445,7 @@ export class FurniBagPanel extends BasePanel {
       this.displayAvatar();
     } else {
       this.mDetailBubble.setProp(null, this.serviceTimestamp);
+      // this.mDetailBubble.setProp(null, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
       this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     }
   }
@@ -597,6 +598,7 @@ export class FurniBagPanel extends BasePanel {
     const item: op_client.ICountablePackageItem = cell.getData("item");
     if (this.mSelectedItemData.indexOf(item) !== -1) return;
     this.mDetailBubble.setProp(item, this.serviceTimestamp);
+    // this.mDetailBubble.setProp(item, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
       this.replaceSelectItem(item, cell);
@@ -1093,7 +1095,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
 //     const tipsWidth = 100 * dpr;
 //     const tipsHeight = 96 * dpr;
 //     this.setSize(tipsWidth, tipsHeight);
-//     const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.commonKey, "tips_bg", {
+//     const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", {
 //       left: 10 * this.dpr,
 //       top: 10 * this.dpr,
 //       right: 10 * this.dpr,
@@ -1110,7 +1112,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
 //     this.mExpires = new BBCodeText(scene, 8 * dpr, 85 * dpr, "", {
 //       fontSize: 10 * this.dpr,
 //       fontFamily: Font.DEFULT_FONT,
-//     });
+//     }).setOrigin(0);
 //     this.add([this.tipsbg, this.tipsText, this.mExpires]);
 //   }
 
@@ -1198,6 +1200,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
 //     if ((<any>this.mExpires).visible) height += this.mExpires.height;
 //     this.setSize(this.tipsText.width, height);
 //     this.tipsbg.resize(this.width, this.height);
+//     this.tipsText.y = -height * 0.5 + this.tipsText.height * 0.5 + 9 * this.dpr;
+//     this.mExpires.y = this.tipsText.y + this.tipsText.height * 0.5 + 3 * this.dpr;
 
 //   }
 

@@ -190,7 +190,7 @@ class ElevatorItem extends Phaser.GameObjects.Container {
         this.floorData = data;
         const texs = data.text.split("#");
         const enabletag = texs[1];
-        const bool = Boolean(enabletag);
+        const bool = enabletag === "false" ? false : true;
         if (bool) {
             this.levelbg.setFrame("floor_number_unlock");
             this.levelTex.setColor("#FAD555");
