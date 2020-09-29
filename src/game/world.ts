@@ -1037,19 +1037,19 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = false;
         if (this.mGame) {
-            if (!this.mConnection.isConnect) {
-                if (this.mConfig.connectFail) {
-                    return this.mConfig.connectFail();
-                } else {
-                    return this.onDisConnected();
-                }
-            }
             this.mConnection.onFocus();
             this.mRoomMamager.onFocus();
             const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
             if (pauseScene) {
                 (pauseScene as GamePauseScene).sleep();
                 this.mGame.scene.stop(GamePauseScene.name);
+            }
+            if (!this.mConnection.isConnect) {
+                if (this.mConfig.connectFail) {
+                    return this.mConfig.connectFail();
+                } else {
+                    return this.onDisConnected();
+                }
             }
         }
     }
