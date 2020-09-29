@@ -17,7 +17,7 @@ export class PicElevatorMediator extends BaseMediator {
         this.world = worldService;
     }
 
-    show() {
+    show(param?: any) {
         if ((this.mView && this.mView.isShow()) || this.mShow) {
             return;
         }
@@ -30,7 +30,7 @@ export class PicElevatorMediator extends BaseMediator {
             this.picElevator.register();
         }
         this.layerMgr.addToUILayer(this.mView);
-        this.mView.show();
+        this.mView.show(param);
     }
 
     isSceneUI() {

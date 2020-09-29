@@ -35,11 +35,30 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
         const tex = this.getDesText(data);
         this.setText(tex);
     }
+    public setTipsPosition(gameobject: Phaser.GameObjects.Container, container: Phaser.GameObjects.Container, offsety: number = 0) {
+        let posx: number = gameobject.x;
+        let posy: number = gameobject.y;
+        let tempobject = <Phaser.GameObjects.Container>gameobject;
+        while (tempobject.parentContainer !== container) {
+            posx += tempobject.parentContainer.x;
+            posy += tempobject.parentContainer.y;
+            tempobject = tempobject.parentContainer;
+        }
+        if (posx - this.width * 0.5 < -container.width * 0.5) {
+            this.x = this.width * 0.5 - container.width * 0.5 + 20 * this.dpr;
+        } else if (posx + this.width * 0.5 > container.width * 0.5) {
+            this.x = container.width * 0.5 - this.width * 0.5 - 20 * this.dpr;
+        } else {
+            this.x = posx;
+        }
+        this.y = posy - this.height * 0.5 + 10 * this.dpr + offsety;
+    }
     private create(bg: string) {
         const tipsWidth = this.width;
         const tipsHeight = this.height;
         const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, bg, this.config, undefined, undefined, 0);
         tipsbg.setPosition(0, -tipsHeight * 0.5);
+        tipsbg.alpha = 0.9;
         this.tipsbg = tipsbg;
         const tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
             color: "#333333",

@@ -4,6 +4,7 @@ import { i18n } from "../../i18n";
 import { UIAtlasKey } from "../ui.atals.name";
 import { BBCodeText, Button, ClickEvent } from "apowophaserui";
 import { Handler } from "../../Handler/Handler";
+import { ItemInfoTips } from "../tips/ItemInfoTips";
 export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
@@ -18,6 +19,7 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
     private renovateBtn: Button;
     private help: Button;
     private equirementsHandler: Handler;
+    private helptips: ItemInfoTips;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.key = key;
@@ -103,13 +105,21 @@ export class PicHouseInfoPanel extends Phaser.GameObjects.Container {
         this.renovateBtn.x = this.width * 0.5 - 60 * this.dpr;
         this.help = new Button(this.scene, UIAtlasKey.common2Key, "icon_tips", "icon_tips");
         this.help.x = this.width * 0.5 - 20 * this.dpr;
+        this.help.on(String(ClickEvent.Tap), this.onHelpHandler, this);
         this.deprecia.add([this.renovateBtn, this.help]);
-        this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue]);
-
+        this.helptips = new ItemInfoTips(this.scene, 140 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
+        this.helptips.x = 60 * this.dpr;
+        this.helptips.setText(i18n.t("room_info.helptips"));
+        this.helptips.y = this.deprecia.y - 20 * this.dpr;
+        this.helptips.visible = false;
+        this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue, this.helptips]);
     }
 
     private onRenovateHandler() {
         if (this.equirementsHandler) this.equirementsHandler.run();
+    }
+    private onHelpHandler() {
+        this.helptips.visible = !this.helptips.visible;
     }
     private getLevelImgs(level: number) {
         const power = 4;

@@ -1,7 +1,7 @@
 import { BasePanel } from "../components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { Font } from "../../utils/font";
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
+import { op_client, op_pkt_def, op_def, op_gameconfig_01 } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 import { DynamicImage } from "../components/dynamic.image";
@@ -51,6 +51,7 @@ export class PicElevatorPanel extends BasePanel {
         }
         this.setInteractive();
         this.addListen();
+        this.setElevtorDataList(this.mShowData[0]);
     }
 
     public addListen() {
@@ -64,7 +65,6 @@ export class PicElevatorPanel extends BasePanel {
     }
 
     preload() {
-        this.addAtlas(this.key, "order/order.png", "order/order.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
         super.preload();
@@ -110,7 +110,7 @@ export class PicElevatorPanel extends BasePanel {
                     cellContainer = new ElevatorItem(this.scene, this.key, this.dpr);
                     cellContainer.setHandler(new Handler(this, this.onSendHandler));
                 }
-                cellContainer.setFloorData();
+                cellContainer.setFloorData(item, index);
                 return cellContainer;
             },
         };
@@ -122,11 +122,12 @@ export class PicElevatorPanel extends BasePanel {
         this.content.add(this.mGameGrid);
         this.resize();
         super.init();
-        this.setElevtorDataList();
     }
 
-    public setElevtorDataList() {
-        this.mGameGrid.setItems(new Array(60));
+    public setElevtorDataList(ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
+        const arr = ui.button.reverse();
+        this.mGameGrid.setItems(arr);
+        this.mGameGrid.setT(1);
     }
 
     destroy() {
@@ -185,13 +186,12 @@ class ElevatorItem extends Phaser.GameObjects.Container {
             style: { color: "#FAD555", fontFamily: Font.NUMBER, bold: true, fontSize: 17 * this.dpr }
         }).setOrigin(0.5); // .setStroke("#FAD555", 2);
         this.add(this.levelTex);
-        this.setFloorData();
     }
 
     public setHandler(send: Handler) {
         this.sendHandler = send;
     }
-    public setFloorData() {
+    public setFloorData(data: op_gameconfig_01.IButton, index: number) {
         // this.floorData = data;
         const bool = true;
         if (bool) {

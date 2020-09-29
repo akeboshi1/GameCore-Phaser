@@ -86,12 +86,8 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
             align: 2,
             orientation: 1,
             space: 10 * this.dpr,
-            celldownCallBack: (gameobject) => {
-                this.iteminfoTips.visible = true;
-                this.onMaterialItemHandler(gameobject);
-            },
             cellupCallBack: (gameobject) => {
-                this.iteminfoTips.visible = false;
+                this.onMaterialItemHandler(gameobject);
             }
         });
         this.add(this.gameScroll);
@@ -113,7 +109,7 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
         this.add(selectBtn);
         selectBtn.on(String(ClickEvent.Tap), this.onSelectHandler, this);
         selectBtn.setTextStyle({ fontSize: 15 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#996600" });
-        this.iteminfoTips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
+        this.iteminfoTips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
         this.iteminfoTips.visible = false;
         this.add(this.iteminfoTips);
     }
@@ -188,12 +184,13 @@ export class PicBusinessChoosePlanPanel extends Phaser.GameObjects.Container {
     }
 
     private onMaterialItemHandler(gameobj: MaterialItem) {
-        const data = gameobj.itemData;
-        this.iteminfoTips.setText(this.getDesText(data));
-        const worldpos = gameobj.getWorldTransformMatrix();
-        const worldpos1 = this.gameScroll.getWorldTransformMatrix();
-        this.iteminfoTips.x = worldpos.tx - worldpos1.tx;
-        this.iteminfoTips.y = this.gameScroll.y - 20 * this.dpr;
+        this.iteminfoTips.visible = !this.iteminfoTips.visible;
+        if (this.iteminfoTips.visible) {
+            const data = gameobj.itemData;
+            this.iteminfoTips.setText(this.getDesText(data));
+            this.iteminfoTips.setTipsPosition(gameobj, this, -10 * this.dpr);
+        }
+
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
