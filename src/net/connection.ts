@@ -75,8 +75,14 @@ export default class Connection implements ConnectionService {
     }
 
     send(packet: PBpacket) {
+        if (!this._isConnect) {
+            Logger.getInstance().log("connect unConnect");
+            // throw new Error(`NetWorker is undefined.`);
+            return;
+        }
         if (!this.mMainWorker) {
-            throw new Error(`NetWorker is undefined.`);
+            Logger.getInstance().log("no MainWorker");
+            return;
         }
 
         this.mMainWorker.postMessage({
