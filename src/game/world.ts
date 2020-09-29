@@ -263,8 +263,8 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
 
     onError(reason?: SocketConnectionError): void {
         this.gameState = GameState.SOCKET_ERROR;
-        Logger.getInstance().log("socket error", this.mConnection.isConnect());
-        if (!this.mConnection.isConnect()) {
+        Logger.getInstance().log("socket error", this.mConnection.isConnect);
+        if (!this.mConnection.isConnect) {
             if (this.mConfig.connectFail) {
                 Logger.getInstance().log("app connectFail");
                 return this.mConfig.connectFail();
@@ -1024,7 +1024,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         }
         this.isPause = false;
         if (this.mGame) {
-            if (!this.mConnection.isConnect()) {
+            if (!this.mConnection.isConnect) {
                 if (this.mConfig.connectFail) {
                     return this.mConfig.connectFail();
                 } else {

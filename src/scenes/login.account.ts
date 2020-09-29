@@ -4,9 +4,7 @@ import { Size } from "../utils/size";
 import { Url } from "../utils/resUtil";
 import { Logger } from "../utils/log";
 import { BasicScene } from "./basic.scene";
-import { Font } from "../utils/font";
-import verion from "../../version";
-
+import { i18n } from "../../src/i18n";
 export class LoginAccountScene extends BasicScene {
     private mWorld: WorldService;
     private bg: Phaser.GameObjects.Sprite;
@@ -65,6 +63,7 @@ export class LoginAccountScene extends BasicScene {
 
         this.checkSize(new Size(width, height));
         this.scale.on("resize", this.checkSize, this);
+        const text = this.add.text(width >> 1, height >> 1, i18n.t("reconnect"));
         const bgg = this.add.graphics();
         bgg.fillStyle(0xffcc00, .8);
         bgg.fillRect(0, 0, 100, 50);

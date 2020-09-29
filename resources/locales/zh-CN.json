@@ -10,6 +10,9 @@
     "name": "名字",
     "des": "描述"
   },
+  "reconnect": {
+    "des": "点击重新登陆"
+  },
   "room_list": {
     "player_room": "玩家房间",
     "popularity_room": "人气房间",

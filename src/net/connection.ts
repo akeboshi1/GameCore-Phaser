@@ -34,9 +34,7 @@ export default class Connection implements ConnectionService {
     constructor(listener: IConnectListener) {
         this.mListener = listener;
     }
-    isConnect(): boolean {
-        return this._isConnect;
-    }
+
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
         try {
@@ -75,11 +73,6 @@ export default class Connection implements ConnectionService {
     }
 
     send(packet: PBpacket) {
-        if (!this._isConnect) {
-            Logger.getInstance().log("connect unConnect");
-            // throw new Error(`NetWorker is undefined.`);
-            return;
-        }
         if (!this.mMainWorker) {
             Logger.getInstance().log("no MainWorker");
             return;
@@ -257,5 +250,9 @@ export default class Connection implements ConnectionService {
         if (this.mMainWorker) {
             this.mMainWorker.postMessage({ method: "endHeartBeat" });
         }
+    }
+
+    get isConnect(): boolean {
+        return this._isConnect;
     }
 }
