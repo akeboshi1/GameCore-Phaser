@@ -143,7 +143,8 @@
     "renovate": "翻新",
     "depreciation": "折旧",
     "needmaterials": "翻新所需材料",
-    "renovatetips": "当前无需翻新"
+    "renovatetips": "当前无需翻新",
+    "helptips": "展示内容为纯文本,展示框采用通用的tip框文本内容为 折旧度降低会影响店铺的每日收入"
   },
   "business_street": {
     "commercial_street": "商业街",

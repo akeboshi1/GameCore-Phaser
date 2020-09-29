@@ -143,7 +143,8 @@
     "renovate": "Renovate",
     "depreciation": "Depreciation",
     "needmaterials": "Materials needed for renovation",
-    "renovatetips": "Currently no refurbishment is required"
+    "renovatetips": "Currently no refurbishment is required",
+    "helptips": "The display content is plain text, and the display box adopts the general text of tip box. The depreciation degree will affect the daily income of the store"
   },
   "business_street": {
     "commercial_street": "STORES",

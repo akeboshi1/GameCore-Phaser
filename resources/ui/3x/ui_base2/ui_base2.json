@@ -484,20 +484,20 @@
 			"frame": {
 				"x": 2033,
 				"y": 517,
-				"w": 98,
-				"h": 99
+				"w": 94,
+				"h": 94
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 98,
-				"h": 99
+				"w": 94,
+				"h": 94
 			},
 			"sourceSize": {
-				"w": 98,
-				"h": 99
+				"w": 94,
+				"h": 94
 			}
 		},
 		"title": {
@@ -527,7 +527,7 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 2132,
+			"w": 2131,
 			"h": 917
 		},
 		"scale": "1"

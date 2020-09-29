@@ -87,13 +87,13 @@ export class PicHousePanel extends BasePanel {
             bgheight = 460 * this.dpr;
             this.content.setSize(bgwidth, bgheight);
             this.bg.resize(bgwidth, bgheight);
-            this.closeShopBtn.visible = true;
+            //  this.closeShopBtn.visible = true;
             this.roomInfoBtn.y = -this.content.height * 0.5 - this.roomInfoBtn.height * 0.5 + 5 * this.dpr;
             this.roomSettingBtn.y = this.roomInfoBtn.y;
             this.closeBtn.y = -this.bg.height * 0.5 + this.dpr * 5;
             this.editorRoomBtn.y = this.content.height * 0.5 - 30 * this.dpr;
             this.houseInfoPanel.y = -this.content.height * 0.5 + this.houseInfoPanel.height * 0.5 + 30 * this.dpr;
-            this.closeShopBtn.on(String(ClickEvent.Tap), this.onCloseShopHandler, this);
+            //  this.closeShopBtn.on(String(ClickEvent.Tap), this.onCloseShopHandler, this);
         } else {
             this.closeShopBtn.visible = false;
         }
