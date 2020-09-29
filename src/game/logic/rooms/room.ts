@@ -3,17 +3,19 @@ import IActor = op_client.IActor;
 import { LogicWorld } from "../logic.world";
 import { PacketHandler } from "net-socket-packet";
 import { IRoomManager } from "./room.manager";
-import { Logger } from "../../game/core/utils/log";
 import { ClockReadyListener } from "../clock";
-import { IPosition45Obj } from "../../game/core/utils/iposition45";
-import { LogicPos, IPos } from "../../game/core/utils/logic.pos";
 import { IBlockObject } from "../../render/rooms/cameras/iblock.object";
-import { Position45 } from "../../game/core/utils/position45";
 import { State } from "../../render/rooms/state/state.group";
 import { ILogicElement } from "./logic.element";
 import { PlayerManager } from "./player/player.manager";
 import { IPoint } from "game-capsule";
 import { ViewblockService } from "../../render/rooms/cameras/viewblock.service";
+import { IPos, LogicPos } from "../../../utils/logic.pos";
+import { IPosition45Obj } from "../../../utils/iposition45";
+import { Position45 } from "../../../utils/position45";
+import { MessageType } from "../../../const/MessageType";
+import { Logger } from "../../../utils/log";
+import { IScenery } from "../../render/rooms/sky.box/scenery";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -300,7 +302,7 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
     }
 
     public destroy() {
-        this.world.emitter.off("Tap", this.onTapHandler, this);
+        this.world.emitter.off(ClickEvent.Tap, this.onTapHandler, this);
         if (this.connection) this.connection.removePacketListener(this);
         this.clear();
         Logger.getInstance().log("#BlackSceneFromBackground; remove scene: ", PlayScene.name);

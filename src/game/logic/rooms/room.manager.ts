@@ -2,9 +2,9 @@ import { Room, ILogicRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { LogicWorld } from "../logic.world";
-import { ConnectionService } from "../../../lib/net/connection.service";
 import { DecorateRoom } from "./decorate.room";
 import { EditorRoom } from "./editor.room";
+import { ConnectionService } from "../../../../lib/net/connection.service";
 export interface IRoomManager {
     readonly world: LogicWorld | undefined;
 

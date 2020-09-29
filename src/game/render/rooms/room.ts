@@ -33,6 +33,7 @@ import { FrameManager } from "./element/frame.manager";
 import { IScenery } from "./sky.box/scenery";
 import { State } from "./state/state.group";
 import { EffectManager } from "./effect/effect.manager";
+import { ClickEvent } from "apowophaserui";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -241,7 +242,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("pointerup", this.onPointerUpHandler, this);
-        this.world.emitter.on("Tap", this.onTapHandler, this);
+        this.world.emitter.on(ClickEvent.Tap, this.onTapHandler, this);
 
         this.initSkyBox();
     }
@@ -444,7 +445,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public destroy() {
-        this.world.emitter.off("Tap", this.onTapHandler, this);
+        this.world.emitter.off(ClickEvent.Tap, this.onTapHandler, this);
         if (this.connection) this.connection.removePacketListener(this);
         this.clear();
         Logger.getInstance().log("#BlackSceneFromBackground; remove scene: ", PlayScene.name);

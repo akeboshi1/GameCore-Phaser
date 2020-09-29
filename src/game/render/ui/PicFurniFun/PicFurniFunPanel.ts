@@ -66,7 +66,7 @@ export class PicFurniFunPanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.confirmBtn.on("Tap", this.onConfirmBtnClick, this);
+        this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnClick, this);
         this.closeBtn.on("pointerup", this.OnClosePanel, this);
     }
 

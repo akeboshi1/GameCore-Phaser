@@ -95,7 +95,7 @@ export class DialogPanel extends BasePanel {
 
         const closeBtn = new Button(this.scene, this.key, "close_1", "close_1");
         closeBtn.setPosition(width * 0.5 - 30 * this.dpr, -cheight * 0.5 + 10 * this.dpr);
-        closeBtn.on("Tap", this.onCloseHandler, this);
+        closeBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
         closeBtn.visible = false;
         this.content.add([this.bg, this.npcIcon, whiteGraphic, this.text, nameBg, this.npcName, closeBtn]);
         this.bg.setInteractive();

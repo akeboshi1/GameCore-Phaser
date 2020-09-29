@@ -1,14 +1,14 @@
-import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
 import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../Components/BasePanel";
-import { Coin } from "../../game/core/utils/resUtil";
-import { i18n } from "../../game/core/utils/i18n";
-import { Handler } from "../../../utils/Handler/Handler";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { PicPropFunConfig } from "./PicPropFunConfig";
 import { DetailDisplay } from "../Market/DetailDisplay";
-import { NineSliceButton, GameSlider, NineSlicePatch } from "apowophaserui";
+import { NineSliceButton, GameSlider, NineSlicePatch, ClickEvent } from "apowophaserui";
+import { Handler } from "../../../../utils/Handler";
+import { WorldService } from "../../world.service";
+import { Font } from "../../../../utils/font";
+import { i18n } from "../../../../utils/i18n";
+import { Coin } from "../../../../utils/resUtil";
 export class PicPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private key: string = "picpropfunpanel";
@@ -67,15 +67,15 @@ export class PicPropFunPanel extends BasePanel {
 
     addListen() {
         if (!this.mInitialized) return;
-        this.cancelBtn.on("Tap", this.onCancelBtnHandler, this);
-        this.confirmBtn.on("Tap", this.onConfirmBtnHandler, this);
+        this.cancelBtn.on(ClickEvent.Tap, this.onCancelBtnHandler, this);
+        this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnHandler, this);
 
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        this.cancelBtn.off("Tap", this.onCancelBtnHandler, this);
-        this.confirmBtn.off("Tap", this.onConfirmBtnHandler, this);
+        this.cancelBtn.off(ClickEvent.Tap, this.onCancelBtnHandler, this);
+        this.confirmBtn.off(ClickEvent.Tap, this.onConfirmBtnHandler, this);
     }
 
     preload() {

@@ -79,13 +79,13 @@ export class MineCarPanel extends BasePanel {
     if (!this.mInitialized) return;
     this.removeListen();
     this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
-    this.mDiscardBtn.on("Tap", this.enterDiscardMode, this);
+    this.mDiscardBtn.on(ClickEvent.Tap, this.enterDiscardMode, this);
   }
 
   removeListen() {
     if (!this.mInitialized) return;
     this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
-    this.mDiscardBtn.off("Tap", this.enterDiscardMode, this);
+    this.mDiscardBtn.off(ClickEvent.Tap, this.enterDiscardMode, this);
   }
 
   setProp(items: op_client.ICountablePackageItem[], limit: number) {
