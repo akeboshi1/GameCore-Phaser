@@ -226,21 +226,12 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             this.onError();
         } else {
             if (this.mReconnect > 2) {
-                const loginAccountScene: Phaser.Scene = this.mGame.scene.getScene(LoginAccountScene.name);
-                if (!loginAccountScene) {
-                    this.mGame.scene.add(LoginAccountScene.name, LoginAccountScene, false, {
-                        world: this, callBack: () => {
-                            this.clearGame().then(() => {
-                                this.initWorld(this.mConfig, this.mCallBack);
-                            });
-                        }
-                    });
-                }
-                this.mGame.scene.start(LoginAccountScene.name);
+                this.addLoginAddScene();
                 // todo reconnect Scene
             } else {
                 this.mReconnect++;
                 this.clearGame().then(() => {
+                    Logger.getInstance().log("clearGame", this.mReconnect);
                     this.initWorld(this.mConfig, this.mCallBack);
                 });
             }
@@ -253,9 +244,11 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Logger.getInstance().log("app connectFail=====reconnect");
         if (!this.game || this.isPause) return;
         if (this.mConfig.connectFail) {
+            Logger.getInstance().log("app connectfail");
             this.onError();
         } else {
             this.clearGame().then(() => {
+                Logger.getInstance().log("clearGame");
                 this.initWorld(this.mConfig, this.mCallBack);
             });
         }
@@ -264,14 +257,34 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
     onError(reason?: SocketConnectionError): void {
         this.gameState = GameState.SOCKET_ERROR;
         Logger.getInstance().log("socket error", this.mConnection.isConnect);
+        if (this.mReconnect > 2) {
+            this.addLoginAddScene();
+            return;
+        }
         if (!this.mConnection.isConnect) {
             if (this.mConfig.connectFail) {
                 Logger.getInstance().log("app connectFail");
                 return this.mConfig.connectFail();
             } else {
+                Logger.getInstance().log("reconnect");
                 this.reconnect();
             }
         }
+    }
+
+    addLoginAddScene() {
+        if (this.clock) this.clock.destroy();
+        const loginAccountScene: Phaser.Scene = this.mGame.scene.getScene(LoginAccountScene.name);
+        if (!loginAccountScene) {
+            this.mGame.scene.add(LoginAccountScene.name, LoginAccountScene, false, {
+                world: this, callBack: () => {
+                    this.clearGame().then(() => {
+                        this.initWorld(this.mConfig, this.mCallBack);
+                    });
+                }
+            });
+        }
+        this.mGame.scene.start(LoginAccountScene.name);
     }
 
     onClientErrorHandler(packet: PBpacket): void {
