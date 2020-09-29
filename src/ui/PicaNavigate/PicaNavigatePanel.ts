@@ -158,7 +158,7 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowMapHandler() {
-    // this.emit("showPanel", "PicaRoomList");
+    this.emit("showPanel", "PicaRoomList");
     // this.emit("showPanel", "PicPartyList");
   }
 
@@ -172,7 +172,7 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowFamilyHandler() {
-    this.emit("showPanel", "PicElevator");
+    this.emit("showPanel", "PicOrder");
   }
   private onShowGoHomeHandler() {
     this.emit("goHome");
