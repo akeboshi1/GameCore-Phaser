@@ -1,9 +1,10 @@
 import { ILayerManager } from "../layer.manager";
 import { WorldService } from "../../game/world.service";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client, op_pkt_def, op_virtual_world } from "pixelpai_proto";
 import { PicElevatorPanel } from "./PicElevatorPanel";
 import { PicElevator } from "./PicElevator";
 import { BaseMediator } from "apowophaserui";
+import { PBpacket } from "net-socket-packet";
 export class PicElevatorMediator extends BaseMediator {
     protected mView: PicElevatorPanel;
     private scene: Phaser.Scene;
@@ -23,6 +24,7 @@ export class PicElevatorMediator extends BaseMediator {
         }
         if (!this.mView) {
             this.mView = new PicElevatorPanel(this.scene, this.world);
+            this.mView.on("queryui", this.onTargetUIHandler, this);
             this.mView.on("hide", this.onHideView, this);
         }
         if (!this.picElevator) {
@@ -47,7 +49,12 @@ export class PicElevatorMediator extends BaseMediator {
             this.mView = undefined;
         }
     }
-
+    private onTargetUIHandler(uiId, componentId) {
+        if (!this.world) {
+            return;
+        }
+        this.picElevator.query_TARGET_UI(uiId, componentId);
+    }
     private onHideView() {
         this.destroy();
     }
