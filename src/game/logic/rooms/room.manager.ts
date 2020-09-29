@@ -65,12 +65,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         });
     }
 
-    public resize(width: number, height: number) {
-        this.mRooms.forEach((room: Room) => {
-            if (room) room.resize(width, height);
-        });
-    }
-
     public destroy() {
         this.removePackListener();
         this.mCurRoom = null;

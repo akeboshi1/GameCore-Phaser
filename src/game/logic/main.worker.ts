@@ -107,14 +107,6 @@ export class MainPeer extends RPCPeer {
         this.render.clearGame();
     }
 
-    public roomResume() {
-        this.render.roomResume();
-    }
-
-    public roomPause() {
-        this.render.roomPause();
-    }
-
     public showLoading() {
         this.render.showLoading();
     }
@@ -153,10 +145,12 @@ export class MainPeer extends RPCPeer {
     @Export()
     public focus() {
         this.socket.pause = false;
+        // todo manager resume
     }
     @Export()
     public blur() {
         this.socket.pause = true;
+        // todo manager pause
     }
     /**
      * 初始化world中的各个管理器,并添加socket事件监听
@@ -211,6 +205,10 @@ export class MainPeer extends RPCPeer {
     @Export()
     public clearClock() {
         this.world.clearClock();
+    }
+    @Export()
+    public requestCurTime() {
+        this.render.getCurTime(null, this.world.clock.unixTime);
     }
     // ==== todo
     public terminate() {

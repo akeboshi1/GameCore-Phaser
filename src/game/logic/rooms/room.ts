@@ -149,11 +149,11 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
     public startLoad() { }
 
     public pause() {
-        this.mWorld.roomPause();
+        this.mWorld.roomPause(this.mID);
     }
 
     public resume() {
-        this.mWorld.roomResume();
+        this.mWorld.roomResume(this.mID);
     }
 
     public addActor(data: IActor): void {

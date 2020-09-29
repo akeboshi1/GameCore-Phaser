@@ -3,29 +3,19 @@ import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.manager";
 import { LayerManager } from "./layer/layer.manager";
 import { TerrainManager } from "./terrain/terrain.manager";
-import { ConnectionService } from "../../lib/net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { IPosition45Obj, Position45 } from "../game/core/utils/position45";
 import { ICameraService, CamerasManager } from "./cameras/cameras.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { WorldService } from "../game/world.service";
 import { PlayScene } from "../scenes/play";
 import { ElementDisplay } from "./display/element.display";
-import { ViewblockManager, ViewblockService } from "./cameras/viewblock.manager";
-import { Pos } from "../game/core/utils/pos";
 import { LoadingScene } from "../scenes/loading";
-import { ClockReadyListener } from "./clock";
 import IActor = op_client.IActor;
 import { Element, IElement } from "./element/element";
-import { IBlockObject } from "./cameras/block.object";
-import { Size } from "../game/core/utils/size";
-import { MessageType } from "../const/MessageType";
 import { DisplayObject } from "./display/display.object";
 import { ReferenceArea } from "./editor/reference.area";
 import { FallEffectContainer } from "./fall.effect/fall.effect.container";
 import { FallEffect } from "./fall.effect/fall.effect";
 import { IPoint } from "game-capsule";
-import { Logger } from "../game/core/utils/log";
 import { WallManager } from "./wall/wall.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { GroupManager } from "./group/GroupManager";
@@ -34,6 +24,18 @@ import { IScenery } from "./sky.box/scenery";
 import { State } from "./state/state.group";
 import { EffectManager } from "./effect/effect.manager";
 import { ClickEvent } from "apowophaserui";
+import { WorldService } from "../world.service";
+import { IPosition45Obj } from "../../../utils/iposition45";
+import { ViewblockService } from "./cameras/viewblock.service";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { ClockReadyListener } from "../../logic/clock";
+import { Pos } from "../../../utils/pos";
+import { IBlockObject } from "./cameras/iblock.object";
+import { Size } from "../../../utils/size";
+import { ViewblockManager } from "./cameras/viewblock.manager";
+import { Logger } from "../../../utils/log";
+import { Position45 } from "../../../utils/position45";
+import { MessageType } from "../../../const/MessageType";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -128,7 +130,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     constructor(protected manager: IRoomManager) {
         super();
         this.mWorld = this.manager.world;
-        this.moveStyle = this.mWorld.moveStyle;
+        this.moveStyle = this.mWorld.render.moveStyle;
         this.mScaleRatio = this.mWorld.scaleRatio;
         if (this.mWorld) {
             if (this.connection) {
@@ -251,13 +253,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         Logger.getInstance().log(`#BlackSceneFromBackground; room.pause(); mScene:${this.mScene}`);
         if (this.mScene) this.mScene.scene.pause();
         if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = false;
+        this.mWorld.render.onBlur();
     }
 
     public resume(name: string) {
         Logger.getInstance().log(`#BlackSceneFromBackground; room.resume(); name:${name}; mScene:${this.mScene}`);
         if (this.mScene) this.mScene.scene.resume(name);
         if (this.mWorld && this.mWorld.inputManager) this.mWorld.inputManager.enable = true;
-        // this.mClock.sync(-1);
+        this.mWorld.render.onFocus();
     }
 
     public addActor(data: IActor): void {
@@ -361,7 +364,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public update(time: number, delta: number) {
-        this.updateClock(time, delta);
         this.mBlocks.update(time, delta);
         if (this.layerManager) this.layerManager.update(time, delta);
         if (this.elementManager) this.elementManager.update(time, delta);
@@ -377,13 +379,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public updateClock(time: number, delta: number) {
-        // 客户端自己通过delta来更新游戏时间戳
-        if (this.mWorld.clock) this.mWorld.clock.update(time, delta);
-    }
-
     public now(): number {
-        return this.mWorld.clock.unixTime;
+        return this.mWorld.render.curTime;
     }
 
     public getMaxScene() {

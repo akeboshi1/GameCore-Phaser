@@ -175,12 +175,12 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
 
     }
 
-    public roomResume() {
-        this.mainPeer.roomResume();
+    public roomResume(roomID: number) {
+        this.mainPeer.roomResume(roomID);
     }
 
-    public roomPause() {
-        this.mainPeer.roomPause();
+    public roomPause(roomID: number) {
+        this.mainPeer.roomPause(roomID);
     }
 
     onClockReady(): void {
@@ -213,6 +213,10 @@ export class LogicWorld extends PacketHandler implements IConnectListener, Clock
 
     get connection(): ConnectionService {
         return this.connect;
+    }
+
+    get clock(): Clock {
+        return this.mClock;
     }
 
     private onGotoAnotherGame(packet: PBpacket) {

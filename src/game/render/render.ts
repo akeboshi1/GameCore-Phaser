@@ -5,11 +5,21 @@ import { World } from "./world";
 import { ServerAddress } from "../../../lib/net/address";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
-    public moveStyle: number = 0;
+    private _moveStyle: number = 0;
+    private _curTime: number;
     constructor(private mWorld: World) {
         super("render");
         this.linkTo(MAIN_WORKER, "../game/main.worker");
     }
+
+    get curTime(): number {
+        return this._curTime;
+    }
+
+    get moveStyle(): number {
+        return this._moveStyle;
+    }
+
     public initGameConfig(config: any) {
         this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
     }
@@ -64,6 +74,10 @@ export class Render extends RPCPeer {
         this.remote[MAIN_WORKER].MainPeer.clearGameComplete();
     }
 
+    public requestCurTime() {
+        this.remote[MAIN_WORKER].MainPeer.requestCurTime();
+    }
+
     @Export()
     public onConnected() {
         this.isConnect = true;
@@ -101,7 +115,7 @@ export class Render extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.num])
     public setMoveStyle(moveStyle: number) {
-        this.moveStyle = moveStyle;
+        this._moveStyle = moveStyle;
     }
 
     @Export()
@@ -114,14 +128,19 @@ export class Render extends RPCPeer {
         this.mWorld.onClockReady();
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public resume(name: string) {
-        this.mWorld.resume(name);
+    @Export([webworker_rpc.ParamType.number])
+    public roomPause(roomID: number) {
+
     }
 
-    @Export()
-    public pause() {
-        this.mWorld.pause();
+    @Export([webworker_rpc.ParamType.number])
+    public roomResume(roomID: number) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.number])
+    public getCurTime(curTime: number) {
+        this._curTime = curTime;
     }
 
     @Export()

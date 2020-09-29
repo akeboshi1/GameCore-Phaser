@@ -11,6 +11,7 @@ import { IRoomService } from "./rooms/room";
 
 export interface WorldService {
     orientation: number;
+    render: Render;
     readonly game: Phaser.Game;
     readonly elementStorage: IElementStorage;
     readonly uiManager: UiManager;
@@ -22,7 +23,6 @@ export interface WorldService {
     readonly uiRatio: number;
     readonly account: Account;
     readonly emitter: Phaser.Events.EventEmitter;
-    render(): Render;
     reconnect();
     changeScene();
     getSize(): Size;

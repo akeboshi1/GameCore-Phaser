@@ -149,7 +149,7 @@ export class World extends PacketHandler implements WorldService, GameMain {
         initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
         document.body.addEventListener("focusout", this.focusoutFunc); // 软键盘收起的事件处理
     }
-    public render(): Render {
+    get render(): Render {
         return this._peer;
     }
     // 软键盘弹出的事件处理
@@ -328,14 +328,6 @@ export class World extends PacketHandler implements WorldService, GameMain {
 
     public playSound(config: ISoundConfig) {
         this.mSoundManager.play(config);
-    }
-
-    public resume(name: string) {
-        this.mRoomMamager.resume(name);
-    }
-
-    public pause() {
-        this.mRoomMamager.pause();
     }
 
     get uiScale(): number {
