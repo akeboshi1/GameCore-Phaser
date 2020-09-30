@@ -1,5 +1,5 @@
 import { Handler } from "./Handler";
-import { IDispose } from "../game/render/rooms/action/IDispose";
+import { IDispose } from "../render/rooms/action/IDispose";
 
 export class EventDispatcher implements IDispose {
 

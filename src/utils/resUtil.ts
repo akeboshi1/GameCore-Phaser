@@ -1,6 +1,8 @@
-import { HTTP_REGEX } from "../const/constants";
 import { op_def } from "pixelpai_proto";
 import { i18n } from "./i18n";
+
+export const PI_EXTENSION_REGEX = /\.pi$/i;
+export const HTTP_REGEX = /^(http|https):/i;
 export class Url {
     static OSD_PATH = "";
     static RES_PATH: string = "";
@@ -268,5 +270,17 @@ export class Coin {
             // res = "";
         }
         return res;
+    }
+}
+
+export namespace UI {
+    export class TuDing18 {
+        static getName(): string {
+            return "ui_moneyIcon_tuding_18_png";
+        }
+
+        static getPNG(): string {
+            return Url.getRes("ui/moneyIcon/tuding_18.png");
+        }
     }
 }
