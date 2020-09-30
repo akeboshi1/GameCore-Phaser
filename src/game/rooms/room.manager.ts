@@ -1,12 +1,12 @@
 import { Room, ILogicRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { LogicWorld } from "../world";
+import { World } from "../world";
 import { DecorateRoom } from "./decorate.room";
 import { EditorRoom } from "./editor.room";
 import { ConnectionService } from "../../../lib/net/connection.service";
 export interface IRoomManager {
-    readonly world: LogicWorld | undefined;
+    readonly world: World | undefined;
 
     readonly currentRoom: ILogicRoomService | undefined;
 
@@ -17,11 +17,11 @@ export interface IRoomManager {
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {
-    protected mWorld: LogicWorld;
+    protected mWorld: World;
     private mRooms: ILogicRoomService[] = [];
     private mCurRoom: ILogicRoomService;
 
-    constructor(world: LogicWorld) {
+    constructor(world: World) {
         super();
         this.mWorld = world;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
@@ -149,7 +149,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    get world(): LogicWorld {
+    get world(): World {
         return this.mWorld;
     }
 

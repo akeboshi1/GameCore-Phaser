@@ -3,7 +3,6 @@ import { PBpacket, PacketHandler, Buffer } from "net-socket-packet";
 import { MainPeer } from "./game";
 import { HttpService } from "./httpClock/http.service";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
-import { HttpClock } from "./http.clock";
 import { RoomManager } from "./rooms/room.manager";
 import { ILogicRoomService } from "./rooms/room";
 import { IPoint, Lite } from "game-capsule";
@@ -12,6 +11,7 @@ import { IConnectListener } from "../../lib/net/socket";
 import { Logger } from "../utils/log";
 import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
+import { HttpClock } from "./httpClock/http.clock";
 
 interface ISize {
     width: number;

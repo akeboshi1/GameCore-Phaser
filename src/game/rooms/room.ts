@@ -1,6 +1,6 @@
 import { op_client, op_def } from "pixelpai_proto";
 import IActor = op_client.IActor;
-import { LogicWorld } from "../world";
+import { World } from "../world";
 import { PacketHandler } from "net-socket-packet";
 import { IRoomManager } from "./room.manager";
 import { ClockReadyListener } from "../clock/clock";
@@ -29,7 +29,7 @@ export interface ILogicRoomService {
     readonly effectManager: EffectManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
-    readonly world: LogicWorld;
+    readonly world: World;
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
 
@@ -75,7 +75,7 @@ export interface ILogicRoomService {
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements ILogicRoomService, SpriteAddCompletedListener, ClockReadyListener {
-    protected mWorld: LogicWorld;
+    protected mWorld: World;
     // protected mMap: Map;
     protected mID: number;
     protected mTerrainManager: TerrainManager;
@@ -297,6 +297,7 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
             this.mActorData = null;
         }
         if (this.mStateMap) this.mStateMap = null;
+        this.
         if (this.mCameraService) this.mCameraService.destroy();
         if (this.mEffectManager) this.mEffectManager.destroy();
     }
@@ -405,7 +406,7 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
         return this.mBlocks;
     }
 
-    get world(): LogicWorld | undefined {
+    get world(): World | undefined {
         return this.mWorld;
     }
 
