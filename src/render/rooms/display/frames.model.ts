@@ -2,8 +2,8 @@ import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_pro
 import * as sha1 from "simple-sha1";
 import { Sprite } from "../element/sprite";
 import { Direction } from "../element/element";
-import { IFramesModel, IDisplay } from "../../../game/rooms/display/iframe.model";
-import { IAnimationData, AnimationData } from "../../../game/rooms/display/ianimation";
+import { IFramesModel, IDisplay } from "../../../game/room/display/iframe.model";
+import { IAnimationData, AnimationData } from "../../../game/room/display/ianimation";
 import Helpers from "../../../utils/helpers";
 import { Logger } from "../../../utils/log";
 

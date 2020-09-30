@@ -6,8 +6,8 @@ import { IRoomService } from "../room";
 import { ElementDisplay } from "./element.display";
 import { IDragonbonesModel } from "./dragonbones.model";
 import { IElement } from "../element/element";
-import { AnimationData } from "../../../game/rooms/display/ianimation";
-import { IFramesModel } from "../../../game/rooms/display/iframe.model";
+import { AnimationData } from "../../../game/room/display/ianimation";
+import { IFramesModel } from "../../../game/room/display/iframe.model";
 import { Url } from "../../../utils/resUtil";
 
 export enum DisplayField {

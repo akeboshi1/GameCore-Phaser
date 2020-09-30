@@ -4,8 +4,8 @@ import { IDragonbonesModel } from "./dragonbones.model";
 import { op_def } from "pixelpai_proto";
 import { IElement } from "../element/element";
 import { Direction } from "../wall/wall";
-import { IFramesModel } from "../../../game/rooms/display/iframe.model";
-import { AnimationData } from "../../../game/rooms/display/ianimation";
+import { IFramesModel } from "../../../game/room/display/iframe.model";
+import { AnimationData } from "../../../game/room/display/ianimation";
 
 export class WallDisplay extends Phaser.GameObjects.Container implements ElementDisplay {
   protected readonly roomService: IRoomService;

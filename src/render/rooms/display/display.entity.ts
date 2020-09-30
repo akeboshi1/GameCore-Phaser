@@ -1,4 +1,4 @@
-import { IFramesModel } from "../../../game/rooms/display/iframe.model";
+import { IFramesModel } from "../../../game/room/display/iframe.model";
 
 export class DisplayEntity {
     public data: IFramesModel;

@@ -2,8 +2,8 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { ILogicRoomService, Room } from "../room";
 import NodeType = op_def.NodeType;
-import { LogicPos } from "../../../game/core/utils/logic.pos";
 import { IElementManager } from "../element/ielement.manager";
+import { Player } from "./player";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

@@ -3,8 +3,8 @@ import { PBpacket, PacketHandler, Buffer } from "net-socket-packet";
 import { MainPeer } from "./game";
 import { HttpService } from "./httpClock/http.service";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
-import { RoomManager } from "./rooms/room.manager";
-import { ILogicRoomService } from "./rooms/room";
+import { RoomManager } from "./room/room.manager";
+import { IRoomService } from "./room/room";
 import { IPoint, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
@@ -115,7 +115,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
     }
     public onDisConnected() {
         Logger.getInstance().log("app connectFail=====");
-        if (this.isPause) return;
+        if (this.connect.pause) return;
         if (this.mConfig.connectFail) {
             this.onError();
         } else {
@@ -174,7 +174,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         }
         this.mClock = new Clock(this.connect, this.mainPeer, this);
     }
-    public leaveScene(room: ILogicRoomService) {
+    public leaveScene(room: IRoomService) {
 
     }
 
@@ -184,6 +184,10 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
 
     public roomPause(roomID: number) {
         this.mainPeer.roomPause(roomID);
+    }
+
+    public setCameraBounds(x: number, y: number, width: number, height: number) {
+        this.mainPeer.setCameraBounds(x, y, width, height);
     }
 
     onClockReady(): void {
@@ -222,6 +226,10 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         return this.mClock;
     }
 
+    get httpClock(): HttpClock {
+        return this.mHttpClock;
+    }
+
     private onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
         this.mainPeer.createAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc.x, content.loc.y, content.loc.z);
@@ -241,7 +249,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
-            this.mainPeer.createGame(keyBoardPacket);
+            this.mainPeer.createGame(keyBoardPacket.Serialization());
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);

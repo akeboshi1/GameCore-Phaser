@@ -1,4 +1,4 @@
-import { Room, ILogicRoomService } from "./room";
+import { Room, IRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { World } from "../world";
@@ -8,7 +8,7 @@ import { ConnectionService } from "../../../lib/net/connection.service";
 export interface IRoomManager {
     readonly world: World | undefined;
 
-    readonly currentRoom: ILogicRoomService | undefined;
+    readonly currentRoom: IRoomService | undefined;
 
     readonly connection: ConnectionService | undefined;
 
@@ -18,8 +18,8 @@ export interface IRoomManager {
 
 export class RoomManager extends PacketHandler implements IRoomManager {
     protected mWorld: World;
-    private mRooms: ILogicRoomService[] = [];
-    private mCurRoom: ILogicRoomService;
+    private mRooms: IRoomService[] = [];
+    private mCurRoom: IRoomService;
 
     constructor(world: World) {
         super();
@@ -41,7 +41,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    public getRoom(id: number): ILogicRoomService | undefined {
+    public getRoom(id: number): IRoomService | undefined {
         return this.mRooms.find((room: Room) => {
             return room.id === id;
         });
@@ -121,14 +121,14 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.push(room);
     }
 
-    private leaveScene(room: ILogicRoomService) {
+    private leaveScene(room: IRoomService) {
         if (!room) return;
         this.mWorld.leaveScene(room);
         // return new Promise((resolve, reject) => {
         //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
         //     if (loading) {
         //         loading.show().then(() => {
-        //             this.mRooms = this.mRooms.filter((r: ILogicRoomService) => r.id !== room.id);
+        //             this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
         //             room.destroy();
         //             resolve();
         //         });

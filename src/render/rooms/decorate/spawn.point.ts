@@ -2,8 +2,8 @@ import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_pro
 import { IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
 import { Animation } from "../display/animation";
 import { ISprite } from "../element/sprite";
-import { AnimationData } from "../../../game/rooms/display/ianimation";
-import { IFramesModel } from "../../../game/rooms/display/iframe.model";
+import { AnimationData } from "../../../game/room/display/ianimation";
+import { IFramesModel } from "../../../game/room/display/iframe.model";
 import { Pos } from "../../../utils/pos";
 import { AnimationQueue } from "../element/element";
 import { FramesModel } from "../display/frames.model";

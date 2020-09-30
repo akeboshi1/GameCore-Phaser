@@ -5,7 +5,7 @@ import HeartBeatWorker from "worker-loader?filename=[hash][name].js!../game/hear
 import * as protos from "pixelpai_proto";
 import { World } from "./world";
 import { GameSocket, ConnListener, Connection } from "./net/connection";
-import { RoomManager } from "./rooms/room.manager";
+import { RoomManager } from "./room/room.manager";
 import { ServerAddress } from "../../lib/net/address";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -62,7 +62,7 @@ export class MainPeer extends RPCPeer {
      * @param sceneID
      */
     public loadSceneConfig(sceneID: number) {
-        this.render.loadSceneConfig(sceneID);
+        this.render.loadSceneConfig(null, sceneID);
     }
 
     public connectFail() {
@@ -102,7 +102,28 @@ export class MainPeer extends RPCPeer {
     }
 
     public clearGame() {
+        //  if (this.mCameraService) this.mCameraService.destroy();
         this.render.clearGame();
+    }
+
+    public roomResume(roomID: number) {
+        this.render.roomResume(null, roomID);
+    }
+
+    public roomPause(roomID: number) {
+        this.render.roomPause(null, roomID);
+    }
+
+    public setCameraBounds(x: number, y: number, width: number, height: number) {
+        this.render.setCameraBounds(null, x, y, width, height);
+    }
+
+    public destroy() {
+        // this.world.emitter.off(ClickEvent.Tap, this.onTapHandler, this);
+        // this.mWorld.game.scene.remove(PlayScene.name);
+        // this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
+        // Logger.getInstance().log("#BlackSceneFromBackground; remove scene: ", PlayScene.name);
+        this.render.destroy();
     }
 
     public showLoading() {

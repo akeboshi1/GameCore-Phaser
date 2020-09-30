@@ -20,7 +20,7 @@ export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
 
-export interface ILogicRoomService {
+export interface IRoomService {
     readonly id: number;
     readonly terrainManager: TerrainManager;
     readonly elementManager: ElementManager;
@@ -74,7 +74,7 @@ export interface ILogicRoomService {
 
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
-export class Room extends PacketHandler implements ILogicRoomService, SpriteAddCompletedListener, ClockReadyListener {
+export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     protected mWorld: World;
     // protected mMap: Map;
     protected mID: number;
@@ -297,18 +297,14 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
             this.mActorData = null;
         }
         if (this.mStateMap) this.mStateMap = null;
-        this.
-        if (this.mCameraService) this.mCameraService.destroy();
+        this.mWorld.peer.clearGame();
         if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
     public destroy() {
-        this.world.emitter.off(ClickEvent.Tap, this.onTapHandler, this);
+        this.mWorld.peer.destroy();
         if (this.connection) this.connection.removePacketListener(this);
         this.clear();
-        Logger.getInstance().log("#BlackSceneFromBackground; remove scene: ", PlayScene.name);
-        this.mWorld.game.scene.remove(PlayScene.name);
-        this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         // if (this.mScene) {
         //   this.mScene = null;
         // }
@@ -337,23 +333,21 @@ export class Room extends PacketHandler implements ILogicRoomService, SpriteAddC
                 this.mSkyboxManager.setState(state);
                 break;
             case "setCameraBounds":
-                if (this.mCameraService) {
-                    const bounds = state.packet;
-                    if (!bounds || !bounds.width || !bounds.height) {
-                        Logger.getInstance().log("setCameraBounds error", bounds);
-                        return;
-                    }
-                    let { x, y, width, height } = bounds;
-                    if (x === null || y === null) {
-                        x = (this.mSize.sceneWidth - width) * 0.5;
-                        y = (this.mSize.sceneHeight - height) * 0.5;
-                    }
-                    x *= this.mScaleRatio;
-                    y *= this.mScaleRatio;
-                    width *= this.mScaleRatio;
-                    height *= this.mScaleRatio;
-                    this.mCameraService.setBounds(x, y, width, height);
+                const bounds = state.packet;
+                if (!bounds || !bounds.width || !bounds.height) {
+                    Logger.getInstance().log("setCameraBounds error", bounds);
+                    return;
                 }
+                let { x, y, width, height } = bounds;
+                if (x === null || y === null) {
+                    x = (this.mSize.sceneWidth - width) * 0.5;
+                    y = (this.mSize.sceneHeight - height) * 0.5;
+                }
+                x *= this.mScaleRatio;
+                y *= this.mScaleRatio;
+                width *= this.mScaleRatio;
+                height *= this.mScaleRatio;
+                this.mWorld.setCameraBounds(x, y, width, height);
                 break;
         }
     }

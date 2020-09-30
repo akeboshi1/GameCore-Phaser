@@ -4,7 +4,7 @@ import { FramesModel} from "../display/frames.model";
 import { Animation } from "../display/animation";
 import NodeType = op_def.NodeType;
 import { Direction } from "./element";
-import { AnimationQueue } from "../../../game/rooms/display/ianimation";
+import { AnimationQueue } from "../../../game/room/display/ianimation";
 import { Pos } from "../../../utils/pos";
 
 export interface ISprite {

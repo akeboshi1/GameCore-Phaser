@@ -138,6 +138,11 @@ export class Render extends RPCPeer {
 
     }
 
+    @Export([webworker_rpc.ParamType.number, webworker_rpc.ParamType.number, webworker_rpc.ParamType.number, webworker_rpc.ParamType.number])
+    public setCameraBounds(x: number, y: number, width: number, height: number) {
+
+    }
+
     @Export([webworker_rpc.ParamType.number])
     public getCurTime(curTime: number) {
         this._curTime = curTime;
