@@ -4,6 +4,7 @@ import { AvatarNode, IImage } from "game-capsule";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { IAvatarSet } from "game-capsule";
 
+// 换装编辑画布
 export class AvatarEditorCanvas extends EditorCanvas {
 
     public mData: AvatarEditorConfigNode;
