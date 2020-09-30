@@ -30,6 +30,13 @@ export class ReAwardTipsPanel extends BasePanel {
     public addAward() {
     }
 
+    public destroy() {
+        super.destroy();
+        if (this.mTips) {
+            this.mTips = [];
+        }
+    }
+
     protected preload() {
         this.addImage(this.key, "reaward_tips/bg.png");
         super.preload();
@@ -43,6 +50,9 @@ export class ReAwardTipsPanel extends BasePanel {
 
     private showAward() {
         if (this.mTips.length < 1) {
+            return;
+        }
+        if (!this.scene) {
             return;
         }
         if (this.showingList.length >= 3) {
