@@ -12,6 +12,7 @@ import { Logger } from "../utils/log";
 import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
 import { HttpClock } from "./httpClock/http.clock";
+import { UiManager } from "./ui/Ui.manager";
 
 interface ISize {
     width: number;
@@ -46,6 +47,7 @@ export interface ILogiclauncherConfig {
 }
 export class World extends PacketHandler implements IConnectListener, ClockReadyListener {
     private connect: ConnectionService;
+    private mUiManager: UiManager;
     private mMoveStyle: number = -1;
     private mSize: ISize;
     private mClock: Clock;
@@ -220,6 +222,10 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
 
     get connection(): ConnectionService {
         return this.connect;
+    }
+
+    get uiManager(): UiManager {
+        return this.mUiManager;
     }
 
     get clock(): Clock {

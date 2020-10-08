@@ -4,6 +4,7 @@ import { ILogicRoomService, Room } from "../room";
 import NodeType = op_def.NodeType;
 import { IElementManager } from "../element/ielement.manager";
 import { Player } from "./player";
+import { PlayerModel } from "../../../render/rooms/player/player.model";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
