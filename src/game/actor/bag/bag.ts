@@ -45,7 +45,7 @@ export class Bag extends PacketHandler {
     }
 
     private handleAddItem(packet: PBpacket): void {
-        this.mWorld.emit(MessageType.PACKAGE_ITEM_ADD, packet);
+        this.mWorld.peer.emit(MessageType.PACKAGE_ITEM_ADD, packet);
     }
 
     private handleRemoveItem(packet: PBpacket): void {

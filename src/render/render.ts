@@ -1,8 +1,9 @@
-import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
+import { RPCPeer, Export, webworker_rpc, RemoteListener } from "webworker-rpc";
 import MainWorker from "worker-loader?filename=[hash][name].js!../game/main.worker";
 import { PBpacket } from "net-socket-packet";
 import { World } from "./world";
 import { ServerAddress } from "../../lib/net/address";
+import { MessageType } from "../messageType/MessageType";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
     private _moveStyle: number = 0;
@@ -61,6 +62,7 @@ export class Render extends RPCPeer {
         this.mainPeer.blur();
     }
 
+    @RemoteListener("mainWorker", "mainPeer",MessageType )
     public syncClock(times: number) {
         this.mainPeer.syncClock(times);
     }

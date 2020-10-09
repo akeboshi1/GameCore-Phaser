@@ -1,5 +1,6 @@
 import { LogicPos } from "../../../utils/logic.pos";
 import { ISprite } from "../display/sprite/isprite";
+import { InputEnable } from "../element/element";
 import { IRoomService } from "../room";
 import { IBlockObject } from "./iblock.object";
 
@@ -34,7 +35,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public getPosition(): LogicPos {
-        let pos: LogicPos;
+        let pos: LogicPos = new LogicPos();
         if (this.mDisplay) {
             pos = new LogicPos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
         } else {
@@ -54,15 +55,15 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public fadeIn(callback?: () => void) {
-        this.mRoomService.world.fadeIn(callback);
+        this.mRoomService.world.peer.fadeIn(this.id, this.type, callback);
     }
 
     public fadeOut(callback?: () => void) {
-        this.mRoomService.world.fadeOut(callback);
+        this.mRoomService.world.peer.fadeOut(this.id, this.type, callback);
     }
 
     public fadeAlpha(alpha: number) {
-        this.mRoomService.world.fadeAlpha(alpha);
+        this.mRoomService.world.peer.fadeAlpha(this.id, this.type, alpha);
     }
 
     public setInputEnable(val: InputEnable) {
@@ -111,7 +112,7 @@ export abstract class BlockObject implements IBlockObject {
         this.isUsed = false;
     }
 
-    protected addDisplay() {}
+    protected addDisplay() { }
 
     protected removeDisplay() {
         if (!this.mDisplay) {
@@ -155,6 +156,10 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     get id(): number {
+        return -1;
+    }
+
+    get type(): number {
         return -1;
     }
 }

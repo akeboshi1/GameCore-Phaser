@@ -24,7 +24,7 @@ export interface ISprite {
     readonly currentAnimation: AnimationData;
     readonly currentCollisionArea: number[][];
     readonly currentWalkableArea: number[][];
-    readonly currentCollisionPoint: Logicp;
+    readonly currentCollisionPoint: Phaser.Geom.Point;
     readonly hasInteractive: boolean;
     readonly attrs: op_def.IStrPair[];
     readonly animationQueue: AnimationQueue[];

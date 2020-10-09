@@ -1,3 +1,4 @@
+import { Logger } from "../../../utils/log";
 import { LogicPos } from "../../../utils/logic.pos";
 import { BlockObject } from "../camera/block.object";
 import { IDragonbonesModel } from "../display/dragonbones/idragonbones.model";
@@ -86,9 +87,9 @@ export class Element extends BlockObject implements IElement {
             return this.mElementManager.scene;
         }
     }
-    get ai(): AI {
-        return this.mAi;
-    }
+    // get ai(): AI {
+    //     return this.mAi;
+    // }
     get eleMgr(): ElementManager {
         if (this.mElementManager) {
             return this.mElementManager as ElementManager;
@@ -897,6 +898,7 @@ export class Element extends BlockObject implements IElement {
     protected removeStateHandler(state: op_def.IState) {
         switch (state.name) {
             case "effect":
+                this.world.removestate(state)
                 // remove
                 if (this.mDisplay) {
                     this.mDisplay.removeEffect(DisplayField.Effect);

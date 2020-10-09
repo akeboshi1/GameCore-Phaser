@@ -118,25 +118,16 @@ export class MainPeer extends RPCPeer {
         this.render.setCameraBounds(x, y, width, height);
     }
 
-    /**
-     * 主进程获取socket信息后发送消息给渲染端，并传送socket信息 （大部分socket数据都照此方法派送）
-     * @param messageType
-     * @param pb
-     */
-    public emit(messageType: string, pb?: PBpacket) {
-        this.render.emitter(messageType, pb);
+    public fadeIn(id: number, type: number, callback?: Function) {
+        this.render.fadeIn(id, type);
     }
 
-    public fadeIn(callback?: Function) {
-        this.render.fadeIn();
+    public fadeOut(id: number, type: number, callback?: Function) {
+        this.render.fadeOut(id, type);
     }
 
-    public fadeOut(callback?: Function) {
-        this.render.fadeOut();
-    }
-
-    public fadeAlpha(alpha: number) {
-        this.render.fadeAlpha(alpha);
+    public fadeAlpha(id: number, type: number, alpha: number) {
+        this.render.fadeAlpha(id, type, alpha);
     }
 
     public destroy() {
