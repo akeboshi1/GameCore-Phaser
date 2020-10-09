@@ -7,9 +7,12 @@ export class Render extends RPCPeer {
     public isConnect: boolean = false;
     private _moveStyle: number = 0;
     private _curTime: number;
+    private mainWorker: any;
     constructor(private mWorld: World) {
         super("render");
-        this.linkTo(MAIN_WORKER, "../game/main.worker");
+        this.linkTo(MAIN_WORKER, "../game/main.worker").onceReady(() => {
+            this.mainWorker = this.remote[MAIN_WORKER].MainPeer;
+        });
     }
 
     get curTime(): number {
@@ -21,61 +24,61 @@ export class Render extends RPCPeer {
     }
 
     public initGameConfig(config: any) {
-        this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
+        this.mainWorker.initGameConfig(JSON.stringify(config));
     }
     public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
-        this.remote[MAIN_WORKER].MainPeer.startConnect(null, gameID, worldID, sceneID, loc);
+        this.mainWorker.startConnect(gameID, worldID, sceneID, loc);
     }
     public startConnect(gateway: ServerAddress) {
-        this.remote[MAIN_WORKER].MainPeer.startConnect(null, gateway.host, gateway.port, gateway.secure);
+        this.mainWorker.startConnect(gateway.host, gateway.port, gateway.secure);
     }
 
     public closeConnect() {
-        this.remote[MAIN_WORKER].MainPeer.closeConnect();
+        this.mainWorker.closeConnect();
     }
 
     public initWorld(desk: boolean) {
-        this.remote[MAIN_WORKER].MainPeer.initWorld(desk);
+        this.mainWorker.initWorld(desk);
     }
 
     public initGame() {
-        this.remote[MAIN_WORKER].MainPeer.initGame();
+        this.mainWorker.initGame();
     }
 
     public send(packet: PBpacket) {
-        this.remote[MAIN_WORKER].MainPeer.send(null, packet.Serialization);
+        this.mainWorker.send(packet.Serialization);
     }
 
     public terminate() {
-        this.remote[MAIN_WORKER].MainPeer.terminate();
+        this.mainWorker.terminate();
     }
 
     public onFocus() {
-        this.remote[MAIN_WORKER].MainPeer.focus();
+        this.mainWorker.focus();
     }
 
     public onBlur() {
-        this.remote[MAIN_WORKER].MainPeer.blur();
+        this.mainWorker.blur();
     }
 
     public syncClock(times: number) {
-        this.remote[MAIN_WORKER].MainPeer.syncClock(null, times);
+        this.mainWorker.syncClock(times);
     }
 
     public clearClock() {
-        this.remote[MAIN_WORKER].MainPeer.clearClock();
+        this.mainWorker.clearClock();
     }
 
     public destroyClock() {
-        this.remote[MAIN_WORKER].MainPeer.destroyClock();
+        this.mainWorker.destroyClock();
     }
 
     public clearGameComplete() {
-        this.remote[MAIN_WORKER].MainPeer.clearGameComplete();
+        this.mainWorker.clearGameComplete();
     }
 
     public requestCurTime() {
-        this.remote[MAIN_WORKER].MainPeer.requestCurTime();
+        this.mainWorker.requestCurTime();
     }
 
     @Export()
@@ -128,22 +131,22 @@ export class Render extends RPCPeer {
         this.mWorld.onClockReady();
     }
 
-    @Export([webworker_rpc.ParamType.number])
+    @Export([webworker_rpc.ParamType.num])
     public roomPause(roomID: number) {
 
     }
 
-    @Export([webworker_rpc.ParamType.number])
+    @Export([webworker_rpc.ParamType.num])
     public roomResume(roomID: number) {
 
     }
 
-    @Export([webworker_rpc.ParamType.number, webworker_rpc.ParamType.number, webworker_rpc.ParamType.number, webworker_rpc.ParamType.number])
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraBounds(x: number, y: number, width: number, height: number) {
 
     }
 
-    @Export([webworker_rpc.ParamType.number])
+    @Export([webworker_rpc.ParamType.num])
     public getCurTime(curTime: number) {
         this._curTime = curTime;
     }
