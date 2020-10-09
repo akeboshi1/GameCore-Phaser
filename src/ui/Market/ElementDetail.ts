@@ -6,21 +6,19 @@ import { DetailDisplay } from "./DetailDisplay";
 import { Font } from "../../utils/font";
 import { WorldService } from "../../game/world.service";
 import { Coin } from "../../utils/resUtil";
-import { NineSliceButton, ClickEvent } from "apowophaserui";
+import { NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
+import { UIAtlasKey } from "../ui.atals.name";
+import { PlayerProperty } from "../../rooms/data/PlayerProperty";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mWorld: WorldService;
   private mCounter: NumberCounter;
   private mBuyBtn: NineSliceButton;
   private mPriceContainer: Phaser.GameObjects.Container;
-  private mNickName: Phaser.GameObjects.Text;
-  private mDetailBubbleContainer: Phaser.GameObjects.Container;
-  private mDetailBubble: Phaser.GameObjects.Graphics;
-  private mDesText: Phaser.GameObjects.Text;
+  private mDetailBubble: DetailBubble;
   private mSelectedProp: op_client.IMarketCommodity;
   private mPriceIcon: Phaser.GameObjects.Image;
   private mPriceText: Phaser.GameObjects.Text;
-  private mSource: Phaser.GameObjects.Text;
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
   private readonly dpr: number;
@@ -52,17 +50,6 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     });
     this.mBuyBtn.setFontStyle("bold");
     this.mBuyBtn.on(String(ClickEvent.Tap), this.onBuyHandler, this);
-    this.mNickName = this.scene.make.text({
-      x: 7 * this.dpr,
-      y: 9 * this.dpr,
-      style: {
-        fontSize: 12 * this.dpr,
-        fontFamily: Font.DEFULT_FONT,
-        color: "#FFFF00",
-        align: "center"
-      }
-    });
-
     this.mPriceContainer = this.scene.make.container(undefined, false);
     this.mPriceIcon = this.scene.make.image({
       x: -78,
@@ -85,42 +72,12 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mDetailDisplay = new DetailDisplay(this.scene);
     this.mDetailDisplay.scale = this.dpr;
     this.mDetailDisplay.y = 110 * this.dpr;
-
-    const bubbleW = 110 * this.dpr;
-    const bubbleH = 96 * this.dpr;
-    this.mDetailBubble = this.scene.make.graphics(undefined, false);
-    this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
-    this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
-
-    this.mDetailBubbleContainer = this.scene.make.container(undefined, false);
-    this.mDetailBubbleContainer.setSize(bubbleW, bubbleH);
-
-    this.mDesText = this.scene.make.text({
-      x: 8 * this.dpr,
-      y: 56 * this.dpr,
-      style: {
-        color: "#32347b",
-        fontSize: 10 * this.dpr,
-        fontFamily: Font.DEFULT_FONT,
-        wordWrap: {
-          width: 90 * this.dpr,
-          useAdvancedWrap: true
-        }
-      }
-    }, false);
-
-    this.mSource = this.scene.make.text({
-      x: 8 * this.dpr,
-      y: 38 * this.dpr,
-      style: {
-        fontSize: 10 * this.dpr,
-        fontFamily: Font.DEFULT_FONT,
-      }
-    }, false);
-
-    this.add([this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubbleContainer]);
-    this.mDetailBubbleContainer.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource]);
+    this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
+    this.mDetailBubble.x = 4 * this.dpr;
+    this.mDetailBubble.y = 260 * this.dpr;
+    this.add([this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubble]);
     this.mPriceContainer.add([priceBg, this.mPriceIcon, this.mPriceText]);
+   // this.mDetailBubble.visible = false;
 
     this.addActionListener();
   }
@@ -138,13 +95,10 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter.x = counterX;
     this.mCounter.y = this.mBuyBtn.y;
 
-    this.mDetailBubbleContainer.x = 10 * this.dpr;
+    this.mDetailBubble.x = 4 * this.dpr;
     const endW = width - (width - this.mCounter.x) - this.mCounter.width / 2;
-    if (this.mDetailBubbleContainer.displayWidth + this.mDetailBubbleContainer.x + 10 * this.dpr > endW) {
-      const bubbleW = endW - 16 * this.dpr;
-      this.mDesText.setWordWrapWidth(bubbleW - 10 * this.dpr, true);
-
-      this.resizeDesBubble(bubbleW, this.mDetailBubbleContainer.height);
+    if (this.mDetailBubble.displayWidth + this.mDetailBubble.x + 10 * this.dpr > endW) {
+      this.mDetailBubble.y = this.height - this.y - this.mDetailBubble.height - 6 * this.dpr;
     }
 
     this.mPriceContainer.x = this.mCounter.x;
@@ -157,6 +111,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     const clickH = height * 0.7;
     this.setInteractive(new Phaser.Geom.Rectangle((width >> 1) + (width - clickW >> 1), height >> 1, clickW, clickH), Phaser.Geom.Rectangle.Contains);
     this.mCounter.resize();
+    this.mDetailBubble.visible = true;
   }
 
   addActionListener() {
@@ -179,20 +134,14 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
   setProp(prop: op_client.IMarketCommodity) {
     this.mSelectedProp = prop;
-    this.mNickName.setText(prop.shortName || prop.name);
-    this.mDesText.setText(prop.des);
     if (prop.price && prop.price.length > 0) {
       this.mPriceIcon.setTexture(this.key, Coin.getIcon(prop.price[0].coinType));
       this.updatePrice(prop.price[0].price.toString());
     } else {
       this.mPriceText.setText("");
     }
-    if (prop.source) {
-      this.mSource.setText(`来源： ${prop.source}`);
-    } else {
-      this.mSource.setText("");
-    }
-    this.resizeDesBubble();
+    this.mDetailBubble.setProp(prop, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
+    this.mDetailBubble.y = this.height - this.y - this.mDetailBubble.height - 6 * this.dpr;
     this.mCounter.setCounter(1);
   }
 
@@ -214,7 +163,9 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
     }
   }
-
+  private get serviceTimestamp() {
+    return Math.floor(this.mWorld.clock.unixTime / 1000);
+  }
   private updatePrice(price: string) {
     this.mPriceText.setText(price);
     this.mPriceIcon.x = this.mPriceText.x - this.mPriceText.width / 2 - 16 * this.dpr;
@@ -245,19 +196,185 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     // this.emit("popItemCard", this.mSelectedProp, this.mDetailDisplay.display);
     this.mCounter.setBlur();
   }
+}
 
-  private resizeDesBubble(w?, h?) {
-    // const bubbleW = 110 * this.dpr;
-    if (w === undefined) w = this.mDetailBubbleContainer.width;
-    const bubbleH = this.mDesText.height + 60 * this.dpr;
-    if (w === this.mDetailBubbleContainer.width && bubbleH === this.mDetailBubbleContainer.height) {
-      return;
+class DetailBubble extends Phaser.GameObjects.Container {
+  private dpr: number;
+  private timeID: any;
+  private tipsbg: NineSlicePatch;
+  private tipsText: BBCodeText;
+  private mExpires: BBCodeText;
+  // private testText: Phaser.GameObjects.Text;
+  constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
+    super(scene);
+    this.dpr = dpr;
+    const tipsWidth = 100 * dpr;
+    const tipsHeight = 96 * dpr;
+    this.setSize(tipsWidth, tipsHeight);
+    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", {
+      left: 10 * this.dpr,
+      top: 10 * this.dpr,
+      right: 10 * this.dpr,
+      bottom: 10 * this.dpr
+    }, undefined, undefined, 0);
+    this.tipsbg.setPosition(tipsWidth * 0.5, tipsHeight * 0.5);
+    this.tipsbg.alpha = 0.6;
+    this.tipsText = new BBCodeText(this.scene, 7 * dpr, -tipsHeight + 60 * this.dpr, "", {
+      color: "#333333",
+      fontSize: 13 * this.dpr,
+      fontFamily: Font.DEFULT_FONT,
+      lineSpacing: 1 * dpr
+    }).setOrigin(0);
+    this.tipsText.setWrapMode("string");
+    this.mExpires = new BBCodeText(scene, 7 * dpr, 85 * dpr, "", {
+      fontSize: 12 * this.dpr,
+      fontFamily: Font.DEFULT_FONT,
+    }).setOrigin(0);
+    this.add([this.tipsbg, this.tipsText, this.mExpires]);
+  }
+
+  setProp(prop: op_client.IMarketCommodity, servertime: number, property: PlayerProperty): this {
+    if (!prop) {
+      this.tipsText.setText(i18n.t("furni_bag.empty_backpack"));
+      this.mExpires.text = "";
+      this.resize();
+    } else {
+      this.tipsText.setWrapWidth(undefined);
+      const name = `[color=#FFFF00]${prop.shortName || prop.name}[/color]`;
+      let source = "";
+      let describle = "";
+      // let attri = "";
+      // let need = "";
+      let tips = name + "\n";
+      let maxWidth: number = 100 * this.dpr;
+      if (prop.source) {
+        source = `${i18n.t("furni_bag.source")}： ${prop.source}`;
+        tips += source + "\n";
+        this.tipsText.text = source;
+        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      }
+      if (prop.des) {
+        describle = prop.des;
+        tips += describle + "\n";
+        this.tipsText.text = describle;
+        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      }
+      // if (prop.affectValues) {
+      //   const len = prop.affectValues.length;
+      //   for (let i = 0; i < len; i++) {
+      //     const affect = prop.affectValues[i];
+      //     const proper = property.propertiesMap.get(affect.key);
+      //     attri += `${proper.name}: ${affect.value}` + (i < len - 1 ? "\n" : "");
+      //   }
+      //   if (attri.length > 0)
+      //     tips += `${i18n.t("furni_bag.properties")}:\n ${attri}`;
+      // }
+      // if (prop.requireValues) {
+      //   const len = prop.requireValues.length;
+      //   for (let i = 0; i < len; i++) {
+      //     const require = prop.requireValues[i];
+      //     const proper = property.propertiesMap.get(require.key);
+      //     need += `${proper.name}:${this.getComparTag(require.compareType)} ${require.value}` + (i < len - 1 ? "\n" : "");
+      //   }
+      //   if (need.length > 0)
+      //     tips += `${i18n.t("furni_bag.needproper")}:\n ${need}`;
+      // }
+      this.tipsText.setWrapWidth(maxWidth);
+      this.tipsText.text = tips;
+      this.width = maxWidth + 14 * this.dpr;
+      // if (prop.expiredTime > 0) {
+      //   let interval = prop.expiredTime - servertime;
+      //   const timeout = () => {
+      //     (<any>this.mExpires).visible = true;
+      //     this.mExpires.text = this.getDataFormat(interval * 1000);
+      //     if (interval > 0) {
+      //       this.timeID = setTimeout(() => {
+      //         interval -= 1;
+      //         timeout();
+      //       }, 1000);
+      //     } else {
+      //       this.timeID = undefined;
+      //     }
+      //   };
+      //   timeout();
+      // } else {
+      //   (<any>this.mExpires).visible = false;
+      //   if (this.timeID) clearTimeout(this.timeID);
+      // }
+      this.resize();
     }
-    this.mDetailBubble.clear();
-    this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
-    this.mDetailBubble.fillRoundedRect(0, 0, w, bubbleH);
+    return this;
+  }
+  private resize(w?: number, h?: number) {
+    const mixheight: number = 96 * this.dpr;
+    let height = this.tipsText.height;
+    if ((<any>this.mExpires).visible) height += this.mExpires.height + 3 * this.dpr;
+    height += 14 * this.dpr;
+    height = height < mixheight ? mixheight : height;
+    this.setSize(this.width, height);
+    this.tipsbg.resize(this.width, this.height);
+    this.tipsbg.x = this.width * 0.5;
+    this.tipsbg.y = this.height * 0.5;
+    this.tipsText.y = 7 * this.dpr;
+    this.mExpires.y = this.tipsText.y + this.tipsText.height + 3 * this.dpr;
 
-    this.mDetailBubbleContainer.setSize(w, bubbleH);
-    this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
+  }
+
+  private getDataFormat(time: number) {
+    const day = Math.floor(time / 86400000);
+    const hour = Math.floor(time / 3600000) % 24;
+    const minute = Math.floor(time / 60000) % 60;
+    const second = Math.floor(time / 1000) % 60;
+    let text = i18n.t("furni_bag.timelimit") + ":  ";
+    if (day > 0) {
+      const temptime = `${day}-${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    } else if (hour > 0 || minute > 0 || second > 0) {
+      const temptime = `${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    } else {
+      const temptime = `${i18n.t("furni_bag.expires")}`;
+      text += `[color=#FF0000]${temptime}[/color]`;
+    }
+    // else if (minute > 0) {
+    //   const temptime = `${this.stringFormat(minute)}:${this.stringFormat(second)}`;
+    //   text += `[color=#FF0000]${temptime}[/color]`;
+    // } else if (second > 0) {
+    //   const temptime = `${this.stringFormat(second)}`;
+    //   text += `[color=#FF0000]${temptime}[/color]`;
+    // }
+    //  else {
+    //   const temptime = `${i18n.t("furni_bag.expires")}`;
+    //   text += `[color=#FF0000]${temptime}[/color]`;
+    // }
+    return text;
+  }
+  private stringFormat(num: number) {
+    let str = num + "";
+    if (str.length <= 1) {
+      str = "0" + str;
+    }
+    return str;
+  }
+
+  private getComparTag(value: number) {
+    let tag = "";
+    switch (value) {
+      case 1:
+        tag = "=";
+      case 2:
+        tag = "!=";
+      case 3:
+        tag = "<=";
+      case 4:
+        tag = "<";
+      case 5:
+        tag = ">=";
+      case 6:
+        tag = ">";
+      default:
+        tag = "=";
+    }
+    return tag;
   }
 }
