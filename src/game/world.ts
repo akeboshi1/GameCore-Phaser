@@ -106,13 +106,13 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         }
     }
     public showLoading() {
-        this.mainPeer.showLoading();
+        this.mainPeer.render.showLoading();
     }
     public onConnected() {
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
-        this.mainPeer.enterVirtualWorld();
+        this.mainPeer.render.enterVirtualWorld();
         // this.login();
     }
     public onDisConnected() {
@@ -121,7 +121,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         if (this.mConfig.connectFail) {
             this.onError();
         } else {
-            this.mainPeer.clearGame();
+            this.mainPeer.render.clearGame();
         }
     }
     public onError() {
@@ -129,7 +129,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         if (!this.connect.connect) {
             if (this.mConfig.connectFail) {
                 Logger.getInstance().log("app connectFail");
-                if (this.mConfig.connectFail) return this.mainPeer.connectFail();
+                if (this.mConfig.connectFail) return this.mainPeer.render.connectFail();
             } else {
                 this.mainPeer.reconnect();
             }
@@ -146,13 +146,13 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         }
     }
     public loadSceneConfig(sceneID: number) {
-        this.mainPeer.loadSceneConfig(sceneID);
+        this.mainPeer.render.loadSceneConfig(sceneID);
     }
     public clearGameComplete() {
         this.initWorld(this.mConfig.desktop || false);
     }
     public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        this.mainPeer.addFillEffect(pos, status);
+        this.mainPeer.render.addFillEffect(pos.x, pos.y, status);
     }
     public setSize(width, height) {
         this.mSize = {
@@ -181,19 +181,19 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
     }
 
     public roomResume(roomID: number) {
-        this.mainPeer.roomResume(roomID);
+        this.mainPeer.render.roomResume(roomID);
     }
 
     public roomPause(roomID: number) {
-        this.mainPeer.roomPause(roomID);
+        this.mainPeer.render.roomPause(roomID);
     }
 
     public setCameraBounds(x: number, y: number, width: number, height: number) {
-        this.mainPeer.setCameraBounds(x, y, width, height);
+        this.mainPeer.render.setCameraBounds(x, y, width, height);
     }
 
     onClockReady(): void {
-        this.mainPeer.onClockReady();
+        this.mainPeer.render.onClockReady();
     }
 
     syncClock(times: number = 1) {
@@ -205,7 +205,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
     }
 
     set moveStyle(moveStyle: number) {
-        this.mainPeer.setMoveStyle(moveStyle);
+        this.mainPeer.render.setMoveStyle(moveStyle);
     }
 
     get moveStyle(): number {
@@ -242,7 +242,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
 
     private onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        this.mainPeer.createAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc.x, content.loc.y, content.loc.z);
+        this.mainPeer.render.createAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc.x, content.loc.y, content.loc.z);
     }
 
     private onInitVirtualWorldPlayerInit(packet: PBpacket) {
@@ -259,7 +259,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
-            this.mainPeer.createGame(keyBoardPacket.Serialization());
+            this.mainPeer.render.createGame(keyBoardPacket.Serialization());
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
@@ -275,7 +275,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
-                this.mainPeer.createGame(new Buffer(content.keyEvents));
+                this.mainPeer.render.createGame(new Buffer(content.keyEvents));
                 Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {

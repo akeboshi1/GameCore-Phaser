@@ -1,4 +1,4 @@
-import { LogicPos } from "../../../utils/logic.pos";
+import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { ISprite } from "../display/sprite/isprite";
 import { InputEnable } from "../element/element";
 import { IRoomService } from "../room";
@@ -9,6 +9,7 @@ export abstract class BlockObject implements IBlockObject {
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = true;
     protected mModel: ISprite;
+    protected mInputEnable: InputEnable;
     constructor(protected mRoomService: IRoomService) {
         this.isUsed = true;
     }
@@ -44,7 +45,7 @@ export abstract class BlockObject implements IBlockObject {
         return pos;
     }
 
-    public getPosition45(): LogicPos {
+    public getPosition45(): IPos {
         const pos = this.getPosition();
         if (!pos) return new LogicPos();
         return this.mRoomService.transformTo45(pos);
@@ -55,34 +56,33 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public fadeIn(callback?: () => void) {
-        this.mRoomService.world.peer.fadeIn(this.id, this.type, callback);
+        this.mRoomService.world.peer.render.fadeIn(this.id, this.type);
     }
 
     public fadeOut(callback?: () => void) {
-        this.mRoomService.world.peer.fadeOut(this.id, this.type, callback);
+        this.mRoomService.world.peer.render.fadeOut(this.id, this.type);
     }
 
     public fadeAlpha(alpha: number) {
-        this.mRoomService.world.peer.fadeAlpha(this.id, this.type, alpha);
+        this.mRoomService.world.peer.render.fadeAlpha(this.id, this.type, alpha);
     }
 
     public setInputEnable(val: InputEnable) {
         // if (this.mInputEnable !== val) {
         this.mInputEnable = val;
-        if (this.mDisplay) {
-            switch (val) {
-                case InputEnable.Interactive:
-                    if (this.mModel && this.mModel.hasInteractive) {
-                        this.mDisplay.setInteractive();
-                    }
-                    break;
-                case InputEnable.Enable:
-                    this.mDisplay.setInteractive();
-                    break;
-                default:
-                    this.mDisplay.disableInteractive();
-                    break;
-            }
+        switch (val) {
+            case InputEnable.Interactive:
+                if (this.mModel && this.mModel.hasInteractive) {
+                    this.mRoomService.world.peer.render.setInteractive(this.id, this.type);
+                }
+                break;
+            case InputEnable.Enable:
+                this.mRoomService.world.peer.render.setInteractive(this.id, this.type);
+                break;
+            default:
+                this.mRoomService.world.peer.render.disableInteractive(this.id, this.type);
+                break;
+
         }
         // }
     }
@@ -90,7 +90,7 @@ export abstract class BlockObject implements IBlockObject {
     public setBlockable(val: boolean): this {
         if (this.mBlockable !== val) {
             this.mBlockable = val;
-            if (this.mDisplay && this.mRoomService) {
+            if (this.mRoomService) {
                 if (val) {
                     this.mRoomService.addBlockObject(this);
                 } else {
@@ -102,10 +102,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public destroy() {
-        if (this.mDisplay) {
-            this.mDisplay.destroy();
-            this.mDisplay = null;
-        }
+        this.mRoomService.world.peer.render.displayDestroy(this.id, this.type);
     }
 
     public clear() {
@@ -115,10 +112,7 @@ export abstract class BlockObject implements IBlockObject {
     protected addDisplay() { }
 
     protected removeDisplay() {
-        if (!this.mDisplay) {
-            return;
-        }
-        this.mDisplay.removeFromParent();
+        this.mRoomService.world.peer.render.removeDisplay(this.id, this.type);
     }
 
     protected addToBlock() {

@@ -1,13 +1,13 @@
-import { LogicPos } from "../../../utils/logic.pos";
+import { IPos, LogicPos } from "../../../utils/logic.pos";
 
 export interface IBlockObject {
     readonly id: number;
 
     readonly type: number;
 
-    getPosition(): LogicPos;
+    getPosition(): IPos;
 
-    getPosition45(): LogicPos;
+    getPosition45(): IPos;
 
     setRenderable(isRenderable: boolean, delay?: number): void;
 

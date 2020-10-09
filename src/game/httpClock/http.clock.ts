@@ -77,7 +77,7 @@ export class HttpClock {
     }
 
     private showAlert(text: string, callback?: () => void) {
-        this.world.peer.showAlert(text, i18n.t("common.tips"));
+        this.world.peer.render.showAlert(text, i18n.t("common.tips"));
     }
 
     set enable(val: boolean) {
