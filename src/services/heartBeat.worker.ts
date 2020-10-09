@@ -1,4 +1,4 @@
-import { RPCPeer, RPCExecutor, Export, webworker_rpc } from "../render/node_modules/webworker-rpc";
+import { RPCPeer, RPCExecutor, Export, webworker_rpc } from "webworker-rpc";
 
 class HeartBeatPeer extends RPCPeer {
     public inited: boolean = false;
@@ -8,11 +8,11 @@ class HeartBeatPeer extends RPCPeer {
     private mainPeer;
     constructor() {
         super("hearBeatWorker");
-        (<any>this).linkTo(MAIN_WORKER, "worker-loader?filename=[hash][name].js!../game/main.worker").onReady(() => {
+        this.linkTo(MAIN_WORKER, "worker-loader?filename=[hash][name].js!../game/main.worker").onceReady(() => {
             this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
         });
 
-        this.remote[MAIN_WORKER].Connection.on("xx", new RPCExecutor("HeartBeatPeer", "startBeat"));
+        this.remote[MAIN_WORKER].Connection.on("xx", new RPCExecutor("HeartBeatPeer", "startBeat"));// TODO:使用@RemoteListener
     }
 
     @Export()

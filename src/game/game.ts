@@ -24,10 +24,10 @@ export class MainPeer extends RPCPeer {
         this.socket = new GameSocket(this, new ConnListener(this));
         this.connect = new Connection(this.socket);
         this.world.setConnect(this.connect);
-        this.linkTo(RENDER_PEER, "").onReady(() => {
+        this.linkTo(RENDER_PEER, "").onceReady(() => {
             this.render = this.remote[RENDER_PEER].Rener;
         });
-        this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onReady(() => {
+        this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onceReady(() => {
             this.heartBearPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         });
     }
@@ -79,11 +79,11 @@ export class MainPeer extends RPCPeer {
 
     public showAlert(text: string, title: string) {
         // 告诉render显示警告框
-        this.render.showAlert(null, text, title);
+        this.render.showAlert(text, title);
     }
 
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
-        this.render.createAnotherGame(null, gameId, worldId, sceneId, px, py, pz);
+        this.render.createAnotherGame(gameId, worldId, sceneId, px, py, pz);
     }
     public enterVirtualWorld() {
         this.render.enterVirtualWorld();
