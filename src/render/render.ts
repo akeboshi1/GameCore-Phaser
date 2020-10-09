@@ -7,11 +7,11 @@ export class Render extends RPCPeer {
     public isConnect: boolean = false;
     private _moveStyle: number = 0;
     private _curTime: number;
-    private mainWorker: any;
+    private mainPeer: any;
     constructor(private mWorld: World) {
         super("render");
         this.linkTo(MAIN_WORKER, "../game/main.worker").onceReady(() => {
-            this.mainWorker = this.remote[MAIN_WORKER].MainPeer;
+            this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
         });
     }
 
@@ -24,61 +24,61 @@ export class Render extends RPCPeer {
     }
 
     public initGameConfig(config: any) {
-        this.mainWorker.initGameConfig(JSON.stringify(config));
+        this.mainPeer.initGameConfig(JSON.stringify(config));
     }
     public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
-        this.mainWorker.startConnect(gameID, worldID, sceneID, loc);
+        this.mainPeer.startConnect(gameID, worldID, sceneID, loc);
     }
     public startConnect(gateway: ServerAddress) {
-        this.mainWorker.startConnect(gateway.host, gateway.port, gateway.secure);
+        this.mainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
     }
 
     public closeConnect() {
-        this.mainWorker.closeConnect();
+        this.mainPeer.closeConnect();
     }
 
     public initWorld(desk: boolean) {
-        this.mainWorker.initWorld(desk);
+        this.mainPeer.initWorld(desk);
     }
 
     public initGame() {
-        this.mainWorker.initGame();
+        this.mainPeer.initGame();
     }
 
     public send(packet: PBpacket) {
-        this.mainWorker.send(packet.Serialization);
+        this.mainPeer.send(packet.Serialization);
     }
 
     public terminate() {
-        this.mainWorker.terminate();
+        this.mainPeer.terminate();
     }
 
     public onFocus() {
-        this.mainWorker.focus();
+        this.mainPeer.focus();
     }
 
     public onBlur() {
-        this.mainWorker.blur();
+        this.mainPeer.blur();
     }
 
     public syncClock(times: number) {
-        this.mainWorker.syncClock(times);
+        this.mainPeer.syncClock(times);
     }
 
     public clearClock() {
-        this.mainWorker.clearClock();
+        this.mainPeer.clearClock();
     }
 
     public destroyClock() {
-        this.mainWorker.destroyClock();
+        this.mainPeer.destroyClock();
     }
 
     public clearGameComplete() {
-        this.mainWorker.clearGameComplete();
+        this.mainPeer.clearGameComplete();
     }
 
     public requestCurTime() {
-        this.mainWorker.requestCurTime();
+        this.mainPeer.requestCurTime();
     }
 
     @Export()
