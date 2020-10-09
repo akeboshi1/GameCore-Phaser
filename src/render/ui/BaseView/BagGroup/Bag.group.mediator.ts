@@ -3,7 +3,7 @@ import { op_gameconfig, op_client } from "pixelpai_proto";
 import { BagGroup } from "./Bag.group";
 import { UIType } from "apowophaserui";
 import { WorldService } from "../../../world.service";
-import { MessageType } from "../../../messageType/MessageType";
+import { MessageType } from "../../../../messageType/MessageType";
 import { Size } from "../../../../utils/size";
 
 /**

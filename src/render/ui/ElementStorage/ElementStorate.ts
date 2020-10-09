@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
 import { WorldService } from "../../world.service";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 
 export class ElementStorage extends PacketHandler {
   private readonly world: WorldService;

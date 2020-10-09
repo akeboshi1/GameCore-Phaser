@@ -4,7 +4,7 @@ import { Market } from "./Market";
 import { op_client, op_def } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 
 export class MarketMediator extends BaseMediator {
   protected mView: MarketPanel;

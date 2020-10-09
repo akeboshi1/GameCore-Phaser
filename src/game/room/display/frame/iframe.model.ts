@@ -1,4 +1,4 @@
-import { IAnimationData, AnimationData } from "./ianimation";
+import { IAnimationData, AnimationData } from "../animation/ianimation";
 import { op_def, op_gameconfig } from "pixelpai_proto";
 export interface IDisplay {
     texturePath: string;

@@ -33,7 +33,7 @@ import { AlertView, Buttons } from "./Components/Alert.view";
 import { BaseMediator, UIType } from "apowophaserui";
 import { ConnectionService } from "../../../lib/net/connection.service";
 import { WorldService } from "../world.service";
-import { MessageType } from "../messageType/MessageType";
+import { MessageType } from "../../messageType/MessageType";
 import { i18n } from "../../utils/i18n";
 
 // export const enum UIType {

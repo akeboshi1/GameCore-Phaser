@@ -1,7 +1,7 @@
 import { IElement } from "../element/element";
 import { DecorateManager } from "../../ui/Decorate/Decorate.manager";
 import { DecorateRoomService } from "../decorate.room";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 import { Pos } from "../../../utils/pos";
 
 export class SelectorElement {

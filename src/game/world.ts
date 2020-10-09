@@ -200,6 +200,10 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         this.mClock.sync(times);
     }
 
+    emit(messageType: string, packet?: PBpacket) {
+        this.mainPeer.emit(messageType, packet);
+    }
+
     set moveStyle(moveStyle: number) {
         this.mainPeer.setMoveStyle(moveStyle);
     }

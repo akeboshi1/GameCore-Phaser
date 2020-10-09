@@ -118,6 +118,15 @@ export class MainPeer extends RPCPeer {
         this.render.setCameraBounds(null, x, y, width, height);
     }
 
+    /**
+     * 主进程获取socket信息后发送消息给渲染端，并传送socket信息 （大部分socket数据都照此方法派送）
+     * @param messageType
+     * @param pb
+     */
+    public emit(messageType: string, pb?: PBpacket) {
+        this.render.emitter(null, messageType, pb);
+    }
+
     public destroy() {
         // this.world.emitter.off(ClickEvent.Tap, this.onTapHandler, this);
         // this.mWorld.game.scene.remove(PlayScene.name);

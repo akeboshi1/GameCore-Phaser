@@ -1,22 +1,9 @@
-import { IElementManager, ElementManager } from "./element.manager";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { FramesDisplay } from "../display/frames.display";
+import { LogicPos } from "../../../utils/logic.pos";
+import { IDragonbonesModel } from "../display/dragonbones/idragonbones.model";
+import { IFramesModel } from "../display/frame/iframe.model";
+import { ISprite } from "../display/sprite/isprite";
 import { IRoomService } from "../room";
-import { ElementDisplay } from "../display/element.display";
-import { IDragonbonesModel } from "../display/dragonbones.model";
-import { op_client, op_def } from "pixelpai_proto";
-import { Tweens } from "tooqinggamephaser";
-import { Logger } from "../../utils/log";
-import { Pos } from "../../../game/core/utils/log";
-import { ISprite } from "../../game/core/utils/pos";
-import { BlockObject } from "../cameras/block.object";
-import { BubbleContainer } from "../bubble/bubble.container";
-import { ShopEntity } from "../../../game/actor/shop/shop.entity";
-import { DisplayObject, DisplayField } from "../display/display.object";
-import { AI } from "../action/AI";
-import { Buffer } from "buffer/";
-import { Font } from "../../utils/font";
-import { IFramesModel} from "../../game/core/utils/fontgic/rooms/display/iframe.model";
+import { IElement } from "./ielement";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -35,74 +22,12 @@ export enum PlayerState {
     EMOTION01 = "emotion01",
 }
 
-export enum Direction {
-    north,
-    north_west,
-    west,
-    west_south,
-    south,
-    south_east,
-    east,
-    east_north,
-}
-
-export interface IElement {
-    readonly id: number;
-    readonly dir: number;
-    readonly roomService: IRoomService;
-    readonly scene: Phaser.Scene;
-
-    model: ISprite;
-
-    update();
-
-    setModel(model: ISprite);
-
-    updateModel(model: op_client.ISprite);
-
-    play(animationName: string): void;
-
-    getDisplay(): DisplayObject;
-
-    setPosition(p: Pos): void;
-
-    getPosition(): Pos;
-
-    getPosition45(): Pos;
-
-    setDirection(val: number): void;
-
-    getDirection(): number;
-
-    showEffected(displayInfo: IFramesModel);
-
-    showNickname();
-
-    hideNickname();
-
-    scaleTween();
-
-    turn();
-
-    setAlpha(val: number);
-
-    setQueue(queue: op_client.IChangeAnimation[]);
-
-    mount(ele: IElement): this;
-
-    unmount(): this;
-
-    addMount(ele: IElement, index?: number): this;
-
-    removeMount(ele: IElement): this;
-}
-
 export interface MoveData {
-    destPos?: Pos;
+    destPos?: LogicPos;
     posPath?: MovePath[];
     arrivalTime?: number;
-    tweenAnim?: Tweens.Tween;
-    tweenLineAnim?: Tweens.Timeline;
+    tweenAnim?: any;
+    tweenLineAnim?: any;
     tweenLastUpdate?: number;
     onCompleteParams?: any;
     onComplete?: Function;

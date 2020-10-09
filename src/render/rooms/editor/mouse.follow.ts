@@ -8,7 +8,7 @@ import { ISprite, Sprite } from "../element/sprite";
 import { IRoomService } from "../room";
 import { Pos } from "../../../utils/pos";
 import { IPosition45Obj } from "../../../utils/iposition45";
-import { IFramesModel } from "../../../game/room/display/iframe.model";
+import { IFramesModel } from "../../../game/room/display/frame/iframe.model";
 import { Position45 } from "../../../utils/position45";
 
 export class MouseFollow {

@@ -1,12 +1,11 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { WorldService } from "../../../game/world.service";
-import { IEntity } from "../../entity";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
-import { MessageType } from "../../../const/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
+import { World } from "../../world";
 
-export class Bag extends PacketHandler implements IEntity {
+export class Bag extends PacketHandler {
     private mInitialize: boolean;
-    constructor(private mWorld: WorldService) {
+    constructor(private mWorld: World) {
         super();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM, this.handleAddItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM, this.handleRemoveItem);
@@ -41,9 +40,9 @@ export class Bag extends PacketHandler implements IEntity {
     }
 
     private handleQueryPackage(packet: PBpacket) {
-        const notice: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE = packet.content;
+        // const notice: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_QUERY_PACKAGE = packet.content;
         this.mInitialize = true;
-        this.mWorld.emitter.emit(MessageType.QUERY_PACKAGE, notice);
+        this.mWorld.emit(MessageType.QUERY_PACKAGE, packet);
     }
 
     private handleAddItem(packet: PBpacket): void {
@@ -53,7 +52,7 @@ export class Bag extends PacketHandler implements IEntity {
         } else if (content.nodetype === op_def.NodeType.CharacterNodeType) {
             this.mWorld.roomManager.currentRoom.playerManager.addPackItems(content.id, content.item);
         }
-        this.mWorld.emitter.emit(MessageType.PACKAGE_ITEM_ADD, content);
+        this.mWorld.emit(MessageType.PACKAGE_ITEM_ADD, packet);
     }
 
     private handleRemoveItem(packet: PBpacket): void {
@@ -62,8 +61,8 @@ export class Bag extends PacketHandler implements IEntity {
         for (let i = 0; i < len; i++) {
             this.mWorld.roomManager.currentRoom.playerManager.removePackItems(content.id, content.itemId[i]);
         }
-        this.mWorld.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
-        this.mWorld.emitter.emit(MessageType.PACKAGE_ITEM_REMOVE, content);
+        this.mWorld.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+        this.mWorld.emit(MessageType.PACKAGE_ITEM_REMOVE, packet);
     }
 
     private handleExchangeItem(packet: PBpacket): void {

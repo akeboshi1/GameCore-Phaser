@@ -20,7 +20,7 @@ import { DisplayObject } from "./display/display.object";
 import { TerrainDisplay } from "./display/terrain.display";
 import { DecorateElementManager } from "./element/decorate.element.manager";
 import { MessageType } from "../const/MessageType";
-import { Sprite, ISprite } from "./element/sprite";
+import { Sprite, ISprite } from "./display/sprite";
 import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
 import { SpawnPoint } from "./decorate/spawn.point";
 import { SelectorElement } from "./decorate/selector.element";

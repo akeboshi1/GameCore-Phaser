@@ -1,8 +1,8 @@
-import { WorldService } from "../../../game/world.service";
+import { World } from "../../world";
 
 export class Friend {
     private mFriendList: any[];
-    constructor(private world: WorldService) {
+    constructor(private world: World) {
         this.mFriendList = [];
     }
 

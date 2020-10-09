@@ -1,7 +1,7 @@
 import { ILayerManager } from "../Layer.manager";
 import { WorldService } from "../../game/world.service";
 import { UserInfoPanel } from "./UserInfoPanel";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 import { BasePanel } from "../Components/BasePanel";
 import { BaseMediator } from "apowophaserui";
 

@@ -5,7 +5,7 @@ import { BagPanel } from "./BagPanel";
 import { ILayerManager } from "../../Layer.manager";
 import { BaseMediator, UIType, InputText } from "apowophaserui";
 import { WorldService } from "../../../world.service";
-import { MessageType } from "../../../messageType/MessageType";
+import { MessageType } from "../../../../messageType/MessageType";
 import { Logger } from "../../../../utils/log";
 
 export enum DragType {

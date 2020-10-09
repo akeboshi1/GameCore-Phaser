@@ -5,7 +5,7 @@ import { BasePanel } from "../Components/BasePanel";
 import { Notice } from "./Notice";
 import { BaseMediator, UIType, Panel } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 
 export class NoticeMediator extends BaseMediator {
     public static NAME: string = "NoticeMediator";

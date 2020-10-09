@@ -4,8 +4,8 @@ import { DisplayObject, DisplayField } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";
 import { SoundField } from "apowophaserui";
-import { AnimationData } from "../../../game/room/display/ianimation";
-import { IFramesModel } from "../../../game/room/display/iframe.model";
+import { AnimationData } from "../../../game/room/display/animation/ianimation";
+import { IFramesModel } from "../../../game/room/display/frame/iframe.model";
 import { ResUtils } from "../../../utils/resUtil";
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",

@@ -4,11 +4,15 @@ import { FramesModel} from "../display/frames.model";
 import { Animation } from "../display/animation";
 import NodeType = op_def.NodeType;
 import { Direction } from "./element";
-import { AnimationQueue } from "../../../game/room/display/ianimation";
-import { Pos } from "../../../utils/pos";
+import { AnimationData, AnimationQueue } from "../../../game/room/display/animation/ianimation";
+import { IFramesModel } from "../../../game/room/display/frame/iframe.model";
+import { Helpers } from "game-capsule";
+import { Logger } from "../../../utils/log";
+import { LogicPos } from "../../../utils/logic.pos";
 
 export interface ISprite {
     readonly id: number;
+    // 龙骨资源名集合
     readonly avatar: IAvatar;
     readonly nickname: string;
     readonly alpha: number;
@@ -20,14 +24,14 @@ export interface ISprite {
     readonly currentAnimation: AnimationData;
     readonly currentCollisionArea: number[][];
     readonly currentWalkableArea: number[][];
-    readonly currentCollisionPoint: Phaser.Geom.Point;
+    readonly currentCollisionPoint: Logicp;
     readonly hasInteractive: boolean;
     readonly attrs: op_def.IStrPair[];
     readonly animationQueue: AnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
-    pos: Pos;
+    pos: LogicPos;
     bindID: number;
     sn: string;
     isMoss?: boolean;
@@ -45,7 +49,7 @@ export interface ISprite {
 
 export class Sprite implements ISprite {
     protected mID: number;
-    protected mPos: Pos;
+    protected mPos: LogicPos;
     protected mAvatar: IAvatar;
     protected mCurrentAnimationName: string;
     protected mDirection: number;
@@ -83,7 +87,7 @@ export class Sprite implements ISprite {
         this.mID = obj.id;
         if (obj.point3f) {
             const point = obj.point3f;
-            this.mPos = new Pos(point.x, point.y, point.z);
+            this.mPos = new LogicPos(point.x, point.y, point.z);
         }
         this.mAttrs = obj.attrs;
         if (obj.avatar) {
@@ -142,7 +146,7 @@ export class Sprite implements ISprite {
 
     public setPosition(x: number, y: number) {
         if (!this.mPos) {
-            this.mPos = new Pos();
+            this.mPos = new LogicPos();
         }
         this.mPos.x = x;
         this.mPos.y = y;
@@ -225,11 +229,11 @@ export class Sprite implements ISprite {
         return this.mID;
     }
 
-    get pos(): Pos {
+    get pos(): LogicPos {
         return this.mPos;
     }
 
-    set pos(pos: Pos) {
+    set pos(pos: LogicPos) {
         this.mPos = pos;
     }
 

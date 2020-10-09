@@ -1,10 +1,16 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
-import { ILogicRoomService, Room } from "../room";
+import { IRoomService, Room } from "../room";
 import NodeType = op_def.NodeType;
 import { IElementManager } from "../element/ielement.manager";
 import { Player } from "./player";
 import { PlayerModel } from "../../../render/rooms/player/player.model";
+import { Logger } from "../../../utils/log";
+import { IElement } from "../element/ielement";
+import { MessageType } from "../../../messageType/MessageType";
+import { LogicPos } from "../../../utils/logic.pos";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { ISprite } from "../../../render/rooms/element/sprite";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -25,19 +31,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollow);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
         }
     }
-
-    // public createActor(playModel: PlayerModel) {
-    //     this.mActor = new Actor(playModel, this);
-    //     if (sprite.attrs) {
-    //         for (const attr of sprite.attrs) {
-    //             this._addSimulate(sprite.id, attr);
-    //         }
-    //     }
-    // }
 
     public createActor(actor: op_client.IActor) {
         const playModel = new PlayerModel(actor);
@@ -71,7 +67,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public requestActorMove(dir: number, keyArr: number[]) {
-
         this.startActorMove();
         if (!this.roomService.world.getGameConfig().desktop) {
             // 按下键盘的时候已经发了一次了，如果再发一次后端会有问题
@@ -138,23 +133,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         this.mPlayerMap.set(id, player);
     }
-
-    get camera(): Phaser.Cameras.Scene2D.Camera {
-        return this.mRoom.cameraService.camera;
-    }
-
-    // public addPlayer(obj: op_client.IActor): void {
-    //     const playerInfo: PlayerInfo = new PlayerInfo();
-    //     playerInfo.setInfo(obj);
-    //     if (obj.walkOriginPoint) {
-    //         playerInfo.setOriginWalkPoint(obj.walkOriginPoint);
-    //     }
-    //     if (obj.originPoint) {
-    //         playerInfo.setOriginCollisionPoint(obj.originPoint);
-    //     }
-    //     this.mPlayerInfoList.push(playerInfo);
-    //     this.mModelDispatch.emit(MessageType.SCENE_ADD_PLAYER, playerInfo);
-    // }
 
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: Player = this.mPlayerMap.get(elementId);
@@ -355,20 +333,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onCameraFollow(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
-        const player = this.get(content.id);
-        const camera = this.roomService.cameraService;
-        if (!camera) {
-            return;
-        }
-        if (player) {
-            camera.startFollow(player.getDisplay());
-        } else {
-            camera.stopFollow();
-        }
-    }
-
     private onMovePath(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
         if (content.nodeType !== NodeType.CharacterNodeType) {
@@ -380,15 +344,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    get roomService(): ILogicRoomService {
+    get roomService(): IRoomService {
         return this.mRoom;
     }
 
-    get scene(): Phaser.Scene | undefined {
-        if (this.mRoom) {
-            return this.mRoom.scene;
-        }
-    }
+    // get scene(): Phaser.Scene | undefined {
+    //     if (this.mRoom) {
+    //         return this.mRoom.scene;
+    //     }
+    // }
 
     get connection(): ConnectionService {
         if (this.mRoom) {

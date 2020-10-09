@@ -5,7 +5,7 @@ import { FramesDisplay } from "../rooms/display/frames.display";
 import { Element } from "../rooms/element/element";
 import { ConnectionService } from "../../../lib/net/connection.service";
 import { WorldService } from "../world.service";
-import { MessageType } from "../messageType/MessageType";
+import { MessageType } from "../../messageType/MessageType";
 
 export enum MouseEvent {
     RightMouseDown = 1,

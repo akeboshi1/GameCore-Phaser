@@ -2,7 +2,7 @@ import { ILayerManager } from "../Layer.manager";
 import { InfoPanel } from "./InfoPanel";
 import { BaseMediator } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 import { Tool } from "../../../utils/tool";
 
 export class InfoPanelMediator extends BaseMediator {

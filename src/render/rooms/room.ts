@@ -35,7 +35,7 @@ import { Size } from "../../utils/size";
 import { ViewblockManager } from "./cameras/viewblock.manager";
 import { Logger } from "../../utils/log";
 import { Position45 } from "../../utils/position45";
-import { MessageType } from "../messageType/MessageType";
+import { MessageType } from "../../messageType/MessageType";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }

@@ -5,7 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { WorldService } from "../../world.service";
 import { i18n } from "../../../utils/i18n";
 import { Font } from "../../../utils/font";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 
 export class ItemPopCardPanel extends BasePanel {
   private readonly key = "item_pop_card";

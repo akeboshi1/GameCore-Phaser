@@ -3,7 +3,7 @@ import { ILayerManager } from "../Layer.manager";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";
-import { MessageType } from "../../messageType/MessageType";
+import { MessageType } from "../../../messageType/MessageType";
 import { WorldService } from "../../world.service";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 

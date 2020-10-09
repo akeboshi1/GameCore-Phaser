@@ -4,7 +4,7 @@ import { op_virtual_world, op_client } from "pixelpai_proto";
 import { IBtnData } from "../Icon.btn";
 import { BaseMediator } from "apowophaserui";
 import { WorldService } from "../../../world.service";
-import { MessageType } from "../../../messageType/MessageType";
+import { MessageType } from "../../../../messageType/MessageType";
 
 export class TopMenuMediator extends BaseMediator {
   public static NAME: string = "TopMenuMediator";

@@ -1,6 +1,6 @@
 import { DisplayField, DisplayObject } from "./display.object";
-import { IFramesModel } from "../../../game/room/display/iframe.model";
-import { IAnimationData, AnimationData } from "../../../game/room/display/ianimation";
+import { IFramesModel } from "../../../game/room/display/frame/iframe.model";
+import { IAnimationData, AnimationData } from "../../../game/room/display/animation/ianimation";
 import { Url } from "../../../utils/resUtil";
 import { Logger } from "../../../utils/log";
 

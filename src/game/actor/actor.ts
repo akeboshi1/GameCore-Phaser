@@ -1,16 +1,7 @@
-import { IElementManager } from "../element/element.manager";
-import { ISprite } from "../element/sprite";
-import { IRoomService } from "../room";
-import { InputListener } from "../../game/core/render/manager/input.manager";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client, op_gameconfig, op_def } from "pixelpai_proto";
-import { Player } from "./player";
-import { Bag } from "../../../game/actor/bag/bag";
-import { Interactive } from "./interactive/interactive";
-import { Friend } from "../../../game/actor/friend/friend";
-import { PlayerModel } from "./player.model";
-import { PlayerState } from "../element/element";
-import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
+import { Player } from "../room/player/player";
+import { Bag } from "./bag/bag";
 
 export class Actor extends Player implements InputListener {
     // ME 我自己

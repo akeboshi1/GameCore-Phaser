@@ -1,12 +1,12 @@
-import { ILogicRoomService } from "./room";
+import { IRoomService } from "./room";
 import { ISprite } from "../../render/rooms/element/sprite";
-import { LogicPos } from "../../game/core/utils/logic.pos";
 import { op_client } from "pixelpai_proto";
-import { IFramesModel } from "./display/iframe.model";
+import { IFramesModel } from "./display/frame/iframe.model";
+import { LogicPos } from "../../utils/logic.pos";
 export interface ILogicElement {
     readonly id: number;
     readonly dir: number;
-    readonly roomService: ILogicRoomService;
+    readonly roomService: IRoomService;
 
     model: ISprite;
 

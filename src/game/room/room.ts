@@ -13,7 +13,7 @@ import { ViewblockService } from "../../render/rooms/cameras/viewblock.service";
 import { IPos, LogicPos } from "../../utils/logic.pos";
 import { IPosition45Obj } from "../../utils/iposition45";
 import { Position45 } from "../../utils/position45";
-import { MessageType } from "../../render/messageType/MessageType";
+import { MessageType } from "../../messageType/MessageType";
 import { Logger } from "../../utils/log";
 import { IScenery } from "../../render/rooms/sky.box/scenery";
 export interface SpriteAddCompletedListener {
