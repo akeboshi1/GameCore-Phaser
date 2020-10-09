@@ -1,4 +1,5 @@
 import { LogicPos } from "../../../utils/logic.pos";
+import { BlockObject } from "../camera/block.object";
 import { IDragonbonesModel } from "../display/dragonbones/idragonbones.model";
 import { IFramesModel } from "../display/frame/iframe.model";
 import { ISprite } from "../display/sprite/isprite";

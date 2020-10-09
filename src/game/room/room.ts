@@ -10,10 +10,9 @@ import { ILogicElement } from "./logic.element";
 import { PlayerManager } from "./player/player.manager";
 import { IPoint } from "game-capsule";
 import { ViewblockService } from "../../render/rooms/cameras/viewblock.service";
-import { IPos, LogicPos } from "../../utils/logic.pos";
+import { LogicPos } from "../../utils/logic.pos";
 import { IPosition45Obj } from "../../utils/iposition45";
 import { Position45 } from "../../utils/position45";
-import { MessageType } from "../../messageType/MessageType";
 import { Logger } from "../../utils/log";
 import { IScenery } from "../../render/rooms/sky.box/scenery";
 export interface SpriteAddCompletedListener {
@@ -43,13 +42,13 @@ export interface IRoomService {
 
     resume(name: string | string[]): void;
 
-    transformTo45(p: LogicPos): IPos;
+    transformTo45(p: LogicPos): LogicPos;
 
-    transformTo90(p: LogicPos): IPos;
+    transformTo90(p: LogicPos): LogicPos;
 
-    transformToMini45(p: LogicPos): IPos;
+    transformToMini45(p: LogicPos): LogicPos;
 
-    transformToMini90(p: LogicPos): IPos;
+    transformToMini90(p: LogicPos): LogicPos;
 
     addBlockObject(object: IBlockObject);
 

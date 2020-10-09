@@ -208,6 +208,14 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         this.mainPeer.fadeIn(callback);
     }
 
+    fadeAlpha(alpha: number) {
+        this.mainPeer.fadeAlpha(alpha);
+    }
+
+    fadeOut(callback?: Function) {
+        this.mainPeer.fadeOut(callback);
+    }
+
     set moveStyle(moveStyle: number) {
         this.mainPeer.setMoveStyle(moveStyle);
     }

@@ -51,7 +51,7 @@ export class MainPeer extends RPCPeer {
 
     public onConnectError(error: string) {
         // 告诉主进程链接错误
-        this.render.onConnectError(null, error);
+        this.render.onConnectError(error);
         // 停止心跳
         this.endBeat();
         this.world.onError();
@@ -62,7 +62,7 @@ export class MainPeer extends RPCPeer {
      * @param sceneID
      */
     public loadSceneConfig(sceneID: number) {
-        this.render.loadSceneConfig(null, sceneID);
+        this.render.loadSceneConfig(sceneID);
     }
 
     public connectFail() {
@@ -70,7 +70,7 @@ export class MainPeer extends RPCPeer {
     }
 
     public setMoveStyle(moveStyle: number) {
-        this.render.setMoveStyle(null, moveStyle);
+        this.render.setMoveStyle(moveStyle);
     }
 
     public onData(buffer: Buffer) {
@@ -98,7 +98,7 @@ export class MainPeer extends RPCPeer {
     }
 
     public createGame(buffer: Buffer) {
-        this.render.createGame(null, buffer);
+        this.render.createGame(buffer);
     }
 
     public clearGame() {
@@ -107,15 +107,15 @@ export class MainPeer extends RPCPeer {
     }
 
     public roomResume(roomID: number) {
-        this.render.roomResume(null, roomID);
+        this.render.roomResume(roomID);
     }
 
     public roomPause(roomID: number) {
-        this.render.roomPause(null, roomID);
+        this.render.roomPause(roomID);
     }
 
     public setCameraBounds(x: number, y: number, width: number, height: number) {
-        this.render.setCameraBounds(null, x, y, width, height);
+        this.render.setCameraBounds(x, y, width, height);
     }
 
     /**
@@ -124,11 +124,19 @@ export class MainPeer extends RPCPeer {
      * @param pb
      */
     public emit(messageType: string, pb?: PBpacket) {
-        this.render.emitter(null, messageType, pb);
+        this.render.emitter(messageType, pb);
     }
 
-    public fadeIn() {
+    public fadeIn(callback?: Function) {
         this.render.fadeIn();
+    }
+
+    public fadeOut(callback?: Function) {
+        this.render.fadeOut();
+    }
+
+    public fadeAlpha(alpha: number) {
+        this.render.fadeAlpha(alpha);
     }
 
     public destroy() {
@@ -144,13 +152,13 @@ export class MainPeer extends RPCPeer {
     }
     // ============= 主进程调用心跳
     public startBeat() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.startBeat(null);
+        this.heartBearPeer.startBeat();
     }
     public endBeat() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.endBeat(null);
+        this.heartBearPeer.endBeat();
     }
     public clearBeat() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.endBeat(null);
+        this.heartBearPeer.endBeat();
     }
 
     // ============== render调用主进程
@@ -240,11 +248,11 @@ export class MainPeer extends RPCPeer {
     }
     @Export()
     public requestCurTime() {
-        this.render.getCurTime(null, this.world.clock.unixTime);
+        this.render.getCurTime(this.world.clock.unixTime);
     }
     // ==== todo
     public terminate() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();
+        this.heartBearPeer.terminate();
         self.close();
         // super.terminate();
     }

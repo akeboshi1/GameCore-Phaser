@@ -58,13 +58,11 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public fadeOut(callback?: () => void) {
-        if (!this.mDisplay) return;
-        this.mDisplay.fadeOut(callback);
+        this.mRoomService.world.fadeOut(callback);
     }
 
     public fadeAlpha(alpha: number) {
-        if (!this.mDisplay) return;
-        // this.mDisplay.alpha = alpha;
+        this.mRoomService.world.fadeAlpha(alpha);
     }
 
     public setInputEnable(val: InputEnable) {
