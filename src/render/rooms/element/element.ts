@@ -9,7 +9,7 @@ import { Tweens } from "tooqinggamephaser";
 import { Logger } from "../../utils/log";
 import { Pos } from "../../../game/core/utils/log";
 import { ISprite } from "../../game/core/utils/pos";
-import { BlockObject } from "../cameras/block.object";
+import { BlockObject } from "../../../game/room/camera/block.object";
 import { BubbleContainer } from "../bubble/bubble.container";
 import { ShopEntity } from "../../../game/actor/shop/shop.entity";
 import { DisplayObject, DisplayField } from "../display/display.object";

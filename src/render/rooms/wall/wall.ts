@@ -1,4 +1,4 @@
-import { BlockObject } from "../cameras/block.object";
+import { BlockObject } from "../../../game/room/camera/block.object";
 import { ElementDisplay } from "../display/element.display";
 import { IRoomService } from "../room";
 import { WallDisplay } from "../display/wall.display";

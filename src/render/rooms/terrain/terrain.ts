@@ -7,7 +7,7 @@ import { IFramesModel } from "../display/frames.model";
 import { ElementDisplay } from "../display/element.display";
 import { IRoomService } from "../room";
 import { TerrainDisplay } from "../display/terrain.display";
-import { BlockObject } from "../cameras/block.object";
+import { BlockObject } from "../../../game/room/camera/block.object";
 import { op_client } from "pixelpai_proto";
 import { DisplayObject } from "../display/display.object";
 

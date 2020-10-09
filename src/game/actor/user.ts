@@ -1,101 +1,57 @@
+import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { op_virtual_world, op_client, op_gameconfig, op_def } from "pixelpai_proto";
 import { Player } from "../room/player/player";
+import { World } from "../world";
+import { IRoomService } from "../room/room";
+import { ISprite } from "../room/display/sprite/isprite";
 import { Bag } from "./bag/bag";
+import { Friend } from "./friend/friend";
 
-export class Actor extends Player implements InputListener {
-    // ME 我自己
-    readonly GameObject: Phaser.GameObjects.GameObject;
-    protected mBag: Bag;
-    // package: op_gameconfig.IPackage;
-    protected mFriend: Friend;
-    protected mInteractive: Interactive;
-    private mRoom: IRoomService;
-    private mPackage: op_gameconfig.IPackage;
-    private mMoveTime: number;
-    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(sprite, mElementManager);
+export class User extends Player {
+    private mUserData: UserDataManager;
+    private mMoveStyle: number;
+    constructor(world: World) {
+        super(undefined, undefined);
         this.mBlockable = false;
-        // this.mRenderable = true; // Actor is always renderable!!!
-        // this.addDisplay();
-        this.mRoom = this.mElementManager.roomService;
-
-        if (this.mRoom.world.inputManager) this.mRoom.world.inputManager.addListener(this);
-
-        // if (this.mElementManager) {
-        //     const roomService = this.mElementManager.roomService;
-        //     if (roomService && roomService.cameraService) {
-        //         roomService.cameraService.startFollow(this.getDisplay());
-        //         roomService.cameraService.syncCameraScroll();
-        //     }
-        // }
-        if (this.mElementManager) {
-            const roomService = this.mElementManager.roomService;
-            if (roomService && roomService.cameraService) {
-                const pos = sprite.pos;
-                const size = this.mElementManager.scene.scale;
-                roomService.cameraService.setScroll(pos.x * roomService.world.scaleRatio - size.width / 2, pos.y * roomService.world.scaleRatio - size.height / 2);
-                roomService.cameraService.syncCameraScroll();
-            }
-        }
-
-        this.mFriend = new Friend(this.mRoom.world);
-        this.mRoom.playerManager.set(this.id, this);
-        this.mInteractive = new Interactive(mElementManager.roomService.world);
-        this.mInteractive.register();
+        this.mUserData = new UserDataManager(world);
     }
 
-    public getBag(): Bag {
-        return this.mBag;
+    addPackListener() {
+        this.mUserData.addPackListener();
     }
 
-    public getFriend(): Friend {
-        return this.mFriend;
+    removePackListener() {
+        this.mUserData.removePackListener();
     }
 
-    public getInteractive(): Interactive {
-        return this.mInteractive;
-    }
-
-    // override super's method.
-    public setRenderable(isRenderable: boolean): void {
-        // do nothing!
-        // Actor is always renderable!!!
-    }
-
-    public destroy() {
-        if (this.mBag) {
-            this.mBag.destroy();
-            this.mBag = null;
-        }
-        if (this.mRoom.world.inputManager) this.mRoom.world.inputManager.removeListener(this);
-        super.destroy();
-    }
-
-    downHandler(d: number, keyList: number[]) {
-        if (!this.mDisplay) {
+    enterScene(room: IRoomService, actor: op_client.IActor) {
+        if (!room || !actor) {
             return;
         }
-        this.mRoom.playerManager.requestActorMove(d, keyList); // startActorMove();
-    }
+        this.mId = actor.id;
+        this.mRoomService = room;
+        this.mElementManager = room.playerManager;
+        this.model = new PlayerModel(actor);
 
-    upHandler() {
-        // this.mRoom.playerManager.stopActorMove();
-        if (!this.mDisplay) {
-            return;
+        if (room.world.inputManager) room.world.inputManager.addListener(this);
+        this.mRoomService.playerManager.setMe(this);
+        const roomService = this.mElementManager.roomService;
+        if (roomService && roomService.cameraService) {
+            const size = this.mElementManager.scene.scale;
+            roomService.cameraService.setScroll(actor.x * roomService.world.scaleRatio - size.width / 2, actor.y * roomService.world.scaleRatio - size.height / 2);
+            roomService.cameraService.syncCameraScroll();
         }
-        this.stopMove();
     }
 
     public startMove() {
         super.startMove();
-        const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
-        if (med) med.hide();
+        // const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
+        // if (med) med.hide();
     }
 
     public stopMove() {
         super.stopMove();
-        if (this.mRoom && this.mRoom.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService && this.mRoomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
             ct.nodeType = this.nodeType;
@@ -109,14 +65,13 @@ export class Actor extends Player implements InputListener {
                 },
                 direction: this.dir
             };
-            // Logger.getInstance().debug("nowPox:" + pos.x + "," + pos.y);
             this.mElementManager.connection.send(pkt);
         }
     }
 
     public move(moveData: op_client.IMoveData) {
         // TODO 不能仅判断walk, 移动状态可能还有run
-        if (this.mRoom.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             if (this.mCurState !== PlayerState.WALK) {
                 return;
             }
@@ -127,7 +82,7 @@ export class Actor extends Player implements InputListener {
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        if (this.mRoom.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             if (this.mCurState !== PlayerState.WALK) {
                 return;
             }
@@ -149,13 +104,34 @@ export class Actor extends Player implements InputListener {
         super.movePath(movePath);
     }
 
+    // override super's method.
+    public setRenderable(isRenderable: boolean): void {
+        // do nothing!
+        // Actor is always renderable!!!
+    }
+
+    public getBag(): Bag {
+        return undefined;
+    }
+
+    public getFriend(): Friend {
+        return undefined;
+    }
+
+    public clear() {
+        this.removePackListener();
+        super.clear();
+        if (this.mUserData) this.userData.destroy();
+        this.destroy();
+    }
+
     protected onMoveComplete() {
         this.preMoveComplete();
         if (this.mCurState !== PlayerState.WALK) {
             this.mMoveData.tweenAnim.stop();
             return;
         }
-        if (this.mRoom.world.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService.world.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             this.changeState(PlayerState.IDLE);
             this.stopMove();
         }
@@ -200,9 +176,9 @@ export class Actor extends Player implements InputListener {
             return;
         }
         if ((val as PlayerModel).package) {
-            this.mPackage = (val as PlayerModel).package;
-            this.mBag = new Bag(this.mElementManager.roomService.world);
-            this.mBag.register();
+            // this.mPackage = (val as PlayerModel).package;
+            // this.mBag = new Bag(this.mElementManager.roomService.world);
+            // this.mBag.register();
         }
         this.load(this.mModel.displayInfo);
         if (this.mModel.pos) this.setPosition(this.mModel.pos);
@@ -223,18 +199,26 @@ export class Actor extends Player implements InputListener {
     }
 
     get package(): op_gameconfig.IPackage {
-        return this.mPackage;
+        return undefined;
     }
 
     set package(value: op_gameconfig.IPackage) {
-        this.mPackage = value;
-    }
-
-    set moveTime(val: number) {
-        this.mMoveTime = val;
+        // this.mPackage = value;
     }
 
     get moveData() {
         return this.mMoveData;
+    }
+
+    get userData() {
+        return this.mUserData;
+    }
+
+    set moveStyle(val: number) {
+        this.mMoveStyle = val;
+    }
+
+    get moveStyle() {
+        return this.mMoveStyle;
     }
 }

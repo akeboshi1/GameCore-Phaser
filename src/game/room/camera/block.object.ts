@@ -1,16 +1,13 @@
-import { ElementDisplay } from "../display/element.display";
-import { InputEnable } from "../element/element";
-import { ISprite } from "../element/sprite";
+import { LogicPos } from "../../../utils/logic.pos";
+import { ISprite } from "../display/sprite/isprite";
 import { IRoomService } from "../room";
 import { IBlockObject } from "./iblock.object";
-import { Pos } from "../../../utils/pos";
+
 export abstract class BlockObject implements IBlockObject {
     public isUsed = false;
-    protected mDisplay?: ElementDisplay;
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = true;
     protected mModel: ISprite;
-    protected mInputEnable: InputEnable = InputEnable.Diasble;
     constructor(protected mRoomService: IRoomService) {
         this.isUsed = true;
     }
@@ -36,19 +33,19 @@ export abstract class BlockObject implements IBlockObject {
         }
     }
 
-    public getPosition(): Pos {
-        let pos: Pos;
+    public getPosition(): LogicPos {
+        let pos: LogicPos;
         if (this.mDisplay) {
-            pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
+            pos = new LogicPos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
         } else {
-            pos = new Pos();
+            pos = new LogicPos();
         }
         return pos;
     }
 
-    public getPosition45(): Pos {
+    public getPosition45(): LogicPos {
         const pos = this.getPosition();
-        if (!pos) return new Pos();
+        if (!pos) return new LogicPos();
         return this.mRoomService.transformTo45(pos);
     }
 
@@ -57,8 +54,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public fadeIn(callback?: () => void) {
-        if (!this.mDisplay) return;
-        this.mDisplay.fadeIn(callback);
+        this.mRoomService.world.fadeIn(callback);
     }
 
     public fadeOut(callback?: () => void) {

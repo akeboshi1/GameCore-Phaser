@@ -127,6 +127,10 @@ export class MainPeer extends RPCPeer {
         this.render.emitter(null, messageType, pb);
     }
 
+    public fadeIn() {
+        this.render.fadeIn();
+    }
+
     public destroy() {
         // this.world.emitter.off(ClickEvent.Tap, this.onTapHandler, this);
         // this.mWorld.game.scene.remove(PlayScene.name);
