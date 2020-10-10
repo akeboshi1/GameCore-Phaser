@@ -122,6 +122,16 @@ export class Render extends RPCPeer {
         this._moveStyle = moveStyle;
     }
 
+    @Export([webworker_rpc.ParamType.unit8array])
+    public onEnterRoom(scene) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public scaleTween(id: number, type: number) {
+
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public getRenderPosition(id: number, type: number): any {
         // todo

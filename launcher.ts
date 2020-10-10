@@ -3,7 +3,6 @@
 // 2. 做设备兼容
 
 import version from "./version";
-import { Logger } from "./src/game/core/utils/log";
 // import { ServerAddress } from "./src/net/address";
 // import { ConnectionService } from "./src/net/connection.service";
 // import { Capsule, PaletteNode, MossNode } from "game-capsule";

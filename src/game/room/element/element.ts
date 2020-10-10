@@ -1,5 +1,5 @@
 import { Logger } from "../../../utils/log";
-import { LogicPos } from "../../../utils/logic.pos";
+import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { BlockObject } from "../camera/block.object";
 import { IDragonbonesModel } from "../display/dragonbones/idragonbones.model";
 import { IFramesModel } from "../display/frame/iframe.model";
@@ -7,6 +7,7 @@ import { ISprite } from "../display/sprite/isprite";
 import { IRoomService } from "../room";
 import { IElement } from "./ielement";
 import { op_client, op_def } from "pixelpai_proto";
+import { Font } from "../../../utils/font";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -192,12 +193,9 @@ export class Element extends BlockObject implements IElement {
         this.update();
     }
 
-    // scaleTween(): void {
-    //     if (!this.mDisplay) {
-    //         return;
-    //     }
-    //     this.mDisplay.scaleTween();
-    // }
+    scaleTween(): void {
+        this.mRoomService.world.peer.render.scaleTween(this.id, this.type);
+    }
 
     public play(animationName: string, times?: number): void {
         if (!this.mModel) {
@@ -265,16 +263,16 @@ export class Element extends BlockObject implements IElement {
     }
 
     public changeState(val?: string) {
-    //     if (this.mCurState === val) return;
-    //     this.mCurState = val;
-    //     if (!this.mDisplay) {
-    //         return;
-    //     }
-    //     if (!val) {
-    //         val = PlayerState.IDLE;
-    //     }
-    //     this.play(this.mCurState);
-    // }
+        //     if (this.mCurState === val) return;
+        //     this.mCurState = val;
+        //     if (!this.mDisplay) {
+        //         return;
+        //     }
+        //     if (!val) {
+        //         val = PlayerState.IDLE;
+        //     }
+        //     this.play(this.mCurState);
+    }
 
     public getState(): string {
         return this.mCurState;
@@ -396,7 +394,7 @@ export class Element extends BlockObject implements IElement {
         this.changeState(PlayerState.IDLE);
     }
 
-    public getPosition() {
+    public getPosition(): IPos {
         let pos: LogicPos;
         if (!this.mDisplay) {
             return new LogicPos(0, 0);
@@ -413,7 +411,7 @@ export class Element extends BlockObject implements IElement {
         return pos;
     }
 
-    public setPosition(p: LogicPos) {
+    public setPosition(p: IPos) {
         if (this.mMoving) {
             this.stopMove();
         }
@@ -430,7 +428,7 @@ export class Element extends BlockObject implements IElement {
         this.update();
     }
 
-    public getRootPosition(): LogicPos {
+    public getRootPosition(): IPos {
         return new LogicPos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
@@ -869,7 +867,7 @@ export class Element extends BlockObject implements IElement {
     protected removeStateHandler(state: op_def.IState) {
         switch (state.name) {
             case "effect":
-                this.world.removestate(state)
+                this.world.removestate(state);
                 // remove
                 // if (this.mDisplay) {
                 //     this.mDisplay.removeEffect(DisplayField.Effect);
@@ -932,12 +930,12 @@ export class FollowObject {
         if (!this.mObject) {
             return;
         }
-        const display = <any> this.mObject;
+        const display = <any>this.mObject;
         if (display.parentContainer) display.parentContainer.remove(display);
     }
 
     destroy() {
-        if (this.mObject) (<any> this.mObject).destroy();
+        if (this.mObject) (<any>this.mObject).destroy();
         this.mObject = undefined;
     }
 

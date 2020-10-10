@@ -1,8 +1,8 @@
 import { IRoomService } from "../room";
-import { LogicPos } from "../../../utils/logic.pos";
+import { IPos } from "../../../utils/logic.pos";
 import { op_client } from "pixelpai_proto";
 import { IFramesModel } from "../display/frame/iframe.model";
-import { ISprite } from "../../../render/rooms/element/sprite";
+import { ISprite } from "../display/sprite/isprite";
 export interface IElement {
     readonly id: number;
     readonly dir: number;
@@ -18,11 +18,11 @@ export interface IElement {
 
     play(animationName: string): void;
 
-    setPosition(p: LogicPos): void;
+    setPosition(p: IPos): void;
 
-    getPosition(): LogicPos;
+    getPosition(): IPos;
 
-    getPosition45(): LogicPos;
+    getPosition45(): IPos;
 
     setDirection(val: number): void;
 

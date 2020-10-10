@@ -2,7 +2,11 @@ import { IElement } from "../element/ielement";
 import { op_def } from "pixelpai_proto";
 import { ISprite } from "../display/sprite/isprite";
 import { IElementManager } from "../element/ielement.manager";
-export class Player implements IElement {
+import { Element, MovePath, PlayerState } from "../element/element";
+import { IPos, LogicPos } from "../../../utils/logic.pos";
+import { op_client, op_virtual_world } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
+export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
@@ -39,7 +43,7 @@ export class Player implements IElement {
         if (!tmpPath) {
             return;
         }
-        let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
+        let lastPos = new LogicPos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
         const paths = [];
         this.mMoveData.arrivalTime = movePath.timestemp;
         let angle = null;
@@ -67,7 +71,7 @@ export class Player implements IElement {
                     this.onMovePathPointComplete(params);
                 }
             });
-            lastPos = new Pos(point.x, point.y);
+            lastPos = new LogicPos(point.x, point.y);
             index++;
         }
         this.mMoveData.posPath = paths;
@@ -99,11 +103,11 @@ export class Player implements IElement {
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
             this.mModel.currentAnimationName = this.mCurState;
-            (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
+            (this.mDisplay as DragonbonesDispla).play(this.mModel.currentAnimation);
         }
     }
 
-    public setPosition(pos: Pos) {
+    public setPosition(pos: IPos) {
         pos.y += this.offsetY;
         super.setPosition(pos);
     }
@@ -185,7 +189,7 @@ export class Player implements IElement {
         content.currentPoint = currentPoint;
         content.lastTargetPoint = targetPoint;
         content.timestemp = this.mRoomService.world.clock.unixTime;
-        this.mRoomService.connection.send(pkt);
+        this.mRoomService.world.peer.send(pkt.Serialization());
     }
 
     protected get offsetY(): number {

@@ -1,9 +1,9 @@
 import { IAvatar } from "../../../../render/rooms/display/dragonbones.model";
 import { LogicPos } from "../../../../utils/logic.pos";
-import { AnimationData, AnimationQueue } from "../animation/ianimation";
-import { IFramesModel } from "../frame/iframe.model";
 import { op_client, op_def, op_gameconfig, op_gameconfig_01 } from "pixelpai_proto";
 import { IDragonbonesModel } from "../dragonbones/idragonbones.model";
+import { AnimationData, AnimationQueue } from "../animation/ianimation";
+import { IFramesModel } from "../frame/iframe.model";
 
 export interface ISprite {
     readonly id: number;
