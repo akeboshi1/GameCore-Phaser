@@ -149,15 +149,7 @@ export class TaskPanel extends BasePanel {
     }
 
     setTaskOptions() {
-        const enumArr: op_pkt_def.PKT_Quest_Type[] = [0];
-        const PKT_Quest_Type = op_pkt_def.PKT_Quest_Type;
-        for (const key in PKT_Quest_Type) {
-            const enumValue = Number(key);
-            if (!isNaN(enumValue)) {
-                const questEnum: op_pkt_def.PKT_Quest_Type = enumValue;
-                enumArr.push(questEnum);
-            }
-        }
+        const enumArr: op_pkt_def.PKT_Quest_Type[] = [0, op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION, op_pkt_def.PKT_Quest_Type.QUEST_SIDE_MISSION, op_pkt_def.PKT_Quest_Type.QUEST_DAILY_GOAL];
         const list = <TaskOption[]>this.optionCon.list;
         for (const option of list) {
             option.visible = false;
@@ -605,7 +597,7 @@ class TaskCell extends Phaser.GameObjects.Container {
             this.itemIcon.scale = this.dpr * 0.6;
         });
         if (!isTask) {
-            this.countTex.text = `[stroke=#666666][color=#666666]${itemData.count}[/color][/stroke]/`;
+            this.countTex.text = `[stroke=#666666][color=#666666]${itemData.count}[/color][/stroke]`;
 
         } else {
             this.countTex.text = this.getCountText(itemData.count, itemData.neededCount);

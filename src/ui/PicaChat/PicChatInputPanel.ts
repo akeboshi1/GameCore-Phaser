@@ -363,9 +363,18 @@ export class PicChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onQuickSendHandler() {
-        this.isOpenQuickPanel = true;
-        this.quickCon.visible = true;
-        this.quickChatScroll.addListen();
+
+        this.isOpenQuickPanel = !this.isOpenQuickPanel;
+        if (this.isOpenQuickPanel) {
+            this.quickCon.visible = true;
+            this.quickChatScroll.addListen();
+        } else {
+            this.mInput.setFocus();
+            this.quickCon.visible = false;
+            this.quickChatScroll.removeListen();
+            this.isOpenQuickPanel = false;
+        }
+
         // this.mInput.setBlur();
     }
     private onSentChat() {

@@ -7,6 +7,7 @@ import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
 import { TextButton } from "../components/TextButton";
 import { op_client, } from "pixelpai_proto";
 import { GameGridTable, TabButton, Button, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
+import { TweenCompent } from "../components/tween.compent";
 
 export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
@@ -160,8 +161,15 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                 tableOX: 19 * this.dpr,
                 zoom: this.zoom
             },
+            press: {
+                tapInterval: 50
+            },
             scrollMode: 0,
             clamplChildOY: false,
+            celldownCallBack: (gameobject) => {
+                const tween = new TweenCompent(this.scene, gameobject, { scale: 0.6 });
+                tween.tween();
+            },
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
                 const scene = cell.scene,
@@ -181,6 +189,12 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
                 this.onSelectItemHandler(cell);
             }
         });
+        // grid.on("pressstart", (cell) => {
+        //     if (cell) {
+        //         const tween = new TweenCompent(this.scene, cell, { scale: 0.6 });
+        //         tween.tween();
+        //     }
+        // });
         grid.layout();
         this.add(grid);
 

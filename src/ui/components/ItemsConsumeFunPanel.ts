@@ -184,6 +184,11 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         this.gameScroll.clearItems(false);
         this.gameScroll.visible = false;
         this.contentTitle.visible = false;
+        this.itemtips.visible = false;
+        if (this.curSelectItem) {
+            this.curSelectItem.select = false;
+            this.curSelectItem = undefined;
+        }
         if (this.parentContainer) this.parentContainer.remove(this);
     }
     private onMaterialItemHandler(gameobject: MaterialItem) {

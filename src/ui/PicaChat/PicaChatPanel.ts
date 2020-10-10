@@ -94,7 +94,7 @@ export class PicaChatPanel extends BasePanel {
             this.mTextArea.scrollToBottom();
         }
 
-        if (this.mInputText) {
+        if (this.mInputText && this.mInputText instanceof PicChatInputPanel) {
             (<PicChatInputPanel>this.mInputText).appendChat(val);
         }
     }
