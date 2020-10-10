@@ -15,6 +15,8 @@ import { Position45 } from "../../utils/position45";
 import { Logger } from "../../utils/log";
 import { IScenery } from "../../render/rooms/sky.box/scenery";
 import { IBlockObject } from "./camera/iblock.object";
+import { ElementManager } from "./element/element.manager";
+import { ConnectionService } from "../../../lib/net/connection.service";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -24,7 +26,7 @@ export interface IRoomService {
     readonly terrainManager: TerrainManager;
     readonly elementManager: ElementManager;
     readonly playerManager: PlayerManager;
-    readonly layerManager: LayerManager;
+    // readonly layerManager: LayerManager;
     readonly effectManager: EffectManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;

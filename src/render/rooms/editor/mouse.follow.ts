@@ -1,7 +1,7 @@
 import { FramesDisplay } from "../display/frames.display";
 import { LayerManager } from "../layer/layer.manager";
 import { EditorRoomService } from "../editor.room";
-import { IElementManager } from "../element/element.manager";
+import { IElementManager } from "../../../game/room/element/element.manager";
 import { op_client, op_def } from "pixelpai_proto";
 import NodeType = op_def.NodeType;
 import { ISprite, Sprite } from "../element/sprite";
