@@ -102,14 +102,14 @@ export class Launcher {
     private mReload: Function;
     private mCompleteFunc: Function;
     private mConfig: ILauncherConfig = {
-        api_root: CONFIG.api_root,
-        auth_token: CONFIG.auth_token,
-        token_expire: CONFIG.token_expire,
-        token_fingerprint: CONFIG.token_fingerprint,
-        user_id: CONFIG.user_id,
+        api_root: undefined,
+        auth_token: undefined,
+        token_expire: undefined,
+        token_fingerprint: undefined,
+        user_id: undefined,
         server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
-        game_id: CONFIG.game_id,
-        virtual_world_id: CONFIG.virtual_world_id,
+        game_id: undefined,
+        virtual_world_id: undefined,
         // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
         width: this.minWidth,
         height: this.minHeight,

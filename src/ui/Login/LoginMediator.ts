@@ -8,6 +8,7 @@ import { BaseMediator } from "apowophaserui";
 
 export class LoginMediator extends BaseMediator {
     private verifiedPanel: VerifiedPanel;
+    private verifiedEnable: boolean = false;
     constructor(private layerManager: LayerManager, scene: Phaser.Scene, private world: WorldService) {
         super();
     }
@@ -64,9 +65,9 @@ export class LoginMediator extends BaseMediator {
                 const data = response.data;
                 this.world.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                const verifiedEnable = CONFIG["verified_enable"];
-                if (verifiedEnable !== undefined && verifiedEnable === false) {
-                    this.enterGame(!verifiedEnable);
+                // const verifiedEnable = CONFIG["verified_enable"];
+                if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
+                    this.enterGame(!this.verifiedEnable);
                     return;
                 }
                 if (data.hasIdentityInfo) {

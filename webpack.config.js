@@ -2,7 +2,6 @@ const path = require("path");
 const webpack = require("webpack");
 const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
-const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -67,7 +66,6 @@ const config = {
             // default: true
             cleanStaleWebpackAssets: false,
         }),
-        new ConfigWebpackPlugin(),
         new CopyWebpackPlugin([{ from: "**/*", to: "resources", force: true, context: "resources" }]),
         new HtmlWebpackPlugin({
             inject: "head",
