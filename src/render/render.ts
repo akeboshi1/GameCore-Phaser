@@ -122,6 +122,12 @@ export class Render extends RPCPeer {
         this._moveStyle = moveStyle;
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public getRenderPosition(id: number, type: number): any {
+        // todo
+        return [];
+    }
+
     @Export()
     public enterVirtualWorld() {
         this.mWorld.enterVirtualWorld();

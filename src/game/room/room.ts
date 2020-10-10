@@ -42,13 +42,13 @@ export interface IRoomService {
 
     resume(name: string | string[]): void;
 
-    transformTo45(p: LogicPos): IPos;
+    transformTo45(p: IPos): IPos;
 
-    transformTo90(p: LogicPos): IPos;
+    transformTo90(p: IPos): IPos;
 
-    transformToMini45(p: LogicPos): IPos;
+    transformToMini45(p: IPos): IPos;
 
-    transformToMini90(p: LogicPos): IPos;
+    transformToMini90(p: IPos): IPos;
 
     addBlockObject(object: IBlockObject);
 
