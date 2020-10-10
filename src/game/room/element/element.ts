@@ -869,6 +869,7 @@ export class Element extends BlockObject implements IElement {
     protected removeStateHandler(state: op_def.IState) {
         switch (state.name) {
             case "effect":
+                this.world.removestate(state)
                 // remove
                 // if (this.mDisplay) {
                 //     this.mDisplay.removeEffect(DisplayField.Effect);

@@ -1,8 +1,9 @@
-import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
+import { RPCPeer, Export, webworker_rpc, RemoteListener } from "webworker-rpc";
 import MainWorker from "worker-loader?filename=[hash][name].js!../game/main.worker";
-import { PBpacket } from "net-socket-packet";
+import { Buffer, PBpacket } from "net-socket-packet";
 import { World } from "./world";
 import { ServerAddress } from "../../lib/net/address";
+import { MessageType } from "../messageType/MessageType";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
     private _moveStyle: number = 0;
@@ -121,6 +122,12 @@ export class Render extends RPCPeer {
         this._moveStyle = moveStyle;
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public getRenderPosition(id: number, type: number): any {
+        // todo
+        return [];
+    }
+
     @Export()
     public enterVirtualWorld() {
         this.mWorld.enterVirtualWorld();
@@ -129,6 +136,16 @@ export class Render extends RPCPeer {
     @Export()
     public onClockReady() {
         this.mWorld.onClockReady();
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public showAlert(text: string, title: string) {
+        // 告诉render显示警告框
+    }
+
+    @Export()
+    public showLoading() {
+
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -140,15 +157,68 @@ export class Render extends RPCPeer {
     public roomResume(roomID: number) {
 
     }
+    @Export()
+    public renderReconnect() {
+
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
+
+    }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraBounds(x: number, y: number, width: number, height: number) {
 
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public setInteractive(id: number, type: number) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public disableInteractive(id: number, type: number) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public removeDisplay(id: number, type: number) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public fadeIn(id: number, type: number) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public fadeOut(id: number, type: number) {
+
+    }
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public fadeAlpha(id: number, type: number, alpha: number) {
+
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public getCurTime(curTime: number) {
         this._curTime = curTime;
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public displayDestroy(id: number, type: number) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.unit8array])
+    public createGame(buffer: Buffer) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public addFillEffect(posX: number, posY: number, status: number) {
+
     }
 
     @Export()

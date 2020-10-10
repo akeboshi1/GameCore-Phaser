@@ -7,6 +7,7 @@ import { World } from "./world";
 import { GameSocket, ConnListener, Connection } from "./net/connection";
 import { RoomManager } from "./room/room.manager";
 import { ServerAddress } from "../../lib/net/address";
+import { Render } from "../render/render";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -15,7 +16,7 @@ export class MainPeer extends RPCPeer {
     private mRoomManager: RoomManager;
     private world: World;
     private socket: GameSocket;
-    private render: any;
+    private mRender: any;
     private connect: Connection;
     private heartBearPeer: any;
     constructor() {
@@ -25,16 +26,19 @@ export class MainPeer extends RPCPeer {
         this.connect = new Connection(this.socket);
         this.world.setConnect(this.connect);
         this.linkTo(RENDER_PEER, "").onceReady(() => {
-            this.render = this.remote[RENDER_PEER].Rener;
+            this.mRender = this.remote[RENDER_PEER].Rener;
         });
         this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onceReady(() => {
             this.heartBearPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         });
     }
+    get render(): Render {
+        return this.mRender;
+    }
     // ============= connection调用主进程
     public onConnected() {
         // 告诉主进程链接成功
-        this.render.onConnected();
+        this.mRender.onConnected();
         // 调用心跳
         this.startBeat();
         // 逻辑层world链接成功
@@ -43,7 +47,7 @@ export class MainPeer extends RPCPeer {
 
     public onDisConnected() {
         // 告诉主进程断开链接
-        this.render.onDisConnected();
+        this.mRender.onDisConnected();
         // 停止心跳
         this.endBeat();
         this.world.onDisConnected();
@@ -51,105 +55,16 @@ export class MainPeer extends RPCPeer {
 
     public onConnectError(error: string) {
         // 告诉主进程链接错误
-        this.render.onConnectError(error);
+        this.mRender.onConnectError(error);
         // 停止心跳
         this.endBeat();
         this.world.onError();
-    }
-
-    /**
-     * 告诉主进程加载场景pi
-     * @param sceneID
-     */
-    public loadSceneConfig(sceneID: number) {
-        this.render.loadSceneConfig(sceneID);
-    }
-
-    public connectFail() {
-        this.render.connectFail();
-    }
-
-    public setMoveStyle(moveStyle: number) {
-        this.render.setMoveStyle(moveStyle);
     }
 
     public onData(buffer: Buffer) {
         this.socket.onData(buffer);
     }
 
-    public showAlert(text: string, title: string) {
-        // 告诉render显示警告框
-        this.render.showAlert(text, title);
-    }
-
-    public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
-        this.render.createAnotherGame(gameId, worldId, sceneId, px, py, pz);
-    }
-    public enterVirtualWorld() {
-        this.render.enterVirtualWorld();
-    }
-
-    public onClockReady() {
-        this.render.onClockReady();
-    }
-
-    public renderReconnect() {
-        this.render.reconnect();
-    }
-
-    public createGame(buffer: Buffer) {
-        this.render.createGame(buffer);
-    }
-
-    public clearGame() {
-        //  if (this.mCameraService) this.mCameraService.destroy();
-        this.render.clearGame();
-    }
-
-    public roomResume(roomID: number) {
-        this.render.roomResume(roomID);
-    }
-
-    public roomPause(roomID: number) {
-        this.render.roomPause(roomID);
-    }
-
-    public setCameraBounds(x: number, y: number, width: number, height: number) {
-        this.render.setCameraBounds(x, y, width, height);
-    }
-
-    /**
-     * 主进程获取socket信息后发送消息给渲染端，并传送socket信息 （大部分socket数据都照此方法派送）
-     * @param messageType
-     * @param pb
-     */
-    public emit(messageType: string, pb?: PBpacket) {
-        this.render.emitter(messageType, pb);
-    }
-
-    public fadeIn(callback?: Function) {
-        this.render.fadeIn();
-    }
-
-    public fadeOut(callback?: Function) {
-        this.render.fadeOut();
-    }
-
-    public fadeAlpha(alpha: number) {
-        this.render.fadeAlpha(alpha);
-    }
-
-    public destroy() {
-        // this.world.emitter.off(ClickEvent.Tap, this.onTapHandler, this);
-        // this.mWorld.game.scene.remove(PlayScene.name);
-        // this.world.emitter.off(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
-        // Logger.getInstance().log("#BlackSceneFromBackground; remove scene: ", PlayScene.name);
-        this.render.destroy();
-    }
-
-    public showLoading() {
-        this.render.showLoading();
-    }
     // ============= 主进程调用心跳
     public startBeat() {
         this.heartBearPeer.startBeat();
@@ -236,7 +151,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public reconnect() {
         // 告诉主进程重新连接
-        this.render.reconnect();
+        this.mRender.reconnect();
     }
     @Export([webworker_rpc.ParamType.num])
     public syncClock(times: number) {
@@ -248,13 +163,17 @@ export class MainPeer extends RPCPeer {
     }
     @Export()
     public requestCurTime() {
-        this.render.getCurTime(this.world.clock.unixTime);
+        this.mRender.getCurTime(this.world.clock.unixTime);
     }
     // ==== todo
     public terminate() {
         this.heartBearPeer.terminate();
         self.close();
         // super.terminate();
+    }
+
+    public destroy() {
+        super.destroy();
     }
 }
 
