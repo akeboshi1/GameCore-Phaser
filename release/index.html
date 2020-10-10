@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width,height=device-height" />
+    <meta charset="UTF-8" name="viewport" content="width=device-width,height=device-height, initial-scale=1.0" />
     <title>Tooqing-phaser3</title>
     <style>
         body {
@@ -25,9 +25,9 @@
 
 <body>
     <!-- <input type="file" id="files" name="files[]" /> -->
-    <div class="container">
-        <div id="game"></div>
-    </div>
+    <!-- <div class="container"> -->
+    <div id="game"></div>
+    <!-- </div> -->
     <!-- <script>
         let fileBin;
         function handleFileSelect(evt) {
@@ -62,14 +62,24 @@
     <script>
         window.addEventListener('load', (event) => {
             const launcher = TooqingCore.Launcher;
-            const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
+            const option = {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                api_root: "https://api-dev.tooqing.com/",
+                osd: "https://osd-alpha.tooqing.com/",
+                server_addr: {
+                    host: "gdev.tooqing.com",
+                    port: 11100,
+                    secure: true
+                },
+                parent: "game",
+                game_id: "5e719a0a68196e416ecf7aad",
+                user_id: "5cd8cf04cbcbf91a0afc3f96",
+                virtual_world_id: "0",
+            }
+
+            const app = launcher.start(option);
             app.registerReload(window.reload);
-            app.registerComplete(() => {
-                const loadingImg = document.getElementById('loading_img');
-                if (loadingImg) loadingImg.remove();
-                const loadingGif = document.getElementById('loading_gif');
-                if (loadingGif) loadingGif.remove();
-            })
             
             window.addEventListener("resize", (e) => {
                 app.onResize(window.innerWidth, window.innerHeight);
