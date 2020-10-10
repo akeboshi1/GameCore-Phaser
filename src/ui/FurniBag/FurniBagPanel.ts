@@ -444,8 +444,8 @@ export class FurniBagPanel extends BasePanel {
       this.mSelectedItemData = arr;
       this.displayAvatar();
     } else {
-      this.mDetailBubble.setProp(null, this.serviceTimestamp);
-      // this.mDetailBubble.setProp(null, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
+      // this.mDetailBubble.setProp(null, this.serviceTimestamp);
+      this.mDetailBubble.setProp(null, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
       this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     }
   }
@@ -597,8 +597,8 @@ export class FurniBagPanel extends BasePanel {
   private onSelectItemHandler(cell: Item) {
     const item: op_client.ICountablePackageItem = cell.getData("item");
     if (this.mSelectedItemData.indexOf(item) !== -1) return;
-    this.mDetailBubble.setProp(item, this.serviceTimestamp);
-    // this.mDetailBubble.setProp(item, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
+    // this.mDetailBubble.setProp(item, this.serviceTimestamp);
+    this.mDetailBubble.setProp(item, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
     if (item) {
       this.replaceSelectItem(item, cell);
@@ -886,120 +886,105 @@ class SeachInput extends Phaser.GameObjects.Container {
 }
 
 class DetailBubble extends Phaser.GameObjects.Container {
-  private mDetailBubble: Phaser.GameObjects.Graphics;
-  private mNickName: Phaser.GameObjects.Text;
-  private mPriceText: Phaser.GameObjects.Text;
-  private mDesText: Phaser.GameObjects.Text;
-  private mSource: Phaser.GameObjects.Text;
-  private mExpires: Text;
+
   private dpr: number;
   private timeID: any;
-  private itemtips: ItemInfoTips;
+  private tipsbg: NineSlicePatch;
+  private tipsText: BBCodeText;
+  private mExpires: BBCodeText;
+  // private testText: Phaser.GameObjects.Text;
   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
     super(scene);
     this.dpr = dpr;
-    this.mDetailBubble = this.scene.make.graphics(undefined, false);
-    const bubbleW = 100 * dpr;
-    const bubbleH = 96 * dpr;
-    this.mDetailBubble = this.scene.make.graphics(undefined, false);
-    this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
-    this.mDetailBubble.fillRoundedRect(0, 0, bubbleW, bubbleH);
-
-    this.mNickName = this.scene.make.text({
-      x: 7 * this.dpr,
-      y: 9 * this.dpr,
-      style: {
-        fontSize: 12 * this.dpr,
-        fontFamily: Font.DEFULT_FONT,
-        color: "#FFFF00",
-        align: "center"
-      }
-    });
-
-    this.mPriceText = this.scene.make.text({
-      x: 7 * this.dpr,
-      y: 28 * this.dpr,
-      style: {
-        fontSize: 10 * this.dpr,
-        fontFamily: Font.DEFULT_FONT,
-        color: "#DC143C",
-        align: "center"
-      }
-    });
-    this.mSource = this.scene.make.text({
-      x: 8 * dpr,
-      y: 47 * dpr,
-      style: {
-        fontSize: 10 * dpr,
-        fontFamily: Font.DEFULT_FONT,
-      }
-    }, false);
-
-    this.mDesText = this.scene.make.text({
-      x: 8 * dpr,
-      y: 66 * dpr,
-      style: {
-        color: "#32347b",
-        fontSize: 10 * dpr,
-        fontFamily: Font.DEFULT_FONT,
-        wordWrap: {
-          width: 90 * dpr,
-          useAdvancedWrap: true
-        }
-      }
-    }, false);
-    this.mExpires = new BBCodeText(scene, 8 * dpr, 85 * dpr, "", {
-      fontSize: 10 * this.dpr,
+    const tipsWidth = 100 * dpr;
+    const tipsHeight = 96 * dpr;
+    this.setSize(tipsWidth, tipsHeight);
+    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", {
+      left: 10 * this.dpr,
+      top: 10 * this.dpr,
+      right: 10 * this.dpr,
+      bottom: 10 * this.dpr
+    }, undefined, undefined, 0);
+    this.tipsbg.setPosition(tipsWidth * 0.5, tipsHeight * 0.5);
+    this.tipsbg.alpha = 0.6;
+    this.tipsText = new BBCodeText(this.scene, 7 * dpr, -tipsHeight + 60 * this.dpr, "", {
+      color: "#333333",
+      fontSize: 13 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
-    });
-    this.add([this.mDetailBubble, this.mNickName, this.mDesText, this.mSource, this.mPriceText, this.mExpires]);
-    this.setSize(bubbleW, bubbleH);
+      lineSpacing: 1 * dpr
+    }).setOrigin(0);
+    this.tipsText.setWrapMode("string");
+    this.mExpires = new BBCodeText(scene, 7 * dpr, 85 * dpr, "", {
+      fontSize: 12 * this.dpr,
+      fontFamily: Font.DEFULT_FONT,
+    }).setOrigin(0);
+    this.add([this.tipsbg, this.tipsText, this.mExpires]);
   }
 
-  setProp(prop: op_client.ICountablePackageItem, servertime: number): this {
+  setProp(prop: op_client.ICountablePackageItem, servertime: number, property: PlayerProperty): this {
     if (!prop) {
-      this.mNickName.setText(i18n.t("furni_bag.empty_backpack"));
-      this.mPriceText.text = "";
-      this.mSource.text = "";
-      this.mDesText.text = "";
+      this.tipsText.setText(i18n.t("furni_bag.empty_backpack"));
+      this.mExpires.text = "";
       this.resize();
     } else {
-      this.mNickName.setText(prop.shortName || prop.name);
-      let posY = 9 * this.dpr;
-      const offsetY = 21 * this.dpr;
-      // this.mDesText.setText(prop.des);
+      this.tipsText.setWrapWidth(undefined);
+      const name =`[color=#FFFF00]${prop.shortName || prop.name}[/color]` ;
+      let price = "";
+      let source = "";
+      let describle = "";
+      let attri = "";
+      let need = "";
+      let tips = name + "\n";
+      let maxWidth: number = 100 * this.dpr;
       if (prop.recyclable) {
-        posY += offsetY;
-        this.mPriceText.y = posY;
-        if (prop.sellingPrice) this.mPriceText.setText(`${i18n.t("furni_bag.sale_price")}：${Coin.getName(prop.sellingPrice.coinType)} x ${prop.sellingPrice.price}`);
+        if (prop.sellingPrice) {
+          price = `${i18n.t("furni_bag.sale_price")}：${Coin.getName(prop.sellingPrice.coinType)} x ${prop.sellingPrice.price}`;
+          tips += price + "\n";
+          this.tipsText.text = price;
+          maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+        }
       } else {
-        posY += offsetY;
-        this.mPriceText.y = posY;
-        this.mPriceText.setText(i18n.t("furni_bag.not_sale"));
+        price = i18n.t("furni_bag.not_sale");
+        tips += price + "\n";
+        this.tipsText.text = price;
+        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
       }
-      // if (prop.tradable) {
-      //   this.mPriceText.setText(`可交易`);
-      // }
       if (prop.source) {
-        this.mSource.setText(`${i18n.t("furni_bag.source")}： ${prop.source}`);
-        posY += offsetY;
-        this.mSource.y = posY;
-      } else {
-        this.mSource.setText("");
+        source = `${i18n.t("furni_bag.source")}： ${prop.source}`;
+        tips += source + "\n";
+        this.tipsText.text = source;
+        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
       }
-      const offset = 15 * this.dpr;
-      const width = this.getMaxWidth(offset);
       if (prop.des) {
-        posY += offsetY;
-        this.mDesText.setWordWrapWidth(width - offset, true);
-        this.mDesText.setText(prop.des);
-        this.mDesText.y = posY;
-      } else {
-        this.mDesText.setText("");
+        describle = prop.des;
+        tips += describle + "\n";
+        this.tipsText.text = describle;
+        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
       }
+      if (prop.affectValues) {
+        const len = prop.affectValues.length;
+        for (let i = 0; i < len; i++) {
+          const affect = prop.affectValues[i];
+          const proper = property.propertiesMap.get(affect.key);
+          attri += `${proper.name}: ${affect.value}` + (i < len - 1 ? "\n" : "");
+        }
+        if (attri.length > 0)
+          tips += `${i18n.t("furni_bag.properties")}:\n ${attri}`;
+      }
+      if (prop.requireValues) {
+        const len = prop.requireValues.length;
+        for (let i = 0; i < len; i++) {
+          const require = prop.requireValues[i];
+          const proper = property.propertiesMap.get(require.key);
+          need += `${proper.name}:${this.getComparTag(require.compareType)} ${require.value}` + (i < len - 1 ? "\n" : "");
+        }
+        if (need.length > 0)
+          tips += `${i18n.t("furni_bag.needproper")}:\n ${need}`;
+      }
+      this.tipsText.setWrapWidth(maxWidth);
+      this.tipsText.text = tips;
+      this.width = maxWidth + 14 * this.dpr;
       if (prop.expiredTime > 0) {
-        posY += offsetY;
-        this.mExpires.y = posY;
         let interval = prop.expiredTime - servertime;
         const timeout = () => {
           (<any>this.mExpires).visible = true;
@@ -1009,40 +994,34 @@ class DetailBubble extends Phaser.GameObjects.Container {
               interval -= 1;
               timeout();
             }, 1000);
+          } else {
+            this.timeID = undefined;
           }
         };
         timeout();
       } else {
         (<any>this.mExpires).visible = false;
+        if (this.timeID) clearTimeout(this.timeID);
       }
-      this.resize(width);
+      this.resize();
     }
     return this;
   }
   private resize(w?: number, h?: number) {
-    if (w === undefined) w = this.width;
-    const bubbleH = this.mDesText.height + 80 * this.dpr;
-    if (w === this.width && bubbleH === this.height) {
-      return;
-    }
-    this.mDetailBubble.clear();
-    this.mDetailBubble.fillStyle(0xFFFFFF, 0.1);
-    this.mDetailBubble.fillRoundedRect(0, 0, w, bubbleH);
+    const mixheight: number = 96 * this.dpr;
+    let height = this.tipsText.height;
+    if ((<any>this.mExpires).visible) height += this.mExpires.height + 3 * this.dpr;
+    height += 14 * this.dpr;
+    height = height < mixheight ? mixheight : height;
+    this.setSize(this.width, height);
+    this.tipsbg.resize(this.width, this.height);
+    this.tipsbg.x = this.width * 0.5;
+    this.tipsbg.y = this.height * 0.5;
+    this.tipsText.y = 7 * this.dpr;
+    this.mExpires.y = this.tipsText.y + this.tipsText.height + 3 * this.dpr;
 
-    this.setSize(w, bubbleH);
-    // this.mDetailBubbleContainer.y = this.height - this.y - this.mDetailBubbleContainer.height - 6 * this.dpr;
   }
 
-  private getMaxWidth(offset: number = 0) {
-    const width = 100 * this.dpr;
-    let maxWidth = 0;
-    if (maxWidth < this.mNickName.width) maxWidth = this.mNickName.width;
-    if (maxWidth < this.mPriceText.width) maxWidth = this.mPriceText.width;
-    if (maxWidth < this.mSource.width) maxWidth = this.mSource.width;
-    if (width - maxWidth < offset) maxWidth += offset + ((maxWidth - width) >= 0 ? 0 : (maxWidth - width));
-    if (maxWidth < width) maxWidth = width;
-    return maxWidth;
-  }
   private getDataFormat(time: number) {
     const day = Math.floor(time / 86400000);
     const hour = Math.floor(time / 3600000) % 24;
@@ -1079,190 +1058,28 @@ class DetailBubble extends Phaser.GameObjects.Container {
     }
     return str;
   }
+
+  private getComparTag(value: number) {
+    let tag = "";
+    switch (value) {
+      case 1:
+        tag = "=";
+      case 2:
+        tag = "!=";
+      case 3:
+        tag = "<=";
+      case 4:
+        tag = "<";
+      case 5:
+        tag = ">=";
+      case 6:
+        tag = ">";
+      default:
+        tag = "=";
+    }
+    return tag;
+  }
 }
-
-// class DetailBubble extends Phaser.GameObjects.Container {
-
-//   private dpr: number;
-//   private timeID: any;
-//   private tipsbg: NineSlicePatch;
-//   private tipsText: BBCodeText;
-//   private mExpires: BBCodeText;
-//   // private testText: Phaser.GameObjects.Text;
-//   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
-//     super(scene);
-//     this.dpr = dpr;
-//     const tipsWidth = 100 * dpr;
-//     const tipsHeight = 96 * dpr;
-//     this.setSize(tipsWidth, tipsHeight);
-//     const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", {
-//       left: 10 * this.dpr,
-//       top: 10 * this.dpr,
-//       right: 10 * this.dpr,
-//       bottom: 10 * this.dpr
-//     });
-//     tipsbg.setPosition(0, -tipsHeight * 0.5);
-//     this.tipsbg = tipsbg;
-//     this.tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
-//       color: "#333333",
-//       fontSize: 13 * this.dpr,
-//       fontFamily: Font.DEFULT_FONT,
-//     }).setOrigin(0);
-//     this.tipsText.setWrapMode("string");
-//     this.mExpires = new BBCodeText(scene, 8 * dpr, 85 * dpr, "", {
-//       fontSize: 10 * this.dpr,
-//       fontFamily: Font.DEFULT_FONT,
-//     }).setOrigin(0);
-//     this.add([this.tipsbg, this.tipsText, this.mExpires]);
-//   }
-
-//   setProp(prop: op_client.ICountablePackageItem, servertime: number, property: PlayerProperty): this {
-//     if (!prop) {
-//       this.tipsText.setText(i18n.t("furni_bag.empty_backpack"));
-//       this.mExpires.text = "";
-//       this.resize();
-//     } else {
-//       this.tipsText.setWrapWidth(undefined);
-//       const name = prop.shortName || prop.name;
-//       let price = "";
-//       let source = "";
-//       let describle = "";
-//       let attri = "";
-//       let need = "";
-//       let tips = name + "\n";
-//       let maxWidth: number = 100 * this.dpr;
-//       if (prop.recyclable) {
-//         if (prop.sellingPrice) {
-//           price = `${i18n.t("furni_bag.sale_price")}：${Coin.getName(prop.sellingPrice.coinType)} x ${prop.sellingPrice.price}`;
-//           tips += price + "\n";
-//           this.tipsText.text = price;
-//           maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-//         }
-//       } else {
-//         price = i18n.t("furni_bag.not_sale");
-//         tips += price + "\n";
-//         this.tipsText.text = price;
-//         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-//       }
-//       if (prop.source) {
-//         source = `${i18n.t("furni_bag.source")}： ${prop.source}`;
-//         tips += source + "\n";
-//         this.tipsText.text = source;
-//         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-//       }
-//       if (prop.des) {
-//         describle = prop.des;
-//         tips += describle + "\n";
-//         this.tipsText.text = describle;
-//         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-//       }
-//       if (prop.affectValues) {
-//         for (const affect of prop.affectValues) {
-//           const proper = property.propertiesMap.get(affect.key);
-//           attri += `${proper.name}: ${affect.value}` + "\n";
-//         }
-//         tips += `${i18n.t("furni_bag.properties")}:\n ${attri}` + "\n";
-//       }
-//       if (prop.requireValues) {
-//         for (const require of prop.requireValues) {
-//           const proper = property.propertiesMap.get(require.key);
-//           need += `${proper.name}:${this.getComparTag(require.compareType)} ${require.value}` + "\n";
-//         }
-//         tips += `${i18n.t("furni_bag.needproper")}:\n ${need}` + "\n";
-//       }
-//       this.tipsText.setWrapWidth(maxWidth);
-//       this.tipsText.text = tips;
-//       if (prop.expiredTime > 0) {
-//         let interval = prop.expiredTime - servertime;
-//         const timeout = () => {
-//           (<any>this.mExpires).visible = true;
-//           this.mExpires.text = this.getDataFormat(interval * 1000);
-//           if (interval > 0) {
-//             this.timeID = setTimeout(() => {
-//               interval -= 1;
-//               timeout();
-//             }, 1000);
-//           } else {
-//             this.timeID = undefined;
-//           }
-//         };
-//         timeout();
-//       } else {
-//         (<any>this.mExpires).visible = false;
-//         if (this.timeID) clearTimeout(this.timeID);
-//       }
-//       this.resize();
-//     }
-//     return this;
-//   }
-//   private resize(w?: number, h?: number) {
-//     let height = 9 * this.dpr + this.tipsText.height;
-//     if ((<any>this.mExpires).visible) height += this.mExpires.height;
-//     this.setSize(this.tipsText.width, height);
-//     this.tipsbg.resize(this.width, this.height);
-//     this.tipsText.y = -height * 0.5 + this.tipsText.height * 0.5 + 9 * this.dpr;
-//     this.mExpires.y = this.tipsText.y + this.tipsText.height * 0.5 + 3 * this.dpr;
-
-//   }
-
-//   private getDataFormat(time: number) {
-//     const day = Math.floor(time / 86400000);
-//     const hour = Math.floor(time / 3600000) % 24;
-//     const minute = Math.floor(time / 60000) % 60;
-//     const second = Math.floor(time / 1000) % 60;
-//     let text = i18n.t("furni_bag.timelimit") + ":  ";
-//     if (day > 0) {
-//       const temptime = `${day}-${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
-//       text += `[color=#FF0000]${temptime}[/color]`;
-//     } else if (hour > 0 || minute > 0 || second > 0) {
-//       const temptime = `${this.stringFormat(hour)}:${this.stringFormat(minute)}:${this.stringFormat(second)}`;
-//       text += `[color=#FF0000]${temptime}[/color]`;
-//     } else {
-//       const temptime = `${i18n.t("furni_bag.expires")}`;
-//       text += `[color=#FF0000]${temptime}[/color]`;
-//     }
-//     // else if (minute > 0) {
-//     //   const temptime = `${this.stringFormat(minute)}:${this.stringFormat(second)}`;
-//     //   text += `[color=#FF0000]${temptime}[/color]`;
-//     // } else if (second > 0) {
-//     //   const temptime = `${this.stringFormat(second)}`;
-//     //   text += `[color=#FF0000]${temptime}[/color]`;
-//     // }
-//     //  else {
-//     //   const temptime = `${i18n.t("furni_bag.expires")}`;
-//     //   text += `[color=#FF0000]${temptime}[/color]`;
-//     // }
-//     return text;
-//   }
-//   private stringFormat(num: number) {
-//     let str = num + "";
-//     if (str.length <= 1) {
-//       str = "0" + str;
-//     }
-//     return str;
-//   }
-
-//   private getComparTag(value: number) {
-//     let tag = "";
-//     switch (value) {
-//       case 1:
-//         tag = "=";
-//       case 2:
-//         tag = "!=";
-//       case 3:
-//         tag = "<=";
-//       case 4:
-//         tag = "<";
-//       case 5:
-//         tag = ">=";
-//       case 6:
-//         tag = ">";
-//       default:
-//         tag = "=";
-//     }
-//     return tag;
-//   }
-// }
 
 class Item extends Phaser.GameObjects.Container {
   public propData: op_client.ICountablePackageItem;

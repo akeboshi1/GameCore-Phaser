@@ -49,6 +49,7 @@ export class PicaMainUIMediator extends BaseMediator {
     }
 
     get playerInfo() {
+        if (!this.mPlayerInfo) this.mPlayerInfo = this.world.user.userData.playerProperty;
         return this.mPlayerInfo;
     }
 
@@ -72,11 +73,11 @@ export class PicaMainUIMediator extends BaseMediator {
     }
 
     private onUpdateHandler() {
-        if (this.mPlayerInfo) this.mView.updatePlayerInfo(this.mPlayerInfo);
+        if (this.mPlayerInfo) this.mView.updatePlayerInfo(this.playerInfo);
         if (this.mRoomInfo) this.mView.updateRoomInfo(this.mRoomInfo);
     }
     private onUpdatePlayerHandler(content: PlayerProperty) {
-        if (!this.mPlayerInfo) this.mPlayerInfo = content;
+        this.mPlayerInfo = content;
         if (this.mView)
             this.mView.updatePlayerInfo(content);
     }
