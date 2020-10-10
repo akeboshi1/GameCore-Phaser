@@ -1,4 +1,4 @@
-import { IElementManager, ElementManager } from "./element.manager";
+import { IElementManager, ElementManager } from "../../../game/room/element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";

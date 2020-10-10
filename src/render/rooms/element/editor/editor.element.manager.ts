@@ -1,4 +1,4 @@
-import { ElementManager } from "../element.manager";
+import { ElementManager } from "../../../../game/room/element/element.manager";
 import { ISprite, Sprite } from "../sprite";
 import { PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";

@@ -3,7 +3,7 @@ import { ConnectionService } from "../../../lib/net/connection.service";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { IRoomService, SpriteAddCompletedListener } from "../room";
-import { IElementManager } from "../element/element.manager";
+import { IElementManager } from "../../../game/room/element/element.manager";
 import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "../element/sprite";
 import { IElement } from "../element/element";

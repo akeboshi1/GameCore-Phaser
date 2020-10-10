@@ -1,5 +1,5 @@
 import { IElement } from "../element/element";
-import { IElementManager } from "../element/element.manager";
+import { IElementManager } from "../../../game/room/element/element.manager";
 import { Logger } from "../../game/core/utils/log";
 import { Pos } from "../../game/core/utils/pos";
 import { ISprite } from "../element/sprite";

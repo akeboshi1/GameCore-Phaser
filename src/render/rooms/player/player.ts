@@ -1,5 +1,5 @@
 import { Element, PlayerState, MovePath } from "../element/element";
-import { IElementManager } from "../element/element.manager";
+import { IElementManager } from "../../../game/room/element/element.manager";
 import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ISprite } from "../element/sprite";

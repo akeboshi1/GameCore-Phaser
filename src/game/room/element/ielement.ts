@@ -34,7 +34,7 @@ export interface IElement {
 
     hideNickname();
 
-    scaleTween();
+    // scaleTween();
 
     turn();
 

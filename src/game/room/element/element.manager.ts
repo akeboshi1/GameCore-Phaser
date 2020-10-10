@@ -1,15 +1,15 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { Element, IElement, InputEnable } from "./element";
-import { IRoomService } from "../room";
-import { ISprite, Sprite } from "./sprite";
+import { Element, IElement, InputEnable } from "../../../render/rooms/element/element";
+import { ISprite, Sprite } from "../../../render/rooms/element/sprite";
 import NodeType = op_def.NodeType;
-import { IDragonbonesModel } from "../display/dragonbones.model";
+import { IDragonbonesModel } from "../../../render/rooms/display/dragonbones.model";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { IFramesModel } from "../../../game/room/display/frame/iframe.model";
-import { IElementStorage } from "../../element.storage";
+import { IFramesModel } from "../display/frame/iframe.model";
+import { IElementStorage } from "../../../render/element.storage";
 import { Logger } from "../../../utils/log";
 import { LogicPos } from "../../../utils/logic.pos";
+import { IRoomService } from "../../../render/rooms/room";
 
 export interface IElementManager {
     hasAddComplete: boolean;
