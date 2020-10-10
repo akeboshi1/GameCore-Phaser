@@ -6,19 +6,10 @@ export class Url {
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
     static getRes(value: string): string {
-        // 资源地址根路径 CONFIG.BUNDLE_RESOURCES_ROOT
-        if (CONFIG.BUNDLE_RESOURCES_ROOT) {
-            return CONFIG.BUNDLE_RESOURCES_ROOT
-                + value;
-        }
         return Url.RES_PATH + value;
     }
 
     static getUIRes(dpr: number, value: string): string {
-        if (CONFIG.BUNDLE_RESOURCES_ROOT) {
-            return CONFIG.BUNDLE_RESOURCES_ROOT
-                + dpr + "x" + value;
-        }
         return Url.RESUI_PATH + `${dpr}x/${value}`;
     }
 
@@ -27,7 +18,7 @@ export class Url {
             if (HTTP_REGEX.test(Url.OSD_PATH)) {
                 return Url.OSD_PATH + value;
             }
-            return CONFIG.osd + value;
+            return Url.OSD_PATH + value;
         }
         return value;
     }
@@ -41,7 +32,7 @@ export class ResUtils {
         if (HTTP_REGEX.test(Url.OSD_PATH)) {
             return Url.OSD_PATH + "avatar/part/" + value + ".png";
         }
-        return CONFIG.osd + "avatar/part/" + value + ".png";
+        return Url.OSD_PATH + "avatar/part/" + value + ".png";
     }
     static getGameConfig(value: string): string {
         if (HTTP_REGEX.test(value)) {

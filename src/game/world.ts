@@ -83,7 +83,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
      */
     private mUIScale: number;
     private mUser: User;
-    private _isIOS = -1;
+
     private mReconnect: number = 0;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super();
@@ -94,8 +94,26 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mCallBack = callBack;
         this.mConfig = config;
         // TODO 检测config内的必要参数如确实抛异常.
+        let error = "";
         if (!config.game_id) {
-            throw new Error(`Config.game_id is required.`);
+            error = `game_id is required.`;
+        }
+        if (!this.mConfig.osd) {
+            error = "osd is required.";
+        }
+        if (!this.mConfig.server_addr) {
+            error = "server is required.";
+        }
+        if (!this.mConfig.api_root) {
+            error = "api_root is required.";
+        }
+        if (error) {
+            const div = document.getElementById(config.parent);
+            if (div) {
+                div.innerText = error;
+            }
+            // return;
+            throw new Error(error);
         }
         if (!config.devicePixelRatio) {
             config.devicePixelRatio = window.devicePixelRatio || 1;
@@ -116,7 +134,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         // }
 
         // this.mScaleRatio = config.scale_ratio ? config.scale_ratio : window.innerWidth / this.DEFAULT_WIDTH * window.devicePixelRatio;
-        Url.OSD_PATH = this.mConfig.osd || CONFIG.osd;
+        Url.OSD_PATH = this.mConfig.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
         this.mUser = new User(this);
@@ -157,7 +175,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         this.mSoundManager.addPackListener();
         this.user.addPackListener();
         this.gameState = GameState.GAME_INIT;
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        const gateway: ServerAddress = this.mConfig.server_addr;
         if (gateway) {
             // connect to game server.
             this.mConnection.startConnect(gateway);
@@ -675,7 +693,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
             // this.mConfig.game_id = gameId;
             // this.mConfig.virtual_world_id = worldId;
             this.mConnection.addPacketListener(this);
-            const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+            const gateway: ServerAddress = this.mConfig.server_addr;
             if (gateway) {
                 // connect to game server.
                 this.mConnection.startConnect(gateway);
@@ -935,7 +953,7 @@ export class World extends PacketHandler implements IConnectListener, WorldServi
         Logger.getInstance().log("dragonbones: ", dragonBones);
         this.gameConfig = {
             type: Phaser.AUTO,
-            parent: this.mConfig.parent || "game",
+            parent: this.mConfig.parent,
             scene: null,
             disableContextMenu: true,
             transparent: false,

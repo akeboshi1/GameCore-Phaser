@@ -14,9 +14,8 @@ export class Logger {
     return Logger._instance;
   }
   fatal(message?: any, ...optionalParams: any[]) {
-    if (!CONFIG.debug) {
-      return console.error(message, ...optionalParams);
-    }
+    return console.error(message, ...optionalParams);
+    // }
 
     throw message;
   }
