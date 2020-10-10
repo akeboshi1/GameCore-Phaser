@@ -1,15 +1,15 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../lib/net/connection.service";
 import { Element, IElement, InputEnable } from "./element";
 import { IRoomService } from "../room";
-import { Logger } from "../../game/core/utils/log";
-import { Pos } from "../../game/core/utils/pos";
-import { IElementStorage } from "../../game/element.storage";
 import { ISprite, Sprite } from "./sprite";
 import NodeType = op_def.NodeType;
-import { IFramesModel } from "../display/frames.model";
 import { IDragonbonesModel } from "../display/dragonbones.model";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { IFramesModel } from "../../../game/room/display/frame/iframe.model";
+import { IElementStorage } from "../../element.storage";
+import { Logger } from "../../../utils/log";
+import { LogicPos } from "../../../utils/logic.pos";
 
 export interface IElementManager {
     hasAddComplete: boolean;
@@ -149,7 +149,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             point = sprite.point3f;
-            ele.setPosition(new Pos(point.x || 0, point.y || 0, point.z || 0));
+            ele.setPosition(new LogicPos(point.x || 0, point.y || 0, point.z || 0));
         }
     }
 
@@ -245,7 +245,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         const ele: Element = this.get(id);
-        ele.setPosition(new Pos(content.position.x, content.position.y, content.position.z));
+        ele.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
     }
 
     protected onRemove(packet: PBpacket) {

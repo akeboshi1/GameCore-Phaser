@@ -34,12 +34,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public getPosition(): LogicPos {
-        let pos: LogicPos;
-        if (this.mDisplay) {
-            pos = new LogicPos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
-        } else {
-            pos = new LogicPos();
-        }
+        const pos: LogicPos = this.mModel ? this.mModel.pos : new LogicPos();
         return pos;
     }
 
