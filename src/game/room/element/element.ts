@@ -1,3 +1,4 @@
+import { Logger } from "../../../utils/log";
 import { LogicPos } from "../../../utils/logic.pos";
 import { BlockObject } from "../camera/block.object";
 import { IDragonbonesModel } from "../display/dragonbones/idragonbones.model";
@@ -5,6 +6,7 @@ import { IFramesModel } from "../display/frame/iframe.model";
 import { ISprite } from "../display/sprite/isprite";
 import { IRoomService } from "../room";
 import { IElement } from "./ielement";
+import { op_client, op_def } from "pixelpai_proto";
 
 export enum PlayerState {
     IDLE = "idle",
@@ -86,9 +88,11 @@ export class Element extends BlockObject implements IElement {
             return this.mElementManager.scene;
         }
     }
-    get ai(): AI {
-        return this.mAi;
-    }
+
+    // get ai(): AI {
+    //     return this.mAi;
+    // }
+
     get eleMgr(): ElementManager {
         if (this.mElementManager) {
             return this.mElementManager as ElementManager;
@@ -97,15 +101,15 @@ export class Element extends BlockObject implements IElement {
 
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-    protected mDisplay: DisplayObject | undefined;
-    protected mBubble: BubbleContainer;
+    // protected mDisplay: DisplayObject | undefined;
+    // protected mBubble: BubbleContainer;
     protected mFollowObjects: Map<any, FollowObject>;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mShopEntity: ShopEntity;
     //  protected concomitants: Element[];
-    protected mAi: AI;
+    // protected mAi: AI;
     protected mOffsetY: number = undefined;
     protected mQueueAnimations: AnimationQueue[];
     protected mMoving: boolean = false;
@@ -116,7 +120,7 @@ export class Element extends BlockObject implements IElement {
         super(mElementManager.roomService);
         this.mId = sprite.id;
         this.model = sprite;
-        this.mAi = new AI(this);
+        // this.mAi = new AI(this);
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -138,7 +142,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
-        this.mDisplay.changeAlpha(this.mModel.alpha);
+        // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.getFollowObject(FollowEnum.Nickname)) this.showNickname();
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
@@ -146,10 +150,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mInputEnable === InputEnable.Interactive) {
             this.setInputEnable(this.mInputEnable);
         }
-        if (frameModel && frameModel.shops) {
-            this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
-            this.mShopEntity.register();
-        }
+        // if (frameModel && frameModel.shops) {
+        //     this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
+        //     this.mShopEntity.register();
+        // }
         if (model.mountSprites && model.mountSprites.length > 0) {
             this.updateMounth(model.mountSprites);
         }
@@ -183,17 +187,17 @@ export class Element extends BlockObject implements IElement {
         }
         if (model.hasOwnProperty("point3f")) {
             const pos = model.point3f;
-            this.setPosition(new Pos(pos.x, pos.y, pos.z));
+            this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
         this.update();
     }
 
-    scaleTween(): void {
-        if (!this.mDisplay) {
-            return;
-        }
-        this.mDisplay.scaleTween();
-    }
+    // scaleTween(): void {
+    //     if (!this.mDisplay) {
+    //         return;
+    //     }
+    //     this.mDisplay.scaleTween();
+    // }
 
     public play(animationName: string, times?: number): void {
         if (!this.mModel) {
@@ -204,14 +208,14 @@ export class Element extends BlockObject implements IElement {
             this.mModel.currentAnimationName = animationName;
         }
         // 部分动画可能会重新播放
-        if (!this.mDisplay) {
-            return Logger.getInstance().warn("display can't initlized");
-        }
+        // if (!this.mDisplay) {
+        //     return Logger.getInstance().warn("display can't initlized");
+        // }
 
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
-        this.mDisplay.play(this.model.currentAnimation, undefined, times);
+        // this.mDisplay.play(this.model.currentAnimation, undefined, times);
     }
 
     public setQueue(animations: op_client.IChangeAnimation[]) {
@@ -250,10 +254,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
         }
-        if (this.mDisplay && this.model) {
-            this.model.direction = val;
-            this.mDisplay.play(this.model.currentAnimation);
-        }
+        // if (this.mDisplay && this.model) {
+        //     this.model.direction = val;
+        //     this.mDisplay.play(this.model.currentAnimation);
+        // }
     }
 
     public getDirection(): number {
@@ -261,19 +265,16 @@ export class Element extends BlockObject implements IElement {
     }
 
     public changeState(val?: string) {
-        if (this.mCurState === val) return;
-        this.mCurState = val;
-        if (!this.mDisplay) {
-            return;
-        }
-        // if (!val) val = PlayerState.IDLE;
-        if (!val) {
-            val = PlayerState.IDLE;
-        }
-        this.play(this.mCurState);
-        // this.mModel.currentAnimationName = this.mCurState;
-        // this.mDisplay.play(this.mModel.currentAnimation);
-    }
+    //     if (this.mCurState === val) return;
+    //     this.mCurState = val;
+    //     if (!this.mDisplay) {
+    //         return;
+    //     }
+    //     if (!val) {
+    //         val = PlayerState.IDLE;
+    //     }
+    //     this.play(this.mCurState);
+    // }
 
     public getState(): string {
         return this.mCurState;
@@ -283,18 +284,14 @@ export class Element extends BlockObject implements IElement {
         return this.mRenderable;
     }
 
-    public getDisplay(): DisplayObject {
-        return this.mDisplay;
-    }
-
     public update() {
         if (this.mDirty === false) {
             return;
         }
         this.mDirty = false;
-        if (this.mBubble) {
-            this.mBubble.follow(this);
-        }
+        // if (this.mBubble) {
+        //     this.mBubble.follow(this);
+        // }
         if (this.mBlockable) {
             this.roomService.updateBlockObject(this);
         }
@@ -324,11 +321,8 @@ export class Element extends BlockObject implements IElement {
         this._doMove();
     }
 
-    public movePosition(pos: Pos, angel: number) {
+    public movePosition(pos: LogicPos, angel: number) {
         if (!this.mElementManager) {
-            return;
-        }
-        if (!this.mDisplay) {
             return;
         }
         this.startMove();
@@ -341,45 +335,42 @@ export class Element extends BlockObject implements IElement {
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        if (!this.mElementManager) {
-            return;
-        }
-        if (!this.mDisplay) {
-            return;
-        }
-        const tmpPath = movePath.path;
-        if (!tmpPath) {
-            return;
-        }
-        this.mMoveData.arrivalTime = movePath.timestemp;
-        let lastPos = new Pos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
-        const paths = [];
-        let angle = null;
-        let point = null;
-        let now = this.mElementManager.roomService.now();
-        let duration = 0;
-        let index = 0;
-        for (const path of movePath.path) {
-            point = path.point3f;
-            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
-                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
-            }
-            now += duration;
-            duration = path.timestemp - now;
-            paths.push({
-                x: point.x,
-                y: point.y,
-                duration,
-                onStartParams: angle,
-                onStart: (tween, target, params) => {
-                    this.onCheckDirection(params);
-                },
-            });
-            lastPos = new Pos(point.x, point.y);
-            index++;
-        }
-        this.mMoveData.posPath = paths;
-        this._doMove();
+        // if (!this.mElementManager) {
+        //     return;
+        // }
+        // const tmpPath = movePath.path;
+        // if (!tmpPath) {
+        //     return;
+        // }
+        // this.mMoveData.arrivalTime = movePath.timestemp;
+        // let lastPos = new LogicPos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
+        // const paths = [];
+        // let angle = null;
+        // let point = null;
+        // let now = this.mElementManager.roomService.now();
+        // let duration = 0;
+        // let index = 0;
+        // for (const path of movePath.path) {
+        //     point = path.point3f;
+        //     if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+        //         angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+        //     }
+        //     now += duration;
+        //     duration = path.timestemp - now;
+        //     paths.push({
+        //         x: point.x,
+        //         y: point.y,
+        //         duration,
+        //         onStartParams: angle,
+        //         onStart: (tween, target, params) => {
+        //             this.onCheckDirection(params);
+        //         },
+        //     });
+        //     lastPos = new LogicPos(point.x, point.y);
+        //     index++;
+        // }
+        // this.mMoveData.posPath = paths;
+        // this._doMove();
     }
 
     public startMove() {
@@ -406,9 +397,9 @@ export class Element extends BlockObject implements IElement {
     }
 
     public getPosition() {
-        let pos: Pos;
+        let pos: LogicPos;
         if (!this.mDisplay) {
-            return new Pos(0, 0);
+            return new LogicPos(0, 0);
         }
         if (this.mRootMount) {
             pos = this.mRootMount.getPosition();
@@ -416,13 +407,13 @@ export class Element extends BlockObject implements IElement {
             pos.y += this.mDisplay.y;
             pos.z += this.mDisplay.z;
         } else {
-            pos = new Pos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
+            pos = new LogicPos(this.mDisplay.x, this.mDisplay.y, this.mDisplay.z);
         }
 
         return pos;
     }
 
-    public setPosition(p: Pos) {
+    public setPosition(p: LogicPos) {
         if (this.mMoving) {
             this.stopMove();
         }
@@ -439,8 +430,8 @@ export class Element extends BlockObject implements IElement {
         this.update();
     }
 
-    public getRootPosition(): Pos {
-        return new Pos(this.mDisplay.x, this.mDisplay.y, 0);
+    public getRootPosition(): LogicPos {
+        return new LogicPos(this.mDisplay.x, this.mDisplay.y, 0);
     }
 
     public showBubble(text: string, setting: op_client.IChat_Setting) {
@@ -607,10 +598,6 @@ export class Element extends BlockObject implements IElement {
             this.mBubble.destroy();
             this.mBubble = undefined;
         }
-        if (this.mShopEntity) {
-            this.mShopEntity.destroy();
-            this.mShopEntity = null;
-        }
         if (this.mAi) {
             this.mAi.destroy();
             this.mAi = null;
@@ -692,58 +679,60 @@ export class Element extends BlockObject implements IElement {
         });
     }
 
-    protected createDisplay(): ElementDisplay {
-        if (!this.mDisplayInfo) {
-            Logger.getInstance().error(`displayinfo does not exist, Create ${this.model.nickname} failed`);
-            return;
-        }
-        if (this.mDisplay) {
-            return this.mDisplay;
-        }
-        const scene = this.mElementManager.scene;
-        if (scene) {
-            if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
-                this.mDisplay = new DragonbonesDisplay(scene, this.mElementManager.roomService, this);
-            } else {
-                this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
-            }
-            const pos = this.mModel.pos;
-            if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
-            this.addToBlock();
-        }
-        return this.mDisplay;
+    protected createDisplay(): this {
+        // if (!this.mDisplayInfo) {
+        //     Logger.getInstance().error(`displayinfo does not exist, Create ${this.model.nickname} failed`);
+        //     return;
+        // }
+        // if (this.mDisplay) {
+        //     return this.mDisplay;
+        // }
+        // const scene = this.mElementManager.scene;
+        // if (scene) {
+        //     if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
+        //         this.mDisplay = new DragonbonesDisplay(scene, this.mElementManager.roomService, this);
+        //     } else {
+        //         this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
+        //     }
+        //     const pos = this.mModel.pos;
+        //     if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
+        //     this.addToBlock();
+        // }
+        // return this.mDisplay;
+        // TODO
+        return this;
     }
 
     protected loadDisplayInfo() {
-        if (!this.mDisplayInfo) {
-            return;
-        }
-        if (!this.mDisplay) {
-            this.createDisplay();
-        }
-        this.mDisplay.once("initialized", this.onDisplayReady, this);
-        this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
-        this.mDisplay.load(this.mDisplayInfo);
+        // if (!this.mDisplayInfo) {
+        //     return;
+        // }
+        // if (!this.mDisplay) {
+        //     this.createDisplay();
+        // }
+        // this.mDisplay.once("initialized", this.onDisplayReady, this);
+        // this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
+        // this.mDisplay.load(this.mDisplayInfo);
     }
 
     protected addDisplay() {
-        this.createDisplay();
-        const room = this.roomService;
-        if (!room || !this.mDisplay) {
-            // Logger.getInstance().error("roomService is undefined");
-            return;
-        }
-        room.addToSurface(this.mDisplay);
-        let depth = 0;
-        if (this.model && this.model.pos) {
-            depth = this.model.pos.depth ? this.model.pos.depth : 0;
-        }
-        if (this.mFollowObjects) {
-            this.mFollowObjects.forEach((follow) => {
-                if (follow.object) room.addToSceneUI(<any> follow.object);
-            });
-        }
-        this.setDepth(depth);
+        // this.createDisplay();
+        // const room = this.roomService;
+        // if (!room || !this.mDisplay) {
+        //     // Logger.getInstance().error("roomService is undefined");
+        //     return;
+        // }
+        // room.addToSurface(this.mDisplay);
+        // let depth = 0;
+        // if (this.model && this.model.pos) {
+        //     depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        // }
+        // if (this.mFollowObjects) {
+        //     this.mFollowObjects.forEach((follow) => {
+        //         if (follow.object) room.addToSceneUI(<any> follow.object);
+        //     });
+        // }
+        // this.setDepth(depth);
     }
 
     protected removeDisplay() {
@@ -765,23 +754,6 @@ export class Element extends BlockObject implements IElement {
             }
             layerManager.depthSurfaceDirty = true;
         }
-    }
-
-    protected onDisplayReady(field?: FramesDisplay) {
-        if (this.mDisplay) {
-            this.mDisplay.play(this.model.currentAnimation);
-            // if (!field || field === DisplayField.STAGE) {
-            if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
-                this.updateMounth(this.mModel.mountSprites);
-            }
-            let depth = 0;
-            if (this.model && this.model.pos) {
-                depth = this.model.pos.depth ? this.model.pos.depth : 0;
-            }
-            this.setDepth(depth);
-        }
-        // this.mDisplay.showRefernceArea();
-        // }
     }
 
     protected onUpdateAnimationHandler() {
@@ -897,10 +869,11 @@ export class Element extends BlockObject implements IElement {
     protected removeStateHandler(state: op_def.IState) {
         switch (state.name) {
             case "effect":
+                this.world.removestate(state)
                 // remove
-                if (this.mDisplay) {
-                    this.mDisplay.removeEffect(DisplayField.Effect);
-                }
+                // if (this.mDisplay) {
+                //     this.mDisplay.removeEffect(DisplayField.Effect);
+                // }
                 break;
         }
     }

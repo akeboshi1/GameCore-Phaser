@@ -1,20 +1,20 @@
 import { op_client, op_def } from "pixelpai_proto";
 import IActor = op_client.IActor;
 import { World } from "../world";
-import { PacketHandler } from "net-socket-packet";
+import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IRoomManager } from "./room.manager";
 import { ClockReadyListener } from "../clock/clock";
-import { IBlockObject } from "../../render/rooms/cameras/iblock.object";
 import { State } from "../../render/rooms/state/state.group";
 import { ILogicElement } from "./logic.element";
 import { PlayerManager } from "./player/player.manager";
 import { IPoint } from "game-capsule";
 import { ViewblockService } from "../../render/rooms/cameras/viewblock.service";
-import { LogicPos } from "../../utils/logic.pos";
+import { IPos, LogicPos } from "../../utils/logic.pos";
 import { IPosition45Obj } from "../../utils/iposition45";
 import { Position45 } from "../../utils/position45";
 import { Logger } from "../../utils/log";
 import { IScenery } from "../../render/rooms/sky.box/scenery";
+import { IBlockObject } from "./camera/iblock.object";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -42,13 +42,13 @@ export interface IRoomService {
 
     resume(name: string | string[]): void;
 
-    transformTo45(p: LogicPos): LogicPos;
+    transformTo45(p: IPos): IPos;
 
-    transformTo90(p: LogicPos): LogicPos;
+    transformTo90(p: IPos): IPos;
 
-    transformToMini45(p: LogicPos): LogicPos;
+    transformToMini45(p: IPos): IPos;
 
-    transformToMini90(p: LogicPos): LogicPos;
+    transformToMini90(p: IPos): IPos;
 
     addBlockObject(object: IBlockObject);
 
@@ -177,28 +177,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public transformTo90(p: LogicPos) {
+    public transformTo90(p: LogicPos): IPos {
         if (!this.mSize) {
             return;
         }
         return Position45.transformTo90(p, this.mSize);
     }
 
-    public transformTo45(p: LogicPos) {
+    public transformTo45(p: LogicPos): IPos {
         if (!this.mSize) {
             return;
         }
         return Position45.transformTo45(p, this.mSize);
     }
 
-    public transformToMini90(p: LogicPos) {
+    public transformToMini90(p: LogicPos): IPos {
         if (!this.mMiniSize) {
             return;
         }
         return Position45.transformTo90(p, this.miniSize);
     }
 
-    public transformToMini45(p: LogicPos) {
+    public transformToMini45(p: LogicPos): IPos {
         if (!this.mMiniSize) {
             return;
         }
@@ -296,7 +296,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mActorData = null;
         }
         if (this.mStateMap) this.mStateMap = null;
-        this.mWorld.peer.clearGame();
+        this.mWorld.peer.render.clearGame();
         if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
@@ -320,10 +320,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     protected addSkyBox(scenery: IScenery) {
         this.mSkyboxManager.add(scenery);
-    }
-
-    protected onGameOutHandler() {
-        this.removePointerMoveHandler();
     }
 
     protected handlerState(state: State) {

@@ -91,13 +91,14 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private async onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+        this.world.peer.render.onEnterRoom(scene.scene);
         if (this.mCurRoom) {
             await this.leaveScene(this.mCurRoom);
         }
         const room = new Room(this);
         this.mRooms.push(room);
-        room.addActor(scene.actor);
-        room.enter(scene.scene);
+        // room.addActor(scene.actor);
+        // room.enter(scene.scene);
         this.mCurRoom = room;
     }
 
