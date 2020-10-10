@@ -1,18 +1,98 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import MainWorker from "worker-loader?filename=[hash][name].js!../game/main.worker";
-import { PBpacket } from "net-socket-packet";
-import { World } from "./world";
+import { op_def } from "pixelpai_proto";
+import { DisplayObject } from "./rooms/display/display.object";
+import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
+import { PBpacket } from "net-socket-packet";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
+
+    private nodes = {
+        [op_def.NodeType.GameNodeType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.SceneNodeType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.ElementNodeType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.TerrainNodeType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.CharacterNodeType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.LocationType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.MovableType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.DisplayType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.AttributeType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.FunctionType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.AnimationsType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.EventType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.MapSizeType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.UIType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.TimerType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.PackageType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.PackageItemType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.AvatarType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.SettingsType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.CampType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.MutexType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.AnimationDataType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.ForkType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.ButtonType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.TextType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.AccessType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.SpawnPointType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.CommodityType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.ShopType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.PaletteType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.TerrainCollectionType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.AssetsType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.MossType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.MossCollectionType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.SceneryType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.ModsType]: new Map<number, DisplayObject>(),
+        [op_def.NodeType.InputTextType]: new Map<number, DisplayObject>()
+    };
+
     private _moveStyle: number = 0;
     private _curTime: number;
     private mainPeer: any;
-    constructor(private mWorld: World) {
+    constructor() {
         super("render");
         this.linkTo(MAIN_WORKER, "../game/main.worker").onceReady(() => {
             this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
         });
+    }
+
+    @Export()
+    public add(type: number, id: number, data: Uint8Array) {
+        if (!Object.prototype.hasOwnProperty.call(this.nodes, type)) {
+            Logger.getInstance().error("type error: ", type, this.nodes);
+            return;
+        }
+        const nodesMap: Map<number, DisplayObject> = this.nodes[type];
+        if (nodesMap.has(id)) {
+            Logger.getInstance().warn("repeated id: ", id);
+        }
+        // TODO: data转换为iSprite；创建displayObject 存入nodes
+    }
+
+    @Export()
+    public remove(type: number, id: number) {
+        if (!Object.prototype.hasOwnProperty.call(this.nodes, type)) {
+            Logger.getInstance().error("type error: ", type, this.nodes);
+            return;
+        }
+        const nodesMap: Map<number, DisplayObject> = this.nodes[type];
+        nodesMap.delete(id);
+    }
+
+    @Export()
+    public setData(type: number, id: number, data: Uint8Array) {
+        if (!Object.prototype.hasOwnProperty.call(this.nodes, type)) {
+            Logger.getInstance().error("type error: ", type, this.nodes);
+            return;
+        }
+        const nodesMap: Map<number, DisplayObject> = this.nodes[type];
+        if (!nodesMap.has(id)) {
+            Logger.getInstance().error("id error: ", id, nodesMap);
+            return;
+        }
+        const node = nodesMap.get(id);
+        // TODO: data转换为iSprite；修改displayObject
     }
 
     get curTime(): number {
@@ -103,17 +183,17 @@ export class Render extends RPCPeer {
 
     @Export()
     public connectFail() {
-        this.mWorld.connectFail();
+        // this.mWorld.connectFail();
     }
 
     @Export()
     public reconnect() {
-        this.mWorld.reconnect();
+        // this.mWorld.reconnect();
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public onGotoAnotherGame(gameId: string, worldId: string, sceneId?: number, x?: number, y?: number, z?: number) {
-        this.mWorld.onGotoAnotherGame(gameId, worldId, sceneId, { x, y, z });
+        // this.mWorld.onGotoAnotherGame(gameId, worldId, sceneId, { x, y, z });
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -123,12 +203,12 @@ export class Render extends RPCPeer {
 
     @Export()
     public enterVirtualWorld() {
-        this.mWorld.enterVirtualWorld();
+        // this.mWorld.enterVirtualWorld();
     }
 
     @Export()
     public onClockReady() {
-        this.mWorld.onClockReady();
+        // this.mWorld.onClockReady();
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -153,7 +233,7 @@ export class Render extends RPCPeer {
 
     @Export()
     public clearGame() {
-        this.mWorld.clearGame();
+        // this.mWorld.clearGame();
     }
 }
 const MAIN_WORKER = "mainWorker";
