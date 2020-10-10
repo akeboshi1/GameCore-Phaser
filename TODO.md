@@ -1,6 +1,27 @@
 TODO List
 ===
-
+> 2020-10
+## rpc模块拆分
+- [ ]render 部分拆分  周围
+  - Phaser场景管理-sceneManager
+  - Phaser镜头管理-cameraManager
+  - 多帧显示对象管理-frameDisplayManager
+  - 龙骨显示对象管理-dragonBonesDisplayManager
+  - 显示对象管理-elementDisplayManager
+  - 地块显示对象管理-terrainDisplayManager
+  - 墙体显示对象管理-wallDisplayManager
+  - ui显示对象管理-uiManager
+  - 显示对象层级管理-layerManager
+  - Phaser声音管理-soundManager
+  - Phaser交互管理-inputManager
+  - 特效显示对象管理-effectManager
+  - 特效显示对象管理-falleffectManager
+  - 编辑模式下显示对象管理-editor
+  - 气泡显示对象管理-bubbleManager
+  - 加载管理-loadingManager
+  - 动画管理-animationManager
+- [ ]game 部分拆分 张腾 管晓敏
+> older
 ## 调研
 - [x] Webworker + Webpack ：[github repository](https://github.com/askdaddy/ts-webworker-webpack) `@seven`
 - [x] Webpack 动态加载代码块。
