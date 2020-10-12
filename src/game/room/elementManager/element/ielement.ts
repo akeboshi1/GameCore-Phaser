@@ -1,9 +1,9 @@
-import { IRoomService } from "./room";
-import { ISprite } from "../../render/rooms/element/sprite";
+import { IRoomService } from "../../room";
+import { IPos } from "../../../../utils/logic.pos";
 import { op_client } from "pixelpai_proto";
-import { IFramesModel } from "./displayManager/frame/iframe.model";
-import { LogicPos } from "../../utils/logic.pos";
-export interface ILogicElement {
+import { IFramesModel } from "../../displayManager/frame/iframe.model";
+import { ISprite } from "../../displayManager/sprite/sprite";
+export interface IElement {
     readonly id: number;
     readonly dir: number;
     readonly roomService: IRoomService;
@@ -18,11 +18,11 @@ export interface ILogicElement {
 
     play(animationName: string): void;
 
-    setPosition(p: LogicPos): void;
+    setPosition(p: IPos): void;
 
-    getPosition(): LogicPos;
+    getPosition(): IPos;
 
-    getPosition45(): LogicPos;
+    getPosition45(): IPos;
 
     setDirection(val: number): void;
 
@@ -34,7 +34,7 @@ export interface ILogicElement {
 
     hideNickname();
 
-    scaleTween();
+    // scaleTween();
 
     turn();
 
@@ -42,11 +42,11 @@ export interface ILogicElement {
 
     setQueue(queue: op_client.IChangeAnimation[]);
 
-    mount(ele: ILogicElement): this;
+    mount(ele: IElement): this;
 
     unmount(): this;
 
-    addMount(ele: ILogicElement, index?: number): this;
+    addMount(ele: IElement, index?: number): this;
 
-    removeMount(ele: ILogicElement): this;
+    removeMount(ele: IElement): this;
 }

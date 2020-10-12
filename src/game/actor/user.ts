@@ -3,7 +3,7 @@ import { PBpacket } from "net-socket-packet";
 import { Player } from "../room/playerManager/player/player";
 import { World } from "../world";
 import { IRoomService } from "../room/room";
-import { ISprite } from "../room/displayManager/sprite/isprite";
+import { ISprite } from "../room/displayManager/sprite/sprite";
 import { Bag } from "./bag/bag";
 import { Friend } from "./friend/friend";
 

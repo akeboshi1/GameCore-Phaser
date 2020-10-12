@@ -1,15 +1,14 @@
-import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
-import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { FramesModel} from "../display/frames.model";
-import { Animation } from "../../../game/room/displayManager/animation/animation";
-import NodeType = op_def.NodeType;
-import { Direction } from "./element";
-import { AnimationData, AnimationQueue } from "../../../game/room/displayManager/animation/ianimation";
-import { IFramesModel } from "../../../game/room/displayManager/frame/iframe.model";
+import { LogicPos } from "../../../../utils/logic.pos";
+import { op_client, op_def, op_gameconfig, op_gameconfig_01 } from "pixelpai_proto";
+import { AnimationData, AnimationQueue } from "../animation/ianimation";
+import { Direction } from "../elementManager/element/direction";
+import { DragonbonesModel } from "../playerManager/model/dragonbones.model";
+import { FramesModel } from "../elementManager/model/frames.model";
 import { Helpers } from "game-capsule";
-import { Logger } from "../../../utils/log";
-import { LogicPos } from "../../../utils/logic.pos";
-
+import { IAvatar, IDragonbonesModel } from "../playerManager/model/idragonbones.model";
+import { IFramesModel } from "../elementManager/model/iframe.model";
+import { Logger } from "../../../../utils/log";
+import NodeType = op_def.NodeType;
 export interface ISprite {
     readonly id: number;
     // 龙骨资源名集合
@@ -24,7 +23,6 @@ export interface ISprite {
     readonly currentAnimation: AnimationData;
     readonly currentCollisionArea: number[][];
     readonly currentWalkableArea: number[][];
-    readonly currentCollisionPoint: Phaser.Geom.Point;
     readonly hasInteractive: boolean;
     readonly attrs: op_def.IStrPair[];
     readonly animationQueue: AnimationQueue[];

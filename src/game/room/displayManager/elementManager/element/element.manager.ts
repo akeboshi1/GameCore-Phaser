@@ -1,17 +1,20 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../../../lib/net/connection.service";
+import { Logger } from "../../../../../utils/log";
+import { LogicPos } from "../../../../../utils/logic.pos";
+import { IElementStorage } from "../../../../elementstorage/element.storage";
+import { ILogicElement } from "../../../logic.element";
 import { IRoomService } from "../../../roomManager/room/room";
-import { ISprite } from "../../sprite/isprite";
-import { IElement } from "./ielement";
+import { IDragonbonesModel } from "../../playerManager/model/idragonbones.model";
+import { ISprite, Sprite } from "../../sprite/sprite";
+import { IFramesModel } from "../model/frames.model";
+import { IElement,Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
-
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
     readonly roomService: IRoomService;
-    readonly scene: Phaser.Scene | undefined;
-    readonly camera: Phaser.Cameras.Scene2D.Camera | undefined;
     readonly map: number[][];
     add(sprite: ISprite[]);
     remove(id: number): IElement;
@@ -117,10 +120,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected removeMap(sprite: ISprite) { }
 
-    get camera(): Phaser.Cameras.Scene2D.Camera | undefined {
-        return this.mRoom.cameraService.camera;
-    }
-
     get connection(): ConnectionService {
         if (this.mRoom) {
             return this.mRoom.connection;
@@ -220,12 +219,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     get roomService(): IRoomService {
         return this.mRoom;
-    }
-
-    get scene(): Phaser.Scene | undefined {
-        if (this.mRoom) {
-            return this.mRoom.scene;
-        }
     }
 
     get map(): number[][] {

@@ -4,7 +4,7 @@ import { NinePatchButton } from "../Components/Ninepatch.button";
 import { NinePatch } from "../Components/Nine.patch";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
-import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
+import { DragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 import { Font } from "../game/core/utils/font";
 import { i18n } from "../game/core/utils/i18n";
 import { InputText } from "apowophaserui";

@@ -1,10 +1,10 @@
-import { Room, IRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { World } from "../world";
 import { DecorateRoom } from "./room/decorate.room";
-import { EditorRoom } from "./editor.room";
-import { ConnectionService } from "../../../lib/net/connection.service";
+import { World } from "../../world";
+import { IRoomService, Room } from "./room/room";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { EditorRoom } from "./room/editor.room";
 export interface IRoomManager {
     readonly world: World | undefined;
 
@@ -91,7 +91,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private async onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        this.world.peer.render.onEnterRoom(new UnitArray(scene.scene));
+        this.world.peer.render.onEnterRoom(scene.scene);
         if (this.mCurRoom) {
             await this.leaveScene(this.mCurRoom);
         }

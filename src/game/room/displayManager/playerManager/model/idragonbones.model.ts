@@ -1,6 +1,6 @@
 import { op_def } from "pixelpai_proto";
-import { AnimationData } from "../animation/ianimation";
-import { Direction } from "../frame/iframe.model";
+import { AnimationData } from "../../animation/animation";
+import { Direction } from "../../elementManager/element/direction";
 
 export interface IDragonbonesModel {
     readonly discriminator: string;

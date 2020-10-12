@@ -1,6 +1,6 @@
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
-import { IAvatar, IDragonbonesModel } from "../display/dragonbones.model";
-import { Animation } from "../display/animation";
+import { IAvatar, IDragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
+import { Animation } from "../../../game/room/displayManager/animation/animation";
 import { ISprite } from "../element/sprite";
 import { AnimationData } from "../../../game/room/displayManager/animation/ianimation";
 import { IFramesModel } from "../../../game/room/displayManager/frame/iframe.model";

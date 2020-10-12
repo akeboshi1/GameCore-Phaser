@@ -25,8 +25,8 @@ TODO List
   - [x] 游戏时间管理（游戏服务器同步）-clock
   - [x] 游戏时间管理（游戏后台同步）-httpclock
   - [x] 游戏net管理-connect
-  - [ ] 游戏数据缓冲管理-elementStorage
-  - [ ] 房间管理-roomManager
+  - [ ] 游戏数据缓冲管理-elementStorage 管晓敏
+  - [ ] 房间管理-roomManager 管晓敏
     - [ ] 房间对象-room
       - [ ] 编辑房间-editorRoom
       - [ ] 装饰房间-decorateRoom
@@ -49,8 +49,10 @@ TODO List
     - [ ] 群体事件管理-frameManager 管晓敏
     - [ ] 特效管理-effectManager 管晓敏
       - [ ] 特效对象 - effect
-    - [ ] 区块管理-blockManager 张腾
+    - [ ] 天空盒区块管理-blockManager 张腾
       - [ ] 区块对象 - block
+    - [ ] 地块区块管理-viewblockManager 张腾
+      - [ ] 区块对象 - viewblock
     - [ ] 天空盒管理-skyBoxManager 张腾
       - [ ] 天空盒逻辑对象 - logicbackgroundDisplay
 > older

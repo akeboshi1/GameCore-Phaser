@@ -1,6 +1,6 @@
 import { Terrain } from "../../render/rooms/terrain/terrain";
 import { InputEnable } from "./displayManager/elementManager/element/element";
-import { ISprite } from "./displayManager/sprite/isprite";
+import { ISprite } from "./displayManager/sprite/sprite";
 
 export class DisplayObjectPool {
     private terrains = new Map();

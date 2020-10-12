@@ -1,19 +1,19 @@
 import { IElement } from "../../elementManager/element/ielement";
 import { op_def } from "pixelpai_proto";
-import { ISprite } from "../../displayManager/sprite/isprite";
-import { IElementManager } from "../../elementManager/element/ielement.manager";
 import { Element, MovePath, PlayerState } from "../../elementManager/element/element";
-import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { ISprite } from "../../sprite/sprite";
+import { IElementManager } from "../../elementManager/element/element.manager";
+import { IPos, LogicPos } from "../../../../../utils/logic.pos";
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
-        if (this.mDisplay) {
-            if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
-        }
+        // if (this.mDisplay) {
+        //     if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
+        // }
     }
 
     setModel(val: ISprite) {
@@ -36,14 +36,11 @@ export class Player extends Element implements IElement {
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        if (!this.mDisplay) {
-            return;
-        }
         const tmpPath = movePath.path;
         if (!tmpPath) {
             return;
         }
-        let lastPos = new LogicPos(this.mDisplay.x, this.mDisplay.y - this.offsetY);
+        let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
         const paths = [];
         this.mMoveData.arrivalTime = movePath.timestemp;
         let angle = null;
@@ -85,16 +82,13 @@ export class Player extends Element implements IElement {
             this.mDisplayInfo.avatarDir = dir;
             this.mModel.direction = dir;
             // if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
-            if (this.mDisplay) {
-                this.mDisplay.play(this.mModel.currentAnimation);
-            }
+            // if (this.mDisplay) {
+            //     this.mDisplay.play(this.mModel.currentAnimation);
+            // }
         }
     }
 
     public changeState(val?: string) {
-        if (!this.mDisplay) {
-            return;
-        }
         if (this.mCurState === val) return;
         // if (!val) val = PlayerState.IDLE;
         if (!val) {
@@ -103,7 +97,7 @@ export class Player extends Element implements IElement {
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
             this.mModel.currentAnimationName = this.mCurState;
-            (this.mDisplay as DragonbonesDispla).play(this.mModel.currentAnimation);
+            // (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }
 
@@ -201,11 +195,6 @@ export class Player extends Element implements IElement {
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
         return this.mOffsetY;
-    }
-
-    protected onDisplayReady(field?: FramesDisplay) {
-        super.onDisplayReady(field);
-        this.showNickname();
     }
 
     private mCheckStateHandle(val: string): boolean {

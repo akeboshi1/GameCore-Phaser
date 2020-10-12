@@ -1,12 +1,37 @@
+import { Helpers } from "game-capsule";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import * as sha1 from "simple-sha1";
-import { Sprite } from "../element/sprite";
-import { Direction } from "../element/element";
-import { IFramesModel, IDisplay } from "../../../game/room/displayManager/frame/iframe.model";
-import { IAnimationData, AnimationData } from "../../../game/room/displayManager/animation/ianimation";
-import Helpers from "../../../utils/helpers";
-import { Logger } from "../../../utils/log";
+import { Logger } from "../../../../../utils/log";
+import { LogicPoint } from "../../../../../utils/logic.point";
+import { AnimationData, IAnimationData } from "../../animation/animation";
+import { Sprite } from "../../sprite/sprite";
+import { Direction } from "../element/direction";
 
+export interface IDisplay {
+    texturePath: string;
+    dataPath?: string;
+}
+export interface IFramesModel {
+    readonly discriminator: string;
+    readonly gene: string | undefined;
+    id: number;
+    avatarDir?: number;
+    type?: string;
+    display?: IDisplay | null;
+    animations?: Map<string, IAnimationData>;
+    animationName: string;
+    package?: op_gameconfig.IPackage;
+    shops?: op_gameconfig.IShop[] | null;
+    getAnimations(name: string): IAnimationData;
+    existAnimation(aniName: string): boolean;
+    getCollisionArea(aniName: string, flip: boolean): number[][];
+    getWalkableArea(aniName: string, flip: boolean): number[][];
+    getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
+    getOriginPoint(aniName: string, flip: boolean): LogicPoint;
+    createSprite(properties: object);
+    findAnimation(baseName: string, dir: Direction): AnimationData;
+    destroy();
+}
 export class FramesModel implements IFramesModel {
     avatarDir?: number;
     readonly discriminator: string = "FramesModel";
@@ -92,12 +117,12 @@ export class FramesModel implements IFramesModel {
         return ani ? ani.interactiveArea : undefined;
     }
 
-    public getOriginPoint(aniName, flip: boolean = false): Phaser.Geom.Point {
+    public getOriginPoint(aniName, flip: boolean = false): LogicPoint {
         const ani = this.getAnimations(aniName);
         if (ani) {
             const originPoint = ani.originPoint;
             if (flip) {
-                return new Phaser.Geom.Point(originPoint.y, originPoint.x);
+                return new LogicPoint(originPoint.y, originPoint.x);
             }
             return originPoint;
         }
@@ -195,7 +220,7 @@ export class FramesModel implements IFramesModel {
             //     frameName: aniData.frameName,
             //     frameRate: aniData.frameRate,
             //     loop: aniData.loop,
-            //     baseLoc: new Phaser.Geom.Point(baseLoc.x, baseLoc.y),
+            //     baseLoc: new LogicPoint(baseLoc.x, baseLoc.y),
             //     // walkableArea: aniData.walkableArea || [],
             //     collisionArea: aniData.collisionArea || [],
             //     originPoint: aniData.originPoint

@@ -1,5 +1,5 @@
 import { ElementDisplay } from "./element.display";
-import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
+import { IAvatar, IDragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 import { DisplayObject, DisplayField } from "./display.object";
 import { IRoomService } from "../room";
 import { IElement } from "../element/element";

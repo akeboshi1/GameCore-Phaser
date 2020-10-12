@@ -1,6 +1,6 @@
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { InputEnable } from "../../displayManager/elementManager/element/element";
-import { ISprite } from "../../displayManager/sprite/isprite";
+import { ISprite } from "../../displayManager/sprite/sprite";
 import { IRoomService } from "../../roomManager/room/room";
 import { IBlockObject } from "./iblock.object";
 
