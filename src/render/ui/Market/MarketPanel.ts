@@ -10,7 +10,7 @@ import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaseru
 import { WorldService } from "../../world.service";
 import { Font } from "../../../utils/font";
 import { i18n } from "../../../utils/i18n";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;

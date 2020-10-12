@@ -1,5 +1,5 @@
 import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 export class FrameAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
     public resName: string;
     public resUrl: string;

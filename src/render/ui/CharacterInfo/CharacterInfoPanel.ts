@@ -13,7 +13,7 @@ import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, Click
 import { WorldService } from "../../world.service";
 import { i18n } from "../../../utils/i18n";
 import { Font } from "../../../utils/font";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 import { Url } from "../../../utils/resUtil";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";

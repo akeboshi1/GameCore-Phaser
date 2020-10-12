@@ -1,10 +1,9 @@
-import { IGroup } from "./IGroup";
-import { FollowGroup } from "./FollowGroup";
-import { IDispose } from "../actionManager/IDispose";
+import { IGroup } from "./igroup";
+import { FollowGroup } from "./follow.group";
+import { IDispose } from "../actionManager/idispose";
 import { IRoomService } from "../roomManager/room/room";
 
 export class GroupManager implements IDispose {
-
     protected map: Map<any, IGroup[]> = new Map<any, IGroup[]>();
     public constructor(private room: IRoomService) {
     }

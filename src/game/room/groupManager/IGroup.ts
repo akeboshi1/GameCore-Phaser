@@ -1,6 +1,7 @@
-import { IDispose } from "../action/IDispose";
-import { HandlerDispatcher } from "../../core/Handler/HandlerDispatcher";
-import { GroupType } from "./GroupManager";
+
+import { IDispose } from "../actionManager/idispose";
+import { GroupType } from "./group.manager";
+import { HandlerDispatcher } from "../../../utils/handler.dispatcher";
 
 export interface IGroup extends IDispose {
     owner: any;

@@ -1,6 +1,6 @@
 import { op_client } from "pixelpai_proto";
 import { BasePanel } from "../Components/BasePanel";import { WorldService } from "../../world.service";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 export class CutInMenuPanel extends BasePanel {
     private key: string = "cutinmenupanel";
     private rightPopButton: RightPopContainer;

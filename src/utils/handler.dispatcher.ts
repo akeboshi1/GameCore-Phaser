@@ -1,7 +1,7 @@
-import { Handler } from "./Handler";
-import { IDispose } from "../render/rooms/action/IDispose";
+import { Handler } from "./handler";
+import { IDispose } from "../game/room/actionManager/idispose";
 
-export class EventDispatcher implements IDispose {
+export class HandlerDispatcher implements IDispose {
 
     private _events: object;
 
@@ -35,15 +35,15 @@ export class EventDispatcher implements IDispose {
         return true;
     }
 
-    public on(type: string, caller: any, listener: Function, args: any[] = null): EventDispatcher {
+    public on(type: string, caller: any, listener: Function, args: any[] = null): HandlerDispatcher {
         return this._createListener(type, caller, listener, args, false);
     }
 
-    public once(type: string, caller: any, listener: Function, args: any[] = null): EventDispatcher {
+    public once(type: string, caller: any, listener: Function, args: any[] = null): HandlerDispatcher {
         return this._createListener(type, caller, listener, args, true);
     }
 
-    public off(type: string, caller: any, listener: Function, onceOnly: Boolean = false): EventDispatcher {
+    public off(type: string, caller: any, listener: Function, onceOnly: Boolean = false): HandlerDispatcher {
         if (!this._events || !this._events[type]) return this;
 
         const listeners: any = this._events[type];
@@ -71,7 +71,7 @@ export class EventDispatcher implements IDispose {
         return this;
     }
 
-    public offAll(type: string = null): EventDispatcher {
+    public offAll(type: string = null): HandlerDispatcher {
         const events: any = this._events;
         if (!events) return this;
         if (type) {
@@ -90,7 +90,7 @@ export class EventDispatcher implements IDispose {
         this.offAll();
     }
 
-    private _createListener(type: string, caller: any, listener: Function, args: any[], once: Boolean, offBefore: Boolean = true): EventDispatcher {
+    private _createListener(type: string, caller: any, listener: Function, args: any[], once: Boolean, offBefore: Boolean = true): HandlerDispatcher {
         if (offBefore)
             this.off(type, caller, listener, once);
         const handler: Handler = EventHandler.create(caller || this, listener, args, once);

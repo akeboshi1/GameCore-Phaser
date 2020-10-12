@@ -2,7 +2,7 @@ import { DragonbonesAnimation } from "../../rooms/Animation/dragonbones.animatio
 import { FrameAnimation } from "../../rooms/Animation/frame.animation";
 import { op_client } from "pixelpai_proto";
 import { BubbleAnimation } from "../../rooms/Animation/bubble.animation";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 
 export class InteractionBubbleCell extends Phaser.GameObjects.Container {
     private mBubbleAni: DragonbonesAnimation | FrameAnimation | BubbleAnimation;

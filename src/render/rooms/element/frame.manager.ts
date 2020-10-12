@@ -1,5 +1,5 @@
 import { IDispose } from "../action/IDispose";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 
 export class FrameManager implements IDispose {
 
