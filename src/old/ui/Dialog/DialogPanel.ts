@@ -3,7 +3,7 @@ import { DynamicImage } from "../Components/Dynamic.image";
 import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Button } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 import { Url } from "../../../utils/resUtil";
 import { Font } from "../../../utils/font";
 export class DialogPanel extends BasePanel {

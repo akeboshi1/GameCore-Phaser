@@ -5,7 +5,7 @@ import { FrameAnimation } from "../../rooms/Animation/frame.animation";
 import { FramesDisplay } from "../../rooms/display/frames.display";
 import { FramesModel } from "../../rooms/display/frames.model";
 import { Animation } from "../../rooms/display/animation";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 import { Url } from "../../../utils/resUtil";
 
 export class DetailDisplay extends Phaser.GameObjects.Container {

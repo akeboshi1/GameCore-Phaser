@@ -1,5 +1,3 @@
-import { FramesModel, IFramesModel } from "../rooms/display/frames.model";
-import { DragonbonesModel, IDragonbonesModel } from "../rooms/display/dragonbones.model";
 import {
     Lite,
     ElementNode,
@@ -11,13 +9,17 @@ import {
     MossNode,
     AssetsNode,
 } from "game-capsule";
-import { Logger } from "./core/utils/log";
 import { op_def } from "pixelpai_proto";
-import { Animation } from "../rooms/display/animation";
 import { MossCollectionNode } from "game-capsule";
-import { IScenery } from "../rooms/sky.box/scenery";
-import { IAsset } from "../loading/loading.manager";
-import { Url } from "./core/utils/resUtil";
+import { IFramesModel } from "../room/displayManager/elementManager/model/iframe.model";
+import { IDragonbonesModel } from "../room/displayManager/playerManager/model/idragonbones.model";
+import { IScenery } from "../room/skyboxManager/scenery";
+
+export interface IAsset {
+    type: string;
+    key: string;
+    source: string;
+}
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
@@ -32,8 +34,8 @@ export interface IElementStorage {
     getMossPalette(key: number): IFramesModel;
     getAssets(): IAsset[];
     getScenerys(): IScenery[];
-    on(event: string | symbol, fn: Function, context?: any);
-    off(event: string | symbol, fn: Function, context?: any);
+    // on(event: string | symbol, fn: Function, context?: any);
+    // off(event: string | symbol, fn: Function, context?: any);
     destroy();
 }
 
@@ -54,19 +56,19 @@ export class ElementStorage implements IElementStorage {
     private _scenerys: IScenery[];
     private _assets: IAsset[];
 
-    private event: Phaser.Events.EventEmitter;
+    // private event: Phaser.Events.EventEmitter;
 
     constructor() {
-        this.event = new Phaser.Events.EventEmitter();
+        // this.event = new Phaser.Events.EventEmitter();
     }
 
-    public on(event: string | symbol, fn: Function, context?: any) {
-        this.event.on(event, fn, context);
-    }
+    // public on(event: string | symbol, fn: Function, context?: any) {
+    //     this.event.on(event, fn, context);
+    // }
 
-    public off(event: string | symbol, fn: Function, context?: any) {
-        this.event.off(event, fn, context);
-    }
+    // public off(event: string | symbol, fn: Function, context?: any) {
+    //     this.event.off(event, fn, context);
+    // }
 
     public setGameConfig(config: Lite) {
         Logger.getInstance().log("TCL: ElementStorage -> config", config);

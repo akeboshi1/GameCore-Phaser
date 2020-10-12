@@ -4,7 +4,7 @@ import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { PicPropFunConfig } from "./PicPropFunConfig";
 import { DetailDisplay } from "../Market/DetailDisplay";
 import { NineSliceButton, GameSlider, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 import { WorldService } from "../../world.service";
 import { Font } from "../../../utils/font";
 import { i18n } from "../../../utils/i18n";

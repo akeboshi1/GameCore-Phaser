@@ -1,6 +1,6 @@
-import { AIAction } from "./AIAction";
-import { IDispose } from "./IDispose";
-import { Handler } from "../../../utils/Handler";
+import { AIAction } from "./ai.action";
+import { IDispose } from "./idispose";
+import { Handler } from "../../../utils/handler";
 
 export class ActionGroup implements IDispose {
     public list: AIAction[];

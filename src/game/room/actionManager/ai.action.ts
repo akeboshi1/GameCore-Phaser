@@ -1,5 +1,6 @@
-import { IDispose } from "./IDispose";
-import { ActionGroup } from "./ActionGroup";
+import { IDispose } from "./idispose";
+import { ActionGroup } from "./action.group";
+import { Element } from "../displayManager/elementManager/element/element";
 
 export abstract class AIAction implements IDispose {
 

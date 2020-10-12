@@ -7,7 +7,7 @@ import { WorldService } from "../../world.service";
 import { Logger } from "../../../utils/log";
 import { Font } from "../../../utils/font";
 import { i18n } from "../../../utils/i18n";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";

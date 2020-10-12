@@ -3,7 +3,7 @@ import { UIAtlasKey } from "../Ui.atals.name";
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "./Dynamic.image";
 import { NineSliceButton, Button, GameScroller, ClickEvent, BBCodeText } from "apowophaserui";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 import { Font } from "../../../utils/font";
 import { i18n } from "../../../utils/i18n";
 import { Url } from "../../../utils/resUtil";

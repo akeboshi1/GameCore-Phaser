@@ -5,7 +5,7 @@ import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
 import { PlayScene } from "../../scenes/play";
 import { WorldService } from "../../world.service";
 import { Url } from "../../../utils/resUtil";
-import { Handler } from "../../../utils/Handler";
+import { Handler } from "../../../utils/handler";
 import { Tool } from "../../../utils/tool";
 import { Pos } from "../../../utils/pos";
 export class InteractiveBubblePanel extends BasePanel {

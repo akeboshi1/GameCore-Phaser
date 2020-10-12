@@ -1,5 +1,5 @@
-import { AIAction } from "./AIAction";
-import { ActionGroup } from "./ActionGroup";
+import { AIAction } from "./ai.action";
+import { ActionGroup } from "./action.group";
 
 export class AI extends AIAction {
 
