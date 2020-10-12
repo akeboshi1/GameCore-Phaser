@@ -13,6 +13,8 @@ import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
 import { HttpClock } from "./httpClock/http.clock";
 import { UiManager } from "./ui/Ui.manager";
+import { ElementStorage } from "./elementstorage/element.storage";
+import { Element } from "./room/displayManager/elementManager/element/element";
 
 interface ISize {
     width: number;
@@ -56,6 +58,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
     private mConfig: ILogiclauncherConfig;
     private mAccount: Account;
     private mRoomManager: RoomManager;
+    private mElementStorage: ElementStorage;
     constructor(private mainPeer: MainPeer) {
         super();
     }
@@ -238,6 +241,10 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
 
     get httpClock(): HttpClock {
         return this.mHttpClock;
+    }
+
+    get elementStorage(): ElementStorage {
+        return this.mElementStorage;
     }
 
     private onGotoAnotherGame(packet: PBpacket) {

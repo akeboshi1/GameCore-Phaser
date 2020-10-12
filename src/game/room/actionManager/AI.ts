@@ -1,5 +1,6 @@
 import { AIAction } from "./ai.action";
 import { ActionGroup } from "./action.group";
+import { Element } from "../displayManager/elementManager/element/element";
 
 export class AI extends AIAction {
 

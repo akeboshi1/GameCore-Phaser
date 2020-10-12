@@ -121,7 +121,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     get connection(): ConnectionService {
         if (this.mRoom) {
-            return this.mRoom.connection;
+            return this.mRoom.world.connection;
         }
         Logger.getInstance().log("roomManager is undefined");
         return;
@@ -147,10 +147,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onAdd(packet: PBpacket) {
-        if (!this.mRoom.layerManager) {
-            Logger.getInstance().error("layer manager does not exist");
-            return;
-        }
+        // if (!this.mRoom.layerManager) {
+        //     Logger.getInstance().error("layer manager does not exist");
+        //     return;
+        // }
         if (!this.mGameConfig) {
             Logger.getInstance().error("gameConfig does not exist");
             return;
