@@ -25,6 +25,7 @@ TODO List
   - [x] 游戏时间管理（游戏服务器同步）-clock
   - [x] 游戏时间管理（游戏后台同步）-httpclock
   - [x] 游戏net管理-connect
+  - [ ] 游戏数据缓冲管理-elementStorage
   - [ ] 房间管理-roomManager
     - [ ] 房间对象-room
       - [ ] 编辑房间-editorRoom
