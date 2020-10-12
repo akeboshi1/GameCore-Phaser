@@ -1,16 +1,16 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
-import { IRoomService, Room } from "../../room";
 import NodeType = op_def.NodeType;
-import { IElementManager } from "../../elementManager/element/ielement.manager";
 import { Player } from "./player";
-import { PlayerModel } from "../../../../render/rooms/player/player.model";
-import { Logger } from "../../../../utils/log";
-import { IElement } from "../../elementManager/element/ielement";
-import { MessageType } from "../../../../messageType/MessageType";
-import { LogicPos } from "../../../../utils/logic.pos";
-import { ConnectionService } from "../../../../../lib/net/connection.service";
-import { ISprite } from "../../../../render/rooms/element/sprite";
+import { IElementManager } from "../../elementManager/element/element.manager";
+import { IRoomService, Room } from "../../../roomManager/room/room";
+import { IElement } from "../../elementManager/element/element";
+import { ISprite, Sprite } from "../../sprite/sprite";
+import { Logger } from "../../../../../utils/log";
+import { MessageType } from "../../../../../messageType/MessageType";
+import { LogicPos } from "../../../../../utils/logic.pos";
+import { ConnectionService } from "../../../../../../lib/net/connection.service";
+import { PlayerModel } from "./player.model";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

@@ -11,7 +11,7 @@ import { Player } from "./player";
 import { IElement } from "../element/element";
 import { Actor } from "./Actor";
 import NodeType = op_def.NodeType;
-import { PlayerModel } from "./player.model";
+import { PlayerModel } from "../../../game/room/displayManager/playerManager/player/player.model";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

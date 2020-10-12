@@ -28,7 +28,7 @@ import { RoomManager } from "./rooms/room.manager";
 import { HttpService } from "../game/logic/http.service";
 import { SoundManager } from "./media/sound.manager";
 import { ILoadingManager, LoadingManager } from "./loading/loading.manager";
-import { PlayerDataManager } from "./rooms/data/PlayerDataManager";
+import { PlayerDataManager } from "../game/actor/data/player.dataManager";
 import { Render } from "./render";
 import { ElementStorage } from "../game/elementstorage/element.storage";
 import { ISoundConfig } from "apowophaserui";

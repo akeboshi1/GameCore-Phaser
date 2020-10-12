@@ -1,6 +1,5 @@
-import { IElement } from "../../elementManager/element/ielement";
 import { op_def } from "pixelpai_proto";
-import { Element, MovePath, PlayerState } from "../../elementManager/element/element";
+import { Element, IElement, MovePath, PlayerState } from "../../elementManager/element/element";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { ISprite } from "../../sprite/sprite";

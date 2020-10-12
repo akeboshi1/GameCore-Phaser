@@ -1,14 +1,14 @@
 import { LogicPos } from "../../../../utils/logic.pos";
 import { op_client, op_def, op_gameconfig, op_gameconfig_01 } from "pixelpai_proto";
-import { AnimationData, AnimationQueue } from "../animation/ianimation";
 import { Direction } from "../elementManager/element/direction";
 import { DragonbonesModel } from "../playerManager/model/dragonbones.model";
-import { FramesModel } from "../elementManager/model/frames.model";
+import { FramesModel, IFramesModel } from "../elementManager/model/frames.model";
 import { Helpers } from "game-capsule";
 import { IAvatar, IDragonbonesModel } from "../playerManager/model/idragonbones.model";
-import { IFramesModel } from "../elementManager/model/iframe.model";
 import { Logger } from "../../../../utils/log";
 import NodeType = op_def.NodeType;
+import { LogicPoint } from "../../../../utils/logic.point";
+import { AnimationData, AnimationQueue } from "../animation/animation";
 export interface ISprite {
     readonly id: number;
     // 龙骨资源名集合
@@ -66,14 +66,14 @@ export class Sprite implements ISprite {
     protected mCurrentAnimation: AnimationData;
     protected mCurrentCollisionArea: number[][];
     protected mCurrentWalkableArea: number[][];
-    protected mCurrentCollisionPoint: Phaser.Geom.Point;
+    protected mCurrentCollisionPoint: LogicPoint;
     protected mVersion: string;
     protected mIsMoss: boolean;
     protected mRegisterAnimation: Map<string, string>;
 
-    protected _originWalkPoint: Phaser.Geom.Point;
+    protected _originWalkPoint: LogicPoint;
 
-    protected _originCollisionPoint: Phaser.Geom.Point;
+    protected _originCollisionPoint: LogicPoint;
 
     protected mAttrs: op_def.IStrPair[];
 
@@ -358,7 +358,7 @@ export class Sprite implements ISprite {
         return this.mCurrentWalkableArea;
     }
 
-    get currentCollisionPoint(): Phaser.Geom.Point {
+    get currentCollisionPoint(): LogicPoint {
         if (!this.mCurrentCollisionPoint) {
             this.mCurrentCollisionPoint = this.getOriginPoint();
         }
@@ -392,11 +392,11 @@ export class Sprite implements ISprite {
         return this.mRegisterAnimation;
     }
 
-    public get originCollisionPoint(): Phaser.Geom.Point {
+    public get originCollisionPoint(): LogicPoint {
         return this._originCollisionPoint;
     }
 
-    public get originWalkPoint(): Phaser.Geom.Point {
+    public get originWalkPoint(): LogicPoint {
         return this._originWalkPoint;
     }
 
@@ -406,7 +406,7 @@ export class Sprite implements ISprite {
 
     public setOriginCollisionPoint(value: number[] | null): void {
         if (this._originCollisionPoint === undefined) {
-            this._originCollisionPoint = new Phaser.Geom.Point();
+            this._originCollisionPoint = new LogicPoint();
         }
         if (value && value.length > 1) {
             this._originCollisionPoint.x = value[0];
@@ -416,7 +416,7 @@ export class Sprite implements ISprite {
 
     public setOriginWalkPoint(value: number[] | null): void {
         if (this._originWalkPoint === undefined) {
-            this._originWalkPoint = new Phaser.Geom.Point();
+            this._originWalkPoint = new LogicPoint();
         }
         if (value && value.length > 1) {
             this._originWalkPoint.x = value[0];

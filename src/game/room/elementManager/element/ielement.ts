@@ -1,8 +1,8 @@
-import { IRoomService } from "../../room";
 import { IPos } from "../../../../utils/logic.pos";
 import { op_client } from "pixelpai_proto";
-import { IFramesModel } from "../../displayManager/frame/iframe.model";
 import { ISprite } from "../../displayManager/sprite/sprite";
+import { IRoomService } from "../../roomManager/room/room";
+import { IFramesModel } from "../../displayManager/elementManager/model/frames.model";
 export interface IElement {
     readonly id: number;
     readonly dir: number;

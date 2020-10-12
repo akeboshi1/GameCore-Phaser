@@ -1,19 +1,22 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Player } from "../room/playerManager/player/player";
 import { World } from "../world";
-import { IRoomService } from "../room/room";
 import { ISprite } from "../room/displayManager/sprite/sprite";
 import { Bag } from "./bag/bag";
 import { Friend } from "./friend/friend";
+import { Player } from "../room/displayManager/playerManager/player/player";
+import { IRoomService } from "../room/roomManager/room/room";
+import { PlayerModel } from "../room/displayManager/playerManager/player/player.model";
+import { PlayerState } from "../room/displayManager/elementManager/element/element";
+import { PlayerDataManager } from "./data/player.dataManager";
 
 export class User extends Player {
-    private mUserData: UserDataManager;
+    private mUserData: PlayerDataManager;
     private mMoveStyle: number;
     constructor(world: World) {
         super(undefined, undefined);
         this.mBlockable = false;
-        this.mUserData = new UserDataManager(world);
+        this.mUserData = new PlayerDataManager(world);
     }
 
     addPackListener() {
@@ -36,10 +39,11 @@ export class User extends Player {
         if (room.world.inputManager) room.world.inputManager.addListener(this);
         this.mRoomService.playerManager.setMe(this);
         const roomService = this.mElementManager.roomService;
-        if (roomService && roomService.cameraService) {
-            const size = this.mElementManager.scene.scale;
-            roomService.cameraService.setScroll(actor.x * roomService.world.scaleRatio - size.width / 2, actor.y * roomService.world.scaleRatio - size.height / 2);
-            roomService.cameraService.syncCameraScroll();
+        if (roomService ) {
+            // todo render setScroll
+            // const size = this.mElementManager.scene.scale;
+            // roomService.cameraService.setScroll(actor.x * roomService.world.scaleRatio - size.width / 2, actor.y * roomService.world.scaleRatio - size.height / 2);
+            // roomService.cameraService.syncCameraScroll();
         }
     }
 
@@ -182,7 +186,8 @@ export class User extends Player {
         }
         this.load(this.mModel.displayInfo);
         if (this.mModel.pos) this.setPosition(this.mModel.pos);
-        this.mDisplay.changeAlpha(this.mModel.alpha);
+        // todo change display alpha
+        // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);
 

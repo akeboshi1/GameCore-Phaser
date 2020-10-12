@@ -4,7 +4,6 @@ import { ConnectionService } from "../../../../../../lib/net/connection.service"
 import { Logger } from "../../../../../utils/log";
 import { LogicPos } from "../../../../../utils/logic.pos";
 import { IElementStorage } from "../../../../elementstorage/element.storage";
-import { ILogicElement } from "../../../logic.element";
 import { IRoomService } from "../../../roomManager/room/room";
 import { IDragonbonesModel } from "../../playerManager/model/idragonbones.model";
 import { ISprite, Sprite } from "../../sprite/sprite";

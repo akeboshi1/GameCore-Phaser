@@ -8,7 +8,7 @@ import { Player } from "./player";
 import { Bag } from "../../../game/actor/bag/bag";
 import { Interactive } from "./interactive/interactive";
 import { Friend } from "../../../game/actor/friend/friend";
-import { PlayerModel } from "./player.model";
+import { PlayerModel } from "../../../game/room/displayManager/playerManager/player/player.model";
 import { PlayerState } from "../element/element";
 import { ControlFMediator } from "../../ui/ControlF/ControlFMediator";
 
