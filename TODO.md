@@ -3,24 +3,55 @@ TODO List
 > 2020-10
 ## rpc模块拆分
 - [ ]render 部分拆分  周围
-  - Phaser场景管理-sceneManager
-  - Phaser镜头管理-cameraManager
-  - 多帧显示对象管理-frameDisplayManager
-  - 龙骨显示对象管理-dragonBonesDisplayManager
-  - 显示对象管理-elementDisplayManager
-  - 地块显示对象管理-terrainDisplayManager
-  - 墙体显示对象管理-wallDisplayManager
-  - ui显示对象管理-uiManager
-  - 显示对象层级管理-layerManager
-  - Phaser声音管理-soundManager
-  - Phaser交互管理-inputManager
-  - 特效显示对象管理-effectManager
-  - 特效显示对象管理-falleffectManager
-  - 编辑模式下显示对象管理-editor
-  - 气泡显示对象管理-bubbleManager
-  - 加载管理-loadingManager
-  - 动画管理-animationManager
+  - [ ] Phaser场景管理-sceneManager
+  - [ ] Phaser镜头管理-cameraManager
+  - [ ] 多帧显示对象管理-frameDisplayManager
+  - [ ] 龙骨显示对象管理-dragonBonesDisplayManager
+  - [ ] 显示对象管理-elementDisplayManager
+  - [ ] 地块显示对象管理-terrainDisplayManager
+  - [ ] 墙体显示对象管理-wallDisplayManager
+  - [ ] ui显示对象管理-uiManager
+  - [ ] 显示对象层级管理-layerManager
+  - [ ] Phaser声音管理-soundManager
+  - [ ] Phaser交互管理-inputManager
+  - [ ] 特效显示对象管理-effectManager
+  - [ ] 特效显示对象管理-falleffectManager
+  - [ ] 编辑模式下显示对象管理-editor
+  - [ ] 气泡显示对象管理-bubbleManager
+  - [ ] 加载管理-loadingManager
+  - [ ] 动画管理-animationManager
 - [ ]game 部分拆分 张腾 管晓敏
+  - [x] 游戏登陆数据管理-account
+  - [x] 游戏时间管理（游戏服务器同步）-clock
+  - [x] 游戏时间管理（游戏后台同步）-httpclock
+  - [x] 游戏net管理-connect
+  - [ ] 房间管理-roomManager
+    - [ ] 房间对象-room
+      - [ ] 编辑房间-editorRoom
+      - [ ] 装饰房间-decorateRoom
+    - [ ] 角色管理-playerManager
+      - [ ] 角色逻辑对象-player
+    - [ ] 元素管理-elementManager
+      - [ ] 元素逻辑对象-element
+        - [ ] 逻辑对象数据
+          - [ ] 多帧显示对象数据-frameModel
+            - [ ] 显示对象动画数据 - animation
+          - [ ] 龙骨显示对象数据-dragonBonesModle
+            - [ ] 显示对象动画数据 - animation
+          - [ ] 显示对象proto数据-isprite
+    - [ ] 地块管理-terrainManager 张腾
+      - [ ] 地块对象 - terrain
+    - [ ] 墙块管理-wallManager 张腾
+      - [ ] 墙块对象 - wall
+    - [ ] 群体事件管理-groupManager 管晓敏
+      - [ ] 跟随族群 - followGroup
+    - [ ] 群体事件管理-frameManager 管晓敏
+    - [ ] 特效管理-effectManager 管晓敏
+      - [ ] 特效对象 - effect
+    - [ ] 区块管理-blockManager 张腾
+      - [ ] 区块对象 - block
+    - [ ] 天空盒管理-skyBoxManager 张腾
+      - [ ] 天空盒逻辑对象 - logicbackgroundDisplay
 > older
 ## 调研
 - [x] Webworker + Webpack ：[github repository](https://github.com/askdaddy/ts-webworker-webpack) `@seven`
