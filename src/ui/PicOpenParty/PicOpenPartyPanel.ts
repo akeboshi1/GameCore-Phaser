@@ -19,7 +19,6 @@ export class PicOpenPartyPanel extends BasePanel {
     private settingBtn: TabButton;
     private topCheckBox: CheckboxGroup;
     private partyCreatePanel: PicOpenPartyCreatePanel;
-    private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -48,7 +47,6 @@ export class PicOpenPartyPanel extends BasePanel {
             this.mShow = true;
         }
         this.addListen();
-        this.updateData();
     }
 
     public addListen() {
@@ -66,10 +64,9 @@ export class PicOpenPartyPanel extends BasePanel {
         super.destroy();
     }
 
-    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, isSelf: boolean = true) {
-        this.mPartyData = content;
-        if (!this.mInitialized) return;
+    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, isSelf: boolean = true) {
         this.settingBtn.visible = isSelf;
+        this.partyCreatePanel.setPartyData(content);
     }
     protected preload() {
         this.addAtlas(this.key, "party/party.png", "party/party.json");
@@ -123,15 +120,10 @@ export class PicOpenPartyPanel extends BasePanel {
         this.topCheckBox.selectIndex(0);
     }
 
-    private updateData() {
-        if (this.mPartyData) {
-            this.setPartyData(this.mPartyData);
-        }
-    }
-
     private onTabBtnHandler(btn: TabButton) {
         if (this.partyBtn === btn) {
             this.partyCreatePanel.show();
+            this.emit("querytheme");
         } else {
             this.partyCreatePanel.hide();
         }

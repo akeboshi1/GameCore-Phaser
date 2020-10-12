@@ -3,6 +3,9 @@ import { i18n } from "../../i18n";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { UIAtlasKey } from "../ui.atals.name";
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { Url } from "../../utils/resUtil";
+import { log, Logger } from "../../utils/log";
 export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
@@ -21,13 +24,13 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private partyTimevalue: Phaser.GameObjects.Text;
     private partyCardImage: DynamicImage;
     private openBtn: NineSliceButton;
+    private curPartyData: op_pkt_def.IPKT_Property;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.key = key;
         this.dpr = dpr;
         this.setSize(width, height);
         this.create();
-        this.setPartyData();
     }
 
     public resize() {
@@ -35,26 +38,28 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     }
 
     public hide() {
-        this.visible = false;
-        this.describleInput.visible = false;
-        (<HTMLTextAreaElement>(this.describleInput.node)).style.display = "none";
-        this.mNameInput.visible = false;
-        (<HTMLTextAreaElement>(this.mNameInput.node)).style.display = "none";
-        this.openBtn.off(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
+        this.changeInputState(false);
     }
 
     public show() {
-        this.visible = true;
-        this.describleInput.visible = true;
-        (<HTMLTextAreaElement>(this.describleInput.node)).style.display = "true";
-        this.mNameInput.visible = true;
-        (<HTMLTextAreaElement>(this.mNameInput.node)).style.display = "true";
-        this.openBtn.on(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
+        this.changeInputState(true);
     }
 
-    public setPartyData() {
-        this.timeSlider.setValue(50, 0, 100);
-        this.gamegride.setItems(new Array(60));
+    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
+        const timeticket = content.ticketsCount;
+        const topic = content.topics;
+        this.timeSlider.setValue(0, 0, timeticket);
+        this.gamegride.setItems(topic);
+    }
+    private changeInputState(visible: boolean) {
+        this.visible = visible;
+        this.describleInput.visible = visible;
+        (<HTMLTextAreaElement>(this.describleInput.node)).style.display = visible ? "true" : "none";
+        this.mNameInput.visible = visible;
+        (<HTMLTextAreaElement>(this.mNameInput.node)).style.display = visible ? "true" : "none";
+        if (visible)
+            this.openBtn.on(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
+        else this.openBtn.off(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
     }
     private create() {
         this.partyNameTitle = this.scene.make.text({ x: -this.width * 0.5 + 10 * this.dpr, y: -this.height * 0.5 + 20 * this.dpr, text: i18n.t("party.partyname"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
@@ -83,17 +88,18 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
             clamplChildOY: false,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene, index = cell.index,
-                    item = cell.item;
+                const item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new PicPartyThemeItem(this.scene, 65 * this.dpr, 70 * this.dpr, this.key, this.dpr);
                 }
-                cellContainer.setThemeData();
+                cellContainer.setThemeData(item);
+                Logger.getInstance().log("cellContainercellContainer");
                 return cellContainer;
             },
         };
         this.gamegride = new GameGridTable(this.scene, tableConfig);
         this.gamegride.layout();
+        this.gamegride.on("cellTap", this.onGridTableHandler, this);
         this.add(this.gamegride);
 
         this.describleTitle = this.scene.make.text({ x: this.partyThemeTitle.x, y: this.partyThemeTitle.y + 60 * this.dpr, text: i18n.t("party.partydescrible"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
@@ -180,6 +186,9 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
 
     }
 
+    private onGridTableHandler(item: PicPartyThemeItem) {
+        this.curPartyData = item.partyData;
+    }
     private createInput(x: number, y: number, width: number, height: number, type: string = "text") {
         const mblackbg = this.scene.make.graphics(undefined, false);
         mblackbg.fillStyle(0xA4EFF3, 0.66);
@@ -198,8 +207,9 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
 }
 
 class PicPartyThemeItem extends Phaser.GameObjects.Container {
+    public partyData: op_pkt_def.IPKT_Property;
     private dpr: number;
-    private icon: Phaser.GameObjects.Image;
+    private icon: DynamicImage;
     private value: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
@@ -214,7 +224,13 @@ class PicPartyThemeItem extends Phaser.GameObjects.Container {
         this.add([this.icon, this.value]);
     }
 
-    public setThemeData() {
-        this.value.text = "发生四点山豆根士大夫敢死队风格去问人体温热太温柔额我让他为人体微软他";
+    public setThemeData(topic: op_pkt_def.IPKT_Property) {
+        this.value.text = topic.name;
+        const texturepath = topic.display.texturePath;
+        const lastindex = texturepath.lastIndexOf("/");
+        const frame = texturepath.slice(lastindex + 1, texturepath.length);
+        const burl = texturepath.slice(0, lastindex + 1);
+        const url = Url.getOsdRes(burl + frame + `_${this.dpr}x` + ".png");
+        this.icon.load(url);
     }
 }

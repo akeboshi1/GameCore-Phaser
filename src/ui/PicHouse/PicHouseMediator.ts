@@ -65,17 +65,14 @@ export class PicHouseMediator extends BaseMediator {
     }
 
     private onRoomInfoHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
-        const uimananger = this.world.uiManager;
-        const mediator = <PicaMainUIMediator>uimananger.getMediator("PicaMainUIMediator");
-        this.mView.setRoomInfoData(content, mediator.isSelfRoom);
+        const isSelfRoom = this.world.user.userData.isSelfRoom;
+        this.mView.setRoomInfoData(content, isSelfRoom);
     }
 
     private queryRoomInfoHandler() {
-        const uimananger = this.world.uiManager;
-        const mediator = <PicaMainUIMediator>uimananger.getMediator("PicaMainUIMediator");
-        const roominfo = mediator.roomInfo;
-        if (roominfo) {
-            this.picHouse.queryRoomInfo(roominfo.roomId);
+        const curRoomID = this.world.user.userData.curRoomID;
+        if (curRoomID) {
+            this.picHouse.queryRoomInfo(curRoomID);
         }
     }
 
