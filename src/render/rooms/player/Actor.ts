@@ -1,4 +1,4 @@
-import { IElementManager } from "../../../game/room/element/element.manager";
+import { IElementManager } from "../../../game/room/elementManager/element/element.manager";
 import { ISprite } from "../element/sprite";
 import { IRoomService } from "../room";
 import { InputListener } from "../../game/core/render/manager/input.manager";

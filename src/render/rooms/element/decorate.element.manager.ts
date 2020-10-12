@@ -1,4 +1,4 @@
-import { ElementManager } from "../../../game/room/element/element.manager";
+import { ElementManager } from "../../../game/room/elementManager/element/element.manager";
 import { ISprite, Sprite } from "./sprite";
 import { Element, InputEnable } from "./element";
 import { DecorateRoomService } from "../decorate.room";

@@ -1,6 +1,6 @@
 import { op_gameconfig_01, op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
-import { IAnimationData } from "../../../game/room/display/animation/ianimation";
+import { IAnimationData } from "../../../game/room/displayManager/animation/ianimation";
 
 export class Animation implements IAnimationData {
     protected mNode: op_gameconfig_01.INode;

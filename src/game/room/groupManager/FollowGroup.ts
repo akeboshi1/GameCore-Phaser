@@ -1,6 +1,5 @@
-import { IGroup } from "./IGroup";
-import { HandlerDispatcher } from "../../core/Handler/HandlerDispatcher";
 import { GroupEventType, GroupType } from "./GroupManager";
+import { IGroup } from "./IGroup";
 export class FollowGroup implements IGroup {
 
     public owner: any;

@@ -1,4 +1,4 @@
-import { IElementManager } from "../../../game/room/element/element.manager";
+import { IElementManager } from "../../../game/room/elementManager/element/element.manager";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../lib/net/connection.service";

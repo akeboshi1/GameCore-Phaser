@@ -1,13 +1,9 @@
 import { IElement } from "../element/element";
-import { IElementManager } from "../../../game/room/element/element.manager";
-import { Logger } from "../../game/core/utils/log";
-import { Pos } from "../../game/core/utils/pos";
 import { ISprite } from "../element/sprite";
-import { IFramesModel } from "../display/frames.model";
 import { ElementDisplay } from "../display/element.display";
 import { IRoomService } from "../room";
 import { TerrainDisplay } from "../display/terrain.display";
-import { BlockObject } from "../../../game/room/camera/block.object";
+import { BlockObject } from "../../../game/room/blockManager/block/block.object";
 import { op_client } from "pixelpai_proto";
 import { DisplayObject } from "../display/display.object";
 

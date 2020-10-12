@@ -1,13 +1,13 @@
-import { Logger } from "../../../utils/log";
-import { IPos, LogicPos } from "../../../utils/logic.pos";
-import { BlockObject } from "../camera/block.object";
-import { IDragonbonesModel } from "../display/dragonbones/idragonbones.model";
-import { IFramesModel } from "../display/frame/iframe.model";
-import { IRoomService } from "../room";
+import { Logger } from "../../../../utils/log";
+import { IPos, LogicPos } from "../../../../utils/logic.pos";
+import { BlockObject } from "../../blockManager/block/block.object";
+import { IDragonbonesModel } from "../../displayManager/dragonbones/idragonbones.model";
+import { IFramesModel } from "../../displayManager/frame/iframe.model";
+import { IRoomService } from "../../room";
 import { IElement } from "./ielement";
 import { op_client, op_def } from "pixelpai_proto";
 import { ElementManager, IElementManager } from "./element.manager";
-import { ISprite } from "../../../render/rooms/element/sprite";
+import { ISprite } from "../../../../render/rooms/element/sprite";
 
 export enum PlayerState {
     IDLE = "idle",

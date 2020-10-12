@@ -1,9 +1,9 @@
-import { IElement } from "../element/ielement";
+import { IElement } from "../../elementManager/element/ielement";
 import { op_def } from "pixelpai_proto";
-import { ISprite } from "../display/sprite/isprite";
-import { IElementManager } from "../element/ielement.manager";
-import { Element, MovePath, PlayerState } from "../element/element";
-import { IPos, LogicPos } from "../../../utils/logic.pos";
+import { ISprite } from "../../displayManager/sprite/isprite";
+import { IElementManager } from "../../elementManager/element/ielement.manager";
+import { Element, MovePath, PlayerState } from "../../elementManager/element/element";
+import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 export class Player extends Element implements IElement {

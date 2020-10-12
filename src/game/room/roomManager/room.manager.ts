@@ -2,7 +2,7 @@ import { Room, IRoomService } from "./room";
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { World } from "../world";
-import { DecorateRoom } from "./decorate.room";
+import { DecorateRoom } from "./room/decorate.room";
 import { EditorRoom } from "./editor.room";
 import { ConnectionService } from "../../../lib/net/connection.service";
 export interface IRoomManager {

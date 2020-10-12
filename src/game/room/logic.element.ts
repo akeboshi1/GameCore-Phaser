@@ -1,7 +1,7 @@
 import { IRoomService } from "./room";
 import { ISprite } from "../../render/rooms/element/sprite";
 import { op_client } from "pixelpai_proto";
-import { IFramesModel } from "./display/frame/iframe.model";
+import { IFramesModel } from "./displayManager/frame/iframe.model";
 import { LogicPos } from "../../utils/logic.pos";
 export interface ILogicElement {
     readonly id: number;

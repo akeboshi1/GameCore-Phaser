@@ -24,7 +24,7 @@ import { Sprite, ISprite } from "./element/sprite";
 import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
 import { SpawnPoint } from "./decorate/spawn.point";
 import { SelectorElement } from "./decorate/selector.element";
-import { IBlockObject } from "../../game/room/camera/block.object";
+import { IBlockObject } from "../../game/room/blockManager/block/block.object";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { IScenery } from "./sky.box/scenery";
 

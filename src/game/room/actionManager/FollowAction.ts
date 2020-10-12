@@ -1,9 +1,5 @@
 import { AIAction } from "./AIAction";
-import { Element, PlayerState } from "../element/element";
-import { op_client, op_def } from "pixelpai_proto";
-import { IGroup } from "../group/IGroup";
-import { FollowGroup } from "../group/FollowGroup";
-import { Room } from "../room";
+import { op_client } from "pixelpai_proto";
 import { Pos } from "../../../utils/pos";
 
 export class FollowAction extends AIAction {

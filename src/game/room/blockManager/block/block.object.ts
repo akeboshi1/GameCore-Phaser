@@ -1,7 +1,7 @@
-import { IPos, LogicPos } from "../../../utils/logic.pos";
-import { ISprite } from "../display/sprite/isprite";
-import { InputEnable } from "../element/element";
-import { IRoomService } from "../room";
+import { IPos, LogicPos } from "../../../../utils/logic.pos";
+import { ISprite } from "../../displayManager/sprite/isprite";
+import { InputEnable } from "../../elementManager/element/element";
+import { IRoomService } from "../../room";
 import { IBlockObject } from "./iblock.object";
 
 export abstract class BlockObject implements IBlockObject {

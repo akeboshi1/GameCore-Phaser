@@ -2,8 +2,8 @@ import { IDragonbonesModel } from "./dragonbones.model";
 import { op_def } from "pixelpai_proto";
 import { IElement } from "../element/element";
 import { DisplayField } from "./display.object";
-import { IFramesModel } from "../../../game/room/display/frame/iframe.model";
-import { AnimationData } from "../../../game/room/display/animation/ianimation";
+import { IFramesModel } from "../../../game/room/displayManager/frame/iframe.model";
+import { AnimationData } from "../../../game/room/displayManager/animation/ianimation";
 
 export interface ElementDisplay extends Phaser.GameObjects.Container {
     readonly element: IElement;

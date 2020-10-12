@@ -1,7 +1,6 @@
-import { Terrain } from "./terrain/terrain";
-import { Element, InputEnable } from "./element/element";
-import { op_client } from "pixelpai_proto";
-import { ISprite } from "./display/sprite";
+import { Terrain } from "../../render/rooms/terrain/terrain";
+import { InputEnable } from "./displayManager/elementManager/element/element";
+import { ISprite } from "./displayManager/sprite/isprite";
 
 export class DisplayObjectPool {
     private terrains = new Map();

@@ -1,7 +1,7 @@
-import { ILogicElement } from "../logic.element";
-import { IRoomService } from "../room";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { ISprite } from "../display/sprite/isprite";
+import { ILogicElement } from "../../logic.element";
+import { IRoomService } from "../../room";
+import { ConnectionService } from "../../../../../lib/net/connection.service";
+import { ISprite } from "../../displayManager/sprite/isprite";
 
 export interface IElementManager {
     hasAddComplete: boolean;

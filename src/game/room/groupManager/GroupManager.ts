@@ -1,7 +1,7 @@
-import { IDispose } from "../action/IDispose";
 import { IGroup } from "./IGroup";
 import { FollowGroup } from "./FollowGroup";
-import { IRoomService } from "../room";
+import { IDispose } from "../actionManager/IDispose";
+import { IRoomService } from "../roomManager/room/room";
 
 export class GroupManager implements IDispose {
 

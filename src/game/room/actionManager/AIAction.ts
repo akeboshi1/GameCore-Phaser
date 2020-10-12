@@ -1,5 +1,4 @@
 import { IDispose } from "./IDispose";
-import { Element } from "../element/element";
 import { ActionGroup } from "./ActionGroup";
 
 export abstract class AIAction implements IDispose {

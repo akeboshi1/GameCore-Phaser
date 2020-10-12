@@ -1,6 +1,6 @@
 import { op_client, op_def } from "pixelpai_proto";
 import { Sprite, ISprite } from "../element/sprite";
-import { ElementManager } from "../../../game/room/element/element.manager";
+import { ElementManager } from "../../../game/room/elementManager/element/element.manager";
 import { IRoomService, Room } from "../room";
 import { GroupType } from "../group/GroupManager";
 import { FollowAction } from "../action/FollowAction";
