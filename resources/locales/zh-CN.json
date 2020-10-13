@@ -264,7 +264,9 @@
     "navigation": "导航",
     "mine": "我的",
     "hotel": "酒店",
-    "picatown": "皮卡小镇"
+    "picatown": "皮卡小镇",
+    "defaultname":"{{name}}的派对"
+    
   },
   "picelevator": {
     "floor": "层"

@@ -3,6 +3,10 @@ import { i18n } from "../../i18n";
 import { Font } from "../../utils/font";
 import { DynamicImage } from "../components/dynamic.image";
 import { UIAtlasKey } from "../ui.atals.name";
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { Url } from "../../utils/resUtil";
+import { log, Logger } from "../../utils/log";
+import { PicOpenPartyPanel } from "./PicOpenPartyPanel";
 export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
@@ -21,13 +25,15 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private partyTimevalue: Phaser.GameObjects.Text;
     private partyCardImage: DynamicImage;
     private openBtn: NineSliceButton;
+    private ownerTicketCount: number = 0;
+    private curPartyData: op_pkt_def.IPKT_Property;
+    private curSelectItem: PicPartyThemeItem;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.key = key;
         this.dpr = dpr;
         this.setSize(width, height);
         this.create();
-        this.setPartyData();
     }
 
     public resize() {
@@ -35,26 +41,36 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     }
 
     public hide() {
-        this.visible = false;
-        this.describleInput.visible = false;
-        (<HTMLTextAreaElement>(this.describleInput.node)).style.display = "none";
-        this.mNameInput.visible = false;
-        (<HTMLTextAreaElement>(this.mNameInput.node)).style.display = "none";
-        this.openBtn.off(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
+        this.changeInputState(false);
     }
 
     public show() {
-        this.visible = true;
-        this.describleInput.visible = true;
-        (<HTMLTextAreaElement>(this.describleInput.node)).style.display = "true";
-        this.mNameInput.visible = true;
-        (<HTMLTextAreaElement>(this.mNameInput.node)).style.display = "true";
-        this.openBtn.on(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
+        this.changeInputState(true);
     }
 
-    public setPartyData() {
-        this.timeSlider.setValue(50, 0, 100);
-        this.gamegride.setItems(new Array(60));
+    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, username: string) {
+        this.mNameInput.text = i18n.t("defaultname", { name: username });
+        this.describleInput.text = i18n.t("describletitle");
+        const timeticket = content.ticketsCount;
+        const topic = content.topics;
+        this.timeSlider.setValue(0, 0, 1);
+        this.ownerTicketCount = timeticket;
+        this.partyTimevalue.text = `*${timeticket}`;
+        this.gamegride.setItems(topic);
+        const cell = this.gamegride.getCell(0);
+        if (cell && cell.container) {
+            this.onGridTableHandler(cell.container);
+        }
+    }
+    private changeInputState(visible: boolean) {
+        this.visible = visible;
+        this.describleInput.visible = visible;
+        (<HTMLTextAreaElement>(this.describleInput.node)).style.display = visible ? "true" : "none";
+        this.mNameInput.visible = visible;
+        (<HTMLTextAreaElement>(this.mNameInput.node)).style.display = visible ? "true" : "none";
+        if (visible)
+            this.openBtn.on(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
+        else this.openBtn.off(String(ClickEvent.Tap), this.onOpenPartyHandler, this);
     }
     private create() {
         this.partyNameTitle = this.scene.make.text({ x: -this.width * 0.5 + 10 * this.dpr, y: -this.height * 0.5 + 20 * this.dpr, text: i18n.t("party.partyname"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
@@ -83,17 +99,18 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
             clamplChildOY: false,
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene, index = cell.index,
-                    item = cell.item;
+                const item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new PicPartyThemeItem(this.scene, 65 * this.dpr, 70 * this.dpr, this.key, this.dpr);
                 }
-                cellContainer.setThemeData();
+                cellContainer.setThemeData(item);
+                Logger.getInstance().log("cellContainercellContainer");
                 return cellContainer;
             },
         };
         this.gamegride = new GameGridTable(this.scene, tableConfig);
         this.gamegride.layout();
+        this.gamegride.on("cellTap", this.onGridTableHandler, this);
         this.add(this.gamegride);
 
         this.describleTitle = this.scene.make.text({ x: this.partyThemeTitle.x, y: this.partyThemeTitle.y + 60 * this.dpr, text: i18n.t("party.partydescrible"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
@@ -109,12 +126,14 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
         const sliderHeight = 4 * this.dpr;
         const sliderx = this.partyTimeTitle.x + this.partyTimeTitle.width + 5 * this.dpr + sliderWidth * 0.5;
         this.createSlider(sliderx, this.partyTimeTitle.y, sliderWidth, sliderHeight);
-        this.partyTimeLable = this.scene.make.text({ x: this.partyTimeTitle.x, y: this.partyTimeTitle.y + 60 * this.dpr, text: i18n.t("party.partycardlabel"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
+        this.partyTimeLable = this.scene.make.text({ x: this.partyTimeTitle.x + 50 * this.dpr, y: this.partyTimeTitle.y + 60 * this.dpr, text: i18n.t("party.partycardlabel"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
         this.partyTimeLable.setOrigin(0, 0.5).setResolution(this.dpr);
         this.add(this.partyTimeLable);
-        this.partyCardImage = new DynamicImage(this.scene, this.partyTimeLable.x + this.partyTimeLable.width, this.partyTimeLable.y);
+        this.partyCardImage = new DynamicImage(this.scene, 0, this.partyTimeLable.y);
+        this.partyCardImage.setTexture(this.key, "party_card");
+        this.partyCardImage.x = this.partyTimeLable.x + this.partyTimeLable.width + this.partyCardImage.width * 0.5;
         this.add(this.partyCardImage);
-        this.partyTimevalue = this.scene.make.text({ x: this.partyCardImage.x, y: this.partyCardImage.y, text: "", style: { fontFamily: Font.DEFULT_FONT, fontSize: 14 * this.dpr, bold: true, color: "#000000" } });
+        this.partyTimevalue = this.scene.make.text({ x: this.partyCardImage.x + this.partyCardImage.width * 0.5 + 2 * this.dpr, y: this.partyCardImage.y, text: "", style: { fontFamily: Font.DEFULT_FONT, fontSize: 14 * this.dpr, bold: true, color: "#000000" } });
         this.partyTimevalue.setOrigin(0, 0.5).setResolution(this.dpr);
         this.partyTimevalue.setStroke("#000000", 2);
         this.add(this.partyTimevalue);
@@ -172,14 +191,26 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     }
     private onSliderValueHandler(value: number) {
         this.itemCountText.x = this.thumb.x;
-        this.itemCountText.text = Math.floor(value * 100) + "";
+        this.itemCountText.text = Math.floor(value * this.ownerTicketCount) + "";
         this.itemCount = value;
     }
 
     private onOpenPartyHandler() {
-
+        if (this.curPartyData) {
+            const topic = this.curPartyData.key;
+            const name = this.partyNameTitle.text;
+            const des = this.partyThemeTitle.text;
+            const ticket = Number(this.partyTimevalue.text);
+            if (ticket > 0)
+                this.emit("openparty", topic, name, des, ticket);
+        }
     }
 
+    private onGridTableHandler(item: PicPartyThemeItem) {
+        if (this.curSelectItem) this.curSelectItem.select = false;
+        item.select = true;
+        this.curPartyData = item.partyData;
+    }
     private createInput(x: number, y: number, width: number, height: number, type: string = "text") {
         const mblackbg = this.scene.make.graphics(undefined, false);
         mblackbg.fillStyle(0xA4EFF3, 0.66);
@@ -198,23 +229,36 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
 }
 
 class PicPartyThemeItem extends Phaser.GameObjects.Container {
+    public partyData: op_pkt_def.IPKT_Property;
     private dpr: number;
-    private icon: Phaser.GameObjects.Image;
+    private icon: DynamicImage;
     private value: Phaser.GameObjects.Text;
+    private selectbg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.setSize(width, height);
+        this.selectbg = this.scene.make.image({ key, frame: "party_selected_bg" });
         this.icon = new DynamicImage(scene, 0, 0);
         this.icon.setTexture(key, "party_icon_1");
         this.value = scene.make.text({ x: 0, y: 0, text: "10", style: { color: "#333333", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0.5, 0);
         this.value.y = this.height * 0.5 - 10 * dpr;
         this.value.setWordWrapWidth(this.width, true);
-        this.add([this.icon, this.value]);
+        this.add([this.selectbg, this.icon, this.value]);
+        this.selectbg.visible = false;
     }
 
-    public setThemeData() {
-        this.value.text = "发生四点山豆根士大夫敢死队风格去问人体温热太温柔额我让他为人体微软他";
+    public setThemeData(topic: op_pkt_def.IPKT_Property) {
+        this.value.text = topic.name;
+        const texturepath = topic.display.texturePath;
+        const lastindex = texturepath.lastIndexOf("/");
+        const frame = texturepath.slice(lastindex + 1, texturepath.length);
+        const burl = texturepath.slice(0, lastindex + 1);
+        const url = Url.getOsdRes(burl + frame + `_${this.dpr}x` + ".png");
+        this.icon.load(url);
+    }
+    public set select(select: boolean) {
+        this.selectbg.visible = select;
     }
 }

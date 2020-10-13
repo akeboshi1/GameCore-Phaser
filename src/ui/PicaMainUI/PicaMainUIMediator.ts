@@ -84,6 +84,7 @@ export class PicaMainUIMediator extends BaseMediator {
 
     private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
         this.mRoomInfo = content;
+        this.world.user.userData.curRoomID = content.roomId;
         if (this.mView)
             this.mView.updateRoomInfo(content);
     }

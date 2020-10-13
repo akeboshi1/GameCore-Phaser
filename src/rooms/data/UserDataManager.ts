@@ -5,6 +5,7 @@ import { ConnectionService } from "../../net/connection.service";
 import { PlayerBag } from "./PlayerBag";
 import { PlayerProperty } from "./PlayerProperty";
 export class UserDataManager extends PacketHandler {
+    private mCurRoomID: string;
     private readonly mPlayerBag: PlayerBag;
     private readonly mProperty: PlayerProperty;
     private readonly mWorld: WorldService;
@@ -67,6 +68,22 @@ export class UserDataManager extends PacketHandler {
         if (this.mProperty) {
             return this.mProperty;
         }
+    }
+
+    get isSelfRoom() {
+        const rooms = this.mProperty.rooms;
+        const curRoomid = this.mCurRoomID;
+        for (const room of rooms) {
+            if (room.roomId === curRoomid) return true;
+        }
+        return false;
+    }
+    set curRoomID(roomID: string) {
+        this.mCurRoomID = roomID;
+    }
+
+    get curRoomID() {
+        return this.mCurRoomID;
     }
 
     querySYNC_ALL_PACKAGE() {

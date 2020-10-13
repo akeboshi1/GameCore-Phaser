@@ -9,7 +9,7 @@ export class PicOpenPartyMediator extends BaseMediator {
     private scene: Phaser.Scene;
     private world: WorldService;
     private layerMgr: ILayerManager;
-    private picOrder: PicOpenParty;
+    private picOpen: PicOpenParty;
     constructor(layerMgr: ILayerManager, scene: Phaser.Scene, worldService: WorldService) {
         super();
         this.scene = scene;
@@ -24,10 +24,13 @@ export class PicOpenPartyMediator extends BaseMediator {
         if (!this.mView) {
             this.mView = new PicOpenPartyPanel(this.scene, this.world);
             this.mView.on("close", this.onCloseHandler, this);
+            this.mView.on("querytheme", this.query_PARTY_REQUIREMENTS, this);
+            this.mView.on("queryopen", this.query_CREATE_PARTY, this);
         }
-        if (!this.picOrder) {
-            this.picOrder = new PicOpenParty(this.world);
-            this.picOrder.register();
+        if (!this.picOpen) {
+            this.picOpen = new PicOpenParty(this.world);
+            this.picOpen.on("themelist", this.on_PARTY_REQUIREMENTS, this);
+            this.picOpen.register();
         }
         this.layerMgr.addToUILayer(this.mView);
         this.mView.show();
@@ -38,13 +41,23 @@ export class PicOpenPartyMediator extends BaseMediator {
     }
 
     destroy() {
-        if (this.picOrder) {
-            this.picOrder.destroy();
-            this.picOrder = undefined;
+        if (this.picOpen) {
+            this.picOpen.destroy();
+            this.picOpen = undefined;
         }
         super.destroy();
     }
     private onCloseHandler() {
         this.destroy();
+    }
+    private on_PARTY_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
+        this.mView.setPartyData(content, this.world.user.userData.isSelfRoom);
+    }
+    private query_PARTY_REQUIREMENTS() {
+        this.picOpen.query_PARTY_REQUIREMENTS(this.world.user.userData.curRoomID);
+    }
+    private query_CREATE_PARTY(topic: string, name: string, des: string, ticket: number) {
+        const id: string = this.world.user.userData.curRoomID;
+        this.picOpen.query_CREATE_PARTY(id, topic, name, des, ticket);
     }
 }
