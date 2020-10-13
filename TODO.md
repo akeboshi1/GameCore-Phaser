@@ -6,9 +6,9 @@ TODO List
   - [x] Phaser场景管理-sceneManager
   - [x] Phaser镜头管理-cameraManager
   - [x] 多帧显示对象管理-frameDisplayManager
-  - [ ] 龙骨显示对象管理-dragonBonesDisplayManager
-  - [ ] 显示对象管理-elementDisplayManager
-  - [ ] 地块显示对象管理-terrainDisplayManager
+  - [x] 龙骨显示对象管理-dragonBonesDisplayManager
+  - [x] 显示对象管理-elementDisplayManager
+  - [x] 地块显示对象管理-terrainDisplayManager
   - [ ] 墙体显示对象管理-wallDisplayManager
   - [ ] ui显示对象管理-uiManager
   - [ ] 显示对象层级管理-layerManager
