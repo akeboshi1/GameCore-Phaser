@@ -24,6 +24,7 @@ export interface ILauncherConfig {
     scale_ratio?: number;
     platform?: string;
     keyboardHeight: number;
+    osd?: string;
     width: number;
     height: number;
     readonly screenWidth: number;
@@ -33,7 +34,6 @@ export interface ILauncherConfig {
     readonly game_created?: Function;
     readonly connection?: any;
     readonly isEditor?: boolean;
-    readonly osd?: string;
     readonly closeGame: Function;
     readonly connectFail?: Function;
     readonly parent?: string;
@@ -125,6 +125,12 @@ export class Launcher {
     };
 
     constructor(config?: ILauncherConfig) {
+        if (config.osd) {
+            config.osd = decodeURIComponent(config.osd);
+        }
+        if (config.api_root) {
+            config.api_root = decodeURIComponent(config.api_root);
+        }
         if (config) {
             Object.assign(this.mConfig, config);
         }
