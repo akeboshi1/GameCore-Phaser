@@ -6,6 +6,7 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { log, Logger } from "../../utils/log";
+import { PicOpenPartyPanel } from "./PicOpenPartyPanel";
 export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
@@ -24,7 +25,9 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private partyTimevalue: Phaser.GameObjects.Text;
     private partyCardImage: DynamicImage;
     private openBtn: NineSliceButton;
+    private ownerTicketCount: number = 0;
     private curPartyData: op_pkt_def.IPKT_Property;
+    private curSelectItem: PicPartyThemeItem;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
         super(scene, x, y);
         this.key = key;
@@ -45,11 +48,19 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
         this.changeInputState(true);
     }
 
-    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
+    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, username: string) {
+        this.mNameInput.text = i18n.t("defaultname", { name: username });
+        this.describleInput.text = i18n.t("describletitle");
         const timeticket = content.ticketsCount;
         const topic = content.topics;
-        this.timeSlider.setValue(0, 0, timeticket);
+        this.timeSlider.setValue(0, 0, 1);
+        this.ownerTicketCount = timeticket;
+        this.partyTimevalue.text = `*${timeticket}`;
         this.gamegride.setItems(topic);
+        const cell = this.gamegride.getCell(0);
+        if (cell && cell.container) {
+            this.onGridTableHandler(cell.container);
+        }
     }
     private changeInputState(visible: boolean) {
         this.visible = visible;
@@ -115,12 +126,14 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
         const sliderHeight = 4 * this.dpr;
         const sliderx = this.partyTimeTitle.x + this.partyTimeTitle.width + 5 * this.dpr + sliderWidth * 0.5;
         this.createSlider(sliderx, this.partyTimeTitle.y, sliderWidth, sliderHeight);
-        this.partyTimeLable = this.scene.make.text({ x: this.partyTimeTitle.x, y: this.partyTimeTitle.y + 60 * this.dpr, text: i18n.t("party.partycardlabel"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
+        this.partyTimeLable = this.scene.make.text({ x: this.partyTimeTitle.x + 50 * this.dpr, y: this.partyTimeTitle.y + 60 * this.dpr, text: i18n.t("party.partycardlabel"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
         this.partyTimeLable.setOrigin(0, 0.5).setResolution(this.dpr);
         this.add(this.partyTimeLable);
-        this.partyCardImage = new DynamicImage(this.scene, this.partyTimeLable.x + this.partyTimeLable.width, this.partyTimeLable.y);
+        this.partyCardImage = new DynamicImage(this.scene, 0, this.partyTimeLable.y);
+        this.partyCardImage.setTexture(this.key, "party_card");
+        this.partyCardImage.x = this.partyTimeLable.x + this.partyTimeLable.width + this.partyCardImage.width * 0.5;
         this.add(this.partyCardImage);
-        this.partyTimevalue = this.scene.make.text({ x: this.partyCardImage.x, y: this.partyCardImage.y, text: "", style: { fontFamily: Font.DEFULT_FONT, fontSize: 14 * this.dpr, bold: true, color: "#000000" } });
+        this.partyTimevalue = this.scene.make.text({ x: this.partyCardImage.x + this.partyCardImage.width * 0.5 + 2 * this.dpr, y: this.partyCardImage.y, text: "", style: { fontFamily: Font.DEFULT_FONT, fontSize: 14 * this.dpr, bold: true, color: "#000000" } });
         this.partyTimevalue.setOrigin(0, 0.5).setResolution(this.dpr);
         this.partyTimevalue.setStroke("#000000", 2);
         this.add(this.partyTimevalue);
@@ -178,15 +191,24 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     }
     private onSliderValueHandler(value: number) {
         this.itemCountText.x = this.thumb.x;
-        this.itemCountText.text = Math.floor(value * 100) + "";
+        this.itemCountText.text = Math.floor(value * this.ownerTicketCount) + "";
         this.itemCount = value;
     }
 
     private onOpenPartyHandler() {
-
+        if (this.curPartyData) {
+            const topic = this.curPartyData.key;
+            const name = this.partyNameTitle.text;
+            const des = this.partyThemeTitle.text;
+            const ticket = Number(this.partyTimevalue.text);
+            if (ticket > 0)
+                this.emit("openparty", topic, name, des, ticket);
+        }
     }
 
     private onGridTableHandler(item: PicPartyThemeItem) {
+        if (this.curSelectItem) this.curSelectItem.select = false;
+        item.select = true;
         this.curPartyData = item.partyData;
     }
     private createInput(x: number, y: number, width: number, height: number, type: string = "text") {
@@ -211,17 +233,20 @@ class PicPartyThemeItem extends Phaser.GameObjects.Container {
     private dpr: number;
     private icon: DynamicImage;
     private value: Phaser.GameObjects.Text;
+    private selectbg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
         this.setSize(width, height);
+        this.selectbg = this.scene.make.image({ key, frame: "party_selected_bg" });
         this.icon = new DynamicImage(scene, 0, 0);
         this.icon.setTexture(key, "party_icon_1");
         this.value = scene.make.text({ x: 0, y: 0, text: "10", style: { color: "#333333", fontSize: 11 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.value.setOrigin(0.5, 0);
         this.value.y = this.height * 0.5 - 10 * dpr;
         this.value.setWordWrapWidth(this.width, true);
-        this.add([this.icon, this.value]);
+        this.add([this.selectbg, this.icon, this.value]);
+        this.selectbg.visible = false;
     }
 
     public setThemeData(topic: op_pkt_def.IPKT_Property) {
@@ -232,5 +257,8 @@ class PicPartyThemeItem extends Phaser.GameObjects.Container {
         const burl = texturepath.slice(0, lastindex + 1);
         const url = Url.getOsdRes(burl + frame + `_${this.dpr}x` + ".png");
         this.icon.load(url);
+    }
+    public set select(select: boolean) {
+        this.selectbg.visible = select;
     }
 }

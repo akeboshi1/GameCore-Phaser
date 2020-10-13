@@ -56,7 +56,8 @@ export class PicOpenPartyMediator extends BaseMediator {
     private query_PARTY_REQUIREMENTS() {
         this.picOpen.query_PARTY_REQUIREMENTS(this.world.user.userData.curRoomID);
     }
-    private query_CREATE_PARTY(id: string, topic: string, name: string, des: string, ticket: number) {
+    private query_CREATE_PARTY(topic: string, name: string, des: string, ticket: number) {
+        const id: string = this.world.user.userData.curRoomID;
         this.picOpen.query_CREATE_PARTY(id, topic, name, des, ticket);
     }
 }

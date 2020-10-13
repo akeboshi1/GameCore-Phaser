@@ -107,6 +107,7 @@ export class PicOpenPartyPanel extends BasePanel {
         this.topCheckBox.on("selected", this.onTabBtnHandler, this);
         this.content.add([this.partyBtn, this.settingBtn]);
         this.partyCreatePanel = new PicOpenPartyCreatePanel(this.scene, 0, 0, this.content.width - 20 * this.dpr, this.content.height - 70 * this.dpr, this.key, this.dpr);
+        this.partyCreatePanel.on("openparty", this.onOpenPartyHandler, this);
         this.partyCreatePanel.y = 0;
         this.content.add(this.partyCreatePanel);
         // const mblackbg = this.scene.make.graphics(undefined, false);
@@ -141,5 +142,9 @@ export class PicOpenPartyPanel extends BasePanel {
 
     private onCloseHandler() {
         this.emit("close");
+    }
+
+    private onOpenPartyHandler(topic: string, name: string, des: string, ticket: number) {
+        this.emit("queryopen", topic, name, des, ticket);
     }
 }

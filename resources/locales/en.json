@@ -264,7 +264,8 @@
     "navigation": "NAVIGATION",
     "mine": "MINE",
     "hotel": "HOTEL",
-    "picatown": "PICATOWN"
+    "picatown": "PICATOWN",
+    "defaultname":"{{name}}'s Party"
   },
   "picelevator": {
     "floor": "f"
