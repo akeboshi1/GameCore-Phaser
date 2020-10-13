@@ -73,4 +73,9 @@ export namespace PicFriendEvent {
      * 请求好友关系
      */
     export const REQ_RELATION: string = "reqRelation";
+
+    /**
+     * 请求新增粉丝
+     */
+    export const REQ_NEW_FANS: string = "reqNewFans";
 }
