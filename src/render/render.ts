@@ -5,6 +5,7 @@ import { ServerAddress } from "../../lib/net/address";
 import { Buffer, PBpacket } from "net-socket-packet";
 import { DisplayField, DisplayObject } from "./display/display.object";
 import { MessageType } from "../messagetype/message.type";
+import { op_client } from "pixelpai_proto";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
@@ -174,7 +175,7 @@ export class Render extends RPCPeer {
     }
 
     @Export()
-    public playSound() {
+    public playSound(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL) {
 
     }
 
@@ -254,6 +255,21 @@ export class Render extends RPCPeer {
 
     }
 
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public sceneAddLoadRes(sceneName: string, type: string, key: string, source: string) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public sceneStartLoad(secenName: string) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public loadStart(str: string, scene) {
+
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public roomPause(roomID: number) {
 
@@ -317,8 +333,8 @@ export class Render extends RPCPeer {
 
     }
 
-    @Export([webworker_rpc.ParamType.unit8array])
-    public createGame(buffer: Buffer) {
+    @Export()
+    public createGame(content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT) {
 
     }
 

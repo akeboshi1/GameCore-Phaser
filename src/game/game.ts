@@ -1,7 +1,5 @@
-import { Clock, ClockReadyListener } from "./clock/clock";
 import { PBpacket, PacketHandler, Buffer } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
-import { HttpService } from "./httpClock/http.service";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
 import { IPoint, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
@@ -9,7 +7,6 @@ import { IConnectListener } from "../../lib/net/socket";
 import { Logger } from "../utils/log";
 import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
-import { HttpClock } from "./httpClock/http.clock";
 import { UiManager } from "./ui/ui.manager";
 import { ElementStorage } from "./elementstorage/element.storage";
 import { RoomManager } from "./room/roomManager/room.manager";
@@ -18,6 +15,12 @@ import { IRoomService } from "./room/roomManager/room/room";
 import { Connection, ConnListener, GameSocket } from "./net/connection";
 import { CreateRoleManager } from "./uimanager/createrole/create.role.manager";
 import { SoundManager } from "./soundmanager/sound.manager";
+import { Clock, ClockReadyListener } from "./loop/clock/clock";
+import { HttpClock } from "./loop/httpClock/http.clock";
+import { HttpService } from "./loop/httpClock/http.service";
+import { Tool } from "../utils/tool";
+import { LoadingManager } from "./loading/loading.manager";
+import { LoadingTips } from "../game/loading/loading.tips";
 
 interface ISize {
     width: number;
@@ -66,7 +69,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mPlayerDataManager: PlayerDataManager;
     private mCreateRoleManager: CreateRoleManager;
     private mSoundManager: SoundManager;
+    private mLoadingManager: LoadingManager;
     private mainPeer: MainPeer;
+    private gameConfigUrls: Map<string, string> = new Map();
+    private gameConfigUrl: string;
     constructor() {
         super();
         this.mainPeer = new MainPeer(this);
@@ -93,7 +99,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.mRoomManager = new RoomManager(this);
         this.mUiManager = new UiManager(this);
-        this.mMouseManager = new MouseManager(this);
         this.mElementStorage = new ElementStorage();
         this.mHttpService = new HttpService(this);
         this.mCreateRoleManager = new CreateRoleManager(this);
@@ -206,6 +211,20 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.setCameraBounds(x, y, width, height);
     }
 
+    public initgameConfigUrls(urls: string[]) {
+        for (const url of urls) {
+            const sceneId = Tool.baseName(url);
+            this.gameConfigUrls.set(sceneId, url);
+            if (url.split(sceneId).length === 3) {
+                this.gameConfigUrl = url;
+            }
+        }
+    }
+
+    public getConfigUrl(sceneId: string) {
+        return this.gameConfigUrls.get(sceneId);
+    }
+
     onClockReady(): void {
         this.mainPeer.render.onClockReady();
     }
@@ -277,11 +296,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mClock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
-        const keyBoardPacket: PBpacket = new PBpacket();
-        keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
+        // const keyBoardPacket: PBpacket = new PBpacket();
+        // keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
-            this.mainPeer.render.createGame(keyBoardPacket.Serialization());
+            this.mainPeer.render.createGame(content);
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
@@ -290,14 +309,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             game_id = game_id.split(".")[1];
         }
 
-        const mainGameConfigUrl = this.gameConfigUrl;
+        const mainGameConfigUrl = this.gameConfigUrls;
 
         this.mLoadingManager.start(LoadingTips.downloadGameConfig());
         // this.mConnection.loadRes([mainGameConfigUrl]);
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
-                this.mainPeer.render.createGame(new Buffer(content.keyEvents));
+                this.mainPeer.render.createGame(content);
                 Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {
