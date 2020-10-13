@@ -11,10 +11,12 @@ import { MessageType } from "../../../../../messageType/MessageType";
 import { LogicPos } from "../../../../../utils/logic.pos";
 import { ConnectionService } from "../../../../../../lib/net/connection.service";
 import { PlayerModel } from "./player.model";
+import { User } from "../../../../actor/user";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     private mPlayerMap: Map<number, Player> = new Map();
+    private mActor: User;
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -37,10 +39,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public createActor(actor: op_client.IActor) {
         const playModel = new PlayerModel(actor);
-        this.mActor = new Actor(playModel, this);
+        this.mActor = new User(this.mRoom.world);
     }
 
-    get actor(): Actor {
+    get actor(): User {
         return this.mActor;
     }
 
@@ -137,18 +139,19 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: Player = this.mPlayerMap.get(elementId);
         if (character && character.id === this.mActor.id) {
-            if (!(character as Actor).package) {
-                (character as Actor).package = op_gameconfig.Package.create();
+            if (!(character as User).package) {
+                (character as User).package = op_gameconfig.Package.create();
             }
-            (character as Actor).package.items = (character as Actor).package.items.concat(items);
-            this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+            (character as User).package.items = (character as User).package.items.concat(items);
+            this.mRoom.world.peer.render.updateCharacterPackage();
+            // this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
         }
     }
 
     public removePackItems(elementId: number, itemId: number): boolean {
         const character: Player = this.mPlayerMap.get(elementId);
         if (character && this.mActor.id) {
-            const itemList: any[] = (character as Actor).package.items;
+            const itemList: any[] = (character as User).package.items;
             const len = itemList.length;
             for (let i = 0; i < len; i++) {
                 if (itemId === itemList[i].id) {

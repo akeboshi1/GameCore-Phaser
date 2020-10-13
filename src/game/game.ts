@@ -149,6 +149,10 @@ export class MainPeer extends RPCPeer {
         this.socket.send(pkt.Serialization());
     }
     @Export()
+    public creareRole() {
+        this.
+    }
+    @Export()
     public reconnect() {
         // 告诉主进程重新连接
         this.mRender.reconnect();

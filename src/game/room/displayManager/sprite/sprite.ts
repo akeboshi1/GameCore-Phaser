@@ -8,7 +8,7 @@ import { IAvatar, IDragonbonesModel } from "../playerManager/model/idragonbones.
 import { Logger } from "../../../../utils/log";
 import NodeType = op_def.NodeType;
 import { LogicPoint } from "../../../../utils/logic.point";
-import { AnimationData, AnimationQueue } from "../animation/animation";
+import { Animation, AnimationData, AnimationQueue } from "../animation/animation";
 export interface ISprite {
     readonly id: number;
     // 龙骨资源名集合

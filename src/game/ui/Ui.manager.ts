@@ -2,8 +2,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ConnectionService } from "../../../lib/net/connection.service";
-import { UIMediatorType } from "../../render/ui/Ui.mediatorType";
-import { BaseMediator } from "apowophaserui";
+import { MessageType } from "../../messageType/MessageType";
 
 // export const enum UIType {
 //     NoneUIType,

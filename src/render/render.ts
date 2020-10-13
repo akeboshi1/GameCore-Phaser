@@ -1,12 +1,12 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { op_def } from "pixelpai_proto";
-import { DisplayObject } from "./rooms/display/display.object";
 import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
 import { Buffer, PBpacket } from "net-socket-packet";
+import { MessageType } from "../messageType/MessageType";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
-
+    public emitter: Phaser.Events.EventEmitter;
     private nodes = {
         [op_def.NodeType.GameNodeType]: new Map<number, DisplayObject>(),
         [op_def.NodeType.SceneNodeType]: new Map<number, DisplayObject>(),
@@ -52,6 +52,7 @@ export class Render extends RPCPeer {
     private mainPeer: any;
     constructor() {
         super("render");
+        this.emitter = new Phaser.Events.EventEmitter();
         this.linkTo(MAIN_WORKER, "../game/main.worker").onceReady(() => {
             this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
         });
@@ -159,6 +160,11 @@ export class Render extends RPCPeer {
 
     public requestCurTime() {
         this.mainPeer.requestCurTime();
+    }
+
+    @Export()
+    public updateCharacterPackage() {
+        this.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
     }
 
     @Export()

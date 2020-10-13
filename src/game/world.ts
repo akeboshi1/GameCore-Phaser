@@ -3,8 +3,6 @@ import { PBpacket, PacketHandler, Buffer } from "net-socket-packet";
 import { MainPeer } from "./game";
 import { HttpService } from "./httpClock/http.service";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
-import { RoomManager } from "./room/room.manager";
-import { IRoomService } from "./room/room";
 import { IPoint, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
@@ -14,7 +12,9 @@ import { ResUtils } from "../utils/resUtil";
 import { HttpClock } from "./httpClock/http.clock";
 import { UiManager } from "./ui/Ui.manager";
 import { ElementStorage } from "./elementstorage/element.storage";
-import { Element } from "./room/displayManager/elementManager/element/element";
+import { RoomManager } from "./room/roomManager/room.manager";
+import { PlayerDataManager } from "./actor/data/player.dataManager";
+import { IRoomService } from "./room/roomManager/room/room";
 
 interface ISize {
     width: number;
@@ -59,6 +59,7 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
     private mAccount: Account;
     private mRoomManager: RoomManager;
     private mElementStorage: ElementStorage;
+    private mPlayerDataManager: PlayerDataManager;
     constructor(private mainPeer: MainPeer) {
         super();
     }
@@ -104,9 +105,9 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
         if (this.mRoleManager) this.mRoleManager.register();
         if (this.mSoundManager) this.mSoundManager.addPackListener();
         if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
-        if (this.mElementStorage) {
-            this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
-        }
+        // if (this.mElementStorage) {
+        //     this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
+        // }
     }
     public showLoading() {
         this.mainPeer.render.showLoading();
@@ -201,10 +202,6 @@ export class World extends PacketHandler implements IConnectListener, ClockReady
 
     syncClock(times: number = 1) {
         this.mClock.sync(times);
-    }
-
-    emit(messageType: string, packet?: PBpacket) {
-        this.mainPeer.emit(messageType, packet);
     }
 
     set moveStyle(moveStyle: number) {

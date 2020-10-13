@@ -1,6 +1,6 @@
-<mxfile host="84c5a488-ba18-4bb9-8a84-52f361c18d4b" modified="2020-10-12T11:55:41.441Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.49.1 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="5z7W3EQv3XF6vlbxREUu" version="13.1.3">
+<mxfile host="84c5a488-ba18-4bb9-8a84-52f361c18d4b" modified="2020-10-13T05:44:47.856Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.49.1 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="iADuQrof-TtA54nk9sxa" version="13.1.3">
     <diagram id="6hGFLwfOUW9BJ-s0fimq" name="Page-1">
-        <mxGraphModel dx="1318" dy="442" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+        <mxGraphModel dx="997" dy="442" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -356,17 +356,20 @@
                 <mxCell id="89" value="world" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="40" y="340" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="193" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="90" target="192" edge="1">
+                <mxCell id="193" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="90" target="92" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="300" y="140"/>
+                            <mxPoint x="410" y="370"/>
+                            <mxPoint x="410" y="140"/>
                         </Array>
+                        <mxPoint x="770" y="140" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="221" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="90" target="220" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="300" y="250"/>
+                            <mxPoint x="410" y="370"/>
+                            <mxPoint x="410" y="190"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -409,8 +412,38 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
+                <mxCell id="314" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="90" target="313">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="410" y="370"/>
+                            <mxPoint x="410" y="1140"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="318" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="90" target="317">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="410" y="370"/>
+                            <mxPoint x="410" y="880"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
                 <mxCell id="90" value="game" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="240" y="340" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="317" value="playerDataManager&lt;br&gt;(角色数据管理)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="480" y="850" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="316" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="313" target="315">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="620" y="1140"/>
+                            <mxPoint x="620" y="960"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="313" value="uiManager&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="480" y="1110" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="285" value="elementStorage" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="480" y="740" width="120" height="60" as="geometry"/>
@@ -422,7 +455,7 @@
                     <mxGeometry x="480" y="640" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="236" value="connection" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="627" y="640" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="650" y="640" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="232" value="httpClock" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="480" y="440" width="120" height="60" as="geometry"/>
@@ -433,20 +466,14 @@
                 <mxCell id="227" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="224" target="226" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="224" value="actor" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="224" value="actor(主角)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="480" y="340" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="226" value="user" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="627" y="340" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="650" y="340" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="220" value="account" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="480" y="220" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="194" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="192" target="92" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="192" value="room" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="770" y="110" width="120" height="60" as="geometry"/>
+                <mxCell id="220" value="account(平台登陆信息)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="160" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="276" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="248" target="275" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -562,12 +589,13 @@
                 <mxCell id="187" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="92" target="186" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="1159" y="150"/>
+                            <mxPoint x="1080" y="140"/>
+                            <mxPoint x="1080" y="140"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="92" value="roomManager" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="1079" y="110" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="900" y="110" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="190" value="editorRoom" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="1360" y="10" width="120" height="60" as="geometry"/>
@@ -712,6 +740,15 @@
                         <mxPoint x="1890" y="1220" as="sourcePoint"/>
                         <mxPoint x="1940" y="1170" as="targetPoint"/>
                     </mxGeometry>
+                </mxCell>
+                <mxCell id="315" value="createRole(创角功能)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="650" y="930" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="319" value="messageType&lt;br&gt;(渲染逻辑通信用事件名，渲染&amp;amp;逻辑通用)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="850" y="2499" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="320" value="sceneParam&lt;br&gt;(场景scene创建名渲染&amp;amp;逻辑通用)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="850" y="2590" width="120" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
