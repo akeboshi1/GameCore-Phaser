@@ -21,7 +21,7 @@ import { HttpService } from "./loop/httpClock/http.service";
 import { Tool } from "../utils/tool";
 import { LoadingManager } from "./loading/loading.manager";
 import { LoadingTips } from "../game/loading/loading.tips";
-
+import { load } from "../utils/http";
 interface ISize {
     width: number;
     height: number;
