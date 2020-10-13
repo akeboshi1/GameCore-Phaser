@@ -1,5 +1,5 @@
 import { Logger } from "../../../utils/log";
-import { World } from "../../world";
+import { World } from "../../game";
 import { IRoomService } from "../roomManager/room/room";
 import { IScenery } from "../skyboxManager/scenery";
 import { State } from "../state/state.group";

@@ -1,6 +1,6 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { World } from "../world";
+import { World } from "../game";
 import { ISprite } from "../room/displayManager/sprite/sprite";
 import { Bag } from "./bag/bag";
 import { Friend } from "./friend/friend";

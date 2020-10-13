@@ -1,5 +1,5 @@
 import { HttpService } from "./http.service";
-import { World } from "../world";
+import { World } from "../game";
 import { i18n } from "../../utils/i18n";
 
 /**

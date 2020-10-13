@@ -1,4 +1,4 @@
-import { World } from "../world";
+import { World } from "../game";
 
 export class HttpService {
     private api_root: string;

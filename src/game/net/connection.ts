@@ -1,7 +1,7 @@
 
 import { PacketHandler, PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
-import { MainPeer } from "../game";
+import { MainPeer } from "../main.peer";
 import { Logger } from "../../utils/log";
 import { SocketConnection, IConnectListener, SocketConnectionError } from "../../../lib/net/socket";
 import { ConnectionService } from "../../../lib/net/connection.service";

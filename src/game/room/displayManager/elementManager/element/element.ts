@@ -4,9 +4,9 @@ import { IPos, LogicPos } from "../../../../../utils/logic.pos";
 import { BlockObject } from "../../../blockManager/block/block.object";
 import { IRoomService } from "../../../roomManager/room/room";
 import { ISprite } from "../../sprite/sprite";
-import { IDragonbonesModel } from "../../playerManager/model/idragonbones.model";
 import { Logger } from "../../../../../utils/log";
 import { IFramesModel } from "../model/frames.model";
+import { IDragonbonesModel } from "../../playerManager/model/dragonbones.model";
 
 export interface IElement {
     readonly id: number;

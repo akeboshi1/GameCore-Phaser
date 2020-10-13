@@ -1,10 +1,9 @@
 import { LogicPos } from "../../../../utils/logic.pos";
 import { op_client, op_def, op_gameconfig, op_gameconfig_01 } from "pixelpai_proto";
 import { Direction } from "../elementManager/element/direction";
-import { DragonbonesModel } from "../playerManager/model/dragonbones.model";
+import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../playerManager/model/dragonbones.model";
 import { FramesModel, IFramesModel } from "../elementManager/model/frames.model";
 import { Helpers } from "game-capsule";
-import { IAvatar, IDragonbonesModel } from "../playerManager/model/idragonbones.model";
 import { Logger } from "../../../../utils/log";
 import NodeType = op_def.NodeType;
 import { LogicPoint } from "../../../../utils/logic.point";

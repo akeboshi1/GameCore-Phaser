@@ -5,7 +5,7 @@ import { IPoint } from "game-capsule";
 import { PlayerManager } from "../../displayManager/playerManager/player/player.manager";
 import { ElementManager } from "../../displayManager/elementManager/element/element.manager";
 import { IPosition45Obj, Position45 } from "../../../../utils/position45";
-import { World } from "../../../world";
+import { World } from "../../../game";
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { IBlockObject } from "../../blockManager/block/iblock.object";
 import { IElement } from "../../displayManager/elementManager/element/element";

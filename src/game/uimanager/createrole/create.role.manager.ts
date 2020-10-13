@@ -1,22 +1,22 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
-import { World } from "../../world";
+import { Game } from "../../game";
 import { CreateRole } from "./create.role";
 
 /**
  * 角色创建，选择管理
  */
-export class RoleManager extends PacketHandler {
-  public readonly world: World;
+export class CreateRoleManager extends PacketHandler {
+  public readonly game: Game;
   private mCreateCharacter: CreateRole;
-  constructor($world: World) {
+  constructor($game: Game) {
     super();
-    this.world = $world;
+    this.game = $game;
   }
 
   register() {
-    if (this.world) {
-      const connection = this.world.connection;
+    if (this.game) {
+      const connection = this.game.connection;
       if (connection) {
         connection.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI, this.onOpenCreateCharacter);
@@ -26,8 +26,8 @@ export class RoleManager extends PacketHandler {
   }
 
   unregister() {
-    if (this.world) {
-      const connection = this.world.connection;
+    if (this.game) {
+      const connection = this.game.connection;
       if (connection) {
         connection.removePacketListener(this);
       }

@@ -1,7 +1,7 @@
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { DecorateRoom } from "./room/decorate.room";
-import { World } from "../../world";
+import { World } from "../../game";
 import { IRoomService, Room } from "./room/room";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { EditorRoom } from "./room/editor.room";

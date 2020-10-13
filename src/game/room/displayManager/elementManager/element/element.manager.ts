@@ -5,7 +5,7 @@ import { Logger } from "../../../../../utils/log";
 import { LogicPos } from "../../../../../utils/logic.pos";
 import { IElementStorage } from "../../../../elementstorage/element.storage";
 import { IRoomService } from "../../../roomManager/room/room";
-import { IDragonbonesModel } from "../../playerManager/model/idragonbones.model";
+import { IDragonbonesModel } from "../../playerManager/model/dragonbones.model";
 import { ISprite, Sprite } from "../../sprite/sprite";
 import { IFramesModel } from "../model/frames.model";
 import { IElement,Element, InputEnable } from "./element";

@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { op_client } from "pixelpai_proto";
 import { MessageType } from "../../../messageType/MessageType";
-import { World } from "../../world";
+import { World } from "../../game";
 
 export class ShopEntity extends PacketHandler {
     public static NAME: string = "ShopModel";

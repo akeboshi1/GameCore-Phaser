@@ -7,7 +7,6 @@ import { IRoomService, Room } from "../../../roomManager/room/room";
 import { IElement } from "../../elementManager/element/element";
 import { ISprite, Sprite } from "../../sprite/sprite";
 import { Logger } from "../../../../../utils/log";
-import { MessageType } from "../../../../../messageType/MessageType";
 import { LogicPos } from "../../../../../utils/logic.pos";
 import { ConnectionService } from "../../../../../../lib/net/connection.service";
 import { PlayerModel } from "./player.model";

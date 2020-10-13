@@ -145,7 +145,7 @@ export class Launcher {
         }, 4 * 60 * 60 * 1000 /* ms */);
 
         import(/* webpackChunkName: "game" */ "./src/game/core/world").then((game) => {
-            this.world = new game.World(this.config, this.mCompleteFunc);
+            this.world = new game.World(this.co./src/game/gameleteFunc);
             if (config.isEditor) {
                 this.world.createGame();
             }
