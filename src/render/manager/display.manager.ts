@@ -5,6 +5,7 @@ import { IFramesModel } from "../../game/room/displayManager/elementManager/mode
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { IDragonbonesModel } from "../display/dragonbones.model";
+import { WallDisplay } from "../display/wall.display";
 import { SceneManager } from "./scene.manager";
 
 export interface IDisplayManagerService {
