@@ -17,6 +17,7 @@ import { PlayerDataManager } from "./actor/data/player.dataManager";
 import { IRoomService } from "./room/roomManager/room/room";
 import { Connection, ConnListener, GameSocket } from "./net/connection";
 import { CreateRoleManager } from "./uimanager/createrole/create.role.manager";
+import { SoundManager } from "./soundmanager/sound.manager";
 
 interface ISize {
     width: number;
@@ -64,6 +65,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mElementStorage: ElementStorage;
     private mPlayerDataManager: PlayerDataManager;
     private mCreateRoleManager: CreateRoleManager;
+    private mSoundManager: SoundManager;
     private mainPeer: MainPeer;
     constructor() {
         super();
@@ -242,6 +244,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     get uiManager(): UiManager {
         return this.mUiManager;
+    }
+
+    get soundManager(): SoundManager {
+        return this.mSoundManager;
     }
 
     get clock(): Clock {

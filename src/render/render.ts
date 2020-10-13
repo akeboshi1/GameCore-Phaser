@@ -4,8 +4,7 @@ import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
 import { Buffer, PBpacket } from "net-socket-packet";
 import { DisplayField, DisplayObject } from "./display/display.object";
-import { MessageType } from "../messageType/MessageType";
-
+import { MessageType } from "../messagetype/message.type";
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
@@ -167,6 +166,16 @@ export class Render extends RPCPeer {
     @Export()
     public updateCharacterPackage() {
         this.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+    }
+
+    @Export([webworker_rpc.ParamType.number])
+    public soundChangeRoom(roomID: number) {
+
+    }
+
+    @Export()
+    public playSound() {
+
     }
 
     @Export()

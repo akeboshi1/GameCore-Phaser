@@ -1,9 +1,9 @@
 import { IRoomService } from "../rooms/room";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
-import { WorldService } from "../world.service";
 import { Logger } from "../../utils/log";
 import { Url } from "../../utils/resUtil";
+import { Game } from "../../game/game";
 
 export enum SoundField {
     Background,
@@ -19,16 +19,16 @@ export interface ISoundConfig {
 }
 
 export class SoundManager extends PacketHandler {
-    private readonly world: WorldService;
+    private readonly game: Game;
     private mScene: Phaser.Scene;
     private mSoundMap: Map<SoundField, Sound>;
-    constructor(world: WorldService) {
+    constructor(game: Game) {
         super();
-        this.world = world;
+        this.game = game;
     }
 
     addPackListener() {
-        const connection = this.world.connection;
+        const connection = this.game.connection;
         if (connection) {
             connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL, this.onPlaySoundHandler);
@@ -36,7 +36,7 @@ export class SoundManager extends PacketHandler {
     }
 
     removePacketListener() {
-        const connection = this.world.connection;
+        const connection = this.game.connection;
         if (connection) {
             connection.removePacketListener(this);
         }
