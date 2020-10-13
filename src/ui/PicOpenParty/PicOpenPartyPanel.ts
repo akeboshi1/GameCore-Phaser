@@ -66,7 +66,8 @@ export class PicOpenPartyPanel extends BasePanel {
 
     public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, isSelf: boolean = true) {
         this.settingBtn.visible = isSelf;
-        this.partyCreatePanel.setPartyData(content);
+        const username = this.mWorld.user.model.nickname;
+        this.partyCreatePanel.setPartyData(content, username);
     }
     protected preload() {
         this.addAtlas(this.key, "party/party.png", "party/party.json");

@@ -192,11 +192,11 @@
     "search": "Search",
     "search_friends_notes": "Search",
     "unfollow": "unfollow",
-    "new_friend": "New Friend",
-    "new_fans": "New Fans",
     "lv": "Lv",
     "remove": "Remove",
-    "unregistered_game": "Unregistered game"
+    "unregistered_game": "Unregistered game",
+    "notice": "Notice",
+    "followed_you": "followed you"
   },
   "friend_invite": {
     "refused": "refused",
@@ -264,7 +264,8 @@
     "navigation": "NAVIGATION",
     "mine": "MINE",
     "hotel": "HOTEL",
-    "picatown": "PICATOWN"
+    "picatown": "PICATOWN",
+    "defaultname":"{{name}}'s Party"
   },
   "picelevator": {
     "floor": "f"
