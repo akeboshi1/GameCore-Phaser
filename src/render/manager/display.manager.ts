@@ -5,6 +5,7 @@ import { IFramesModel } from "../../game/room/displayManager/elementManager/mode
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { IDragonbonesModel } from "../display/dragonbones.model";
+import { WallDisplay } from "../display/wall.display";
 import { SceneManager } from "./scene.manager";
 
 export interface IDisplayManagerService {
@@ -29,7 +30,7 @@ export interface IDisplayManagerService {
 }
 
 export abstract class DisplayManager extends RPCEmitter implements IDisplayManagerService {
-    protected displays: Map<number, DisplayObject> = new Map<number, DisplayObject>();
+    protected displays: Map<number, Phaser.GameObjects.Container> = new Map<number, Phaser.GameObjects.Container>();
 
     constructor(private game: Phaser.Game, private sceneManager: SceneManager) {
         super();
@@ -49,7 +50,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.removeFromParent();
         display.destroy();
         this.displays.delete(displayID);
@@ -60,7 +61,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.load(data, field);
     }
 
@@ -69,7 +70,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.changeAlpha(val);
     }
 
@@ -78,7 +79,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.fadeIn();
     }
 
@@ -87,7 +88,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.fadeOut();
     }
 
@@ -96,7 +97,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.play(animationName, field, times);
     }
 
@@ -105,7 +106,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.mount(ele, targetIndex);
     }
 
@@ -114,7 +115,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.unmount(ele);
     }
 
@@ -123,7 +124,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.removeEffect(field);
     }
 
@@ -132,7 +133,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.removeDisplay(field);
     }
 
@@ -141,7 +142,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.setDisplayBadges(cards);
     }
 
@@ -150,7 +151,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.showRefernceArea();
     }
 
@@ -159,7 +160,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.hideRefernceArea();
     }
 
@@ -168,7 +169,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.scaleTween();
     }
 
@@ -177,7 +178,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
+        const display = this.displays.get(displayID) as DisplayObject;
         display.showEffect();
     }
 
