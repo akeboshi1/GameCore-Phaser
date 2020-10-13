@@ -1,9 +1,9 @@
-import { World } from "../game";
+import { Game } from "../../game";
 
 export class HttpService {
     private api_root: string;
-    constructor(private mWorld: World) {
-        this.api_root = this.mWorld.getGameConfig().api_root;
+    constructor(private game: Game) {
+        this.api_root = this.game.getGameConfig().api_root;
     }
     /**
      * 用户关注其他用户
@@ -51,7 +51,7 @@ export class HttpService {
      * @param password
      */
     login(account: string, password: string): Promise<Response> {
-        return fetch(`${this.mWorld.getGameConfig().api_root}${`account/signin`}`, {
+        return fetch(`${this.game.getGameConfig().api_root}${`account/signin`}`, {
             body: JSON.stringify({ account, password }),
             method: "POST",
             headers: {
@@ -137,7 +137,7 @@ export class HttpService {
     }
 
     public post(uri: string, body: any, headers?: any): Promise<Response> {
-        const account = this.mWorld.account;
+        const account = this.game.account;
         if (!account) {
             return Promise.reject("account does not exist");
         }
@@ -157,7 +157,7 @@ export class HttpService {
     }
 
     public get(uri: string) {
-        const account = this.mWorld.account;
+        const account = this.game.account;
         if (!account) {
             return Promise.reject("account does not exist");
         }
