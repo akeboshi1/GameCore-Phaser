@@ -3,7 +3,7 @@ import { DragonbonesDisplay } from "../display/dragonbones.display";
 import { FramesDisplay } from "../display/frames.display";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "../display/element.display";
-import { IDragonbonesModel } from "../display/dragonbones.model";
+import { IDragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 import { op_client, op_def } from "pixelpai_proto";
 import { Tweens } from "tooqinggamephaser";
 import { Logger } from "../../utils/log";

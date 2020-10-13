@@ -1,10 +1,10 @@
 import { AIAction } from "./ai.action";
 import { op_client } from "pixelpai_proto";
-import { Pos } from "../../../utils/pos";
 import { FollowGroup } from "../groupManager/follow.group";
 import { IGroup } from "../groupManager/IGroup";
 import { Room } from "../roomManager/room/room";
 import { Element, PlayerState } from "../displayManager/elementManager/element/element";
+import { LogicPos } from "../../../utils/logic.pos";
 
 export class FollowAction extends AIAction {
 
@@ -14,7 +14,7 @@ export class FollowAction extends AIAction {
     private followgroup: FollowGroup;
     private movePath: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH;
     private tempPath: Array<{ x: number, y: number, len: number, angle: number }>;
-    private tempPos = new Pos();
+    private tempPos = new LogicPos();
     private distance: number = 50;
     private offset: number = 20;
     private tempdis: number = 0;

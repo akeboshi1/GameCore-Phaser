@@ -1,13 +1,60 @@
-import { Logger } from "../../../../utils/log";
-import { IPos, LogicPos } from "../../../../utils/logic.pos";
-import { BlockObject } from "../../blockManager/block/block.object";
-import { IDragonbonesModel } from "../../displayManager/dragonbones/idragonbones.model";
-import { IFramesModel } from "../../displayManager/frame/iframe.model";
-import { IRoomService } from "../../room";
-import { IElement } from "./ielement";
 import { op_client, op_def } from "pixelpai_proto";
-import { ElementManager, IElementManager } from "./element.manager";
-import { ISprite } from "../../../../render/rooms/element/sprite";
+import { IElementManager } from "./element.manager";
+import { IPos, LogicPos } from "../../../../../utils/logic.pos";
+import { BlockObject } from "../../../blockManager/block/block.object";
+import { IRoomService } from "../../../roomManager/room/room";
+import { ISprite } from "../../sprite/sprite";
+import { Logger } from "../../../../../utils/log";
+import { IFramesModel } from "../model/frames.model";
+import { IDragonbonesModel } from "../../playerManager/model/dragonbones.model";
+
+export interface IElement {
+    readonly id: number;
+    readonly dir: number;
+    readonly roomService: IRoomService;
+
+    model: ISprite;
+
+    update();
+
+    setModel(model: ISprite);
+
+    updateModel(model: op_client.ISprite);
+
+    play(animationName: string): void;
+
+    setPosition(p: IPos): void;
+
+    getPosition(): IPos;
+
+    getPosition45(): IPos;
+
+    setDirection(val: number): void;
+
+    getDirection(): number;
+
+    showEffected(displayInfo: IFramesModel);
+
+    showNickname();
+
+    hideNickname();
+
+    // scaleTween();
+
+    turn();
+
+    setAlpha(val: number);
+
+    setQueue(queue: op_client.IChangeAnimation[]);
+
+    mount(ele: IElement): this;
+
+    unmount(): this;
+
+    addMount(ele: IElement, index?: number): this;
+
+    removeMount(ele: IElement): this;
+}
 
 export enum PlayerState {
     IDLE = "idle",
@@ -84,19 +131,19 @@ export class Element extends BlockObject implements IElement {
         this.setModel(val);
     }
 
-    get scene(): Phaser.Scene {
-        if (this.mElementManager) {
-            return this.mElementManager.scene;
-        }
-    }
+    // get scene(): Phaser.Scene {
+    //     if (this.mElementManager) {
+    //         return this.mElementManager.scene;
+    //     }
+    // }
 
     // get ai(): AI {
     //     return this.mAi;
     // }
 
-    get eleMgr(): ElementManager {
+    get eleMgr(): IElementManager {
         if (this.mElementManager) {
-            return this.mElementManager as ElementManager;
+            return this.mElementManager;
         }
     }
 
@@ -122,6 +169,9 @@ export class Element extends BlockObject implements IElement {
         this.mId = sprite.id;
         this.model = sprite;
         // this.mAi = new AI(this);
+    }
+    showEffected(displayInfo: any) {
+        throw new Error("Method not implemented.");
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
@@ -395,7 +445,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public getPosition(): IPos {
-        let pos: LogicPos;
+        let pos: IPos;
         // if (!this.mDisplay) {
         //     return new LogicPos(0, 0);
         // }
@@ -434,10 +484,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showBubble(text: string, setting: op_client.IChat_Setting) {
-        const scene = this.mElementManager.scene;
-        if (!scene) {
-            return;
-        }
+        // todo 联系render showBubble
+        // const scene = this.mElementManager.scene;
+        // if (!scene) {
+        //     return;
+        // }
         // if (!this.mBubble) {
         //     this.mBubble = new BubbleContainer(scene, this.roomService.world.scaleRatio);
         // }

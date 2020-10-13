@@ -1,22 +1,20 @@
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import IActor = op_client.IActor;
-import { World } from "../world";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IRoomManager } from "./room.manager";
-import { ClockReadyListener } from "../clock/clock";
-import { State } from "../../render/rooms/state/state.group";
-import { ILogicElement } from "./logic.element";
-import { PlayerManager } from "./playerManager/player/player.manager";
 import { IPoint } from "game-capsule";
-import { ViewblockService } from "../../render/rooms/cameras/viewblock.service";
-import { IPos, LogicPos } from "../../utils/logic.pos";
-import { IPosition45Obj } from "../../utils/iposition45";
-import { Position45 } from "../../utils/position45";
-import { Logger } from "../../utils/log";
-import { IScenery } from "../../render/rooms/sky.box/scenery";
-import { IBlockObject } from "./blockManager/block/iblock.object";
-import { ElementManager } from "./elementManager/element/element.manager";
-import { ConnectionService } from "../../../lib/net/connection.service";
+import { PlayerManager } from "../../displayManager/playerManager/player/player.manager";
+import { ElementManager } from "../../displayManager/elementManager/element/element.manager";
+import { IPosition45Obj, Position45 } from "../../../../utils/position45";
+import { World } from "../../../game";
+import { IPos, LogicPos } from "../../../../utils/logic.pos";
+import { IBlockObject } from "../../blockManager/block/iblock.object";
+import { IElement } from "../../displayManager/elementManager/element/element";
+import { ClockReadyListener } from "../../../clock/clock";
+import { GroupManager } from "../../groupManager/group.manager";
+import { IRoomManager } from "../room.manager";
+import { IScenery } from "../../skyboxManager/scenery";
+import { Logger } from "../../../../utils/log";
+import { ConnectionService } from "../../../../../lib/net/connection.service";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -64,7 +62,7 @@ export interface IRoomService {
 
     // addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
 
-    getElement(id: number): ILogicElement;
+    getElement(id: number): IElement;
 
     update(time: number, delta: number): void;
 
@@ -207,7 +205,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return Position45.transformTo45(p, this.mMiniSize);
     }
 
-    public getElement(id: number): ILogicElement {
+    public getElement(id: number): IElement {
         let ele = null;
         if (this.mPlayerManager) {
             ele = this.mPlayerManager.get(id);

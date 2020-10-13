@@ -1,10 +1,10 @@
 import { op_client } from "pixelpai_proto";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
-import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
+import { DragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 import { FrameAnimation } from "../../rooms/Animation/frame.animation";
 import { FramesDisplay } from "../../rooms/display/frames.display";
 import { FramesModel } from "../../rooms/display/frames.model";
-import { Animation } from "../../rooms/display/animation";
+import { Animation } from "../../../game/room/displayManager/animation/animation";
 import { Handler } from "../../../utils/handler";
 import { Url } from "../../../utils/resUtil";
 

@@ -3,9 +3,9 @@ TODO List
 > 2020-10
 ## rpc模块拆分
 - [ ]render 部分拆分  周围
-  - [ ] Phaser场景管理-sceneManager
-  - [ ] Phaser镜头管理-cameraManager
-  - [ ] 多帧显示对象管理-frameDisplayManager
+  - [x] Phaser场景管理-sceneManager
+  - [x] Phaser镜头管理-cameraManager
+  - [x] 多帧显示对象管理-frameDisplayManager
   - [ ] 龙骨显示对象管理-dragonBonesDisplayManager
   - [ ] 显示对象管理-elementDisplayManager
   - [ ] 地块显示对象管理-terrainDisplayManager
@@ -25,8 +25,11 @@ TODO List
   - [x] 游戏时间管理（游戏服务器同步）-clock
   - [x] 游戏时间管理（游戏后台同步）-httpclock
   - [x] 游戏net管理-connect
-  - [ ] 游戏数据缓冲管理-elementStorage
-  - [ ] 房间管理-roomManager
+  - [ ] 游戏数据缓存管理-elementStorage 管晓敏
+  - [ ] 游戏主角管理-user 管晓敏
+  - [ ] 游戏角色数据管理-playerDataManager 管晓敏
+  - [ ] ui逻辑管理-uiManager 管晓敏
+  - [ ] 房间管理-roomManager 管晓敏
     - [ ] 房间对象-room
       - [ ] 编辑房间-editorRoom
       - [ ] 装饰房间-decorateRoom
@@ -44,13 +47,15 @@ TODO List
       - [ ] 地块对象 - terrain
     - [ ] 墙块管理-wallManager 张腾
       - [ ] 墙块对象 - wall
-    - [ ] 群体事件管理-groupManager 管晓敏
-      - [ ] 跟随族群 - followGroup
-    - [ ] 群体事件管理-frameManager 管晓敏
+    - [x] 群体事件管理-groupManager 管晓敏
+      - [x] 跟随族群 - followGroup
+    - [x] 群体事件管理-frameManager 管晓敏
     - [ ] 特效管理-effectManager 管晓敏
       - [ ] 特效对象 - effect
-    - [ ] 区块管理-blockManager 张腾
+    - [ ] 天空盒区块管理-blockManager 张腾
       - [ ] 区块对象 - block
+    - [ ] 地块区块管理-viewblockManager 张腾
+      - [ ] 区块对象 - viewblock
     - [ ] 天空盒管理-skyBoxManager 张腾
       - [ ] 天空盒逻辑对象 - logicbackgroundDisplay
 > older

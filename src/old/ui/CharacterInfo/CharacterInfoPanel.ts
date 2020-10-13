@@ -2,7 +2,7 @@ import { BasePanel } from "../Components/BasePanel";
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
-import { DragonbonesModel } from "../../rooms/display/dragonbones.model";
+import { DragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 import { CharacterEditorPanel } from "./CharacterEditorPanel";
 import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;

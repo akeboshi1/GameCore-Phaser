@@ -1,4 +1,4 @@
-import { World } from "../../world";
+import { World } from "../../game";
 
 export class Friend {
     private mFriendList: any[];

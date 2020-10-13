@@ -1,6 +1,6 @@
 import { IRoomService } from "../room";
 import { ElementDisplay } from "./element.display";
-import { IDragonbonesModel } from "./dragonbones.model";
+import { IDragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 import { op_def } from "pixelpai_proto";
 import { IElement } from "../element/element";
 import { Direction } from "../wall/wall";

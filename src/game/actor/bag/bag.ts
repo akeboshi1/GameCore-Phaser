@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { MessageType } from "../../../messageType/MessageType";
-import { World } from "../../world";
+import { World } from "../../game";
 
 export class Bag extends PacketHandler {
     private mInitialize: boolean;

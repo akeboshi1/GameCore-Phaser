@@ -9,7 +9,7 @@ import { ISprite, Sprite } from "../element/sprite";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IFramesModel } from "../display/frames.model";
-import { IDragonbonesModel } from "../display/dragonbones.model";
+import { IDragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

@@ -4,7 +4,7 @@ import { op_def } from "pixelpai_proto";
 import { ReferenceArea } from "../editor/reference.area";
 import { IRoomService } from "../room";
 import { ElementDisplay } from "./element.display";
-import { IDragonbonesModel } from "./dragonbones.model";
+import { IDragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
 import { IElement } from "../element/element";
 import { AnimationData } from "../../../game/room/displayManager/animation/ianimation";
 import { IFramesModel } from "../../../game/room/displayManager/frame/iframe.model";

@@ -1,6 +1,15 @@
-import { IPosition45Obj } from "./iposition45";
 import { IPos } from "./logic.pos";
+import { LogicPoint } from "./logic.point";
 
+export interface IPosition45Obj {
+    readonly cols: number;
+    readonly rows: number;
+    readonly tileWidth: number;
+    readonly tileHeight: number;
+    readonly sceneWidth?: number;
+    readonly sceneHeight?: number;
+    readonly offset?: LogicPoint;
+}
 export class Position45 {
   public static transformTo90(point: IPos, position: IPosition45Obj): IPos {
     const offsetX = position.rows * (position.tileWidth / 2); // + position.tileWidth / 2;
