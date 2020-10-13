@@ -3,13 +3,17 @@ import { Logger } from "../../utils/log";
 import { PlayScene } from "../scenes/play";
 
 export class SceneManager extends RPCEmitter {
+    private scenes: Map<number, PlayScene> = new Map<number, PlayScene>();
+
     constructor(private game: Phaser.Game) {
         super();
     }
 
     @Export()
-    public addScene(name: string, room) {// TODO: 只传id，所有由scene发起的逻辑，转移到worker中
-        this.game.scene.add(name, PlayScene, true, { room });
+    public addScene(name: string, roomID?: number) {
+        // TODO: name和class对应
+        const scene = this.game.scene.add(name, PlayScene, true, { room }) as PlayScene;
+        this.scenes.set(room.id, scene);
     }
 
     @Export()
@@ -37,5 +41,13 @@ export class SceneManager extends RPCEmitter {
         }
 
         scene.scene.resume(name);
+    }
+
+    public getScene(roomID: number): PlayScene | null {
+        if (!this.scenes.has(roomID)) {
+            return null;
+        }
+
+        return this.scenes.get(roomID);
     }
 }

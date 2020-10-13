@@ -1,9 +1,10 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { op_def } from "pixelpai_proto";
-import { DisplayObject } from "./rooms/display/display.object";
 import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
 import { Buffer, PBpacket } from "net-socket-packet";
+import { DisplayField, DisplayObject } from "./display/display.object";
+
 export class Render extends RPCPeer {
     public isConnect: boolean = false;
 
