@@ -10,37 +10,12 @@ import { MessageType } from "../structureinterface/message.type";
 import { op_client } from "pixelpai_proto";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { GameMain } from "../structureinterface/game.main";
-// export interface ILauncherConfig {
-//     api_root: string;
-//     auth_token: string;
-//     token_expire: string | null;
-//     token_fingerprint: string;
-//     server_addr: any | undefined;
-//     user_id: string;
-//     game_id: string;
-//     virtual_world_id: string;
-//     ui_scale?: number;
-//     devicePixelRatio?: number;
-//     scale_ratio?: number;
-//     platform?: string;
-//     keyboardHeight: number;
-//     width: number;
-//     height: number;
-//     readonly screenWidth: number;
-//     readonly screenHeight: number;
-//     readonly baseWidth: number;
-//     readonly baseHeight: number;
-//     readonly game_created?: Function;
-//     readonly connection?: any;
-//     readonly isEditor?: boolean;
-//     readonly osd?: string;
-//     readonly closeGame: Function;
-//     readonly connectFail?: Function;
-//     readonly parent?: string;
-// }
+
 export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
+    private mConfig: ILauncherConfig;
+    private mCallBack: Function;
     private nodes = {
         [op_def.NodeType.GameNodeType]: new Map<number, DisplayObject>(),
         [op_def.NodeType.SceneNodeType]: new Map<number, DisplayObject>(),
@@ -84,16 +59,19 @@ export class Render extends RPCPeer implements GameMain {
     private _moveStyle: number = 0;
     private _curTime: number;
     private mainPeer: any;
-    constructor() {
+    constructor(config: ILauncherConfig, callBack?: Function) {
         super("render");
         this.emitter = new Phaser.Events.EventEmitter();
+        this.mConfig = config;
+        this.mCallBack = callBack;
         this.linkTo(MAIN_WORKER, "../game/main.worker").onceReady(() => {
             this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
+            this.createGame();
         });
     }
 
     createGame() {
-
+        this.mainPeer.createGame(this.mConfig);
     }
 
     resize(width: number, height: number) {
@@ -357,6 +335,18 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public roomResume(roomID: number) {
+
+    }
+    @Export()
+    public removeScene(sceneName: string) {
+
+    }
+    @Export()
+    public showCreatePanelError(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CREATE_ROLE_ERROR_MESSAGE) {
+
+    }
+    @Export([webworker_rpc.ParamType.str])
+    public createSetNickName(name: string) {
 
     }
     @Export()

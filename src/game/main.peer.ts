@@ -8,6 +8,7 @@ import { ServerAddress } from "../../lib/net/address";
 import { Render } from "../render/render";
 import { RoomManager } from "./room/roomManager/room.manager";
 import { Game } from "./game";
+import { ILauncherConfig } from "../structureinterface/lanucher.config";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -23,14 +24,14 @@ export class MainPeer extends RPCPeer {
         super("mainWorker");
         this.mGame = game;
         this.linkTo(RENDER_PEER, "").onceReady(() => {
-            this.mRender = this.remote[RENDER_PEER].Render;
+            this.mRender = this.remote[RENDER_PEER];
         });
         this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onceReady(() => {
             this.heartBearPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         });
     }
     get render(): Render {
-        return this.mRender;
+        return this.mRender.Render;
     }
     // ============= connection调用主进程
     public onConnected() {
@@ -74,10 +75,9 @@ export class MainPeer extends RPCPeer {
     }
 
     // ============== render调用主进程
-    @Export([webworker_rpc.ParamType.str])
-    public initGameConfig(str: string) {
-        const config = JSON.parse(str);
-        this.game.initGameConfig(config);
+    @Export()
+    public createGame(config: ILauncherConfig) {
+        this.game.createGame(config);
     }
     @Export()
     public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {

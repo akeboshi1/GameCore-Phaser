@@ -22,36 +22,11 @@ import { Tool } from "../utils/tool";
 import { LoadingManager } from "./loading/loading.manager";
 import { LoadingTips } from "../game/loading/loading.tips";
 import { load } from "../utils/http";
+import { ILauncherConfig } from "../structureinterface/lanucher.config";
+import { ServerAddress } from "../../lib/net/address";
 interface ISize {
     width: number;
     height: number;
-}
-export interface ILogiclauncherConfig {
-    api_root: string;
-    auth_token: string;
-    token_expire: string | null;
-    token_fingerprint: string;
-    user_id: string;
-    game_id: string;
-    virtual_world_id: string;
-    ui_scale?: number;
-    devicePixelRatio?: number;
-    scale_ratio?: number;
-    platform?: string;
-    keyboardHeight: number;
-    width: number;
-    height: number;
-    desktop: boolean;
-    readonly screenWidth: number;
-    readonly screenHeight: number;
-    readonly baseWidth: number;
-    readonly baseHeight: number;
-    readonly game_created?: boolean;
-    readonly isEditor?: boolean;
-    readonly osd?: string;
-    readonly closeGame: boolean;
-    readonly connectFail?: boolean;
-    readonly parent?: string;
 }
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     private connect: ConnectionService;
@@ -62,7 +37,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mClock: Clock;
     private mHttpClock: HttpClock;
     private mHttpService: HttpService;
-    private mConfig: ILogiclauncherConfig;
+    private mConfig: ILauncherConfig;
     private mAccount: Account;
     private mRoomManager: RoomManager;
     private mElementStorage: ElementStorage;
@@ -79,12 +54,17 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mSocket = new GameSocket(this.mainPeer, new ConnListener(this.mainPeer));
         this.connect = new Connection(this.mSocket);
     }
+    public createGame(config?: ILauncherConfig) {
+        this.mConfig = config;
+        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        if (gateway) {
+            // connect to game server.
+            this.mainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
+        }
+    }
     public createAccount(gameID: string, worldID: string, sceneId?: number, loc?: any) {
         this.mAccount = new Account();
         this.mAccount.enterGame(gameID, worldID, sceneId, loc);
-    }
-    public initGameConfig(config: any) {
-        this.mConfig = config;
     }
 
     // public setConnect(connect: ConnectionService) {
@@ -186,7 +166,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public setGameConfig(config: any) {
         this.mConfig = config;
     }
-    public getGameConfig(): ILogiclauncherConfig {
+    public getGameConfig(): ILauncherConfig {
         return this.mConfig;
     }
     public clearClock() {
@@ -301,7 +281,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${this.mAccount.gameID}`);
-            this.mainPeer.render.createGame(content);
+            this.mainPeer.render.createGameCallBack(content);
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
@@ -317,7 +297,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.mElementStorage.setGameConfig(gameConfig);
-                this.mainPeer.render.createGame(content);
+                this.mainPeer.render.createGameCallBack(content);
                 Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {

@@ -5,16 +5,15 @@ import { IPoint } from "game-capsule";
 import { PlayerManager } from "../../displayManager/playerManager/player/player.manager";
 import { ElementManager } from "../../displayManager/elementManager/element/element.manager";
 import { IPosition45Obj, Position45 } from "../../../../utils/position45";
-import { World } from "../../../game";
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { IBlockObject } from "../../blockManager/block/iblock.object";
 import { IElement } from "../../displayManager/elementManager/element/element";
-import { ClockReadyListener } from "../../../clock/clock";
 import { GroupManager } from "../../groupManager/group.manager";
 import { IRoomManager } from "../room.manager";
 import { IScenery } from "../../skyboxManager/scenery";
 import { Logger } from "../../../../utils/log";
 import { ConnectionService } from "../../../../../lib/net/connection.service";
+import { Game } from "../../../game";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -28,7 +27,7 @@ export interface IRoomService {
     readonly effectManager: EffectManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
-    readonly world: World;
+    readonly game: Game;
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
 
@@ -74,7 +73,7 @@ export interface IRoomService {
 // 这一层管理数据和Phaser之间的逻辑衔接
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
-    protected mWorld: World;
+    protected mGame: Game;
     // protected mMap: Map;
     protected mID: number;
     protected mTerrainManager: TerrainManager;
@@ -97,10 +96,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private mActorData: IActor;
     constructor(protected manager: IRoomManager) {
         super();
-        this.mWorld = this.manager.world;
-        this.moveStyle = this.mWorld.moveStyle;
-        this.mScaleRatio = this.mWorld.getGameConfig().scale_ratio;
-        if (this.mWorld) {
+        this.mGame = this.manager.world;
+        this.moveStyle = this.mGame.moveStyle;
+        this.mScaleRatio = this.mGame.getGameConfig().scale_ratio;
+        if (this.mGame) {
             if (this.connection) {
                 this.connection.addPacketListener(this);
                 this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
@@ -132,7 +131,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
-        this.mWorld.showLoading();
+        this.mGame.showLoading();
     }
 
     public onFullPacketReceived(sprite_t: op_def.NodeType): void {
@@ -148,11 +147,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public startLoad() { }
 
     public pause() {
-        this.mWorld.roomPause(this.mID);
+        this.mGame.roomPause(this.mID);
     }
 
     public resume() {
-        this.mWorld.roomResume(this.mID);
+        this.mGame.roomResume(this.mID);
     }
 
     public addActor(data: IActor): void {
@@ -222,7 +221,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.layerManager) this.layerManager.update(time, delta);
         if (this.elementManager) this.elementManager.update(time, delta);
         if (this.mFrameManager) this.frameManager.update(time, delta);
-        if (this.mWorld.httpClock) this.mWorld.httpClock.update(time, delta);
+        if (this.mGame.httpClock) this.mGame.httpClock.update(time, delta);
         const eles = this.elementManager.getElements();
         for (const ele of eles) {
             ele.update();
@@ -235,11 +234,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public updateClock(time: number, delta: number) {
         // 客户端自己通过delta来更新游戏时间戳
-        if (this.mWorld.clock) this.mWorld.clock.update(time, delta);
+        if (this.mGame.clock) this.mGame.clock.update(time, delta);
     }
 
     public now(): number {
-        return this.mWorld.clock.unixTime;
+        return this.mGame.clock.unixTime;
     }
 
     public getMaxScene() {
@@ -296,12 +295,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mActorData = null;
         }
         if (this.mStateMap) this.mStateMap = null;
-        this.mWorld.peer.render.clearGame();
+        this.mGame.peer.render.clearGame();
         if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
     public destroy() {
-        this.mWorld.peer.destroy();
+        this.mGame.peer.destroy();
         if (this.connection) this.connection.removePacketListener(this);
         this.clear();
         // if (this.mScene) {
@@ -342,7 +341,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 y *= this.mScaleRatio;
                 width *= this.mScaleRatio;
                 height *= this.mScaleRatio;
-                this.mWorld.setCameraBounds(x, y, width, height);
+                this.mGame.setCameraBounds(x, y, width, height);
                 break;
         }
     }
@@ -396,7 +395,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     get world(): World | undefined {
-        return this.mWorld;
+        return this.mGame;
     }
 
     get enableEdit() {
@@ -468,7 +467,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // fall.show(status);
         // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
         // this.addToSceneUI(fall);
-        this.mWorld.addFillEffect(pos, status);
+        this.mGame.addFillEffect(pos, status);
     }
 
     private onMovePathHandler(packet: PBpacket) {
@@ -588,7 +587,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private enterRoom() {
-        this.mWorld.game.scene.run(PlayScene.name, {
+        this.mGame.game.scene.run(PlayScene.name, {
             room: this,
         });
     }

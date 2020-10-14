@@ -1,3 +1,5 @@
+import { GameMain } from "./src/structureinterface/game.main";
+import { ILauncherConfig } from "./src/structureinterface/lanucher.config";
 // 加载器：
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
