@@ -6,7 +6,8 @@ import { IElement } from "../element/element";
 import { SoundField } from "apowophaserui";
 import { AnimationData } from "../../../game/room/displayManager/animation/ianimation";
 import { IFramesModel } from "../../../game/room/displayManager/frame/iframe.model";
-import { ResUtils } from "../../../utils/resUtil";
+import { ResUtils } from "../../utils/resUtil";
+
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
     BodyCost = "body_cost_$",

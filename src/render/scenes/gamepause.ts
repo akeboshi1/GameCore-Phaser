@@ -1,6 +1,6 @@
 import { WorldService } from "../game/world.service";
-import { Url } from "../game/core/utils/resUtil";
-import { Size } from "../game/core/utils/size";
+import { Url } from "../../utils";
+import { Size } from "../../utils/size";
 import { BasicScene } from "./basic.scene";
 
 export class GamePauseScene extends BasicScene {

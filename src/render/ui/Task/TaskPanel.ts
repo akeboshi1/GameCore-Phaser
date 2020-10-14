@@ -6,7 +6,7 @@ import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { Handler } from "../../../utils/Handler";
 import { Url } from "../../../utils/resUtil";
-import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText } from "apowophaserui";
+import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText, ClickEvent } from "apowophaserui";
 export class TaskPanel extends BasePanel {
     private key = "task_ui";
     private blackBg: Phaser.GameObjects.Graphics;

@@ -1,5 +1,4 @@
 import * as Chance from "chance";
-import { Logger } from "./log";
 
 export default class Helpers {
     static readonly MAX_ID: number = Math.pow(2, 31);

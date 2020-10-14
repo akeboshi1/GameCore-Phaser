@@ -2,12 +2,11 @@ import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../game/world.service";
 import { NinePatchButton } from "../Components/Ninepatch.button";
 import { NinePatch } from "../Components/Nine.patch";
-import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragonbonesModel } from "../../../game/room/displayManager/playerManager/model/dragonbones.model";
-import { Font } from "../game/core/utils/font";
-import { i18n } from "../game/core/utils/i18n";
 import { InputText } from "apowophaserui";
+import { i18n, Font } from "../../../utils";
+import { DragonbonesDisplay } from "../../display/dragonbones.display";
 
 export class CreateRolePanel extends BasePanel {
   private readonly key = "createCharacter";

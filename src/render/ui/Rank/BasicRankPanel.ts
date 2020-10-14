@@ -1,8 +1,8 @@
 import { BasePanel } from "../Components/BasePanel";
 import { op_client } from "pixelpai_proto";
-import { Background, Border, Url } from "../../game/core/utils/resUtil";
+import { Background, Border, Url } from "../../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
+import { Font } from "../../../utils/font";
 import { NinePatch } from "../Components/Nine.patch";
 
 export class BasicRankPanel extends BasePanel {

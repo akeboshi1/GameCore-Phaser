@@ -4,11 +4,11 @@ import { op_client, op_def } from "pixelpai_proto";
 import { CheckboxGroup } from "../Components/Checkbox.group";
 import { TextButton } from "../Components/TextButton";
 import { MarketItem } from "./Item";
-import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 import { WorldService } from "../../world.service";
 import { Font, i18n, Handler } from "../../../utils";
+import { PicPropFunConfig } from "../../../pica/ui/PicPropFun/PicPropFunConfig";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;

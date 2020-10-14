@@ -9,9 +9,7 @@ import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { i18n } from "../../../utils/i18n";
-import { Handler } from "../../../utils/handler";
-import { Font } from "../../../utils/font";
+import { i18n, Handler, Font} from "../../../utils";
 import { Logger } from "../../../utils/log";
 import { Url, Coin } from "../../../utils/resUtil";
 

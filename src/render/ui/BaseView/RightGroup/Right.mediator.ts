@@ -1,7 +1,7 @@
 import { BaseFaceMediator } from "../BaseFace.mediator";
 import { RightBtnGroup } from "./Right.btn.group";
 import { WorldService } from "../../../world.service";
-import { MessageType } from "../../../../messageType/MessageType";
+import { MessageType } from "../../../../structureinterface/message.type";
 export class RightMediator extends BaseFaceMediator {
     public static NAME: string = "RightMediator";
     constructor(mWorld: WorldService, scene: Phaser.Scene) {
