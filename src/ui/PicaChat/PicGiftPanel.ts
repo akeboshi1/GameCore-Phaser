@@ -42,7 +42,9 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         this.visible = true;
     }
     public setGiftDatas(datas: op_client.IMarketCommodity[]) {
-        this.mPropGrid.setItems(datas);
+        const len = 12 - datas.length;
+        const items = len > 0 ? datas.concat(new Array(len)) : datas;
+        this.mPropGrid.setItems(items);
     }
 
     protected init() {
@@ -77,9 +79,10 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicGiftItem(scene, 0, 0, this.key, this.dpr);
                 }
                 cellContainer.setItemData(item);
-                if (this.curGiftData.id === item.id) {
+                if (item && this.curGiftData && this.curGiftData.id === item.id) {
                     cellContainer.isSelect = true;
-                } else cellContainer.isSelect = false;
+                    this.curGiftItem = cellContainer;
+                }
                 return cellContainer;
             },
         };
@@ -127,9 +130,10 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         this.curGiftItem = item;
         this.curGiftData = data;
         this.giftName.text = data.name;
-        this.giftPriceImage.setTexture(UIAtlasKey.commonKey, Coin.getIcon(data.sellingPrice.coinType));
+        const price = data.price[0];
+        this.giftPriceImage.setTexture(UIAtlasKey.commonKey, Coin.getIcon(price.coinType));
         this.giftPriceImage.x = this.giftName.x + this.giftName.width + 5 * this.dpr + this.giftPriceImage.width * 0.5;
-        this.giftValue.text = data.sellingPrice.price + "";
+        this.giftValue.text = price.price + "";
         this.giftValue.x = this.giftPriceImage.x + this.giftPriceImage.width * 0.5 + 5 * this.dpr;
         this.giftDescr.text = data.des;
     }
@@ -140,7 +144,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
 }
 
 class PicGiftItem extends Phaser.GameObjects.Container {
-    public itemData: op_client.CountablePackageItem;
+    public itemData: op_client.IMarketCommodity;
     public bg: Phaser.GameObjects.Image;
     public selectbg: Phaser.GameObjects.Image;
     public icon: DynamicImage;
@@ -156,29 +160,22 @@ class PicGiftItem extends Phaser.GameObjects.Container {
         this.icon = new DynamicImage(scene, 0, 0);
         this.add([this.bg, this.selectbg, this.icon]);
         this.setSize(this.selectbg.width, this.selectbg.height);
-        this.isSelect = false;
     }
 
-    public setItemData(datas: op_client.IMarketCommodity) {
-
-        // this.itemData = data;
-        // if (!data) {
-        //     this.icon.visible = false;
-        //     this.selectbg.visible = false;
-        //     return;
-        // }
-        // this.icon.visible = true;
-        // this.selectbg.visible = this.mIsSelect;
-        // if (this.isEmptyHanded) {
-        //     this.icon.setTexture(this.key, "empty_handed");
-        // } else {
-        //     const display = data.display;
-        //     const url = Url.getOsdRes(display.texturePath);
-        //     this.icon.load(url, this, () => {
-        //         this.icon.displayWidth = 34 * this.dpr;
-        //         this.icon.scaleY = this.icon.scaleX;
-        //     });
-        // }
+    public setItemData(data: op_client.IMarketCommodity) {
+        this.isSelect = false;
+        this.itemData = data;
+        if (!data) {
+            this.icon.visible = false;
+            this.selectbg.visible = false;
+            return;
+        }
+        this.icon.visible = true;
+        this.selectbg.visible = this.mIsSelect;
+        const url = Url.getOsdRes(data.icon);
+        this.icon.load(url, this, () => {
+            this.icon.scale = this.dpr;
+        });
     }
 
     public get isSelect() {
@@ -187,9 +184,5 @@ class PicGiftItem extends Phaser.GameObjects.Container {
     public set isSelect(value: boolean) {
         this.mIsSelect = value;
         this.selectbg.visible = value;
-    }
-    public get isEmptyHanded() {
-        if (this.itemData && this.itemData.id === "empty_handed") return true;
-        return false;
     }
 }

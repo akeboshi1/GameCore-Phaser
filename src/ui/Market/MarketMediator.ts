@@ -57,11 +57,13 @@ export class MarketMediator extends BaseMediator {
   }
 
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
-    this.mView.setCategories(content);
+    if (this.mView)
+      this.mView.setCategories(content);
   }
 
   private onQueryResuleHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
-    this.mView.setProp(content);
+    if (this.mView)
+      this.mView.setProp(content);
   }
 
   private onGetCategoriesHandler() {

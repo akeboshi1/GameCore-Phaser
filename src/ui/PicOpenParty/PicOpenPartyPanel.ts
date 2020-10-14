@@ -68,9 +68,9 @@ export class PicOpenPartyPanel extends BasePanel {
         this.settingBtn.visible = isSelf;
         const username = this.mWorld.user.userData.playerProperty.nickname;
         this.partyCreatePanel.setPartyData(content, username);
-        if (true) {
-            this.partyBtn.setText(i18n.t("party.partymgr"));
-        }
+        // if (true) {
+        //     this.partyBtn.setText(i18n.t("party.partymgr"));
+        // }
     }
     protected preload() {
         this.addAtlas(this.key, "party/party.png", "party/party.json");

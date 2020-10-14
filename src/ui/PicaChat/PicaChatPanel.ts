@@ -87,7 +87,7 @@ export class PicaChatPanel extends BasePanel {
     }
 
     public setGiftData(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
-
+        this.giftPanel.setGiftDatas(content.commodities);
     }
     public appendChat(val: string) {
         this.chatCatchArr.push(val);
@@ -287,6 +287,7 @@ export class PicaChatPanel extends BasePanel {
             }
             this.resize(this.width, 185 * this.dpr);
             this.giftPanel.show();
+            this.emit("querymarket");
         } else {
             this.giftPanel.hide();
             this.showChatTextArea();

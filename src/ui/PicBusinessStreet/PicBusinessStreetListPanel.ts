@@ -167,7 +167,7 @@ export class PicBusinessStreetListPanel extends Phaser.GameObjects.Container {
             scrollMode: 0,
             clamplChildOY: false,
             celldownCallBack: (gameobject) => {
-                const tween = new TweenCompent(this.scene, gameobject, { scale: 0.6 });
+                const tween = new TweenCompent(this.scene, gameobject, { scale: 0.9 });
                 tween.tween();
             },
             // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),

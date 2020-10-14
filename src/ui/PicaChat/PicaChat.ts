@@ -68,6 +68,8 @@ export class PicaChat extends PacketHandler {
   }
 
   private onQueryMarketHandler(packet: PBpacket) {
-    this.mEvent.emit("queryMarket", packet.content);
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY = packet.content;
+    if (content.marketName === "gift_shop")
+      this.mEvent.emit("queryMarket", packet.content);
   }
 }

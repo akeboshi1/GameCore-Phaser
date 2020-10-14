@@ -74,10 +74,10 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mDetailDisplay.y = 110 * this.dpr;
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 4 * this.dpr;
-    this.mDetailBubble.y = 260 * this.dpr;
+    this.mDetailBubble.y = 400 * this.dpr;
     this.add([this.mDetailDisplay, this.mPriceContainer, this.mCounter, this.mBuyBtn, this.mDetailBubble]);
     this.mPriceContainer.add([priceBg, this.mPriceIcon, this.mPriceText]);
-   // this.mDetailBubble.visible = false;
+    // this.mDetailBubble.visible = false;
 
     this.addActionListener();
   }
@@ -96,11 +96,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mCounter.y = this.mBuyBtn.y;
 
     this.mDetailBubble.x = 4 * this.dpr;
-    const endW = width - (width - this.mCounter.x) - this.mCounter.width / 2;
-    if (this.mDetailBubble.displayWidth + this.mDetailBubble.x + 10 * this.dpr > endW) {
-      this.mDetailBubble.y = this.height - this.y - this.mDetailBubble.height - 6 * this.dpr;
-    }
-
+    this.mDetailBubble.y = this.mCounter.y - 70 * this.dpr;
     this.mPriceContainer.x = this.mCounter.x;
     this.mPriceContainer.y = this.mCounter.y - 35 * this.dpr;
 
@@ -216,7 +212,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       top: 10 * this.dpr,
       right: 10 * this.dpr,
       bottom: 10 * this.dpr
-    }, undefined, undefined, 0);
+    }, undefined, undefined, 0.5);
     this.tipsbg.setPosition(tipsWidth * 0.5, tipsHeight * 0.5);
     this.tipsbg.alpha = 0.6;
     this.tipsText = new BBCodeText(this.scene, 7 * dpr, -tipsHeight + 60 * this.dpr, "", {
@@ -248,7 +244,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       let tips = name + "\n";
       let maxWidth: number = 100 * this.dpr;
       if (prop.source) {
-        source = `${i18n.t("furni_bag.source")}： ${prop.source}`;
+        source = `${i18n.t("furni_bag.source")}：${prop.source}`;
         tips += source + "\n";
         this.tipsText.text = source;
         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;

@@ -950,7 +950,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
       }
       if (prop.source) {
-        source = `${i18n.t("furni_bag.source")}： ${prop.source}`;
+        source = `${i18n.t("furni_bag.source")}：${prop.source}`;
         tips += source + "\n";
         this.tipsText.text = source;
         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
@@ -969,7 +969,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
           attri += `${proper.name}: ${affect.value}` + (i < len - 1 ? "\n" : "");
         }
         if (attri.length > 0)
-          tips += `${i18n.t("furni_bag.properties")}:\n ${attri}`;
+          tips += `${i18n.t("furni_bag.properties")}:\n${attri}`;
       }
       if (prop.requireValues) {
         const len = prop.requireValues.length;
@@ -979,7 +979,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
           need += `${proper.name}:${this.getComparTag(require.compareType)} ${require.value}` + (i < len - 1 ? "\n" : "");
         }
         if (need.length > 0)
-          tips += `${i18n.t("furni_bag.needproper")}:\n ${need}`;
+          tips += `${i18n.t("furni_bag.needproper")}:\n${need}`;
       }
       this.tipsText.setWrapWidth(maxWidth);
       this.tipsText.text = tips;

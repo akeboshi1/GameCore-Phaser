@@ -92,7 +92,8 @@ export class Market extends PacketHandler {
   }
 
   private onQueryMarketHandler(packet: PBpacket) {
-    this.mEvent.emit("queryMarket", packet.content);
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY = packet.content;
+    this.mEvent.emit("queryMarket", content);
   }
 
   private onQueryCommodityResultHandler(packet: PBpacket) {
@@ -104,7 +105,7 @@ export class Market extends PacketHandler {
   private openMarketPanel(packge: PBpacket) {
     const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
     this.mEvent.emit("showopen", content);
-}
+  }
 
   get connection(): ConnectionService {
     if (this.world) {
