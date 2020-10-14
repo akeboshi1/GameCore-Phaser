@@ -3,7 +3,6 @@ import { NinePatch } from "../Components/Nine.patch";
 import { IListItemComponent } from "../Bag/IListItemRender";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { Geom } from "tooqinggamephaser";
-import { DragonbonesDisplay } from "../../rooms/display/dragonbones.display";
 import { IconBtn } from "../BaseView/Icon.btn";
 import { FriendMediator } from "./Friend.mediator";
 import { UIMediatorType } from "../Ui.mediatorType";
@@ -11,6 +10,7 @@ import { WorldService } from "../../world.service";
 import { Size } from "../../../utils/size";
 import { Border, Background, Url } from "../../../utils/resUtil";
 import { Font } from "../../../utils/font";
+import { DragonbonesDisplay } from "../../display/dragonbones.display";
 export interface IFriendIcon {
     res: string;
     name: string;

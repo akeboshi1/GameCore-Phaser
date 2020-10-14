@@ -6,7 +6,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { Pos } from "../../../utils/pos";
 import { IPosition45Obj } from "../../../utils/iposition45";
 import { Position45 } from "../../../utils/position45";
-import { MessageType } from "../../../messageType/MessageType";
+import { MessageType } from "../../../structureinterface/message.type";
 export class DecoratePanel extends BasePanel {
     private readonly resKey = "decorate";
     private readonly minGrid: number = 2;

@@ -6,10 +6,7 @@ import { DynamicImage } from "../Components/Dynamic.image";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, Button, BBCodeText } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { i18n } from "../../../utils/i18n";
-import { Font } from "../../../utils/font";
-import { Url } from "../../../utils/resUtil";
-import { Handler } from "../../../utils/handler";
+import { i18n, Font, Url, Handler } from "../../../utils";
 export class ComposePanel extends BasePanel {
     private key: string = "compose";
     private content: Phaser.GameObjects.Container;

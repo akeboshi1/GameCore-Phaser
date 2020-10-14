@@ -4,7 +4,6 @@ import { CreateRoleScene } from "../../scenes/create.character";
 import { CreateRolePanel } from "./Create.role.panel";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
-import { RPCFunction } from "../../lib/rpc/rpc.peer";
 
 export interface ICreateRole {
   enter();

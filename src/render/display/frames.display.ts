@@ -1,8 +1,8 @@
 import { DisplayField, DisplayObject } from "./display.object";
 import { IFramesModel } from "../../../game/room/displayManager/frame/iframe.model";
 import { IAnimationData, AnimationData } from "../../../game/room/displayManager/animation/ianimation";
-import { Url } from "../../../utils/resUtil";
-import { Logger } from "../../../utils/log";
+import { Url } from "../../utils";
+import { Logger } from "../../utils/log";
 
 // export enum DisplayField {
 //     BACKEND = 1,

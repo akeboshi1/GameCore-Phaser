@@ -1,11 +1,11 @@
 import { WorldService } from "../../game/world.service";
-import { MessageType } from "../../../messageType/MessageType";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_def, op_client, op_gameconfig } from "pixelpai_proto";
 import { ShopPanel } from "./ShopPanel";
 import { ILayerManager } from "../Layer.manager";
 import { BasePanel } from "../Components/BasePanel";
 import { BaseMediator, UIType } from "apowophaserui";
+import { MessageType } from "../../../structureinterface/message.type";
 
 export class ShopMediator extends BaseMediator {
     public static NAME: string = "ShopMediator";

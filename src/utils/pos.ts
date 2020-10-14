@@ -14,7 +14,7 @@ export class Pos implements IPos {
         this.depth = depth | 0;
     }
 
-    public add(x: number, y: number, z?: number): IPos {
+    public add(x: number, y: number, z?: number): Pos {
         this.x += x;
         this.x += y;
         this.z += z ? z : 0;
@@ -29,7 +29,7 @@ export class Pos implements IPos {
         return `Pos >> x: ${this.x}, y: ${this.y}, z: ${this.z}, depth: ${this.depth}`;
     }
 
-    public toPoint(): Phaser.Geom.Point {
-        return new Phaser.Geom.Point(this.x, this.y);
+    public toPoint(): IPos {
+        return new Pos(this.x, this.y);
     }
 }

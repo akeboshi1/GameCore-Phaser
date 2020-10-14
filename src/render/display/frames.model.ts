@@ -4,8 +4,8 @@ import { Sprite } from "../element/sprite";
 import { Direction } from "../element/element";
 import { IFramesModel, IDisplay } from "../../../game/room/displayManager/frame/iframe.model";
 import { IAnimationData, AnimationData } from "../../../game/room/displayManager/animation/ianimation";
-import Helpers from "../../../utils/helpers";
-import { Logger } from "../../../utils/log";
+import Helpers from "../../utils/helpers";
+import { Logger } from "../../utils/log";
 
 export class FramesModel implements IFramesModel {
     avatarDir?: number;
