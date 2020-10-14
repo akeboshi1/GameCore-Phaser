@@ -1,12 +1,11 @@
 import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
+import { Font, i18n } from "../../../utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
-import { i18n } from "../../game/core/utils/i18n";
 import { DynamicImage } from "../Components/Dynamic.image";
-import { Handler } from "../../../utils/Handler/Handler";
-import { Url } from "../../game/core/utils/resUtil";
+import { Handler } from "../../../utils/Handler";
+import { Url } from "../../../utils/resUtil";
 import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText } from "apowophaserui";
 export class TaskPanel extends BasePanel {
     private key = "task_ui";

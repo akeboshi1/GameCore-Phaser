@@ -9,7 +9,7 @@ export interface GameMain {
     setKeyBoardHeight(height: number);
     startFullscreen(): void;
     stopFullscreen(): void;
-    createGame(): void;
+    createGame(content?): void;
     setGameConfig(config): void;
     updatePalette(palett): void;
     onFocus();

@@ -4,6 +4,7 @@ export interface IPos {
     z?: number;
     depth?: number;
 }
+
 export class LogicPos implements IPos {
     x: number;
     y: number;
@@ -19,7 +20,7 @@ export class LogicPos implements IPos {
         this.depth = depth | 0;
     }
 
-    public add(x: number, y: number, z?: number): LogicPos {
+    public add(x: number, y: number, z?: number): this {
         this.x += x;
         this.x += y;
         this.z += z ? z : 0;
@@ -31,10 +32,10 @@ export class LogicPos implements IPos {
     }
 
     public toString(): string {
-        return `Pos >> x: ${this.x}, y: ${this.y}, z: ${this.z}, depth: ${this.depth}`;
+        return `Pos { x: ${this.x}, y: ${this.y}, z: ${this.z}, depth: ${this.depth} }`;
     }
 
     public toPoint(): IPos {
-        return { x: this.x, y: this.y };
+        return new LogicPos(this.x, this.y, this.z);
     }
 }

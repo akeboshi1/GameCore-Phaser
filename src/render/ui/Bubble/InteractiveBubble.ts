@@ -39,6 +39,7 @@ export class InteractiveBubble extends PacketHandler {
         this.unregister();
         this.mEvent.destroy();
     }
+
     queryInteractiveHandler(data: any) {
         const connection = this.connection;
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_ACTIVE_BUBBLE);
@@ -47,7 +48,8 @@ export class InteractiveBubble extends PacketHandler {
         //  content.receiverId = data.receiverId;
         connection.send(packet);
     }
-    get connection(): ConnectionService{
+
+    get connection(): ConnectionService {
         if (this.world) {
             return this.world.connection;
         }

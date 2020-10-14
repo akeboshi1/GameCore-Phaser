@@ -84,7 +84,7 @@ export class Render extends RPCPeer implements GameMain {
     private _moveStyle: number = 0;
     private _curTime: number;
     private mainPeer: any;
-    constructor() {
+    constructor(config?: ILauncherConfig) {
         super("render");
         this.emitter = new Phaser.Events.EventEmitter();
         this.linkTo(MAIN_WORKER, "../game/main.worker").onceReady(() => {
@@ -92,7 +92,7 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
-    createGame() {
+    createGame(content) {
 
     }
 

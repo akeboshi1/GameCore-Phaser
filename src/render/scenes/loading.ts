@@ -1,15 +1,11 @@
-import { WorldService } from "../game/world.service";
-import { IRoomService } from "../rooms/room";
-import { Size } from "../game/core/utils/size";
-import { Url } from "../game/core/utils/resUtil";
-import { Logger } from "../game/core/utils/log";
 import { BasicScene } from "./basic.scene";
-import { Font } from "../game/core/utils/font";
-import verion from "../../version";
+import verion from "../../../version";
+import { Url } from "../../utils/resUtil";
+import { Font } from "../../utils/font";
+import { Logger } from "../../utils/log";
 
 export class LoadingScene extends BasicScene {
-  private mWorld: WorldService;
-  private mRoom: IRoomService;
+  private mWorld: any;
   private bg: Phaser.GameObjects.Sprite;
   private mCallback: Function;
   private curtain: Curtain;
@@ -38,7 +34,6 @@ export class LoadingScene extends BasicScene {
   public init(data: any) {
     this.createFont();
     this.mWorld = data.world;
-    this.mRoom = data.room;
     this.mRequestCom = false;
     this.mCallback = data.callBack;
     this.tipsText = data.text;
@@ -75,20 +70,18 @@ export class LoadingScene extends BasicScene {
     this.progressText = this.add.text(this.bg.x, this.bg.y + this.bg.displayHeight * 0.5, this.tipsText, {
       fontSize: 12 * dpr,
       fontFamily: Font.DEFULT_FONT
-    }
-    ).setOrigin(0.5);
+    }).setOrigin(0.5);
 
     const debug = this.add.text(width - 4 * dpr, height - 4 * dpr, `v${verion} ${this.getDebug()}`, {
       fontSize: 12 * dpr,
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
 
-    this.checkSize(new Size(width, height));
     if (this.mCallback) {
       this.mCallback.call(this, this);
       this.mCallback = undefined;
     }
-    this.scale.on("resize", this.checkSize, this);
+    // this.scale.on("resize", this.checkSize, this);
   }
 
   public async show() {
@@ -111,7 +104,7 @@ export class LoadingScene extends BasicScene {
 
   public awake(data?: any) {
     this.mShow = true;
-    this.scale.on("resize", this.checkSize, this);
+    // this.scale.on("resize", this.checkSize, this);
     this.scene.wake();
     if (!data) {
       return;
@@ -129,11 +122,11 @@ export class LoadingScene extends BasicScene {
     if (this.curtain) {
       if (this.bg) this.bg.visible = false;
       this.curtain.close().then(() => {
-        this.scale.off("resize", this.checkSize, this);
+        // this.scale.off("resize", this.checkSize, this);
         this.scene.sleep();
       });
     } else {
-      this.scale.off("resize", this.checkSize, this);
+      // this.scale.off("resize", this.checkSize, this);
       this.scene.sleep();
     }
   }
@@ -173,9 +166,6 @@ export class LoadingScene extends BasicScene {
       audioType = "HTML5 Audio";
     }
     return `(${renderType} | ${audioType})`;
-  }
-
-  private checkSize(size: Size) {
   }
 
   private createFont() {
