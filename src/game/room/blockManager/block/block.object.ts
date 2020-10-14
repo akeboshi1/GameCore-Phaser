@@ -51,15 +51,15 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public fadeIn(callback?: () => void) {
-        this.mRoomService.world.peer.render.fadeIn(this.id, this.type);
+        this.mRoomService.game.peer.render.fadeIn(this.id, this.type);
     }
 
     public fadeOut(callback?: () => void) {
-        this.mRoomService.world.peer.render.fadeOut(this.id, this.type);
+        this.mRoomService.game.peer.render.fadeOut(this.id, this.type);
     }
 
     public fadeAlpha(alpha: number) {
-        this.mRoomService.world.peer.render.fadeAlpha(this.id, this.type, alpha);
+        this.mRoomService.game.peer.render.fadeAlpha(this.id, this.type, alpha);
     }
 
     public setInputEnable(val: InputEnable) {
@@ -68,14 +68,14 @@ export abstract class BlockObject implements IBlockObject {
         switch (val) {
             case InputEnable.Interactive:
                 if (this.mModel && this.mModel.hasInteractive) {
-                    this.mRoomService.world.peer.render.setInteractive(this.id, this.type);
+                    this.mRoomService.game.peer.render.setInteractive(this.id, this.type);
                 }
                 break;
             case InputEnable.Enable:
-                this.mRoomService.world.peer.render.setInteractive(this.id, this.type);
+                this.mRoomService.game.peer.render.setInteractive(this.id, this.type);
                 break;
             default:
-                this.mRoomService.world.peer.render.disableInteractive(this.id, this.type);
+                this.mRoomService.game.peer.render.disableInteractive(this.id, this.type);
                 break;
 
         }
@@ -97,7 +97,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public destroy() {
-        this.mRoomService.world.peer.render.displayDestroy(this.id, this.type);
+        this.mRoomService.game.peer.render.displayDestroy(this.id, this.type);
     }
 
     public clear() {
@@ -107,7 +107,7 @@ export abstract class BlockObject implements IBlockObject {
     protected addDisplay() { }
 
     protected removeDisplay() {
-        this.mRoomService.world.peer.render.removeDisplay(this.id, this.type);
+        this.mRoomService.game.peer.render.removeDisplay(this.id, this.type);
     }
 
     protected addToBlock() {
