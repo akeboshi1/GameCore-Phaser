@@ -1,5 +1,4 @@
 import { IRoomManager } from "./room.manager";
-import { ElementManager } from "../../game/room/elementManager/element/element.manager";
 import { PlayerManager } from "./player/player.manager";
 import { LayerManager } from "./layer/layer.manager";
 import { TerrainManager } from "./terrain/terrain.manager";

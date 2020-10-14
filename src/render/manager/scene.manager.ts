@@ -44,7 +44,6 @@ export class SceneManager extends RPCEmitter {
     public removeScene(name: string) {
         this.game.scene.remove(name);
     }
-
     @Export()
     public pauseScene(name: string) {
         const scene = this.game.scene.getScene(name);

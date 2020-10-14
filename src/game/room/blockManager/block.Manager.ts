@@ -1,6 +1,7 @@
+import { SceneName } from "../../../structureinterface/scene.name";
 import { Logger } from "../../../utils/log";
 import { Game } from "../../game";
-import { IRoomService } from "../roomManager/room/room";
+import { IRoomService, Room } from "../roomManager/room/room";
 import { Fit, IScenery } from "../skyboxManager/scenery";
 import { State } from "../state/state.group";
 
@@ -33,7 +34,7 @@ export class BlockManager implements IBlockManager {
     this.mScenery = scenery;
     this.mUris = scenery.uris;
     this.mRoom = room;
-    this.mGame = room.world;
+    this.mGame = room.game;
     this.mCameras = room.cameraService;
     this.mMainCamera = this.mCameras.camera;
     this._bound = this.mMainCamera.getBounds();
@@ -45,8 +46,9 @@ export class BlockManager implements IBlockManager {
       Logger.getInstance().fatal(`${BlockManager.name} scene does not exist`);
       return;
     }
-    this.mSceneName = SkyBoxScene.name + `_${scenery.id}`;
-    const scene = this.mGame.game.scene.add(this.mSceneName, SkyBoxScene, false);
+    this.mSceneName = SceneName.SKYBOX_SCENE + `_${scenery.id}`;
+    const scene = this.mGame.peer.remote["render"].SceneManager.addScene(this.mSceneName, { autoStart: true });
+    // game.scene.add(this.mSceneName, SkyBoxScene, false);
     playScene.scene.launch(this.mSceneName, this);
     this.updateDepth();
   }
@@ -123,7 +125,7 @@ export class BlockManager implements IBlockManager {
   }
 
   destroy() {
-      // todo destroy game.scene.remove(this.mSceneName)
+    // todo destroy game.scene.remove(this.mSceneName)
     // if (this.mGame && this.mGame.game) {
     //   this.mGame.game.scene.remove(this.mSceneName);
     // }
