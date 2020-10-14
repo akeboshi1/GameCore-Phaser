@@ -2,6 +2,7 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
+import { ILauncherConfig } from "./rpc/structureinterface/lanucher.config";
 import version from "./version";
 // import { ServerAddress } from "./src/net/address";
 // import { ConnectionService } from "./src/net/connection.service";
@@ -9,34 +10,34 @@ import version from "./version";
 // import { EditorLauncher, EditorCanvasType } from "./src/editor/editor.launcher";
 // import { ElementEditorEmitType, ElementEditorBrushType } from "./src/editor/canvas/element/element.editor.canvas";
 
-export interface ILauncherConfig {
-    api_root: string;
-    auth_token: string;
-    token_expire: string | null;
-    token_fingerprint: string;
-    server_addr: any | undefined;
-    user_id: string;
-    game_id: string;
-    virtual_world_id: string;
-    ui_scale?: number;
-    devicePixelRatio?: number;
-    scale_ratio?: number;
-    platform?: string;
-    keyboardHeight: number;
-    width: number;
-    height: number;
-    readonly screenWidth: number;
-    readonly screenHeight: number;
-    readonly baseWidth: number;
-    readonly baseHeight: number;
-    readonly game_created?: Function;
-    readonly connection?: any;
-    readonly isEditor?: boolean;
-    readonly osd?: string;
-    readonly closeGame: Function;
-    readonly connectFail?: Function;
-    readonly parent?: string;
-}
+// export interface ILauncherConfig {
+//     api_root: string;
+//     auth_token: string;
+//     token_expire: string | null;
+//     token_fingerprint: string;
+//     server_addr: any | undefined;
+//     user_id: string;
+//     game_id: string;
+//     virtual_world_id: string;
+//     ui_scale?: number;
+//     devicePixelRatio?: number;
+//     scale_ratio?: number;
+//     platform?: string;
+//     keyboardHeight: number;
+//     width: number;
+//     height: number;
+//     readonly screenWidth: number;
+//     readonly screenHeight: number;
+//     readonly baseWidth: number;
+//     readonly baseHeight: number;
+//     readonly game_created?: Function;
+//     readonly connection?: any;
+//     readonly isEditor?: boolean;
+//     readonly osd?: string;
+//     readonly closeGame: Function;
+//     readonly connectFail?: Function;
+//     readonly parent?: string;
+// }
 
 export interface GameMain {
     resize(newWidth, newHeight);
@@ -144,8 +145,8 @@ export class Launcher {
             // xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./src/game/world").then((game) => {
-            this.world = new game.World(this.config, this.mCompleteFunc);
+        import(/* webpackChunkName: "game" */ "./rpc/render/render").then((game) => {
+            this.world = new game.Render(this.config, this.mCompleteFunc);
             if (config.isEditor) {
                 this.world.createGame();
             }
