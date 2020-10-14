@@ -1,233 +1,153 @@
-import { RPCEmitter } from "webworker-rpc";
+import { constants } from "buffer";
+import { Export, RPCEmitter } from "webworker-rpc";
+import { Logger } from "../../utils/log";
 import { ElementDisplay } from "../display/element.display";
-import { GridLayer } from "../layer/grid.layer";
+import { RoomLayers } from "../layer/room.layers";
 import { SceneManager } from "./scene.manager";
 
 export class LayerManager extends RPCEmitter {
-    // ================ 背景层
-    /**
-     * 背景层1(用于鼠标点击移动)
-     */
-    protected mGroundClickLayer: Phaser.GameObjects.Container;
+    private roomLayersMap: Map<number, RoomLayers> = new Map<number, RoomLayers>();
 
-    /**
-     * 背景层2
-     */
-    protected mUGroundLayer2: Phaser.GameObjects.Container;
-
-    // ================舞台层
-
-    /**
-     * 舞台地皮层（地块）
-     */
-    protected mGroundLayer: Phaser.GameObjects.Container;
-
-    /**
-     * 网格层
-     * 介于地皮和地表中间
-     */
-    protected mTileLayer: GridLayer;
-
-    /**
-     * 舞台地表层（包括角色，物件 ，特效等）
-     */
-    protected mSurfaceLayer: Phaser.GameObjects.Container;
-    protected mSurfaceInteractived: boolean = true;
-
-    /**
-     * 舞台大气层
-     */
-    protected mAtmosphere: Phaser.GameObjects.Container;
-
-    // ===============UI层
-    /**
-     * 场景中的ui，可能跟跟随物件或人物
-     */
-    protected mSceneUILayer: Phaser.GameObjects.Container;
-
-    protected mMiddleLayer: Phaser.GameObjects.Container;
-
-    private mScene: Phaser.Scene;
-
-    private mDepthSurface: boolean;
-
-    private mDepthGround: boolean;
-
-    private mDelta: number = 0;
-
-    constructor(private room: any, private sceneManager: SceneManager) {
+    constructor(private sceneManager: SceneManager) {
         super();
-        let zoom = 1;
-        if (!room) {
+    }
+
+    @Export()
+    public addRoomLayers(room: any) {
+        if (this.roomLayersMap.has(room.id)) {
+            Logger.getInstance().warn("RoomLayers exit: ", room.id);
+        }
+        this.roomLayersMap.set(room.id, new RoomLayers(room, this.sceneManager));
+    }
+
+    @Export()
+    public removeRoomLayers(roomID: number) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
             return;
         }
-        if (room.world) {
-            zoom = room.world.scaleRatio;
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.destroy();
+        this.roomLayersMap.delete(roomID);
+    }
+
+    @Export()
+    public addToGround(roomID: number, ele: ElementDisplay | ElementDisplay[], index?: number) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
         }
-
-        this.mScene = this.sceneManager.getRoomScene(room.id);
-        // ==========背景层
-        this.mGroundClickLayer = this.mScene.add.container(0, 0);
-        // this.totalLayerList.push(this.mGroundClickLayer);
-
-        this.mUGroundLayer2 = this.mScene.add.container(0, 0);
-
-        // ==========舞台层
-        this.mGroundLayer = this.mScene.add.container(0, 0).setScale(zoom);
-
-        this.mTileLayer = new GridLayer(this.mScene).setScale(zoom);
-        this.mScene.sys.displayList.add(this.mTileLayer);
-
-        this.mMiddleLayer = this.mScene.add.container(0, 0).setScale(zoom);
-
-        this.mSurfaceLayer = this.mScene.add.container(0, 0).setScale(zoom);
-
-        this.mAtmosphere = this.mScene.add.container(0, 0);
-
-        this.mSceneUILayer = this.mScene.add.container(0, 0);
-        // this.mUILayer.setInteractive(new Geom.Rectangle(0, 0, window.innerWidth, window.innerHeight), Phaser.Geom.Rectangle.Contains);
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.addToGround(ele, index);
     }
 
-    public addToGround(ele: ElementDisplay | ElementDisplay[], index?: number) {
-        if (index !== undefined) {
-            this.mGroundLayer.addAt(ele, index);
-        } else {
-            if (Array.isArray(ele)) {
-                this.mGroundLayer.add(ele);
-            } else {
-                this.mGroundLayer.add([ele]);
-            }
+    @Export()
+    public addToSurface(roomID: number, ele: ElementDisplay | ElementDisplay[]) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
         }
-        // this.mGroundLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
-        // Logger.log("terrain num: ", this.mGroundLayer.list.length);
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.addToSurface(ele);
     }
 
-    public addToSurface(ele: ElementDisplay | ElementDisplay[]) {
-        if (Array.isArray(ele)) {
-            this.mSurfaceLayer.add(ele);
-        } else {
-            this.mSurfaceLayer.add([ele]);
+    @Export()
+    public addToSceneToUI(roomID: number, child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
         }
-        // Logger.log("surface num: ", this.mSurfaceLayer.list.length);
-        // this.mSurfaceLayer.add(Array.from(tmp, (display: ElementDisplay) => display.GameObject));
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.addToSceneToUI(child);
     }
 
-    public addToSceneToUI(child: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]) {
-        this.mSceneUILayer.add(child);
+    @Export()
+    public addToAtmosphere(roomID: number, child: Phaser.GameObjects.GameObject) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
+        }
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.addToAtmosphere(child);
     }
 
-    public addToAtmosphere(child: Phaser.GameObjects.GameObject) {
-        this.mAtmosphere.add(child);
+    @Export()
+    public addToMiddle(roomID: number, child: Phaser.GameObjects.GameObject) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
+        }
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.addToMiddle(child);
     }
 
-    public addToMiddle(child: Phaser.GameObjects.GameObject) {
-        this.mMiddleLayer.add(child);
+    @Export()
+    public resize(roomID: number, width: number, height: number) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
+        }
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.resize(width, height);
     }
 
-    public resize(width: number, height: number) {
-        const zoom = this.room.world.scaleRatio;
-        this.mGroundLayer.setScale(zoom);
-        this.mTileLayer.setScale(zoom);
-        this.mMiddleLayer.setScale(zoom);
-        this.mSurfaceLayer.setScale(zoom);
+    @Export()
+    public sortSurface(roomID: number) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
+        }
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.sortSurface();
     }
 
-    public sortSurface() {
-        this.mSurfaceLayer.sort("depth");
+    @Export()
+    public changeScene(roomID: number) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
+        }
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.changeScene();
     }
 
-    public changeScene() {
-        this._clearLayer();
-    }
-
+    @Export()
     public drawGrid(room: any) {
-        if (this.mTileLayer) {
-            this.mTileLayer.draw(room);
-        }
-    }
-
-    public setGridVisible(visible: boolean) {
-        if (this.mTileLayer) {
-            this.mTileLayer.setVisible(visible);
-        }
-    }
-
-    public update(time: number, delta: number) {
-        if (time - this.mDelta < 200) {
+        if (!this.roomLayersMap.has(room.id)) {
+            Logger.getInstance().error("RoomLayers not found: ", room.id);
             return;
         }
-        this.mDelta = time;
-        if (this.mDepthGround) {
-            this.mGroundLayer.sort("depth");
-            this.mDepthGround = false;
-        }
-        if (this.mDepthSurface) {
-            this.mDepthSurface = false;
-            this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
-                // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
-                return displayA.sortY + displayA.sortZ > displayB.sortY + displayB.sortZ;
-            });
-        }
+        const roomLayers = this.roomLayersMap.get(room.id);
+        roomLayers.drawGrid(room);
     }
 
-    public setSurfaceInteractive(val: boolean) {
-        if (this.mSurfaceInteractived === val) {
+    @Export()
+    public setGridVisible(roomID: number, visible: boolean) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
             return;
         }
-        this.mSurfaceInteractived = val;
-        const list = this.mSurfaceLayer.list;
-        if (val) {
-            // this.mSurfaceLayer.setInteractive();
-            list.forEach((obj) => {
-                obj.setInteractive();
-            });
-        } else {
-            list.forEach((obj) => {
-                obj.disableInteractive();
-            });
-            // this.mSurfaceLayer.disableInteractive();
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.setGridVisible(visible);
+    }
+
+    @Export()
+    public update(roomID: number, time: number, delta: number) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
         }
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.update(time, delta);
     }
 
-    public destroy() {
-        this.mDelta = 0;
-        this._clearLayer();
-    }
-
-    private _clearLayer() {
-        this.clearLayer(this.mGroundClickLayer);
-        this.clearLayer(this.mGroundLayer);
-        this.clearLayer(this.mSurfaceLayer);
-        this.clearLayer(this.mUGroundLayer2);
-        this.clearLayer(this.mAtmosphere);
-        this.mTileLayer.destroy(true);
-    }
-
-    private clearLayer(container: Phaser.GameObjects.Container, destroy: boolean = false) {
-        const list: Phaser.GameObjects.GameObject[] = container.list;
-        if (list) {
-            const len: number = list.length;
-            let child: Phaser.GameObjects.GameObject;
-            for (let i: number = 0; i < len; i++) {
-                child = list[i];
-                if (child) {
-                    child.destroy(destroy);
-                    child = null;
-                }
-            }
+    @Export()
+    public setSurfaceInteractive(roomID: number, val: boolean) {
+        if (!this.roomLayersMap.has(roomID)) {
+            Logger.getInstance().error("RoomLayers not found: ", roomID);
+            return;
         }
-        container.destroy(destroy);
-    }
-
-    set depthSurfaceDirty(val: boolean) {
-        this.mDepthSurface = val;
-    }
-
-    set depthGroundDirty(val: boolean) {
-        this.mDepthGround = val;
-    }
-
-    get layer(): Phaser.GameObjects.Container {
-        return this.mGroundLayer;
+        const roomLayers = this.roomLayersMap.get(roomID);
+        roomLayers.setSurfaceInteractive(val);
     }
 }

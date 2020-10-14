@@ -1,10 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IRoomService } from "../room";
 import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
-import { Rectangle45 } from "../../../utils/rectangle45";
-import { Pos } from "../../../utils/pos";
-import { Logger } from "../../../utils/log";
-import { ConnectionService } from "../../../../lib/net/connection.service";
+import { Logger } from "../../utils/log";
+import { Pos } from "../../utils/pos";
+import { Rectangle45 } from "../../utils/rectangle45";
 
 export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
@@ -52,7 +50,7 @@ export class RoomCameras extends PacketHandler implements ICameraService {
     protected mCameras: Phaser.Cameras.Scene2D.Camera[];
     protected readonly zoom: number = 1;
 
-    constructor(protected mRoomService: IRoomService) {
+    constructor(protected mRoomService: any) {
         super();
         if (this.mRoomService && this.mRoomService.world) {
             this.zoom = this.mRoomService.world.scaleRatio;
