@@ -1,5 +1,4 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IRoomService } from "../room";
 import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 import { ConnectionService } from "../../../lib/net/connection.service";
@@ -52,7 +51,7 @@ export class RoomCameras extends PacketHandler implements ICameraService {
     protected mCameras: Phaser.Cameras.Scene2D.Camera[];
     protected readonly zoom: number = 1;
 
-    constructor(protected mRoomService: IRoomService) {
+    constructor(protected mRoomService: any) {
         super();
         if (this.mRoomService && this.mRoomService.world) {
             this.zoom = this.mRoomService.world.scaleRatio;

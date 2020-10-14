@@ -1,7 +1,5 @@
 import { op_def } from "pixelpai_proto";
 import { Export, RPCEmitter, RPCExecutor, RPCParam } from "webworker-rpc";
-import { AnimationData } from "../../game/room/displayManager/animation/ianimation";
-import { IFramesModel } from "../../game/room/displayManager/elementManager/model/iframe.model";
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { IDragonbonesModel } from "../display/dragonbones.model";
@@ -34,7 +32,7 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
     constructor(private game: Phaser.Game, private sceneManager: SceneManager) {
         super();
 
-        this.exportRegistries();
+        this.exportBaseFunctions();
     }
 
     public addDisplay(sceneID: number, displayID: number, data: any): void {
@@ -181,22 +179,22 @@ export abstract class DisplayManager extends RPCEmitter implements IDisplayManag
         display.showEffect();
     }
 
-    private exportRegistries() {
-        this.addRegistry(new RPCExecutor("addDisplay", this.constructor.name));
-        this.addRegistry(new RPCExecutor("removeDisplay", this.constructor.name));
-        this.addRegistry(new RPCExecutor("load", this.constructor.name));
-        this.addRegistry(new RPCExecutor("changeAlpha", this.constructor.name));
-        this.addRegistry(new RPCExecutor("fadeIn", this.constructor.name));
-        this.addRegistry(new RPCExecutor("fadeOut", this.constructor.name));
-        this.addRegistry(new RPCExecutor("play", this.constructor.name));
-        this.addRegistry(new RPCExecutor("mount", this.constructor.name));
-        this.addRegistry(new RPCExecutor("unmount", this.constructor.name));
-        this.addRegistry(new RPCExecutor("removeEffect", this.constructor.name));
-        this.addRegistry(new RPCExecutor("removeDisplayField", this.constructor.name));
-        this.addRegistry(new RPCExecutor("setDisplayBadges", this.constructor.name));
-        this.addRegistry(new RPCExecutor("showRefernceArea", this.constructor.name));
-        this.addRegistry(new RPCExecutor("hideRefernceArea", this.constructor.name));
-        this.addRegistry(new RPCExecutor("scaleTween", this.constructor.name));
-        this.addRegistry(new RPCExecutor("showEffect", this.constructor.name));
+    private exportBaseFunctions() {
+        this.exportFunction("addDisplay");
+        this.exportFunction("removeDisplay");
+        this.exportFunction("load");
+        this.exportFunction("changeAlpha");
+        this.exportFunction("fadeIn");
+        this.exportFunction("fadeOut");
+        this.exportFunction("play");
+        this.exportFunction("mount");
+        this.exportFunction("unmount");
+        this.exportFunction("removeEffect");
+        this.exportFunction("removeDisplayField");
+        this.exportFunction("setDisplayBadges");
+        this.exportFunction("showRefernceArea");
+        this.exportFunction("hideRefernceArea");
+        this.exportFunction("scaleTween");
+        this.exportFunction("showEffect");
     }
 }

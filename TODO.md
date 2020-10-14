@@ -11,7 +11,7 @@ TODO List
   - [x] 地块显示对象管理-terrainDisplayManager
   - [ ] 墙体显示对象管理-wallDisplayManager
   - [x] ui显示对象管理-uiManager
-  - [ ] 显示对象层级管理-layerManager
+  - [x] 显示对象层级管理-layerManager
   - [ ] Phaser声音管理-soundManager
   - [ ] Phaser交互管理-inputManager
   - [ ] 特效显示对象管理-effectManager

@@ -1,13 +1,11 @@
-import {IRoomService} from "../room";
-import {Pos} from "../../game/core/utils/pos";
-import {Logger} from "../../game/core/utils/log";
+import { Pos } from "../../utils/pos";
 
 export class GridLayer extends Phaser.GameObjects.Graphics {
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
 
-    public draw(room: IRoomService) {
+    public draw(room: any) {
         this.clear();
         if (!room || !room.roomSize) return;
         this.lineStyle(1, 0xFFFFFF);
