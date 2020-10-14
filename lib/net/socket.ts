@@ -4,6 +4,8 @@ import { Logger } from "../../src/utils/log";
 export interface IConnectListener {
     onConnected(connection?: SocketConnection): void;
 
+    onReconnect(connection?: SocketConnection): void;
+
     onDisConnected(connection?: SocketConnection): void;
 
     onError(reason?: SocketConnectionError | undefined): void;
@@ -23,11 +25,11 @@ export class SocketConnection {
     protected mTransport: WSWrapper;
     protected mServerAddr: ServerAddress = { host: "localhost", port: 80 };
     protected mConnectListener?: IConnectListener;
-
+    private isConnect: boolean = false;
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
         this.mConnectListener = $listener;
-
+        Logger.getInstance().info(`SocketConnection init.`);
         // add connection event to listener
         if (typeof this.mTransport !== "undefined" && typeof this.mConnectListener !== "undefined") {
             const listener: IConnectListener = this.mConnectListener;
@@ -35,14 +37,16 @@ export class SocketConnection {
                 Logger.getInstance().info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this);
                 this.onConnected();
+                this.isConnect = true;
             });
             this.mTransport.on("close", () => {
                 Logger.getInstance().info(`SocketConnection close.`);
                 listener.onDisConnected(this);
+                this.isConnect = false;
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
                 Logger.getInstance().info(`SocketConnection error.`);
-                listener.onError(reason);
+                if (this.isConnect) listener.onError(reason);
             });
         }
     }
@@ -65,6 +69,7 @@ export class SocketConnection {
 
     // Frees all resources for garbage collection.
     destroy(): void {
+        Logger.getInstance().log("socket close");
         if (this.mTransport) {
             this.mTransport.destroy();
         }

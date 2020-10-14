@@ -220,29 +220,9 @@
 				"h": 122
 			}
 		},
-		"friend_add": {
-			"frame": {
-				"x": 829,
-				"y": 125,
-				"w": 73,
-				"h": 73
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 73,
-				"h": 73
-			},
-			"sourceSize": {
-				"w": 73,
-				"h": 73
-			}
-		},
 		"friend_default": {
 			"frame": {
-				"x": 904,
+				"x": 829,
 				"y": 125,
 				"w": 275,
 				"h": 123
@@ -282,7 +262,7 @@
 		},
 		"head": {
 			"frame": {
-				"x": 1181,
+				"x": 1106,
 				"y": 125,
 				"w": 83,
 				"h": 83
@@ -302,7 +282,7 @@
 		},
 		"letter_bg": {
 			"frame": {
-				"x": 1266,
+				"x": 1191,
 				"y": 125,
 				"w": 39,
 				"h": 28
@@ -322,8 +302,8 @@
 		},
 		"lv_backpround": {
 			"frame": {
-				"x": 1266,
-				"y": 155,
+				"x": 1232,
+				"y": 125,
 				"w": 70,
 				"h": 32
 			},
@@ -400,10 +380,10 @@
 				"h": 15
 			}
 		},
-		"new_fans": {
+		"notice": {
 			"frame": {
-				"x": 1266,
-				"y": 189,
+				"x": 1191,
+				"y": 159,
 				"w": 73,
 				"h": 73
 			},
@@ -420,10 +400,30 @@
 				"h": 73
 			}
 		},
+		"notice_icon": {
+			"frame": {
+				"x": 1266,
+				"y": 159,
+				"w": 60,
+				"h": 60
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 60,
+				"h": 60
+			},
+			"sourceSize": {
+				"w": 60,
+				"h": 60
+			}
+		},
 		"number_background": {
 			"frame": {
-				"x": 278,
-				"y": 264,
+				"x": 1106,
+				"y": 221,
 				"w": 33,
 				"h": 33
 			},
@@ -442,8 +442,8 @@
 		},
 		"offline_head": {
 			"frame": {
-				"x": 1181,
-				"y": 210,
+				"x": 1141,
+				"y": 234,
 				"w": 83,
 				"h": 83
 			},
@@ -482,8 +482,8 @@
 		},
 		"online_checked": {
 			"frame": {
-				"x": 313,
-				"y": 264,
+				"x": 1266,
+				"y": 221,
 				"w": 36,
 				"h": 36
 			},
@@ -502,8 +502,8 @@
 		},
 		"online_unchecked": {
 			"frame": {
-				"x": 351,
-				"y": 264,
+				"x": 1304,
+				"y": 221,
 				"w": 36,
 				"h": 36
 			},
@@ -522,8 +522,8 @@
 		},
 		"partition": {
 			"frame": {
-				"x": 389,
-				"y": 264,
+				"x": 1328,
+				"y": 128,
 				"w": 16,
 				"h": 33
 			},
@@ -638,46 +638,6 @@
 			"sourceSize": {
 				"w": 2,
 				"h": 121
-			}
-		},
-		"vip_backpround": {
-			"frame": {
-				"x": 475,
-				"y": 1664,
-				"w": 85,
-				"h": 32
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 85,
-				"h": 32
-			},
-			"sourceSize": {
-				"w": 85,
-				"h": 32
-			}
-		},
-		"vip_logo": {
-			"frame": {
-				"x": 562,
-				"y": 1664,
-				"w": 41,
-				"h": 25
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 41,
-				"h": 25
-			},
-			"sourceSize": {
-				"w": 41,
-				"h": 25
 			}
 		}
 	},

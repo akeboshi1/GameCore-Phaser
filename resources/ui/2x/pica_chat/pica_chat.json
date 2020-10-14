@@ -180,9 +180,29 @@
 				"h": 79
 			}
 		},
-		"scroll_btn": {
+		"party_gift_icon": {
 			"frame": {
 				"x": 434,
+				"y": 1,
+				"w": 77,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 77,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 77,
+				"h": 87
+			}
+		},
+		"scroll_btn": {
+			"frame": {
+				"x": 513,
 				"y": 1,
 				"w": 53,
 				"h": 55
@@ -202,7 +222,7 @@
 		},
 		"title_bg": {
 			"frame": {
-				"x": 489,
+				"x": 568,
 				"y": 1,
 				"w": 2,
 				"h": 26

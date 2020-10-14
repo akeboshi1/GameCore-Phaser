@@ -11,6 +11,9 @@
     "name": "name",
     "des": "description"
   },
+  "reconnect": {
+    "des": "Click to log in again"
+  },
   "room_list": {
     "player_room": "Others' Room",
     "popularity_room": "Most Popular",
@@ -32,7 +35,9 @@
     "source": "Source",
     "empty_backpack": "Empty in the backpack",
     "expires": "Expired",
-    "timelimit":"Expires"
+    "timelimit": "Expires",
+    "properties": "Prop Properties",
+    "needproper": "Need Properties"
   },
   "common": {
     "cancel": "Cancel",
@@ -50,7 +55,8 @@
     "search": "search",
     "tips": "tips",
     "offline": "Your account is logged in at another location and you have been forced to go offline",
-    "description": "Description"
+    "description": "Description",
+    "setting": "SET"
   },
   "player_info": {
     "title": "Personal Data",
@@ -137,7 +143,10 @@
     "turnover": "Income",
     "closeshop": "Close Shop",
     "renovate": "Renovate",
-    "depreciation": "Depreciation"
+    "depreciation": "Depreciation",
+    "needmaterials": "Materials needed for renovation",
+    "renovatetips": "Currently no refurbishment is required",
+    "helptips": "**The depreciation degree will affect the daily income of the store"
   },
   "business_street": {
     "commercial_street": "STORES",
@@ -183,11 +192,11 @@
     "search": "Search",
     "search_friends_notes": "Search",
     "unfollow": "unfollow",
-    "new_friend": "New Friend",
-    "new_fans": "New Fans",
     "lv": "Lv",
     "remove": "Remove",
-    "unregistered_game": "Unregistered game"
+    "unregistered_game": "Unregistered game",
+    "notice": "Notice",
+    "followed_you": "followed you"
   },
   "friend_invite": {
     "refused": "refused",
@@ -214,14 +223,16 @@
     "mystery": "Mystery",
     "world": "World",
     "current": "Current",
-    "system": "System"
+    "system": "System",
+    "givegift": "GIVEGIFTS"
   },
   "minecar": {
     "discard": "discard",
     "confirmation": "Are you sure you want to discard [color=#0157BC] {{name}} [/color] ？"
   },
   "main_ui": {
-    "energy_tips": "Current energy value {{name}} When energy is insufficient, restore 1 point every 10 minutes"
+    "energy_tips": "Current energy value {{name}} When energy is insufficient, restore 1 point every 10 minutes",
+    "party": "Party"
   },
   "order": {
     "title": "ORDER",
@@ -230,7 +241,9 @@
     "receive": "RECEIVE",
     "deliverying": "DELIVERYING...",
     "refreshtips": "Are you sure to refresh the order",
-    "refreshtitle": "ORDER REFRESH"
+    "refreshtitle": "ORDER REFRESH",
+    "progresstitle": "PROGRESS REWARD",
+    "rewardtitle": "Progress reward"
   },
   "work": {
     "title": "WORK",
@@ -238,5 +251,23 @@
     "worktimes": "WORKTIME",
     "salary": "SALARY",
     "attri": "*{{name}}need more than{{value}}to take this job"
+  },
+  "party": {
+    "partyname": "PARTYNAME",
+    "partytheme": "PARTYTHEME",
+    "partydescrible": "DESCRIBLE",
+    "partytime": "PARTYTIME",
+    "partyopen": "OPEN",
+    "partytitle": "Party Room Name",
+    "describletitle": "Let's have a party!",
+    "partycardlabel": "You currently have a party Duration card:",
+    "navigation": "NAVIGATION",
+    "mine": "MINE",
+    "hotel": "HOTEL",
+    "picatown": "PICATOWN",
+    "defaultname":"{{name}}'s Party"
+  },
+  "picelevator": {
+    "floor": "f"
   }
 }

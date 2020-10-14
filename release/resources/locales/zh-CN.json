@@ -10,6 +10,9 @@
     "name": "名字",
     "des": "描述"
   },
+  "reconnect": {
+    "des": "点击重新登陆"
+  },
   "room_list": {
     "player_room": "玩家房间",
     "popularity_room": "人气房间",
@@ -33,7 +36,9 @@
     "source": "来源",
     "empty_backpack": "背包里空空如也",
     "expires": "已过期",
-    "timelimit": "限时"
+    "timelimit": "限时",
+    "properties": "道具属性",
+    "needproper": "需求属性"
   },
   "common": {
     "cancel": "取消",
@@ -50,7 +55,8 @@
     "search": "搜索",
     "tips": "提示",
     "offline": "您的账号在另一地点登录，您已被迫下线",
-    "description": "描述"
+    "description": "描述",
+    "setting": "设置"
   },
   "player_info": {
     "title": "信息详情",
@@ -137,7 +143,10 @@
     "turnover": "营业额",
     "closeshop": "关闭商店",
     "renovate": "翻新",
-    "depreciation": "折旧"
+    "depreciation": "折旧",
+    "needmaterials": "翻新所需材料",
+    "renovatetips": "当前无需翻新",
+    "helptips": "折旧度降低会影响店铺的每日收入"
   },
   "business_street": {
     "commercial_street": "商业街",
@@ -183,11 +192,11 @@
     "search_friends_notes": "搜索",
     "unfollow": "取消关注",
     "search": "搜索",
-    "new_friend": "新的好友",
-    "new_fans": "新增粉丝",
     "lv": "等级",
     "remove": "移除",
-    "unregistered_game": "未注册游戏"
+    "unregistered_game": "未注册游戏",
+    "notice": "通知",
+    "followed_you": "关注了你"
   },
   "friend_invite": {
     "refused": "拒绝",
@@ -214,14 +223,16 @@
     "mystery": "神秘人",
     "world": "世界",
     "current": "当前",
-    "system": "系统"
+    "system": "系统",
+    "givegift": "赠送"
   },
   "minecar": {
     "discard": "丢弃",
     "confirmation": "您确定要丢弃[color=#0157BC] {{name}} [/color]吗?"
   },
   "main_ui": {
-    "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点"
+    "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点",
+    "party": "派对"
   },
   "order": {
     "title": "订单",
@@ -230,7 +241,9 @@
     "receive": "领取",
     "deliverying": "送货中...",
     "refreshtips": "确定刷新订单吗？",
-    "refreshtitle": "订单刷新"
+    "refreshtitle": "订单刷新",
+    "progresstitle": "进度奖励",
+    "rewardtitle": "完成进度奖励"
   },
   "work": {
     "title": "打 工",
@@ -238,5 +251,24 @@
     "worktimes": "打工次数",
     "salary": "报酬",
     "attri": "*{{name}}需要大于{{value}}才可以任职这份工作"
+  },
+  "party": {
+    "partyname": "派对房间",
+    "partytheme": "派对主题",
+    "partydescrible": "派对描述",
+    "partytime": "派对时长",
+    "partyopen": "立即开启",
+    "partytitle": "派对房间名称",
+    "describletitle": "一起开派对吧！",
+    "partycardlabel": "您目前拥有派对时长卡：",
+    "navigation": "导航",
+    "mine": "我的",
+    "hotel": "酒店",
+    "picatown": "皮卡小镇",
+    "defaultname":"{{name}}的派对"
+    
+  },
+  "picelevator": {
+    "floor": "层"
   }
 }
