@@ -46,8 +46,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
         }
-        if (this.mRoom && this.mRoom.world) {
-            this.mGameConfig = this.mRoom.world.elementStorage;
+        if (this.mRoom && this.mRoom.game) {
+            this.mGameConfig = this.mRoom.game.elementStorage;
         }
 
         const size = this.mRoom.miniSize;
@@ -121,7 +121,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     get connection(): ConnectionService {
         if (this.mRoom) {
-            return this.mRoom.world.connection;
+            return this.mRoom.game.connection;
         }
         Logger.getInstance().log("roomManager is undefined");
         return;
@@ -201,7 +201,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
         if (!sprite.displayInfo) {
-            const displayInfo = this.roomService.world.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
+            const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.displayInfo = displayInfo;
                 return displayInfo;

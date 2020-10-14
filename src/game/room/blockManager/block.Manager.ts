@@ -1,11 +1,11 @@
 import { Logger } from "../../../utils/log";
-import { World } from "../../game";
+import { Game } from "../../game";
 import { IRoomService } from "../roomManager/room/room";
-import { IScenery } from "../skyboxManager/scenery";
+import { Fit, IScenery } from "../skyboxManager/scenery";
 import { State } from "../state/state.group";
 
 export interface IBlockManager {
-  readonly world: World;
+  readonly game: Game;
   startPlay(scene: Phaser.Scene);
   check(time?: number, delta?: number);
 }
@@ -20,7 +20,7 @@ export class BlockManager implements IBlockManager {
   private mMainCamera: Phaser.Cameras.Scene2D.Camera;
   private mScaleRatio: number;
   private mSceneName: string = "";
-  private mWorld: World;
+  private mGame: Game;
   private scene: Phaser.Scene;
   private mScenery: IScenery;
   private mRoom: IRoomService;
@@ -33,11 +33,11 @@ export class BlockManager implements IBlockManager {
     this.mScenery = scenery;
     this.mUris = scenery.uris;
     this.mRoom = room;
-    this.mWorld = room.world;
+    this.mGame = room.world;
     this.mCameras = room.cameraService;
     this.mMainCamera = this.mCameras.camera;
     this._bound = this.mMainCamera.getBounds();
-    this.mScaleRatio = this.mWorld.scaleRatio;
+    this.mScaleRatio = this.mGame.scaleRatio;
     this.setSize(scenery.width, scenery.height);
 
     const playScene = room.scene;
@@ -46,7 +46,7 @@ export class BlockManager implements IBlockManager {
       return;
     }
     this.mSceneName = SkyBoxScene.name + `_${scenery.id}`;
-    const scene = this.mWorld.game.scene.add(this.mSceneName, SkyBoxScene, false);
+    const scene = this.mGame.game.scene.add(this.mSceneName, SkyBoxScene, false);
     playScene.scene.launch(this.mSceneName, this);
     this.updateDepth();
   }
@@ -100,7 +100,7 @@ export class BlockManager implements IBlockManager {
     if (!camera) {
       return;
     }
-    this.mScaleRatio = this.mWorld.scaleRatio;
+    this.mScaleRatio = this.mGame.scaleRatio;
     this.updatePosition();
     this._bound = this.mMainCamera.getBounds();
     camera.setBounds(this._bound.x, this._bound.y, this._bound.width, this._bound.height);
@@ -124,8 +124,8 @@ export class BlockManager implements IBlockManager {
 
   destroy() {
       // todo destroy game.scene.remove(this.mSceneName)
-    // if (this.mWorld && this.mWorld.game) {
-    //   this.mWorld.game.scene.remove(this.mSceneName);
+    // if (this.mGame && this.mGame.game) {
+    //   this.mGame.game.scene.remove(this.mSceneName);
     // }
     this.mGrids.length = 0;
   }
@@ -167,7 +167,7 @@ export class BlockManager implements IBlockManager {
     if (!this.mScenery || !playScene) {
       return;
     }
-    const scene = this.mWorld.game.scene.getScene(this.mSceneName);
+    const scene = this.mGame.game.scene.getScene(this.mSceneName);
     if (!scene) {
       return;
     }
@@ -181,7 +181,7 @@ export class BlockManager implements IBlockManager {
   protected initBlock() {
     this.clear();
     this.mContainer = this.scene.add.container(0, 0);
-    this.mContainer.setScale(this.mWorld.scaleRatio);
+    this.mContainer.setScale(this.mGame.scaleRatio);
     const len = this.mUris.length;
     // TODO
     if (this.mScenery.fit === Fit.Repeat) {
@@ -259,8 +259,8 @@ export class BlockManager implements IBlockManager {
     }
   }
 
-  get world(): WorldService {
-    return this.mWorld;
+  get game(): Game {
+    return this.mGame;
   }
 
   get scenery(): IScenery {
@@ -271,10 +271,10 @@ export class BlockManager implements IBlockManager {
     if (!props) return;
     const offset = this.offset;
     if (props.x !== undefined) {
-      props.x = (offset.x + props.x) * this.mWorld.scaleRatio;
+      props.x = (offset.x + props.x) * this.mGame.scaleRatio;
     }
     if (props.y !== undefined) {
-      props.y = (offset.y + props.y) * this.mWorld.scaleRatio;
+      props.y = (offset.y + props.y) * this.mGame.scaleRatio;
     }
     return props;
   }
