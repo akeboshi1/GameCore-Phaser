@@ -1,11 +1,11 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { MessageType } from "../../../messageType/MessageType";
-import { World } from "../../game";
+import { MessageType } from "../../../structureinterface/message.type";
+import { Game } from "../../game";
 
 export class Bag extends PacketHandler {
     private mInitialize: boolean;
-    constructor(private mWorld: World) {
+    constructor(private mGame: Game) {
         super();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ADD_ITEM, this.handleAddItem);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_REMOVE_ITEM, this.handleRemoveItem);
@@ -18,16 +18,16 @@ export class Bag extends PacketHandler {
     }
 
     public register() {
-        this.mWorld.connection.addPacketListener(this);
+        this.mGame.connection.addPacketListener(this);
     }
 
     public unRegister() {
-        this.mWorld.connection.removePacketListener(this);
+        this.mGame.connection.removePacketListener(this);
     }
 
     public destroy() {
         this.mInitialize = false;
-        this.mWorld.connection.removePacketListener(this);
+        this.mGame.connection.removePacketListener(this);
     }
 
     public requestVirtualWorldQueryPackage(bagId: number, page?: number, perPage?: number) {
@@ -36,25 +36,25 @@ export class Bag extends PacketHandler {
         content.id = bagId;
         content.page = page;
         content.perPage = perPage;
-        this.mWorld.connection.send(pkt);
+        this.mGame.connection.send(pkt);
     }
 
     private handleQueryPackage(packet: PBpacket) {
         this.mInitialize = true;
-        this.mWorld.emit(MessageType.QUERY_PACKAGE, packet);
+        this.mGame.peer.render.emitter.emit(MessageType.QUERY_PACKAGE, packet);
     }
 
     private handleAddItem(packet: PBpacket): void {
-        this.mWorld.peer.emit(MessageType.PACKAGE_ITEM_ADD, packet);
+        this.mGame.peer.render.emitter.emit(MessageType.PACKAGE_ITEM_ADD, packet);
     }
 
     private handleRemoveItem(packet: PBpacket): void {
-        this.mWorld.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
-        this.mWorld.emit(MessageType.PACKAGE_ITEM_REMOVE, packet);
+        this.mGame.peer.render.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+        this.mGame.peer.render.emitter.emit(MessageType.PACKAGE_ITEM_REMOVE, packet);
     }
 
     private handleExchangeItem(packet: PBpacket): void {
-        this.mWorld.emit(MessageType.PACKAGE_EXCHANGE_ITEM_POS, packet);
+        this.mGame.peer.render.emitter.emit(MessageType.PACKAGE_EXCHANGE_ITEM_POS, packet);
     }
 
 }

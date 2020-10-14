@@ -11,11 +11,12 @@ import { LogicPos } from "../../../../../utils/logic.pos";
 import { ConnectionService } from "../../../../../../lib/net/connection.service";
 import { PlayerModel } from "./player.model";
 import { User } from "../../../../actor/user";
+import { MessageType } from "../../../../../structureinterface/message.type";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
-    private mPlayerMap: Map<number, Player> = new Map();
     private mActor: User;
+    private mPlayerMap: Map<number, Player> = new Map();
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -67,40 +68,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public requestActorMove(dir: number, keyArr: number[]) {
-        this.startActorMove();
-        if (!this.roomService.game.getGameConfig().desktop) {
-            // 按下键盘的时候已经发了一次了，如果再发一次后端会有问题
-            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
-            const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
-            content.keyCodes = keyArr;
-            this.connection.send(pkt);
-        }
-    }
-
-    public startActorMove() {
-        if (!this.mActor) {
-            Logger.getInstance().error("MainHero miss");
-            return;
-        }
-        this.mActor.startMove();
-    }
-
-    public stopActorMove() {
-        if (!this.mActor) {
-            Logger.getInstance().error("MainHero miss");
-            return;
-        }
-        this.mActor.stopMove();
-    }
-
     public get(id: number): Player {
         if (!this.mPlayerMap) {
             return;
         }
         let player = this.mPlayerMap.get(id);
         if (!player) {
-            const actor = this.mActor;
+            const actor = this.actor;
             if (actor && actor.id === id) {
                 player = actor;
             }
@@ -124,6 +98,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return element;
     }
 
+    public setMe(user: User) {
+        this.mActor = user;
+        this.mPlayerMap.set(user.id, user);
+    }
+
     public getElements(): IElement[] {
         return Array.from(this.mPlayerMap.values());
     }
@@ -135,6 +114,23 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.set(id, player);
     }
 
+    get camera(): Phaser.Cameras.Scene2D.Camera {
+        return this.mRoom.cameraService.camera;
+    }
+
+    // public addPlayer(obj: op_client.IActor): void {
+    //     const playerInfo: PlayerInfo = new PlayerInfo();
+    //     playerInfo.setInfo(obj);
+    //     if (obj.walkOriginPoint) {
+    //         playerInfo.setOriginWalkPoint(obj.walkOriginPoint);
+    //     }
+    //     if (obj.originPoint) {
+    //         playerInfo.setOriginCollisionPoint(obj.originPoint);
+    //     }
+    //     this.mPlayerInfoList.push(playerInfo);
+    //     this.mModelDispatch.emit(MessageType.SCENE_ADD_PLAYER, playerInfo);
+    // }
+
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: Player = this.mPlayerMap.get(elementId);
         if (character && character.id === this.mActor.id) {
@@ -142,8 +138,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 (character as User).package = op_gameconfig.Package.create();
             }
             (character as User).package.items = (character as User).package.items.concat(items);
-            this.mRoom.game.peer.render.updateCharacterPackage();
-            // this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+            this.mRoom.game.peer.render.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
         }
     }
 

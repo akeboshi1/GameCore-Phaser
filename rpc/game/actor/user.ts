@@ -1,6 +1,6 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { World } from "../game";
+import { Game } from "../game";
 import { ISprite } from "../room/displayManager/sprite/sprite";
 import { Bag } from "./bag/bag";
 import { Friend } from "./friend/friend";
@@ -13,10 +13,10 @@ import { PlayerDataManager } from "./data/player.dataManager";
 export class User extends Player {
     private mUserData: PlayerDataManager;
     private mMoveStyle: number;
-    constructor(world: World) {
+    constructor(game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
-        this.mUserData = new PlayerDataManager(world);
+        this.mUserData = new PlayerDataManager(game);
     }
 
     addPackListener() {
@@ -36,7 +36,7 @@ export class User extends Player {
         this.mElementManager = room.playerManager;
         this.model = new PlayerModel(actor);
 
-        if (room.world.inputManager) room.world.inputManager.addListener(this);
+        if (room.game.inputManager) room.game.inputManager.addListener(this);
         this.mRoomService.playerManager.setMe(this);
         const roomService = this.mElementManager.roomService;
         if (roomService ) {
@@ -55,7 +55,7 @@ export class User extends Player {
 
     public stopMove() {
         super.stopMove();
-        if (this.mRoomService && this.mRoomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
             ct.nodeType = this.nodeType;
@@ -75,7 +75,7 @@ export class User extends Player {
 
     public move(moveData: op_client.IMoveData) {
         // TODO 不能仅判断walk, 移动状态可能还有run
-        if (this.mRoomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             if (this.mCurState !== PlayerState.WALK) {
                 return;
             }
@@ -86,7 +86,7 @@ export class User extends Player {
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        if (this.mRoomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             if (this.mCurState !== PlayerState.WALK) {
                 return;
             }
@@ -135,7 +135,7 @@ export class User extends Player {
             this.mMoveData.tweenAnim.stop();
             return;
         }
-        if (this.mRoomService.world.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        if (this.mRoomService.game.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             this.changeState(PlayerState.IDLE);
             this.stopMove();
         }

@@ -140,29 +140,14 @@
   integrity sha1-fyrX7FX5FEgvybHsS7GuYCjUYGY=
 
 "@types/node@*":
-<<<<<<< HEAD
-  version "14.11.8"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.11.8.tgz?cache=0&sync_timestamp=1602226632957&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.11.8.tgz#fe2012f2355e4ce08bca44aeb3abbb21cf88d33f"
-  integrity sha1-/iAS8jVeTOCLykSus6u7Ic+I0z8=
+  version "14.11.2"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.11.2.tgz?cache=0&sync_timestamp=1600732809777&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
+  integrity sha1-LeHtZnBDk4faHJ9UmireKwp5klY=
 
 "@types/node@8.0.0":
   version "8.0.0"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-8.0.0.tgz?cache=0&sync_timestamp=1602226632957&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-8.0.0.tgz#acaa89247afddc7967e9902fd11761dadea1a555"
   integrity sha1-rKqJJHr93Hln6ZAv0Rdh2t6hpVU=
-
-"@types/node@^13.7.0":
-  version "13.13.25"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-13.13.25.tgz?cache=0&sync_timestamp=1602226632957&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-13.13.25.tgz#768d6712b15099a744812a92b84ffde8f4e13cf1"
-  integrity sha1-do1nErFQmadEgSqSuE/96PThPPE=
-
-"@types/node@^14.0.13":
-  version "14.11.2"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
-  integrity sha512-jiE3QIxJ8JLNcb1Ps6rDbysDhN4xa8DJJvuC9prr6w+1tIh+QAbYyNF3tyiZNLDBIuBCf4KEcV2UvQm/V60xfA==
-=======
-  version "14.11.2"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.11.2.tgz?cache=0&sync_timestamp=1600732809777&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
-  integrity sha1-LeHtZnBDk4faHJ9UmireKwp5klY=
 
 "@types/node@^13.7.0":
   version "13.13.25"
@@ -173,7 +158,6 @@
   version "14.11.8"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.11.8.tgz?cache=0&sync_timestamp=1602226632957&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.11.8.tgz#fe2012f2355e4ce08bca44aeb3abbb21cf88d33f"
   integrity sha1-/iAS8jVeTOCLykSus6u7Ic+I0z8=
->>>>>>> dev
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -484,21 +468,13 @@ anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-<<<<<<< HEAD
 apowophaserui@^0.7.0:
   version "0.7.0"
   resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.7.0.tgz#6e00e05bc3d1b5329ca59fa907686d215927bf09"
   integrity sha512-5Y9b3xdZ7snvhK6HiMLdmYDtnpAGRNeT4+rdJ8iWL2k6ssXtstbSJRHP83T+ghceeCY/k/gG3U88bK9RHVsoRg==
-=======
-apowophaserui@^0.7.8:
-  version "0.7.8"
-  resolved "https://registry.npm.taobao.org/apowophaserui/download/apowophaserui-0.7.8.tgz#0969105ebae75d2d70e33d9e522adf9d02e608bb"
-  integrity sha1-CWkQXrrnXS1w4z2eUirfnQLmCLs=
->>>>>>> dev
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"
-    jsdoc "^3.6.6"
     lokijs "^1.5.8"
     node-gyp "^6.1.0"
     papaparse "^4.6.3"
@@ -1024,21 +1000,19 @@ caseless@~0.12.0:
   resolved "https://registry.npm.taobao.org/caseless/download/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-<<<<<<< HEAD
-"chainsaw@>=0.0.7 <0.1":
-  version "0.0.9"
-  resolved "https://registry.npm.taobao.org/chainsaw/download/chainsaw-0.0.9.tgz#11a05102d1c4c785b6d0415d336d5a3a1612913e"
-  integrity sha1-EaBRAtHEx4W20EFdM21aOhYSkT4=
-  dependencies:
-    traverse ">=0.3.0 <0.4"
-=======
 catharsis@^0.8.11:
   version "0.8.11"
   resolved "https://registry.npm.taobao.org/catharsis/download/catharsis-0.8.11.tgz#d0eb3d2b82b7da7a3ce2efb1a7b00becc6643468"
   integrity sha1-0Os9K4K32no84u+xp7AL7MZkNGg=
   dependencies:
     lodash "^4.17.14"
->>>>>>> dev
+
+"chainsaw@>=0.0.7 <0.1":
+  version "0.0.9"
+  resolved "https://registry.npm.taobao.org/chainsaw/download/chainsaw-0.0.9.tgz#11a05102d1c4c785b6d0415d336d5a3a1612913e"
+  integrity sha1-EaBRAtHEx4W20EFdM21aOhYSkT4=
+  dependencies:
+    traverse ">=0.3.0 <0.4"
 
 chalk@^2.0.0, chalk@^2.1.0, chalk@^2.3.0, chalk@^2.4.2:
   version "2.4.2"
@@ -1764,11 +1738,7 @@ enhanced-resolve@^2.2.2:
 
 enhanced-resolve@^4.0.0, enhanced-resolve@^4.1.1, enhanced-resolve@^4.3.0:
   version "4.3.0"
-<<<<<<< HEAD
-  resolved "https://registry.npm.taobao.org/enhanced-resolve/download/enhanced-resolve-4.3.0.tgz?cache=0&sync_timestamp=1601451681276&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fenhanced-resolve%2Fdownload%2Fenhanced-resolve-4.3.0.tgz#3b806f3bfafc1ec7de69551ef93cca46c1704126"
-=======
   resolved "https://registry.npm.taobao.org/enhanced-resolve/download/enhanced-resolve-4.3.0.tgz#3b806f3bfafc1ec7de69551ef93cca46c1704126"
->>>>>>> dev
   integrity sha1-O4BvO/r8HsfeaVUe+TzKRsFwQSY=
   dependencies:
     graceful-fs "^4.1.2"
@@ -2483,11 +2453,7 @@ globby@^7.1.1:
     pify "^3.0.0"
     slash "^1.0.0"
 
-<<<<<<< HEAD
-graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
-=======
-graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.9, graceful-fs@^4.2.2:
->>>>>>> dev
+graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.4"
   resolved "https://registry.npm.taobao.org/graceful-fs/download/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha1-Ila94U02MpWMRl68ltxGfKB6Kfs=

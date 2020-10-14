@@ -17,13 +17,14 @@ import { ClockReadyListener } from "../../../loop/clock/clock";
 import { State } from "../../state/state.group";
 import { GroupManager } from "../../../../pica/groupManager/group.manager";
 import { HandlerManager } from "../../../../pica/handlerManager/handler.manager";
+import { EffectManager } from "../../effectManager/effect.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
 
 export interface IRoomService {
     readonly id: number;
-    readonly terrainManager: TerrainManager;
+    // readonly terrainManager: TerrainManager;
     readonly elementManager: ElementManager;
     readonly playerManager: PlayerManager;
     // readonly layerManager: LayerManager;

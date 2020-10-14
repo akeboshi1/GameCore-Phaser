@@ -7,47 +7,47 @@ import { State } from "../state/state.group";
 
 export interface IBlockManager {
   readonly game: Game;
-  startPlay(scene: Phaser.Scene);
+  startPlay();
   check(time?: number, delta?: number);
 }
 export class BlockManager implements IBlockManager {
-  private mContainer: Phaser.GameObjects.Container;
+  // private mContainer: Phaser.GameObjects.Container;
   private mRows: number = 1;
   private mCols: number = 1;
   private mGridWidth: number;
   private mGridHeight: number;
   private mGrids: Block[];
   private mUris: string[][];
-  private mMainCamera: Phaser.Cameras.Scene2D.Camera;
+  // private mMainCamera: Phaser.Cameras.Scene2D.Camera;
   private mScaleRatio: number;
   private mSceneName: string = "";
   private mGame: Game;
-  private scene: Phaser.Scene;
+  // private scene: Phaser.Scene;
   private mScenery: IScenery;
   private mRoom: IRoomService;
-  private mCameras: ICameraService;
+  // private mCameras: ICameraService;
   private mStateMap: Map<string, State>;
-  private _bound: Phaser.Geom.Rectangle;
-  private tween: Phaser.Tweens.Tween;
+  // private _bound: Phaser.Geom.Rectangle;
+  // private tween: Phaser.Tweens.Tween;
   constructor(scenery: IScenery, room: IRoomService) {
     this.mGrids = [];
     this.mScenery = scenery;
     this.mUris = scenery.uris;
     this.mRoom = room;
     this.mGame = room.game;
-    this.mCameras = room.cameraService;
-    this.mMainCamera = this.mCameras.camera;
-    this._bound = this.mMainCamera.getBounds();
+    // this.mCameras = room.cameraService;
+    // this.mMainCamera = this.mCameras.camera;
+    // this._bound = this.mMainCamera.getBounds();
     this.mScaleRatio = this.mGame.scaleRatio;
     this.setSize(scenery.width, scenery.height);
-
-    const playScene = room.scene;
-    if (!playScene) {
-      Logger.getInstance().fatal(`${BlockManager.name} scene does not exist`);
-      return;
-    }
+    // const playScene = room.scene;
+    // if (!playScene) {
+    //   Logger.getInstance().fatal(`${BlockManager.name} scene does not exist`);
+    //   return;
+    // }
     this.mSceneName = SceneName.SKYBOX_SCENE + `_${scenery.id}`;
     const scene = this.mGame.peer.remote["render"].SceneManager.addScene(this.mSceneName, { autoStart: true });
+    this.mGame.peer.remote["render"].SceneManager.lauchScene(PLAYS,this.mSceneName);
     // game.scene.add(this.mSceneName, SkyBoxScene, false);
     playScene.scene.launch(this.mSceneName, this);
     this.updateDepth();
@@ -162,22 +162,23 @@ export class BlockManager implements IBlockManager {
   }
 
   protected updateDepth() {
-    if (!this.mRoom) {
-      return;
-    }
-    const playScene = this.mRoom.scene;
-    if (!this.mScenery || !playScene) {
-      return;
-    }
-    const scene = this.mGame.game.scene.getScene(this.mSceneName);
-    if (!scene) {
-      return;
-    }
-    if (this.mScenery.depth < 0) {
-      scene.scene.sendToBack(this.mSceneName);
-    } else {
-      scene.scene.moveAbove(playScene.sys.settings.key, this.mSceneName);
-    }
+    this.game.peer.render.updateDepth(this.mRoom.id, this.mSceneName);
+    // if (!this.mRoom) {
+    //   return;
+    // }
+    // const playScene = this.mRoom.scene;
+    // if (!this.mScenery || !playScene) {
+    //   return;
+    // }
+    // const scene = this.mGame.game.scene.getScene(this.mSceneName);
+    // if (!scene) {
+    //   return;
+    // }
+    // if (this.mScenery.depth < 0) {
+    //   scene.scene.sendToBack(this.mSceneName);
+    // } else {
+    //   scene.scene.moveAbove(playScene.sys.settings.key, this.mSceneName);
+    // }
   }
 
   protected initBlock() {
@@ -193,7 +194,7 @@ export class BlockManager implements IBlockManager {
       const cols = Math.floor(height / this.mScenery.height);
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
-          const block = new Block(this.scene, this.mUris[0][0], this.mScaleRatio);
+          const block = new Block(this.mUris[0][0], this.mScaleRatio);
           block.setRectangle(j * this.mGridWidth, i * this.mGridHeight, this.mGridWidth, this.mGridHeight);
           this.mGrids.push(block);
         }
@@ -297,17 +298,19 @@ export class BlockManager implements IBlockManager {
   }
 }
 
-class Block extends DynamicImage {
+class Block {
   private mLoaded: boolean = false;
   private mInCamera: boolean = false;
   private mKey: string;
-  private mRectangle: Phaser.Geom.Rectangle;
   private mScale: number;
-  constructor(scene: Phaser.Scene, key: string, scale: number) {
-    super(scene, 0, 0);
+  private visible: boolean = false;
+  private x: number = 0;
+  private y: number = 0;
+  private width: number = 0;
+  private height: number = 0;
+  constructor(key: string, scale: number) {
     this.mKey = key;
     this.mScale = scale;
-    this.setOrigin(0);
     // this.mRectangle = new Phaser.Geom.Rectangle(this.x, this.y, 1, 1);
   }
 
@@ -325,11 +328,11 @@ class Block extends DynamicImage {
   }
 
   setRectangle(x: number, y: number, width: number, height: number) {
-    this.x = x;
-    this.y = y;
-    this.setSize(width, height);
-    const camera = this.scene.cameras.main;
-    this.mRectangle = new Phaser.Geom.Rectangle(x * this.mScale + camera.x, y * this.mScale + camera.y, width * this.mScale, height * this.mScale);
+    this.
+    this.x = x * this.mScale + camera.x;
+    this.y = y * this.mScale + camera.y;
+    this.width = width * this.mScale;
+    this.height = height * this.mScale;
   }
 
   updatePosition() {

@@ -2,13 +2,13 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { PlayerData } from "./player.data";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { World } from "../../game";
+import { Game } from "../../game";
 export class PlayerDataManager extends PacketHandler {
     private readonly mPlayerData: PlayerData;
-    private readonly mWorld: World;
-    constructor(world: World) {
+    private readonly mGame: Game;
+    constructor(game: Game) {
         super();
-        this.mWorld = world;
+        this.mGame = game;
         this.mPlayerData = new PlayerData();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE, this.onSYNC_PACKAHE);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
@@ -46,8 +46,8 @@ export class PlayerDataManager extends PacketHandler {
     }
 
     get connection(): ConnectionService {
-        if (this.mWorld) {
-            return this.mWorld.connection;
+        if (this.mGame) {
+            return this.mGame.connection;
         }
     }
 

@@ -4,7 +4,7 @@ import { Logger } from "../../src/utils/log";
 export interface IConnectListener {
     onConnected(connection?: SocketConnection): void;
 
-    onReconnect(connection?: SocketConnection): void;
+    // onReconnect(connection?: SocketConnection): void;
 
     onDisConnected(connection?: SocketConnection): void;
 
