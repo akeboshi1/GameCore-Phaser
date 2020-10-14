@@ -10,6 +10,7 @@ import { BaseMediator } from "apowophaserui";
 
 export class PicaChatMediator extends BaseMediator {
     public static NAME: string = "PicaChatMediator";
+    protected mView: PicaChatPanel;
     private scene: Phaser.Scene;
     private mChat: PicaChat;
     private world: WorldService;
@@ -32,11 +33,13 @@ export class PicaChatMediator extends BaseMediator {
         if (!this.mChat) {
             this.mChat = new PicaChat(this.world);
             this.mChat.on("chat", this.onChatHandler, this);
+            this.mChat.on("queryMarket", this.onQueryResuleHandler, this);
             this.mChat.register();
         }
         if (!this.mView) {
             this.mView = new PicaChatPanel(this.scene, this.world);
             this.mView.on("showNavigate", this.onShowNavigateHandler, this);
+            this.mView.on("querymarket", this.queryMarket, this);
             this.mView.on("chat", this.onSendChatHandler, this);
         }
         this.mView.show();
@@ -126,5 +129,11 @@ export class PicaChatMediator extends BaseMediator {
             }
             return this.world.roomManager.currentRoom.getElement(id);
         }
+    }
+    private onQueryResuleHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
+        this.mView.setGiftData(content);
+    }
+    private queryMarket() {
+        this.mChat.queryMarket("gift_shop", 1, undefined, undefined);
     }
 }

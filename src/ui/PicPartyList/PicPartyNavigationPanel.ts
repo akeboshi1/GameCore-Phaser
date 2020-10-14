@@ -18,6 +18,7 @@ export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private sendHandler: Handler;
+    private partyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -51,7 +52,6 @@ export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new PartyListItem(this.scene, this.key, this.dpr);
-                    cellContainer.setHandler(new Handler(this, this.onSendHandler));
                 }
                 cellContainer.setPartyData(item, index);
                 return cellContainer;
@@ -59,6 +59,7 @@ export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
         };
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
+        this.mGameGrid.on("cellTap", this.onGridTableHandler, this);
         this.add(this.mGameGrid);
         // this.signProgressPanel.visible = false;
         this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
@@ -66,19 +67,20 @@ export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
         this.add(this.itemtips);
         this.hotelBtn = new Button(this.scene, this.key, "hotel", "hotel", i18n.t("party.hotel"));
         this.hotelBtn.text.setOrigin(0, 1);
-        this.hotelBtn.setTextStyle({ fontSize: 16 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#FFDE00" });
+        this.hotelBtn.tweenScale = 0.88;
+        this.hotelBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#FFDE00", stroke: "#222222", strokeThickness: 2 * this.dpr });
         this.hotelBtn.setTextOffset(-this.hotelBtn.width * 0.5 + 5 * this.dpr, this.hotelBtn.height * 0.5 - 2 * this.dpr);
         this.hotelBtn.setPosition(-this.hotelBtn.width * 0.5 - 18 * this.dpr, this.signProgressPanel.y + this.signProgressPanel.height * 0.5 + this.hotelBtn.height * 0.5 + 20 * this.dpr);
         this.hotelBtn.on(String(ClickEvent.Tap), this.onHotelHandler, this);
         this.add(this.hotelBtn);
         this.picatownBtn = new Button(this.scene, this.key, "town", "town", i18n.t("party.picatown"));
         this.picatownBtn.text.setOrigin(0, 1);
-        this.picatownBtn.setTextStyle({ fontSize: 16 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#FFDE00" });
+        this.picatownBtn.tweenScale = 0.88;
+        this.picatownBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.BOLD_FONT, color: "#FFDE00", stroke: "#222222", strokeThickness: 2 * this.dpr });
         this.picatownBtn.setTextOffset(-this.picatownBtn.width * 0.5 + 5 * this.dpr, this.picatownBtn.height * 0.5 - 2 * this.dpr);
         this.picatownBtn.setPosition(this.picatownBtn.width * 0.5 - 10 * this.dpr, this.hotelBtn.y);
         this.picatownBtn.on(String(ClickEvent.Tap), this.onPicatownHandler, this);
         this.add(this.picatownBtn);
-        this.setPartyDataList();
         this.setSignProgress();
     }
 
@@ -88,9 +90,9 @@ export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
-    public setPartyDataList() {
-        const arr = new Array(60);
-        this.mGameGrid.setItems(arr);
+    public setPartyDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST) {
+        this.partyData = content;
+        this.mGameGrid.setItems(content.party);
     }
 
     public setSignProgress() {
@@ -99,15 +101,17 @@ export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
     destroy() {
         super.destroy();
     }
-
+    private onGridTableHandler(item: PartyListItem) {
+        this.onSendHandler(item.partyData);
+    }
     private onHotelHandler() {
-        if (this.sendHandler) this.sendHandler.runWith(["hotel"]);
+        if (this.sendHandler) this.sendHandler.runWith(["hotel", this.partyData.hotel]);
     }
     private onPicatownHandler() {
-        if (this.sendHandler) this.sendHandler.runWith(["pictown"]);
+        if (this.sendHandler) this.sendHandler.runWith(["pictown", this.partyData.picatown]);
     }
-    private onSendHandler(index: number, orderOperator: op_pkt_def.PKT_Order_Operator) {
-        if (this.sendHandler) this.sendHandler.runWith(["partylist"]);
+    private onSendHandler(data: op_client.IEditModeRoom) {
+        if (this.sendHandler) this.sendHandler.runWith(["partylist", data]);
     }
     private onProgressHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["progress"]);
@@ -141,7 +145,7 @@ export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
 }
 
 class PartyListItem extends Phaser.GameObjects.Container {
-    private orderData: op_client.IPKT_Quest;
+    public partyData: op_client.IEditModeRoom;
     private key: string;
     private dpr: number;
     private bg: NineSlicePatch;
@@ -150,8 +154,6 @@ class PartyListItem extends Phaser.GameObjects.Container {
     private hotImageValue: ImageValue;
     private partyOwnerName: ImageValue;
     private playerCount: ImageValue;
-    private sendHandler: Handler;
-    private index: number;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
@@ -174,7 +176,7 @@ class PartyListItem extends Phaser.GameObjects.Container {
         this.hotImageValue.x = -this.width * 0.5 + this.hotImageValue.width * 0.5 + 8 * dpr;
         this.hotImageValue.y = this.height * 0.5 - this.hotImageValue.height * 0.5 - 5 * dpr;
         this.add(this.hotImageValue);
-        this.partyName = scene.make.text({ x: -this.width * 0.5 + 40 * dpr, y: -this.height * 0.5 + 5 * dpr, text: "某某某排队", style: { color: "#333333", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } });
+        this.partyName = scene.make.text({ x: -this.width * 0.5 + 40 * dpr, y: -this.height * 0.5 + 5 * dpr, text: "", style: { color: "#333333", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT } });
         this.partyName.setOrigin(0);
         this.add(this.partyName);
         this.partyOwnerName = new ImageValue(scene, 50 * dpr, 20 * dpr, key, "user", dpr);
@@ -186,18 +188,17 @@ class PartyListItem extends Phaser.GameObjects.Container {
         this.playerCount.setTextStyle({ color: "#333333" });
         this.playerCount.x = this.width * 0.5 - 25 * dpr;
         this.add(this.playerCount);
-        this.setPartyData(null, null);
     }
-
-    public setHandler(send: Handler) {
-        this.sendHandler = send;
-    }
-    public setPartyData(data: op_client.IPKT_Quest, index: number) {
-        this.hotImageValue.setText("88");
-        this.partyOwnerName.setText("派对主任昵称");
-    }
-    private onSendHandler() {
-        if (this.sendHandler) this.sendHandler.runWith([this.index]);
+    public setPartyData(data: op_client.IEditModeRoom) {
+        this.partyData = data;
+        const texturepath = data.topic.display.texturePath;
+        const lastindex = texturepath.lastIndexOf("/");
+        const frame = texturepath.slice(lastindex + 1, texturepath.length);
+        const burl = texturepath.slice(0, lastindex + 1);
+        const url = Url.getOsdRes(burl + frame + `_${this.dpr}x` + ".png");
+        this.imagIcon.load(url);
+        this.hotImageValue.setText(data.ownerName);
+        this.partyName.text = data.topic.name;
     }
 }
 

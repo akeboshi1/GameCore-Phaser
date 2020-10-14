@@ -265,8 +265,13 @@
     "mine": "我的",
     "hotel": "酒店",
     "picatown": "皮卡小镇",
-    "defaultname":"{{name}}的派对"
-    
+    "defaultname": "{{name}}的派对",
+    "partymgr": "派对管理",
+    "modifyname": "修改名称",
+    "modifytheme": "修改主题",
+    "modifydescrible": "修改描述",
+    "overagetime": "当前剩余时长",
+    "suppletime": "补充时长"
   },
   "picelevator": {
     "floor": "层"

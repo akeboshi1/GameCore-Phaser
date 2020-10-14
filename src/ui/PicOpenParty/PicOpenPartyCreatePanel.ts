@@ -6,7 +6,6 @@ import { UIAtlasKey } from "../ui.atals.name";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Url } from "../../utils/resUtil";
 import { log, Logger } from "../../utils/log";
-import { PicOpenPartyPanel } from "./PicOpenPartyPanel";
 export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
@@ -24,6 +23,8 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private partyTimeLable: Phaser.GameObjects.Text;
     private partyTimevalue: Phaser.GameObjects.Text;
     private partyCardImage: DynamicImage;
+    private overageTitle: Phaser.GameObjects.Text;
+    private overageValue: Phaser.GameObjects.Text;
     private openBtn: NineSliceButton;
     private ownerTicketCount: number = 0;
     private curPartyData: op_pkt_def.IPKT_Property;
@@ -49,8 +50,9 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     }
 
     public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, username: string) {
-        this.mNameInput.text = i18n.t("defaultname", { name: username });
-        this.describleInput.text = i18n.t("describletitle");
+        this.setPartyInfoType(true);
+        this.mNameInput.text = i18n.t("party.defaultname", { name: username });
+        this.describleInput.text = i18n.t("party.describletitle");
         const timeticket = content.ticketsCount;
         const topic = content.topics;
         this.timeSlider.setValue(0, 0, 1);
@@ -61,6 +63,35 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
         if (cell && cell.container) {
             this.onGridTableHandler(cell.container);
         }
+    }
+    // "modifyname": "修改名称",
+    // "modifytheme": "修改主题",
+    // "modifydescrible": "修改描述",
+    // "overagetime": "当前剩余时长",
+    // "suppletime": "补充时长"
+    private setPartyInfoType(create: boolean) {
+        if (create) {
+            this.partyNameTitle.text = i18n.t("party.partyname");
+            this.partyThemeTitle.text = i18n.t("party.partytheme");
+            this.describleTitle.text = i18n.t("party.partydescrible");
+            this.partyTimeLable.text = i18n.t("party.partycardlabel");
+            this.overageTitle.visible = false;
+            this.overageValue.visible = false;
+            this.partyTimeTitle.y = this.describleTitle.y + 80 * this.dpr;
+            this.timeSlider.y = this.partyTimeTitle.y;
+        } else {
+            this.partyNameTitle.text = i18n.t("party.modifyname");
+            this.partyThemeTitle.text = i18n.t("party.modifytheme");
+            this.describleTitle.text = i18n.t("party.modifydescrible");
+            this.partyTimeLable.text = i18n.t("party.suppletime");
+            this.overageTitle.visible = true;
+            this.overageValue.visible = true;
+            this.partyTimeTitle.y = this.overageValue.y + 80 * this.dpr;
+            this.timeSlider.y = this.partyTimeTitle.y;
+        }
+        this.partyTimeLable.y = this.partyTimeTitle.y + 80 * this.dpr;
+        this.partyCardImage.y = this.partyTimeLable.y;
+        this.partyTimevalue.y = this.partyTimeLable.y;
     }
     private changeInputState(visible: boolean) {
         this.visible = visible;
@@ -104,7 +135,9 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicPartyThemeItem(this.scene, 65 * this.dpr, 70 * this.dpr, this.key, this.dpr);
                 }
                 cellContainer.setThemeData(item);
-                Logger.getInstance().log("cellContainercellContainer");
+                if (this.curPartyData && this.curPartyData.id === item.id) {
+                    cellContainer.select = true;
+                } else cellContainer.select = false;
                 return cellContainer;
             },
         };
@@ -118,7 +151,17 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
         this.describleTitle.setStroke("#000000", 2);
         this.add(this.describleTitle);
         this.describleInput = this.createInput(this.describleTitle.x + this.describleTitle.width + 5 * this.dpr, this.describleTitle.y + 10 * this.dpr, 203 * this.dpr, 52 * this.dpr, "textarea");
-        this.partyTimeTitle = this.scene.make.text({ x: this.describleTitle.x, y: this.describleTitle.y + 80 * this.dpr, text: i18n.t("party.partytime"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
+
+        this.overageTitle = this.scene.make.text({ x: this.describleTitle.x, y: this.describleTitle.y + 80 * this.dpr, text: i18n.t("party.overagetime"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
+        this.overageTitle.setOrigin(0, 0.5).setResolution(this.dpr);
+        this.overageTitle.setStroke("#000000", 2);
+        this.add(this.overageTitle);
+        this.overageValue = this.scene.make.text({ x: this.overageTitle.x + this.overageTitle.width, y: this.overageTitle.y, text: "", style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
+        this.overageValue.setOrigin(0, 0.5).setResolution(this.dpr);
+        this.overageValue.setStroke("#000000", 2);
+        this.add(this.overageValue);
+
+        this.partyTimeTitle = this.scene.make.text({ x: this.overageTitle.x, y: this.overageTitle.y + 80 * this.dpr, text: i18n.t("party.partytime"), style: { fontFamily: Font.DEFULT_FONT, fontSize: 11 * this.dpr, bold: true, color: "#000000" } });
         this.partyTimeTitle.setOrigin(0, 0.5).setResolution(this.dpr);
         this.partyTimeTitle.setStroke("#000000", 2);
         this.add(this.partyTimeTitle);
@@ -191,16 +234,17 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     }
     private onSliderValueHandler(value: number) {
         this.itemCountText.x = this.thumb.x;
-        this.itemCountText.text = Math.floor(value * this.ownerTicketCount) + "";
-        this.itemCount = value;
+        this.itemCount = Math.floor(value * this.ownerTicketCount);
+        this.itemCountText.text = this.itemCount + "";
+
     }
 
     private onOpenPartyHandler() {
         if (this.curPartyData) {
             const topic = this.curPartyData.key;
-            const name = this.partyNameTitle.text;
-            const des = this.partyThemeTitle.text;
-            const ticket = Number(this.partyTimevalue.text);
+            const name = this.mNameInput.text;
+            const des = this.describleInput.text;
+            const ticket = this.itemCount;
             if (ticket > 0)
                 this.emit("openparty", topic, name, des, ticket);
         }
@@ -210,6 +254,7 @@ export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
         if (this.curSelectItem) this.curSelectItem.select = false;
         item.select = true;
         this.curPartyData = item.partyData;
+        this.curSelectItem = item;
     }
     private createInput(x: number, y: number, width: number, height: number, type: string = "text") {
         const mblackbg = this.scene.make.graphics(undefined, false);
@@ -250,6 +295,7 @@ class PicPartyThemeItem extends Phaser.GameObjects.Container {
     }
 
     public setThemeData(topic: op_pkt_def.IPKT_Property) {
+        this.partyData = topic;
         this.value.text = topic.name;
         const texturepath = topic.display.texturePath;
         const lastindex = texturepath.lastIndexOf("/");

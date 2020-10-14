@@ -15,7 +15,7 @@ export class PicPartyList extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST, this.on_ORDER_LIST);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, this.on_PARTY_LIST);
             // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS, this.on_PLAYER_PROGRESS);
         }
     }
@@ -46,17 +46,17 @@ export class PicPartyList extends PacketHandler {
         }
     }
 
-    // public query_ORDER_LIST() {
-    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_ORDER_LIST);
-    //     this.connection.send(packet);
-    // }
-    // public query_CHANGE_ORDER_STAGE(index: number, state: op_pkt_def.PKT_Order_Operator) {
-    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_ORDER_STAGE);
-    //     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_ORDER_STAGE = packet.content;
-    //     content.index = index;
-    //     content.op = state;
-    //     this.connection.send(packet);
-    // }
+    public query_PARTY_LIST() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_PARTY_LIST);
+        this.connection.send(packet);
+    }
+    public queryEnterRoom(roomID: string, password?: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM = packet.content;
+        content.roomId = roomID;
+        content.password = password;
+        this.connection.send(packet);
+    }
     // public query_PLAYER_PROGRESS() {
     //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_PLAYER_PROGRESS);
     //     this.connection.send(packet);
@@ -68,10 +68,10 @@ export class PicPartyList extends PacketHandler {
     //     content.index = index;
     //     this.connection.send(packet);
     // }
-    // private on_ORDER_LIST(packet: PBpacket) {
-    //     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = packet.content;
-    //     this.mEvent.emit("questlist", content);
-    // }
+    private on_PARTY_LIST(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST = packet.content;
+        this.mEvent.emit("questlist", content);
+    }
     // private on_PLAYER_PROGRESS(packet: PBpacket) {
     //     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
     //     this.mEvent.emit("progresslist", content);

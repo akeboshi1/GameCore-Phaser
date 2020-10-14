@@ -1,15 +1,14 @@
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
 import { Handler } from "../../Handler/Handler";
-import { Url } from "../../utils/resUtil";
+import { Coin, Url } from "../../utils/resUtil";
 import { BBCodeText, ClickEvent, GameGridTable, NineSliceButton } from "apowophaserui";
 import { Font } from "../../utils/font";
 import { UIAtlasKey } from "../ui.atals.name";
 import { i18n } from "../../i18n";
 export class PicGiftPanel extends Phaser.GameObjects.Container {
     private mPropGrid: GameGridTable;
-    private curHandheldItem: PicGiftItem;
-    private isExtendsGrid: boolean = false;
+    private curGiftItem: PicGiftItem;
     private key: string;
     private dpr: number;
     private zoom: number;
@@ -18,6 +17,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
     private giftValue: Phaser.GameObjects.Text;
     private sendButton: NineSliceButton;
     private giftDescr: Phaser.GameObjects.Text;
+    private curGiftData: op_client.IMarketCommodity;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.key = key;
@@ -25,7 +25,6 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         this.zoom = zoom;
         this.setSize(width, height);
         this.init();
-        this.setGiftDatas();
     }
     public resize() {
         if (this.mPropGrid) this.mPropGrid.resetMask();
@@ -42,13 +41,8 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
     public show() {
         this.visible = true;
     }
-    public setGiftDatas() {
-        this.mPropGrid.setItems(new Array(60));
-        this.giftName.text = "某某某礼物某某某";
-        this.giftPriceImage.x = this.giftName.x + this.giftName.width + 5 * this.dpr + this.giftPriceImage.width * 0.5;
-        this.giftValue.text = 100 + "";
-        this.giftValue.x = this.giftPriceImage.x + this.giftPriceImage.width * 0.5 + 5 * this.dpr;
-        this.giftDescr.text = "热度值10，赠送666个可以触发世界喇叭！";
+    public setGiftDatas(datas: op_client.IMarketCommodity[]) {
+        this.mPropGrid.setItems(datas);
     }
 
     protected init() {
@@ -83,6 +77,9 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicGiftItem(scene, 0, 0, this.key, this.dpr);
                 }
                 cellContainer.setItemData(item);
+                if (this.curGiftData.id === item.id) {
+                    cellContainer.isSelect = true;
+                } else cellContainer.isSelect = false;
                 return cellContainer;
             },
         };
@@ -125,14 +122,16 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
     private onSelectItemHandler(item: PicGiftItem) {
         const data = item.itemData;
         if (!data) return;
-        if (this.curHandheldItem) this.curHandheldItem.isSelect = false;
+        if (this.curGiftItem) this.curGiftItem.isSelect = false;
         item.isSelect = true;
-        this.curHandheldItem = item;
-        if (item.isEmptyHanded) {
-            this.emit("clearhandheld");
-        } else {
-            this.emit("changehandheld", data.id);
-        }
+        this.curGiftItem = item;
+        this.curGiftData = data;
+        this.giftName.text = data.name;
+        this.giftPriceImage.setTexture(UIAtlasKey.commonKey, Coin.getIcon(data.sellingPrice.coinType));
+        this.giftPriceImage.x = this.giftName.x + this.giftName.width + 5 * this.dpr + this.giftPriceImage.width * 0.5;
+        this.giftValue.text = data.sellingPrice.price + "";
+        this.giftValue.x = this.giftPriceImage.x + this.giftPriceImage.width * 0.5 + 5 * this.dpr;
+        this.giftDescr.text = data.des;
     }
 
     private onSendHandler() {
@@ -160,7 +159,7 @@ class PicGiftItem extends Phaser.GameObjects.Container {
         this.isSelect = false;
     }
 
-    public setItemData(data: op_client.CountablePackageItem) {
+    public setItemData(datas: op_client.IMarketCommodity) {
 
         // this.itemData = data;
         // if (!data) {

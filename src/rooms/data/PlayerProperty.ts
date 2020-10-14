@@ -2,6 +2,7 @@ import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { Logger } from "../../utils/log";
 export class PlayerProperty {
     public playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
+    public nickname: string;
     public coin: op_pkt_def.IPKT_Property;
     public diamond: op_pkt_def.IPKT_Property;
     public level: op_pkt_def.IPKT_Property;
@@ -79,6 +80,7 @@ export class PlayerProperty {
         this.properties = this.playerInfo.properties;
         this.handheld = this.playerInfo.handheld;
         this.command = this.playerInfo.command;
+        this.nickname = this.playerInfo.nickname;
         this.propertiesMap = new Map<string, op_pkt_def.IPKT_Property>();
         for (const proper of this.properties) {
             if (!proper.hasOwnProperty("id")) {

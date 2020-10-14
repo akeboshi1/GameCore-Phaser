@@ -265,7 +265,10 @@
     "mine": "MINE",
     "hotel": "HOTEL",
     "picatown": "PICATOWN",
-    "defaultname":"{{name}}'s Party"
+    "defaultname": "{{name}}'s Party",
+    "partymgr": "MANAGEMENT",
+    "overagetime": "Current remaining time",
+    "suppletime":"Supplementary time"
   },
   "picelevator": {
     "floor": "f"

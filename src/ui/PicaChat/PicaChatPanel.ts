@@ -86,6 +86,9 @@ export class PicaChatPanel extends BasePanel {
         super.resize(w, h);
     }
 
+    public setGiftData(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
+
+    }
     public appendChat(val: string) {
         this.chatCatchArr.push(val);
         if (this.chatCatchArr.length > this.chatMaxLen) this.chatCatchArr.shift();

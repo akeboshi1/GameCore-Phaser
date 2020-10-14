@@ -66,7 +66,11 @@ export class PicOpenPartyPanel extends BasePanel {
 
     public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, isSelf: boolean = true) {
         this.settingBtn.visible = isSelf;
-        this.partyCreatePanel.setPartyData(content);
+        const username = this.mWorld.user.userData.playerProperty.nickname;
+        this.partyCreatePanel.setPartyData(content, username);
+        if (true) {
+            this.partyBtn.setText(i18n.t("party.partymgr"));
+        }
     }
     protected preload() {
         this.addAtlas(this.key, "party/party.png", "party/party.json");
@@ -135,6 +139,7 @@ export class PicOpenPartyPanel extends BasePanel {
 
     private createTabButton(text: string) {
         const btn = new TabButton(this.scene, UIAtlasKey.common2Key, "default_tab", "check_tab", text);
+        btn.tweenEnable = false;
         btn.setTextStyle({ fontFamily: Font.BOLD_FONT, fontSize: 16 * this.dpr, color: "#ffffff" });
         btn.setTextOffset(0, 0);
         return btn;

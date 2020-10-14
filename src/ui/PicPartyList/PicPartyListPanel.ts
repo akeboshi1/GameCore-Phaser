@@ -20,7 +20,7 @@ export class PicPartyListPanel extends BasePanel {
     private searchBtn: TabButton;
     private topCheckBox: CheckboxGroup;
     private partyNavigationPanel: PicPartyNavigationPanel;
-    private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
+    private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
     constructor(scene: Phaser.Scene, world: WorldService) {
         super(scene, world);
     }
@@ -49,7 +49,6 @@ export class PicPartyListPanel extends BasePanel {
             this.mShow = true;
         }
         this.addListen();
-        this.updateData();
     }
 
     public addListen() {
@@ -67,10 +66,10 @@ export class PicPartyListPanel extends BasePanel {
         super.destroy();
     }
 
-    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, isSelf: boolean = true) {
+    public setPartyListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, isSelf: boolean = true) {
         this.mPartyData = content;
-        if (!this.mInitialized) return;
         this.mineBtn.visible = isSelf;
+        this.partyNavigationPanel.setPartyDataList(content);
     }
     protected preload() {
         this.addAtlas(this.key, "party/party.png", "party/party.json");
@@ -113,6 +112,7 @@ export class PicPartyListPanel extends BasePanel {
         this.topCheckBox.on("selected", this.onTabBtnHandler, this);
         this.content.add([this.navigationBtn, this.mineBtn, this.searchBtn]);
         this.partyNavigationPanel = new PicPartyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
+        this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
         this.partyNavigationPanel.y = 0 * this.dpr;
         this.content.add(this.partyNavigationPanel);
         // const mblackbg = this.scene.make.graphics(undefined, false);
@@ -124,17 +124,11 @@ export class PicPartyListPanel extends BasePanel {
         super.init();
         this.topCheckBox.selectIndex(0);
     }
-
-    private updateData() {
-        if (this.mPartyData) {
-            this.setPartyData(this.mPartyData);
-        }
-    }
-
     private onTabBtnHandler(btn: TabButton) {
         this.partyNavigationPanel.visible = false;
         if (this.navigationBtn === btn) {
             this.partyNavigationPanel.visible = true;
+            this.emit("querylist");
         } else if (this.mineBtn === btn) {
         } else if (this.searchBtn === btn) {
         } else {
@@ -143,10 +137,18 @@ export class PicPartyListPanel extends BasePanel {
 
     private createTabButton(text: string) {
         const btn = new TabButton(this.scene, UIAtlasKey.common2Key, "default_tab_s", "check_tab_s", text);
+        btn.tweenEnable = false;
         btn.setTextStyle({ fontFamily: Font.BOLD_FONT, fontSize: 16 * this.dpr, color: "#ffffff" });
         return btn;
     }
     private onCloseHandler() {
         this.emit("close");
+    }
+    private onPartyListHandler(tag: string, data: op_client.IEditModeRoom) {
+        if (tag === "hotel" || tag === "pictown" || tag === "partylist") {
+            this.emit("queryenter", data.roomId);
+        } else if (tag === "progress") {
+
+        }
     }
 }

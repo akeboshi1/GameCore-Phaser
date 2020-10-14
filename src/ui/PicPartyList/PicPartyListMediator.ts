@@ -24,9 +24,12 @@ export class PicPartyListMediator extends BaseMediator {
         if (!this.mView) {
             this.mView = new PicPartyListPanel(this.scene, this.world);
             this.mView.on("close", this.onCloseHandler, this);
+            this.mView.on("querylist", this.query_PARTY_LIST, this);
+            this.mView.on("queryenter", this.queryEnterRoom, this);
         }
         if (!this.picList) {
             this.picList = new PicPartyList(this.world);
+            this.picList.on("questlist", this.on_PARTY_LIST, this);
             this.picList.register();
         }
         this.layerMgr.addToUILayer(this.mView);
@@ -46,5 +49,14 @@ export class PicPartyListMediator extends BaseMediator {
     }
     private onCloseHandler() {
         this.destroy();
+    }
+    private on_PARTY_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST) {
+        this.mView.setPartyListData(content, this.world.user.userData.isSelfRoom);
+    }
+    private query_PARTY_LIST() {
+        this.picList.query_PARTY_LIST();
+    }
+    private queryEnterRoom(roomID: string, password?: string) {
+        this.picList.queryEnterRoom(roomID);
     }
 }
