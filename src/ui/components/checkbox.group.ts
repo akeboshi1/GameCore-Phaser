@@ -45,7 +45,7 @@ export class CheckboxGroup extends Phaser.Events.EventEmitter {
       return;
     }
     if (this.mSelectedButton) {
-      this.mSelectedButton.changeNormal();
+      this.mSelectedButton.selected = false;
     }
     item.changeDown();
     this.mSelectedButton = item;

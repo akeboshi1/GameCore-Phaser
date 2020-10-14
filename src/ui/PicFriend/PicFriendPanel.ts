@@ -11,7 +11,7 @@ import { PicFriendEvent } from "./PicFriendEvent";
 import { LabelInput } from "../components/label.input";
 import { op_client } from "pixelpai_proto";
 import { FriendRelation, FriendRelationEnum } from "./PicFriendRelation";
-import { Button, ClickEvent, GameGridTable, CheckBox, NineSlicePatch, TabButton, NineSliceButton } from "apowophaserui";
+import { Button, ClickEvent, GameGridTable, CheckBox, NineSlicePatch, TabButton, NineSliceButton, BBCodeText } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
 export default class PicFriendPanel extends BasePanel {
     private key = "picfriendpanel";
@@ -27,8 +27,9 @@ export default class PicFriendPanel extends BasePanel {
         this.mSubContanerMap = new Map();
         this.mSubContanerMap.set(FriendChannel.Blacklist, BlackContainer);
         this.mSubContanerMap.set(FriendChannel.Search, SearchContainer);
-        this.mSubContanerMap.set(FriendChannel.NewFriend, NewFriendContainer);
-        this.mSubContanerMap.set(FriendChannel.NewFans, NewFansContainer);
+        this.mSubContanerMap.set(FriendChannel.Notice, NoticeContainer);
+        // this.mSubContanerMap.set(FriendChannel.NewFriend, NewFriendContainer);
+        // this.mSubContanerMap.set(FriendChannel.NewFans, NewFansContainer);
 
     }
 
@@ -65,7 +66,7 @@ export default class PicFriendPanel extends BasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.on(String(ClickEvent.Tap), this.OnClosePanel, this);
+        this.closeBtn.on(ClickEvent.Tap, this.OnClosePanel, this);
         this.friendContainer.register();
         this.friendContainer.on("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
@@ -79,7 +80,7 @@ export default class PicFriendPanel extends BasePanel {
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.closeBtn.off(String(ClickEvent.Tap), this.OnClosePanel, this);
+        this.closeBtn.off(ClickEvent.Tap, this.OnClosePanel, this);
         this.friendContainer.off("shwoAddFriend", this.onShowAddFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.friendContainer.off(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
@@ -178,14 +179,6 @@ export default class PicFriendPanel extends BasePanel {
 
     private onReqFriendAttributesHandler(id: string) {
         this.emit(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, id);
-    }
-
-    private onReqFollowFriendHandler(id: string) {
-        this.emit(PicFriendEvent.FOLLOW, id);
-    }
-
-    private onUnfollowFriendHanlder(id: string) {
-        this.emit(PicFriendEvent.UNFOLLOW, id);
     }
 
     private onShowAddFriendHandler(type: FriendChannel) {
@@ -309,10 +302,22 @@ class FriendContainer extends Container {
         });
     }
 
+    protected sortByCreate(ary: FriendData[]) {
+        return ary.sort((a: FriendData, b: FriendData) => {
+            return b.createAt - a.createAt;
+        });
+    }
+
     protected sortByOnlien(array: FriendData[]) {
         return array.sort((a: FriendData, b: FriendData) => {
             const aLv = a.lv ? 1 : 0;
             const bLv = b.lv ? 1 : 0;
+            if (a.type === FriendChannel.Menu || b.type === FriendChannel.Menu) {
+                return 1;
+            }
+            if (a.type === FriendChannel.Null || b.type === FriendChannel.Null) {
+                return 1;
+            }
             return bLv - aLv;
         });
     }
@@ -339,16 +344,16 @@ class MainContainer extends FriendContainer {
 
     public register() {
         this.searchInput.on("textchange", this.onTextChangeHandler, this);
-        this.searchBtn.on(String(ClickEvent.Tap), this.onSeachHandler, this);
-        this.onlineCheckBox.on(String(ClickEvent.Tap), this.onCheckoutOnlineHandler, this);
-        this.addFriendBtn.on(String(ClickEvent.Tap), this.onShowAddFriendHandler, this);
+        this.searchBtn.on(ClickEvent.Tap, this.onSeachHandler, this);
+        this.onlineCheckBox.on(ClickEvent.Tap, this.onCheckoutOnlineHandler, this);
+        this.addFriendBtn.on(ClickEvent.Tap, this.onShowAddFriendHandler, this);
     }
 
     public unregister() {
         this.searchInput.off("textchange", this.onTextChangeHandler, this);
-        this.searchBtn.off(String(ClickEvent.Tap), this.onSeachHandler, this);
-        this.onlineCheckBox.off(String(ClickEvent.Tap), this.onCheckoutOnlineHandler, this);
-        this.addFriendBtn.off(String(ClickEvent.Tap), this.onShowAddFriendHandler, this);
+        this.searchBtn.off(ClickEvent.Tap, this.onSeachHandler, this);
+        this.onlineCheckBox.off(ClickEvent.Tap, this.onCheckoutOnlineHandler, this);
+        this.addFriendBtn.off(ClickEvent.Tap, this.onShowAddFriendHandler, this);
     }
 
     public resize() {
@@ -398,7 +403,11 @@ class MainContainer extends FriendContainer {
                 relation = FriendRelationEnum.Friend;
             }
             if (target) {
-                result.push({ type, id: target._id, nickname: target.nickname, relation });
+                let createAt = 0;
+                if (target.createAt) {
+                    createAt = Date.parse(target.createAt);
+                }
+                result.push({ type, id: target._id, nickname: target.nickname, relation, createAt });
                 ids.push(target._id);
             }
         }
@@ -410,15 +419,14 @@ class MainContainer extends FriendContainer {
     public showFriend(type: FriendChannel, data: FriendData[]) {
         // let result: FriendData[] = [];
 
-        this.sortByName(data);
-        this.sortByOnlien(data);
         let title = "";
         let friendType = "";
         switch(type) {
             case FriendChannel.Friends:
+                this.sortByOnlien(data);
                 title = i18n.t("friendlist.title");
                 friendType = i18n.t("friendlist.friends");
-                const menu: FriendData[] = [{ type: FriendChannel.Menu, menuData: { type: FriendChannel.NewFans } }, { type: FriendChannel.Menu, menuData: { type: FriendChannel.NewFriend } }, { type: FriendChannel.Menu, menuData: { type: FriendChannel.Blacklist } }, { type: FriendChannel.Null }];
+                const menu: FriendData[] = [{ type: FriendChannel.Menu, menuData: { type: FriendChannel.Notice } }, { type: FriendChannel.Menu, menuData: { type: FriendChannel.Blacklist } }, { type: FriendChannel.Null }];
                 data = menu.concat(data);
                 break;
             case FriendChannel.Fans:
@@ -433,6 +441,11 @@ class MainContainer extends FriendContainer {
                 title = i18n.t("friendlist.blacklist");
                 break;
         }
+        if (type !== FriendChannel.Friends) {
+            this.sortByCreate(data);
+        }
+        this.sortByOnlien(data);
+
         this.showingFriends = data;
         // this.friendList.setItems(this.showingFriends);
         this.friendTabel.setItems(this.showingFriends);
@@ -545,14 +558,6 @@ class MainContainer extends FriendContainer {
         this.searchInput.setBlur();
     }
 
-    private onReqFollowFriendHandler(friend: FriendData) {
-        this.emit(PicFriendEvent.FOLLOW, friend.id);
-    }
-
-    private onReqUnfollowFriendHandler(friend: FriendData) {
-        this.emit(PicFriendEvent.UNFOLLOW, friend.id);
-    }
-
     private onSelectChannelHandler(item) {
         this.fetchCurrentFriend();
     }
@@ -651,13 +656,14 @@ class PicFriendItem extends Container {
             case FriendChannel.Search:
             case FriendChannel.Friends:
             case FriendChannel.Followes:
-            case FriendChannel.NewFriend:
             case FriendChannel.Blacklist:
                 return new FriendRenderer(this.scene, this);
             case FriendChannel.Null:
                 return new NullRenderer(this.scene, this);
             case FriendChannel.Menu:
                 return new MenuRenderer(this.scene, this);
+            case FriendChannel.Notice:
+                return new NoticeRenderer(this.scene, this);
         }
     }
 
@@ -707,17 +713,13 @@ class MenuRenderer implements IRenderer {
             return;
         }
         switch(menudata.type) {
-            case FriendChannel.NewFans:
-                this.icon.setFrame("new_fans");
-                this.text.text = i18n.t("friendlist.new_fans");
+            case FriendChannel.Notice:
+                this.icon.setFrame("notice");
+                this.text.text = i18n.t("friendlist.notice");
                 break;
             case FriendChannel.Blacklist:
                 this.icon.setFrame("black_list");
                 this.text.text = i18n.t("friendlist.blacklist");
-                break;
-            case FriendChannel.NewFriend:
-                this.icon.setFrame("friend_add");
-                this.text.text = i18n.t("friendlist.new_friend");
                 break;
         }
     }
@@ -726,6 +728,35 @@ class MenuRenderer implements IRenderer {
         if (this.icon) this.icon.destroy();
         if (this.text) this.text.destroy();
         if (this.arrow) this.arrow.destroy();
+    }
+}
+
+class NoticeRenderer implements IRenderer {
+    private icon: Image;
+    private text: BBCodeText;
+    constructor(private scene: Phaser.Scene, private owner: PicFriendItem) {
+        this.icon = this.scene.make.image({
+            x: 7.44 * this.owner.dpr - this.owner.width * 0.5,
+            key: owner.key,
+            frame: "notice_icon"
+        }, false).setOrigin(0, 0.5);
+
+        this.text = new BBCodeText(this.scene, this.icon.x + this.icon.width + 9.67 * owner.dpr, 0, "", {
+            fontSize: 9.33 * owner.dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#000000"
+        });
+        this.text.setOrigin(0, 0.5);
+        this.owner.add([this.icon, this.text]);
+    }
+
+    setItemData(data: any) {
+        this.text.setText(`[color=#00dffc]${data.nickname}[/color] ${i18n.t("friendlist.followed_you")}`);
+    }
+
+    destroy() {
+        if (this.icon) this.icon.destroy();
+        if (this.text) this.text.destroy();
     }
 }
 
@@ -775,7 +806,7 @@ class FriendRenderer implements IRenderer {
         });
 
         this.addBtn = this.createAddBtn(i18n.t("friendlist.follow"));
-        this.addBtn.on(String(ClickEvent.Tap), this.onAddHandler, this);
+        this.addBtn.on(ClickEvent.Tap, this.onAddHandler, this);
         this.owner.add(this.addBtn);
 
         owner.add([this.icon, this.nameText, this.level, this.addBtn]);
@@ -861,17 +892,6 @@ class FriendRenderer implements IRenderer {
     }
 }
 
-class FansRenderer extends FriendRenderer {
-    constructor(scene: Phaser.Scene, owner: PicFriendItem) {
-        super(scene, owner);
-    }
-
-    protected onAddHandler() {
-        if (this.itemData) this.owner.emit(PicFriendEvent.RENDERER_EVENT, PicFriendEvent.FOLLOW, this.itemData.id);
-        // this.owner.emit(PicFriendEvent.FOLLOW, this.itemData);
-    }
-}
-
 class SubFriendContainer extends FriendContainer {
     protected backBtn: Button;
     protected gridTable: GameGridTable;
@@ -883,11 +903,11 @@ class SubFriendContainer extends FriendContainer {
     }
 
     public register() {
-        this.backBtn.on(String(ClickEvent.Tap), this.onBackHandler, this);
+        this.backBtn.on(ClickEvent.Tap, this.onBackHandler, this);
     }
 
     public unregister() {
-        this.backBtn.off(String(ClickEvent.Tap), this.onBackHandler, this);
+        this.backBtn.off(ClickEvent.Tap, this.onBackHandler, this);
     }
 
     public resize() {
@@ -1083,30 +1103,6 @@ class BlackContainer extends SubFriendContainer {
     }
 }
 
-class NewFansContainer extends SubFriendContainer {
-    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number, uiScale: number) {
-        super(scene, width, heigth, key, dpr, uiScale);
-        this.friendType = FriendChannel.Blacklist;
-    }
-
-    draw() {
-        super.draw();
-        this.titleText.setText(i18n.t("friendlist.new_fans"));
-    }
-}
-
-class NewFriendContainer extends SubFriendContainer {
-    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number, uiScale: number) {
-        super(scene, width, heigth, key, dpr, uiScale);
-        this.friendType = FriendChannel.Blacklist;
-    }
-
-    draw() {
-        super.draw();
-        this.titleText.setText(i18n.t("friendlist.new_friend"));
-    }
-}
-
 class SearchInput extends LabelInput {
     private searchBtn: Button;
     constructor(scene: Phaser.Scene, config: any, key: string, dpr: number) {
@@ -1114,7 +1110,7 @@ class SearchInput extends LabelInput {
 
         this.searchBtn = new Button(this.scene, key, "search_blue");
         this.searchBtn.x = config.width + 4 * dpr + this.searchBtn.width * 0.5;
-        this.searchBtn.on(String(ClickEvent.Tap), this.onSearchHandler, this);
+        this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
         this.add(this.searchBtn);
 
         const background = scene.make.graphics(undefined, false);
@@ -1127,6 +1123,61 @@ class SearchInput extends LabelInput {
     private onSearchHandler() {
         this.setBlur();
         this.emit("search", this.text);
+    }
+}
+
+class NoticeContainer extends SubFriendContainer {
+    constructor(scene: Phaser.Scene, width: number, heigth: number, key: string, dpr: number, uiScale: number) {
+        super(scene, width, heigth, key, dpr, uiScale);
+        this.friendType = FriendChannel.Search;
+    }
+
+    draw() {
+        super.draw();
+        this.titleText.setText(i18n.t("friendlist.notice"));
+    }
+
+    setItems(data: any[]) {
+        if (!data) {
+            return;
+        }
+        const result: FriendData[] = [];
+        const ids = [];
+        const now = Date.now();
+        const showTiems = 72 * 60 * 60 * 1000;
+        for (const friend of data) {
+            if (friend.created_at) {
+                const create_at = Date.parse(friend.created_at);
+                if (now - create_at < showTiems) {
+                    const user = friend.user;
+                    if (user) {
+                        result.push({ type: FriendChannel.Notice, id: user._id, nickname: user.nickname });
+                        ids.push(user._id);
+                    }
+                }
+            }
+        }
+        super.setItems(result);
+        if (ids.length > 0) {
+            this.emit(PicFriendEvent.REQ_PLAYER_LIST, ids);
+        }
+    }
+
+    updateFriends(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+        const playerInfos = content.playerInfos;
+        let platformFriend = null;
+        for (const player of playerInfos) {
+            platformFriend = this.items.find((friend) => friend.id === player.platformId);
+            if (platformFriend) {
+                platformFriend.nickname = player.nickname;
+                if (player.level) platformFriend.lv = player.level.level;
+            }
+        }
+        if (this.gridTable) this.gridTable.setItems(this.items);
+    }
+
+    fetchEventName() {
+        return PicFriendEvent.REQ_NEW_FANS;
     }
 }
 
@@ -1202,6 +1253,7 @@ export interface FriendData {
     nickname?: string;
     username?: string;
     menuData?: MenuData;
+    createAt?: number;
     relation?: FriendRelationEnum;
 }
 
@@ -1211,8 +1263,7 @@ export enum FriendChannel {
     Followes,
     Blacklist,
     Search,
-    NewFriend,
     Menu,
-    NewFans,
+    Notice,
     Null
 }

@@ -220,29 +220,9 @@
 				"h": 82
 			}
 		},
-		"friend_add": {
-			"frame": {
-				"x": 574,
-				"y": 85,
-				"w": 49,
-				"h": 49
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 49,
-				"h": 49
-			},
-			"sourceSize": {
-				"w": 49,
-				"h": 49
-			}
-		},
 		"friend_default": {
 			"frame": {
-				"x": 625,
+				"x": 574,
 				"y": 85,
 				"w": 184,
 				"h": 82
@@ -282,7 +262,7 @@
 		},
 		"head": {
 			"frame": {
-				"x": 811,
+				"x": 760,
 				"y": 85,
 				"w": 56,
 				"h": 56
@@ -302,7 +282,7 @@
 		},
 		"letter_bg": {
 			"frame": {
-				"x": 869,
+				"x": 818,
 				"y": 85,
 				"w": 26,
 				"h": 19
@@ -322,8 +302,8 @@
 		},
 		"lv_backpround": {
 			"frame": {
-				"x": 574,
-				"y": 143,
+				"x": 846,
+				"y": 85,
 				"w": 47,
 				"h": 22
 			},
@@ -343,7 +323,7 @@
 		"male": {
 			"frame": {
 				"x": 186,
-				"y": 106,
+				"y": 109,
 				"w": 16,
 				"h": 16
 			},
@@ -362,8 +342,8 @@
 		},
 		"min_pic_bg": {
 			"frame": {
-				"x": 869,
-				"y": 106,
+				"x": 818,
+				"y": 109,
 				"w": 16,
 				"h": 67
 			},
@@ -400,10 +380,10 @@
 				"h": 10
 			}
 		},
-		"new_fans": {
+		"notice": {
 			"frame": {
-				"x": 811,
-				"y": 143,
+				"x": 836,
+				"y": 109,
 				"w": 49,
 				"h": 49
 			},
@@ -420,10 +400,30 @@
 				"h": 49
 			}
 		},
+		"notice_icon": {
+			"frame": {
+				"x": 760,
+				"y": 160,
+				"w": 40,
+				"h": 40
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 40,
+				"h": 40
+			},
+			"sourceSize": {
+				"w": 40,
+				"h": 40
+			}
+		},
 		"number_background": {
 			"frame": {
-				"x": 187,
-				"y": 175,
+				"x": 836,
+				"y": 160,
 				"w": 22,
 				"h": 22
 			},
@@ -442,8 +442,8 @@
 		},
 		"offline_head": {
 			"frame": {
-				"x": 211,
-				"y": 194,
+				"x": 187,
+				"y": 184,
 				"w": 56,
 				"h": 56
 			},
@@ -462,8 +462,8 @@
 		},
 		"online": {
 			"frame": {
-				"x": 178,
-				"y": 13,
+				"x": 187,
+				"y": 160,
 				"w": 14,
 				"h": 14
 			},
@@ -482,8 +482,8 @@
 		},
 		"online_checked": {
 			"frame": {
-				"x": 269,
-				"y": 175,
+				"x": 860,
+				"y": 160,
 				"w": 24,
 				"h": 24
 			},
@@ -502,8 +502,8 @@
 		},
 		"online_unchecked": {
 			"frame": {
-				"x": 295,
-				"y": 175,
+				"x": 245,
+				"y": 186,
 				"w": 24,
 				"h": 24
 			},
@@ -522,7 +522,7 @@
 		},
 		"partition": {
 			"frame": {
-				"x": 194,
+				"x": 178,
 				"y": 13,
 				"w": 11,
 				"h": 22
@@ -622,62 +622,22 @@
 		},
 		"tab_partition": {
 			"frame": {
-				"x": 1509,
-				"y": 1,
-				"w": 2,
-				"h": 91
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 2,
-				"h": 91
-			},
-			"sourceSize": {
-				"w": 2,
-				"h": 91
-			}
-		},
-		"vip_backpround": {
-			"frame": {
 				"x": 317,
 				"y": 1111,
-				"w": 57,
-				"h": 22
+				"w": 2,
+				"h": 91
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 57,
-				"h": 22
+				"w": 2,
+				"h": 91
 			},
 			"sourceSize": {
-				"w": 57,
-				"h": 22
-			}
-		},
-		"vip_logo": {
-			"frame": {
-				"x": 376,
-				"y": 1111,
-				"w": 28,
-				"h": 17
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 28,
-				"h": 17
-			},
-			"sourceSize": {
-				"w": 28,
-				"h": 17
+				"w": 2,
+				"h": 91
 			}
 		}
 	},
@@ -687,8 +647,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1512,
-			"h": 1155
+			"w": 1508,
+			"h": 1203
 		},
 		"scale": "1"
 	}

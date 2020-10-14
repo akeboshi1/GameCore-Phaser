@@ -82,8 +82,8 @@
 		},
 		"order_progress_finished": {
 			"frame": {
-				"x": 1,
-				"y": 171,
+				"x": 348,
+				"y": 156,
 				"w": 105,
 				"h": 105
 			},
@@ -102,8 +102,8 @@
 		},
 		"order_progress_ok": {
 			"frame": {
-				"x": 348,
-				"y": 156,
+				"x": 1,
+				"y": 263,
 				"w": 44,
 				"h": 33
 			},
@@ -122,8 +122,8 @@
 		},
 		"order_progress_shade": {
 			"frame": {
-				"x": 108,
-				"y": 171,
+				"x": 47,
+				"y": 263,
 				"w": 97,
 				"h": 97
 			},
@@ -142,8 +142,8 @@
 		},
 		"order_progress_top": {
 			"frame": {
-				"x": 207,
-				"y": 191,
+				"x": 396,
+				"y": 123,
 				"w": 47,
 				"h": 31
 			},
@@ -162,8 +162,8 @@
 		},
 		"order_progress_unfinished": {
 			"frame": {
-				"x": 256,
-				"y": 191,
+				"x": 146,
+				"y": 263,
 				"w": 105,
 				"h": 105
 			},
@@ -180,10 +180,30 @@
 				"h": 105
 			}
 		},
+		"party_card": {
+			"frame": {
+				"x": 253,
+				"y": 263,
+				"w": 58,
+				"h": 58
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 58,
+				"h": 58
+			},
+			"sourceSize": {
+				"w": 58,
+				"h": 58
+			}
+		},
 		"party_icon_1": {
 			"frame": {
-				"x": 1,
-				"y": 298,
+				"x": 313,
+				"y": 263,
 				"w": 68,
 				"h": 63
 			},
@@ -202,8 +222,8 @@
 		},
 		"party_icon_2": {
 			"frame": {
-				"x": 71,
-				"y": 298,
+				"x": 383,
+				"y": 263,
 				"w": 67,
 				"h": 63
 			},
@@ -220,10 +240,30 @@
 				"h": 63
 			}
 		},
+		"party_selected_bg": {
+			"frame": {
+				"x": 455,
+				"y": 1,
+				"w": 161,
+				"h": 161
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 161,
+				"h": 161
+			},
+			"sourceSize": {
+				"w": 161,
+				"h": 161
+			}
+		},
 		"town": {
 			"frame": {
-				"x": 423,
-				"y": 1,
+				"x": 1,
+				"y": 370,
 				"w": 410,
 				"h": 168
 			},
@@ -242,8 +282,8 @@
 		},
 		"user": {
 			"frame": {
-				"x": 394,
-				"y": 171,
+				"x": 423,
+				"y": 1,
 				"w": 22,
 				"h": 26
 			},
@@ -267,8 +307,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 834,
-			"h": 362
+			"w": 617,
+			"h": 539
 		},
 		"scale": "1"
 	}

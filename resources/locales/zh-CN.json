@@ -192,11 +192,11 @@
     "search_friends_notes": "搜索",
     "unfollow": "取消关注",
     "search": "搜索",
-    "new_friend": "新的好友",
-    "new_fans": "新增粉丝",
     "lv": "等级",
     "remove": "移除",
-    "unregistered_game": "未注册游戏"
+    "unregistered_game": "未注册游戏",
+    "notice": "通知",
+    "followed_you": "关注了你"
   },
   "friend_invite": {
     "refused": "拒绝",

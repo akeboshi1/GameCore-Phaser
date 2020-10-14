@@ -38,6 +38,7 @@ export class PicFriendMediator extends BaseMediator {
             this.mView.on(PicFriendEvent.SEARCH_FRIEND, this.onSearchHandler, this);
             this.mView.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
             this.mView.on(PicFriendEvent.REQ_RELATION, this.onReRelationHandler, this);
+            this.mView.on(PicFriendEvent.REQ_NEW_FANS, this.onReqNewHandler, this);
         }
         if (!this.picFriend) {
             this.picFriend = new PicFriend(this.world);
@@ -85,6 +86,16 @@ export class PicFriendMediator extends BaseMediator {
                 }
                 this.mView.updateRelation(result);
             }
+        });
+    }
+
+    private onReqNewHandler() {
+        this.picFriend.getFans().then((response) => {
+            const data = response.data;
+            if (!data) {
+                return;
+            }
+            this.mView.setFriend(FriendChannel.Notice, data.filter((friend) => friend.user));
         });
     }
 
