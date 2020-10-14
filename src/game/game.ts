@@ -54,6 +54,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mSocket = new GameSocket(this.mainPeer, new ConnListener(this.mainPeer));
         this.connect = new Connection(this.mSocket);
     }
+    get scaleRatio(): number {
+        return this.mConfig.devicePixelRatio;
+    }
     public createGame(config?: ILauncherConfig) {
         this.mConfig = config;
         const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;

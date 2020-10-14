@@ -22,7 +22,7 @@ export class Player extends Element implements IElement {
 
     public move(moveData: op_client.IMoveData) {
         if (this.getDirection() !== moveData.direction) {
-            if (this.roomService.world.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+            if (this.roomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
                 if (this.mId !== this.roomService.playerManager.actor.id) {
                     this.setDirection(moveData.direction);
                 }
@@ -181,8 +181,8 @@ export class Player extends Element implements IElement {
         targetPoint.y = path.y;
         content.currentPoint = currentPoint;
         content.lastTargetPoint = targetPoint;
-        content.timestemp = this.mRoomService.world.clock.unixTime;
-        this.mRoomService.world.peer.send(pkt.Serialization());
+        content.timestemp = this.mRoomService.game.clock.unixTime;
+        this.mRoomService.game.peer.send(pkt.Serialization());
     }
 
     protected get offsetY(): number {

@@ -3,6 +3,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ConnectionService } from "../../../lib/net/connection.service";
 import { MessageType } from "../../structureinterface/message.type";
+import { Game } from "../game";
 import { UIMediatorType } from "./ui.mediator.type";
 
 // export const enum UIType {
@@ -34,9 +35,9 @@ export class UiManager extends PacketHandler {
     private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
     private mStackList: any[] = [];// 记录面板打开关闭先后顺序
     private isShowMainUI: boolean = false;
-    constructor(private worldService: WorldService) {
+    constructor(private game: Game) {
         super();
-        this.mConnect = worldService.connection;
+        this.mConnect = this.game.connection;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
@@ -55,14 +56,14 @@ export class UiManager extends PacketHandler {
     public addPackListener() {
         if (this.mConnect) {
             this.mConnect.addPacketListener(this);
-            this.worldService.emitter.on(MessageType.SHOW_UI, this.handleShowUI, this);
+            this.game.emitter.on(MessageType.SHOW_UI, this.handleShowUI, this);
         }
     }
 
     public removePackListener() {
         if (this.mConnect) {
             this.mConnect.removePacketListener(this);
-            this.worldService.emitter.off(MessageType.SHOW_UI, this.handleShowUI, this);
+            this.game.emitter.off(MessageType.SHOW_UI, this.handleShowUI, this);
         }
     }
 
@@ -102,8 +103,8 @@ export class UiManager extends PacketHandler {
         if (!this.mMedMap) {
             this.mMedMap = new Map();
             // ============场景中固定显示ui
-            if (this.worldService.game.device.os.desktop) {
-                this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.worldService, scene));
+            if (this.game.game.device.os.desktop) {
+                this.mMedMap.set(BagGroupMediator.NAME, new BagGroupMediator(this.game, scene));
             } else {
                 // this.mMedMap.set(BottomMediator.NAME, new BottomMediator(this.worldService, scene));
                 // this.mMedMap.set(LeftMediator.NAME, new LeftMediator(this.worldService, scene));

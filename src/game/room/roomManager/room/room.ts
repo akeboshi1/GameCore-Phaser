@@ -8,12 +8,15 @@ import { IPosition45Obj, Position45 } from "../../../../utils/position45";
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { IBlockObject } from "../../blockManager/block/iblock.object";
 import { IElement } from "../../displayManager/elementManager/element/element";
-import { GroupManager } from "../../groupManager/group.manager";
 import { IRoomManager } from "../room.manager";
 import { IScenery } from "../../skyboxManager/scenery";
 import { Logger } from "../../../../utils/log";
 import { ConnectionService } from "../../../../../lib/net/connection.service";
 import { Game } from "../../../game";
+import { ClockReadyListener } from "../../../loop/clock/clock";
+import { State } from "../../state/state.group";
+import { GroupManager } from "../../../../pica/groupManager/group.manager";
+import { HandlerManager } from "../../../../pica/handlerManager/handler.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -25,6 +28,7 @@ export interface IRoomService {
     readonly playerManager: PlayerManager;
     // readonly layerManager: LayerManager;
     readonly effectManager: EffectManager;
+    readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
@@ -82,7 +86,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mWallManager: WallManager;
     protected mLayManager: LayerManager;
     protected mGroupManager: GroupManager;
-    protected mFrameManager: FrameManager;
+    protected mHandlerManager: HandlerManager;
     protected mSkyboxManager: SkyBoxManager;
     protected mEffectManager: EffectManager;
     protected mSize: IPosition45Obj;
@@ -96,7 +100,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private mActorData: IActor;
     constructor(protected manager: IRoomManager) {
         super();
-        this.mGame = this.manager.world;
+        this.mGame = this.manager.game;
         this.moveStyle = this.mGame.moveStyle;
         this.mScaleRatio = this.mGame.getGameConfig().scale_ratio;
         if (this.mGame) {
@@ -220,7 +224,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mBlocks.update(time, delta);
         if (this.layerManager) this.layerManager.update(time, delta);
         if (this.elementManager) this.elementManager.update(time, delta);
-        if (this.mFrameManager) this.frameManager.update(time, delta);
+        if (this.mHandlerManager) this.handlerManager.update(time, delta);
         if (this.mGame.httpClock) this.mGame.httpClock.update(time, delta);
         const eles = this.elementManager.getElements();
         for (const ele of eles) {
@@ -280,7 +284,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public initUI() {
-        if (this.world.uiManager) this.world.uiManager.showMainUI();
+        if (this.game.uiManager) this.game.uiManager.showMainUI();
     }
 
     public clear() {
@@ -309,7 +313,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     protected initSkyBox() {
-        const scenerys = this.world.elementStorage.getScenerys();
+        const scenerys = this.game.elementStorage.getScenerys();
         if (scenerys) {
             for (const scenery of scenerys) {
                 this.addSkyBox(scenery);
@@ -358,16 +362,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mPlayerManager || undefined;
     }
 
-    get layerManager(): LayerManager {
-        return this.mLayManager || undefined;
-    }
+    // get layerManager(): LayerManager {
+    //     return this.mLayManager || undefined;
+    // }
 
     get groupManager(): GroupManager {
         return this.mGroupManager || undefined;
     }
 
-    get frameManager(): FrameManager {
-        return this.mFrameManager || undefined;
+    get handlerManager(): HandlerManager {
+        return this.mHandlerManager || undefined;
     }
 
     get cameraService(): ICameraService {
@@ -394,7 +398,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mBlocks;
     }
 
-    get world(): World | undefined {
+    get game(): Game | undefined {
         return this.mGame;
     }
 
@@ -579,16 +583,5 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         conten.position = position;
         conten.nextPoint = nextPosition;
         this.connection.send(packet);
-    }
-
-    // Move through the location returned by the server
-    private onTapHandler(pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) {
-        this.move(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio, gameObject);
-    }
-
-    private enterRoom() {
-        this.mGame.game.scene.run(PlayScene.name, {
-            room: this,
-        });
     }
 }
