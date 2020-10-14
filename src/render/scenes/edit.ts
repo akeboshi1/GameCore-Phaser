@@ -1,4 +1,4 @@
-import { PlayScene } from "./play";
+import { PlayScene } from "./play.scene";
 
 // 编辑器用 Phaser.Scene
 export class EditScene extends PlayScene {

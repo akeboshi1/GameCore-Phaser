@@ -38,7 +38,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public createActor(actor: op_client.IActor) {
         const playModel = new PlayerModel(actor);
-        this.mActor = new User(this.mRoom.world);
+        this.mActor = new User(this.mRoom.game);
     }
 
     get actor(): User {
@@ -69,7 +69,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public requestActorMove(dir: number, keyArr: number[]) {
         this.startActorMove();
-        if (!this.roomService.world.getGameConfig().desktop) {
+        if (!this.roomService.game.getGameConfig().desktop) {
             // 按下键盘的时候已经发了一次了，如果再发一次后端会有问题
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN);
             const content: op_virtual_world.IOP_CLIENT_REQ_GATEWAY_KEYBOARD_DOWN = pkt.content;
@@ -142,7 +142,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 (character as User).package = op_gameconfig.Package.create();
             }
             (character as User).package.items = (character as User).package.items.concat(items);
-            this.mRoom.world.peer.render.updateCharacterPackage();
+            this.mRoom.game.peer.render.updateCharacterPackage();
             // this.mRoom.world.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
         }
     }
