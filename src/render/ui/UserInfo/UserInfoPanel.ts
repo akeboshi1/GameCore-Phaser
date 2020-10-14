@@ -1,8 +1,8 @@
 import { BasePanel } from "../Components/BasePanel";
 import { DynamicImage } from "../Components/Dynamic.image";
-import { Background, Border, Url, BlueButton } from "../../game/core/utils/resUtil";
+import { Background, Border, Url, BlueButton } from "../../../utils/resUtil";
 import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
+import { Font } from "../../../utils/font";
 import { NinePatchButton } from "../Components/Ninepatch.button";
 import { op_client } from "pixelpai_proto";
 import { UserInfoMediator } from "./UserInfoMediator";

@@ -47,7 +47,7 @@ export class InteractiveBubble extends PacketHandler {
         //  content.receiverId = data.receiverId;
         connection.send(packet);
     }
-    get connection(): ConnectionService{
+    get connection(): ConnectionService {
         if (this.world) {
             return this.world.connection;
         }
