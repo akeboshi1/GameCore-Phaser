@@ -1,12 +1,44 @@
+import "tooqinggamephaser";
+import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { op_def } from "pixelpai_proto";
 import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
-import { Buffer, PBpacket } from "net-socket-packet";
-import { DisplayField, DisplayObject } from "./display/display.object";
-import { MessageType } from "../messagetype/message.type";
+import { PBpacket } from "net-socket-packet";
+import { DisplayObject } from "./display/display.object";
+import { MessageType } from "../structureinterface/message.type";
 import { op_client } from "pixelpai_proto";
-export class Render extends RPCPeer {
+import { ILauncherConfig } from "../structureinterface/lanucher.config";
+import { GameMain } from "../structureinterface/game.main";
+// export interface ILauncherConfig {
+//     api_root: string;
+//     auth_token: string;
+//     token_expire: string | null;
+//     token_fingerprint: string;
+//     server_addr: any | undefined;
+//     user_id: string;
+//     game_id: string;
+//     virtual_world_id: string;
+//     ui_scale?: number;
+//     devicePixelRatio?: number;
+//     scale_ratio?: number;
+//     platform?: string;
+//     keyboardHeight: number;
+//     width: number;
+//     height: number;
+//     readonly screenWidth: number;
+//     readonly screenHeight: number;
+//     readonly baseWidth: number;
+//     readonly baseHeight: number;
+//     readonly game_created?: Function;
+//     readonly connection?: any;
+//     readonly isEditor?: boolean;
+//     readonly osd?: string;
+//     readonly closeGame: Function;
+//     readonly connectFail?: Function;
+//     readonly parent?: string;
+// }
+export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
     private nodes = {
@@ -57,6 +89,54 @@ export class Render extends RPCPeer {
         this.emitter = new Phaser.Events.EventEmitter();
         this.linkTo(MAIN_WORKER, "../game/main.worker").onceReady(() => {
             this.mainPeer = this.remote[MAIN_WORKER].MainPeer;
+        });
+    }
+
+    createGame() {
+
+    }
+
+    resize(width: number, height: number) {
+
+    }
+
+    onOrientationChange(oriation: number, newWidth: number, newHeight: number) {
+
+    }
+    scaleChange(scale: number) {
+
+    }
+    enableClick() {
+
+    }
+    disableClick() {
+
+    }
+    setKeyBoardHeight(height: number) {
+
+    }
+    startFullscreen(): void {
+
+    }
+    stopFullscreen(): void {
+
+    }
+
+    setGameConfig(config): void {
+
+    }
+    updatePalette(palett): void {
+
+    }
+
+    updateMoss(moss): void {
+
+    }
+    restart(config?: ILauncherConfig, callBack?: Function) {
+
+    }
+    destroy(): Promise<void> {
+        return new Promise((reslove, reject) => {
         });
     }
 
@@ -169,7 +249,7 @@ export class Render extends RPCPeer {
         this.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
     }
 
-    @Export([webworker_rpc.ParamType.number])
+    @Export([webworker_rpc.ParamType.num])
     public soundChangeRoom(roomID: number) {
 
     }
@@ -334,7 +414,7 @@ export class Render extends RPCPeer {
     }
 
     @Export()
-    public createGame(content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT) {
+    public createGameCallBack(content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT) {
 
     }
 

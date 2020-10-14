@@ -23,7 +23,7 @@ export class MainPeer extends RPCPeer {
         super("mainWorker");
         this.mGame = game;
         this.linkTo(RENDER_PEER, "").onceReady(() => {
-            this.mRender = this.remote[RENDER_PEER].Rener;
+            this.mRender = this.remote[RENDER_PEER].Render;
         });
         this.linkTo(HEARTBEAT_WORKER, "worker-loader?filename=[hash][name].js!../game/heartBeat.worker").onceReady(() => {
             this.heartBearPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;

@@ -1,4 +1,4 @@
-import { SceneName } from "../../sceneparam/scene.name";
+import { SceneName } from "../../structureinterface/scene.name";
 import { Game } from "../game";
 
 export interface IAsset {
@@ -24,7 +24,7 @@ export class LoadingManager {
     }
 
     start(text?: string) {
-        this.mGame.peer.render.addScene(SceneName.LOADING_SCENE, { text });
+        this.mGame.peer.remote["render"].SceneManager.addScene(SceneName.LOADING_SCENE, { text });
         // const sceneManager = this.game.scene;
         // if (!sceneManager) {
         //     return Promise.reject("start faild. SceneManager does not exist");

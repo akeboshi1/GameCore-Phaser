@@ -101,7 +101,7 @@ export enum GameState {
 }
 
 // The World act as the global Phaser.World instance;
-export class World extends PacketHandler implements WorldService, GameMain {
+export class World extends PacketHandler implements GameMain {
     public static SCALE_CHANGE: string = "scale_change";
     public isPause: boolean = false;
     private readonly DEFAULT_WIDTH = 360;

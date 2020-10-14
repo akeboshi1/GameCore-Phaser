@@ -86,6 +86,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public initGameConfig(config: any) {
         this.mConfig = config;
     }
+
     // public setConnect(connect: ConnectionService) {
     //     this.connect = connect;
     //     this.connect.addPacketListener(this);

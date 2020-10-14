@@ -9,54 +9,6 @@ import version from "./version";
 // import { EditorLauncher, EditorCanvasType } from "./src/editor/editor.launcher";
 // import { ElementEditorEmitType, ElementEditorBrushType } from "./src/editor/canvas/element/element.editor.canvas";
 
-export interface ILauncherConfig {
-    api_root: string;
-    auth_token: string;
-    token_expire: string | null;
-    token_fingerprint: string;
-    server_addr: any | undefined;
-    user_id: string;
-    game_id: string;
-    virtual_world_id: string;
-    ui_scale?: number;
-    devicePixelRatio?: number;
-    scale_ratio?: number;
-    platform?: string;
-    keyboardHeight: number;
-    width: number;
-    height: number;
-    readonly screenWidth: number;
-    readonly screenHeight: number;
-    readonly baseWidth: number;
-    readonly baseHeight: number;
-    readonly game_created?: Function;
-    readonly connection?: any;
-    readonly isEditor?: boolean;
-    readonly osd?: string;
-    readonly closeGame: Function;
-    readonly connectFail?: Function;
-    readonly parent?: string;
-}
-
-export interface GameMain {
-    resize(newWidth, newHeight);
-    onOrientationChange(oriation: number, newWidth: number, newHeight: number);
-    scaleChange(scale: number);
-    enableClick();
-    disableClick();
-    setKeyBoardHeight(height: number);
-    startFullscreen(): void;
-    stopFullscreen(): void;
-    createGame(): void;
-    setGameConfig(config): void;
-    updatePalette(palett): void;
-    onFocus();
-    onBlur();
-    updateMoss(moss): void;
-    restart(config?: ILauncherConfig, callBack?: Function);
-    destroy(): Promise<void>;
-}
-
 export class Launcher {
     get config(): ILauncherConfig {
         return this.mConfig;
@@ -96,19 +48,19 @@ export class Launcher {
     readonly maxWidth = 1920;
     readonly maxHeight = 1080;
     readonly keyboardHeight = 256;
-    private world: GameMain;
+    private game: GameMain;
     private intervalId: any;
     private mReload: Function;
     private mCompleteFunc: Function;
     private mConfig: ILauncherConfig = {
-        api_root: CONFIG.api_root,
-        auth_token: CONFIG.auth_token,
-        token_expire: CONFIG.token_expire,
-        token_fingerprint: CONFIG.token_fingerprint,
-        user_id: CONFIG.user_id,
+        api_root: undefined,
+        auth_token: undefined,
+        token_expire: undefined,
+        token_fingerprint: undefined,
+        user_id: undefined,
         server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
-        game_id: CONFIG.game_id,
-        virtual_world_id: CONFIG.virtual_world_id,
+        game_id: undefined,
+        virtual_world_id: undefined,
         // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
         width: this.minWidth,
         height: this.minHeight,
@@ -127,7 +79,6 @@ export class Launcher {
         if (config) {
             Object.assign(this.mConfig, config);
         }
-
         this.intervalId = setInterval(() => {
             // const xhr = new XMLHttpRequest(); // TODO
             // xhr.open("GET", "./package.json", true);
@@ -144,55 +95,55 @@ export class Launcher {
             // xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./src/game/core/world").then((game) => {
-            this.world = new game.World(this.co./src/game/gameleteFunc);
+        import(/* webpackChunkName: "game" */ "./src/render/rendrer").then((game) => {
+            this.game = new game.Render(this.config, this.mCompleteFunc);
             if (config.isEditor) {
-                this.world.createGame();
+                this.game.createGame();
             }
             this.disableClick();
         });
     }
 
     public pauseGame() {
-        if (this.world) this.world.onBlur();
+        if (this.game) this.game.onBlur();
     }
 
     public resumeGame() {
-        if (this.world) this.world.onFocus();
+        if (this.game) this.game.onFocus();
     }
 
     public keyBoardHeight(height: number) {
-        if (this.world) this.world.setKeyBoardHeight(height);
+        if (this.game) this.game.setKeyBoardHeight(height);
     }
 
     public enableClick() {
-        if (this.world) this.world.enableClick();
+        if (this.game) this.game.enableClick();
     }
 
     public disableClick() {
-        if (this.world) {
-            this.world.disableClick();
+        if (this.game) {
+            this.game.disableClick();
         } else {
         }
     }
 
     public startFullscreen() {
-        if (!this.world) {
+        if (!this.game) {
             return;
         }
-        this.world.startFullscreen();
+        this.game.startFullscreen();
     }
 
     public stopFullscreen() {
-        if (!this.world) {
+        if (!this.game) {
             return;
         }
-        this.world.stopFullscreen();
+        this.game.stopFullscreen();
     }
 
     public setGameConfig(config) {
-        if (!this.world) return;
-        this.world.setGameConfig(config);
+        if (!this.game) return;
+        this.game.setGameConfig(config);
     }
 
     public updatePalette(palette) {
