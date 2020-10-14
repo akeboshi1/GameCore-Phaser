@@ -2,7 +2,6 @@
 import { Room } from "../rooms/room";
 import { BasicScene } from "./basic.scene";
 import { Font } from "../../utils/font";
-import { JoyStickManager } from "../manager/joystick.manager";
 import { Size } from "../../utils/size";
 
 export class MainUIScene extends BasicScene {
@@ -44,7 +43,7 @@ export class MainUIScene extends BasicScene {
     if (world.game.device.os.desktop) {
     } else {
       if (world.inputManager) {
-        (world.inputManager as JoyStickManager).setScene(this);
+        world.inputManager.setScene(this);
       }
     }
     world.uiManager.setScene(this);

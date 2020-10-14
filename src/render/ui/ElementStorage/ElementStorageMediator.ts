@@ -5,7 +5,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { BaseMediator } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { MessageType } from "../../../messageType/MessageType";
+import { MessageType } from "../../../structureinterface/message.type";
 
 export class ElementStorageMediator extends BaseMediator {
     public static NAME: string = "ElementStorageMediator";

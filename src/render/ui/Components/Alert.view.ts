@@ -1,5 +1,5 @@
 import { BasePanel } from "./BasePanel";
-import { Button, BBCodeText } from "apowophaserui";
+import { Button, BBCodeText, ClickEvent } from "apowophaserui";
 import { WorldService } from "../../world.service";
 import { i18n } from "../../../utils/i18n";
 import { Font } from "../../../utils/font";

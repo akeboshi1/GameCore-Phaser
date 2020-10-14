@@ -8,7 +8,7 @@ import { IDragonbonesModel } from "./dragonbones.model";
 import { IElement } from "../element/element";
 import { AnimationData } from "../../../game/room/displayManager/animation/ianimation";
 import { IFramesModel } from "../../../game/room/displayManager/frame/iframe.model";
-import { Url } from "../../../utils/resUtil";
+import { Url } from "../../utils";
 
 export enum DisplayField {
     BACKEND = 0,

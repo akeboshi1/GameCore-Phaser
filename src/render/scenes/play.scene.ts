@@ -1,23 +1,16 @@
 import { MainUIScene } from "./main.ui";
-import { IRoomService } from "../rooms/room";
 import { BasicScene } from "./basic.scene";
-import { PlayCamera } from "../rooms/cameras/play.camera";
 import { Size } from "../../utils/size";
+import { PlayCamera } from "../cameras/play.camera";
+import { RoomScene } from "./room.scene";
 
 // 游戏正式运行用 Phaser.Scene
-export class PlayScene extends BasicScene {
-    protected mRoom: IRoomService;
+export class PlayScene extends RoomScene {
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: PlayScene.name });
     }
 
     public preload() { }
-
-    public init(data: any) {
-        if (data) {
-            this.mRoom = data.room;
-        }
-    }
 
     public create() {
         const oldCamera = this.cameras.main;

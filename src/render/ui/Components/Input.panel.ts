@@ -7,11 +7,9 @@ export class InputPanel extends Phaser.Events.EventEmitter {
     private mInput;
     private scene: Phaser.Scene;
     private mTextArea: Phaser.GameObjects.Text;
-    private world: WorldService;
     constructor(scene: Phaser.Scene, world: WorldService, text?: string) {
         super();
         this.scene = scene;
-        this.world = world;
         const width = scene.cameras.main.width;
         const height = scene.cameras.main.height;
         this.mBackground = scene.add.graphics();

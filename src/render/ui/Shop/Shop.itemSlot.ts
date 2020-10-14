@@ -3,7 +3,7 @@ import { WorldService } from "../../game/world.service";
 import { DragDropIcon } from "../Bag/DragDropIcon";
 import { op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { UI } from "../../../const/res.const";
-import { Url } from "../../game/core/utils/resUtil";
+import { Url } from "../../../utils/resUtil";
 import { DynamicImage } from "../Components/Dynamic.image";
 import { ToolTip } from "../Tips/ToolTip";
 import { PBpacket } from "net-socket-packet";

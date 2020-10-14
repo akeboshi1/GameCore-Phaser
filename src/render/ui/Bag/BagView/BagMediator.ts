@@ -5,8 +5,8 @@ import { BagPanel } from "./BagPanel";
 import { ILayerManager } from "../../Layer.manager";
 import { BaseMediator, UIType, InputText } from "apowophaserui";
 import { WorldService } from "../../../world.service";
-import { MessageType } from "../../../../messageType/MessageType";
 import { Logger } from "../../../../utils/log";
+import { MessageType } from "../../../../structureinterface/message.type";
 
 export enum DragType {
     DRAG_TYPE_SHORTCUT = 1,
