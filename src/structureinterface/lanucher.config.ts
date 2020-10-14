@@ -14,6 +14,7 @@ export interface ILauncherConfig {
     keyboardHeight: number;
     width: number;
     height: number;
+    desktop: boolean;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;

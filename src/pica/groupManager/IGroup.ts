@@ -1,7 +1,6 @@
-
-import { IDispose } from "../actionManager/idispose";
+import { IDispose } from "../../game/room/actionManager/idispose";
+import { HandlerDispatcher } from "../../utils/handler.dispatcher";
 import { GroupType } from "./group.manager";
-import { HandlerDispatcher } from "../../../utils/handler.dispatcher";
 
 export interface IGroup extends IDispose {
     owner: any;

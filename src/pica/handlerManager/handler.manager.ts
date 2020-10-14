@@ -1,6 +1,7 @@
-import { Handler } from "../../../utils/handler";
+import { IDispose } from "../../game/room/actionManager/idispose";
+import { Handler } from "../../utils";
 
-export class FrameManager implements IDispose {
+export class HandlerManager implements IDispose {
 
     private handlers: Handler[] = [];
     public add(caller: any, method: Function, args?: any[]) {

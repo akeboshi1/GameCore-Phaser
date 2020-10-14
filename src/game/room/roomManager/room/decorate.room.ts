@@ -1,42 +1,23 @@
 import { IRoomService } from "./room";
 import { IRoomManager } from "../room.manager";
-import { ViewblockService, ViewblockManager } from "./cameras/viewblock.manager";
-import { CamerasManager, ICameraService } from "./cameras/cameras.manager";
-import { ConnectionService } from "../../lib/net/connection.service";
-import { LayerManager } from "./layer/layer.manager";
-import { IPosition45Obj, Position45 } from "../utils/position45";
-import { TerrainManager } from "./terrain/terrain.manager";
-import { WorldService } from "../game/world.service";
-import { IElement } from "../../elementManager/element/element";
-import { ElementDisplay } from "./display/element.display";
-import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
-import { Pos } from "../utils/pos";
-import { PlayerManager } from "../../playerManager/player/player.manager";
+import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { LoadingScene } from "../scenes/loading";
-import { PlayScene } from "../scenes/play";
-import { Logger } from "../utils/log";
-import { DisplayObject } from "./display/display.object";
-import { TerrainDisplay } from "./display/terrain.display";
-import { DecorateElementManager } from "./elementManager/element/decorate.element.manager";
-import { MessageType } from "../const/MessageType";
-import { Sprite, ISprite } from "./display/sprite";
-import { DecorateTerrainManager } from "./terrain/decorate.terrain.manager";
-import { SpawnPoint } from "./decorate/spawn.point";
-import { SelectorElement } from "./decorate/selector.element";
-import { IBlockObject } from "./cameras/block.object";
-import { SkyBoxManager } from "./sky.box/sky.box.manager";
-import { IScenery } from "./sky.box/scenery";
+import { Game } from "../../../game";
+import { IPosition45Obj } from "../../../../utils/position45";
+import { IElement } from "../../displayManager/elementManager/element/element";
+import { IPos } from "../../../../utils/logic.pos";
+import { PlayerManager } from "../../displayManager/playerManager/player/player.manager";
+import { HandlerManager } from "../../../../pica/handlerManager/handler.manager";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
     readonly selectedSprite: IElement | undefined;
 
-    transformToMini45(p: Pos): Pos;
+    transformToMini45(p: IPos): IPos;
 
-    transformToMini90(p: Pos): Pos;
+    transformToMini90(p: IPos): IPos;
 
-    canPut(pos: Pos, collisionArea: number[][], origin: Phaser.Geom.Point): boolean;
+    canPut(pos: IPos, collisionArea: number[][], origin: Phaser.Geom.Point): boolean;
 }
 
 export class DecorateRoom extends PacketHandler implements DecorateRoomService {
@@ -44,7 +25,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     // TODO clock sync
     clockSyncComplete: boolean = true;
     readonly playerManager: PlayerManager;
-    readonly world: WorldService;
+    readonly game: Game;
     private mID: number;
     private mBlocks: ViewblockManager;
     private mSize: IPosition45Obj;
@@ -53,17 +34,16 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mElementManager: DecorateElementManager;
     private mLayerManager: LayerManager;
     private mCameraService: ICameraService;
-    private mScene: Phaser.Scene | undefined;
     private mSelectorElement: SelectorElement;
     private mSkyboxManager: SkyBoxManager;
     private mMap: number[][];
     private mScaleRatio: number;
-    private cameraPos: Pos;
+    private cameraPos: IPos;
 
     constructor(manager: IRoomManager) {
         super();
-        this.world = manager.world;
-        this.mScaleRatio = this.world.scaleRatio;
+        this.game = manager.game;
+        this.mScaleRatio = this.game.scaleRatio;
         if (this.connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE, this.onSelectSpriteHandler);
@@ -111,7 +91,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         //     world: this.world,
         //     room: this
         // });
-        this.world.showLoading().then(() => {
+        this.game.showLoading().then(() => {
             this.completeLoad();
         });
     }
@@ -141,14 +121,14 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     completeLoad() {
-        this.world.game.scene.add(PlayScene.name, PlayScene, true, {
+        this.game.game.scene.add(PlayScene.name, PlayScene, true, {
             room: this
         });
     }
 
     initUI() {
-        if (this.world.uiManager) {
-            this.world.uiManager.showDecorateUI();
+        if (this.game.uiManager) {
+            this.game.uiManager.showDecorateUI();
         }
     }
 
@@ -159,11 +139,11 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mBlocks) this.mBlocks.destroy();
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         this.removePointerMoveHandler();
-        this.world.game.scene.remove(PlayScene.name);
-        this.world.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
-        this.world.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
-        this.world.emitter.off(MessageType.PUT_ELEMENT, this.onPutElement, this);
-        this.world.emitter.off(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
+        this.game.game.scene.remove(PlayScene.name);
+        this.game.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
+        this.game.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
+        this.game.emitter.off(MessageType.PUT_ELEMENT, this.onPutElement, this);
+        this.game.emitter.off(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
         if (!this.mScene) return;
         this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
         this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
@@ -202,7 +182,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mLayerManager) {
             this.mLayerManager.destroy();
         }
-        this.mScene = this.world.game.scene.getScene(PlayScene.name);
+        this.mScene = this.game.game.scene.getScene(PlayScene.name);
         this.mLayerManager = new LayerManager(this);
         // this.mLayerManager.drawGrid(this);
         this.mTerrainManager = new DecorateTerrainManager(this);
@@ -222,17 +202,17 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             this.mCameraService.scrollTargetPoint(this.cameraPos.x, this.cameraPos.y);
             this.mCameraService.syncCameraScroll();
         }
-        this.world.changeRoom(this);
-        const loadingScene: LoadingScene = this.world.game.scene.getScene(LoadingScene.name) as LoadingScene;
+        this.game.changeRoom(this);
+        const loadingScene: LoadingScene = this.game.game.scene.getScene(LoadingScene.name) as LoadingScene;
         if (loadingScene) loadingScene.sleep();
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         // this.mCameraService.centerCameas();
 
-        this.world.emitter.on(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
-        this.world.emitter.on(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
-        this.world.emitter.on(MessageType.PUT_ELEMENT, this.onPutElement, this);
-        this.world.emitter.on(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
+        this.game.emitter.on(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
+        this.game.emitter.on(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
+        this.game.emitter.on(MessageType.PUT_ELEMENT, this.onPutElement, this);
+        this.game.emitter.on(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
 
         this.initSkyBox();
     }
@@ -384,7 +364,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     protected initSkyBox() {
-        const scenerys = this.world.elementStorage.getScenerys();
+        const scenerys = this.game.elementStorage.getScenerys();
         if (scenerys) {
             for (const scenery of scenerys) {
                 this.addSkyBox(scenery);
@@ -537,7 +517,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_RECYCLE_SPRITE = packet.content;
         content.sprites = [sprite.toSprite()];
         content.nodeType = sprite.nodeType;
-        this.world.connection.send(packet);
+        this.game.connection.send(packet);
         this.mSelectorElement.destroy();
         this.mSelectorElement = undefined;
     }
@@ -701,12 +681,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.mCameraService;
     }
 
-    get scene(): Phaser.Scene | undefined {
-        return this.mScene;
+    get handlerManager(): HandlerManager {
+        return this.mHandlerManager;
     }
 
     get connection(): ConnectionService {
-        return this.world.connection;
+        return this.game.connection;
     }
 
     get miniSize(): IPosition45Obj {

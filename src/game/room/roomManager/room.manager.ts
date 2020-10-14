@@ -1,12 +1,12 @@
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { DecorateRoom } from "./room/decorate.room";
-import { World } from "../../game";
+import { Game } from "../../game";
 import { IRoomService, Room } from "./room/room";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { EditorRoom } from "./room/editor.room";
 export interface IRoomManager {
-    readonly world: World | undefined;
+    readonly game: Game | undefined;
 
     readonly currentRoom: IRoomService | undefined;
 
@@ -17,13 +17,13 @@ export interface IRoomManager {
 }
 
 export class RoomManager extends PacketHandler implements IRoomManager {
-    protected mWorld: World;
+    protected mGame: Game;
     private mRooms: IRoomService[] = [];
     private mCurRoom: IRoomService;
 
-    constructor(world: World) {
+    constructor(game: Game) {
         super();
-        this.mWorld = world;
+        this.mGame = game;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
@@ -86,12 +86,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (this.hasRoom(vw.scene.id)) {
             this.onEnterRoom(scene);
         } else {
-            this.mWorld.loadSceneConfig(vw.scene.id);
+            this.mGame.loadSceneConfig(vw.scene.id);
         }
     }
 
     private async onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        this.world.peer.render.onEnterRoom(scene.scene);
+        this.game.peer.render.onEnterRoom(scene.scene);
         if (this.mCurRoom) {
             await this.leaveScene(this.mCurRoom);
         }
@@ -124,7 +124,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private leaveScene(room: IRoomService) {
         if (!room) return;
-        this.mWorld.leaveScene(room);
+        this.mGame.leaveScene(room);
         // return new Promise((resolve, reject) => {
         //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
         //     if (loading) {
@@ -150,8 +150,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
     }
 
-    get world(): World {
-        return this.mWorld;
+    get game(): Game {
+        return this.mGame;
     }
 
     get currentRoom(): Room {
@@ -159,8 +159,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     get connection(): ConnectionService {
-        if (this.mWorld) {
-            return this.mWorld.connection;
+        if (this.mGame) {
+            return this.mGame.connection;
         }
     }
 }
