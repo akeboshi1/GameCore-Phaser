@@ -244,7 +244,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     scaleTween(): void {
-        this.mRoomService.world.peer.render.scaleTween(this.id, this.type);
+        this.mRoomService.game.peer.render.scaleTween(this.id, this.type);
     }
 
     public play(animationName: string, times?: number): void {
