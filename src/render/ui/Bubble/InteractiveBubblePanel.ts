@@ -2,7 +2,7 @@ import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
 import { BasePanel } from "../Components/BasePanel";
 import { IElement } from "../../rooms/element/element";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
-import { PlayScene } from "../../scenes/play";
+import { PlayScene } from "../../scenes/play.scene";
 import { WorldService } from "../../world.service";
 import { Url } from "../../../utils/resUtil";
 import { Handler } from "../../../utils/handler";
