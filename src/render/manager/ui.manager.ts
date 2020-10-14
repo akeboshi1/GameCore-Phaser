@@ -16,7 +16,6 @@ import { InputTextFactory } from "../ui/Components/InputTextFactory";
 import { DecorateControlMediator } from "../ui/DecorateControl/DecorateControlMediator";
 import { ActivityMediator } from "../ui/Activity/ActivityMediator";
 import { PicaChatMediator } from "../../pica/ui/PicaChat/PicaChatMediator";
-import { PicaNavigateMediator } from "../ui/PicaNavigate/PicaNavigateMediator";
 import { MineCarMediator } from "../ui/MineCar/MineCarMediator";
 import { UIMediatorType } from "../ui/Ui.mediatorType";
 import { ReAwardTipsMediator } from "../ui/ReAwardTips/ReAwardTipsMediator";
@@ -24,18 +23,15 @@ import { ComposeMediator } from "../ui/Compose/ComposeMediator";
 import { MineSettleMediator } from "../ui/MineSettle/MineSettleMediator";
 import { EquipUpgradeMediator } from "../ui/EquipUpgrade/EquipUpgradeMediator";
 import { MarketMediator } from "../ui/Market/MarketMediator";
-import { PicaMainUIMediator } from "../ui/PicaMainUI/PicaMainUIMediator";
-import { PicFurniFunMediator } from "../ui/PicFurniFun/PicFurniFunMediator";
-import { PicHandheldMediator } from "../ui/PicHandheld/PicHandheldMediator";
 import { InteractiveBubbleMediator } from "../ui/Bubble/InteractiveBubbleMediator";
 import { CharacterInfoMediator } from "../ui/CharacterInfo/CharacterInfoMediator";
 import { AlertView, Buttons } from "../ui/Components/Alert.view";
 import { BaseMediator, UIType } from "apowophaserui";
-import { ConnectionService } from "../../../lib/net/connection.service";
-import { WorldService } from "../world.service";
-import { MessageType } from "../../messageType/MessageType";
 import { i18n } from "../../utils/i18n";
-import { RPCEmitter } from "webworker-rpc";
+import { Export, RPCEmitter } from "webworker-rpc";
+import { PicaMainUIMediator } from "../../pica/ui/PicaMainUI/PicaMainUIMediator";
+import { PicHandheldMediator } from "../../pica/ui/PicHandheld/PicHandheldMediator";
+import { PicFurniFunMediator } from "../../pica/ui/PicFurniFun/PicFurniFunMediator";
 
 // export const enum UIType {
 //     NoneUIType,
@@ -46,9 +42,9 @@ import { RPCEmitter } from "webworker-rpc";
 // Monopoly, // 独占型ui
 // Activity, // 热发布活动类型ui，便于单独刷新活动ui
 // }
-export class UiManager extends RPCEmitter {
+export class UIManager extends RPCEmitter {
     private mScene: Phaser.Scene;
-    private mConnect: ConnectionService;
+    // private mConnect: ConnectionService;
     private mMedMap: Map<UIMediatorType, BaseMediator>;
     private mUILayerManager: ILayerManager;
     private mCache: any[] = [];
@@ -66,36 +62,14 @@ export class UiManager extends RPCEmitter {
     private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
     private mStackList: any[] = [];// 记录面板打开关闭先后顺序
     private isShowMainUI: boolean = false;
-    constructor(private worldService: WorldService) {
+    constructor(private worldService: any) {
         super();
-        this.mConnect = worldService.connection;
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_MARKET, this.onEnableMarket);
-        // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditMode);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_FORCE_OFFLINE, this.onForceOfflineHandler);
         this.mUILayerManager = new LayerManager();
         this.mInputTextFactory = new InputTextFactory(worldService);
     }
 
     public getInputTextFactory(): InputTextFactory {
         return this.mInputTextFactory;
-    }
-
-    public addPackListener() {
-        if (this.mConnect) {
-            this.mConnect.addPacketListener(this);
-            this.worldService.emitter.on(MessageType.SHOW_UI, this.handleShowUI, this);
-        }
-    }
-
-    public removePackListener() {
-        if (this.mConnect) {
-            this.mConnect.removePacketListener(this);
-            this.worldService.emitter.off(MessageType.SHOW_UI, this.handleShowUI, this);
-        }
     }
 
     public getUILayerManager(): ILayerManager {
@@ -272,7 +246,6 @@ export class UiManager extends RPCEmitter {
     }
 
     public destroy() {
-        this.removePackListener();
         this.clearMediator();
         this.mMedMap = undefined;
         this.clearCache();
@@ -410,22 +383,27 @@ export class UiManager extends RPCEmitter {
         const mediator: BaseMediator = this.mMedMap.get(className);
         if (mediator) mediator.show();
     }
-    private handleShowUI(packet: PBpacket): void {
+
+    @Export()
+    public handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
         this.showMed(ui.name, ui);
     }
 
-    private handleUpdateUI(packet: PBpacket) {
+    @Export()
+    public handleUpdateUI(packet: PBpacket) {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
         this.updateMed(ui.name, ui);
     }
 
-    private handleCloseUI(packet: PBpacket): void {
+    @Export()
+    public handleCloseUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
         this.hideMed(ui.name);
     }
 
-    private onEnableEditMode(packet: PBpacket) {
+    @Export()
+    public onEnableEditMode(packet: PBpacket) {
         let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.NAME);
         if (!topMenu) {
             topMenu = new TopMenuMediator(this.mScene, this.worldService);
@@ -434,6 +412,24 @@ export class UiManager extends RPCEmitter {
         topMenu.addItem({
             key: "Turn_Btn_Top", name: "EnterDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
             iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
+    }
+
+    @Export()
+    public onUIStateHandler(packge: PBpacket) {
+        this.mAtiveUIData = packge.content;
+        if (this.mAtiveUIData && this.mMedMap) {
+            this.updateUIState(this.mAtiveUIData);
+        }
+    }
+
+    @Export()
+    public onForceOfflineHandler() {
+        new AlertView(this.mScene, this.worldService).show({
+            text: i18n.t("common.offline"),
+            callback: () => {
+            },
+            btns: Buttons.Ok
         });
     }
 
@@ -459,7 +455,7 @@ export class UiManager extends RPCEmitter {
     }
 
     private checkNormalUITween(show: boolean, medName: string) {
-        const size: Size = this.worldService.getSize();
+        const size: any = this.worldService.getSize();
         let len: number = this.mShowuiList.length;
         let tmpName: string;
         let med;
@@ -555,13 +551,6 @@ export class UiManager extends RPCEmitter {
         this.mMedMap.forEach((med: BaseMediator) => med.hide());
     }
 
-    private onUIStateHandler(packge: PBpacket) {
-        this.mAtiveUIData = packge.content;
-        if (this.mAtiveUIData && this.mMedMap) {
-            this.updateUIState(this.mAtiveUIData);
-        }
-    }
-
     private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
             const tag = ui.name;
@@ -584,15 +573,6 @@ export class UiManager extends RPCEmitter {
                 }
             }
         }
-    }
-
-    private onForceOfflineHandler(packet: PBpacket) {
-        const alert = new AlertView(this.mScene, this.worldService).show({
-            text: i18n.t("common.offline"),
-            callback: () => {
-            },
-            btns: Buttons.Ok
-        });
     }
 
     private getPanelNameByStateTag(tag: string) {

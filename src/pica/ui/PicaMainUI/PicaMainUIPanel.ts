@@ -1,13 +1,12 @@
-import { BasePanel } from "../Components/BasePanel";
-import { TextToolTips } from "../Tips/TextToolTip";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
 import { CheckBox, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { WorldService } from "../../world.service";
 import { Logger } from "../../../utils/log";
 import { Font } from "../../../utils/font";
 import { i18n } from "../../../utils/i18n";
 import { Handler } from "../../../utils/handler";
+import { BasePanel } from "../../../render/ui/Components/BasePanel";
+import { TextToolTips } from "../../../render/ui/Tips/TextToolTip";
+import { UIAtlasKey, UIAtlasName } from "../../../render/ui/Ui.atals.name";
 
 export class PicaMainUIPanel extends BasePanel {
     private readonly key = "main_ui";
@@ -27,7 +26,7 @@ export class PicaMainUIPanel extends BasePanel {
     private praiseImg: Phaser.GameObjects.Image;
     private playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     private roomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
-    constructor(scene: Phaser.Scene, worldService: WorldService) {
+    constructor(scene: Phaser.Scene, worldService: any) {
         super(scene, worldService);
     }
 
@@ -399,7 +398,7 @@ class ExpProgress extends Phaser.GameObjects.Container {
     private mCurrentLv: Phaser.GameObjects.Text;
     private mNextLv: Phaser.GameObjects.Text;
     private mProgressBar: ProgressBar;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number, world: WorldService) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number, world: any) {
         super(scene);
 
         const width = world.getSize().width / scale;

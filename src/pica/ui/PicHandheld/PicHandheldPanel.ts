@@ -1,10 +1,9 @@
-import { BasePanel } from "../Components/BasePanel";
-import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
-import { DynamicImage } from "../Components/Dynamic.image";
-import { Handler } from "../../../utils/Handler/Handler";
-import { Url } from "../../game/core/utils/resUtil";
 import { GameGridTable } from "apowophaserui";
+import { BasePanel } from "../../../render/ui/Components/BasePanel";
+import { Handler } from "../../../utils/handler";
+import { DynamicImage } from "../../../render/ui/Components/Dynamic.image";
+import { Url } from "../../../utils/resUtil";
 export class PicHandheldPanel extends BasePanel {
     private readonly key = "pichandheldpanel";
     private gridContent: Phaser.GameObjects.Container;
@@ -12,7 +11,7 @@ export class PicHandheldPanel extends BasePanel {
     private mPropGrid: GameGridTable;
     private curHandheldItem: HandheldItem;
     private isExtendsGrid: boolean = false;
-    constructor(scene: Phaser.Scene, world: WorldService) {
+    constructor(scene: Phaser.Scene, world: any) {
         super(scene, world);
     }
 
