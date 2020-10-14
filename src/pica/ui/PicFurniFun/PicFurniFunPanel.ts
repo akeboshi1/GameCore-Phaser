@@ -1,15 +1,14 @@
-import { WorldService } from "../../game/world.service";
-import { Font } from "../../game/core/utils/font";
-import { DynamicImage } from "../Components/Dynamic.image";
 import { op_client } from "pixelpai_proto";
-import { BasePanel } from "../Components/BasePanel";
-import { Url, Coin } from "../../game/core/utils/resUtil";
-import { i18n } from "../../game/core/utils/i18n";
-import { UIAtlasName, UIAtlasKey } from "../Ui.atals.name";
-import { DetailDisplay } from "../Market/DetailDisplay";
-import { FramesModel } from "../../rooms/display/frames.model";
 import I18NextXhrBackend from "i18next-xhr-backend";
-import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText } from "apowophaserui";
+import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText, ClickEvent } from "apowophaserui";
+import { BasePanel } from "../../../render/ui/Components/BasePanel";
+import { DetailDisplay } from "../../../render/ui/Market/DetailDisplay";
+import { UIAtlasKey, UIAtlasName } from "../../../render/ui/Ui.atals.name";
+import { i18n } from "../../../utils/i18n";
+import { Font } from "../../../utils/font";
+import { FramesModel } from "../../../render/display/frames.model";
+import { DynamicImage } from "../../../render/ui/Components/Dynamic.image";
+import { Url } from "../../../utils/resUtil";
 export class PicFurniFunPanel extends BasePanel {
     private key: string = "furni_unlock";
     private confirmBtn: NineSliceButton;
@@ -28,7 +27,7 @@ export class PicFurniFunPanel extends BasePanel {
     private selectMaterial: MaterialItem;
     private tipsbg: NineSlicePatch;
     private itemName: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, world: WorldService) {
+    constructor(scene: Phaser.Scene, world: any) {
         super(scene, world);
     }
 

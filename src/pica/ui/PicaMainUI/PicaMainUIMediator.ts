@@ -1,19 +1,18 @@
 
-import { ILayerManager } from "../Layer.manager";
 import { PicaMainUIPanel } from "./PicaMainUIPanel";
 import { op_client } from "pixelpai_proto";
 import { PicaMainUI } from "./PicaMainUI";
 import { BaseMediator } from "apowophaserui";
-import { WorldService } from "../../world.service";
+import { ILayerManager } from "../../../render/ui/Layer.manager";
 
 export class PicaMainUIMediator extends BaseMediator {
     public static NAME: string = "PicaMainUIMediator";
     protected mView: PicaMainUIPanel;
-    private world: WorldService;
+    private world: any;
     private mainUI: PicaMainUI;
     private mPlayerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     private mRoomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
-    constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, worldService: WorldService) {
+    constructor(private layerManager: ILayerManager, private scene: Phaser.Scene, worldService: any) {
         super();
         this.world = worldService;
         this.mainUI = new PicaMainUI(worldService);
