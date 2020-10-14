@@ -11,10 +11,7 @@ import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { FriendRelationEnum } from "../PicFriend/PicFriendRelation";
 import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { i18n } from "../../../utils/i18n";
-import { Font } from "../../../utils/font";
-import { Handler } from "../../../utils/handler";
-import { Url } from "../../../utils/resUtil";
+import { i18n, Font, Handler, Url } from "../../../utils";
 export default class CharacterInfoPanel extends BasePanel {
     private key = "player_info";
     private commonkey = "common_key";

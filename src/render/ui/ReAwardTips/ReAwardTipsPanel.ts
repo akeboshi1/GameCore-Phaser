@@ -2,8 +2,7 @@ import { BasePanel } from "../Components/BasePanel";
 import { WorldService } from "../../game/world.service";
 import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "../Components/Dynamic.image";
-import { Font } from "../../game/core/utils/font";
-import { Url } from "../../game/core/utils/resUtil";
+import { Font, Url } from "../../../utils";
 
 export class ReAwardTipsPanel extends BasePanel {
     private key: string = "reaward_tips";

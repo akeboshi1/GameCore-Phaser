@@ -1,7 +1,6 @@
-import { Font } from "../../game/core/utils/font";
+import { Font, i18n } from "../../../utils";
 import { op_client } from "pixelpai_proto";
 import { NineSlicePatch, BBCodeText, IPatchesConfig } from "apowophaserui";
-import { i18n } from "../../game/core/utils/i18n";
 
 export class ItemInfoTips extends Phaser.GameObjects.Container {
     private tipsbg: NineSlicePatch;

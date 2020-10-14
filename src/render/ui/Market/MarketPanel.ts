@@ -8,9 +8,7 @@ import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 import { WorldService } from "../../world.service";
-import { Font } from "../../../utils/font";
-import { i18n } from "../../../utils/i18n";
-import { Handler } from "../../../utils/handler";
+import { Font, i18n, Handler } from "../../../utils";
 export class MarketPanel extends BasePanel {
   private readonly key = "market";
   private mSelectItem: ElementDetail;

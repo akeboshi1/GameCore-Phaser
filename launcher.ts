@@ -4,6 +4,8 @@ import { ILauncherConfig } from "./src/structureinterface/lanucher.config";
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
+import { GameMain } from "./src/structureinterface/game.main";
+import { ILauncherConfig } from "./src/structureinterface/lanucher.config";
 import version from "./version";
 // import { ServerAddress } from "./src/net/address";
 // import { ConnectionService } from "./src/net/connection.service";
@@ -97,8 +99,8 @@ export class Launcher {
             // xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./src/render/rendrer").then((game) => {
-            this.game = new game.Render(this.config, this.mCompleteFunc);
+        import(/* webpackChunkName: "game" */ "./src/render/render").then((game) => {
+            this.game = new game.Render(this.config);
             if (config.isEditor) {
                 this.game.createGame();
             }
@@ -149,17 +151,17 @@ export class Launcher {
     }
 
     public updatePalette(palette) {
-        if (!this.world) return;
-        this.world.updatePalette(palette);
+        if (!this.game) return;
+        this.game.updatePalette(palette);
     }
 
     public restart(config?: ILauncherConfig, callBack?: Function) {
-        if (this.world) this.world.restart(config, callBack);
+        if (this.game) this.game.restart(config, callBack);
     }
 
     public updateMoss(moss) {
-        if (!this.world) return;
-        this.world.updateMoss(moss);
+        if (!this.game) return;
+        this.game.updateMoss(moss);
     }
 
     public registerReload(func: Function) {
@@ -171,26 +173,24 @@ export class Launcher {
     }
 
     public onResize(width: number, height: number, ui_scale?: number) {
-        if (!this.world) return;
+        if (!this.game) return;
         if (ui_scale) this.mConfig.ui_scale = ui_scale;
-        this.world.resize(width, height);
+        this.game.resize(width, height);
         // if (width < height) {
-        //     this.world.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
+        //     this.game.resize(this.mConfig.screenHeight, this.mConfig.screenWidth);
         // } else {
-        //     this.world.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
+        //     this.game.resize(this.mConfig.screenWidth, this.mConfig.screenHeight);
         // }
     }
 
     public onOrientationChange(orientation: number, width: number, height: number) {
-        if (!this.world) return;
-        this.world.onOrientationChange(orientation, width, height);
+        if (!this.game) return;
+        this.game.onOrientationChange(orientation, width, height);
     }
 
     public destroy(): Promise<void> {
         if (this.intervalId) clearInterval(this.intervalId);
-        if (this.world) return this.world.destroy();
+        if (this.game) return this.game.destroy();
         return null;
     }
 }
-
-export * from "./src/game/core/editor";

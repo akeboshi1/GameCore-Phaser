@@ -1,4 +1,4 @@
-import { Tool } from "../../game/core/utils/tool";
+import { Tool } from "../../../utils/tool";
 import { IToolTip } from "./ItoolTip";
 
 export class ToolTip extends Phaser.GameObjects.Container implements IToolTip {
