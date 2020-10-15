@@ -1,4 +1,4 @@
-import { PBpacket, PacketHandler, Buffer } from "net-socket-packet";
+import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
 import { IPoint, Lite } from "game-capsule";
@@ -9,7 +9,6 @@ import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
 // import { ElementStorage } from "./elementstorage/element.storage";
 import { Connection, ConnListener, GameSocket } from "./net/connection";
-import { CreateRoleManager } from "./uimanager/createrole/create.role.manager";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
@@ -19,6 +18,8 @@ import { LoadingTips } from "./loading/loading.tips";
 import { load } from "../utils/http";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { ServerAddress } from "../../lib/net/address";
+import { UIManager } from "./ui/ui.manager";
+import { CreateRoleManager } from "./ui/create.role/create.role.manager";
 interface ISize {
     width: number;
     height: number;
@@ -38,6 +39,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     // private mElementStorage: ElementStorage;
     // private mPlayerDataManager: PlayerDataManager;
     private mCreateRoleManager: CreateRoleManager;
+    private mUIManager: UIManager;
     // private mSoundManager: SoundManager;
     private mLoadingManager: LoadingManager;
     private mainPeer: MainPeer;
@@ -79,6 +81,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // this.mRoomManager = new RoomManager(this);
         // this.mUiManager = new UiManager(this);
         // this.mElementStorage = new ElementStorage();
+        this.mUIManager = new UIManager(this);
         this.mHttpService = new HttpService(this);
         this.mCreateRoleManager = new CreateRoleManager(this);
         // this.mSoundManager = new SoundManager(this);
@@ -86,8 +89,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mCreateRoleManager.register();
+        this.mUIManager.addPackListener();
         // this.mRoomManager.addPackListener();
-        // this.mUiManager.addPackListener();
         // this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
         this.mAccount = new Account();
@@ -95,7 +98,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
     public initGame() {
         // if (this.mRoomManager) this.mRoomManager.addPackListener();
-        // if (this.mUiManager) this.mUiManager.addPackListener();
+        if (this.mUIManager) this.mUIManager.addPackListener();
         if (this.mCreateRoleManager) this.mCreateRoleManager.register();
         // if (this.mSoundManager) this.mSoundManager.addPackListener();
         // if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
