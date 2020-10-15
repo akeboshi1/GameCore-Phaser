@@ -2,7 +2,6 @@ import { BasePanel } from "../Components/BasePanel";
 import { LoadingScene } from "../../scenes/loading";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
-import { WorldService } from "../../world.service";
 import { Font } from "../../../utils/font";
 import Helpers from "../../../utils/helpers";
 
@@ -16,7 +15,7 @@ export class LoginPanel extends BasePanel {
     private loginBtn: NineSliceButton;
     private downcount: number = -1;
     private fetchCode: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, world: WorldService) {
+    constructor(scene: Phaser.Scene, world: any) {
         super(scene, world);
     }
 

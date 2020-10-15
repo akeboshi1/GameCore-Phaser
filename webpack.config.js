@@ -4,7 +4,6 @@ const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
 const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
 const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
-const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");

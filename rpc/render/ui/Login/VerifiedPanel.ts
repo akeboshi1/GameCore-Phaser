@@ -1,7 +1,6 @@
 import { BasePanel } from "../Components/BasePanel";
 import { UIAtlasKey, UIAtlasName } from "../Ui.atals.name";
 import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
-import { WorldService } from "../../world.service";
 import { Font } from "../../../utils/font";
 
 export class VerifiedPanel extends BasePanel {
@@ -9,7 +8,7 @@ export class VerifiedPanel extends BasePanel {
     private mNameInput: InputText;
     private mIDCardInput: InputText;
     private isIDCard = /^[1-9]\d{5}(19|20|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-    constructor(scene: Phaser.Scene, world: WorldService) {
+    constructor(scene: Phaser.Scene, world: any) {
         super(scene, world);
     }
 

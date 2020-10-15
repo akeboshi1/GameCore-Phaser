@@ -59,12 +59,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
     public createGame(config?: ILauncherConfig) {
         this.mConfig = config;
-        const gateway: ServerAddress = this.mConfig.server_addr || CONFIG.gateway;
+        const gateway: ServerAddress = this.mConfig.server_addr;
         if (gateway) {
             // connect to game server.
             this.mainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
         }
     }
+
     public createAccount(gameID: string, worldID: string, sceneId?: number, loc?: any) {
         this.mAccount = new Account();
         this.mAccount.enterGame(gameID, worldID, sceneId, loc);
@@ -74,8 +75,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     //     this.connect = connect;
     //     this.connect.addPacketListener(this);
     // }
-    public initWorld(desk: boolean) {
-        this.mConfig.desktop = desk;
+    public initWorld() {
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
@@ -108,9 +108,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         //     this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
         // }
     }
+
     public showLoading() {
         this.mainPeer.render.showLoading();
     }
+
     public onConnected() {
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
@@ -118,6 +120,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.enterVirtualWorld();
         // this.login();
     }
+
     public onDisConnected() {
         Logger.getInstance().log("app connectFail=====");
         if (this.connect.pause) return;
@@ -127,6 +130,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mainPeer.render.clearGame();
         }
     }
+
     public onError() {
         Logger.getInstance().log("socket error");
         if (!this.connect.connect) {
@@ -138,25 +142,31 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
         }
     }
+
     public onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
     }
+
     public destroyClock() {
         if (this.mClock) {
             this.mClock.destroy();
             this.mClock = null;
         }
     }
+
     public loadSceneConfig(sceneID: number) {
         this.mainPeer.render.loadSceneConfig(sceneID);
     }
+
     public clearGameComplete() {
-        this.initWorld(this.mConfig.desktop || false);
+        this.initWorld();
     }
+
     public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
         this.mainPeer.render.addFillEffect(pos.x, pos.y, status);
     }
+
     public setSize(width, height) {
         this.mSize = {
             width,

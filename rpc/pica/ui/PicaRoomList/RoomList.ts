@@ -1,12 +1,11 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { WorldService } from "../../world.service";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 
 export class RoomList extends PacketHandler {
-  private readonly world: WorldService;
+  private readonly world: any;
   private mEvent: Phaser.Events.EventEmitter;
-  constructor($world: WorldService) {
+  constructor($world: any) {
     super();
     this.world = $world;
     this.mEvent = new Phaser.Events.EventEmitter();

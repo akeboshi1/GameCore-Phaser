@@ -1,10 +1,9 @@
-import { WorldService } from "../game/world.service";
 import { Url } from "../../utils";
 import { Size } from "../../utils/size";
 import { BasicScene } from "./basic.scene";
 
 export class GamePauseScene extends BasicScene {
-    private mWorld: WorldService;
+    private mWorld: any;
     private bg: Phaser.GameObjects.Graphics;
     private pauseImg: Phaser.GameObjects.Image;
     private tipTF: Phaser.GameObjects.Text;

@@ -1,7 +1,6 @@
 import { PopUpTextUI } from "../ui/PopUpPanel/PopUpTextUI";
 import { BasicScene } from "./basic.scene";
 import { InputText, ComboBox } from "apowophaserui";
-import { WorldService } from "../world.service";
 import { ConnectionService } from "../../../lib/net/connection.service";
 import { Size } from "../../utils/size";
 import { Logger } from "../../utils/log";
@@ -11,7 +10,7 @@ export class LoginScene extends BasicScene {
     private mCallBack: Function;
     private mConnect: ConnectionService;
     private mTabDic: Map<number, Phaser.GameObjects.Image>;
-    private mWorld: WorldService;
+    private mWorld: any;
     private mCurTabIndex: number = 0;
 
     private rect: Phaser.GameObjects.Graphics;

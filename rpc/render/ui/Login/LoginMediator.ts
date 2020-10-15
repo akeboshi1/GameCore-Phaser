@@ -1,14 +1,16 @@
 import { LoginPanel } from "./LoginPanel";
 import { LayerManager } from "../Layer.manager";
 import { VerifiedPanel } from "./VerifiedPanel";
-import { AlertView, Buttons } from "../Components/Alert.view";
+// import { AlertView, Buttons } from "../Components/Alert.view";
 import { BaseMediator } from "apowophaserui";
-import { WorldService } from "../../world.service";
 import { Logger } from "../../../utils/log";
+import { AlertView, Buttons } from "../Components/Alert.view";
 
 export class LoginMediator extends BaseMediator {
     private verifiedPanel: VerifiedPanel;
-    constructor(private layerManager: LayerManager, scene: Phaser.Scene, private world: WorldService) {
+    private verifiedEnable: boolean = false;
+
+    constructor(private layerManager: LayerManager, scene: Phaser.Scene, private world: any) {
         super();
     }
 
@@ -32,6 +34,7 @@ export class LoginMediator extends BaseMediator {
     }
 
     private onFetchCodeHandler(phone: string, areaCode: string) {
+        // TODO rpc world
         this.world.httpService.requestPhoneCode(phone, areaCode);
     }
 
@@ -42,6 +45,7 @@ export class LoginMediator extends BaseMediator {
             this.world.enterGame();
             return;
         }
+        // TODO rpc world
         this.world.httpClock.allowLogin(() => { (<LoginPanel>this.mView).setInputVisible(true); })
             .then((allow: boolean) => {
                 if (allow) {
@@ -64,9 +68,8 @@ export class LoginMediator extends BaseMediator {
                 const data = response.data;
                 this.world.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                const verifiedEnable = CONFIG["verified_enable"];
-                if (verifiedEnable !== undefined && verifiedEnable === false) {
-                    this.enterGame(!verifiedEnable);
+                if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
+                    this.enterGame(!this.verifiedEnable);
                     return;
                 }
                 if (data.hasIdentityInfo) {
