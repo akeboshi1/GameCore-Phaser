@@ -1,6 +1,6 @@
+import { Logger } from "../../src/utils/log";
 import { ServerAddress } from "./address";
 import { WSWrapper, ReadyState } from "./transport/websocket";
-import { Logger } from "../../src/utils/log";
 export interface IConnectListener {
     onConnected(connection?: SocketConnection): void;
 

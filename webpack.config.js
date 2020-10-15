@@ -4,7 +4,6 @@ const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
 const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
 const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
-const ConfigWebpackPlugin = require("config-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -15,6 +14,8 @@ const appVer = require("./version");
 const config = {
     entry: {
         tooqing: path.join(__dirname, "./launcher.ts"),
+        mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
+        heartWorker: path.join(__dirname, "./src/services/heartBeat.worker.ts")
     },
     output: {
         // This is required so workers are known where to be loaded from
@@ -76,6 +77,7 @@ const config = {
             inject: "head",
             title: "图轻播放器",
             template: path.join(__dirname, "./index.html"),
+            chunks:["tooqing"]
         }),
         new TSLintPlugin({
             config: path.resolve(__dirname, "./tslint.json"),

@@ -1,4 +1,5 @@
-export class Pos {
+import { IPos } from "./logic.pos";
+export class Pos implements IPos {
     x: number;
     y: number;
     z?: number;
@@ -28,8 +29,7 @@ export class Pos {
         return `Pos >> x: ${this.x}, y: ${this.y}, z: ${this.z}, depth: ${this.depth}`;
     }
 
-    public toPoint(): Phaser.Geom.Point {
-        return new Phaser.Geom.Point(this.x, this.y);
+    public toPoint(): IPos {
+        return new Pos(this.x, this.y);
     }
-
 }

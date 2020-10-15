@@ -2,7 +2,7 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-import { ILauncherConfig } from "./rpc/structureinterface/lanucher.config";
+import { ILauncherConfig } from "./src/structureinterface/lanucher.config";
 import version from "./version";
 // import { ServerAddress } from "./src/net/address";
 // import { ConnectionService } from "./src/net/connection.service";
@@ -145,7 +145,7 @@ export class Launcher {
             // xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
 
-        import(/* webpackChunkName: "game" */ "./rpc/render/render").then((game) => {
+        import(/* webpackChunkName: "game" */ "./src/render/render").then((game) => {
             this.world = new game.Render(this.config, this.mCompleteFunc);
             if (config.isEditor) {
                 this.world.createGame();
@@ -240,5 +240,3 @@ export class Launcher {
         return null;
     }
 }
-
-export * from "./src/editor";

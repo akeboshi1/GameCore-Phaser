@@ -20,6 +20,7 @@ export enum ElementEditorEmitType {
     Update_Frame_Sumb = "updateFrameSumb"
 }
 
+// 物件编辑画布
 export class ElementEditorCanvas extends EditorCanvas {
 
     public mData: ElementNode;

@@ -1,6 +1,7 @@
-import { HTTP_REGEX } from "../const/constants";
 import { op_def } from "pixelpai_proto";
-import { i18n } from "../i18n";
+import { HTTP_REGEX } from "../structureinterface/constants";
+import { i18n } from "./i18n";
+
 export class Url {
     static OSD_PATH = "";
     static RES_PATH: string = "";
