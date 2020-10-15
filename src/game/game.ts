@@ -1,4 +1,4 @@
-import { PBpacket, PacketHandler, Buffer } from "net-socket-packet";
+import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world } from "pixelpai_proto";
 import { IPoint, Lite } from "game-capsule";
@@ -9,7 +9,6 @@ import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
 // import { ElementStorage } from "./elementstorage/element.storage";
 import { Connection, ConnListener, GameSocket } from "./net/connection";
-import { CreateRoleManager } from "./uimanager/createrole/create.role.manager";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
@@ -20,6 +19,7 @@ import { load } from "../utils/http";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { ServerAddress } from "../../lib/net/address";
 import { UIManager } from "./ui/ui.manager";
+import { CreateRoleManager } from "./ui/create.role/create.role.manager";
 interface ISize {
     width: number;
     height: number;
