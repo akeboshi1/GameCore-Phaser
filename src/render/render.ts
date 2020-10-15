@@ -10,7 +10,7 @@ import { MessageType } from "../structureinterface/message.type";
 import { op_client } from "pixelpai_proto";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { GameMain } from "../structureinterface/game.main";
-import { MAIN_WORKER_URL, RENDER_PEER } from "../structureinterface/worker.name";
+import { MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "../structureinterface/worker.name";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -434,4 +434,3 @@ export class Render extends RPCPeer implements GameMain {
         // this.mWorld.clearGame();
     }
 }
-const MAIN_WORKER = "mainWorker";

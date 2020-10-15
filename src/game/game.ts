@@ -46,7 +46,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
-        this.mSocket = new GameSocket(this.mainPeer, new ConnListener(this.mainPeer));
+        this.mSocket = new GameSocket(peer, new ConnListener(peer));
         this.connect = new Connection(this.mSocket);
     }
     get scaleRatio(): number {

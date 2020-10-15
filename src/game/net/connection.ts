@@ -14,8 +14,10 @@ for (const key in protos) {
 export class GameSocket extends SocketConnection {
     protected mUuid: number = 0;
     private _pause: boolean = false;
-    constructor(private mainPeer: MainPeer, $listener: IConnectListener) {
+    private mainPeer: MainPeer;
+    constructor(mainPeer: MainPeer, $listener: IConnectListener) {
         super($listener);
+        this.mainPeer = mainPeer;
     }
     send(data: any): void {
         if (this._pause) return;
@@ -25,7 +27,7 @@ export class GameSocket extends SocketConnection {
         super.send(protobuf_packet.Serialization());
         Logger.getInstance().info(`MainWorker[发送] >>> ${protobuf_packet.toString()}`);
     }
-    onData(data: any) {
+    protected onData(data: any) {
         if (this._pause) return;
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));

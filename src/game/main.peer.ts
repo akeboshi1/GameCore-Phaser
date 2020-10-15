@@ -59,7 +59,7 @@ export class MainPeer extends RPCPeer {
     }
 
     public onData(buffer: Buffer) {
-        this.mGame.socket.onData(buffer);
+        // this.mGame.socket.onData(buffer);
     }
 
     // ============= 主进程调用心跳
@@ -147,10 +147,18 @@ export class MainPeer extends RPCPeer {
     }
     // ============= 心跳调用主进程
     @Export()
-    public heartBeat() {
+    public startHeartBeat() {
         // ==========同步心跳
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
         this.mGame.socket.send(pkt.Serialization());
+    }
+    @Export()
+    public endHeartBeat() {
+
+    }
+    @Export()
+    public clearHeartBeat() {
+
     }
     @Export()
     public creareRole() {

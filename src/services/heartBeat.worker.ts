@@ -19,12 +19,12 @@ class HeartBeatPeer extends RPCPeer {
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
             if (this.reConnectCount >= 8) {
-                this.remote[MAIN_WORKER].MainPeer.startBeat("reConnect");
+                this.remote[MAIN_WORKER].MainPeer.startHeartBeat("reConnect");
                 return;
             }
             this.reConnectCount++;
             // Logger.getInstance().log("heartBeatWorker startBeat");
-            this.remote[MAIN_WORKER].MainPeer.startBeat("heartBeat");
+            this.remote[MAIN_WORKER].MainPeer.startHeartBeat("heartBeat");
         }, this.delayTime);
     }
 
@@ -42,7 +42,7 @@ class HeartBeatPeer extends RPCPeer {
     public clearBeat() {
         this.reConnectCount = 0;
         // Logger.getInstance().log("heartBeatWorker clearBeat");
-        this.remote[MAIN_WORKER].MainPeer.clearBeat(null);
+        this.remote[MAIN_WORKER].MainPeer.clearHeartBeat(null);
     }
 
     @Export([webworker_rpc.ParamType.str])

@@ -79,7 +79,7 @@ export class SocketConnection {
         if (!this.mTransport) {
             return Logger.getInstance().error(`Empty transport.`);
         }
-        this.mTransport.on("packet", this.onData);
+        this.mTransport.on("packet", this.onData.bind(this));
     }
 
     protected onData(data: any) {
