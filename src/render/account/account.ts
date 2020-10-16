@@ -5,7 +5,7 @@ interface IAccountData {
     fingerprint: string;
     id: string;
 }
-class Account {
+export class Account {
     private mGameId: string;
     private mVirtualWorldId: string;
     private mSceneID: number;

@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game } from "tooqinggamephaser";
+import { Game, Scene } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { op_def } from "pixelpai_proto";
 import { Logger } from "../utils/log";
@@ -11,6 +11,8 @@ import { op_client } from "pixelpai_proto";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { GameMain } from "../structureinterface/game.main";
 import { MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "../structureinterface/worker.name";
+import { Account } from "./account/account";
+import { SceneName } from "../structureinterface/scene.name";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -26,6 +28,7 @@ export class Render extends RPCPeer implements GameMain {
      * 面板缩放系数
      */
     private mUIScale: number;
+    private mAccount: Account;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
@@ -36,8 +39,12 @@ export class Render extends RPCPeer implements GameMain {
             Logger.getInstance().log("worker onReady");
         });
     }
+    get account(): Account {
+        return this.mAccount;
+    }
 
     createGame() {
+        this.newGame();
         this.remote[MAIN_WORKER].MainPeer.createGame(this.mConfig);
     }
 
@@ -134,15 +141,13 @@ export class Render extends RPCPeer implements GameMain {
     public initGameConfig(config: any) {
         this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
     }
-    public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
-        this.remote[MAIN_WORKER].MainPeer.startConnect(gameID, worldID, sceneID, loc);
-    }
+
     public startConnect(gateway: ServerAddress) {
         this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
     }
-    public newGame(): Phaser.Game {
+    public newGame() {
         if (this.mGame) {
-            return this.mGame;
+            return;
         }
         Logger.getInstance().log("dragonbones: ", dragonBones);
         this.gameConfig = {
@@ -186,19 +191,10 @@ export class Render extends RPCPeer implements GameMain {
         if (this.mGame.device.os.desktop) {
             this.mUIScale = 1;
         }
-        return this.mGame;
     }
 
     public closeConnect() {
         this.remote[MAIN_WORKER].MainPeer.closeConnect();
-    }
-
-    public initWorld(desk: boolean) {
-        this.remote[MAIN_WORKER].MainPeer.initWorld(desk);
-    }
-
-    public initGame() {
-        this.remote[MAIN_WORKER].MainPeer.initGame();
     }
 
     public send(packet: PBpacket) {
@@ -238,6 +234,20 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
+    public login() {
+        if (!this.mGame.scene.getScene(SceneName.LOGIN_SCENE)) {
+            this.mGame.scene.add(SceneName.LOGIN_SCENE, Login);
+        }
+        this.mGame.scene.start(LoginScene.name, {
+            connect: this.mConnection,
+            world: this,
+            callBack: () => {
+                this.enterGame();
+            },
+        });
+    }
+
+    @Export()
     public updateCharacterPackage() {
         this.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
     }
@@ -255,7 +265,6 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public onConnected() {
         this.isConnect = true;
-        this.newGame();
     }
 
     @Export()
@@ -283,11 +292,6 @@ export class Render extends RPCPeer implements GameMain {
         // this.mWorld.reconnect();
     }
 
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public onGotoAnotherGame(gameId: string, worldId: string, sceneId?: number, x?: number, y?: number, z?: number) {
-        // this.mWorld.onGotoAnotherGame(gameId, worldId, sceneId, { x, y, z });
-    }
-
     @Export([webworker_rpc.ParamType.num])
     public setMoveStyle(moveStyle: number) {
         this._moveStyle = moveStyle;
@@ -311,7 +315,48 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public enterVirtualWorld() {
-        // this.mWorld.enterVirtualWorld();
+        const token = localStorage.getItem("token");
+        const account = token ? JSON.parse(token) : null;
+        Logger.getInstance().log("render---enterVirtualWorld", this.mConfig, token);
+        if (!this.mConfig.auth_token) {
+            if (!account) {
+                this.login();
+                return;
+            }
+            Logger.getInstance().log("render---refreshToken");
+            this.mAccount.setAccount(account);
+            this.remote[MAIN_WORKER].MainPeer.refreshToken();
+        } else {
+            // this.mGame.scene.start(LoadingScene.name, { world: this });
+            // this.mLoadingManager.start();
+            Logger.getInstance().log("render---enterVirtualWorld");
+            this.mAccount.setAccount({
+                token: this.mConfig.auth_token,
+                expire: this.mConfig.token_expire,
+                fingerprint: this.mConfig.token_fingerprint,
+                refreshToken: account ? account.refreshToken : "",
+                id: this.mConfig.user_id ? this.mConfig.user_id : account ? account.id : "",
+            });
+            this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
+        }
+        // this.remote[MAIN_WORKER].MainPeer.enterVirtualWorldCallBack(token);
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number) {
+        if (!this.mAccount) this.mAccount = new Account();
+        this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+        // this.remote[MAIN_WORKER].MainPeer.createAccount(gameID, worldID, sceneID, loc);
+    }
+
+    @Export()
+    public refreshAccount(account: any) {
+        this.account.refreshToken(account);
+    }
+
+    @Export()
+    public getAccount(): any {
+        return this.mAccount.accountData;
     }
 
     @Export()
@@ -372,7 +417,9 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
-
+        // this.newGame().then(() => {
+        //     // todo sceneManager loginScene.name
+        // });
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -420,8 +467,24 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public createGameCallBack(content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT) {
+    public createGameCallBack(content: op_def.IKeyCodeEvent[]) {
+        this.newGame();
+        this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
+        if (window.screen.width > window.screen.height) {
+            if (this.mConfig.width > this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        } else {
+            if (this.mConfig.width < this.mConfig.height) {
+                this.resize(this.mConfig.width, this.mConfig.height);
+            } else {
+                this.resize(this.mConfig.height, this.mConfig.width);
+            }
+        }
 
+        this.gameCreated();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -430,7 +493,44 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public clearGame() {
-        // this.mWorld.clearGame();
+    public clearGame(callBack?: Function): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.mGame) {
+                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
+                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
+                this.mGame.plugins.removeGlobalPlugin("rexButton");
+                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexInputText");
+                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                this.mGame.plugins.removeScenePlugin("DragonBones");
+                this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                    this.mGame = undefined;
+                    if (callBack) callBack();
+                    resolve();
+                });
+                this.mGame.destroy(true);
+            } else {
+                resolve();
+            }
+        });
+    }
+
+    private onFullScreenChange() {
+        this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
+    }
+
+    private gameCreated() {
+        if (this.mCallBack) {
+            this.mCallBack();
+        }
+        if (this.mConfig.game_created) {
+            this.mConfig.game_created();
+        }
+        this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
+        this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
+        // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 }
