@@ -13,11 +13,15 @@ import { GameMain } from "../structureinterface/game.main";
 import { MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "../structureinterface/worker.name";
 import { Account } from "./account/account";
 import { SceneName } from "../structureinterface/scene.name";
+import { SceneManager } from "./managers/scene.manager";
+import { LoginScene } from "./scenes/login.scene";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
+
+    private sceneManager: SceneManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -145,52 +149,60 @@ export class Render extends RPCPeer implements GameMain {
     public startConnect(gateway: ServerAddress) {
         this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
     }
-    public newGame() {
-        if (this.mGame) {
-            return;
-        }
-        Logger.getInstance().log("dragonbones: ", dragonBones);
-        this.gameConfig = {
-            type: Phaser.AUTO,
-            parent: this.mConfig.parent,
-            scene: null,
-            disableContextMenu: true,
-            transparent: false,
-            backgroundColor: 0x0,
-            resolution: 1,
-            fps: {
-                target: 60,
-                forceSetTimeOut: true
-            },
-            dom: {
-                createContainer: true,
-            },
-            plugins: {
-                scene: [
-                    {
-                        key: "DragonBones",
-                        plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
-                        mapping: "dragonbone",
-                    },
-                ],
-            },
-            render: {
-                pixelArt: true,
-                roundPixels: true,
-            },
-            scale: {
-                mode: Phaser.Scale.NONE,
-                width: this.mConfig.width * window.devicePixelRatio,
-                height: this.mConfig.height * window.devicePixelRatio,
-                zoom: 1 / window.devicePixelRatio,
-            },
-        };
-        Object.assign(this.gameConfig, this.mConfig);
-        this.mGame = new Game(this.gameConfig);
-        this.mGame.input.mouse.capture = true;
-        if (this.mGame.device.os.desktop) {
-            this.mUIScale = 1;
-        }
+
+    public newGame(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (this.mGame) {
+                resolve();
+            }
+            Logger.getInstance().log("dragonbones: ", dragonBones);
+            this.gameConfig = {
+                type: Phaser.AUTO,
+                parent: this.mConfig.parent,
+                scene: null,
+                disableContextMenu: true,
+                transparent: false,
+                backgroundColor: 0x0,
+                resolution: 1,
+                fps: {
+                    target: 60,
+                    forceSetTimeOut: true
+                },
+                dom: {
+                    createContainer: true,
+                },
+                plugins: {
+                    scene: [
+                        {
+                            key: "DragonBones",
+                            plugin: dragonBones.phaser.plugin.DragonBonesScenePlugin,
+                            mapping: "dragonbone",
+                        },
+                    ],
+                },
+                render: {
+                    pixelArt: true,
+                    roundPixels: true,
+                },
+                scale: {
+                    mode: Phaser.Scale.NONE,
+                    width: this.mConfig.width * window.devicePixelRatio,
+                    height: this.mConfig.height * window.devicePixelRatio,
+                    zoom: 1 / window.devicePixelRatio,
+                },
+            };
+            Object.assign(this.gameConfig, this.mConfig);
+            this.mGame = new Game(this.gameConfig);
+            this.mGame.input.mouse.capture = true;
+            if (this.mGame.device.os.desktop) {
+                this.mUIScale = 1;
+            }
+            this.sceneManager = new SceneManager(this.mGame);
+            this.exportProperty(this.sceneManager, this);
+            // .onceReady(() => {
+            resolve();
+            // });
+        });
     }
 
     public closeConnect() {
@@ -236,13 +248,14 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public login() {
         if (!this.mGame.scene.getScene(SceneName.LOGIN_SCENE)) {
-            this.mGame.scene.add(SceneName.LOGIN_SCENE, Login);
+            this.mGame.scene.add(SceneName.LOGIN_SCENE, LoginScene);
         }
-        this.mGame.scene.start(LoginScene.name, {
-            connect: this.mConnection,
+        this.mGame.scene.start(SceneName.LOGIN_SCENE, {
             world: this,
             callBack: () => {
-                this.enterGame();
+                this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
+                // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+                this.mGame.scene.remove(LoginScene.name);
             },
         });
     }
