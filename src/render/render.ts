@@ -16,7 +16,6 @@ import { SceneName } from "../structureinterface/scene.name";
 import { SceneManager } from "./managers/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { UiManager } from "./managers/ui.manager";
-import { LoginMediator } from "./ui/Login/LoginMediator";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -287,24 +286,12 @@ export class Render extends RPCPeer implements GameMain {
         this.remote[MAIN_WORKER].MainPeer.requestCurTime();
     }
 
-    public requestPhoneCode(phone: string, areaCode: string) {
-        this.remote[MAIN_WORKER].MainPeer.requestPhoneCode(phone, areaCode);
+    public onLoginErrorHanlerCallBack(name: string, idcard: string) {
+
     }
 
-    public httpClockEnable(enable: boolean) {
-        this.remote[MAIN_WORKER].MainPeer.httpClockEnable(enable);
-    }
+    public onShowErrorHandlerCallBack(error, okText) {
 
-    public allowLogin() {
-        this.remote[MAIN_WORKER].MainPeer.allowLogin();
-    }
-
-    public loginByPhoneCode(phone: string, code: string, areaCode: string) {
-        this.remote[MAIN_WORKER].MainPeer.loginByPhoneCode(phone, code, areaCode);
-    }
-
-    public verified(name: string, idcard: string) {
-        this.remote[MAIN_WORKER].MainPeer.verified(name, idcard);
     }
 
     @Export()
@@ -324,29 +311,39 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
-    @Export()
-    public allowLoginCallBack() {
-        this.uiManager.getMediator(LoginMediator.name);
+    @Export([webworker_rpc.ParamType.str])
+    public showUI(panelName: string) {
+
     }
 
     @Export([webworker_rpc.ParamType.boolean])
-    public allowLoginPromise(allow: boolean) {
+    public setInputVisible(allow: boolean) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.boolean])
+    public setLoginEnable(allow: boolean) {
 
     }
 
     @Export()
-    public allowLoginPromiseError() {
+    public onShowVerified() {
+
+    }
+
+    @Export([webworker_rpc.ParamType.boolean])
+    public setVerifiedEnable(enable: boolean) {
 
     }
 
     @Export()
-    public loginByPhoneCodeCallBack(response) {
-
+    public onShowErrorHandler(error, okText) {
+        this.onShowErrorHandlerCallBack(error, okText);
     }
 
-    @Export()
-    public verifiedCallBack(response: any) {
-
+    @Export([webworker_rpc.ParamType.str])
+    public onLoginErrorHanler(name: string, idcard: string) {
+        this.onLoginErrorHanlerCallBack(name, idcard);
     }
 
     @Export()

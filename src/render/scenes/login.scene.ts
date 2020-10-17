@@ -16,7 +16,7 @@ export class LoginScene extends BasicScene {
         if (this.world) {
             const uimanager: UiManager = this.world.uiManager;
             uimanager.setScene(this);
-            uimanager.showMed("Login");
+            uimanager.showPanel("Login");
         }
     }
 

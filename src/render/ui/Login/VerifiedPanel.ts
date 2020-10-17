@@ -3,6 +3,7 @@ import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
 import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/Ui.atals.name";
 import { Font } from "../../../utils";
+import { MAIN_WORKER } from "../../../structureinterface/worker.name";
 
 export class VerifiedPanel extends BasePanel {
     private mVerifiedBtn: NineSliceButton;
@@ -34,7 +35,7 @@ export class VerifiedPanel extends BasePanel {
         mask.fillRect(-width * 0.5, -height * 0.5, width, height)
             .setInteractive(new Phaser.Geom.Rectangle(-width * 0.5, -height * 0.5, width, height), Phaser.Geom.Rectangle.Contains);
 
-        const container = this.scene.make.container({  }, false);
+        const container = this.scene.make.container({}, false);
 
         const bg = this.scene.make.image({
             key: UIAtlasKey.common2Key,
@@ -130,18 +131,19 @@ export class VerifiedPanel extends BasePanel {
         const name = this.mNameInput.text;
         const idCard = this.mIDCardInput.text;
         if (!name) {
-            this.emit("error", "[color=#F9361B]名字不能为空[/color]");
+            this.render.onLoginErrorHanler("error", "[color=#F9361B]名字不能为空[/color]");
             return;
         }
         if (!idCard || idCard.length !== 18) {
-            this.emit("error", "[color=#F9361B]证件格式有误[/color]");
+            this.render.onLoginErrorHanler("error", "[color=#F9361B]证件格式有误[/color]");
             return;
         }
         if (!this.checkIdCard()) {
-            this.emit("error", "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]");
+            this.render.onLoginErrorHanler("error", "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]");
             return;
         }
-        this.emit("verified", name, idCard);
+        this.render.onLoginErrorHanler("error", "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]");
+        this.render.remote[MAIN_WORKER].onVerifiedHandler(name, idCard);
     }
 
     private onVerifiedDownHandler() {
@@ -188,7 +190,7 @@ export class VerifiedPanel extends BasePanel {
                 let sum = 0;
                 let ai = 0;
                 let wi = 0;
-                for (let i = 0; i < 17; i++ ) {
+                for (let i = 0; i < 17; i++) {
                     ai = codeAry[i];
                     wi = factor[i];
                     sum += ai * wi;

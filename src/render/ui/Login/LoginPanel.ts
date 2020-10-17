@@ -1,6 +1,7 @@
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/Ui.atals.name";
 import { SceneName } from "../../../structureinterface/scene.name";
+import { MAIN_WORKER } from "../../../structureinterface/worker.name";
 import { Font } from "../../../utils";
 import Helpers from "../../../utils/helpers";
 import { Render } from "../../render";
@@ -187,7 +188,6 @@ export class LoginPanel extends BasePanel {
         this.loginBtn.setFontStyle("bold");
         this.loginBtn.on(String(ClickEvent.Down), this.LoginDownHandler, this);
         this.loginBtn.on(String(ClickEvent.Tap), this.tryLogin, this);
-
         const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#FFEC48]《用户服务协议》[/color][/area]和[area=privacy][color=#FFEC48]《隐私与保护政策》[/color][/area]", {
             color: "#ffffff",
             fontSize: 11 * this.dpr,
@@ -240,7 +240,7 @@ export class LoginPanel extends BasePanel {
     private onFetchCodeHandler() {
         const text = this.mPhoneInput.text;
         if (text.length !== 11) {
-            this.emit("error", "手机格式错误");
+            this.render.onLoginErrorHanler("error", "手机格式错误");
             return;
         }
         if (this.fetchTime) {
@@ -261,21 +261,21 @@ export class LoginPanel extends BasePanel {
                 this.fetchCode.setText(`获取验证码`);
             }
         }, 1000);
-        this.emit("fetchCode", text, this.areaCode);
+        this.render.remote[MAIN_WORKER].onFetchCodeHandler();
     }
 
     private tryLogin() {
         const phone = this.mPhoneInput.text;
         const code = this.mPhoneCodeInput.text;
         if (phone.length !== 11) {
-            this.emit("error", "手机格式错误");
+            this.render.onLoginErrorHanler("error", "手机格式错误");
             return;
         }
         if (!code) {
-            this.emit("error", "验证码格式错误");
+            this.render.onLoginErrorHanler("error", "验证码格式错误");
             return;
         }
-        this.emit("login", phone, code, this.areaCode);
+        this.render.remote[MAIN_WORKER].onLoginHandler();
     }
 
     private LoginDownHandler() {

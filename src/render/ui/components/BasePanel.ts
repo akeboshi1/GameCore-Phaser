@@ -13,11 +13,13 @@ export class BasePanel extends Panel {
     protected mResources: Map<string, any>;
     protected mReLoadResources: Map<string, any>;
     protected mReloadTimes: number = 0;
+    protected render: Render;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
         this.mScene = scene;
         this.mWorld = render;
         this.mInitialized = false;
+        this.render = render;
         if (render) {
             this.dpr = Math.round(render.uiRatio || 1);
             this.scale = this.mWorld.uiScale;
