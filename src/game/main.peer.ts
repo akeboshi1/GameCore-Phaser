@@ -190,6 +190,11 @@ export class MainPeer extends RPCPeer {
         this.remote[RENDER_PEER].Render.getCurTime(this.mGame.clock.unixTime);
     }
 
+    @Export([webworker_rpc.ParamType.boolean])
+    public httpClockEnable(enable: boolean) {
+        this.mGame.httpClock.enable = enable;
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();

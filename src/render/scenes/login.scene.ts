@@ -8,14 +8,13 @@ export class LoginScene extends BasicScene {
     }
 
     public preload() {
-        // this.load.atlas("login", "./resources/ui/login/login.png", "./resources/ui/login/login.json");
+        this.load.atlas("login", "./resources/ui/login/login.png", "./resources/ui/login/login.json");
     }
 
     public create() {
         if (this.world) {
             const uimanager = this.world.uiManager;
             uimanager.setScene(this);
-
             uimanager.showMed("Login");
         }
     }

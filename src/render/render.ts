@@ -15,6 +15,7 @@ import { Account } from "./account/account";
 import { SceneName } from "../structureinterface/scene.name";
 import { SceneManager } from "./managers/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
+import { UiManager } from "./managers/ui.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -33,6 +34,7 @@ export class Render extends RPCPeer implements GameMain {
      */
     private mUIScale: number;
     private mAccount: Account;
+    private mUiManager: UiManager;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
@@ -42,14 +44,42 @@ export class Render extends RPCPeer implements GameMain {
             this.createGame();
             Logger.getInstance().log("worker onReady");
         });
+        this.createManager();
     }
+
+    get uiRatio(): number {
+        return this.mConfig.scale_ratio;
+    }
+
+    get uiScale(): number {
+        return this.mUIScale;
+    }
+
     get account(): Account {
         return this.mAccount;
+    }
+
+    get uiManager(): UiManager {
+        return this.mUiManager;
     }
 
     createGame() {
         this.newGame();
         this.remote[MAIN_WORKER].MainPeer.createGame(this.mConfig);
+    }
+
+    enterGame() {
+        this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
+        // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
+        this.mGame.scene.remove(LoginScene.name);
+        // this.uiManager.destroy();
+        // this.uiManager.addPackListener();
+        // loginScene.remove();
+        // this.mLoadingManager.start(LoadingTips.enterGame());
+    }
+
+    createManager() {
+        this.mUiManager = new UiManager(this.mConfig);
     }
 
     resize(width: number, height: number) {
@@ -59,21 +89,27 @@ export class Render extends RPCPeer implements GameMain {
     onOrientationChange(oriation: number, newWidth: number, newHeight: number) {
 
     }
+
     scaleChange(scale: number) {
 
     }
+
     enableClick() {
 
     }
+
     disableClick() {
 
     }
+
     setKeyBoardHeight(height: number) {
 
     }
+
     startFullscreen(): void {
 
     }
+
     stopFullscreen(): void {
 
     }
@@ -91,6 +127,7 @@ export class Render extends RPCPeer implements GameMain {
     restart(config?: ILauncherConfig, callBack?: Function) {
 
     }
+
     destroy(): Promise<void> {
         return new Promise((reslove, reject) => {
         });
@@ -198,10 +235,10 @@ export class Render extends RPCPeer implements GameMain {
                 this.mUIScale = 1;
             }
             this.sceneManager = new SceneManager(this.mGame);
-            this.exportProperty(this.sceneManager, this);
-            // .onceReady(() => {
-            resolve();
-            // });
+            this.exportProperty(this.sceneManager, this)
+                .onceReady(() => {
+                    resolve();
+                });
         });
     }
 
@@ -245,17 +282,27 @@ export class Render extends RPCPeer implements GameMain {
         this.remote[MAIN_WORKER].MainPeer.requestCurTime();
     }
 
+    public requestPhoneCode(phone: string, areaCode: string) {
+        this.remote[MAIN_WORKER].MainPeer.requestPhoneCode(phone, areaCode);
+    }
+
+    public httpClockEnable(enable: boolean) {
+        this.remote[MAIN_WORKER].MainPeer.httpClockEnable(enable);
+    }
+
     @Export()
     public login() {
+        this.sceneManager.startScene(name, {});
         if (!this.mGame.scene.getScene(SceneName.LOGIN_SCENE)) {
             this.mGame.scene.add(SceneName.LOGIN_SCENE, LoginScene);
         }
         this.mGame.scene.start(SceneName.LOGIN_SCENE, {
             world: this,
             callBack: () => {
-                this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
+                this.enterGame();
+                // this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
                 // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-                this.mGame.scene.remove(LoginScene.name);
+                // this.mGame.scene.remove(LoginScene.name);
             },
         });
     }

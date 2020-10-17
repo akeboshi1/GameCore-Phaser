@@ -1,0 +1,534 @@
+import { PBpacket } from "net-socket-packet";
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { BaseMediator, UIType } from "apowophaserui";
+import { ConnectionService } from "../../../lib/net/connection.service";
+import { UIMediatorType } from "../../game/ui/ui.mediator.type";
+import { ILayerManager, LayerManager } from "./layer.manager";
+import { ILauncherConfig } from "../../structureinterface/lanucher.config";
+
+export class UiManager {
+    private mScene: Phaser.Scene;
+    private mMedMap: Map<UIMediatorType, BaseMediator>;
+    private mUILayerManager: ILayerManager;
+    private mCache: any[] = [];
+    private mNoneUIMap: Map<string, any> = new Map();
+    private mSceneUIMap: Map<string, any> = new Map();
+    private mNormalUIMap: Map<string, any> = new Map();
+    private mPopUIMap: Map<string, any> = new Map();
+    private mTipUIMap: Map<string, any> = new Map();
+    private mMonopolyUIMap: Map<string, any> = new Map();
+    private mActivityUIMap: Map<string, any> = new Map();
+    private mCacheUI: Function;
+    // 用于记录功能ui打开的顺序,最多2个
+    private mShowuiList: any[] = [];
+    private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
+    private mStackList: any[] = [];// 记录面板打开关闭先后顺序
+    private isShowMainUI: boolean = false;
+    constructor(private mConfig: ILauncherConfig) {
+        this.mUILayerManager = new LayerManager();
+    }
+
+    public getUILayerManager(): ILayerManager {
+        return this.mUILayerManager;
+    }
+
+    public getActiveUIData(name: string): op_pkt_def.IPKT_UI[] {
+        if (!this.mAtiveUIData) return null;
+        const arr: op_pkt_def.IPKT_UI[] = [];
+        for (const data of this.mAtiveUIData.ui) {
+            const tagName = data.name.split(".")[0];
+            const paneName = this.getPanelNameByStateTag(tagName);
+            if (paneName === name) {
+                arr.push(data);
+            }
+        }
+        return arr;
+    }
+
+    public setScene(scene: Phaser.Scene) {
+        this.mScene = scene;
+        this.mUILayerManager.setScene(scene);
+        if (scene && this.mCacheUI) {
+            this.mCacheUI();
+            this.mCacheUI = undefined;
+        }
+    }
+
+    public showMainUI() {
+        if (!this.mScene) {
+            this.mCacheUI = this.showMainUI;
+            return;
+        }
+        const scene = this.mScene;
+        this.clearMediator();
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
+            // ============场景中固定显示ui
+            if (this.mConfig.platform === "pc") {
+            } else {
+            }
+            this.mMedMap.set(UIMediatorType.);
+            // this.mMedMap.set(UBaseMediatorType.MainUBaseMediator, new MainUBaseMediator(this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.BagMediator, new BagMediator(this.mUILayerManager, this.worldService, scene));
+            if (this.worldService.game.device.os.desktop) this.mMedMap.set(UIMediatorType.ChatMediator, new ChatMediator(this.worldService, scene));
+            this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, scene, this.worldService));
+            this.mMedMap.set(FriendMediator.NAME, new FriendMediator(scene, this.worldService));
+            this.mMedMap.set(ReAwardTipsMediator.name, new ReAwardTipsMediator(scene, this.worldService));
+            this.mMedMap.set(CharacterInfoMediator.name, new CharacterInfoMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(ComposeMediator.name, new ComposeMediator(this.mUILayerManager,scene, this.worldService));
+            // this.mMedMap.set(CharacterInfoMediator.name, new CharacterInfoMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(NpcDialogueMediator.name, new NpcDialogueMediator(this.mUILayerManager,scene, this.worldService));
+            // this.mMedMap.set(MineCarMediator.name, new MineCarMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(TopMenuMediator.name, new TopMenuMediator(scene, this.worldService));
+            // this.mMedMap.set(MineSettleMediator.name, new MineSettleMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(EquipUpgradeMediator.name, new EquipUpgradeMediator(this.mUILayerManager, scene, this.worldService));
+            // this.mMedMap.set(DebugLoggerMediator.NAME, new DebugLoggerMediator(scene, this.worldService));
+            // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, scene, this.worldService));
+            // for (const tmp of this.mCache) {
+            //     const ui = tmp[0];
+            //     this.showMed(ui.name, ui);
+            // }
+            // this.mCache.length = 0;
+        }
+        // TOOD 通过统一的方法创建打开
+        this.mMedMap.forEach((mediator: any, key: string) => {
+            let map: Map<string, any>;
+            const deskBoo: boolean = this.worldService.game.device.os.desktop ? true : false;
+            switch (key) {
+                case LeftMediator.NAME:
+                case RightMediator.NAME:
+                case BottomMediator.NAME:
+                    map = this.mSceneUIMap;
+                    break;
+                // case TopMediator.NAME:
+                //     if (deskBoo) {
+                //         map = this.mSceneUIMap;
+                //     }
+                //     break;
+                case BagGroupMediator.NAME:
+                    if (deskBoo) {
+                        map = this.mSceneUIMap;
+                    }
+                    break;
+                case UIMediatorType.ChatMediator:
+                    if (deskBoo) {
+                        map = this.mSceneUIMap;
+                    }
+                    break;
+                case RankMediator.NAME:
+                    if (deskBoo) {
+                        map = this.mSceneUIMap;
+                    }
+                    break;
+            }
+            if (map) map.set(key, mediator);
+            if (mediator.isSceneUI()) {
+                mediator.show();
+            }
+        });
+        if (this.mAtiveUIData) {
+            this.updateUIState(this.mAtiveUIData);
+        }
+        if (this.mCache) {
+            for (const tmp of this.mCache) {
+                const ui = tmp[0];
+                this.showMed(ui.name, ui);
+            }
+            this.mCache.length = 0;
+        }
+    }
+
+    public showDecorateUI() {
+        if (!this.mScene) {
+            this.mCacheUI = this.showDecorateUI;
+            return;
+        }
+        this.clearMediator();
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
+        }
+        // const topMenu = new TopMenuMediator(this.mScene, this.worldService);
+        // this.mMedMap.set(ElementStorageMediator.NAME, new ElementStorageMediator(this.mUILayerManager, this.mScene, this.worldService));
+        this.mMedMap.set(DecorateControlMediator.NAME, new DecorateControlMediator(this.mUILayerManager, this.mScene, this.worldService));
+        this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
+        // this.mMedMap.set(TopMenuMediator.name, topMenu);
+        // topMenu.addItem({
+        //     key: "Turn_Btn_Top", name: "SaveDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+        //     iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        // });
+        this.showAll();
+    }
+
+    public resize(width: number, height: number) {
+        if (this.mMedMap) {
+            this.mMedMap.forEach((mediator: BaseMediator) => {
+                if (mediator.isShow) mediator.resize();
+            });
+        }
+    }
+
+    public setMediator(value: string, mediator: BaseMediator) {
+        this.mMedMap.set(value, mediator);
+    }
+
+    public getMediator(type: string): BaseMediator | undefined {
+        if (!this.mMedMap) return;
+        return this.mMedMap.get(type);
+    }
+
+    public clearMediator() {
+        if (!this.mMedMap) {
+            return;
+        }
+        this.mMedMap.forEach((med: BaseMediator) => med.destroy());
+        this.mMedMap.clear();
+        this.mMedMap = null;
+    }
+
+    public destroy() {
+        this.removePackListener();
+        this.clearMediator();
+        this.mMedMap = undefined;
+        this.clearCache();
+        this.mScene = undefined;
+    }
+
+    public baseFaceResize() {
+        const bottomMed = this.getMediator(BottomMediator.NAME);
+        const rightMed = this.getMediator(RightMediator.NAME);
+        const leftMed = this.getMediator(LeftMediator.NAME);
+        // const topMed = this.getMediator(TopMediator.NAME);
+        if (rightMed && rightMed.getView()) rightMed.getView().resize(0, 0);
+        if (leftMed && leftMed.getView()) leftMed.getView().resize(0, 0);
+        if (bottomMed && bottomMed.getView()) bottomMed.getView().resize(0, 0);
+        // if (topMed && topMed.getView()) topMed.getView().resize(0, 0);
+    }
+
+    public baseFaceTween(show: boolean) {
+        // if (!this.worldService.game.device.os.desktop) {
+        //     (this.worldService.inputManager as JoyStickManager).tweenExpand(show);
+        // }
+        const rightMed = this.getMediator(RightMediator.NAME);
+        const leftMed = this.getMediator(LeftMediator.NAME);
+        const bottomMed = this.getMediator(BottomMediator.NAME);
+        // const topMed = this.getMediator(TopMediator.NAME);
+        if (rightMed && rightMed.getView()) rightMed.getView().tweenExpand(show);
+        if (leftMed && leftMed.getView()) leftMed.getView().tweenExpand(show);
+        if (bottomMed && bottomMed.getView()) bottomMed.getView().tweenExpand(show);
+        // if (topMed && topMed.getView()) topMed.getView().tweenExpand(show);
+    }
+
+    public checkUIState(medName: string, show: boolean) {
+        const mediator = this.mMedMap.get(medName);
+        if (!mediator) return;
+        const uiType: number = mediator.UIType;
+        const deskBoo: boolean = this.worldService.game.device.os.desktop;
+        let map: Map<string, any>;
+        switch (uiType) {
+            case UIType.None:
+                map = this.mNoneUIMap;
+                break;
+            case UIType.Scene:
+                map = this.mSceneUIMap;
+                break;
+            case UIType.Normal:
+                map = this.mNormalUIMap;
+                // pc端场景ui无需收进，但是功能ui可以共存，需要调整位置
+                if (deskBoo) {
+                    this.checkNormalUITween(show, medName);
+                } else {
+                    this.checkBaseUImap(show);
+                }
+                break;
+            case UIType.Monopoly:
+                map = this.mMonopolyUIMap;
+                this.checkBaseUImap(show);
+                this.checkNormalUImap(show);
+                this.chekcTipUImap(show);
+                break;
+            case UIType.Tips:
+                map = this.mTipUIMap;
+                break;
+            case UIType.Pop:
+                map = this.mPopUIMap;
+                break;
+            case UIType.Activity:
+                map = this.mActivityUIMap;
+                break;
+        }
+        if (map) map.set(medName, mediator);
+    }
+
+    public showMed(type: string, ...param: any[]) {
+        if (!this.mScene) {
+            this.mCache.push(param);
+            return;
+        }
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
+        }
+        type = this.getPanelNameByAlias(type);
+        const className: string = type + "Mediator";
+        let mediator: BaseMediator = this.mMedMap.get(className);
+        if (!mediator) {
+            const path: string = `./${type}/${type}Mediator`;
+            const ns: any = require(`./${type}/${className}`);
+            mediator = new ns[className](this.mUILayerManager, this.mScene, this.worldService);
+            if (!mediator) {
+                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+                return;
+            }
+            this.mMedMap.set(type + "Mediator", mediator);
+            // mediator.setName(type);
+        }
+        // if (mediator.showing) return;
+        if (param) mediator.setParam(param);
+        // if (className === "RankMediator") {
+        //     if (!this.worldService.game.device.os.desktop) {
+        //         const med: TopMediator = this.getMediator(TopMediator.NAME) as TopMediator;
+        //         if (med) {
+        //             if (!med.isShow()) {
+        //                 med.preRefreshBtn(className);
+        //             } else {
+        //                 med.refreshBtn(className, true);
+        //             }
+        //         }
+        //         return;
+        //     }
+        // }
+        this.checkUIState(className, false);
+        mediator.show(param);
+        // this.mStackList.unshift(className);
+        // if (this.mStackList.length > 2) this.mStackList.splice(this.mStackList.length - 1, 1);
+    }
+    public hideMed(type: string) {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const medName: string = `${type}Mediator`;
+        const mediator: BaseMediator = this.mMedMap.get(medName);
+        if (!mediator) {
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        this.checkUIState(medName, true);
+        mediator.hide();
+    }
+    public showExistMed(type: string, extendName = "Mediator") {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const className: string = type + extendName;
+        const mediator: BaseMediator = this.mMedMap.get(className);
+        if (mediator) mediator.show();
+    }
+    private handleShowUI(packet: PBpacket): void {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
+        this.showMed(ui.name, ui);
+    }
+
+    private handleUpdateUI(packet: PBpacket) {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
+        this.updateMed(ui.name, ui);
+    }
+
+    private handleCloseUI(packet: PBpacket): void {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
+        this.hideMed(ui.name);
+    }
+
+    private onEnableEditMode(packet: PBpacket) {
+        let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.NAME);
+        if (!topMenu) {
+            topMenu = new TopMenuMediator(this.mScene, this.worldService);
+            this.mMedMap.set(TopMenuMediator.NAME, topMenu);
+        }
+        topMenu.addItem({
+            key: "Turn_Btn_Top", name: "EnterDecorate", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+            iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
+    }
+
+    private onEnableMarket() {
+        if (!this.mMedMap) {
+            return;
+        }
+        let topMenu: TopMenuMediator = <TopMenuMediator>this.mMedMap.get(TopMenuMediator.NAME);
+        if (!topMenu) {
+            topMenu = new TopMenuMediator(this.mScene, this.worldService);
+            this.mMedMap.set(TopMenuMediator.NAME, topMenu);
+        }
+        topMenu.addItem({
+            key: "Turn_Btn_Top", name: "Market", bgResKey: "baseView", bgTextures: ["btnGroup_yellow_normal.png", "btnGroup_yellow_light.png", "btnGroup_yellow_select.png"],
+            iconResKey: "", iconTexture: "btnGroup_top_expand.png", scale: 1, pngUrl: "ui/baseView/mainui_mobile.png", jsonUrl: "ui/baseView/mainui_mobile.json"
+        });
+    }
+
+    private checkBaseUImap(show: boolean) {
+        this.mSceneUIMap.forEach((med) => {
+            if (med) med.tweenExpand(show);
+        });
+    }
+
+    private checkNormalUITween(show: boolean, medName: string) {
+        const size: Size = this.worldService.getSize();
+        let len: number = this.mShowuiList.length;
+        let tmpName: string;
+        let med;
+        if (!show) {
+            if (this.mShowuiList.indexOf(medName) === -1) this.mShowuiList.push(medName);
+            len = this.mShowuiList.length;
+            const mPad: number = len > 1 ? size.width / 3 : 0;
+            for (let i: number = 0; i < len; i++) {
+                tmpName = this.mShowuiList[i];
+                med = this.mMedMap.get(tmpName);
+                if (len > 2 && i === 0) {
+                    med.hide();
+                } else {
+                    med.resize((i * 2 - 1) * mPad, 0);
+                }
+            }
+            if (len > 2) this.mShowuiList.shift();
+        } else {
+            let index: number;
+            for (let i: number = 0; i < len; i++) {
+                tmpName = this.mShowuiList[i];
+                med = this.mMedMap.get(tmpName);
+                if (tmpName === medName) {
+                    index = i;
+                    continue;
+                }
+                med.resize(0, 0);
+            }
+            this.mShowuiList.splice(index, 1);
+        }
+    }
+
+    private checkNormalUImap(show: boolean) {
+        this.mNormalUIMap.forEach((med) => {
+            if (med) {
+                if (show) {
+                    // med.show();
+                } else {
+                    med.hide();
+                }
+            }
+        });
+        if (!show) this.mNormalUIMap.clear();
+    }
+
+    private chekcTipUImap(show: boolean) {
+        this.mTipUIMap.forEach((med) => {
+            if (med) {
+                if (show) {
+                    // med.show();
+                } else {
+                    med.hide();
+                }
+            }
+        });
+        if (!show) this.mNormalUIMap.clear();
+    }
+
+    private updateMed(type: string, ...param: any[]) {
+        if (!this.mMedMap) {
+            return;
+        }
+        const name: string = `${type}Mediator`;
+        const mediator: BaseMediator = this.mMedMap.get(name);
+        if (!mediator) {
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        if (param) mediator.setParam(param);
+        mediator.update(param);
+    }
+
+    private showAll() {
+        if (!this.mMedMap) {
+            return;
+        }
+        this.mMedMap.forEach((med: BaseMediator) => {
+            if (med.isSceneUI()) {
+                med.show();
+            }
+        });
+    }
+
+    private clearCache() {
+        this.mCacheUI = undefined;
+        this.mCache = [];
+    }
+
+    private closeAll() {
+        if (!this.mMedMap) {
+            return;
+        }
+        this.mMedMap.forEach((med: BaseMediator) => med.hide());
+    }
+
+    private onUIStateHandler(packge: PBpacket) {
+        this.mAtiveUIData = packge.content;
+        if (this.mAtiveUIData && this.mMedMap) {
+            this.updateUIState(this.mAtiveUIData);
+        }
+    }
+
+    private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
+        for (const ui of data.ui) {
+            const tag = ui.name;
+            const paneltags = tag.split(".");
+            const panelName = this.getPanelNameByStateTag(paneltags[0]);
+            if (panelName) {
+                const mediator: BaseMediator = this.mMedMap.get(panelName + "Mediator");
+                if (mediator) {
+                    if (paneltags.length === 1) {
+                        if (ui.visible || ui.visible === undefined) {
+                            this.showMed(panelName);
+                        } else {
+                            this.hideMed(panelName);
+                        }
+                    } else {
+                        const view = mediator.getView();
+                        if (view)
+                            view.updateUIState(ui);
+                    }
+                }
+            }
+        }
+    }
+
+    private onForceOfflineHandler(packet: PBpacket) {
+        const alert = new AlertView(this.mScene, this.worldService).show({
+            text: i18n.t("common.offline"),
+            callback: () => {
+            },
+            btns: Buttons.Ok
+        });
+    }
+
+    private getPanelNameByStateTag(tag: string) {
+        switch (tag) {
+            case "mainui":
+                return "PicaMainUI";
+            case "activity":
+                return "Activity";
+            case "picachat":
+                return "PicaChat";
+            case "picanavigate":
+                return "PicaNavigate";
+            case "PicHandheld":
+                return "PicHandheld";
+        }
+        return tag;
+    }
+    private getPanelNameByAlias(alias: string) {
+        switch (alias) {
+            case "MessageBox":
+                return "PicaMessageBox";
+        }
+        return alias;
+    }
+}
