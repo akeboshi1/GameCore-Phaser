@@ -1,5 +1,7 @@
+import { Scene } from "tooqinggamephaser";
 import { Export, RPCEmitter } from "webworker-rpc";
 import { Logger } from "../../utils/log";
+import { ResUtils } from "../../utils/resUtil";
 import { BasicScene } from "../scenes/basic.scene";
 import { CreateRoleScene } from "../scenes/create.role.scene";
 import { GamePauseScene } from "../scenes/game.pause.scene";
@@ -13,7 +15,7 @@ import { SelectRoleScene } from "../scenes/select.role.scene";
 import { SkyBoxScene } from "../scenes/sky.box.scene";
 
 export class SceneManager {
-    private readonly sceneClassName = {
+    private readonly sceneClass = {
         "BasicScene": BasicScene,
         "CreateRoleScene": CreateRoleScene,
         "GamePauseScene": GamePauseScene,
@@ -27,40 +29,64 @@ export class SceneManager {
         "SkyBoxScene": SkyBoxScene
     };
 
+    private stateSceneName: string;
+    private launchedScenes: string[] = [];
+
     constructor(private game: Phaser.Game) {
 
     }
 
     public startScene(name: string, data?: any) {
-        const className = "";// TODO: add global file
-        if (!this.sceneClassName.hasOwnProperty(className)) {
-            Logger.getInstance().error("className error: ", className);
+        if (!this.sceneClass.hasOwnProperty(name)) {
+            Logger.getInstance().error("className error: ", name);
         }
-        this.game.scene.add(name, this.sceneClassName[className], true, { data });
+        if (this.stateSceneName && this.game.scene.getScene(this.stateSceneName)) {
+            this.stopScene(this.stateSceneName);
+        }
+
+        this.game.scene.add(name, this.sceneClass[name], true, { data });
+        this.stateSceneName = name;
+    }
+
+    public launchScene(name: string, data?: any) {
+        if (!this.stateSceneName || !this.game.scene.isActive(this.stateSceneName)) {
+            Logger.getInstance().error("no state scene is running");
+            return;
+        }
+
+        const scene = this.game.scene.getScene(this.stateSceneName);
+        scene.scene.launch(name, data);
+        this.launchedScenes.push(name);
     }
 
     public stopScene(name: string) {
-        this.game.scene.stop(name);
+        if (name === this.stateSceneName) {
+            for (const ls of this.launchedScenes) {
+                if (this.game.scene.getScene(ls)) {
+                    this.game.scene.remove(ls);
+                }
+            }
+            this.stateSceneName = null;
+            this.launchedScenes.length = 0;
+        }
+        this.game.scene.remove(name);
     }
 
-    public wakeScene(name: string) {
-        const scene = this.game.scene.getScene(name);
-        if (!scene) {
-            Logger.getInstance().error("scene not found : ", name);
-            return;
+    public wakeScene(name: string, data?: any) {
+        if (!this.game.scene.getScene(name)) {
+            this.startScene(name, data);
+        } else {
+            const scene = this.game.scene.getScene(name) as BasicScene;
+            scene.wake(data);
         }
-
-        scene.scene.wake(name);
     }
 
     public sleepScene(name: string) {
-        const scene = this.game.scene.getScene(name);
-        if (!scene) {
-            Logger.getInstance().error("scene not found : ", name);
+        if (!this.game.scene.getScene(name)) {
             return;
         }
-
-        scene.scene.sleep(name);
+        const scene = this.game.scene.getScene(name) as BasicScene;
+        scene.sleep();
     }
 
     public pauseScene(name: string) {

@@ -335,8 +335,13 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public showLoading() {
+    public showLoading(data?: any) {
+        this.sceneManager.wakeScene("LoadingScene", data);
+    }
 
+    @Export()
+    public hideLoading() {
+        this.sceneManager.sleepScene("LoadingScene");
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
