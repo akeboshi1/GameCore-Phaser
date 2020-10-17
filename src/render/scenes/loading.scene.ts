@@ -12,6 +12,7 @@ export class LoadingScene extends BasicScene {
   private progressText: Phaser.GameObjects.Text;
   private mRequestCom: boolean = false;
   private tipsText: string;
+  private taskCount: number = 0;
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -82,10 +83,11 @@ export class LoadingScene extends BasicScene {
       this.mCallback = undefined;
     }
     // this.scale.on("resize", this.checkSize, this);
+    this.taskCount++;
   }
 
+  // UNUSED
   public async show() {
-    this.awake();
     if (!this.curtain) {
       return Promise.resolve();
     }
@@ -93,8 +95,8 @@ export class LoadingScene extends BasicScene {
     return this.curtain.open();
   }
 
+  // UNUSED
   public async close() {
-    this.mShow = false;
     if (!this.curtain) {
       return;
     }
@@ -102,10 +104,10 @@ export class LoadingScene extends BasicScene {
     return this.curtain.close();
   }
 
-  public awake(data?: any) {
-    this.mShow = true;
+  public wake(data?: any) {
     // this.scale.on("resize", this.checkSize, this);
-    this.scene.wake();
+    this.taskCount++;
+    super.wake(data);
     if (!data) {
       return;
     }
@@ -116,6 +118,8 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
+    this.taskCount--;
+    if (this.taskCount > 0) return;
     if (this.progressText) {
       if (this.progressText.active) this.progressText.setText("");
     }
@@ -123,11 +127,11 @@ export class LoadingScene extends BasicScene {
       if (this.bg) this.bg.visible = false;
       this.curtain.close().then(() => {
         // this.scale.off("resize", this.checkSize, this);
-        this.scene.sleep();
+        super.sleep();
       });
     } else {
       // this.scale.off("resize", this.checkSize, this);
-      this.scene.sleep();
+      super.sleep();
     }
   }
 

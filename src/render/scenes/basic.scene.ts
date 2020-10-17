@@ -1,6 +1,5 @@
 export class BasicScene extends Phaser.Scene {
     protected mInitialize: boolean = false;
-    protected mShow: boolean = false;
     constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config);
     }
@@ -9,15 +8,19 @@ export class BasicScene extends Phaser.Scene {
         this.mInitialize = true;
     }
 
-    sceneInitialize(): boolean {
+    public sceneInitialize(): boolean {
         return this.mInitialize;
     }
 
-    getShow(): boolean {
-        return this.mShow;
+    public setViewPort(x: number, y: number, width: number, height: number) {
+        this.cameras.main.setViewport(x, y, width, height);
     }
 
-    setViewPort(x: number, y: number, width: number, height: number) {
-        this.cameras.main.setViewport(x, y, width, height);
+    public wake(data?: any) {
+        this.scene.wake();
+    }
+
+    public sleep() {
+        this.scene.sleep();
     }
 }
