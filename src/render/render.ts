@@ -312,8 +312,13 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public showUI(panelName: string) {
+    public showPanel(panelName: string) {
+        this.mUiManager.showPanel(panelName);
+    }
 
+    @Export([webworker_rpc.ParamType.str])
+    public hidePanel(panelName: string) {
+        this.mUiManager.hidePanel(panelName);
     }
 
     @Export([webworker_rpc.ParamType.boolean])

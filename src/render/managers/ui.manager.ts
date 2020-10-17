@@ -36,8 +36,8 @@ export class UiManager {
         }
     }
 
-    public setPanel(value: string, mediator: BasePanel) {
-        this.mPanelMap.set(value, mediator);
+    public setPanel(value: string, panel: BasePanel) {
+        this.mPanelMap.set(value, panel);
     }
 
     public getPanel(type: string): BasePanel | undefined {
