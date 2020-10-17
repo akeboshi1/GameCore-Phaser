@@ -1,7 +1,7 @@
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../components/base.panel";
 import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
-import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/Ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
 import { Font } from "../../../utils";
 import { MAIN_WORKER } from "../../../structureinterface/worker.name";
 

@@ -1,4 +1,4 @@
-import { BasePanel } from "./BasePanel";
+import { BasePanel } from "./base.panel";
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
 import { Font, i18n } from "../../../utils";

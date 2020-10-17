@@ -1,7 +1,7 @@
 import { ILayerManager, LayerManager } from "./layer.manager";
 import { ILauncherConfig } from "../../structureinterface/lanucher.config";
 import { Render } from "../render";
-import { BasePanel } from "../ui/components/BasePanel";
+import { BasePanel } from "../ui/components/base.panel";
 
 export class UiManager {
     private mScene: Phaser.Scene;

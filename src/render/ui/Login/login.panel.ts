@@ -1,11 +1,11 @@
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/Ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
 import { SceneName } from "../../../structureinterface/scene.name";
 import { MAIN_WORKER } from "../../../structureinterface/worker.name";
 import { Font } from "../../../utils";
 import Helpers from "../../../utils/helpers";
 import { Render } from "../../render";
-import { BasePanel } from "../components/BasePanel";
+import { BasePanel } from "../components/base.panel";
 
 export class LoginPanel extends BasePanel {
     private readonly key = "login";
