@@ -62,6 +62,27 @@ export class MainPeer extends RPCPeer {
         this.mGame.connection.onData(buffer);
     }
 
+    public allowLoginCallBack() {
+        this.render.allowLoginCallBack();
+    }
+
+    public allowLoginPromise(allow: boolean) {
+        this.render.allowLoginPromise(allow);
+    }
+
+    public allowLoginPromiseError(err: any) {
+        this.render.allowLoginPromiseError();
+        Logger.getInstance().error(err);
+    }
+
+    public loginByPhoneCodeCallBack(response: any) {
+        this.render.loginByPhoneCodeCallBack(response);
+    }
+
+    public verifiedCallBack(response: any) {
+        this.render.verifiedCallBack(response);
+    }
+
     // ============= 主进程调用心跳
     public startBeat() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.startBeat();
@@ -193,6 +214,33 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.boolean])
     public httpClockEnable(enable: boolean) {
         this.mGame.httpClock.enable = enable;
+    }
+
+    @Export()
+    public allowLogin() {
+        this.mGame.httpClock.allowLogin(() => {
+            this.allowLoginCallBack();
+        })
+            .then((allow: boolean) => {
+                this.allowLoginPromise(allow);
+            })
+            .catch((err) => {
+                this.allowLoginPromiseError(err);
+            });
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public loginByPhoneCode(phone: string, code: string, areaCode: string) {
+        this.mGame.httpService.loginByPhoneCode(phone, code, areaCode).then((response: any) => {
+            this.loginByPhoneCodeCallBack(response);
+        });
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public verified(name: string, idcard: string) {
+        this.mGame.httpService.verified(name, idcard).then((response: any) => {
+            this.verifiedCallBack(response);
+        });
     }
 
     // ==== todo

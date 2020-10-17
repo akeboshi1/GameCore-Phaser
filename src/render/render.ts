@@ -16,6 +16,7 @@ import { SceneName } from "../structureinterface/scene.name";
 import { SceneManager } from "./managers/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { UiManager } from "./managers/ui.manager";
+import { LoginMediator } from "./ui/Login/LoginMediator";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -45,6 +46,10 @@ export class Render extends RPCPeer implements GameMain {
             Logger.getInstance().log("worker onReady");
         });
         this.createManager();
+    }
+
+    get config(): ILauncherConfig {
+        return this.mConfig;
     }
 
     get uiRatio(): number {
@@ -79,7 +84,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     createManager() {
-        this.mUiManager = new UiManager(this.mConfig);
+        this.mUiManager = new UiManager(this);
     }
 
     resize(width: number, height: number) {
@@ -290,6 +295,18 @@ export class Render extends RPCPeer implements GameMain {
         this.remote[MAIN_WORKER].MainPeer.httpClockEnable(enable);
     }
 
+    public allowLogin() {
+        this.remote[MAIN_WORKER].MainPeer.allowLogin();
+    }
+
+    public loginByPhoneCode(phone: string, code: string, areaCode: string) {
+        this.remote[MAIN_WORKER].MainPeer.loginByPhoneCode(phone, code, areaCode);
+    }
+
+    public verified(name: string, idcard: string) {
+        this.remote[MAIN_WORKER].MainPeer.verified(name, idcard);
+    }
+
     @Export()
     public login() {
         this.sceneManager.startScene(name, {});
@@ -305,6 +322,31 @@ export class Render extends RPCPeer implements GameMain {
                 // this.mGame.scene.remove(LoginScene.name);
             },
         });
+    }
+
+    @Export()
+    public allowLoginCallBack() {
+        this.uiManager.getMediator(LoginMediator.name);
+    }
+
+    @Export([webworker_rpc.ParamType.boolean])
+    public allowLoginPromise(allow: boolean) {
+
+    }
+
+    @Export()
+    public allowLoginPromiseError() {
+
+    }
+
+    @Export()
+    public loginByPhoneCodeCallBack(response) {
+
+    }
+
+    @Export()
+    public verifiedCallBack(response: any) {
+
     }
 
     @Export()

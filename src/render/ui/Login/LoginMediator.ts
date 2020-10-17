@@ -3,11 +3,13 @@ import { VerifiedPanel } from "./VerifiedPanel";
 import { BaseMediator } from "apowophaserui";
 import { LayerManager } from "../../managers/layer.manager";
 import { Render } from "../../render";
-import { Logger } from "../../../utils/log";
+import { AlertView, Buttons } from "../components/alert.view";
 
 export class LoginMediator extends BaseMediator {
+    public static NAME: string = "LoginMediator";
     private verifiedPanel: VerifiedPanel;
     private verifiedEnable: boolean = false;
+    private phone: string;
     constructor(private layerManager: LayerManager, scene: Phaser.Scene, private render: Render) {
         super();
     }
@@ -21,6 +23,68 @@ export class LoginMediator extends BaseMediator {
         this.mView.on("login", this.onLoginHandler, this);
         this.mView.on("error", this.onLoginErrorHanler, this);
         this.layerManager.addToUILayer(this.mView);
+    }
+
+    public allowLoginCallBack() {
+        (<LoginPanel>this.mView).setInputVisible(true);
+    }
+
+    public allowLoginPromise(allow: boolean) {
+        if (allow) {
+            this.destroy();
+            this.render.enterGame();
+        } else {
+            (<LoginPanel>this.mView).setInputVisible(false);
+        }
+    }
+
+    public allowLoginPromiseError() {
+        this.onLoginErrorHanler("服务器错误，请与管管联系！", "确定");
+    }
+
+    public loginByPhoneCodeCallBack(response) {
+        if (response.code === 200 || response.code === 201) {
+            const data = response.data;
+            this.render.account.setAccount(data);
+            localStorage.setItem("accountphone", JSON.stringify({ account: this.phone }));
+            // const verifiedEnable = CONFIG["verified_enable"];
+            if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
+                this.enterGame(!this.verifiedEnable);
+                return;
+            }
+            if (data.hasIdentityInfo) {
+                this.enterGame(data.adult);
+            } else {
+                (<LoginPanel>this.mView).setInputVisible(false);
+                this.onShowVerified();
+            }
+
+        } else if (response.code >= 400) {
+            this.onLoginErrorHanler(response.msg || "服务器错误");
+        }
+        (<LoginPanel>this.mView).setLoginEnable(true);
+    }
+
+    public verifiedCallBack(response: any) {
+        const { code, data } = response;
+        if (code === 200 || code === 201 || code === 0) {
+            // this.enterGame(data.adult);
+            this.enterGame(true);
+        } else if (code === 10001 || code >= 400) {
+            // 验证失败
+            this.verifiedPanel.setVerifiedEnable(false);
+            this.onShowErrorHandler("[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]", "重新认证");
+            // this.verifiedPanel.setVisible(false);
+            // new AlertView(this.layerManager.scene, this.world).setOKText("重新认证").show({
+            //     text: "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]",
+            //     title: "提示",
+            //     callback: () => {
+            //         this.verifiedPanel.setVerifiedEnable(true);
+            //         // this.verifiedPanel.setVisible(true);
+            //     },
+            //     btns: Buttons.Ok
+            // });
+        }
     }
 
     destroy() {
@@ -43,45 +107,26 @@ export class LoginMediator extends BaseMediator {
             this.render.enterGame();
             return;
         }
-        this.world.httpClock.allowLogin(() => { (<LoginPanel>this.mView).setInputVisible(true); })
-            .then((allow: boolean) => {
-                if (allow) {
-                    this.destroy();
-                    this.render.enterGame();
-                } else {
-                    (<LoginPanel>this.mView).setInputVisible(false);
-                }
-            })
-            .catch((err) => {
-                this.onLoginErrorHanler("服务器错误，请与管管联系！", "确定");
-                Logger.getInstance().error(err);
-            });
+        this.render.allowLogin();
+        // this.world.httpClock.allowLogin(() => { (<LoginPanel>this.mView).setInputVisible(true); })
+        //     .then((allow: boolean) => {
+        //         if (allow) {
+        //             this.destroy();
+        //             this.render.enterGame();
+        //         } else {
+        //             (<LoginPanel>this.mView).setInputVisible(false);
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         this.onLoginErrorHanler("服务器错误，请与管管联系！", "确定");
+        //         Logger.getInstance().error(err);
+        //     });
     }
 
     private onLoginHandler(phone: string, code: string, areaCode: string) {
+        this.phone = phone;
         (<LoginPanel>this.mView).setLoginEnable(false);
-        this.world.httpService.loginByPhoneCode(phone, code, areaCode).then((response: any) => {
-            if (response.code === 200 || response.code === 201) {
-                const data = response.data;
-                this.world.account.setAccount(data);
-                localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                // const verifiedEnable = CONFIG["verified_enable"];
-                if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
-                    this.enterGame(!this.verifiedEnable);
-                    return;
-                }
-                if (data.hasIdentityInfo) {
-                    this.enterGame(data.adult);
-                } else {
-                    (<LoginPanel>this.mView).setInputVisible(false);
-                    this.onShowVerified();
-                }
-
-            } else if (response.code >= 400) {
-                this.onLoginErrorHanler(response.msg || "服务器错误");
-            }
-            (<LoginPanel>this.mView).setLoginEnable(true);
-        });
+        this.render.loginByPhoneCode(phone, code, areaCode);
     }
 
     private onShowVerified() {
@@ -99,7 +144,7 @@ export class LoginMediator extends BaseMediator {
 
     private onShowErrorHandler(error, okText?: string) {
         this.verifiedPanel.setVerifiedEnable(false);
-        new AlertView(this.layerManager.scene, this.world).setOKText(okText ? okText : "重新输入").show({
+        new AlertView(this.layerManager.scene, this.render).setOKText(okText ? okText : "重新输入").show({
             text: error ? error : "[color=#F9361B]证件格式有误[/color]",
             title: "提示",
             callback: () => {
@@ -122,26 +167,6 @@ export class LoginMediator extends BaseMediator {
     }
 
     private onVerifiedHandler(name: string, idcard: string) {
-        this.world.httpService.verified(name, idcard).then((response: any) => {
-            const { code, data } = response;
-            if (code === 200 || code === 201 || code === 0) {
-                // this.enterGame(data.adult);
-                this.enterGame(true);
-            } else if (code === 10001 || code >= 400) {
-                // 验证失败
-                this.verifiedPanel.setVerifiedEnable(false);
-                this.onShowErrorHandler("[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]", "重新认证");
-                // this.verifiedPanel.setVisible(false);
-                // new AlertView(this.layerManager.scene, this.world).setOKText("重新认证").show({
-                //     text: "[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]",
-                //     title: "提示",
-                //     callback: () => {
-                //         this.verifiedPanel.setVerifiedEnable(true);
-                //         // this.verifiedPanel.setVisible(true);
-                //     },
-                //     btns: Buttons.Ok
-                // });
-            }
-        });
+        this.render.verified(name, idcard);
     }
 }

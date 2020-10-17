@@ -1,3 +1,4 @@
+import { UiManager } from "../managers/ui.manager";
 import { BasicScene } from "./basic.scene";
 
 // 编辑器用 Phaser.Scene
@@ -13,7 +14,7 @@ export class LoginScene extends BasicScene {
 
     public create() {
         if (this.world) {
-            const uimanager = this.world.uiManager;
+            const uimanager: UiManager = this.world.uiManager;
             uimanager.setScene(this);
             uimanager.showMed("Login");
         }
