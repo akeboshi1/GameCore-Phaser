@@ -237,6 +237,8 @@ export class Render extends RPCPeer implements GameMain {
             this.mGame.input.mouse.capture = true;
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
+            } else {
+                this.mUIScale = Math.ceil(window.devicePixelRatio);
             }
             this.sceneManager = new SceneManager(this.mGame);
             this.exportProperty(this.sceneManager, this)
@@ -296,7 +298,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public login() {
-        this.sceneManager.startScene(name, {});
+        this.sceneManager.startScene(SceneName.LOADING_SCENE, { dpr: this.mUIScale });
         if (!this.mGame.scene.getScene(SceneName.LOGIN_SCENE)) {
             this.mGame.scene.add(SceneName.LOGIN_SCENE, LoginScene);
         }
