@@ -16,6 +16,7 @@ import { SceneName } from "../structureinterface/scene.name";
 import { SceneManager } from "./managers/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { UiManager } from "./managers/ui.manager";
+import { Url } from "../utils";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -44,6 +45,9 @@ export class Render extends RPCPeer implements GameMain {
             this.createGame();
             Logger.getInstance().log("worker onReady");
         });
+        Url.OSD_PATH = this.mConfig.osd;
+        Url.RES_PATH = "./resources/";
+        Url.RESUI_PATH = "./resources/ui/";
         this.createManager();
     }
 
@@ -539,6 +543,7 @@ export class Render extends RPCPeer implements GameMain {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
+        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz});
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -587,7 +592,6 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public createGameCallBack(content: op_def.IKeyCodeEvent[]) {
-        this.newGame();
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         if (window.screen.width > window.screen.height) {
             if (this.mConfig.width > this.mConfig.height) {

@@ -380,7 +380,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
     }
 
-    private onInitVirtualWorldPlayerInit(packet: PBpacket) {
+    private async onInitVirtualWorldPlayerInit(packet: PBpacket) {
         // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
@@ -390,34 +390,38 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mClock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
-        this.peer.render.getAccount().then((account) => {
-            // const keyBoardPacket: PBpacket = new PBpacket();
-            // keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
-            if (!configUrls || configUrls.length <= 0) {
-                Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${account.gameID}`);
+        const account = await this.peer.render.getAccount();
+        // const keyBoardPacket: PBpacket = new PBpacket();
+        // keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
+        if (!configUrls || configUrls.length <= 0) {
+            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${account.gameID}`);
+            this.mainPeer.render.createGameCallBack(content.keyEvents);
+            this.gameCreated();
+            return;
+        }
+        Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
+        let game_id = account.gameID;
+        if (!game_id) {
+            this.mainPeer.render.createGameCallBack(content.keyEvents);
+            this.gameCreated();
+            return;
+        }
+        if (game_id.indexOf(".") > -1) {
+            game_id = game_id.split(".")[1];
+        }
+        const mainGameConfigUrl = this.gameConfigUrls;
+        this.mLoadingManager.start(LoadingTips.downloadGameConfig());
+        // this.connect.loadRes([mainGameConfigUrl]);
+        this.loadGameConfig(mainGameConfigUrl)
+            .then((gameConfig: Lite) => {
+                // this.mElementStorage.setGameConfig(gameConfig);
                 this.mainPeer.render.createGameCallBack(content.keyEvents);
                 this.gameCreated();
-                return;
-            }
-            Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
-            let game_id = account.gameID;
-            if (game_id.indexOf(".") > -1) {
-                game_id = game_id.split(".")[1];
-            }
-            const mainGameConfigUrl = this.gameConfigUrls;
-            this.mLoadingManager.start(LoadingTips.downloadGameConfig());
-            // this.connect.loadRes([mainGameConfigUrl]);
-            this.loadGameConfig(mainGameConfigUrl)
-                .then((gameConfig: Lite) => {
-                    // this.mElementStorage.setGameConfig(gameConfig);
-                    this.mainPeer.render.createGameCallBack(content.keyEvents);
-                    this.gameCreated();
-                    Logger.getInstance().debug("created game suc");
-                })
-                .catch((err: any) => {
-                    Logger.getInstance().log(err);
-                });
-        });
+                Logger.getInstance().debug("created game suc");
+            })
+            .catch((err: any) => {
+                Logger.getInstance().log(err);
+            });
     }
 
     private gameCreated() {
@@ -435,7 +439,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.send(pkt.Serialization());
         const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
-        content.localeCode = i18n.language;
+        // content.localeCode = i18n.language;
+        content.localeCode = "zh-CN";
         this.mainPeer.send(i18Packet.Serialization());
         // this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
     }

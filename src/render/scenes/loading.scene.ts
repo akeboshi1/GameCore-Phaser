@@ -31,7 +31,7 @@ export class LoadingScene extends BasicScene {
 
   public init(data: any) {
     this.createFont();
-    this.dpr = data.dpr;
+    this.dpr = data.dpr || 2;
     this.mRequestCom = false;
     this.mCallback = data.callBack;
     this.tipsText = data.text;
