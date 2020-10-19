@@ -475,11 +475,19 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public showLoading(data?: any) {
+        if (!this.sceneManager) {
+            Logger.getInstance().error("no game created");
+            return;
+        }
         this.sceneManager.wakeScene("LoadingScene", data);
     }
 
     @Export()
     public hideLoading() {
+        if (!this.sceneManager) {
+            Logger.getInstance().error("no game created");
+            return;
+        }
         this.sceneManager.sleepScene("LoadingScene");
     }
 
