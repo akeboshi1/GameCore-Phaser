@@ -36,27 +36,35 @@ export class SceneManager {
 
     }
 
-    public startScene(name: string, data?: any) {
+    public startScene(name: string, data?: any): BasicScene {
         if (!this.sceneClass.hasOwnProperty(name)) {
             Logger.getInstance().error("className error: ", name);
         }
         if (this.stateSceneName && this.game.scene.getScene(this.stateSceneName)) {
-            this.stopScene(this.stateSceneName);
+            if (this.stateSceneName === name) {
+                const exitScene = this.game.scene.getScene(this.stateSceneName) as BasicScene;
+                exitScene.wake(data);
+                return exitScene;
+            } else {
+                this.stopScene(this.stateSceneName);
+            }
         }
 
-        this.game.scene.add(name, this.sceneClass[name], true, { data });
+        const scene = this.game.scene.add(name, this.sceneClass[name], true, { data }) as BasicScene;
         this.stateSceneName = name;
+        return scene;
     }
 
-    public launchScene(name: string, data?: any) {
-        if (!this.stateSceneName || !this.game.scene.isActive(this.stateSceneName)) {
+    public launchScene(name: string, data?: any): Phaser.Scene {
+        if (!this.stateSceneName || !this.game.scene.getScene(this.stateSceneName)) {
             Logger.getInstance().error("no state scene is running");
             return;
         }
 
         const scene = this.game.scene.getScene(this.stateSceneName);
-        scene.scene.launch(name, data);
+        const scenePlugin = scene.scene.launch(name, data);
         this.launchedScenes.push(name);
+        return scenePlugin.scene;
     }
 
     public stopScene(name: string) {
@@ -72,12 +80,13 @@ export class SceneManager {
         this.game.scene.remove(name);
     }
 
-    public wakeScene(name: string, data?: any) {
+    public wakeScene(name: string, data?: any): BasicScene {
         if (!this.game.scene.getScene(name)) {
-            this.startScene(name, data);
+            return this.startScene(name, data);
         } else {
             const scene = this.game.scene.getScene(name) as BasicScene;
             scene.wake(data);
+            return scene;
         }
     }
 
@@ -107,5 +116,12 @@ export class SceneManager {
         }
 
         scene.scene.resume(name);
+    }
+
+    public isActive(name: string): boolean {
+        if (!this.game.scene.getScene(name)) {
+            return false;
+        }
+        return this.game.scene.getScene(name).scene.isActive();
     }
 }
