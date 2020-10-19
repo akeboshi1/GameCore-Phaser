@@ -80,12 +80,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
-        Logger.getInstance().log("===========enter scene");
+        Logger.getInstance().log("===========enter scene=====0");
         const vw = scene;
         if (this.mCurRoom) {
             await this.leaveRoom(this.mCurRoom);
         }
         if (this.hasRoom(vw.scene.id)) {
+            Logger.getInstance().log("===========enter scene=====1");
             this.onEnterRoom(scene);
         } else {
             this.mGame.loadSceneConfig(vw.scene.id);
@@ -93,6 +94,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private async onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+        Logger.getInstance().log("enter===room");
         if (this.mCurRoom) {
             await this.leaveRoom(this.mCurRoom);
         }
@@ -124,9 +126,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private leaveRoom(room: IRoomService) {
-        return;
         if (!room) return;
         this.mGame.leaveRoom(room);
+        Logger.getInstance().log("===========leaveRoom");
         // return new Promise((resolve, reject) => {
         //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
         //     if (loading) {
@@ -162,6 +164,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     get connection(): ConnectionService {
         if (this.mGame) {
+            Logger.getInstance().log("room=======connect");
             return this.mGame.connection;
         }
     }

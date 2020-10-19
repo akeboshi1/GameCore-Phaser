@@ -40,13 +40,13 @@ export class EffectManager extends PacketHandler {
     }
 
     protected updateDisplay(effect: Effect) {
-        const id = effect.id;
-        const display = this.room.game.elementStorage.getDisplayModel(id);
-        if (display) {
-            effect.displayInfo = display;
-        } else {
-            this.fetchDisplay([id]);
-        }
+        // const id = effect.id;
+        // const display = this.room.game.elementStorage.getDisplayModel(id);
+        // if (display) {
+        //     effect.displayInfo = display;
+        // } else {
+        //     this.fetchDisplay([id]);
+        // }
     }
 
     protected fetchDisplay(ids: number[]) {

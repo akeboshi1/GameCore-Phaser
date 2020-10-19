@@ -94,6 +94,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public loginEnterWorld() {
+        Logger.getInstance().log("game======loginEnterWorld");
         this.mGame.loginEnterWorld();
     }
 

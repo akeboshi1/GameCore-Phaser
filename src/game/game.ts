@@ -24,6 +24,7 @@ import { Account } from "../render/account/account";
 import { Render } from "../render/render";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
+import { RoomManager } from "./room/room.manager";
 interface ISize {
     width: number;
     height: number;
@@ -39,7 +40,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mHttpService: HttpService;
     private mConfig: ILauncherConfig;
     // private mAccount: Account;
-    // private mRoomManager: RoomManager;
+    private mRoomManager: RoomManager;
     private mElementStorage: ElementStorage;
     // private mPlayerDataManager: PlayerDataManager;
     private mCreateRoleManager: CreateRoleManager;
@@ -239,6 +240,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mElementStorage;
     }
 
+    get roomManager(): RoomManager {
+        return this.mRoomManager;
+    }
+
     public async enterVirtualWorld() {
         if (this.mConfig && this.connect) {
             // this.mLoadingManager.start();
@@ -324,7 +329,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
-        // this.mRoomManager = new RoomManager(this);
+        this.mRoomManager = new RoomManager(this);
         // this.mUiManager = new UiManager(this);
         // this.mElementStorage = new ElementStorage();
         this.mUIManager = new UIManager(this);
@@ -336,14 +341,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
         this.mCreateRoleManager.register();
         this.mUIManager.addPackListener();
-        // this.mRoomManager.addPackListener();
+        this.mRoomManager.addPackListener();
         // this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
         this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
     }
 
     private initGame() {
-        // if (this.mRoomManager) this.mRoomManager.addPackListener();
+        if (this.mRoomManager) this.mRoomManager.addPackListener();
         if (this.mUIManager) this.mUIManager.addPackListener();
         if (this.mCreateRoleManager) this.mCreateRoleManager.register();
         // if (this.mSoundManager) this.mSoundManager.addPackListener();

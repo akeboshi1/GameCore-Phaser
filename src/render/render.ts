@@ -389,6 +389,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public loadSceneConfig(sceneID: number) {
+        Logger.getInstance().log("===========loadSceneconfig");
         // todo world loadSceneConfig
     }
 
@@ -543,7 +544,7 @@ export class Render extends RPCPeer implements GameMain {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
-        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz});
+        this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz });
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
