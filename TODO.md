@@ -11,6 +11,8 @@ TODO List
   - [x] 地块显示对象管理-terrainDisplayManager
   - [ ] 墙体显示对象管理-wallDisplayManager
   - [x] ui显示对象管理-uiManager
+    - [x] 登陆ui-loginPanel
+    - [ ] 创角ui-CreateRolePanel
   - [x] 显示对象层级管理-layerManager
   - [ ] Phaser声音管理-soundManager
   - [ ] Phaser交互管理-inputManager
@@ -18,17 +20,18 @@ TODO List
   - [ ] 特效显示对象管理-falleffectManager
   - [ ] 编辑模式下显示对象管理-editor
   - [ ] 气泡显示对象管理-bubbleManager
-  - [ ] 加载管理-loadingManager
+  - [x] 加载管理-loadingManager
   - [ ] 动画管理-animationManager
 - [ ]game 部分拆分 张腾 管晓敏
   - [x] 游戏登陆数据管理-account
   - [x] 游戏时间管理（游戏服务器同步）-clock
   - [x] 游戏时间管理（游戏后台同步）-httpclock
   - [x] 游戏net管理-connect
-  - [ ] 游戏数据缓存管理-elementStorage 管晓敏
+  - [x] 游戏数据缓存管理-elementStorage 管晓敏
   - [ ] 游戏主角管理-user 管晓敏
-  - [ ] 游戏角色数据管理-playerDataManager 管晓敏
-  - [ ] ui逻辑管理-uiManager 管晓敏
+  - [x] 游戏角色数据管理-playerDataManager 管晓敏
+  - [x] ui逻辑管理-uiManager 管晓敏
+    - [x] 登陆-login
   - [ ] 房间管理-roomManager 管晓敏
     - [ ] 房间对象-room
       - [ ] 编辑房间-editorRoom
