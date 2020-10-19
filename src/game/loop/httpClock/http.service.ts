@@ -137,26 +137,64 @@ export class HttpService {
         return this.post("game/played_duration", { gameId }, { "App-Key": Appid });
     }
 
-    public post(uri: string, body: any, headers?: any): any {
-        this.game.peer.render.getAccount().then((account) => {
-            if (!account) {
-                return Promise.reject("account does not exist");
-            }
-            if (!account.accountData) {
-                return Promise.reject("token does not exist");
-            }
-            headers = Object.assign({
-                "Content-Type": "application/json",
-                "X-Pixelpai-TK": account.accountData.accessToken
-            }, headers);
-            const data = {
-                body: JSON.stringify(body),
-                method: "POST",
-                headers,
-            };
-            Logger.getInstance().log("post----httpservice");
-            return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
-        });
+    public async post(uri: string, body: any, headers?: any): Promise<any> {
+        // this.game.peer.render.getAccount().then((account) => {
+        //     if (!account) {
+        //         return Promise.reject("account does not exist");
+        //     }
+        //     if (!account.accountData) {
+        //         return Promise.reject("token does not exist");
+        //     }
+        //     headers = Object.assign({
+        //         "Content-Type": "application/json",
+        //         "X-Pixelpai-TK": account.accountData.accessToken
+        //     }, headers);
+        //     const data = {
+        //         body: JSON.stringify(body),
+        //         method: "POST",
+        //         headers,
+        //     };
+        //     Logger.getInstance().log("post----httpservice");
+        //     return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
+        // });
+        // return new Promise((resolve, reject) => {
+        //     this.game.peer.render.getAccount()
+        //     .then((account) => {
+        //         if (!account) {
+        //             reject("account does not exist");
+        //         }
+        //         if (!account.accessToken) {
+        //             return Promise.reject("token does not exist");
+        //         }
+        //         headers = Object.assign({
+        //             "Content-Type": "application/json",
+        //             "X-Pixelpai-TK": account.accessToken
+        //         }, headers);
+        //         const data = {
+        //             body: JSON.stringify(body),
+        //             method: "POST",
+        //             headers,
+        //         };
+        //         return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
+        //     });
+        // });
+        const account = await this.game.peer.render.getAccount();
+        if (!account) {
+            return Promise.reject("account does not exist");
+        }
+        if (!account.accessToken) {
+            return Promise.reject("token does not exist");
+        }
+        headers = Object.assign({
+            "Content-Type": "application/json",
+            "X-Pixelpai-TK": account.accessToken
+        }, headers);
+        const data = {
+            body: JSON.stringify(body),
+            method: "POST",
+            headers,
+        };
+        return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
     }
 
     public get(uri: string) {

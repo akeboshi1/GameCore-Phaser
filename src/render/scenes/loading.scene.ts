@@ -1,18 +1,19 @@
+import { Font, Url } from "../../utils";
+import { Logger } from "../../utils/log";
 import { BasicScene } from "./basic.scene";
 import verion from "../../../version";
-import { Url } from "../../utils/resUtil";
-import { Font } from "../../utils/font";
-import { Logger } from "../../utils/log";
 
 export class LoadingScene extends BasicScene {
-  private mWorld: any;
   private bg: Phaser.GameObjects.Sprite;
+  private mask: Phaser.GameObjects.Graphics;
+  private debug: Phaser.GameObjects.Text;
   private mCallback: Function;
   private curtain: Curtain;
   private progressText: Phaser.GameObjects.Text;
   private mRequestCom: boolean = false;
   private tipsText: string;
-  private taskCount: number = 0;
+  private dpr: number;
+
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -20,12 +21,8 @@ export class LoadingScene extends BasicScene {
   public preload() {
     // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
     // this.load.image("loading_bg", Url.getRes(""))
-    let dpr = 2;
-    if (this.mWorld) {
-      dpr = this.mWorld.uiRatio || 2;
-    }
     this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
-    this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
+    this.load.atlas("curtain", Url.getUIRes(this.dpr, "loading/curtain.png"), Url.getUIRes(this.dpr, "loading/curtain.json"));
     this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
     // this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));
     this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
@@ -34,7 +31,7 @@ export class LoadingScene extends BasicScene {
 
   public init(data: any) {
     this.createFont();
-    this.mWorld = data.world;
+    this.dpr = data.dpr || 2;
     this.mRequestCom = false;
     this.mCallback = data.callBack;
     this.tipsText = data.text;
@@ -63,18 +60,23 @@ export class LoadingScene extends BasicScene {
       repeat: -1
     });
 
-    const dpr = this.mWorld.uiRatio;
-    this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.mWorld.uiScale * dpr * 2);
+    this.curtain = new Curtain(this, this.dpr);
+
+    this.mask = this.add.graphics(undefined);
+    this.mask.fillStyle(0);
+    this.mask.fillRect(0, 0, width, height);
+
+    this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.dpr * 2);
     this.bg.play("loading_anis");
-    this.curtain = new Curtain(this, this.mWorld);
 
     this.progressText = this.add.text(this.bg.x, this.bg.y + this.bg.displayHeight * 0.5, this.tipsText, {
-      fontSize: 12 * dpr,
+      fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT
-    }).setOrigin(0.5);
+    }
+    ).setOrigin(0.5);
 
-    const debug = this.add.text(width - 4 * dpr, height - 4 * dpr, `v${verion} ${this.getDebug()}`, {
-      fontSize: 12 * dpr,
+    this.debug = this.add.text(width - 4 * this.dpr, height - 4 * this.dpr, `v${verion} ${this.getDebug()}`, {
+      fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
 
@@ -83,31 +85,34 @@ export class LoadingScene extends BasicScene {
       this.mCallback = undefined;
     }
     // this.scale.on("resize", this.checkSize, this);
-    this.taskCount++;
+
   }
 
-  // UNUSED
   public async show() {
+    this.awake();
     if (!this.curtain) {
       return Promise.resolve();
     }
-    if (this.bg) this.bg.visible = false;
+    this.displayVisible(false);
     return this.curtain.open();
   }
 
-  // UNUSED
   public async close() {
     if (!this.curtain) {
       return;
     }
-    if (this.bg) this.bg.visible = false;
+    this.displayVisible(false);
     return this.curtain.close();
   }
 
-  public wake(data?: any) {
+  public awake(data?: any) {
+    if (!this.scene || !this.scene.settings) {
+      return;
+    }
+    this.displayVisible(true);
     // this.scale.on("resize", this.checkSize, this);
-    this.taskCount++;
-    super.wake(data);
+    this.scene.wake();
+    this.scene.bringToTop(LoadingScene.name);
     if (!data) {
       return;
     }
@@ -118,20 +123,24 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
-    this.taskCount--;
-    if (this.taskCount > 0) return;
-    if (this.progressText) {
+    if (this.progressText)  {
       if (this.progressText.active) this.progressText.setText("");
     }
+    if (!this.scene || !this.scene.settings) {
+      return;
+    }
+    if (!this.scene.settings.active) {
+      return;
+    }
     if (this.curtain) {
-      if (this.bg) this.bg.visible = false;
+      this.displayVisible(false);
       this.curtain.close().then(() => {
-        // this.scale.off("resize", this.checkSize, this);
-        super.sleep();
+        // this.displayVisible(true);
+        this.scene.sleep();
       });
     } else {
-      // this.scale.off("resize", this.checkSize, this);
-      super.sleep();
+      this.displayVisible(true);
+      this.scene.sleep();
     }
   }
 
@@ -172,6 +181,14 @@ export class LoadingScene extends BasicScene {
     return `(${renderType} | ${audioType})`;
   }
 
+  private displayVisible(val: boolean) {
+    if (this.bg) {
+      this.bg.visible = val;
+      this.debug.visible = val;
+      this.mask.visible = val;
+    }
+  }
+
   private createFont() {
     const element = document.createElement("style");
     document.head.appendChild(element);
@@ -185,7 +202,6 @@ export class LoadingScene extends BasicScene {
     sheet.insertRule(styles3, 0);
     sheet.insertRule(styles4, 0);
   }
-
 }
 
 class Curtain {
@@ -194,9 +210,9 @@ class Curtain {
   private upTween: Phaser.Tweens.Tween;
   private downTween: Phaser.Tweens.Tween;
   private readonly key = "curtain";
-  constructor(private scene: Phaser.Scene, world: any) {
-    this.upDisplay = this.scene.add.image(0, 0, this.key, "up.png").setOrigin(0).setVisible(false).setScale(world.uiScale);
-    this.downDisplay = this.scene.add.image(0, 0, this.key, "down.png").setOrigin(0, 1).setVisible(false).setScale(world.uiScale);
+  constructor(private scene: Phaser.Scene, uiScale: number) {
+    this.upDisplay = this.scene.add.image(0, 0, this.key, "up.png").setOrigin(0).setVisible(false).setScale(uiScale);
+    this.downDisplay = this.scene.add.image(0, 0, this.key, "down.png").setOrigin(0, 1).setVisible(false).setScale(uiScale);
   }
 
   open() {
@@ -220,8 +236,8 @@ class Curtain {
         props: { y: height },
         duration: 1000,
         onComplete: () => {
-          this.upDisplay.visible = false;
-          this.downDisplay.visible = false;
+          // this.upDisplay.visible = false;
+          // this.downDisplay.visible = false;
           this.clearTween();
           resolve();
         }
