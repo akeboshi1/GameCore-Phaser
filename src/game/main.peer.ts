@@ -59,7 +59,7 @@ export class MainPeer extends RPCPeer {
     }
 
     public onData(buffer: Buffer) {
-        // this.mGame.socket.onData(buffer);
+        this.mGame.connection.onData(buffer);
     }
 
     // ============= 主进程调用心跳
@@ -86,10 +86,17 @@ export class MainPeer extends RPCPeer {
             Logger.getInstance().log("heartBeatworker onReady");
         });
     }
+
     @Export()
-    public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: any) {
-        this.mGame.createAccount(gameID, worldID, sceneID, loc);
+    public refreshToken() {
+        this.mGame.refreshToken();
     }
+
+    @Export()
+    public loginEnterWorld() {
+        this.mGame.loginEnterWorld();
+    }
+
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
@@ -101,50 +108,59 @@ export class MainPeer extends RPCPeer {
         this.terminate();
         this.mGame.connection.closeConnect();
     }
+
     @Export()
     public focus() {
         this.mGame.socket.pause = false;
         // todo manager resume
     }
+
     @Export()
     public blur() {
         this.mGame.socket.pause = true;
         // todo manager pause
     }
-    /**
-     * 初始化world中的各个管理器,并添加socket事件监听
-     */
-    @Export()
-    public initWorld() {
-        this.mGame.initWorld();
-    }
-    /**
-     * 添加world中的socket消息监听
-     */
-    @Export()
-    public initGame() {
-        this.mGame.initGame();
-    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setSize(width, height) {
         this.mGame.setSize(width, height);
     }
+
     @Export([webworker_rpc.ParamType.str])
     public setGameConfig(configStr: string) {
         this.mGame.setGameConfig(configStr);
     }
+
     @Export([webworker_rpc.ParamType.unit8array])
     public send(buffer: Buffer) {
         this.mGame.socket.send(buffer);
     }
+
     @Export()
     public destroyClock() {
         this.mGame.destroyClock();
     }
+
     @Export()
     public clearGameComplete() {
         this.mGame.clearGameComplete();
     }
+
+    @Export()
+    public allowLogin() {
+
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public loginByPhoneCode(phone: string, code: string, areaCode: string) {
+
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public onVerifiedHandler(name: string, idcard: string) {
+
+    }
+
     // ============= 心跳调用主进程
     @Export()
     public startHeartBeat() {
@@ -152,35 +168,48 @@ export class MainPeer extends RPCPeer {
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
         this.mGame.socket.send(pkt.Serialization());
     }
+
     @Export()
     public endHeartBeat() {
 
     }
+
     @Export()
     public clearHeartBeat() {
 
     }
+
     @Export()
     public creareRole() {
 
     }
+
     @Export()
     public reconnect() {
         // 告诉主进程重新连接
         this.remote[RENDER_PEER].Render.reconnect();
     }
+
     @Export([webworker_rpc.ParamType.num])
     public syncClock(times: number) {
         this.mGame.syncClock(times);
     }
+
     @Export()
     public clearClock() {
         this.mGame.clearClock();
     }
+
     @Export()
     public requestCurTime() {
         this.remote[RENDER_PEER].Render.getCurTime(this.mGame.clock.unixTime);
     }
+
+    @Export([webworker_rpc.ParamType.boolean])
+    public httpClockEnable(enable: boolean) {
+        this.mGame.httpClock.enable = enable;
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();

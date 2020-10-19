@@ -1,9 +1,11 @@
-import { PacketHandler } from "net-socket-packet";
+import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Game } from "../game";
+import { BasicMediator } from "./basic/basic.mediator";
+import { UIMediatorType } from "./ui.mediator.type";
 
 export class UIManager extends PacketHandler {
-
+    private mMedMap: Map<UIMediatorType, BasicMediator>;
     constructor(private game: Game) {
         super();
     }
@@ -27,12 +29,85 @@ export class UIManager extends PacketHandler {
         connection.removePacketListener(this);
     }
 
-    private handleCloseUI() {
+    public showMed(type: string, ...param: any[]) {
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
+        }
+        type = this.getPanelNameByAlias(type);
+        const className: string = type + "Mediator";
+        let mediator: BasicMediator = this.mMedMap.get(className);
+        if (!mediator) {
+            const path: string = `./${type}/${type}Mediator`;
+            const ns: any = require(`./${type}/${className}`);
+            mediator = new ns[className]();
+            if (!mediator) {
+                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+                return;
+            }
+            this.mMedMap.set(type + "Mediator", mediator);
+            // mediator.setName(type);
+        }
+        // if (mediator.showing) return;
+        if (param) mediator.setParam(param);
+        mediator.show(param);
     }
 
-    private handleUpdateUI() {
+    public updateMed(type: string, ...param: any[]) {
+        if (!this.mMedMap) {
+            return;
+        }
+        const name: string = `${type}Mediator`;
+        const mediator: BasicMediator = this.mMedMap.get(name);
+        if (!mediator) {
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        if (param) mediator.setParam(param);
+        mediator.update(param);
+    }
+    public hideMed(type: string) {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const medName: string = `${type}Mediator`;
+        const mediator: BasicMediator = this.mMedMap.get(medName);
+        if (!mediator) {
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        mediator.hide();
+    }
+    public showExistMed(type: string, extendName = "Mediator") {
+        if (!this.mMedMap) {
+            return;
+        }
+        type = this.getPanelNameByAlias(type);
+        const className: string = type + extendName;
+        const mediator: BasicMediator = this.mMedMap.get(className);
+        if (mediator) mediator.show();
     }
 
-    private handleShowUI() {
+    private handleShowUI(packet: PBpacket): void {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
+        this.showMed(ui.name, ui);
+    }
+
+    private handleUpdateUI(packet: PBpacket) {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
+        this.updateMed(ui.name, ui);
+    }
+
+    private handleCloseUI(packet: PBpacket): void {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
+        this.hideMed(ui.name);
+    }
+
+    private getPanelNameByAlias(alias: string) {
+        switch (alias) {
+            case "MessageBox":
+                return "PicaMessageBox";
+        }
+        return alias;
     }
 }
