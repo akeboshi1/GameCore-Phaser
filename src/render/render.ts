@@ -23,6 +23,8 @@ export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
 
+    private readonly DEFAULT_WIDTH = 360;
+    private readonly DEFAULT_HEIGHT = 640;
     private sceneManager: SceneManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
@@ -30,12 +32,20 @@ export class Render extends RPCPeer implements GameMain {
     private _curTime: number;
     private mGame: Phaser.Game;
     private gameConfig: Phaser.Types.Core.GameConfig;
+    private mAccount: Account;
+    private mUiManager: UiManager;
+    /**
+     * 场景缩放系数（layermanager，缩放场景中容器大小）
+     */
+    private mScaleRatio: number;
+    /**
+     * 判断加载几x资源
+     */
+    private mUIRatio: number;
     /**
      * 面板缩放系数
      */
     private mUIScale: number;
-    private mAccount: Account;
-    private mUiManager: UiManager;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
@@ -45,9 +55,8 @@ export class Render extends RPCPeer implements GameMain {
             this.createGame();
             Logger.getInstance().log("worker onReady");
         });
-        Url.OSD_PATH = this.mConfig.osd;
-        Url.RES_PATH = "./resources/";
-        Url.RESUI_PATH = "./resources/ui/";
+
+        this.initConfig();
         this.createManager();
     }
 
@@ -56,11 +65,15 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     get uiRatio(): number {
-        return this.mConfig.scale_ratio;
+        return this.mUIRatio;
     }
 
     get uiScale(): number {
         return this.mUIScale;
+    }
+
+    get scaleRatio(): number {
+        return this.mScaleRatio;
     }
 
     get account(): Account {
@@ -466,7 +479,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public getAccount(): any {
-        return this.mAccount.accountData;
+        return this.mAccount;
     }
 
     @Export()
@@ -655,5 +668,23 @@ export class Render extends RPCPeer implements GameMain {
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
         // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
+    }
+
+    private initConfig() {
+        if (!this.mConfig.devicePixelRatio) {
+            this.mConfig.devicePixelRatio = window.devicePixelRatio || 1;
+        }
+        if (this.mConfig.width === undefined) {
+            this.mConfig.width = window.innerWidth;
+        }
+        if (this.mConfig.height === undefined) {
+            this.mConfig.height = window.innerHeight;
+        }
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 1);
+        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 1);
+        this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
+        Url.OSD_PATH = this.mConfig.osd;
+        Url.RES_PATH = "./resources/";
+        Url.RESUI_PATH = "./resources/ui/";
     }
 }

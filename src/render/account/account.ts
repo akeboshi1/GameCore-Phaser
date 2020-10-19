@@ -6,11 +6,11 @@ interface IAccountData {
     id: string;
 }
 export class Account {
-    private mGameId: string;
-    private mVirtualWorldId: string;
-    private mSceneID: number;
-    private mLoc: any;
-    private mCurAccountData: IAccountData;
+    public gameId: string;
+    public virtualWorldId: string;
+    public sceneID: number;
+    public loc: any;
+    public accountData: IAccountData;
     constructor() {
         // TODO
         // 1. 登陆注册的逻辑在这里做
@@ -20,7 +20,7 @@ export class Account {
     public setAccount(val: any) {
         // this.clear();
         // Object.assign(this.mCurAccountData, val);
-        this.mCurAccountData = {
+        this.accountData = {
             id: val.id,
             fingerprint: val.fingerprint,
             refreshToken: val.refreshToken,
@@ -31,25 +31,25 @@ export class Account {
     }
 
     public refreshToken(data: any) {
-        if (this.mCurAccountData) {
+        if (this.accountData) {
             const { newExpire, newFingerprint, newToken } = data;
-            this.mCurAccountData.expire = newExpire;
-            this.mCurAccountData.fingerprint = newFingerprint;
-            this.mCurAccountData.accessToken = newToken;
+            this.accountData.expire = newExpire;
+            this.accountData.fingerprint = newFingerprint;
+            this.accountData.accessToken = newToken;
             this.saveLocalStorage();
         }
     }
 
     public saveLocalStorage() {
-        if (!this.mCurAccountData) {
+        if (!this.accountData) {
             return;
         }
-        const { id, fingerprint, refreshToken, expire, accessToken } = this.mCurAccountData;
+        const { id, fingerprint, refreshToken, expire, accessToken } = this.accountData;
         localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken }));
     }
 
     public clear() {
-        this.mCurAccountData = {
+        this.accountData = {
             accessToken: "",
             expire: 0,
             fingerprint: "",
@@ -64,30 +64,19 @@ export class Account {
         this.enterGame(undefined, undefined, undefined, undefined);
     }
 
-    public get accountData(): IAccountData | undefined {
-        return this.mCurAccountData;
-    }
-
     public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any) {
-        this.mGameId = gameId;
-        this.mVirtualWorldId = virtualWorldId;
-        this.mSceneID = sceneId;
-        this.mLoc = loc;
+        this.gameId = gameId;
+        this.virtualWorldId = virtualWorldId;
+        this.sceneID = sceneId;
+        this.loc = loc;
     }
 
     get gameID(): string {
-        return this.mGameId;
-    }
-
-    get virtualWorldId(): string {
-        return this.mVirtualWorldId;
+        return this.gameId;
     }
 
     get sceneId(): number {
-        return this.mSceneID;
+        return this.sceneID;
     }
 
-    get loc(): any {
-        return this.mLoc;
-    }
 }

@@ -245,13 +245,17 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             if (!account) {
                 return;
             }
+            const accountData = account.accountData;
+            if (!accountData) {
+                return;
+            }
             // this.peer.render.getAccount().then((account) => {
             if (!this.mConfig.auth_token) {
-                if (!account) {
+                if (!accountData) {
                     this.peer.render.login();
                     return;
                 }
-                this.httpService.refreshToekn(account.refreshToken, account.accessToken)
+                this.httpService.refreshToekn(accountData.refreshToken, accountData.accessToken)
                     .then((response: any) => {
                         if (response.code === 200) {
                             this.peer.render.refreshAccount(response);
@@ -270,8 +274,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public async refreshToken() {
         const account = await this.peer.render.getAccount();
+        const accountData = account.accountData;
         // this.peer.render.getAccount().then((account) => {
-        this.httpService.refreshToekn(account.refreshToken, account.accessToken)
+        this.httpService.refreshToekn(accountData.refreshToken, accountData.accessToken)
             .then((response: any) => {
                 if (response.code === 200) {
                     this.peer.render.refreshAccount(response);
@@ -296,17 +301,18 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         let sceneId = null;
         let loc = null;
         const account = await this.peer.render.getAccount();
-        if (account && account.gameID) {
-            game_id = account.gameID;
+        const accountData = account.accountData;
+        if (account && account.gameId) {
+            game_id = account.gameId;
             virtualWorldUuid = account.virtualWorldId;
             sceneId = account.sceneId;
             loc = account.loc;
         }
         content.virtualWorldUuid = virtualWorldUuid;
         content.gameId = game_id;
-        content.userToken = this.mConfig.auth_token = account.accessToken;
-        content.expire = this.mConfig.token_expire = account.expire + "";
-        content.fingerprint = this.mConfig.token_fingerprint = account.fingerprint;
+        content.userToken = this.mConfig.auth_token = accountData.accessToken;
+        content.expire = this.mConfig.token_expire = accountData.expire + "";
+        content.fingerprint = this.mConfig.token_fingerprint = accountData.fingerprint;
         content.sceneId = sceneId;
         content.loc = loc;
         this.connect.send(pkt);
