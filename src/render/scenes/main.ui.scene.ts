@@ -4,6 +4,9 @@ import { Font } from "../../utils/font";
 import { Size } from "../../utils/size";
 
 export class MainUIScene extends BasicScene {
+  private readonly LAYER_UI = "uiLayer";
+  private readonly LAYER_DIALOG = "dialogLayer";
+  private readonly LAYER_TOOLTIPS = "toolTipsLyaer";
   private timeOutID = 0;
   private timeOutCancelMap = {};
   private timeOutCallerList = [];
@@ -50,6 +53,11 @@ export class MainUIScene extends BasicScene {
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
     // this.scale.on("resize", this.checkSize, this);
+
+    // set layers
+    this.layerManager.addLayer(this, BasicScene, this.LAYER_UI, 1);
+    this.layerManager.addLayer(this, BasicScene, this.LAYER_DIALOG, 2);
+    this.layerManager.addLayer(this, BasicScene, this.LAYER_TOOLTIPS, 3);
   }
 
   public setTimeout(caller, time): number {

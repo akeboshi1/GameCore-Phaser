@@ -1,4 +1,3 @@
-import { ILayerManager, LayerManager } from "./layer.manager";
 import { ILauncherConfig } from "../../structureinterface/lanucher.config";
 import { Render } from "../render";
 import { BasePanel } from "../ui/components/base.panel";
@@ -6,22 +5,15 @@ import { BasePanel } from "../ui/components/base.panel";
 export class UiManager {
     private mScene: Phaser.Scene;
     private mPanelMap: Map<string, BasePanel>;
-    private mUILayerManager: ILayerManager;
     private mCache: any[] = [];
     private mCacheUI: Function;
     private mConfig: ILauncherConfig;
     constructor(private render: Render) {
         this.mConfig = render.config;
-        this.mUILayerManager = new LayerManager();
-    }
-
-    public getUILayerManager(): ILayerManager {
-        return this.mUILayerManager;
     }
 
     public setScene(scene: Phaser.Scene) {
         this.mScene = scene;
-        this.mUILayerManager.setScene(scene);
         if (scene && this.mCacheUI) {
             this.mCacheUI();
             this.mCacheUI = undefined;
@@ -87,6 +79,7 @@ export class UiManager {
         // if (param) mediator.setParam(param);
         // mediator.show(param);
     }
+
     public hidePanel(type: string) {
         if (!this.mPanelMap) {
             return;
@@ -100,6 +93,7 @@ export class UiManager {
         // }
         // mediator.hide();
     }
+
     // public showExistMed(type: string, extendName = "Mediator") {
     //     if (!this.mPanelMap) {
     //         return;
