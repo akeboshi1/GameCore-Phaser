@@ -1,10 +1,19 @@
 import { Size } from "../../utils/size";
 import { PlayCamera } from "../cameras/play.camera";
+import { BasicLayer } from "../managers/layer.manager";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
+    private readonly LAYER_GROUNDCLICK = "groundClickLayer";
+    private readonly LAYER_GROUND2 = "groundLayer2";
+    private readonly LAYER_GROUND = "groundLayer";
+    private readonly LAYER_MIDDLE = "middleLayer";
+    private readonly LAYER_SURFACE = "surfaceLayer";
+    private readonly LAYER_ATMOSPHERE = "atmosphere";
+    private readonly LAYER_SCENEUI = "sceneUILayer";
+
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: PlayScene.name });
     }
@@ -34,6 +43,18 @@ export class PlayScene extends RoomScene {
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
         if (this.mRoom) this.mRoom.startPlay();
+
+        // set layers
+        // ==========背景层
+        this.layerManager.addLayer(this, BasicLayer, this.LAYER_GROUNDCLICK, 1);
+        this.layerManager.addLayer(this, BasicLayer, this.LAYER_GROUND2, 2);
+
+        // ==========舞台层
+        this.layerManager.addLayer(this, GroundLayer, this.LAYER_GROUND, 3).setScale(this.mRoom.world.scaleRatio);
+        this.layerManager.addLayer(this, BasicLayer, this.LAYER_MIDDLE, 4).setScale(this.mRoom.world.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, this.LAYER_SURFACE, 5).setScale(this.mRoom.world.scaleRatio);
+        this.layerManager.addLayer(this, BasicLayer, this.LAYER_ATMOSPHERE, 6);
+        this.layerManager.addLayer(this, BasicLayer, this.LAYER_SCENEUI, 7);
     }
 
     update(time: number, delta: number) {
@@ -60,5 +81,21 @@ export class PlayScene extends RoomScene {
     private checkSize(size: Size) {
         const width: number = size.width;
         const height: number = size.height;
+    }
+}
+
+class GroundLayer extends BasicLayer {
+    public sortLayer() {
+        this.sort("depth");
+    }
+}
+
+class SurfaceLayer extends BasicLayer {
+    public sortLayer() {
+        // TODO: import ElementDisplay
+        this.sort("depth", (displayA: any, displayB: any) => {
+            // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
+            return displayA.sortY + displayA.sortZ > displayB.sortY + displayB.sortZ;
+        });
     }
 }
