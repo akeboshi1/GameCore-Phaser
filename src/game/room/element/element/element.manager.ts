@@ -6,6 +6,7 @@ import { LogicPos } from "../../../../utils/logic.pos";
 import { IDragonbonesModel } from "../../display/dragones/dragonbones.model";
 import { IFramesModel } from "../../display/frames/frames.model";
 import { ISprite, Sprite } from "../../display/sprite/sprite";
+import { IElementStorage } from "../../elementstorage/element.storage";
 import { IRoomService } from "../../room/room";
 
 import { IElement,Element, InputEnable } from "./element";

@@ -11,6 +11,7 @@ import { ClockReadyListener } from "../../loop/clock/clock";
 import { State } from "../state/state.group";
 import { IRoomManager } from "../room.manager";
 import { ConnectionService } from "../../../../lib/net/connection.service";
+import { EffectManager } from "../effect/effect.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -21,7 +22,7 @@ export interface IRoomService {
     // readonly elementManager: ElementManager;
     // readonly playerManager: PlayerManager;
     // readonly layerManager: LayerManager;
-    // readonly effectManager: EffectManager;
+    readonly effectManager: EffectManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
@@ -82,7 +83,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // protected mGroupManager: GroupManager;
     // protected mHandlerManager: HandlerManager;
     // protected mSkyboxManager: SkyBoxManager;
-    // protected mEffectManager: EffectManager;
+    protected mEffectManager: EffectManager;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
     // protected mCameraService: ICameraService;
@@ -214,7 +215,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public update(time: number, delta: number) {
-        // this.updateClock(time, delta);
+        this.updateClock(time, delta);
         // this.mBlocks.update(time, delta);
         // if (this.layerManager) this.layerManager.update(time, delta);
         // if (this.elementManager) this.elementManager.update(time, delta);
@@ -372,9 +373,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     return this.mCameraService || undefined;
     // }
 
-    // get effectManager(): EffectManager {
-    //     return this.mEffectManager;
-    // }
+    get effectManager(): EffectManager {
+        return this.mEffectManager;
+    }
 
     get id(): number {
         return this.mID;

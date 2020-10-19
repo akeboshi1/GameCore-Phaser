@@ -3,6 +3,7 @@ import { IRoomService, Room } from "./room/room";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
 import { ConnectionService } from "../../../lib/net/connection.service";
+import { Logger } from "../../utils/log";
 export interface IRoomManager {
     readonly game: Game | undefined;
 
@@ -18,7 +19,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     protected mGame: Game;
     private mRooms: IRoomService[] = [];
     private mCurRoom: IRoomService;
-
     constructor(game: Game) {
         super();
         this.mGame = game;
@@ -80,6 +80,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
+        Logger.getInstance().log("===========enter scene");
         const vw = scene;
         if (this.mCurRoom) {
             await this.leaveRoom(this.mCurRoom);

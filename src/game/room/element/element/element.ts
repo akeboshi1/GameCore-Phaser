@@ -6,6 +6,7 @@ import { IDragonbonesModel } from "../../display/dragones/dragonbones.model";
 import { IFramesModel } from "../../display/frames/frames.model";
 import { ISprite } from "../../display/sprite/sprite";
 import { IRoomService } from "../../room/room";
+import { IElementManager } from "./element.manager";
 
 export interface IElement {
     readonly id: number;

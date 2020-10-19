@@ -23,6 +23,7 @@ import { CreateRoleManager } from "./ui/create.role/create.role.manager";
 import { Account } from "../render/account/account";
 import { Render } from "../render/render";
 import { IRoomService } from "./room/room/room";
+import { ElementStorage } from "./room/elementstorage/element.storage";
 interface ISize {
     width: number;
     height: number;
@@ -39,7 +40,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mConfig: ILauncherConfig;
     // private mAccount: Account;
     // private mRoomManager: RoomManager;
-    // private mElementStorage: ElementStorage;
+    private mElementStorage: ElementStorage;
     // private mPlayerDataManager: PlayerDataManager;
     private mCreateRoleManager: CreateRoleManager;
     private mUIManager: UIManager;
@@ -234,9 +235,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mHttpClock;
     }
 
-    // get elementStorage(): ElementStorage {
-    //     return this.mElementStorage;
-    // }
+    get elementStorage(): ElementStorage {
+        return this.mElementStorage;
+    }
 
     public async enterVirtualWorld() {
         if (this.mConfig && this.connect) {
