@@ -22,6 +22,7 @@ import { UIManager } from "./ui/ui.manager";
 import { CreateRoleManager } from "./ui/create.role/create.role.manager";
 import { Account } from "../render/account/account";
 import { Render } from "../render/render";
+import { IRoomService } from "./room/room/room";
 interface ISize {
     width: number;
     height: number;
@@ -217,9 +218,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mSocket;
     }
 
-    // get uiManager(): UiManager {
-    //     return this.mUiManager;
-    // }
+    get uiManager(): UIManager {
+        return this.mUIManager;
+    }
 
     // get soundManager(): SoundManager {
     //     return this.mSoundManager;
@@ -306,6 +307,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             content.loc = loc;
             this.connect.send(pkt);
         });
+    }
+
+    public leaveRoom(room: IRoomService) {
+
     }
 
     private initWorld() {

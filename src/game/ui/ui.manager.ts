@@ -29,6 +29,10 @@ export class UIManager extends PacketHandler {
         connection.removePacketListener(this);
     }
 
+    public showMainUI() {
+
+    }
+
     public showMed(type: string, ...param: any[]) {
         if (!this.mMedMap) {
             this.mMedMap = new Map();
