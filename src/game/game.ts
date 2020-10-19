@@ -252,7 +252,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             // this.peer.render.getAccount().then((account) => {
             if (!this.mConfig.auth_token) {
                 if (!accountData) {
-                    this.peer.render.login();
+                    this.mUIManager.showMed("Login");
+                    // LoginManager.show("Login");
+                    // this.peer.render.login();
                     return;
                 }
                 this.httpService.refreshToekn(accountData.refreshToken, accountData.accessToken)
@@ -261,7 +263,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                             this.peer.render.refreshAccount(response);
                             this.loginEnterWorld();
                         } else {
-                            this.peer.render.login();
+                            this.mUIManager.showMed("Login");
+                            // this.peer.render.login();
                             return;
                         }
                     });

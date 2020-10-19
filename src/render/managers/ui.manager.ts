@@ -87,6 +87,7 @@ export class UiManager {
         // if (param) mediator.setParam(param);
         // mediator.show(param);
     }
+
     public hidePanel(type: string) {
         if (!this.mPanelMap) {
             return;
@@ -100,6 +101,7 @@ export class UiManager {
         // }
         // mediator.hide();
     }
+
     // public showExistMed(type: string, extendName = "Mediator") {
     //     if (!this.mPanelMap) {
     //         return;
