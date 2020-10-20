@@ -13,6 +13,7 @@ export class LoadingScene extends BasicScene {
   private mRequestCom: boolean = false;
   private tipsText: string;
   private dpr: number;
+  private taskCount: number = 0;
 
   constructor() {
     super({ key: LoadingScene.name });
@@ -86,10 +87,11 @@ export class LoadingScene extends BasicScene {
     }
     // this.scale.on("resize", this.checkSize, this);
 
+    this.taskCount++;
   }
 
   public async show() {
-    this.awake();
+    this.wake();
     if (!this.curtain) {
       return Promise.resolve();
     }
@@ -105,13 +107,14 @@ export class LoadingScene extends BasicScene {
     return this.curtain.close();
   }
 
-  public awake(data?: any) {
+  public wake(data?: any) {
     if (!this.scene || !this.scene.settings) {
       return;
     }
     this.displayVisible(true);
     // this.scale.on("resize", this.checkSize, this);
-    this.scene.wake();
+    this.taskCount++;
+    super.wake(data);
     this.scene.bringToTop(LoadingScene.name);
     if (!data) {
       return;
@@ -123,7 +126,9 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
-    if (this.progressText)  {
+    this.taskCount--;
+    if (this.taskCount > 0) return;
+    if (this.progressText) {
       if (this.progressText.active) this.progressText.setText("");
     }
     if (!this.scene || !this.scene.settings) {
@@ -136,11 +141,11 @@ export class LoadingScene extends BasicScene {
       this.displayVisible(false);
       this.curtain.close().then(() => {
         // this.displayVisible(true);
-        this.scene.sleep();
+        super.sleep();
       });
     } else {
       this.displayVisible(true);
-      this.scene.sleep();
+      super.sleep();
     }
   }
 
