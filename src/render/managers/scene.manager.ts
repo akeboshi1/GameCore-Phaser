@@ -1,6 +1,7 @@
 import { Scene } from "tooqinggamephaser";
 import { Export, RPCEmitter } from "webworker-rpc";
 import { Logger } from "../../utils/log";
+import { ValueResolver } from "../../utils/promise";
 import { ResUtils } from "../../utils/resUtil";
 import { BasicScene } from "../scenes/basic.scene";
 import { CreateRoleScene } from "../scenes/create.role.scene";
@@ -31,12 +32,13 @@ export class SceneManager {
 
     private stateSceneName: string;
     private launchedScenes: string[] = [];
+    private createResolvers: Map<string, ValueResolver<BasicScene>> = new Map();
 
     constructor(private game: Phaser.Game) {
 
     }
 
-    public startScene(name: string, data?: any): BasicScene {
+    public startScene(name: string, data?: any): Promise<BasicScene> {
         if (!this.sceneClass.hasOwnProperty(name)) {
             Logger.getInstance().error("className error: ", name);
         }
@@ -44,27 +46,34 @@ export class SceneManager {
             if (this.stateSceneName === name) {
                 const exitScene = this.game.scene.getScene(this.stateSceneName) as BasicScene;
                 exitScene.wake(data);
-                return exitScene;
-            } else {
-                this.stopScene(this.stateSceneName);
+                return new Promise<BasicScene>((resolve) => {
+                    resolve(exitScene);
+                });
             }
         }
 
-        const scene = this.game.scene.add(name, this.sceneClass[name], true, { data }) as BasicScene;
-        this.stateSceneName = name;
-        return scene;
+        const resolver = new ValueResolver<BasicScene>();
+        this.createResolvers.set(name, resolver);
+        return resolver.promise(() => {
+            const newScene = this.game.scene.add(name, this.sceneClass[name], true, { data });
+            newScene.events.once("create", this.startedSceneCreated, this);
+        });
     }
 
-    public launchScene(name: string, data?: any): Phaser.Scene {
+    public launchScene(name: string, data?: any): Promise<BasicScene> {
         if (!this.stateSceneName || !this.game.scene.getScene(this.stateSceneName)) {
             Logger.getInstance().error("no state scene is running");
             return;
         }
 
-        const scene = this.game.scene.getScene(this.stateSceneName);
-        const scenePlugin = scene.scene.launch(name, data);
-        this.launchedScenes.push(name);
-        return scenePlugin.scene;
+        const resolver = new ValueResolver<BasicScene>();
+        this.createResolvers.set(name, resolver);
+        return resolver.promise(() => {
+            const scene = this.game.scene.getScene(this.stateSceneName);
+            const scenePlugin = scene.scene.launch(name, data);
+            this.launchedScenes.push(name);
+            scenePlugin.scene.events.once("create", this.launchedSceneCreated, this);
+        });
     }
 
     public stopScene(name: string) {
@@ -122,5 +131,29 @@ export class SceneManager {
             return false;
         }
         return this.game.scene.getScene(name).scene.isActive();
+    }
+
+    private startedSceneCreated(scene: Phaser.Scene) {
+        const key = scene.scene.key;
+        if (!this.createResolvers.has(key)) {
+            return;
+        }
+        const resolver = this.createResolvers.get(key);
+        this.createResolvers.delete(key);
+        resolver.resolve(scene as BasicScene);
+
+        if (this.stateSceneName && this.game.scene.getScene(this.stateSceneName)) {
+            this.stopScene(this.stateSceneName);
+        }
+        this.stateSceneName = key;
+    }
+    private launchedSceneCreated(scene: Phaser.Scene) {
+        const key = scene.scene.key;
+        if (!this.createResolvers.has(key)) {
+            return;
+        }
+        const resolver = this.createResolvers.get(key);
+        this.createResolvers.delete(key);
+        resolver.resolve(scene as BasicScene);
     }
 }
