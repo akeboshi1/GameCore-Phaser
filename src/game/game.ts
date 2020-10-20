@@ -293,7 +293,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     // this.mAccount.refreshToken(response);
                     this.loginEnterWorld();
                 } else {
-                    this.peer.render.login();
+                    this.mUIManager.showMed("Login");
+                    // this.peer.render.login();
                     return;
                 }
             });
@@ -330,6 +331,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public leaveRoom(room: IRoomService) {
 
+    }
+
+    public showMediator(name, param?: any) {
+        this.mUIManager.showMed(name, param);
     }
 
     private initWorld() {

@@ -1,4 +1,4 @@
-import { UiManager } from "../managers/ui.manager";
+import { UiManager } from "../ui/ui.manager";
 import { BasicScene } from "./basic.scene";
 
 // 编辑器用 Phaser.Scene

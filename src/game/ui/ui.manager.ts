@@ -43,7 +43,7 @@ export class UIManager extends PacketHandler {
         if (!mediator) {
             const path: string = `./${type}/${type}Mediator`;
             const ns: any = require(`./${type}/${className}`);
-            mediator = new ns[className]();
+            mediator = new ns[className](this.game);
             if (!mediator) {
                 // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;

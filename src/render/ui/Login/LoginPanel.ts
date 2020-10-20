@@ -4,8 +4,8 @@ import { SceneName } from "../../../structureinterface/scene.name";
 import { MAIN_WORKER } from "../../../structureinterface/worker.name";
 import { Font } from "../../../utils";
 import Helpers from "../../../utils/helpers";
-import { Render } from "../../render";
 import { BasePanel } from "../components/base.panel";
+import { UiManager } from "../ui.manager";
 
 export class LoginPanel extends BasePanel {
     private readonly key = "login";
@@ -17,8 +17,8 @@ export class LoginPanel extends BasePanel {
     private loginBtn: NineSliceButton;
     private downcount: number = -1;
     private fetchCode: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, render: Render) {
-        super(scene, render);
+    constructor(uimanager: UiManager) {
+        super(uimanager.scene, uimanager.render);
     }
 
     public show() {
