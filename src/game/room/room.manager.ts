@@ -4,6 +4,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
 import { ConnectionService } from "../../../lib/net/connection.service";
 import { Logger } from "../../utils/log";
+import { Lite } from "game-capsule";
 export interface IRoomManager {
     readonly game: Game | undefined;
 
@@ -89,19 +90,19 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             Logger.getInstance().log("===========enter scene=====1");
             this.onEnterRoom(scene);
         } else {
-            this.mGame.loadSceneConfig(vw.scene.id);
+            this.mGame.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
+                this.game.elementStorage.setSceneConfig(config);
+                this.onEnterRoom(scene);
+            });
         }
     }
 
     private async onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         Logger.getInstance().log("enter===room");
-        if (this.mCurRoom) {
-            await this.leaveRoom(this.mCurRoom);
-        }
         const room = new Room(this);
         this.mRooms.push(room);
         // room.addActor(scene.actor);
-        // room.enter(scene.scene);
+        room.enter(scene.scene);
         this.mCurRoom = room;
     }
 

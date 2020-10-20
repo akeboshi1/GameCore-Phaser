@@ -12,6 +12,7 @@ import { State } from "../state/state.group";
 import { IRoomManager } from "../room.manager";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { EffectManager } from "../effect/effect.manager";
+import { Logger } from "../../../utils/log";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -114,6 +115,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!data) {
             return;
         }
+        Logger.getInstance().log("room====enter");
         this.mID = data.id;
         this.mSize = {
             cols: data.cols,

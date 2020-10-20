@@ -78,7 +78,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     // }
 
     public showLoading() {
-        this.mainPeer.render.showLoading();
+        this.mLoadingManager.start();
+        // this.mainPeer.render.showLoading();
     }
 
     public onConnected() {
@@ -123,8 +124,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
     }
 
-    public loadSceneConfig(sceneID: number) {
-        this.mainPeer.render.loadSceneConfig(sceneID);
+    public loadSceneConfig(sceneID: string): Promise<any> {
+        Logger.getInstance().log("===========loadSceneconfig");
+        const remotePath = this.getConfigUrl(sceneID);
+        this.mLoadingManager.start(LoadingTips.downloadSceneConfig());
+        return this.loadGameConfig(remotePath);
     }
 
     public clearGameComplete() {
@@ -336,7 +340,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.mRoomManager = new RoomManager(this);
         // this.mUiManager = new UiManager(this);
-        // this.mElementStorage = new ElementStorage();
+        this.mElementStorage = new ElementStorage();
         this.mUIManager = new UIManager(this);
         this.mHttpService = new HttpService(this);
         this.mCreateRoleManager = new CreateRoleManager(this);
@@ -353,9 +357,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private initGame() {
-        if (this.mRoomManager) this.mRoomManager.addPackListener();
-        if (this.mUIManager) this.mUIManager.addPackListener();
-        if (this.mCreateRoleManager) this.mCreateRoleManager.register();
+        // if (this.mRoomManager) this.mRoomManager.addPackListener();
+        // if (this.mUIManager) this.mUIManager.addPackListener();
+        // if (this.mCreateRoleManager) this.mCreateRoleManager.register();
         // if (this.mSoundManager) this.mSoundManager.addPackListener();
         // if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
         // if (this.mElementStorage) {
@@ -428,9 +432,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const mainGameConfigUrl = this.gameConfigUrls;
         this.mLoadingManager.start(LoadingTips.downloadGameConfig());
         // this.connect.loadRes([mainGameConfigUrl]);
+        Logger.getInstance().log("onInitVirtualWorldPlayerInit====loadGameConfig");
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
-                // this.mElementStorage.setGameConfig(gameConfig);
+                this.mElementStorage.setGameConfig(gameConfig);
                 this.mainPeer.render.createGameCallBack(content.keyEvents);
                 this.gameCreated();
                 Logger.getInstance().debug("created game suc");
@@ -438,6 +443,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             .catch((err: any) => {
                 Logger.getInstance().log(err);
             });
+    }
+
+    private loadGameConfig(remotePath): Promise<Lite> {
+        const configPath = ResUtils.getGameConfig(remotePath);
+        return load(configPath, "arraybuffer").then((req: any) => {
+            this.mLoadingManager.start(LoadingTips.parseConfig());
+            Logger.getInstance().log("start decodeConfig");
+            return this.decodeConfigs(req);
+        });
     }
 
     private gameCreated() {
@@ -459,15 +473,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         content.localeCode = "zh-CN";
         this.mainPeer.send(i18Packet.Serialization());
         // this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
-    }
-
-    private loadGameConfig(remotePath): Promise<Lite> {
-        const configPath = ResUtils.getGameConfig(remotePath);
-        return load(configPath, "arraybuffer").then((req: any) => {
-            Logger.getInstance().log("start decodeConfig");
-            this.mLoadingManager.start(LoadingTips.parseConfig());
-            return this.decodeConfigs(req);
-        });
     }
 
     private decodeConfigs(req): Promise<Lite> {

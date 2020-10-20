@@ -7,12 +7,6 @@ export interface IAsset {
     source: string;
 }
 
-export interface ILoadingManager {
-    start(text?: string): Promise<any>;
-    addAssets(asset: IAsset[]): Promise<any>;
-    destroy();
-}
-
 export class LoadingManager {
     private readonly mGame: Game;
     private mResources: IAsset[];

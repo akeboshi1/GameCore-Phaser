@@ -399,12 +399,6 @@ export class Render extends RPCPeer implements GameMain {
         this.isConnect = false;
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public loadSceneConfig(sceneID: number) {
-        Logger.getInstance().log("===========loadSceneconfig");
-        // todo world loadSceneConfig
-    }
-
     @Export()
     public connectFail() {
         // this.mWorld.connectFail();
