@@ -17,6 +17,9 @@ import { SceneManager } from "./managers/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { UiManager } from "./managers/ui.manager";
 import { Url } from "../utils";
+import { Lite } from "game-capsule";
+import { ResUtils } from "../utils/resUtil";
+import { load } from "../utils/http";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -398,12 +401,6 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.str])
     public onConnectError(error: string) {
         this.isConnect = false;
-    }
-
-    @Export([webworker_rpc.ParamType.num])
-    public loadSceneConfig(sceneID: number) {
-        Logger.getInstance().log("===========loadSceneconfig");
-        // todo world loadSceneConfig
     }
 
     @Export()

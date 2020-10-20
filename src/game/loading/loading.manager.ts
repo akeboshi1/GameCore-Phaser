@@ -7,12 +7,6 @@ export interface IAsset {
     source: string;
 }
 
-export interface ILoadingManager {
-    start(text?: string): Promise<any>;
-    addAssets(asset: IAsset[]): Promise<any>;
-    destroy();
-}
-
 export class LoadingManager {
     private readonly mGame: Game;
     private mResources: IAsset[];
@@ -24,7 +18,7 @@ export class LoadingManager {
     }
 
     start(text?: string) {
-        this.mGame.peer.remote["render"].Render.showLoading({ text });
+        this.mGame.peer.remote["Render"].showLoading({ text });
         // const sceneManager = this.game.scene;
         // if (!sceneManager) {
         //     return Promise.reject("start faild. SceneManager does not exist");

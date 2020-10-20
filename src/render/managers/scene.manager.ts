@@ -80,13 +80,12 @@ export class SceneManager {
         this.game.scene.remove(name);
     }
 
-    public wakeScene(name: string, data?: any): BasicScene {
+    public wakeScene(name: string, data?: any) {
         if (!this.game.scene.getScene(name)) {
-            return this.startScene(name, data);
+            return;
         } else {
             const scene = this.game.scene.getScene(name) as BasicScene;
             scene.wake(data);
-            return scene;
         }
     }
 
