@@ -30,6 +30,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public init(data: any) {
+    super.init(data);
     this.createFont();
     this.dpr = data.dpr || 2;
     this.mRequestCom = false;

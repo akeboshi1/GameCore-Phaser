@@ -15,6 +15,7 @@ export class GamePauseScene extends BasicScene {
     }
 
     public init(data: any) {
+        super.init(data);
         this.mWorld = data.world;
     }
 

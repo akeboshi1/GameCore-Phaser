@@ -22,8 +22,9 @@ export class PlayScene extends RoomScene {
 
     public create() {
         const oldCamera = this.cameras.main;
+        const { width, height } = this.sys.scale;
         this.cameras.addExisting(
-            new PlayCamera(0, 0, this.sys.scale.width, this.sys.scale.height, this.mRoom.world.scaleRatio),
+            new PlayCamera(0, 0, width, height, this.render.scaleRatio),
             true
         );
         this.cameras.remove(oldCamera);
@@ -34,15 +35,17 @@ export class PlayScene extends RoomScene {
         const scene = this.game.scene.getScene(MainUIScene.name);
         if (!scene.scene.isActive()) {
             this.scene.launch(MainUIScene.name, {
-                room: this.mRoom,
+                "render": this.render,
+                "roomid": this.mRoomID,
             });
         } else {
-            this.mRoom.initUI();
+            this.render.initUI();
+            // this.mRoom.initUI();
         }
         this.scene.sendToBack();
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
-        if (this.mRoom) this.mRoom.startPlay();
+        this.render.startRoomPlay();
 
         // set layers
         // ==========背景层
@@ -50,17 +53,15 @@ export class PlayScene extends RoomScene {
         this.layerManager.addLayer(this, BasicLayer, this.LAYER_GROUND2, 2);
 
         // ==========舞台层
-        this.layerManager.addLayer(this, GroundLayer, this.LAYER_GROUND, 3).setScale(this.mRoom.world.scaleRatio);
-        this.layerManager.addLayer(this, BasicLayer, this.LAYER_MIDDLE, 4).setScale(this.mRoom.world.scaleRatio);
-        this.layerManager.addLayer(this, SurfaceLayer, this.LAYER_SURFACE, 5).setScale(this.mRoom.world.scaleRatio);
+        this.layerManager.addLayer(this, GroundLayer, this.LAYER_GROUND, 3).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BasicLayer, this.LAYER_MIDDLE, 4).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, this.LAYER_SURFACE, 5).setScale(this.render.scaleRatio);
         this.layerManager.addLayer(this, BasicLayer, this.LAYER_ATMOSPHERE, 6);
         this.layerManager.addLayer(this, BasicLayer, this.LAYER_SCENEUI, 7);
     }
 
     update(time: number, delta: number) {
-        if (this.mRoom) {
-            this.mRoom.update(time, delta);
-        }
+        this.render.updateRoom(time, delta);
     }
 
     // setViewPort(x: number, y: number, width: number, height: number) {

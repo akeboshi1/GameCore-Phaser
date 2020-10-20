@@ -11,7 +11,7 @@ export class LoginMediator extends BasicMediator {
     }
 
     show() {
-       this.game.peer.remote[RENDER_PEER].Render.showPanel(LoginMediator.NAME);
+       this.game.peer.remote[RENDER_PEER].Render.showLogin();
     }
 
     destroy() {

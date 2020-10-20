@@ -8,6 +8,7 @@ export class CreateRoleScene extends BasicScene {
   }
 
   init(data: any) {
+    super.init(data);
     if (data.role) {
       this.role = data.role;
       // data.createRole

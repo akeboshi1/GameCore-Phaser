@@ -133,6 +133,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
+        // create render scene
         this.mGame.showLoading({
             "dpr": this.mScaleRatio,
             "sceneName": "PlayScene"
@@ -276,6 +277,62 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     }
         // }
         return { width: w, height: h };
+    }
+
+    public startPlay() {
+        // if (this.mLayManager) {
+        //     this.layerManager.destroy();
+        // }
+        // this.mCameraService = new CamerasManager(this);
+        // this.mScene = this.world.game.scene.getScene(PlayScene.name);
+        // this.mTerrainManager = new TerrainManager(this, this);
+        // this.mElementManager = new ElementManager(this);
+        // this.mPlayerManager = new PlayerManager(this);
+        // this.mWallManager = new WallManager(this);
+        // this.mBlocks = new ViewblockManager(this.mCameraService);
+        // this.mLayManager = new LayerManager(this);
+        // this.mGroupManager = new GroupManager(this);
+        // this.mFrameManager = new FrameManager();
+        // this.mSkyboxManager = new SkyBoxManager(this);
+        // this.mEffectManager = new EffectManager(this);
+        // if (this.scene) {
+        //     const camera = this.scene.cameras.main;
+        //     // setTimeout(() => {
+        //     //     camera.flash(6000, 1, 1, 1, true, undefined, this.scene);
+        //     // }, 6000);
+        //     this.mCameraService.camera = camera;
+        //     const padding = 199 * this.mScaleRatio;
+        //     this.mCameraService.setBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
+        //     // init block
+        //     this.mBlocks.int(this.mSize);
+
+        //     if (this.mWorld.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+        //         this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
+        //     }
+        // }
+        // // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
+        // // this.mPlayerManager.createActor(this.mActorData);
+        // this.mWorld.user.enterScene(this, this.mActorData);
+        // const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+        // this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
+        // // if (loadingScene) loadingScene.sleep();
+        // this.world.changeRoom(this);
+        // // if (this.world.uiManager) this.world.uiManager.showMainUI();
+
+        // if (this.connection) {
+        //     this.cameraService.syncCamera();
+        //     this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        // }
+
+        // this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
+        // this.scene.input.on("pointerup", this.onPointerUpHandler, this);
+        // this.world.emitter.on(ClickEvent.Tap, this.onTapHandler, this);
+
+        // this.mLoadState = [];
+        // this.mWorld.showLoading(LoadingTips.loadingResources());
+        // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+
+        this.initSkyBox();
     }
 
     public setState(states: op_def.IState[]) {

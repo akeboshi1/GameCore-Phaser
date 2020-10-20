@@ -5,16 +5,15 @@ import { Size } from "../../utils/size";
 import { Render } from "../render";
 
 export class MainUIScene extends BasicScene {
-  private readonly LAYER_UI = "uiLayer";
-  private readonly LAYER_DIALOG = "dialogLayer";
-  private readonly LAYER_TOOLTIPS = "toolTipsLyaer";
+  public readonly LAYER_UI = "uiLayer";
+  public readonly LAYER_DIALOG = "dialogLayer";
+  public readonly LAYER_TOOLTIPS = "toolTipsLyaer";
   private timeOutID = 0;
   private timeOutCancelMap = {};
   private timeOutCallerList = [];
   private timeOutTimeMap = {};
   private fps: Phaser.GameObjects.Text;
   private sizeTF: Phaser.GameObjects.Text;
-  private mRender: Render;
   constructor() {
     super({ key: MainUIScene.name });
   }
@@ -23,9 +22,9 @@ export class MainUIScene extends BasicScene {
   }
 
   public init(data: any) {
-    this.mRender = data.render;
-    if (this.mRender) {
-      this.mRender.uiManager.setScene(null);
+    super.init(data);
+    if (this.render) {
+      this.render.uiManager.setScene(null);
     }
   }
 
@@ -47,7 +46,7 @@ export class MainUIScene extends BasicScene {
     //     world.inputManager.setScene(this);
     //   }
     // }
-    this.mRender.uiManager.setScene(this);
+    this.render.uiManager.setScene(this);
     // this.mRoom.initUI();
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
@@ -87,7 +86,7 @@ export class MainUIScene extends BasicScene {
   private checkSize(size: Size) {
     const width: number = size.width;
     const height: number = size.height;
-    const world = this.mRender;
+    const world = this.render;
     // const gameSize = world.getSize();
     // this.sizeTF.text = `CSS size: ${world.getConfig().width} ${world.getConfig().height}
     // Game size: ${gameSize.width.toFixed(2)} ${gameSize.height.toFixed(2)}
