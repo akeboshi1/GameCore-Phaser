@@ -211,6 +211,11 @@ export class MainPeer extends RPCPeer {
         this.mGame.httpClock.enable = enable;
     }
 
+    @Export()
+    public showMediator(name, param?: any) {
+        this.mGame.showMediator(name, param);
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();

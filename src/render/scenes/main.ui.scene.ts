@@ -2,6 +2,7 @@
 import { BasicScene } from "./basic.scene";
 import { Font } from "../../utils/font";
 import { Size } from "../../utils/size";
+import { Render } from "../render";
 
 export class MainUIScene extends BasicScene {
   private readonly LAYER_UI = "uiLayer";
@@ -13,7 +14,7 @@ export class MainUIScene extends BasicScene {
   private timeOutTimeMap = {};
   private fps: Phaser.GameObjects.Text;
   private sizeTF: Phaser.GameObjects.Text;
-  private mRoom: any;
+  private mRender: Render;
   constructor() {
     super({ key: MainUIScene.name });
   }
@@ -22,17 +23,15 @@ export class MainUIScene extends BasicScene {
   }
 
   public init(data: any) {
-    this.mRoom = data.room;
-    if (this.mRoom) {
-      this.mRoom.world.uiManager.setScene(null);
+    this.mRender = data.render;
+    if (this.mRender) {
+      this.mRender.uiManager.setScene(null);
     }
   }
 
   public create() {
     super.create();
-    const world = this.mRoom.world;
-    const gameSize = world.getSize();
-    const width = gameSize.width;
+    const width = this.cameras.main.width;
     this.fps = this.add.text(width * 0.5, 10, "", { style: { color: "#64DD17", } });
     this.fps.setStroke("0x0", 1);
     this.fps.setFontFamily(Font.DEFULT_FONT);
@@ -42,14 +41,14 @@ export class MainUIScene extends BasicScene {
     this.sizeTF.setFontSize(20 * window.devicePixelRatio);
     this.sizeTF.setFontFamily(Font.DEFULT_FONT);
     this.sizeTF.setStroke("#0", 3);
-    if (world.game.device.os.desktop) {
-    } else {
-      if (world.inputManager) {
-        world.inputManager.setScene(this);
-      }
-    }
-    world.uiManager.setScene(this);
-    this.mRoom.initUI();
+    // if (world.game.device.os.desktop) {
+    // } else {
+    //   if (world.inputManager) {
+    //     world.inputManager.setScene(this);
+    //   }
+    // }
+    this.mRender.uiManager.setScene(this);
+    // this.mRoom.initUI();
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
     // this.scale.on("resize", this.checkSize, this);
@@ -88,15 +87,15 @@ export class MainUIScene extends BasicScene {
   private checkSize(size: Size) {
     const width: number = size.width;
     const height: number = size.height;
-    const world = this.mRoom.world;
-    const gameSize = world.getSize();
-    this.sizeTF.text = `CSS size: ${world.getConfig().width} ${world.getConfig().height}
-    Game size: ${gameSize.width.toFixed(2)} ${gameSize.height.toFixed(2)}
-    deviceRatio: ${window.devicePixelRatio}
-    scene ratio: ${world.scaleRatio}
-    ui ratio: ${world.uiRatio}
-    ui scale: ${world.uiScale.toFixed(5)}
-    `;
+    const world = this.mRender;
+    // const gameSize = world.getSize();
+    // this.sizeTF.text = `CSS size: ${world.getConfig().width} ${world.getConfig().height}
+    // Game size: ${gameSize.width.toFixed(2)} ${gameSize.height.toFixed(2)}
+    // deviceRatio: ${window.devicePixelRatio}
+    // scene ratio: ${world.scaleRatio}
+    // ui ratio: ${world.uiRatio}
+    // ui scale: ${world.uiScale.toFixed(5)}
+    // `;
     //  this.sizeTF.text = "width:" + size.width + ";height:" + size.height;
   }
 }

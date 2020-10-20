@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game, Scene } from "tooqinggamephaser";
+import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { op_def } from "pixelpai_proto";
 import { Logger } from "../utils/log";
@@ -12,10 +12,9 @@ import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { GameMain } from "../structureinterface/game.main";
 import { MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "../structureinterface/worker.name";
 import { Account } from "./account/account";
-import { SceneName } from "../structureinterface/scene.name";
 import { SceneManager } from "./managers/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
-import { UiManager } from "./managers/ui.manager";
+import { UiManager } from "./ui/ui.manager";
 import { Url } from "../utils";
 import { Lite } from "game-capsule";
 import { ResUtils } from "../utils/resUtil";
@@ -28,7 +27,7 @@ export class Render extends RPCPeer implements GameMain {
 
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
-    private sceneManager: SceneManager;
+    private mSceneManager: SceneManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -85,6 +84,10 @@ export class Render extends RPCPeer implements GameMain {
 
     get uiManager(): UiManager {
         return this.mUiManager;
+    }
+
+    get sceneManager(): SceneManager {
+        return this.mSceneManager;
     }
 
     createGame() {
@@ -260,8 +263,8 @@ export class Render extends RPCPeer implements GameMain {
             } else {
                 this.mUIScale = Math.ceil(window.devicePixelRatio);
             }
-            this.sceneManager = new SceneManager(this.mGame);
-            this.exportProperty(this.sceneManager, this)
+            this.mSceneManager = new SceneManager(this.mGame);
+            this.exportProperty(this.mSceneManager, this)
                 .onceReady(() => {
                     resolve();
                 });
@@ -318,19 +321,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public login() {
-        this.sceneManager.startScene(SceneName.LOADING_SCENE, { dpr: this.mUIScale });
-        if (!this.mGame.scene.getScene(SceneName.LOGIN_SCENE)) {
-            this.mGame.scene.add(SceneName.LOGIN_SCENE, LoginScene);
-        }
-        this.mGame.scene.start(SceneName.LOGIN_SCENE, {
-            world: this,
-            callBack: () => {
-                this.enterGame();
-                // this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
-                // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-                // this.mGame.scene.remove(LoginScene.name);
-            },
-        });
+        this.remote[MAIN_WORKER].MainPeer.showMediator("Login");
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -492,20 +483,20 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public showLoading(data?: any) {
-        if (!this.sceneManager) {
+        if (!this.mSceneManager) {
             Logger.getInstance().error("no game created");
             return;
         }
-        this.sceneManager.wakeScene("LoadingScene", data);
+        this.mSceneManager.wakeScene("LoadingScene", data);
     }
 
     @Export()
     public hideLoading() {
-        if (!this.sceneManager) {
+        if (!this.mSceneManager) {
             Logger.getInstance().error("no game created");
             return;
         }
-        this.sceneManager.sleepScene("LoadingScene");
+        this.mSceneManager.sleepScene("LoadingScene");
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])

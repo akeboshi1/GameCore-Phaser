@@ -1,15 +1,14 @@
 import { ILauncherConfig } from "../../structureinterface/lanucher.config";
+import { Logger } from "../../utils/log";
 import { Render } from "../render";
-import { BasePanel } from "../ui/components/base.panel";
+import { BasePanel } from "./components/base.panel";
 
 export class UiManager {
     private mScene: Phaser.Scene;
     private mPanelMap: Map<string, BasePanel>;
     private mCache: any[] = [];
     private mCacheUI: Function;
-    private mConfig: ILauncherConfig;
-    constructor(private render: Render) {
-        this.mConfig = render.config;
+    constructor(private mRender: Render) {
     }
 
     public setScene(scene: Phaser.Scene) {
@@ -54,30 +53,32 @@ export class UiManager {
     }
 
     public showPanel(type: string, ...param: any[]) {
-        // if (!this.mScene) {
-        //     this.mCache.push(param);
-        //     return;
-        // }
-        // if (!this.mPanelMap) {
-        //     this.mPanelMap = new Map();
-        // }
+        if (!this.mScene) {
+            this.render.sceneManager.launchScene("MainUIScene");
+            this.mCache.push(param);
+            this.mCacheUI = this.showPanel;
+            return;
+        }
+        if (!this.mPanelMap) {
+            this.mPanelMap = new Map();
+        }
         // type = this.getPanelNameByAlias(type);
-        // const className: string = type + "Mediator";
-        // let mediator: BasePanel = this.mPanelMap.get(className);
-        // if (!mediator) {
-        //     const path: string = `./${type}/${type}Mediator`;
-        //     const ns: any = require(`./${type}/${className}`);
-        //     mediator = new ns[className](this.mUILayerManager, this.mScene, this.render);
-        //     if (!mediator) {
-        //         // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-        //         return;
-        //     }
-        //     this.mPanelMap.set(type + "Mediator", mediator);
+        const className: string = type + "Panel";
+        let panel: BasePanel = this.mPanelMap.get(className);
+        if (!panel) {
+            // const path: string = `./${type}/${type}Panel`;
+            const ns: any = require(`./${type}/${className}`);
+            panel = new ns[className](this);
+            if (!panel) {
+                Logger.getInstance().error(`error ${type} no panel can show!!!`);
+                return;
+            }
+            this.mPanelMap.set(type + "Panel", panel);
         //     // mediator.setName(type);
-        // }
+        }
         // // if (mediator.showing) return;
         // if (param) mediator.setParam(param);
-        // mediator.show(param);
+        panel.show(param);
     }
 
     public hidePanel(type: string) {
@@ -85,24 +86,22 @@ export class UiManager {
             return;
         }
         // type = this.getPanelNameByAlias(type);
-        // const medName: string = `${type}Mediator`;
-        // const mediator: BasePanel = this.mPanelMap.get(medName);
-        // if (!mediator) {
-        //     // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-        //     return;
-        // }
-        // mediator.hide();
+        const medName: string = `${type}Mediator`;
+        const panel: BasePanel = this.mPanelMap.get(medName);
+        if (!panel) {
+            Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        panel.hide();
     }
 
-    // public showExistMed(type: string, extendName = "Mediator") {
-    //     if (!this.mPanelMap) {
-    //         return;
-    //     }
-    //     type = this.getPanelNameByAlias(type);
-    //     const className: string = type + extendName;
-    //     const mediator: BasePanel = this.mPanelMap.get(className);
-    //     if (mediator) mediator.show();
-    // }
+    get scene(): Phaser.Scene {
+        return this.mScene;
+    }
+
+    get render(): Render {
+        return this.mRender;
+    }
 
     private clearCache() {
         this.mCacheUI = undefined;

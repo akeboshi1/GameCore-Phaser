@@ -11,7 +11,7 @@ export class LoginMediator extends BasicMediator {
     }
 
     show() {
-       this.game.peer.remote[RENDER_PEER].showPanel(LoginMediator.NAME);
+       this.game.peer.remote[RENDER_PEER].Render.showPanel(LoginMediator.NAME);
     }
 
     destroy() {
@@ -26,16 +26,16 @@ export class LoginMediator extends BasicMediator {
         this.game.peer.httpClockEnable(!adult);
         if (adult) {
             this.destroy();
-            this.game.peer.remote[RENDER_PEER].enterGame();
+            this.game.peer.remote[RENDER_PEER].Render.enterGame();
             return;
         }
-        this.game.httpClock.allowLogin(() => { this.game.peer.remote[RENDER_PEER].setInputVisible(true); })
+        this.game.httpClock.allowLogin(() => { this.game.peer.remote[RENDER_PEER].Render.setInputVisible(true); })
             .then((allow: boolean) => {
                 if (allow) {
                     this.destroy();
-                    this.game.peer.remote[RENDER_PEER].enterGame();
+                    this.game.peer.remote[RENDER_PEER].Render.enterGame();
                 } else {
-                    this.game.peer.remote[RENDER_PEER].setInputVisible(false);
+                    this.game.peer.remote[RENDER_PEER].Render.setInputVisible(false);
                 }
             })
             .catch((err) => {
@@ -45,11 +45,11 @@ export class LoginMediator extends BasicMediator {
     }
 
     public onLoginHandler(phone: string, code: string, areaCode: string) {
-        this.game.peer.remote[RENDER_PEER].setLoginEnable(true);
+        this.game.peer.remote[RENDER_PEER].Render.setLoginEnable(true);
         this.game.httpService.loginByPhoneCode(phone, code, areaCode).then((response: any) => {
             if (response.code === 200 || response.code === 201) {
                 const data = response.data;
-                this.game.peer.remote[RENDER_PEER].account.setAccount(data);
+                this.game.peer.remote[RENDER_PEER].Render.account.setAccount(data);
                 localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
                 // const verifiedEnable = CONFIG["verified_enable"];
                 if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
@@ -59,28 +59,28 @@ export class LoginMediator extends BasicMediator {
                 if (data.hasIdentityInfo) {
                     this.enterGame(data.adult);
                 } else {
-                    this.game.peer.remote[RENDER_PEER].setInputVisible(false);
+                    this.game.peer.remote[RENDER_PEER].Render.setInputVisible(false);
                     this.onShowVerified();
                 }
 
             } else if (response.code >= 400) {
                 this.onLoginErrorHanler(response.msg || "服务器错误");
             }
-            this.game.peer.remote[RENDER_PEER].setLoginEnable(true);
+            this.game.peer.remote[RENDER_PEER].Render.setLoginEnable(true);
         });
     }
 
     public onShowVerified() {
-        this.game.peer.remote[RENDER_PEER].onShowVerified();
+        this.game.peer.remote[RENDER_PEER].Render.onShowVerified();
     }
 
     public onShowErrorHandler(error, okText?: string) {
-        this.game.peer.remote[RENDER_PEER].onShowErrorHandler(error, okText);
+        this.game.peer.remote[RENDER_PEER].Render.onShowErrorHandler(error, okText);
     }
 
     public onLoginErrorHanler(error: string, okText?: string) {
-        this.game.peer.remote[RENDER_PEER].setInputVisible(false);
-        this.game.peer.remote[RENDER_PEER].onLoginErrorHanler(error, okText);
+        this.game.peer.remote[RENDER_PEER].Render.setInputVisible(false);
+        this.game.peer.remote[RENDER_PEER].Render.onLoginErrorHanler(error, okText);
     }
 
     public onVerifiedHandler(name: string, idcard: string) {
@@ -91,7 +91,7 @@ export class LoginMediator extends BasicMediator {
                 this.enterGame(true);
             } else if (code === 10001 || code >= 400) {
                 // 验证失败
-                this.game.peer.remote[RENDER_PEER].setVerifiedEnable(false);
+                this.game.peer.remote[RENDER_PEER].Render.setVerifiedEnable(false);
                 this.onShowErrorHandler("[color=#F9361B]实名认证失败，身份证号码有误\n请如实进行实名认证！[/color]", "重新认证");
             }
         });
