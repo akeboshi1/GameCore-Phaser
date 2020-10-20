@@ -50,15 +50,16 @@ export class SceneManager {
             }
         }
 
-        const scene = this.game.scene.add(name, this.sceneClass[name], true, { data }) as BasicScene;
+        const scene = this.game.scene.add(name, this.sceneClass[name], true, data) as BasicScene;
         this.stateSceneName = name;
         return scene;
     }
 
     public launchScene(name: string, data?: any): Phaser.Scene {
-        if (!this.stateSceneName || !this.game.scene.getScene(this.stateSceneName)) {
-            Logger.getInstance().error("no state scene is running");
-            return;
+        if (!this.game.scene.getScene(this.stateSceneName)) {
+            // Logger.getInstance().error("no state scene is running");
+            // return;
+            this.game.scene.add(name, this.sceneClass[name], false);
         }
 
         const scene = this.game.scene.getScene(this.stateSceneName);

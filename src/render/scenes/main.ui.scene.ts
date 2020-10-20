@@ -5,9 +5,9 @@ import { Size } from "../../utils/size";
 import { Render } from "../render";
 
 export class MainUIScene extends BasicScene {
-  private readonly LAYER_UI = "uiLayer";
-  private readonly LAYER_DIALOG = "dialogLayer";
-  private readonly LAYER_TOOLTIPS = "toolTipsLyaer";
+  public readonly LAYER_UI = "uiLayer";
+  public readonly LAYER_DIALOG = "dialogLayer";
+  public readonly LAYER_TOOLTIPS = "toolTipsLyaer";
   private timeOutID = 0;
   private timeOutCancelMap = {};
   private timeOutCallerList = [];

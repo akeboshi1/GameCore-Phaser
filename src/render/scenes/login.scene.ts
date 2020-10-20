@@ -1,20 +1,17 @@
+import { Render } from "../render";
 import { UiManager } from "../ui/ui.manager";
 import { BasicScene } from "./basic.scene";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {
-    private world: any;
+    private render: Render;
     constructor() {
         super({ key: LoginScene.name });
     }
 
-    public preload() {
-        this.load.atlas("login", "./resources/ui/login/login.png", "./resources/ui/login/login.json");
-    }
-
     public create() {
-        if (this.world) {
-            const uimanager: UiManager = this.world.uiManager;
+        if (this.render) {
+            const uimanager: UiManager = this.render.uiManager;
             uimanager.setScene(this);
             uimanager.showPanel("Login");
         }
@@ -22,7 +19,7 @@ export class LoginScene extends BasicScene {
 
     public init(data?: any) {
         if (data) {
-            this.world = data.world;
+            this.render = data;
         }
     }
 }

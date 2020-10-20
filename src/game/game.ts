@@ -85,7 +85,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         // Logger.getInstance().info(`enterVirtualWorld`);
-        this.mainPeer.render.enterVirtualWorld();
+        this.enterVirtualWorld();
         // this.login();
     }
 
@@ -245,41 +245,32 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async enterVirtualWorld() {
-        if (this.mConfig && this.connect) {
-            // this.mLoadingManager.start();
-            // test login and verified
-            const account = await this.peer.render.getAccount();
-            if (!account) {
-                return;
-            }
-            const accountData = account.accountData;
-            if (!accountData) {
-                return;
-            }
-            // this.peer.render.getAccount().then((account) => {
-            if (!this.mConfig.auth_token) {
-                if (!accountData) {
-                    this.mUIManager.showMed("Login");
-                    // LoginManager.show("Login");
-                    // this.peer.render.login();
-                    return;
-                }
-                this.httpService.refreshToekn(accountData.refreshToken, accountData.accessToken)
-                    .then((response: any) => {
-                        if (response.code === 200) {
-                            this.peer.render.refreshAccount(response);
-                            this.loginEnterWorld();
-                        } else {
-                            this.mUIManager.showMed("Login");
-                            // this.peer.render.login();
-                            return;
-                        }
-                    });
-            } else {
-                this.loginEnterWorld();
-            }
-            // });
+        if (!this.mConfig || !this.connect) {
+            return;
         }
+        const token = await this.peer.render.getLocalStorage("token");
+        const account = token ? JSON.parse(token) : null;
+        if (!this.mConfig.auth_token) {
+            if (!account) {
+                this.login();
+                return;
+            }
+            this.peer.render.setAccount(account);
+            this.refreshToken();
+        } else {
+            this.peer.render.setAccount({
+                token: this.mConfig.auth_token,
+                expire: this.mConfig.token_expire,
+                fingerprint: this.mConfig.token_fingerprint,
+                refreshToken: account ? account.refreshToken : "",
+                id: this.mConfig.user_id ? this.mConfig.user_id : account ? account.id : "",
+            });
+            this.loginEnterWorld();
+        }
+    }
+
+    public login() {
+        this.mUIManager.showMed("Login");
     }
 
     public async refreshToken() {

@@ -1,8 +1,8 @@
 import { LayerManager } from "../managers/layer.manager";
 
 export class BasicScene extends Phaser.Scene {
+    public layerManager: LayerManager;
     protected initialize: boolean = false;
-    protected layerManager: LayerManager;
     constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config);
         this.layerManager = new LayerManager();
