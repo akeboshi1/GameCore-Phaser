@@ -210,8 +210,6 @@ export class LoginPanel extends BasePanel {
         this.acceptBtn.y = label.y;
         this.acceptBtn.selected = true;
         this.add([backgroundColor, bg, cloudLeft, cloudRight, logo, phoneContaier, codeContainer, label1, label2, this.loginBtn, this.acceptBtn, label]);
-        this.scene.scene.sleep(SceneName.LOGIN_SCENE);
-
         super.init();
     }
 

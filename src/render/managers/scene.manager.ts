@@ -1,8 +1,5 @@
-import { Scene } from "tooqinggamephaser";
-import { Export, RPCEmitter } from "webworker-rpc";
 import { Logger } from "../../utils/log";
 import { ValueResolver } from "../../utils/promise";
-import { ResUtils } from "../../utils/resUtil";
 import { BasicScene } from "../scenes/basic.scene";
 import { CreateRoleScene } from "../scenes/create.role.scene";
 import { GamePauseScene } from "../scenes/game.pause.scene";

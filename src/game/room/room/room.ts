@@ -13,6 +13,7 @@ import { IRoomManager } from "../room.manager";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { EffectManager } from "../effect/effect.manager";
 import { Logger } from "../../../utils/log";
+import { PlayScene } from "../../../render/scenes/play.scene";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -132,8 +133,23 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
-        this.mGame.showLoading();
+        this.mGame.showLoading({
+            "dpr": this.mScaleRatio,
+            "sceneName": "PlayScene"
+        });
     }
+
+    // public completeLoad() {
+    //     this.mGame.peer.render.
+    //         if(this.mGame.scene.getScene(PlayScene.name)) {
+    //         // const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
+    //         // if (loadingScene) loadingScene.sleep();
+    //         return;
+    //     }
+    //     this.mGame.scene.add(PlayScene.name, PlayScene, true, {
+    //         room: this,
+    //     });
+    // }
 
     public onFullPacketReceived(sprite_t: op_def.NodeType): void {
         if (sprite_t !== op_def.NodeType.TerrainNodeType) {

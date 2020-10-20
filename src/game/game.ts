@@ -77,9 +77,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     //     this.mAccount.enterGame(gameID, worldID, sceneId, loc);
     // }
 
-    public showLoading() {
-        this.mLoadingManager.start();
-        // this.mainPeer.render.showLoading();
+    public showLoading(data?: any) {
+        // this.mLoadingManager.start();
+        this.mainPeer.render.showLoading(data);
     }
 
     public onConnected() {
@@ -248,9 +248,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mRoomManager;
     }
 
+    get loadingManager(): LoadingManager {
+        return this.mLoadingManager;
+    }
+
     public async enterVirtualWorld() {
         if (this.mConfig && this.connect) {
-            this.mLoadingManager.start();
+            // this.mLoadingManager.start();
             // test login and verified
             const account = await this.peer.render.getAccount();
             if (!account) {

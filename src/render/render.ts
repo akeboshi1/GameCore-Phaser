@@ -19,6 +19,7 @@ import { Url } from "../utils";
 import { Lite } from "game-capsule";
 import { ResUtils } from "../utils/resUtil";
 import { load } from "../utils/http";
+import { BasicScene } from "./scenes/basic.scene";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -487,7 +488,9 @@ export class Render extends RPCPeer implements GameMain {
             Logger.getInstance().error("no game created");
             return;
         }
-        this.mSceneManager.wakeScene("LoadingScene", data);
+        return this.mSceneManager.startScene("LoadingScene", data).then((scene: BasicScene) => {
+            if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
+        });
     }
 
     @Export()
@@ -497,6 +500,24 @@ export class Render extends RPCPeer implements GameMain {
             return;
         }
         this.mSceneManager.sleepScene("LoadingScene");
+    }
+
+    @Export()
+    public showPlay(data?: any) {
+        if (!this.mSceneManager) {
+            Logger.getInstance().error("no game created");
+            return;
+        }
+        this.mSceneManager.startScene("PlayScene", data);
+    }
+
+    @Export()
+    public hidePlay() {
+        if (!this.mSceneManager) {
+            Logger.getInstance().error("no game created");
+            return;
+        }
+        this.mSceneManager.sleepScene("PlayScene");
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
