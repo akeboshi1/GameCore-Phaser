@@ -18,7 +18,7 @@ export class LoadingManager {
     }
 
     start(text?: string) {
-        this.mGame.peer.remote["Render"].showLoading({ text });
+        this.mGame.peer.remote["render"].Render.showLoading({ text });
         // const sceneManager = this.game.scene;
         // if (!sceneManager) {
         //     return Promise.reject("start faild. SceneManager does not exist");
