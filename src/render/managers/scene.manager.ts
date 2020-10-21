@@ -31,9 +31,15 @@ export class SceneManager {
     private stateSceneName: string;
     private launchedScenes: string[] = [];
     private createResolvers: Map<string, ValueResolver<BasicScene>> = new Map();
-
     constructor(private render: Render) {
+    }
 
+    public get currentScene(): Phaser.Scene {
+        return this.render.game.scene.getScene(this.stateSceneName);
+    }
+
+    public getSceneByName(sceneName: string): Phaser.Scene {
+        return this.render.game.scene.getScene(sceneName);
     }
 
     public startScene(name: string, data?: any): Promise<BasicScene> {
