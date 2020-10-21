@@ -5,7 +5,6 @@ import { IPoint, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
 import { Logger } from "../utils/log";
-import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, ConnListener, GameSocket } from "./net/connection";
@@ -19,12 +18,10 @@ import { load } from "../utils/http";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { ServerAddress } from "../../lib/net/address";
 import { UIManager } from "./ui/ui.manager";
-import { CreateRoleManager } from "./ui/create.role/create.role.manager";
-import { Account } from "../render/account/account";
-import { Render } from "../render/render";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
+import { RENDER_PEER } from "../structureinterface/worker.name";
 interface ISize {
     width: number;
     height: number;
@@ -43,7 +40,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mRoomManager: RoomManager;
     private mElementStorage: ElementStorage;
     // private mPlayerDataManager: PlayerDataManager;
-    private mCreateRoleManager: CreateRoleManager;
     private mUIManager: UIManager;
     // private mSoundManager: SoundManager;
     private mLoadingManager: LoadingManager;
@@ -58,9 +54,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.connect = new Connection(this.mSocket);
         this.connect.addPacketListener(this);
     }
+
     get scaleRatio(): number {
         return this.mConfig.devicePixelRatio;
     }
+
     public createGame(config?: ILauncherConfig) {
         this.mConfig = config;
         this.initWorld();
@@ -72,13 +70,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
     }
 
-    // public createAccount(gameID: string, worldID: string, sceneId?: number, loc?: any) {
-    //     this.mAccount = new Account();
-    //     this.mAccount.enterGame(gameID, worldID, sceneId, loc);
-    // }
-
     public showLoading(data?: any) {
-        // this.mLoadingManager.start();
         this.mainPeer.render.showLoading(data);
     }
 
@@ -125,7 +117,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public loadSceneConfig(sceneID: string): Promise<any> {
-        Logger.getInstance().log("===========loadSceneconfig");
         const remotePath = this.getConfigUrl(sceneID);
         this.mLoadingManager.start(LoadingTips.downloadSceneConfig());
         return this.loadGameConfig(remotePath);
@@ -200,17 +191,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.setMoveStyle(moveStyle);
     }
 
-    // get moveStyle(): number {
-    //     return this.mMoveStyle;
-    // }
-
     get httpService(): HttpService {
         return this.mHttpService;
     }
-
-    // get account(): Account {
-    //     return this.mAccount;
-    // }
 
     get peer(): MainPeer {
         return this.mainPeer;
@@ -250,6 +233,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     get loadingManager(): LoadingManager {
         return this.mLoadingManager;
+    }
+
+    get renderPeer() {
+        const render = this.peer.remote[RENDER_PEER].Render;
+        if (!render) {
+            throw new Error("can't find render");
+        }
+        return render;
     }
 
     public async enterVirtualWorld() {
@@ -347,12 +338,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mElementStorage = new ElementStorage();
         this.mUIManager = new UIManager(this);
         this.mHttpService = new HttpService(this);
-        this.mCreateRoleManager = new CreateRoleManager(this);
         // this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
-        this.mCreateRoleManager.register();
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
         // this.mSoundManager.addPackListener();

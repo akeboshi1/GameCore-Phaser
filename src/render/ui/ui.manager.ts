@@ -1,4 +1,3 @@
-import { ILauncherConfig } from "../../structureinterface/lanucher.config";
 import { Logger } from "../../utils/log";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
@@ -52,7 +51,7 @@ export class UiManager {
         this.mScene = undefined;
     }
 
-    public showPanel(type: string, ...param: any[]) {
+    public showPanel(type: string, param?: any) {
         if (!this.mScene) {
             this.render.sceneManager.launchScene("MainUIScene");
             this.mCache.push(param);
