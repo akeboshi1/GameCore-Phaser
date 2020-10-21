@@ -5,11 +5,11 @@ import { IBlockObject } from "../block/iblock.object";
 import { IPos } from "../../../utils/logic.pos";
 import { Viewblock } from "./view.block";
 import { LogicRectangle } from "../../../utils/logic.rectangle";
+import { ICameraService } from "../camera/cameras.manager";
 export class ViewblockManager implements ViewblockService {
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];
     private mDelay: number = 0;
-
     constructor(cameras: ICameraService) {
         this.mCameras = cameras;
     }
@@ -76,11 +76,8 @@ export class ViewblockManager implements ViewblockService {
 
     public update(time: number, delta: number): void {
         if (!this.mCameras) return;
-        // if (time - this.mDelay < 3000) {
-        //     return;
-        // }
         this.mDelay = time;
-        const bound: Phaser.Geom.Rectangle = this.mCameras.getViewPort();
+        const bound: LogicRectangle = this.mCameras.getViewPort();
         const miniViewPort = this.mCameras.getMiniViewPort();
         for (const block of this.mBlocks) {
             block.check(bound, miniViewPort);

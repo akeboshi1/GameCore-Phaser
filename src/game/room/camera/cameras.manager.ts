@@ -2,11 +2,15 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger } from "../../../utils/log";
+import { LogicPos } from "../../../utils/logic.pos";
 import { LogicRectangle } from "../../../utils/logic.rectangle";
+import { LogicRectangle45 } from "../../../utils/logic.rectangle45";
 import { Game } from "../../game";
 import { IRoomService } from "../room/room";
 
 export interface ICameraService {
+    getViewPort(): LogicRectangle | undefined;
+    getMiniViewPort(): LogicRectangle45 | undefined;
     syncToEditor(): void;
     centerCameas(): void;
     syncCamera(): void;
@@ -16,10 +20,29 @@ export interface ICameraService {
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
+    readonly MINI_VIEW_SIZE = 50;
+    readonly VIEW_PORT_SIZE = 50;
+    protected viewPort = new LogicRectangle();
+    protected miniViewPort = new LogicRectangle();
     private zoom: number = 1;
     constructor(protected mGame: Game, private mRoomService: IRoomService) {
         super();
         this.zoom = this.mGame.scaleRatio;
+    }
+
+    public getViewPort(): LogicRectangle | undefined {
+        const worldView = this.mGame.peer.render.getWorldView();
+        this.viewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.viewPort.width >> 1);
+        this.viewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.viewPort.height >> 1);
+        return this.viewPort;
+    }
+
+    public getMiniViewPort(): LogicRectangle45 {
+        const worldView = this.mGame.peer.render.getWorldView();
+        this.miniViewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.miniViewPort.width >> 1);
+        this.miniViewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.miniViewPort.height >> 1);
+        const pos = this.mRoomService.transformTo45(new LogicPos(this.miniViewPort.x + (this.miniViewPort.width >> 1), this.miniViewPort.y));
+        return new LogicRectangle45(pos.x, pos.y, this.MINI_VIEW_SIZE, this.MINI_VIEW_SIZE);
     }
 
     public syncToEditor() {

@@ -1,4 +1,4 @@
-import { i18n } from "../../utils/i18n";
+import { i18n } from "../../utils";
 
 export class LoadingTips {
     /**
@@ -24,6 +24,10 @@ export class LoadingTips {
 
     static waitEnterRoom() {
         return i18n.t("loading.wait_enter_room");
+    }
+
+    static loadingResources() {
+        return i18n.t("loading.loading_resources");
     }
 
     static loginGame() {

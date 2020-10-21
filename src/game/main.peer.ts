@@ -14,7 +14,6 @@ for (const key in protos) {
 }
 
 export class MainPeer extends RPCPeer {
-    // private mRoomManager: RoomManager;
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
@@ -154,6 +153,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public startRoomPlay() {
+        Logger.getInstance().log("peer startroom");
         this.game.roomManager.currentRoom.startPlay();
     }
 
@@ -175,6 +175,21 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public onVerifiedHandler(name: string, idcard: string) {
 
+    }
+
+    @Export()
+    public getCurrentRoomSize(): any {
+        return this.game.roomManager.currentRoom.roomSize;
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public resetGameraSize(width: number, height: number) {
+        this.game.roomManager.currentRoom.cameraService.resetCameraSize(width, height);
+    }
+
+    @Export()
+    public syncCameraScroll() {
+        this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
     }
 
     // ============= 心跳调用主进程

@@ -1,5 +1,4 @@
 import { Logger } from "../../utils/log";
-import { ValueResolver } from "../../utils/promise";
 import { Render } from "../render";
 import { BasicScene } from "../scenes/basic.scene";
 import { CreateRoleScene } from "../scenes/create.role.scene";
@@ -28,81 +27,68 @@ export class SceneManager {
         "SkyBoxScene": SkyBoxScene
     };
 
-    private stateSceneName: string;
-    private launchedScenes: string[] = [];
-    private createResolvers: Map<string, ValueResolver<BasicScene>> = new Map();
+    private mCurSceneName: string;
     constructor(private render: Render) {
     }
 
-    public get currentScene(): Phaser.Scene {
-        return this.render.game.scene.getScene(this.stateSceneName);
+    public currentScene(): BasicScene {
+        const sceneManager = this.render.game.scene;
+        if (!sceneManager) {
+            return null;
+        }
+        return sceneManager.getScene(this.mCurSceneName) as BasicScene;
     }
 
     public getSceneByName(sceneName: string): Phaser.Scene {
         return this.render.game.scene.getScene(sceneName);
     }
 
-    public startScene(name: string, data?: any): Promise<BasicScene> {
+    public async startScene(name: string, data?: any) {
+        const sceneManager = this.render.game.scene;
+        if (!data) data = {};
+        if (!sceneManager) {
+            return Promise.reject("start faild. SceneManager does not exist");
+        }
         if (!this.sceneClass.hasOwnProperty(name)) {
-            Logger.getInstance().error("className error: ", name);
-            return;
+            return Promise.reject("className error: " + name);
         }
-        if (this.stateSceneName && this.render.game.scene.getScene(this.stateSceneName)) {
-            if (this.stateSceneName === name) {
-                const exitScene = this.render.game.scene.getScene(this.stateSceneName) as BasicScene;
-                exitScene.wake(data);
-                return new Promise<BasicScene>((resolve) => {
-                    resolve(exitScene);
-                });
-            }
+        data.render = this.render;
+        data.callBack = this.sceneCallback.bind(this);
+        this.mCurSceneName = name;
+        const scene = sceneManager.getScene(name) as BasicScene;
+        if (scene) {
+            scene.wake(data);
+        } else {
+            sceneManager.add(name, this.sceneClass[name]);
+            sceneManager.start(name, data);
         }
-
-        const resolver = new ValueResolver<BasicScene>();
-        this.createResolvers.set(name, resolver);
-        return resolver.promise(() => {
-            if (!data) data = {};
-            data.render = this.render;
-            const newScene = this.render.game.scene.add(name, this.sceneClass[name], true, data);
-            newScene.events.once("create", this.startedSceneCreated, this);
-        });
-    }
-
-    public launchScene(name: string, data?: any): Promise<BasicScene> {
-        if (!this.stateSceneName || !this.render.game.scene.getScene(this.stateSceneName)) {
-            Logger.getInstance().error("no state scene is running");
-            return;
-        }
-
-        const resolver = new ValueResolver<BasicScene>();
-        this.createResolvers.set(name, resolver);
-        return resolver.promise(() => {
-            if (!data) data = {};
-            data.render = this.render;
-            const scene = this.render.game.scene.getScene(this.stateSceneName);
-            const scenePlugin = scene.scene.launch(name, data);
-            this.launchedScenes.push(name);
-            scenePlugin.scene.events.once("create", this.launchedSceneCreated, this);
-        });
     }
 
     public stopScene(name: string) {
-        if (name === this.stateSceneName) {
-            for (const ls of this.launchedScenes) {
-                if (this.render.game.scene.getScene(ls)) {
-                    this.render.game.scene.remove(ls);
-                }
-            }
-            this.stateSceneName = null;
-            this.launchedScenes.length = 0;
+        const sceneManager = this.render.game.scene;
+        if (!sceneManager) {
+            return Promise.reject("start faild. SceneManager does not exist");
         }
-        this.render.game.scene.remove(name);
+        if (!this.sceneClass.hasOwnProperty(name)) {
+            return Promise.reject("className error: " + name);
+        }
+        const scene = sceneManager.getScene(name) as BasicScene;
+        if (!scene) return;
+        scene.scene.stop();
     }
 
     public wakeScene(name: string, data?: any) {
-        if (!this.render.game.scene.getScene(name)) {
+        const sceneManager = this.render.game.scene;
+        if (!sceneManager) {
+            return Promise.reject("start faild. SceneManager does not exist");
+        }
+        if (!this.sceneClass.hasOwnProperty(name)) {
+            return Promise.reject("className error: " + name);
+        }
+        const scene = sceneManager.getScene(name) as BasicScene;
+        if (!scene) {
             return;
         } else {
-            const scene = this.render.game.scene.getScene(name) as BasicScene;
             scene.wake(data);
         }
     }
@@ -131,7 +117,6 @@ export class SceneManager {
             Logger.getInstance().error("scene not found : ", name);
             return;
         }
-
         scene.scene.resume(name);
     }
 
@@ -142,27 +127,7 @@ export class SceneManager {
         return this.render.game.scene.getScene(name).scene.isActive();
     }
 
-    private startedSceneCreated(scene: Phaser.Scene) {
-        const key = scene.scene.key;
-        if (!this.createResolvers.has(key)) {
-            return;
-        }
-        const resolver = this.createResolvers.get(key);
-        this.createResolvers.delete(key);
-        resolver.resolve(scene as BasicScene);
-
-        if (this.stateSceneName && this.render.game.scene.getScene(this.stateSceneName)) {
-            this.stopScene(this.stateSceneName);
-        }
-        this.stateSceneName = key;
-    }
-    private launchedSceneCreated(scene: Phaser.Scene) {
-        const key = scene.scene.key;
-        if (!this.createResolvers.has(key)) {
-            return;
-        }
-        const resolver = this.createResolvers.get(key);
-        this.createResolvers.delete(key);
-        resolver.resolve(scene as BasicScene);
+    private sceneCallback(scene: Phaser.Scene) {
+        return Promise.resolve();
     }
 }

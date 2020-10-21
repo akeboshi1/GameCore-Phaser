@@ -1,16 +1,12 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
+import { PacketHandler } from "net-socket-packet";
 import { Logger } from "../../utils/log";
-import { ConnectionService } from "../../../lib/net/connection.service";
-import { Pos } from "../../utils/pos";
-import { Rectangle45 } from "../../utils/rectangle45";
 import { Render } from "../render";
 
 export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
     moving: boolean;
     readonly targetFollow: any;
-
+    startRoomPlay(scene: Phaser.Scene);
     startFollow(target: any): void;
     stopFollow(): void;
 
@@ -19,10 +15,6 @@ export interface ICameraService {
     removeCamera(camera: Phaser.Cameras.Scene2D.Camera): void;
 
     resize(width: number, height: number): void;
-
-    getViewPort(): Phaser.Geom.Rectangle | undefined;
-
-    getMiniViewPort(): Rectangle45 | undefined;
 
     setBounds(x: integer, y: integer, width: integer, height: integer, centerOn?: boolean): void;
 
@@ -34,8 +26,7 @@ export interface ICameraService {
     destroy(): void;
 }
 
-export class RoomCamerasManager extends PacketHandler implements ICameraService {
-
+export class CamerasManager extends PacketHandler implements ICameraService {
     readonly MINI_VIEW_SIZE = 50;
     readonly VIEW_PORT_SIZE = 50;
     protected mMain: Phaser.Cameras.Scene2D.Camera;
@@ -46,30 +37,14 @@ export class RoomCamerasManager extends PacketHandler implements ICameraService 
     protected mCameras: Phaser.Cameras.Scene2D.Camera[];
     protected readonly zoom: number = 1;
 
-    constructor(protected render: Render, protected mRoomService: any) {
+    constructor(protected render: Render) {
         super();
-        if (this.mRoomService && this.mRoomService.world) {
-            this.zoom = this.mRoomService.world.scaleRatio;
-        }
         this.mCameras = [];
-        // this.zoom = this.mRoomService.world.scaleRatio;
+        this.zoom = this.render.scaleRatio;
     }
 
-    public getViewPort(): Phaser.Geom.Rectangle | undefined {
-        if (!this.mMain) return;
-        const worldView = this.mMain.worldView;
-        this.viewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.viewPort.width >> 1);
-        this.viewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.viewPort.height >> 1);
-        return this.viewPort;
-    }
-
-    public getMiniViewPort(): Rectangle45 {
-        if (!this.mMain) return;
-        const worldView = this.mMain.worldView;
-        this.miniViewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.miniViewPort.width >> 1);
-        this.miniViewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.miniViewPort.height >> 1);
-        const pos = this.mRoomService.transformTo45(new Pos(this.miniViewPort.x + (this.miniViewPort.width >> 1), this.miniViewPort.y));
-        return new Rectangle45(pos.x, pos.y, this.MINI_VIEW_SIZE, this.MINI_VIEW_SIZE);
+    startRoomPlay(scene: Phaser.Scene) {
+        this.mMain = scene.cameras.main;
     }
 
     public set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined) {
@@ -173,7 +148,7 @@ export class RoomCamerasManager extends PacketHandler implements ICameraService 
         if (!this.mMain) {
             return;
         }
-        this.setScroll(x * this.mRoomService.world.scaleRatio - this.mMain.width / 2, y * this.mRoomService.world.scaleRatio - this.mMain.height / 2);
+        this.setScroll(x * this.render.scaleRatio - this.mMain.width / 2, y * this.render.scaleRatio - this.mMain.height / 2);
     }
 
     public destroy() {
@@ -182,10 +157,6 @@ export class RoomCamerasManager extends PacketHandler implements ICameraService 
     }
 
     private resetCameraSize(width: number, height: number) {
-        if (!this.connection) {
-            Logger.getInstance().error("connection is undefined");
-            return;
-        }
         this.render.mainPeer.resetGameraSize(width, height);
     }
 
@@ -194,7 +165,7 @@ export class RoomCamerasManager extends PacketHandler implements ICameraService 
             Logger.getInstance().error("camera does not exist");
             return;
         }
-        const size = this.mRoomService.roomSize;
+        const size = this.render.getCurrentRoomSize();
         if (!size) {
             Logger.getInstance().error("room size does not exist");
             return;
@@ -208,14 +179,6 @@ export class RoomCamerasManager extends PacketHandler implements ICameraService 
         const miniViewW = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileWidth / 2);
         const miniviewH = (this.MINI_VIEW_SIZE + this.MINI_VIEW_SIZE) * (size.tileHeight / 2);
         this.miniViewPort.setSize(miniViewW, miniviewH);
-    }
-
-    get connection(): ConnectionService {
-        if (!this.mRoomService) {
-            Logger.getInstance().error("room service is undefined");
-            return;
-        }
-        return this.mRoomService.connection;
     }
 
     set moving(val: boolean) {

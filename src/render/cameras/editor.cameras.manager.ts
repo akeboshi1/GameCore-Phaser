@@ -1,25 +1,25 @@
-import { RoomCameras } from "./cameras.manager";
 import { PBpacket } from "net-socket-packet";
 import { op_editor } from "pixelpai_proto";
+import { CamerasManager } from "./cameras.manager";
 
-export class EditorCamerasManager extends RoomCameras {
+export class EditorCamerasManager extends CamerasManager {
     public centerCameas() {
-        if (!this.mMain || !this.mRoomService) {
-            return;
-        }
-        const roomSize = this.mRoomService.roomSize;
-        this.mMain.setScroll(
-            (roomSize.sceneWidth - this.mMain.width) >> 1,
-            (roomSize.sceneHeight - this.mMain.height) >> 1
-        );
-        const cameraView = this.mMain.worldView;
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
-        content.x = this.mMain.scrollX;
-        content.y = this.mMain.scrollY;
-        content.width = this.mMain.width;
-        content.height = this.mMain.height;
-        this.connection.send(pkt);
+        // if (!this.mMain || !this.mRoomService) {
+        //     return;
+        // }
+        // const roomSize = this.mRoomService.roomSize;
+        // this.mMain.setScroll(
+        //     (roomSize.sceneWidth - this.mMain.width) >> 1,
+        //     (roomSize.sceneHeight - this.mMain.height) >> 1
+        // );
+        // const cameraView = this.mMain.worldView;
+        // const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        // const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        // content.x = this.mMain.scrollX;
+        // content.y = this.mMain.scrollY;
+        // content.width = this.mMain.width;
+        // content.height = this.mMain.height;
+        // this.connection.send(pkt);
     }
 
     public offsetScroll(x: number, y: number) {
@@ -45,12 +45,12 @@ export class EditorCamerasManager extends RoomCameras {
     }
 
     public syncCameraScroll() {
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
-        content.x = this.mMain.scrollX / this.zoom;
-        content.y = this.mMain.scrollY / this.zoom;
-        content.width = 0;
-        content.height = 0;
-        this.connection.send(pkt);
+        // const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+        // const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+        // content.x = this.mMain.scrollX / this.zoom;
+        // content.y = this.mMain.scrollY / this.zoom;
+        // content.width = 0;
+        // content.height = 0;
+        // this.connection.send(pkt);
     }
 }
