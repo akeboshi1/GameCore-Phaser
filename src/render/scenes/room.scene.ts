@@ -1,11 +1,12 @@
 import { BasicScene } from "./basic.scene";
 
 export class RoomScene extends BasicScene {
-    protected mRoom: any;
+    protected mRoomID: any;
 
     public init(data: any) {
+        super.init(data);
         if (data) {
-            this.mRoom = data.room;
+            this.mRoomID = data.roomid;
         }
     }
 

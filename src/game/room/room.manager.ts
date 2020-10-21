@@ -165,7 +165,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     get connection(): ConnectionService {
         if (this.mGame) {
-            Logger.getInstance().log("room=======connect");
             return this.mGame.connection;
         }
     }

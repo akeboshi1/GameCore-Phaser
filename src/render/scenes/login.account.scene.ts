@@ -27,6 +27,7 @@ export class LoginAccountScene extends BasicScene {
     }
 
     public init(data: any) {
+        super.init(data);
         this.createFont();
         this.mWorld = data.world;
         this.mCallback = data.callBack;

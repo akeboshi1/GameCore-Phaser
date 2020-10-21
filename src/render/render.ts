@@ -16,9 +16,8 @@ import { SceneManager } from "./managers/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { UiManager } from "./ui/ui.manager";
 import { Url } from "../utils";
-import { Lite } from "game-capsule";
-import { ResUtils } from "../utils/resUtil";
-import { load } from "../utils/http";
+import { LocalStorageManager } from "./managers/local.storage.manager";
+import { BasicScene } from "./scenes/basic.scene";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -36,6 +35,7 @@ export class Render extends RPCPeer implements GameMain {
     private gameConfig: Phaser.Types.Core.GameConfig;
     private mAccount: Account;
     private mUiManager: UiManager;
+    private mLocalStorageManager: LocalStorageManager;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
@@ -48,12 +48,15 @@ export class Render extends RPCPeer implements GameMain {
      * 面板缩放系数
      */
     private mUIScale: number;
+
+    private mMainPeer: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
+            this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.createGame();
             Logger.getInstance().log("worker onReady");
         });
@@ -90,6 +93,14 @@ export class Render extends RPCPeer implements GameMain {
         return this.mSceneManager;
     }
 
+    get localStorageManager(): LocalStorageManager {
+        return this.mLocalStorageManager;
+    }
+
+    get game(): Phaser.Game {
+        return this.mGame;
+    }
+
     createGame() {
         this.newGame();
         this.remote[MAIN_WORKER].MainPeer.createGame(this.mConfig);
@@ -107,6 +118,7 @@ export class Render extends RPCPeer implements GameMain {
 
     createManager() {
         this.mUiManager = new UiManager(this);
+        this.mLocalStorageManager = new LocalStorageManager();
     }
 
     resize(width: number, height: number) {
@@ -153,6 +165,18 @@ export class Render extends RPCPeer implements GameMain {
     }
     restart(config?: ILauncherConfig, callBack?: Function) {
 
+    }
+
+    initUI() {
+        this.remote[MAIN_WORKER].MainPeer.initUI();
+    }
+
+    startRoomPlay() {
+        this.remote[MAIN_WORKER].MainPeer.startRoomPlay();
+    }
+
+    updateRoom(time: number, delta: number) {
+        this.remote[MAIN_WORKER].MainPeer.updateRoom(time,delta);
     }
 
     destroy(): Promise<void> {
@@ -260,10 +284,8 @@ export class Render extends RPCPeer implements GameMain {
             this.mGame.input.mouse.capture = true;
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
-            } else {
-                this.mUIScale = Math.ceil(window.devicePixelRatio);
             }
-            this.mSceneManager = new SceneManager(this.mGame);
+            this.mSceneManager = new SceneManager(this);
             this.exportProperty(this.mSceneManager, this)
                 .onceReady(() => {
                     resolve();
@@ -272,43 +294,43 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     public closeConnect() {
-        this.remote[MAIN_WORKER].MainPeer.closeConnect();
+        this.mainPeer.closeConnect();
     }
 
     public send(packet: PBpacket) {
-        this.remote[MAIN_WORKER].MainPeer.send(packet.Serialization);
+        this.mainPeer.send(packet.Serialization);
     }
 
     public terminate() {
-        this.remote[MAIN_WORKER].MainPeer.terminate();
+        this.mainPeer.terminate();
     }
 
     public onFocus() {
-        this.remote[MAIN_WORKER].MainPeer.focus();
+        this.mainPeer.focus();
     }
 
     public onBlur() {
-        this.remote[MAIN_WORKER].MainPeer.blur();
+        this.mainPeer.blur();
     }
 
     public syncClock(times: number) {
-        this.remote[MAIN_WORKER].MainPeer.syncClock(times);
+        this.mainPeer.syncClock(times);
     }
 
     public clearClock() {
-        this.remote[MAIN_WORKER].MainPeer.clearClock();
+        this.mainPeer.clearClock();
     }
 
     public destroyClock() {
-        this.remote[MAIN_WORKER].MainPeer.destroyClock();
+        this.mainPeer.destroyClock();
     }
 
     public clearGameComplete() {
-        this.remote[MAIN_WORKER].MainPeer.clearGameComplete();
+        this.mainPeer.clearGameComplete();
     }
 
     public requestCurTime() {
-        this.remote[MAIN_WORKER].MainPeer.requestCurTime();
+        this.mainPeer.requestCurTime();
     }
 
     public onLoginErrorHanlerCallBack(name: string, idcard: string) {
@@ -320,8 +342,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public login() {
-        this.remote[MAIN_WORKER].MainPeer.showMediator("Login");
+    public showLogin() {
+        this.mSceneManager.startScene("LoginScene", this);
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -425,40 +447,11 @@ export class Render extends RPCPeer implements GameMain {
         return [];
     }
 
-    @Export()
-    public enterVirtualWorld() {
-        const token = localStorage.getItem("token");
-        const account = token ? JSON.parse(token) : null;
-        Logger.getInstance().log("render---enterVirtualWorld", this.mConfig, token);
-        if (!this.mConfig.auth_token) {
-            if (!account) {
-                this.login();
-                return;
-            }
-            Logger.getInstance().log("render---refreshToken");
-            this.mAccount.setAccount(account);
-            this.remote[MAIN_WORKER].MainPeer.refreshToken();
-        } else {
-            // this.mGame.scene.start(LoadingScene.name, { world: this });
-            // this.mLoadingManager.start();
-            Logger.getInstance().log("render---enterVirtualWorld");
-            this.mAccount.setAccount({
-                token: this.mConfig.auth_token,
-                expire: this.mConfig.token_expire,
-                fingerprint: this.mConfig.token_fingerprint,
-                refreshToken: account ? account.refreshToken : "",
-                id: this.mConfig.user_id ? this.mConfig.user_id : account ? account.id : "",
-            });
-            this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
-        }
-        // this.remote[MAIN_WORKER].MainPeer.enterVirtualWorldCallBack(token);
-    }
-
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number) {
         if (!this.mAccount) this.mAccount = new Account();
         this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
-        // this.remote[MAIN_WORKER].MainPeer.createAccount(gameID, worldID, sceneID, loc);
+        // if (this.mainPeer) this.mainPeer.createAccount(gameID, worldID, sceneID, loc);
     }
 
     @Export()
@@ -469,6 +462,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public getAccount(): any {
         return this.mAccount;
+    }
+
+    @Export()
+    public setAccount(val: any): void {
+        this.mAccount.setAccount(val);
     }
 
     @Export()
@@ -487,7 +485,9 @@ export class Render extends RPCPeer implements GameMain {
             Logger.getInstance().error("no game created");
             return;
         }
-        this.mSceneManager.wakeScene("LoadingScene", data);
+        return this.mSceneManager.startScene("LoadingScene", data).then((scene: BasicScene) => {
+            if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
+        });
     }
 
     @Export()
@@ -497,6 +497,24 @@ export class Render extends RPCPeer implements GameMain {
             return;
         }
         this.mSceneManager.sleepScene("LoadingScene");
+    }
+
+    @Export()
+    public showPlay(data?: any) {
+        if (!this.mSceneManager) {
+            Logger.getInstance().error("no game created");
+            return;
+        }
+        this.mSceneManager.startScene("PlayScene", data);
+    }
+
+    @Export()
+    public hidePlay() {
+        if (!this.mSceneManager) {
+            Logger.getInstance().error("no game created");
+            return;
+        }
+        this.mSceneManager.sleepScene("PlayScene");
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
@@ -643,6 +661,16 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
+    @Export()
+    public setLocalStorage(key: string, value: string) {
+        this.localStorageManager.setItem(key, value);
+    }
+
+    @Export()
+    public getLocalStorage(key: string) {
+        return this.localStorageManager.getItem(key);
+    }
+
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
@@ -675,5 +703,12 @@ export class Render extends RPCPeer implements GameMain {
         Url.OSD_PATH = this.mConfig.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
+    }
+
+    get mainPeer() {
+        if (!this.mMainPeer) {
+            throw new Error("can't find main worker");
+        }
+        return this.mMainPeer;
     }
 }

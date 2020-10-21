@@ -7,14 +7,13 @@ export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;
   private mask: Phaser.GameObjects.Graphics;
   private debug: Phaser.GameObjects.Text;
-  private mCallback: Function;
+  // private mCallback: Function;
   private curtain: Curtain;
   private progressText: Phaser.GameObjects.Text;
   private mRequestCom: boolean = false;
   private tipsText: string;
   private dpr: number;
   private taskCount: number = 0;
-
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -31,11 +30,12 @@ export class LoadingScene extends BasicScene {
   }
 
   public init(data: any) {
+    super.init(data);
     this.createFont();
     this.dpr = data.dpr || 2;
     this.mRequestCom = false;
-    this.mCallback = data.callBack;
-    this.tipsText = data.text;
+    // this.mCallback = data.callBack;
+    this.tipsText = data.text || "";
   }
 
   public create() {
@@ -80,13 +80,7 @@ export class LoadingScene extends BasicScene {
       fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
-
-    if (this.mCallback) {
-      this.mCallback.call(this, this);
-      this.mCallback = undefined;
-    }
     // this.scale.on("resize", this.checkSize, this);
-
     this.taskCount++;
   }
 

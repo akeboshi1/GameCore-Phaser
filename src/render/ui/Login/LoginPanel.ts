@@ -1,6 +1,5 @@
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
-import { SceneName } from "../../../structureinterface/scene.name";
 import { MAIN_WORKER } from "../../../structureinterface/worker.name";
 import { Font } from "../../../utils";
 import Helpers from "../../../utils/helpers";
@@ -43,26 +42,20 @@ export class LoginPanel extends BasePanel {
     }
 
     public setLoginEnable(val) {
-        // if (val) {
-        //     this.loginBtn.setInteractive();
-        // } else {
-        //     this.loginBtn.disableInteractive();
-        // }
         this.loginBtn.enable = val;
     }
 
     protected preload() {
-        this.addAtlas(this.key, "./login/login.png", "./login/login.json");
+        this.addAtlas(this.key, "login/login.png", "login/login.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
-        // this.addAtlas()
         super.preload();
     }
 
     protected init() {
-        super.init();
         // const { width, height } = this.scene.cameras.main;
         const width = this.scene.cameras.main.width / this.scale;
         const height = this.scene.cameras.main.height / this.scale;
+        const container = this.scene.add.container(0, 0, this);
         const scale = this.scale;
 
         const backgroundColor = this.scene.make.graphics(undefined, false);
@@ -107,6 +100,7 @@ export class LoginPanel extends BasePanel {
             color: "#717171",
             fontSize: 16 * this.dpr + "px"
         });
+
         const phoneContaier = this.createInput(this.mPhoneInput, width * 0.5, 97 * this.dpr + logo.y + logo.height);
         const accountData: string = localStorage.getItem("accountphone");
         if (accountData) {
@@ -210,8 +204,6 @@ export class LoginPanel extends BasePanel {
         this.acceptBtn.y = label.y;
         this.acceptBtn.selected = true;
         this.add([backgroundColor, bg, cloudLeft, cloudRight, logo, phoneContaier, codeContainer, label1, label2, this.loginBtn, this.acceptBtn, label]);
-        this.scene.scene.sleep(SceneName.LOGIN_SCENE);
-
         super.init();
     }
 

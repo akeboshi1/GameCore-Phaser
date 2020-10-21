@@ -30,7 +30,6 @@ export class UIManager extends PacketHandler {
     }
 
     public showMainUI() {
-
     }
 
     public showMed(type: string, ...param: any[]) {

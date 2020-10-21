@@ -8,6 +8,7 @@ export class SkyBoxScene extends BasicScene {
   }
 
   init(data: any) {
+    super.init(data);
     if (data) {
       this.skyBoxManager = data;
     }
