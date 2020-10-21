@@ -3,6 +3,7 @@ import { BasicScene } from "./basic.scene";
 import { Font } from "../../utils/font";
 import { Size } from "../../utils/size";
 import { Render } from "../render";
+import { BasicLayer } from "../managers/layer.manager";
 
 export class MainUIScene extends BasicScene {
   private readonly LAYER_UI = "uiLayer";
@@ -54,9 +55,9 @@ export class MainUIScene extends BasicScene {
     // this.scale.on("resize", this.checkSize, this);
 
     // set layers
-    this.layerManager.addLayer(this, BasicScene, this.LAYER_UI, 1);
-    this.layerManager.addLayer(this, BasicScene, this.LAYER_DIALOG, 2);
-    this.layerManager.addLayer(this, BasicScene, this.LAYER_TOOLTIPS, 3);
+    this.layerManager.addLayer(this, BasicLayer, this.LAYER_UI, 1);
+    this.layerManager.addLayer(this, BasicLayer, this.LAYER_DIALOG, 2);
+    this.layerManager.addLayer(this, BasicLayer, this.LAYER_TOOLTIPS, 3);
   }
 
   public setTimeout(caller, time): number {

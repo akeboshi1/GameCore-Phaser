@@ -43,13 +43,13 @@ export class LayerManager {
         this.layers = new Map();
     }
 
-    public addLayer(scene: Phaser.Scene, layerConstructor: Function, name: string, depth: number): BasicLayer {
+    public addLayer(scene: Phaser.Scene, layerClass: typeof BasicLayer, name: string, depth: number): BasicLayer {
         if (this.layers.get(name)) {
             Logger.getInstance().warn("repeated layer name: ", name);
             return;
         }
 
-        const layer = layerConstructor(scene, name, depth) as BasicLayer;
+        const layer = new layerClass(scene, name, depth);
         this.layers.set(name, layer);
         return layer;
     }
