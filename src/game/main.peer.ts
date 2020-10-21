@@ -17,8 +17,6 @@ export class MainPeer extends RPCPeer {
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
-    // private socket: GameSocket;
-    // private connect: Connection;
     /**
      * 主进程和render之间完全链接成功
      */

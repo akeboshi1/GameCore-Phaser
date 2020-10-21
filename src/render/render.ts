@@ -19,6 +19,7 @@ import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { initLocales } from "../utils/i18n";
 import * as path from "path";
+import { RoomCamerasManager } from "./cameras/cameras.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -28,6 +29,7 @@ export class Render extends RPCPeer implements GameMain {
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
     private mSceneManager: SceneManager;
+    private mCameraManager: RoomCamerasManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -177,7 +179,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     updateRoom(time: number, delta: number) {
-        this.remote[MAIN_WORKER].MainPeer.updateRoom(time,delta);
+        this.remote[MAIN_WORKER].MainPeer.updateRoom(time, delta);
     }
 
     destroy(): Promise<void> {
@@ -476,6 +478,15 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
+    public getWorldView(): any {
+        const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
+        const camera = playScene.cameras.main;
+        const rect = camera.worldView;
+        const obj = { x: rect.x, y: rect.y, width: rect.width, heigth: rect.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+        return obj;
+    }
+
+    @Export()
     public onClockReady() {
         // this.mWorld.onClockReady();
     }
@@ -675,6 +686,20 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public getLocalStorage(key: string) {
         return this.localStorageManager.getItem(key);
+    }
+
+    @Export()
+    public createPanel(mediatorName: string, key: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (!this.uiManager) {
+                reject("uiManager not found");
+                return;
+            }
+            const panel = this.uiManager.createPanel(mediatorName);
+            this.exportProperty(panel, this, key).onceReady(() => {
+                resolve();
+            });
+        });
     }
 
     private onFullScreenChange() {

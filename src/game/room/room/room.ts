@@ -14,6 +14,7 @@ import { ConnectionService } from "../../../../lib/net/connection.service";
 import { EffectManager } from "../effect/effect.manager";
 import { Logger } from "../../../utils/log";
 import { PlayScene } from "../../../render/scenes/play.scene";
+import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -85,10 +86,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // protected mGroupManager: GroupManager;
     // protected mHandlerManager: HandlerManager;
     // protected mSkyboxManager: SkyBoxManager;
+    protected mViewBlockManager: Viewblo
     protected mEffectManager: EffectManager;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
-    // protected mCameraService: ICameraService;
+    protected mCameraService: ICameraService;
     // protected mBlocks: ViewblockService;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
@@ -283,7 +285,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mLayManager) {
         //     this.layerManager.destroy();
         // }
-        // this.mCameraService = new CamerasManager(this);
+        this.mCameraService = new CamerasManager(this.mGame, this);
         // this.mScene = this.world.game.scene.getScene(PlayScene.name);
         // this.mTerrainManager = new TerrainManager(this, this);
         // this.mElementManager = new ElementManager(this);
