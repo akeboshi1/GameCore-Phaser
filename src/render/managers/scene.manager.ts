@@ -45,6 +45,7 @@ export class SceneManager {
     public startScene(name: string, data?: any): Promise<BasicScene> {
         if (!this.sceneClass.hasOwnProperty(name)) {
             Logger.getInstance().error("className error: ", name);
+            return;
         }
         if (this.stateSceneName && this.render.game.scene.getScene(this.stateSceneName)) {
             if (this.stateSceneName === name) {

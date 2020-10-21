@@ -140,19 +140,19 @@
   integrity sha1-fyrX7FX5FEgvybHsS7GuYCjUYGY=
 
 "@types/node@*":
-  version "14.11.10"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.11.10.tgz#8c102aba13bf5253f35146affbf8b26275069bef"
-  integrity sha1-jBAquhO/UlPzUUav+/iyYnUGm+8=
+  version "14.14.0"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.14.0.tgz?cache=0&sync_timestamp=1603194135498&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.14.0.tgz#f1091b6ad5de18e8e91bdbd43ec63f13de372538"
+  integrity sha1-8QkbatXeGOjpG9vUPsY/E943JTg=
 
 "@types/node@8.0.0":
   version "8.0.0"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-8.0.0.tgz#acaa89247afddc7967e9902fd11761dadea1a555"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-8.0.0.tgz?cache=0&sync_timestamp=1603194135498&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-8.0.0.tgz#acaa89247afddc7967e9902fd11761dadea1a555"
   integrity sha1-rKqJJHr93Hln6ZAv0Rdh2t6hpVU=
 
 "@types/node@^13.7.0":
-  version "13.13.26"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-13.13.26.tgz#09b8326828d46b174d29086cdb6dcd2d0dcf67a3"
-  integrity sha1-CbgyaCjUaxdNKQhs223NLQ3PZ6M=
+  version "13.13.27"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-13.13.27.tgz?cache=0&sync_timestamp=1603194135498&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-13.13.27.tgz#989cb01c7a6419abd2f2f956cae4828f825589f6"
+  integrity sha1-mJywHHpkGavS8vlWyuSCj4JVifY=
 
 "@types/node@^14.0.13":
   version "14.11.8"
@@ -1724,7 +1724,7 @@ enhanced-resolve@^2.2.2:
 
 enhanced-resolve@^4.0.0, enhanced-resolve@^4.1.1, enhanced-resolve@^4.3.0:
   version "4.3.0"
-  resolved "https://registry.npm.taobao.org/enhanced-resolve/download/enhanced-resolve-4.3.0.tgz?cache=0&sync_timestamp=1601451681276&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fenhanced-resolve%2Fdownload%2Fenhanced-resolve-4.3.0.tgz#3b806f3bfafc1ec7de69551ef93cca46c1704126"
+  resolved "https://registry.npm.taobao.org/enhanced-resolve/download/enhanced-resolve-4.3.0.tgz?cache=0&sync_timestamp=1603193035222&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fenhanced-resolve%2Fdownload%2Fenhanced-resolve-4.3.0.tgz#3b806f3bfafc1ec7de69551ef93cca46c1704126"
   integrity sha1-O4BvO/r8HsfeaVUe+TzKRsFwQSY=
   dependencies:
     graceful-fs "^4.1.2"
@@ -5577,7 +5577,7 @@ unique-slug@^2.0.0:
 
 universalify@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npm.taobao.org/universalify/download/universalify-1.0.0.tgz#b61a1da173e8435b2fe3c67d29b9adf8594bd16d"
+  resolved "https://registry.npm.taobao.org/universalify/download/universalify-1.0.0.tgz?cache=0&sync_timestamp=1603180080276&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Funiversalify%2Fdownload%2Funiversalify-1.0.0.tgz#b61a1da173e8435b2fe3c67d29b9adf8594bd16d"
   integrity sha1-thodoXPoQ1sv48Z9Kbmt+FlL0W0=
 
 unpipe@1.0.0, unpipe@~1.0.0:
@@ -5876,8 +5876,8 @@ websocket-extensions@>=0.1.1:
   integrity sha1-f4RzvIOd/YdgituV1+sHUhFXikI=
 
 "webworker-rpc@git://github.com/ApowoGames/webworker-rpc":
-  version "0.0.34"
-  resolved "git://github.com/ApowoGames/webworker-rpc#019e86d7c41a2f3264986c1de1e6eff2c889e115"
+  version "0.0.36"
+  resolved "git://github.com/ApowoGames/webworker-rpc#9dceaaf07ad324da40ca16f3cf00b2aa3e66f739"
   dependencies:
     clean-webpack-plugin "^3.0.0"
     copy-webpack-plugin "^5.0.4"

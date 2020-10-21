@@ -1,4 +1,5 @@
 import { ILauncherConfig } from "../../structureinterface/lanucher.config";
+import { LoginPanel } from "../../ui/login/login";
 import { Logger } from "../../utils/log";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
@@ -8,6 +9,11 @@ export class UiManager {
     private mPanelMap: Map<string, BasePanel>;
     private mCache: any[] = [];
     private mCacheUI: Function;
+    private readonly mPanelClass = {
+        "BaseMediator": BasePanel,
+        "LoginMediator": LoginPanel
+    };
+
     constructor(private mRender: Render) {
     }
 
@@ -25,6 +31,17 @@ export class UiManager {
                 if (panel.isShow) panel.resize();
             });
         }
+    }
+
+    public createPanel(mediatorName: string): BasePanel {
+        if (!this.mPanelClass.hasOwnProperty(mediatorName)) {
+            Logger.getInstance().error("mediatorName error: ", mediatorName);
+            return;
+        }
+
+        const panel = new this.mPanelClass[mediatorName](this.mScene, this.mRender);
+        this.setPanel(mediatorName, panel);
+        return panel;
     }
 
     public setPanel(value: string, panel: BasePanel) {
@@ -74,7 +91,7 @@ export class UiManager {
                 return;
             }
             this.mPanelMap.set(type + "Panel", panel);
-        //     // mediator.setName(type);
+            //     // mediator.setName(type);
         }
         // // if (mediator.showing) return;
         // if (param) mediator.setParam(param);

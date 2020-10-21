@@ -18,7 +18,8 @@ import { UiManager } from "./ui/ui.manager";
 import { Url } from "../utils";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
-import { RoomCamerasManager } from "../render/cameras/cameras.manager";
+import { BasePanel } from "./ui/components/base.panel";
+import { RoomCamerasManager } from "./cameras/cameras.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -680,6 +681,20 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public getLocalStorage(key: string) {
         return this.localStorageManager.getItem(key);
+    }
+
+    @Export()
+    public createPanel(mediatorName: string, key: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (!this.uiManager) {
+                reject("uiManager not found");
+                return;
+            }
+            const panel = this.uiManager.createPanel(mediatorName);
+            this.exportProperty(panel, this, key).onceReady(() => {
+                resolve();
+            });
+        });
     }
 
     private onFullScreenChange() {
