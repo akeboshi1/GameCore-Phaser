@@ -278,6 +278,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public login() {
+        this.roomManager.currentRoom.scen
         this.mUIManager.showMed("Login");
     }
 

@@ -20,11 +20,5 @@ export class Position45 {
     return new LogicPos(Math.floor((point3.y + point3.z) / position.tileHeight + (point3.x - offsetX) / position.tileWidth),
                    Math.floor((point3.y + point3.z) / position.tileHeight - (point3.x - offsetX) / position.tileWidth)
     );
-    // const offsetX = position.sceneWidth / 2; // - position.tileWidth / 2;
-    // const pos: IPos = {
-    //   x: Math.floor((point3.y + point3.z) / position.tileHeight + (point3.x - offsetX) / position.tileWidth),
-    //   y: Math.floor((point3.y + point3.z) / position.tileHeight - (point3.x - offsetX) / position.tileWidth),
-    // };
-    // return pos;
   }
 }

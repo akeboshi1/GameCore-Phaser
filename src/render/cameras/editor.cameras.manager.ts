@@ -1,4 +1,4 @@
-import { RoomCameras } from "./room.cameras";
+import { RoomCameras } from "./cameras.manager";
 import { PBpacket } from "net-socket-packet";
 import { op_editor } from "pixelpai_proto";
 

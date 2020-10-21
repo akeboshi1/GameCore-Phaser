@@ -18,6 +18,7 @@ import { UiManager } from "./ui/ui.manager";
 import { Url } from "../utils";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
+import { RoomCamerasManager } from "../render/cameras/cameras.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -27,6 +28,7 @@ export class Render extends RPCPeer implements GameMain {
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
     private mSceneManager: SceneManager;
+    private mCameraManager: RoomCamerasManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -176,7 +178,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     updateRoom(time: number, delta: number) {
-        this.remote[MAIN_WORKER].MainPeer.updateRoom(time,delta);
+        this.remote[MAIN_WORKER].MainPeer.updateRoom(time, delta);
     }
 
     destroy(): Promise<void> {
@@ -467,6 +469,15 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public setAccount(val: any): void {
         this.mAccount.setAccount(val);
+    }
+
+    @Export()
+    public getWorldView(): any {
+        const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
+        const camera = playScene.cameras.main;
+        const rect = camera.worldView;
+        const obj = { x: rect.x, y: rect.y, width: rect.width, heigth: rect.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+        return obj;
     }
 
     @Export()

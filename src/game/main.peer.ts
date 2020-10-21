@@ -3,7 +3,6 @@ import { op_gateway } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 // import HeartBeatWorker from "worker-loader?filename=js/[name].js!../services/heartBeat.worker";
 import * as protos from "pixelpai_proto";
-import { GameSocket, ConnListener, Connection } from "./net/connection";
 import { ServerAddress } from "../../lib/net/address";
 import { Render } from "../render/render";
 import { Game } from "./game";
@@ -19,8 +18,6 @@ export class MainPeer extends RPCPeer {
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
-    // private socket: GameSocket;
-    // private connect: Connection;
     /**
      * 主进程和render之间完全链接成功
      */
