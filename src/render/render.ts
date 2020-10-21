@@ -2,7 +2,6 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { op_def } from "pixelpai_proto";
 import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
@@ -18,8 +17,9 @@ import { UiManager } from "./ui/ui.manager";
 import { Url } from "../utils";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
-import { BasePanel } from "./ui/components/base.panel";
 import { CamerasManager } from "./cameras/cameras.manager";
+import { initLocales } from "../utils/i18n";
+import * as path from "path";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -358,6 +358,11 @@ export class Render extends RPCPeer implements GameMain {
         this.mSceneManager.startScene("LoginScene", this);
     }
 
+    @Export()
+    public showCreateRole(params?: any) {
+        this.mSceneManager.startScene("CreateRoleScene", { render: this, params });
+    }
+
     @Export([webworker_rpc.ParamType.str])
     public showPanel(panelName: string) {
         this.mUiManager.showPanel(panelName);
@@ -632,7 +637,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public createGameCallBack(content: op_def.IKeyCodeEvent[]) {
+    public createGameCallBack() {
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         if (window.screen.width > window.screen.height) {
             if (this.mConfig.width > this.mConfig.height) {
@@ -746,6 +751,7 @@ export class Render extends RPCPeer implements GameMain {
         Url.OSD_PATH = this.mConfig.osd;
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
+        initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
     }
 
     get mainPeer() {

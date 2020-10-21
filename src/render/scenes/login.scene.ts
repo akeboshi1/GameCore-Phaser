@@ -1,4 +1,3 @@
-import { Render } from "../render";
 import { UiManager } from "../ui/ui.manager";
 import { BasicScene } from "./basic.scene";
 

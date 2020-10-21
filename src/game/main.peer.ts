@@ -4,7 +4,6 @@ import { PBpacket, Buffer } from "net-socket-packet";
 // import HeartBeatWorker from "worker-loader?filename=js/[name].js!../services/heartBeat.worker";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
-import { Render } from "../render/render";
 import { Game } from "./game";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { Logger } from "../utils/log";
@@ -27,7 +26,7 @@ export class MainPeer extends RPCPeer {
         this.game = new Game(this);
     }
 
-    get render(): Render {
+    get render() {
         return this.remote[RENDER_PEER].Render;
     }
     // ============= connection调用主进程

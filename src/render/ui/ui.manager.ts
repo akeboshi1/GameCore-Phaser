@@ -1,4 +1,3 @@
-import { ILauncherConfig } from "../../structureinterface/lanucher.config";
 import { LoginPanel } from "../../ui/login/login";
 import { Logger } from "../../utils/log";
 import { Render } from "../render";
@@ -69,7 +68,7 @@ export class UiManager {
         this.mScene = undefined;
     }
 
-    public showPanel(type: string, ...param: any[]) {
+    public showPanel(type: string, param?: any) {
         if (!this.mScene) {
             const scene = this.render.sceneManager.currentScene();
             if (!scene) return;

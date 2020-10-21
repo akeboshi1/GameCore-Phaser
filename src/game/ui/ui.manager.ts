@@ -19,6 +19,9 @@ export class UIManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI, this.handleShowUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI, this.handleUpdateUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
+        // TODO 这2条协议合并到SHOW_UI和CLOS_UI
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CLOSE_CREATE_ROLE_UI, this.onHandleCloseCreateRoleUI);
     }
 
     public removePackListener() {
@@ -69,6 +72,7 @@ export class UIManager extends PacketHandler {
         if (param) mediator.setParam(param);
         mediator.update(param);
     }
+
     public hideMed(type: string) {
         if (!this.mMedMap) {
             return;
@@ -82,6 +86,7 @@ export class UIManager extends PacketHandler {
         }
         mediator.hide();
     }
+
     public showExistMed(type: string, extendName = "Mediator") {
         if (!this.mMedMap) {
             return;
@@ -105,6 +110,14 @@ export class UIManager extends PacketHandler {
     private handleCloseUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
         this.hideMed(ui.name);
+    }
+
+    private onHandleShowCreateRoleUI(packet: PBpacket) {
+        this.showMed("CreateRole", packet.content);
+    }
+
+    private onHandleCloseCreateRoleUI() {
+        this.hideMed("CreateRole");
     }
 
     private getPanelNameByAlias(alias: string) {
