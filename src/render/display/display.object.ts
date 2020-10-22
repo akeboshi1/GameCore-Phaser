@@ -1,10 +1,8 @@
 import { Url } from "../../utils/resUtil";
 import { ReferenceArea } from "../editor/reference.area";
-import { ElementDisplay } from "./element.display";
 import { DynamicSprite, DynamicImage } from "../ui/components";
-import { PlayAnimation } from "./animation";
-import { IFramesModel } from "./frames.model";
-import { IDragonbonesModel } from "./dragonbones.model";
+import { IDragonbonesModel } from "./dragonbones/dragonbones.model";
+import { RunningAnimation } from "../../structureinterface/animation";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -14,12 +12,12 @@ export enum DisplayField {
     Effect
 }
 
-export class DisplayObject extends Phaser.GameObjects.Container implements ElementDisplay {
+export class DisplayObject extends Phaser.GameObjects.Container {
     /**
      * 实际透明度，避免和tween混淆
      */
+    protected mID: number;
     protected mAlpha: number = 1;
-
     protected mBaseLoc: Phaser.Geom.Point;
     protected mCollisionArea: number[][];
     protected mOriginPoint: Phaser.Geom.Point;
@@ -29,14 +27,13 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mBackEffect: DynamicSprite;
     protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
-    // protected mElement: IElement;
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
-    protected mActionName: PlayAnimation;
-    constructor(scene: Phaser.Scene, roomService: any, element?: any) {
+    protected mActionName: RunningAnimation;
+    constructor(scene: Phaser.Scene, roomService: any, id?: any) {
         super(scene);
-        // this.mElement = element;
+        this.mID = id;
     }
 
     public changeAlpha(val?: number) {
@@ -59,10 +56,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     fadeOut(callback?: () => void) {
     }
 
-    load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
+    load(data: IDragonbonesModel, field?: DisplayField) {
     }
 
-    play(animationName: PlayAnimation, field?: DisplayField, times?: number) {
+    play(animation: RunningAnimation, field?: DisplayField, times?: number) {
     }
 
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }
@@ -202,6 +199,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
             return;
         }
         this.mChildMap.delete(key);
+    }
+
+    get id(): number {
+        return this.mID;
     }
 
     get topPoint(): Phaser.Geom.Point {

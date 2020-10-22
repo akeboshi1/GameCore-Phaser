@@ -1,11 +1,12 @@
 import { Helpers } from "game-capsule";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import * as sha1 from "simple-sha1";
+import { RunningAnimation } from "../../../../structureinterface/animation";
+import { IDisplay } from "../../../../structureinterface/display";
 import { Direction } from "../../../../utils/direction";
 import { Logger } from "../../../../utils/log";
 import { LogicPoint } from "../../../../utils/logic.point";
-import { AnimationData, IAnimationData } from "../animation/animation";
-import { IDisplay } from "../sprite/idisplay";
+import { AnimationModel, IAnimationModel } from "../animation/animation.model";
 import { Sprite } from "../sprite/sprite";
 
 export interface IFramesModel {
@@ -15,18 +16,16 @@ export interface IFramesModel {
     avatarDir?: number;
     type?: string;
     display?: IDisplay | null;
-    animations?: Map<string, IAnimationData>;
+    animations?: Map<string, IAnimationModel>;
     animationName: string;
-    package?: op_gameconfig.IPackage;
-    shops?: op_gameconfig.IShop[] | null;
-    getAnimations(name: string): IAnimationData;
+    getAnimations(name: string): IAnimationModel;
     existAnimation(aniName: string): boolean;
     getCollisionArea(aniName: string, flip: boolean): number[][];
     getWalkableArea(aniName: string, flip: boolean): number[][];
     getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
     getOriginPoint(aniName: string, flip: boolean): LogicPoint;
     createSprite(properties: object): Sprite;
-    findAnimation(baseName: string, dir: Direction): AnimationData;
+    findAnimation(baseName: string, dir: Direction): RunningAnimation;
     destroy();
 }
 
@@ -36,7 +35,7 @@ export class FramesModel implements IFramesModel {
     public id: number;
     public type: string;
     public display: IDisplay | null;
-    public animations: Map<string, IAnimationData>;
+    public animations: Map<string, IAnimationModel>;
     public animationName: string;
     public package: op_gameconfig.IPackage;
     public shops: op_gameconfig.IShop[];
@@ -62,7 +61,7 @@ export class FramesModel implements IFramesModel {
         }
     }
 
-    public getAnimationData(): Map<string, IAnimationData> {
+    public getAnimationData(): Map<string, IAnimationModel> {
         return this.animations;
     }
 
@@ -71,7 +70,7 @@ export class FramesModel implements IFramesModel {
         return this.animations.has(aniName);
     }
 
-    public getAnimations(name: string): IAnimationData {
+    public getAnimations(name: string): IAnimationModel {
         if (!this.animations) return;
         return this.animations.get(name);
     }
@@ -86,7 +85,7 @@ export class FramesModel implements IFramesModel {
 
     public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
         const anis: op_gameconfig_01.IAnimationData[] = [];
-        this.animations.forEach((ani: IAnimationData) => {
+        this.animations.forEach((ani: IAnimationModel) => {
             anis.push(ani.createProtocolObject());
         }, this);
         return anis;
@@ -126,7 +125,7 @@ export class FramesModel implements IFramesModel {
         }
     }
 
-    public getDirable() {}
+    public getDirable() { }
 
     public createSprite(properties: {
         nodeType: op_def.NodeType;
@@ -166,7 +165,7 @@ export class FramesModel implements IFramesModel {
         return new Sprite(spr, nodeType);
     }
 
-    public findAnimation(baseName: string, dir: Direction): AnimationData {
+    public findAnimation(baseName: string, dir: Direction): RunningAnimation {
         let animationName = this.checkDirectionAnimation(baseName, dir);
         let flip = false;
         if (animationName) {
@@ -204,7 +203,7 @@ export class FramesModel implements IFramesModel {
         this.mGen = sha1.sync(display.dataPath + display.texturePath);
     }
 
-    private setAnimationData(aniDatas: IAnimationData[]) {
+    private setAnimationData(aniDatas: IAnimationModel[]) {
         if (!aniDatas) {
             Logger.getInstance().error(`${this.id} animationData does not exist`);
             return;

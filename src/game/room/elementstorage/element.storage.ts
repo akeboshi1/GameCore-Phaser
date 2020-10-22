@@ -15,7 +15,7 @@ import { FramesModel, IFramesModel } from "../display/frames/frames.model";
 import { DragonbonesModel, IDragonbonesModel } from "../display/dragones/dragonbones.model";
 import { IScenery } from "../skybox/scenery";
 import { Logger } from "../../../utils/log";
-import { Animation } from "../display/animation/animation";
+import { AnimationModel } from "../display/animation/animation.model";
 import { Url } from "../../../utils";
 
 export interface IAsset {
@@ -89,7 +89,7 @@ export class ElementStorage implements IElementStorage {
                     const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
-                        anis.push(new Animation(ani.createProtocolObject()));
+                        anis.push(new AnimationModel(ani.createProtocolObject()));
                     }
                     displayModel = new FramesModel({
                         id: obj.id,
@@ -127,7 +127,7 @@ export class ElementStorage implements IElementStorage {
                         defaultAnimationName: terrainPalette.animations.defaultAnimationName,
                         display: terrainPalette.animations.display,
                         animationData: terrainPalette.animations.animationData.map(
-                            (ani: AnimationDataNode) => new Animation(ani.createProtocolObject())
+                            (ani: AnimationDataNode) => new AnimationModel(ani.createProtocolObject())
                         ),
                     },
                 });
@@ -149,7 +149,7 @@ export class ElementStorage implements IElementStorage {
                         defaultAnimationName: elementMoss.animations.defaultAnimationName,
                         display: elementMoss.animations.display,
                         animationData: elementMoss.animations.animationData.map(
-                            (ani: AnimationDataNode) => new Animation(ani.createProtocolObject())
+                            (ani: AnimationDataNode) => new AnimationModel(ani.createProtocolObject())
                         ),
                     },
                 });
@@ -188,7 +188,7 @@ export class ElementStorage implements IElementStorage {
                     const eleAnis = (<ElementNode>obj).animations;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
-                        anis.push(new Animation(ani.createProtocolObject()));
+                        anis.push(new AnimationModel(ani.createProtocolObject()));
                     }
                     displayModel = new FramesModel({
                         id: obj.id,

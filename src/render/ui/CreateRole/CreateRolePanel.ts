@@ -1,9 +1,8 @@
 import { InputText, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { BasePanel } from "../components/base.panel";
 import { UiManager } from "../ui.manager";
-import { Font, i18n, Logger } from "../../../utils";
-import { DragonbonesDisplay } from "../../display/dragonbones.display";
-import { ResUtils } from "../../../utils/resUtil";
+import { Font, i18n } from "../../../utils";
+import { DragonbonesDisplay } from "../../display/dragonbones/dragonbones.display";
 
 export class CreateRolePanel extends BasePanel {
   private readonly key = "createCharacter";
@@ -116,10 +115,10 @@ export class CreateRolePanel extends BasePanel {
     //   bottom: 24 * this.dpr
     // });
     this.mInputTextBg = new NineSlicePatch(this.scene, width >> 1, 350 * this.dpr, 255 * this.dpr, 50 * this.dpr, this.key, "input_bg.png", {
-        left: 27 * this.dpr,
-        top: 24 * this.dpr,
-        right: 28 * this.dpr,
-        bottom: 24 * this.dpr
+      left: 27 * this.dpr,
+      top: 24 * this.dpr,
+      right: 28 * this.dpr,
+      bottom: 24 * this.dpr
     });
     this.add(this.mInputTextBg);
 

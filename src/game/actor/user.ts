@@ -4,7 +4,7 @@ import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { PlayerState } from "../room/element/element/element";
+import { PlayerState } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { PlayerDataManager } from "./data/player.dataManager";
 import { Logger } from "../../utils/log";
