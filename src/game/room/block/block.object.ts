@@ -1,7 +1,7 @@
 import { Logger } from "../../../utils/log";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { ISprite } from "../display/sprite/sprite";
-import { InputEnable } from "../element/element/element";
+import { InputEnable } from "../element/element";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
 

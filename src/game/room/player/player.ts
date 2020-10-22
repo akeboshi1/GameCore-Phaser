@@ -1,10 +1,10 @@
 import { op_def } from "pixelpai_proto";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Element, IElement, MovePath, PlayerState } from "../element/element/element";
-import { IElementManager } from "../element/element/element.manager";
+import { IElementManager } from "../element/element.manager";
 import { ISprite } from "../display/sprite/sprite";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
+import { Element, IElement, MovePath, PlayerState } from "../element/element";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;

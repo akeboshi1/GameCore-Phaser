@@ -6,7 +6,6 @@ import { IPosition45Obj, Position45 } from "../../../utils/position45";
 import { Game } from "../../game";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { IBlockObject } from "../block/iblock.object";
-import { IElement } from "../element/element/element";
 import { ClockReadyListener } from "../../loop/clock/clock";
 import { State } from "../state/state.group";
 import { IRoomManager } from "../room.manager";
@@ -17,7 +16,8 @@ import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 import { ViewblockManager } from "../viewblock/viewblock.manager";
 import { ViewblockService } from "../viewblock/viewblock.service";
 import { PlayerManager } from "../player/player.manager";
-import { ElementManager } from "../element/element/element.manager";
+import { ElementManager } from "../element/element.manager";
+import { IElement } from "../element/element";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
