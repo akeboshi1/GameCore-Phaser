@@ -1,16 +1,15 @@
-import { LogicPos } from "../../../../utils/logic.pos";
-import { op_client, op_def, op_gameconfig, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
+import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
+import { Direction } from "../../../../utils/direction";
 import { Logger } from "../../../../utils/log";
-import NodeType = op_def.NodeType;
 import { LogicPoint } from "../../../../utils/logic.point";
+import { IPos, LogicPos } from "../../../../utils/logic.pos";
+import { Animation } from "../animation/animation";
 import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel, IFramesModel } from "../frames/frames.model";
-import { Animation, AnimationData, AnimationQueue } from "../animation/animation";
-import { Direction } from "../../../../utils/direction";
+import NodeType = op_def.NodeType;
 export interface ISprite {
     readonly id: number;
-    // 龙骨资源名集合
     readonly avatar: IAvatar;
     readonly nickname: string;
     readonly alpha: number;
@@ -22,13 +21,14 @@ export interface ISprite {
     readonly currentAnimation: AnimationData;
     readonly currentCollisionArea: number[][];
     readonly currentWalkableArea: number[][];
+    readonly currentCollisionPoint: LogicPoint;
     readonly hasInteractive: boolean;
     readonly attrs: op_def.IStrPair[];
     readonly animationQueue: AnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
-    pos: LogicPos;
+    pos: IPos;
     bindID: number;
     sn: string;
     isMoss?: boolean;
@@ -44,9 +44,23 @@ export interface ISprite {
     toSprite(): op_client.ISprite;
 }
 
+export interface AnimationData {
+    name: string;
+    flip: boolean;
+    times?: number;
+    playingQueue?: AnimationQueue;
+}
+
+export interface AnimationQueue {
+    name: string;
+    playTimes?: number;
+    playedTimes?: number;
+    complete?: Function;
+}
+
 export class Sprite implements ISprite {
     protected mID: number;
-    protected mPos: LogicPos;
+    protected mPos: IPos;
     protected mAvatar: IAvatar;
     protected mCurrentAnimationName: string;
     protected mDirection: number;
@@ -89,6 +103,13 @@ export class Sprite implements ISprite {
         this.mAttrs = obj.attrs;
         if (obj.avatar) {
             this.updateAvatar(obj.avatar);
+            // if (attrs && attrs.length > 0) {
+            //     for (const att of attrs) {
+            //         if (att.key === "minecart") {
+            //             this.mAvatar.stalkerId = att.value;
+            //         }
+            //     }
+            // }
         }
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
@@ -97,7 +118,7 @@ export class Sprite implements ISprite {
             this.mSn = obj.sn;
         }
         this.tryRegisterAnimation(obj.animationRegistrationMap);
-        this.mCurrentAnimationName = obj.currentAnimationName || "idle";
+        this.mCurrentAnimationName = obj.currentAnimationName;
         this.direction = obj.direction || 3;
         this.mNickname = obj.nickname;
         this.mBindID = obj.bindId;
@@ -226,11 +247,11 @@ export class Sprite implements ISprite {
         return this.mID;
     }
 
-    get pos(): LogicPos {
+    get pos(): IPos {
         return this.mPos;
     }
 
-    set pos(pos: LogicPos) {
+    set pos(pos: IPos) {
         this.mPos = pos;
     }
 
@@ -320,6 +341,8 @@ export class Sprite implements ISprite {
         if (this.currentAnimationName) {
             this.mDisplayInfo.animationName = this.currentAnimationName;
             this.setAnimationData(this.currentAnimationName, this.direction);
+        } else {
+            if (displayInfo.animationName) this.currentAnimationName = displayInfo.animationName;
         }
     }
 
@@ -432,7 +455,7 @@ export class Sprite implements ISprite {
     }
 
     private setAnimationData(animationName: string, direction: Direction) {
-        if (!this.displayInfo) {
+        if (!this.displayInfo || !animationName) {
             return;
         }
         let baseAniName = animationName.split(`_`)[0];

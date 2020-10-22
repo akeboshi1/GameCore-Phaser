@@ -37,7 +37,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public getPosition(): IPos {
-        const pos: LogicPos = this.mModel ? this.mModel.pos : new LogicPos();
+        const pos: IPos = this.mModel ? this.mModel.pos : new LogicPos();
         return pos;
     }
 
