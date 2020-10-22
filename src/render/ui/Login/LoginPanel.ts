@@ -16,8 +16,10 @@ export class LoginPanel extends BasePanel {
     private loginBtn: NineSliceButton;
     private downcount: number = -1;
     private fetchCode: Phaser.GameObjects.Text;
+    private mMediator: any;
     constructor(uimanager: UiManager) {
         super(uimanager.scene, uimanager.render);
+        this.mMediator = this.render.mainPeer["LoginMediator"];
     }
 
     public show() {
@@ -267,7 +269,8 @@ export class LoginPanel extends BasePanel {
             this.render.onLoginErrorHanler("error", "验证码格式错误");
             return;
         }
-        this.render.remote[MAIN_WORKER].onLoginHandler();
+        this.mMediator.login(phone, code, this.areaCode);
+        // this.render.remote[MAIN_WORKER].onLoginHandler();
     }
 
     private LoginDownHandler() {

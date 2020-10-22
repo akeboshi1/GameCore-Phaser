@@ -32,7 +32,7 @@ export class UiManager {
         }
     }
 
-    public createPanel(mediatorName: string): BasePanel {
+    public createPanel(mediatorName: string) {
         if (!this.mPanelClass.hasOwnProperty(mediatorName)) {
             Logger.getInstance().error("mediatorName error: ", mediatorName);
             return;
@@ -97,6 +97,7 @@ export class UiManager {
         // // if (mediator.showing) return;
         // if (param) mediator.setParam(param);
         panel.show(param);
+        return panel;
     }
 
     public hidePanel(type: string) {

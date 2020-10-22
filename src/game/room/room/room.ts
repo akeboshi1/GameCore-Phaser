@@ -14,10 +14,10 @@ import { EffectManager } from "../effect/effect.manager";
 import { Logger } from "../../../utils/log";
 import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 import { ViewblockManager } from "../viewblock/viewblock.manager";
-import { ViewblockService } from "../viewblock/viewblock.service";
 import { PlayerManager } from "../player/player.manager";
 import { ElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
+import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -94,7 +94,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
-    protected mBlocks: ViewblockService;
+    protected mBlocks: IViewBlockManager;
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
@@ -470,7 +470,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mMiniSize;
     }
 
-    get blocks(): ViewblockService {
+    get blocks(): IViewBlockManager {
         return this.mBlocks;
     }
 

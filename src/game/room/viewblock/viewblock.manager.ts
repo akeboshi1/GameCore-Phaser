@@ -1,5 +1,4 @@
 
-import { ViewblockService } from "./viewblock.service";
 import { IPosition45Obj } from "../../../utils/position45";
 import { IBlockObject } from "../block/iblock.object";
 import { IPos } from "../../../utils/logic.pos";
@@ -7,7 +6,8 @@ import { Viewblock } from "./view.block";
 import { LogicRectangle } from "../../../utils/logic.rectangle";
 import { ICameraService } from "../camera/cameras.manager";
 import { Logger } from "../../../utils/log";
-export class ViewblockManager implements ViewblockService {
+import { IViewBlockManager } from "./iviewblock.manager";
+export class ViewblockManager implements IViewBlockManager {
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];
     private mDelay: number = 0;
@@ -18,16 +18,18 @@ export class ViewblockManager implements ViewblockService {
     public add(e: IBlockObject): boolean {
         Logger.getInstance().log("viewblock add");
         if (!this.mCameras) return false;
-        const miniView = this.mCameras.getMiniViewPort();
-        for (const block of this.mBlocks) {
-            const rect = block.rectangle;
-            const ePos: IPos = e.getPosition();
-            if (!ePos) return;
-            if (rect.contains(ePos.x, ePos.y)) {
-                block.add(e, miniView);
-                return;
+        this.mCameras.getMiniViewPort().then((obj) => {
+            const miniView = obj;
+            for (const block of this.mBlocks) {
+                const rect = block.rectangle;
+                const ePos: IPos = e.getPosition();
+                if (!ePos) return;
+                if (rect.contains(ePos.x, ePos.y)) {
+                    block.add(e, miniView);
+                    return;
+                }
             }
-        }
+        });
     }
 
     public remove(e: IBlockObject): boolean {
@@ -81,11 +83,15 @@ export class ViewblockManager implements ViewblockService {
         Logger.getInstance().log("viewblock update");
         if (!this.mCameras) return;
         this.mDelay = time;
-        const bound: LogicRectangle = this.mCameras.getViewPort();
-        const miniViewPort = this.mCameras.getMiniViewPort();
-        for (const block of this.mBlocks) {
-            block.check(bound, miniViewPort);
-        }
+        this.mCameras.getViewPort().then((obj) => {
+            const bound: LogicRectangle = obj;
+            this.mCameras.getMiniViewPort().then((obj45) => {
+                const miniViewPort = obj45;
+                for (const block of this.mBlocks) {
+                    block.check(bound, miniViewPort);
+                }
+            });
+        });
     }
 
     public destroy(): void {

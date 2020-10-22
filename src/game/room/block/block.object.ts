@@ -16,6 +16,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public setRenderable(isRenderable: boolean, delay: number = 0) {
+        Logger.getInstance().log(isRenderable,"=====blockobject");
         if (this.mRenderable !== isRenderable) {
             this.mRenderable = isRenderable;
             if (isRenderable) {
