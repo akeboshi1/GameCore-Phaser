@@ -95,6 +95,7 @@ export class SceneManager {
 
     public sleepScene(name: string) {
         if (!this.render.game.scene.getScene(name)) {
+            Logger.getInstance().log(name + "sleep faild");
             return;
         }
         const scene = this.render.game.scene.getScene(name) as BasicScene;

@@ -91,6 +91,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             this.onEnterRoom(scene);
         } else {
             this.mGame.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
+                Logger.getInstance().log("=======enter scene load sceneConfig");
                 this.game.elementStorage.setSceneConfig(config);
                 this.onEnterRoom(scene);
             });

@@ -182,18 +182,21 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addBlockObject(object: IBlockObject) {
+        Logger.getInstance().log("rooms add");
         if (this.blocks) {
             this.blocks.add(object);
         }
     }
 
     public removeBlockObject(object: IBlockObject) {
+        Logger.getInstance().log("rooms remove");
         if (this.blocks) {
             this.blocks.remove(object);
         }
     }
 
     public updateBlockObject(object: IBlockObject) {
+        Logger.getInstance().log("rooms update");
         if (this.blocks) {
             this.blocks.check(object);
         }

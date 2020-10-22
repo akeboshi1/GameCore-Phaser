@@ -6,6 +6,7 @@ import { IPos } from "../../../utils/logic.pos";
 import { Viewblock } from "./view.block";
 import { LogicRectangle } from "../../../utils/logic.rectangle";
 import { ICameraService } from "../camera/cameras.manager";
+import { Logger } from "../../../utils/log";
 export class ViewblockManager implements ViewblockService {
     private mCameras: ICameraService;
     private mBlocks: Viewblock[] = [];
@@ -15,6 +16,7 @@ export class ViewblockManager implements ViewblockService {
     }
 
     public add(e: IBlockObject): boolean {
+        Logger.getInstance().log("viewblock add");
         if (!this.mCameras) return false;
         const miniView = this.mCameras.getMiniViewPort();
         for (const block of this.mBlocks) {
@@ -29,6 +31,7 @@ export class ViewblockManager implements ViewblockService {
     }
 
     public remove(e: IBlockObject): boolean {
+        Logger.getInstance().log("viewblock remove");
         if (!e) return;
         for (const block of this.mBlocks) {
             if (block.remove(e)) {
@@ -75,6 +78,7 @@ export class ViewblockManager implements ViewblockService {
     }
 
     public update(time: number, delta: number): void {
+        Logger.getInstance().log("viewblock update");
         if (!this.mCameras) return;
         this.mDelay = time;
         const bound: LogicRectangle = this.mCameras.getViewPort();

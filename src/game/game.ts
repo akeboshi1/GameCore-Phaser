@@ -422,7 +422,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
         let game_id = account.gameID;
-        if (!game_id) {
+        if (game_id === undefined) {
             Logger.getInstance().log("!game_ID");
             this.mainPeer.render.createGameCallBack(content.keyEvents);
             this.gameCreated();

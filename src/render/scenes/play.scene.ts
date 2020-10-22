@@ -54,6 +54,7 @@ export class PlayScene extends RoomScene {
         this.render.camermsManager.startRoomPlay(this);
         this.render.showLoading({ "text": LoadingTips.loadingResources() });
         this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        this.onLoadCompleteHandler();
 
         // set layers
         // ==========背景层
