@@ -1,10 +1,9 @@
 import { Export, RPCEmitter, RPCExecutor, RPCParam } from "webworker-rpc";
-import { AnimationData, DisplayType } from "../../structureinterface/display";
+import { RunningAnimation } from "../../structureinterface/animation";
+import { DisplayType } from "../../structureinterface/display";
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
-import { DragonbonesDisplay } from "../display/dragonbones.display";
-import { ElementDisplay } from "../display/element.display";
-import { FramesDisplay } from "../display/frames.display";
+import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { SceneManager } from "./scene.manager";
 
 export class DisplayManager {
@@ -86,13 +85,13 @@ export class DisplayManager {
         display.fadeOut();
     }
 
-    public play(displayID: number, animationName: AnimationData, field?: DisplayField, times?: number) {
+    public play(displayID: number, animation: RunningAnimation, field?: DisplayField, times?: number) {
         if (!this.displays.has(displayID)) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
-        display.play(animationName, field, times);
+        display.play(animation, field, times);
     }
 
     public mount(displayID: number, ele: Phaser.GameObjects.Container, targetIndex?: number) {

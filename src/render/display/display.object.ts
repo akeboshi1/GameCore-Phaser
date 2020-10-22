@@ -1,10 +1,8 @@
 import { Url } from "../../utils/resUtil";
 import { ReferenceArea } from "../editor/reference.area";
-import { ElementDisplay } from "./element.display";
 import { DynamicSprite, DynamicImage } from "../ui/components";
-import { PlayAnimation } from "./animation";
-import { IFramesModel } from "./frames.model";
-import { IDragonbonesModel } from "./dragonbones.model";
+import { IDragonbonesModel } from "./dragonbones/dragonbones.model";
+import { RunningAnimation } from "../../structureinterface/animation";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -33,7 +31,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
-    protected mActionName: PlayAnimation;
+    protected mActionName: RunningAnimation;
     constructor(scene: Phaser.Scene, roomService: any, element?: any) {
         super(scene);
         // this.mElement = element;
@@ -59,10 +57,10 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     fadeOut(callback?: () => void) {
     }
 
-    load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
+    load(data: IDragonbonesModel, field?: DisplayField) {
     }
 
-    play(animationName: PlayAnimation, field?: DisplayField, times?: number) {
+    play(animation: RunningAnimation, field?: DisplayField, times?: number) {
     }
 
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }

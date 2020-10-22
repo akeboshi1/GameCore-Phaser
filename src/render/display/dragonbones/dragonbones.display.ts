@@ -1,10 +1,7 @@
-import { ResUtils } from "../../utils/resUtil";
-import { ElementDisplay } from "./element.display";
+import { ResUtils } from "../../../utils/resUtil";
 import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
-import { DisplayObject, DisplayField } from "./display.object";
-import { IFramesModel } from "./frames.model";
-import { PlayAnimation } from "./animation";
-import { SoundField } from "apowophaserui";
+import { DisplayObject, DisplayField } from "../display.object";
+import { RunningAnimation } from "../../../structureinterface/animation";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -75,7 +72,7 @@ export enum AvatarPartType {
 /**
  * 龙骨显示对象
  */
-export class DragonbonesDisplay extends DisplayObject implements ElementDisplay {
+export class DragonbonesDisplay extends DisplayObject {
 
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
@@ -144,7 +141,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         // this.alpha = val;
     }
 
-    public load(display: IDragonbonesModel | IFramesModel, field?: DisplayField) {
+    public load(display: IDragonbonesModel, field?: DisplayField) {
         field = !field ? DisplayField.STAGE : field;
         if (field === DisplayField.STAGE) {
             this.displayInfo = <IDragonbonesModel>display;
@@ -161,7 +158,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         return this.mArmatureDisplay;
     }
 
-    public play(val: PlayAnimation) {
+    public play(val: RunningAnimation) {
         this.mActionName = val;
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {

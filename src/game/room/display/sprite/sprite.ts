@@ -1,9 +1,7 @@
 import { Helpers } from "game-capsule";
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { Direction } from "../../../../utils/direction";
-import { Logger } from "../../../../utils/log";
-import { LogicPoint } from "../../../../utils/logic.point";
-import { IPos, LogicPos } from "../../../../utils/logic.pos";
+import { AnimationQueue, RunningAnimation } from "../../../../structureinterface/animation";
+import { IPos, LogicPos, LogicPoint, Logger, Direction } from "../../../../utils";
 import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel, IFramesModel } from "../frames/frames.model";
@@ -18,7 +16,7 @@ export interface ISprite {
     readonly platformId: string;
     readonly sceneId: number;
     readonly nodeType: op_def.NodeType;
-    readonly currentAnimation: AnimationData;
+    readonly currentAnimation: RunningAnimation;
     readonly currentCollisionArea: number[][];
     readonly currentWalkableArea: number[][];
     readonly currentCollisionPoint: LogicPoint;
@@ -38,24 +36,10 @@ export interface ISprite {
     updateAvatar(avatar: op_gameconfig.IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
-    setAnimationName(name: string, playTimes?: number): AnimationData;
+    setAnimationName(name: string, playTimes?: number): RunningAnimation;
     setAnimationQueue(queue: AnimationQueue[]);
     turn(): ISprite;
     toSprite(): op_client.ISprite;
-}
-
-export interface AnimationData {
-    name: string;
-    flip: boolean;
-    times?: number;
-    playingQueue?: AnimationQueue;
-}
-
-export interface AnimationQueue {
-    name: string;
-    playTimes?: number;
-    playedTimes?: number;
-    complete?: Function;
 }
 
 export class Sprite implements ISprite {
@@ -76,7 +60,7 @@ export class Sprite implements ISprite {
     protected mPlatformId: string;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mNodeType: NodeType;
-    protected mCurrentAnimation: AnimationData;
+    protected mCurrentAnimation: RunningAnimation;
     protected mCurrentCollisionArea: number[][];
     protected mCurrentWalkableArea: number[][];
     protected mCurrentCollisionPoint: LogicPoint;
@@ -362,7 +346,7 @@ export class Sprite implements ISprite {
         return this.mNodeType;
     }
 
-    get currentAnimation(): AnimationData {
+    get currentAnimation(): RunningAnimation {
         return this.mCurrentAnimation;
     }
 

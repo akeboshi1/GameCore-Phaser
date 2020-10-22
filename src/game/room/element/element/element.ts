@@ -1,5 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue } from "../../../../structureinterface/display";
+import { AnimationQueue } from "../../../../structureinterface/animation";
 import { Logger } from "../../../../utils/log";
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { BlockObject } from "../../block/block.object";
@@ -476,7 +476,7 @@ export class Element extends BlockObject implements IElement {
         this.update();
     }
 
-    public getRootPosition(): LogicPos {
+    public getRootPosition(): IPos {
         return this.mModel.pos;
     }
 

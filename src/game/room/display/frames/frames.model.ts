@@ -1,11 +1,12 @@
 import { Helpers } from "game-capsule";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import * as sha1 from "simple-sha1";
-import { AnimationData, IDisplay } from "../../../../structureinterface/display";
+import { RunningAnimation } from "../../../../structureinterface/animation";
+import { IDisplay } from "../../../../structureinterface/display";
 import { Direction } from "../../../../utils/direction";
 import { Logger } from "../../../../utils/log";
 import { LogicPoint } from "../../../../utils/logic.point";
-import { IAnimationModel } from "../animation/animation.model";
+import { AnimationModel, IAnimationModel } from "../animation/animation.model";
 import { Sprite } from "../sprite/sprite";
 
 export interface IFramesModel {
@@ -26,7 +27,7 @@ export interface IFramesModel {
     getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
     getOriginPoint(aniName: string, flip: boolean): LogicPoint;
     createSprite(properties: object): Sprite;
-    findAnimation(baseName: string, dir: Direction): AnimationData;
+    findAnimation(baseName: string, dir: Direction): RunningAnimation;
     destroy();
 }
 
@@ -166,7 +167,7 @@ export class FramesModel implements IFramesModel {
         return new Sprite(spr, nodeType);
     }
 
-    public findAnimation(baseName: string, dir: Direction): AnimationData {
+    public findAnimation(baseName: string, dir: Direction): RunningAnimation {
         let animationName = this.checkDirectionAnimation(baseName, dir);
         let flip = false;
         if (animationName) {
