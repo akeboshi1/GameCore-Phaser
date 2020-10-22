@@ -1,3 +1,5 @@
+import { LoadingTips } from "../../game/loading/loading.tips";
+import { Logger } from "../../utils/log";
 import { Size } from "../../utils/size";
 import { PlayCamera } from "../cameras/play.camera";
 import { BasicLayer } from "../managers/layer.manager";
@@ -21,6 +23,7 @@ export class PlayScene extends RoomScene {
     public preload() { }
 
     public create() {
+        Logger.getInstance().log("create playscene");
         const oldCamera = this.cameras.main;
         const { width, height } = this.sys.scale;
         this.cameras.addExisting(
@@ -45,7 +48,13 @@ export class PlayScene extends RoomScene {
         this.scene.sendToBack();
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
+        // ======= mainworker startPlay
         this.render.startRoomPlay();
+        // ======= render startPlay
+        this.render.camermsManager.startRoomPlay(this);
+        this.render.showLoading({ "text": LoadingTips.loadingResources() });
+        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        this.onLoadCompleteHandler();
 
         // set layers
         // ==========背景层
@@ -71,6 +80,12 @@ export class PlayScene extends RoomScene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+    }
+
+    private onLoadCompleteHandler() {
+        Logger.getInstance().log("playload complete");
+        this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        this.render.sceneManager.sleepScene("LoadingScene");
     }
 
     private checkOriention(orientation) {

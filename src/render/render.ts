@@ -17,9 +17,9 @@ import { UiManager } from "./ui/ui.manager";
 import { Url } from "../utils";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
+import { CamerasManager } from "./cameras/cameras.manager";
 import { initLocales } from "../utils/i18n";
 import * as path from "path";
-import { RoomCamerasManager } from "./cameras/cameras.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -29,7 +29,7 @@ export class Render extends RPCPeer implements GameMain {
     private readonly DEFAULT_WIDTH = 360;
     private readonly DEFAULT_HEIGHT = 640;
     private mSceneManager: SceneManager;
-    private mCameraManager: RoomCamerasManager;
+    private mCameraManager: CamerasManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -96,6 +96,10 @@ export class Render extends RPCPeer implements GameMain {
         return this.mSceneManager;
     }
 
+    get camermsManager(): CamerasManager {
+        return this.mCameraManager;
+    }
+
     get localStorageManager(): LocalStorageManager {
         return this.mLocalStorageManager;
     }
@@ -121,6 +125,7 @@ export class Render extends RPCPeer implements GameMain {
 
     createManager() {
         this.mUiManager = new UiManager(this);
+        this.mCameraManager = new CamerasManager(this);
         this.mLocalStorageManager = new LocalStorageManager();
     }
 
@@ -306,6 +311,10 @@ export class Render extends RPCPeer implements GameMain {
 
     }
 
+    public getCurrentRoomSize(): any {
+        return this.mainPeer.getCurrentRoomSize();
+    }
+
     @Export()
     public showLogin() {
         this.mSceneManager.startScene("LoginScene", this);
@@ -464,7 +473,7 @@ export class Render extends RPCPeer implements GameMain {
             Logger.getInstance().error("no game created");
             return;
         }
-        return this.mSceneManager.startScene("LoadingScene", data).then((scene: BasicScene) => {
+        this.mSceneManager.startScene("LoadingScene", data).then((scene: BasicScene) => {
             if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
         });
     }
@@ -546,8 +555,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public setCameraBounds(x: number, y: number, width: number, height: number) {
-
+    public setCamerasBounds(x: number, y: number, width: number, height: number) {
+        this.mCameraManager.setBounds(x, y, width, height);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -662,6 +671,14 @@ export class Render extends RPCPeer implements GameMain {
                 resolve();
             });
         });
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public setCameraScroller(actorX: number, actorY: number) {
+        Logger.getInstance().log("syncCameraScroll");
+        const sceneScrale = this.mSceneManager.currentScene().scale;
+        this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
+        this.mainPeer.syncCameraScroll();
     }
 
     private onFullScreenChange() {

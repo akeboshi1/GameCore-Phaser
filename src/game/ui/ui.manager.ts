@@ -36,6 +36,7 @@ export class UIManager extends PacketHandler {
     }
 
     public showMed(type: string, ...param: any[]) {
+        return;
         if (!this.mMedMap) {
             this.mMedMap = new Map();
         }

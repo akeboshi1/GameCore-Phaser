@@ -13,7 +13,6 @@ export class LoadingScene extends BasicScene {
   private mRequestCom: boolean = false;
   private tipsText: string;
   private dpr: number;
-  private taskCount: number = 0;
   constructor() {
     super({ key: LoadingScene.name });
   }
@@ -81,7 +80,6 @@ export class LoadingScene extends BasicScene {
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
     // this.scale.on("resize", this.checkSize, this);
-    this.taskCount++;
   }
 
   public async show() {
@@ -107,7 +105,6 @@ export class LoadingScene extends BasicScene {
     }
     this.displayVisible(true);
     // this.scale.on("resize", this.checkSize, this);
-    this.taskCount++;
     super.wake(data);
     this.scene.bringToTop(LoadingScene.name);
     if (!data) {
@@ -120,8 +117,6 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
-    this.taskCount--;
-    if (this.taskCount > 0) return;
     if (this.progressText) {
       if (this.progressText.active) this.progressText.setText("");
     }

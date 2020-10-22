@@ -21,6 +21,7 @@ import { UIManager } from "./ui/ui.manager";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
+import { User } from "./actor/user";
 import { RENDER_PEER } from "../structureinterface/worker.name";
 interface ISize {
     width: number;
@@ -29,6 +30,7 @@ interface ISize {
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     private connect: ConnectionService;
     private mSocket: GameSocket;
+    private mUser: User;
     // private mUiManager: UiManager;
     // private mMoveStyle: number = -1;
     private mSize: ISize;
@@ -161,8 +163,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.roomPause(roomID);
     }
 
-    public setCameraBounds(x: number, y: number, width: number, height: number) {
-        this.mainPeer.render.setCameraBounds(x, y, width, height);
+    public setCamerasBounds(x: number, y: number, width: number, height: number) {
+        this.mainPeer.render.setCamerasBounds(x, y, width, height);
     }
 
     public initgameConfigUrls(urls: string[]) {
@@ -235,6 +237,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mLoadingManager;
     }
 
+    get user() {
+        return this.mUser;
+    }
+
     get renderPeer() {
         const render = this.peer.remote[RENDER_PEER].Render;
         if (!render) {
@@ -269,7 +275,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public login() {
-        this.roomManager.currentRoom.scen
         this.mUIManager.showMed("Login");
     }
 
@@ -329,6 +334,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private initWorld() {
+        this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
@@ -395,6 +401,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private async onInitVirtualWorldPlayerInit(packet: PBpacket) {
+        Logger.getInstance().log("onInitVirtualWorldPlayerInit");
         // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
@@ -415,11 +422,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
         let game_id = account.gameID;
-        if (!game_id) {
+        if (game_id === undefined) {
+            Logger.getInstance().log("!game_ID");
             this.mainPeer.render.createGameCallBack(content.keyEvents);
             this.gameCreated();
             return;
         }
+        Logger.getInstance().log("WorldPlayerInit");
         if (game_id.indexOf(".") > -1) {
             game_id = game_id.split(".")[1];
         }
@@ -450,11 +459,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     private gameCreated() {
         if (this.connection) {
+            Logger.getInstance().log("connection gameCreat");
             this.mLoadingManager.start(LoadingTips.waitEnterRoom());
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
         } else {
-            // Logger.getInstance().error("connection is undefined");
+            // Log
+            Logger.getInstance().log("no connection gameCreat");
         }
     }
 
@@ -479,9 +490,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
                     resolve(gameConfig);
                 } catch (error) {
+                    Logger.getInstance().log("catch error", error);
                     reject(error);
                 }
             } else {
+                Logger.getInstance().log("reject error");
                 reject("error");
             }
         });

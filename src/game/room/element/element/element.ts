@@ -165,10 +165,12 @@ export class Element extends BlockObject implements IElement {
     protected mMounts: IElement[];
     protected mDirty: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(mElementManager.roomService);
+        super(mElementManager ? mElementManager.roomService : undefined);
+        if (!sprite) {
+            return;
+        }
         this.mId = sprite.id;
         this.model = sprite;
-        // this.mAi = new AI(this);
     }
     showEffected(displayInfo: any) {
         throw new Error("Method not implemented.");
@@ -313,15 +315,15 @@ export class Element extends BlockObject implements IElement {
     }
 
     public changeState(val?: string) {
-    //     if (this.mCurState === val) return;
-    //     this.mCurState = val;
-    //     if (!this.mDisplay) {
-    //         return;
-    //     }
-    //     if (!val) {
-    //         val = PlayerState.IDLE;
-    //     }
-    //     this.play(this.mCurState);
+        //     if (this.mCurState === val) return;
+        //     this.mCurState = val;
+        //     if (!this.mDisplay) {
+        //         return;
+        //     }
+        //     if (!val) {
+        //         val = PlayerState.IDLE;
+        //     }
+        //     this.play(this.mCurState);
     }
 
     public getState(): string {
@@ -536,10 +538,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     // public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
-        // if (displayInfo && this.mDisplay) {
-        //     const key = displayInfo.gene;
-        //     // this.mDisplay.once(key, this.onDisplayReady, this);
-        //     this.mDisplay.load(displayInfo, DisplayField.Effect);
+    // if (displayInfo && this.mDisplay) {
+    //     const key = displayInfo.gene;
+    //     // this.mDisplay.once(key, this.onDisplayReady, this);
+    //     this.mDisplay.load(displayInfo, DisplayField.Effect);
     //     }
     // }
 
@@ -870,16 +872,16 @@ export class Element extends BlockObject implements IElement {
 
     protected updateStateHandler(state: op_def.IState) {
         switch (state.name) {
-            case "effect":
-                const buf = Buffer.from(state.packet);
-                const id = buf.readDoubleBE(0);
-                const effect = this.roomService.effectManager.get(id);
-                if (effect.displayInfo) {
-                    // this.showEffected(<IFramesModel>effect.displayInfo);
-                } else {
-                    // effect.once("updateDisplayInfo", this.showEffected, this);
-                }
-                break;
+            // case "effect":
+            //     const buf = Buffer.from(state.packet);
+            //     const id = buf.readDoubleBE(0);
+            //     const effect = this.roomService.effectManager.get(id);
+            //     if (effect.displayInfo) {
+            //         // this.showEffected(<IFramesModel>effect.displayInfo);
+            //     } else {
+            //         // effect.once("updateDisplayInfo", this.showEffected, this);
+            //     }
+            //     break;
         }
     }
 

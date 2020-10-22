@@ -1,3 +1,4 @@
+import { Logger } from "../../../utils/log";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element/element";
@@ -87,8 +88,10 @@ export abstract class BlockObject implements IBlockObject {
             this.mBlockable = val;
             if (this.mRoomService) {
                 if (val) {
+                    Logger.getInstance().log("block addBlockObject");
                     this.mRoomService.addBlockObject(this);
                 } else {
+                    Logger.getInstance().log("block removeBlockObject");
                     this.mRoomService.removeBlockObject(this);
                 }
             }
