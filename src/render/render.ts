@@ -662,13 +662,13 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public createPanel(mediatorName: string, key: string): Promise<any> {
+    public createPanel(name: string, key: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (!this.uiManager) {
                 reject("uiManager not found");
                 return;
             }
-            const panel = this.uiManager.createPanel(mediatorName);
+            const panel = this.uiManager.showPanel(name);
             this.exportProperty(panel, this, key).onceReady(() => {
                 resolve();
             });

@@ -18,8 +18,6 @@ export interface IFramesModel {
     display?: IDisplay | null;
     animations?: Map<string, IAnimationModel>;
     animationName: string;
-    package?: op_gameconfig.IPackage;
-    shops?: op_gameconfig.IShop[] | null;
     getAnimations(name: string): IAnimationModel;
     existAnimation(aniName: string): boolean;
     getCollisionArea(aniName: string, flip: boolean): number[][];
