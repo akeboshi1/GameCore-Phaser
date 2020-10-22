@@ -2,16 +2,16 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import NodeType = op_def.NodeType;
 import { Player } from "./player";
-import { IElementManager } from "../element/element/element.manager";
+import { IElementManager } from "../element/element.manager";
 import { User } from "../../actor/user";
 import { IRoomService, Room } from "../room/room";
 import { PlayerModel } from "./player.model";
 import { ISprite, Sprite } from "../display/sprite/sprite";
-import { IElement } from "../element/element/element";
 import { MessageType } from "../../../structureinterface/message.type";
 import { LogicPos } from "../../../utils/logic.pos";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger } from "../../../utils/log";
+import { IElement } from "../element/element";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
