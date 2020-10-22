@@ -1,5 +1,5 @@
 import { op_client } from "pixelpai_proto";
-import { Animation } from "../display/animation/animation";
+import { AnimationModel } from "../display/animation/animation.model";
 import { IDragonbonesModel } from "../display/dragones/dragonbones.model";
 import { FramesModel, IFramesModel } from "../display/frames/frames.model";
 
@@ -20,7 +20,7 @@ export class Effect extends Phaser.Events.EventEmitter {
         if (display && animations) {
             const anis = [];
             for (const ani of animations) {
-                anis.push(new Animation(ani));
+                anis.push(new AnimationModel(ani));
             }
             this.displayInfo = new FramesModel({
                 animations: {

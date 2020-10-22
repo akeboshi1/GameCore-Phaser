@@ -4,7 +4,7 @@ import { Direction } from "../../../../utils/direction";
 import { Logger } from "../../../../utils/log";
 import { LogicPoint } from "../../../../utils/logic.point";
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
-import { Animation } from "../animation/animation";
+import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel, IFramesModel } from "../frames/frames.model";
 import NodeType = op_def.NodeType;
@@ -205,7 +205,7 @@ export class Sprite implements ISprite {
             const anis = [];
             const objAnis = animations;
             for (const ani of objAnis) {
-                anis.push(new Animation(ani));
+                anis.push(new AnimationModel(ani));
             }
             defAnimation = defAnimation || this.mCurrentAnimationName || "";
             this.mDisplayInfo = new FramesModel({
