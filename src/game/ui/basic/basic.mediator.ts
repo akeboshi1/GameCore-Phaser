@@ -1,3 +1,4 @@
+import { Game } from "../../game";
 
 export interface IMediator {
     UIType: number;
@@ -32,8 +33,7 @@ export class BasicMediator implements IMediator {
     protected mShow: boolean = false;
     protected mParam: any;
     protected mUIType: number;
-    constructor() {
-        this.mUIType = UIType.None;
+    constructor(protected game: Game) {
     }
 
     public get UIType(): number {
@@ -82,5 +82,13 @@ export class BasicMediator implements IMediator {
     destroy() {
         this.mShow = false;
         this.mParam = null;
+        delete this.game.peer[this.constructor.name];
+    }
+
+    protected __exportProperty(callback?: () => any) {
+        if (!this.game || !this.game.peer) {
+            return;
+        }
+        return this.game.peer.exportProperty(this, this.game.peer, this.constructor.name).onceReady(callback);
     }
 }

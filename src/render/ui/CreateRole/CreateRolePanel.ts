@@ -1,8 +1,9 @@
 import { InputText, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { BasePanel } from "../components/base.panel";
 import { UiManager } from "../ui.manager";
-import { Font, i18n } from "../../../utils";
+import { Font, i18n, Logger } from "../../../utils";
 import { DragonbonesDisplay } from "../../display/dragonbones.display";
+import { ResUtils } from "../../../utils/resUtil";
 
 export class CreateRolePanel extends BasePanel {
   private readonly key = "createCharacter";
@@ -20,6 +21,7 @@ export class CreateRolePanel extends BasePanel {
   private dragonbones: DragonbonesDisplay;
   private avatars: [];
   private mCurPageNum: number = 0;
+  private mMediator: any;
 
   constructor(uiManager: UiManager) {
     super(uiManager.scene, uiManager.render);
@@ -27,6 +29,7 @@ export class CreateRolePanel extends BasePanel {
     const container = this.scene.add.container(0, 0);
     container.add(this);
     this.scene.scale.on("resize", this.onResize, this);
+    this.mMediator = this.render.mainPeer["CreateRoleMediator"];
     // container.scale = 1 / this.mWorld.uiScale;
   }
 
@@ -254,12 +257,14 @@ export class CreateRolePanel extends BasePanel {
   }
 
   private onRandomNameHandler() {
-    this.emit("randomName");
+    this.mediator.randomName();
     this.inputText.setBlur();
   }
 
   private onSubmitHandler() {
-    this.emit("submit", this.inputText.text, this.avatars[this.mCurPageNum]);
+    // this.emit("submit", this.inputText.text, this.avatars[this.mCurPageNum]);
+    // this.mediator.submit(this.inputText.text, this.avatars[this.mCurPageNum]);
+    this.mediator.submit("", this.avatars[this.mCurPageNum]);
     this.inputText.setBlur();
     if (this.mError) {
       this.mError.setVisible(false);
@@ -296,5 +301,12 @@ export class CreateRolePanel extends BasePanel {
 
   private loadDragonbonesComplete() {
     this.dragonbones.play({ name: "idle", flip: false });
+  }
+
+  get mediator() {
+    if (!this.mMediator) {
+      return;
+    }
+    return this.mMediator;
   }
 }
