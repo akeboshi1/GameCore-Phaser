@@ -2,6 +2,9 @@ import { Url } from "../../utils/resUtil";
 import { ReferenceArea } from "../editor/reference.area";
 import { ElementDisplay } from "./element.display";
 import { DynamicSprite, DynamicImage } from "../ui/components";
+import { PlayAnimation } from "./animation";
+import { IFramesModel } from "./frames.model";
+import { IDragonbonesModel } from "./dragonbones.model";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -26,14 +29,14 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     protected mBackEffect: DynamicSprite;
     protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
-    protected mElement: IElement;
+    // protected mElement: IElement;
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
-    protected mActionName: AnimationData;
-    constructor(scene: Phaser.Scene, roomService: any, element?: IElement) {
+    protected mActionName: PlayAnimation;
+    constructor(scene: Phaser.Scene, roomService: any, element?: any) {
         super(scene);
-        this.mElement = element;
+        // this.mElement = element;
     }
 
     public changeAlpha(val?: number) {
@@ -59,7 +62,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements Eleme
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
     }
 
-    play(animationName: AnimationData, field?: DisplayField, times?: number) {
+    play(animationName: PlayAnimation, field?: DisplayField, times?: number) {
     }
 
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }

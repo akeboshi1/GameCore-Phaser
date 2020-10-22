@@ -69,7 +69,8 @@ export class FramesDisplay extends DisplayObject {
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
-        this.mCurAnimation = data.getAnimations(animation.name);
+        // this.mCurAnimation = data.getAnimations(animation.name);
+        this.mCurAnimation = null;
         if (!this.mCurAnimation) return;
         this.clear();
         const layer = this.mCurAnimation.layer;
@@ -133,7 +134,8 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         // TODO
-        const anis = data.getAnimations("idle");
+        const anis = null;
+        // const anis = data.getAnimations("idle");
         if (!anis) {
             return;
         }
@@ -422,8 +424,10 @@ export class FramesDisplay extends DisplayObject {
         // const animations = data.getAnimations(aniName);
         // if (!animations) return;
         const { name, flip } = playAnimation;
-        this.mCollisionArea = data.getCollisionArea(name, flip);
-        this.mOriginPoint = data.getOriginPoint(name, flip);
+        // this.mCollisionArea = data.getCollisionArea(name, flip);
+        // this.mOriginPoint = data.getOriginPoint(name, flip);
+        this.mCollisionArea = [];
+        this.mOriginPoint = new Phaser.Geom.Point(0, 0);
 
         if (this.mReferenceArea) {
             this.showRefernceArea();
