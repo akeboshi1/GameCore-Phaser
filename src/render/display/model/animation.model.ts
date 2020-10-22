@@ -4,35 +4,21 @@ export interface IAnimationModel {
     frameName: string[];
     frameRate: number;
     loop: boolean;
-    baseLoc: LogicPoint;
     collisionArea?: number[][];
     walkableArea?: number[][];
-    originPoint: LogicPoint;
-
-    readonly interactiveArea?: op_def.IPBPoint2i[];
-    readonly layer: op_gameconfig_01.IAnimationLayer[];
-    readonly mountLayer: op_gameconfig_01.IAnimationMountLayer;
-    createProtocolObject(): op_gameconfig_01.IAnimationData;
 }
 
 export class AnimationModel implements IAnimationModel {
-    protected mNode: op_gameconfig_01.INode;
     protected mID: number;
-    protected mBaseLoc: LogicPoint;
     protected mFrameName: string[];
     protected mFrameRate: number;
     protected mLoop: boolean;
     protected mName: string;
     protected mCollisionArea: number[][];
     protected mWalkableArea: number[][];
-    protected mOriginPoint: LogicPoint;
-    protected mInteractiveArea: IPoint[];
-    protected mLayer: op_gameconfig_01.IAnimationLayer[];
-    protected mMountLayer: op_gameconfig_01.IAnimationMountLayer;
 
-    constructor(ani: op_gameconfig_01.IAnimationData) {
+    constructor(ani) {
         const tmpBaseLoc = ani.baseLoc.split(",");
-        this.mNode = ani.node;
         this.mID = ani.node.id;
         this.mName = ani.node.name;
         this.mFrameName = ani.frameName;
@@ -53,9 +39,7 @@ export class AnimationModel implements IAnimationModel {
             // Logger.getInstance().fatal(`Animation: ${ani.id} baseLoc is invalid`);
         }
         this.mFrameRate = ani.frameRate;
-        this.mBaseLoc = new LogicPoint(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         const origin = ani.originPoint;
-        this.mOriginPoint = new LogicPoint(origin[0], origin[1]);
         if (typeof ani.collisionArea === "string") {
             this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
         } else {
@@ -67,32 +51,9 @@ export class AnimationModel implements IAnimationModel {
         } else {
             this.mWalkableArea = ani.walkableArea || [[0]];
         }
-        // this.mInteractiveArea = [{x: 0, y: 0}];
-        this.mInteractiveArea = ani.interactiveArea;
-        this.mLayer = ani.layer;
-        this.mMountLayer = ani.mountLayer;
     }
 
-    createProtocolObject(): op_gameconfig_01.IAnimationData {
-        const ani = op_gameconfig_01.AnimationData.create();
-        ani.node = this.mNode;
-        ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
-        ani.node.name = this.name;
-        ani.loop = this.loop;
-        ani.frameRate = this.frameRate;
-        ani.frameName = this.frameName;
-        ani.originPoint = [this.originPoint.x, this.originPoint.y];
-        ani.walkOriginPoint = [this.originPoint.x, this.originPoint.y];
-        ani.walkableArea = this.arrayToString(this.mWalkableArea, ",", "&");
-        ani.collisionArea = this.arrayToString(this.mCollisionArea, ",", "&");
-        ani.interactiveArea = this.mInteractiveArea;
-        const layers = [];
-        for (const layer of this.mLayer) {
-            layers.push(op_gameconfig_01.AnimationLayer.create(layer));
-        }
-        ani.layer = layers;
-        ani.mountLayer = this.mMountLayer;
-        return ani;
+    createProtocolObject() {
     }
 
     private stringToArray(string: string, fristJoin: string, lastJoin: string) {
@@ -115,10 +76,6 @@ export class AnimationModel implements IAnimationModel {
             tmp.push(ary.join(fristJoin));
         }
         return tmp.join(lastJoin);
-    }
-
-    get baseLoc(): LogicPoint {
-        return this.mBaseLoc;
     }
 
     get id(): number {
@@ -147,27 +104,5 @@ export class AnimationModel implements IAnimationModel {
 
     get walkableArea(): number[][] {
         return this.mWalkableArea;
-    }
-
-    get originPoint(): LogicPoint {
-        return this.mOriginPoint;
-    }
-
-    get interactiveArea(): op_def.IPBPoint2i[] {
-        return this.mInteractiveArea;
-    }
-
-    get layer() {
-        if (this.mLayer.length > 0) {
-            return this.mLayer;
-        }
-        return [{
-            frameName: this.mFrameName,
-            offsetLoc: this.mBaseLoc
-        }];
-    }
-
-    get mountLayer() {
-        return this.mMountLayer;
     }
 }

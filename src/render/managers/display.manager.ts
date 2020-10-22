@@ -18,26 +18,26 @@ export class DisplayManager {
         const scene = this.sceneManager.currentScene;
         if (!scene) return;
 
-        let display: DisplayObject;
+        // let display: DisplayObject;
         switch (type) {
             case DisplayType.Dragonbones:
-                display = new DragonbonesDisplay(scene, data);
+                // display = new DragonbonesDisplay(scene, data);
                 break;
             case DisplayType.Element:
-                display = new ElementDisplay(scene, data);
+                // display = new ElementDisplay(scene, data);
                 break;
             case DisplayType.Frame:
-                display = new FramesDisplay(scene, data);
+                // display = new FramesDisplay(scene, data);
                 break;
             case DisplayType.Terrain:
-                display = new TerrainDisplay(scene, data);
+                // display = new TerrainDisplay(scene, data);
                 break;
             default:
                 Logger.getInstance().error("undefined display type: ", type);
                 return;
         }
 
-        this.displays.set(displayID, display);
+        // this.displays.set(displayID, display);
     }
     public removeDisplay(displayID: number): void {
         if (!this.displays.has(displayID)) {
@@ -50,7 +50,7 @@ export class DisplayManager {
         this.displays.delete(displayID);
     }
 
-    public load(displayID: number, data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
+    public load(displayID: number, data: any, field?: DisplayField) {
         if (!this.displays.has(displayID)) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
@@ -131,7 +131,7 @@ export class DisplayManager {
         display.removeDisplay(field);
     }
 
-    public setDisplayBadges(displayID: number, cards: op_def.IBadgeCard[]) {
+    public setDisplayBadges(displayID: number, cards: []) {
         if (!this.displays.has(displayID)) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
@@ -173,6 +173,6 @@ export class DisplayManager {
             return;
         }
         const display = this.displays.get(displayID);
-        display.showEffect();
+        // display.showEffect();
     }
 }
