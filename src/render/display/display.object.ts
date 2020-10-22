@@ -1,5 +1,10 @@
-import { op_def } from "pixelpai_proto";
-import { Url } from "../../utils";
+import { Url } from "../../utils/resUtil";
+import { ReferenceArea } from "../editor/reference.area";
+import { ElementDisplay } from "./element.display";
+import { DynamicSprite, DynamicImage } from "../ui/components";
+import { PlayAnimation } from "./animation";
+import { IFramesModel } from "./frames.model";
+import { IDragonbonesModel } from "./dragonbones.model";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -18,23 +23,20 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mBaseLoc: Phaser.Geom.Point;
     protected mCollisionArea: number[][];
     protected mOriginPoint: Phaser.Geom.Point;
-    protected mRoomService: IRoomService;
     protected mFlagContainer: Phaser.GameObjects.Container;
     protected mNickname: Phaser.GameObjects.Text;
     protected mBadges: DynamicImage[];
     protected mBackEffect: DynamicSprite;
     protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
-    protected mElement: IElement;
+    // protected mElement: IElement;
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
-    protected mActionName: AnimationData;
-    constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
+    protected mActionName: PlayAnimation;
+    constructor(scene: Phaser.Scene, roomService: any, element?: any) {
         super(scene);
-        this.mElement = element;
-        this.mRoomService = roomService;
-        this.mAntial = antial;
+        // this.mElement = element;
     }
 
     public changeAlpha(val?: number) {
@@ -60,7 +62,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     load(data: IFramesModel | IDragonbonesModel, field?: DisplayField) {
     }
 
-    play(animationName: AnimationData, field?: DisplayField, times?: number) {
+    play(animationName: PlayAnimation, field?: DisplayField, times?: number) {
     }
 
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }
@@ -107,7 +109,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         super.destroy(fromScene);
     }
 
-    public setDisplayBadges(cards: op_def.IBadgeCard[]) {
+    public setDisplayBadges(cards) {
         if (!this.mBadges) this.mBadges = [];
         else this.clearBadges();
         for (const card of cards) {
@@ -120,7 +122,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
 
     public showRefernceArea() {
         if (!this.mReferenceArea) {
-            this.mReferenceArea = new ReferenceArea(this.scene, this.mRoomService);
+            this.mReferenceArea = new ReferenceArea(this.scene, undefined);
             this.addChildMap("reference", this.mReferenceArea);
         }
         if (!this.mCollisionArea || this.mCollisionArea.length <= 0) return;
@@ -136,11 +138,6 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     scaleTween(): void { }
-
-    public showEffect() {
-        this.addEffect(this.mBackEffect, Url.getRes("ui/vip/vip_effect_back.png"), Url.getRes("ui/vip/vip_effect_back.json"), true, 15, false, true);
-        this.addEffect(this.mFrontEffect, Url.getRes("ui/vip/vip_effect_front.png"), Url.getRes("ui/vip/vip_effect_front.json"), true, 15, false, true);
-    }
 
     public getElement(key: string) {
         if (!this.mChildMap) {
@@ -221,10 +218,6 @@ export class DisplayObject extends Phaser.GameObjects.Container {
 
     get sortZ(): number {
         return this.z || 0;
-    }
-
-    get element(): IElement {
-        return this.mElement;
     }
 
     get collisionArea() {

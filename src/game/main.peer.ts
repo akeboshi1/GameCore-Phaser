@@ -4,7 +4,6 @@ import { PBpacket, Buffer } from "net-socket-packet";
 // import HeartBeatWorker from "worker-loader?filename=js/[name].js!../services/heartBeat.worker";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
-import { Render } from "../render/render";
 import { Game } from "./game";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { Logger } from "../utils/log";
@@ -14,7 +13,6 @@ for (const key in protos) {
 }
 
 export class MainPeer extends RPCPeer {
-    // private mRoomManager: RoomManager;
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
@@ -28,7 +26,7 @@ export class MainPeer extends RPCPeer {
         this.game = new Game(this);
     }
 
-    get render(): Render {
+    get render() {
         return this.remote[RENDER_PEER].Render;
     }
     // ============= connection调用主进程
@@ -154,6 +152,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public startRoomPlay() {
+        Logger.getInstance().log("peer startroom");
         this.game.roomManager.currentRoom.startPlay();
     }
 
@@ -175,6 +174,21 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public onVerifiedHandler(name: string, idcard: string) {
 
+    }
+
+    @Export()
+    public getCurrentRoomSize(): any {
+        return this.game.roomManager.currentRoom.roomSize;
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public resetGameraSize(width: number, height: number) {
+        this.game.roomManager.currentRoom.cameraService.resetCameraSize(width, height);
+    }
+
+    @Export()
+    public syncCameraScroll() {
+        this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
     }
 
     // ============= 心跳调用主进程

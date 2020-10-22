@@ -5,7 +5,6 @@ import { IPoint, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
 import { Logger } from "../utils/log";
-import { i18n } from "../utils/i18n";
 import { ResUtils } from "../utils/resUtil";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, ConnListener, GameSocket } from "./net/connection";
@@ -19,12 +18,11 @@ import { load } from "../utils/http";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { ServerAddress } from "../../lib/net/address";
 import { UIManager } from "./ui/ui.manager";
-import { CreateRoleManager } from "./ui/create.role/create.role.manager";
-import { Account } from "../render/account/account";
-import { Render } from "../render/render";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
+import { User } from "./actor/user";
+import { RENDER_PEER } from "../structureinterface/worker.name";
 interface ISize {
     width: number;
     height: number;
@@ -32,6 +30,7 @@ interface ISize {
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     private connect: ConnectionService;
     private mSocket: GameSocket;
+    private mUser: User;
     // private mUiManager: UiManager;
     // private mMoveStyle: number = -1;
     private mSize: ISize;
@@ -43,7 +42,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mRoomManager: RoomManager;
     private mElementStorage: ElementStorage;
     // private mPlayerDataManager: PlayerDataManager;
-    private mCreateRoleManager: CreateRoleManager;
     private mUIManager: UIManager;
     // private mSoundManager: SoundManager;
     private mLoadingManager: LoadingManager;
@@ -58,9 +56,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.connect = new Connection(this.mSocket);
         this.connect.addPacketListener(this);
     }
+
     get scaleRatio(): number {
         return this.mConfig.devicePixelRatio;
     }
+
     public createGame(config?: ILauncherConfig) {
         this.mConfig = config;
         this.initWorld();
@@ -72,13 +72,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
     }
 
-    // public createAccount(gameID: string, worldID: string, sceneId?: number, loc?: any) {
-    //     this.mAccount = new Account();
-    //     this.mAccount.enterGame(gameID, worldID, sceneId, loc);
-    // }
-
     public showLoading(data?: any) {
-        // this.mLoadingManager.start();
         this.mainPeer.render.showLoading(data);
     }
 
@@ -125,7 +119,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public loadSceneConfig(sceneID: string): Promise<any> {
-        Logger.getInstance().log("===========loadSceneconfig");
         const remotePath = this.getConfigUrl(sceneID);
         this.mLoadingManager.start(LoadingTips.downloadSceneConfig());
         return this.loadGameConfig(remotePath);
@@ -170,8 +163,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.roomPause(roomID);
     }
 
-    public setCameraBounds(x: number, y: number, width: number, height: number) {
-        this.mainPeer.render.setCameraBounds(x, y, width, height);
+    public setCamerasBounds(x: number, y: number, width: number, height: number) {
+        this.mainPeer.render.setCamerasBounds(x, y, width, height);
     }
 
     public initgameConfigUrls(urls: string[]) {
@@ -200,17 +193,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.setMoveStyle(moveStyle);
     }
 
-    // get moveStyle(): number {
-    //     return this.mMoveStyle;
-    // }
-
     get httpService(): HttpService {
         return this.mHttpService;
     }
-
-    // get account(): Account {
-    //     return this.mAccount;
-    // }
 
     get peer(): MainPeer {
         return this.mainPeer;
@@ -252,6 +237,18 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mLoadingManager;
     }
 
+    get user() {
+        return this.mUser;
+    }
+
+    get renderPeer() {
+        const render = this.peer.remote[RENDER_PEER].Render;
+        if (!render) {
+            throw new Error("can't find render");
+        }
+        return render;
+    }
+
     public async enterVirtualWorld() {
         if (!this.mConfig || !this.connect) {
             return;
@@ -278,7 +275,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public login() {
-        this.roomManager.currentRoom.scen
         this.mUIManager.showMed("Login");
     }
 
@@ -338,6 +334,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private initWorld() {
+        this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
@@ -348,12 +345,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mElementStorage = new ElementStorage();
         this.mUIManager = new UIManager(this);
         this.mHttpService = new HttpService(this);
-        this.mCreateRoleManager = new CreateRoleManager(this);
         // this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
-        this.mCreateRoleManager.register();
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
         // this.mSoundManager.addPackListener();
@@ -406,6 +401,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private async onInitVirtualWorldPlayerInit(packet: PBpacket) {
+        Logger.getInstance().log("onInitVirtualWorldPlayerInit");
         // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
@@ -426,11 +422,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
         let game_id = account.gameID;
-        if (!game_id) {
+        if (game_id === undefined) {
+            Logger.getInstance().log("!game_ID");
             this.mainPeer.render.createGameCallBack(content.keyEvents);
             this.gameCreated();
             return;
         }
+        Logger.getInstance().log("WorldPlayerInit");
         if (game_id.indexOf(".") > -1) {
             game_id = game_id.split(".")[1];
         }
@@ -461,11 +459,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     private gameCreated() {
         if (this.connection) {
+            Logger.getInstance().log("connection gameCreat");
             this.mLoadingManager.start(LoadingTips.waitEnterRoom());
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
         } else {
-            // Logger.getInstance().error("connection is undefined");
+            // Log
+            Logger.getInstance().log("no connection gameCreat");
         }
     }
 
@@ -490,9 +490,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
                     resolve(gameConfig);
                 } catch (error) {
+                    Logger.getInstance().log("catch error", error);
                     reject(error);
                 }
             } else {
+                Logger.getInstance().log("reject error");
                 reject("error");
             }
         });

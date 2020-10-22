@@ -1,24 +1,25 @@
-import { LoadingScene } from "./loading.scene";
 import { BasicScene } from "./basic.scene";
+import { UiManager } from "../ui/ui.manager";
+import { LoadingScene } from "./loading.scene";
 
 export class CreateRoleScene extends BasicScene {
-  private role: any;
+  private params: any;
   constructor() {
     super({ key: CreateRoleScene.name });
   }
 
-  init(data: any) {
+  public init(data?: any) {
     super.init(data);
-    if (data.role) {
-      this.role = data.role;
-      // data.createRole
+    this.params = data.params;
+  }
+
+  public create() {
+    if (this.render) {
+      const uimanager: UiManager = this.render.uiManager;
+      uimanager.setScene(this);
+      uimanager.showPanel("CreateRole", this.params);
+      this.render.sceneManager.sleepScene(LoadingScene.name);
     }
   }
 
-  create() {
-    if (this.role) {
-      this.game.scene.stop(LoadingScene.name);
-      this.role.start(this);
-    }
-  }
 }

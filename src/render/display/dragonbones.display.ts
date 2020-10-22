@@ -1,6 +1,10 @@
-import { DisplayObject, DisplayField } from "./display.object";
-import { SoundField } from "apowophaserui";
 import { ResUtils } from "../../utils/resUtil";
+import { ElementDisplay } from "./element.display";
+import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
+import { DisplayObject, DisplayField } from "./display.object";
+import { IFramesModel } from "./frames.model";
+import { PlayAnimation } from "./animation";
+import { SoundField } from "apowophaserui";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -97,8 +101,8 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
     private mDragonBonesRenderTexture: Phaser.GameObjects.RenderTexture;
 
-    public constructor(scene: Phaser.Scene, roomService: IRoomService, element?: IElement, antial: boolean = false) {
-        super(scene, roomService, element, antial);
+    public constructor(scene: Phaser.Scene, roomService: any) {
+        super(scene, roomService, undefined);
     }
 
     public set displayInfo(val: IDragonbonesModel | undefined) {
@@ -157,7 +161,7 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
         return this.mArmatureDisplay;
     }
 
-    public play(val: AnimationData) {
+    public play(val: PlayAnimation) {
         this.mActionName = val;
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
@@ -230,10 +234,10 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.onLoadCompleteHandler();
         } else {
             const res = "./resources/dragonbones";
-            const pngResUtils = `${res}/${this.mDragonbonesName}_tex.png`;
-            const jsonResUtils = `${res}/${this.mDragonbonesName}_tex.json`;
-            const dbbinResUtils = `${res}/${this.mDragonbonesName}_ske.dbbin`;
-            this.loadDragonBones(res, pngResUtils, jsonResUtils, dbbinResUtils);
+            const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
+            const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
+            const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
+            this.loadDragonBones(res, pngUrl, jsonUrl, dbbinUrl);
         }
     }
 
@@ -283,11 +287,12 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             null,
             { responseType: "arraybuffer" },
         );
-        this.scene.load.once(
-            Phaser.Loader.Events.COMPLETE,
-            this.onLoadCompleteHandler,
-            this,
-        );
+        // this.scene.load.once(
+        //     Phaser.Loader.Events.COMPLETE,
+        //     this.onLoadCompleteHandler,
+        //     this,
+        // );
+        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
         this.scene.load.start();
     }
 
@@ -833,9 +838,9 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
 
         this.mLoadMap.forEach((data) => {
             const nextLoad: string[] = data;
-            const partResUrl: string = ResUtils.getPartUrl(nextLoad[1]);
+            const partUrl: string = ResUtils.getPartUrl(nextLoad[1]);
             const partName: string = ResUtils.getPartName(nextLoad[1]);
-            configList.push({ key: partName, url: partResUrl });
+            configList.push({ key: partName, url: partUrl });
         });
         this.scene.load.image(configList);
         this.scene.load.start();
@@ -963,10 +968,11 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
     private onSoundEventHandler(event: dragonBones.EventObject) {
         // Logger.getInstance().log("sound event: ", event.name);
         if (event.name) {
-            this.mRoomService.world.playSound({
-                field: SoundField.Element,
-                key: event.name,
-            });
+            throw new Error("todo");
+            // this.mRoomService.world.playSound({
+            //     field: SoundField.Element,
+            //     key: event.name,
+            // });
         }
     }
 
@@ -1013,5 +1019,20 @@ export class DragonbonesDisplay extends DisplayObject implements ElementDisplay 
             this.mPlaceholder.destroy();
         }
         this.mPlaceholder = undefined;
+    }
+
+    private onFileLoadHandler(key: string, type: string) {
+        // if (!file) {
+        //     return;
+        // }
+        // const multi = file.multiFile;
+        // if (!multi || multi.key !== this.mDragonbonesName || multi.pending !== 1) {
+        //     return;
+        // }
+        if (key !== this.mDragonbonesName || type !== "image") {
+            return;
+        }
+        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
+        this.onLoadCompleteHandler();
     }
 }

@@ -1,6 +1,15 @@
+import { IFramesModel } from "./frames.model";
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "./display.object";
+import { IAnimationData, PlayAnimation } from "./animation";
 import { Url } from "../../utils/resUtil";
+
+// export enum DisplayField {
+//     BACKEND = 1,
+//     STAGE,
+//     FRONTEND,
+//     Effect
+// }
 
 /**
  * 序列帧显示对象
@@ -39,7 +48,7 @@ export class FramesDisplay extends DisplayObject {
             if (display.texturePath === "" && display.dataPath === "") {
                 Logger.getInstance().error("动画资源报错：", data);
             } else {
-                this.scene.load.atlas(data.gene, Url.OSD_PATH + display.texturePath, Url.OSD_PATH + display.dataPath);
+                this.scene.load.atlas(data.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
                 // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
                 //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
                 // }, this);
@@ -53,14 +62,15 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    public play(animation: AnimationData, field?: DisplayField, times?: number) {
+    public play(animation: PlayAnimation, field?: DisplayField, times?: number) {
         if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
-        this.mCurAnimation = data.getAnimations(animation.name);
+        // this.mCurAnimation = data.getAnimations(animation.name);
+        this.mCurAnimation = null;
         if (!this.mCurAnimation) return;
         this.clear();
         const layer = this.mCurAnimation.layer;
@@ -124,7 +134,8 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         // TODO
-        const anis = data.getAnimations("idle");
+        const anis = null;
+        // const anis = data.getAnimations("idle");
         if (!anis) {
             return;
         }
@@ -161,7 +172,7 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         if (!this.mCurAnimation.mountLayer) {
-            Logger.getInstance().error(`mountLyaer does not exist ${this.element ? this.element.id : 0}`);
+            // Logger.getInstance().error(`mountLyaer does not exist ${this.element ? this.element.id : 0}`);
             return;
         }
         const { index, mountPoint } = this.mCurAnimation.mountLayer;
@@ -406,15 +417,17 @@ export class FramesDisplay extends DisplayObject {
         this.scene.anims.create(config);
     }
 
-    private initBaseLoc(field: DisplayField, playAnimation: AnimationData) {
+    private initBaseLoc(field: DisplayField, playAnimation: PlayAnimation) {
         const data: IFramesModel = this.mDisplayDatas.get(field);
         // const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         if (this.mDisplays.length < 1 || !data || !data.animations) return;
         // const animations = data.getAnimations(aniName);
         // if (!animations) return;
         const { name, flip } = playAnimation;
-        this.mCollisionArea = data.getCollisionArea(name, flip);
-        this.mOriginPoint = data.getOriginPoint(name, flip);
+        // this.mCollisionArea = data.getCollisionArea(name, flip);
+        // this.mOriginPoint = data.getOriginPoint(name, flip);
+        this.mCollisionArea = [];
+        this.mOriginPoint = new Phaser.Geom.Point(0, 0);
 
         if (this.mReferenceArea) {
             this.showRefernceArea();

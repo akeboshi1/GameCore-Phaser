@@ -160,10 +160,12 @@ export class Element extends BlockObject implements IElement {
     protected mMounts: IElement[];
     protected mDirty: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(mElementManager.roomService);
+        super(mElementManager ? mElementManager.roomService : undefined);
+        if (!sprite) {
+            return;
+        }
         this.mId = sprite.id;
         this.model = sprite;
-        // this.mAi = new AI(this);
     }
     showEffected(displayInfo: any) {
         throw new Error("Method not implemented.");
@@ -865,16 +867,16 @@ export class Element extends BlockObject implements IElement {
 
     protected updateStateHandler(state: op_def.IState) {
         switch (state.name) {
-            case "effect":
-                const buf = Buffer.from(state.packet);
-                const id = buf.readDoubleBE(0);
-                const effect = this.roomService.effectManager.get(id);
-                if (effect.displayInfo) {
-                    // this.showEffected(<IFramesModel>effect.displayInfo);
-                } else {
-                    // effect.once("updateDisplayInfo", this.showEffected, this);
-                }
-                break;
+            // case "effect":
+            //     const buf = Buffer.from(state.packet);
+            //     const id = buf.readDoubleBE(0);
+            //     const effect = this.roomService.effectManager.get(id);
+            //     if (effect.displayInfo) {
+            //         // this.showEffected(<IFramesModel>effect.displayInfo);
+            //     } else {
+            //         // effect.once("updateDisplayInfo", this.showEffected, this);
+            //     }
+            //     break;
         }
     }
 
