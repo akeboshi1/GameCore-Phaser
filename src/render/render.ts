@@ -449,12 +449,14 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public getWorldView(): any {
-        const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
-        const camera = playScene.cameras.main;
-        const rect = camera.worldView;
-        const obj = { x: rect.x, y: rect.y, width: rect.width, heigth: rect.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
-        return obj;
+    public getWorldView(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
+            const camera = playScene.cameras.main;
+            const rect = camera.worldView;
+            const obj = { x: rect.x, y: rect.y, width: rect.width, heigth: rect.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+            resolve(obj);
+        });
     }
 
     @Export()
