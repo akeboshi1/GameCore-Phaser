@@ -1,4 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
+import { AnimationQueue } from "../../../../structureinterface/display";
 import { Logger } from "../../../../utils/log";
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { BlockObject } from "../../block/block.object";
@@ -92,12 +93,6 @@ export interface MovePath {
     onStartParams?: any;
     onStart?: Function;
     onComplete?: Function;
-}
-
-export interface AnimationQueue {
-    name: string;
-    playTimes?: number;
-    complete?: Function;
 }
 
 export enum InputEnable {

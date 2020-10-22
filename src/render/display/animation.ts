@@ -1,34 +1,48 @@
 import { op_gameconfig_01, op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
-import { LogicPoint } from "../../../../utils/logic.point";
 
 export interface IAnimationData {
     name: string;
     frameName: string[];
     frameRate: number;
     loop: boolean;
-    baseLoc: LogicPoint;
+    baseLoc: Phaser.Geom.Point;
     collisionArea?: number[][];
     walkableArea?: number[][];
-    originPoint: LogicPoint;
+    originPoint: Phaser.Geom.Point;
 
     readonly interactiveArea?: op_def.IPBPoint2i[];
     readonly layer: op_gameconfig_01.IAnimationLayer[];
     readonly mountLayer: op_gameconfig_01.IAnimationMountLayer;
+
     createProtocolObject(): op_gameconfig_01.IAnimationData;
+}
+
+export interface PlayAnimation {
+    name: string;
+    flip: boolean;
+    times?: number;
+    playingQueue?: AnimationQueue;
+}
+
+export interface AnimationQueue {
+    name: string;
+    playTimes?: number;
+    playedTimes?: number;
+    complete?: Function;
 }
 
 export class Animation implements IAnimationData {
     protected mNode: op_gameconfig_01.INode;
     protected mID: number;
-    protected mBaseLoc: LogicPoint;
+    protected mBaseLoc: Phaser.Geom.Point;
     protected mFrameName: string[];
     protected mFrameRate: number;
     protected mLoop: boolean;
     protected mName: string;
     protected mCollisionArea: number[][];
     protected mWalkableArea: number[][];
-    protected mOriginPoint: LogicPoint;
+    protected mOriginPoint: Phaser.Geom.Point;
     protected mInteractiveArea: IPoint[];
     protected mLayer: op_gameconfig_01.IAnimationLayer[];
     protected mMountLayer: op_gameconfig_01.IAnimationMountLayer;
@@ -56,9 +70,9 @@ export class Animation implements IAnimationData {
             // Logger.getInstance().fatal(`Animation: ${ani.id} baseLoc is invalid`);
         }
         this.mFrameRate = ani.frameRate;
-        this.mBaseLoc = new LogicPoint(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
+        this.mBaseLoc = new Phaser.Geom.Point(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         const origin = ani.originPoint;
-        this.mOriginPoint = new LogicPoint(origin[0], origin[1]);
+        this.mOriginPoint = new Phaser.Geom.Point(origin[0], origin[1]);
         if (typeof ani.collisionArea === "string") {
             this.mCollisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
         } else {
@@ -120,7 +134,7 @@ export class Animation implements IAnimationData {
         return tmp.join(lastJoin);
     }
 
-    get baseLoc(): LogicPoint {
+    get baseLoc(): Phaser.Geom.Point {
         return this.mBaseLoc;
     }
 
@@ -152,7 +166,7 @@ export class Animation implements IAnimationData {
         return this.mWalkableArea;
     }
 
-    get originPoint(): LogicPoint {
+    get originPoint(): Phaser.Geom.Point {
         return this.mOriginPoint;
     }
 

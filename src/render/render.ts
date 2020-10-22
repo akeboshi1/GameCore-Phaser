@@ -192,44 +192,6 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
-    // @Export()
-    // public add(type: number, id: number, data: Uint8Array) {
-    //     if (!Object.prototype.hasOwnProperty.call(this.nodes, type)) {
-    //         Logger.getInstance().error("type error: ", type, this.nodes);
-    //         return;
-    //     }
-    //     const nodesMap: Map<number, DisplayObject> = this.nodes[type];
-    //     if (nodesMap.has(id)) {
-    //         Logger.getInstance().warn("repeated id: ", id);
-    //     }
-    //     // TODO: data转换为iSprite；创建displayObject 存入nodes
-    // }
-
-    // @Export()
-    // public remove(type: number, id: number) {
-    //     if (!Object.prototype.hasOwnProperty.call(this.nodes, type)) {
-    //         Logger.getInstance().error("type error: ", type, this.nodes);
-    //         return;
-    //     }
-    //     const nodesMap: Map<number, DisplayObject> = this.nodes[type];
-    //     nodesMap.delete(id);
-    // }
-
-    // @Export()
-    // public setData(type: number, id: number, data: Uint8Array) {
-    //     if (!Object.prototype.hasOwnProperty.call(this.nodes, type)) {
-    //         Logger.getInstance().error("type error: ", type, this.nodes);
-    //         return;
-    //     }
-    //     const nodesMap: Map<number, DisplayObject> = this.nodes[type];
-    //     if (!nodesMap.has(id)) {
-    //         Logger.getInstance().error("id error: ", id, nodesMap);
-    //         return;
-    //     }
-    //     const node = nodesMap.get(id);
-    //     // TODO: data转换为iSprite；修改displayObject
-    // }
-
     get curTime(): number {
         return this._curTime;
     }

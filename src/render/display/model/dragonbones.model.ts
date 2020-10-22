@@ -1,7 +1,3 @@
-import { op_def } from "pixelpai_proto";
-import { AnimationData } from "../../../../structureinterface/display";
-import { Direction } from "../../../../utils/direction";
-import { LogicPoint } from "../../../../utils/logic.point";
 export interface IDragonbonesModel {
     readonly discriminator: string;
     id: number;
@@ -13,10 +9,7 @@ export interface IDragonbonesModel {
     destroy();
     getCollisionArea(aniName: string): number[][];
     getWalkableArea(aniName: string): number[][];
-    getOriginPoint(aniName: string): LogicPoint;
     existAnimation(aniName: string): boolean;
-    getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
-    findAnimation(baseName: string, dir: Direction): AnimationData;
 
 }
 
@@ -94,28 +87,7 @@ export class DragonbonesModel implements IDragonbonesModel {
         return new Phaser.Geom.Point(1, 1);
     }
 
-    public getInteractiveArea(): op_def.IPBPoint2i[] {
-        return undefined;
-    }
-
     existAnimation(aniName: string) {
         return true;
-    }
-
-    public findAnimation(baseName: string, dir: Direction): AnimationData {
-        let flip = false;
-        switch (dir) {
-            case Direction.south_east:
-                flip = true;
-                dir = Direction.west_south;
-                break;
-            case Direction.east_north:
-                flip = true;
-                dir = Direction.north_west;
-                break;
-        }
-        let addName: string = "";
-        if ((dir >= Direction.north && dir < Direction.west) || dir > Direction.east && dir <= Direction.east_north) addName = "_back";
-        return { name: `${baseName}${addName}`, flip };
     }
 }

@@ -214,7 +214,7 @@ export class Sprite implements ISprite {
                     display,
                     animationData: anis,
                 },
-                id:this.id
+                id: this.id
             });
             if (defAnimation) {
                 this.currentAnimationName = defAnimation;
