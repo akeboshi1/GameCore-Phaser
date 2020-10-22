@@ -16,8 +16,8 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     /**
      * 实际透明度，避免和tween混淆
      */
+    protected mID: number;
     protected mAlpha: number = 1;
-
     protected mBaseLoc: Phaser.Geom.Point;
     protected mCollisionArea: number[][];
     protected mOriginPoint: Phaser.Geom.Point;
@@ -27,14 +27,13 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mBackEffect: DynamicSprite;
     protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
-    // protected mElement: IElement;
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
     protected mActionName: RunningAnimation;
-    constructor(scene: Phaser.Scene, roomService: any, element?: any) {
+    constructor(scene: Phaser.Scene, roomService: any, id?: any) {
         super(scene);
-        // this.mElement = element;
+        this.mID = id;
     }
 
     public changeAlpha(val?: number) {
@@ -200,6 +199,10 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             return;
         }
         this.mChildMap.delete(key);
+    }
+
+    get id(): number {
+        return this.mID;
     }
 
     get topPoint(): Phaser.Geom.Point {
