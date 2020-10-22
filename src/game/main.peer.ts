@@ -8,6 +8,7 @@ import { Game } from "./game";
 import { ILauncherConfig } from "../structureinterface/lanucher.config";
 import { Logger } from "../utils/log";
 import { HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "../structureinterface/worker.name";
+import { LogicPoint } from "../utils";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -243,6 +244,22 @@ export class MainPeer extends RPCPeer {
     @Export()
     public showMediator(name, param?: any) {
         this.game.showMediator(name, param);
+    }
+
+    // display data getter
+    @Export()
+    public framesModel_getAnimations(id: number, name: string): any {// IAnimationModel
+
+    }
+
+    @Export()
+    public framesModel_getCollisionArea(id: number, aniName: string, flip: boolean): number[][] {
+        return null;
+    }
+
+    @Export()
+    public framesModel_getOriginPoint(id: number, aniName: string, flip: boolean): LogicPoint {
+        return null;
     }
 
     // ==== todo
