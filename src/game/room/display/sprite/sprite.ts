@@ -6,8 +6,9 @@ import NodeType = op_def.NodeType;
 import { LogicPoint } from "../../../../utils/logic.point";
 import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel, IFramesModel } from "../frames/frames.model";
-import { Animation, AnimationData, AnimationQueue } from "../animation/animation";
+import { Animation } from "../animation/animation";
 import { Direction } from "../../../../utils/direction";
+import { AnimationData, AnimationQueue } from "../../../../structureinterface/display";
 export interface ISprite {
     readonly id: number;
     // 龙骨资源名集合
@@ -193,7 +194,7 @@ export class Sprite implements ISprite {
                     display,
                     animationData: anis,
                 },
-                id:this.id
+                id: this.id
             });
             if (defAnimation) {
                 this.currentAnimationName = defAnimation;

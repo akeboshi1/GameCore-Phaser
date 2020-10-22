@@ -1,11 +1,11 @@
 import { Helpers } from "game-capsule";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import * as sha1 from "simple-sha1";
+import { AnimationData, IDisplay } from "../../../../structureinterface/display";
 import { Direction } from "../../../../utils/direction";
 import { Logger } from "../../../../utils/log";
 import { LogicPoint } from "../../../../utils/logic.point";
-import { AnimationData, IAnimationData } from "../animation/animation";
-import { IDisplay } from "../sprite/idisplay";
+import { IAnimationData } from "../animation/animation";
 import { Sprite } from "../sprite/sprite";
 
 export interface IFramesModel {
@@ -126,7 +126,7 @@ export class FramesModel implements IFramesModel {
         }
     }
 
-    public getDirable() {}
+    public getDirable() { }
 
     public createSprite(properties: {
         nodeType: op_def.NodeType;

@@ -18,20 +18,6 @@ export interface IAnimationData {
     createProtocolObject(): op_gameconfig_01.IAnimationData;
 }
 
-export interface AnimationData {
-    name: string;
-    flip: boolean;
-    times?: number;
-    playingQueue?: AnimationQueue;
-}
-
-export interface AnimationQueue {
-    name: string;
-    playTimes?: number;
-    playedTimes?: number;
-    complete?: Function;
-}
-
 export class Animation implements IAnimationData {
     protected mNode: op_gameconfig_01.INode;
     protected mID: number;

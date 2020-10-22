@@ -1,7 +1,7 @@
 import { op_def } from "pixelpai_proto";
+import { AnimationData } from "../../../../structureinterface/display";
 import { Direction } from "../../../../utils/direction";
 import { LogicPoint } from "../../../../utils/logic.point";
-import { AnimationData } from "../animation/animation";
 export interface IDragonbonesModel {
     readonly discriminator: string;
     id: number;

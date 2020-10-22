@@ -1,4 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
+import { AnimationQueue } from "../../../../structureinterface/display";
 import { Logger } from "../../../../utils/log";
 import { IPos, LogicPos } from "../../../../utils/logic.pos";
 import { BlockObject } from "../../block/block.object";
@@ -92,12 +93,6 @@ export interface MovePath {
     onStartParams?: any;
     onStart?: Function;
     onComplete?: Function;
-}
-
-export interface AnimationQueue {
-    name: string;
-    playTimes?: number;
-    complete?: Function;
 }
 
 export enum InputEnable {
@@ -313,15 +308,15 @@ export class Element extends BlockObject implements IElement {
     }
 
     public changeState(val?: string) {
-    //     if (this.mCurState === val) return;
-    //     this.mCurState = val;
-    //     if (!this.mDisplay) {
-    //         return;
-    //     }
-    //     if (!val) {
-    //         val = PlayerState.IDLE;
-    //     }
-    //     this.play(this.mCurState);
+        //     if (this.mCurState === val) return;
+        //     this.mCurState = val;
+        //     if (!this.mDisplay) {
+        //         return;
+        //     }
+        //     if (!val) {
+        //         val = PlayerState.IDLE;
+        //     }
+        //     this.play(this.mCurState);
     }
 
     public getState(): string {
@@ -536,10 +531,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     // public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
-        // if (displayInfo && this.mDisplay) {
-        //     const key = displayInfo.gene;
-        //     // this.mDisplay.once(key, this.onDisplayReady, this);
-        //     this.mDisplay.load(displayInfo, DisplayField.Effect);
+    // if (displayInfo && this.mDisplay) {
+    //     const key = displayInfo.gene;
+    //     // this.mDisplay.once(key, this.onDisplayReady, this);
+    //     this.mDisplay.load(displayInfo, DisplayField.Effect);
     //     }
     // }
 
