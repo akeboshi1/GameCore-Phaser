@@ -1,4 +1,3 @@
-import { Export, RPCEmitter, RPCExecutor, RPCParam } from "webworker-rpc";
 import { RunningAnimation } from "../../structureinterface/animation";
 import { IFramesModel } from "../../structureinterface/frame";
 import { Logger } from "../../utils/log";
@@ -14,29 +13,17 @@ export class DisplayManager {
         this.displays = new Map();
     }
 
-    public addDisplay(data: IFramesModel | IDragonbonesModel): void {
-        // const scene = this.sceneManager.currentScene;
-        // if (!scene) return;
-        // let display: DisplayObject;
-        // switch (type) {
-        //     case DisplayType.Dragonbones:
-        //         display = new DragonbonesDisplay(scene, data);
-        //         break;
-        //     case DisplayType.Element:
-        //         // display = new ElementDisplay(scene, data);
-        //         break;
-        //     case DisplayType.Frame:
-        //         // display = new FramesDisplay(scene, data);
-        //         break;
-        //     case DisplayType.Terrain:
-        //         // display = new TerrainDisplay(scene, data);
-        //         break;
-        //     default:
-        //         Logger.getInstance().error("undefined display type: ", type);
-        //         return;
-        // }
-
-        // this.displays.set(displayID, display);
+    public addDragonbonesDisplay(data: IDragonbonesModel): void {
+        const scene = this.sceneManager.currentScene;
+        if (!scene) return;
+        const display: DisplayObject = new DragonbonesDisplay(scene, data);
+        this.displays.set(data.id, display);
+    }
+    public addTerrainDisplay(data: IFramesModel) {
+    }
+    public addFramesDisplay(data: IFramesModel) {
+    }
+    public addWallDisplay(data: IFramesModel) {
     }
     public removeDisplay(displayID: number): void {
         if (!this.displays.has(displayID)) {
