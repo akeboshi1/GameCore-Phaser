@@ -3,6 +3,7 @@ import { AnimationQueue, IDragonbonesModel, IFramesModel } from "structureinterf
 import { IPos, Logger, LogicPos } from "utils";
 import { BlockObject } from "../block/block.object";
 import { ISprite } from "../display/sprite/sprite";
+import { Player } from "../player/player";
 import { IRoomService } from "../room/room";
 import { IElementManager } from "./element.manager";
 
@@ -262,6 +263,7 @@ export class Element extends BlockObject implements IElement {
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
+        this.mElementManager.roomService.game.peer.render.playElementAnimation(this.id, { name: this.mModel.currentAnimationName, flip: false }, undefined, false);
         // this.mDisplay.play(this.model.currentAnimation, undefined, times);
     }
 
@@ -301,6 +303,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
         }
+        if (this.model && !this.model.currentAnimationName) {
+            this.model.currentAnimationName = PlayerState.IDLE;
+            this.play(this.model.currentAnimationName);
+        }
         // if (this.mDisplay && this.model) {
         //     this.model.direction = val;
         //     this.mDisplay.play(this.model.currentAnimation);
@@ -312,8 +318,12 @@ export class Element extends BlockObject implements IElement {
     }
 
     public changeState(val?: string) {
-        //     if (this.mCurState === val) return;
-        //     this.mCurState = val;
+        if (this.mCurState === val) return;
+        if (!val) {
+            val = PlayerState.IDLE;
+        }
+        this.mCurState = val;
+        this.play(this.mCurState);
         //     if (!this.mDisplay) {
         //         return;
         //     }
@@ -548,6 +558,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mModel.turn();
+        this.play(this.model.currentAnimationName);
         // if (this.mDisplay) this.mDisplay.play(this.mModel.currentAnimation);
     }
 
@@ -727,7 +738,7 @@ export class Element extends BlockObject implements IElement {
         } else {
             this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo);
         }
-        // this.addToBlock();
+        this.addToBlock();
         return this;
     }
 

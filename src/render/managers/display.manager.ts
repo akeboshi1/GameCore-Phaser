@@ -22,7 +22,6 @@ export class DisplayManager {
         const display: DisplayObject = new DragonbonesDisplay(scene, data);
         this.displays.set(data.id, display);
         display.load(data);
-        // scene.add.container(0, 0).add(display);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
@@ -30,22 +29,24 @@ export class DisplayManager {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.currentScene;
+        const scene = this.sceneManager.getSceneByName(PlayScene.name);
         if (!scene) return;
         const display: DisplayObject = new FramesDisplay(scene, data);
         this.displays.set(data.id, display);
+        display.load(data);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
     public addFramesDisplay(data: IFramesModel | IDragonbonesModel) {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.currentScene;
+        const scene = this.sceneManager.getSceneByName(PlayScene.name);
         if (!scene) return;
         const display: DisplayObject = new FramesDisplay(scene, data);
-        (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
         this.displays.set(data.id, display);
         display.load(data);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
     public addWallDisplay(data: IFramesModel | IDragonbonesModel) {

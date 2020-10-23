@@ -686,6 +686,18 @@ export class Render extends RPCPeer implements GameMain {
         this.mCameraManager.camera = scene.cameras.main;
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public playDragonBonesAnimation(id: number, animation: any) {
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) display.play(animation);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public playElementAnimation(id: number, animation: any, field?: any, times?: number) {
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) display.play(animation, field, times);
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
         Logger.getInstance().log("syncCameraScroll");
@@ -702,6 +714,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public createFramesDisplay(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayManager.addFramesDisplay(displayInfo);
+    }
+
+    @Export()
+    public createTerrainDisplay(displayInfo: IFramesModel | IDragonbonesModel) {
+        this.mDisplayManager.addTerrainDisplay(displayInfo);
     }
 
     @Export()

@@ -81,6 +81,11 @@ export class Player extends Element implements IElement {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
             this.mModel.direction = dir;
+            const id = this.mModel.id;
+            if (!this.mModel.currentAnimationName) {
+                this.mModel.currentAnimationName = PlayerState.IDLE;
+                this.mElementManager.roomService.game.peer.render.playDragonBonesAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
+            }
             // if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
             // if (this.mDisplay) {
             //     this.mDisplay.play(this.mModel.currentAnimation);
@@ -97,6 +102,8 @@ export class Player extends Element implements IElement {
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
             this.mModel.currentAnimationName = this.mCurState;
+            const id = this.mModel.id;
+            this.mElementManager.roomService.game.peer.render.playAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
             // (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }
