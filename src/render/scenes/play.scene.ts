@@ -1,9 +1,10 @@
 import { LoadingTips } from "../../game/loading/loading.tips";
-import { Logger, Size } from "utils";
+import { Logger } from "utils";
 import { PlayCamera } from "../cameras/play.camera";
 import { BasicLayer } from "../managers/layer.manager";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
+import { Size } from "src/utils/size";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {

@@ -21,6 +21,8 @@ export class DisplayManager {
         if (!scene) return;
         const display: DisplayObject = new DragonbonesDisplay(scene, data);
         this.displays.set(data.id, display);
+        display.load(data);
+        (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
     }
 
     public addTerrainDisplay(data: IFramesModel | IDragonbonesModel) {
