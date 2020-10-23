@@ -173,19 +173,15 @@ export class User extends Player {
             // this.mBag.register();
         }
         this.load(this.mModel.displayInfo);
-        if (this.mModel.pos) this.setPosition(this.mModel.pos);
+        if (this.mModel.pos) {
+            const obj = { id: val.id, pos: val.pos, alpha: val.alpha };
+            this.game.peer.render.setDisplayData(obj);
+            this.setPosition(this.mModel.pos);
+        }
         // todo change display alpha
-        this.game.peer.render.changeAlpha(val.id, this.mModel.alpha);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);
-
-        // if (this.mElementManager) {
-        //     const roomService = this.mElementManager.roomService;
-        //     if (roomService && roomService.cameraService) {
-        //         roomService.cameraService.startFollow(this.mDisplay);
-        //     }
-        // }
     }
 
     get model(): ISprite {

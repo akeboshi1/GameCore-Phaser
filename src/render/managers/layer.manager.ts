@@ -42,6 +42,12 @@ export class LayerManager {
         this.layers = new Map();
     }
 
+    public setScale(zoom: number) {
+        this.layers.forEach((val) => {
+            val.setScale(zoom);
+        });
+    }
+
     public addLayer(scene: Phaser.Scene, layerClass: typeof BasicLayer, name: string, depth: number): BasicLayer {
         if (this.layers.get(name)) {
             Logger.getInstance().warn("repeated layer name: ", name);
@@ -50,6 +56,7 @@ export class LayerManager {
 
         const layer = new layerClass(scene, name, depth);
         this.layers.set(name, layer);
+        scene.sys.displayList.add(layer);
         return layer;
     }
 

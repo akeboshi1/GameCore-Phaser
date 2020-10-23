@@ -17,12 +17,13 @@ export class DisplayManager {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.currentScene;
+        const scene = this.sceneManager.getSceneByName(PlayScene.name);
         if (!scene) return;
         const display: DisplayObject = new DragonbonesDisplay(scene, data);
-        (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
         this.displays.set(data.id, display);
         display.load(data);
+        // scene.add.container(0, 0).add(display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
     public addTerrainDisplay(data: IFramesModel | IDragonbonesModel) {
@@ -185,5 +186,16 @@ export class DisplayManager {
         }
         const display = this.displays.get(displayID);
         // display.showEffect();
+    }
+
+    public setDisplayData(sprite: any) {
+        const display = this.displays.get(sprite.id);
+        if (!display) return;
+        display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
+        display.changeAlpha(sprite.alpha);
+    }
+
+    public getDisplay(id: number): DisplayObject {
+        return this.displays.get(id);
     }
 }

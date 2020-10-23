@@ -47,6 +47,19 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.mMain = scene.cameras.main;
     }
 
+    public pan(x: number, y: number, duration: number): Promise<any> {
+        x *= this.zoom;
+        y *= this.zoom;
+        for (const cam of this.mCameras) {
+            cam.pan(x, y, duration);
+        }
+        return new Promise((resolve, reject) => {
+            this.mMain.once(Phaser.Cameras.Scene2D.Events.PAN_COMPLETE, () => {
+                resolve();
+            });
+        });
+    }
+
     public set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined) {
         this.mMain = camera;
         this.addCamera(camera);
@@ -58,8 +71,11 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public resize(width: number, height: number) {
+        Logger.getInstance().log("resize");
         this.resetCameraSize(width, height);
+        Logger.getInstance().log("camera ===== resize");
         if (this.mTarget) {
+            Logger.getInstance().log("target ===== resize");
             this.startFollow(this.mTarget);
         }
     }
@@ -87,6 +103,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public startFollow(target: any) {
+        Logger.getInstance().log("target ===== startFollow");
         this.mTarget = target;
         if (this.mMain && target) {
             for (const camera of this.mCameras) {
@@ -157,6 +174,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     private resetCameraSize(width: number, height: number) {
+        Logger.getInstance().log("resetCamerSize");
         this.render.mainPeer.resetGameraSize(width, height);
     }
 

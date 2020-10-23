@@ -39,6 +39,18 @@ export class SceneManager {
         return sceneManager.getScene(this.mCurSceneName) as BasicScene;
     }
 
+    public resize(width, height) {
+        const sceneManager = this.render.game.scene;
+        if (!sceneManager) {
+            return null;
+        }
+        const zoom = this.render.scaleRatio;
+        const playScene = sceneManager.getScene("PlayScene") as BasicScene;
+        if (playScene) playScene.setScale(zoom);
+        const uiScene = sceneManager.getScene("MainUIScene") as BasicScene;
+        if (uiScene) uiScene.setScale(zoom);
+    }
+
     public getSceneByName(sceneName: string): Phaser.Scene {
         return this.render.game.scene.getScene(sceneName);
     }

@@ -134,7 +134,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     resize(width: number, height: number) {
-
+        if (this.mCameraManager) this.mCameraManager.resize(width, height);
+        if (this.mSceneManager) this.mSceneManager.resize(width, height);
     }
 
     onOrientationChange(oriation: number, newWidth: number, newHeight: number) {
@@ -697,6 +698,11 @@ export class Render extends RPCPeer implements GameMain {
         this.mDisplayManager.addFramesDisplay(displayInfo);
     }
 
+    @Export()
+    public setDisplayData(sprite: any) {
+       this.mDisplayManager.setDisplayData(sprite);
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public changeAlpha(id: number, alpha: number) {
         this.mDisplayManager.changeAlpha(id, alpha);
@@ -705,6 +711,30 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public removeBlockObject(id: number) {
         this.mDisplayManager.removeDisplay(id);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public setPosition(id: number, x: number, y: number) {
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) display.setPosition(x, y);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public startFollow(id: number) {
+        Logger.getInstance().log("target ===== startFollow");
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) this.mCameraManager.startFollow(display);
+    }
+
+    @Export()
+    public stopFollow() {
+        this.mCameraManager.stopFollow();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public cameraPan(id: number) {
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) this.mCameraManager.pan(display.x, display.y, 300);
     }
 
     private onFullScreenChange() {

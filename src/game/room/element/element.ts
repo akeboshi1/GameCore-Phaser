@@ -187,9 +187,11 @@ export class Element extends BlockObject implements IElement {
         //     return;
         // }
         if (this.mModel.pos) {
+            const obj = { id: model.id, pos: model.pos, alpha: model.alpha };
+            this.mElementManager.roomService.game.peer.render.setDisplayData(obj);
             this.setPosition(this.mModel.pos);
         }
-        this.mElementManager.roomService.game.peer.render.changeAlpha(model.id, this.mModel.alpha);
+        this.mElementManager.roomService.game.peer.render.setDisplayData(model);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.getFollowObject(FollowEnum.Nickname)) this.showNickname();
         this.setDirection(this.mModel.direction);
@@ -468,6 +470,7 @@ export class Element extends BlockObject implements IElement {
             if (this.mRootMount) {
                 return;
             }
+            this.mElementManager.roomService.game.peer.render.setPosition(this.id, p.x, p.y);
             // this.mDisplay.setPosition(p.x, p.y, p.z);
             const depth = p.depth ? p.depth : 0;
             this.setDepth(depth);
@@ -724,6 +727,7 @@ export class Element extends BlockObject implements IElement {
         } else {
             this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo);
         }
+        // this.addToBlock();
         return this;
     }
 
@@ -745,6 +749,7 @@ export class Element extends BlockObject implements IElement {
 
     protected addDisplay() {
         if (!this.mCreatedDisplay) {
+            this.mCreatedDisplay = true;
             this.createDisplay();
         }
         // this.mElementManager.roomService.game.peer.render.createDisplay();

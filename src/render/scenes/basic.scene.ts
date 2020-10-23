@@ -16,6 +16,10 @@ export class BasicScene extends Phaser.Scene {
         }
     }
 
+    setScale(zoom: number) {
+        if (this.layerManager) this.layerManager.setScale(zoom);
+    }
+
     public create() {
         this.initialize = true;
     }

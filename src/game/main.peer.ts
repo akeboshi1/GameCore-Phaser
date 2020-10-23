@@ -182,12 +182,15 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public resetGameraSize(width: number, height: number) {
-        this.game.roomManager.currentRoom.cameraService.resetCameraSize(width, height);
+        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.cameraService) this.game.roomManager.currentRoom.cameraService.resetCameraSize(width, height);
     }
 
     @Export()
     public syncCameraScroll() {
-        this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
+        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.cameraService) {
+            Logger.getInstance().log("mainpeer====synccamerascroll");
+            this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
+        }
     }
 
     // ============= 心跳调用主进程

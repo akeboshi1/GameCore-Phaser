@@ -25,6 +25,7 @@ export interface IRoomService {
     // readonly terrainManager: TerrainManager;
     readonly elementManager: ElementManager;
     readonly playerManager: PlayerManager;
+    readonly cameraService: ICameraService;
     // readonly layerManager: LayerManager;
     // readonly effectManager: EffectManager;
     // readonly handlerManager: HandlerManager;
@@ -541,13 +542,24 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private onCameraFollowHandler(packet: PBpacket) {
-        // const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
-        // const target = this.getElement(content.id);
-        // if (target) {
-        //     if (this.mCameraService) this.mCameraService.startFollow(target.getDisplay());
-        // } else {
-        //     if (this.mCameraService) this.mCameraService.stopFollow();
-        // }
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
+        const target = this.getElement(content.id);
+        if (!this.mCameraService) return;
+        if (target) {
+            Logger.getInstance().log("followHandler====room");
+            if (content.effect === "liner") {
+                this.mCameraService.pan();
+                // const position = target.getPosition();
+                // this.mCameraService.pan(position.x, position.y, 300).then(() => {
+                //     this.mCameraService.startFollow(target);
+                // });
+            } else {
+                this.game.peer.render.startFollow(content.id);
+            }
+        } else {
+            if (this.mCameraService) this.game.peer.render.stopFollow();
+            // this.mCameraService.stopFollow();
+        }
     }
 
     private onSyncStateHandler(packet: PBpacket) {
