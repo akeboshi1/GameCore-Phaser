@@ -1,4 +1,4 @@
-import { RENDER_PEER } from "../../../structureinterface/worker.name";
+import { RENDER_PEER } from "structureinterface";
 import { Logger } from "../../../utils/log";
 import { Game } from "../../game";
 import { BasicMediator } from "../basic/basic.mediator";
@@ -11,7 +11,7 @@ export class LoginMediator extends BasicMediator {
     }
 
     show() {
-    //    this.game.peer.remote[RENDER_PEER].Render.showLogin();
+        //    this.game.peer.remote[RENDER_PEER].Render.showLogin();
         this.__exportProperty(() => {
             // this.mCreateRole = new CreateRole(this.game);
             // this.mCreateRole.start();

@@ -1,6 +1,6 @@
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_virtual_world, op_client, op_gameconfig } from "pixelpai_proto";
-import { SceneName } from "../../../structureinterface/scene.name";
+import { SceneName } from "structureinterface";
 import { Game } from "../../game";
 import { CreateRoleManager } from "./create.role.manager";
 

@@ -1,12 +1,13 @@
-import { RunningAnimation } from "../../structureinterface/animation";
-import { IFramesModel } from "../../structureinterface/frame";
+import { RunningAnimation, IFramesModel, IDragonbonesModel } from "structureinterface";
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
-import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { IDragonbonesModel } from "../../structureinterface/dragonbones";
 import { SceneManager } from "./scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
+<<<<<<< HEAD
 import { PlayScene } from "../scenes/play.scene";
+=======
+import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
+>>>>>>> f5322aa391fae480e4b5f46291aab855de7f08fa
 
 export class DisplayManager {
     private displays: Map<number, DisplayObject>;

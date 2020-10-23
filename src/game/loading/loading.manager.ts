@@ -1,4 +1,4 @@
-import { SceneName } from "../../structureinterface/scene.name";
+import { SceneName } from "structureinterface";
 import { Game } from "../game";
 
 export interface IAsset {

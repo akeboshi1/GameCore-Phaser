@@ -45,7 +45,13 @@
                 "String"
             ]
         ],
-        "no-string-literal": false
+        "no-string-literal": false,
+        "no-implicit-dependencies": [
+            "optional",
+            [
+                "src"
+            ]
+        ]
     },
     "rulesDirectory": [],
     "linterOptions": {

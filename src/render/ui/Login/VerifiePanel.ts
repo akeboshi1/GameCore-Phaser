@@ -3,7 +3,7 @@ import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
 import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
 import { Font } from "../../../utils";
-import { MAIN_WORKER } from "../../../structureinterface/worker.name";
+import { MAIN_WORKER } from "structureinterface";
 
 export class VerifiedPanel extends BasePanel {
     private mVerifiedBtn: NineSliceButton;

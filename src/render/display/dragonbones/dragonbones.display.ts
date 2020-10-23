@@ -1,7 +1,6 @@
 import { ResUtils } from "../../../utils/resUtil";
-import { IAvatar, IDragonbonesModel } from "../../../structureinterface/dragonbones";
+import { IAvatar, IDragonbonesModel, RunningAnimation } from "structureinterface";
 import { DisplayObject, DisplayField } from "../display.object";
-import { RunningAnimation } from "../../../structureinterface/animation";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",

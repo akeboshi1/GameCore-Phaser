@@ -40,6 +40,7 @@ const config = {
             phaser: phaser,
             webworkerrpc: webworkerrpc,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
+            structureinterface: path.join(__dirname, "./src/structureinterface"),
         },
     },
     optimization: {
@@ -77,7 +78,7 @@ const config = {
             inject: "head",
             title: "图轻播放器",
             template: path.join(__dirname, "./index.html"),
-            chunks:["tooqing"]
+            chunks: ["tooqing"]
         }),
         new TSLintPlugin({
             config: path.resolve(__dirname, "./tslint.json"),

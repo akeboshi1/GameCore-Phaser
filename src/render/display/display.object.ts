@@ -1,8 +1,7 @@
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
 import { Url, LogicPoint } from "../../utils";
-import { RunningAnimation } from "../../structureinterface/animation";
-import { IDragonbonesModel } from "../../structureinterface/dragonbones";
+import { RunningAnimation, IDragonbonesModel } from "structureinterface";
 
 export enum DisplayField {
     BACKEND = 0,

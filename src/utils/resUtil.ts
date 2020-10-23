@@ -1,5 +1,5 @@
 import { op_def } from "pixelpai_proto";
-import { HTTP_REGEX } from "../structureinterface/constants";
+import { HTTP_REGEX } from "structureinterface";
 import { i18n } from "./i18n";
 
 export class Url {
@@ -252,7 +252,7 @@ export class Coin {
         } else if (type === op_def.CoinType.DIAMOND) {
             res = i18n.t("coin.diamond");
         } else if (type === op_def.CoinType.GOLD_COIN) {
-             res = i18n.t("coin.gold_coin");
+            res = i18n.t("coin.gold_coin");
         } else if (type === op_def.CoinType.QING_SONG_TANG) {
             // res = "";
         } else if (type === op_def.CoinType.TU_DING_COIN) {

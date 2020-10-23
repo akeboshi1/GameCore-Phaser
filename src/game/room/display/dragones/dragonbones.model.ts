@@ -1,6 +1,5 @@
 import { op_def } from "pixelpai_proto";
-import { RunningAnimation } from "../../../../structureinterface/animation";
-import { IAvatar, IDragonbonesModel } from "../../../../structureinterface/dragonbones";
+import { RunningAnimation, IAvatar, IDragonbonesModel } from "structureinterface";
 import { Direction, LogicPoint } from "../../../../utils";
 
 export class DragonbonesModel implements IDragonbonesModel {
