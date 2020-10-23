@@ -6,6 +6,7 @@ import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { IDragonbonesModel } from "../../structureinterface/dragonbones";
 import { SceneManager } from "./scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
+import { PlayScene } from "../scenes/play.scene";
 
 export class DisplayManager {
     private displays: Map<number, DisplayObject>;
@@ -41,6 +42,8 @@ export class DisplayManager {
         const scene = this.sceneManager.currentScene;
         if (!scene) return;
         const display: DisplayObject = new FramesDisplay(scene, data);
+        display.load(data);
+        (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
         this.displays.set(data.id, display);
     }
 

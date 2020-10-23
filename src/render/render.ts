@@ -693,11 +693,6 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public loadDisplayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
-        this.mDisplayManager.load(displayInfo.id, displayInfo);
-    }
-
-    @Export()
     public createDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayManager.addDragonbonesDisplay(displayInfo);
     }

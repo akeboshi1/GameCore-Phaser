@@ -243,7 +243,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public update(time: number, delta: number) {
         this.updateClock(time, delta);
-        this.mBlocks.update(time, delta);
+        // this.mBlocks.update(time, delta);
+        // this.mViewBlockManager.update(time, delta);
         // if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mElementManager) this.mElementManager.update(time, delta);
         // if (this.mHandlerManager) this.handlerManager.update(time, delta);
