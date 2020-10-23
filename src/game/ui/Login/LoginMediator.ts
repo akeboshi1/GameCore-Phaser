@@ -1,5 +1,5 @@
 import { RENDER_PEER } from "structureinterface";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 import { Game } from "../../game";
 import { BasicMediator } from "../basic/basic.mediator";
 

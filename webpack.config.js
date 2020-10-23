@@ -41,6 +41,7 @@ const config = {
             webworkerrpc: webworkerrpc,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
             structureinterface: path.join(__dirname, "./src/structureinterface"),
+            utils: path.join(__dirname, "./src/utils"),
         },
     },
     optimization: {

@@ -20,6 +20,9 @@
       "structureinterface": [
         "./src/structureinterface/index"
       ],
+      "utils": [
+        "./src/utils/index"
+      ],
     },
   },
   "exclude": [

@@ -1,5 +1,4 @@
-import { Font, Url } from "../../utils";
-import { Logger } from "../../utils/log";
+import { Font, Url, Logger } from "utils";
 import { BasicScene } from "./basic.scene";
 import verion from "../../../version";
 

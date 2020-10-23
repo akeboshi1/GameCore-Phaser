@@ -7,7 +7,7 @@ import { PlayerModel } from "../room/player/player.model";
 import { PlayerState } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { PlayerDataManager } from "./data/player.dataManager";
-import { Logger } from "../../utils/log";
+import { Logger } from "utils";
 
 export class User extends Player {
     private mUserData: PlayerDataManager;

@@ -1,6 +1,6 @@
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
-import { Url, LogicPoint } from "../../utils";
+import { Url, LogicPoint } from "utils";
 import { RunningAnimation, IDragonbonesModel } from "structureinterface";
 
 export enum DisplayField {

@@ -8,9 +8,8 @@ import { IRoomService, Room } from "../room/room";
 import { PlayerModel } from "./player.model";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { MessageType } from "structureinterface";
-import { LogicPos } from "../../../utils/logic.pos";
+import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger } from "../../../utils/log";
 import { IElement } from "../element/element";
 
 export class PlayerManager extends PacketHandler implements IElementManager {

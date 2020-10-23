@@ -1,5 +1,5 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 import { AvatarNode, IImage } from "game-capsule";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { IAvatarSet } from "game-capsule";

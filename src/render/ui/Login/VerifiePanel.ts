@@ -2,7 +2,7 @@ import { BasePanel } from "../components/base.panel";
 import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
 import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
-import { Font } from "../../../utils";
+import { Font } from "utils";
 import { MAIN_WORKER } from "structureinterface";
 
 export class VerifiedPanel extends BasePanel {

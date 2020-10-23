@@ -1,6 +1,6 @@
 import { op_gameconfig_01, op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
-import { LogicPoint } from "../../../../utils/logic.point";
+import { LogicPoint } from "utils";
 
 export interface IAnimationData {
     name: string;

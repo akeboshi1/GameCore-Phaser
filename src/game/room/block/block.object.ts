@@ -1,5 +1,4 @@
-import { Logger } from "../../../utils/log";
-import { IPos, LogicPos } from "../../../utils/logic.pos";
+import { Logger, IPos, LogicPos } from "utils";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element";
 import { IRoomService } from "../room/room";
@@ -16,7 +15,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public setRenderable(isRenderable: boolean, delay: number = 0) {
-        Logger.getInstance().log(isRenderable,"=====blockobject");
+        Logger.getInstance().log(isRenderable, "=====blockobject");
         if (this.mRenderable !== isRenderable) {
             this.mRenderable = isRenderable;
             if (isRenderable) {

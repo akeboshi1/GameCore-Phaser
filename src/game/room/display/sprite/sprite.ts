@@ -1,7 +1,7 @@
 import { Helpers } from "game-capsule";
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
 import { AnimationQueue, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structureinterface";
-import { IPos, LogicPos, LogicPoint, Logger, Direction } from "../../../../utils";
+import { IPos, LogicPos, LogicPoint, Logger, Direction } from "utils";
 import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel } from "../frames/frames.model";

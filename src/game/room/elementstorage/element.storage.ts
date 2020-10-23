@@ -14,9 +14,8 @@ import { MossCollectionNode } from "game-capsule";
 import { FramesModel } from "../display/frames/frames.model";
 import { DragonbonesModel } from "../display/dragones/dragonbones.model";
 import { IScenery } from "../skybox/scenery";
-import { Logger } from "../../../utils/log";
 import { AnimationModel } from "../display/animation/animation.model";
-import { Url } from "../../../utils";
+import { Logger, Url } from "utils";
 import { IDragonbonesModel, IFramesModel } from "structureinterface";
 
 export interface IAsset {

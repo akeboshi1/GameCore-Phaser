@@ -3,7 +3,7 @@ import { op_gameconfig_01 } from "pixelpai_proto";
 import * as url from "url";
 // import * as _ from "lodash";
 import { AvatarDirEnum, IAvatarSet } from "game-capsule";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 import { AvatarEditorEmitType } from "./avatar.editor.canvas";
 import { BlendModes } from "tooqinggamephaser";
 

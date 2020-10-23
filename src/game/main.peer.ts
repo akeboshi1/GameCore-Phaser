@@ -6,8 +6,7 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structureinterface";
-import { Logger } from "../utils/log";
-import { LogicPoint } from "../utils";
+import { Logger, LogicPoint } from "utils";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }

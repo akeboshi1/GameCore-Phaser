@@ -1,5 +1,5 @@
 import { PacketHandler } from "net-socket-packet";
-import { Logger } from "../../utils/log";
+import { Logger } from "utils";
 import { Render } from "../render";
 
 export interface ICameraService {
