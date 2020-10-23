@@ -462,7 +462,7 @@ export class Render extends RPCPeer implements GameMain {
             const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
             const camera = playScene.cameras.main;
             const rect = camera.worldView;
-            const obj = { x: rect.x, y: rect.y, width: rect.width, heigth: rect.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+            const obj = { x: rect.x, y: rect.y, width: rect.width, height: rect.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
             resolve(obj);
         });
     }
@@ -693,11 +693,17 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public loadDisplayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
-        this.mDisplayManager.load
+        this.mDisplayManager.load(displayInfo.id, displayInfo);
     }
 
     @Export()
-    public createDisplay(displayInfo: IFramesModel | IDragonbonesModel) {
+    public createDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
+        this.mDisplayManager.addDragonbonesDisplay(displayInfo);
+    }
+
+    @Export()
+    public createFramesDisplay(displayInfo: IFramesModel | IDragonbonesModel) {
+        this.mDisplayManager.addFramesDisplay(displayInfo);
     }
 
     private onFullScreenChange() {

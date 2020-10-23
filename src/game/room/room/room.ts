@@ -366,7 +366,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public clear() {
         // if (this.mLayManager) this.mLayManager.destroy();
         // if (this.mTerrainManager) this.mTerrainManager.destroy();
-        // if (this.mElementManager) this.mElementManager.destroy();
+        if (this.mElementManager) this.mElementManager.destroy();
         // if (this.mPlayerManager) this.mPlayerManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
         // if (this.mSkyboxManager) this.mSkyboxManager.destroy();
