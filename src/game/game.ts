@@ -417,7 +417,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             return;
         }
         Logger.getInstance().log(`mMoveStyle:${content.moveStyle}`);
-        let game_id = account.gameID;
+        let game_id = account.gameId;
         if (game_id === undefined) {
             Logger.getInstance().log("!game_ID");
             this.mainPeer.render.createGameCallBack(content.keyEvents);
@@ -428,7 +428,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (game_id.indexOf(".") > -1) {
             game_id = game_id.split(".")[1];
         }
-        const mainGameConfigUrl = this.gameConfigUrls;
+        const mainGameConfigUrl = this.gameConfigUrl;
         this.mLoadingManager.start(LoadingTips.downloadGameConfig());
         // this.connect.loadRes([mainGameConfigUrl]);
         Logger.getInstance().log("onInitVirtualWorldPlayerInit====loadGameConfig");

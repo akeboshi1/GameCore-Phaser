@@ -680,10 +680,16 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
+    @Export()
+    public roomstartPlay() {
+        const scene = this.mSceneManager.getSceneByName("PlayScene");
+        this.mCameraManager.camera = scene.cameras.main;
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
         Logger.getInstance().log("syncCameraScroll");
-        const sceneScrale = this.mSceneManager.currentScene.scale;
+        const sceneScrale = this.mSceneManager.getSceneByName("PlayScene").scale;
         this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
         this.mainPeer.syncCameraScroll();
     }
@@ -700,7 +706,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public setDisplayData(sprite: any) {
-       this.mDisplayManager.setDisplayData(sprite);
+        this.mDisplayManager.setDisplayData(sprite);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

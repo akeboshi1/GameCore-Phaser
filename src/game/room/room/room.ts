@@ -308,6 +308,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
         const padding = 199 * this.mScaleRatio;
+        this.mGame.peer.render.roomstartPlay();
         this.mGame.peer.render.setCamerasBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         //     // init block
         this.mBlocks.int(this.mSize);
@@ -318,7 +319,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // }
         // // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
         // // this.mPlayerManager.createActor(this.mActorData);
-        this.game.user.enterScene(this, this.mActorData);
+        this.mGame.user.enterScene(this, this.mActorData);
         // const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
         // this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
         // // if (loadingScene) loadingScene.sleep();
