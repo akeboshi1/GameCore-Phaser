@@ -30,6 +30,7 @@ export class Render extends RPCPeer implements GameMain {
     private readonly DEFAULT_HEIGHT = 640;
     private mSceneManager: SceneManager;
     private mCameraManager: CamerasManager;
+    private mElementManager
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -681,6 +682,11 @@ export class Render extends RPCPeer implements GameMain {
         const sceneScrale = this.mSceneManager.currentScene().scale;
         this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
         this.mainPeer.syncCameraScroll();
+    }
+
+    @Export()
+    public createDisplay(displayInfo: any) {
+        this.mGame;
     }
 
     private onFullScreenChange() {

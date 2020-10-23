@@ -713,6 +713,7 @@ export class Element extends BlockObject implements IElement {
         // }
         // return this.mDisplay;
         // TODO
+        this.mDisplayInfo
         return this;
     }
 
@@ -729,6 +730,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected addDisplay() {
+        this.mElementManager.roomService.game.peer.render.createDisplay();
         // this.createDisplay();
         // const room = this.roomService;
         // if (!room || !this.mDisplay) {

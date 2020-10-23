@@ -17,10 +17,10 @@ export class DisplayManager {
         const scene = this.sceneManager.currentScene;
         if (!scene) return;
 
-        // let display: DisplayObject;
+        let display: DisplayObject;
         switch (type) {
             case DisplayType.Dragonbones:
-                // display = new DragonbonesDisplay(scene, data);
+                display = new DragonbonesDisplay(scene, data);
                 break;
             case DisplayType.Element:
                 // display = new ElementDisplay(scene, data);
