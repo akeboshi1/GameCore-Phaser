@@ -699,6 +699,16 @@ export class Render extends RPCPeer implements GameMain {
         this.mDisplayManager.addFramesDisplay(displayInfo);
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public changeAlpha(id: number, alpha: number) {
+        this.mDisplayManager.changeAlpha(id, alpha);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public removeBlockObject(id: number) {
+        this.mDisplayManager.removeDisplay(id);
+    }
+
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }

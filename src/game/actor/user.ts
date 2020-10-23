@@ -175,6 +175,7 @@ export class User extends Player {
         this.load(this.mModel.displayInfo);
         if (this.mModel.pos) this.setPosition(this.mModel.pos);
         // todo change display alpha
+        this.game.peer.render.changeAlpha(val.id, this.mModel.alpha);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);

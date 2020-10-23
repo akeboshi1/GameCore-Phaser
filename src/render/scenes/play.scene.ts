@@ -47,7 +47,7 @@ export class PlayScene extends RoomScene {
         this.scene.sendToBack();
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
-        
+
         // ======= render startPlay
         this.render.camermsManager.startRoomPlay(this);
         this.render.showLoading({ "text": LoadingTips.loadingResources() });

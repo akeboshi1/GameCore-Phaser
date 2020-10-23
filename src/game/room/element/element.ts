@@ -189,6 +189,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
+        this.mElementManager.roomService.game.peer.render.changeAlpha(model.id, this.mModel.alpha);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.getFollowObject(FollowEnum.Nickname)) this.showNickname();
         this.setDirection(this.mModel.direction);
@@ -634,6 +635,7 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData.tweenAnim = null;
             this.mMoveData = null;
         }
+        this.mElementManager.roomService.game.peer.render.removeBlockObject(this.mDisplayInfo.id);
         // if (this.mDisplay) {
         //     if (this.mBlockable) {
         //         this.roomService.removeBlockObject(this);

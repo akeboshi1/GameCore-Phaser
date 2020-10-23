@@ -3,11 +3,8 @@ import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { SceneManager } from "./scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
-<<<<<<< HEAD
 import { PlayScene } from "../scenes/play.scene";
-=======
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
->>>>>>> f5322aa391fae480e4b5f46291aab855de7f08fa
 
 export class DisplayManager {
     private displays: Map<number, DisplayObject>;
