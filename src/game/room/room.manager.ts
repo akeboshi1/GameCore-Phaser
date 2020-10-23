@@ -3,7 +3,7 @@ import { IRoomService, Room } from "./room/room";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
 import { ConnectionService } from "../../../lib/net/connection.service";
-import { Logger } from "../../utils/log";
+import { Logger } from "utils";
 import { Lite } from "game-capsule";
 export interface IRoomManager {
     readonly game: Game | undefined;

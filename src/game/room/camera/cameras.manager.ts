@@ -1,10 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger } from "../../../utils/log";
-import { LogicPos } from "../../../utils/logic.pos";
-import { LogicRectangle } from "../../../utils/logic.rectangle";
-import { LogicRectangle45 } from "../../../utils/logic.rectangle45";
+import { Logger, LogicPos, LogicRectangle, LogicRectangle45 } from "utils";
 import { Game } from "../../game";
 import { IRoomService } from "../room/room";
 
@@ -77,8 +74,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.connection.send(packet);
     }
 
-    public syncCameraScroll() {
-        const cameraView = this.mGame.peer.render.getWorldView();
+    public async syncCameraScroll() {
+        const cameraView = await this.mGame.peer.render.getWorldView();
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION = pkt.content;
         const pos = op_def.PBPoint3f.create();

@@ -1,5 +1,5 @@
-import { op_client} from "pixelpai_proto";
-import { LogicPos } from "../../../utils/logic.pos";
+import { op_client } from "pixelpai_proto";
+import { LogicPos } from "utils";
 import { Sprite } from "../display/sprite/sprite";
 
 export class PlayerModel extends Sprite {

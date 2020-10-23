@@ -1,7 +1,7 @@
 import { BasePanel } from "./base.panel";
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
-import { Font, i18n } from "../../../utils";
+import { Font, i18n } from "utils";
 
 export class AlertView extends BasePanel {
     private key: string = "pica_alert";

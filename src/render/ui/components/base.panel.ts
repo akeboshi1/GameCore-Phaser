@@ -1,5 +1,5 @@
 import { Panel } from "apowophaserui";
-import { Url } from "../../../utils";
+import { Url } from "utils";
 import { Render } from "../../render";
 
 export class BasePanel extends Panel {

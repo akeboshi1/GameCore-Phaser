@@ -1,5 +1,5 @@
 import { Buffer } from "buffer/";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 
 export class StateParse {
     static decode(name: string, packet: Uint8Array) {

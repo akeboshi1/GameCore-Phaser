@@ -1,6 +1,6 @@
 import { op_client, op_def } from "pixelpai_proto";
 import { AnimationQueue, IDragonbonesModel, IFramesModel } from "structureinterface";
-import { IPos, Logger, LogicPos } from "../../../utils";
+import { IPos, Logger, LogicPos } from "utils";
 import { BlockObject } from "../block/block.object";
 import { ISprite } from "../display/sprite/sprite";
 import { IRoomService } from "../room/room";
@@ -716,6 +716,9 @@ export class Element extends BlockObject implements IElement {
         // }
         // return this.mDisplay;
         // TODO
+        if (!this.mDisplayInfo) {
+            return;
+        }
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo);
         } else {

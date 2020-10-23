@@ -1,4 +1,4 @@
-import { Logger } from "../../utils/log";
+import { Logger } from "utils";
 import { Render } from "../render";
 import { BasicScene } from "../scenes/basic.scene";
 import { CreateRoleScene } from "../scenes/create.role.scene";

@@ -1,5 +1,4 @@
-import { Url } from "../../utils";
-import { Size } from "../../utils/size";
+import { Url, Size } from "utils";
 import { BasicScene } from "./basic.scene";
 
 export class GamePauseScene extends BasicScene {

@@ -14,9 +14,7 @@
  *  └─────────────────────────────────────────────────────────────┘
  */
 
-import { Intersects } from "../../../utils/intersects";
-import { LogicRectangle } from "../../../utils/logic.rectangle";
-import { LogicRectangle45 } from "../../../utils/logic.rectangle45";
+import { Intersects, LogicRectangle, LogicRectangle45 } from "utils";
 import { IBlockObject } from "../block/iblock.object";
 
 /**

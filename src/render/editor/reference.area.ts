@@ -1,7 +1,4 @@
-import { Pos } from "../../utils/pos";
-import { Logger } from "../../utils/log";
-import { IPosition45Obj, Position45 } from "../../utils/position45";
-import { LogicPoint } from "../../utils";
+import { Pos, Logger, IPosition45Obj, Position45, LogicPoint } from "utils";
 
 export class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize: IPosition45Obj;

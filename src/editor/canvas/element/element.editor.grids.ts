@@ -1,7 +1,7 @@
 import { IPoint } from "game-capsule";
 import { AnimationDataNode } from "game-capsule";
 import Position45Utils from "../../utils/position45.utils";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 import { ElementEditorCanvas, ElementEditorBrushType } from "./element.editor.canvas";
 
 export default class ElementEditorGrids extends Phaser.GameObjects.Container {

@@ -1,4 +1,4 @@
-import { i18n } from "../../../utils/i18n";
+import { i18n } from "utils";
 import { Game } from "../../game";
 import { HttpService } from "./http.service";
 

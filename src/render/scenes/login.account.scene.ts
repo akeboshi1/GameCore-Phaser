@@ -1,7 +1,5 @@
 import { BasicScene } from "./basic.scene";
-import { Url } from "../../utils/resUtil";
-import { Size } from "../../utils/size";
-import { Logger } from "../../utils/log";
+import { Url, Size, Logger } from "utils";
 
 export class LoginAccountScene extends BasicScene {
     private mWorld: any;
