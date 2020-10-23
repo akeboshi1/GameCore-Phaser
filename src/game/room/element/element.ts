@@ -714,6 +714,9 @@ export class Element extends BlockObject implements IElement {
         // }
         // return this.mDisplay;
         // TODO
+        if (!this.mDisplayInfo) {
+            return;
+        }
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo);
         } else {

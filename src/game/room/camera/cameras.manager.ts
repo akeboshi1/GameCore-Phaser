@@ -77,8 +77,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.connection.send(packet);
     }
 
-    public syncCameraScroll() {
-        const cameraView = this.mGame.peer.render.getWorldView();
+    public async syncCameraScroll() {
+        const cameraView = await this.mGame.peer.render.getWorldView();
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION = pkt.content;
         const pos = op_def.PBPoint3f.create();
