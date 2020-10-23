@@ -1,7 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { AnimationModel } from "../display/animation/animation.model";
-import { DragonbonesModel, IDragonbonesModel } from "../display/dragones/dragonbones.model";
-import { FramesModel, IFramesModel } from "../display/frames/frames.model";
+import { DragonbonesModel } from "../display/dragones/dragonbones.model";
+import { FramesModel } from "../display/frames/frames.model";
 
 export class Effect extends Phaser.Events.EventEmitter {
 
