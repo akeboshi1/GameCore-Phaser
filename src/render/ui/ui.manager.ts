@@ -70,7 +70,7 @@ export class UiManager {
 
     public showPanel(type: string, param?: any) {
         if (!this.mScene) {
-            const scene = this.render.sceneManager.currentScene();
+            const scene = this.render.sceneManager.currentScene;
             if (!scene) return;
             scene.scene.launch("MainUIScene");
             this.mCache.push(param);

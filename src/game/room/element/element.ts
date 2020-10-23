@@ -717,6 +717,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected loadDisplayInfo() {
+        this.mElementManager.roomService.game.peer.render.loadDisplayInfo(this.mDisplayInfo);
         // if (!this.mDisplayInfo) {
         //     return;
         // }

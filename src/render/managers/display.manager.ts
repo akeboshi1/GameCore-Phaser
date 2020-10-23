@@ -5,6 +5,7 @@ import { DisplayField, DisplayObject } from "../display/display.object";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { IDragonbonesModel } from "../../structureinterface/dragonbones";
 import { SceneManager } from "./scene.manager";
+import { FramesDisplay } from "../display/frames/frames.display";
 
 export class DisplayManager {
     private displays: Map<number, DisplayObject>;
@@ -13,18 +14,39 @@ export class DisplayManager {
         this.displays = new Map();
     }
 
-    public addDragonbonesDisplay(data: IDragonbonesModel): void {
+    public addDragonbonesDisplay(data: IFramesModel | IDragonbonesModel): void {
+        if (!data) {
+            return;
+        }
         const scene = this.sceneManager.currentScene;
         if (!scene) return;
         const display: DisplayObject = new DragonbonesDisplay(scene, data);
         this.displays.set(data.id, display);
     }
-    public addTerrainDisplay(data: IFramesModel) {
+
+    public addTerrainDisplay(data: IFramesModel | IDragonbonesModel) {
+        if (!data) {
+            return;
+        }
+        const scene = this.sceneManager.currentScene;
+        if (!scene) return;
+        const display: DisplayObject = new FramesDisplay(scene, data);
+        this.displays.set(data.id, display);
     }
-    public addFramesDisplay(data: IFramesModel) {
+
+    public addFramesDisplay(data: IFramesModel | IDragonbonesModel) {
+        if (!data) {
+            return;
+        }
+        const scene = this.sceneManager.currentScene;
+        if (!scene) return;
+        const display: DisplayObject = new FramesDisplay(scene, data);
+        this.displays.set(data.id, display);
     }
-    public addWallDisplay(data: IFramesModel) {
+
+    public addWallDisplay(data: IFramesModel | IDragonbonesModel) {
     }
+
     public removeDisplay(displayID: number): void {
         if (!this.displays.has(displayID)) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);

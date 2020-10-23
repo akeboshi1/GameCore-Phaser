@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game } from "tooqinggamephaser";
+import { Display, Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { Logger } from "../utils/log";
 import { ServerAddress } from "../../lib/net/address";
@@ -20,6 +20,9 @@ import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import { initLocales } from "../utils/i18n";
 import * as path from "path";
+import { IFramesModel } from "../structureinterface/frame";
+import { IDragonbonesModel } from "../structureinterface/dragonbones";
+import { DisplayManager } from "./managers/display.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -38,6 +41,7 @@ export class Render extends RPCPeer implements GameMain {
     private gameConfig: Phaser.Types.Core.GameConfig;
     private mAccount: Account;
     private mUiManager: UiManager;
+    private mDisplayManager: DisplayManager;
     private mLocalStorageManager: LocalStorageManager;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
@@ -58,14 +62,13 @@ export class Render extends RPCPeer implements GameMain {
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
+        this.initConfig();
+        this.createManager();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.createGame();
             Logger.getInstance().log("worker onReady");
         });
-
-        this.initConfig();
-        this.createManager();
     }
 
     get config(): ILauncherConfig {
@@ -100,6 +103,10 @@ export class Render extends RPCPeer implements GameMain {
         return this.mCameraManager;
     }
 
+    get DisplayManager(): DisplayManager {
+        return this.mDisplayManager;
+    }
+
     get localStorageManager(): LocalStorageManager {
         return this.mLocalStorageManager;
     }
@@ -127,6 +134,8 @@ export class Render extends RPCPeer implements GameMain {
         this.mUiManager = new UiManager(this);
         this.mCameraManager = new CamerasManager(this);
         this.mLocalStorageManager = new LocalStorageManager();
+        this.mSceneManager = new SceneManager(this);
+        this.mDisplayManager = new DisplayManager(this.game, this.mSceneManager);
     }
 
     resize(width: number, height: number) {
@@ -255,7 +264,6 @@ export class Render extends RPCPeer implements GameMain {
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
             }
-            this.mSceneManager = new SceneManager(this);
             this.exportProperty(this.mSceneManager, this)
                 .onceReady(() => {
                     resolve();
@@ -684,7 +692,12 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public createDisplay(displayInfo: any) {
+    public loadDisplayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
+        this.mDisplayManager.load
+    }
+
+    @Export()
+    public createDisplay(displayInfo: IFramesModel | IDragonbonesModel) {
     }
 
     private onFullScreenChange() {
