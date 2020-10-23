@@ -156,6 +156,7 @@ export class Element extends BlockObject implements IElement {
     protected mRootMount: IElement;
     protected mMounts: IElement[];
     protected mDirty: boolean = false;
+    protected mCreatedDisplay: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager ? mElementManager.roomService : undefined);
         if (!sprite) {
@@ -171,6 +172,7 @@ export class Element extends BlockObject implements IElement {
     public load(displayInfo: IFramesModel | IDragonbonesModel) {
         this.mDisplayInfo = displayInfo;
         this.loadDisplayInfo();
+        this.addDisplay();
     }
 
     public setModel(model: ISprite) {
@@ -625,6 +627,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public destroy() {
+        this.mCreatedDisplay = false;
         if (this.mMoveData && this.mMoveData.tweenAnim) {
             this.mMoveData.tweenAnim.stop();
             this.mMoveData.tweenAnim.remove();
@@ -720,7 +723,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected loadDisplayInfo() {
-        this.mElementManager.roomService.game.peer.render.loadDisplayInfo(this.mDisplayInfo);
+        // if () {
+
+        // }
+        // this.mElementManager.roomService.game.peer.render.loadDisplayInfo(this.mDisplayInfo);
         // if (!this.mDisplayInfo) {
         //     return;
         // }
@@ -733,7 +739,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected addDisplay() {
-        this.mElementManager.roomService.game.peer.render.createDisplay();
+        if (!this.mCreatedDisplay) {
+            this.createDisplay();
+        }
+        // this.mElementManager.roomService.game.peer.render.createDisplay();
         // this.createDisplay();
         // const room = this.roomService;
         // if (!room || !this.mDisplay) {

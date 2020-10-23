@@ -457,7 +457,8 @@ export class Render extends RPCPeer implements GameMain {
             const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
             const camera = playScene.cameras.main;
             const rect = camera.worldView;
-            const obj = { x: rect.x, y: rect.y, width: rect.width, height: rect.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+            const { x, y, width, height } = rect;
+            const obj = { x, y, width, height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
             resolve(obj);
         });
     }
@@ -684,11 +685,6 @@ export class Render extends RPCPeer implements GameMain {
         const sceneScrale = this.mSceneManager.currentScene.scale;
         this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
         this.mainPeer.syncCameraScroll();
-    }
-
-    @Export()
-    public loadDisplayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
-        this.mDisplayManager.load(displayInfo.id, displayInfo);
     }
 
     @Export()

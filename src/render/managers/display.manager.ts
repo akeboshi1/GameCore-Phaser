@@ -3,7 +3,11 @@ import { Logger } from "utils";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { SceneManager } from "./scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
+<<<<<<< HEAD
+import { PlayScene } from "../scenes/play.scene";
+=======
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
+>>>>>>> f5322aa391fae480e4b5f46291aab855de7f08fa
 
 export class DisplayManager {
     private displays: Map<number, DisplayObject>;
@@ -39,6 +43,8 @@ export class DisplayManager {
         const scene = this.sceneManager.currentScene;
         if (!scene) return;
         const display: DisplayObject = new FramesDisplay(scene, data);
+        display.load(data);
+        (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
         this.displays.set(data.id, display);
     }
 

@@ -38,7 +38,6 @@ export class PlayScene extends RoomScene {
         if (!scene.scene.isActive()) {
             this.scene.launch(MainUIScene.name, {
                 "render": this.render,
-                "roomid": this.mRoomID,
             });
         } else {
             this.render.initUI();
@@ -47,8 +46,7 @@ export class PlayScene extends RoomScene {
         this.scene.sendToBack();
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
-        // ======= mainworker startPlay
-        this.render.startRoomPlay();
+        
         // ======= render startPlay
         this.render.camermsManager.startRoomPlay(this);
         this.render.showLoading({ "text": LoadingTips.loadingResources() });
@@ -66,6 +64,9 @@ export class PlayScene extends RoomScene {
         this.layerManager.addLayer(this, SurfaceLayer, this.LAYER_SURFACE, 5).setScale(this.render.scaleRatio);
         this.layerManager.addLayer(this, BasicLayer, this.LAYER_ATMOSPHERE, 6);
         this.layerManager.addLayer(this, BasicLayer, this.LAYER_SCENEUI, 7);
+
+        // ======= mainworker startPlay
+        this.render.startRoomPlay();
     }
 
     update(time: number, delta: number) {
