@@ -692,7 +692,7 @@ export class Element extends BlockObject implements IElement {
         // });
     }
 
-    protected createDisplay(): this {
+    protected createDisplay() {
         // if (!this.mDisplayInfo) {
         //     Logger.getInstance().error(`displayinfo does not exist, Create ${this.model.nickname} failed`);
         //     return;
@@ -713,10 +713,16 @@ export class Element extends BlockObject implements IElement {
         // }
         // return this.mDisplay;
         // TODO
+        if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
+            this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo);
+        } else {
+            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo);
+        }
         return this;
     }
 
     protected loadDisplayInfo() {
+        this.mElementManager.roomService.game.peer.render.loadDisplayInfo(this.mDisplayInfo);
         // if (!this.mDisplayInfo) {
         //     return;
         // }
