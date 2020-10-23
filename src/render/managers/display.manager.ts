@@ -20,6 +20,7 @@ export class DisplayManager {
         const scene = this.sceneManager.currentScene;
         if (!scene) return;
         const display: DisplayObject = new DragonbonesDisplay(scene, data);
+        (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
         this.displays.set(data.id, display);
     }
 
