@@ -3,8 +3,7 @@
 //     readonly scene: Phaser.Scene;
 //     setScene(scene: Phaser.Scene): void;
 
-import { Logger } from "../../utils/log";
-import { BlackButton } from "../../utils/resUtil";
+import { Logger } from "utils";
 
 //     addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
 //     addToDialogLayer(obj: Phaser.GameObjects.GameObject);

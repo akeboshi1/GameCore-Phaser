@@ -1,4 +1,3 @@
-import { Logger } from "../../../utils/log";
 import { Game } from "../../game";
 
 export class HttpService {

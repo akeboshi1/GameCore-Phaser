@@ -1,7 +1,7 @@
 import { InputText, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { BasePanel } from "../components/base.panel";
 import { UiManager } from "../ui.manager";
-import { Font, i18n } from "../../../utils";
+import { Font, i18n } from "utils";
 import { DragonbonesDisplay } from "../../display/dragonbones/dragonbones.display";
 
 export class CreateRolePanel extends BasePanel {

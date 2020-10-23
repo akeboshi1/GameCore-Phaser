@@ -1,4 +1,4 @@
-import { ResUtils } from "../../../utils/resUtil";
+import { ResUtils } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation } from "structureinterface";
 import { DisplayObject, DisplayField } from "../display.object";
 

@@ -2,7 +2,7 @@ import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { ElementNode, DisplayNode } from "game-capsule";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
 import { IImage } from "game-capsule";
 

@@ -1,5 +1,5 @@
 import { op_def, op_client } from "pixelpai_proto";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 
 export interface IScenery {
     readonly id: number;

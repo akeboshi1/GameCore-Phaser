@@ -1,6 +1,5 @@
 import { LoadingTips } from "../../game/loading/loading.tips";
-import { Logger } from "../../utils/log";
-import { Size } from "../../utils/size";
+import { Logger, Size } from "utils";
 import { PlayCamera } from "../cameras/play.camera";
 import { BasicLayer } from "../managers/layer.manager";
 import { MainUIScene } from "./main.ui.scene";

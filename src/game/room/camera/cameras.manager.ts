@@ -1,10 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger } from "../../../utils/log";
-import { LogicPos } from "../../../utils/logic.pos";
-import { LogicRectangle } from "../../../utils/logic.rectangle";
-import { LogicRectangle45 } from "../../../utils/logic.rectangle45";
+import { Logger, LogicPos, LogicRectangle, LogicRectangle45 } from "utils";
 import { Game } from "../../game";
 import { IRoomService } from "../room/room";
 

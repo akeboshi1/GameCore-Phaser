@@ -1,4 +1,4 @@
-import { IPos } from "../../../utils/logic.pos";
+import { IPos } from "utils";
 
 export interface IBlockObject {
     readonly id: number;

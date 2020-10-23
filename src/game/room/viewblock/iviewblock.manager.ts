@@ -1,4 +1,4 @@
-import { IPosition45Obj } from "../../../utils/position45";
+import { IPosition45Obj } from "utils";
 import { IBlockObject } from "../block/iblock.object";
 
 export interface IViewBlockManager {

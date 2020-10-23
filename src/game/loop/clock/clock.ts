@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Algorithm } from "../../../utils/algorithm";
+import { Algorithm } from "utils";
 import { MainPeer } from "../../main.peer";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;

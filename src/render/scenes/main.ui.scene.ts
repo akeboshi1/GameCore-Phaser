@@ -1,7 +1,6 @@
 
 import { BasicScene } from "./basic.scene";
-import { Font } from "../../utils/font";
-import { Size } from "../../utils/size";
+import { Font, Size } from "utils";
 import { Render } from "../render";
 import { BasicLayer } from "../managers/layer.manager";
 

@@ -1,5 +1,5 @@
 import { ElementNode, AnimationsNode, AnimationDataNode, DisplayNode } from "game-capsule";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";

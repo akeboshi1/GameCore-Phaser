@@ -1,5 +1,5 @@
 import { LoginPanel } from "../../ui/login/login";
-import { Logger } from "../../utils/log";
+import { Logger } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 
