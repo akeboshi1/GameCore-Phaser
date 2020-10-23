@@ -1,5 +1,5 @@
 import { ResUtils } from "../../../utils/resUtil";
-import { IAvatar, IDragonbonesModel } from "./dragonbones.model";
+import { IAvatar, IDragonbonesModel } from "../../../structureinterface/dragonbones";
 import { DisplayObject, DisplayField } from "../display.object";
 import { RunningAnimation } from "../../../structureinterface/animation";
 

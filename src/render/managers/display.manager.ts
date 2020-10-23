@@ -1,9 +1,10 @@
 import { Export, RPCEmitter, RPCExecutor, RPCParam } from "webworker-rpc";
 import { RunningAnimation } from "../../structureinterface/animation";
-import { DisplayType } from "../../structureinterface/display";
+import { IFramesModel } from "../../structureinterface/frame";
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
+import { IDragonbonesModel } from "../../structureinterface/dragonbones";
 import { SceneManager } from "./scene.manager";
 
 export class DisplayManager {
@@ -13,28 +14,27 @@ export class DisplayManager {
         this.displays = new Map();
     }
 
-    public addDisplay(displayID: number, type: DisplayType, data: any): void {
-        const scene = this.sceneManager.currentScene;
-        if (!scene) return;
-
-        let display: DisplayObject;
-        switch (type) {
-            case DisplayType.Dragonbones:
-                display = new DragonbonesDisplay(scene, data);
-                break;
-            case DisplayType.Element:
-                // display = new ElementDisplay(scene, data);
-                break;
-            case DisplayType.Frame:
-                // display = new FramesDisplay(scene, data);
-                break;
-            case DisplayType.Terrain:
-                // display = new TerrainDisplay(scene, data);
-                break;
-            default:
-                Logger.getInstance().error("undefined display type: ", type);
-                return;
-        }
+    public addDisplay(data: IFramesModel | IDragonbonesModel): void {
+        // const scene = this.sceneManager.currentScene;
+        // if (!scene) return;
+        // let display: DisplayObject;
+        // switch (type) {
+        //     case DisplayType.Dragonbones:
+        //         display = new DragonbonesDisplay(scene, data);
+        //         break;
+        //     case DisplayType.Element:
+        //         // display = new ElementDisplay(scene, data);
+        //         break;
+        //     case DisplayType.Frame:
+        //         // display = new FramesDisplay(scene, data);
+        //         break;
+        //     case DisplayType.Terrain:
+        //         // display = new TerrainDisplay(scene, data);
+        //         break;
+        //     default:
+        //         Logger.getInstance().error("undefined display type: ", type);
+        //         return;
+        // }
 
         // this.displays.set(displayID, display);
     }
