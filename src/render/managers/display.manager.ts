@@ -22,6 +22,7 @@ export class DisplayManager {
         const display: DisplayObject = new DragonbonesDisplay(scene, data);
         (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
         this.displays.set(data.id, display);
+        display.load(data);
     }
 
     public addTerrainDisplay(data: IFramesModel | IDragonbonesModel) {
@@ -41,9 +42,9 @@ export class DisplayManager {
         const scene = this.sceneManager.currentScene;
         if (!scene) return;
         const display: DisplayObject = new FramesDisplay(scene, data);
-        display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
         this.displays.set(data.id, display);
+        display.load(data);
     }
 
     public addWallDisplay(data: IFramesModel | IDragonbonesModel) {

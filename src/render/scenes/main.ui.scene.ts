@@ -1,8 +1,8 @@
 
 import { BasicScene } from "./basic.scene";
-import { Font, Size } from "utils";
-import { Render } from "../render";
+import { Font } from "utils";
 import { BasicLayer } from "../managers/layer.manager";
+import { Size } from "src/utils/size";
 
 export class MainUIScene extends BasicScene {
   public readonly LAYER_UI = "uiLayer";
