@@ -242,7 +242,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     get renderPeer() {
-        const render = this.peer.remote[RENDER_PEER].Render;
+        const render = this.peer.render;
         if (!render) {
             throw new Error("can't find render");
         }
