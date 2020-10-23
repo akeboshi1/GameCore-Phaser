@@ -678,7 +678,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
         Logger.getInstance().log("syncCameraScroll");
-        const sceneScrale = this.mSceneManager.currentScene().scale;
+        const sceneScrale = this.mSceneManager.currentScene.scale;
         this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
         this.mainPeer.syncCameraScroll();
     }
