@@ -1,8 +1,8 @@
+import { IAnimationData } from "../../../game/room/display/animation/animation.model";
+import { IFramesModel } from "../../../game/room/display/frames/frames.model";
 import { RunningAnimation } from "../../../structureinterface/animation";
 import { Logger, Url } from "../../../utils";
 import { DisplayField, DisplayObject } from "../display.object";
-import { IAnimationModel } from "./animation.model";
-import { IFramesModel } from "./frames.model";
 
 /**
  * 序列帧显示对象
@@ -18,7 +18,7 @@ export class FramesDisplay extends DisplayObject {
     protected mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = [];
     protected mMountContainer: Phaser.GameObjects.Container;
     protected mMainSprite: Phaser.GameObjects.Sprite;
-    protected mCurAnimation: IAnimationModel;
+    protected mCurAnimation: IAnimationData;
     protected mMountList: Phaser.GameObjects.Container[];
 
     public load(displayInfo: IFramesModel, field?: DisplayField) {
@@ -61,8 +61,8 @@ export class FramesDisplay extends DisplayObject {
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
-        // TODO ask game
-        this.mCurAnimation = data.getAnimations(animation.name);
+        const aniDatas = data.animations;
+        this.mCurAnimation = aniDatas.get(animation.name);
         if (!this.mCurAnimation) return;
         this.clear();
         const layer = this.mCurAnimation.layer;
@@ -125,19 +125,23 @@ export class FramesDisplay extends DisplayObject {
         if (!data) {
             return;
         }
-        // TODO
-        const anis = data.getAnimations("idle");
+        const anis = data.animations;
         if (!anis) {
             return;
         }
-        const layer = anis.layer;
+        // TODO
+        const ani = anis.get("idle");
+        if (!ani) {
+            return;
+        }
+        const layer = ani.layer;
         const effects = [];
         for (let i = 0; i < layer.length; i++) {
             let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
             const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_idle_${i}`;
-                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, anis);
+                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, ani);
                 display = this.scene.make.sprite(undefined, false).play(key);
             } else {
                 display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
@@ -163,7 +167,7 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         if (!this.mCurAnimation.mountLayer) {
-            Logger.getInstance().error(`mountLyaer does not exist ${this.element ? this.element.id : 0}`);
+            Logger.getInstance().error(`mountLyaer does not exist ${this.id}`);
             return;
         }
         const { index, mountPoint } = this.mCurAnimation.mountLayer;
@@ -408,15 +412,16 @@ export class FramesDisplay extends DisplayObject {
         this.scene.anims.create(config);
     }
 
-    private initBaseLoc(field: DisplayField, playAnimation: AnimationData) {
+    private initBaseLoc(field: DisplayField, playAnimation: RunningAnimation) {
         const data: IFramesModel = this.mDisplayDatas.get(field);
         // const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         if (this.mDisplays.length < 1 || !data || !data.animations) return;
         // const animations = data.getAnimations(aniName);
         // if (!animations) return;
         const { name, flip } = playAnimation;
-        this.mCollisionArea = data.getCollisionArea(name, flip);
-        this.mOriginPoint = data.getOriginPoint(name, flip);
+        // TODO
+        // this.mCollisionArea = data.getCollisionArea(name, flip);
+        // this.mOriginPoint = data.getOriginPoint(name, flip);
 
         if (this.mReferenceArea) {
             this.showRefernceArea();

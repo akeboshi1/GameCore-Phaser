@@ -1,10 +1,12 @@
 import { Helpers } from "game-capsule";
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
+import { DragonbonesDisplay } from "../../../../render/display/dragonbones/dragonbones.display";
 import { AnimationQueue, RunningAnimation } from "../../../../structureinterface/animation";
+import { IFramesModel } from "../../../../structureinterface/frame";
 import { IPos, LogicPos, LogicPoint, Logger, Direction } from "../../../../utils";
 import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel, IAvatar, IDragonbonesModel } from "../dragones/dragonbones.model";
-import { FramesModel, IFramesModel } from "../frames/frames.model";
+import { FramesModel } from "../frames/frames.model";
 import NodeType = op_def.NodeType;
 export interface ISprite {
     readonly id: number;
@@ -58,7 +60,7 @@ export class Sprite implements ISprite {
     protected mSceneId: number;
     protected mUuid: number;
     protected mPlatformId: string;
-    protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+    protected mDisplayInfo: FramesModel | DragonbonesModel;
     protected mNodeType: NodeType;
     protected mCurrentAnimation: RunningAnimation;
     protected mCurrentCollisionArea: number[][];
@@ -87,13 +89,6 @@ export class Sprite implements ISprite {
         this.mAttrs = obj.attrs;
         if (obj.avatar) {
             this.updateAvatar(obj.avatar);
-            // if (attrs && attrs.length > 0) {
-            //     for (const att of attrs) {
-            //         if (att.key === "minecart") {
-            //             this.mAvatar.stalkerId = att.value;
-            //         }
-            //     }
-            // }
         }
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
@@ -316,11 +311,11 @@ export class Sprite implements ISprite {
         return this.mPlatformId;
     }
 
-    get displayInfo(): IFramesModel | IDragonbonesModel {
+    get displayInfo(): FramesModel | DragonbonesModel {
         return this.mDisplayInfo;
     }
 
-    set displayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
+    set displayInfo(displayInfo: FramesModel | DragonbonesModel) {
         this.mDisplayInfo = displayInfo;
         if (this.currentAnimationName) {
             this.mDisplayInfo.animationName = this.currentAnimationName;

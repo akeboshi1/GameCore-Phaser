@@ -31,7 +31,7 @@ export class SceneManager {
     constructor(private render: Render) {
     }
 
-    public currentScene(): BasicScene {
+    get currentScene(): BasicScene {
         const sceneManager = this.render.game.scene;
         if (!sceneManager) {
             return null;

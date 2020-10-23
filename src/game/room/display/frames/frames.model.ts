@@ -3,31 +3,12 @@ import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_pro
 import * as sha1 from "simple-sha1";
 import { RunningAnimation } from "../../../../structureinterface/animation";
 import { IDisplay } from "../../../../structureinterface/display";
+import { IFramesModel } from "../../../../structureinterface/frame";
 import { Direction } from "../../../../utils/direction";
 import { Logger } from "../../../../utils/log";
 import { LogicPoint } from "../../../../utils/logic.point";
-import { AnimationModel, IAnimationModel } from "../animation/animation.model";
+import { AnimationModel, IAnimationData } from "../animation/animation.model";
 import { Sprite } from "../sprite/sprite";
-
-export interface IFramesModel {
-    readonly discriminator: string;
-    readonly gene: string | undefined;
-    id: number;
-    avatarDir?: number;
-    type?: string;
-    display?: IDisplay | null;
-    animations?: Map<string, IAnimationModel>;
-    animationName: string;
-    getAnimations(name: string): IAnimationModel;
-    existAnimation(aniName: string): boolean;
-    getCollisionArea(aniName: string, flip: boolean): number[][];
-    getWalkableArea(aniName: string, flip: boolean): number[][];
-    getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
-    getOriginPoint(aniName: string, flip: boolean): LogicPoint;
-    createSprite(properties: object): Sprite;
-    findAnimation(baseName: string, dir: Direction): RunningAnimation;
-    destroy();
-}
 
 export class FramesModel implements IFramesModel {
     avatarDir?: number;
@@ -35,7 +16,7 @@ export class FramesModel implements IFramesModel {
     public id: number;
     public type: string;
     public display: IDisplay | null;
-    public animations: Map<string, IAnimationModel>;
+    public animations: Map<string, AnimationModel>;
     public animationName: string;
     public package: op_gameconfig.IPackage;
     public shops: op_gameconfig.IShop[];
@@ -61,7 +42,7 @@ export class FramesModel implements IFramesModel {
         }
     }
 
-    public getAnimationData(): Map<string, IAnimationModel> {
+    public getAnimationData(): Map<string, IAnimationData> {
         return this.animations;
     }
 
@@ -70,7 +51,7 @@ export class FramesModel implements IFramesModel {
         return this.animations.has(aniName);
     }
 
-    public getAnimations(name: string): IAnimationModel {
+    public getAnimations(name: string): IAnimationData {
         if (!this.animations) return;
         return this.animations.get(name);
     }
@@ -85,7 +66,7 @@ export class FramesModel implements IFramesModel {
 
     public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
         const anis: op_gameconfig_01.IAnimationData[] = [];
-        this.animations.forEach((ani: IAnimationModel) => {
+        this.animations.forEach((ani: AnimationModel) => {
             anis.push(ani.createProtocolObject());
         }, this);
         return anis;
@@ -203,7 +184,7 @@ export class FramesModel implements IFramesModel {
         this.mGen = sha1.sync(display.dataPath + display.texturePath);
     }
 
-    private setAnimationData(aniDatas: IAnimationModel[]) {
+    private setAnimationData(aniDatas: AnimationModel[]) {
         if (!aniDatas) {
             Logger.getInstance().error(`${this.id} animationData does not exist`);
             return;

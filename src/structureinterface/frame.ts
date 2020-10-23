@@ -1,6 +1,5 @@
-import { IFrame } from "game-capsule";
-import { IDisplay } from "../../../structureinterface/display";
-import { IAnimationModel } from "./animation.model";
+import { IAnimationData } from "./animation";
+import { IDisplay } from "./display";
 
 export interface IFramesModel {
     readonly discriminator: string;
@@ -9,6 +8,6 @@ export interface IFramesModel {
     avatarDir?: number;
     type?: string;
     display?: IDisplay | null;
-    animations?: Map<string, IAnimationModel>;
+    animations?: Map<string, IAnimationData>;
     animationName: string;
 }

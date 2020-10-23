@@ -30,7 +30,6 @@ export class Render extends RPCPeer implements GameMain {
     private readonly DEFAULT_HEIGHT = 640;
     private mSceneManager: SceneManager;
     private mCameraManager: CamerasManager;
-    private mElementManager
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -686,7 +685,6 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public createDisplay(displayInfo: any) {
-        this.mGame;
     }
 
     private onFullScreenChange() {

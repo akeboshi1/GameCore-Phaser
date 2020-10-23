@@ -2,7 +2,7 @@ import { op_gameconfig_01, op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
 import { LogicPoint } from "../../../../utils/logic.point";
 
-export interface IAnimationModel {
+export interface IAnimationData {
     name: string;
     frameName: string[];
     frameRate: number;
@@ -15,10 +15,9 @@ export interface IAnimationModel {
     readonly interactiveArea?: op_def.IPBPoint2i[];
     readonly layer: op_gameconfig_01.IAnimationLayer[];
     readonly mountLayer: op_gameconfig_01.IAnimationMountLayer;
-    createProtocolObject(): op_gameconfig_01.IAnimationData;
 }
 
-export class AnimationModel implements IAnimationModel {
+export class AnimationModel implements IAnimationData {
     protected mNode: op_gameconfig_01.INode;
     protected mID: number;
     protected mBaseLoc: LogicPoint;

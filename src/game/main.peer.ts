@@ -248,7 +248,7 @@ export class MainPeer extends RPCPeer {
 
     // display data getter
     @Export()
-    public framesModel_getAnimations(id: number, name: string): any {// IAnimationModel
+    public framesModel_getAnimations(id: number, name: string): any {// IAnimationData
         return null;
     }
 
