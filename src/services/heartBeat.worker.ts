@@ -1,5 +1,5 @@
 import { RPCPeer, RPCExecutor, Export, webworker_rpc, RemoteListener } from "webworker-rpc";
-import { HEARTBEAT_WORKER, MAIN_WORKER } from "../structureinterface/worker.name";
+import { HEARTBEAT_WORKER, MAIN_WORKER } from "structureinterface";
 
 class HeartBeatPeer extends RPCPeer {
     public inited: boolean = false;

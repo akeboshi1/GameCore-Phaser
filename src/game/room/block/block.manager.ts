@@ -1,4 +1,4 @@
-import { SceneName } from "../../../structureinterface/scene.name";
+import { SceneName } from "structureinterface";
 import { Game } from "../../game";
 import { IRoomService } from "../room/room";
 import { Fit, IScenery } from "../skybox/scenery";

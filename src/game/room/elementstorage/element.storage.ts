@@ -17,8 +17,7 @@ import { IScenery } from "../skybox/scenery";
 import { Logger } from "../../../utils/log";
 import { AnimationModel } from "../display/animation/animation.model";
 import { Url } from "../../../utils";
-import { IFramesModel } from "../../../structureinterface/frame";
-import { IDragonbonesModel } from "../../../structureinterface/dragonbones";
+import { IDragonbonesModel, IFramesModel } from "structureinterface";
 
 export interface IAsset {
     type: string;

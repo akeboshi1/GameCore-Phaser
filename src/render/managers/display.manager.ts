@@ -1,10 +1,6 @@
-import { Export, RPCEmitter, RPCExecutor, RPCParam } from "webworker-rpc";
-import { RunningAnimation } from "../../structureinterface/animation";
-import { IFramesModel } from "../../structureinterface/frame";
+import { RunningAnimation, IFramesModel, IDragonbonesModel } from "structureinterface";
 import { Logger } from "../../utils/log";
 import { DisplayField, DisplayObject } from "../display/display.object";
-import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { IDragonbonesModel } from "../../structureinterface/dragonbones";
 import { SceneManager } from "./scene.manager";
 
 export class DisplayManager {

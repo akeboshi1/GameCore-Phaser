@@ -5,9 +5,8 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import { ILauncherConfig } from "../structureinterface/lanucher.config";
+import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structureinterface";
 import { Logger } from "../utils/log";
-import { HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "../structureinterface/worker.name";
 import { LogicPoint } from "../utils";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);

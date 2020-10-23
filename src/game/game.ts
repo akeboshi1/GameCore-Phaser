@@ -15,14 +15,13 @@ import { Tool } from "../utils/tool";
 import { LoadingManager } from "./loading/loading.manager";
 import { LoadingTips } from "./loading/loading.tips";
 import { load } from "../utils/http";
-import { ILauncherConfig } from "../structureinterface/lanucher.config";
+import { ILauncherConfig, RENDER_PEER } from "structureinterface";
 import { ServerAddress } from "../../lib/net/address";
 import { UIManager } from "./ui/ui.manager";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
-import { RENDER_PEER } from "../structureinterface/worker.name";
 interface ISize {
     width: number;
     height: number;

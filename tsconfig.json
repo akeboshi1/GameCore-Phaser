@@ -14,7 +14,13 @@
     "typeRoots": [
       "node_modules/@types",
       "node_modules/apowophaserui/types"
-  ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "structureinterface": [
+        "./src/structureinterface/index"
+      ],
+    },
   },
   "exclude": [
     "node_modules",

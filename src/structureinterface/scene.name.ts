@@ -1,5 +1,3 @@
-import { PlayScene } from "../render/scenes/play.scene";
-
 export class SceneName {
     public static PLAY_SCENE = "PlayScene";
     public static PLAY_SCENE_1 = "PlayScene_1";

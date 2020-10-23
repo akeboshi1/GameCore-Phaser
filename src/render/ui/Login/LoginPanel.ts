@@ -1,6 +1,6 @@
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
-import { MAIN_WORKER } from "../../../structureinterface/worker.name";
+import { MAIN_WORKER } from "structureinterface";
 import { Font } from "../../../utils";
 import Helpers from "../../../utils/helpers";
 import { BasePanel } from "../components/base.panel";

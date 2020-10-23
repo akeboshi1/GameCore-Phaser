@@ -1,6 +1,5 @@
 import { IAnimationData } from "../../../game/room/display/animation/animation.model";
-import { RunningAnimation } from "../../../structureinterface/animation";
-import { IFramesModel } from "../../../structureinterface/frame";
+import { RunningAnimation, IFramesModel } from "structureinterface";
 import { Logger, Url } from "../../../utils";
 import { DisplayField, DisplayObject } from "../display.object";
 

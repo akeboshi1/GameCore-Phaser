@@ -1,15 +1,14 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { IDragonbonesModel } from "../../../structureinterface/dragonbones";
-import { IFramesModel } from "../../../structureinterface/frame";
+import { IDragonbonesModel, IFramesModel } from "structureinterface";
 import { Logger } from "../../../utils/log";
 import { LogicPos } from "../../../utils/logic.pos";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService } from "../room/room";
 
-import { IElement,Element, InputEnable } from "./element";
+import { IElement, Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
 export interface IElementManager {
     hasAddComplete: boolean;
