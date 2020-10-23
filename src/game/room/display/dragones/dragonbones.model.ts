@@ -1,23 +1,13 @@
 import { op_def } from "pixelpai_proto";
 import { RunningAnimation } from "../../../../structureinterface/animation";
-import { Direction } from "../../../../utils/direction";
-import { LogicPoint } from "../../../../utils/logic.point";
+import { Direction, LogicPoint } from "../../../../utils";
+
 export interface IDragonbonesModel {
     readonly discriminator: string;
     id: number;
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
-
-    // TODO
-    destroy();
-    getCollisionArea(aniName: string): number[][];
-    getWalkableArea(aniName: string): number[][];
-    getOriginPoint(aniName: string): LogicPoint;
-    existAnimation(aniName: string): boolean;
-    getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
-    findAnimation(baseName: string, dir: Direction): RunningAnimation;
-
 }
 
 export interface IAvatar {
@@ -61,6 +51,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     id: number;
     avatarDir?: number;
     avatar?: IAvatar;
+    animationName?: string;
 
     constructor(data: any) {
         // this.id = id;

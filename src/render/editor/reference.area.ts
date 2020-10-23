@@ -1,15 +1,16 @@
 import { Pos } from "../../utils/pos";
 import { Logger } from "../../utils/log";
 import { IPosition45Obj, Position45 } from "../../utils/position45";
+import { LogicPoint } from "../../utils";
 
 export class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize: IPosition45Obj;
-    private mOrigin: Phaser.Geom.Point;
+    private mOrigin: LogicPoint;
     constructor(scene: Phaser.Scene, private mRoomService: any) {
         super(scene);
     }
 
-    draw(area: number[][], origin: Phaser.Geom.Point) {
+    draw(area: number[][], origin: LogicPoint) {
         this.clear();
         if (area.length === 0 || area[0].length === 0) {
             return;

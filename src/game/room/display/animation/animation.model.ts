@@ -15,7 +15,6 @@ export interface IAnimationModel {
     readonly interactiveArea?: op_def.IPBPoint2i[];
     readonly layer: op_gameconfig_01.IAnimationLayer[];
     readonly mountLayer: op_gameconfig_01.IAnimationMountLayer;
-    createProtocolObject(): op_gameconfig_01.IAnimationData;
 }
 
 export class AnimationModel implements IAnimationModel {

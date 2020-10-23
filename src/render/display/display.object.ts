@@ -1,8 +1,8 @@
-import { Url } from "../../utils/resUtil";
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
 import { IDragonbonesModel } from "./dragonbones/dragonbones.model";
 import { RunningAnimation } from "../../structureinterface/animation";
+import { Url, LogicPoint } from "../../utils";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -20,7 +20,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mAlpha: number = 1;
     protected mBaseLoc: Phaser.Geom.Point;
     protected mCollisionArea: number[][];
-    protected mOriginPoint: Phaser.Geom.Point;
+    protected mOriginPoint: LogicPoint;
     protected mFlagContainer: Phaser.GameObjects.Container;
     protected mNickname: Phaser.GameObjects.Text;
     protected mBadges: DynamicImage[];

@@ -18,15 +18,6 @@ export interface IFramesModel {
     display?: IDisplay | null;
     animations?: Map<string, IAnimationModel>;
     animationName: string;
-    getAnimations(name: string): IAnimationModel;
-    existAnimation(aniName: string): boolean;
-    getCollisionArea(aniName: string, flip: boolean): number[][];
-    getWalkableArea(aniName: string, flip: boolean): number[][];
-    getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined;
-    getOriginPoint(aniName: string, flip: boolean): LogicPoint;
-    createSprite(properties: object): Sprite;
-    findAnimation(baseName: string, dir: Direction): RunningAnimation;
-    destroy();
 }
 
 export class FramesModel implements IFramesModel {
@@ -35,7 +26,7 @@ export class FramesModel implements IFramesModel {
     public id: number;
     public type: string;
     public display: IDisplay | null;
-    public animations: Map<string, IAnimationModel>;
+    public animations: Map<string, AnimationModel>;
     public animationName: string;
     public package: op_gameconfig.IPackage;
     public shops: op_gameconfig.IShop[];
@@ -85,7 +76,7 @@ export class FramesModel implements IFramesModel {
 
     public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
         const anis: op_gameconfig_01.IAnimationData[] = [];
-        this.animations.forEach((ani: IAnimationModel) => {
+        this.animations.forEach((ani: AnimationModel) => {
             anis.push(ani.createProtocolObject());
         }, this);
         return anis;
@@ -203,7 +194,7 @@ export class FramesModel implements IFramesModel {
         this.mGen = sha1.sync(display.dataPath + display.texturePath);
     }
 
-    private setAnimationData(aniDatas: IAnimationModel[]) {
+    private setAnimationData(aniDatas: AnimationModel[]) {
         if (!aniDatas) {
             Logger.getInstance().error(`${this.id} animationData does not exist`);
             return;
