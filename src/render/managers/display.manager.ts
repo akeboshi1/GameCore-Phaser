@@ -17,12 +17,13 @@ export class DisplayManager {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.currentScene;
+        const scene = this.sceneManager.getSceneByName(PlayScene.name);
         if (!scene) return;
         const display: DisplayObject = new DragonbonesDisplay(scene, data);
         this.displays.set(data.id, display);
         display.load(data);
-        (<PlayScene>scene).layerManager.addToLayer("middleLayer", display);
+        // scene.add.container(0, 0).add(display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
     public addTerrainDisplay(data: IFramesModel | IDragonbonesModel) {

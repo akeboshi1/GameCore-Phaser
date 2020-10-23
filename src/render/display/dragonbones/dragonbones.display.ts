@@ -244,7 +244,7 @@ export class DragonbonesDisplay extends DisplayObject {
                 this.mAnimationName,
                 this.dragonBonesName,
             );
-            this.mArmatureDisplay.visible = false;
+            // this.mArmatureDisplay.visible = false;
             this.showPlaceholder();
             this.add(this.mArmatureDisplay);
         }
@@ -252,7 +252,7 @@ export class DragonbonesDisplay extends DisplayObject {
         this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
 
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
-        this.clearArmatureSlot();
+        // this.clearArmatureSlot();
         // ==========替换相应格位的display，服务端通信后可调用
         this.getReplaceArr();
         this.showReplaceArmatrue();

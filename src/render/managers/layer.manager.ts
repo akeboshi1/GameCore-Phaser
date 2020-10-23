@@ -50,6 +50,7 @@ export class LayerManager {
 
         const layer = new layerClass(scene, name, depth);
         this.layers.set(name, layer);
+        scene.sys.displayList.add(layer);
         return layer;
     }
 
