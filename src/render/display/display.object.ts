@@ -122,7 +122,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             this.addChildMap("reference", this.mReferenceArea);
         }
         if (!this.mCollisionArea || this.mCollisionArea.length <= 0) return;
-        this.mReferenceArea.draw(this.mCollisionArea, this.mOriginPoint);
+        this.mReferenceArea.draw(this.mCollisionArea, new Phaser.Geom.Point(this.mOriginPoint.x, this.mOriginPoint.y));
         this.addAt(this.mReferenceArea, 0);
     }
 
