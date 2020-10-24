@@ -319,6 +319,10 @@ export class Render extends RPCPeer implements GameMain {
         return this.mainPeer.getCurrentRoomSize();
     }
 
+    public syncCameraScroll() {
+        this.mainPeer.syncCameraScroll();
+    }
+
     @Export()
     public showLogin() {
         this.mSceneManager.startScene("LoginScene", this);
@@ -703,7 +707,7 @@ export class Render extends RPCPeer implements GameMain {
         Logger.getInstance().log("syncCameraScroll");
         const sceneScrale = this.mSceneManager.getSceneByName("PlayScene").scale;
         this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
-        this.mainPeer.syncCameraScroll();
+        this.syncCameraScroll();
     }
 
     @Export()
