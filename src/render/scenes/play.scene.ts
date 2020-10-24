@@ -49,7 +49,7 @@ export class PlayScene extends RoomScene {
         this.scale.on("resize", this.checkSize, this);
 
         // ======= render startPlay
-        this.render.camermsManager.startRoomPlay(this);
+        this.render.camerasManager.startRoomPlay(this);
         this.render.showLoading({ "text": LoadingTips.loadingResources() });
         this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.onLoadCompleteHandler();

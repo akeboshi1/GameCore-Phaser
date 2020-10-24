@@ -4,7 +4,7 @@ export { Url } from "./resUtil";
 export { Handler } from "./Handler";
 export { Logger } from "./log";
 export { Direction } from "./direction";
-export { LogicPoint } from "./logic.point";
+export { ILogicPoint, LogicPoint } from "./logic.point";
 export { IPos, LogicPos } from "./logic.pos";
 export { ResUtils } from "./resUtil";
 export { Tool } from "./tool";

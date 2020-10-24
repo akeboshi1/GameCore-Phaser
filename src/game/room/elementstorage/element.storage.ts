@@ -13,10 +13,10 @@ import { op_def } from "pixelpai_proto";
 import { MossCollectionNode } from "game-capsule";
 import { FramesModel } from "../display/frames/frames.model";
 import { DragonbonesModel } from "../display/dragones/dragonbones.model";
-import { IScenery } from "../skybox/scenery";
 import { AnimationModel } from "../display/animation/animation.model";
 import { Logger, Url } from "utils";
 import { IDragonbonesModel, IFramesModel } from "structureinterface";
+import { IScenery } from "src/structureinterface/scenery";
 
 export interface IAsset {
     type: string;

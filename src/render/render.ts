@@ -94,7 +94,7 @@ export class Render extends RPCPeer implements GameMain {
         return this.mSceneManager;
     }
 
-    get camermsManager(): CamerasManager {
+    get camerasManager(): CamerasManager {
         return this.mCameraManager;
     }
 
