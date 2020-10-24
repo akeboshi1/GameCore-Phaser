@@ -734,9 +734,10 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
-            this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo);
+            this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo as IDragonbonesModel);
         } else {
-            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo);
+            // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
+            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo as IFramesModel);
         }
         this.addToBlock();
         return this;

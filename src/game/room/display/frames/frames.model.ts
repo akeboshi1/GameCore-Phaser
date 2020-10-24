@@ -16,7 +16,7 @@ export class FramesModel implements IFramesModel {
     public animationName: string;
     public package: op_gameconfig.IPackage;
     public shops: op_gameconfig.IShop[];
-    protected mGen: string;
+    public gene: string;
 
     constructor(data: any) {
         // TODO 定义IElement接口
@@ -54,10 +54,6 @@ export class FramesModel implements IFramesModel {
 
     public destroy() {
         if (this.animations) this.animations.clear();
-    }
-
-    get gene(): string | undefined {
-        return this.mGen;
     }
 
     public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
@@ -177,7 +173,7 @@ export class FramesModel implements IFramesModel {
             dataPath: display.dataPath,
             texturePath: display.texturePath,
         };
-        this.mGen = sha1.sync(display.dataPath + display.texturePath);
+        this.gene = sha1.sync(display.dataPath + display.texturePath);
     }
 
     private setAnimationData(aniDatas: AnimationModel[]) {

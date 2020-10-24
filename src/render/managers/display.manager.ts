@@ -25,7 +25,7 @@ export class DisplayManager {
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
-    public addTerrainDisplay(data: IFramesModel | IDragonbonesModel) {
+    public addTerrainDisplay(data: IFramesModel ) {
         if (!data) {
             return;
         }
@@ -37,7 +37,7 @@ export class DisplayManager {
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
-    public addFramesDisplay(data: IFramesModel | IDragonbonesModel) {
+    public addFramesDisplay(data: IFramesModel) {
         if (!data) {
             return;
         }

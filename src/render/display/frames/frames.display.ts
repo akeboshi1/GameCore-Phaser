@@ -19,9 +19,10 @@ export class FramesDisplay extends DisplayObject {
     protected mMainSprite: Phaser.GameObjects.Sprite;
     protected mCurAnimation: IAnimationData;
     protected mMountList: Phaser.GameObjects.Container[];
-
+    private mModel: IFramesModel;
     public load(displayInfo: IFramesModel, field?: DisplayField) {
         field = !field ? DisplayField.STAGE : field;
+        this.mModel = displayInfo;
         const data = displayInfo;
         if (!data || !data.gene) return;
         const currentDisplay = this.mDisplayDatas.get(field);
@@ -377,6 +378,7 @@ export class FramesDisplay extends DisplayObject {
         }
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
+                this.play({ name: "idle", flip: false });
                 this.emit("initialized", this);
             } else {
                 this.playEffect();

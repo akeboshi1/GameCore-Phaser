@@ -16,13 +16,14 @@ import { PlayerManager } from "../player/player.manager";
 import { ElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
+import { TerrainManager } from "../terrain/terrain.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
 
 export interface IRoomService {
     readonly id: number;
-    // readonly terrainManager: TerrainManager;
+    readonly terrainManager: TerrainManager;
     readonly elementManager: ElementManager;
     readonly playerManager: PlayerManager;
     readonly cameraService: ICameraService;
@@ -80,7 +81,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mGame: Game;
     // protected mMap: Map;
     protected mID: number;
-    // protected mTerrainManager: TerrainManager;
+    protected mTerrainManager: TerrainManager;
     protected mElementManager: ElementManager;
     protected mPlayerManager: PlayerManager;
     // protected mWallManager: WallManager;
@@ -88,7 +89,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // protected mGroupManager: GroupManager;
     // protected mHandlerManager: HandlerManager;
     // protected mSkyboxManager: SkyBoxManager;
-    protected mViewBlockManager: ViewblockManager;
     // protected mEffectManager: EffectManager;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -237,12 +237,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!ele && this.mElementManager) {
             ele = this.mElementManager.get(id);
         }
+        if (!ele && this.mTerrainManager) {
+            ele = this.mTerrainManager.get(id);
+        }
         return ele;
     }
 
     public update(time: number, delta: number) {
         this.updateClock(time, delta);
-        // this.mBlocks.update(time, delta);
+        this.mBlocks.update(time, delta);
         // this.mViewBlockManager.update(time, delta);
         // if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mElementManager) this.mElementManager.update(time, delta);
@@ -294,7 +297,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         Logger.getInstance().log("roomstartPlay");
         this.mCameraService = new CamerasManager(this.mGame, this);
         // this.mScene = this.world.game.scene.getScene(PlayScene.name);
-        // this.mTerrainManager = new TerrainManager(this, this);
+        this.mTerrainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
         // this.mWallManager = new WallManager(this);
@@ -366,7 +369,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public clear() {
         // if (this.mLayManager) this.mLayManager.destroy();
-        // if (this.mTerrainManager) this.mTerrainManager.destroy();
+        if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mPlayerManager) this.mPlayerManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
@@ -427,9 +430,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     }
     // }
 
-    // get terrainManager(): TerrainManager {
-    //     return this.mTerrainManager || undefined;
-    // }
+    get terrainManager(): TerrainManager {
+        return this.mTerrainManager || undefined;
+    }
 
     get elementManager(): ElementManager {
         return this.mElementManager || undefined;

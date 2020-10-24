@@ -712,12 +712,12 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public createFramesDisplay(displayInfo: IFramesModel | IDragonbonesModel) {
+    public createFramesDisplay(displayInfo: IFramesModel) {
         this.mDisplayManager.addFramesDisplay(displayInfo);
     }
 
     @Export()
-    public createTerrainDisplay(displayInfo: IFramesModel | IDragonbonesModel) {
+    public createTerrainDisplay(displayInfo: IFramesModel) {
         this.mDisplayManager.addTerrainDisplay(displayInfo);
     }
 
