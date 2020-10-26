@@ -5,12 +5,19 @@ import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
+import { IScenery } from "src/structureinterface/scenery";
+import { BlockManager } from "../display/scenery/block.manager";
+import { Render } from "../render";
 
 export class DisplayManager {
+    private sceneManager: SceneManager;
     private displays: Map<number, DisplayObject>;
+    private scenerys: Map<number, IScenery>;
 
-    constructor(private game: Phaser.Game, private sceneManager: SceneManager) {
+    constructor(private render: Render) {
+        this.sceneManager = render.sceneManager;
         this.displays = new Map();
+        this.scenerys = new Map();
     }
 
     public addDragonbonesDisplay(data: IFramesModel | IDragonbonesModel): void {
@@ -194,6 +201,14 @@ export class DisplayManager {
         if (!display) return;
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         display.changeAlpha(sprite.alpha);
+    }
+
+    public addSkybox(scenery: IScenery) {
+        const skybox = new BlockManager(scenery, this.render);
+    }
+
+    public removeSkybox(scenery: IScenery) {
+
     }
 
     public getDisplay(id: number): DisplayObject {

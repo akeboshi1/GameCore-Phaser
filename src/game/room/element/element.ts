@@ -188,8 +188,6 @@ export class Element extends BlockObject implements IElement {
         //     return;
         // }
         if (this.mModel.pos) {
-            const obj = { id: model.id, pos: model.pos, alpha: model.alpha };
-            this.mElementManager.roomService.game.peer.render.setDisplayData(obj);
             this.setPosition(this.mModel.pos);
         }
         this.mElementManager.roomService.game.peer.render.setDisplayData(model);

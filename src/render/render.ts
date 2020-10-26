@@ -18,10 +18,8 @@ import * as path from "path";
 import { IFramesModel } from "../structureinterface/frame";
 import { IDragonbonesModel } from "../structureinterface/dragonbones";
 import { DisplayManager } from "./managers/display.manager";
+import { IScenery } from "src/structureinterface/scenery";
 import { MouseManager } from "./input/mouse.manager";
-// import { InputManager } from "./input/input.service";
-// import { KeyBoardManager } from "./input/keyboard.manager";
-// import { JoyStickManager } from "./input/joystick.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -141,7 +139,7 @@ export class Render extends RPCPeer implements GameMain {
         this.mLocalStorageManager = new LocalStorageManager();
         this.mSceneManager = new SceneManager(this);
         this.mMouseManager = new MouseManager(this);
-        this.mDisplayManager = new DisplayManager(this.game, this.mSceneManager);
+        this.mDisplayManager = new DisplayManager(this);
     }
 
     resize(width: number, height: number) {
@@ -744,6 +742,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public setDisplayData(sprite: any) {
         this.mDisplayManager.setDisplayData(sprite);
+    }
+
+    @Export()
+    public addSkybox(scenery: IScenery) {
+        this.mDisplayManager.addSkybox(scenery);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

@@ -19,6 +19,7 @@ import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { IScenery } from "src/structureinterface/scenery";
+import { Scenery } from "../sky.box/scenery";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -307,7 +308,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mLayManager = new LayerManager(this);
         // this.mGroupManager = new GroupManager(this);
         // this.mFrameManager = new FrameManager();
-        // this.mSkyboxManager = new SkyBoxManager(this);
+        this.mSkyboxManager = new SkyBoxManager(this);
         // this.mEffectManager = new EffectManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
@@ -398,7 +399,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const scenerys = this.game.elementStorage.getScenerys();
         if (scenerys) {
             for (const scenery of scenerys) {
-                this.addSkyBox(scenery);
+                this.addSkyBox({
+                    id: scenery.id,
+                    uris: scenery.uris,
+                    depth: scenery.depth,
+                    width: scenery.width,
+                    height: scenery.height,
+                    speed: scenery.speed,
+                    offset: scenery.offset,
+                    fit: scenery.fit
+                });
             }
         }
     }

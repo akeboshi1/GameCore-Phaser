@@ -4,6 +4,7 @@ import { State } from "../state/state.group";
 import { IRoomService } from "../room/room";
 import { IScenery } from "src/structureinterface/scenery";
 import { Scenery } from "./scenery";
+import { Game } from "src/game/game";
 
 export interface ISkyBoxConfig {
   key: string;
@@ -17,9 +18,11 @@ export class SkyBoxManager extends PacketHandler {
   protected mRoom: IRoomService;
   protected mScenetys: Map<number, IScenery>;
   protected mStateMap: Map<string, State>;
+  protected mGame: Game;
   constructor(room: IRoomService) {
     super();
     this.mRoom = room;
+    this.mGame = room.game;
     this.mScenetys = new Map();
   }
 
@@ -29,6 +32,7 @@ export class SkyBoxManager extends PacketHandler {
     // }
     // const blockManager = new BlockManager(scenery, this.mRoom);
     this.mScenetys.set(scenery.id, scenery);
+    this.mGame.renderPeer.addSkybox(scenery);
     // if (this.mStateMap) {
     //   blockManager.setState(this.mStateMap);
     // }

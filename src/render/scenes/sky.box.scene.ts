@@ -16,7 +16,7 @@ export class SkyBoxScene extends BasicScene {
 
   create() {
     const oldCamera = this.cameras.main;
-    this.cameras.addExisting(new PlayCamera(0, 0, this.sys.scale.width, this.sys.scale.height, this.skyBoxManager.world.scaleRatio), true);
+    this.cameras.addExisting(new PlayCamera(0, 0, this.sys.scale.width, this.sys.scale.height, this.skyBoxManager.scaleRatio), true);
     this.cameras.remove(oldCamera);
     // this.scene.sendToBack();
 
