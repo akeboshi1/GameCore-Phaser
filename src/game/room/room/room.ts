@@ -293,7 +293,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return { width: w, height: h };
     }
 
-    public startPlay() {
+    public async startPlay() {
         // if (this.mLayManager) {
         //     this.layerManager.destroy();
         // }
@@ -333,7 +333,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // // if (this.world.uiManager) this.world.uiManager.showMainUI();
 
         if (this.connection) {
-            this.cameraService.syncCamera();
+            await this.cameraService.syncCamera();
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         }
 
@@ -559,23 +559,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onCameraFollowHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
-        const target = this.getElement(content.id);
-        if (!this.mCameraService) return;
-        if (target) {
-            Logger.getInstance().log("followHandler====room");
-            if (content.effect === "liner") {
-                this.mCameraService.pan();
-                // const position = target.getPosition();
-                // this.mCameraService.pan(position.x, position.y, 300).then(() => {
-                //     this.mCameraService.startFollow(target);
-                // });
-            } else {
-                this.game.peer.render.startFollow(content.id);
-            }
-        } else {
-            if (this.mCameraService) this.game.peer.render.stopFollow();
-            // this.mCameraService.stopFollow();
-        }
+        this.game.renderPeer.cameraFollow(content.id, content.effect);
     }
 
     private onSyncStateHandler(packet: PBpacket) {

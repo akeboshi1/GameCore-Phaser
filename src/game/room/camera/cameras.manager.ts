@@ -13,7 +13,6 @@ export interface ICameraService {
     syncCamera(): void;
     syncCameraScroll(): void;
     resetCameraSize(width: number, height: number);
-    pan();
     destroy(): void;
 }
 
@@ -51,10 +50,6 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         });
     }
 
-    public pan() {
-        this.mGame.peer.render.cameraPan();
-    }
-
     public syncToEditor() {
         const cameraView = this.mGame.peer.render.getWorldView();
         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
@@ -80,7 +75,6 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public async syncCameraScroll() {
-        Logger.getInstance().log("cameras manager ==== synccamerascroll");
         const cameraView = await this.mGame.peer.render.getWorldView();
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_CAMERA_POSITION = pkt.content;

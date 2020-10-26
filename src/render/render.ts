@@ -770,16 +770,19 @@ export class Render extends RPCPeer implements GameMain {
         if (display) display.setPosition(x, y, z);
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public startFollow(id: number) {
-        Logger.getInstance().log("target ===== startFollow");
-        const display = this.mDisplayManager.getDisplay(id);
-        if (display) this.mCameraManager.startFollow(display);
-    }
-
-    @Export()
-    public stopFollow() {
-        this.mCameraManager.stopFollow();
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public async cameraFollow(id: number, effect: string) {
+        const target = this.mDisplayManager.getDisplay(id);
+        if (target) {
+            if (effect === "liner") {
+                await this.mCameraManager.pan(target.x, target.y, target.y);
+                this.mCameraManager.startFollow(target);
+            } else {
+                this.mCameraManager.startFollow(target);
+            }
+        } else {
+            this.mCameraManager.stopFollow();
+        }
     }
 
     @Export([webworker_rpc.ParamType.num])
