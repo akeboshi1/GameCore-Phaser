@@ -193,14 +193,20 @@ export class MainPeer extends RPCPeer {
         }
     }
 
-    @Export([webworker_rpc.ParamType.num])
+    @Export()
     public sendMouseEvent(id: number, mouseEvent, point3f) {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
         content.mouseEvent = mouseEvent;
         content.point3f = point3f;
-        this.game.socket.send(pkt);
+        this.game.connection.send(pkt);
+    }
+
+    @Export()
+    public displayStartMove(id: number) {
+        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (element) element.startMove();
     }
 
     // ============= 心跳调用主进程

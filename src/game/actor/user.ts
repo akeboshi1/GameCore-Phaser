@@ -130,13 +130,13 @@ export class User extends Player {
         this._doMove();
     }
 
-    protected onMoving() {
-        if (this.mCurState !== PlayerState.WALK) {
-            this.mMoveData.tweenLineAnim.stop();
-            return;
-        }
-        super.onMoving();
-    }
+    // protected onMoving() {
+    //     if (this.mCurState !== PlayerState.WALK) {
+    //         this.mMoveData.tweenLineAnim.stop();
+    //         return;
+    //     }
+    //     super.onMoving();
+    // }
 
     protected addToBlock() {
         this.addDisplay();

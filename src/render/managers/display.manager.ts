@@ -26,19 +26,19 @@ export class DisplayManager {
         }
         const scene = this.sceneManager.getSceneByName(PlayScene.name);
         if (!scene) return;
-        const display: DisplayObject = new DragonbonesDisplay(scene, data);
+        const display: DisplayObject = new DragonbonesDisplay(scene, this.render, data.id);
         this.displays.set(data.id, display);
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
-    public addTerrainDisplay(data: IFramesModel ) {
+    public addTerrainDisplay(data: IFramesModel) {
         if (!data) {
             return;
         }
         const scene = this.sceneManager.getSceneByName(PlayScene.name);
         if (!scene) return;
-        const display: DisplayObject = new FramesDisplay(scene, data);
+        const display: DisplayObject = new FramesDisplay(scene, this.render, data.id);
         this.displays.set(data.id, display);
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
@@ -50,7 +50,7 @@ export class DisplayManager {
         }
         const scene = this.sceneManager.getSceneByName(PlayScene.name);
         if (!scene) return;
-        const display: DisplayObject = new FramesDisplay(scene, data);
+        const display: DisplayObject = new FramesDisplay(scene, this.render, data.id);
         this.displays.set(data.id, display);
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
@@ -220,5 +220,10 @@ export class DisplayManager {
 
     public getDisplay(id: number): DisplayObject {
         return this.displays.get(id);
+    }
+
+    public displayDoMove(id: number, moveData: any) {
+        const display = this.getDisplay(id);
+        if (display) display.doMove(moveData);
     }
 }

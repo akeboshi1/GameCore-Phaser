@@ -796,6 +796,17 @@ export class Render extends RPCPeer implements GameMain {
         this.mDisplayManager.updateSkyboxState(state);
     }
 
+    @Export([webworker_rpc.ParamType.boolean])
+    public setLayerDepth(val: boolean) {
+        const scene: BasicScene = this.mSceneManager.getSceneByName("PlayScene") as BasicScene;
+        scene.layerManager.depthSurfaceDirty = val;
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public doMove(id: number, moveData: any) {
+        this.mDisplayManager.displayDoMove(id, moveData);
+    }
+
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }

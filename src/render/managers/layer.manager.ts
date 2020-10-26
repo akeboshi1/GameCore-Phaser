@@ -4,6 +4,7 @@
 //     setScene(scene: Phaser.Scene): void;
 
 import { Logger } from "utils";
+import { DisplayObject } from "../display/display.object";
 
 //     addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
 //     addToDialogLayer(obj: Phaser.GameObjects.GameObject);
@@ -28,6 +29,7 @@ export class BasicLayer extends Phaser.GameObjects.Container {
 }
 
 export class LayerManager {
+    private mDepthSurface: boolean;
     // private mScene: Phaser.Scene;
 
     // private mInteractive: Phaser.GameObjects.Container;
@@ -99,13 +101,14 @@ export class LayerManager {
         //     this.mGroundLayer.sort("depth");
         //     this.mDepthGround = false;
         // }
-        // if (this.mDepthSurface) {
-        //     this.mDepthSurface = false;
-        //     this.mSurfaceLayer.sort("depth", (displayA: ElementDisplay, displayB: ElementDisplay) => {
-        //         // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
-        //         return displayA.sortY + displayA.sortZ > displayB.sortY + displayB.sortZ;
-        //     });
-        // }
+        if (this.mDepthSurface) {
+            this.mDepthSurface = false;
+            const surfaceLayer = this.getLayer("surfaceLayer");
+            surfaceLayer.sort("depth", (displayA: DisplayObject, displayB: DisplayObject) => {
+                // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
+                return displayA.sortY + displayA.sortZ > displayB.sortY + displayB.sortZ;
+            });
+        }
     }
 
     // public setScene(scene: Phaser.Scene) {
@@ -186,4 +189,7 @@ export class LayerManager {
     // get scene(): Phaser.Scene {
     //     return this.mScene;
     // }
+    set depthSurfaceDirty(val: boolean) {
+        this.mDepthSurface = val;
+    }
 }

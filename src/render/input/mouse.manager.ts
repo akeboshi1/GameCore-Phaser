@@ -30,14 +30,14 @@ export class MouseManager {
     }
 
     public changeScene(scene: Phaser.Scene) {
-        // this.pause();
-        // this.mGameObject = null;
-        // this.mScene = scene;
-        // if (!this.mScene) return;
-        // // scene.input.on("gameobjectup", this.groundUp, this);
-        // scene.input.on("gameobjectdown", this.groundDown, this);
-        // scene.input.on("pointerdown", this.pointerDownHandler, this);
-        // this.resume();
+        this.pause();
+        this.mGameObject = null;
+        this.mScene = scene;
+        if (!this.mScene) return;
+        // scene.input.on("gameobjectup", this.groundUp, this);
+        scene.input.on("gameobjectdown", this.groundDown, this);
+        scene.input.on("pointerdown", this.pointerDownHandler, this);
+        this.resume();
     }
 
     public resize(width: number, height: number) {
