@@ -1,7 +1,7 @@
 import { RunningAnimation, IFramesModel, IDragonbonesModel } from "structureinterface";
 import { Logger } from "utils";
 import { DisplayField, DisplayObject } from "../display/display.object";
-import { SceneManager } from "./scene.manager";
+import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";

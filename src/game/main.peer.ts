@@ -1,5 +1,5 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { op_gateway } from "pixelpai_proto";
+import { op_gateway, op_virtual_world } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 // import HeartBeatWorker from "worker-loader?filename=js/[name].js!../services/heartBeat.worker";
 import * as protos from "pixelpai_proto";
@@ -191,6 +191,16 @@ export class MainPeer extends RPCPeer {
             Logger.getInstance().log("mainpeer====synccamerascroll");
             this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
         }
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public sendMouseEvent(id: number, mouseEvent, point3f) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
+        content.id = id;
+        content.mouseEvent = mouseEvent;
+        content.point3f = point3f;
+        this.game.socket.send(pkt);
     }
 
     // ============= 心跳调用主进程
