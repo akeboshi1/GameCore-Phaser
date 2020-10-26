@@ -306,7 +306,7 @@ export class Element extends BlockObject implements IElement {
         }
         if (this.model) {
             this.model.direction = val;
-            //     this.mDisplay.play(this.model.currentAnimation);
+            // this.mDisplay.play(this.model.currentAnimation);
         }
         this.play(this.model.currentAnimationName);
     }
@@ -429,33 +429,17 @@ export class Element extends BlockObject implements IElement {
     }
 
     public startMove() {
+        this.mMoving = true;
         this.changeState(PlayerState.WALK);
     }
 
     public stopMove() {
         this.mMoving = false;
-        // if (!this.mDisplay) {
-        //     // Logger.getInstance().error(`can't stopMove, display does not exist`);
-        //     return;
-        // }
-        if (this.mMoveData && this.mMoveData.posPath) {
-            // this.mModel.setPosition(this.mDisplay.x, this.mDisplay.y);
-            // delete this.mMoveData.destPos;
-            delete this.mMoveData.posPath;
-            if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
-            if (this.mMoveData.tweenLineAnim) {
-                this.mMoveData.tweenLineAnim.stop();
-                this.mMoveData.tweenLineAnim.destroy();
-            }
-        }
         this.changeState(PlayerState.IDLE);
     }
 
     public getPosition(): IPos {
         let pos: IPos;
-        // if (!this.mDisplay) {
-        //     return new LogicPos(0, 0);
-        // }
         const p = super.getPosition();
         if (this.mRootMount) {
             pos = this.mRootMount.getPosition();
@@ -684,13 +668,13 @@ export class Element extends BlockObject implements IElement {
             return;
         }
 
-        const line = this.mMoveData.tweenLineAnim;
-        if (line) {
-            line.stop();
-            line.destroy();
-        }
-
-        const posPath = this.mMoveData.posPath;
+        // const line = this.mMoveData.tweenLineAnim;
+        // if (line) {
+        //     line.stop();
+        //     line.destroy();
+        // }
+        // const posPath = this.mMoveData.posPath;
+        this.mElementManager.roomService.game.peer.render.doMove(this.id, this.mMoveData);
         // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
         //     targets: this.mDisplay,
         //     ease: "Linear",
@@ -771,16 +755,16 @@ export class Element extends BlockObject implements IElement {
         //     return;
         // }
         // room.addToSurface(this.mDisplay);
-        // let depth = 0;
-        // if (this.model && this.model.pos) {
-        //     depth = this.model.pos.depth ? this.model.pos.depth : 0;
-        // }
+        let depth = 0;
+        if (this.model && this.model.pos) {
+            depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        }
         // if (this.mFollowObjects) {
         //     this.mFollowObjects.forEach((follow) => {
         //         if (follow.object) room.addToSceneUI(<any> follow.object);
         //     });
         // }
-        // this.setDepth(depth);
+        this.setDepth(depth);
     }
 
     protected removeDisplay() {
@@ -791,6 +775,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected setDepth(depth: number) {
+        this.mElementManager.roomService.game.peer.render.setLayerDepth(true);
         // if (this.mDisplay) {
         //     // this.mDisplay.setDepth(depth);
         //     if (!this.roomService) {
@@ -804,33 +789,33 @@ export class Element extends BlockObject implements IElement {
         // }
     }
 
-    protected onUpdateAnimationHandler() {
-        // if (this.mDisplay) {
-        //     this.setInputEnable(this.mInputEnable);
-        // }
-    }
+    // protected onUpdateAnimationHandler() {
+    // if (this.mDisplay) {
+    //     this.setInputEnable(this.mInputEnable);
+    // }
+    // }
 
-    protected onMoveStart() {
-        this.mMoving = true;
-    }
+    // protected onMoveStart() {
+    //     this.mMoving = true;
+    // }
 
-    protected onMoveComplete() {
-        // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
-        this.stopMove();
-    }
+    // protected onMoveComplete() {
+    //     // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
+    //     this.stopMove();
+    // }
 
-    protected onMoving() {
-        const now = this.roomService.now();
-        if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-            // let depth = 0;
-            // if (this.model && this.model.pos) {
-            //     depth = this.model.pos.depth ? this.model.pos.depth : 0;
-            // }
-            this.setDepth(0);
-            this.mMoveData.tweenLastUpdate = now;
-        }
-        this.mDirty = true;
-    }
+    // protected onMoving() {
+    //     const now = this.roomService.now();
+    //     if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
+    //         // let depth = 0;
+    //         // if (this.model && this.model.pos) {
+    //         //     depth = this.model.pos.depth ? this.model.pos.depth : 0;
+    //         // }
+    //         this.setDepth(0);
+    //         this.mMoveData.tweenLastUpdate = now;
+    //     }
+    //     this.mDirty = true;
+    // }
 
     protected get offsetY(): number {
         if (this.mOffsetY === undefined) {

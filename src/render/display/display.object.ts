@@ -2,6 +2,7 @@ import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
 import { Url, LogicPoint } from "utils";
 import { RunningAnimation, IDragonbonesModel } from "structureinterface";
+import { Render } from "../render";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -30,8 +31,11 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
     protected mActionName: RunningAnimation;
-    constructor(scene: Phaser.Scene, roomService: any, id?: any) {
+    private moveData: any;
+    private render: Render;
+    constructor(scene: Phaser.Scene, render: Render, id?: any) {
         super(scene);
+        this.render = render;
         this.mID = id;
     }
 
@@ -140,6 +144,61 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             return;
         }
         return this.mChildMap.get(key);
+    }
+
+    public doMove(moveData: any) {
+        // this.moveData = moveData;
+        // const line = moveData.tweenLineAnim;
+        // if (line) {
+        //     line.stop();
+        //     line.destroy();
+        // }
+        // const posPath = moveData.posPath;
+        // moveData.tweenLineAnim = this.scene.tweens.timeline({
+        //     targets: this,
+        //     ease: "Linear",
+        //     tweens: posPath,
+        //     onStart: () => {
+        //         this.onMoveStart();
+        //     },
+        //     onComplete: () => {
+        //         this.onMoveComplete();
+        //     },
+        //     onUpdate: () => {
+        //         this.onMoving();
+        //     },
+        //     onCompleteParams: [this],
+        // });
+    }
+
+    public stopMove() {
+        // if (this.moveData && this.moveData.posPath) {
+        //     delete this.moveData.posPath;
+        //     if (this.moveData.arrivalTime) this.moveData.arrivalTime = 0;
+        //     if (this.moveData.tweenLineAnim) {
+        //         this.moveData.tweenLineAnim.stop();
+        //         this.moveData.tweenLineAnim.destroy();
+        //     }
+        // }
+        // this.render.mainPeer.
+    }
+
+    protected onMoveStart() {
+        this.render.mainPeer.onMoveStart(this.id);
+    }
+
+    protected onMoveComplete() {
+        // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
+        this.stopMove();
+    }
+
+    protected onMoving() {
+        // const now = this.roomService.now();
+        // if (now - (this.moveData.tweenLastUpdate || 0) >= 50) {
+        //     this.setDepth(0);
+        //     this.moveData.tweenLastUpdate = now;
+        // }
+        // this.mDirty = true;
     }
 
     protected addEffect(target: DynamicSprite, textureURL: string, atlasURL?: string, isBack?: boolean, framerate?: number, loop?: boolean, killComplete?: boolean) {

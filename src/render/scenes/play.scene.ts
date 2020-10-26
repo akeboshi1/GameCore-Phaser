@@ -77,6 +77,7 @@ export class PlayScene extends RoomScene {
 
     update(time: number, delta: number) {
         this.render.updateRoom(time, delta);
+        this.layerManager.update(time, delta);
     }
 
     // setViewPort(x: number, y: number, width: number, height: number) {

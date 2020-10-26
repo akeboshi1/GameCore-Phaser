@@ -135,19 +135,19 @@ export class Player extends Element implements IElement {
         }
     }
 
-    protected onMoveStart() {
-        this.changeState(PlayerState.WALK);
-        if (this.mMoveData) {
-            this.mMoveData.step = 0;
-        }
-        super.onMoveStart();
-    }
+    // protected onMoveStart() {
+    //     this.changeState(PlayerState.WALK);
+    //     if (this.mMoveData) {
+    //         this.mMoveData.step = 0;
+    //     }
+    //     super.onMoveStart();
+    // }
 
-    protected onMoveComplete() {
-        this.preMoveComplete();
-        super.onMoveComplete();
-        this.changeState(PlayerState.IDLE);
-    }
+    // protected onMoveComplete() {
+    //     this.preMoveComplete();
+    //     super.onMoveComplete();
+    //     this.changeState(PlayerState.IDLE);
+    // }
 
     protected preMoveComplete() {
         if (this.mMoveData && this.mMoveData.posPath) {

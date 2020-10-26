@@ -1,6 +1,7 @@
 import { ResUtils } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation } from "structureinterface";
 import { DisplayObject, DisplayField } from "../display.object";
+import { Render } from "src/render/render";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -97,8 +98,8 @@ export class DragonbonesDisplay extends DisplayObject {
 
     private mDragonBonesRenderTexture: Phaser.GameObjects.RenderTexture;
 
-    public constructor(scene: Phaser.Scene, roomService: any) {
-        super(scene, roomService, undefined);
+    public constructor(scene: Phaser.Scene, render: Render, id?: number) {
+        super(scene, render, id);
     }
 
     public set displayInfo(val: IDragonbonesModel | undefined) {
