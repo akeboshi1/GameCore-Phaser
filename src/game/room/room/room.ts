@@ -9,7 +9,6 @@ import { ClockReadyListener } from "../../loop/clock/clock";
 import { State } from "../state/state.group";
 import { IRoomManager } from "../room.manager";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { EffectManager } from "../effect/effect.manager";
 import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 import { ViewblockManager } from "../viewblock/viewblock.manager";
 import { PlayerManager } from "../player/player.manager";
@@ -349,21 +348,21 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public setState(states: op_def.IState[]) {
-        // if (!this.mStateMap) this.mStateMap = new Map();
-        // let state: State;
-        // for (const sta of states) {
-        //     switch (sta.execCode) {
-        //         case op_def.ExecCode.EXEC_CODE_ADD:
-        //         case op_def.ExecCode.EXEC_CODE_UPDATE:
-        //             state = new State(sta);
-        //             this.mStateMap.set(sta.name, new State(sta));
-        //             this.handlerState(state);
-        //             break;
-        //         case op_def.ExecCode.EXEC_CODE_DELETE:
-        //             this.mStateMap.delete(sta.name);
-        //             break;
-        //     }
-        // }
+        if (!this.mStateMap) this.mStateMap = new Map();
+        let state: State;
+        for (const sta of states) {
+            switch (sta.execCode) {
+                case op_def.ExecCode.EXEC_CODE_ADD:
+                case op_def.ExecCode.EXEC_CODE_UPDATE:
+                    state = new State(sta);
+                    this.mStateMap.set(sta.name, new State(sta));
+                    this.handlerState(state);
+                    break;
+                case op_def.ExecCode.EXEC_CODE_DELETE:
+                    this.mStateMap.delete(sta.name);
+                    break;
+            }
+        }
     }
 
     public initUI() {
@@ -417,30 +416,30 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mSkyboxManager.add(scenery);
     }
 
-    // protected handlerState(state: State) {
-    //     switch (state.name) {
-    //         case "skyBoxAnimation":
-    //             this.mSkyboxManager.setState(state);
-    //             break;
-    //         case "setCameraBounds":
-    //             const bounds = state.packet;
-    //             if (!bounds || !bounds.width || !bounds.height) {
-    //                 Logger.getInstance().log("setCameraBounds error", bounds);
-    //                 return;
-    //             }
-    //             let { x, y, width, height } = bounds;
-    //             if (x === null || y === null) {
-    //                 x = (this.mSize.sceneWidth - width) * 0.5;
-    //                 y = (this.mSize.sceneHeight - height) * 0.5;
-    //             }
-    //             x *= this.mScaleRatio;
-    //             y *= this.mScaleRatio;
-    //             width *= this.mScaleRatio;
-    //             height *= this.mScaleRatio;
-    //             this.mGame.setCameraBounds(x, y, width, height);
-    //             break;
-    //     }
-    // }
+    protected handlerState(state: State) {
+        switch (state.name) {
+            case "skyBoxAnimation":
+                this.mSkyboxManager.setState(state);
+                break;
+            case "setCameraBounds":
+                const bounds = state.packet;
+                if (!bounds || !bounds.width || !bounds.height) {
+                    Logger.getInstance().log("setCameraBounds error", bounds);
+                    return;
+                }
+                let { x, y, width, height } = bounds;
+                if (x === null || y === null) {
+                    x = (this.mSize.sceneWidth - width) * 0.5;
+                    y = (this.mSize.sceneHeight - height) * 0.5;
+                }
+                x *= this.mScaleRatio;
+                y *= this.mScaleRatio;
+                width *= this.mScaleRatio;
+                height *= this.mScaleRatio;
+                this.mGame.renderPeer.setCamerasBounds(x, y, width, height);
+                break;
+        }
+    }
 
     get terrainManager(): TerrainManager {
         return this.mTerrainManager || undefined;
@@ -563,17 +562,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private onSyncStateHandler(packet: PBpacket) {
-        // const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
-        // const group = content.stateGroup;
-        // for (const states of group) {
-        //     switch (states.owner.type) {
-        //         case op_def.NodeType.SceneNodeType:
-        //             this.setState(states.state);
-        //             break;
-        //         case op_def.NodeType.ElementNodeType:
-        //             this.elementManager.setState(states);
-        //             break;
-        //     }
-        // }
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
+        const group = content.stateGroup;
+        for (const states of group) {
+            switch (states.owner.type) {
+                case op_def.NodeType.SceneNodeType:
+                    this.setState(states.state);
+                    break;
+                case op_def.NodeType.ElementNodeType:
+                    this.elementManager.setState(states);
+                    break;
+            }
+        }
     }
 }

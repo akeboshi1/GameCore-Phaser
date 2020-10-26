@@ -791,6 +791,11 @@ export class Render extends RPCPeer implements GameMain {
         if (display) this.mCameraManager.pan(display.x, display.y, 300);
     }
 
+    @Export()
+    public updateSkyboxState(state) {
+        this.mDisplayManager.updateSkyboxState(state);
+    }
+
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
