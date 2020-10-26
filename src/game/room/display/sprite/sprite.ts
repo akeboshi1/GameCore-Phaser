@@ -315,6 +315,7 @@ export class Sprite implements ISprite {
 
     set displayInfo(displayInfo: FramesModel | DragonbonesModel) {
         this.mDisplayInfo = displayInfo;
+        this.mDisplayInfo.id = this.id;
         if (this.currentAnimationName) {
             this.mDisplayInfo.animationName = this.currentAnimationName;
             this.setAnimationData(this.currentAnimationName, this.direction);
