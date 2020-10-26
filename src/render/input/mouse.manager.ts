@@ -30,15 +30,14 @@ export class MouseManager {
     }
 
     public changeScene(scene: Phaser.Scene) {
-        this.pause();
-        this.mGameObject = null;
-        this.mScene = scene;
-        if (!this.mScene) return;
-        // scene.input.on("gameobjectup", this.groundUp, this);
-        scene.input.on("pointerdown", this.onPointerDownHandler, this);
-        scene.input.on("pointerup", this.onPointerUpHandler, this);
-        scene.input.on("gameobjectdown", this.groundDown, this);
-        this.resume();
+        // this.pause();
+        // this.mGameObject = null;
+        // this.mScene = scene;
+        // if (!this.mScene) return;
+        // // scene.input.on("gameobjectup", this.groundUp, this);
+        // scene.input.on("gameobjectdown", this.groundDown, this);
+        // scene.input.on("pointerdown", this.pointerDownHandler, this);
+        // this.resume();
     }
 
     public resize(width: number, height: number) {
@@ -124,41 +123,20 @@ export class MouseManager {
         this.debounce = null;
     }
 
-    private onPointerDownHandler(pointer: Phaser.Input.Pointer) {
-        this.addPointerMoveHandler();
+    private groundDown(pointer, gameObject) {
+        this.mGameObject = gameObject;
+        this.mDownTime = setTimeout(this.holdHandler.bind(this), this.mDownDelay, pointer, gameObject);
     }
 
-    private onPointerUpHandler(pointer) {
-        this.removePointerMoveHandler();
-        clearTimeout(this.mDownTime);
-        this.onUpdate(pointer, this.mGameObject);
-        this.mGameObject = null;
+    private groundUp(pointer, gameObject) {
+        // this.mGameObject = null;
+        this.onUpdate(pointer, gameObject);
     }
 
-    private addPointerMoveHandler() {
-        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.on("gameout", this.onGameOutHandler, this);
-    }
-
-    private removePointerMoveHandler() {
-        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameout", this.onGameOutHandler, this);
-        if (this.render.camerasManager.moving) {
-            this.render.syncCameraScroll();
-            this.render.camerasManager.moving = false;
-        }
-    }
-
-    private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
+    private pointerDownHandler(pointer, gameobject) {
         if (this.debounce) {
             this.mGameObject = null;
             return;
-        }
-        if (!this.render.camerasManager.targetFollow) {
-            this.render.camerasManager.offsetScroll(
-                pointer.prevPosition.x - pointer.position.x,
-                pointer.prevPosition.y - pointer.position.y
-            );
         }
         this.debounce = setTimeout(() => {
             this.debounce = null;
@@ -173,22 +151,15 @@ export class MouseManager {
         this.onUpdate(pointer, this.mGameObject);
     }
 
-    private onGameOutHandler() {
-        this.removePointerMoveHandler();
-    }
-
-    private groundDown(pointer, gameObject) {
-        this.mGameObject = gameObject;
-        this.mDownTime = setTimeout(this.holdHandler.bind(this), this.mDownDelay, pointer, gameObject);
-    }
-
-    private groundUp(pointer, gameObject) {
-        // this.mGameObject = null;
-        this.onUpdate(pointer, gameObject);
+    private onPointerUpHandler(pointer) {
+        clearTimeout(this.mDownTime);
+        this.onUpdate(pointer, this.mGameObject);
+        this.mGameObject = null;
     }
 
     private holdHandler(pointer, gameobject) {
         // this.worldService.emitter.emit(MessageType.PRESS_ELEMENT, pointer, gameobject);
+
         let id = 0;
         let com = null;
         if (gameobject && gameobject.parentContainer) {

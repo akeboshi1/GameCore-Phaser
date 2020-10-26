@@ -70,7 +70,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public setPosition(p: IPos) {
-        this.mRoomService.game.peer.render.setPosition(p.x, p.y, p.z);
+        this.mRoomService.game.peer.render.setPosition(this.id, p.x, p.y, p.z);
         // if (this.mDisplay) {
         //     this.mDisplay.setPosition(p.x, p.y, p.z);
         // }
