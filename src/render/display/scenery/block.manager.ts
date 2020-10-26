@@ -354,7 +354,7 @@ class Block extends DynamicImage {
   get key(): string {
     return this.mKey;
   }
-  
+
   protected onLoadComplete(file) {
     super.onLoadComplete(file);
     if (this.texture) {
