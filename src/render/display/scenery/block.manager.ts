@@ -1,10 +1,11 @@
-import { DynamicImage } from "../../ui/components/dynamic.image";
 import { ICameraService } from "src/render/cameras/cameras.manager";
 import { Render } from "src/render/render";
-import { PlayScene } from "src/render/scenes/play.scene";
-import { SkyBoxScene } from "src/render/scenes/sky.box.scene";
+// import { SkyBoxScene } from "src/render/scenes/sky.box.scene";
 import { Logger, Url } from "utils";
-import { Fit, IScenery } from "src/structureinterface/scenery";
+import { Fit, IScenery } from "structureinterface";
+import { DynamicImage } from "../../ui";
+import { SkyBoxScene } from "../../scenes/sky.box.scene";
+// import { DynamicImage } from "src/render/ui";
 // import { State } from "../state/state.group";
 
 export interface IBlockManager {
@@ -39,13 +40,13 @@ export class BlockManager implements IBlockManager {
     this.mScaleRatio = this.render.scaleRatio;
     this.setSize(scenery.width, scenery.height);
 
-    const playScene = render.sceneManager.getSceneByName(PlayScene.name);
+    const playScene = render.sceneManager.getSceneByName("PlayScene");
     if (!playScene) {
       Logger.getInstance().fatal(`${BlockManager.name} scene does not exist`);
       return;
     }
-    this.mSceneName = SkyBoxScene.name + `_${scenery.id}`;
-    // const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
+    this.mSceneName = "SkyBoxScene" + `_${scenery.id}`;
+    const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
     playScene.scene.launch(this.mSceneName, this);
     this.updateDepth();
   }
@@ -161,7 +162,7 @@ export class BlockManager implements IBlockManager {
     if (!this.render) {
       return;
     }
-    const playScene = this.render.sceneManager.getSceneByName(PlayScene.name);
+    const playScene = this.render.sceneManager.getSceneByName("PlayScene");
     if (!this.mScenery || !playScene) {
       return;
     }
@@ -262,6 +263,10 @@ export class BlockManager implements IBlockManager {
     return this.mScenery;
   }
 
+  get scaleRatio() {
+    return this.mScaleRatio;
+  }
+
   protected async fixPosition(props: any) {
     if (!props) return;
     const offset = await this.getOffset();
@@ -349,7 +354,7 @@ class Block extends DynamicImage {
   get key(): string {
     return this.mKey;
   }
-
+  
   protected onLoadComplete(file) {
     super.onLoadComplete(file);
     if (this.texture) {

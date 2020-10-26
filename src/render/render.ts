@@ -18,6 +18,7 @@ import * as path from "path";
 import { IFramesModel } from "../structureinterface/frame";
 import { IDragonbonesModel } from "../structureinterface/dragonbones";
 import { DisplayManager } from "./managers/display.manager";
+import { IScenery } from "src/structureinterface/scenery";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 
 export class Render extends RPCPeer implements GameMain {
@@ -130,7 +131,7 @@ export class Render extends RPCPeer implements GameMain {
         this.mCameraManager = new CamerasManager(this);
         this.mLocalStorageManager = new LocalStorageManager();
         this.mSceneManager = new SceneManager(this);
-        this.mDisplayManager = new DisplayManager(this.game, this.mSceneManager);
+        this.mDisplayManager = new DisplayManager(this);
     }
 
     resize(width: number, height: number) {
@@ -728,6 +729,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public setDisplayData(sprite: any) {
         this.mDisplayManager.setDisplayData(sprite);
+    }
+
+    @Export()
+    public addSkybox(scenery: IScenery) {
+        this.mDisplayManager.addSkybox(scenery);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

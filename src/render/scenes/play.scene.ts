@@ -103,15 +103,15 @@ export class PlayScene extends RoomScene {
     private removePointerMoveHandler() {
         this.scene.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.scene.scene.input.off("gameout", this.onGameOutHandler, this);
-        if (this.render.camermsManager.moving) {
+        if (this.render.camerasManager.moving) {
             this.render.syncCameraScroll();
-            this.render.camermsManager.moving = false;
+            this.render.camerasManager.moving = false;
         }
     }
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        if (!this.render.camermsManager.targetFollow) {
-            this.render.camermsManager.offsetScroll(
+        if (!this.render.camerasManager.targetFollow) {
+            this.render.camerasManager.offsetScroll(
                 pointer.prevPosition.x - pointer.position.x,
                 pointer.prevPosition.y - pointer.position.y
             );
