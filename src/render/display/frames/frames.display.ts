@@ -56,6 +56,7 @@ export class FramesDisplay extends DisplayObject {
 
     public play(animation: RunningAnimation, field?: DisplayField, times?: number) {
         if (!animation) return;
+        this.mActionName = animation;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
         if (this.scene.textures.exists(data.gene) === false) {
@@ -117,7 +118,6 @@ export class FramesDisplay extends DisplayObject {
             if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
 
-        this.mActionName = animation;
     }
 
     public playEffect() {
@@ -378,8 +378,8 @@ export class FramesDisplay extends DisplayObject {
         }
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
-                this.play({ name: "idle", flip: false });
-                this.emit("initialized", this);
+                this.play(this.mActionName);
+                // this.emit("initialized", this);
             } else {
                 this.playEffect();
             }

@@ -94,7 +94,6 @@ export class Sprite implements ISprite {
         if (obj.sn) {
             this.mSn = obj.sn;
         }
-        Logger.getInstance().log("===> dir: ", obj.direction);
         this.tryRegisterAnimation(obj.animationRegistrationMap);
         this.mCurrentAnimationName = obj.currentAnimationName;
         this.direction = obj.direction || 3;
