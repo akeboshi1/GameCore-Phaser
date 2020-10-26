@@ -22,7 +22,7 @@ export interface IElement {
 
     play(animationName: string): void;
 
-    setPosition(p: IPos): void;
+    setPosition(p: IPos, update: boolean): void;
 
     getPosition(): IPos;
 
@@ -261,7 +261,7 @@ export class Element extends BlockObject implements IElement {
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
-        this.mElementManager.roomService.game.peer.render.playElementAnimation(this.id, { name: this.mModel.currentAnimationName, flip: false }, undefined, false);
+        this.mElementManager.roomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimation);
         // this.mDisplay.play(this.model.currentAnimation, undefined, times);
     }
 
@@ -303,12 +303,12 @@ export class Element extends BlockObject implements IElement {
         }
         if (this.model && !this.model.currentAnimationName) {
             this.model.currentAnimationName = PlayerState.IDLE;
-            this.play(this.model.currentAnimationName);
         }
-        // if (this.mDisplay && this.model) {
-        //     this.model.direction = val;
-        //     this.mDisplay.play(this.model.currentAnimation);
-        // }
+        if (this.model) {
+            this.model.direction = val;
+            //     this.mDisplay.play(this.model.currentAnimation);
+        }
+        this.play(this.model.currentAnimationName);
     }
 
     public getDirection(): number {
@@ -382,7 +382,7 @@ export class Element extends BlockObject implements IElement {
         }
         this.startMove();
         if (!pos.depth) pos.depth = this.getDepth();
-        this.setPosition(pos);
+        this.setPosition(pos, true);
         const direction = this.calculateDirectionByAngle(angel);
         if (direction !== -1 && direction !== this.model.direction) {
             this.setDirection(direction);
@@ -469,7 +469,7 @@ export class Element extends BlockObject implements IElement {
         return pos;
     }
 
-    public setPosition(p: IPos) {
+    public setPosition(p: IPos, update: boolean = false) {
         if (this.mMoving) {
             this.stopMove();
         }
@@ -483,6 +483,7 @@ export class Element extends BlockObject implements IElement {
             const depth = p.depth ? p.depth : 0;
             this.setDepth(depth);
         }
+        if (!update) return;
         this.updateBlock();
         this.update();
     }
@@ -585,7 +586,7 @@ export class Element extends BlockObject implements IElement {
             // pos.x += this.mDisplay.x;
             // pos.y += this.mDisplay.y;
             this.mRootMount = null;
-            this.setPosition(pos);
+            this.setPosition(pos, true);
             this.enableBlock();
             this.mDirty = true;
         }
