@@ -1,16 +1,6 @@
 import { op_def, op_client } from "pixelpai_proto";
-import { Logger } from "utils";
-
-export interface IScenery {
-    readonly id: number;
-    readonly depth: number;
-    readonly width: number;
-    readonly height: number;
-    readonly uris: string[][];
-    readonly speed: number;
-    readonly fit: Fit;
-    readonly offset: op_def.IPBPoint2f;
-}
+import { Fit, IScenery } from "src/structureinterface/scenery";
+import { ILogicPoint, Logger, LogicPoint } from "utils";
 
 export class Scenery implements IScenery {
     private mID: number;
@@ -20,7 +10,7 @@ export class Scenery implements IScenery {
     private mUris: string[][];
     private mSpeed: number;
     private mFit: Fit;
-    private mOffset: op_def.IPBPoint2f;
+    private mOffset: ILogicPoint;
     constructor(scenery: op_client.IOP_EDITOR_REQ_CLIENT_ADD_SCENERY) {
         this.mID = scenery.id;
         this.mDepth = scenery.depth;
@@ -52,7 +42,17 @@ export class Scenery implements IScenery {
         this.mWidth = scenery.width;
         this.mHeight = scenery.height;
         this.mFit = scenery.fit;
-        this.mOffset = scenery.offset || { x: 0, y: 0 };
+        const pos = { x: 0, y: 0 };
+        const offset = scenery.offset;
+        if (offset) {
+            pos.x = offset.x;
+            pos.y = offset.y;
+        }
+        this.mOffset = pos;
+    }
+
+    get offset(): ILogicPoint {
+        return this.mOffset;
     }
 
     get width(): number {
@@ -71,10 +71,6 @@ export class Scenery implements IScenery {
         return this.mDepth;
     }
 
-    get offset(): op_def.IPBPoint2f {
-        return this.mOffset;
-    }
-
     get speed(): number {
         return this.mSpeed;
     }
@@ -86,11 +82,4 @@ export class Scenery implements IScenery {
     get fit(): Fit {
         return this.mFit;
     }
-}
-
-export enum Fit {
-    Center = 1,
-    Fill,
-    Stretch,
-    Repeat
 }

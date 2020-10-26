@@ -49,7 +49,7 @@ export class PlayScene extends RoomScene {
         this.scale.on("resize", this.checkSize, this);
 
         // ======= render startPlay
-        this.render.camermsManager.startRoomPlay(this);
+        this.render.camerasManager.startRoomPlay(this);
         this.render.showLoading({ "text": LoadingTips.loadingResources() });
         this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.onLoadCompleteHandler();
@@ -68,9 +68,10 @@ export class PlayScene extends RoomScene {
 
         // ======= mainworker startPlay
         this.render.startRoomPlay();
+        this.render.changeScene(this);
 
-        this.scene.scene.input.on("pointerdown", this.onPointerDownHandler, this);
-        this.scene.scene.input.on("pointerup", this.onPointerUpHandler, this);
+        // this.scene.scene.input.on("pointerdown", this.onPointerDownHandler, this);
+        // this.scene.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.scene.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
     }
 
@@ -85,41 +86,6 @@ export class PlayScene extends RoomScene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
-    }
-
-    private onPointerDownHandler(pointer: Phaser.Input.Pointer) {
-        this.addPointerMoveHandler();
-    }
-
-    private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
-        this.removePointerMoveHandler();
-    }
-
-    private addPointerMoveHandler() {
-        this.scene.scene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.scene.scene.input.on("gameout", this.onGameOutHandler, this);
-    }
-
-    private removePointerMoveHandler() {
-        this.scene.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.scene.scene.input.off("gameout", this.onGameOutHandler, this);
-        if (this.render.camermsManager.moving) {
-            this.render.syncCameraScroll();
-            this.render.camermsManager.moving = false;
-        }
-    }
-
-    private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        if (!this.render.camermsManager.targetFollow) {
-            this.render.camermsManager.offsetScroll(
-                pointer.prevPosition.x - pointer.position.x,
-                pointer.prevPosition.y - pointer.position.y
-            );
-        }
-    }
-
-    private onGameOutHandler() {
-        this.removePointerMoveHandler();
     }
 
     private onLoadCompleteHandler() {

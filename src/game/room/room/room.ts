@@ -17,6 +17,8 @@ import { ElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
+import { SkyBoxManager } from "../sky.box/sky.box.manager";
+import { IScenery } from "src/structureinterface/scenery";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -88,7 +90,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // protected mLayManager: LayerManager;
     // protected mGroupManager: GroupManager;
     // protected mHandlerManager: HandlerManager;
-    // protected mSkyboxManager: SkyBoxManager;
+    protected mSkyboxManager: SkyBoxManager;
     // protected mEffectManager: EffectManager;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
@@ -393,17 +395,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     protected initSkyBox() {
-        // const scenerys = this.game.elementStorage.getScenerys();
-        // if (scenerys) {
-        //     for (const scenery of scenerys) {
-        //         this.addSkyBox(scenery);
-        //     }
-        // }
+        const scenerys = this.game.elementStorage.getScenerys();
+        if (scenerys) {
+            for (const scenery of scenerys) {
+                this.addSkyBox(scenery);
+            }
+        }
     }
 
-    // protected addSkyBox(scenery: IScenery) {
-    //     this.mSkyboxManager.add(scenery);
-    // }
+    protected addSkyBox(scenery: IScenery) {
+        this.mSkyboxManager.add(scenery);
+    }
 
     // protected handlerState(state: State) {
     //     switch (state.name) {

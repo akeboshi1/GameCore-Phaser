@@ -1,3 +1,8 @@
+export interface ILogicPoint {
+    x: number;
+    y: number;
+}
+
 export class LogicPoint {
     public x: number;
     public y: number;

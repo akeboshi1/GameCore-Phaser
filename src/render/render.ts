@@ -18,8 +18,16 @@ import * as path from "path";
 import { IFramesModel } from "../structureinterface/frame";
 import { IDragonbonesModel } from "../structureinterface/dragonbones";
 import { DisplayManager } from "./managers/display.manager";
+import { MouseManager } from "./input/mouse.manager";
+// import { InputManager } from "./input/input.service";
+// import { KeyBoardManager } from "./input/keyboard.manager";
+// import { JoyStickManager } from "./input/joystick.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
-
+enum MoveStyle {
+    DIRECTION_MOVE_STYLE = 1,
+    FOLLOW_MOUSE_MOVE_STYLE = 2,
+    PATH_MOVE_STYLE = 3
+}
 export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
@@ -28,6 +36,8 @@ export class Render extends RPCPeer implements GameMain {
     private readonly DEFAULT_HEIGHT = 640;
     private mSceneManager: SceneManager;
     private mCameraManager: CamerasManager;
+    private mMouseManager: MouseManager;
+    // private mInputManager: InputManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -94,7 +104,7 @@ export class Render extends RPCPeer implements GameMain {
         return this.mSceneManager;
     }
 
-    get camermsManager(): CamerasManager {
+    get camerasManager(): CamerasManager {
         return this.mCameraManager;
     }
 
@@ -130,12 +140,14 @@ export class Render extends RPCPeer implements GameMain {
         this.mCameraManager = new CamerasManager(this);
         this.mLocalStorageManager = new LocalStorageManager();
         this.mSceneManager = new SceneManager(this);
+        this.mMouseManager = new MouseManager(this);
         this.mDisplayManager = new DisplayManager(this.game, this.mSceneManager);
     }
 
     resize(width: number, height: number) {
         if (this.mCameraManager) this.mCameraManager.resize(width, height);
         if (this.mSceneManager) this.mSceneManager.resize(width, height);
+        if (this.mMouseManager) this.mMouseManager.resize(width, height);
     }
 
     onOrientationChange(oriation: number, newWidth: number, newHeight: number) {
@@ -277,6 +289,10 @@ export class Render extends RPCPeer implements GameMain {
 
     public terminate() {
         this.mainPeer.terminate();
+    }
+
+    public changeScene(scene: Phaser.Scene) {
+        if (this.mMouseManager) this.mMouseManager.changeScene(scene);
     }
 
     public onFocus() {
@@ -610,7 +626,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public createGameCallBack() {
+    public createGameCallBack(keyEvents: any) {
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         if (window.screen.width > window.screen.height) {
             if (this.mConfig.width > this.mConfig.height) {
@@ -626,7 +642,7 @@ export class Render extends RPCPeer implements GameMain {
             }
         }
 
-        this.gameCreated();
+        this.gameCreated(keyEvents);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -768,13 +784,25 @@ export class Render extends RPCPeer implements GameMain {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
 
-    private gameCreated() {
+    private gameCreated(keyEvents: any) {
         if (this.mCallBack) {
             this.mCallBack();
         }
         if (this.mConfig.game_created) {
             this.mConfig.game_created();
         }
+        // if (this.moveStyle === MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
+        //     if (this.mGame.device.os.desktop) {
+        //         this.mInputManager = new KeyBoardManager(this, keyEvents);
+        //     } else {
+        //         this.mInputManager = new JoyStickManager(this, keyEvents);
+        //     }
+        // } else {
+        //     if (this.mGame.device.os.desktop) {
+        //         this.mInputManager = new KeyBoardManager(this, keyEvents);
+        //     }
+        // }
+        // if (this.mInputManager) this.mInputManager.enable = false;
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
         // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);

@@ -77,7 +77,7 @@ export class ViewblockManager implements IViewBlockManager {
     }
 
     public update(time: number, delta: number): void {
-        Logger.getInstance().log("viewblock update");
+        // Logger.getInstance().log("viewblock update");
         if (!this.mCameras) return;
         this.mDelay = time;
         this.mCameras.getViewPort().then((obj) => {
