@@ -106,7 +106,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         super();
         this.mGame = this.manager.game;
         this.moveStyle = this.mGame.moveStyle;
-        this.mScaleRatio = this.mGame.getGameConfig().scale_ratio;
+        this.mScaleRatio = this.mGame.scaleRatio;
         if (this.mGame) {
             if (this.connection) {
                 this.connection.addPacketListener(this);
