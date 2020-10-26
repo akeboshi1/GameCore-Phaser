@@ -330,6 +330,11 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
+    public hideLogin() {
+        this.sceneManager.stopScene("LoginScene");
+    }
+
+    @Export()
     public showCreateRole(params?: any) {
         this.mSceneManager.startScene("CreateRoleScene", { render: this, params });
     }
