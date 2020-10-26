@@ -8,7 +8,7 @@ import { PBpacket } from "net-socket-packet";
 import { MessageType, GameMain, ILauncherConfig, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "structureinterface";
 import { op_client } from "pixelpai_proto";
 import { Account } from "./account/account";
-import { SceneManager } from "./managers/scene.manager";
+import { SceneManager } from "./scenes/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { UiManager } from "./ui/ui.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";

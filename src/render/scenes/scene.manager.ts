@@ -1,16 +1,16 @@
 import { Logger } from "utils";
 import { Render } from "../render";
-import { BasicScene } from "../scenes/basic.scene";
-import { CreateRoleScene } from "../scenes/create.role.scene";
-import { GamePauseScene } from "../scenes/game.pause.scene";
-import { LoadingScene } from "../scenes/loading.scene";
-import { LoginAccountScene } from "../scenes/login.account.scene";
-import { LoginScene } from "../scenes/login.scene";
-import { MainUIScene } from "../scenes/main.ui.scene";
-import { PlayScene } from "../scenes/play.scene";
-import { RoomScene } from "../scenes/room.scene";
-import { SelectRoleScene } from "../scenes/select.role.scene";
-import { SkyBoxScene } from "../scenes/sky.box.scene";
+import { BasicScene } from "./basic.scene";
+import { CreateRoleScene } from "./create.role.scene";
+import { GamePauseScene } from "./game.pause.scene";
+import { LoadingScene } from "./loading.scene";
+import { LoginAccountScene } from "./login.account.scene";
+import { LoginScene } from "./login.scene";
+import { MainUIScene } from "./main.ui.scene";
+import { PlayScene } from "./play.scene";
+import { RoomScene } from "./room.scene";
+import { SelectRoleScene } from "./select.role.scene";
+import { SkyBoxScene } from "./sky.box.scene";
 
 export class SceneManager {
     private readonly sceneClass = {
