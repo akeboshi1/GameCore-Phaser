@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales } from "utils";
+import { Url, initLocales, LogicPoint, Logger } from "utils";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
 import { MessageType, GameMain, ILauncherConfig, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "structureinterface";
@@ -721,7 +721,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public playElementAnimation(id: number, animation: any, field?: any, times?: number) {
+    public playAnimation(id: number, animation: any, field?: any, times?: number) {
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.play(animation, field, times);
     }

@@ -7,11 +7,12 @@ import { PlayerModel } from "../room/player/player.model";
 import { PlayerState } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { PlayerDataManager } from "./data/player.dataManager";
-import { Logger } from "utils";
+import { ILogicPoint, Logger, LogicPoint, Tool } from "utils";
 
 export class User extends Player {
     private mUserData: PlayerDataManager;
     private mMoveStyle: number;
+    private mSpeed: number = 1;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -67,6 +68,30 @@ export class User extends Player {
             };
             this.mElementManager.connection.send(pkt);
         }
+    }
+
+    public tryMove(targetPoint: ILogicPoint) {
+        const pos = this.getPosition();
+        const angle = Tool.calcAngle(pos, targetPoint);
+        const dir = Tool.angleToDirections(angle, 3, undefined);
+        if (dir.left) {
+            pos.x -= this.mSpeed;
+        }
+        if (dir.right) {
+            pos.x += this.mSpeed;
+        }
+        if (dir.up) {
+            pos.y -= this.mSpeed;
+        }
+        if (dir.down) {
+            pos.y += this.mSpeed;
+        }
+        pos.y += this.offsetY;
+        this.mModel.setPosition(pos.x, pos.y);
+        if (this.mRootMount) {
+            return;
+        }
+        this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
     }
 
     public move(moveData: op_client.IMoveData) {
