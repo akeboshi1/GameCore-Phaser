@@ -10,7 +10,6 @@ import { ClockReadyListener } from "../../loop/clock/clock";
 import { State } from "../state/state.group";
 import { IRoomManager } from "../room.manager";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { EffectManager } from "../effect/effect.manager";
 import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 import { ViewblockManager } from "../viewblock/viewblock.manager";
 import { PlayerManager } from "../player/player.manager";
@@ -20,7 +19,7 @@ import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { IScenery } from "src/structureinterface/scenery";
-import { Scenery } from "../sky.box/scenery";
+import { JoystickManager } from "../../input.manager/joystick.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -294,7 +293,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return { width: w, height: h };
     }
 
-    public startPlay() {
+    public async startPlay() {
         // if (this.mLayManager) {
         //     this.layerManager.destroy();
         // }
@@ -334,7 +333,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // // if (this.world.uiManager) this.world.uiManager.showMainUI();
 
         if (this.connection) {
-            this.cameraService.syncCamera();
+            await this.cameraService.syncCamera();
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         }
 
@@ -347,24 +346,26 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
 
         this.initSkyBox();
+
+        const joystick = new JoystickManager(this.game);
     }
 
     public setState(states: op_def.IState[]) {
-        // if (!this.mStateMap) this.mStateMap = new Map();
-        // let state: State;
-        // for (const sta of states) {
-        //     switch (sta.execCode) {
-        //         case op_def.ExecCode.EXEC_CODE_ADD:
-        //         case op_def.ExecCode.EXEC_CODE_UPDATE:
-        //             state = new State(sta);
-        //             this.mStateMap.set(sta.name, new State(sta));
-        //             this.handlerState(state);
-        //             break;
-        //         case op_def.ExecCode.EXEC_CODE_DELETE:
-        //             this.mStateMap.delete(sta.name);
-        //             break;
-        //     }
-        // }
+        if (!this.mStateMap) this.mStateMap = new Map();
+        let state: State;
+        for (const sta of states) {
+            switch (sta.execCode) {
+                case op_def.ExecCode.EXEC_CODE_ADD:
+                case op_def.ExecCode.EXEC_CODE_UPDATE:
+                    state = new State(sta);
+                    this.mStateMap.set(sta.name, new State(sta));
+                    this.handlerState(state);
+                    break;
+                case op_def.ExecCode.EXEC_CODE_DELETE:
+                    this.mStateMap.delete(sta.name);
+                    break;
+            }
+        }
     }
 
     public initUI() {
@@ -448,30 +449,30 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mSkyboxManager.add(scenery);
     }
 
-    // protected handlerState(state: State) {
-    //     switch (state.name) {
-    //         case "skyBoxAnimation":
-    //             this.mSkyboxManager.setState(state);
-    //             break;
-    //         case "setCameraBounds":
-    //             const bounds = state.packet;
-    //             if (!bounds || !bounds.width || !bounds.height) {
-    //                 Logger.getInstance().log("setCameraBounds error", bounds);
-    //                 return;
-    //             }
-    //             let { x, y, width, height } = bounds;
-    //             if (x === null || y === null) {
-    //                 x = (this.mSize.sceneWidth - width) * 0.5;
-    //                 y = (this.mSize.sceneHeight - height) * 0.5;
-    //             }
-    //             x *= this.mScaleRatio;
-    //             y *= this.mScaleRatio;
-    //             width *= this.mScaleRatio;
-    //             height *= this.mScaleRatio;
-    //             this.mGame.setCameraBounds(x, y, width, height);
-    //             break;
-    //     }
-    // }
+    protected handlerState(state: State) {
+        switch (state.name) {
+            case "skyBoxAnimation":
+                this.mSkyboxManager.setState(state);
+                break;
+            case "setCameraBounds":
+                const bounds = state.packet;
+                if (!bounds || !bounds.width || !bounds.height) {
+                    Logger.getInstance().log("setCameraBounds error", bounds);
+                    return;
+                }
+                let { x, y, width, height } = bounds;
+                if (x === null || y === null) {
+                    x = (this.mSize.sceneWidth - width) * 0.5;
+                    y = (this.mSize.sceneHeight - height) * 0.5;
+                }
+                x *= this.mScaleRatio;
+                y *= this.mScaleRatio;
+                width *= this.mScaleRatio;
+                height *= this.mScaleRatio;
+                this.mGame.renderPeer.setCamerasBounds(x, y, width, height);
+                break;
+        }
+    }
 
     get terrainManager(): TerrainManager {
         return this.mTerrainManager || undefined;
@@ -626,37 +627,21 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onCameraFollowHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
-        const target = this.getElement(content.id);
-        if (!this.mCameraService) return;
-        if (target) {
-            Logger.getInstance().log("followHandler====room");
-            if (content.effect === "liner") {
-                this.mCameraService.pan();
-                // const position = target.getPosition();
-                // this.mCameraService.pan(position.x, position.y, 300).then(() => {
-                //     this.mCameraService.startFollow(target);
-                // });
-            } else {
-                this.game.peer.render.startFollow(content.id);
-            }
-        } else {
-            if (this.mCameraService) this.game.peer.render.stopFollow();
-            // this.mCameraService.stopFollow();
-        }
+        this.game.renderPeer.cameraFollow(content.id, content.effect);
     }
 
     private onSyncStateHandler(packet: PBpacket) {
-        // const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
-        // const group = content.stateGroup;
-        // for (const states of group) {
-        //     switch (states.owner.type) {
-        //         case op_def.NodeType.SceneNodeType:
-        //             this.setState(states.state);
-        //             break;
-        //         case op_def.NodeType.ElementNodeType:
-        //             this.elementManager.setState(states);
-        //             break;
-        //     }
-        // }
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
+        const group = content.stateGroup;
+        for (const states of group) {
+            switch (states.owner.type) {
+                case op_def.NodeType.SceneNodeType:
+                    this.setState(states.state);
+                    break;
+                case op_def.NodeType.ElementNodeType:
+                    this.elementManager.setState(states);
+                    break;
+            }
+        }
     }
 }

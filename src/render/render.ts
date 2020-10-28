@@ -19,7 +19,7 @@ import { IFramesModel } from "../structureinterface/frame";
 import { IDragonbonesModel } from "../structureinterface/dragonbones";
 import { DisplayManager } from "./managers/display.manager";
 import { IScenery } from "src/structureinterface/scenery";
-import { MouseManager } from "./input/mouse.manager";
+import { InputManager } from "./input/input.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -34,7 +34,7 @@ export class Render extends RPCPeer implements GameMain {
     private readonly DEFAULT_HEIGHT = 640;
     private mSceneManager: SceneManager;
     private mCameraManager: CamerasManager;
-    private mMouseManager: MouseManager;
+    private mInputManager: InputManager;
     // private mInputManager: InputManager;
     private mConfig: ILauncherConfig;
     private mCallBack: Function;
@@ -138,14 +138,14 @@ export class Render extends RPCPeer implements GameMain {
         this.mCameraManager = new CamerasManager(this);
         this.mLocalStorageManager = new LocalStorageManager();
         this.mSceneManager = new SceneManager(this);
-        this.mMouseManager = new MouseManager(this);
+        this.mInputManager = new InputManager(this);
         this.mDisplayManager = new DisplayManager(this);
     }
 
     resize(width: number, height: number) {
         if (this.mCameraManager) this.mCameraManager.resize(width, height);
         if (this.mSceneManager) this.mSceneManager.resize(width, height);
-        if (this.mMouseManager) this.mMouseManager.resize(width, height);
+        if (this.mInputManager) this.mInputManager.resize(width, height);
     }
 
     onOrientationChange(oriation: number, newWidth: number, newHeight: number) {
@@ -290,7 +290,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     public changeScene(scene: Phaser.Scene) {
-        if (this.mMouseManager) this.mMouseManager.changeScene(scene);
+        if (this.mInputManager) this.mInputManager.setScene(scene);
     }
 
     public onFocus() {
@@ -353,13 +353,18 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public showPanel(panelName: string) {
-        this.mUiManager.showPanel(panelName);
+    public showPanel(panelName: string, params?: any) {
+        this.mUiManager.showPanel(panelName, params);
     }
 
     @Export([webworker_rpc.ParamType.str])
     public hidePanel(panelName: string) {
         this.mUiManager.hidePanel(panelName);
+    }
+
+    @Export()
+    public showJoystick() {
+        this.mInputManager.showJoystick();
     }
 
     @Export([webworker_rpc.ParamType.boolean])
@@ -782,10 +787,30 @@ export class Render extends RPCPeer implements GameMain {
         this.mCameraManager.stopFollow();
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public async cameraFollow(id: number, effect: string) {
+        const target = this.mDisplayManager.getDisplay(id);
+        if (target) {
+            if (effect === "liner") {
+                await this.mCameraManager.pan(target.x, target.y, target.y);
+                this.mCameraManager.startFollow(target);
+            } else {
+                this.mCameraManager.startFollow(target);
+            }
+        } else {
+            this.mCameraManager.stopFollow();
+        }
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public cameraPan(id: number) {
         const display = this.mDisplayManager.getDisplay(id);
         if (display) this.mCameraManager.pan(display.x, display.y, 300);
+    }
+
+    @Export()
+    public updateSkyboxState(state) {
+        this.mDisplayManager.updateSkyboxState(state);
     }
 
     @Export([webworker_rpc.ParamType.boolean])

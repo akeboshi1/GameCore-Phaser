@@ -1,12 +1,9 @@
 import { ICameraService } from "src/render/cameras/cameras.manager";
 import { Render } from "src/render/render";
-// import { SkyBoxScene } from "src/render/scenes/sky.box.scene";
 import { Logger, Url } from "utils";
 import { Fit, IScenery } from "structureinterface";
 import { DynamicImage } from "../../ui";
 import { SkyBoxScene } from "../../scenes/sky.box.scene";
-// import { DynamicImage } from "src/render/ui";
-// import { State } from "../state/state.group";
 
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
@@ -133,7 +130,7 @@ export class BlockManager implements IBlockManager {
     this.handlerState(state);
   }
 
-  public playSkyBoxAnimation(packet: any) {
+  public async playSkyBoxAnimation(packet: any) {
     const { id, targets, duration, reset, resetDuration } = packet;
     if (id === undefined || targets === undefined || duration === undefined) {
       return;
@@ -146,7 +143,9 @@ export class BlockManager implements IBlockManager {
     }
 
     const camera = this.scene.cameras.main;
-    this.move(camera, this.fixPosition(targets), duration, this.fixPosition(reset), resetDuration);
+    const targetPos = await this.fixPosition(targets);
+    const resetPos = await this.fixPosition(reset);
+    this.move(camera, targetPos, duration, resetPos, resetDuration);
   }
 
   protected handlerState(state) {
@@ -215,6 +214,7 @@ export class BlockManager implements IBlockManager {
       this.tween.stop();
       this.tween.removeAllListeners();
     }
+    Logger.getInstance().log("scenery: ", props, duration);
     this.tween = this.scene.tweens.add({
       targets,
       props,

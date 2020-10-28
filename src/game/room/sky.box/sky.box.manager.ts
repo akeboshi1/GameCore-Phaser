@@ -3,7 +3,6 @@ import { PacketHandler } from "net-socket-packet";
 import { State } from "../state/state.group";
 import { IRoomService } from "../room/room";
 import { IScenery } from "src/structureinterface/scenery";
-import { Scenery } from "./scenery";
 import { Game } from "src/game/game";
 
 export interface ISkyBoxConfig {
@@ -27,9 +26,6 @@ export class SkyBoxManager extends PacketHandler {
   }
 
   add(scenery: IScenery) {
-    // if (scenery.id === 1896802976) {
-    //   return;
-    // }
     // const blockManager = new BlockManager(scenery, this.mRoom);
     this.mScenetys.set(scenery.id, scenery);
     this.mGame.renderPeer.addSkybox(scenery);
@@ -57,9 +53,10 @@ export class SkyBoxManager extends PacketHandler {
       this.mStateMap = new Map();
     }
     this.mStateMap.set(states.name, states);
-    this.mScenetys.forEach((block) => {
+    this.mGame.renderPeer.updateSkyboxState(states);
+    // this.mScenetys.forEach((block) => {
       // block.setState(states);
-    });
+    // });
   }
 
   resize(width: number, height: number) {

@@ -51,7 +51,7 @@ export enum NodeType {
 export class DisplayManager {
     private sceneManager: SceneManager;
     private displays: Map<number, DisplayObject>;
-    private scenerys: Map<number, IScenery>;
+    private scenerys: Map<number, BlockManager>;
 
     constructor(private render: Render) {
         this.sceneManager = render.sceneManager;
@@ -244,6 +244,13 @@ export class DisplayManager {
 
     public addSkybox(scenery: IScenery) {
         const skybox = new BlockManager(scenery, this.render);
+        this.scenerys.set(scenery.id, skybox);
+    }
+
+    public updateSkyboxState(state) {
+        this.scenerys.forEach((scenery) => {
+            scenery.setState(state);
+        });
     }
 
     public removeSkybox(scenery: IScenery) {
