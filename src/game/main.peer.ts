@@ -6,7 +6,7 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structureinterface";
-import { Logger, LogicPoint } from "utils";
+import {  LogicPoint } from "utils";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -21,7 +21,7 @@ export class MainPeer extends RPCPeer {
     private isReady: boolean = false;
     constructor() {
         super(MAIN_WORKER);
-        Logger.getInstance().log("constructor mainPeer");
+        // Logger.getInstance().log("constructor mainPeer");
         this.game = new Game(this);
     }
 
@@ -74,12 +74,12 @@ export class MainPeer extends RPCPeer {
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
         // ============
-        Logger.getInstance().log("createGame");
+        // Logger.getInstance().log("createGame");
         const url: string = "/js/game" + "_v1.0.398";
-        Logger.getInstance().log("render link onReady");
+        // Logger.getInstance().log("render link onReady");
         this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
             this.game.createGame(this.mConfig);
-            Logger.getInstance().log("heartBeatworker onReady");
+            // Logger.getInstance().log("heartBeatworker onReady");
         });
     }
 
@@ -90,7 +90,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public loginEnterWorld() {
-        Logger.getInstance().log("game======loginEnterWorld");
+        // Logger.getInstance().log("game======loginEnterWorld");
         this.game.loginEnterWorld();
     }
 
@@ -151,7 +151,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public startRoomPlay() {
-        Logger.getInstance().log("peer startroom");
+        // Logger.getInstance().log("peer startroom");
         this.game.roomManager.currentRoom.startPlay();
     }
 
@@ -188,7 +188,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public syncCameraScroll() {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.cameraService) {
-            Logger.getInstance().log("mainpeer====synccamerascroll");
+            // Logger.getInstance().log("mainpeer====synccamerascroll");
             this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
         }
     }
@@ -203,10 +203,32 @@ export class MainPeer extends RPCPeer {
         this.game.connection.send(pkt);
     }
 
-    @Export()
+    @Export([webworker_rpc.ParamType.num])
     public displayStartMove(id: number) {
         const element = this.game.roomManager.currentRoom.elementManager.get(id);
         if (element) element.startMove();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public displayCompleteMove(id: number) {
+        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (element) element.completeMove();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public displayStopMove(id: number) {
+        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (element) element.stopMove();
+    }
+
+    @Export()
+    public now(): number {
+        return this.game.roomManager.currentRoom.now();
+    }
+
+    @Export()
+    public onTapHandler(obj: any) {
+        this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
     }
 
     // ============= 心跳调用主进程

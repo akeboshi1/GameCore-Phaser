@@ -45,6 +45,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private gameConfigUrls: Map<string, string> = new Map();
     private gameConfigUrl: string;
     private isPause: boolean = false;
+    private mMoveStyle: number;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
@@ -186,7 +187,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     set moveStyle(moveStyle: number) {
+        this.mMoveStyle = moveStyle;
         this.mainPeer.render.setMoveStyle(moveStyle);
+    }
+
+    get moveStyle(): number {
+        return this.mMoveStyle;
     }
 
     get httpService(): HttpService {

@@ -1,5 +1,6 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import IActor = op_client.IActor;
+import NodeType = op_def.NodeType;
 import { IPoint } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IPosition45Obj, Position45, IPos, LogicPos, Logger } from "utils";
@@ -100,7 +101,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
-    private readonly moveStyle: op_def.MoveStyle;
+    private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     constructor(protected manager: IRoomManager) {
         super();
@@ -386,6 +387,36 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
+    public move(id: number, x: number, y: number, nodeType: NodeType) {
+        if (this.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+            return;
+        }
+        if (!this.mPlayerManager) {
+            return;
+        }
+        const actor = this.mPlayerManager.actor;
+        if (!actor) {
+            return;
+        }
+        const pos45 = actor.getPosition45();
+        const click45 = this.transformTo45(new LogicPos(x, y));
+        if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
+            this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
+            return;
+        }
+
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH = pkt.content;
+        if (id) content.id = id;
+        if (nodeType) content.nodeType = nodeType;
+
+        // content.mouseEvent = [9];
+        content.point3f = { x, y };
+        this.connection.send(pkt);
+
+        this.tryMove();
+    }
+
     public destroy() {
         this.mGame.peer.destroy();
         if (this.connection) this.connection.removePacketListener(this);
@@ -506,6 +537,42 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get sceneType(): op_def.SceneTypeEnum {
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
+    }
+
+    private tryMove() {
+        const player = this.mPlayerManager.actor;
+        if (!player) {
+            return;
+        }
+        const moveData = player.moveData;
+        const pos = moveData.posPath;
+        if (!pos || pos.length < 0) {
+            return;
+        }
+
+        const step = moveData.step || 0;
+        if (step >= pos.length) {
+            return;
+        }
+
+        const playerPosition = player.getPosition();
+        const position = op_def.PBPoint3f.create();
+        position.x = playerPosition.x;
+        position.y = playerPosition.y;
+
+        if (pos[step] === undefined) {
+            Logger.getInstance().log("move error", pos, step);
+        }
+        const nextPosition = op_def.PBPoint3f.create();
+        nextPosition.x = pos[step].x;
+        nextPosition.y = pos[step].y;
+
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
+        const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
+        conten.timestemp = this.now();
+        conten.position = position;
+        conten.nextPoint = nextPosition;
+        this.connection.send(packet);
     }
 
     private onEnableEditModeHandler(packet: PBpacket) {

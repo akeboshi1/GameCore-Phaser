@@ -2,6 +2,8 @@ import { ClickEvent } from "apowophaserui";
 import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structureinterface";
+import { DisplayObject } from "../display/display.object";
+import { NodeType } from "../managers/display.manager";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -84,9 +86,23 @@ export class MouseManager {
             const diffY = Math.abs(pointer.downY - pointer.upY);
             if (diffX < 10 && diffY < 10) {
                 // events.push(MouseEvent.Tap);
-                this.render.emitter.emit(ClickEvent.Tap, pointer, gameobject);
+                // this.render.emitter.emit(ClickEvent.Tap, pointer, gameobject);
+                if (gameobject) {
+                    const displsy = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
+                    let nodeType = -1;
+                    if (displsy && displsy instanceof DisplayObject) {
+                        nodeType = displsy.nodeType;
+                    }
+                    this.render.mainPeer.onTapHandler({ id, x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio, nodeType });
+                } else {
+                    this.render.mainPeer.onTapHandler({ x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio });
+                }
+
                 if (pointer.isDown === false) {
-                    if (com instanceof FramesDisplay) {
+                    if (com && com instanceof FramesDisplay) {
+                        if (com.nodeType === NodeType.ElementNodeType) {
+                            com.scaleTween();
+                        }
                         // const ele = com.element;
                         // if (ele instanceof Element) {
                         //     com.scaleTween();

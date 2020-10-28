@@ -60,20 +60,20 @@ export class Player extends Element implements IElement {
                 y: point.y + this.offsetY,
                 duration,
                 onStartParams: angle,
-                onStart: (tween, target, params) => {
-                    this.onCheckDirection(params);
-                },
                 onCompleteParams: { duration, index },
-                onComplete: (tween, targets, params) => {
-                    this.onMovePathPointComplete(params);
-                }
+                // onStart: (tween, target, params) => {
+                //     this.onCheckDirection(params);
+                // },
+                // onComplete: (tween, targets, params) => {
+                //     this.onMovePathPointComplete(params);
+                // }
             });
             lastPos = new LogicPos(point.x, point.y);
             index++;
         }
         this.mMoveData.posPath = paths;
         this.mMoveData.onCompleteParams = point;
-        this.mMoveData.onComplete = this.mMovePathPointFinished;
+        // this.mMoveData.onComplete = this.mMovePathPointFinished;
         this._doMove();
     }
 
@@ -119,6 +119,20 @@ export class Player extends Element implements IElement {
         return pos;
     }
 
+    public startMove() {
+        super.startMove();
+
+    }
+
+    public stopMove() {
+        super.stopMove();
+    }
+
+    public completeMove() {
+        this.onMovePathPointComplete(this.mMoveData.onCompleteParams);
+        this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
+    }
+
     protected onCheckDirection(params: any) {
         if (typeof params !== "number") {
             return;
@@ -151,10 +165,10 @@ export class Player extends Element implements IElement {
 
     protected preMoveComplete() {
         if (this.mMoveData && this.mMoveData.posPath) {
-            const complete = this.mMoveData.onComplete;
+            const complete = this.mMoveData.onCompleteParams;
             if (complete) {
-                complete.call(this, this.mMoveData.onCompleteParams);
-                delete this.mMoveData.onComplete;
+                this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
+                // complete.call(this, this.mMoveData.onCompleteParams);
                 delete this.mMoveData.onCompleteParams;
             }
         }

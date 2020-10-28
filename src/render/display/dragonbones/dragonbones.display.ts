@@ -98,13 +98,12 @@ export class DragonbonesDisplay extends DisplayObject {
 
     private mDragonBonesRenderTexture: Phaser.GameObjects.RenderTexture;
 
-    public constructor(scene: Phaser.Scene, render: Render, id?: number) {
-        super(scene, render, id);
+    public constructor(scene: Phaser.Scene, render: Render, id?: number, type?: number) {
+        super(scene, render, id, type);
     }
 
     public set displayInfo(val: IDragonbonesModel | undefined) {
         if (this.mNeedReplaceTexture === false) {
-
             this.mNeedReplaceTexture = this.checkNeedReplaceTexture(this.mDisplayInfo, val);
             // console.log("ZW-- set displayInfo:", val, this.mNeedReplaceTexture);
         }

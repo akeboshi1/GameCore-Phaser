@@ -1,7 +1,7 @@
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
 import { Url, LogicPoint } from "utils";
-import { RunningAnimation, IDragonbonesModel } from "structureinterface";
+import { RunningAnimation, IDragonbonesModel, IFramesModel } from "structureinterface";
 import { Render } from "../render";
 
 export enum DisplayField {
@@ -17,6 +17,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
      * 实际透明度，避免和tween混淆
      */
     protected mID: number;
+    protected mNodeType: number = undefined;
     protected mAlpha: number = 1;
     protected mBaseLoc: Phaser.Geom.Point;
     protected mCollisionArea: number[][];
@@ -33,10 +34,11 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mActionName: RunningAnimation;
     private moveData: any;
     private render: Render;
-    constructor(scene: Phaser.Scene, render: Render, id?: any) {
+    constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
         this.mID = id;
+        this.mNodeType = type;
     }
 
     public changeAlpha(val?: number) {
@@ -59,7 +61,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     fadeOut(callback?: () => void) {
     }
 
-    load(data: IDragonbonesModel, field?: DisplayField) {
+    load(data: IDragonbonesModel | IFramesModel, field?: DisplayField) {
     }
 
     play(animation: RunningAnimation, field?: DisplayField, times?: number) {
@@ -146,58 +148,63 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         return this.mChildMap.get(key);
     }
 
+    get nodeType(): number {
+        return this.mNodeType;
+    }
+
     public doMove(moveData: any) {
-        // this.moveData = moveData;
-        // const line = moveData.tweenLineAnim;
-        // if (line) {
-        //     line.stop();
-        //     line.destroy();
-        // }
-        // const posPath = moveData.posPath;
-        // moveData.tweenLineAnim = this.scene.tweens.timeline({
-        //     targets: this,
-        //     ease: "Linear",
-        //     tweens: posPath,
-        //     onStart: () => {
-        //         this.onMoveStart();
-        //     },
-        //     onComplete: () => {
-        //         this.onMoveComplete();
-        //     },
-        //     onUpdate: () => {
-        //         this.onMoving();
-        //     },
-        //     onCompleteParams: [this],
-        // });
+        this.moveData = moveData;
+        const line = moveData.tweenLineAnim;
+        if (line) {
+            line.stop();
+            line.destroy();
+        }
+        const posPath = moveData.posPath;
+        moveData.tweenLineAnim = this.scene.tweens.timeline({
+            targets: this,
+            ease: "Linear",
+            tweens: posPath,
+            onStart: () => {
+                this.onMoveStart();
+            },
+            onComplete: () => {
+                this.onMoveComplete();
+            },
+            onUpdate: () => {
+                this.onMoving();
+            },
+            onCompleteParams: [this],
+        });
     }
 
     public stopMove() {
-        // if (this.moveData && this.moveData.posPath) {
-        //     delete this.moveData.posPath;
-        //     if (this.moveData.arrivalTime) this.moveData.arrivalTime = 0;
-        //     if (this.moveData.tweenLineAnim) {
-        //         this.moveData.tweenLineAnim.stop();
-        //         this.moveData.tweenLineAnim.destroy();
-        //     }
-        // }
-        // this.render.mainPeer.
+        if (this.moveData && this.moveData.posPath) {
+            delete this.moveData.posPath;
+            if (this.moveData.arrivalTime) this.moveData.arrivalTime = 0;
+            if (this.moveData.tweenLineAnim) {
+                this.moveData.tweenLineAnim.stop();
+                this.moveData.tweenLineAnim.destroy();
+            }
+        }
+        this.render.mainPeer.displayStopMove(this.id);
     }
 
     protected onMoveStart() {
-        this.render.mainPeer.onMoveStart(this.id);
+        this.render.mainPeer.displayStartMove(this.id);
     }
 
     protected onMoveComplete() {
-        // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
+        if (this.moveData.tweenLineAnim) this.moveData.tweenLineAnim.stop();
+        this.render.mainPeer.displayCompleteMove(this.id);
         this.stopMove();
     }
 
     protected onMoving() {
-        // const now = this.roomService.now();
-        // if (now - (this.moveData.tweenLastUpdate || 0) >= 50) {
-        //     this.setDepth(0);
-        //     this.moveData.tweenLastUpdate = now;
-        // }
+        const now = this.render.mainPeer.now();
+        if (now - (this.moveData.tweenLastUpdate || 0) >= 50) {
+            this.setDepth(0);
+            this.moveData.tweenLastUpdate = now;
+        }
         // this.mDirty = true;
     }
 

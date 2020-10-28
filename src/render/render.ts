@@ -1,8 +1,8 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Display, Game } from "tooqinggamephaser";
+import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Logger, Url, initLocales } from "utils";
+import { Url, initLocales } from "utils";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
 import { MessageType, GameMain, ILauncherConfig, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "structureinterface";
@@ -70,7 +70,7 @@ export class Render extends RPCPeer implements GameMain {
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.createGame();
-            Logger.getInstance().log("worker onReady");
+            // Logger.getInstance().log("worker onReady");
         });
     }
 
@@ -228,7 +228,7 @@ export class Render extends RPCPeer implements GameMain {
             if (this.mGame) {
                 resolve();
             }
-            Logger.getInstance().log("dragonbones: ", dragonBones);
+            // Logger.getInstance().log("dragonbones: ", dragonBones);
             this.gameConfig = {
                 type: Phaser.AUTO,
                 parent: this.mConfig.parent,
@@ -500,7 +500,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public showLoading(data?: any) {
         if (!this.mSceneManager) {
-            Logger.getInstance().error("no game created");
+            // Logger.getInstance().error("no game created");
             return;
         }
         this.mSceneManager.startScene("LoadingScene", data).then((scene: BasicScene) => {
@@ -511,7 +511,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public hideLoading() {
         if (!this.mSceneManager) {
-            Logger.getInstance().error("no game created");
+            // Logger.getInstance().error("no game created");
             return;
         }
         this.mSceneManager.sleepScene("LoadingScene");
@@ -520,7 +520,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public showPlay(data?: any) {
         if (!this.mSceneManager) {
-            Logger.getInstance().error("no game created");
+            // Logger.getInstance().error("no game created");
             return;
         }
         this.mSceneManager.startScene("PlayScene", data);
@@ -529,7 +529,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public hidePlay() {
         if (!this.mSceneManager) {
-            Logger.getInstance().error("no game created");
+            // Logger.getInstance().error("no game created");
             return;
         }
         this.mSceneManager.sleepScene("PlayScene");
@@ -723,7 +723,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
-        Logger.getInstance().log("syncCameraScroll");
+        // Logger.getInstance().log("syncCameraScroll");
         const sceneScrale = this.mSceneManager.getSceneByName("PlayScene").scale;
         this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
         this.syncCameraScroll();
@@ -772,7 +772,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public startFollow(id: number) {
-        Logger.getInstance().log("target ===== startFollow");
+        // Logger.getInstance().log("target ===== startFollow");
         const display = this.mDisplayManager.getDisplay(id);
         if (display) this.mCameraManager.startFollow(display);
     }
