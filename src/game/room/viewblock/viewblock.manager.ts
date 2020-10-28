@@ -1,5 +1,5 @@
 
-import { IPosition45Obj, IPos, LogicRectangle, Logger } from "utils";
+import { IPosition45Obj, IPos, LogicRectangle } from "utils";
 import { IBlockObject } from "../block/iblock.object";
 import { Viewblock } from "./view.block";
 import { ICameraService } from "../camera/cameras.manager";
@@ -13,7 +13,7 @@ export class ViewblockManager implements IViewBlockManager {
     }
 
     public add(e: IBlockObject): boolean {
-        Logger.getInstance().log("viewblock add");
+        // Logger.getInstance().log("viewblock add");
         if (!this.mCameras) return false;
         this.mCameras.getMiniViewPort().then((obj) => {
             const miniView = obj;
@@ -30,7 +30,7 @@ export class ViewblockManager implements IViewBlockManager {
     }
 
     public remove(e: IBlockObject): boolean {
-        Logger.getInstance().log("viewblock remove");
+        // Logger.getInstance().log("viewblock remove");
         if (!e) return;
         for (const block of this.mBlocks) {
             if (block.remove(e)) {

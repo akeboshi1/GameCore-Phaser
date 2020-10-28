@@ -1,4 +1,4 @@
-import { Logger, IPos, LogicPos } from "utils";
+import { IPos, LogicPos } from "utils";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element";
 import { IRoomService } from "../room/room";
@@ -15,7 +15,7 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     public setRenderable(isRenderable: boolean, delay: number = 0) {
-        Logger.getInstance().log(isRenderable, "=====blockobject");
+        // Logger.getInstance().log(isRenderable, "=====blockobject");
         if (this.mRenderable !== isRenderable) {
             this.mRenderable = isRenderable;
             if (isRenderable) {
@@ -88,10 +88,10 @@ export abstract class BlockObject implements IBlockObject {
             this.mBlockable = val;
             if (this.mRoomService) {
                 if (val) {
-                    Logger.getInstance().log("block addBlockObject");
+                    // Logger.getInstance().log("block addBlockObject");
                     this.mRoomService.addBlockObject(this);
                 } else {
-                    Logger.getInstance().log("block removeBlockObject");
+                    // Logger.getInstance().log("block removeBlockObject");
                     this.mRoomService.removeBlockObject(this);
                 }
             }

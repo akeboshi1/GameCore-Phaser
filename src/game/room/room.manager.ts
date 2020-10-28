@@ -3,7 +3,7 @@ import { IRoomService, Room } from "./room/room";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
 import { ConnectionService } from "../../../lib/net/connection.service";
-import { Logger } from "utils";
+// import { Logger } from "utils";
 import { Lite } from "game-capsule";
 export interface IRoomManager {
     readonly game: Game | undefined;
@@ -81,17 +81,17 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
-        Logger.getInstance().log("===========enter scene=====0");
+        // Logger.getInstance().log("===========enter scene=====0");
         const vw = scene;
         if (this.mCurRoom) {
             await this.leaveRoom(this.mCurRoom);
         }
         if (this.hasRoom(vw.scene.id)) {
-            Logger.getInstance().log("===========enter scene=====1");
+            // Logger.getInstance().log("===========enter scene=====1");
             this.onEnterRoom(scene);
         } else {
             this.mGame.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
-                Logger.getInstance().log("=======enter scene load sceneConfig");
+                // Logger.getInstance().log("=======enter scene load sceneConfig");
                 this.game.elementStorage.setSceneConfig(config);
                 this.onEnterRoom(scene);
             });
@@ -99,7 +99,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private async onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        Logger.getInstance().log("enter===room");
+        // Logger.getInstance().log("enter===room");
         const room = new Room(this);
         this.mRooms.push(room);
         room.addActor(scene.actor);
@@ -130,7 +130,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     private leaveRoom(room: IRoomService) {
         if (!room) return;
         this.mGame.leaveRoom(room);
-        Logger.getInstance().log("===========leaveRoom");
+        // Logger.getInstance().log("===========leaveRoom");
         // return new Promise((resolve, reject) => {
         //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
         //     if (loading) {

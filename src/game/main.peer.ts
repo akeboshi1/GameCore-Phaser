@@ -155,10 +155,10 @@ export class MainPeer extends RPCPeer {
         this.game.roomManager.currentRoom.startPlay();
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public updateRoom(time: number, delta: number) {
-        this.game.roomManager.currentRoom.update(time, delta);
-    }
+    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    // public updateRoom(time: number, delta: number) {
+    //     this.game.roomManager.currentRoom.update(time, delta);
+    // }
 
     @Export()
     public allowLogin() {
