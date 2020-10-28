@@ -635,6 +635,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public createGameCallBack(keyEvents: any) {
+        this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         if (window.screen.width > window.screen.height) {
             if (this.mConfig.width > this.mConfig.height) {
@@ -662,6 +663,7 @@ export class Render extends RPCPeer implements GameMain {
     public clearGame(callBack?: Function): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.mGame) {
+                this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
                 this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
                 this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
