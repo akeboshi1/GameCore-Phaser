@@ -47,7 +47,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private isPause: boolean = false;
     private mMoveStyle: number;
     private mWorkerLoop: any;
-    private delayTime: number = 20000;
+    private delayTime: number = 20;
     private currentTime: number = 0;
     constructor(peer: MainPeer) {
         super();
@@ -63,7 +63,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public update() {
-        if (this.roomManager) this.roomManager.currentRoom.update(this.currentTime, this.delayTime);
+        // if (this.roomManager) this.roomManager.currentRoom.update(this.currentTime, this.delayTime);
+        if (this.user) {
+            this.user.update();
+        }
     }
 
     get scaleRatio(): number {

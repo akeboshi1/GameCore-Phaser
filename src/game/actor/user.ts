@@ -12,7 +12,8 @@ import { ILogicPoint, Logger, LogicPoint, Tool } from "utils";
 export class User extends Player {
     private mUserData: PlayerDataManager;
     private mMoveStyle: number;
-    private mSpeed: number = 1;
+    private mSpeed: number = 5;
+    private mTargetPoint: ILogicPoint;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -44,6 +45,27 @@ export class User extends Player {
         this.game.peer.render.setCameraScroller(actor.x, actor.y);
     }
 
+    update() {
+        if (this.mMoving) {
+            const pos = this.getPosition();
+            // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
+            const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
+            // const dir = Tool.angleToDirections(angle, 3, undefined);
+            pos.y += this.offsetY;
+            pos.x += Math.cos(angle) * this.mSpeed;
+            pos.y += Math.sin(angle) * this.mSpeed;
+            this.mModel.setPosition(pos.x, pos.y);
+            if (this.mRootMount) {
+                return;
+            }
+            this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+
+            if (Math.ceil(pos.x) === this.mTargetPoint.x && Math.ceil(pos.y) === this.mTargetPoint.y) {
+                this.stopMove();
+            }
+        }
+    }
+
     public startMove() {
         super.startMove();
         // const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
@@ -68,30 +90,11 @@ export class User extends Player {
             };
             this.mElementManager.connection.send(pkt);
         }
+        this.mTargetPoint = null;
     }
 
     public tryMove(targetPoint: ILogicPoint) {
-        const pos = this.getPosition();
-        const angle = Tool.calcAngle(pos, targetPoint);
-        const dir = Tool.angleToDirections(angle, 3, undefined);
-        if (dir.left) {
-            pos.x -= this.mSpeed;
-        }
-        if (dir.right) {
-            pos.x += this.mSpeed;
-        }
-        if (dir.up) {
-            pos.y -= this.mSpeed;
-        }
-        if (dir.down) {
-            pos.y += this.mSpeed;
-        }
-        pos.y += this.offsetY;
-        this.mModel.setPosition(pos.x, pos.y);
-        if (this.mRootMount) {
-            return;
-        }
-        this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+        this.mTargetPoint = targetPoint;
     }
 
     public move(moveData: op_client.IMoveData) {

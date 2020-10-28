@@ -22,7 +22,7 @@ export class JoystickManager extends PacketHandler {
     start() {
         this.user.startMove();
     }
-    
+
     stop() {
         this.user.stopMove();
     }

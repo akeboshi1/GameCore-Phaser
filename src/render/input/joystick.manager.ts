@@ -50,7 +50,7 @@ export class JoystickManager extends PacketHandler {
         if (!this.mJoystick) {
             return;
         }
-        this.mJoystick.calcAngle(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
+        this.mJoystick.calcAngle(Math.ceil(pointer.worldX / this.mScaleRatio), Math.ceil(pointer.worldY / this.mScaleRatio));
     }
 
     private start() {
