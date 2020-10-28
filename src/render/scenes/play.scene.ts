@@ -70,9 +70,9 @@ export class PlayScene extends RoomScene {
         this.render.startRoomPlay();
         this.render.changeScene(this);
 
-        this.scene.scene.input.on("pointerdown", this.onPointerDownHandler, this);
-        this.scene.scene.input.on("pointerup", this.onPointerUpHandler, this);
-        this.scene.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        this.input.on("pointerdown", this.onPointerDownHandler, this);
+        this.input.on("pointerup", this.onPointerUpHandler, this);
+        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
     }
 
     update(time: number, delta: number) {
@@ -98,13 +98,13 @@ export class PlayScene extends RoomScene {
     }
 
     private addPointerMoveHandler() {
-        this.scene.scene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.scene.scene.input.on("gameout", this.onGameOutHandler, this);
+        this.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.input.on("gameout", this.onGameOutHandler, this);
     }
 
     private removePointerMoveHandler() {
-        this.scene.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.scene.scene.input.off("gameout", this.onGameOutHandler, this);
+        this.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.input.off("gameout", this.onGameOutHandler, this);
         if (this.render.camerasManager.moving) {
             this.render.syncCameraScroll();
             this.render.camerasManager.moving = false;

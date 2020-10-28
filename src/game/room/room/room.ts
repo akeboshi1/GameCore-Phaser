@@ -18,7 +18,7 @@ import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { IScenery } from "src/structureinterface/scenery";
-import { Scenery } from "../sky.box/scenery";
+import { JoystickManager } from "../../input.manager/joystick.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -345,6 +345,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
 
         this.initSkyBox();
+
+        const joystick = new JoystickManager(this.game);
     }
 
     public setState(states: op_def.IState[]) {
