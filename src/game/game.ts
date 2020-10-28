@@ -46,12 +46,24 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private gameConfigUrl: string;
     private isPause: boolean = false;
     private mMoveStyle: number;
+    private mWorkerLoop: any;
+    private delayTime: number = 20000;
+    private currentTime: number = 0;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
         this.mSocket = new GameSocket(peer, new ConnListener(peer));
         this.connect = new Connection(this.mSocket);
         this.connect.addPacketListener(this);
+        this.currentTime = new Date().getTime();
+        this.mWorkerLoop = setInterval(() => {
+            this.currentTime = new Date().getTime();
+            this.update();
+        }, this.delayTime);
+    }
+
+    public update() {
+        if (this.roomManager) this.roomManager.currentRoom.update(this.currentTime, this.delayTime);
     }
 
     get scaleRatio(): number {
