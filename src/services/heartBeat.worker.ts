@@ -1,5 +1,6 @@
 import { RPCPeer, RPCExecutor, Export, webworker_rpc, RemoteListener } from "webworker-rpc";
-import { HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER } from "structureinterface";
+import { HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, MAIN_WORKER_URL } from "structureinterface";
+import { Logger } from "utils";
 
 class HeartBeatPeer extends RPCPeer {
     public inited: boolean = false;
@@ -8,14 +9,15 @@ class HeartBeatPeer extends RPCPeer {
     private startDelay: any;
     constructor() {
         super(HEARTBEAT_WORKER);
-        this.linkTo(MAIN_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            // Logger.getInstance().log("mainworker link ready");
-        });
+        // this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
+        //     Logger.getInstance().log("mainworker link ready");
+        // });
         // this.remote[MAIN_WORKER].Connection.on("xx", new RPCExecutor("startBeat", "HeartBeatPeer"));// TODO:使用@RemoteListener
     }
 
     @Export()
     public startBeat() {
+        Logger.getInstance().log("startBeat");
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
             if (this.reConnectCount >= 8) {
