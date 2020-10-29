@@ -84,12 +84,13 @@ export class Player extends Element implements IElement {
             const id = this.mModel.id;
             if (!this.mModel.currentAnimationName) {
                 this.mModel.currentAnimationName = PlayerState.IDLE;
-                this.mElementManager.roomService.game.peer.render.playDragonBonesAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
+                // this.mElementManager.roomService.game.peer.render.playAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
             }
             // if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
             // if (this.mDisplay) {
             //     this.mDisplay.play(this.mModel.currentAnimation);
             // }
+            this.mElementManager.roomService.game.peer.render.playAnimation(id, this.mModel.currentAnimation);
         }
     }
 

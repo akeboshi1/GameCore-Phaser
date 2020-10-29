@@ -717,12 +717,6 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public playDragonBonesAnimation(id: number, animation: any) {
-        const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.play(animation);
-    }
-
-    @Export([webworker_rpc.ParamType.num])
     public playAnimation(id: number, animation: any, field?: any, times?: number) {
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.play(animation, field, times);

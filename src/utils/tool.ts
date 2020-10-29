@@ -42,6 +42,21 @@ export class Tool {
         return angle * (180 / Math.PI);
     }
 
+    public static calculateDirectionByRadin(radin: any) {
+        const angle = radin * (180 / Math.PI);
+        let direction = -1;
+        if (angle > 90) {
+            direction = 3;
+        } else if (angle >= 0) {
+            direction = 5;
+        } else if (angle >= -90) {
+            direction = 7;
+        } else {
+            direction = 1;
+        }
+        return direction;
+    }
+
     public static angleToDirections(angle, dirMode, out) {
         if (out === undefined) {
             out = {};
