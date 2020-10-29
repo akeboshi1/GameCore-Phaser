@@ -261,7 +261,7 @@ export class Element extends BlockObject implements IElement {
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
-        this.mElementManager.roomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimation);
+        this.mElementManager.roomService.game.peer.render.playAnimation(this.id, this.mModel.currentAnimation);
         // this.mDisplay.play(this.model.currentAnimation, undefined, times);
     }
 

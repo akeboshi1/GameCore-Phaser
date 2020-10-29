@@ -3,7 +3,7 @@ export interface ILogicPoint {
     y: number;
 }
 
-export class LogicPoint {
+export class LogicPoint implements ILogicPoint {
     public x: number;
     public y: number;
     constructor(x?: number, y?: number) {

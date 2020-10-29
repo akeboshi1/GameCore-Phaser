@@ -1,5 +1,5 @@
 import { PacketHandler } from "net-socket-packet";
-import { Logger, LogicPoint, Tool } from "utils";
+import { LogicPoint, Tool } from "utils";
 import { User } from "../actor/user";
 import { Game } from "../game";
 
@@ -19,12 +19,19 @@ export class JoystickManager extends PacketHandler {
         });
     }
 
+    start() {
+        this.user.startMove();
+    }
+
+    stop() {
+        this.user.stopMove();
+    }
+
     calcAngle(x: number, y: number) {
         if (!this.user) {
             return;
         }
-        const pos = this.user.getPosition();
-        const angle = Tool.calcAngle(pos, { x, y });
+        this.user.tryMove({ x, y });
         // Logger.getInstance().log("pointer position: ", Tool.angleToDirections(angle, 3, undefined));
     }
 

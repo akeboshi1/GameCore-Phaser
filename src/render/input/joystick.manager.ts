@@ -38,16 +38,32 @@ export class JoystickManager extends PacketHandler {
     private onDownHandler(pointer: Phaser.Input.Pointer) {
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.calcAngle(pointer);
+        this.start();
     }
 
     private onUpHandler(pointer: Phaser.Input.Pointer) {
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.stop();
     }
 
     private calcAngle(pointer: Phaser.Input.Pointer) {
         if (!this.mJoystick) {
             return;
         }
-        this.mJoystick.calcAngle(pointer.worldX / this.mScaleRatio, pointer.worldY / this.mScaleRatio);
+        this.mJoystick.calcAngle(Math.ceil(pointer.worldX / this.mScaleRatio), Math.ceil(pointer.worldY / this.mScaleRatio));
+    }
+
+    private start() {
+        if (!this.mJoystick) {
+            return;
+        }
+        this.mJoystick.start();
+    }
+
+    private stop() {
+        if (!this.mJoystick) {
+            return;
+        }
+        this.mJoystick.stop();
     }
 }
