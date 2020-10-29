@@ -50,7 +50,8 @@ export class User extends Player {
             const pos = this.getPosition();
             // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
             const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
-            // const dir = Tool.angleToDirections(angle, 3, undefined);
+            const dir = Tool.calculateDirectionByRadin(angle);
+            this.setDirection(dir);
             pos.y += this.offsetY;
             pos.x += Math.cos(angle) * this.mSpeed;
             pos.y += Math.sin(angle) * this.mSpeed;
