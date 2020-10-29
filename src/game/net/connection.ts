@@ -15,9 +15,17 @@ export class GameSocket extends SocketConnection {
     protected mUuid: number = 0;
     private _pause: boolean = false;
     private mainPeer: MainPeer;
+    private socketList: any[];
+    private mTimestamp: number;
     constructor(mainPeer: MainPeer, $listener: IConnectListener) {
         super($listener);
         this.mainPeer = mainPeer;
+        this.socketList = [];
+    }
+    update(time: number, delta: number) {
+        if (!this.mTimestamp) this.mTimestamp = time;
+        else
+            this.mTimestamp += delta;
     }
     send(data: any): void {
         if (this._pause) return;
