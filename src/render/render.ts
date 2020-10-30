@@ -437,6 +437,11 @@ export class Render extends RPCPeer implements GameMain {
         // this.mWorld.reconnect();
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public updateUIState(panelName: string, ui: any) {
+        this.uiManager.updateUIState(panelName, ui);
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public setMoveStyle(moveStyle: number) {
         this._moveStyle = moveStyle;

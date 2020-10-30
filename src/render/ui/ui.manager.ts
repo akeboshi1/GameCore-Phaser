@@ -117,6 +117,13 @@ export class UiManager {
         panel.hide();
     }
 
+    public updateUIState(panelName: string, ui: any) {
+        const panel = this.mPanelMap.get(panelName);
+        if (panel) {
+            panel.updateUIState(ui);
+        }
+    }
+
     get scene(): BasicScene {
         return this.mScene;
     }

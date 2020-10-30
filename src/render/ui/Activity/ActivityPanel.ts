@@ -1,4 +1,3 @@
-import { op_pkt_def } from "pixelpai_proto";
 import { GameScroller } from "apowophaserui";
 import { BasePanel } from "../components/base.panel";
 import { Render } from "src/render/render";
@@ -7,6 +6,7 @@ export class ActivityPanel extends BasePanel {
     private readonly key: string = "activity";
     private content: Phaser.GameObjects.Container;
     private mGameScroll: GameScroller;
+    private activeUIData: any;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
     }
@@ -21,14 +21,15 @@ export class ActivityPanel extends BasePanel {
     }
 
     show(param?: any) {
+        super.show(param);
+        if (!this.activeUIData) this.checkUpdateActive();
         if (this.mInitialized) {
             this.setInteractive();
+            if (this.activeUIData) this._updateUIState(this.activeUIData);
         }
-        super.show(param);
-        this.checkUpdateActive();
     }
 
-    updateUIState(active?: op_pkt_def.IPKT_UI) {
+    updateUIState(active?: any) {
         if (!this.mInitialized) {
             return;
         }
@@ -88,14 +89,17 @@ export class ActivityPanel extends BasePanel {
             this.emit("showPanel", "PicOrder");
         }
     }
-    private checkUpdateActive() {
-        const arr = this.render.mainPeer.getActiveUIData("Activity");
-        if (arr) {
-            for (const data of arr) {
-                this.updateUIState(data);
-            }
-        }
+    private async checkUpdateActive() {
+        this.activeUIData = await this.render.mainPeer.getActiveUIData("Activity");
+        if (!this.mInitialized) return;
+        this._updateUIState(this.activeUIData);
+    }
 
+    private _updateUIState(data: any) {
+        if (!data) return;
+        for (const tmpData of data) {
+            this.updateUIState(tmpData);
+        }
     }
 
     private onPointerUpHandler(gameobject) {

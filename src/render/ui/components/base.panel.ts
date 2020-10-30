@@ -1,4 +1,5 @@
 import { Panel } from "apowophaserui";
+import { MainUIScene } from "src/render/scenes/main.ui.scene";
 import { Logger, Url } from "utils";
 import { Render } from "../../render";
 
@@ -25,6 +26,10 @@ export class BasePanel extends Panel {
             this.dpr = Math.round(render.uiRatio || 1);
             this.scale = this.mWorld.uiScale;
         }
+    }
+    protected init() {
+        super.init();
+        (<MainUIScene>this.mScene).layerManager.addToLayer("uiLayer", this);
     }
 
     protected addResources(key: string, resource: any) {

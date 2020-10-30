@@ -1,5 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { BasicScene } from "src/render/scenes/basic.scene";
 import { Game } from "../game";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
@@ -8,6 +9,7 @@ import { UIMediatorType } from "./ui.mediator.type";
 
 export class UIManager extends PacketHandler {
     private mMedMap: Map<UIMediatorType, BasicMediator>;
+    private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
     constructor(private game: Game) {
         super();
         if (!this.mMedMap) {
@@ -28,6 +30,7 @@ export class UIManager extends PacketHandler {
         // TODO 这2条协议合并到SHOW_UI和CLOS_UI
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CLOSE_CREATE_ROLE_UI, this.onHandleCloseCreateRoleUI);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
     }
 
     public removePackListener() {
@@ -39,13 +42,15 @@ export class UIManager extends PacketHandler {
     }
 
     public showMainUI() {
-        // this.mMedMap.set("LoginMediator", new LoginMediator(this.game));
-        // this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
-        // this.mMedMap.forEach((mediator: any, key: string) => {
-        //     if (mediator.isSceneUI()) {
-        //         mediator.show();
-        //     }
-        // });
+        if (this.mAtiveUIData) {
+            this.updateUIState(this.mAtiveUIData);
+        }
+        this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
+        this.mMedMap.forEach((mediator: any, key: string) => {
+            if (mediator.isSceneUI()) {
+                mediator.show();
+            }
+        });
     }
 
     public showMed(type: string, ...param: any[]) {
@@ -107,6 +112,64 @@ export class UIManager extends PacketHandler {
         const className: string = type + extendName;
         const mediator: BasicMediator = this.mMedMap.get(className);
         if (mediator) mediator.show();
+    }
+
+    public getActiveUIData(name: string): op_pkt_def.IPKT_UI[] {
+        if (!this.mAtiveUIData) return null;
+        const arr: op_pkt_def.IPKT_UI[] = [];
+        for (const data of this.mAtiveUIData.ui) {
+            const tagName = data.name.split(".")[0];
+            const paneName = this.getPanelNameByStateTag(tagName);
+            if (paneName === name) {
+                arr.push(data);
+            }
+        }
+        return arr;
+    }
+
+    private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
+        for (const ui of data.ui) {
+            const tag = ui.name;
+            const paneltags = tag.split(".");
+            const panelName = this.getPanelNameByStateTag(paneltags[0]);
+            if (panelName) {
+                const mediator: BasicMediator = this.mMedMap.get(panelName + "Mediator");
+                if (mediator) {
+                    if (paneltags.length === 1) {
+                        if (ui.visible || ui.visible === undefined) {
+                            this.showMed(panelName);
+                        } else {
+                            this.hideMed(panelName);
+                        }
+                    } else {
+                        this.game.peer.render.updateUIState(panelName,ui);
+                    }
+                }
+            }
+        }
+    }
+
+    private onUIStateHandler(packge: PBpacket) {
+        this.mAtiveUIData = packge.content;
+        if (this.mAtiveUIData && this.mMedMap) {
+            this.updateUIState(this.mAtiveUIData);
+        }
+    }
+
+    private getPanelNameByStateTag(tag: string) {
+        switch (tag) {
+            case "mainui":
+                return "PicaMainUI";
+            case "activity":
+                return "Activity";
+            case "picachat":
+                return "PicaChat";
+            case "picanavigate":
+                return "PicaNavigate";
+            case "PicHandheld":
+                return "PicHandheld";
+        }
+        return tag;
     }
 
     private handleShowUI(packet: PBpacket): void {

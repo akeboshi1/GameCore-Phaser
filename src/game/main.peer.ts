@@ -151,7 +151,7 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.str])
     public getActiveUIData(str: string): any {
-        return [];// this.game.uiManager.getActiveUIData(str);
+        return this.game.uiManager.getActiveUIData(str);
     }
 
     @Export()
