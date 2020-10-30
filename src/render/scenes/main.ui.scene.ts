@@ -47,7 +47,7 @@ export class MainUIScene extends BasicScene {
     //   }
     // }
     this.render.uiManager.setScene(this);
-    // this.mRoom.initUI();
+    this.render.initUI();
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
     // this.scale.on("resize", this.checkSize, this);

@@ -3,7 +3,7 @@ import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { IPoint } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IPosition45Obj, Position45, IPos, LogicPos, Logger } from "utils";
+import { IPosition45Obj, Position45, IPos, LogicPos } from "utils";
 import { Game } from "../../game";
 import { IBlockObject } from "../block/iblock.object";
 import { ClockReadyListener } from "../../loop/clock/clock";
@@ -123,7 +123,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!data) {
             return;
         }
-        Logger.getInstance().log("room====enter");
+        // Logger.getInstance().log("room====enter");
         this.mID = data.id;
         this.mSize = {
             cols: data.cols,
@@ -184,21 +184,21 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addBlockObject(object: IBlockObject) {
-        Logger.getInstance().log("rooms add");
+        // Logger.getInstance().log("rooms add");
         if (this.blocks) {
             this.blocks.add(object);
         }
     }
 
     public removeBlockObject(object: IBlockObject) {
-        Logger.getInstance().log("rooms remove");
+        // Logger.getInstance().log("rooms remove");
         if (this.blocks) {
             this.blocks.remove(object);
         }
     }
 
     public updateBlockObject(object: IBlockObject) {
-        Logger.getInstance().log("rooms update");
+        // Logger.getInstance().log("rooms update");
         if (this.blocks) {
             this.blocks.check(object);
         }
@@ -297,7 +297,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mLayManager) {
         //     this.layerManager.destroy();
         // }
-        Logger.getInstance().log("roomstartPlay");
+        // Logger.getInstance().log("roomstartPlay");
         this.mCameraService = new CamerasManager(this.mGame, this);
         // this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mTerrainManager = new TerrainManager(this, this);
@@ -457,7 +457,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             case "setCameraBounds":
                 const bounds = state.packet;
                 if (!bounds || !bounds.width || !bounds.height) {
-                    Logger.getInstance().log("setCameraBounds error", bounds);
+                    // Logger.getInstance().log("setCameraBounds error", bounds);
                     return;
                 }
                 let { x, y, width, height } = bounds;
@@ -562,7 +562,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         position.y = playerPosition.y;
 
         if (pos[step] === undefined) {
-            Logger.getInstance().log("move error", pos, step);
+           // Logger.getInstance().log("move error", pos, step);
         }
         const nextPosition = op_def.PBPoint3f.create();
         nextPosition.x = pos[step].x;

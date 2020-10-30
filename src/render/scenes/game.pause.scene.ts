@@ -19,6 +19,7 @@ export class GamePauseScene extends BasicScene {
     }
 
     public create() {
+        super.create();
         const width = this.scale.gameSize.width;
         const height = this.scale.gameSize.height;
         this.bg = this.add.graphics();

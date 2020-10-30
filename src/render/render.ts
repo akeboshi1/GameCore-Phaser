@@ -70,7 +70,7 @@ export class Render extends RPCPeer implements GameMain {
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.createGame();
-            // Logger.getInstance().log("worker onReady");
+            Logger.getInstance().log("worker onReady");
         });
     }
 
@@ -508,9 +508,10 @@ export class Render extends RPCPeer implements GameMain {
             // Logger.getInstance().error("no game created");
             return;
         }
-        this.mSceneManager.startScene("LoadingScene", data).then((scene: BasicScene) => {
+        data.callBack = () => {
             if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
-        });
+        };
+        this.mSceneManager.startScene("LoadingScene", data);
     }
 
     @Export()
@@ -818,6 +819,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public doMove(id: number, moveData: any) {
         this.mDisplayManager.displayDoMove(id, moveData);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public showNickname(id: number, name: string) {
+        this.mDisplayManager.showNickname(id, name);
     }
 
     private onFullScreenChange() {

@@ -1,5 +1,5 @@
 import { Panel } from "apowophaserui";
-import { Url } from "utils";
+import { Logger, Url } from "utils";
 import { Render } from "../../render";
 
 export class BasePanel extends Panel {
@@ -16,6 +16,7 @@ export class BasePanel extends Panel {
     protected render: Render;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
+        if (!scene.sys) Logger.getInstance().error("no scene system");
         this.mScene = scene;
         this.mWorld = render;
         this.mInitialized = false;

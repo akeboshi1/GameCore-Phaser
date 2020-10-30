@@ -23,6 +23,7 @@ export class PlayScene extends RoomScene {
     public preload() { }
 
     public create() {
+        super.create();
         Logger.getInstance().log("create playscene");
         const oldCamera = this.cameras.main;
         const { width, height } = this.sys.scale;

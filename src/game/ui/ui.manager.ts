@@ -1,13 +1,19 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Game } from "../game";
+import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
+import { LoginMediator } from "./login/LoginMediator";
 import { UIMediatorType } from "./ui.mediator.type";
 
 export class UIManager extends PacketHandler {
     private mMedMap: Map<UIMediatorType, BasicMediator>;
     constructor(private game: Game) {
         super();
+        if (!this.mMedMap) {
+            this.mMedMap = new Map();
+        }
+        this.mMedMap.set("LoginMediator", new LoginMediator(this.game));
     }
 
     public addPackListener() {
@@ -33,6 +39,13 @@ export class UIManager extends PacketHandler {
     }
 
     public showMainUI() {
+        // this.mMedMap.set("LoginMediator", new LoginMediator(this.game));
+        // this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
+        // this.mMedMap.forEach((mediator: any, key: string) => {
+        //     if (mediator.isSceneUI()) {
+        //         mediator.show();
+        //     }
+        // });
     }
 
     public showMed(type: string, ...param: any[]) {

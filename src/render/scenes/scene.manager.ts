@@ -55,21 +55,24 @@ export class SceneManager {
         return this.render.game.scene.getScene(sceneName);
     }
 
-    public async startScene(name: string, data?: any) {
+    public startScene(name: string, data?: any) {
         const sceneManager = this.render.game.scene;
         if (!data) data = {};
         if (!sceneManager) {
-            return Promise.reject("start faild. SceneManager does not exist");
+            return; // Promise.reject("start faild. SceneManager does not exist");
         }
         if (!this.sceneClass.hasOwnProperty(name)) {
-            return Promise.reject("className error: " + name);
+            return;// Promise.reject("className error: " + name);
         }
         data.render = this.render;
-        data.callBack = this.sceneCallback.bind(this);
         this.mCurSceneName = name;
         const scene = sceneManager.getScene(name) as BasicScene;
+        this.render.emitter.once("sceneCreated", () => {
+            if (data.callBack) data.callBack();
+        }, this);
         if (scene) {
             scene.wake(data);
+            if (data.callBack) data.callBack();
         } else {
             sceneManager.add(name, this.sceneClass[name]);
             sceneManager.start(name, data);

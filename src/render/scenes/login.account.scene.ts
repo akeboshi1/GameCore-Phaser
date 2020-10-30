@@ -32,6 +32,7 @@ export class LoginAccountScene extends BasicScene {
     }
 
     public create() {
+        super.create();
         try {
             WebFont.load({
                 custom: {

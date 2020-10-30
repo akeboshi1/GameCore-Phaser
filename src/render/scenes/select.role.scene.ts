@@ -1,5 +1,6 @@
+import { BasicScene } from "./basic.scene";
 
-export class SelectRoleScene extends Phaser.Scene {
+export class SelectRoleScene extends BasicScene {
   private mWorld: any | undefined;
   constructor() {
     super({ key: SelectRoleScene.name });
@@ -12,7 +13,7 @@ export class SelectRoleScene extends Phaser.Scene {
   }
 
   public create() {
-
+    super.create();
   }
 
   get key(): string {

@@ -6,7 +6,7 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structureinterface";
-import {  LogicPoint } from "utils";
+import { Logger, LogicPoint } from "utils";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -21,7 +21,7 @@ export class MainPeer extends RPCPeer {
     private isReady: boolean = false;
     constructor() {
         super(MAIN_WORKER);
-        // Logger.getInstance().log("constructor mainPeer");
+        Logger.getInstance().log("constructor mainPeer");
         this.game = new Game(this);
     }
 
@@ -74,12 +74,12 @@ export class MainPeer extends RPCPeer {
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
         // ============
-        // Logger.getInstance().log("createGame");
+        Logger.getInstance().log("createGame");
         const url: string = "/js/game" + "_v1.0.398";
-        // Logger.getInstance().log("render link onReady");
+        Logger.getInstance().log("render link onReady");
         this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
             this.game.createGame(this.mConfig);
-            // Logger.getInstance().log("heartBeatworker onReady");
+            Logger.getInstance().log("heartBeatworker onReady");
         });
     }
 
@@ -90,7 +90,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public loginEnterWorld() {
-        // Logger.getInstance().log("game======loginEnterWorld");
+        Logger.getInstance().log("game======loginEnterWorld");
         this.game.loginEnterWorld();
     }
 
@@ -149,9 +149,14 @@ export class MainPeer extends RPCPeer {
         this.game.roomManager.currentRoom.initUI();
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public getActiveUIData(str: string): any {
+        return [];// this.game.uiManager.getActiveUIData(str);
+    }
+
     @Export()
     public startRoomPlay() {
-        // Logger.getInstance().log("peer startroom");
+        Logger.getInstance().log("peer startroom");
         this.game.roomManager.currentRoom.startPlay();
     }
 
@@ -188,7 +193,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public syncCameraScroll() {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.cameraService) {
-            // Logger.getInstance().log("mainpeer====synccamerascroll");
+            Logger.getInstance().log("mainpeer====synccamerascroll");
             this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
         }
     }

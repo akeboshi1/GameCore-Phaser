@@ -495,6 +495,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showNickname() {
+        this.mElementManager.roomService.game.peer.render.showNickname(this.id, this.mModel.nickname);
         // if (!this.mDisplay || !this.model) {
         //     return;
         // }
