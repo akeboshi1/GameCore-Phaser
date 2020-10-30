@@ -16,6 +16,8 @@
       "node_modules/apowophaserui/types"
     ],
     "baseUrl": ".",
+    "noImplicitUseStrict": true,
+    "alwaysStrict": false,
     "paths": {
       "structureinterface": [
         "./src/structureinterface/index"

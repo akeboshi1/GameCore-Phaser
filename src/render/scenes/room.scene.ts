@@ -10,4 +10,8 @@ export class RoomScene extends BasicScene {
         }
     }
 
+    public create() {
+        super.create();
+    }
+
 }

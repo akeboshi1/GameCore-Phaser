@@ -22,6 +22,7 @@ export class BasicScene extends Phaser.Scene {
 
     public create() {
         this.initialize = true;
+        this.render.emitter.emit("sceneCreated");
     }
 
     public sceneInitialize(): boolean {

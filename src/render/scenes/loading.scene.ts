@@ -37,6 +37,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public create() {
+    super.create();
     try {
       WebFont.load({
         custom: {

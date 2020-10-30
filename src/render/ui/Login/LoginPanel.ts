@@ -1,9 +1,11 @@
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
 import { MAIN_WORKER } from "structureinterface";
-import { Font, Helpers } from "utils";
+import { Font, Helpers, Logger } from "utils";
 import { BasePanel } from "../components/base.panel";
 import { UiManager } from "../ui.manager";
+import { BasicScene } from "src/render/scenes/basic.scene";
+import { Render } from "src/render/render";
 
 export class LoginPanel extends BasePanel {
     private readonly key = "login";
@@ -16,8 +18,8 @@ export class LoginPanel extends BasePanel {
     private downcount: number = -1;
     private fetchCode: Phaser.GameObjects.Text;
     private mMediator: any;
-    constructor(uimanager: UiManager) {
-        super(uimanager.scene, uimanager.render);
+    constructor(scene: BasicScene, render: Render) {
+        super(scene, render);
         this.mMediator = this.render.mainPeer["LoginMediator"];
     }
 

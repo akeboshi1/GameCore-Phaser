@@ -91,7 +91,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public onConnected() {
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
-        // Logger.getInstance().info(`enterVirtualWorld`);
+        Logger.getInstance().info(`enterVirtualWorld`);
         this.enterVirtualWorld();
         // this.login();
     }
@@ -320,7 +320,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.renderPeer.hideLogin();
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
-        // Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
+        Logger.getInstance().log(`VW_id: ${this.mConfig.virtual_world_id}`);
         let game_id = this.mConfig.game_id;
         let virtualWorldUuid = this.mConfig.virtual_world_id;
         let sceneId = null;

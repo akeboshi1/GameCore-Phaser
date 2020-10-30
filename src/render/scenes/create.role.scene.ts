@@ -14,6 +14,7 @@ export class CreateRoleScene extends BasicScene {
   }
 
   public create() {
+    super.create();
     if (this.render) {
       const uimanager: UiManager = this.render.uiManager;
       uimanager.setScene(this);

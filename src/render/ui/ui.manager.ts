@@ -2,21 +2,24 @@ import { LoginPanel } from "../../ui/login/login";
 import { Logger } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
+import { ActivityPanel } from "./Activity/ActivityPanel";
+import { BasicScene } from "../scenes/basic.scene";
 
 export class UiManager {
-    private mScene: Phaser.Scene;
+    private mScene: BasicScene;
     private mPanelMap: Map<string, BasePanel>;
     private mCache: any[] = [];
     private mCacheUI: Function;
     private readonly mPanelClass = {
         "BaseMediator": BasePanel,
-        "LoginMediator": LoginPanel
+        "LoginMediator": LoginPanel,
+        "Activity": ActivityPanel,
     };
 
     constructor(private mRender: Render) {
     }
 
-    public setScene(scene: Phaser.Scene) {
+    public setScene(scene: BasicScene) {
         this.mScene = scene;
         if (scene && this.mCacheUI) {
             this.mCacheUI();
@@ -86,7 +89,7 @@ export class UiManager {
         if (!panel) {
             // const path: string = `./${type}/${type}Panel`;
             const ns: any = require(`./${type}/${className}`);
-            panel = new ns[className](this);
+            panel = new ns[className](this.scene, this.render);
             if (!panel) {
                 Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
@@ -114,7 +117,7 @@ export class UiManager {
         panel.hide();
     }
 
-    get scene(): Phaser.Scene {
+    get scene(): BasicScene {
         return this.mScene;
     }
 
