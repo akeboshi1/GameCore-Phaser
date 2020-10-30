@@ -43,7 +43,9 @@ export class JoystickManager extends PacketHandler {
 
     private onUpHandler(pointer: Phaser.Input.Pointer) {
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.stop();
+        if ((pointer.downX - pointer.upX) > 10 * this.mScaleRatio || Math.abs(pointer.downY - pointer.upY) > 10 * this.mScaleRatio) {
+            this.stop();
+        }
     }
 
     private calcAngle(pointer: Phaser.Input.Pointer) {

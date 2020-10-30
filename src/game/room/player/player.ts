@@ -104,7 +104,7 @@ export class Player extends Element implements IElement {
             this.mCurState = val;
             this.mModel.currentAnimationName = this.mCurState;
             const id = this.mModel.id;
-            this.mElementManager.roomService.game.peer.render.playAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
+            this.mElementManager.roomService.game.peer.render.playAnimation(id, this.mModel.currentAnimation);
             // (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }

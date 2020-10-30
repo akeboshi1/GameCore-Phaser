@@ -12,7 +12,7 @@ import { ILogicPoint, Logger, LogicPoint, Tool } from "utils";
 export class User extends Player {
     private mUserData: PlayerDataManager;
     private mMoveStyle: number;
-    private mSpeed: number = 5;
+    private mSpeed: number = 3;
     private mTargetPoint: ILogicPoint;
     constructor(private game: Game) {
         super(undefined, undefined);
@@ -48,11 +48,17 @@ export class User extends Player {
     update() {
         if (this.mMoving) {
             const pos = this.getPosition();
+            pos.y += this.offsetY;
+            Logger.getInstance().log("=====>> position: ", Math.ceil(pos.x), this.mTargetPoint.x, Math.ceil(pos.y), this.mTargetPoint.y);
+            if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y -this.mTargetPoint.y) <= this.mSpeed) {
+                this.stopMove();
+                return;
+            }
             // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
             const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
             const dir = Tool.calculateDirectionByRadin(angle);
             this.setDirection(dir);
-            pos.y += this.offsetY;
+
             pos.x += Math.cos(angle) * this.mSpeed;
             pos.y += Math.sin(angle) * this.mSpeed;
             this.mModel.setPosition(pos.x, pos.y);
@@ -60,10 +66,6 @@ export class User extends Player {
                 return;
             }
             this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
-
-            if (Math.ceil(pos.x) === this.mTargetPoint.x && Math.ceil(pos.y) === this.mTargetPoint.y) {
-                this.stopMove();
-            }
         }
     }
 
