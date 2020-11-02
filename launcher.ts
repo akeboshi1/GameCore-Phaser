@@ -2,7 +2,7 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 
-import { ILauncherConfig } from "structureinterface";
+import { ILauncherConfig } from "structure";
 import version from "./version";
 // import { ServerAddress } from "./src/net/address";
 // import { ConnectionService } from "./src/net/connection.service";

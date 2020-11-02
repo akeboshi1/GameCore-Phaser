@@ -1,5 +1,5 @@
 import { op_def, op_client } from "pixelpai_proto";
-import { Fit, IScenery } from "src/structureinterface/scenery";
+import { Fit, IScenery } from "src/structure/scenery";
 import { ILogicPoint, Logger, LogicPoint } from "utils";
 
 export class Scenery implements IScenery {

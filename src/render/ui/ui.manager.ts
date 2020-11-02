@@ -1,9 +1,9 @@
-import { LoginPanel } from "../../ui/login/login";
 import { Logger } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { ActivityPanel } from "./Activity/ActivityPanel";
 import { BasicScene } from "../scenes/basic.scene";
+import { LoginPanel } from "./Login/LoginPanel";
 
 export class UiManager {
     private mScene: BasicScene;

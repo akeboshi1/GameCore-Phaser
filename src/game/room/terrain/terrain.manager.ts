@@ -7,8 +7,9 @@ import NodeType = op_def.NodeType;
 import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService, SpriteAddCompletedListener } from "../room/room";
 import { ISprite, Sprite } from "../display/sprite/sprite";
-import { IDragonbonesModel, IFramesModel } from "structureinterface";
 import { ConnectionService } from "lib/net/connection.service";
+import { IFramesModel } from "src/structure/frame";
+import { IDragonbonesModel } from "src/structure/dragonbones";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

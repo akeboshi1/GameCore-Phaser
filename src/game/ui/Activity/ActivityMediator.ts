@@ -8,7 +8,9 @@ export class ActivityMediator extends BasicMediator {
     }
 
     show(params?: any) {
-        this.game.renderPeer.showPanel(ActivityMediator.NAME, params);
+        this.__exportProperty(() => {
+            this.game.renderPeer.showPanel(ActivityMediator.NAME, params);
+        });
     }
 
     isSceneUI() {

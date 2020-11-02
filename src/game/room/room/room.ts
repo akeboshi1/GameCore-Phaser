@@ -18,7 +18,7 @@ import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery } from "src/structureinterface/scenery";
+import { IScenery } from "src/structure/scenery";
 import { JoystickManager } from "../../input.manager/joystick.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;

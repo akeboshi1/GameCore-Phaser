@@ -1,4 +1,4 @@
-import { Logger } from "../../src/utils/log";
+import { Logger } from "utils";
 import { ServerAddress } from "./address";
 import { WSWrapper, ReadyState } from "./transport/websocket";
 export interface IConnectListener {

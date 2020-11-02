@@ -40,8 +40,9 @@ const config = {
             phaser: phaser,
             webworkerrpc: webworkerrpc,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-            structureinterface: path.join(__dirname, "./src/structureinterface"),
+            structure: path.join(__dirname, "./src/structure"),
             utils: path.join(__dirname, "./src/utils"),
+            pica: path.join(__dirname, "./src/pica/ui"),
         },
     },
     optimization: {

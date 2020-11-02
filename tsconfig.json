@@ -19,11 +19,14 @@
     "noImplicitUseStrict": true,
     "alwaysStrict": false,
     "paths": {
-      "structureinterface": [
-        "./src/structureinterface/index"
-      ],
       "utils": [
         "./src/utils/index"
+      ],
+      "structure": [
+        "./src/structure/index"
+      ],
+      "pica": [
+        "./src/pica/ui/index"
       ],
     },
   },

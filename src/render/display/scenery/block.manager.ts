@@ -1,7 +1,7 @@
 import { ICameraService } from "src/render/cameras/cameras.manager";
 import { Render } from "src/render/render";
 import { Logger, Url } from "utils";
-import { Fit, IScenery } from "structureinterface";
+import { Fit, IScenery } from "structure";
 import { DynamicImage } from "../../ui";
 import { SkyBoxScene } from "../../scenes/sky.box.scene";
 

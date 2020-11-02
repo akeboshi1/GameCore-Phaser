@@ -7,7 +7,7 @@ import { User } from "../../actor/user";
 import { IRoomService, Room } from "../room/room";
 import { PlayerModel } from "./player.model";
 import { ISprite, Sprite } from "../display/sprite/sprite";
-import { MessageType } from "structureinterface";
+import { MessageType } from "structure";
 import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";

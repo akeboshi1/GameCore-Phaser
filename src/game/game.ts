@@ -12,7 +12,7 @@ import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
 import { LoadingTips } from "./loading/loading.tips";
-import { ILauncherConfig, RENDER_PEER } from "structureinterface";
+import { ILauncherConfig } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { UIManager } from "./ui/ui.manager";
 import { IRoomService } from "./room/room/room";

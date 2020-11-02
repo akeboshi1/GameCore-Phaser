@@ -1,7 +1,6 @@
-import { ClickEvent } from "apowophaserui";
 import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
-import { MessageType } from "structureinterface";
+import { MessageType } from "structure";
 import { DisplayObject } from "../display/display.object";
 import { NodeType } from "../managers/display.manager";
 

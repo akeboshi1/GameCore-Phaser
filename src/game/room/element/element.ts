@@ -1,9 +1,10 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue, IDragonbonesModel, IFramesModel } from "structureinterface";
+import { AnimationQueue } from "src/structure/animation";
+import { IDragonbonesModel } from "src/structure/dragonbones";
+import { IFramesModel } from "src/structure/frame";
 import { IPos, Logger, LogicPos } from "utils";
 import { BlockObject } from "../block/block.object";
 import { ISprite } from "../display/sprite/sprite";
-import { Player } from "../player/player";
 import { IRoomService } from "../room/room";
 import { IElementManager } from "./element.manager";
 

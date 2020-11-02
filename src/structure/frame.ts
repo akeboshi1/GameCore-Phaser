@@ -1,4 +1,3 @@
-import { IAnimationData } from "./animation";
 import { IDisplay } from "./display";
 
 export interface IFramesModel {
@@ -8,6 +7,6 @@ export interface IFramesModel {
     avatarDir?: number;
     type?: string;
     display?: IDisplay | null;
-    animations?: Map<string, IAnimationData>;
+    animations?: Map<string, any>;
     animationName: string;
 }

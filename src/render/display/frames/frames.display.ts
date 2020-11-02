@@ -1,7 +1,7 @@
-import { IAnimationData } from "../../../game/room/display/animation/animation.model";
-import { RunningAnimation, IFramesModel } from "structureinterface";
 import { Logger, Url } from "utils";
 import { DisplayField, DisplayObject } from "../display.object";
+import { IFramesModel } from "src/structure/frame";
+import { RunningAnimation } from "src/structure/animation";
 
 /**
  * 序列帧显示对象
@@ -17,7 +17,7 @@ export class FramesDisplay extends DisplayObject {
     protected mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = [];
     protected mMountContainer: Phaser.GameObjects.Container;
     protected mMainSprite: Phaser.GameObjects.Sprite;
-    protected mCurAnimation: IAnimationData;
+    protected mCurAnimation: any;
     protected mMountList: Phaser.GameObjects.Container[];
     private mModel: IFramesModel;
     public load(displayInfo: IFramesModel, field?: DisplayField) {
@@ -323,7 +323,7 @@ export class FramesDisplay extends DisplayObject {
         super.destroy();
     }
 
-    protected createDisplay(key: string, ani: IAnimationData) {
+    protected createDisplay(key: string, ani: any) {
         // const ani = data.getAnimations(animationName);
         const layer = ani.layer;
         let display: any;
@@ -386,7 +386,7 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    private makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], animation: IAnimationData) {
+    private makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], animation: any) {
         const { loop } = animation;
         if (frameVisible && frameName.length !== frameVisible.length) {
             return;

@@ -15,8 +15,9 @@ import { FramesModel } from "../display/frames/frames.model";
 import { DragonbonesModel } from "../display/dragones/dragonbones.model";
 import { AnimationModel } from "../display/animation/animation.model";
 import { Logger, Url } from "utils";
-import { IDragonbonesModel, IFramesModel } from "structureinterface";
-import { IScenery } from "src/structureinterface/scenery";
+import { IScenery } from "src/structure/scenery";
+import { IDragonbonesModel } from "src/structure/dragonbones";
+import { IFramesModel } from "src/structure/frame";
 
 export interface IAsset {
     type: string;

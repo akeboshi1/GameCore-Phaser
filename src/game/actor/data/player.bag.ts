@@ -1,22 +1,22 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
-export class PlayerData {
+export class PlayerBag {
     itemBag: PackageData;
     furniBag: PackageData;
     avatarBag: PackageData;
     mineBag: PackageData;
-    EditFurniBag: PackageData;
+    editFurniBag: PackageData;
 
     destroy() {
         if (this.itemBag) this.itemBag.destroy();
         if (this.furniBag) this.furniBag.destroy();
         if (this.avatarBag) this.avatarBag.destroy();
         if (this.mineBag) this.mineBag.destroy();
-        if (this.EditFurniBag) this.EditFurniBag.destroy();
+        if (this.editFurniBag) this.editFurniBag.destroy();
         this.itemBag = undefined;
         this.furniBag = undefined;
         this.avatarBag = undefined;
         this.mineBag = undefined;
-        this.EditFurniBag = undefined;
+        this.editFurniBag = undefined;
     }
     public getItemsByCategory(packType: op_pkt_def.PKT_PackageType, subType: string) {
         const pack = this.getPackage(packType);
@@ -65,13 +65,13 @@ export class PlayerData {
             if (!this.mineBag) this.mineBag = new PackageData();
             return this.mineBag;
         } else if (packageName === op_pkt_def.PKT_PackageType.EditFurniturePackage) {
-            if (!this.EditFurniBag) this.EditFurniBag = new PackageData();
-            return this.EditFurniBag;
+            if (!this.editFurniBag) this.editFurniBag = new PackageData();
+            return this.editFurniBag;
         }
     }
 }
 
-export class PackageData {
+class PackageData {
     packageName: op_pkt_def.PKT_PackageType;
     list: op_client.ICountablePackageItem[];
     subMap: Map<string, Map<string, op_client.ICountablePackageItem>>;

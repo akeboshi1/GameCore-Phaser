@@ -1,9 +1,9 @@
 import { BasePanel } from "../components/base.panel";
 import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
-import { UIAtlasKey, UIAtlasName } from "../../../pica/ui/ui.atals.name";
+import { UIAtlasKey, UIAtlasName } from "pica";
 import { Font } from "utils";
-import { MAIN_WORKER } from "structureinterface";
+import { MAIN_WORKER } from "structure";
 
 export class VerifiedPanel extends BasePanel {
     private mVerifiedBtn: NineSliceButton;

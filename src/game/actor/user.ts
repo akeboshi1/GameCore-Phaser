@@ -6,18 +6,18 @@ import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
 import { PlayerState } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
-import { PlayerDataManager } from "./data/player.dataManager";
 import { ILogicPoint, Logger, LogicPoint, Tool } from "utils";
+import { UserDataManager } from "./data/user.dataManager";
 
 export class User extends Player {
-    private mUserData: PlayerDataManager;
+    private mUserData: UserDataManager;
     private mMoveStyle: number;
     private mSpeed: number = 3;
     private mTargetPoint: ILogicPoint;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
-        this.mUserData = new PlayerDataManager(game);
+        this.mUserData = new UserDataManager(game);
     }
 
     addPackListener() {

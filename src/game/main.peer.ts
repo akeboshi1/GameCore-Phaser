@@ -5,8 +5,8 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structureinterface";
 import { Logger, LogicPoint } from "utils";
+import { EventType, ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structure";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -56,6 +56,10 @@ export class MainPeer extends RPCPeer {
 
     public onData(buffer: Buffer) {
         this.game.connection.onData(buffer);
+    }
+
+    public workerEmitter(eventType: EventType, data: any) {
+        this.render.workerEmitter(eventType, data);
     }
 
     // ============= 主进程调用心跳

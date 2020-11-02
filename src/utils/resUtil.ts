@@ -1,5 +1,5 @@
 import { op_def } from "pixelpai_proto";
-import { HTTP_REGEX } from "structureinterface";
+import { HTTP_REGEX } from "structure";
 import { i18n } from "./i18n";
 
 export class Url {

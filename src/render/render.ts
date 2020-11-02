@@ -2,10 +2,9 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, LogicPoint, Logger } from "utils";
+import { Url, initLocales, Logger, Size } from "utils";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
-import { MessageType, GameMain, ILauncherConfig, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER } from "structureinterface";
 import { op_client } from "pixelpai_proto";
 import { Account } from "./account/account";
 import { SceneManager } from "./scenes/scene.manager";
@@ -15,10 +14,8 @@ import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel } from "../structureinterface/frame";
-import { IDragonbonesModel } from "../structureinterface/dragonbones";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType } from "structure";
 import { DisplayManager } from "./managers/display.manager";
-import { IScenery } from "src/structureinterface/scenery";
 import { InputManager } from "./input/input.manager";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 enum MoveStyle {
@@ -116,6 +113,11 @@ export class Render extends RPCPeer implements GameMain {
 
     get game(): Phaser.Game {
         return this.mGame;
+    }
+
+    getSize(): Size | undefined {
+        if (!this.mGame) return;
+        return this.mGame.scale.gameSize;
     }
 
     createGame() {
@@ -335,6 +337,10 @@ export class Render extends RPCPeer implements GameMain {
 
     public syncCameraScroll() {
         this.mainPeer.syncCameraScroll();
+    }
+
+    public renderEmitter(eventType: EventType, data: any) {
+        this.mMainPeer.renderEmitter(eventType, data);
     }
 
     @Export()
@@ -829,6 +835,18 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
     public showNickname(id: number, name: string) {
         this.mDisplayManager.showNickname(id, name);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public workerEmitter(eventType: EventType, data: any) {
+        switch (eventType) {
+            case EventType.PACKAGE_SYNC_FINISH:
+                break;
+            case EventType.PACKAGE_UPDATE:
+                break;
+            case EventType.UPDATE_PLAYER_INFO:
+                break;
+        }
     }
 
     private onFullScreenChange() {
