@@ -5,6 +5,7 @@ import { Game } from "../game";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
 import { LoginMediator } from "./login/LoginMediator";
+import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 import { UIMediatorType } from "./ui.mediator.type";
 
 export class UIManager extends PacketHandler {
@@ -45,6 +46,7 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
+        this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
         this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
         this.mMedMap.forEach((mediator: any, key: string) => {
             if (mediator.isSceneUI()) {
@@ -142,7 +144,7 @@ export class UIManager extends PacketHandler {
                             this.hideMed(panelName);
                         }
                     } else {
-                        this.game.peer.render.updateUIState(panelName,ui);
+                        this.game.peer.render.updateUIState(panelName, ui);
                     }
                 }
             }

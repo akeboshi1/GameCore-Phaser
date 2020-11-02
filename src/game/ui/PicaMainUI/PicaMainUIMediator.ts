@@ -30,6 +30,10 @@ export class PicaMainUIMediator extends BasicMediator {
         super.destroy();
     }
 
+    isSceneUI() {
+        return true;
+    }
+
     get playerInfo() {
         if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;
         return this.mPlayerInfo;

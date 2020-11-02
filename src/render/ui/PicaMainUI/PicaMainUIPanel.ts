@@ -301,8 +301,8 @@ export class PicaMainUIPanel extends BasePanel {
         this.textToolTip.visible = false;
         this.scene.input.off("pointerdown", this.onTextToolTipHandler, this);
     }
-    private checkUpdateActive() {
-        const arr = this.mWorld.uiManager.getActiveUIData("PicaMainUI");
+    private async checkUpdateActive() {
+        const arr = await this.mWorld.mainPeer.getActiveUIData("PicaMainUI");
         if (arr) {
             for (const data of arr) {
                 this.updateUIState(data);
