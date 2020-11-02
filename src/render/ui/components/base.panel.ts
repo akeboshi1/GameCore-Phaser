@@ -15,6 +15,7 @@ export class BasePanel extends Panel {
     protected mReLoadResources: Map<string, any>;
     protected mReloadTimes: number = 0;
     protected render: Render;
+    protected key: string = "";
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
         if (!scene.sys) Logger.getInstance().error("no scene system");
@@ -30,6 +31,15 @@ export class BasePanel extends Panel {
     protected init() {
         super.init();
         (<MainUIScene>this.mScene).layerManager.addToLayer("uiLayer", this);
+        this.setLinear(this.key);
+    }
+
+    protected setLinear(key: string) {
+        if (!key) {
+            return;
+        }
+        const frame = this.scene.textures.getFrame(key, "__BASE");
+        if (frame) frame.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
 
     protected addResources(key: string, resource: any) {

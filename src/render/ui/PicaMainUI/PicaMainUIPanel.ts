@@ -7,7 +7,6 @@ import { BasePanel } from "../components/base.panel";
 import { TextToolTips } from "../components/tips/TextToolTip";
 
 export class PicaMainUIPanel extends BasePanel {
-    private readonly key = "main_ui";
     private mCoinValue: ValueContainer;
     private mDiamondValue: ValueContainer;
     private mSceneName: SceneName;
@@ -27,6 +26,7 @@ export class PicaMainUIPanel extends BasePanel {
     private roomInfo: any;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
+        this.key = "main_ui";
     }
 
     show(param?: any) {

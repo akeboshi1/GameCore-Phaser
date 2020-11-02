@@ -1,13 +1,12 @@
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "pica";
 import { MAIN_WORKER } from "structure";
-import { Font, Helpers, Logger } from "utils";
+import { Font, Helpers } from "utils";
 import { BasePanel } from "../components/base.panel";
 import { BasicScene } from "src/render/scenes/basic.scene";
 import { Render } from "src/render/render";
 
 export class LoginPanel extends BasePanel {
-    private readonly key = "login";
     private readonly areaCode = "86";
     private mPhoneInput: InputText;
     private mPhoneCodeInput: InputText;
@@ -20,6 +19,7 @@ export class LoginPanel extends BasePanel {
     constructor(scene: BasicScene, render: Render) {
         super(scene, render);
         this.mMediator = this.render.mainPeer["LoginMediator"];
+        this.key = "login";
     }
 
     public show() {

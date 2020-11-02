@@ -3,12 +3,12 @@ import { BasePanel } from "../components/base.panel";
 import { Render } from "src/render/render";
 
 export class ActivityPanel extends BasePanel {
-    private readonly key: string = "activity";
     private content: Phaser.GameObjects.Container;
     private mGameScroll: GameScroller;
     private activeUIData: any;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
+        this.key = "activity";
     }
 
     resize(w: number, h: number) {

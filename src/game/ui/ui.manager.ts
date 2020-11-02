@@ -4,6 +4,7 @@ import { BasicScene } from "src/render/scenes/basic.scene";
 import { Game } from "../game";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
+import { CutInMediator } from "./CutIn/CutInMediator";
 import { LoginMediator } from "./login/LoginMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 import { UIMediatorType } from "./ui.mediator.type";
@@ -46,6 +47,7 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
+        this.mMedMap.set(CutInMediator.NAME, new CutInMediator(this.game));
         this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
         this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
         this.mMedMap.forEach((mediator: any, key: string) => {

@@ -4,7 +4,6 @@ import { Render } from "../../render";
 import { Font, i18n } from "utils";
 
 export class AlertView extends BasePanel {
-    private key: string = "pica_alert";
     private mOkBtn: Button;
     private mCancelBtn: Button;
     private mContent: BBCodeText;
@@ -13,6 +12,7 @@ export class AlertView extends BasePanel {
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
         this.disInteractive();
+        this.key = "pica_alert";
     }
 
     show(config: IAlertConfig) {
