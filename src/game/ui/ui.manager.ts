@@ -1,6 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { BasicScene } from "src/render/scenes/basic.scene";
 import { Game } from "../game";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
@@ -18,6 +17,10 @@ export class UIManager extends PacketHandler {
             this.mMedMap = new Map();
         }
         this.mMedMap.set("LoginMediator", new LoginMediator(this.game));
+    }
+
+    public getMed(name: string): BasicMediator {
+        return this.mMedMap.get(name);
     }
 
     public addPackListener() {
@@ -47,6 +50,7 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
+        // this.mMedMap.set(PicaChatMediator.NAME, new PicaChatMediator(this.game));
         this.mMedMap.set(CutInMediator.NAME, new CutInMediator(this.game));
         this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
         this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));

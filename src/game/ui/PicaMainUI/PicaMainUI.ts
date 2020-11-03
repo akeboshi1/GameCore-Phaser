@@ -49,6 +49,7 @@ export class PicaMainUI extends PacketHandler {
 
     private onUpdateModeRoomInfo(packet: PBpacket) {
         this.game.peer.workerEmitter(EventType.UPDATE_ROOM_INFO, packet.content);
+        this.game.peer.workerEmitter(EventType.UPDATE_PARTY_STATE, packet.content.openingParty);
     }
 
     get connection(): ConnectionService {

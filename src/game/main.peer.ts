@@ -1,5 +1,5 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { op_gateway, op_virtual_world } from "pixelpai_proto";
+import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 // import HeartBeatWorker from "worker-loader?filename=js/[name].js!../services/heartBeat.worker";
 import * as protos from "pixelpai_proto";
@@ -7,6 +7,7 @@ import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
 import { EventType, ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structure";
+import { PicaChatMediator } from "./ui/PicaChat/PicaChatMediator";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -240,6 +241,21 @@ export class MainPeer extends RPCPeer {
         this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public sendMessage(val: string) {
+        (this.game.uiManager.getMed(PicaChatMediator.NAME) as PicaChatMediator).sendMessage(val);
+    }
+
+    @Export()
+    public showNavigate() {
+        (this.game.uiManager.getMed(PicaChatMediator.NAME) as PicaChatMediator).showNavigate();
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public buyItem(name: string, data: any) {
+        (this.game.uiManager.getMed(name) as PicaChatMediator).buyItem(data);
+    }
+
     // ============= 心跳调用主进程
     @Export()
     public startHeartBeat() {
@@ -289,9 +305,21 @@ export class MainPeer extends RPCPeer {
         this.game.httpClock.enable = enable;
     }
 
-    @Export()
-    public showMediator(name, param?: any) {
-        this.game.showMediator(name, param);
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    public showNoticeHandler(name: string, text: string) {
+        const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
+        data.text = [{ text, node: undefined }];
+        this.game.showByName(name, data);
+    }
+
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.boolean])
+    public showMediator(name: string, isShow: boolean, param?: any) {
+        this.game.showMediator(name, isShow, param);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public hideMediator(name: string) {
+        this.game.hideMediator(name);
     }
 
     // display data getter

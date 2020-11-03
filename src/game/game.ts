@@ -347,8 +347,20 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     }
 
-    public showMediator(name, param?: any) {
-        this.mUIManager.showMed(name, param);
+    public showByName(name: string, data?: any) {
+
+    }
+
+    public showMediator(name: string, isShow: boolean, param?: any) {
+        if (isShow) {
+            this.mUIManager.showMed(name, param);
+        } else {
+            this.mUIManager.hideMed(name);
+        }
+    }
+
+    public hideMediator(name) {
+        this.mUIManager.hideMed(name);
     }
 
     private initWorld() {
