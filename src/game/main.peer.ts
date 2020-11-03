@@ -327,6 +327,11 @@ export class MainPeer extends RPCPeer {
         this.game.hideMediator(name);
     }
 
+    @Export()
+    public renderEmitter(eventType: EventType, data: any) {
+
+    }
+
     // display data getter
     @Export()
     public framesModel_getAnimations(id: number, name: string): any {// IAnimationData
