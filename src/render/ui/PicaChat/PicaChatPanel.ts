@@ -8,6 +8,7 @@ import { Render } from "src/render/render";
 import { UIAtlasKey, UIAtlasName } from "pica";
 import { Font, i18n } from "utils";
 import { EventType } from "structure";
+import { UiManager } from "../ui.manager";
 
 export class PicaChatPanel extends BasePanel {
     private readonly MAX_HEIGHT: number;
@@ -27,8 +28,8 @@ export class PicaChatPanel extends BasePanel {
     private chatCatchArr: string[] = [];
     private chatMaxLen: number = 100;
     private giftPanel: PicGiftPanel;
-    constructor(scene: Phaser.Scene, render: Render) {
-        super(scene, render);
+    constructor(uiManager: UiManager) {
+        super(uiManager.scene, uiManager.render);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
         this.scale = 1;
@@ -151,7 +152,7 @@ export class PicaChatPanel extends BasePanel {
         this.render.emitter.off(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
     }
 
-    updateUIState(active?: op_pkt_def.IPKT_UI) {
+    updateUIState(active?: any) {
         if (!this.mInitialized) {
             return;
         }
@@ -408,10 +409,7 @@ export class PicaChatPanel extends BasePanel {
         this.showPanelHandler("PicPropFun", true, config);
     }
     private showNoticeHandler(text: string) {
-        this.render.mainPeer.showPanelHandler();
-        const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-        data.text = [{ text, node: undefined }];
-        this.showPanelHandler("PicaNotice", true, data);
+        this.render.mainPeer.showNoticeHandler(text);
     }
     private showPanelHandler(panelName: string, isshow: boolean, data?: any) {
         if (!this.mWorld) {

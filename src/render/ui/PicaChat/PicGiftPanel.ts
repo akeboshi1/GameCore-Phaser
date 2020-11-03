@@ -1,12 +1,8 @@
-import { op_client, op_def } from "pixelpai_proto";
 import { DynamicImage } from "../components/dynamic.image";
-import { Handler } from "../../Handler/Handler";
-import { Coin, Url } from "../../utils/resUtil";
-import { BBCodeText, ClickEvent, GameGridTable, NineSliceButton } from "apowophaserui";
-import { Font } from "../../utils/font";
-import { UIAtlasKey } from "../ui.atals.name";
-import { i18n } from "../../i18n";
-import { PicPropFunConfig } from "../PicPropFun/PicPropFunConfig";
+import { ClickEvent, GameGridTable, NineSliceButton } from "apowophaserui";
+import { UIAtlasKey } from "pica";
+import { Font, Handler, i18n } from "utils";
+import { Coin, Url } from "src/utils/resUtil";
 export class PicGiftPanel extends Phaser.GameObjects.Container {
     private mPropGrid: GameGridTable;
     private curGiftItem: PicGiftItem;
@@ -18,7 +14,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
     private giftValue: Phaser.GameObjects.Text;
     private sendButton: NineSliceButton;
     private giftDescr: Phaser.GameObjects.Text;
-    private curGiftData: op_client.IMarketCommodity;
+    private curGiftData: any;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.key = key;
@@ -42,7 +38,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
     public show() {
         this.visible = true;
     }
-    public setGiftDatas(datas: op_client.IMarketCommodity[]) {
+    public setGiftDatas(datas: any[]) {
         const len = 12 - datas.length;
         const items = len > 0 ? datas.concat(new Array(len)) : datas;
         this.mPropGrid.setItems(items);

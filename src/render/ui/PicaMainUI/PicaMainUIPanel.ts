@@ -5,6 +5,7 @@ import { EventType } from "structure";
 import { Font, Handler, i18n, Logger } from "utils";
 import { BasePanel } from "../components/base.panel";
 import { TextToolTips } from "../components/tips/TextToolTip";
+import { UiManager } from "../ui.manager";
 
 export class PicaMainUIPanel extends BasePanel {
     private mCoinValue: ValueContainer;
@@ -24,8 +25,8 @@ export class PicaMainUIPanel extends BasePanel {
     private partyBtn: Button;
     private playerInfo: any; // PlayerProperty;
     private roomInfo: any;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
-    constructor(scene: Phaser.Scene, render: Render) {
-        super(scene, render);
+    constructor(uiManager: UiManager) {
+        super(uiManager.scene, uiManager.render);
         this.key = "main_ui";
     }
 

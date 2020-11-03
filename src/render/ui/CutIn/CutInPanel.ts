@@ -1,11 +1,12 @@
 import { Render } from "src/render/render";
 import { Font, Url } from "utils";
 import { BasePanel } from "../components/base.panel";
+import { UiManager } from "../ui.manager";
 
 export class CutInPanel extends BasePanel {
   private mName: Phaser.GameObjects.Text;
-  constructor(scene: Phaser.Scene, render: Render) {
-    super(scene, render);
+  constructor(uiManager: UiManager) {
+    super(uiManager.scene, uiManager.render);
     this.key = "cut_in";
   }
 
