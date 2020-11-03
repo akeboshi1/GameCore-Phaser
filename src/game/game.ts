@@ -19,6 +19,7 @@ import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
+import { Export } from "webworker-rpc";
 interface ISize {
     width: number;
     height: number;

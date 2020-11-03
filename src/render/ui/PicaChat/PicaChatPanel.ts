@@ -301,7 +301,7 @@ export class PicaChatPanel extends BasePanel {
             this.resize(this.width, 185 * this.dpr);
             this.giftPanel.show();
             this.render.renderEmitter(EventType.QUERY_MARKET_REQUEST, { marketName: "gift_shop", page: 1, category: undefined, subCategory: undefined });
-            const curRoom = await this.render.mainPeer.roomManager.curRoom;
+            const curRoom = await this.render.mainPeer.getCurrentRoom();
             const openingParty = curRoom ? curRoom.openingParty : false;
             this.giftPanel.setGiftActive(openingParty);
         } else {
@@ -330,7 +330,7 @@ export class PicaChatPanel extends BasePanel {
                 this.scene.load.start();
             }
         } else {
-            this.mInputText = new InputPanel(this.scene, this.mWorld);
+            this.mInputText = new InputPanel(this.scene, this.render);
             this.mInputText.once("close", this.sendChat, this);
         }
     }
@@ -345,7 +345,7 @@ export class PicaChatPanel extends BasePanel {
 
     private openAppInputPanel() {
         if (this.scene.cache.json.has("quickchat")) {
-            this.mInputText = new PicChatInputPanel(this.scene, this.mWorld, this.key, this.chatCatchArr.concat());
+            this.mInputText = new PicChatInputPanel(this.scene, this.render, this.key, this.chatCatchArr.concat());
             this.mInputText.once("close", this.appCloseChat, this);
             this.mInputText.on("send", this.appSendChat, this);
             const quickArr = this.scene.cache.json.get("quickchat");
@@ -367,10 +367,10 @@ export class PicaChatPanel extends BasePanel {
         if (this.parentContainer) this.parentContainer.visible = true;
     }
     private async checkUpdateActive() {
-        const curRoom = await this.render.mainPeer.roomManager.curRoom;
+        const curRoom = await this.render.mainPeer.getCurrentRoom();
         if (curRoom)
             this.setGiftButtonState(curRoom.openingParty);
-        const arr = await this.render.mainPeer.uiManager.getActiveUIData("PicaChat");
+        const arr = await this.render.mainPeer.getActiveUIData("PicaChat");
         if (arr) {
             for (const data of arr) {
                 this.updateUIState(data);
@@ -390,13 +390,13 @@ export class PicaChatPanel extends BasePanel {
         this.showPanelHandler("PicHandheld", true);
     }
     private onBuyItemHandler(prop: any, data: any) {
-        const alertView = new AlertView(this.scene, this.mWorld);
+        const alertView = new AlertView(this.scene, this.render);
         const price = data.count * data.sellingPrice.price;
         if (price > 0) {
             alertView.show({
                 title: i18n.t("party.sendgift"),
                 text: i18n.t("party.sendgifttips", { count: prop.quantity, name: data.name || data.shortName }),
-                oy: 302 * this.dpr * this.mWorld.uiScale,
+                oy: 302 * this.dpr * this.render.uiScale,
                 callback: () => {
                     this.render.mainPeer.buyItem("PicaChat", prop);
                 },
@@ -411,11 +411,11 @@ export class PicaChatPanel extends BasePanel {
     private showNoticeHandler(text: string) {
         this.render.mainPeer.showNoticeHandler(text);
     }
-    private showPanelHandler(panelName: string, isshow: boolean, data?: any) {
-        if (!this.mWorld) {
+    private async showPanelHandler(panelName: string, isshow: boolean, data?: any) {
+        if (!this.render) {
             return;
         }
-        const uiManager = this.mWorld.uiManager;
+        const uiManager = await this.render.mainPeer.getUiManager();
         if (isshow) {
             uiManager.showMed(panelName, data);
 

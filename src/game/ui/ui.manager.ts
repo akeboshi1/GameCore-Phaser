@@ -51,7 +51,7 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
-        // this.mMedMap.set(PicaChatMediator.NAME, new PicaChatMediator(this.game));
+        this.mMedMap.set(PicaChatMediator.NAME, new PicaChatMediator(this.game));
         this.mMedMap.set(CutInMediator.NAME, new CutInMediator(this.game));
         this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
         this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
@@ -123,7 +123,7 @@ export class UIManager extends PacketHandler {
         if (mediator) mediator.show();
     }
 
-    public getActiveUIData(name: string): op_pkt_def.IPKT_UI[] {
+    public getActiveUIData(name: string): any[] {
         if (!this.mAtiveUIData) return null;
         const arr: op_pkt_def.IPKT_UI[] = [];
         for (const data of this.mAtiveUIData.ui) {
