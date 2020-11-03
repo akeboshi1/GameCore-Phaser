@@ -89,7 +89,7 @@ export class UiManager {
         if (!panel) {
             // const path: string = `./${type}/${type}Panel`;
             const ns: any = require(`./${type}/${className}`);
-            panel = new ns[className](this.scene, this.render);
+            panel = new ns[className](this);
             if (!panel) {
                 Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
