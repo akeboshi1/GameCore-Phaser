@@ -358,6 +358,11 @@ export class Render extends RPCPeer implements GameMain {
         this.mSceneManager.startScene("CreateRoleScene", { render: this, params });
     }
 
+    @Export()
+    public hideCreateRole() {
+        this.mSceneManager.stopScene("CreateRoleScene");
+    }
+
     @Export([webworker_rpc.ParamType.str])
     public showPanel(panelName: string, params?: any) {
         this.mUiManager.showPanel(panelName, params);

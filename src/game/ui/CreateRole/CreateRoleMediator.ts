@@ -42,7 +42,7 @@ export class CreateRoleMediator extends BasicMediator {
 
 class CreateRole extends PacketHandler {
   private mParam: any;
-  private mEvent: Map<string, any>;
+  private mEvent: Map<string, any>=new Map();
   private event: Event;
   constructor(private game: Game) {
     super();

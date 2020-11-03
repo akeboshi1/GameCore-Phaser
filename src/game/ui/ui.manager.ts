@@ -202,6 +202,7 @@ export class UIManager extends PacketHandler {
 
     private onHandleCloseCreateRoleUI() {
         this.hideMed("CreateRole");
+        this.game.peer.render.hideCreateRole();
     }
 
     private getPanelNameByAlias(alias: string) {

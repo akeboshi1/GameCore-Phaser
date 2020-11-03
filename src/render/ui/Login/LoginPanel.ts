@@ -5,6 +5,7 @@ import { Font, Helpers } from "utils";
 import { BasePanel } from "../components/base.panel";
 import { BasicScene } from "src/render/scenes/basic.scene";
 import { Render } from "src/render/render";
+import { UiManager } from "../ui.manager";
 
 export class LoginPanel extends BasePanel {
     private readonly areaCode = "86";
@@ -16,8 +17,8 @@ export class LoginPanel extends BasePanel {
     private downcount: number = -1;
     private fetchCode: Phaser.GameObjects.Text;
     private mMediator: any;
-    constructor(scene: BasicScene, render: Render) {
-        super(scene, render);
+    constructor(uimanager: UiManager) {
+        super(uimanager.scene, uimanager.render);
         this.mMediator = this.render.mainPeer["LoginMediator"];
         this.key = "login";
     }

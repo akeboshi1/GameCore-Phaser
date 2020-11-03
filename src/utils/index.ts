@@ -1,6 +1,6 @@
 export { i18n } from "./i18n";
 export { Font } from "./font";
-export { Url } from "./resUtil";
+export { Url, Coin, CoinType } from "./resUtil";
 export { Handler } from "./Handler";
 export { Logger } from "./log";
 export { Direction } from "./direction";

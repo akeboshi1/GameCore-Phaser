@@ -1,8 +1,7 @@
-import { DynamicImage } from "../components/dynamic.image";
 import { ClickEvent, GameGridTable, NineSliceButton } from "apowophaserui";
 import { UIAtlasKey } from "pica";
-import { Font, Handler, i18n } from "utils";
-import { Coin, Url } from "src/utils/resUtil";
+import { Font, Handler, i18n, Coin, Url } from "utils";
+import { DynamicImage } from "../components";
 export class PicGiftPanel extends Phaser.GameObjects.Container {
     private mPropGrid: GameGridTable;
     private curGiftItem: PicGiftItem;
@@ -38,7 +37,7 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
     public show() {
         this.visible = true;
     }
-    public setGiftDatas(datas: any[]) {
+    public setGiftDatas(datas: any) {
         const len = 12 - datas.length;
         const items = len > 0 ? datas.concat(new Array(len)) : datas;
         this.mPropGrid.setItems(items);
@@ -153,37 +152,27 @@ export class PicGiftPanel extends Phaser.GameObjects.Container {
         const title = i18n.t("chat.givegift");
         const url = this.curGiftData.icon;
         const slider = data.sellingPrice.price > 0 ? true : false;
-        const confirmHandler = new Handler(this, (tempdata: op_client.CountablePackageItem, count: number) => {
-            const prop = op_def.OrderCommodities.create();
-            prop.id = data.id;
-            prop.quantity = count;
-            prop.category = tempdata.category;
+        const confirmHandler = new Handler(this, (tempdata: any, count: number) => {
             this.curGiftData.remain -= count;
             if (this.curGiftData.limit > 0 && this.curGiftData.remain <= 0) {
                 this.mPropGrid.refresh();
             }
-            this.emit("buyItem", prop, data);
+            this.emit("buyItem", { id: data.id, quantity: count, category: tempdata.category }, data);
         });
-        const config: PicPropFunConfig = {
+        const config = {
             confirmHandler, data, url, title, slider, line: true
         };
         this.emit("showpropfun", config);
     }
     private getBuyPackageData() {
-        const propdata: op_client.IMarketCommodity = this.curGiftData;
-        const itemdata = op_client.CountablePackageItem.create();
-        itemdata.id = propdata.id;
-        itemdata.sellingPrice = propdata.price[0];
-        itemdata.name = propdata.name;
-        itemdata.shortName = propdata.shortName;
-        itemdata.category = propdata.category;
-        itemdata.count = itemdata.sellingPrice.price > 0 ? 99 : 1;
-        return itemdata;
+        const propdata = this.curGiftData;
+        const count = propdata.price[0] > 0 ? 99 : 1;
+        return { id: propdata.id, sellingPrice: propdata.price[0], name: propdata.name, shortName: propdata.shortName, category: propdata.category, count };
     }
 }
 
 class PicGiftItem extends Phaser.GameObjects.Container {
-    public itemData: op_client.IMarketCommodity;
+    public itemData: any;
     public bg: Phaser.GameObjects.Image;
     public selectbg: Phaser.GameObjects.Image;
     public icon: DynamicImage;
@@ -203,7 +192,7 @@ class PicGiftItem extends Phaser.GameObjects.Container {
         this.setSize(this.selectbg.width, this.selectbg.height);
     }
 
-    public setItemData(data: op_client.IMarketCommodity) {
+    public setItemData(data: any) {
         this.isSelect = false;
         this.itemData = data;
         if (!data) {

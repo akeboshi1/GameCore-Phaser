@@ -1,6 +1,13 @@
-import { op_def } from "pixelpai_proto";
 import { HTTP_REGEX } from "structure";
 import { i18n } from "./i18n";
+
+export enum CoinType {
+    TU_DING_COIN = 0,
+    QING_SONG_TANG = 1,
+    GOLD_COIN = 2,
+    COIN = 3,
+    DIAMOND = 4
+}
 
 export class Url {
     static OSD_PATH = "";
@@ -226,36 +233,35 @@ export class TransparentButton {
         };
     }
 }
-
 export class Coin {
     static getIcon(coinType: number) {
         let res = "tuding_icon";
-        const type = <op_def.CoinType>coinType;
-        if (type === op_def.CoinType.COIN) {
+        const type = <CoinType>coinType;
+        if (type === CoinType.COIN) {
             res = "iv_coin";
-        } else if (type === op_def.CoinType.DIAMOND) {
+        } else if (type === CoinType.DIAMOND) {
             res = "iv_diamond";
-        } else if (type === op_def.CoinType.GOLD_COIN) {
+        } else if (type === CoinType.GOLD_COIN) {
             // res = "";
-        } else if (type === op_def.CoinType.QING_SONG_TANG) {
+        } else if (type === CoinType.QING_SONG_TANG) {
             // res = "";
-        } else if (type === op_def.CoinType.TU_DING_COIN) {
+        } else if (type === CoinType.TU_DING_COIN) {
             // res = "";
         }
         return res;
     }
     static getName(coinType: number) {
         let res = "银币";
-        const type = <op_def.CoinType>coinType;
-        if (type === op_def.CoinType.COIN) {
+        const type = <CoinType>coinType;
+        if (type === CoinType.COIN) {
             res = i18n.t("coin.coin");
-        } else if (type === op_def.CoinType.DIAMOND) {
+        } else if (type === CoinType.DIAMOND) {
             res = i18n.t("coin.diamond");
-        } else if (type === op_def.CoinType.GOLD_COIN) {
+        } else if (type === CoinType.GOLD_COIN) {
             res = i18n.t("coin.gold_coin");
-        } else if (type === op_def.CoinType.QING_SONG_TANG) {
+        } else if (type === CoinType.QING_SONG_TANG) {
             // res = "";
-        } else if (type === op_def.CoinType.TU_DING_COIN) {
+        } else if (type === CoinType.TU_DING_COIN) {
             // res = "";
         }
         return res;

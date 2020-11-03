@@ -262,8 +262,8 @@ export class CreateRolePanel extends BasePanel {
 
   private onSubmitHandler() {
     // this.emit("submit", this.inputText.text, this.avatars[this.mCurPageNum]);
-    // this.mediator.submit(this.inputText.text, this.avatars[this.mCurPageNum]);
-    this.mediator.submit("", this.avatars[this.mCurPageNum]);
+    this.mediator.submit(this.inputText.text, this.avatars[this.mCurPageNum]);
+    // this.mediator.submit("", this.avatars[this.mCurPageNum]);
     this.inputText.setBlur();
     if (this.mError) {
       this.mError.setVisible(false);

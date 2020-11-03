@@ -49,7 +49,6 @@ export class User extends Player {
         if (this.mMoving) {
             const pos = this.getPosition();
             pos.y += this.offsetY;
-            Logger.getInstance().log("=====>> position: ", Math.ceil(pos.x), this.mTargetPoint.x, Math.ceil(pos.y), this.mTargetPoint.y);
             if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y -this.mTargetPoint.y) <= this.mSpeed) {
                 this.stopMove();
                 return;
