@@ -5,6 +5,7 @@ import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
 import { CutInMediator } from "./CutIn/CutInMediator";
 import { LoginMediator } from "./login/LoginMediator";
+import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 import { UIMediatorType } from "./ui.mediator.type";
 
