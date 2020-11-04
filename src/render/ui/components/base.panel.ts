@@ -28,10 +28,17 @@ export class BasePanel extends Panel {
             this.scale = this.mWorld.uiScale;
         }
     }
+
+    public destroy() {
+        if (this.render && this.render.hasOwnProperty(this.constructor.name)) delete this.render[this.constructor.name];
+        super.destroy();
+    }
+
     protected init() {
         super.init();
         (<MainUIScene>this.mScene).layerManager.addToLayer("uiLayer", this);
         this.setLinear(this.key);
+        this.__exportProperty();
     }
 
     protected setLinear(key: string) {
@@ -66,5 +73,15 @@ export class BasePanel extends Panel {
     protected get cameraHeight() {
         const height = this.scene.cameras.main.height;
         return height;
+    }
+
+    protected __exportProperty() {
+        if (!this.render) {
+            return;
+        }
+        return this.render.exportProperty(this, this.render, this.constructor.name).onceReady(this.exportComplete.bind(this));
+    }
+
+    protected exportComplete() {
     }
 }

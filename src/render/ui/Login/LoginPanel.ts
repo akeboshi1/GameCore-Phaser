@@ -1,6 +1,6 @@
 import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "pica";
-import { MAIN_WORKER } from "structure";
+import { MAIN_WORKER, ModuleName } from "structure";
 import { Font, Helpers } from "utils";
 import { BasePanel } from "../components/base.panel";
 import { BasicScene } from "src/render/scenes/basic.scene";
@@ -20,7 +20,7 @@ export class LoginPanel extends BasePanel {
     constructor(uimanager: UiManager) {
         super(uimanager.scene, uimanager.render);
         this.mMediator = this.render.mainPeer["LoginMediator"];
-        this.key = "login";
+        this.key = ModuleName.LOGIN_NAME;
     }
 
     public show() {

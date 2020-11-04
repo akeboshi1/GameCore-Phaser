@@ -82,7 +82,7 @@ export class BasicMediator implements IMediator {
     destroy() {
         this.mShow = false;
         this.mParam = null;
-        delete this.game.peer[this.constructor.name];
+        if (this.game && this.game.peer && this.game.peer.hasOwnProperty(this.constructor.name)) delete this.game.peer[this.constructor.name];
     }
 
     protected __exportProperty(callback?: () => any) {

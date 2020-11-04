@@ -1,7 +1,7 @@
 import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "pica";
 import { Render } from "src/render/render";
-import { EventType } from "structure";
+import { EventType, ModuleName } from "structure";
 import { Font, Handler, i18n, Logger } from "utils";
 import { BasePanel } from "../components/base.panel";
 import { TextToolTips } from "../components/tips/TextToolTip";
@@ -27,7 +27,7 @@ export class PicaMainUIPanel extends BasePanel {
     private roomInfo: any;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = "main_ui";
+        this.key = ModuleName.PICAMAINUI_NAME;
     }
 
     show(param?: any) {

@@ -1,9 +1,11 @@
+import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Game } from "src/game/game";
+import { ModuleName } from "structure";
 
 export class PicHandheld extends PacketHandler {
-    constructor(game: Game) {
+    constructor(private game: Game) {
         super();
         this.register();
     }
@@ -22,22 +24,13 @@ export class PicHandheld extends PacketHandler {
         }
     }
 
-    on(event: string | symbol, fn: Function, context?: any) {
-        this.mEvent.on(event, fn, context);
-    }
-
-    off(event: string | symbol, fn: Function, context?: any) {
-        this.mEvent.off(event, fn, context);
-    }
-
     destroy() {
         this.unregister();
-        this.mEvent.destroy();
     }
 
     get connection(): ConnectionService {
-        if (this.world) {
-            return this.world.connection;
+        if (this.game) {
+            return this.game.connection;
         }
     }
 
@@ -60,7 +53,7 @@ export class PicHandheld extends PacketHandler {
 
     private onRetHandheldList(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD = packet.content;
-        this.mEvent.emit("handheldlist", content);
+        const view = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
+        view.setEqipedDatas(content);
     }
-
 }

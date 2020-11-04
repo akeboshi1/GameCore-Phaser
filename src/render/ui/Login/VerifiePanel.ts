@@ -3,7 +3,7 @@ import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 import { Render } from "../../render";
 import { UIAtlasKey, UIAtlasName } from "pica";
 import { Font } from "utils";
-import { MAIN_WORKER } from "structure";
+import { MAIN_WORKER, ModuleName } from "structure";
 
 export class VerifiedPanel extends BasePanel {
     private mVerifiedBtn: NineSliceButton;
@@ -12,6 +12,7 @@ export class VerifiedPanel extends BasePanel {
     private isIDCard = /^[1-9]\d{5}(19|20|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
+        this.key = ModuleName.VERIFIED_NAME;
     }
 
     public setVerifiedEnable(val: boolean) {

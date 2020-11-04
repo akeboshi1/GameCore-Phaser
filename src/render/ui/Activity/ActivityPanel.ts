@@ -1,7 +1,7 @@
 import { GameScroller } from "apowophaserui";
 import { BasePanel } from "../components/base.panel";
-import { Render } from "src/render/render";
 import { UiManager } from "../ui.manager";
+import { ModuleName } from "structure";
 
 export class ActivityPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
@@ -9,7 +9,7 @@ export class ActivityPanel extends BasePanel {
     private activeUIData: any;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = "activity";
+        this.key = ModuleName.ACTIVITY_NAME;
     }
 
     resize(w: number, h: number) {

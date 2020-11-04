@@ -3,6 +3,7 @@ import { GameGridTable } from "apowophaserui";
 import { BasePanel } from "../components/base.panel";
 import { UiManager } from "../ui.manager";
 import { Handler, Url } from "utils";
+import { ModuleName } from "structure";
 export class PicHandheldPanel extends BasePanel {
     private gridContent: Phaser.GameObjects.Container;
     private handeldEqiped: HandheldEqiped;
@@ -11,7 +12,7 @@ export class PicHandheldPanel extends BasePanel {
     private isExtendsGrid: boolean = false;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = "pichandheldpanel";
+        this.key = ModuleName.PICHANDHELD_NAME;
     }
 
     public resize(w: number, h: number) {
@@ -39,11 +40,6 @@ export class PicHandheldPanel extends BasePanel {
         this.addListen();
         this.updateData();
         this.render.mainPeer.requestHandheldList();
-
-        // this.render.mainPeer.exportUimanager().then(() => {
-        //     this.render.mainPeer.uiManager.sho
-        // });
-        // this.emit("handheldlist");
     }
 
     hide() {

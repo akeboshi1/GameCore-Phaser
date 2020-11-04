@@ -6,16 +6,16 @@ import { Game } from "src/game/game";
 
 export class PicHandheldMediator extends BasicMediator {
     public static NAME: string = "PicHandheld";
-    private picHand: PicHandheld;
     private picHandheld: PicHandheld;
     constructor(game: Game) {
         super(game);
         this.picHandheld = new PicHandheld(this.game);
-        this.picHand.on("handheldlist", this.onHandheldList, this);
     }
 
-    show() {
-
+    show(param?: any) {
+        this.__exportProperty(() => {
+            this.game.peer.render.showPanel(PicHandheldMediator.NAME, param);
+        });
     }
 
     hide() {
@@ -24,37 +24,32 @@ export class PicHandheldMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.picHand) {
-            this.picHand.destroy();
-            this.picHand = undefined;
+        if (this.picHandheld) {
+            this.picHandheld.destroy();
+            this.picHandheld = undefined;
         }
         super.destroy();
     }
 
     public requestHandheldList() {
-        this.picHand.queryHandheldList();
+        this.picHandheld.queryHandheldList();
     }
 
-    private onHandheldList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD) {
-        this.mView.setEqipedDatas(content);
-    }
     private onChangeHandheld(id: string) {
-        this.picHand.queryChangeHandheld(id);
+        this.picHandheld.queryChangeHandheld(id);
     }
 
     private onClearHandheld() {
-        this.picHand.queryClearHandheld();
+        this.picHandheld.queryClearHandheld();
     }
     private openEquipedPanel(state: boolean) {
-        const uiManager = this.world.uiManager;
-        const mediator = uiManager.getMediator(PicaChatMediator.name);
+        const uiManager = this.game.uiManager;
+        const mediator = uiManager.getMed(PicaChatMediator.name);
         if (mediator) {
             if (state)
                 mediator.hide();
             else {
                 mediator.show();
-                this.layerManager.removeToUILayer(this.mView);
-                this.layerManager.addToUILayer(this.mView);
             }
         }
     }

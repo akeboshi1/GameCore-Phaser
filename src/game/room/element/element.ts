@@ -496,31 +496,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showNickname() {
-        this.mElementManager.roomService.game.peer.render.showNickname(this.id, this.mModel.nickname);
-        // if (!this.mDisplay || !this.model) {
-        //     return;
-        // }
-        // if (!this.mDisplay.topPoint) {
-        //     return;
-        // }
-        // const ratio = this.mRoomService.world.scaleRatio;
-        // let follow = this.getFollowObject(FollowEnum.Nickname);
-        // let nickname = null;
-        // if (!follow || !follow.object) {
-        //     nickname = this.scene.make.text({
-        //         style: {
-        //             fontSize: 12 * ratio,
-        //             fontFamily: Font.DEFULT_FONT
-        //         }
-        //     }).setOrigin(0.5).setStroke("0x0", 2 * ratio);
-        //     follow = new FollowObject(nickname, this, ratio);
-        //     this.addFollowObject(FollowEnum.Nickname, follow);
-        // } else {
-        //     nickname = follow.object;
-        // }
-        // nickname.text = this.mModel.nickname;
-        // follow.setOffset(0, this.mDisplay.topPoint.y);
-        // if (this.mDisplay.parentContainer) this.roomService.addToSceneUI(nickname);
+        const displayManager = this.mRoomService.game.renderPeer.DisplayManager;
+        if (!displayManager) {
+            return;
+        }
+        displayManager.showNickname(this.id, this.mModel.nickname);
     }
 
     public hideNickname() {
@@ -530,14 +510,6 @@ export class Element extends BlockObject implements IElement {
     get nickname(): string {
         return this.mModel.nickname;
     }
-
-    // public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
-    // if (displayInfo && this.mDisplay) {
-    //     const key = displayInfo.gene;
-    //     // this.mDisplay.once(key, this.onDisplayReady, this);
-    //     this.mDisplay.load(displayInfo, DisplayField.Effect);
-    //     }
-    // }
 
     public turn(): void {
         if (!this.mModel) {
@@ -549,10 +521,6 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setAlpha(val: number) {
-        // if (!this.mDisplay) {
-        //     return;
-        // }
-        // this.mDisplay.setAlpha(val);
     }
 
     public mount(root: IElement) {

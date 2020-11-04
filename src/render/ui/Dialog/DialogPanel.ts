@@ -3,6 +3,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { BasePanel } from "../components/base.panel";
 import { UiManager } from "../ui.manager";
 import { Font, Handler, Url } from "utils";
+import { ModuleName } from "structure";
 
 enum HorizontalAlignment {
     HORIZONTAL_LEFT = 0,
@@ -18,7 +19,7 @@ enum VerticalAlignment {
 }
 
 export class DialogPanel extends BasePanel {
-    public key: string = "commonkey";
+    public key: string = ModuleName.DIALOG_NAME;
     private npcName: Phaser.GameObjects.Text;
     private npcIcon: DynamicImage;
     private content: Phaser.GameObjects.Container;

@@ -6,7 +6,7 @@ import { BasePanel } from "../components/base.panel";
 import { InputPanel } from "../components/";
 import { UIAtlasKey, UIAtlasName } from "pica";
 import { Font, i18n } from "utils";
-import { EventType } from "structure";
+import { EventType, ModuleName } from "structure";
 import { UiManager } from "../ui.manager";
 
 enum ChatChannel {
@@ -40,7 +40,7 @@ export class PicaChatPanel extends BasePanel {
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
         this.scale = 1;
-        this.key = "pica_chat";
+        this.key = ModuleName.PICACHAT_NAME;
         this.UIType = UIType.Scene;
     }
 

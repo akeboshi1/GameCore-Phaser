@@ -5,6 +5,7 @@ import { Render } from "../render";
 import { RunningAnimation } from "src/structure/animation";
 import { IDragonbonesModel } from "src/structure/dragonbones";
 import { IFramesModel } from "src/structure/frame";
+import { ElementTopDisplay } from "./element.top.display";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -34,8 +35,9 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
     protected mActionName: RunningAnimation;
-    private moveData: any;
-    private render: Render;
+    protected mTopDisplay: ElementTopDisplay;
+    protected moveData: any;
+    protected render: Render;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
@@ -109,6 +111,9 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             this.mChildMap.clear();
             this.mChildMap = null;
         }
+        if (this.mTopDisplay) {
+            this.mTopDisplay.destroy();
+        }
         // this.removeAll(true);
         super.destroy(fromScene);
     }
@@ -148,6 +153,13 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             return;
         }
         return this.mChildMap.get(key);
+    }
+
+    public showNickname(name: string) {
+        if (!this.mTopDisplay) {
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+        }
+        this.mTopDisplay.showNickname(name);
     }
 
     get nodeType(): number {

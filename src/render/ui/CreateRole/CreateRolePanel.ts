@@ -3,6 +3,7 @@ import { BasePanel } from "../components/base.panel";
 import { UiManager } from "../ui.manager";
 import { Font, i18n } from "utils";
 import { DragonbonesDisplay } from "../../display/dragonbones/dragonbones.display";
+import { ModuleName } from "structure";
 
 export class CreateRolePanel extends BasePanel {
   private mFoot: Phaser.GameObjects.Image;
@@ -28,7 +29,7 @@ export class CreateRolePanel extends BasePanel {
     container.add(this);
     this.scene.scale.on("resize", this.onResize, this);
     this.mMediator = this.render.mainPeer["CreateRoleMediator"];
-    this.key = "createCharacter";
+    this.key = ModuleName.CREATEROLE_NAME;
     // container.scale = 1 / this.mWorld.uiScale;
   }
 
