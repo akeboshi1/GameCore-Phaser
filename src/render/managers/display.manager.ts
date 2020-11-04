@@ -270,6 +270,10 @@ export class DisplayManager {
 
     public showNickname(id: number, name: string) {
         const display = this.getDisplay(id);
+        if (!display) {
+            return;
+        }
+        display.showNickname(name);
         // if (display) display.showNickname(name);
     }
 }

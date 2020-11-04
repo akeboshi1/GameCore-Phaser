@@ -142,6 +142,7 @@ export class Render extends RPCPeer implements GameMain {
         this.mSceneManager = new SceneManager(this);
         this.mInputManager = new InputManager(this);
         this.mDisplayManager = new DisplayManager(this);
+        this.exportProperty(this.mDisplayManager, this, "DisplayManager");
     }
 
     resize(width: number, height: number) {
