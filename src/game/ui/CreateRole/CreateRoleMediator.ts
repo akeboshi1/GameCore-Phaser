@@ -3,8 +3,10 @@ import { Game } from "../../game";
 import { BasicMediator } from "../basic/basic.mediator";
 import { op_client, op_virtual_world, op_gameconfig } from "pixelpai_proto";
 import { Logger } from "utils";
+import { ModuleName } from "structure";
 
 export class CreateRoleMediator extends BasicMediator {
+  public static NAME: string = ModuleName.CREATEROLE_NAME;
   private mCreateRole: CreateRole;
   constructor(game: Game) {
     super(game);
@@ -42,7 +44,7 @@ export class CreateRoleMediator extends BasicMediator {
 
 class CreateRole extends PacketHandler {
   private mParam: any;
-  private mEvent: Map<string, any>=new Map();
+  private mEvent: Map<string, any> = new Map();
   private event: Event;
   constructor(private game: Game) {
     super();

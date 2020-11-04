@@ -2,8 +2,9 @@ import { Dialog } from "./Dialog";
 import { op_client } from "pixelpai_proto";
 import { BasicMediator } from "../basic/basic.mediator";
 import { Game } from "src/game/game";
+import { ModuleName } from "structure";
 export class DialogMediator extends BasicMediator {
-    public static NAME: string = "Dialog";
+    public static NAME: string = ModuleName.DIALOG_NAME;
     private dialog: Dialog;
     constructor(protected game: Game) {
         super(game);

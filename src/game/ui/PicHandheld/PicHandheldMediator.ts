@@ -3,9 +3,10 @@ import { PicHandheld } from "./PicHandheld";
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
 import { BasicMediator } from "../basic/basic.mediator";
 import { Game } from "src/game/game";
+import { ModuleName } from "structure";
 
 export class PicHandheldMediator extends BasicMediator {
-    public static NAME: string = "PicHandheld";
+    public static NAME: string = ModuleName.PICHANDHELD_NAME;
     private picHandheld: PicHandheld;
     constructor(game: Game) {
         super(game);

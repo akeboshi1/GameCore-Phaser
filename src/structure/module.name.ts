@@ -8,4 +8,5 @@ export class ModuleName {
     public static ACTIVITY_NAME: string = "Activity";
     public static CREATEROLE_NAME: string = "CreateRole";
     public static VERIFIED_NAME: string = "Verfied";
+    public static PICANAVIGATE_NAME: string = "PicaNavigate";
 }

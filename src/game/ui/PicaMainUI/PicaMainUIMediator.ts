@@ -1,11 +1,12 @@
 import { op_client } from "pixelpai_proto";
 import { PlayerProperty } from "src/game/actor/data/player.property";
 import { Game } from "src/game/game";
+import { ModuleName } from "structure";
 import { BasicMediator } from "../basic/basic.mediator";
 import { PicaMainUI } from "./PicaMainUI";
 
 export class PicaMainUIMediator extends BasicMediator {
-    public static NAME: string = "PicaMainUI";
+    public static NAME: string = ModuleName.PICAMAINUI_NAME;
     private mainUI: PicaMainUI;
     private mPlayerInfo: PlayerProperty;
     private mRoomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;

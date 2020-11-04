@@ -38,6 +38,7 @@ export class BasePanel extends Panel {
         super.init();
         (<MainUIScene>this.mScene).layerManager.addToLayer("uiLayer", this);
         this.setLinear(this.key);
+        Logger.getInstance().log("init========", this.key);
         this.__exportProperty();
     }
 

@@ -2,6 +2,7 @@ import { Game } from "src/game/game";
 import { BasicMediator } from "../basic/basic.mediator";
 import { PicaChat } from "./PicaChat";
 import { op_def } from "pixelpai_proto";
+import { ModuleName } from "structure";
 export class PicaChatMediator extends BasicMediator {
     public static NAME: string = "PicaChat";
     private mChat: PicaChat;
@@ -39,8 +40,8 @@ export class PicaChatMediator extends BasicMediator {
 
     showNavigate() {
         const uiManager = this.game.uiManager;
-        uiManager.showMed("PicaNavigate");
-        uiManager.hideMed("PicHandheld");
+        uiManager.showMed(ModuleName.PICANAVIGATE_NAME);
+        uiManager.hideMed(ModuleName.PICHANDHELD_NAME);
         this.hide();
     }
 

@@ -1,9 +1,10 @@
+import { ModuleName } from "structure";
 import { Logger } from "utils";
 import { Game } from "../../game";
 import { BasicMediator } from "../basic/basic.mediator";
 
 export class LoginMediator extends BasicMediator {
-    public static NAME: string = "Login";
+    public static NAME: string = ModuleName.LOGIN_NAME;
     private verifiedEnable: boolean = false;
     constructor(game: Game) {
         super(game);
