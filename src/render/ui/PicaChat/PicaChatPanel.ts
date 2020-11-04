@@ -345,9 +345,9 @@ export class PicaChatPanel extends BasePanel {
             this.resize(this.width, 185 * this.dpr);
             this.giftPanel.show();
             this.render.renderEmitter(EventType.QUERY_MARKET_REQUEST, { marketName: "gift_shop", page: 1, category: undefined, subCategory: undefined });
-            const curRoom = await this.render.mainPeer.getCurrentRoom();
-            const openingParty = curRoom ? curRoom.openingParty : false;
-            this.giftPanel.setGiftActive(openingParty);
+            // const curRoom = await this.render.mainPeer.getCurrentRoom();
+            // const openingParty = curRoom ? curRoom.openingParty : false;
+            // this.giftPanel.setGiftActive(openingParty);
         } else {
             this.giftPanel.hide();
             this.showChatTextArea();
@@ -411,9 +411,9 @@ export class PicaChatPanel extends BasePanel {
         if (this.parentContainer) this.parentContainer.visible = true;
     }
     private async checkUpdateActive() {
-        const curRoom = await this.render.mainPeer.getCurrentRoom();
-        if (curRoom)
-            this.setGiftButtonState(curRoom.openingParty);
+        // const curRoom = await this.render.mainPeer.getCurrentRoom();
+        // if (curRoom)
+        //     this.setGiftButtonState(curRoom.openingParty);
         const arr = await this.render.mainPeer.getActiveUIData("PicaChat");
         if (arr) {
             for (const data of arr) {
@@ -455,17 +455,14 @@ export class PicaChatPanel extends BasePanel {
     private showNoticeHandler(text: string) {
         this.render.mainPeer.showNoticeHandler(text);
     }
-    private async showPanelHandler(panelName: string, isshow: boolean, data?: any) {
+    private showPanelHandler(panelName: string, isshow: boolean, data?: any) {
         if (!this.render) {
             return;
         }
-        const uiManager = await this.render.mainPeer.getUiManager();
         if (isshow) {
-            uiManager.showMed(panelName, data);
-
+            this.render.mainPeer.showMediator(panelName, true, data);
         } else {
-            uiManager.hideMed(panelName);
-
+            this.render.mainPeer.hideMediator(panelName);
         }
     }
 }

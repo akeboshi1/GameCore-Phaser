@@ -154,11 +154,6 @@ export class MainPeer extends RPCPeer {
         this.game.roomManager.currentRoom.initUI();
     }
 
-    @Export()
-    public getUiManager(): any {
-        return this.game.uiManager;
-    }
-
     @Export([webworker_rpc.ParamType.str])
     public getActiveUIData(str: string): any {
         return this.game.uiManager.getActiveUIData(str);
@@ -188,11 +183,6 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public onVerifiedHandler(name: string, idcard: string) {
 
-    }
-
-    @Export()
-    public getCurrentRoom(): any {
-        return this.game.roomManager.currentRoom;
     }
 
     @Export()
