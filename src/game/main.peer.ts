@@ -8,6 +8,8 @@ import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
 import { EventType, ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structure";
 import { PicaChatMediator } from "./ui/PicaChat/PicaChatMediator";
+import { DialogMediator } from "./ui/Dialog/DialogMediator";
+import { PicHandheldMediator } from "./ui/PicHandheld/PicHandheldMediator";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -327,9 +329,30 @@ export class MainPeer extends RPCPeer {
         this.game.showMediator(name, isShow, param);
     }
 
+    @Export()
+    public exportUimanager(): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            this.exportProperty(this.game.uiManager, this, "uiManager").onceReady(() => {
+                resolve(true);
+            });
+        });
+    }
+
     @Export([webworker_rpc.ParamType.str])
     public hideMediator(name: string) {
         this.game.hideMediator(name);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public onQueryNextDialog(id: number, comid: number, data?: number[]) {
+        const med: DialogMediator = this.game.uiManager.getMed(DialogMediator.NAME) as DialogMediator;
+        if (med) med.onQueryNextDialog(id, comid, data);
+    }
+
+    @Export()
+    public requestHandheldList() {
+        const med: PicHandheldMediator = this.game.uiManager.getMed(PicHandheldMediator.NAME) as PicHandheldMediator;
+        if (med) med.requestHandheldList();
     }
 
     @Export()

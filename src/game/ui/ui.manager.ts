@@ -4,6 +4,7 @@ import { Game } from "../game";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
 import { CutInMediator } from "./CutIn/CutInMediator";
+import { DialogMediator } from "./Dialog/DialogMediator";
 import { LoginMediator } from "./login/LoginMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
@@ -51,6 +52,7 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
+        this.mMedMap.set(DialogMediator.NAME, new DialogMediator(this.game));
         this.mMedMap.set(PicaChatMediator.NAME, new PicaChatMediator(this.game));
         this.mMedMap.set(CutInMediator.NAME, new CutInMediator(this.game));
         this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
@@ -70,14 +72,14 @@ export class UIManager extends PacketHandler {
         const className: string = type + "Mediator";
         let mediator: BasicMediator = this.mMedMap.get(className);
         if (!mediator) {
-            const path: string = `./${type}/${type}Mediator`;
+            // const path: string = `./${type}/${type}Mediator`;
             const ns: any = require(`./${type}/${className}`);
             mediator = new ns[className](this.game);
             if (!mediator) {
                 // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
             }
-            this.mMedMap.set(type + "Mediator", mediator);
+            this.mMedMap.set(className, mediator);
             // mediator.setName(type);
         }
         // if (mediator.showing) return;
