@@ -4,11 +4,18 @@ import { PicGiftPanel } from "./PicGiftPanel";
 import { AlertView } from "../components/alert.view";
 import { BasePanel } from "../components/base.panel";
 import { InputPanel } from "../components/";
-import { Render } from "src/render/render";
 import { UIAtlasKey, UIAtlasName } from "pica";
 import { Font, i18n } from "utils";
 import { EventType } from "structure";
 import { UiManager } from "../ui.manager";
+
+enum ChatChannel {
+    CurrentScene = 0,
+    World = 1,
+    Team = 2,
+    Private = 3,
+    System = 4
+}
 
 export class PicaChatPanel extends BasePanel {
     private readonly MAX_HEIGHT: number;
@@ -89,9 +96,42 @@ export class PicaChatPanel extends BasePanel {
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width / this.scale, h / this.scale), Phaser.Geom.Rectangle.Contains);
     }
 
+    public async chatHandler(content: any) {
+        const nickName = await this.render.mainPeer.getPlayerName(content.chatSenderid);
+        let speaker = "";
+        if (nickName) {
+            speaker = nickName;
+        } else {
+            if (content.chatSenderid) {
+                speaker = i18n.t("chat.mystery");
+            }
+        }
+        let color = "#ffffff";
+        if (content.chatSetting) {
+            color = content.chatSetting.textColor;
+        }
+        this.showChat(`[color=${color}][${this.getChannel(content.chatChannel)}]${speaker}: ${content.chatContext}[/color]\n`);
+    }
+
+    public showChat(chat: string) {
+        this.appendChat(chat);
+    }
+
+    public getChannel(channel: any) {
+        switch (channel) {
+            case ChatChannel.CurrentScene:
+                return i18n.t("chat.current");
+            case ChatChannel.World:
+                return i18n.t("chat.world");
+            default:
+                return i18n.t("chat.system");
+        }
+    }
+
     public setGiftData(content) {
         this.giftPanel.setGiftDatas(content.commodities);
     }
+
     public appendChat(val: string) {
         this.chatCatchArr.push(val);
         if (this.chatCatchArr.length > this.chatMaxLen) this.chatCatchArr.shift();
@@ -104,10 +144,12 @@ export class PicaChatPanel extends BasePanel {
             (<PicChatInputPanel>this.mInputText).appendChat(val);
         }
     }
+
     public isShowChatPanel() {
         if (!this.mTextArea || !this.mTextArea.visible) return false;
         return true;
     }
+
     public hide() {
         this.mShow = false;
         this.removeInteractive();
@@ -129,6 +171,7 @@ export class PicaChatPanel extends BasePanel {
         this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
         this.mGiftBtn.on("pointerup", this.onGiftHandler, this);
 
+        this.render.emitter.on(EventType.CHAT, this.chatHandler, this);
         this.render.emitter.on(EventType.QUERY_MARKET_REQUEST, this.setGiftData, this);
         this.render.emitter.on(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
     }
@@ -148,6 +191,7 @@ export class PicaChatPanel extends BasePanel {
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
         this.mGiftBtn.off("pointerup", this.onGiftHandler, this);
 
+        this.render.emitter.off(EventType.CHAT, this.chatHandler, this);
         this.render.emitter.off(EventType.QUERY_MARKET_REQUEST, this.setGiftData, this);
         this.render.emitter.off(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
     }

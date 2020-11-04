@@ -843,15 +843,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public workerEmitter(eventType: EventType, data: any) {
-        switch (eventType) {
-            case EventType.PACKAGE_SYNC_FINISH:
-                break;
-            case EventType.PACKAGE_UPDATE:
-                break;
-            case EventType.UPDATE_PLAYER_INFO:
-                break;
-        }
+    public workerEmitter(eventType: string, data: any) {
+        this.emitter.emit(eventType, data);
     }
 
     private onFullScreenChange() {

@@ -527,6 +527,10 @@ export class Element extends BlockObject implements IElement {
         this.removeFollowObject(FollowEnum.Nickname);
     }
 
+    get nickname(): string {
+        return this.mModel.nickname;
+    }
+
     // public showEffected(displayInfo: IFramesModel, field?: DisplayField) {
     // if (displayInfo && this.mDisplay) {
     //     const key = displayInfo.gene;

@@ -200,6 +200,11 @@ export class MainPeer extends RPCPeer {
         return this.game.roomManager.currentRoom.roomSize;
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public getPlayerName(id: number): string {
+        return this.game.roomManager.currentRoom.playerManager.get(id).nickname;
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public resetGameraSize(width: number, height: number) {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.cameraService) this.game.roomManager.currentRoom.cameraService.resetCameraSize(width, height);
