@@ -6,6 +6,7 @@ import { Logger } from "utils";
 import { SocketConnection, IConnectListener, SocketConnectionError } from "../../../lib/net/socket";
 import { ConnectionService } from "../../../lib/net/connection.service";
 import { ServerAddress } from "../../../lib/net/address";
+import { Clock } from "../loop/clock/clock";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -85,6 +86,7 @@ export class Connection implements ConnectionService {
     private mSocket: GameSocket;
     private isConnect: boolean = false;
     private isPause: boolean = false;
+    private mClock: Clock;
     constructor(socket: GameSocket) {
         this.mSocket = socket;
     }
@@ -109,11 +111,16 @@ export class Connection implements ConnectionService {
         this.clearPacketListeners();
     }
 
+    setClock(clock: Clock) {
+        this.mClock = clock;
+    }
+
     addPacketListener(listener: PacketHandler) {
         this.mPacketHandlers.push(listener);
     }
 
     send(packet: PBpacket) {
+        packet.header.timestamp = this.mClock ? this.mClock.unixTime : 0;
         this.mSocket.send(packet.Serialization());
     }
 

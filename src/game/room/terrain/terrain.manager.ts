@@ -8,8 +8,8 @@ import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService, SpriteAddCompletedListener } from "../room/room";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { ConnectionService } from "lib/net/connection.service";
-import { IFramesModel } from "src/structure/frame";
-import { IDragonbonesModel } from "src/structure/dragonbones";
+import { IFramesModel } from "structure";
+import { IDragonbonesModel } from "structure";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

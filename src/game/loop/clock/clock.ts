@@ -45,6 +45,7 @@ export class Clock extends PacketHandler {
         this.mListener = listener;
         this.mainPeer = mainPeer;
         this._check();
+        con.setClock(this);
     }
 
     public sync(times: number = 1): void {

@@ -17,6 +17,16 @@ export class Account {
         // 2. 缓存用户登陆后的帐号咨讯
     }
 
+    public getAccountData() {
+        return this.accountData;
+    }
+
+    // public accountData(): Promise<any> {
+    //     return new Promise<any>((resolve) => {
+    //         resolve(this.accountData);
+    //     });
+    // }
+
     public setAccount(val: any) {
         // this.clear();
         // Object.assign(this.mCurAccountData, val);

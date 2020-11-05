@@ -5,7 +5,7 @@ import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
 import { IPos, Logger } from "utils";
 import { IRoomService } from "../room/room";
-import { IFramesModel } from "src/structure/frame";
+import { IFramesModel } from "structure";
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel;

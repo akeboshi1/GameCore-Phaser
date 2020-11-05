@@ -138,6 +138,16 @@ export class UIManager extends PacketHandler {
         return arr;
     }
 
+    public destroy() {
+        this.removePackListener();
+        if (this.mMedMap) {
+            this.mMedMap.forEach((basicMed: BasicMediator) => {
+                if (basicMed) basicMed.destroy();
+            });
+        }
+        if (this.mAtiveUIData) this.mAtiveUIData = undefined;
+    }
+
     private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
             const tag = ui.name;

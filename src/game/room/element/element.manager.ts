@@ -8,8 +8,8 @@ import { IRoomService } from "../room/room";
 
 import { IElement, Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
-import { IFramesModel } from "src/structure/frame";
-import { IDragonbonesModel } from "src/structure/dragonbones";
+import { IFramesModel } from "structure";
+import { IDragonbonesModel } from "structure";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;

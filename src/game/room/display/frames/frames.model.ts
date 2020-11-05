@@ -1,9 +1,9 @@
 import { Helpers } from "game-capsule";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import * as sha1 from "simple-sha1";
-import { RunningAnimation } from "src/structure/animation";
-import { IDisplay } from "src/structure/display";
-import { IFramesModel } from "src/structure/frame";
+import { RunningAnimation } from "structure";
+import { IDisplay } from "structure";
+import { IFramesModel } from "structure";
 import { Direction, Logger, LogicPoint } from "utils";
 import { AnimationModel, IAnimationData } from "../animation/animation.model";
 import { Sprite } from "../sprite/sprite";

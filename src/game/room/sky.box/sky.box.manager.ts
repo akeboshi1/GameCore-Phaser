@@ -2,7 +2,7 @@
 import { PacketHandler } from "net-socket-packet";
 import { State } from "../state/state.group";
 import { IRoomService } from "../room/room";
-import { IScenery } from "src/structure/scenery";
+import { IScenery } from "structure";
 import { Game } from "src/game/game";
 
 export interface ISkyBoxConfig {

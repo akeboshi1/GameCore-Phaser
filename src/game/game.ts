@@ -4,7 +4,7 @@ import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto"
 import { IPoint, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
-import { Logger, ResUtils, Tool, load } from "utils";
+import { Logger, ResUtils, Tool, load, EventDispatcher } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, ConnListener, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
@@ -12,13 +12,14 @@ import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
 import { LoadingTips } from "./loading/loading.tips";
-import { ILauncherConfig } from "structure";
+import { ILauncherConfig, ModuleName } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { UIManager } from "./ui/ui.manager";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
+import { DataManager } from "./data.manager/dataManager";
 interface ISize {
     width: number;
     height: number;
@@ -34,6 +35,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private mHttpClock: HttpClock;
     private mHttpService: HttpService;
     private mConfig: ILauncherConfig;
+    private mDataManager: DataManager;
     // private mAccount: Account;
     private mRoomManager: RoomManager;
     private mElementStorage: ElementStorage;
@@ -254,6 +256,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mLoadingManager;
     }
 
+    get dataManager(): DataManager {
+        return this.mDataManager;
+    }
+
+    get emitter(): EventDispatcher {
+        return this.mDataManager.emitter;
+    }
+
     get user() {
         return this.mUser;
     }
@@ -298,7 +308,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public async refreshToken() {
         const account = await this.peer.render.getAccount();
         const accountData = account.accountData;
-        // this.peer.render.getAccount().then((account) => {
+        // this.peer.render[ModuleName.].then((account) => {
         this.httpService.refreshToekn(accountData.refreshToken, accountData.accessToken)
             .then((response: any) => {
                 if (response.code === 200) {
@@ -377,6 +387,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mHttpService = new HttpService(this);
         // this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+        this.mDataManager = new DataManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -428,6 +439,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mClock.destroy();
             this.mClock = null;
         }
+        if (this.roomManager) this.roomManager.destroy();
+        if (this.uiManager) this.uiManager.destroy();
+        if (this.mElementStorage) this.mElementStorage.destroy();
+        if (this.mLoadingManager) this.mLoadingManager.destroy();
+        if (this.mDataManager) this.mDataManager.clear();
     }
 
     private async onInitVirtualWorldPlayerInit(packet: PBpacket) {

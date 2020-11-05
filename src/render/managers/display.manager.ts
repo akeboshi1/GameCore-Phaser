@@ -4,12 +4,12 @@ import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { IScenery } from "src/structure/scenery";
+import { IScenery } from "structure";
 import { BlockManager } from "../display/scenery/block.manager";
 import { Render } from "../render";
-import { IFramesModel } from "src/structure/frame";
-import { IDragonbonesModel } from "src/structure/dragonbones";
-import { RunningAnimation } from "src/structure/animation";
+import { IFramesModel } from "structure";
+import { IDragonbonesModel } from "structure";
+import { RunningAnimation } from "structure";
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,

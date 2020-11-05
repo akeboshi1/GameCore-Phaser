@@ -18,3 +18,4 @@ export { initLocales } from "./i18n";
 export { Pos } from "./pos";
 export { Size } from "./size";
 export { Helpers } from "./helpers";
+export { EventDispatcher } from "./EventDispatcher";

@@ -1,3 +1,4 @@
+import { ModuleName } from "structure";
 import { Logger } from "utils";
 import { Render } from "../render";
 import { BasicScene } from "./basic.scene";
@@ -29,6 +30,9 @@ export class SceneManager {
 
     private mCurSceneName: string;
     constructor(private render: Render) {
+        this.render.exportProperty(this, this.render,ModuleName.SCENEMANAGER_NAME)
+        .onceReady(() => {
+        });
     }
 
     get currentScene(): BasicScene {

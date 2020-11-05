@@ -1,4 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Clock } from "src/game/loop/clock/clock";
 import { ServerAddress } from "./address";
 
 export interface ConnectionService {
@@ -6,6 +7,7 @@ export interface ConnectionService {
     pause: boolean;
     startConnect(addr: ServerAddress, keepalive?: boolean);
     closeConnect(): void;
+    setClock(clock: Clock): void;
     addPacketListener(listener: PacketHandler): void;
     removePacketListener(listener: PacketHandler): void;
     clearPacketListeners(): void;

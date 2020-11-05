@@ -2,9 +2,7 @@ import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
 import { Url, LogicPoint } from "utils";
 import { Render } from "../render";
-import { RunningAnimation } from "src/structure/animation";
-import { IDragonbonesModel } from "src/structure/dragonbones";
-import { IFramesModel } from "src/structure/frame";
+import { RunningAnimation, IDragonbonesModel, IFramesModel } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
 
 export enum DisplayField {

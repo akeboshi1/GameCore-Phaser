@@ -14,10 +14,14 @@ import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
+import * as protos from "pixelpai_proto";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
+for (const key in protos) {
+    PBpacket.addProtocol(protos[key]);
+}
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
     FOLLOW_MOUSE_MOVE_STYLE = 2,
@@ -63,7 +67,6 @@ export class Render extends RPCPeer implements GameMain {
         this.mConfig = config;
         this.mCallBack = callBack;
         this.initConfig();
-        this.createManager();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.createGame();
@@ -121,8 +124,10 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     createGame() {
-        this.newGame();
-        this.remote[MAIN_WORKER].MainPeer.createGame(this.mConfig);
+        this.newGame().then(() => {
+            this.createManager();
+            this.remote[MAIN_WORKER].MainPeer.createGame(this.mConfig);
+        });
     }
 
     enterGame() {
@@ -272,10 +277,7 @@ export class Render extends RPCPeer implements GameMain {
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
             }
-            this.exportProperty(this.mSceneManager, this)
-                .onceReady(() => {
-                    resolve();
-                });
+            resolve();
         });
     }
 
@@ -476,8 +478,12 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number) {
-        if (!this.mAccount) this.mAccount = new Account();
-        this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+        if (!this.mAccount) {
+            this.mAccount = new Account();
+            this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
+                this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+            });
+        }
         // if (this.mainPeer) this.mainPeer.createAccount(gameID, worldID, sceneID, loc);
     }
 

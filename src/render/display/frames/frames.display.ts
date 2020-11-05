@@ -1,7 +1,7 @@
 import { Logger, Url } from "utils";
 import { DisplayField, DisplayObject } from "../display.object";
-import { IFramesModel } from "src/structure/frame";
-import { RunningAnimation } from "src/structure/animation";
+import { IFramesModel } from "structure";
+import { RunningAnimation } from "structure";
 
 /**
  * 序列帧显示对象
