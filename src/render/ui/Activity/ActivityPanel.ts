@@ -83,11 +83,11 @@ export class ActivityPanel extends BasePanel {
 
     private onClickHandler(name: string) {
         if (name === "4") {
-            this.emit("showPanel", "Task");
+            this.render.renderEmitter("showPanel", "Task");
         } else if (name === "3") {
-            this.emit("showPanel", "PicFriend");
+            this.render.renderEmitter("showPanel", "PicFriend");
         } else if (name === "2") {
-            this.emit("showPanel", "PicOrder");
+            this.render.renderEmitter("showPanel", "PicOrder");
         }
     }
     private async checkUpdateActive() {

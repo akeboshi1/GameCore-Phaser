@@ -341,7 +341,7 @@ export class Render extends RPCPeer implements GameMain {
         this.mainPeer.syncCameraScroll();
     }
 
-    public renderEmitter(eventType: EventType, data: any) {
+    public renderEmitter(eventType: string, data?: any) {
         this.mMainPeer.renderEmitter(eventType, data);
     }
 

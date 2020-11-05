@@ -7,7 +7,6 @@ import { EventType } from "structure";
 export class PicaMainUI extends PacketHandler {
     constructor(private game: Game) {
         super();
-        this.register();
     }
 
     register() {
@@ -44,7 +43,7 @@ export class PicaMainUI extends PacketHandler {
     }
 
     private onUpdatePlayerInfo(packet: PBpacket) {
-        this.game.peer.workerEmitter(EventType.UPDATE_PLAYER_INFO, packet.content);
+        // this.game.peer.workerEmitter(EventType.UPDATE_PLAYER_INFO, packet.content);
     }
 
     private onUpdateModeRoomInfo(packet: PBpacket) {

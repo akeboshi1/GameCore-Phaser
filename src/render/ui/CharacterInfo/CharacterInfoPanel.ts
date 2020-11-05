@@ -12,7 +12,7 @@ import { Font, Handler, i18n, Url } from "utils";
 import { FriendRelationEnum } from "structure";
 import { DragonbonesDisplay } from "../../display/dragonbones/dragonbones.display";
 
-export default class CharacterInfoPanel extends BasePanel {
+export class CharacterInfoPanel extends BasePanel {
     private commonkey = "common_key";
     private bg: Phaser.GameObjects.Image;
     private labelText: Text;
@@ -295,11 +295,11 @@ export default class CharacterInfoPanel extends BasePanel {
         this.mCharacterData = data;
         this.content.visible = true;
         const nickname = data.nickname;
-        const current_title = data.currentTitle;
-        const exp = data.level.currentLevelExp;
-        const nexExp = data.level.nextLevelExp;
+        const current_title = data.currentTitle || "";
+        const exp = data.level.currentLevelExp || 0;
+        const nexExp = data.level.nextLevelExp || 0;
         const cid = data.cid;
-        const levle = data.level.level;
+        const levle = data.level.level || 0;
         const spaceOffset = this.getspaceStr(1 * this.dpr);
         if (this.avatar) {
             this.avatar.load({

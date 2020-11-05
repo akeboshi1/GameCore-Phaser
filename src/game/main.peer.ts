@@ -61,7 +61,7 @@ export class MainPeer extends RPCPeer {
         this.game.connection.onData(buffer);
     }
 
-    public workerEmitter(eventType: EventType, data: any) {
+    public workerEmitter(eventType: string, data: any) {
         this.render.workerEmitter(eventType, data);
     }
 
@@ -355,9 +355,9 @@ export class MainPeer extends RPCPeer {
         if (med) med.requestHandheldList();
     }
 
-    @Export()
-    public renderEmitter(eventType: EventType, data: any) {
-
+    @Export([webworker_rpc.ParamType.str])
+    public renderEmitter(eventType: string, data: any) {
+        this.game.emitter.emit(eventType, data);
     }
 
     // display data getter

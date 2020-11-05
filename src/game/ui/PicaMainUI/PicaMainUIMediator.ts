@@ -19,7 +19,18 @@ export class PicaMainUIMediator extends BasicMediator {
     show(param?: any) {
         this.__exportProperty(() => {
             this.game.peer.render.showPanel(PicaMainUIMediator.NAME, param);
+            this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
+            this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
+            this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
+            this.mainUI.register();
         });
+    }
+
+    hide() {
+        super.hide();
+        this.game.emitter.off("showPanel", this.onShowPanelHandler, this);
+        this.game.emitter.off("openroompanel", this.onOpenRoomHandler, this);
+        this.game.emitter.off("querypraise", this.onQuery_PRAISE_ROOM, this);
     }
 
     destroy() {
@@ -33,6 +44,33 @@ export class PicaMainUIMediator extends BasicMediator {
 
     isSceneUI() {
         return true;
+    }
+
+    private onShowPanelHandler(panel: string, data?: any) {
+        if (!this.mainUI || !this.game) {
+            return;
+        }
+        const uiManager = this.game.uiManager;
+        uiManager.showMed(panel);
+        if (panel === ModuleName.CHARACTERINFO_NAME) {
+            this.mainUI.fetchPlayerInfo();
+        }
+        // const uiManager = this.world.uiManager;
+        // if (data)
+        //     uiManager.showMed(panel, data);
+        // else uiManager.showMed(panel);
+    }
+
+    private onOpenRoomHandler() {
+        if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
+        const uimanager = this.game.uiManager;
+        uimanager.showMed("PicHouse");
+    }
+
+    private onQuery_PRAISE_ROOM(praise: boolean) {
+        if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
+        const roomid = this.mRoomInfo.roomId;
+        this.mainUI.query_PRAISE_ROOM(roomid, praise);
     }
 
     get playerInfo() {

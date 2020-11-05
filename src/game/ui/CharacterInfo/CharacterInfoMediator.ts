@@ -19,20 +19,20 @@ export class CharacterInfoMediator extends BasicMediator {
 
     show(params?: any) {
         this.__exportProperty(() => {
-            this.game.renderPeer.showCreateRole(params);
+            this.game.renderPeer.showPanel(ModuleName.CHARACTERINFO_NAME, params);
+            if (!this.mView) {
+                this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
+                // this.mView = new CharacterInfoPanel(this.scene, this.game);
+                // this.mView.on("hide", this.onHidePanel, this);
+                // this.mView.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
+                // this.mView.on("track", this.onTrackHandler, this);
+                // this.mView.on("invite", this.onInviteHandler, this);
+                // this.mView.on("follow", this.onFollowHandler, this);
+                // this.mView.on("unfollow", this.onUnfollowHandler, this);
+                // this.mView.on("addBlack", this.onAddBlackHandler, this);
+                // this.mView.on("removeBlack", this.onRemoveBlackHandler, this);
+            }
         });
-        if (!this.mView) {
-            this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
-            // this.mView = new CharacterInfoPanel(this.scene, this.game);
-            // this.mView.on("hide", this.onHidePanel, this);
-            // this.mView.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
-            // this.mView.on("track", this.onTrackHandler, this);
-            // this.mView.on("invite", this.onInviteHandler, this);
-            // this.mView.on("follow", this.onFollowHandler, this);
-            // this.mView.on("unfollow", this.onUnfollowHandler, this);
-            // this.mView.on("addBlack", this.onAddBlackHandler, this);
-            // this.mView.on("removeBlack", this.onRemoveBlackHandler, this);
-        }
     }
 
     isSceneUI() {

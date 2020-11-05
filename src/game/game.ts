@@ -392,6 +392,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
+        this.user.addPackListener();
         // this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
         this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
