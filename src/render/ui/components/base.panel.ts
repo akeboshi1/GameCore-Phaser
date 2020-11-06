@@ -16,6 +16,8 @@ export class BasePanel extends Panel {
     protected mReloadTimes: number = 0;
     protected render: Render;
     protected key: string = "";
+    private exported: boolean = false;
+    private exportListeners: Function[] = [];
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
         if (!scene.sys) Logger.getInstance().error("no scene system");
@@ -31,7 +33,17 @@ export class BasePanel extends Panel {
 
     public destroy() {
         if (this.render && this.render.hasOwnProperty(this.constructor.name)) delete this.render[this.constructor.name];
+        this.exportListeners.length = 0;
         super.destroy();
+    }
+
+    public addExportListener(f: Function) {
+        if (this.exported) {
+            f();
+            return;
+        }
+
+        this.exportListeners.push(f);
     }
 
     protected init() {
@@ -84,5 +96,10 @@ export class BasePanel extends Panel {
     }
 
     protected exportComplete() {
+        this.exported = true;
+        for (const listener of this.exportListeners) {
+            listener();
+        }
+        this.exportListeners.length = 0;
     }
 }

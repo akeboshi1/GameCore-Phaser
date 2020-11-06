@@ -1,4 +1,7 @@
-import { Handler } from "utils";
+import { Handler } from "../../../utils";
+import { BubbleAnimation } from "../../display/animation/bubble.animation";
+import { DragonbonesAnimation } from "../../display/animation/dragonbones.animation";
+import { FrameAnimation } from "../../display/animation/frame.animation";
 
 export class InteractionBubbleCell extends Phaser.GameObjects.Container {
     private mBubbleAni: DragonbonesAnimation | FrameAnimation | BubbleAnimation;

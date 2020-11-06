@@ -1,22 +1,18 @@
-import { WorldService } from "../../game/world.service";
-import { op_client, op_pkt_def, op_gameconfig } from "pixelpai_proto";
-import { BasePanel } from "../components/BasePanel";
-import { IElement } from "../../rooms/element/element";
-import { Url } from "../../utils/resUtil";
+import { ModuleName } from "../../../structure";
+import { Handler, Pos, Tool, Url } from "../../../utils";
+import { PlayScene } from "../../scenes/play.scene";
+import { SceneManager } from "../../scenes/scene.manager";
+import { BasePanel } from "../components/base.panel";
+import { UiManager } from "../ui.manager";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
-import { Handler } from "../../Handler/Handler";
-import { Pos } from "../../utils/pos";
-import { Tool } from "../../utils/tool";
-import { PlayScene } from "../../scenes/play";
 export class InteractiveBubblePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
-    private world: WorldService;
     private map = new Map<number, InteractionBubbleContainer>();
     private mBubble: InteractionBubbleContainer;
-    constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene, world);
-        this.world = world;
+    constructor(uiManager: UiManager, private sceneManager: SceneManager, private uiScale: number) {
+        super(uiManager.scene, uiManager.render);
         // this.scale = 1;
+        this.key = ModuleName.BUBBLE_NAME;
     }
 
     resize(width: number, height: number) {
@@ -49,7 +45,7 @@ export class InteractiveBubblePanel extends BasePanel {
             this.map.delete(id);
         }
     }
-    showInteractionBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE, ele: IElement) {
+    showInteractionBubble(content: any, ele: any) {// ele: IElement
         const dpr = this.dpr;
         content.display["resName"] = null;// "gems";
         content.display.texturePath = Url.getUIRes(dpr, "bubble/bubblebg.png");// "resources/test/columns";
@@ -63,7 +59,7 @@ export class InteractiveBubblePanel extends BasePanel {
             this.map.set(key, this.mBubble);
         }
         this.mBubble.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
-        const playScene = this.world.game.scene.getScene(PlayScene.name);
+        const playScene = this.sceneManager.getSceneByName(PlayScene.name);
         this.updateBubblePos(ele, playScene);
         this.mBubble.setFollow(ele, playScene, (obj) => {
             this.updateBubblePos(ele, obj.scene);
@@ -73,7 +69,7 @@ export class InteractiveBubblePanel extends BasePanel {
     }
     updateBubblePos(gameObject: any, scene: Phaser.Scene) {
         const dpr = this.dpr;
-        const zoom = this.world.uiScale;
+        const zoom = this.uiScale;
         const display = gameObject.getDisplay();
         if (!display) {
             return;
@@ -92,6 +88,6 @@ export class InteractiveBubblePanel extends BasePanel {
     }
 
     private onInteractiveBubbleHandler(data: any) {
-        this.emit("queryinteractive", data);
+        this.render.renderEmitter("queryinteractive", data);
     }
 }

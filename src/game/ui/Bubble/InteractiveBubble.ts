@@ -1,15 +1,11 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { ConnectionService } from "../../net/connection.service";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { WorldService } from "../../game/world.service";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { Game } from "../../game";
 export class InteractiveBubble extends PacketHandler {
 
-    private readonly world: WorldService;
-    private mEvent: Phaser.Events.EventEmitter;
-    constructor(world: WorldService) {
+    constructor(private game: Game) {
         super();
-        this.world = world;
-        this.mEvent = new Phaser.Events.EventEmitter();
     }
     register() {
         const connection = this.connection;
@@ -27,17 +23,8 @@ export class InteractiveBubble extends PacketHandler {
         }
     }
 
-    on(event: string | symbol, fn: Function, context?: any) {
-        this.mEvent.on(event, fn, context);
-    }
-
-    off(event: string | symbol, fn: Function, context?: any) {
-        this.mEvent.off(event, fn, context);
-    }
-
     destroy() {
         this.unregister();
-        this.mEvent.destroy();
     }
     queryInteractiveHandler(data: any) {
         const connection = this.connection;
@@ -48,19 +35,19 @@ export class InteractiveBubble extends PacketHandler {
         connection.send(packet);
     }
     get connection(): ConnectionService {
-        if (this.world) {
-            return this.world.connection;
+        if (this.game) {
+            return this.game.connection;
         }
     }
 
     private onShowHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE = packet.content;
-        this.mEvent.emit("showbubble", content);
+        this.game.emitter.emit("showbubble", content);
     }
 
     private onClearHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORDL_REQ_CLIENT_REMOVE_INTERACTIVE_BUBBLE = packet.content;
-        this.mEvent.emit("clearbubble", content.ids);
+        this.game.emitter.emit("clearbubble", content.ids);
     }
 
 }

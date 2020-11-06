@@ -1,44 +1,43 @@
-import { Logger } from "../../utils/log";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { InteractiveBubblePanel } from "./InteractiveBubblePanel";
-import { Handler } from "../../Handler/Handler";
-import { IElement } from "../../rooms/element/element";
-import { ILayerManager } from "../layer.manager";
-import { WorldService } from "../../game/world.service";
-import { Pos } from "../../utils/pos";
-import { PlayScene } from "../../scenes/play";
-import { Tool } from "../../utils/tool";
-import { Url } from "../../utils/resUtil";
-import { Room } from "../../rooms/room";
 import { InteractiveBubble } from "./InteractiveBubble";
 import { BaseMediator } from "apowophaserui";
+import { Game } from "../../game";
+import { BasicMediator } from "../basic/basic.mediator";
+import { ModuleName } from "../../../structure";
+import { Room } from "../../room/room/room";
 
-export class InteractiveBubbleMediator extends BaseMediator {
-    protected mView: InteractiveBubblePanel;
-    private layerMgr: ILayerManager;
-    private scene: Phaser.Scene;
-    private mworld: WorldService;
+export class InteractiveBubbleMediator extends BasicMediator {
+    public static NAME: string = ModuleName.BUBBLE_NAME;
+    private mView: any;
     private mCurRoom: Room;
     private bubblePacket: InteractiveBubble;
-    constructor(layerMgr: ILayerManager, scene: Phaser.Scene, mworld: WorldService) {
-        super();
-        this.layerMgr = layerMgr;
-        this.mworld = mworld;
-        this.scene = scene;
+    constructor(protected game: Game) {
+        super(game);
         if (!this.bubblePacket) {
-            this.bubblePacket = new InteractiveBubble(mworld);
-            this.bubblePacket.on("showbubble", this.onShowInteractiveBubble, this);
-            this.bubblePacket.on("clearbubble", this.onClearInteractiveBubble, this);
+            this.bubblePacket = new InteractiveBubble(this.game);
+            this.game.emitter.on("showbubble", this.onShowInteractiveBubble, this);
+            this.game.emitter.on("clearbubble", this.onClearInteractiveBubble, this);
             this.bubblePacket.register();
-        }
-        if (!this.mView) {
-            this.mView = new InteractiveBubblePanel(this.scene, this.mworld);
-            this.mView.on("queryinteractive", this.onInteractiveBubbleHandler, this);
         }
     }
 
+    show(param?: any) {
+        this.__exportProperty(() => {
+            this.game.peer.render.showPanel(InteractiveBubbleMediator.NAME, param).then(() => {
+                this.mView = this.game.peer.render.InteractiveBubblePanel;
+            });
+            this.game.emitter.on("queryinteractive", this.onInteractiveBubbleHandler, this);
+            this.bubblePacket.register();
+        });
+    }
+
+    hide() {
+        super.hide();
+        this.game.emitter.off("queryinteractive", this.onInteractiveBubbleHandler, this);
+    }
+
     get currentRoom(): Room {
-        return this.mworld.roomManager.currentRoom;
+        return this.game.roomManager.currentRoom;
     }
 
     destroy() {
@@ -65,7 +64,7 @@ export class InteractiveBubbleMediator extends BaseMediator {
         if (element && this.mView) {
             this.mView.showInteractionBubble(content, element);
         }
-        this.layerMgr.addToUILayer(this.mView, 0);
+        // this.layerMgr.addToUILayer(this.mView, 0);
     }
 
     private onClearInteractiveBubble(ids: number[]) {
