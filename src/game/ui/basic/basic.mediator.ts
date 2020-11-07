@@ -70,13 +70,19 @@ export class BasicMediator implements IMediator {
 
     show(param?: any): void {
         this.mShow = true;
+        if (param) this.mShowData = param;
+        if (!this.mPanelInit) {
+            return;
+        }
     }
 
     update(param?: any): void {
+        if (param) this.mShowData = param;
     }
 
     setParam(param: any) {
         this.mParam = param;
+        if (param) this.mShowData = param;
     }
 
     getParam(): any {

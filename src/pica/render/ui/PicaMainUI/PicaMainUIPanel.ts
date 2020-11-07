@@ -1,5 +1,6 @@
 import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Render } from "src/render/render";
 import { BasePanel, TextToolTips, UiManager } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";
@@ -20,7 +21,7 @@ export class PicaMainUIPanel extends BasePanel {
     private praiseBtn: CheckBox;
     private praiseImg: Phaser.GameObjects.Image;
     private partyBtn: Button;
-    private playerInfo: any; // PlayerProperty;
+    private playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     private roomInfo: any;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
@@ -84,15 +85,11 @@ export class PicaMainUIPanel extends BasePanel {
 
     update(param) {
         super.update();
-        let data: any;
-        if (param && param.length > 0) {
-            data = param[0];
-        }
-        if (data) {
-            if (!data.hasOwnProperty("roomId")) {
-                this.playerInfo = data;
+        if (param) {
+            if (!param.hasOwnProperty("roomId")) {
+                this.playerInfo = param;
             } else {
-                this.roomInfo = data;
+                this.roomInfo = param;
             }
         }
 
@@ -104,24 +101,48 @@ export class PicaMainUIPanel extends BasePanel {
         }
     }
 
-    updatePlayerInfo(player: any) {
+    updatePlayerInfo(player: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
         this.playerInfo = player;
         if (!this.mInitialized) return;
         if (player.level) {
             const level = player.level;
-            this.playerLv.text = level.value + "";
+            this.playerLv.text = level.level + "";
         }
-        if (player.coin !== undefined) this.mCoinValue.setText(player.coin.value||0 + "");
-        if (player.diamond !== undefined) this.mDiamondValue.setText(player.diamond.value||0 + "");
+        if (player.coin !== undefined) this.mCoinValue.setText(this.getCoin().value + "" || 0 + "");
+        if (player.diamond !== undefined) this.mDiamondValue.setText(this.getDiamond().value + "" || 0 + "");
         if (player.energy) {
             const energy = player.energy;
             if (energy) {
-                this.mStrengthValue.setValue(energy.value, energy.max);
+                this.mStrengthValue.setValue(energy.currentValue, energy.max);
             } else {
                 this.mStrengthValue.setValue(0, 100);
             }
         }
         this.mSceneName.rightIcon.visible = this.isSelfRoom;
+    }
+
+    getCoin(): op_pkt_def.IPKT_Property {
+        for (const proper of this.playerInfo.properties) {
+            if (!proper.hasOwnProperty("id")) {
+                Logger.getInstance().error(proper.key + "  缺少ID");
+                continue;
+            }
+            if (proper.id === "IV0000001") {
+                return proper;
+            }
+        }
+    }
+
+    getDiamond(): op_pkt_def.IPKT_Property {
+        for (const proper of this.playerInfo.properties) {
+            if (!proper.hasOwnProperty("id")) {
+                Logger.getInstance().error(proper.key + "  缺少ID");
+                continue;
+            }
+            if (proper.id === "IV0000002") {
+                return proper;
+            }
+        }
     }
 
     updateRoomInfo(room: any) {
@@ -285,7 +306,7 @@ export class PicaMainUIPanel extends BasePanel {
     private onStrengthHandler() {
         if (this.playerInfo) {
             const energy = this.playerInfo.energy;
-            const rep = `${energy.value}/${energy.max}\n`;
+            const rep = `${energy.currentValue}/${energy.max}\n`;
             const text = i18n.t("main_ui.energy_tips", { "name": rep, "interpolation": { "escapeValue": false } });
             if (!this.textToolTip.visible)
                 this.scene.input.on("pointerdown", this.onTextToolTipHandler, this);

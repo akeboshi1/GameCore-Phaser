@@ -1,5 +1,6 @@
 import { Panel } from "apowophaserui";
 import { MainUIScene } from "src/render/scenes/main.ui.scene";
+import { EventType } from "structure";
 import { Logger, Url } from "utils";
 import { Render } from "../../render";
 export class BasePanel extends Panel {
@@ -28,6 +29,10 @@ export class BasePanel extends Panel {
             this.dpr = Math.round(render.uiRatio || 1);
             this.scale = this.mWorld.uiScale;
         }
+    }
+
+    get initialized(): boolean {
+        return this.mInitialized;
     }
 
     public destroy() {
@@ -91,11 +96,12 @@ export class BasePanel extends Panel {
         if (!this.render) {
             return;
         }
-        return this.render.exportProperty(this, this.render, this.constructor.name).onceReady(this.exportComplete.bind(this));
+        return this.render.exportProperty(this, this.render, this.key).onceReady(this.exportComplete.bind(this));
     }
 
     protected exportComplete() {
         this.exported = true;
+        this.render.renderEmitter(EventType.PANEL_INIT, this.key);
         for (const listener of this.exportListeners) {
             listener();
         }

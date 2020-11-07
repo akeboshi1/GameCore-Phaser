@@ -2,6 +2,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
+import { EventType } from "structure";
 
 export class PicaMainUI extends BasicModel {
     constructor(game: Game) {
@@ -13,7 +14,7 @@ export class PicaMainUI extends BasicModel {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUpdatePlayerInfo);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onUpdateModeRoomInfo);
         }
     }
 
@@ -41,8 +42,9 @@ export class PicaMainUI extends BasicModel {
         this.connection.send(packet);
     }
 
-    private onUpdatePlayerInfo(packet: PBpacket) {
-        this.game.user.userData.onUPDATE_PLAYER_INFO(packet);
+    private onUpdateModeRoomInfo(packet: PBpacket) {
+        this.game.peer.workerEmitter(EventType.UPDATE_ROOM_INFO, packet.content);
+        this.game.peer.workerEmitter(EventType.UPDATE_PARTY_STATE, packet.content.openingParty);
     }
 
     get connection(): ConnectionService {
