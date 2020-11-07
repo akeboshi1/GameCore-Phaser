@@ -1,11 +1,6 @@
 import { SceneName } from "structure";
 import { Game } from "../game";
-
-export interface IAsset {
-    type: string;
-    key: string;
-    source: string;
-}
+import { IAsset } from "../room";
 
 export class LoadingManager {
     private readonly mGame: Game;

@@ -6,10 +6,8 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
-import { EventType, ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structure";
-import { PicaChatMediator } from "./ui/PicaChat/PicaChatMediator";
-import { DialogMediator } from "./ui/Dialog/DialogMediator";
-import { PicHandheldMediator } from "./ui/PicHandheld/PicHandheldMediator";
+import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structure";
+import { DialogMediator, PicaChatMediator, PicaGame, PicHandheldMediator } from "picaWorker";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -25,7 +23,7 @@ export class MainPeer extends RPCPeer {
     constructor() {
         super(MAIN_WORKER);
         Logger.getInstance().log("constructor mainPeer");
-        this.game = new Game(this);
+        this.game = new PicaGame(this);
     }
 
     get render() {
@@ -82,7 +80,7 @@ export class MainPeer extends RPCPeer {
         this.mConfig = config;
         // ============
         Logger.getInstance().log("createGame");
-        const url: string = "/js/game" + "_v1.0.398";
+        // const url: string = "/js/game" + "_v1.0.398";
         Logger.getInstance().log("render link onReady");
         this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
             this.game.createGame(this.mConfig);

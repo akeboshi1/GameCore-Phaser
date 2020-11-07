@@ -19,13 +19,25 @@
     "noImplicitUseStrict": true,
     "alwaysStrict": false,
     "paths": {
+      "gamecoreRender": [
+        "./src/render/index"
+      ],
+      "gamecore": [
+        "./src/game/index"
+      ],
       "utils": [
         "./src/utils/index"
       ],
       "structure": [
         "./src/structure/index"
       ],
-      "pica": [
+      "picaWorker": [
+        "./src/pica/game/index"
+      ],
+      "picaRender": [
+        "./src/pica/render/index"
+      ],
+      "picaRes": [
         "./src/pica/ui/index"
       ],
     },

@@ -1,24 +1,17 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Game } from "../game";
-import { ActivityMediator } from "./Activity/ActivityMediator";
 import { BasicMediator } from "./basic/basic.mediator";
-import { CutInMediator } from "./CutIn/CutInMediator";
-import { DialogMediator } from "./Dialog/DialogMediator";
-import { LoginMediator } from "./login/LoginMediator";
-import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
-import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 import { UIMediatorType } from "./ui.mediator.type";
 
 export class UIManager extends PacketHandler {
-    private mMedMap: Map<UIMediatorType, BasicMediator>;
-    private mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
-    constructor(private game: Game) {
+    protected mMedMap: Map<UIMediatorType, BasicMediator>;
+    protected mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
+    constructor(protected game: Game) {
         super();
         if (!this.mMedMap) {
             this.mMedMap = new Map();
         }
-        this.mMedMap.set("LoginMediator", new LoginMediator(this.game));
     }
 
     public getMed(name: string): BasicMediator {
@@ -52,13 +45,8 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
-        this.mMedMap.set(DialogMediator.NAME, new DialogMediator(this.game));
-        this.mMedMap.set(PicaChatMediator.NAME, new PicaChatMediator(this.game));
-        this.mMedMap.set(CutInMediator.NAME, new CutInMediator(this.game));
-        this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
-        this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
         this.mMedMap.forEach((mediator: any, key: string) => {
-            if (mediator.isSceneUI()) {
+            if (mediator.isSceneUI() && !mediator.isShow()) {
                 mediator.show();
             }
         });
@@ -148,7 +136,7 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) this.mAtiveUIData = undefined;
     }
 
-    private updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
+    protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
             const tag = ui.name;
             const paneltags = tag.split(".");
@@ -170,14 +158,19 @@ export class UIManager extends PacketHandler {
         }
     }
 
-    private onUIStateHandler(packge: PBpacket) {
+    protected getMediatorClass(type: string): any {
+        const className = type + "Mediator";
+        return require(`./${type}/${className}`);
+    }
+
+    protected onUIStateHandler(packge: PBpacket) {
         this.mAtiveUIData = packge.content;
         if (this.mAtiveUIData && this.mMedMap) {
             this.updateUIState(this.mAtiveUIData);
         }
     }
 
-    private getPanelNameByStateTag(tag: string) {
+    protected getPanelNameByStateTag(tag: string) {
         switch (tag) {
             case "mainui":
                 return "PicaMainUI";
@@ -193,31 +186,31 @@ export class UIManager extends PacketHandler {
         return tag;
     }
 
-    private handleShowUI(packet: PBpacket): void {
+    protected handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
         this.showMed(ui.name, ui);
     }
 
-    private handleUpdateUI(packet: PBpacket) {
+    protected handleUpdateUI(packet: PBpacket) {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
         this.updateMed(ui.name, ui);
     }
 
-    private handleCloseUI(packet: PBpacket): void {
+    protected handleCloseUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
         this.hideMed(ui.name);
     }
 
-    private onHandleShowCreateRoleUI(packet: PBpacket) {
+    protected onHandleShowCreateRoleUI(packet: PBpacket) {
         this.showMed("CreateRole", packet.content);
     }
 
-    private onHandleCloseCreateRoleUI() {
+    protected onHandleCloseCreateRoleUI() {
         this.hideMed("CreateRole");
         this.game.peer.render.hideCreateRole();
     }
 
-    private getPanelNameByAlias(alias: string) {
+    protected getPanelNameByAlias(alias: string) {
         switch (alias) {
             case "MessageBox":
                 return "PicaMessageBox";

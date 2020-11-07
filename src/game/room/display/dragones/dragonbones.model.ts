@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2020-10-23 17:08:12
- * @LastEditTime: 2020-11-05 16:31:35
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: /game-core/src/game/room/display/dragones/dragonbones.model.ts
- */
 import { op_def } from "pixelpai_proto";
 import { RunningAnimation, IAvatar, IDragonbonesModel } from "structure";
 import { Direction } from "utils";

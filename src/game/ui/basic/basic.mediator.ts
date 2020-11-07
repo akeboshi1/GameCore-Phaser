@@ -1,4 +1,5 @@
 import { Game } from "../../game";
+import { BasicModel } from "./basic.model";
 
 export interface IMediator {
     UIType: number;
@@ -31,8 +32,11 @@ export class BasicMediator implements IMediator {
      * 面板处于打开状态
      */
     protected mShow: boolean = false;
+    protected mPanelInit: boolean = false;
     protected mParam: any;
     protected mUIType: number;
+    protected mModel: BasicModel;
+    protected mShowData: any;
     constructor(protected game: Game) {
     }
 
@@ -81,8 +85,15 @@ export class BasicMediator implements IMediator {
 
     destroy() {
         this.mShow = false;
+        this.mPanelInit = false;
+        this.mShowData = null;
         this.mParam = null;
+        if (this.mModel) this.mModel.destroy();
         if (this.game && this.game.peer && this.game.peer.hasOwnProperty(this.constructor.name)) delete this.game.peer[this.constructor.name];
+    }
+
+    protected onPanelInitCallBack() {
+        this.mPanelInit = true;
     }
 
     protected __exportProperty(callback?: () => any) {

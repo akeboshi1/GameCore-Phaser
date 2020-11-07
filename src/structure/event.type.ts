@@ -9,6 +9,7 @@ export class EventType {
     public static QUERY_MARKET = "QUERY_MARKET"; // 刷新市场数据
     public static CHAT = "CHAT"; // 聊天
     // ============== render event name
+    public static PANEL_INIT = "PANEL_INIT";
     public static SHOW_MED = "SHOW_MED";
     public static QUERY_PRAISE = "QUERY_PRAISE";
     public static QUERY_MARKET_REQUEST = "QUERY_MARKET_REQUEST";

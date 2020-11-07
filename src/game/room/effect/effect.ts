@@ -1,14 +1,13 @@
 import { op_client } from "pixelpai_proto";
+import { Game } from "src/game/game";
 import { AnimationModel } from "../display/animation/animation.model";
 import { DragonbonesModel } from "../display/dragones/dragonbones.model";
 import { FramesModel } from "../display/frames/frames.model";
 
-export class Effect extends Phaser.Events.EventEmitter {
-
+export class Effect {
     private mID: number;
     private mDisplayInfo: FramesModel | DragonbonesModel;
-    constructor(id: number) {
-        super();
+    constructor(private game: Game, id: number) {
         this.mID = id;
     }
 
@@ -41,7 +40,7 @@ export class Effect extends Phaser.Events.EventEmitter {
 
     set displayInfo(display: FramesModel | DragonbonesModel) {
         this.mDisplayInfo = display;
-        this.emit("updateDisplayInfo", display);
+        this.game.emitter.emit("updateDisplayInfo", display);
     }
 
     get displayInfo(): FramesModel | DragonbonesModel {

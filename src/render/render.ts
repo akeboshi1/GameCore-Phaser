@@ -18,6 +18,7 @@ import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, 
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
+import { PicaRenderUiManager } from "picaRender";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -31,22 +32,22 @@ export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
 
-    private readonly DEFAULT_WIDTH = 360;
-    private readonly DEFAULT_HEIGHT = 640;
-    private mSceneManager: SceneManager;
-    private mCameraManager: CamerasManager;
-    private mInputManager: InputManager;
-    // private mInputManager: InputManager;
-    private mConfig: ILauncherConfig;
+    protected readonly DEFAULT_WIDTH = 360;
+    protected readonly DEFAULT_HEIGHT = 640;
+    protected mSceneManager: SceneManager;
+    protected mCameraManager: CamerasManager;
+    protected mInputManager: InputManager;
+    // protected mInputManager: InputManager;
+    protected mConfig: ILauncherConfig;
+    protected mUiManager: UiManager;
+    protected mDisplayManager: DisplayManager;
+    protected mLocalStorageManager: LocalStorageManager;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
     private mGame: Phaser.Game;
     private gameConfig: Phaser.Types.Core.GameConfig;
     private mAccount: Account;
-    private mUiManager: UiManager;
-    private mDisplayManager: DisplayManager;
-    private mLocalStorageManager: LocalStorageManager;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
@@ -130,6 +131,15 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
+    createManager() {
+        this.mUiManager = new PicaRenderUiManager(this);
+        this.mCameraManager = new CamerasManager(this);
+        this.mLocalStorageManager = new LocalStorageManager();
+        this.mSceneManager = new SceneManager(this);
+        this.mInputManager = new InputManager(this);
+        this.mDisplayManager = new DisplayManager(this);
+    }
+
     enterGame() {
         this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
         // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
@@ -138,15 +148,6 @@ export class Render extends RPCPeer implements GameMain {
         // this.uiManager.addPackListener();
         // loginScene.remove();
         // this.mLoadingManager.start(LoadingTips.enterGame());
-    }
-
-    createManager() {
-        this.mUiManager = new UiManager(this);
-        this.mCameraManager = new CamerasManager(this);
-        this.mLocalStorageManager = new LocalStorageManager();
-        this.mSceneManager = new SceneManager(this);
-        this.mInputManager = new InputManager(this);
-        this.mDisplayManager = new DisplayManager(this);
     }
 
     resize(width: number, height: number) {
@@ -849,7 +850,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public workerEmitter(eventType: string, data: any) {
+    public workerEmitter(eventType: string, data?: any) {
         this.emitter.emit(eventType, data);
     }
 

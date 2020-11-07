@@ -1,3 +1,4 @@
+import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
@@ -14,7 +15,6 @@ import { LoadingManager } from "./loading/loading.manager";
 import { LoadingTips } from "./loading/loading.tips";
 import { ILauncherConfig, ModuleName } from "structure";
 import { ServerAddress } from "../../lib/net/address";
-import { UIManager } from "./ui/ui.manager";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
@@ -25,32 +25,32 @@ interface ISize {
     height: number;
 }
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
-    private connect: ConnectionService;
-    private mSocket: GameSocket;
-    private mUser: User;
-    // private mUiManager: UiManager;
-    // private mMoveStyle: number = -1;
-    private mSize: ISize;
-    private mClock: Clock;
-    private mHttpClock: HttpClock;
-    private mHttpService: HttpService;
-    private mConfig: ILauncherConfig;
-    private mDataManager: DataManager;
-    // private mAccount: Account;
-    private mRoomManager: RoomManager;
-    private mElementStorage: ElementStorage;
-    // private mPlayerDataManager: PlayerDataManager;
-    private mUIManager: UIManager;
-    // private mSoundManager: SoundManager;
-    private mLoadingManager: LoadingManager;
-    private mainPeer: MainPeer;
-    private gameConfigUrls: Map<string, string> = new Map();
-    private gameConfigUrl: string;
-    private isPause: boolean = false;
-    private mMoveStyle: number;
-    private mWorkerLoop: any;
-    private delayTime: number = 20;
-    private currentTime: number = 0;
+    protected mainPeer: MainPeer;
+    protected connect: ConnectionService;
+    protected mSocket: GameSocket;
+    protected mUser: User;
+    // protected mUiManager: UiManager;
+    // protected mMoveStyle: number = -1;
+    protected mSize: ISize;
+    protected mClock: Clock;
+    protected mHttpClock: HttpClock;
+    protected mHttpService: HttpService;
+    protected mConfig: ILauncherConfig;
+    protected mDataManager: DataManager;
+    // protected mAccount: Account;
+    protected mRoomManager: RoomManager;
+    protected mElementStorage: ElementStorage;
+    // protected mPlayerDataManager: PlayerDataManager;
+    protected mUIManager: UIManager;
+    // protected mSoundManager: SoundManager;
+    protected mLoadingManager: LoadingManager;
+    protected gameConfigUrls: Map<string, string> = new Map();
+    protected gameConfigUrl: string;
+    protected isPause: boolean = false;
+    protected mMoveStyle: number;
+    protected mWorkerLoop: any;
+    protected delayTime: number = 20;
+    protected currentTime: number = 0;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
@@ -373,13 +373,19 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mUIManager.hideMed(name);
     }
 
-    private initWorld() {
+    protected initWorld() {
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
+        this.createManager();
+
+        this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
+    }
+
+    protected createManager() {
         this.mRoomManager = new RoomManager(this);
         // this.mUiManager = new UiManager(this);
         this.mElementStorage = new ElementStorage();
@@ -395,7 +401,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.user.addPackListener();
         // this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
-        this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
     }
 
     private initGame() {

@@ -1,5 +1,5 @@
 import { PacketHandler } from "net-socket-packet";
-import { Game } from "src/game/game";
+import { Game } from "../../game";
 import { EventDispatcher } from "utils";
 
 export class BasicModel extends PacketHandler {

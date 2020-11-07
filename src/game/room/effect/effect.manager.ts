@@ -13,7 +13,7 @@ export class EffectManager extends PacketHandler {
     }
 
     public add(id: number) {
-        const effect = new Effect(id);
+        const effect = new Effect(this.room.game, id);
         this.mEffects.set(id, effect);
         this.updateDisplay(effect);
         return effect;

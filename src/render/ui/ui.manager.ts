@@ -2,21 +2,20 @@ import { Logger } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "../scenes/basic.scene";
-import { LoginPanel } from "./Login/LoginPanel";
 
 export class UiManager {
-    private mScene: BasicScene;
-    private mPanelMap: Map<string, BasePanel>;
-    private mCache: any[] = [];
-    private mCacheUI: Function;
+    protected mScene: BasicScene;
+    protected mPanelMap: Map<string, BasePanel>;
+    protected mCache: any[] = [];
+    protected mCacheUI: Function;
     private readonly mPanelClass = {
         "BaseMediator": BasePanel,
-        "LoginMediator": LoginPanel,
+        // "LoginMediator": LoginPanel,
         // "Activity": ActivityPanel,
         // "Dialog": DialogPanel,
     };
 
-    constructor(private mRender: Render) {
+    constructor(protected mRender: Render) {
     }
 
     public setScene(scene: BasicScene) {
@@ -124,6 +123,11 @@ export class UiManager {
         }
     }
 
+    protected getPanelClass(type: string): any {
+        const className = type + "Panel";
+        return require(`./${type}/${className}`);
+    }
+
     get scene(): BasicScene {
         return this.mScene;
     }
@@ -132,7 +136,7 @@ export class UiManager {
         return this.mRender;
     }
 
-    private clearCache() {
+    protected clearCache() {
         this.mCacheUI = undefined;
         this.mCache = [];
     }

@@ -2,7 +2,7 @@ import { Panel } from "apowophaserui";
 import { MainUIScene } from "src/render/scenes/main.ui.scene";
 import { Logger, Url } from "utils";
 import { Render } from "../../render";
-
+import { EventType } from "structure";
 export class BasePanel extends Panel {
     protected mInitialized: boolean;
     protected mTweening: boolean = false;
@@ -84,5 +84,6 @@ export class BasePanel extends Panel {
     }
 
     protected exportComplete() {
+        this.render.workerEmitter(EventType.PANEL_INIT);
     }
 }
