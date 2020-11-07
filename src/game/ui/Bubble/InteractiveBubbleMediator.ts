@@ -41,7 +41,7 @@ export class InteractiveBubbleMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.mCurRoom) this.mCurRoom.frameManager.remove(this, this.update);
+        if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);
         if (this.bubblePacket) {
             this.bubblePacket.destroy();
             this.bubblePacket = undefined;
@@ -55,9 +55,9 @@ export class InteractiveBubbleMediator extends BasicMediator {
     }
     private onShowInteractiveBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
         if (this.mCurRoom !== this.currentRoom) {
-            if (this.mCurRoom) this.mCurRoom.frameManager.remove(this, this.update);
+            if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);
             this.mCurRoom = this.currentRoom;
-            this.mCurRoom.frameManager.add(this, this.update);
+            this.mCurRoom.addUpdateHandler(this, this.update);
         }
         let element = this.currentRoom.elementManager.get(content.receiverId);
         if (!element) element = this.currentRoom.playerManager.get(content.receiverId);
