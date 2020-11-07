@@ -1,10 +1,8 @@
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { InteractiveBubble } from "./InteractiveBubble";
 import { BaseMediator } from "apowophaserui";
-import { Game } from "../../game";
-import { BasicMediator } from "../basic/basic.mediator";
-import { ModuleName } from "../../../structure";
-import { Room } from "../../room/room/room";
+import { BasicMediator, Game, Room } from "gamecore";
+import { ModuleName } from "structure";
 
 export class InteractiveBubbleMediator extends BasicMediator {
     public static NAME: string = ModuleName.BUBBLE_NAME;
