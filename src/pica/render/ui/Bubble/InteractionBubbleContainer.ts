@@ -1,6 +1,6 @@
 import { InteractionBubbleCell } from "./InteractionBubbleCell";
 import { BaseUI } from "apowophaserui";
-import { Handler } from "../../../utils";
+import { Handler } from "utils";
 export class InteractionBubbleContainer extends BaseUI {
     public id: number;
     private mBubble: InteractionBubbleCell;

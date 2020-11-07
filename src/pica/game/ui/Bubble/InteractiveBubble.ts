@@ -1,7 +1,7 @@
+import { Game } from "gamecore";
+import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Game } from "../../game";
 export class InteractiveBubble extends PacketHandler {
 
     constructor(private game: Game) {

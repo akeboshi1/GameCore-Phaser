@@ -1,9 +1,6 @@
-import { ModuleName } from "../../../structure";
-import { Handler, Pos, Tool, Url } from "../../../utils";
-import { PlayScene } from "../../scenes/play.scene";
-import { SceneManager } from "../../scenes/scene.manager";
-import { BasePanel } from "../components/base.panel";
-import { UiManager } from "../ui.manager";
+import { BasePanel, PlayScene, SceneManager, UiManager } from "gamecoreRender";
+import { ModuleName } from "structure";
+import { Handler, Pos, Tool, Url } from "utils";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
 export class InteractiveBubblePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
