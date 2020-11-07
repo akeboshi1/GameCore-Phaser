@@ -2,7 +2,6 @@ import { Panel } from "apowophaserui";
 import { MainUIScene } from "src/render/scenes/main.ui.scene";
 import { Logger, Url } from "utils";
 import { Render } from "../../render";
-import { EventType } from "structure";
 export class BasePanel extends Panel {
     protected mInitialized: boolean;
     protected mTweening: boolean = false;
@@ -16,6 +15,8 @@ export class BasePanel extends Panel {
     protected mReloadTimes: number = 0;
     protected render: Render;
     protected key: string = "";
+    private exported: boolean = false;
+    private exportListeners: Function[] = [];
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
         if (!scene.sys) Logger.getInstance().error("no scene system");
@@ -31,7 +32,17 @@ export class BasePanel extends Panel {
 
     public destroy() {
         if (this.render && this.render.hasOwnProperty(this.constructor.name)) delete this.render[this.constructor.name];
+        this.exportListeners.length = 0;
         super.destroy();
+    }
+
+    public addExportListener(f: Function) {
+        if (this.exported) {
+            f();
+            return;
+        }
+
+        this.exportListeners.push(f);
     }
 
     protected init() {
@@ -84,6 +95,10 @@ export class BasePanel extends Panel {
     }
 
     protected exportComplete() {
-        this.render.workerEmitter(EventType.PANEL_INIT);
+        this.exported = true;
+        for (const listener of this.exportListeners) {
+            listener();
+        }
+        this.exportListeners.length = 0;
     }
 }

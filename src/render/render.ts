@@ -367,8 +367,18 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public showPanel(panelName: string, params?: any) {
-        this.mUiManager.showPanel(panelName, params);
+    public showPanel(panelName: string, params?: any): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const panel = this.mUiManager.showPanel(panelName, params);
+            if (!panel) {
+                reject(false);
+                return;
+            }
+
+            panel.addExportListener(() => {
+                resolve(true);
+            });
+        });
     }
 
     @Export([webworker_rpc.ParamType.str])

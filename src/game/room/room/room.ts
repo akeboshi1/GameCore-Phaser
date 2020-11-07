@@ -3,7 +3,7 @@ import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { IPoint } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IPosition45Obj, Position45, IPos, LogicPos } from "utils";
+import { IPosition45Obj, Position45, IPos, LogicPos, Handler } from "utils";
 import { Game } from "../../game";
 import { IBlockObject } from "../block/iblock.object";
 import { ClockReadyListener } from "../../loop/clock/clock";
@@ -102,6 +102,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mStateMap: Map<string, State>;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
+    private mUpdateHandlers: Handler[] = [];
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
@@ -254,6 +255,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mElementManager) this.mElementManager.update(time, delta);
         // if (this.mHandlerManager) this.handlerManager.update(time, delta);
         if (this.mGame.httpClock) this.mGame.httpClock.update(time, delta);
+        for (const oneHandler of this.mUpdateHandlers) {
+            oneHandler.runWith([time, delta]);
+        }
         const eles = this.mElementManager.getElements();
         for (const ele of eles) {
             ele.update();
@@ -427,6 +431,34 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // }
     }
 
+    // update handlers. TODO: remove method
+    public addUpdateHandler(caller: any, method: Function) {
+        this.removeUpdateHandler(caller, method);
+        const handler = new Handler(caller, method);
+        this.mUpdateHandlers.push(handler);
+    }
+    public removeUpdateHandler(caller: any, method: Function) {
+        let removeid: number = -1;
+        for (let i = 0; i < this.mUpdateHandlers.length; i++) {
+            const item = this.mUpdateHandlers[i];
+            if (item.caller === caller && item.method === method) {
+                removeid = i;
+                break;
+            }
+        }
+        if (removeid !== -1) {
+            const hander = this.mUpdateHandlers.splice(removeid, 1)[0];
+            hander.clear();
+        }
+    }
+    public destroyUpdateHandler() {
+        for (const item of this.mUpdateHandlers) {
+            item.clear();
+        }
+        this.mUpdateHandlers.length = 0;
+    }
+    //
+
     protected initSkyBox() {
         const scenerys = this.game.elementStorage.getScenerys();
         if (scenerys) {
@@ -562,7 +594,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         position.y = playerPosition.y;
 
         if (pos[step] === undefined) {
-           // Logger.getInstance().log("move error", pos, step);
+            // Logger.getInstance().log("move error", pos, step);
         }
         const nextPosition = op_def.PBPoint3f.create();
         nextPosition.x = pos[step].x;
