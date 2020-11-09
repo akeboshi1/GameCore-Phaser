@@ -5,7 +5,7 @@ import { EventType, ModuleName } from "structure";
 
 export class PicaNavigateMediator extends BasicMediator {
   public static NAME: string = ModuleName.PICANAVIGATE_NAME;
-  constructor(protected game: Game) {
+  constructor(game: Game) {
     super(game);
     this.mModel = new PicaNavigate(this.game);
   }
@@ -17,7 +17,7 @@ export class PicaNavigateMediator extends BasicMediator {
     }
     this.__exportProperty(() => {
       this.game.peer.render.showPanel(PicaNavigateMediator.NAME, param).then(() => {
-        this.mView = this.game.peer.render[ModuleName.PICANAVIGATE_NAME];
+        this.mView = this.game.peer.render[PicaNavigateMediator.NAME];
       });
       this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
       this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
@@ -55,14 +55,14 @@ export class PicaNavigateMediator extends BasicMediator {
     this.destroy();
   }
 
-  private onShowPanelHandler(panel: string, data?: any) {
-    if (!panel || !this.game) {
+  private onShowPanelHandler(data: { panel: string, data?: any }) {
+    if (!data.panel || !this.game) {
       return;
     }
     const uiManager = this.game.uiManager;
-    if (data)
-      uiManager.showMed(panel, data);
-    else uiManager.showMed(panel);
+    if (data.data)
+      uiManager.showMed(data.panel, data.data);
+    else uiManager.showMed(data.panel);
   }
   private onGomeHomeHandler() {
     (<PicaNavigate>this.mModel).queryGOHomeHandler();

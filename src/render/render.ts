@@ -659,7 +659,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public getCurTime(curTime: number) {
-        this._curTime = curTime;
+        return this._curTime = curTime;
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

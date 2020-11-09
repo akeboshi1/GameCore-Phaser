@@ -195,6 +195,14 @@ export class MainPeer extends RPCPeer {
         return this.game.roomManager.currentRoom.playerManager.get(id).nickname;
     }
 
+    @Export()
+    public getPlayerAvatar(): any {
+        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.playerManager && this.game.roomManager.currentRoom.playerManager.actor)
+            return this.game.roomManager.currentRoom.playerManager.actor.model.avatar;
+
+        return null;
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public resetGameraSize(width: number, height: number) {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.cameraService) this.game.roomManager.currentRoom.cameraService.resetCameraSize(width, height);
@@ -246,6 +254,14 @@ export class MainPeer extends RPCPeer {
         this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
     }
 
+    @Export()
+    public isCurrentRoomEditEnable(): boolean {
+        if (this.game.roomManager && this.game.roomManager.currentRoom) {
+            return this.game.roomManager.currentRoom.enableEdit;
+        }
+        return false;
+    }
+
     @Export([webworker_rpc.ParamType.str])
     public sendMessage(val: string) {
         (this.game.uiManager.getMed(PicaChatMediator.NAME) as PicaChatMediator).sendMessage(val);
@@ -259,6 +275,13 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public buyItem(name: string, data: any) {
         (this.game.uiManager.getMed(name) as PicaChatMediator).buyItem(data);
+    }
+
+    @Export()
+    public showMed(type: string, ...param: any[]) {
+        if (this.game.uiManager) {
+            this.game.uiManager.showMed(type, param);
+        }
     }
 
     // ============= 心跳调用主进程
@@ -301,8 +324,13 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public requestCurTime() {
-        this.remote[RENDER_PEER].Render.getCurTime(this.game.clock.unixTime);
+    public requestCurTime(): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
+            this.remote[RENDER_PEER].Render.getCurTime(this.game.clock.unixTime)
+                .then((t) => {
+                    resolve(t);
+                });
+        });
     }
 
     @Export([webworker_rpc.ParamType.boolean])
@@ -371,6 +399,15 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public framesModel_getOriginPoint(id: number, aniName: string, flip: boolean): LogicPoint {
+        return null;
+    }
+
+    @Export()
+    public getUserData_PlayerProperty(): any {
+        if (this.game.user && this.game.user.userData) {
+            return this.game.user.userData.playerProperty;
+        }
+
         return null;
     }
 
