@@ -7,8 +7,7 @@ import { BasePanel, Render, UiManager } from "gamecoreRender";
 import { EventType, FriendChannel, FriendData, FriendRelation, FriendRelationEnum, ModuleName } from "structure";
 import { UIAtlasName, UIAtlasKey } from "picaRes";
 import { Font, Handler, i18n } from "utils";
-import { LabelInput } from "../components/label.input";
-import { CheckboxGroup } from "../components/checkbox.group";
+import { LabelInput, CheckboxGroup } from "gamecoreRender";
 export class PicFriendPanel extends BasePanel {
     private bg: Image;
     private closeBtn: Button;

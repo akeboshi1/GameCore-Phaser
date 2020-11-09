@@ -38,7 +38,7 @@
         "./src/pica/render/index"
       ],
       "picaRes": [
-        "./src/pica/ui/index"
+        "./src/pica/res/index"
       ],
     },
   },

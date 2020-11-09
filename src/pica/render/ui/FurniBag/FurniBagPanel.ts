@@ -1,7 +1,7 @@
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch } from "apowophaserui";
 import { BasePanel, CheckboxGroup, DynamicImage, InputPanel, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
-import { UIAtlasKey, UIAtlasName } from "src/pica/res";
+import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
 

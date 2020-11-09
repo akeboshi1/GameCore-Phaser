@@ -19,8 +19,6 @@ export * from "./Bubble/InteractionBubbleCell";
 export * from "./Bubble/InteractionBubbleContainer";
 export * from "./Bubble/InteractiveBubblePanel";
 export * from "./PicaNavigate/PicaNavigatePanel";
-export * from "./components/label.input";
-export * from "./components/checkbox.group";
 export * from "./FurniBag/FurniBagPanel";
 export * from "./Market/DetailDisplay";
 export * from "./Market/ElementDetail";

@@ -1,6 +1,6 @@
 import { UIType } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "src/pica/res";
+import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { i18n } from "utils";
 export class PicaNavigatePanel extends BasePanel {

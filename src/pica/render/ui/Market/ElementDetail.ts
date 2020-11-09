@@ -3,7 +3,7 @@ import { NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowoph
 import { Render } from "gamecoreRender";
 import { NumberCounter } from "./NumberCounter";
 import { Coin, Font, i18n } from "utils";
-import { UIAtlasKey } from "src/pica/res";
+import { UIAtlasKey } from "picaRes";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mCounter: NumberCounter;

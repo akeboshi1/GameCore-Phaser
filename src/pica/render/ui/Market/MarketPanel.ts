@@ -4,7 +4,7 @@ import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaseru
 import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
-import { UIAtlasKey, UIAtlasName } from "src/pica/res";
+import { UIAtlasKey, UIAtlasName } from "picaRes";
 export class MarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
