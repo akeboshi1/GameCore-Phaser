@@ -157,20 +157,22 @@ export class HttpService {
     }
 
     public get(uri: string) {
-        this.game.peer.render.getAccount().then((account) => {
-            if (!account) {
-                return Promise.reject("account does not exist");
-            }
-            if (!account.accountData) {
-                return Promise.reject("token does not exist");
-            }
-            const data = {
-                method: "GET",
-                headers: {
-                    "X-Pixelpai-TK": account.accountData.accessToken
+        return new Promise((resolve, reject) => {
+            this.game.peer.render.getAccount().then((account) => {
+                if (!account) {
+                    reject("account does not exist");
                 }
-            };
-            return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
+                if (!account.accountData) {
+                    reject("token does not exist");
+                }
+                const data = {
+                    method: "GET",
+                    headers: {
+                        "X-Pixelpai-TK": account.accountData.accessToken
+                    }
+                };
+                resolve(fetch(`${this.api_root}${uri}`, data).then((response) => response.json()));
+            });
         });
     }
 }

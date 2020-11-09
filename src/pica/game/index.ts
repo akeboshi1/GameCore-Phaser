@@ -5,7 +5,6 @@ export { PicaChatMediator } from "./ui/PicaChat/PicaChatMediator";
 export { PicaMainUI } from "./ui/PicaMainUI/PicaMainUI";
 export { PicaMainUIMediator } from "./ui/PicaMainUI/PicaMainUIMediator";
 export { PicFriend } from "./ui/PicFriend/PicFriend";
-export { PicFriendEvent } from "./ui/PicFriend/PicFriendEvent";
 export { PicFriendMediator } from "./ui/PicFriend/PicFriendMediator";
 export { PicFriendRelation } from "./ui/PicFriend/PicFriendRelation";
 export { PicHandheld } from "./ui/PicHandheld/PicHandheld";

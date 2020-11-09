@@ -1,8 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { PicFriend } from "./PicFriend";
-import { PicFriendEvent } from "./PicFriendEvent";
 import { PicFriendRelation } from "./PicFriendRelation";
-import { ModuleName, FriendChannel } from "structure";
+import { ModuleName, FriendChannel, EventType } from "structure";
 import { BasicMediator, Game } from "gamecore";
 
 export class PicFriendMediator extends BasicMediator {
@@ -12,29 +11,54 @@ export class PicFriendMediator extends BasicMediator {
     constructor(game: Game) {
         super(game);
         this.picFriend = new PicFriend(game);
-        this.game.emitter.on(PicFriendEvent.PLAYER_LIST, this.onPlayerListHandler, this);
-        this.game.emitter.on(PicFriendEvent.SEARCH_RESULT, this.onSearchResultHandler, this);
+        this.game.emitter.on(EventType.PLAYER_LIST, this.onPlayerListHandler, this);
+        this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
     }
 
     show(param?: any) {
-        this.__exportProperty(() => {
-            this.game.peer.render.showPanel(ModuleName.PICFRIEND_NAME, param);
-            if (!this.mView) {
-                this.mView = this.game.peer.render[ModuleName.PICFRIEND_NAME];
-                this.mView.on("hide", this.onHidePanel, this);
-                this.mView.on(PicFriendEvent.FETCH_FRIEND, this.onFetchFriendHandler, this);
-                this.mView.on(PicFriendEvent.UNFOLLOW, this.onUnfollowHandler, this);
-                this.mView.on(PicFriendEvent.FOLLOW, this.onFollowHandler, this);
-                this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
-                this.mView.on(PicFriendEvent.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
-                this.mView.on(PicFriendEvent.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
-                this.mView.on(PicFriendEvent.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
-                this.mView.on(PicFriendEvent.SEARCH_FRIEND, this.onSearchHandler, this);
-                this.mView.on(PicFriendEvent.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
-                this.mView.on(PicFriendEvent.REQ_RELATION, this.onReRelationHandler, this);
-                this.mView.on(PicFriendEvent.REQ_NEW_FANS, this.onReqNewHandler, this);
-            }
-        });
+        super.show(param);
+        if (!this.mPanelInit) {
+            this.__exportProperty(() => {
+                this.game.peer.render.showPanel(ModuleName.PICFRIEND_NAME, param);
+                if (!this.mView) {
+                    this.mView = this.game.peer.render[ModuleName.PICFRIEND_NAME];
+                }
+                this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
+                this.game.emitter.on("hide", this.onHidePanel, this);
+                this.game.emitter.on(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
+                this.game.emitter.on(EventType.UNFOLLOW, this.onUnfollowHandler, this);
+                this.game.emitter.on(EventType.FOLLOW, this.onFollowHandler, this);
+                this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
+                this.game.emitter.on(EventType.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
+                this.game.emitter.on(EventType.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
+                this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
+                this.game.emitter.on(EventType.SEARCH_FRIEND, this.onSearchHandler, this);
+                this.game.emitter.on(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
+                this.game.emitter.on(EventType.REQ_RELATION, this.onReRelationHandler, this);
+                this.game.emitter.on(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
+            });
+        } else {
+            this.mView = this.game.peer.render[ModuleName.PICFRIEND_NAME];
+            if (this.mView && this.mShowData)
+                this.mView.setFriend(FriendChannel.Friends, this.mShowData);
+        }
+    }
+
+    hide() {
+        super.hide();
+        this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
+        this.game.emitter.off("hide", this.onHidePanel, this);
+        this.game.emitter.off(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
+        this.game.emitter.off(EventType.UNFOLLOW, this.onUnfollowHandler, this);
+        this.game.emitter.off(EventType.FOLLOW, this.onFollowHandler, this);
+        this.game.emitter.off(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
+        this.game.emitter.off(EventType.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
+        this.game.emitter.off(EventType.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
+        this.game.emitter.off(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
+        this.game.emitter.off(EventType.SEARCH_FRIEND, this.onSearchHandler, this);
+        this.game.emitter.off(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
+        this.game.emitter.off(EventType.REQ_RELATION, this.onReRelationHandler, this);
+        this.game.emitter.off(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
     }
 
     destroy() {
@@ -54,9 +78,16 @@ export class PicFriendMediator extends BasicMediator {
         }
     }
 
+    protected onPanelInitCallBack() {
+        super.onPanelInitCallBack();
+        if (this.mShowData)
+            this.show(this.mShowData);
+        // this.mView.update(this.mShowData);
+    }
+
     private onReRelationHandler(ids: number[]) {
         const relations = [];
-        this.game.peer.render[ModuleName.ACCOUNT_NAME].accountData().then((accountData) => {
+        this.game.peer.render[ModuleName.ACCOUNT_NAME].getAccountData().then((accountData) => {
             for (const id of ids) {
                 relations.push({
                     userA: accountData.id,
@@ -71,7 +102,7 @@ export class PicFriendMediator extends BasicMediator {
                         const users = key.split("_");
                         result.push(PicFriendRelation.check(users[0], users[1], data[key]));
                     }
-                    this.mView.updateRelation(result);
+                    if (this.mView) this.mView.updateRelation(result);
                 }
             });
         });
@@ -103,6 +134,10 @@ export class PicFriendMediator extends BasicMediator {
 
     private getFriends() {
         this.picFriend.getFriends().then((response) => {
+            if (!this.mPanelInit) {
+                this.mShowData = response.data;
+                return;
+            }
             this.mView.setFriend(FriendChannel.Friends, response.data);
         });
     }
@@ -113,6 +148,10 @@ export class PicFriendMediator extends BasicMediator {
             if (!data) {
                 return;
             }
+            if (!this.mPanelInit) {
+                this.mShowData = data;
+                return;
+            }
             this.mView.setFriend(FriendChannel.Fans, data.filter((friend) => friend.user));
         });
     }
@@ -121,6 +160,10 @@ export class PicFriendMediator extends BasicMediator {
         this.picFriend.getFolloweds().then((response) => {
             const data = response.data;
             if (!data) {
+                return;
+            }
+            if (!this.mPanelInit) {
+                this.mShowData = data;
                 return;
             }
             this.mView.setFriend(FriendChannel.Followes, data.filter((friend) => friend.followed_user));
@@ -199,6 +242,10 @@ export class PicFriendMediator extends BasicMediator {
     }
 
     private onHidePanel() {
-        this.destroy();
+        if (this.mView) {
+            this.mView.hide();
+        }
+        this.mView = undefined;
+        this.hide();
     }
 }

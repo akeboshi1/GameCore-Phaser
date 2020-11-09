@@ -102,11 +102,11 @@ export class CharacterInfoPanel extends BasePanel {
         // this.tradeBtn.on(String(ClickEvent.Tap), this.onTradingHandler, this);
         this.mExitBtn.on(String(ClickEvent.Tap), this.onExitHandler, this);
         this.mFirendMenu.register();
-        this.mFirendMenu.on("track", this.onTrackHandler, this);
-        this.mFirendMenu.on("invite", this.onIntiveHandler, this);
+        this.render.emitter.on("track", this.onTrackHandler, this);
+        this.render.emitter.on("invite", this.onIntiveHandler, this);
         this.mCharacterMenu.register();
-        this.mCharacterMenu.on("addBlack", this.onAddBlacklistHandler, this);
-        this.mCharacterMenu.on("removeBlack", this.onRemoveBlacklistHandler, this);
+        this.render.emitter.on("addBlack", this.onAddBlacklistHandler, this);
+        this.render.emitter.on("removeBlack", this.onRemoveBlacklistHandler, this);
 
     }
 
@@ -119,11 +119,11 @@ export class CharacterInfoPanel extends BasePanel {
         // this.tradeBtn.off(String(ClickEvent.Tap), this.onTradingHandler, this);
         this.mExitBtn.off(String(ClickEvent.Tap), this.onExitHandler, this);
         this.mFirendMenu.unregister();
-        this.mFirendMenu.off("track", this.onTrackHandler, this);
-        this.mFirendMenu.off("invite", this.onIntiveHandler, this);
+        this.render.emitter.off("track", this.onTrackHandler, this);
+        this.render.emitter.off("invite", this.onIntiveHandler, this);
         this.mCharacterMenu.unregister();
-        this.mCharacterMenu.off("addBlack", this.onAddBlacklistHandler, this);
-        this.mCharacterMenu.off("removeBlack", this.onRemoveBlacklistHandler, this);
+        this.render.emitter.off("addBlack", this.onAddBlacklistHandler, this);
+        this.render.emitter.off("removeBlack", this.onRemoveBlacklistHandler, this);
 
     }
 
@@ -957,6 +957,6 @@ class CharacterMenu extends Menu {
     }
 
     private onAddBlackHandler() {
-        this.render.renderEmitter(this.isBlack ? "removeBlack" : "addBlack");
+        this.render.emitter.emit(this.isBlack ? "removeBlack" : "addBlack");
     }
 }

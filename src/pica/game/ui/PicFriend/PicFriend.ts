@@ -2,9 +2,8 @@ import { BasicModel, Game, HttpService } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { Logger } from "utils";
-import { PicFriendEvent } from "./PicFriendEvent";
 
 export class PicFriend extends BasicModel {
     private httpService: HttpService;
@@ -13,7 +12,7 @@ export class PicFriend extends BasicModel {
         super(game);
         this.httpService = game.httpService;
         if (!game.peer.render[ModuleName.ACCOUNT_NAME]) return;
-        game.peer.render[ModuleName.ACCOUNT_NAME].accountData().then((accountData) => {
+        game.peer.render[ModuleName.ACCOUNT_NAME].getAccountData().then((accountData) => {
             if (accountData) {
                 this.userId = accountData.id;
                 this.register();
@@ -97,11 +96,11 @@ export class PicFriend extends BasicModel {
     }
 
     private onPlayerListHandler(packet: PBpacket) {
-        this.event.emit(PicFriendEvent.PLAYER_LIST, packet.content);
+        this.event.emit(EventType.PLAYER_LIST, packet.content);
     }
 
     private onSearchHandler(packet: PBpacket) {
-        this.event.emit(PicFriendEvent.SEARCH_RESULT, packet.content);
+        this.event.emit(EventType.SEARCH_RESULT, packet.content);
     }
 
     // public queryPlayerInfo() {

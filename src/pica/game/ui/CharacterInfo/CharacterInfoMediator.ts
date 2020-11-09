@@ -126,7 +126,7 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     private async checkRelation(cid: string) {
-        const me = await this.game.peer.render[ModuleName.ACCOUNT_NAME].accountData();
+        const me = await this.game.peer.render[ModuleName.ACCOUNT_NAME].getAccountData();
         this.game.httpService.post("user/check_relation", {
             relations: [{
                 userA: me.id,
