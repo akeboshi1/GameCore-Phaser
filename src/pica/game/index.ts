@@ -19,3 +19,5 @@ export * from "./ui/login";
 export { PicaGame } from "./pica.game";
 export { InteractiveBubble } from "./ui/Bubble/InteractiveBubble";
 export { InteractiveBubbleMediator } from "./ui/Bubble/InteractiveBubbleMediator";
+export { PicaNavigate } from "./ui/PicaNavigate/PicaNavigate";
+export { PicaNavigateMediator } from "./ui/PicaNavigate/PicaNavigateMediator";
