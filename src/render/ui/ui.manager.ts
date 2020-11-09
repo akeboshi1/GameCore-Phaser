@@ -84,18 +84,18 @@ export class UiManager {
         }
         // type = this.getPanelNameByAlias(type);
         const className: string = type + "Panel";
-        let panel: BasePanel = this.mPanelMap.get(className);
+        // let panel: BasePanel = this.mPanelMap.get(className);
+        // if (!panel) {
+        // const path: string = `./${type}/${type}Panel`;
+        const ns: any = require(`./${type}/${className}`);
+        const panel = new ns[className](this);
         if (!panel) {
-            // const path: string = `./${type}/${type}Panel`;
-            const ns: any = require(`./${type}/${className}`);
-            panel = new ns[className](this);
-            if (!panel) {
-                Logger.getInstance().error(`error ${type} no panel can show!!!`);
-                return;
-            }
-            this.mPanelMap.set(type + "Panel", panel);
-            //     // mediator.setName(type);
+            Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
         }
+        this.mPanelMap.set(type + "Panel", panel);
+        //     // mediator.setName(type);
+        // }
         // // if (mediator.showing) return;
         // if (param) mediator.setParam(param);
         panel.show(param);
@@ -107,7 +107,7 @@ export class UiManager {
             return;
         }
         // type = this.getPanelNameByAlias(type);
-        const medName: string = `${type}Mediator`;
+        const medName: string = `${type}Panel`;
         const panel: BasePanel = this.mPanelMap.get(medName);
         if (!panel) {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);

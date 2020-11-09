@@ -6,8 +6,8 @@ import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
-import { FriendRelationEnum } from "structure";
-import { BasePanel, DynamicImage, UiManager, DragonbonesDisplay } from "gamecoreRender";
+import { FriendRelationEnum, ModuleName } from "structure";
+import { BasePanel, DynamicImage, UiManager, DragonbonesDisplay, Render } from "gamecoreRender";
 
 export class CharacterInfoPanel extends BasePanel {
     private commonkey = "common_key";
@@ -41,9 +41,9 @@ export class CharacterInfoPanel extends BasePanel {
     private mCharacterMenu: CharacterMenu;
     private mCharacterData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO;
     private mRelation: FriendRelationEnum;
-    constructor(uiManager: UiManager) {
+    constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = "player_info";
+        this.key = ModuleName.CHARACTERINFO_NAME;
     }
     resize(width: number, height: number) {
         const w: number = this.scaleWidth;
@@ -75,11 +75,22 @@ export class CharacterInfoPanel extends BasePanel {
         } else {
             this.mShow = true;
         }
-        if (param) {
+        if (param && param.length > 0) {
             this.setPlayerData(param);
         }
         this.setInteractive();
         this.addListen();
+    }
+
+    public hide() {
+        super.hide();
+    }
+
+    public update(param) {
+        super.update(param);
+        if (param) {
+            this.setPlayerData(param);
+        }
     }
 
     public addListen() {
@@ -161,10 +172,10 @@ export class CharacterInfoPanel extends BasePanel {
         });
         this.mainCon.add([this.labelText, this.closeBtn, this.likeBtn, this.avatar]);
 
-        this.mFirendMenu = new FriendMenu(this.scene, this.dpr, this.scale);
+        this.mFirendMenu = new FriendMenu(this.uiManager.render, this.scene, this.dpr, this.scale);
         this.mFirendMenu.x = this.bg.width * 0.5 - this.mFirendMenu.width - 14 * this.dpr;
         this.mFirendMenu.y = -this.bg.height * 0.5 + 200 * this.dpr;
-        this.mCharacterMenu = new CharacterMenu(this.scene, this.dpr, this.scale);
+        this.mCharacterMenu = new CharacterMenu(this.uiManager.render, this.scene, this.dpr, this.scale);
         this.mCharacterMenu.x = this.bg.width * 0.5 - this.mCharacterMenu.width - 14 * this.dpr;
         this.mCharacterMenu.y = -this.bg.height * 0.5 + 100 * this.dpr;
         this.mExitBtn = new NineSliceButton(this.scene, -this.bg.width * 0.5 + 40 * this.dpr, this.labelText.y + this.labelText.height * 0.5, 48 * this.dpr, 26 * this.dpr, this.commonkey, "yellow_btn_normal_s", "注销", this.dpr, this.scale, {
@@ -282,7 +293,7 @@ export class CharacterInfoPanel extends BasePanel {
     }
 
     reqPlayerInfo() {
-        this.emit("queryOwnerInfo");
+        this.render.renderEmitter("queryOwnerInfo");
     }
     public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         if (!this.mInitialized) {
@@ -291,32 +302,34 @@ export class CharacterInfoPanel extends BasePanel {
         }
         this.mCharacterData = data;
         this.content.visible = true;
-        const nickname = data.nickname;
-        const current_title = data.currentTitle || "";
-        const exp = data.level.currentLevelExp || 0;
-        const nexExp = data.level.nextLevelExp || 0;
-        const cid = data.cid;
-        const levle = data.level.level || 0;
+        const nickname = data.nickname ? data.nickname : "???";
+        const current_title = data.currentTitle ? data.currentTitle : "???";
+        const exp = data.level && data.level.currentLevelExp ? data.level.currentLevelExp : 0;
+        const nexExp = data.level && data.level.nextLevelExp ? data.level.nextLevelExp : 0;
+        const cid = data.cid || 0;
+        const levle = data.level && data.level.level ? data.level.level : 0;
         const spaceOffset = this.getspaceStr(1 * this.dpr);
-        if (this.avatar) {
+        if (this.avatar && data.currentAvatar && data.currentAvatar.avatar) {
             this.avatar.load({
                 id: 0,
                 avatar: data.currentAvatar.avatar
             });
         }
         this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + spaceOffset + current_title);
-        this.likeBtn.setText(data.like + "");
+        const likeBtnLabel: string = data.like ? data.like + "" : "???";
+        this.likeBtn.setText(likeBtnLabel + "");
         const likeposx = this.bg.width * 0.5 - this.likeBtn.width * 0.5 - this.likeBtn.text.width;
         this.likeBtn.x = likeposx - 20 * this.dpr;
         this.lvText.text = "lv " + levle;
         this.idText.setText("(52365404)");
         const subArr: Map<any, any[]> = new Map();
-        subArr.set(CharacterOptionType.Skill, data.lifeSkills);
+        const lifeSkills = data.lifeSkills ? data.lifeSkills : [];
+        subArr.set(CharacterOptionType.Skill, lifeSkills);
         if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
             this.likeBtn.setFrame("praise_aft");
-            subArr.set(CharacterOptionType.Attribute, data.properties);
-            subArr.set(CharacterOptionType.Badge, data.badges);
+            subArr.set(CharacterOptionType.Attribute, data.properties ? data.properties : []);
+            subArr.set(CharacterOptionType.Badge, data.badges ? data.badges : []);
             this.addFriendBtn.visible = false;
             this.privaCharBtn.visible = false;
             this.mFirendMenu.visible = false;
@@ -335,14 +348,14 @@ export class CharacterInfoPanel extends BasePanel {
             this.mAttrPanel.y = gridy + 15 * this.dpr;
             this.mAttrPanel.space = 20 * this.dpr;
         } else {
-            const remark = (data.remark ? data.remark : i18n.t("player_info.note_nickname"));
+            // const remark = (data.remark ? data.remark : i18n.t("player_info.note_nickname"));
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
             //   this.lvCon.setPosition(this.idText.x + this.lvCon.width * 0.5, -this.mainCon.height * 0.5 + 100 * this.dpr);
             this.likeBtn.setFrame("praise_bef");
-            subArr.set(CharacterOptionType.Attribute, data.properties);
-            subArr.set(CharacterOptionType.Badge, data.badges);
-            this.addFriendBtn.visible = !data.friend;
-            this.privaCharBtn.visible = data.friend;
+            subArr.set(CharacterOptionType.Attribute, data.properties ? data.properties : []);
+            subArr.set(CharacterOptionType.Badge, data.badges ? data.badges : []);
+            this.addFriendBtn.visible = data.friend ? !data.friend : false;
+            this.privaCharBtn.visible = data.friend ? data.friend : false;
             this.mExitBtn.visible = false;
             this.bottombg.clear();
             this.bottombg.fillStyle(0x6AE2FF, 1);
@@ -424,7 +437,7 @@ export class CharacterInfoPanel extends BasePanel {
     }
 
     private OnClosePanel() {
-        this.emit("hide");
+        this.render.renderEmitter("hide");
     }
 
     private setSubCategory(map: Map<CharacterOptionType, any[]>) {
@@ -510,11 +523,11 @@ export class CharacterInfoPanel extends BasePanel {
         switch (this.mRelation) {
             case FriendRelationEnum.Friend:
             case FriendRelationEnum.Followed:
-                this.emit("unfollow", this.mCharacterData.cid);
+                this.render.renderEmitter("unfollow", this.mCharacterData.cid);
                 break;
             case FriendRelationEnum.Fans:
             case FriendRelationEnum.Null:
-                this.emit("follow", this.mCharacterData.cid);
+                this.render.renderEmitter("follow", this.mCharacterData.cid);
                 break;
         }
     }
@@ -578,28 +591,28 @@ export class CharacterInfoPanel extends BasePanel {
         if (!this.mCharacterData) {
             return;
         }
-        this.emit("track", this.mCharacterData.cid);
+        this.render.renderEmitter("track", this.mCharacterData.cid);
     }
 
     private onIntiveHandler() {
         if (!this.mCharacterData) {
             return;
         }
-        this.emit("invite", this.mCharacterData.cid);
+        this.render.renderEmitter("invite", this.mCharacterData.cid);
     }
 
     private onAddBlacklistHandler() {
         if (!this.mCharacterData) {
             return;
         }
-        this.emit("addBlack", this.mCharacterData.cid);
+        this.render.renderEmitter("addBlack", this.mCharacterData.cid);
     }
 
     private onRemoveBlacklistHandler() {
         if (!this.mCharacterData) {
             return;
         }
-        this.emit("removeBlack", this.mCharacterData.cid);
+        this.render.renderEmitter("removeBlack", this.mCharacterData.cid);
     }
 }
 
@@ -699,7 +712,7 @@ class CharacterOwnerItem extends Container {
 class Menu extends Container {
     protected background: Phaser.GameObjects.Graphics;
     protected maskGraphic: Phaser.GameObjects.Graphics;
-    constructor(scene: Phaser.Scene, protected mDpr: number, protected mScale: number, width: number, height: number) {
+    constructor(protected render: Render, scene: Phaser.Scene, protected mDpr: number, protected mScale: number, width: number, height: number) {
         super(scene);
         this.setSize(width, height);
         this.draw();
@@ -744,8 +757,8 @@ class FriendMenu extends Menu {
     private isExpand: boolean = false;
     private tween: Phaser.Tweens.Tween;
     private autoCollapseTime: any;
-    constructor(scene: Phaser.Scene, dpr: number, scale: number) {
-        super(scene, dpr, scale, 58 * dpr, 40 * dpr);
+    constructor(render: Render, scene: Phaser.Scene, dpr: number, scale: number) {
+        super(render, scene, dpr, scale, 58 * dpr, 40 * dpr);
     }
 
     register() {
@@ -874,12 +887,12 @@ class FriendMenu extends Menu {
     }
 
     private onTrackHandler() {
-        this.emit("track");
+        this.render.renderEmitter("track");
         this.collapse();
     }
 
     private onInviteHandler() {
-        this.emit("invite");
+        this.render.renderEmitter("invite");
         this.collapse();
     }
 
@@ -908,8 +921,8 @@ class FriendMenu extends Menu {
 class CharacterMenu extends Menu {
     private addBlacklistBtn: NineSliceButton;
     private isBlack: boolean;
-    constructor(scene: Phaser.Scene, dpr: number, scale: number) {
-        super(scene, dpr, scale, 58 * dpr, 36 * dpr);
+    constructor(render: Render, scene: Phaser.Scene, dpr: number, scale: number) {
+        super(render, scene, dpr, scale, 58 * dpr, 36 * dpr);
     }
 
     public register() {
@@ -944,6 +957,6 @@ class CharacterMenu extends Menu {
     }
 
     private onAddBlackHandler() {
-        this.emit(this.isBlack ? "removeBlack" : "addBlack");
+        this.render.renderEmitter(this.isBlack ? "removeBlack" : "addBlack");
     }
 }

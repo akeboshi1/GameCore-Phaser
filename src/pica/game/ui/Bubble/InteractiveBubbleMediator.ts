@@ -6,7 +6,6 @@ import { ModuleName } from "structure";
 
 export class InteractiveBubbleMediator extends BasicMediator {
     public static NAME: string = ModuleName.BUBBLE_NAME;
-    private mView: any;
     private mCurRoom: Room;
     private bubblePacket: InteractiveBubble;
     constructor(protected game: Game) {
