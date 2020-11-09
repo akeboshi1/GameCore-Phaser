@@ -19,3 +19,4 @@ export * from "./Bubble/InteractionBubbleCell";
 export * from "./Bubble/InteractionBubbleContainer";
 export * from "./Bubble/InteractiveBubblePanel";
 export * from "./PicaNavigate/PicaNavigatePanel";
+export * from "./FurniBag/FurniBagPanel";

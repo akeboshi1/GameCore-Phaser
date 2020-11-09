@@ -1,4 +1,4 @@
-import { BasePanel, PlayScene, SceneManager, UiManager } from "gamecoreRender";
+import { BasePanel, PlayScene, Render, SceneManager, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Handler, Pos, Tool, Url } from "utils";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
@@ -6,7 +6,7 @@ export class InteractiveBubblePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private map = new Map<number, InteractionBubbleContainer>();
     private mBubble: InteractionBubbleContainer;
-    constructor(uiManager: UiManager, private sceneManager: SceneManager, private uiScale: number) {
+    constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         // this.scale = 1;
         this.key = ModuleName.BUBBLE_NAME;
@@ -56,7 +56,7 @@ export class InteractiveBubblePanel extends BasePanel {
             this.map.set(key, this.mBubble);
         }
         this.mBubble.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
-        const playScene = this.sceneManager.getSceneByName(PlayScene.name);
+        const playScene = this.render.sceneManager.getSceneByName(PlayScene.name);
         this.updateBubblePos(ele, playScene);
         this.mBubble.setFollow(ele, playScene, (obj) => {
             this.updateBubblePos(ele, obj.scene);
@@ -66,7 +66,7 @@ export class InteractiveBubblePanel extends BasePanel {
     }
     updateBubblePos(gameObject: any, scene: Phaser.Scene) {
         const dpr = this.dpr;
-        const zoom = this.uiScale;
+        const zoom = this.render.uiScale;
         const display = gameObject.getDisplay();
         if (!display) {
             return;

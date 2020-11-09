@@ -2,6 +2,8 @@ export { DynamicImage } from "./dynamic.image";
 export { DynamicNinepatch } from "./dynamic.ninepatch";
 export { DynamicSprite } from "./dynamic.sprite";
 export { InputPanel } from "./input.panel";
+export { CheckboxGroup } from "./checkbox.group";
+export { TextButton } from "./TextButton";
 export * from "./base.panel";
 export * from "./ninepatch.button";
 export * from "./alert.view";

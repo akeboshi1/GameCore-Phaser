@@ -14,4 +14,5 @@ export class ModuleName {
     public static ACCOUNT_NAME: string = "Account";
     public static SCENEMANAGER_NAME: string = "SceneManager";
     public static BUBBLE_NAME: string = "Bubble";
+    public static FURNIBAG_NAME: string = "FurniBag";
 }

@@ -21,3 +21,6 @@ export { InteractiveBubble } from "./ui/Bubble/InteractiveBubble";
 export { InteractiveBubbleMediator } from "./ui/Bubble/InteractiveBubbleMediator";
 export { PicaNavigate } from "./ui/PicaNavigate/PicaNavigate";
 export { PicaNavigateMediator } from "./ui/PicaNavigate/PicaNavigateMediator";
+export { FurniBag } from "./ui/FurniBag/FurniBag";
+export { FurniBagMediator } from "./ui/FurniBag/FurniBagMediator";
+export { TimerCountDown } from "./ui/FurniBag/TimerCountDown";

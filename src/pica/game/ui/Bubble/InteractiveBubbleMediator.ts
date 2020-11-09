@@ -7,7 +7,7 @@ export class InteractiveBubbleMediator extends BasicMediator {
     public static NAME: string = ModuleName.BUBBLE_NAME;
     private mView: any;
     private mCurRoom: Room;
-    constructor(protected game: Game) {
+    constructor(game: Game) {
         super(game);
         this.game.emitter.on("showbubble", this.onShowInteractiveBubble, this);
         this.game.emitter.on("clearbubble", this.onClearInteractiveBubble, this);
@@ -19,7 +19,7 @@ export class InteractiveBubbleMediator extends BasicMediator {
     show(param?: any) {
         this.__exportProperty(() => {
             this.game.peer.render.showPanel(InteractiveBubbleMediator.NAME, param).then(() => {
-                this.mView = this.game.peer.render[ModuleName.BUBBLE_NAME];
+                this.mView = this.game.peer.render[InteractiveBubbleMediator.NAME];
             });
             this.game.emitter.on("queryinteractive", this.onInteractiveBubbleHandler, this);
         });
