@@ -5,12 +5,12 @@ import { PicaMainUI } from "./PicaMainUI";
 
 export class PicaMainUIMediator extends BasicMediator {
     public static NAME: string = ModuleName.PICAMAINUI_NAME;
-    private mPlayerInfo: PlayerProperty;
+    private mPlayerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     private mRoomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(protected game: Game) {
         super(game);
         this.mModel = new PicaMainUI(this.game);
-        // this.mModel.on("updateroom", this.onUpdateRoomHandler, this);
+        this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
     }
 
     show(param?: any) {
@@ -24,9 +24,9 @@ export class PicaMainUIMediator extends BasicMediator {
                 this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
             });
         } else {
-            const view = this.game.peer.render[ModuleName.PICAMAINUI_NAME];
-            if (view && this.mShowData)
-                view.update(this.mShowData);
+            this.mView = this.game.peer.render[ModuleName.PICAMAINUI_NAME];
+            if (this.mView && this.mShowData)
+                this.mView.update(this.mShowData);
         }
     }
 
@@ -53,7 +53,7 @@ export class PicaMainUIMediator extends BasicMediator {
 
     protected onPanelInitCallBack() {
         super.onPanelInitCallBack();
-        this.mShowData = this.playerInfo.playerInfo;
+        this.mShowData = this.playerInfo;
         this.show(this.mShowData);
     }
 
@@ -72,6 +72,15 @@ export class PicaMainUIMediator extends BasicMediator {
         // else uiManager.showMed(panel);
     }
 
+    private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
+        this.mRoomInfo = content;
+        if (this.mPanelInit) {
+            this.mShowData = this.mRoomInfo;
+            if (this.mView && this.mShowData)
+                this.mView.update(this.mShowData);
+        }
+    }
+
     private onOpenRoomHandler() {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const uimanager = this.game.uiManager;
@@ -85,7 +94,7 @@ export class PicaMainUIMediator extends BasicMediator {
     }
 
     get playerInfo() {
-        if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;
+        if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty.playerInfo;
         return this.mPlayerInfo;
     }
 

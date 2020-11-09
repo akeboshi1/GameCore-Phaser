@@ -18,21 +18,21 @@ export class PicaRenderUiManager extends UiManager {
         }
         // type = this.getPanelNameByAlias(type);
         const className: string = type + "Panel";
-        let panel: BasePanel = this.mPanelMap.get(className);
-        if (!panel) {
-            // const path: string = `./${type}/${type}Panel`;
-            let ns: any = require(`./${type}/${className}`);
-            if (!ns) {
-                ns = this.getPanelClass(type);
-            }
-            panel = new ns[className](this);
-            if (!panel) {
-                Logger.getInstance().error(`error ${type} no panel can show!!!`);
-                return;
-            }
-            this.mPanelMap.set(type + "Panel", panel);
-            //     // mediator.setName(type);
+        // let panel: BasePanel = this.mPanelMap.get(className);
+        // if (!panel) {
+        // const path: string = `./${type}/${type}Panel`;
+        let ns: any = require(`./${type}/${className}`);
+        if (!ns) {
+            ns = this.getPanelClass(type);
         }
+        const panel = new ns[className](this);
+        if (!panel) {
+            Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        this.mPanelMap.set(type + "Panel", panel);
+        //     // mediator.setName(type);
+        // }
         // // if (mediator.showing) return;
         // if (param) mediator.setParam(param);
         panel.show(param);

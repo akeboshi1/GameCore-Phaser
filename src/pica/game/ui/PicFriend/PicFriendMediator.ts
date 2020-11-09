@@ -181,7 +181,7 @@ export class PicFriendMediator extends BasicMediator {
 
     private onReqFriendAttributesHandler(id: string) {
         const uimanager = this.game.uiManager;
-        uimanager.showMed("CharacterInfo");
+        uimanager.showMed(ModuleName.CHARACTERINFO_NAME);
         this.picFriend.fetchFriendInfo(id);
     }
 

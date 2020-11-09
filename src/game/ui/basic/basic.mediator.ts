@@ -37,6 +37,7 @@ export class BasicMediator implements IMediator {
     protected mUIType: number;
     protected mModel: BasicModel;
     protected mShowData: any;
+    protected mView: any;
     constructor(protected game: Game) {
     }
 
@@ -54,6 +55,8 @@ export class BasicMediator implements IMediator {
     }
 
     hide(): void {
+        this.mView = undefined;
+        this.mPanelInit = false;
         this.mShow = false;
     }
 
@@ -105,6 +108,9 @@ export class BasicMediator implements IMediator {
     protected __exportProperty(callback?: () => any) {
         if (!this.game || !this.game.peer) {
             return;
+        }
+        if (this.game.peer[this.constructor.name]) {
+            return callback();
         }
         return this.game.peer.exportProperty(this, this.game.peer, this.constructor.name).onceReady(callback);
     }

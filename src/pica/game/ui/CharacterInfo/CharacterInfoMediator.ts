@@ -1,6 +1,6 @@
 import { op_client } from "pixelpai_proto";
 import { CharacterInfo } from "./CharacterInfo";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { PicFriendRelation } from "../PicFriend/PicFriendRelation";
 import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
 import { BasicMediator, Game } from "gamecore";
@@ -8,7 +8,6 @@ import { BasicMediator, Game } from "gamecore";
 export class CharacterInfoMediator extends BasicMediator {
     public static NAME: string = ModuleName.CHARACTERINFO_NAME;
     private characterInfo: CharacterInfo;
-    private mView;
     constructor(game: Game) {
         super(game);
         this.characterInfo = new CharacterInfo(this.game);
@@ -16,22 +15,43 @@ export class CharacterInfoMediator extends BasicMediator {
         this.game.emitter.on("otherInfo", this.onOtherCharacterInfo, this);
     }
 
-    show(params?: any) {
-        this.__exportProperty(() => {
-            this.game.renderPeer.showPanel(ModuleName.CHARACTERINFO_NAME, params);
-            if (!this.mView) {
-                this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
-                // this.mView = new CharacterInfoPanel(this.scene, this.game);
-                // this.mView.on("hide", this.onHidePanel, this);
-                // this.mView.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
-                // this.mView.on("track", this.onTrackHandler, this);
-                // this.mView.on("invite", this.onInviteHandler, this);
-                // this.mView.on("follow", this.onFollowHandler, this);
-                // this.mView.on("unfollow", this.onUnfollowHandler, this);
-                // this.mView.on("addBlack", this.onAddBlackHandler, this);
-                // this.mView.on("removeBlack", this.onRemoveBlackHandler, this);
-            }
-        });
+    show(param?: any) {
+        super.show(param);
+        this.mShowData = param;
+        if (!this.mPanelInit) {
+            this.__exportProperty(() => {
+                this.game.renderPeer.showPanel(ModuleName.CHARACTERINFO_NAME, param);
+                if (!this.mView) {
+                    this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
+                }
+                this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
+                this.game.emitter.on("hide", this.onHidePanel, this);
+                this.game.emitter.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
+                this.game.emitter.on("track", this.onTrackHandler, this);
+                this.game.emitter.on("invite", this.onInviteHandler, this);
+                this.game.emitter.on("follow", this.onFollowHandler, this);
+                this.game.emitter.on("unfollow", this.onUnfollowHandler, this);
+                this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
+                this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
+            });
+        } else {
+            this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
+            if (this.mView && this.mShowData)
+                this.mView.update(this.mShowData);
+        }
+    }
+
+    hide() {
+        super.hide();
+        this.game.emitter.on("hide", this.onHidePanel, this);
+        this.game.emitter.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
+        this.game.emitter.on("track", this.onTrackHandler, this);
+        this.game.emitter.on("invite", this.onInviteHandler, this);
+        this.game.emitter.on("follow", this.onFollowHandler, this);
+        this.game.emitter.on("unfollow", this.onUnfollowHandler, this);
+        this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
+        this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
+        this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
     }
 
     isSceneUI() {
@@ -50,6 +70,11 @@ export class CharacterInfoMediator extends BasicMediator {
         }
     }
 
+    protected onPanelInitCallBack() {
+        super.onPanelInitCallBack();
+        this.show(this.mShowData);
+    }
+
     private onHidePanel() {
         if (this.mView) {
             this.mView.hide();
@@ -59,11 +84,19 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     private onOwnerCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
+        this.mShowData = content;
+        if (!this.mPanelInit) {
+            return;
+        }
         if (this.mView)
             this.mView.setPlayerData(content);
     }
 
     private onOtherCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+        this.mShowData = content;
+        if (!this.mPanelInit) {
+            return;
+        }
         if (this.mView) {
             this.mView.setPlayerData(content);
             this.checkRelation(content.cid);

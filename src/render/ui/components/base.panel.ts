@@ -36,7 +36,7 @@ export class BasePanel extends Panel {
     }
 
     public destroy() {
-        if (this.render && this.render.hasOwnProperty(this.constructor.name)) delete this.render[this.constructor.name];
+        if (this.render && this.render.hasOwnProperty(this.key)) delete this.render[this.key];
         this.exportListeners.length = 0;
         super.destroy();
     }

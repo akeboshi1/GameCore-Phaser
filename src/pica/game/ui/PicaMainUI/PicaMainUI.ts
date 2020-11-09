@@ -43,6 +43,7 @@ export class PicaMainUI extends BasicModel {
     }
 
     private onUpdateModeRoomInfo(packet: PBpacket) {
+        this.game.emitter.emit("updateroom", packet.content);
         this.game.peer.workerEmitter(EventType.UPDATE_ROOM_INFO, packet.content);
         this.game.peer.workerEmitter(EventType.UPDATE_PARTY_STATE, packet.content.openingParty);
     }

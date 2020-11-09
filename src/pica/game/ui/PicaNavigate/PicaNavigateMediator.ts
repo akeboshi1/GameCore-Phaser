@@ -5,7 +5,6 @@ import { EventType, ModuleName } from "structure";
 
 export class PicaNavigateMediator extends BasicMediator {
   public static NAME: string = ModuleName.PICANAVIGATE_NAME;
-  private mView: any;
   constructor(game: Game) {
     super(game);
     this.mModel = new PicaNavigate(this.game);
