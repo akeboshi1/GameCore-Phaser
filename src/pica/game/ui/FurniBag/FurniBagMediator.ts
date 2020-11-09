@@ -5,7 +5,6 @@ import { EventType, ModuleName } from "structure";
 
 export class FurniBagMediator extends BasicMediator {
     public static NAME: string = ModuleName.FURNIBAG_NAME;
-    protected mView: any;// FurniBagPanel
     private mScneType: op_def.SceneTypeEnum;
     private timeID: any;
     constructor(game: Game) {
