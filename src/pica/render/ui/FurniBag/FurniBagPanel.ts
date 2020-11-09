@@ -1,5 +1,6 @@
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch } from "apowophaserui";
 import { BasePanel, CheckboxGroup, DynamicImage, InputPanel, Render, TextButton, UiManager } from "gamecoreRender";
+import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "src/pica/res";
 import { ModuleName } from "structure";
 import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
@@ -162,25 +163,26 @@ export class FurniBagPanel extends BasePanel {
       // content.avatar = new op_gameconfig.Avatar();
       content = { avatar: {} };
     }
-    const player = this.mWorld.roomManager.currentRoom.playerManager.actor;
-    const avatar = player.model.avatar;
-    for (const key in avatar) {
-      if (avatar.hasOwnProperty(key)) {
-        const element = avatar[key];
-        if (element) content.avatar[key] = element;
-      }
-    }
-    for (const item of this.mSelectedItemData) {
-      const dataAvatar = item.avatar;
-      for (const key in dataAvatar) {
-        if (dataAvatar.hasOwnProperty(key)) {
-          const element = dataAvatar[key];
-          if (element) content.avatar[key] = element;
+    this.render.mainPeer.getPlayerAvatar()
+      .then((avatar) => {
+        for (const key in avatar) {
+          if (avatar.hasOwnProperty(key)) {
+            const element = avatar[key];
+            if (element) content.avatar[key] = element;
+          }
         }
-      }
-    }
-    const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
+        for (const item of this.mSelectedItemData) {
+          const dataAvatar = item.avatar;
+          for (const key in dataAvatar) {
+            if (dataAvatar.hasOwnProperty(key)) {
+              const element = dataAvatar[key];
+              if (element) content.avatar[key] = element;
+            }
+          }
+        }
+        const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
+        this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
+      });
   }
   public setSelectedResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
     if (content.display) {
@@ -276,7 +278,7 @@ export class FurniBagPanel extends BasePanel {
     const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
     reseticon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.resetBtn.add(reseticon);
-    this.mDetailDisplay = new DetailDisplay(this.scene, true);
+    this.mDetailDisplay = new DetailDisplay(this.scene, this.render, true);
     this.mDetailDisplay.setSize(110 * this.dpr, 110 * this.dpr);
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
@@ -288,7 +290,7 @@ export class FurniBagPanel extends BasePanel {
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 10 * this.dpr;
 
-    this.mSeachInput = new SeachInput(this.scene, this.mWorld, this.key, this.dpr);
+    this.mSeachInput = new SeachInput(this.scene, this.render, this.key, this.dpr);
     // this.mSeachInput.x = this.mSeachInput.width / 2 + 6 * this.dpr;
     const inputWid: number = this.mInputBoo ? 260 * this.dpr : 0;
     this.mCategoryScroll = new GameScroller(this.scene, {
@@ -309,10 +311,6 @@ export class FurniBagPanel extends BasePanel {
     this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategoryScroll]);
     this.add([this.sellBtn, this.useBtn, this.mAdd, this.saveBtn, this.resetBtn]);
     this.mShelfContainer.add(this.mCategoriesBar);
-    // this.mCategeoriesContainer.add([this.mCategoriesBar]);
-    if (this.mWorld && this.mWorld.roomManager && this.mWorld.roomManager.currentRoom) {
-      this.mEnableEdit = this.mWorld.roomManager.currentRoom.enableEdit;
-    }
 
     const topCapW = 67 * this.dpr;
     const topCapH = 30 * this.dpr;
@@ -347,12 +345,16 @@ export class FurniBagPanel extends BasePanel {
     this.topBtns.forEach((btn) => {
       this.add(btn);
     });
-    if (this.mEnableEdit) {
-      const index = topCategorys.indexOf(5);// op_pkt_def.PKT_PackageType.EditFurniturePackage
-      this.topCheckBox.selectIndex(index);
-    } else {
-      this.topCheckBox.selectIndex(0);
-    }
+    this.render.mainPeer.isCurrentRoomEditEnable()
+      .then((val) => {
+        this.mEnableEdit = val;
+        if (this.mEnableEdit) {
+          const index = topCategorys.indexOf(5);// op_pkt_def.PKT_PackageType.EditFurniturePackage
+          this.topCheckBox.selectIndex(index);
+        } else {
+          this.topCheckBox.selectIndex(0);
+        }
+      });
     const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
     const capW = (propFrame.width);
     const capH = (propFrame.height);
@@ -435,9 +437,16 @@ export class FurniBagPanel extends BasePanel {
       this.mSelectedItemData = arr;
       this.displayAvatar();
     } else {
-      // this.mDetailBubble.setProp(null, this.serviceTimestamp);
-      this.mDetailBubble.setProp(null, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
-      this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+      let property = null;
+      this.render.mainPeer.getUserData_PlayerProperty()
+        .then((val) => {
+          property = val;
+          return this.serviceTimestamp;
+        })
+        .then((t) => {
+          this.mDetailBubble.setProp(null, Math.floor(t / 1000), property);
+          this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+        });
     }
   }
   private replaceSelectItem(data: any, cell: Item) {// op_client.ICountablePackageItem
@@ -573,16 +582,24 @@ export class FurniBagPanel extends BasePanel {
 
   private queryPackege(isupdate: boolean = false) {
     if (this.mSelectedCategeories) {
-      this.render.renderEmitter("queryPackage", [this.categoryType, this.mSelectedCategeories.key, isupdate]);
+      this.render.renderEmitter("queryPackage", { packType: this.categoryType, key: this.mSelectedCategeories.key, isupdate });
     }
   }
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
     if (this.mSelectedItemData.indexOf(item) !== -1) return;
-    // this.mDetailBubble.setProp(item, this.serviceTimestamp);
-    this.mDetailBubble.setProp(item, this.serviceTimestamp, this.mWorld.user.userData.playerProperty);
-    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+
+    let property = null;
+    this.render.mainPeer.getUserData_PlayerProperty()
+      .then((val) => {
+        property = val;
+        return this.serviceTimestamp;
+      })
+      .then((t) => {
+        this.mDetailBubble.setProp(item, Math.floor(t / 1000), property);
+        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+      });
     if (item) {
       this.replaceSelectItem(item, cell);
       this.setSelectedItem(item);
@@ -601,7 +618,7 @@ export class FurniBagPanel extends BasePanel {
 
   private onSeachHandler(val: string) {
     if (this.mSelectedCategeories && val.length > 0) {
-      this.render.renderEmitter("seachPackage", [val, this.mSelectedCategeories.key]);
+      this.render.renderEmitter("seachPackage", { query: val, categories: this.mSelectedCategeories.key });
     }
   }
 
@@ -735,12 +752,12 @@ export class FurniBagPanel extends BasePanel {
   }
   private onSellPropsHandler(category: number, prop: any, count: number) {// op_client.CountablePackageItem
     this.mCategoryScroll.addListen();
-    this.render.renderEmitter("sellProps", [prop, count, category]);
+    this.render.renderEmitter("sellProps", { prop, count, category });
   }
 
   private onUsePropsHandler(prop: any, count: number) {// op_client.CountablePackageItem
     this.mCategoryScroll.addListen();
-    this.render.renderEmitter("useprops", [prop.id, count]);
+    this.render.renderEmitter("useprops", { itemid: prop.id, count });
   }
 
   private showSeach(parent: TextButton) {
@@ -787,12 +804,15 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private showPropFun(config: any) {// PicPropFunConfig
-    const uimanager = this.mWorld.uiManager;
-    uimanager.showMed("PicPropFun", config);
+    this.render.mainPeer.showMed("PicPropFun", config);
   }
 
-  private get serviceTimestamp() {
-    return Math.floor(this.mWorld.clock.unixTime / 1000);
+  private get serviceTimestamp(): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      this.render.mainPeer.requestCurTime().then((t) => {
+        resolve(t);
+      });
+    });
   }
 }
 

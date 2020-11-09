@@ -24,3 +24,5 @@ export { PicaNavigateMediator } from "./ui/PicaNavigate/PicaNavigateMediator";
 export { FurniBag } from "./ui/FurniBag/FurniBag";
 export { FurniBagMediator } from "./ui/FurniBag/FurniBagMediator";
 export { TimerCountDown } from "./ui/FurniBag/TimerCountDown";
+export { Market } from "./ui/Market/Market";
+export { MarketMediator } from "./ui/Market/MarketMediator";

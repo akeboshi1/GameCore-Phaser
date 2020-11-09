@@ -1,0 +1,117 @@
+import { Market } from "./Market";
+import { op_client, op_def } from "pixelpai_proto";
+import { BasicMediator, Game } from "gamecore";
+import { EventType, MessageType, ModuleName } from "structure";
+
+export class MarketMediator extends BasicMediator {
+  public static NAME: string = ModuleName.Market_NAME;
+  constructor(game: Game) {
+    super(game);
+    if (!this.mModel) {
+      this.mModel = new Market(game);
+      this.game.emitter.on("getMarketCategories", this.onCategoriesHandler, this);
+      this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
+      this.game.emitter.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+      this.game.emitter.on("showopen", this.onShowOpenPanel, this);
+    }
+  }
+
+  show(param?: any) {
+    if (this.mPanelInit || this.mShow) {
+      return;
+    }
+
+    this.__exportProperty(() => {
+      this.game.peer.render.showPanel(MarketMediator.NAME, param).then(() => {
+        this.mView = this.game.peer.render[MarketMediator.NAME];
+      });
+      this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
+      this.game.emitter.on("getCategories", this.onGetCategoriesHandler, this);
+      this.game.emitter.on("queryProp", this.onQueryPropHandler, this);
+      this.game.emitter.on("buyItem", this.onBuyItemHandler, this);
+      this.game.emitter.on("close", this.onCloseHandler, this);
+      this.game.emitter.on("popItemCard", this.onPopItemCardHandler, this);
+      this.game.emitter.on("queryPropResource", this.onQueryPropresouceHandler, this);
+    });
+
+    if (param && param[0]) {
+      this.model.setMarketName(param[0].marketName);
+    } else {
+      this.model.setMarketName("shop");
+    }
+  }
+
+  hide() {
+    super.hide();
+    this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
+    this.game.emitter.off("getCategories", this.onGetCategoriesHandler, this);
+    this.game.emitter.off("queryProp", this.onQueryPropHandler, this);
+    this.game.emitter.off("buyItem", this.onBuyItemHandler, this);
+    this.game.emitter.off("close", this.onCloseHandler, this);
+    this.game.emitter.off("popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.off("queryPropResource", this.onQueryPropresouceHandler, this);
+  }
+
+  destroy() {
+    if (this.model) this.model.destroy();
+    this.mModel = null;
+    super.destroy();
+  }
+
+  private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
+    if (this.mView)
+      this.mView.setCategories(content);
+  }
+
+  private onQueryResuleHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
+    if (this.mView)
+      this.mView.setProp(content);
+  }
+
+  private onGetCategoriesHandler() {
+    this.model.getMarkCategories();
+  }
+
+  private onQueryPropHandler(data: { page: number, category: string, subCategory: string }) {
+    this.model.queryMarket(data.page, data.category, data.subCategory);
+  }
+
+  private onBuyItemHandler(prop: op_def.IOrderCommodities) {
+    this.model.buyMarketCommodities([prop]);
+  }
+
+  private onQueryPropresouceHandler(prop: op_client.IMarketCommodity) {
+    this.model.queryCommodityResource(prop.id, prop.category);
+  }
+
+  private onShowOpenPanel(content: any) {
+    this.setParam([content]);
+    this.show([content]);
+  }
+
+  private onPopItemCardHandler(data: { prop, display }) {
+    const packet = {
+      content: {
+        name: "ItemPopCard",
+        prop: data.prop,
+        display: data.display
+      }
+    };
+    this.game.renderPeer.workerEmitter(MessageType.SHOW_UI, packet);
+  }
+
+  private onQueryCommodityResourceHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {
+    if (!this.mView) {
+      return;
+    }
+    this.mView.setCommodityResource(content);
+  }
+
+  private onCloseHandler() {
+    super.destroy();
+  }
+
+  private get model(): Market {
+    return (<Market>this.mModel);
+  }
+}

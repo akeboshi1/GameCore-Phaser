@@ -15,4 +15,5 @@ export class ModuleName {
     public static SCENEMANAGER_NAME: string = "SceneManager";
     public static BUBBLE_NAME: string = "Bubble";
     public static FURNIBAG_NAME: string = "FurniBag";
+    public static Market_NAME: string = "Market";
 }

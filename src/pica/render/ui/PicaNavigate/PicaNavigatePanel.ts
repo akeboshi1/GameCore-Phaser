@@ -1,6 +1,6 @@
 import { UIType } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "src/pica/res";
 import { ModuleName } from "structure";
 import { i18n } from "utils";
 export class PicaNavigatePanel extends BasePanel {
@@ -182,11 +182,13 @@ export class PicaNavigatePanel extends BasePanel {
     this.render.renderEmitter("close");
   }
   private checkUpdateActive() {
-    const arr = this.mWorld.uiManager.getActiveUIData("PicHandheld");
-    if (arr) {
-      for (const data of arr) {
-        this.updateUIState(data);
-      }
-    }
+    this.render.mainPeer.getActiveUIData("PicHandheld")
+      .then((arr) => {
+        if (arr) {
+          for (const data of arr) {
+            this.updateUIState(data);
+          }
+        }
+      });
   }
 }

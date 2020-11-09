@@ -112,8 +112,8 @@ export class FurniBagMediator extends BasicMediator {
     }
 
     private onGetCategoriesHandler(categoryType: number) {
-        if (this.mModel) {
-            (<FurniBag>this.mModel).getCategories(categoryType);
+        if (this.model) {
+            this.model.getCategories(categoryType);
         }
     }
 
@@ -121,43 +121,43 @@ export class FurniBagMediator extends BasicMediator {
         this.mView.setProp(content.items);
     }
 
-    private onQueryPackage(packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean) {
+    private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
         if (this.playerData) {
-            const items = this.playerData.getItemsByCategory(packType, key);
-            this.mView.setProp(items, isupdate);
+            const items = this.playerData.getItemsByCategory(data.packType, data.key);
+            this.mView.setProp(items, data.isupdate);
         }
     }
 
     private onQueryPropResourceHandler(prop: op_client.IMarketCommodity) {
-        (<FurniBag>this.mModel).queryCommodityResource(prop.id);
+        this.model.queryCommodityResource(prop.id);
     }
 
     private onQuerySaveAvatar(avatarids: string[]) {
-        (<FurniBag>this.mModel).querySaveAvatar(avatarids);
+        this.model.querySaveAvatar(avatarids);
     }
 
     private onQueryResetAvatar(avatar: op_gameconfig.Avatar) {
-        (<FurniBag>this.mModel).queryResetAvatar(avatar);
+        this.model.queryResetAvatar(avatar);
     }
-    private onSeachPackageHandler(query: string, categories: string) {
-        (<FurniBag>this.mModel).seachPackage(query, categories);
+    private onSeachPackageHandler(data: { query: string, categories: string }) {
+        this.model.seachPackage(data.query, data.categories);
     }
 
     private onAddFurniHandler(id: string) {
         if (this.mView.enableEdit) {
-            (<FurniBag>this.mModel).enterEditAndSelectedSprite(id);
+            this.model.enterEditAndSelectedSprite(id);
         } else {
-            (<FurniBag>this.mModel).addFurniToScene(id);
+            this.model.addFurniToScene(id);
         }
         this.destroy();
     }
 
-    private onSellPropsHandler(prop: op_client.CountablePackageItem, count: number, category: number) {
-        (<FurniBag>this.mModel).sellProps(prop, count, category);
+    private onSellPropsHandler(data: { prop: op_client.CountablePackageItem, count: number, category: number }) {
+        this.model.sellProps(data.prop, data.count, data.category);
     }
 
-    private onUsePropsHandler(itemid: string, count: number) {
-        (<FurniBag>this.mModel).useProps(itemid, count);
+    private onUsePropsHandler(data: { itemid: string, count: number }) {
+        this.model.useProps(data.itemid, data.count);
     }
     private onResetAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
         this.mView.resetAvatar(content);
@@ -168,6 +168,10 @@ export class FurniBagMediator extends BasicMediator {
     }
 
     private queryDressAvatarIDS() {
-        (<FurniBag>this.mModel).queryDressAvatarItemIDs();
+        this.model.queryDressAvatarItemIDs();
+    }
+
+    private get model(): FurniBag {
+        return (<FurniBag>this.mModel);
     }
 }

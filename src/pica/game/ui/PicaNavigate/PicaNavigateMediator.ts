@@ -55,14 +55,14 @@ export class PicaNavigateMediator extends BasicMediator {
     this.destroy();
   }
 
-  private onShowPanelHandler(panel: string, data?: any) {
-    if (!panel || !this.game) {
+  private onShowPanelHandler(data: { panel: string, data?: any }) {
+    if (!data.panel || !this.game) {
       return;
     }
     const uiManager = this.game.uiManager;
-    if (data)
-      uiManager.showMed(panel, data);
-    else uiManager.showMed(panel);
+    if (data.data)
+      uiManager.showMed(data.panel, data.data);
+    else uiManager.showMed(data.panel);
   }
   private onGomeHomeHandler() {
     (<PicaNavigate>this.mModel).queryGOHomeHandler();
