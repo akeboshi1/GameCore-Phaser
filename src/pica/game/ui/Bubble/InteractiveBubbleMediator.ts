@@ -1,6 +1,5 @@
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { InteractiveBubble } from "./InteractiveBubble";
-import { BaseMediator } from "apowophaserui";
 import { BasicMediator, Game, Room } from "gamecore";
 import { ModuleName } from "structure";
 
@@ -8,24 +7,21 @@ export class InteractiveBubbleMediator extends BasicMediator {
     public static NAME: string = ModuleName.BUBBLE_NAME;
     private mView: any;
     private mCurRoom: Room;
-    private bubblePacket: InteractiveBubble;
     constructor(protected game: Game) {
         super(game);
-        if (!this.bubblePacket) {
-            this.bubblePacket = new InteractiveBubble(this.game);
-            this.game.emitter.on("showbubble", this.onShowInteractiveBubble, this);
-            this.game.emitter.on("clearbubble", this.onClearInteractiveBubble, this);
-            this.bubblePacket.register();
+        this.game.emitter.on("showbubble", this.onShowInteractiveBubble, this);
+        this.game.emitter.on("clearbubble", this.onClearInteractiveBubble, this);
+        if (!this.mModel) {
+            this.mModel = new InteractiveBubble(this.game);
         }
     }
 
     show(param?: any) {
         this.__exportProperty(() => {
             this.game.peer.render.showPanel(InteractiveBubbleMediator.NAME, param).then(() => {
-                this.mView = this.game.peer.render.InteractiveBubblePanel;
+                this.mView = this.game.peer.render[ModuleName.BUBBLE_NAME];
             });
             this.game.emitter.on("queryinteractive", this.onInteractiveBubbleHandler, this);
-            this.bubblePacket.register();
         });
     }
 
@@ -40,9 +36,9 @@ export class InteractiveBubbleMediator extends BasicMediator {
 
     destroy() {
         if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);
-        if (this.bubblePacket) {
-            this.bubblePacket.destroy();
-            this.bubblePacket = undefined;
+        if (this.mModel) {
+            this.mModel.destroy();
+            this.mModel = undefined;
         }
         super.destroy();
         this.mCurRoom = undefined;
@@ -77,6 +73,6 @@ export class InteractiveBubbleMediator extends BasicMediator {
             this.mView.clearInteractionBubble(data);
             return;
         }
-        this.bubblePacket.queryInteractiveHandler(data);
+        (<InteractiveBubble>this.mModel).queryInteractiveHandler(data);
     }
 }
