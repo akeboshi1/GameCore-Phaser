@@ -42,6 +42,11 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     hide() {
+        if (this.mView) {
+            this.mView.hide();
+            this.mView.destroy();
+            this.mView = undefined;
+        }
         super.hide();
         this.game.emitter.off("hide", this.onHidePanel, this);
         this.game.emitter.off("queryOwnerInfo", this.onQueryOwnerInfo, this);
@@ -63,11 +68,6 @@ export class CharacterInfoMediator extends BasicMediator {
             this.characterInfo.destroy();
             this.characterInfo = undefined;
         }
-        if (this.mView) {
-            this.mView.hide();
-            this.mView.destroy();
-            this.mView = undefined;
-        }
         super.destroy();
     }
 
@@ -77,10 +77,6 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     private onHidePanel() {
-        if (this.mView) {
-            this.mView.hide();
-        }
-        this.mView = undefined;
         this.hide();
     }
 

@@ -1,7 +1,7 @@
 import { UIType } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { ModuleName } from "structure";
+import { ModuleName, RENDER_PEER } from "structure";
 import { i18n } from "utils";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key_lang: string = "key_lang";
@@ -159,27 +159,27 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowMapHandler() {
-    this.render.renderEmitter("showPanel", "PicPartyList");
+    this.render.renderEmitter(RENDER_PEER + "_showPanel", "PicPartyList");
   }
 
   private onShowShopHandler() {
-    this.render.renderEmitter("showPanel", "Market");
+    this.render.renderEmitter(RENDER_PEER + "_showPanel", "Market");
   }
 
   private onShowBagHandler() {
-    this.render.renderEmitter("showPanel", "FurniBag");
+    this.render.renderEmitter(RENDER_PEER + "_showPanel", "FurniBag");
   }
 
   private onShowFamilyHandler() {
-    this.render.renderEmitter("showPanel", "PicManorList");
+    this.render.renderEmitter(RENDER_PEER + "_showPanel", "PicManorList");
   }
 
   private onShowGoHomeHandler() {
-    this.render.renderEmitter("goHome");
+    this.render.renderEmitter(RENDER_PEER + "_goHome");
   }
 
   private onCloseHandler() {
-    this.render.renderEmitter("close");
+    this.render.renderEmitter(RENDER_PEER + "_close");
   }
   private checkUpdateActive() {
     this.render.mainPeer.getActiveUIData("PicHandheld")

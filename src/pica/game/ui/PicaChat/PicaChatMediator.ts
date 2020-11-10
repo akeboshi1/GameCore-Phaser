@@ -17,7 +17,7 @@ export class PicaChatMediator extends BasicMediator {
                 if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
             });
         } else {
-            this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
+            if (this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
         }
     }
 

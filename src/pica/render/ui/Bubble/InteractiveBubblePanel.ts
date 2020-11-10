@@ -1,5 +1,5 @@
 import { BasePanel, PlayScene, UiManager } from "gamecoreRender";
-import { ModuleName } from "structure";
+import { ModuleName, RENDER_PEER } from "structure";
 import { Handler, Pos, Tool, Url } from "utils";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
 export class InteractiveBubblePanel extends BasePanel {
@@ -85,6 +85,6 @@ export class InteractiveBubblePanel extends BasePanel {
     }
 
     private onInteractiveBubbleHandler(data: any) {
-        this.render.renderEmitter("queryinteractive", data);
+        this.render.renderEmitter(RENDER_PEER + "_queryinteractive", data);
     }
 }

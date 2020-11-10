@@ -1,7 +1,7 @@
 import { Market } from "./Market";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
-import { EventType, MessageType, ModuleName } from "structure";
+import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
 
 export class MarketMediator extends BasicMediator {
   public static NAME: string = ModuleName.Market_NAME;
@@ -26,12 +26,12 @@ export class MarketMediator extends BasicMediator {
         this.mView = this.game.peer.render[MarketMediator.NAME];
       });
       this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-      this.game.emitter.on("getCategories", this.onGetCategoriesHandler, this);
-      this.game.emitter.on("queryProp", this.onQueryPropHandler, this);
-      this.game.emitter.on("buyItem", this.onBuyItemHandler, this);
-      this.game.emitter.on("close", this.onCloseHandler, this);
-      this.game.emitter.on("popItemCard", this.onPopItemCardHandler, this);
-      this.game.emitter.on("queryPropResource", this.onQueryPropresouceHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_getCategories", this.onGetCategoriesHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_queryProp", this.onQueryPropHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_buyItem", this.onBuyItemHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_close", this.onCloseHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_popItemCard", this.onPopItemCardHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_queryPropResource", this.onQueryPropresouceHandler, this);
     });
 
     if (param && param[0]) {
@@ -44,12 +44,12 @@ export class MarketMediator extends BasicMediator {
   hide() {
     super.hide();
     this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-    this.game.emitter.off("getCategories", this.onGetCategoriesHandler, this);
-    this.game.emitter.off("queryProp", this.onQueryPropHandler, this);
-    this.game.emitter.off("buyItem", this.onBuyItemHandler, this);
-    this.game.emitter.off("close", this.onCloseHandler, this);
-    this.game.emitter.off("popItemCard", this.onPopItemCardHandler, this);
-    this.game.emitter.off("queryPropResource", this.onQueryPropresouceHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_getCategories", this.onGetCategoriesHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_queryProp", this.onQueryPropHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_buyItem", this.onBuyItemHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_close", this.onCloseHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_queryPropResource", this.onQueryPropresouceHandler, this);
   }
 
   destroy() {
@@ -97,7 +97,7 @@ export class MarketMediator extends BasicMediator {
         display: data.display
       }
     };
-    this.game.renderPeer.workerEmitter(MessageType.SHOW_UI, packet);
+    this.game.peer.workerEmitter(MessageType.SHOW_UI, packet);
   }
 
   private onQueryCommodityResourceHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE) {

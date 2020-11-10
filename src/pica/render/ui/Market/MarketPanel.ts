@@ -2,7 +2,7 @@ import { ElementDetail } from "./ElementDetail";
 import { MarketItem } from "./item";
 import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
-import { ModuleName } from "structure";
+import { ModuleName, RENDER_PEER } from "structure";
 import { Font, Handler, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 export class MarketPanel extends BasePanel {
@@ -360,7 +360,7 @@ export class MarketPanel extends BasePanel {
     this.add(this.mPropGrid);
     this.resize(0, 0);
 
-    this.render.renderEmitter("getCategories");
+    this.render.renderEmitter(RENDER_PEER + "_getCategories");
   }
 
   protected setSelect() {
@@ -419,13 +419,13 @@ export class MarketPanel extends BasePanel {
   }
 
   private queryProp(category: string, subCategory: string) {
-    this.render.renderEmitter("queryProp", { page: 1, category, subCategory });
+    this.render.renderEmitter(RENDER_PEER + "_queryProp", { page: 1, category, subCategory });
   }
 
   private onSelectItemHandler(prop: any) {// op_client.IMarketCommodity
     this.mSelectItem.setProp(prop);
     this.mSelectItem.setData("propdata", prop);
-    this.render.renderEmitter("queryPropResource", prop);
+    this.render.renderEmitter(RENDER_PEER + "_queryPropResource", prop);
   }
 
   private onBuyItemHandler(prop: any) {// op_def.IOrderCommodities
@@ -435,18 +435,18 @@ export class MarketPanel extends BasePanel {
     const title = i18n.t("market.payment");
     const resource = this.mSelectItem.getData("display");
     const confirmHandler = new Handler(this, () => {
-      this.render.renderEmitter("buyItem", prop);
+      this.render.renderEmitter(RENDER_PEER + "_buyItem", prop);
     }, [prop]);
     this.showPropFun({ confirmHandler, data, resource, slider: false, title });
   }
 
   private onCloseHandler() {
-    this.render.renderEmitter("close");
+    this.render.renderEmitter(RENDER_PEER + "_close");
   }
 
   private onPopItemCardHandler(prop, display) {
     if (prop) {
-      this.render.renderEmitter("popItemCard", { prop, display });
+      this.render.renderEmitter(RENDER_PEER + "_popItemCard", { prop, display });
     }
   }
   private getBuyPackageData() {
