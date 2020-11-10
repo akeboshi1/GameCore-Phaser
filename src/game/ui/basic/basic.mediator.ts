@@ -39,7 +39,7 @@ export class BasicMediator implements IMediator {
     protected mModel: BasicModel;
     protected mShowData: any;
     protected mView: any;
-    constructor(protected game: Game, protected key: string) {
+    constructor(protected key: string, protected game: Game) {
         if (!key || key.length === 0) {
             Logger.getInstance().error("invalid key");
             return;
