@@ -5,10 +5,9 @@ import { BasicMediator, Game } from "gamecore";
 import { op_client } from "pixelpai_proto";
 
 export class PicHandheldMediator extends BasicMediator {
-    public static NAME: string = ModuleName.PICHANDHELD_NAME;
     private picHandheld: PicHandheld;
     constructor(game: Game) {
-        super(game);
+        super(ModuleName.PICHANDHELD_NAME, game);
         this.picHandheld = new PicHandheld(this.game);
         this.game.emitter.on(MAIN_WORKER + "_handheldlist", this.onHandheldList, this);
     }
@@ -18,7 +17,7 @@ export class PicHandheldMediator extends BasicMediator {
         this.mShowData = param;
         if (!this.mPanelInit) {
             this.__exportProperty(() => {
-                this.game.peer.render.showPanel(PicHandheldMediator.NAME, param);
+                this.game.peer.render.showPanel(this.key, param);
                 if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
                 this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
                 this.game.emitter.on("changehandheld", this.onChangeHandheld, this);
@@ -36,10 +35,6 @@ export class PicHandheldMediator extends BasicMediator {
 
     hide() {
         if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
-        if (this.mView) {
-            this.mView.hide();
-        }
-        this.mView = undefined;
         super.hide();
         this.game.emitter.off("changehandheld", this.onChangeHandheld, this);
         this.game.emitter.off("clearhandheld", this.onClearHandheld, this);
@@ -87,7 +82,7 @@ export class PicHandheldMediator extends BasicMediator {
     }
     private openEquipedPanel(state: boolean) {
         const uiManager = this.game.uiManager;
-        const mediator = uiManager.getMed(PicaChatMediator.NAME);
+        const mediator = uiManager.getMed(ModuleName.PICHANDHELD_NAME);
         if (mediator) {
             if (state) {
                 mediator.hide();

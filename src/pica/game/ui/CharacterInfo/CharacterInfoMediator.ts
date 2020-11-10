@@ -6,10 +6,9 @@ import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
 import { BasicMediator, Game } from "gamecore";
 
 export class CharacterInfoMediator extends BasicMediator {
-    public static NAME: string = ModuleName.CHARACTERINFO_NAME;
     private characterInfo: CharacterInfo;
     constructor(game: Game) {
-        super(game);
+        super(ModuleName.CHARACTERINFO_NAME, game);
         this.characterInfo = new CharacterInfo(this.game);
         this.game.emitter.on("ownerInfo", this.onOwnerCharacterInfo, this);
         this.game.emitter.on("otherInfo", this.onOtherCharacterInfo, this);
@@ -20,9 +19,9 @@ export class CharacterInfoMediator extends BasicMediator {
         this.mShowData = param;
         if (!this.mPanelInit) {
             this.__exportProperty(() => {
-                this.game.renderPeer.showPanel(ModuleName.CHARACTERINFO_NAME, param);
+                this.game.renderPeer.showPanel(this.key, param);
                 if (!this.mView) {
-                    this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
+                    this.mView = this.game.peer.render[this.key];
                 }
                 this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
                 this.game.emitter.on("hide", this.onHidePanel, this);

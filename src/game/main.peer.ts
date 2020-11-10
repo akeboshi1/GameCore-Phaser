@@ -6,7 +6,7 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
-import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER } from "structure";
+import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName } from "structure";
 import { DialogMediator, PicaChatMediator, PicaGame, PicHandheldMediator } from "picaWorker";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -264,12 +264,12 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.str])
     public sendMessage(val: string) {
-        (this.game.uiManager.getMed(PicaChatMediator.NAME) as PicaChatMediator).sendMessage(val);
+        (this.game.uiManager.getMed(ModuleName.PICACHAT_NAME) as PicaChatMediator).sendMessage(val);
     }
 
     @Export()
     public showNavigate() {
-        (this.game.uiManager.getMed(PicaChatMediator.NAME) as PicaChatMediator).showNavigate();
+        (this.game.uiManager.getMed(ModuleName.PICACHAT_NAME) as PicaChatMediator).showNavigate();
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -371,15 +371,9 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public onQueryNextDialog(id: number, comid: number, data?: number[]) {
-        const med: DialogMediator = this.game.uiManager.getMed(DialogMediator.NAME) as DialogMediator;
+        const med: DialogMediator = this.game.uiManager.getMed(ModuleName.DIALOG_NAME) as DialogMediator;
         if (med) med.onQueryNextDialog(id, comid, data);
     }
-
-    // @Export()
-    // public requestHandheldList() {
-    //     const med: PicHandheldMediator = this.game.uiManager.getMed(PicHandheldMediator.NAME) as PicHandheldMediator;
-    //     if (med) med.requestHandheldList();
-    // }
 
     @Export([webworker_rpc.ParamType.str])
     public renderEmitter(eventType: string, data: any) {

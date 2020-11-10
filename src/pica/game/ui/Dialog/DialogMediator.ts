@@ -4,17 +4,16 @@ import { Game } from "src/game/game";
 import { ModuleName } from "structure";
 import { BasicMediator } from "gamecore";
 export class DialogMediator extends BasicMediator {
-    public static NAME: string = ModuleName.DIALOG_NAME;
     private dialog: Dialog;
     constructor(protected game: Game) {
-        super(game);
+        super(ModuleName.DIALOG_NAME, game);
         this.dialog = new Dialog(this.game);
     }
 
     show(param?: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
         super.show(param);
         this.__exportProperty(() => {
-            this.game.peer.render.showPanel(DialogMediator.NAME, param);
+            this.game.peer.render.showPanel(this.key, param);
         });
     }
     public update(param?: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI) {

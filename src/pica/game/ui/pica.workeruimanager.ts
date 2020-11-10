@@ -1,4 +1,5 @@
 import { UIManager, Game, BasicMediator } from "gamecore";
+import { ModuleName } from "structure";
 import { ActivityMediator } from "./Activity/ActivityMediator";
 import { CutInMediator } from "./CutIn";
 import { DialogMediator } from "./Dialog";
@@ -14,12 +15,11 @@ export class PicaWorkerUiManager extends UIManager {
     }
 
     public showMainUI() {
-        this.mMedMap.set(DialogMediator.NAME, new DialogMediator(this.game));
-        this.mMedMap.set(CutInMediator.NAME, new CutInMediator(this.game));
-        this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
-        this.mMedMap.set(PicaChatMediator.NAME, new PicaChatMediator(this.game));
-        this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
-        this.mMedMap.set(PicHandheldMediator.NAME, new PicHandheldMediator(this.game));
+        this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
+        this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
+        this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
+        this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
+        this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
         super.showMainUI();
     }
 

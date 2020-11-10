@@ -1,3 +1,4 @@
+import { Logger } from "utils";
 import { Game } from "../../game";
 import { BasicModel } from "./basic.model";
 
@@ -38,7 +39,11 @@ export class BasicMediator implements IMediator {
     protected mModel: BasicModel;
     protected mShowData: any;
     protected mView: any;
-    constructor(protected game: Game) {
+    constructor(protected key: string, protected game: Game) {
+        if (!key || key.length === 0) {
+            Logger.getInstance().error("invalid key");
+            return;
+        }
     }
 
     public get UIType(): number {
@@ -55,6 +60,7 @@ export class BasicMediator implements IMediator {
     }
 
     hide(): void {
+        if (this.mView) this.mView.hide();
         this.mView = undefined;
         this.mPanelInit = false;
         this.mShow = false;
@@ -98,7 +104,7 @@ export class BasicMediator implements IMediator {
         this.mShowData = null;
         this.mParam = null;
         if (this.mModel) this.mModel.destroy();
-        if (this.game && this.game.peer && this.game.peer.hasOwnProperty(this.constructor.name)) delete this.game.peer[this.constructor.name];
+        if (this.key.length > 0 && this.game && this.game.peer && this.game.peer.hasOwnProperty(this.key)) delete this.game.peer[this.key];
     }
 
     protected onPanelInitCallBack() {
@@ -109,9 +115,9 @@ export class BasicMediator implements IMediator {
         if (!this.game || !this.game.peer) {
             return;
         }
-        if (this.game.peer[this.constructor.name]) {
+        if (this.game.peer[this.key]) {
             return callback();
         }
-        return this.game.peer.exportProperty(this, this.game.peer, this.constructor.name).onceReady(callback);
+        return this.game.peer.exportProperty(this, this.game.peer, this.key).onceReady(callback);
     }
 }

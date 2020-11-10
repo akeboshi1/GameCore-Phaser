@@ -3,10 +3,9 @@ import { ModuleName } from "structure";
 import { Logger } from "utils";
 
 export class LoginMediator extends BasicMediator {
-    public static NAME: string = ModuleName.LOGIN_NAME;
     private verifiedEnable: boolean = false;
     constructor(game: Game) {
-        super(game);
+        super(ModuleName.LOGIN_NAME, game);
     }
 
     show() {

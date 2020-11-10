@@ -5,11 +5,10 @@ import { ModuleName, FriendChannel, EventType } from "structure";
 import { BasicMediator, Game } from "gamecore";
 
 export class PicFriendMediator extends BasicMediator {
-    public static NAME: string = ModuleName.PICFRIEND_NAME;
     protected mView;
     private picFriend: PicFriend;
     constructor(game: Game) {
-        super(game);
+        super(ModuleName.PICFRIEND_NAME, game);
         this.picFriend = new PicFriend(game);
         this.game.emitter.on(EventType.PLAYER_LIST, this.onPlayerListHandler, this);
         this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
