@@ -1,7 +1,7 @@
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { InteractiveBubble } from "./InteractiveBubble";
 import { BasicMediator, Game, Room } from "gamecore";
-import { ModuleName } from "structure";
+import { ModuleName, RENDER_PEER } from "structure";
 
 export class InteractiveBubbleMediator extends BasicMediator {
     public static NAME: string = ModuleName.BUBBLE_NAME;
@@ -20,13 +20,13 @@ export class InteractiveBubbleMediator extends BasicMediator {
             this.game.peer.render.showPanel(InteractiveBubbleMediator.NAME, param).then(() => {
                 this.mView = this.game.peer.render[InteractiveBubbleMediator.NAME];
             });
-            this.game.emitter.on("queryinteractive", this.onInteractiveBubbleHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_queryinteractive", this.onInteractiveBubbleHandler, this);
         });
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off("queryinteractive", this.onInteractiveBubbleHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_queryinteractive", this.onInteractiveBubbleHandler, this);
     }
 
     get currentRoom(): Room {

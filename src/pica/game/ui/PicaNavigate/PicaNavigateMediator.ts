@@ -1,7 +1,7 @@
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
 import { PicaNavigate } from "./PicaNavigate";
 import { BasicMediator, Game } from "gamecore";
-import { EventType, ModuleName } from "structure";
+import { EventType, ModuleName, RENDER_PEER } from "structure";
 
 export class PicaNavigateMediator extends BasicMediator {
   public static NAME: string = ModuleName.PICANAVIGATE_NAME;
@@ -20,18 +20,18 @@ export class PicaNavigateMediator extends BasicMediator {
         this.mView = this.game.peer.render[PicaNavigateMediator.NAME];
       });
       this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-      this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
-      this.game.emitter.on("close", this.onCloseHandler, this);
-      this.game.emitter.on("goHome", this.onGomeHomeHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_showPanel", this.onShowPanelHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_close", this.onCloseHandler, this);
+      this.game.emitter.on(RENDER_PEER + "_goHome", this.onGomeHomeHandler, this);
     });
   }
 
   hide() {
     super.hide();
     this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-    this.game.emitter.off("showPanel", this.onShowPanelHandler, this);
-    this.game.emitter.off("close", this.onCloseHandler, this);
-    this.game.emitter.off("goHome", this.onGomeHomeHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_showPanel", this.onShowPanelHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_close", this.onCloseHandler, this);
+    this.game.emitter.off(RENDER_PEER + "_goHome", this.onGomeHomeHandler, this);
   }
 
   isSceneUI() {
