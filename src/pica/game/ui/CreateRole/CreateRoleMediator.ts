@@ -9,15 +9,19 @@ export class CreateRoleMediator extends BasicMediator {
   private mCreateRole: CreateRole;
   constructor(game: Game) {
     super(ModuleName.CREATEROLE_NAME, game);
-
+    this.game.emitter.on("GenerateName", this.randomNameCallBack, this);
+    this.mCreateRole = new CreateRole(this.game);
   }
 
   show(params?: any) {
-    this.__exportProperty(() => {
-      this.mCreateRole = new CreateRole(this.game);
-      this.mCreateRole.start();
-      this.game.renderPeer.showCreateRole(params);
-    });
+    if (!this.mPanelInit) {
+      this.__exportProperty(() => {
+        this.game.renderPeer.showCreateRole(params);
+        if (!this.mView) this.mView = this.game.peer.render[ModuleName.CREATEROLE_NAME];
+      });
+    } else {
+      if (this.mView) this.mView = this.game.peer.render[ModuleName.CREATEROLE_NAME];
+    }
   }
 
   randomName() {
@@ -36,6 +40,10 @@ export class CreateRoleMediator extends BasicMediator {
     }
   }
 
+  private randomNameCallBack(val: string) {
+    this.mView.setNickName(val);
+  }
+
   private onError() {
 
   }
@@ -47,6 +55,7 @@ class CreateRole extends PacketHandler {
   private event: Event;
   constructor(private game: Game) {
     super();
+    this.start();
   }
 
   start() {
@@ -102,5 +111,6 @@ class CreateRole extends PacketHandler {
 
   private onGenerateNameHandler(packet: PBpacket) {
     Logger.getInstance().log("Generate Name: ", packet.content.name);
+    this.game.emitter.emit("GenerateName", packet.content.name);
   }
 }

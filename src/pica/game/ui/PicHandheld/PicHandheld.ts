@@ -2,7 +2,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { Game } from "gamecore";
-import { ModuleName } from "structure";
+import { MAIN_WORKER } from "structure";
 
 export class PicHandheld extends PacketHandler {
     constructor(private game: Game) {
@@ -53,7 +53,6 @@ export class PicHandheld extends PacketHandler {
 
     private onRetHandheldList(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD = packet.content;
-        const view = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
-        view.setEqipedDatas(content);
+        this.game.emitter.emit(MAIN_WORKER + "_handheldlist", content);
     }
 }

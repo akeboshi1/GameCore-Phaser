@@ -10,9 +10,14 @@ export class PicaChatMediator extends BasicMediator {
     }
 
     show(param?: any) {
-        this.__exportProperty(() => {
-            this.game.peer.render.showPanel(this.key, param);
-        });
+        if (!this.mPanelInit) {
+            this.__exportProperty(() => {
+                this.game.peer.render.showPanel(this.key, param);
+                if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
+            });
+        } else {
+            if (this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
+        }
     }
 
     isSceneUI() {
@@ -28,8 +33,8 @@ export class PicaChatMediator extends BasicMediator {
     }
 
     hide() {
+        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
         super.hide();
-        this.game.peer.render.hidePanel(this.key);
     }
 
     sendMessage(val: string) {

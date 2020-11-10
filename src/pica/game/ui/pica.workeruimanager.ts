@@ -6,6 +6,7 @@ import { DialogMediator } from "./Dialog";
 import { LoginMediator } from "./login";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
+import { PicHandheldMediator } from "./PicHandheld/PicHandheldMediator";
 
 export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {

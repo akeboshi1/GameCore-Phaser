@@ -37,12 +37,13 @@ export class PicHandheldPanel extends BasePanel {
         }
         this.addListen();
         this.updateData();
-        this.render.mainPeer.requestHandheldList();
+        this.render.renderEmitter("handheldlist");
     }
 
     hide() {
         this.mShow = false;
         this.removeListen();
+        super.hide();
     }
 
     public addListen() {
@@ -202,9 +203,9 @@ export class PicHandheldPanel extends BasePanel {
         item.isSelect = true;
         this.curHandheldItem = item;
         if (item.isEmptyHanded) {
-            this.emit("clearhandheld");
+            this.render.renderEmitter("clearhandheld");
         } else {
-            this.emit("changehandheld", data.id);
+            this.render.renderEmitter("changehandheld", data.id);
         }
 
     }
@@ -214,17 +215,17 @@ export class PicHandheldPanel extends BasePanel {
         if (!this.isExtendsGrid) {
             this.mPropGrid.setItems([]);
             this.gridContent.visible = false;
-            this.emit("openeqiped", false);
+            this.render.renderEmitter("openeqiped", false);
         } else {
             this.gridContent.visible = true;
-            this.emit("handheldlist");
-            this.emit("openeqiped", true);
+            this.render.renderEmitter("handheldlist");
+            this.render.renderEmitter("openeqiped", true);
         }
         this.updateLayout();
     }
 
     private onShortcutHandler(data: any) {
-        this.emit("clearhandheld");
+        this.render.renderEmitter("clearhandheld");
     }
 }
 

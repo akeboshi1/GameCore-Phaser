@@ -150,6 +150,7 @@ export class PicaChatPanel extends BasePanel {
     public hide() {
         this.mShow = false;
         this.removeInteractive();
+        super.hide();
     }
 
     public addListen() {
