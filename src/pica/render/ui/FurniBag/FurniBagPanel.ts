@@ -577,12 +577,12 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private onCloseHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_close");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
   }
 
   private queryPackege(isupdate: boolean = false) {
     if (this.mSelectedCategeories) {
-      this.render.renderEmitter(RENDER_PEER + "_queryPackage", { packType: this.categoryType, key: this.mSelectedCategeories.key, isupdate });
+      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryPackage", { packType: this.categoryType, key: this.mSelectedCategeories.key, isupdate });
     }
   }
 
@@ -618,7 +618,7 @@ export class FurniBagPanel extends BasePanel {
 
   private onSeachHandler(val: string) {
     if (this.mSelectedCategeories && val.length > 0) {
-      this.render.renderEmitter(RENDER_PEER + "_seachPackage", { query: val, categories: this.mSelectedCategeories.key });
+      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_seachPackage", { query: val, categories: this.mSelectedCategeories.key });
     }
   }
 
@@ -626,7 +626,7 @@ export class FurniBagPanel extends BasePanel {
     if (!this.mSelectedItemData) {
       return;
     }
-    this.render.renderEmitter(RENDER_PEER + "_addFurniToScene", this.mSelectedItemData[0].id);
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_addFurniToScene", this.mSelectedItemData[0].id);
   }
 
   private onTopCategoryHandler(item: Button) {
@@ -696,9 +696,9 @@ export class FurniBagPanel extends BasePanel {
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
     if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-      this.render.renderEmitter(RENDER_PEER + "_queryDressAvatarIDS");
+      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryDressAvatarIDS");
     }
-    this.render.renderEmitter(RENDER_PEER + "_getCategories", categoryType);
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_getCategories", categoryType);
   }
 
   private onSellBtnHandler() {
@@ -741,23 +741,23 @@ export class FurniBagPanel extends BasePanel {
       idsArr.push(item.id);
       this.dressAvatarIDS.push(item.id);
     }
-    this.render.renderEmitter(RENDER_PEER + "_querySaveAvatar", idsArr);
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querySaveAvatar", idsArr);
     // this.queryPackege();
     // }
   }
 
   private onResetBtnHandler() {
     // if (this.mSelectedItemData.length > 0)
-    this.render.renderEmitter(RENDER_PEER + "_queryResetAvatar");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryResetAvatar");
   }
   private onSellPropsHandler(category: number, prop: any, count: number) {// op_client.CountablePackageItem
     this.mCategoryScroll.addListen();
-    this.render.renderEmitter(RENDER_PEER + "_sellProps", { prop, count, category });
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_sellProps", { prop, count, category });
   }
 
   private onUsePropsHandler(prop: any, count: number) {// op_client.CountablePackageItem
     this.mCategoryScroll.addListen();
-    this.render.renderEmitter(RENDER_PEER + "_useprops", { itemid: prop.id, count });
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_useprops", { itemid: prop.id, count });
   }
 
   private showSeach(parent: TextButton) {

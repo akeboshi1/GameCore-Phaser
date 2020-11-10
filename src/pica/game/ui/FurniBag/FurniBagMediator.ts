@@ -33,17 +33,17 @@ export class FurniBagMediator extends BasicMediator {
                 this.mView = this.game.peer.render[this.key];
             });
             this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-            this.game.emitter.on(RENDER_PEER + "_getCategories", this.onGetCategoriesHandler, this);
-            this.game.emitter.on(RENDER_PEER + "_queryPackage", this.onQueryPackage, this);
-            this.game.emitter.on(RENDER_PEER + "_close", this.onCloseHandler, this);
-            this.game.emitter.on(RENDER_PEER + "_queryPropResource", this.onQueryPropResourceHandler, this);
-            this.game.emitter.on(RENDER_PEER + "_seachPackage", this.onSeachPackageHandler, this);
-            this.game.emitter.on(RENDER_PEER + "_addFurniToScene", this.onAddFurniHandler, this);
-            this.game.emitter.on(RENDER_PEER + "_sellProps", this.onSellPropsHandler, this);
-            this.game.emitter.on(RENDER_PEER + "_querySaveAvatar", this.onQuerySaveAvatar, this);
-            this.game.emitter.on(RENDER_PEER + "_queryResetAvatar", this.onQueryResetAvatar, this);
-            this.game.emitter.on(RENDER_PEER + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
-            this.game.emitter.on(RENDER_PEER + "_useprops", this.onUsePropsHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPackage", this.onQueryPackage, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropResourceHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_seachPackage", this.onSeachPackageHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_addFurniToScene", this.onAddFurniHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_sellProps", this.onSellPropsHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_useprops", this.onUsePropsHandler, this);
         });
 
         this.addLisenter();
@@ -53,17 +53,17 @@ export class FurniBagMediator extends BasicMediator {
         if (this.mView) this.mView.destroy();
         super.hide();
         this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-        this.game.emitter.off(RENDER_PEER + "_getCategories", this.onGetCategoriesHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_queryPackage", this.onQueryPackage, this);
-        this.game.emitter.off(RENDER_PEER + "_close", this.onCloseHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_queryPropResource", this.onQueryPropResourceHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_seachPackage", this.onSeachPackageHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_addFurniToScene", this.onAddFurniHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_sellProps", this.onSellPropsHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_querySaveAvatar", this.onQuerySaveAvatar, this);
-        this.game.emitter.off(RENDER_PEER + "_queryResetAvatar", this.onQueryResetAvatar, this);
-        this.game.emitter.off(RENDER_PEER + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
-        this.game.emitter.off(RENDER_PEER + "_useprops", this.onUsePropsHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryPackage", this.onQueryPackage, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropResourceHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_seachPackage", this.onSeachPackageHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_addFurniToScene", this.onAddFurniHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_sellProps", this.onSellPropsHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_useprops", this.onUsePropsHandler, this);
     }
 
     destroy() {

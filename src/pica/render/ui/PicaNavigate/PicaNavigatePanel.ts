@@ -159,27 +159,27 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowMapHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_showPanel", "PicPartyList");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "PicPartyList");
   }
 
   private onShowShopHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_showPanel", "Market");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "Market");
   }
 
   private onShowBagHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_showPanel", "FurniBag");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "FurniBag");
   }
 
   private onShowFamilyHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_showPanel", "PicManorList");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "PicManorList");
   }
 
   private onShowGoHomeHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_goHome");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_goHome");
   }
 
   private onCloseHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_close");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
   }
   private checkUpdateActive() {
     this.render.mainPeer.getActiveUIData("PicHandheld")

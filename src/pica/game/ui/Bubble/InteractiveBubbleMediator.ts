@@ -19,13 +19,13 @@ export class InteractiveBubbleMediator extends BasicMediator {
             this.game.peer.render.showPanel(this.key, param).then(() => {
                 this.mView = this.game.peer.render[this.key];
             });
-            this.game.emitter.on(RENDER_PEER + "_queryinteractive", this.onInteractiveBubbleHandler, this);
+            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryinteractive", this.onInteractiveBubbleHandler, this);
         });
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off(RENDER_PEER + "_queryinteractive", this.onInteractiveBubbleHandler, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryinteractive", this.onInteractiveBubbleHandler, this);
     }
 
     get currentRoom(): Room {

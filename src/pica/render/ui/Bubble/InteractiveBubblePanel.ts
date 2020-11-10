@@ -85,6 +85,6 @@ export class InteractiveBubblePanel extends BasePanel {
     }
 
     private onInteractiveBubbleHandler(data: any) {
-        this.render.renderEmitter(RENDER_PEER + "_queryinteractive", data);
+        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryinteractive", data);
     }
 }
