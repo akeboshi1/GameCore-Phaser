@@ -39,8 +39,11 @@ export class BasicMediator implements IMediator {
     protected mModel: BasicModel;
     protected mShowData: any;
     protected mView: any;
-    protected key: string = "";
-    constructor(protected game: Game) {
+    constructor(protected game: Game, protected key: string) {
+        if (!key || key.length === 0) {
+            Logger.getInstance().error("invalid key");
+            return;
+        }
     }
 
     public get UIType(): number {
@@ -109,10 +112,6 @@ export class BasicMediator implements IMediator {
 
     protected __exportProperty(callback?: () => any) {
         if (!this.game || !this.game.peer) {
-            return;
-        }
-        if (this.key.length === 0) {
-            Logger.getInstance().error("invalid key");
             return;
         }
         if (this.game.peer[this.key]) {
