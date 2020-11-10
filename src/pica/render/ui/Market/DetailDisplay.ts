@@ -1,5 +1,7 @@
 import { DragonbonesDisplay, FrameAnimation, FramesDisplay, Render } from "gamecoreRender";
+import { IFramesModel } from "structure";
 import { Handler, Url } from "utils";
+import * as sha1 from "simple-sha1";
 
 export class DetailDisplay extends Phaser.GameObjects.Container {
   private mDisplay: any;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
@@ -65,15 +67,18 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         this.mFramesDisplay.x = -spriteWidth * 0.5 * scale;
         this.mFramesDisplay.y = -spriteHeight * 0.5 * scale;
       });
-      // const animode = new FramesModel({
-      //   animations: {
-      //     display,
-      //     defaultAnimationName: aniName,
-      //     animationData: anis
-      //   },
-      //   id: content.id,
-      // });
-      // this.mFramesDisplay.load(animode);
+      const animations = new Map();
+      for (const aniData of anis) {
+        animations.set(aniData.name, aniData);
+      }
+      const animode = {
+        animations,
+        id: content.id,
+        gene: sha1.sync(display.dataPath + display.texturePath),
+        discriminator: "FramesModel",
+        animationName: aniName
+      };
+      this.mFramesDisplay.load(animode);
     }
   }
 
@@ -89,12 +94,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.mDragonboneDisplay.once("initialized", () => {
       this.mDragonboneDisplay.play({ name: "idle", flip: false });
     });
-    // this.mDragonboneDisplay.load(new DragonbonesModel({
-    //   id: 0,
-    //   avatar: content.avatar
-    // }));
-    // this.mDragonboneDisplay.scale = scale;
-    // this.add(this.mDragonboneDisplay);
+    const dbModel = { id: 0, avatar: content.avatar };
+    this.mDragonboneDisplay.load(dbModel);
+    this.mDragonboneDisplay.scale = scale;
+    this.add(this.mDragonboneDisplay);
   }
 
   loadUrl(url: string, data?: string) {
