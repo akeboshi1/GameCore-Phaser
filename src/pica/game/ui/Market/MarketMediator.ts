@@ -100,7 +100,7 @@ export class MarketMediator extends BasicMediator {
   }
 
   private onCloseHandler() {
-    super.destroy();
+    this.hide();
   }
 
   private get model(): Market {
