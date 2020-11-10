@@ -51,6 +51,7 @@ export class FurniBagMediator extends BasicMediator {
     }
 
     hide() {
+        if (this.mView) this.mView.destroy();
         super.hide();
         this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
         this.game.emitter.off(RENDER_PEER + "_getCategories", this.onGetCategoriesHandler, this);
@@ -91,7 +92,7 @@ export class FurniBagMediator extends BasicMediator {
     }
 
     private onCloseHandler() {
-        this.destroy();
+        this.hide();
     }
 
     private addLisenter() {
@@ -165,7 +166,7 @@ export class FurniBagMediator extends BasicMediator {
         } else {
             this.model.addFurniToScene(id);
         }
-        this.destroy();
+        this.hide();
     }
 
     private onSellPropsHandler(data: { prop: op_client.CountablePackageItem, count: number, category: number }) {
