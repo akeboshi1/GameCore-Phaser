@@ -50,7 +50,6 @@ export class FurniBagMediator extends BasicMediator {
     }
 
     hide() {
-        if (this.mView) this.mView.destroy();
         super.hide();
         this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);

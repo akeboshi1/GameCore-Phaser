@@ -51,7 +51,7 @@ export class PicaNavigateMediator extends BasicMediator {
     }
     const uiManager = this.game.uiManager;
     uiManager.showExistMed(PicaChatMediator.name, "");
-    this.destroy();
+    this.hide();
   }
 
   private onShowPanelHandler(panel: string) {
