@@ -1,4 +1,3 @@
-import { DragonbonesModel, FramesModel } from "gamecore";
 import { DragonbonesDisplay, FrameAnimation, FramesDisplay, Render } from "gamecoreRender";
 import { Handler, Url } from "utils";
 
@@ -66,15 +65,15 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         this.mFramesDisplay.x = -spriteWidth * 0.5 * scale;
         this.mFramesDisplay.y = -spriteHeight * 0.5 * scale;
       });
-      const animode = new FramesModel({
-        animations: {
-          display,
-          defaultAnimationName: aniName,
-          animationData: anis
-        },
-        id: content.id,
-      });
-      this.mFramesDisplay.load(animode);
+      // const animode = new FramesModel({
+      //   animations: {
+      //     display,
+      //     defaultAnimationName: aniName,
+      //     animationData: anis
+      //   },
+      //   id: content.id,
+      // });
+      // this.mFramesDisplay.load(animode);
     }
   }
 
@@ -90,12 +89,12 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.mDragonboneDisplay.once("initialized", () => {
       this.mDragonboneDisplay.play({ name: "idle", flip: false });
     });
-    this.mDragonboneDisplay.load(new DragonbonesModel({
-      id: 0,
-      avatar: content.avatar
-    }));
-    this.mDragonboneDisplay.scale = scale;
-    this.add(this.mDragonboneDisplay);
+    // this.mDragonboneDisplay.load(new DragonbonesModel({
+    //   id: 0,
+    //   avatar: content.avatar
+    // }));
+    // this.mDragonboneDisplay.scale = scale;
+    // this.add(this.mDragonboneDisplay);
   }
 
   loadUrl(url: string, data?: string) {

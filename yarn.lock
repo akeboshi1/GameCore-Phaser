@@ -140,9 +140,9 @@
   integrity sha1-fyrX7FX5FEgvybHsS7GuYCjUYGY=
 
 "@types/node@*":
-  version "14.14.6"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.14.6.tgz#146d3da57b3c636cc0d1769396ce1cfa8991147f"
-  integrity sha512-6QlRuqsQ/Ox/aJEQWBEJG7A9+u7oSYl3mem/K8IzxXG/kAGbV1YPD9Bg9Zw3vyxC/YP+zONKwy8hGkSt1jxFMw==
+  version "14.14.7"
+  resolved "https://registry.npmjs.org/@types/node/-/node-14.14.7.tgz#8ea1e8f8eae2430cf440564b98c6dfce1ec5945d"
+  integrity sha512-Zw1vhUSQZYw+7u5dAwNbIA9TuTotpzY/OF7sJM9FqPOF3SPjKnxrjoTktXDZgUjybf4cWVBP7O8wvKdSaGHweg==
 
 "@types/node@8.0.0":
   version "8.0.0"
@@ -5872,8 +5872,8 @@ websocket-extensions@>=0.1.1:
   integrity sha1-f4RzvIOd/YdgituV1+sHUhFXikI=
 
 "webworker-rpc@git://github.com/ApowoGames/webworker-rpc":
-  version "0.0.40"
-  resolved "git://github.com/ApowoGames/webworker-rpc#a0516847c27915bed07079306edde175b6a370b3"
+  version "0.0.42"
+  resolved "git://github.com/ApowoGames/webworker-rpc#de9d9b5f491942a511109010c74482244bca96a3"
   dependencies:
     clean-webpack-plugin "^3.0.0"
     copy-webpack-plugin "^5.0.4"
