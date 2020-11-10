@@ -8,7 +8,7 @@ export class EventDispatcher {
         return !!listener;
     }
 
-    public emit(type: string, data: any = null): Boolean {
+    public emit(type: string, ...data: any[]): Boolean {
         if (!this._events || !this._events[type]) return false;
 
         const listeners: any = this._events[type];
