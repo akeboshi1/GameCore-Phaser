@@ -1,11 +1,12 @@
 import { BasicScene } from "./basic.scene";
 import { UiManager } from "../ui/ui.manager";
 import { LoadingScene } from "./loading.scene";
+import { SceneName } from "structure";
 
 export class CreateRoleScene extends BasicScene {
   private params: any;
   constructor() {
-    super({ key: CreateRoleScene.name });
+    super({ key: SceneName.CREATE_ROLE_SCENE});
   }
 
   public init(data?: any) {

@@ -356,18 +356,27 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public hideLogin() {
-        this.uiManager.hidePanel(ModuleName.LOGIN_NAME);
         this.sceneManager.stopScene(SceneName.LOGIN_SCENE);
     }
 
     @Export()
     public showCreateRole(params?: any) {
-        this.mSceneManager.startScene("CreateRoleScene", { render: this, params });
+        this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
     }
 
     @Export()
     public hideCreateRole() {
-        this.mSceneManager.stopScene("CreateRoleScene");
+        this.mSceneManager.stopScene(SceneName.CREATE_ROLE_SCENE);
+    }
+
+    @Export()
+    public showPlay(params?: any) {
+        this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
+    }
+
+    @Export()
+    public hidePlay() {
+        this.mSceneManager.stopScene(SceneName.PLAY_SCENE);
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -558,24 +567,6 @@ export class Render extends RPCPeer implements GameMain {
             return;
         }
         this.mSceneManager.sleepScene("LoadingScene");
-    }
-
-    @Export()
-    public showPlay(data?: any) {
-        if (!this.mSceneManager) {
-            // Logger.getInstance().error("no game created");
-            return;
-        }
-        this.mSceneManager.startScene("PlayScene", data);
-    }
-
-    @Export()
-    public hidePlay() {
-        if (!this.mSceneManager) {
-            // Logger.getInstance().error("no game created");
-            return;
-        }
-        this.mSceneManager.sleepScene("PlayScene");
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])

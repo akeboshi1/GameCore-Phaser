@@ -301,6 +301,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mLayManager) {
         //     this.layerManager.destroy();
         // }
+        this.game.renderPeer.showPlay();
         // Logger.getInstance().log("roomstartPlay");
         this.mCameraService = new CamerasManager(this.mGame, this);
         // this.mScene = this.world.game.scene.getScene(PlayScene.name);

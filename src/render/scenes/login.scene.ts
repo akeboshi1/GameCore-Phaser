@@ -1,10 +1,10 @@
-import { ModuleName } from "structure";
+import { ModuleName, SceneName } from "structure";
 import { BasicScene } from "./basic.scene";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {
     constructor() {
-        super({ key: LoginScene.name });
+        super({ key: SceneName.LOGIN_SCENE });
     }
 
     public create() {

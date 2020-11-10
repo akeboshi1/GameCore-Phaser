@@ -1,6 +1,7 @@
 import { Font, Url, Logger } from "utils";
 import { BasicScene } from "./basic.scene";
 import verion from "../../../version";
+import { SceneName } from "structure";
 
 export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;
@@ -13,7 +14,7 @@ export class LoadingScene extends BasicScene {
   private tipsText: string;
   private dpr: number;
   constructor() {
-    super({ key: LoadingScene.name });
+    super({ key: SceneName.LOADING_SCENE });
   }
 
   public preload() {

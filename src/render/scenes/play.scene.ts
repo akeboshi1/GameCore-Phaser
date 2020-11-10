@@ -5,6 +5,7 @@ import { BasicLayer } from "../managers/layer.manager";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
+import { SceneName } from "structure";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
@@ -17,7 +18,7 @@ export class PlayScene extends RoomScene {
     private readonly LAYER_SCENEUI = "sceneUILayer";
 
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
-        super(config || { key: PlayScene.name });
+        super(config || { key: SceneName.PLAY_SCENE });
     }
 
     public preload() { }
