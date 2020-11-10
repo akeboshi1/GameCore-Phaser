@@ -4,10 +4,9 @@ import { BasicMediator, Game, Room } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
 
 export class InteractiveBubbleMediator extends BasicMediator {
-    public static NAME: string = ModuleName.BUBBLE_NAME;
     private mCurRoom: Room;
     constructor(game: Game) {
-        super(game);
+        super(ModuleName.BUBBLE_NAME, game);
         this.game.emitter.on("showbubble", this.onShowInteractiveBubble, this);
         this.game.emitter.on("clearbubble", this.onClearInteractiveBubble, this);
         if (!this.mModel) {
@@ -17,8 +16,8 @@ export class InteractiveBubbleMediator extends BasicMediator {
 
     show(param?: any) {
         this.__exportProperty(() => {
-            this.game.peer.render.showPanel(InteractiveBubbleMediator.NAME, param).then(() => {
-                this.mView = this.game.peer.render[InteractiveBubbleMediator.NAME];
+            this.game.peer.render.showPanel(this.key, param).then(() => {
+                this.mView = this.game.peer.render[this.key];
             });
             this.game.emitter.on(RENDER_PEER + "_queryinteractive", this.onInteractiveBubbleHandler, this);
         });

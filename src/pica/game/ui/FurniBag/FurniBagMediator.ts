@@ -4,11 +4,10 @@ import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
 
 export class FurniBagMediator extends BasicMediator {
-    public static NAME: string = ModuleName.FURNIBAG_NAME;
     private mScneType: op_def.SceneTypeEnum;
     private timeID: any;
     constructor(game: Game) {
-        super(game);
+        super(ModuleName.FURNIBAG_NAME, game);
         if (this.game && this.game.roomManager && this.game.roomManager.currentRoom) {
             this.mScneType = this.game.roomManager.currentRoom.sceneType;
         } else {
@@ -30,8 +29,8 @@ export class FurniBagMediator extends BasicMediator {
         this.game.emitter.on("avatarIDs", this.onDressAvatarIDS, this);
 
         this.__exportProperty(() => {
-            this.game.peer.render.showPanel(FurniBagMediator.NAME, param).then(() => {
-                this.mView = this.game.peer.render[FurniBagMediator.NAME];
+            this.game.peer.render.showPanel(this.key, param).then(() => {
+                this.mView = this.game.peer.render[this.key];
             });
             this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
             this.game.emitter.on(RENDER_PEER + "_getCategories", this.onGetCategoriesHandler, this);

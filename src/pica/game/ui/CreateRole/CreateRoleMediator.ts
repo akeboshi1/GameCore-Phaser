@@ -6,10 +6,9 @@ import { Logger } from "utils";
 import { ModuleName } from "structure";
 
 export class CreateRoleMediator extends BasicMediator {
-  public static NAME: string = ModuleName.CREATEROLE_NAME;
   private mCreateRole: CreateRole;
   constructor(game: Game) {
-    super(game);
+    super(ModuleName.CREATEROLE_NAME, game);
 
   }
 

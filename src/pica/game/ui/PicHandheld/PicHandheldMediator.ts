@@ -4,16 +4,15 @@ import { ModuleName } from "structure";
 import { BasicMediator, Game } from "gamecore";
 
 export class PicHandheldMediator extends BasicMediator {
-    public static NAME: string = ModuleName.PICHANDHELD_NAME;
     private picHandheld: PicHandheld;
     constructor(game: Game) {
-        super(game);
+        super(ModuleName.PICHANDHELD_NAME, game);
         this.picHandheld = new PicHandheld(this.game);
     }
 
     show(param?: any) {
         this.__exportProperty(() => {
-            this.game.peer.render.showPanel(PicHandheldMediator.NAME, param);
+            this.game.peer.render.showPanel(this.key, param);
         });
     }
 

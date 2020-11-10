@@ -4,11 +4,10 @@ import { EventType, ModuleName } from "structure";
 import { PicaMainUI } from "./PicaMainUI";
 
 export class PicaMainUIMediator extends BasicMediator {
-    public static NAME: string = ModuleName.PICAMAINUI_NAME;
     private mPlayerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     private mRoomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     constructor(protected game: Game) {
-        super(game);
+        super(ModuleName.PICAMAINUI_NAME, game);
         this.mModel = new PicaMainUI(this.game);
         this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
     }
@@ -17,7 +16,7 @@ export class PicaMainUIMediator extends BasicMediator {
         super.show(param);
         if (!this.mPanelInit) {
             this.__exportProperty(() => {
-                this.game.peer.render.showPanel(PicaMainUIMediator.NAME, param);
+                this.game.peer.render.showPanel(this.key, param);
                 this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
                 this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
                 this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);

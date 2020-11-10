@@ -4,9 +4,8 @@ import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
 
 export class MarketMediator extends BasicMediator {
-  public static NAME: string = ModuleName.Market_NAME;
   constructor(game: Game) {
-    super(game);
+    super(ModuleName.Market_NAME, game);
     if (!this.mModel) {
       this.mModel = new Market(game);
       this.game.emitter.on("getMarketCategories", this.onCategoriesHandler, this);
@@ -22,8 +21,8 @@ export class MarketMediator extends BasicMediator {
     }
 
     this.__exportProperty(() => {
-      this.game.peer.render.showPanel(MarketMediator.NAME, param).then(() => {
-        this.mView = this.game.peer.render[MarketMediator.NAME];
+      this.game.peer.render.showPanel(this.key, param).then(() => {
+        this.mView = this.game.peer.render[this.key];
       });
       this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
       this.game.emitter.on(RENDER_PEER + "_getCategories", this.onGetCategoriesHandler, this);

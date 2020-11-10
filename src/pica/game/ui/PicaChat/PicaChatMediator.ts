@@ -3,16 +3,15 @@ import { op_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { BasicMediator, Game } from "gamecore";
 export class PicaChatMediator extends BasicMediator {
-    public static NAME: string = "PicaChat";
     private mChat: PicaChat;
     constructor(protected game: Game) {
-        super(game);
+        super(ModuleName.PICACHAT_NAME, game);
         this.mChat = new PicaChat(this.game);
     }
 
     show(param?: any) {
         this.__exportProperty(() => {
-            this.game.peer.render.showPanel(PicaChatMediator.NAME, param);
+            this.game.peer.render.showPanel(this.key, param);
         });
     }
 
@@ -30,7 +29,7 @@ export class PicaChatMediator extends BasicMediator {
 
     hide() {
         super.hide();
-        this.game.peer.render.hidePanel(PicaChatMediator.NAME);
+        this.game.peer.render.hidePanel(this.key);
     }
 
     sendMessage(val: string) {
