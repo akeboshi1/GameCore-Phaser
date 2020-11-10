@@ -8,13 +8,8 @@ export class LoginMediator extends BasicMediator {
         super(ModuleName.LOGIN_NAME, game);
     }
 
-    show() {
-        //    this.game.renderPeer.showLogin();
-        this.__exportProperty(() => {
-            // this.mCreateRole = new CreateRole(this.game);
-            // this.mCreateRole.start();
-            this.game.renderPeer.showLogin();
-        });
+    show(param?: any) {
+        super.show(param);
     }
 
     login(phone, code, areaCode) {

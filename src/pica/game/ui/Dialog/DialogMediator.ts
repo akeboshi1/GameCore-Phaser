@@ -10,12 +10,6 @@ export class DialogMediator extends BasicMediator {
         this.dialog = new Dialog(this.game);
     }
 
-    show(param?: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI) {
-        super.show(param);
-        this.__exportProperty(() => {
-            this.game.peer.render.showPanel(this.key, param);
-        });
-    }
     public update(param?: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI) {
         super.update(param);
     }

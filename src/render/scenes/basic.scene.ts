@@ -40,4 +40,8 @@ export class BasicScene extends Phaser.Scene {
     public sleep() {
         this.scene.sleep();
     }
+
+    public stop() {
+        this.scene.stop();
+    }
 }

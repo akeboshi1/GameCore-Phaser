@@ -15,12 +15,7 @@ export class InteractiveBubbleMediator extends BasicMediator {
     }
 
     show(param?: any) {
-        this.__exportProperty(() => {
-            this.game.peer.render.showPanel(this.key, param).then(() => {
-                this.mView = this.game.peer.render[this.key];
-            });
-            this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryinteractive", this.onInteractiveBubbleHandler, this);
-        });
+        super.show(param);
     }
 
     hide() {
@@ -45,6 +40,11 @@ export class InteractiveBubbleMediator extends BasicMediator {
     update() {
         if (this.mView) this.mView.update();
     }
+
+    protected mediatorExport() {
+        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryinteractive", this.onInteractiveBubbleHandler, this);
+    }
+
     private onShowInteractiveBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
         if (this.mCurRoom !== this.currentRoom) {
             if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);

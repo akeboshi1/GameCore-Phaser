@@ -151,7 +151,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public initUI() {
         // 根据不同场景初始化不同场景ui
-        this.game.roomManager.currentRoom.initUI();
+        if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.initUI();
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -251,7 +251,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public onTapHandler(obj: any) {
-        this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
+        if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
     }
 
     @Export()

@@ -16,7 +16,7 @@ export class LoginPanel extends BasePanel {
     private mMediator: any;
     constructor(uimanager: UiManager) {
         super(uimanager.scene, uimanager.render);
-        this.mMediator = this.render.mainPeer["LoginMediator"];
+        this.mMediator = this.render.mainPeer[ModuleName.LOGIN_NAME];
         this.key = ModuleName.LOGIN_NAME;
     }
 
@@ -267,6 +267,7 @@ export class LoginPanel extends BasePanel {
             this.render.onLoginErrorHanler("error", "验证码格式错误");
             return;
         }
+        if (!this.mMediator) this.mMediator = this.render.mainPeer[ModuleName.LOGIN_NAME];
         this.mMediator.login(phone, code, this.areaCode);
         // this.render.remote[MAIN_WORKER].onLoginHandler();
     }

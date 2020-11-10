@@ -26,7 +26,7 @@ export class CreateRolePanel extends BasePanel {
     const container = this.scene.add.container(0, 0);
     container.add(this);
     this.scene.scale.on("resize", this.onResize, this);
-    this.mMediator = this.render.mainPeer["CreateRoleMediator"];
+    this.mMediator = this.render.mainPeer[ModuleName.CREATEROLE_NAME];
     this.key = ModuleName.CREATEROLE_NAME;
     // container.scale = 1 / this.mWorld.uiScale;
   }
@@ -46,6 +46,10 @@ export class CreateRolePanel extends BasePanel {
     // );
     this.addAtlas(this.key, "create_role/create_role.png", "create_role/create_role.json");
     super.preload();
+  }
+
+  hide() {
+    super.hide();
   }
 
   resize(wid: number, hei: number) {

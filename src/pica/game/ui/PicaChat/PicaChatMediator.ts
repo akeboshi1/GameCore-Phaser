@@ -10,14 +10,7 @@ export class PicaChatMediator extends BasicMediator {
     }
 
     show(param?: any) {
-        if (!this.mPanelInit) {
-            this.__exportProperty(() => {
-                this.game.peer.render.showPanel(this.key, param);
-                if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
-            });
-        } else {
-            if (this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
-        }
+        super.show(param);
     }
 
     isSceneUI() {

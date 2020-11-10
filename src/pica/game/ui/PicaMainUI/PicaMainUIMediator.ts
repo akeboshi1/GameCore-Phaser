@@ -14,24 +14,10 @@ export class PicaMainUIMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        if (!this.mPanelInit) {
-            this.__exportProperty(() => {
-                this.game.peer.render.showPanel(this.key, param);
-                this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-                this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
-                this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
-                this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
-            });
-        } else {
-            this.mView = this.game.peer.render[ModuleName.PICAMAINUI_NAME];
-            if (this.mView && this.mShowData)
-                this.mView.update(this.mShowData);
-        }
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
         this.game.emitter.off("showPanel", this.onShowPanelHandler, this);
         this.game.emitter.off("openroompanel", this.onOpenRoomHandler, this);
         this.game.emitter.off("querypraise", this.onQuery_PRAISE_ROOM, this);
@@ -50,10 +36,14 @@ export class PicaMainUIMediator extends BasicMediator {
         return true;
     }
 
-    protected onPanelInitCallBack() {
-        super.onPanelInitCallBack();
-        this.mShowData = this.playerInfo;
-        this.show(this.mShowData);
+    protected panelInit() {
+        this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
+        this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
+        this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
+        if (this.mView) {
+            this.mShowData = this.playerInfo;
+            this.mView.update(this.mShowData);
+        }
     }
 
     private onShowPanelHandler(panel: string, data?: any) {

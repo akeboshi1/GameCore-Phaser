@@ -16,36 +16,23 @@ export class CharacterInfoMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.mShowData = param;
-        if (!this.mPanelInit) {
-            this.__exportProperty(() => {
-                this.game.renderPeer.showPanel(this.key, param);
-                if (!this.mView) {
-                    this.mView = this.game.peer.render[this.key];
-                }
-                this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-                this.game.emitter.on("hide", this.onHidePanel, this);
-                this.game.emitter.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
-                this.game.emitter.on("track", this.onTrackHandler, this);
-                this.game.emitter.on("invite", this.onInviteHandler, this);
-                this.game.emitter.on("follow", this.onFollowHandler, this);
-                this.game.emitter.on("unfollow", this.onUnfollowHandler, this);
-                this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
-                this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
-            });
-        } else {
-            this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
-            if (this.mView && this.mShowData)
-                this.mView.update(this.mShowData);
-        }
+        // this.mShowData = param;
+        // if (!this.mPanelInit) {
+        //     this.__exportProperty(() => {
+        //         this.game.renderPeer.showPanel(this.key, param);
+        //         if (!this.mView) {
+        //             this.mView = this.game.peer.render[this.key];
+        //         }
+
+        //     });
+        // } else {
+        //     this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
+        //     if (this.mView && this.mShowData)
+        //         this.mView.update(this.mShowData);
+        // }
     }
 
     hide() {
-        if (this.mView) {
-            this.mView.hide();
-            this.mView.destroy();
-            this.mView = undefined;
-        }
         super.hide();
         this.game.emitter.off("hide", this.onHidePanel, this);
         this.game.emitter.off("queryOwnerInfo", this.onQueryOwnerInfo, this);
@@ -55,7 +42,6 @@ export class CharacterInfoMediator extends BasicMediator {
         this.game.emitter.off("unfollow", this.onUnfollowHandler, this);
         this.game.emitter.off("addBlack", this.onAddBlackHandler, this);
         this.game.emitter.off("removeBlack", this.onRemoveBlackHandler, this);
-        this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
     }
 
     isSceneUI() {
@@ -70,9 +56,20 @@ export class CharacterInfoMediator extends BasicMediator {
         super.destroy();
     }
 
-    protected onPanelInitCallBack() {
-        super.onPanelInitCallBack();
-        this.show(this.mShowData);
+    protected panelInit() {
+        this.game.emitter.on("hide", this.onHidePanel, this);
+        this.game.emitter.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
+        this.game.emitter.on("track", this.onTrackHandler, this);
+        this.game.emitter.on("invite", this.onInviteHandler, this);
+        this.game.emitter.on("follow", this.onFollowHandler, this);
+        this.game.emitter.on("unfollow", this.onUnfollowHandler, this);
+        this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
+        this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
+        if (this.mShowData && this.mView) this.mView.update(this.mShowData);
+    }
+
+    protected mediatorExport() {
+
     }
 
     private onHidePanel() {

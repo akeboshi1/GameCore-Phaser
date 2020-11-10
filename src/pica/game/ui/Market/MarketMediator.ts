@@ -16,22 +16,7 @@ export class MarketMediator extends BasicMediator {
   }
 
   show(param?: any) {
-    if (this.mPanelInit || this.mShow) {
-      return;
-    }
-
-    this.__exportProperty(() => {
-      this.game.peer.render.showPanel(this.key, param).then(() => {
-        this.mView = this.game.peer.render[this.key];
-      });
-      this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_popItemCard", this.onPopItemCardHandler, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
-    });
+    super.show(param);
 
     if (param && param[0]) {
       this.model.setMarketName(param[0].marketName);
@@ -42,7 +27,6 @@ export class MarketMediator extends BasicMediator {
 
   hide() {
     super.hide();
-    this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
@@ -55,6 +39,15 @@ export class MarketMediator extends BasicMediator {
     if (this.model) this.model.destroy();
     this.mModel = null;
     super.destroy();
+  }
+
+  protected mediatorExport() {
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
   }
 
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {

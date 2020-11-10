@@ -30,9 +30,9 @@ export class SceneManager {
 
     private mCurSceneName: string;
     constructor(private render: Render) {
-        this.render.exportProperty(this, this.render,ModuleName.SCENEMANAGER_NAME)
-        .onceReady(() => {
-        });
+        this.render.exportProperty(this, this.render, ModuleName.SCENEMANAGER_NAME)
+            .onceReady(() => {
+            });
     }
 
     get currentScene(): BasicScene {
@@ -61,7 +61,7 @@ export class SceneManager {
 
     public startScene(name: string, data?: any) {
         const sceneManager = this.render.game.scene;
-        if (!data) data = {};
+        if (!data) data = { render: this.render };
         if (!sceneManager) {
             return; // Promise.reject("start faild. SceneManager does not exist");
         }
@@ -83,6 +83,27 @@ export class SceneManager {
         }
     }
 
+    public launchScene(startScene: BasicScene, LaunchName: string, data?: any) {
+        const sceneManager = this.render.game.scene;
+        if (!data) data = { render: this.render };
+        if (!sceneManager) {
+            return; // Promise.reject("start faild. SceneManager does not exist");
+        }
+        if (!this.sceneClass.hasOwnProperty(LaunchName)) {
+            return;// Promise.reject("className error: " + name);
+        }
+        data.render = this.render;
+        const scene = sceneManager.getScene(LaunchName) as BasicScene;
+        this.render.emitter.once("sceneCreated", () => {
+            if (data.callBack) data.callBack();
+        }, this);
+        if (scene) {
+        } else {
+            sceneManager.add(LaunchName, this.sceneClass[LaunchName]);
+        }
+        startScene.scene.launch(LaunchName, data);
+    }
+
     public stopScene(name: string) {
         const sceneManager = this.render.game.scene;
         if (!sceneManager) {
@@ -93,7 +114,7 @@ export class SceneManager {
         }
         const scene = sceneManager.getScene(name) as BasicScene;
         if (!scene) return;
-        scene.scene.stop();
+        scene.stop();
     }
 
     public wakeScene(name: string, data?: any) {

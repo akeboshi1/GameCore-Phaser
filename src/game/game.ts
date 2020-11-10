@@ -302,7 +302,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public login() {
-        this.mUIManager.showMed("Login");
+        this.renderPeer.showLogin();
+        // this.mUIManager.showMed(ModuleName.LOGIN_NAME);
     }
 
     public async refreshToken() {

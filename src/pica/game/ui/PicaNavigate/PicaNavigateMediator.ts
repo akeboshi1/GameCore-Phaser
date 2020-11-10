@@ -10,24 +10,11 @@ export class PicaNavigateMediator extends BasicMediator {
   }
 
   show(param?: any) {
-    if (this.mPanelInit || this.mShow) {
-      this.mView.show();
-      return;
-    }
-    this.__exportProperty(() => {
-      this.game.peer.render.showPanel(this.key, param).then(() => {
-        this.mView = this.game.peer.render[this.key];
-      });
-      this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_showPanel", this.onShowPanelHandler, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-      this.game.emitter.on(RENDER_PEER + "_" + this.key + "_goHome", this.onGomeHomeHandler, this);
-    });
+    super.show(param);
   }
 
   hide() {
     super.hide();
-    this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_showPanel", this.onShowPanelHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_goHome", this.onGomeHomeHandler, this);
@@ -43,6 +30,16 @@ export class PicaNavigateMediator extends BasicMediator {
       this.mModel = undefined;
     }
     super.destroy();
+  }
+
+  protected panelInit() {
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_showPanel", this.onShowPanelHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_goHome", this.onGomeHomeHandler, this);
+  }
+
+  protected _show() {
+    this.mView.show();
   }
 
   private onCloseHandler() {

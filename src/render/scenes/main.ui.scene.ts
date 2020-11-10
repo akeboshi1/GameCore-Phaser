@@ -3,6 +3,7 @@ import { BasicScene } from "./basic.scene";
 import { Font } from "utils";
 import { BasicLayer } from "../managers/layer.manager";
 import { Size } from "src/utils/size";
+import { SceneName } from "structure";
 
 export class MainUIScene extends BasicScene {
   public readonly LAYER_UI = "uiLayer";
@@ -15,7 +16,7 @@ export class MainUIScene extends BasicScene {
   private fps: Phaser.GameObjects.Text;
   private sizeTF: Phaser.GameObjects.Text;
   constructor() {
-    super({ key: MainUIScene.name });
+    super({ key: SceneName.MAINUI_SCENE });
   }
 
   public preload() {
@@ -29,7 +30,6 @@ export class MainUIScene extends BasicScene {
   }
 
   public create() {
-    super.create();
     const width = this.cameras.main.width;
     this.fps = this.add.text(width * 0.5, 10, "", { style: { color: "#64DD17", } });
     this.fps.setStroke("0x0", 1);
@@ -56,6 +56,7 @@ export class MainUIScene extends BasicScene {
     this.layerManager.addLayer(this, BasicLayer, this.LAYER_UI, 1);
     this.layerManager.addLayer(this, BasicLayer, this.LAYER_DIALOG, 2);
     this.layerManager.addLayer(this, BasicLayer, this.LAYER_TOOLTIPS, 3);
+    super.create();
   }
 
   public setTimeout(caller, time): number {

@@ -1,5 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { ModuleName } from "structure";
 import { Game } from "../game";
 import { BasicMediator } from "./basic/basic.mediator";
 import { UIMediatorType } from "./ui.mediator.type";
@@ -202,12 +203,12 @@ export class UIManager extends PacketHandler {
     }
 
     protected onHandleShowCreateRoleUI(packet: PBpacket) {
-        this.showMed("CreateRole", packet.content);
+        this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
     }
 
     protected onHandleCloseCreateRoleUI() {
-        this.hideMed("CreateRole");
-        this.game.peer.render.hideCreateRole();
+        this.hideMed(ModuleName.CREATEROLE_NAME);
+        // this.game.peer.render.hideCreateRole();
     }
 
     protected getPanelNameByAlias(alias: string) {

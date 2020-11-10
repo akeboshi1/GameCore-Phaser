@@ -14,18 +14,10 @@ export class CreateRoleMediator extends BasicMediator {
   }
 
   show(params?: any) {
-    if (!this.mPanelInit) {
-      this.__exportProperty(() => {
-        this.game.renderPeer.showCreateRole(params);
-        if (!this.mView) this.mView = this.game.peer.render[ModuleName.CREATEROLE_NAME];
-      });
-    } else {
-      if (this.mView) this.mView = this.game.peer.render[ModuleName.CREATEROLE_NAME];
-    }
+    super.show(params);
   }
 
   randomName() {
-    // TOOD
     this.mCreateRole.onRandomNameHandler();
   }
 
@@ -40,7 +32,12 @@ export class CreateRoleMediator extends BasicMediator {
     }
   }
 
+  protected panelInit() {
+    this.game.renderPeer.showCreateRole(this.mShowData);
+  }
+
   private randomNameCallBack(val: string) {
+    if (!this.mView) this.mView = this.game.peer.render[ModuleName.CREATEROLE_NAME];
     this.mView.setNickName(val);
   }
 

@@ -101,7 +101,6 @@ export class BasePanel extends Panel {
 
     protected exportComplete() {
         this.exported = true;
-        this.render.renderEmitter(EventType.PANEL_INIT, this.key);
         for (const listener of this.exportListeners) {
             listener();
         }

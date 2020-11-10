@@ -14,23 +14,6 @@ export class PicHandheldMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.mShowData = param;
-        if (!this.mPanelInit) {
-            this.__exportProperty(() => {
-                this.game.peer.render.showPanel(this.key, param);
-                if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
-                this.game.emitter.on(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
-                this.game.emitter.on("changehandheld", this.onChangeHandheld, this);
-                this.game.emitter.on("clearhandheld", this.onClearHandheld, this);
-                this.game.emitter.on("handheldlist", this.onReqHandheldList, this);
-                this.game.emitter.on("openeqiped", this.openEquipedPanel, this);
-            });
-        } else {
-            if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
-            if (this.mView && this.mShowData) {
-                this.mView.setEqipedDatas(this.mShowData);
-            }
-        }
     }
 
     hide() {
@@ -55,9 +38,11 @@ export class PicHandheldMediator extends BasicMediator {
         return true;
     }
 
-    protected onPanelInitCallBack() {
-        super.onPanelInitCallBack();
-        this.show();
+    protected panelInit() {
+        this.game.emitter.on("changehandheld", this.onChangeHandheld, this);
+        this.game.emitter.on("clearhandheld", this.onClearHandheld, this);
+        this.game.emitter.on("handheldlist", this.onReqHandheldList, this);
+        this.game.emitter.on("openeqiped", this.openEquipedPanel, this);
     }
 
     private onReqHandheldList() {

@@ -9,12 +9,11 @@ import { op_client } from "pixelpai_proto";
 import { Account } from "./account/account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
-import { UiManager } from "./ui/ui.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
@@ -39,7 +38,7 @@ export class Render extends RPCPeer implements GameMain {
     protected mInputManager: InputManager;
     // protected mInputManager: InputManager;
     protected mConfig: ILauncherConfig;
-    protected mUiManager: UiManager;
+    protected mUiManager: PicaRenderUiManager;
     protected mDisplayManager: DisplayManager;
     protected mLocalStorageManager: LocalStorageManager;
     private mCallBack: Function;
@@ -95,7 +94,7 @@ export class Render extends RPCPeer implements GameMain {
         return this.mAccount;
     }
 
-    get uiManager(): UiManager {
+    get uiManager(): PicaRenderUiManager {
         return this.mUiManager;
     }
 
@@ -346,14 +345,19 @@ export class Render extends RPCPeer implements GameMain {
         this.mMainPeer.renderEmitter(eventType, data);
     }
 
+    public showMediator(name: string, isShow: boolean) {
+        this.mMainPeer.showMediator(name, isShow);
+    }
+
     @Export()
     public showLogin() {
-        this.mSceneManager.startScene("LoginScene", this);
+        this.mSceneManager.startScene(SceneName.LOGIN_SCENE, this);
     }
 
     @Export()
     public hideLogin() {
-        this.sceneManager.stopScene("LoginScene");
+        this.uiManager.hidePanel(ModuleName.LOGIN_NAME);
+        this.sceneManager.stopScene(SceneName.LOGIN_SCENE);
     }
 
     @Export()
@@ -369,14 +373,14 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.str])
     public showPanel(panelName: string, params?: any): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            const panel = this.mUiManager.showPanel(panelName, params);
-            if (!panel) {
-                reject(false);
-                return;
-            }
-
-            panel.addExportListener(() => {
-                resolve(true);
+            this.mUiManager.showPanel(panelName, params).then((panel) => {
+                if (!panel) {
+                    reject(false);
+                    return;
+                }
+                panel.addExportListener(() => {
+                    resolve(true);
+                });
             });
         });
     }

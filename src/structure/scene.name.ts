@@ -4,4 +4,5 @@ export class SceneName {
     public static LOADING_SCENE = "LoadingScene";
     public static SKYBOX_SCENE = "SkyboxScene";
     public static LOGIN_SCENE = "LoginScene";
+    public static MAINUI_SCENE = "MainUIScene";
 }

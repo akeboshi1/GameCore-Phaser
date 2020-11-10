@@ -2,12 +2,13 @@ import { Logger } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "../scenes/basic.scene";
+import { Panel } from "apowophaserui";
+import { SceneName } from "structure";
 
 export class UiManager {
     protected mScene: BasicScene;
     protected mPanelMap: Map<string, BasePanel>;
     protected mCache: any[] = [];
-    protected mCacheUI: Function;
     private readonly mPanelClass = {
         "BaseMediator": BasePanel,
         // "LoginMediator": LoginPanel,
@@ -20,9 +21,13 @@ export class UiManager {
 
     public setScene(scene: BasicScene) {
         this.mScene = scene;
-        if (scene && this.mCacheUI) {
-            this.mCacheUI();
-            this.mCacheUI = undefined;
+        if (scene) {
+            if (this.mCache) {
+                for (const tmp of this.mCache) {
+                    this.showPanel(tmp.name, tmp.param);
+                }
+                this.mCache.length = 0;
+            }
         }
     }
 
@@ -70,36 +75,29 @@ export class UiManager {
         this.mScene = undefined;
     }
 
-    public showPanel(type: string, param?: any) {
-        if (!this.mScene) {
-            const scene = this.render.sceneManager.currentScene;
-            if (!scene) return;
-            scene.scene.launch("MainUIScene");
-            this.mCache.push(param);
-            this.mCacheUI = this.showPanel;
-            return;
-        }
-        if (!this.mPanelMap) {
-            this.mPanelMap = new Map();
-        }
-        // type = this.getPanelNameByAlias(type);
-        const className: string = type + "Panel";
-        // let panel: BasePanel = this.mPanelMap.get(className);
-        // if (!panel) {
-        // const path: string = `./${type}/${type}Panel`;
-        const ns: any = require(`./${type}/${className}`);
-        const panel = new ns[className](this);
-        if (!panel) {
-            Logger.getInstance().error(`error ${type} no panel can show!!!`);
-            return;
-        }
-        this.mPanelMap.set(type + "Panel", panel);
-        //     // mediator.setName(type);
-        // }
-        // // if (mediator.showing) return;
-        // if (param) mediator.setParam(param);
-        panel.show(param);
-        return panel;
+    public showPanel(type: string, param?: any): Promise<BasePanel> {
+        return new Promise<BasePanel>((resolve, reject) => {
+            if (!this.mScene) {
+                const scene = this.render.sceneManager.currentScene;
+                if (!scene) {
+                    reject();
+                    return;
+                }
+                this.render.sceneManager.launchScene(scene, SceneName.MAINUI_SCENE);
+                this.mCache.push({ name: type, param });
+                this.render.emitter.once("sceneCreated", () => {
+                    if (this.mCache) {
+                        for (const tmp of this.mCache) {
+                            resolve(this._showPanel(tmp.name, tmp.param));
+                        }
+                        this.mCache.length = 0;
+                    }
+                }, this);
+                return;
+            } else {
+                resolve(this._showPanel(type, param));
+            }
+        });
     }
 
     public hidePanel(type: string) {
@@ -137,7 +135,22 @@ export class UiManager {
     }
 
     protected clearCache() {
-        this.mCacheUI = undefined;
         this.mCache = [];
+    }
+
+    protected _showPanel(type: string, param?: any): BasePanel {
+        if (!this.mPanelMap) {
+            this.mPanelMap = new Map();
+        }
+        const className: string = type + "Panel";
+        const ns: any = require(`./${type}/${className}`);
+        const panel = new ns[className](this);
+        if (!panel) {
+            Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
+        }
+        this.mPanelMap.set(type + "Panel", panel);
+        panel.show(param);
+        return panel;
     }
 }

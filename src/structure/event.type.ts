@@ -89,7 +89,6 @@ export class EventType {
     public static REQ_NEW_FANS: string = "reqNewFans";
 
     // ============== render event name
-    public static PANEL_INIT = "PANEL_INIT";
     public static SHOW_MED = "SHOW_MED";
     public static QUERY_PRAISE = "QUERY_PRAISE";
     public static QUERY_MARKET_REQUEST = "QUERY_MARKET_REQUEST";
