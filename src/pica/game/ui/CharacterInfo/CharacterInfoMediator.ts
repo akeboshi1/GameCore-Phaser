@@ -43,14 +43,14 @@ export class CharacterInfoMediator extends BasicMediator {
 
     hide() {
         super.hide();
-        this.game.emitter.on("hide", this.onHidePanel, this);
-        this.game.emitter.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
-        this.game.emitter.on("track", this.onTrackHandler, this);
-        this.game.emitter.on("invite", this.onInviteHandler, this);
-        this.game.emitter.on("follow", this.onFollowHandler, this);
-        this.game.emitter.on("unfollow", this.onUnfollowHandler, this);
-        this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
-        this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
+        this.game.emitter.off("hide", this.onHidePanel, this);
+        this.game.emitter.off("queryOwnerInfo", this.onQueryOwnerInfo, this);
+        this.game.emitter.off("track", this.onTrackHandler, this);
+        this.game.emitter.off("invite", this.onInviteHandler, this);
+        this.game.emitter.off("follow", this.onFollowHandler, this);
+        this.game.emitter.off("unfollow", this.onUnfollowHandler, this);
+        this.game.emitter.off("addBlack", this.onAddBlackHandler, this);
+        this.game.emitter.off("removeBlack", this.onRemoveBlackHandler, this);
         this.game.emitter.off(EventType.PANEL_INIT, this.onPanelInitCallBack, this);
     }
 
@@ -68,6 +68,7 @@ export class CharacterInfoMediator extends BasicMediator {
             this.mView.destroy();
             this.mView = undefined;
         }
+        super.destroy();
     }
 
     protected onPanelInitCallBack() {

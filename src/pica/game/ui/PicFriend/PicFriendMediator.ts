@@ -70,6 +70,7 @@ export class PicFriendMediator extends BasicMediator {
             this.mView.hide();
             this.mView = undefined;
         }
+        super.destroy();
     }
 
     fetchCurrentFriend() {

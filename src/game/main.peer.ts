@@ -375,11 +375,11 @@ export class MainPeer extends RPCPeer {
         if (med) med.onQueryNextDialog(id, comid, data);
     }
 
-    @Export()
-    public requestHandheldList() {
-        const med: PicHandheldMediator = this.game.uiManager.getMed(PicHandheldMediator.NAME) as PicHandheldMediator;
-        if (med) med.requestHandheldList();
-    }
+    // @Export()
+    // public requestHandheldList() {
+    //     const med: PicHandheldMediator = this.game.uiManager.getMed(PicHandheldMediator.NAME) as PicHandheldMediator;
+    //     if (med) med.requestHandheldList();
+    // }
 
     @Export([webworker_rpc.ParamType.str])
     public renderEmitter(eventType: string, data: any) {

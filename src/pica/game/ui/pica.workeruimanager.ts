@@ -5,6 +5,7 @@ import { DialogMediator } from "./Dialog";
 import { LoginMediator } from "./login";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
+import { PicHandheldMediator } from "./PicHandheld/PicHandheldMediator";
 
 export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {
@@ -18,6 +19,7 @@ export class PicaWorkerUiManager extends UIManager {
         this.mMedMap.set(ActivityMediator.NAME, new ActivityMediator(this.game));
         this.mMedMap.set(PicaChatMediator.NAME, new PicaChatMediator(this.game));
         this.mMedMap.set(PicaMainUIMediator.NAME, new PicaMainUIMediator(this.game));
+        this.mMedMap.set(PicHandheldMediator.NAME, new PicHandheldMediator(this.game));
         super.showMainUI();
     }
 

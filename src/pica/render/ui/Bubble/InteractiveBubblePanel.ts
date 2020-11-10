@@ -1,4 +1,4 @@
-import { BasePanel, PlayScene, Render, SceneManager, UiManager } from "gamecoreRender";
+import { BasePanel, PlayScene, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Handler, Pos, Tool, Url } from "utils";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
