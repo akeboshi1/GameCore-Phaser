@@ -3,8 +3,8 @@ import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, Handler, i18n } from "utils";
-import { PicPartyNavigationPanel } from "./PicPartyNavigationPanel";
-export class PicPartyListPanel extends BasePanel {
+import { PicaPartyNavigationPanel } from "./PicaPartyNavigationPanel";
+export class PicaPartyListPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
@@ -13,11 +13,11 @@ export class PicPartyListPanel extends BasePanel {
     private mineBtn: TabButton;
     private searchBtn: TabButton;
     private topCheckBox: CheckboxGroup;
-    private partyNavigationPanel: PicPartyNavigationPanel;
+    private partyNavigationPanel: PicaPartyNavigationPanel;
     private mPartyData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = ModuleName.PICPARTYLIST_NAME;
+        this.key = ModuleName.PICAPARTYLIST_NAME;
     }
 
     public resize(w: number, h: number) {
@@ -109,7 +109,7 @@ export class PicPartyListPanel extends BasePanel {
         this.topCheckBox.appendItemAll([this.navigationBtn, this.mineBtn, this.searchBtn]);
         this.topCheckBox.on("selected", this.onTabBtnHandler, this);
         this.content.add([this.navigationBtn, this.mineBtn, this.searchBtn]);
-        this.partyNavigationPanel = new PicPartyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
+        this.partyNavigationPanel = new PicaPartyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
         this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
         this.partyNavigationPanel.y = 0 * this.dpr;
         this.content.add(this.partyNavigationPanel);

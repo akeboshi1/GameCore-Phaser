@@ -3,7 +3,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 
-export class PicPartyList extends BasicModel {
+export class PicaPartyList extends BasicModel {
     constructor(game: Game) {
         super(game);
         this.register();

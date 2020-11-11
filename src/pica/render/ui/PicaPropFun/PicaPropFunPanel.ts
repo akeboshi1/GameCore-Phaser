@@ -4,7 +4,7 @@ import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Coin, Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-export class PicPropFunPanel extends BasePanel {
+export class PicaPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private itemName: Phaser.GameObjects.Text;
     private titleName: Phaser.GameObjects.Text;
@@ -26,7 +26,7 @@ export class PicPropFunPanel extends BasePanel {
     private line: boolean = false;
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = ModuleName.PICPROPFUN_NAME;
+        this.key = ModuleName.PICAPROPFUN_NAME;
     }
 
     resize(w: number, h: number) {

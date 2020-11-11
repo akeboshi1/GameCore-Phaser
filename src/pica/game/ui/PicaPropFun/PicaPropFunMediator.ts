@@ -1,9 +1,9 @@
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
 
-export class PicPropFunMediator extends BasicMediator {
+export class PicaPropFunMediator extends BasicMediator {
     constructor(game: Game) {
-        super(ModuleName.PICPROPFUN_NAME, game);
+        super(ModuleName.PICAPROPFUN_NAME, game);
     }
 
     show(param?: any) {

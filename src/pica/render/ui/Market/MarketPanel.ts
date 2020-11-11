@@ -461,6 +461,6 @@ export class MarketPanel extends BasePanel {
     return itemdata;
   }
   private showPropFun(config: any) {// PicPropFunConfig
-    this.render.mainPeer.showMediator("PicPropFun", true, config);
+    this.render.mainPeer.showMediator(ModuleName.PICAPROPFUN_NAME, true, config);
   }
 }

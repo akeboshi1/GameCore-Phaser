@@ -1,5 +1,5 @@
 import { op_client } from "pixelpai_proto";
-export class PicPropFunConfig {
+export class PicaPropFunConfig {
     resultHandler: { key: string, confirmFunc: string, cancelFunc?: string, confirmAddData?: any };
     slider?: boolean;
     data: op_client.ICountablePackageItem;

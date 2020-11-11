@@ -815,7 +815,7 @@ export class FurniBagPanel extends BasePanel {
   }
 
   private showPropFun(config: any) {// PicPropFunConfig
-    this.render.mainPeer.showMediator("PicPropFun", true, config);
+    this.render.mainPeer.showMediator(ModuleName.PICAPROPFUN_NAME, true, config);
   }
 
   private get serviceTimestamp(): Promise<number> {

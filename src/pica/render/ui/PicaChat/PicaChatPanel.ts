@@ -448,7 +448,7 @@ export class PicaChatPanel extends BasePanel {
         }
     }
     private showPropFun(config: any) {
-        this.showPanelHandler("PicPropFun", true, config);
+        this.showPanelHandler(ModuleName.PICAPROPFUN_NAME, true, config);
     }
     private showNoticeHandler(text: string) {
         this.render.mainPeer.showNoticeHandler(text);

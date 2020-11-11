@@ -4,7 +4,7 @@ import { UIAtlasKey } from "picaRes";
 import { ChineseUnit } from "structure";
 import { Font, Handler, i18n, Url } from "utils";
 
-export class PicPartyNavigationPanel extends Phaser.GameObjects.Container {
+export class PicaPartyNavigationPanel extends Phaser.GameObjects.Container {
     private mGameGrid: GameGridTable;
     private signProgressPanel: SignProgressPanel;
     private itemtips: ItemInfoTips;

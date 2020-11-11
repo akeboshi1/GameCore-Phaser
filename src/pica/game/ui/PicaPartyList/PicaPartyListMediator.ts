@@ -1,13 +1,13 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { PicPartyList } from "./PicPartyList";
+import { PicaPartyList } from "./PicaPartyList";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
-export class PicPartyListMediator extends BasicMediator {
+export class PicaPartyListMediator extends BasicMediator {
     constructor(game: Game) {
-        super(ModuleName.PICPARTYLIST_NAME, game);
+        super(ModuleName.PICAPARTYLIST_NAME, game);
 
         if (!this.mModel) {
-            this.mModel = new PicPartyList(game);
+            this.mModel = new PicaPartyList(game);
             this.game.emitter.on("questlist", this.on_PARTY_LIST, this);
             this.game.emitter.on("progresslist", this.on_PLAYER_PROGRESS, this);
         }
@@ -67,7 +67,7 @@ export class PicPartyListMediator extends BasicMediator {
         this.mView.setOnlineProgress(content);
     }
 
-    private get model(): PicPartyList {
-        return (<PicPartyList>this.mModel);
+    private get model(): PicaPartyList {
+        return (<PicaPartyList>this.mModel);
     }
 }
