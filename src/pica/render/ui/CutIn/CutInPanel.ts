@@ -14,9 +14,8 @@ export class CutInPanel extends BasePanel {
       this.preload();
       return;
     }
-    // if (!param || param.length < 1) return;
-    if (param && param.length > 0) {
-      const text = param[0].text;
+    if (param) {
+      const text = param.text;
       if (this.mName) {
         this.mName.setText(text[0].text);
       }

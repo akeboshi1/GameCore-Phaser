@@ -68,7 +68,7 @@ export class DialogPanel extends BasePanel {
         }
         this.setInteractive();
         this.addListen();
-        this.setDialogData(this.mShowData[0]);
+        this.setDialogData(this.mShowData);
     }
     init() {
         const width = this.scaleWidth;
@@ -192,7 +192,7 @@ export class DialogPanel extends BasePanel {
     }
     public update(param?: any) {
         this.mShowData = param;
-        this.setDialogData(param[0]);
+        this.setDialogData(param);
     }
     private onItemHandler(item: NpcDialogueItem) {
         for (const temp of this.listItems) {
