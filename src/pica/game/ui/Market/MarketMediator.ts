@@ -23,6 +23,12 @@ export class MarketMediator extends BasicMediator {
     } else {
       this.model.setMarketName("shop");
     }
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
   }
 
   hide() {
@@ -42,12 +48,6 @@ export class MarketMediator extends BasicMediator {
   }
 
   protected mediatorExport() {
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_popItemCard", this.onPopItemCardHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
   }
 
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
