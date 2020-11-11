@@ -57,7 +57,7 @@ export class PicPropFunPanel extends BasePanel {
         }
         this.setInteractive();
         this.addListen();
-        const config = this.mShowData[0];// PicPropFunConfig
+        const config = this.mShowData;// PicPropFunConfig
         this.setProp(config);
         this.updateData();
     }
