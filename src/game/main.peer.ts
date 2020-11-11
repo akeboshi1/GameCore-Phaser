@@ -277,13 +277,6 @@ export class MainPeer extends RPCPeer {
         (this.game.uiManager.getMed(name) as PicaChatMediator).buyItem(data);
     }
 
-    @Export()
-    public showMed(type: string, ...param: any[]) {
-        if (this.game.uiManager) {
-            this.game.uiManager.showMed(type, param);
-        }
-    }
-
     // ============= 心跳调用主进程
     @Export()
     public startHeartBeat() {
