@@ -46,14 +46,14 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
-        this.mMedMap.forEach((mediator: any, key: string) => {
+        this.mMedMap.forEach((mediator: any) => {
             if (mediator.isSceneUI() && !mediator.isShow()) {
                 mediator.show();
             }
         });
     }
 
-    public showMed(type: string, ...param: any[]) {
+    public showMed(type: string, param?: any) {
         if (!this.mMedMap) {
             this.mMedMap = new Map();
         }
@@ -76,7 +76,7 @@ export class UIManager extends PacketHandler {
         mediator.show(param);
     }
 
-    public updateMed(type: string, ...param: any[]) {
+    public updateMed(type: string, param?: any) {
         if (!this.mMedMap) {
             return;
         }

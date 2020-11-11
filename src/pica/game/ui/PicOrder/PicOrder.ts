@@ -6,6 +6,7 @@ import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 export class PicOrder extends BasicModel {
     constructor(game: Game) {
         super(game);
+        this.register();
     }
     register() {
         const connection = this.connection;
@@ -65,11 +66,11 @@ export class PicOrder extends BasicModel {
     }
     private on_ORDER_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = packet.content;
-        this.game.emitter.emit("questlist", content);
+        this.event.emit("questlist", content);
     }
     private on_PLAYER_PROGRESS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
-        this.game.emitter.emit("progresslist", content);
+        this.event.emit("progresslist", content);
     }
 
     private on_CLIENT_TEST(packet: PBpacket) {

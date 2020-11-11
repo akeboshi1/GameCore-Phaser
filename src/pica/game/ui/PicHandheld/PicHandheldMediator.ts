@@ -1,6 +1,5 @@
 import { PicHandheld } from "./PicHandheld";
-import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
-import { EventType, MAIN_WORKER, ModuleName } from "structure";
+import { MAIN_WORKER, ModuleName } from "structure";
 import { BasicMediator, Game } from "gamecore";
 import { op_client } from "pixelpai_proto";
 

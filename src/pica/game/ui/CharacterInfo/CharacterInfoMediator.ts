@@ -14,24 +14,6 @@ export class CharacterInfoMediator extends BasicMediator {
         this.game.emitter.on("otherInfo", this.onOtherCharacterInfo, this);
     }
 
-    show(param?: any) {
-        super.show(param);
-        // this.mShowData = param;
-        // if (!this.mPanelInit) {
-        //     this.__exportProperty(() => {
-        //         this.game.renderPeer.showPanel(this.key, param);
-        //         if (!this.mView) {
-        //             this.mView = this.game.peer.render[this.key];
-        //         }
-
-        //     });
-        // } else {
-        //     this.mView = this.game.peer.render[ModuleName.CHARACTERINFO_NAME];
-        //     if (this.mView && this.mShowData)
-        //         this.mView.update(this.mShowData);
-        // }
-    }
-
     hide() {
         super.hide();
         this.game.emitter.off("hide", this.onHidePanel, this);
@@ -66,10 +48,6 @@ export class CharacterInfoMediator extends BasicMediator {
         this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
         this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
         if (this.mShowData && this.mView) this.mView.update(this.mShowData);
-    }
-
-    protected mediatorExport() {
-
     }
 
     private onHidePanel() {

@@ -12,3 +12,4 @@ export * from "./tips/ItemInfoTips";
 export * from "./tips/TextToolTip";
 export * from "./tips/itoolTip";
 export * from "./tips/toolTip";
+export * from "./image.value";
