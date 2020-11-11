@@ -32,8 +32,8 @@ export class CreateRolePanel extends BasePanel {
   }
 
   show(param: any) {
-    if (param[0]) {
-      this.avatars = param[0].avatars;
+    if (param) {
+      this.avatars = param.avatars;
     }
     super.show(param);
   }
@@ -286,6 +286,7 @@ export class CreateRolePanel extends BasePanel {
 
   private setPageNum(val: number) {
     this.mCurPageNum = val;
+    if (!this.avatars) return;
     if (this.mCurPageNum < 0) {
       this.mCurPageNum = this.avatars.length - 1;
     } else if (this.mCurPageNum >= this.avatars.length) {
