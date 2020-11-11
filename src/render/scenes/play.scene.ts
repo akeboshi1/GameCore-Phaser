@@ -129,7 +129,7 @@ export class PlayScene extends RoomScene {
     private onLoadCompleteHandler() {
         Logger.getInstance().log("playload complete");
         this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-        this.render.sceneManager.sleepScene("LoadingScene");
+        this.render.sceneManager.sleepScene(SceneName.LOADING_SCENE);
     }
 
     private checkOriention(orientation) {

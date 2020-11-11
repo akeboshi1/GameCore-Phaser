@@ -557,7 +557,8 @@ export class Render extends RPCPeer implements GameMain {
         data.callBack = () => {
             if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
         };
-        this.mSceneManager.startScene("LoadingScene", data);
+        data.dpr = window.devicePixelRatio;
+        this.mSceneManager.startScene(SceneName.LOADING_SCENE, data);
     }
 
     @Export()
@@ -566,7 +567,7 @@ export class Render extends RPCPeer implements GameMain {
             // Logger.getInstance().error("no game created");
             return;
         }
-        this.mSceneManager.sleepScene("LoadingScene");
+        this.mSceneManager.sleepScene(SceneName.LOADING_SCENE);
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
