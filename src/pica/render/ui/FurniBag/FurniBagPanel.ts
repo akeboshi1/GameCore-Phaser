@@ -236,6 +236,22 @@ export class FurniBagPanel extends BasePanel {
     this.queryPackege(isupdate);
   }
 
+  public onSellPropsHandler(category: number, prop: any, count: number) {// op_client.CountablePackageItem
+    this.mCategoryScroll.addListen();
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_sellProps", { prop, count, category });
+  }
+  public onSellPropsFailedHandler(prop: any) {
+    this.mCategoryScroll.addListen();
+  }
+
+  public onUsePropsHandler(prop: any, count: number) {// op_client.CountablePackageItem
+    this.mCategoryScroll.addListen();
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_useprops", { itemid: prop.id, count });
+  }
+  public onUsePropsFailedHandler(prop: any) {
+    this.mCategoryScroll.addListen();
+  }
+
   protected preload() {
     this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
     this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
@@ -713,11 +729,14 @@ export class FurniBagPanel extends BasePanel {
         resource.display = data.display;
       }
       resource.animations = data.animations;
-      const confirmHandler = new Handler(this, this.onSellPropsHandler, [this.categoryType]);
-      const cancelHandler = new Handler(this, () => {
-        this.mCategoryScroll.addListen();
-      });
-      this.showPropFun({ confirmHandler, data, cancelHandler, title, resource });
+      const resultHandler = {
+        key: this.key,
+        confirmFunc: this.onSellPropsHandler.name,
+        cancelFunc: this.onSellPropsFailedHandler.name,
+        confirmAddData: this.categoryType
+      };
+
+      this.showPropFun({ resultHandler, data, title, resource });
     }
   }
 
@@ -726,11 +745,12 @@ export class FurniBagPanel extends BasePanel {
     if (this.mSelectedItemData.length > 0) {
       const data = this.mSelectedItemData[0];
       const title = i18n.t("common.use");
-      const confirmHandler = new Handler(this, this.onUsePropsHandler);
-      const cancelHandler = new Handler(this, () => {
-        this.mCategoryScroll.addListen();
-      });
-      this.showPropFun({ confirmHandler, data, cancelHandler, price: false, title });
+      const resultHandler = {
+        key: this.key,
+        confirmFunc: this.onUsePropsHandler.name,
+        cancelFunc: this.onUsePropsFailedHandler.name
+      };
+      this.showPropFun({ resultHandler, data, price: false, title });
     }
   }
   private onSaveBtnHandler() {
@@ -749,15 +769,6 @@ export class FurniBagPanel extends BasePanel {
   private onResetBtnHandler() {
     // if (this.mSelectedItemData.length > 0)
     this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryResetAvatar");
-  }
-  private onSellPropsHandler(category: number, prop: any, count: number) {// op_client.CountablePackageItem
-    this.mCategoryScroll.addListen();
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_sellProps", { prop, count, category });
-  }
-
-  private onUsePropsHandler(prop: any, count: number) {// op_client.CountablePackageItem
-    this.mCategoryScroll.addListen();
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_useprops", { itemid: prop.id, count });
   }
 
   private showSeach(parent: TextButton) {

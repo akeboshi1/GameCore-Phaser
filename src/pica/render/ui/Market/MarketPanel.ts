@@ -148,6 +148,10 @@ export class MarketPanel extends BasePanel {
     super.destroy();
   }
 
+  public onPropConfirmHandler(prop: any, count: number) {// op_client.CountablePackageItem
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_buyItem", prop);
+  }
+
   protected layoutCategories() {
     this.mCategoriesBar.y = this.mCategoriesContainer.height + this.mShelfContainer.y;
     this.mSubCategeoriesContainer.addAt(this.mCategoriesBar, 0);
@@ -434,10 +438,8 @@ export class MarketPanel extends BasePanel {
     const data = itemdata;
     const title = i18n.t("market.payment");
     const resource = this.mSelectItem.getData("display");
-    const confirmHandler = new Handler(this, () => {
-      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_buyItem", prop);
-    }, [prop]);
-    this.showPropFun({ confirmHandler, data, resource, slider: false, title });
+    const resultHandler = { key: this.key, confirmFunc: this.onPropConfirmHandler.name, confirmAddData: prop };
+    this.showPropFun({ resultHandler, data, resource, slider: false, title });
   }
 
   private onCloseHandler() {

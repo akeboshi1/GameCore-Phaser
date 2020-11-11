@@ -26,3 +26,4 @@ export * from "./Market/MarketPanel";
 export * from "./Market/NumberCounter";
 export * from "./Market/item";
 export * from "./PicFriend/PicFriendPanel";
+export * from "./PicPropFun/PicPropFunPanel";
