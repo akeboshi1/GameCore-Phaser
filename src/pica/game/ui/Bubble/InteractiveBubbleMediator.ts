@@ -16,6 +16,7 @@ export class InteractiveBubbleMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
+        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryinteractive", this.onInteractiveBubbleHandler, this);
     }
 
     hide() {
@@ -42,7 +43,6 @@ export class InteractiveBubbleMediator extends BasicMediator {
     }
 
     protected mediatorExport() {
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryinteractive", this.onInteractiveBubbleHandler, this);
     }
 
     private onShowInteractiveBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {

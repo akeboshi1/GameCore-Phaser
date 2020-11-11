@@ -35,6 +35,10 @@ export class BasePanel extends Panel {
         return this.mInitialized;
     }
 
+    public hide() {
+        super.hide();
+    }
+
     public destroy() {
         if (this.render && this.render.hasOwnProperty(this.key)) delete this.render[this.key];
         this.exportListeners.length = 0;

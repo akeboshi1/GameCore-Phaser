@@ -11,6 +11,9 @@ export class PicaNavigateMediator extends BasicMediator {
 
   show(param?: any) {
     super.show(param);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_showPanel", this.onShowPanelHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_goHome", this.onGomeHomeHandler, this);
   }
 
   hide() {
@@ -33,9 +36,6 @@ export class PicaNavigateMediator extends BasicMediator {
   }
 
   protected panelInit() {
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_showPanel", this.onShowPanelHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_goHome", this.onGomeHomeHandler, this);
   }
 
   protected _show() {
