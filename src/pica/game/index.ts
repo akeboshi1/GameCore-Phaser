@@ -28,3 +28,5 @@ export { MarketMediator } from "./ui/Market/MarketMediator";
 export * from "./ui/PicFriend/PicFriend";
 export * from "./ui/PicFriend/PicFriendMediator";
 export * from "./ui/PicFriend/PicFriendRelation";
+export { PicPropFunConfig } from "./ui/PicPropFun/PicPropFunConfig";
+export { PicPropFunMediator } from "./ui/PicPropFun/PicPropFunMediator";

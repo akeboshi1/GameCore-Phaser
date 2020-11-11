@@ -281,7 +281,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
         const len = prop.affectValues.length;
         for (let i = 0; i < len; i++) {
           const affect = prop.affectValues[i];
-          if (property.hasProperty(affect.key)) {
+          if (property.propertiesMap.has(affect.key)) {
             const proper = property.propertiesMap.get(affect.key);
             const value = affect.value > 0 ? `[color=#ffff00]+${affect.value}[/color]` : `[color=#ff0000]${affect.value}[/color]`;
             attri += "\n" + `${proper.name}: ${value}`;
@@ -299,7 +299,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
         const len = prop.requireValues.length;
         for (let i = 0; i < len; i++) {
           const require = prop.requireValues[i];
-          if (property.hasProperty(require.key)) {
+          if (property.propertiesMap.has(require.key)) {
             const proper = property.propertiesMap.get(require.key);
             const value = proper.value >= require.value ? `[color=#00ff00](${require.value})[/color]` : `[color=#00ff00](${require.value})[/color]`;
             need += `\n${proper.name}: ${value}`;

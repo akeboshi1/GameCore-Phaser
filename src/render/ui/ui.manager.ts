@@ -7,7 +7,7 @@ import { SceneName } from "structure";
 
 export class UiManager {
     protected mScene: BasicScene;
-    protected mPanelMap: Map<string, BasePanel>;
+    protected mPanelMap: Map<string, BasePanel>;// key: "<ModelName>Panel"
     protected mCache: any[] = [];
     private readonly mPanelClass = {
         "BaseMediator": BasePanel,

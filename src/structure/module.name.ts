@@ -17,4 +17,5 @@ export class ModuleName {
     public static FURNIBAG_NAME: string = "FurniBag";
     public static Market_NAME: string = "Market";
     public static PICORDER_NAME: string = "PicOrder";
+    public static PICPROPFUN_NAME: string = "PicPropFun";
 }
