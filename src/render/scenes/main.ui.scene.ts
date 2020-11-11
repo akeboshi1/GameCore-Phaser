@@ -6,9 +6,9 @@ import { Size } from "src/utils/size";
 import { SceneName } from "structure";
 
 export class MainUIScene extends BasicScene {
-  public readonly LAYER_UI = "uiLayer";
-  public readonly LAYER_DIALOG = "dialogLayer";
-  public readonly LAYER_TOOLTIPS = "toolTipsLyaer";
+  public static readonly LAYER_UI = "uiLayer";
+  public static readonly LAYER_DIALOG = "dialogLayer";
+  public static readonly LAYER_TOOLTIPS = "toolTipsLyaer";
   private timeOutID = 0;
   private timeOutCancelMap = {};
   private timeOutCallerList = [];
@@ -53,9 +53,9 @@ export class MainUIScene extends BasicScene {
     // this.scale.on("resize", this.checkSize, this);
 
     // set layers
-    this.layerManager.addLayer(this, BasicLayer, this.LAYER_UI, 1);
-    this.layerManager.addLayer(this, BasicLayer, this.LAYER_DIALOG, 2);
-    this.layerManager.addLayer(this, BasicLayer, this.LAYER_TOOLTIPS, 3);
+    this.layerManager.addLayer(this, BasicLayer, MainUIScene.LAYER_UI, 1);
+    this.layerManager.addLayer(this, BasicLayer, MainUIScene.LAYER_DIALOG, 2);
+    this.layerManager.addLayer(this, BasicLayer, MainUIScene.LAYER_TOOLTIPS, 3);
     super.create();
   }
 

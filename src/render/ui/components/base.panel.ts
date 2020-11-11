@@ -1,5 +1,5 @@
 import { Panel } from "apowophaserui";
-import { MainUIScene } from "src/render/scenes/main.ui.scene";
+import { MainUIScene } from "../../scenes/main.ui.scene";
 import { EventType } from "structure";
 import { Logger, Url } from "utils";
 import { Render } from "../../render";
@@ -56,7 +56,7 @@ export class BasePanel extends Panel {
 
     protected init() {
         super.init();
-        (<MainUIScene>this.mScene).layerManager.addToLayer("uiLayer", this);
+        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_UI, this);
         this.setLinear(this.key);
         Logger.getInstance().log("init========", this.key);
         this.__exportProperty();
