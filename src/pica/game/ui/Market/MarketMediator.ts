@@ -42,6 +42,11 @@ export class MarketMediator extends BasicMediator {
   }
 
   destroy() {
+    this.game.emitter.off("getMarketCategories", this.onCategoriesHandler, this);
+    this.game.emitter.off("queryMarket", this.onQueryResuleHandler, this);
+    this.game.emitter.off("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+    this.game.emitter.off("showopen", this.onShowOpenPanel, this);
+
     if (this.model) this.model.destroy();
     this.mModel = null;
     super.destroy();

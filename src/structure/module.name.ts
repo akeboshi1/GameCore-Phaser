@@ -18,4 +18,5 @@ export class ModuleName {
     public static Market_NAME: string = "Market";
     public static PICORDER_NAME: string = "PicOrder";
     public static PICPROPFUN_NAME: string = "PicPropFun";
+    public static PICPARTYLIST_NAME: string = "PicPartyList";
 }
