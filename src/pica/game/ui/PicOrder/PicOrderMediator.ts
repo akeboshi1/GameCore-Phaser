@@ -41,6 +41,7 @@ export class PicOrderMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICORDER_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on("questlist", this.on_ORDER_LIST, this);
         this.game.emitter.on("progresslist", this.on_PLAYER_PROGRESS, this);
+        this.query_ORDER_LIST();
         // if (this.mView) this.mView.setOrderDataList(this.mShowData);
     }
 
@@ -76,18 +77,23 @@ export class PicOrderMediator extends BasicMediator {
                 }
             }
         }
-        this.mShowData = content;
         if (!this.mPanelInit) {
             return;
         }
         if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
-        if (this.mView && this.mShowData) {
+        if (this.mView && content) {
             this.mView.setOrderDataList(content);
         }
     }
 
     private on_PLAYER_PROGRESS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
-        this.mView.setOrderProgress(content);
+        if (!this.mPanelInit) {
+            return;
+        }
+        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
+        if (this.mView && content) {
+            this.mView.setOrderProgress(content);
+        }
     }
 
     private onHideView() {

@@ -23,7 +23,7 @@ export class PicaWorkerUiManager extends UIManager {
         super.showMainUI();
     }
 
-    public showMed(type: string, ...param: any[]) {
+    public showMed(type: string, param: any) {
         if (!this.mMedMap) {
             this.mMedMap = new Map();
         }

@@ -65,6 +65,9 @@ export class PicFriendMediator extends BasicMediator {
         this.game.emitter.on(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
         this.game.emitter.on(EventType.REQ_RELATION, this.onReRelationHandler, this);
         this.game.emitter.on(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
+        this.mView = this.game.peer.render[ModuleName.PICFRIEND_NAME];
+        if (this.mView && this.mShowData)
+            this.mView.setFriend(FriendChannel.Friends, this.mShowData);
     }
 
     private onReRelationHandler(ids: number[]) {
