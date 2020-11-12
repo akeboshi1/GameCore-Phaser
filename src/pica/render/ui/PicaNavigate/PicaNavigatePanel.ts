@@ -159,15 +159,15 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowMapHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "PicPartyList");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", ModuleName.PICAPARTYLIST_NAME);
   }
 
   private onShowShopHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "Market");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", ModuleName.Market_NAME);
   }
 
   private onShowBagHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "FurniBag");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", ModuleName.FURNIBAG_NAME);
   }
 
   private onShowFamilyHandler() {

@@ -13,23 +13,26 @@ export class PicaNoticePanel extends BasePanel {
         this.key = ModuleName.PICANOTICE_NAME;
     }
 
-    show(param: any[]) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
+    show(param: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
+        if (param && Array.isArray(param) && param.length > 0) {
+            param = param[0];
+        }
         this.mShowData = param;
-        if (param && param.length > 0) {
-            if (param[0].display && param[0].display.length > 0) this.isbigbg = true;
+        if (param) {
+            if (param.display && param.display.length > 0) this.isbigbg = true;
         }
         if (!this.mInitialized) {
             this.preload();
             return;
         }
-        if (param && param.length > 0) {
-            const text = param[0].text;
+        if (param) {
+            const text = param.text;
             if (this.mContent && text && text.length > 0) {
                 this.mContent.setText(text[0].text);
                 if (this.isbigbg)
                     this.mContent.y = -this.bg.height * 0.5 + this.mContent.height * 0.5 + 2 * this.dpr;
             }
-            const display = param[0].display;
+            const display = param.display;
             if (this.imageIcon && display && display.length > 0) {
                 const url = Url.getOsdRes(display[0].texturePath);
                 this.imageIcon.load(url, this, () => {

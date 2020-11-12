@@ -20,4 +20,5 @@ export class ModuleName {
     public static PICAPROPFUN_NAME: string = "PicaPropFun";
     public static PICAPARTYLIST_NAME: string = "PicaPartyList";
     public static PICANOTICE_NAME: string = "PicaNotice";
+    public static PICAMANORLIST_NAME: string = "PicaManorList";
 }
