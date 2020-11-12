@@ -17,10 +17,10 @@ export class PicaNavigateMediator extends BasicMediator {
   }
 
   hide() {
-    super.hide();
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_showPanel", this.onShowPanelHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_goHome", this.onGomeHomeHandler, this);
+    super.hide();
   }
 
   isSceneUI() {

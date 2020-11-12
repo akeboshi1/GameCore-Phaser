@@ -20,8 +20,8 @@ export class InteractiveBubbleMediator extends BasicMediator {
     }
 
     hide() {
-        super.hide();
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryinteractive", this.onInteractiveBubbleHandler, this);
+        super.hide();
     }
 
     get currentRoom(): Room {

@@ -12,8 +12,8 @@ export class PicaPropFunMediator extends BasicMediator {
     }
 
     hide() {
-        super.hide();
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
+        super.hide();
     }
 
     private onCloseHandler() {
