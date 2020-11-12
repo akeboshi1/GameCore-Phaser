@@ -8,24 +8,24 @@ export class PicaHandheldMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICAHANDHELD_NAME, game);
         this.PicaHandheld = new PicaHandheld(this.game);
-        this.game.emitter.on(MAIN_WORKER + "_handheldlist", this.onHandheldList, this);
+        this.game.emitter.on("handheldlist", this.onHandheldList, this);
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on("changehandheld", this.onChangeHandheld, this);
-        this.game.emitter.on("clearhandheld", this.onClearHandheld, this);
-        this.game.emitter.on("handheldlist", this.onReqHandheldList, this);
-        this.game.emitter.on("openeqiped", this.openEquipedPanel, this);
+        this.game.emitter.on(ModuleName.PICAHANDHELD_NAME + "_changehandheld", this.onChangeHandheld, this);
+        this.game.emitter.on(ModuleName.PICAHANDHELD_NAME + "_clearhandheld", this.onClearHandheld, this);
+        this.game.emitter.on(ModuleName.PICAHANDHELD_NAME + "_handheldlist", this.onReqHandheldList, this);
+        this.game.emitter.on(ModuleName.PICAHANDHELD_NAME + "_openeqiped", this.openEquipedPanel, this);
     }
 
     hide() {
         if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
         super.hide();
-        this.game.emitter.off("changehandheld", this.onChangeHandheld, this);
-        this.game.emitter.off("clearhandheld", this.onClearHandheld, this);
-        this.game.emitter.off("handheldlist", this.onReqHandheldList, this);
-        this.game.emitter.off("openeqiped", this.openEquipedPanel, this);
+        this.game.emitter.off(ModuleName.PICAHANDHELD_NAME + "_changehandheld", this.onChangeHandheld, this);
+        this.game.emitter.off(ModuleName.PICAHANDHELD_NAME + "_clearhandheld", this.onClearHandheld, this);
+        this.game.emitter.off(ModuleName.PICAHANDHELD_NAME + "_handheldlist", this.onReqHandheldList, this);
+        this.game.emitter.off(ModuleName.PICAHANDHELD_NAME + "_openeqiped", this.openEquipedPanel, this);
     }
 
     destroy() {

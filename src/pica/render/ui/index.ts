@@ -34,6 +34,7 @@ export * from "./PicaManorList/PicaManorListPanel";
 export * from "./PicaManorList/PicaManorScrollPanel";
 export * from "./PicaOpenParty/PicaOpenPartyCreatePanel";
 export * from "./PicaOpenParty/PicaOpenPartyPanel";
+export * from "./Task/TaskPanel";
 export * from "./PicaManorInfo/PicaManorBasePanel";
 export * from "./PicaManorInfo/PicaManorChildPanel";
 export * from "./PicaManorInfo/PicaManorInfoPanel";
