@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"bg.png": {
+		"bg": {
 			"frame": {
 				"x": 1,
 				"y": 1,
@@ -20,7 +20,7 @@
 				"h": 1029
 			}
 		},
-		"bg_edge.png": {
+		"bg_edge": {
 			"frame": {
 				"x": 1,
 				"y": 1032,
@@ -40,7 +40,7 @@
 				"h": 11
 			}
 		},
-		"button_click.png": {
+		"button_click": {
 			"frame": {
 				"x": 1,
 				"y": 1045,
@@ -60,7 +60,7 @@
 				"h": 104
 			}
 		},
-		"button_normal.png": {
+		"button_normal": {
 			"frame": {
 				"x": 106,
 				"y": 1045,
@@ -80,7 +80,7 @@
 				"h": 104
 			}
 		},
-		"icon_test.png": {
+		"icon_test": {
 			"frame": {
 				"x": 211,
 				"y": 1045,
@@ -100,7 +100,7 @@
 				"h": 129
 			}
 		},
-		"title.png": {
+		"title": {
 			"frame": {
 				"x": 1175,
 				"y": 1,
@@ -124,7 +124,7 @@
 	"meta": {
 		"app": "http://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
 			"w": 1748,

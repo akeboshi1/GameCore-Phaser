@@ -43,3 +43,5 @@ export { PicaBusinessStreet } from "./ui/PicaBusinessStreet/PicaBusinessStreet";
 export { PicaBusinessStreetMediator } from "./ui/PicaBusinessStreet/PicaBusinessStreetMediator";
 export { PicaBusinessMarketingPlan } from "./ui/PicaBusinessMarketingPlan/PicaBusinessMarketingPlan";
 export { PicaBusinessMarketingPlanMediator } from "./ui/PicaBusinessMarketingPlan/PicaBusinessMarketingPlanMediator";
+export * from "./ui/PicaRecharge/PicaRecharge";
+export * from "./ui/PicaRecharge/PicaRechargeMediator";

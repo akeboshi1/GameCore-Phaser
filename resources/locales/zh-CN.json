@@ -31,9 +31,8 @@
     "Props": "道具",
     "decorate": "装扮",
     "reset": "还原",
-    "sale_price": "售卖价格",
-    "not_sale": "不可售卖",
-    "source": "来源",
+    "sale_price": "出售价格",
+    "not_sale": "不可出售",
     "empty_backpack": "背包里空空如也",
     "expires": "已过期",
     "timelimit": "限时",
@@ -48,15 +47,32 @@
     "lv": "等级",
     "refresh": "刷新",
     "buy": "购买",
-    "sold": "售出",
+    "sold": "出售",
     "add": "添加",
-    "source": "来源",
     "all": "全部",
     "search": "搜索",
     "tips": "提示",
     "offline": "您的账号在另一地点登录，您已被迫下线",
-    "description": "描述",
-    "setting": "设置"
+    "setting": "设置",
+    "manager": "管理",
+    "sign": "在线奖励",
+    "shop": "商店",
+    "editnow": "立即修改",
+    "open": "打开"
+  },
+  "quantityunit": {
+    "k": "千",
+    "h": "百",
+    "t": "十",
+    "g": "个",
+    "w": "万",
+    "m": "百万"
+  },
+  "timeuint": {
+    "day": "天",
+    "hour": "小时",
+    "minutes": "分钟",
+    "second": "秒"
   },
   "player_info": {
     "title": "信息详情",
@@ -120,9 +136,9 @@
     "daily": "【每日】"
   },
   "furni_unlock": {
-    "unlock": "修复",
+    "unlock": "修 复",
     "repair": "立即修复",
-    "needMaterials": "解锁所需材料",
+    "needMaterials": "修复所需材料",
     "sold": "可售卖：",
     "notrading": "不可交易",
     "title": "家具修复"
@@ -176,11 +192,7 @@
     "onrank": "未上榜",
     "history": "历史记录",
     "ranking": "排行榜",
-    "rankreward": "奖励",
-    "day": "天",
-    "hour": "小时",
-    "minutes": "分钟",
-    "second": "秒"
+    "rankreward": "奖励"
   },
   "friendlist": {
     "title": "我的好友",
@@ -208,7 +220,8 @@
     "downloading_config": "下载游戏配置...",
     "downloading_scene_config": "下载场景配置...",
     "parse_config": "解析配置...",
-    "wait_enter_room": "等待进入房间"
+    "wait_enter_room": "等待进入房间",
+    "loading_resources": "正在加载资源...."
   },
   "coin": {
     "coin": "银币",
@@ -231,7 +244,7 @@
     "confirmation": "您确定要丢弃[color=#0157BC] {{name}} [/color]吗?"
   },
   "main_ui": {
-    "energy_tips": "当前精力值{{name}}精力不满时，每10分钟恢复1点",
+    "energy_tips": "当前精力值{{name}}精力不满时，每5分钟恢复1点",
     "party": "派对"
   },
   "order": {
@@ -250,7 +263,8 @@
     "vim": "精力值",
     "worktimes": "打工次数",
     "salary": "报酬",
-    "attri": "*{{name}}需要大于{{value}}才可以任职这份工作"
+    "attri": "*{{name}}需要大于{{value}}才可以任职这份工作",
+    "worktips": "每次打工会消耗1次打工机会和1点精力，打工机会每天重置"
   },
   "party": {
     "partyname": "派对房间",
@@ -270,10 +284,58 @@
     "modifyname": "修改名称",
     "modifytheme": "修改主题",
     "modifydescrible": "修改描述",
-    "overagetime": "当前剩余时长",
-    "suppletime": "补充时长"
+    "overagetime": "当前剩余时长:",
+    "suppletime": "补充时长",
+    "ticketinsuff": "时长卡不足",
+    "giftsell": "礼物已售完",
+    "sendgift": "赠送礼物",
+    "sendgifttips": "确定赠送{{count}}个{{name}}吗？",
+    "opentips": "您的房间已经开启派对了！",
+    "modifytips": "您的派对已经修改了！",
+    "openconfirm": "确定消耗{{count}}个时长卡，开启派对吗？",
+    "modifyconfirm": "确定消耗{{count}}个时长卡，修改派对吗？",
+    "onlinetime": "在线{{name}}分钟",
+    "nopartytips": "暂无派对，快去开启派对吧~",
+    "progresstips": "下次领取：{{timer}}"
   },
   "picelevator": {
     "floor": "层"
+  },
+  "manor": {
+    "title": "街区列表",
+    "searchstreet": "搜索街区",
+    "successtitle": "恭喜你",
+    "successtips": "购买成功！\n快进来看看你的庄园吧~",
+    "failedtitle": "很遗憾",
+    "failedtips": "购买失败！\n此庄园已被其他人购买了！",
+    "landstatus": "土地状况",
+    "manorname": "庄园名称：",
+    "manorowner": "庄园主人：",
+    "manorarea": "所属街区：",
+    "manorstatus": "当前状态：",
+    "manorprice": "出售价格：",
+    "needlevel": "需求等级：",
+    "editorbtn": "编辑庄园",
+    "enterbtn": "立即进入",
+    "otherbtn": "看看其他",
+    "selling": "出售中",
+    "noowner": "暂无主人",
+    "manorshop": "庄园商店",
+    "using": "使用中",
+    "usermanor": "{{name}}的庄园",
+    "owned": "已拥有",
+    "eidtnickname": "修改昵称",
+    "nicknameplaceholder": "请输入新昵称"
+  },
+  "recharge": {
+    "title": "充值",
+    "gift": "礼包",
+    "privilege": "月卡",
+    "diamond": "钻石"
+  },
+  "treasure": {
+    "tipslabel": "打开宝箱将随机获得以下一项物品",
+    "pagedown": "下一页",
+    "titleimg":"treasure_title_cn"
   }
 }

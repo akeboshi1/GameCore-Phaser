@@ -1,18 +1,18 @@
 {
   "market": {
-    "title": "Market",
-    "payment": "PURCHASE",
+    "title": "SHOP",
+    "payment": "Buy",
     "refreshtime": "Refresh at ",
     "refresh": "Refresh"
   },
   "item": {
     "source": "source: ",
-    "copy_suc": "copy {{name}} succeed",
+    "copy_suc": "{{name}} copied",
     "name": "name",
     "des": "description"
   },
   "reconnect": {
-    "des": "Click to log in again"
+    "des": "Click to re-login"
   },
   "room_list": {
     "player_room": "Others' Room",
@@ -25,19 +25,18 @@
     "my": "Personal"
   },
   "furni_bag": {
-    "add": "Add",
+    "add": "Place",
     "furni": "Furnitures",
     "Props": "Items",
     "decorate": "Avatars",
     "reset": "Reset",
-    "sale_price": "Sale price",
-    "not_sale": "Not for sale",
-    "source": "Source",
-    "empty_backpack": "Empty in the backpack",
+    "sale_price": "Sell price",
+    "not_sale": "Not Tradable",
+    "empty_backpack": "The inventory is empty",
     "expires": "Expired",
     "timelimit": "Expires",
     "properties": "Prop Properties",
-    "needproper": "Need Properties"
+    "needproper": "Requirement"
   },
   "common": {
     "cancel": "Cancel",
@@ -50,13 +49,29 @@
     "sold": "Sell",
     "add": "Add",
     "remove": "Remove",
-    "source": "Source",
     "all": "All",
     "search": "search",
     "tips": "tips",
-    "offline": "Your account is logged in at another location and you have been forced to go offline",
-    "description": "Description",
-    "setting": "SET"
+    "offline": "Your account is logged in at another location",
+    "setting": "SETTINGS",
+    "manager": "MANAGER",
+    "sign": "SignIn",
+    "editnow": "Edit Now",
+    "open": "Open"
+  },
+  "quantityunit": {
+    "k": "k",
+    "h": "",
+    "t": "",
+    "g": "",
+    "w": "",
+    "m": "m"
+  },
+  "timeuint": {
+    "day": "Days",
+    "hour": "Hour",
+    "minutes": "Minute",
+    "second": "Second"
   },
   "player_info": {
     "title": "Personal Data",
@@ -90,14 +105,14 @@
     "make": "Produce",
     "needMaterials": "Materials",
     "synthesis": "Produce",
-    "confirmation": "Are you sure you want to synthesize {{name}} ？"
+    "confirmation": "Are you sure to synthesize {{name}} ？"
   },
   "minesettle": {
     "settle": "Summary",
     "savebag": "OK"
   },
   "equipupgrade": {
-    "title": "Equip"
+    "title": "Equipment"
   },
   "task": {
     "title": "Quests",
@@ -138,7 +153,7 @@
     "roomlevel": "Level",
     "expvalue": "Exp",
     "popvalue": "Popularity",
-    "goodvalue": "Like Count",
+    "goodvalue": "Likes",
     "compveness": "D: Competitiveness",
     "turnover": "Income",
     "closeshop": "Close Shop",
@@ -176,62 +191,59 @@
     "onrank": "N/A",
     "history": "HISTORY",
     "ranking": "RANKING",
-    "rankreward": "REWARD",
-    "day": "Days",
-    "hour": "Hour",
-    "minutes": "Minute",
-    "second": "Second"
+    "rankreward": "REWARD"
   },
   "friendlist": {
-    "title": "MY FRIEND",
-    "olinetitle": "Show only online",
+    "title": "MY FRIENDS",
+    "olinetitle": "Online",
     "friends": "Friends",
     "fans": "Fans",
     "follow": "Follow",
     "blacklist": "BLACKLIST",
     "search": "Search",
     "search_friends_notes": "Search",
-    "unfollow": "unfollow",
+    "unfollow": "Following",
     "lv": "Lv",
     "remove": "Remove",
-    "unregistered_game": "Unregistered game",
+    "unregistered_game": "Not in Game",
     "notice": "Notice",
     "followed_you": "followed you"
   },
   "friend_invite": {
     "refused": "refused",
-    "agree": "agree"
+    "agree": "allow"
   },
   "loading": {
     "enter_game": "Entering the game",
-    "logging": "logging in",
-    "downloading_config": "downloading game config",
-    "downloading_scene_config": "downloading scene config",
-    "parse_config": "parse config",
-    "wait_enter_room": "wait enter room"
+    "logging": "Logging in",
+    "downloading_config": "Downloading game config",
+    "downloading_scene_config": "Downloading scene config",
+    "parse_config": "Parse config",
+    "wait_enter_room": "Loading room data",
+    "loading_resources": "loading resources...."
   },
   "coin": {
     "coin": "coin",
     "diamond": "diamond",
-    "gold_coin": "gold coin"
+    "gold_coin": "gold"
   },
   "create_role": {
-    "enter_nick": "Please en ter a nickname",
-    "commit": "commit"
+    "enter_nick": "Please input your nickname",
+    "commit": "OK"
   },
   "chat": {
     "mystery": "Mystery",
     "world": "World",
-    "current": "Current",
+    "current": "Scene",
     "system": "System",
-    "givegift": "GIVEGIFTS"
+    "givegift": "Gifts"
   },
   "minecar": {
     "discard": "discard",
-    "confirmation": "Are you sure you want to discard [color=#0157BC] {{name}} [/color] ？"
+    "confirmation": "Are you sure you want to discard [color=#0157BC] {{name}} [/color]"
   },
   "main_ui": {
-    "energy_tips": "Current energy value {{name}} When energy is insufficient, restore 1 point every 10 minutes",
+    "energy_tips": "Current energy value {{name}} When energy is insufficient, restore 1 point every 5 minutes",
     "party": "Party"
   },
   "order": {
@@ -240,24 +252,25 @@
     "accele": "ACCELERATE",
     "receive": "RECEIVE",
     "deliverying": "DELIVERYING...",
-    "refreshtips": "Are you sure to refresh the order",
-    "refreshtitle": "ORDER REFRESH",
+    "refreshtips": "Are you sure to withdraw the order",
+    "refreshtitle": "ORDER WITHDRAW",
     "progresstitle": "PROGRESS REWARD",
     "rewardtitle": "Progress reward"
   },
   "work": {
     "title": "WORK",
-    "vim": "VIM",
-    "worktimes": "WORKTIME",
+    "vim": "Energy",
+    "worktimes": "WORK TIME",
     "salary": "SALARY",
-    "attri": "*{{name}}need more than{{value}}to take this job"
+    "attri": "*Requires {{name}}: {{value}}",
+    "worktips": "Every time you join a union, you consume 1 job opportunity and 1 point of energy, and the job opportunity is reset every day"
   },
   "party": {
-    "partyname": "PARTYNAME",
-    "partytheme": "PARTYTHEME",
-    "partydescrible": "DESCRIBLE",
-    "partytime": "PARTYTIME",
-    "partyopen": "OPEN",
+    "partyname": "NAME",
+    "partytheme": "THEME",
+    "partydescrible": "SLOGAN",
+    "partytime": "Duration",
+    "partyopen": "GO",
     "partytitle": "Party Room Name",
     "describletitle": "Let's have a party!",
     "partycardlabel": "You currently have a party Duration card:",
@@ -267,10 +280,61 @@
     "picatown": "PICATOWN",
     "defaultname": "{{name}}'s Party",
     "partymgr": "MANAGEMENT",
-    "overagetime": "Current remaining time",
-    "suppletime":"Supplementary time"
+    "modifyname": "New Name",
+    "modifytheme": "New Theme",
+    "modifydescrible": "New Description",
+    "overagetime": "Remaining time",
+    "suppletime": "Supplementary time",
+    "ticketinsuff": "Insufficient coupon",
+    "giftsell": "Sold Out",
+    "sendgift": "GIFT",
+    "sendgifttips": "Are you sure to give {{count}} {{name}}?",
+    "opentips": "The party has started in your room!",
+    "modifytips": "Your party has been modified!",
+    "openconfirm": "Are you sure to consume {{count}} time cards to start the party?",
+    "modifyconfirm": "Are you sure to consume {{count}} time cards to modify the party?",
+    "onlinetime": "Online {{name}} minutes",
+    "nopartytips": "There is no party yet, let's start the party~",
+    "progresstips": "Next award: {{timer}}"
   },
   "picelevator": {
-    "floor": "f"
+    "floor": "F"
+  },
+  "manor": {
+    "title": "Street list",
+    "searchstreet": "Search Street",
+    "successtitle": "CONGRATULATIONS",
+    "successtips": "Successful purchase! \nCome in and take a look at your manor~",
+    "failedtitle": "Unfortunately",
+    "failedtips": "Failed purchase! \nThis manor has been purchased by someone else!",
+    "landstatus": "LANDSTATUS",
+    "manorname": "Manor name: ",
+    "manorowner": "Manor'owner: ",
+    "manorarea": "Block: ",
+    "manorstatus": "Current state: ",
+    "manorprice": "Sale price: ",
+    "needlevel": "Demand level: ",
+    "editorbtn": "Edit manor",
+    "enterbtn": "Enter now",
+    "otherbtn": "Other",
+    "selling": "Selling",
+    "noowner": "No owner",
+    "manorshop": "Manor Shop",
+    "using": "using",
+    "usermanor": "{{name}}'s manor",
+    "owned": "Already owned",
+    "eidtnickname": "EDITNICKNAME",
+    "nicknameplaceholder": "Please enter a new nickname"
+  },
+  "recharge": {
+    "title": "RECHARGE",
+    "gift": "GIFT",
+    "privilege": "PRIVILEGE",
+    "diamond": "DIAMOND  "
+  },
+  "treasure": {
+    "tipslabel": "will give you one of the following items at random",
+    "pagedown": "Page down",
+    "titleimg":"treasure_title"
   }
 }

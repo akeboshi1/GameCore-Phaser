@@ -17,3 +17,7 @@ export * from "./input.view";
 export * from "./three.button";
 export * from "./three.slice.path";
 export * from "./tween.compent";
+export * from "./value.container";
+export * from "./GridLayoutGroup";
+export * from "./soundButton";
+export * from "./prop.item";
