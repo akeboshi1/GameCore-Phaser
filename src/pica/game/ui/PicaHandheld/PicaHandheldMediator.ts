@@ -6,7 +6,7 @@ import { op_client } from "pixelpai_proto";
 export class PicaHandheldMediator extends BasicMediator {
     private PicaHandheld: PicaHandheld;
     constructor(game: Game) {
-        super(ModuleName.PICHANDHELD_NAME, game);
+        super(ModuleName.PICAHANDHELD_NAME, game);
         this.PicaHandheld = new PicaHandheld(this.game);
         this.game.emitter.on(MAIN_WORKER + "_handheldlist", this.onHandheldList, this);
     }
@@ -51,7 +51,7 @@ export class PicaHandheldMediator extends BasicMediator {
     private onHandheldList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD) {
         this.mShowData = content;
         if (!this.mPanelInit) return;
-        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
+        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAHANDHELD_NAME];
         if (this.mView && this.mShowData) {
             this.mView.setEqipedDatas(this.mShowData);
         }
@@ -66,7 +66,7 @@ export class PicaHandheldMediator extends BasicMediator {
     }
     private openEquipedPanel(state: boolean) {
         const uiManager = this.game.uiManager;
-        const mediator = uiManager.getMed(ModuleName.PICHANDHELD_NAME);
+        const mediator = uiManager.getMed(ModuleName.PICAHANDHELD_NAME);
         if (mediator) {
             if (state) {
                 mediator.hide();

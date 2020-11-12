@@ -81,7 +81,7 @@ export class PicaOrderMediator extends BasicMediator {
         if (!this.mPanelInit) {
             return;
         }
-        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
+        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAHANDHELD_NAME];
         if (this.mView && content) {
             this.mView.setOrderDataList(content);
         }
@@ -91,7 +91,7 @@ export class PicaOrderMediator extends BasicMediator {
         if (!this.mPanelInit) {
             return;
         }
-        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICHANDHELD_NAME];
+        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAHANDHELD_NAME];
         if (this.mView && content) {
             this.mView.setOrderProgress(content);
         }

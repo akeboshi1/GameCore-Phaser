@@ -8,7 +8,7 @@ export class PicaFriendMediator extends BasicMediator {
     protected mView;
     private PicaFriend: PicaFriend;
     constructor(game: Game) {
-        super(ModuleName.PICFRIEND_NAME, game);
+        super(ModuleName.PICAFRIEND_NAME, game);
         this.PicaFriend = new PicaFriend(game);
         this.game.emitter.on(EventType.PLAYER_LIST, this.onPlayerListHandler, this);
         this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
@@ -16,6 +16,18 @@ export class PicaFriendMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
+        this.game.emitter.on("hide", this.onHidePanel, this);
+        this.game.emitter.on(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
+        this.game.emitter.on(EventType.UNFOLLOW, this.onUnfollowHandler, this);
+        this.game.emitter.on(EventType.FOLLOW, this.onFollowHandler, this);
+        this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
+        this.game.emitter.on(EventType.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
+        this.game.emitter.on(EventType.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
+        this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
+        this.game.emitter.on(EventType.SEARCH_FRIEND, this.onSearchHandler, this);
+        this.game.emitter.on(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
+        this.game.emitter.on(EventType.REQ_RELATION, this.onReRelationHandler, this);
+        this.game.emitter.on(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
     }
 
     hide() {
@@ -53,19 +65,7 @@ export class PicaFriendMediator extends BasicMediator {
     }
 
     protected panelInit() {
-        this.game.emitter.on("hide", this.onHidePanel, this);
-        this.game.emitter.on(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
-        this.game.emitter.on(EventType.UNFOLLOW, this.onUnfollowHandler, this);
-        this.game.emitter.on(EventType.FOLLOW, this.onFollowHandler, this);
-        this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
-        this.game.emitter.on(EventType.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
-        this.game.emitter.on(EventType.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
-        this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
-        this.game.emitter.on(EventType.SEARCH_FRIEND, this.onSearchHandler, this);
-        this.game.emitter.on(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
-        this.game.emitter.on(EventType.REQ_RELATION, this.onReRelationHandler, this);
-        this.game.emitter.on(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
-        this.mView = this.game.peer.render[ModuleName.PICFRIEND_NAME];
+        super.panelInit();
         if (this.mView && this.mShowData)
             this.mView.setFriend(FriendChannel.Friends, this.mShowData);
     }

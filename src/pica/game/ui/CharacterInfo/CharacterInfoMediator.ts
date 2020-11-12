@@ -146,7 +146,7 @@ export class CharacterInfoMediator extends BasicMediator {
 
     private updateFrind() {
         const uimanager = this.game.uiManager;
-        const PicaFriend: PicaFriendMediator = <PicaFriendMediator>uimanager.getMed(ModuleName.PICFRIEND_NAME);
+        const PicaFriend: PicaFriendMediator = <PicaFriendMediator>uimanager.getMed(ModuleName.PICAFRIEND_NAME);
         if (PicaFriend) {
             PicaFriend.fetchCurrentFriend();
         }
