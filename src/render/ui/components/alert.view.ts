@@ -1,7 +1,8 @@
-import { BasePanel } from "./base.panel";
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
-import { Render } from "../../render";
+import { ModuleName } from "structure";
 import { Font, i18n } from "utils";
+import { UiManager } from "../ui.manager";
+import { BasePanel } from "./base.panel";
 
 export class AlertView extends BasePanel {
     private mOkBtn: Button;
@@ -9,10 +10,11 @@ export class AlertView extends BasePanel {
     private mContent: BBCodeText;
     private mTitleLabel: Phaser.GameObjects.Text;
     private mOkText: string;
-    constructor(scene: Phaser.Scene, render: Render) {
-        super(scene, render);
+    private mBackGround: Phaser.GameObjects.Graphics;
+    constructor(private uiManager: UiManager) {
+        super(uiManager.scene, uiManager.render);
+        this.key = ModuleName.ALERTVIEW_NAME;
         this.disInteractive();
-        this.key = "pica_alert";
     }
 
     show(config: IAlertConfig) {
@@ -23,7 +25,10 @@ export class AlertView extends BasePanel {
             const { ox, oy } = config;
             this.x = (ox || this.scene.cameras.main.width / 2);
             this.y = (oy || this.scene.cameras.main.height / 2);
-
+            this.mBackGround.clear();
+            this.mBackGround.fillStyle(0xffffff, 0);
+            this.mBackGround.fillRect(-this.x, - this.y, this.cameraWidth, this.cameraHeight);
+            this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(-this.x, -this.y, this.cameraWidth, this.cameraHeight), Phaser.Geom.Rectangle.Contains);
             this.mContent.setText(config.text);
             if (config.title) {
                 this.mTitleLabel.setText(config.title);
@@ -58,15 +63,18 @@ export class AlertView extends BasePanel {
 
     protected init() {
         const zoom = this.mWorld.uiScale || 1;
+        this.mBackGround = this.scene.make.graphics(undefined, false);
+        this.add(this.mBackGround);
         const bg = this.scene.make.image({
             key: this.key,
             frame: "bg.png"
         }, false);
-
+        bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         const title = this.scene.make.image({
             key: this.key,
             frame: "title.png"
         }, false);
+        title.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         title.y = -bg.height / 2;
 
         this.mTitleLabel = this.scene.make.text({
@@ -120,12 +128,23 @@ export class AlertView extends BasePanel {
         if (callback) {
             callback.call(this.mShowData.content);
         }
-        this.onCancelHandler();
+        this.closePanel();
     }
 
     private onCancelHandler() {
+        const callback = this.mShowData.cancelback;
+        if (callback) {
+            callback.call(this.mShowData.content);
+        }
+        this.closePanel();
+    }
+    private closePanel() {
         if (this.parentContainer) {
             this.parentContainer.remove(this);
+        }
+        if (!this.mShowData || this.mShowData.once !== false) {
+            this.destroy();
+            this.mShowData = undefined;
         }
     }
 }
@@ -135,9 +154,11 @@ export interface IAlertConfig {
     title?: string;
     callback: Function;
     content?: any;
+    cancelback?: Function;
     ox?: number;
     oy?: number;
     btns?: Buttons;
+    once?: boolean;
 }
 
 export enum Buttons {

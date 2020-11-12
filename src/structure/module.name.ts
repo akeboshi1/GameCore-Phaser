@@ -16,8 +16,10 @@ export class ModuleName {
     public static BUBBLE_NAME: string = "Bubble";
     public static FURNIBAG_NAME: string = "FurniBag";
     public static Market_NAME: string = "Market";
-    public static PICORDER_NAME: string = "PicOrder";
+    public static PICAORDER_NAME: string = "PicaOrder";
     public static PICAPROPFUN_NAME: string = "PicaPropFun";
     public static PICAPARTYLIST_NAME: string = "PicaPartyList";
     public static PICANOTICE_NAME: string = "PicaNotice";
+    public static ALERTVIEW_NAME: string = "AlertView";
+    public static PICAOPENPARTY_NAME: string = "PicaOpenParty";
 }
