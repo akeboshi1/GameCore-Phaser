@@ -2,7 +2,7 @@ import { UIType } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName, RENDER_PEER } from "structure";
-import { i18n } from "utils";
+import { i18n, Logger } from "utils";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key_lang: string = "key_lang";
   private mBackground: Phaser.GameObjects.Image;
@@ -61,6 +61,7 @@ export class PicaNavigatePanel extends BasePanel {
 
   public hide() {
     this.mShow = false;
+    super.hide();
   }
 
   show(param?: any) {
@@ -98,6 +99,7 @@ export class PicaNavigatePanel extends BasePanel {
     }
     return true;
   }
+
   protected preload() {
     this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
     let lang = "cn";
