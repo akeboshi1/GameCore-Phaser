@@ -2,7 +2,7 @@ import { GameGridTable } from "apowophaserui";
 import { Handler, Url } from "utils";
 import { ModuleName } from "structure";
 import { BasePanel, DynamicImage, UiManager } from "gamecoreRender";
-export class PicHandheldPanel extends BasePanel {
+export class PicaHandheldPanel extends BasePanel {
     private gridContent: Phaser.GameObjects.Container;
     private handeldEqiped: HandheldEqiped;
     private mPropGrid: GameGridTable;

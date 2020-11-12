@@ -1,11 +1,12 @@
+import { BasicModel } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
-import { PacketHandler, PBpacket } from "net-socket-packet";
+import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { Game } from "src/game/game";
 
-export class Dialog extends PacketHandler {
-    constructor(private game: Game) {
-        super();
+export class Dialog extends BasicModel {
+    constructor(game: Game) {
+        super(game);
         this.register();
     }
     register() {
