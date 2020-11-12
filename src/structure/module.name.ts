@@ -23,4 +23,6 @@ export class ModuleName {
     public static ALERTVIEW_NAME: string = "AlertView";
     public static PICAOPENPARTY_NAME: string = "PicaOpenParty";
     public static PICAMANORLIST_NAME: string = "PicaManorList";
+    public static PICAMANORINFO_NAME: string = "PicaManorInfo";
+    public static PICABUSINESSSTREET_NAME: string = "PicaBusinessStreet";
 }

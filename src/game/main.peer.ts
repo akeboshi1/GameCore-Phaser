@@ -398,6 +398,15 @@ export class MainPeer extends RPCPeer {
         return null;
     }
 
+    @Export()
+    public getUserData_CurRoomID(): string {
+        if (this.game.user && this.game.user.userData) {
+            return this.game.user.userData.curRoomID;
+        }
+
+        return null;
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();

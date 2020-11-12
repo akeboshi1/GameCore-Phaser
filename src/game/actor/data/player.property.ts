@@ -3,6 +3,7 @@ import { Logger } from "utils";
 export class PlayerProperty {
     public playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     public nickname: string;
+    public cid: string;
     public coin: op_pkt_def.IPKT_Property;
     public diamond: op_pkt_def.IPKT_Property;
     public level: op_pkt_def.IPKT_Property;
@@ -111,6 +112,7 @@ export class PlayerProperty {
     }
 
     protected updateBaseProperties() {
+        this.cid = this.playerInfo.cid;
         this.rooms = this.playerInfo.rooms;
         this.properties = this.playerInfo.properties;
         this.handheld = this.playerInfo.handheld;

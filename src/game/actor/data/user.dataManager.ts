@@ -76,6 +76,9 @@ export class UserDataManager extends PacketHandler {
     get curRoomID() {
         return this.mCurRoomID;
     }
+    get cid() {
+        return this.playerProperty.cid;
+    }
 
     querySYNC_ALL_PACKAGE() {
         this.querySYNC_PACKAGE(op_pkt_def.PKT_PackageType.PropPackage);

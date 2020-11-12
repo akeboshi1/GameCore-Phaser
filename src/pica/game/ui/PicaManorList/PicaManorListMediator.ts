@@ -18,9 +18,9 @@ export class PicaManorListMediator extends BasicMediator {
     }
 
     hide() {
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_hide", this.onHidePanel, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_querylist", this.query_COMMERCIAL_STREET, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_hide", this.onHidePanel, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_querylist", this.query_COMMERCIAL_STREET, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
         super.hide();
     }
 

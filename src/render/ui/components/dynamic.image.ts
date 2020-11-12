@@ -5,8 +5,8 @@ export class DynamicImage extends Phaser.GameObjects.Image {
     private mLoadContext: any;
     private mLoadErrorCallback: Function;
     private mUrl: string;
-    constructor(scene: Phaser.Scene, x: number, y: number) {
-        super(scene, x, y, undefined);
+    constructor(scene: Phaser.Scene, x: number, y: number, key?: string, frame?: string) {
+        super(scene, x, y, key, frame);
     }
 
     public load(value: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function) {
