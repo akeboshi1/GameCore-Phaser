@@ -37,7 +37,7 @@ export class PicaHandheldPanel extends BasePanel {
         }
         this.addListen();
         this.updateData();
-        this.render.renderEmitter("handheldlist");
+        this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_handheldlist");
     }
 
     hide() {
@@ -203,9 +203,9 @@ export class PicaHandheldPanel extends BasePanel {
         item.isSelect = true;
         this.curHandheldItem = item;
         if (item.isEmptyHanded) {
-            this.render.renderEmitter("clearhandheld");
+            this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_clearhandheld");
         } else {
-            this.render.renderEmitter("changehandheld", data.id);
+            this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_changehandheld", data.id);
         }
 
     }
@@ -215,17 +215,17 @@ export class PicaHandheldPanel extends BasePanel {
         if (!this.isExtendsGrid) {
             this.mPropGrid.setItems([]);
             this.gridContent.visible = false;
-            this.render.renderEmitter("openeqiped", false);
+            this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_openeqiped", false);
         } else {
             this.gridContent.visible = true;
-            this.render.renderEmitter("handheldlist");
-            this.render.renderEmitter("openeqiped", true);
+            this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_handheldlist");
+            this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_openeqiped", true);
         }
         this.updateLayout();
     }
 
     private onShortcutHandler(data: any) {
-        this.render.renderEmitter("clearhandheld");
+        this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_clearhandheld");
     }
 }
 
@@ -252,7 +252,6 @@ class HandheldItem extends Phaser.GameObjects.Container {
     }
 
     public setItemData(data: any) {
-
         this.itemData = data;
         if (!data) {
             this.icon.visible = false;

@@ -33,3 +33,5 @@ export { PicaNoticeMediator } from "./ui/PicaNotice/PicaNoticeMediator";
 export { PicaPartyList } from "./ui/PicaPartyList/PicaPartyList";
 export { PicaPartyListMediator } from "./ui/PicaPartyList/PicaPartyListMediator";
 export * from "./ui/CreateRole/CreateRoleMediator";
+export * from "./ui/Task/Task";
+export * from "./ui/Task/TaskMediator";

@@ -20,3 +20,4 @@ export { Size } from "./size";
 export { Helpers } from "./helpers";
 export { EventDispatcher } from "./EventDispatcher";
 export { Color } from "./Color";
+export * from "./copy.prototype";

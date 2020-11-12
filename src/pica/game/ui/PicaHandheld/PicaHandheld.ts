@@ -53,6 +53,6 @@ export class PicaHandheld extends PacketHandler {
 
     private onRetHandheldList(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD = packet.content;
-        this.game.emitter.emit(MAIN_WORKER + "_handheldlist", content);
+        this.game.emitter.emit("handheldlist", content);
     }
 }

@@ -23,4 +23,5 @@ export class ModuleName {
     public static ALERTVIEW_NAME: string = "AlertView";
     public static PICAOPENPARTY_NAME: string = "PicaOpenParty";
     public static PICAMANORLIST_NAME: string = "PicaManorList";
+    public static PICATASK_NAME: string = "Task";
 }
