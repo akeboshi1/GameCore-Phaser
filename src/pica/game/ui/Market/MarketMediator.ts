@@ -32,13 +32,13 @@ export class MarketMediator extends BasicMediator {
   }
 
   hide() {
-    super.hide();
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_popItemCard", this.onPopItemCardHandler, this);
     this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
+    super.hide();
   }
 
   destroy() {

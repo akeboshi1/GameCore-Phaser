@@ -15,7 +15,6 @@ export class PicaPartyListMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_querylist", this.query_PARTY_LIST, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
@@ -24,13 +23,12 @@ export class PicaPartyListMediator extends BasicMediator {
     }
 
     hide() {
-        super.hide();
-
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_querylist", this.query_PARTY_LIST, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        super.hide();
     }
 
     destroy() {

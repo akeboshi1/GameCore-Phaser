@@ -38,7 +38,6 @@ export class FurniBagMediator extends BasicMediator {
     }
 
     hide() {
-        super.hide();
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryPackage", this.onQueryPackage, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
@@ -50,6 +49,7 @@ export class FurniBagMediator extends BasicMediator {
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_useprops", this.onUsePropsHandler, this);
+        super.hide();
     }
 
     destroy() {

@@ -171,7 +171,7 @@ export class PicaNavigatePanel extends BasePanel {
   }
 
   private onShowFamilyHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", "PicManorList");
+    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showPanel", ModuleName.PICAMANORLIST_NAME);
   }
 
   private onShowGoHomeHandler() {

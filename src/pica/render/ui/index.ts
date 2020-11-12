@@ -29,5 +29,8 @@ export * from "./PicaFriend/PicaFriendPanel";
 export * from "./PicaPropFun/PicaPropFunPanel";
 export * from "./PicaNotice/PicaNoticePanel";
 export * from "./PicaPartyList/PicaPartyListPanel";
+export * from "./PicaManorList/PicaManorContentPanel";
+export * from "./PicaManorList/PicaManorListPanel";
+export * from "./PicaManorList/PicaManorScrollPanel";
 export * from "./PicaOpenParty/PicaOpenPartyCreatePanel";
 export * from "./PicaOpenParty/PicaOpenPartyPanel";
