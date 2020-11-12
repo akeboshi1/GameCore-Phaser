@@ -5,7 +5,6 @@ import { ModuleName } from "structure";
 export class ActivityPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mGameScroll: GameScroller;
-    private activeUIData: any;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.ACTIVITY_NAME;
@@ -21,12 +20,21 @@ export class ActivityPanel extends BasePanel {
     }
 
     show(param?: any) {
-        super.show(param);
-        if (!this.activeUIData) this.checkUpdateActive();
         if (this.mInitialized) {
             this.setInteractive();
-            if (this.activeUIData) this._updateUIState(this.activeUIData);
         }
+        super.show(param);
+        this.checkUpdateActive();
+    }
+
+    addListen() {
+        if (!this.mInitialized) return;
+        this.mGameScroll.addListen();
+    }
+
+    removeListen() {
+        if (!this.mInitialized) return;
+        this.mGameScroll.removeListen();
     }
 
     updateUIState(active?: any) {
@@ -46,12 +54,9 @@ export class ActivityPanel extends BasePanel {
     }
 
     protected init() {
-        const conWidth = 60 * this.dpr, conHeight = 300 * this.dpr;
+        const conWidth = 60 * this.dpr, conHeight = 270 * this.dpr;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWidth, conHeight);
-        const img = this.scene.make.image({ key: this.key, frame: "home_more" });
-        this.content.add(img);
-        img.y = -conHeight * 0.5 + img.height * 0.5;
         this.add(this.content);
         this.mGameScroll = new GameScroller(this.scene, {
             x: 0,
@@ -69,9 +74,14 @@ export class ActivityPanel extends BasePanel {
             }
         });
         this.content.add(this.mGameScroll);
+        const img = this.scene.make.image({ key: this.key, frame: "home_more" });
+        img.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        this.content.add(img);
+        img.y = conHeight * 0.5 - img.height * 0.5;
         for (let i = 0; i < 4; i++) {
             const frame = `icon_${i + 1}`;
             const image = this.scene.make.image({ key: this.key, frame });
+            image.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
             image.name = i + 1 + "";
             this.mGameScroll.addItem(image);
         }
@@ -82,23 +92,21 @@ export class ActivityPanel extends BasePanel {
 
     private onClickHandler(name: string) {
         if (name === "4") {
-            this.render.renderEmitter("showPanel", "Task");
+            this.render.renderEmitter("showPanel", ModuleName.PICATASK_NAME);
         } else if (name === "3") {
-            this.render.renderEmitter("showPanel", "PicaFriend");
+            this.render.renderEmitter("showPanel", ModuleName.PICAFRIEND_NAME);
         } else if (name === "2") {
-            this.render.renderEmitter("showPanel", "PicaOrder");
+            this.render.renderEmitter("showPanel", ModuleName.PICAORDER_NAME);
+        } else if (name === "1") {
+            this.render.renderEmitter("showPanel", "PicaRecharge");
         }
     }
     private async checkUpdateActive() {
-        this.activeUIData = await this.render.mainPeer.getActiveUIData("Activity");
-        if (!this.mInitialized) return;
-        this._updateUIState(this.activeUIData);
-    }
-
-    private _updateUIState(data: any) {
-        if (!data) return;
-        for (const tmpData of data) {
-            this.updateUIState(tmpData);
+        const arr = await this.render.mainPeer.getActiveUIData("Activity");
+        if (arr) {
+            for (const data of arr) {
+                this.updateUIState(data);
+            }
         }
     }
 
