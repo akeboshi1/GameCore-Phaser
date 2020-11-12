@@ -13,3 +13,7 @@ export * from "./tips/TextToolTip";
 export * from "./tips/itoolTip";
 export * from "./tips/toolTip";
 export * from "./image.value";
+export * from "./input.view";
+export * from "./three.button";
+export * from "./three.slice.path";
+export * from "./tween.compent";
