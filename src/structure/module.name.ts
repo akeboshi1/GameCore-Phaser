@@ -25,4 +25,5 @@ export class ModuleName {
     public static PICAMANORLIST_NAME: string = "PicaManorList";
     public static PICAMANORINFO_NAME: string = "PicaManorInfo";
     public static PICABUSINESSSTREET_NAME: string = "PicaBusinessStreet";
+    public static PICABUSINESSMARKETINGPLAN_NAME: string = "PicaBusinessMarketingPlan";
 }
