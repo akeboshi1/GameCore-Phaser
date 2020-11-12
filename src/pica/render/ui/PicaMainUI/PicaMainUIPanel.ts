@@ -350,7 +350,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     private onPartyHandler() {
-        this.render.renderEmitter(EventType.SHOW_MED, "PicOpenParty");
+        this.render.renderEmitter(EventType.SHOW_MED, "PicaOpenParty");
     }
 }
 

@@ -1,4 +1,4 @@
-export { Game } from "./game";
+export * from "./game";
 export * from "./ui";
 export * from "./actor";
 export * from "./room";

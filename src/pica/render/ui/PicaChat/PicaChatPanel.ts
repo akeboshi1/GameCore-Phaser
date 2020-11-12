@@ -1,6 +1,6 @@
-import { PicChatInputPanel } from "./PicChatInputPanel";
+import { PicaChatInputPanel } from "./PicaChatInputPanel";
 import { BBCodeText, TextArea, UIType } from "apowophaserui";
-import { PicGiftPanel } from "./PicGiftPanel";
+import { PicaGiftPanel } from "./PicaGiftPanel";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, i18n } from "utils";
 import { EventType, ModuleName } from "structure";
@@ -28,11 +28,11 @@ export class PicaChatPanel extends BasePanel {
     private mNavigateBtn: Phaser.GameObjects.Image;
     private mOutputText: BBCodeText;
     private mTextArea: TextArea;
-    private mInputText: InputPanel | PicChatInputPanel;
+    private mInputText: InputPanel | PicaChatInputPanel;
     private chatCatchArr: string[] = [];
     private chatMaxLen: number = 100;
-    private giftPanel: PicGiftPanel;
-    constructor(uiManager: UiManager) {
+    private giftPanel: PicaGiftPanel;
+    constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
@@ -137,8 +137,8 @@ export class PicaChatPanel extends BasePanel {
             this.mTextArea.scrollToBottom();
         }
 
-        if (this.mInputText && this.mInputText instanceof PicChatInputPanel) {
-            (<PicChatInputPanel>this.mInputText).appendChat(val);
+        if (this.mInputText && this.mInputText instanceof PicaChatInputPanel) {
+            (<PicaChatInputPanel>this.mInputText).appendChat(val);
         }
     }
 
@@ -331,7 +331,7 @@ export class PicaChatPanel extends BasePanel {
         if (!this.giftPanel || !this.giftPanel.visible) {
             this.hideAllChildPanel();
             if (!this.giftPanel) {
-                this.giftPanel = new PicGiftPanel(this.scene, 0, 0, this.width, 175 * this.dpr, this.key, this.dpr, this.scale);
+                this.giftPanel = new PicaGiftPanel(this.scene, 0, 0, this.width, 175 * this.dpr, this.key, this.dpr, this.scale);
                 this.giftPanel.y = this.height - this.giftPanel.height * 0.5;
                 this.giftPanel.x = this.width * 0.5;
                 this.add(this.giftPanel);
@@ -387,7 +387,7 @@ export class PicaChatPanel extends BasePanel {
 
     private openAppInputPanel() {
         if (this.scene.cache.json.has("quickchat")) {
-            this.mInputText = new PicChatInputPanel(this.scene, this.render, this.key, this.chatCatchArr.concat());
+            this.mInputText = new PicaChatInputPanel(this.scene, this.render, this.key, this.chatCatchArr.concat());
             this.mInputText.once("close", this.appCloseChat, this);
             this.mInputText.on("send", this.appSendChat, this);
             const quickArr = this.scene.cache.json.get("quickchat");
@@ -424,15 +424,15 @@ export class PicaChatPanel extends BasePanel {
         if (this.giftPanel) this.giftPanel.hide();
         if (this.mTextArea) this.mTextArea.visible = false;
         this.mScrollBtn.disableInteractive();
-        this.showPanelHandler("PicHandheld", false);
+        this.showPanelHandler("PicaHandheld", false);
     }
     private showChatTextArea() {
         this.mTextArea.visible = true;
         this.mScrollBtn.setInteractive();
-        this.showPanelHandler("PicHandheld", true);
+        this.showPanelHandler("PicaHandheld", true);
     }
     private onBuyItemHandler(prop: any, data: any) {
-        const alertView = new AlertView(this.scene, this.render);
+        const alertView = new AlertView(this.uiManager);
         const price = data.count * data.sellingPrice.price;
         if (price > 0) {
             alertView.show({

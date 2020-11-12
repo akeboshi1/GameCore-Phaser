@@ -10,7 +10,7 @@ export class PicHandheldPanel extends BasePanel {
     private isExtendsGrid: boolean = false;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = ModuleName.PICHANDHELD_NAME;
+        this.key = ModuleName.PICAHANDHELD_NAME;
     }
 
     public resize(w: number, h: number) {

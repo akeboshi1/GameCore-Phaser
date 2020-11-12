@@ -1,6 +1,6 @@
 import { FriendRelation, FriendRelationEnum } from "structure";
 
-export class PicFriendRelation {
+export class PicaFriendRelation {
     static check(me: string, cid: string, data: any[]): FriendRelation {
         let relation = FriendRelationEnum.Null;
         if (data.length > 0) {

@@ -8,7 +8,7 @@ import { EventType, FriendChannel, FriendData, FriendRelation, FriendRelationEnu
 import { UIAtlasName, UIAtlasKey } from "picaRes";
 import { Font, Handler, i18n } from "utils";
 import { LabelInput, CheckboxGroup } from "gamecoreRender";
-export class PicFriendPanel extends BasePanel {
+export class PicaFriendPanel extends BasePanel {
     private bg: Image;
     private closeBtn: Button;
     private content: Container;
@@ -18,7 +18,7 @@ export class PicFriendPanel extends BasePanel {
     private mSubContanerMap: Map<FriendChannel, any>;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = ModuleName.PICFRIEND_NAME;
+        this.key = ModuleName.PICAFRIEND_NAME;
         this.mSubContanerMap = new Map();
         this.mSubContanerMap.set(FriendChannel.Blacklist, BlackContainer);
         this.mSubContanerMap.set(FriendChannel.Search, SearchContainer);

@@ -4,7 +4,7 @@ import { AlertView, BasePanel, DynamicImage, ImageValue, ItemInfoTips, Render, U
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Logger, Url } from "utils";
-export class PicOrderPanel extends BasePanel {
+export class PicaOrderPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
     private titlebg: Phaser.GameObjects.Image;
@@ -20,7 +20,7 @@ export class PicOrderPanel extends BasePanel {
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = ModuleName.PICORDER_NAME;
+        this.key = ModuleName.PICAORDER_NAME;
     }
 
     resize(width?: number, height?: number) {
@@ -144,8 +144,8 @@ export class PicOrderPanel extends BasePanel {
         this.content.add([this.bg, this.closeBtn, this.titlebg, titlebg2, this.tilteName, this.orderProgressPanel, this.mGameGrid, this.goldImageValue, this.itemtips]);
         this.resize();
         super.init();
-        this.render.renderEmitter(ModuleName.PICORDER_NAME + "_questlist");
-        this.render.renderEmitter(ModuleName.PICORDER_NAME + "_questprogress");
+        this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_questlist");
+        this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_questprogress");
     }
 
     public setOrderDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST) {
@@ -168,22 +168,22 @@ export class PicOrderPanel extends BasePanel {
     }
 
     private OnClosePanel() {
-        this.render.renderEmitter(ModuleName.PICORDER_NAME + "_hide");
+        this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_hide");
     }
 
     private onSendHandler(index: number, orderOperator: op_pkt_def.PKT_Order_Operator) {
         if (orderOperator === op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE) {
-            const alertView = new AlertView(this.scene, this.mWorld);
+            const alertView = new AlertView(this.uiManager);
             alertView.show({
                 text: i18n.t("order.refreshtips"),
                 title: i18n.t("order.refreshtitle"),
                 oy: 302 * this.dpr * this.mWorld.uiScale,
                 callback: () => {
-                    this.render.renderEmitter(ModuleName.PICORDER_NAME + "_changeorder", { index, orderOperator });
+                    this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_changeorder", { index, orderOperator });
                 },
             });
         } else {
-            this.render.renderEmitter(ModuleName.PICORDER_NAME + "_changeorder", { index, orderOperator });
+            this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_changeorder", { index, orderOperator });
         }
     }
 
@@ -192,7 +192,7 @@ export class PicOrderPanel extends BasePanel {
         const data = item.progressData;
         if (!data.received) {
             if (data.targetValue <= this.progressData.currentProgressValue) {
-                this.render.renderEmitter(ModuleName.PICORDER_NAME + "_questreward", index);
+                this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_questreward", index);
             } else {
                 this.itemtips.setItemData(data.rewards[0]);
                 this.showItemTipsState(item);
@@ -201,7 +201,7 @@ export class PicOrderPanel extends BasePanel {
     }
 
     private onRefreshOrderList() {
-        this.render.renderEmitter(ModuleName.PICORDER_NAME + "_questlist");
+        this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_questlist");
     }
     private onItemInfoTips(item: MaterialItem) {
         const data = item.itemData;

@@ -1,10 +1,10 @@
 import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { op_client, op_virtual_world } from "pixelpai_proto";
 import { Game } from "gamecore";
 import { MAIN_WORKER } from "structure";
 
-export class PicHandheld extends PacketHandler {
+export class PicaHandheld extends PacketHandler {
     constructor(private game: Game) {
         super();
         this.register();

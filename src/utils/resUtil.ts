@@ -1,4 +1,5 @@
 import { HTTP_REGEX } from "structure";
+import { Font } from "./font";
 import { i18n } from "./i18n";
 
 export enum CoinType {
@@ -266,4 +267,119 @@ export class Coin {
         }
         return res;
     }
+}
+export class UIHelper {
+    public static get threeGreenNormal() {
+        return ["butt_green_left", "butt_green_middle", "butt_green_right"];
+    }
+    public static get threeRedNormal() {
+        return ["butt_red_left", "butt_red_middle", "butt_red_right"];
+    }
+    public static get threeYellowNormal() {
+        return ["butt_yellow_left", "butt_yellow_middle", "butt_yellow_right"];
+    }
+
+    public static titleYellowStyle_m(dpr, size: number = 20) {
+        return {
+            fontSize: size * dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#905B06"
+        };
+    }
+
+    public static blackStyle(dpr, size: number = 12) {
+        return {
+            fontSize: size * dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#000000"
+        };
+    }
+    public static whiteStyle(dpr, size: number = 12) {
+        return {
+            fontSize: size * dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#ffffff"
+        };
+    }
+    public static brownishStyle(dpr, size: number = 12) {
+        return {
+            fontSize: size * dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#996600"
+        };
+    }
+    public static yellowStyle(dpr, size: number = 12) {
+        return {
+            fontSize: size * dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#FFD248"
+        };
+    }
+    public static redStyle(dpr, size: number = 12) {
+        return {
+            fontSize: size * dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#E33922"
+        };
+    }
+
+    public static blueStyle(dpr, size: number = 12) {
+        return {
+            fontSize: size * dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#2B4BB5"
+        };
+    }
+    public static background_w(dpr: number) {
+        return {
+            left: 50 * dpr,
+            top: 30 * dpr,
+            right: 30 * dpr,
+            bottom: 95 * dpr
+        };
+    }
+    public static background_w_s(dpr: number) {
+        return {
+            left: 50 * dpr,
+            top: 30 * dpr,
+            right: 30 * dpr,
+            bottom: 70 * dpr
+        };
+    }
+    public static background_n(dpr: number) {
+        return {
+            left: 30 * dpr,
+            top: 40 * dpr,
+            right: 30 * dpr,
+            bottom: 40 * dpr
+        };
+    }
+
+    public static button(dpr: number) {
+        return {
+            left: 14 * dpr,
+            top: 14 * dpr,
+            right: 14 * dpr,
+            bottom: 14 * dpr
+        };
+    }
+
+    static spliceText(maxwidth: number, text: string, fontSize: number, scene: Phaser.Scene) {
+        const mlabel = this.Text(scene);
+        for (let i = 0; i < text.length; i++) {
+            const temp = text.slice(0, i);
+            const width = mlabel.setText(text).width;
+            if (width > maxwidth) {
+                return temp;
+            }
+        }
+        return text;
+    }
+    public static Text(scene: Phaser.Scene) {
+        if (!this.mText) {
+            this.mText = scene.make.text(this.whiteStyle, false);
+        }
+        return this.mText;
+    }
+    private static mText: Phaser.GameObjects.Text;
 }

@@ -1,8 +1,8 @@
 import { op_client } from "pixelpai_proto";
 import { CharacterInfo } from "./CharacterInfo";
-import { EventType, ModuleName } from "structure";
-import { PicFriendRelation } from "../PicFriend/PicFriendRelation";
-import { PicFriendMediator } from "../PicFriend/PicFriendMediator";
+import { ModuleName } from "structure";
+import { PicaFriendRelation } from "../PicaFriend/PicaFriendRelation";
+import { PicaFriendMediator } from "../PicaFriend/PicaFriendMediator";
 import { BasicMediator, Game } from "gamecore";
 
 export class CharacterInfoMediator extends BasicMediator {
@@ -108,7 +108,7 @@ export class CharacterInfoMediator extends BasicMediator {
             if (code === 200) {
                 for (const key in data) {
                     const ids = key.split("_");
-                    this.mView.setFriendRelation(PicFriendRelation.check(ids[0], ids[1], data[key]).relation);
+                    this.mView.setFriendRelation(PicaFriendRelation.check(ids[0], ids[1], data[key]).relation);
                 }
             }
         });
@@ -146,9 +146,9 @@ export class CharacterInfoMediator extends BasicMediator {
 
     private updateFrind() {
         const uimanager = this.game.uiManager;
-        const picFriend: PicFriendMediator = <PicFriendMediator>uimanager.getMed(ModuleName.PICFRIEND_NAME);
-        if (picFriend) {
-            picFriend.fetchCurrentFriend();
+        const PicaFriend: PicaFriendMediator = <PicaFriendMediator>uimanager.getMed(ModuleName.PICAFRIEND_NAME);
+        if (PicaFriend) {
+            PicaFriend.fetchCurrentFriend();
         }
     }
 }

@@ -2,7 +2,7 @@ import { ClickEvent, GameGridTable, NineSliceButton } from "apowophaserui";
 import { UIAtlasKey } from "picaRes";
 import { DynamicImage } from "gamecoreRender";
 import { Font, Handler, i18n, Coin, Url } from "utils";
-export class PicGiftPanel extends Phaser.GameObjects.Container {
+export class PicaGiftPanel extends Phaser.GameObjects.Container {
     private mPropGrid: GameGridTable;
     private curGiftItem: PicGiftItem;
     private key: string;

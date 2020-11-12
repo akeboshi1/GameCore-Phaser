@@ -13,3 +13,4 @@ export { EventType } from "./event.type";
 export { ModuleName } from "./module.name";
 export { FriendRelation, FriendRelationEnum, FriendData, FriendChannel, MenuData } from "./friend.relation";
 export { ChineseUnit } from "./chinese.unit";
+export { TimerCountDown } from "./TimerCountDown";

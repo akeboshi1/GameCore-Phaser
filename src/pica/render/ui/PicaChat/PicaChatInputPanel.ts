@@ -3,7 +3,7 @@ import { UIAtlasKey } from "picaRes";
 import { Render } from "gamecoreRender";
 import { Font, i18n } from "utils";
 
-export class PicChatInputPanel extends Phaser.Events.EventEmitter {
+export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
     private bottomCon: Phaser.GameObjects.Container;
     private contentCon: Phaser.GameObjects.Container;
