@@ -200,16 +200,16 @@ export class DialogPanel extends BasePanel {
         }
         item.select = true;
         const data = this.showData[0];
-        this.render.mainPeer.onQueryNextDialog(data.id, item.itemData.node.id);
+        this.render.renderEmitter(this.key + "_querydialog", { id: data.id, nodeid: item.itemData.node.id });
     }
 
     private onNextDialogHandler() {
         const data = this.showData[0];
-        this.render.mainPeer.onQueryNextDialog(data.id, 0);
+        this.render.renderEmitter(this.key + "_querydialog", { id: data.id, nodeid: 0 });
     }
 
     private onCloseHandler() {
-        this.render.mainPeer.hideMediator("Dialog");
+        this.render.renderEmitter(this.key + "_hide");
     }
 }
 

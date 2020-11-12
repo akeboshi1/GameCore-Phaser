@@ -362,12 +362,6 @@ export class MainPeer extends RPCPeer {
         this.game.hideMediator(name);
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public onQueryNextDialog(id: number, comid: number, data?: number[]) {
-        const med: DialogMediator = this.game.uiManager.getMed(ModuleName.DIALOG_NAME) as DialogMediator;
-        if (med) med.onQueryNextDialog(id, comid, data);
-    }
-
     @Export([webworker_rpc.ParamType.str])
     public renderEmitter(eventType: string, data: any) {
         this.game.emitter.emit(eventType, data);

@@ -13,6 +13,10 @@ export class PicaHandheldMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
+        this.game.emitter.on("changehandheld", this.onChangeHandheld, this);
+        this.game.emitter.on("clearhandheld", this.onClearHandheld, this);
+        this.game.emitter.on("handheldlist", this.onReqHandheldList, this);
+        this.game.emitter.on("openeqiped", this.openEquipedPanel, this);
     }
 
     hide() {
@@ -37,13 +41,6 @@ export class PicaHandheldMediator extends BasicMediator {
         return true;
     }
 
-    protected panelInit() {
-        this.game.emitter.on("changehandheld", this.onChangeHandheld, this);
-        this.game.emitter.on("clearhandheld", this.onClearHandheld, this);
-        this.game.emitter.on("handheldlist", this.onReqHandheldList, this);
-        this.game.emitter.on("openeqiped", this.openEquipedPanel, this);
-    }
-
     private onReqHandheldList() {
         this.PicaHandheld.queryHandheldList();
     }
@@ -66,7 +63,7 @@ export class PicaHandheldMediator extends BasicMediator {
     }
     private openEquipedPanel(state: boolean) {
         const uiManager = this.game.uiManager;
-        const mediator = uiManager.getMed(ModuleName.PICAHANDHELD_NAME);
+        const mediator = uiManager.getMed(ModuleName.PICACHAT_NAME);
         if (mediator) {
             if (state) {
                 mediator.hide();
