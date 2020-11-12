@@ -335,7 +335,7 @@ export class MainPeer extends RPCPeer {
     public showNoticeHandler(text: string) {
         const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
         data.text = [{ text, node: undefined }];
-        this.game.showByName("PicaNotice", data);
+        this.game.showByName(ModuleName.PICANOTICE_NAME, data);
     }
 
     @Export([webworker_rpc.ParamType.str])

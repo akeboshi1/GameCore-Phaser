@@ -35,13 +35,6 @@ export class PicaNavigateMediator extends BasicMediator {
     super.destroy();
   }
 
-  protected panelInit() {
-  }
-
-  protected _show() {
-    this.mView.show();
-  }
-
   private onCloseHandler() {
     if (!this.game) {
       return;
