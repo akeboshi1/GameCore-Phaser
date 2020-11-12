@@ -32,7 +32,7 @@ export class PicaChatPanel extends BasePanel {
     private chatCatchArr: string[] = [];
     private chatMaxLen: number = 100;
     private giftPanel: PicGiftPanel;
-    constructor(uiManager: UiManager) {
+    constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.MAX_HEIGHT = 460 * this.dpr;
         this.MIN_HEIGHT = 100 * this.dpr;
@@ -424,15 +424,15 @@ export class PicaChatPanel extends BasePanel {
         if (this.giftPanel) this.giftPanel.hide();
         if (this.mTextArea) this.mTextArea.visible = false;
         this.mScrollBtn.disableInteractive();
-        this.showPanelHandler("PicHandheld", false);
+        this.showPanelHandler("PicaHandheld", false);
     }
     private showChatTextArea() {
         this.mTextArea.visible = true;
         this.mScrollBtn.setInteractive();
-        this.showPanelHandler("PicHandheld", true);
+        this.showPanelHandler("PicaHandheld", true);
     }
     private onBuyItemHandler(prop: any, data: any) {
-        const alertView = new AlertView(this.scene, this.render);
+        const alertView = new AlertView(this.uiManager);
         const price = data.count * data.sellingPrice.price;
         if (price > 0) {
             alertView.show({

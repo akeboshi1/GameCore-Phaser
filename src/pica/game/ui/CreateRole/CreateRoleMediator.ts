@@ -1,9 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "../../../../game/game";
-import { BasicMediator } from "../../../../game/ui/basic/basic.mediator";
 import { op_client, op_virtual_world, op_gameconfig } from "pixelpai_proto";
 import { Logger } from "utils";
 import { ModuleName } from "structure";
+import { BasicMediator, Game } from "gamecore";
 
 export class CreateRoleMediator extends BasicMediator {
   private mCreateRole: CreateRole;

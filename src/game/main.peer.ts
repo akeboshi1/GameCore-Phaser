@@ -7,7 +7,7 @@ import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName } from "structure";
-import { DialogMediator, PicaChatMediator, PicaGame, PicHandheldMediator } from "picaWorker";
+import { DialogMediator, PicaChatMediator, PicaGame } from "picaWorker";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }

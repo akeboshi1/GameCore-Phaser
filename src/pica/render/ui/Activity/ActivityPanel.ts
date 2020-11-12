@@ -84,9 +84,9 @@ export class ActivityPanel extends BasePanel {
         if (name === "4") {
             this.render.renderEmitter("showPanel", "Task");
         } else if (name === "3") {
-            this.render.renderEmitter("showPanel", "PicFriend");
+            this.render.renderEmitter("showPanel", "PicaFriend");
         } else if (name === "2") {
-            this.render.renderEmitter("showPanel", "PicOrder");
+            this.render.renderEmitter("showPanel", "PicaOrder");
         }
     }
     private async checkUpdateActive() {

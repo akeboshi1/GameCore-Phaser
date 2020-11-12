@@ -1,12 +1,13 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { PicOrder } from "./PicOrder";
-import { BasicMediator, Game } from "gamecore";
+import { PicaOrder } from "./PicaOrder";
+import { BasicMediator } from "gamecore";
 import { ModuleName } from "structure";
-export class PicOrderMediator extends BasicMediator {
-    private picOrder: PicOrder;
-    constructor(game: Game) {
-        super(ModuleName.PICORDER_NAME, game);
-        this.picOrder = new PicOrder(game);
+import { PicaGame } from "../../pica.game";
+export class PicaOrderMediator extends BasicMediator {
+    private PicaOrder: PicaOrder;
+    constructor(game: PicaGame) {
+        super(ModuleName.PICAORDER_NAME, game);
+        this.PicaOrder = new PicaOrder(game);
     }
 
     isSceneUI() {
@@ -15,30 +16,30 @@ export class PicOrderMediator extends BasicMediator {
 
     hide() {
         super.hide();
-        this.game.emitter.off(ModuleName.PICORDER_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.off(ModuleName.PICORDER_NAME + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
-        this.game.emitter.off(ModuleName.PICORDER_NAME + "_questprogress", this.query_PLAYER_PROGRESS, this);
-        this.game.emitter.off(ModuleName.PICORDER_NAME + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
-        this.game.emitter.off(ModuleName.PICORDER_NAME + "_hide", this.onHideView, this);
+        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_questlist", this.query_ORDER_LIST, this);
+        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
+        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_questprogress", this.query_PLAYER_PROGRESS, this);
+        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off("questlist", this.on_ORDER_LIST, this);
         this.game.emitter.off("progresslist", this.on_PLAYER_PROGRESS, this);
     }
 
     destroy() {
-        if (this.picOrder) {
-            this.picOrder.destroy();
-            this.picOrder = undefined;
+        if (this.PicaOrder) {
+            this.PicaOrder.destroy();
+            this.PicaOrder = undefined;
         }
         super.destroy();
     }
 
     protected panelInit() {
         super.panelInit();
-        this.game.emitter.on(ModuleName.PICORDER_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.on(ModuleName.PICORDER_NAME + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
-        this.game.emitter.on(ModuleName.PICORDER_NAME + "_questprogress", this.query_PLAYER_PROGRESS, this);
-        this.game.emitter.on(ModuleName.PICORDER_NAME + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
-        this.game.emitter.on(ModuleName.PICORDER_NAME + "_hide", this.onHideView, this);
+        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_questlist", this.query_ORDER_LIST, this);
+        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
+        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_questprogress", this.query_PLAYER_PROGRESS, this);
+        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on("questlist", this.on_ORDER_LIST, this);
         this.game.emitter.on("progresslist", this.on_PLAYER_PROGRESS, this);
         this.query_ORDER_LIST();
@@ -54,17 +55,17 @@ export class PicOrderMediator extends BasicMediator {
     }
 
     private query_ORDER_LIST() {
-        this.picOrder.query_ORDER_LIST();
+        this.PicaOrder.query_ORDER_LIST();
     }
     private query_CHANGE_ORDER_STAGE(obj: { index: number, orderOperator: op_pkt_def.PKT_Order_Operator }) {
-        this.picOrder.query_CHANGE_ORDER_STAGE(obj.index, obj.orderOperator);
+        this.PicaOrder.query_CHANGE_ORDER_STAGE(obj.index, obj.orderOperator);
     }
     private query_PLAYER_PROGRESS() {
-        this.picOrder.query_PLAYER_PROGRESS("order");
+        this.PicaOrder.query_PLAYER_PROGRESS("order");
     }
 
     private query_PLAYER_PROGRESS_REWARD(index: number) {
-        this.picOrder.query_PLAYER_PROGRESS_REWARD(index);
+        this.PicaOrder.query_PLAYER_PROGRESS_REWARD(index);
     }
     private on_ORDER_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST) {
         const list = content.orders;

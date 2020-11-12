@@ -1,13 +1,13 @@
-import { PicHandheld } from "./PicHandheld";
+import { PicaHandheld } from "./PicaHandheld";
 import { MAIN_WORKER, ModuleName } from "structure";
 import { BasicMediator, Game } from "gamecore";
 import { op_client } from "pixelpai_proto";
 
-export class PicHandheldMediator extends BasicMediator {
-    private picHandheld: PicHandheld;
+export class PicaHandheldMediator extends BasicMediator {
+    private PicaHandheld: PicaHandheld;
     constructor(game: Game) {
         super(ModuleName.PICHANDHELD_NAME, game);
-        this.picHandheld = new PicHandheld(this.game);
+        this.PicaHandheld = new PicaHandheld(this.game);
         this.game.emitter.on(MAIN_WORKER + "_handheldlist", this.onHandheldList, this);
     }
 
@@ -25,9 +25,9 @@ export class PicHandheldMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.picHandheld) {
-            this.picHandheld.destroy();
-            this.picHandheld = undefined;
+        if (this.PicaHandheld) {
+            this.PicaHandheld.destroy();
+            this.PicaHandheld = undefined;
         }
         this.hide();
         super.destroy();
@@ -45,7 +45,7 @@ export class PicHandheldMediator extends BasicMediator {
     }
 
     private onReqHandheldList() {
-        this.picHandheld.queryHandheldList();
+        this.PicaHandheld.queryHandheldList();
     }
 
     private onHandheldList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_HANDHELD) {
@@ -58,11 +58,11 @@ export class PicHandheldMediator extends BasicMediator {
     }
 
     private onChangeHandheld(id: string) {
-        this.picHandheld.queryChangeHandheld(id);
+        this.PicaHandheld.queryChangeHandheld(id);
     }
 
     private onClearHandheld() {
-        this.picHandheld.queryClearHandheld();
+        this.PicaHandheld.queryClearHandheld();
     }
     private openEquipedPanel(state: boolean) {
         const uiManager = this.game.uiManager;

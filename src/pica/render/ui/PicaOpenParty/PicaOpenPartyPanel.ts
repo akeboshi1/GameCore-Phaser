@@ -1,19 +1,11 @@
-import { BasePanel } from "../components/BasePanel";
-import { WorldService } from "../../game/world.service";
-import { i18n } from "../../i18n";
 import { op_client } from "pixelpai_proto";
-import { Font } from "../../utils/font";
-import { UIAtlasKey, UIAtlasName } from "../ui.atals.name";
-import { CheckboxGroup } from "../components/checkbox.group";
-import { NineSlicePatch, NineSliceButton, TabButton, ClickEvent } from "apowophaserui";
-import { Handler } from "../../Handler/Handler";
-import { ItemsConsumeFunPanel } from "../components/ItemsConsumeFunPanel";
-import { PicOpenPartyCreatePanel } from "./PicOpenPartyCreatePanel";
-import { CacheDataManager } from "../../message/CacheDataManager";
-import { DataMgrType } from "../../message/DataManager";
-import { EventType } from "../../message/EventType";
-import { AlertView } from "../components/alert.view";
-export class PicOpenPartyPanel extends BasePanel {
+import { NineSlicePatch, TabButton } from "apowophaserui";
+import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
+import { ModuleName } from "structure";
+import { Font, i18n } from "utils";
+import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { PicaOpenPartyCreatePanel } from "./PicaOpenPartyCreatePanel";
+export class PicaOpenPartyPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
@@ -21,10 +13,10 @@ export class PicOpenPartyPanel extends BasePanel {
     private partyBtn: TabButton;
     private settingBtn: TabButton;
     private topCheckBox: CheckboxGroup;
-    private partyCreatePanel: PicOpenPartyCreatePanel;
-    constructor(scene: Phaser.Scene, world: WorldService) {
-        super(scene, world);
-        this.key = "picpartypanel";
+    private partyCreatePanel: PicaOpenPartyCreatePanel;
+    constructor(private uiManager: UiManager) {
+        super(uiManager.scene, uiManager.render);
+        this.key = ModuleName.PICAOPENPARTY_NAME;
     }
 
     public resize(w: number, h: number) {
@@ -116,7 +108,7 @@ export class PicOpenPartyPanel extends BasePanel {
         this.topCheckBox.appendItemAll([this.partyBtn, this.settingBtn]);
         this.topCheckBox.on("selected", this.onTabBtnHandler, this);
         this.content.add([this.partyBtn, this.settingBtn]);
-        this.partyCreatePanel = new PicOpenPartyCreatePanel(this.scene, this.mWorld, 0, 0, this.content.width - 20 * this.dpr, this.content.height - 70 * this.dpr, this.key, this.dpr, this.scale);
+        this.partyCreatePanel = new PicaOpenPartyCreatePanel(this.uiManager, 0, 0, this.content.width - 20 * this.dpr, this.content.height - 70 * this.dpr, this.key, this.dpr, this.scale);
         this.partyCreatePanel.on("openparty", this.onOpenPartyHandler, this);
         this.partyCreatePanel.on("showtips", this.showPanelHandler, this);
         this.partyCreatePanel.on("querytheme", this.onQueryThemeHandler, this);
@@ -153,12 +145,12 @@ export class PicOpenPartyPanel extends BasePanel {
     }
 
     private onCloseHandler() {
-        this.emit("close");
+        this.render.renderEmitter(ModuleName.PICAOPENPARTY_NAME + "_close");
     }
 
     private onOpenPartyHandler(topic: string, name: string, des: string, ticket: number, created: boolean) {
-        this.emit("queryopen", topic, name, des, ticket);
-        this.emit("close");
+        this.render.renderEmitter(ModuleName.PICAOPENPARTY_NAME + "_queryopen", { topic, name, des, ticket });
+        this.render.renderEmitter(ModuleName.PICAOPENPARTY_NAME + "_close");
         // const mgr = this.mWorld.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         this.showPanelHandler("PicaNotice", !created ? i18n.t("party.opentips") : i18n.t("party.modifytips"));
     }
@@ -172,6 +164,6 @@ export class PicOpenPartyPanel extends BasePanel {
         uiManager.showMed(panelName, data);
     }
     private onQueryThemeHandler() {
-        this.emit("querytheme");
+        this.render.renderEmitter(ModuleName.PICAOPENPARTY_NAME + "_querytheme");
     }
 }

@@ -13,7 +13,7 @@ import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
 import { LoadingTips } from "./loading/loading.tips";
-import { ILauncherConfig, ModuleName } from "structure";
+import { ILauncherConfig } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";

@@ -5,7 +5,7 @@ import { op_client, op_virtual_world } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { Logger } from "utils";
 
-export class PicFriend extends BasicModel {
+export class PicaFriend extends BasicModel {
     private httpService: HttpService;
     private userId: string;
     constructor(game: Game) {

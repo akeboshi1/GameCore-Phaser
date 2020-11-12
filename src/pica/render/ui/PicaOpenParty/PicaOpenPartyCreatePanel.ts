@@ -2,9 +2,9 @@ import { BBCodeText, ClickEvent, GameGridTable, GameSlider, InputText, NineSlice
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { AlertView, DynamicImage, Render, UiManager } from "gamecoreRender";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { TimerCountDown } from "picaWorker";
 import { UIAtlasKey } from "picaRes";
-export class PicOpenPartyCreatePanel extends Phaser.GameObjects.Container {
+import { TimerCountDown } from "structure";
+export class PicaOpenPartyCreatePanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private partyNameTitle: BBCodeText;
