@@ -21,3 +21,4 @@ export * from "./value.container";
 export * from "./GridLayoutGroup";
 export * from "./soundButton";
 export * from "./prop.item";
+export * from "./ItemsConsumeFunPanel";

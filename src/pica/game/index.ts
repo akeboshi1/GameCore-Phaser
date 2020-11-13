@@ -54,3 +54,5 @@ export * from "./ui/PicaRoomList/PicaRoomList";
 export * from "./ui/PicaRoomList/PicaRoomListMediator";
 export * from "./ui/PicaWork/PicaWork";
 export * from "./ui/PicaWork/PicaWorkMediator";
+export * from "./ui/PicaHouse/PicaHouse";
+export * from "./ui/PicaHouse/PicaHouseMediator";
