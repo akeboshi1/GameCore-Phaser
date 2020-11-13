@@ -1,6 +1,6 @@
 import { BasicMediator, Game, PlayerProperty } from "gamecore";
 import { op_client } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
+import { ModuleName } from "structure";
 import { PicaMainUI } from "./PicaMainUI";
 
 export class PicaMainUIMediator extends BasicMediator {
@@ -9,11 +9,14 @@ export class PicaMainUIMediator extends BasicMediator {
     constructor(protected game: Game) {
         super(ModuleName.PICAMAINUI_NAME, game);
         this.mModel = new PicaMainUI(this.game);
-        this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
     }
 
     show(param?: any) {
         super.show(param);
+        this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
+        this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
+        this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
+        this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
     }
 
     hide() {
@@ -21,6 +24,7 @@ export class PicaMainUIMediator extends BasicMediator {
         this.game.emitter.off("showPanel", this.onShowPanelHandler, this);
         this.game.emitter.off("openroompanel", this.onOpenRoomHandler, this);
         this.game.emitter.off("querypraise", this.onQuery_PRAISE_ROOM, this);
+        this.game.emitter.off("updateroom", this.onUpdateRoomHandler, this);
     }
 
     destroy() {
@@ -37,9 +41,6 @@ export class PicaMainUIMediator extends BasicMediator {
     }
 
     protected panelInit() {
-        this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
-        this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
-        this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
         if (this.mView) {
             this.mShowData = this.playerInfo;
             this.mView.update(this.mShowData);
@@ -54,6 +55,8 @@ export class PicaMainUIMediator extends BasicMediator {
         uiManager.showMed(panel);
         if (panel === ModuleName.CHARACTERINFO_NAME) {
             (<PicaMainUI>this.mModel).fetchPlayerInfo();
+        } else if (panel === ModuleName.PICAOPENPARTY_NAME) {
+
         }
         // const uiManager = this.world.uiManager;
         // if (data)
