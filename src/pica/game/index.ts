@@ -58,3 +58,5 @@ export * from "./ui/PicaMineCar/PicaMineCar";
 export * from "./ui/PicaMineCar/PicaMineCarMediator";
 export * from "./ui/PicaHouse/PicaHouse";
 export * from "./ui/PicaHouse/PicaHouseMediator";
+export * from "./ui/PicaMineSettle/PicaMineSettle";
+export * from "./ui/PicaMineSettle/PicaMineSettleMediator";

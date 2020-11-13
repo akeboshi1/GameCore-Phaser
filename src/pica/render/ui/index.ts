@@ -62,3 +62,4 @@ export * from "./PicaWork/PicaWorkPanel";
 export * from "./PicaMineCar/PicaMineCarPanel";
 export * from "./PicaHouse/PicaHousePanel";
 export * from "./PicaHouse/PicaHouseInfoPanel";
+export * from "./PicaMineSettle/PicaMineSettlePanel";

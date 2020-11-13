@@ -100,11 +100,7 @@ export class PicaMineCarMediator extends BasicMediator {
   }
 
   private onCloseHandler() {
-    if (this.mView) {
-      this.mView.hide();
-      this.mView = undefined;
-    }
-    this.mShow = false;
+    this.hide();
   }
   private get model(): PicaMineCar {
     return (<PicaMineCar>this.mModel);

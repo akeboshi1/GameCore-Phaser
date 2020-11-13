@@ -22,3 +22,4 @@ export * from "./GridLayoutGroup";
 export * from "./soundButton";
 export * from "./prop.item";
 export * from "./ItemsConsumeFunPanel";
+export * from "./nine.patch";
