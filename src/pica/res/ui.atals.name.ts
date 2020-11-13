@@ -1,5 +1,5 @@
 export class UIAtlasName {
-    public static commonUrl = "common/ui_base";
+    public static commonUrl = "ui_base/ui_base";
     public static common2Url = "ui_base2/ui_base2";
     public static common3Url = "ui_base3/ui_base3";
     public static jsonUrl(name: string) {

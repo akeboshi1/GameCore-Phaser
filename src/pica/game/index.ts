@@ -45,3 +45,5 @@ export { PicaBusinessMarketingPlan } from "./ui/PicaBusinessMarketingPlan/PicaBu
 export { PicaBusinessMarketingPlanMediator } from "./ui/PicaBusinessMarketingPlan/PicaBusinessMarketingPlanMediator";
 export * from "./ui/PicaRecharge/PicaRecharge";
 export * from "./ui/PicaRecharge/PicaRechargeMediator";
+export * from "./ui/PicaRoomUpgrade/PicaRoomUpgrade";
+export * from "./ui/PicaRoomUpgrade/PicaRoomUpgradeMediator";
