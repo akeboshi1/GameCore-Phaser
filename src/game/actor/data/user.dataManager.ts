@@ -101,11 +101,13 @@ export class UserDataManager extends PacketHandler {
     public onUPDATE_PACKAGE(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE = packet.content;
         this.playerBag.updatePackage(content);
+        this.game.emitter.emit(EventType.PACKAGE_UPDATE, content.packageName);
         this.game.peer.workerEmitter(EventType.PACKAGE_UPDATE, content.packageName);
     }
     public onUPDATE_PLAYER_INFO(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO = packet.content;
         this.playerProperty.syncData(content);
+        this.game.emitter.emit(EventType.UPDATE_PLAYER_INFO, content);
         this.game.peer.workerEmitter(EventType.UPDATE_PLAYER_INFO, content);
     }
 }
