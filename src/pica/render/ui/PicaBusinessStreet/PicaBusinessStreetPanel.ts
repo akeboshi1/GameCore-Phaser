@@ -10,7 +10,7 @@ import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Handler, i18n } from "utils";
-export default class PicaBusinessStreetPanel extends BasePanel {
+export class PicaBusinessStreetPanel extends BasePanel {
     private key2 = "c_street_2";
     private content: PicaBusinessContentPanel;
     private mBackGround: Phaser.GameObjects.Graphics;

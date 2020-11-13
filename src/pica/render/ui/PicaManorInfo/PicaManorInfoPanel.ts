@@ -6,7 +6,7 @@ import { BasePanel, Render, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Handler, i18n } from "utils";
-export default class PicaManorInfoPanel extends BasePanel {
+export class PicaManorInfoPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackGround: Phaser.GameObjects.Graphics;
     private picChildPanel: PicaManorChildPanel;

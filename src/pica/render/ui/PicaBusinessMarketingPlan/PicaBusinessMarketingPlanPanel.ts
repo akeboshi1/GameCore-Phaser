@@ -5,7 +5,7 @@ import { PicaBusinessContentPanel } from "../PicaBusinessStreet/PicaBusinessCont
 import { ModuleName, RENDER_PEER } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Handler } from "utils";
-export default class PicaBusinessMarketingPlanPanel extends BasePanel {
+export class PicaBusinessMarketingPlanPanel extends BasePanel {
     private key2 = "c_street_2";
     private content: PicaBusinessContentPanel;
     private mBackGround: Phaser.GameObjects.Graphics;
