@@ -60,3 +60,5 @@ export * from "./ui/PicaHouse/PicaHouse";
 export * from "./ui/PicaHouse/PicaHouseMediator";
 export * from "./ui/PicaMineSettle/PicaMineSettle";
 export * from "./ui/PicaMineSettle/PicaMineSettleMediator";
+export * from "./ui/PicaRewardTip/PicaRewardTip";
+export * from "./ui/PicaRewardTip/PicaRewardTipMediator";

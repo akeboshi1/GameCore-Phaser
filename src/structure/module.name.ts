@@ -37,4 +37,5 @@ export class ModuleName {
     public static PICAMINECAR_NAME: string = "PicaMineCar";
     public static PICAHOUSE_NAME: string = "PicaHouse";
     public static PICAMINESETTLE_NAME: string = "PicaMineSettle";
+    public static PICAREWARDTIP_NAME: string = "PicaRewardTip";
 }
