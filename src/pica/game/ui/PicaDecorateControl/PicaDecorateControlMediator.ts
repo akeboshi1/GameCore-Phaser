@@ -4,9 +4,9 @@ import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 import { MessageType, ModuleName, RENDER_PEER } from "structure";
 
-export class DecorateControlMediator extends BasicMediator {
+export class PicaDecorateControlMediator extends BasicMediator {
     constructor(game: Game) {
-        super(ModuleName.DECORATECONTROL_NAME, game);
+        super(ModuleName.PICADECORATECONTROL_NAME, game);
         game.emitter.on(MessageType.SELECTED_DECORATE_ELEMENT, this.onSelectedDecorateHandler, this);
         game.emitter.on(MessageType.CANCEL_DECORATE_ELEMENT, this.onCancelDecorateHandler, this);
     }
@@ -88,7 +88,7 @@ export class DecorateControlMediator extends BasicMediator {
     private onShowFurniHandler() {
         const uiManager = this.game.uiManager;
         if (uiManager) {
-            uiManager.showMed(ModuleName.FURNIBAG_NAME);
+            uiManager.showMed(ModuleName.PICABAG_NAME);
         }
     }
 

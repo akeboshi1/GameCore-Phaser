@@ -1,4 +1,4 @@
-import { DetailDisplay } from "../Market/DetailDisplay";
+import { DetailDisplay } from "../PicaMarket/DetailDisplay";
 import { NineSliceButton, GameSlider, NineSlicePatch, ClickEvent } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";

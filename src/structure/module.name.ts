@@ -14,8 +14,8 @@ export class ModuleName {
     public static ACCOUNT_NAME: string = "Account";
     public static SCENEMANAGER_NAME: string = "SceneManager";
     public static BUBBLE_NAME: string = "Bubble";
-    public static FURNIBAG_NAME: string = "FurniBag";
-    public static Market_NAME: string = "Market";
+    public static PICABAG_NAME: string = "PicaBag";
+    public static PICAMARKET_NAME: string = "PicaMarket";
     public static PICAORDER_NAME: string = "PicaOrder";
     public static PICAPROPFUN_NAME: string = "PicaPropFun";
     public static PICAPARTYLIST_NAME: string = "PicaPartyList";
@@ -29,10 +29,9 @@ export class ModuleName {
     public static PICABUSINESSMARKETINGPLAN_NAME: string = "PicaBusinessMarketingPlan";
     public static PICARECHARGE_NAME: string = "PicaRecharge";
     public static PICAROOMUPGRAGE_NAME: string = "PicaRoomUpgrade";
-    public static DECORATECONTROL_NAME: string = "DecorateControl";
+    public static PICADECORATECONTROL_NAME: string = "PicaDecorateControl";
     public static PICAROOMUPGRADE_NAME: string = "PicaRoomUpgrade";
     public static PICAEQUIPUPGRADE_NAME: string = "PicaEquipUpgrade";
-    public static ITEMDETAIL_NAME: string = "ItemDetail";
     public static PICAROOMLIST_NAME: string = "PicaRoomList";
     public static PICAWORK_NAME: string = "PicaWork";
     public static PICAHOUSE_NAME: string = "PicaHouse";

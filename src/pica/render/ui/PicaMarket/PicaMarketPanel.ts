@@ -32,7 +32,7 @@ export class MarketPanel extends BasePanel {
   private refreshNeedCount: Phaser.GameObjects.Text;
   constructor(uiManager: UiManager) {
     super(uiManager.scene, uiManager.render);
-    this.key = ModuleName.Market_NAME;
+    this.key = ModuleName.PICAMARKET_NAME;
     this.mSubTabs = [];
     this.mTabs = [];
   }

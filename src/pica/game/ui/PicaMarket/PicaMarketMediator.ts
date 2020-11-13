@@ -1,13 +1,13 @@
-import { Market } from "./Market";
+import { PicaMarket } from "./PicaMarket";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
 
-export class MarketMediator extends BasicMediator {
+export class PicaMarketMediator extends BasicMediator {
   constructor(game: Game) {
-    super(ModuleName.Market_NAME, game);
+    super(ModuleName.PICAMARKET_NAME, game);
     if (!this.mModel) {
-      this.mModel = new Market(game);
+      this.mModel = new PicaMarket(game);
       this.game.emitter.on("getMarketCategories", this.onCategoriesHandler, this);
       this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
       this.game.emitter.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
@@ -108,7 +108,7 @@ export class MarketMediator extends BasicMediator {
     this.hide();
   }
 
-  private get model(): Market {
-    return (<Market>this.mModel);
+  private get model(): PicaMarket {
+    return (<PicaMarket>this.mModel);
   }
 }
