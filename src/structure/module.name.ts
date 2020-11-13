@@ -29,4 +29,5 @@ export class ModuleName {
     public static PICABUSINESSMARKETINGPLAN_NAME: string = "PicaBusinessMarketingPlan";
     public static PICARECHARGE_NAME: string = "PicaRecharge";
     public static PICAROOMUPGRAGE_NAME: string = "PicaRoomUpgrade";
+    public static DECORATECONTROL_NAME: string = "DecorateControl";
 }
