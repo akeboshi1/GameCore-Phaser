@@ -15,15 +15,15 @@ export class FurniBagMediator extends BasicMediator {
         }
         this.mModel = new FurniBag(game, this.mScneType);
         this.addLisenter();
-    }
-
-    show(param?: any) {
-        super.show(param);
         this.game.emitter.on("packageCategory", this.onPackageCategoryHandler, this);
         this.game.emitter.on("queryPackage", this.onQueryPackageHandler, this);
         this.game.emitter.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
         this.game.emitter.on("queryResetAvatar", this.onResetAvatar, this);
         this.game.emitter.on("avatarIDs", this.onDressAvatarIDS, this);
+    }
+
+    show(param?: any) {
+        super.show(param);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPackage", this.onQueryPackage, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
@@ -53,10 +53,11 @@ export class FurniBagMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.mModel) {
-            this.mModel.destroy();
-            this.mModel = undefined;
-        }
+        this.game.emitter.off("packageCategory", this.onPackageCategoryHandler, this);
+        this.game.emitter.off("queryPackage", this.onQueryPackageHandler, this);
+        this.game.emitter.off("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+        this.game.emitter.off("queryResetAvatar", this.onResetAvatar, this);
+        this.game.emitter.off("avatarIDs", this.onDressAvatarIDS, this);
         super.destroy();
         this.removeLisenter();
     }
