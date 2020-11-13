@@ -14,6 +14,18 @@ export class CharacterInfoMediator extends BasicMediator {
         this.game.emitter.on("otherInfo", this.onOtherCharacterInfo, this);
     }
 
+    show(param?: any) {
+        super.show(param);
+        this.game.emitter.on("hide", this.onHidePanel, this);
+        this.game.emitter.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
+        this.game.emitter.on("track", this.onTrackHandler, this);
+        this.game.emitter.on("invite", this.onInviteHandler, this);
+        this.game.emitter.on("follow", this.onFollowHandler, this);
+        this.game.emitter.on("unfollow", this.onUnfollowHandler, this);
+        this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
+        this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
+    }
+
     hide() {
         super.hide();
         this.game.emitter.off("hide", this.onHidePanel, this);
@@ -39,14 +51,7 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     protected panelInit() {
-        this.game.emitter.on("hide", this.onHidePanel, this);
-        this.game.emitter.on("queryOwnerInfo", this.onQueryOwnerInfo, this);
-        this.game.emitter.on("track", this.onTrackHandler, this);
-        this.game.emitter.on("invite", this.onInviteHandler, this);
-        this.game.emitter.on("follow", this.onFollowHandler, this);
-        this.game.emitter.on("unfollow", this.onUnfollowHandler, this);
-        this.game.emitter.on("addBlack", this.onAddBlackHandler, this);
-        this.game.emitter.on("removeBlack", this.onRemoveBlackHandler, this);
+        super.panelInit();
         if (this.mShowData && this.mView) this.mView.update(this.mShowData);
     }
 

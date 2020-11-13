@@ -5,19 +5,19 @@ import { PicaRoomUpgrade } from "./PicaRoomUpgrade";
 export class PicaRoomUpgradeMediator extends BasicMediator {
     private picaRoom: PicaRoomUpgrade;
     constructor(game: Game) {
-        super(ModuleName.PICAROOMUPGRAGE_NAME, game);
+        super(ModuleName.PICAROOMUPGRADE_NAME, game);
         this.picaRoom = new PicaRoomUpgrade(game);
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAROOMUPGRAGE_NAME + "_querytargetui", this.onQueryTargetUI, this);
+        this.game.emitter.on(ModuleName.PICAROOMUPGRADE_NAME + "_querytargetui", this.onQueryTargetUI, this);
         this.game.emitter.on("querytargetui", this.onQueryTargetUI, this);
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off(ModuleName.PICAROOMUPGRAGE_NAME + "_querytargetui", this.onQueryTargetUI, this);
+        this.game.emitter.off(ModuleName.PICAROOMUPGRADE_NAME + "_querytargetui", this.onQueryTargetUI, this);
         this.game.emitter.off("querytargetui", this.onQueryTargetUI, this);
     }
 

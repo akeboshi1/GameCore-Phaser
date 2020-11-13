@@ -47,3 +47,5 @@ export * from "./ui/PicaRecharge/PicaRecharge";
 export * from "./ui/PicaRecharge/PicaRechargeMediator";
 export * from "./ui/PicaRoomUpgrade/PicaRoomUpgrade";
 export * from "./ui/PicaRoomUpgrade/PicaRoomUpgradeMediator";
+export * from "./ui/PicaEquipUpgrade/PicaEquipUpgrade";
+export * from "./ui/PicaEquipUpgrade/PicaEquipUpgradeMediator";
