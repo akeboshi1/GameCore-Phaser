@@ -11,7 +11,7 @@ export class PicaRoomUpgradePanel extends BasePanel {
     private readonly MAX_TIMES: number = 4;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = ModuleName.PICAROOMUPGRAGE_NAME;
+        this.key = ModuleName.PICAROOMUPGRADE_NAME;
     }
 
     public resize(w: number, h: number) {
@@ -115,7 +115,7 @@ export class PicaRoomUpgradePanel extends BasePanel {
             return;
         }
         const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
-        this.render.renderEmitter(ModuleName.PICAROOMUPGRAGE_NAME + "_querytargetui", data.id);
+        this.render.renderEmitter(ModuleName.PICAROOMUPGRADE_NAME + "_querytargetui", data.id);
     }
 
     private createAnimations() {

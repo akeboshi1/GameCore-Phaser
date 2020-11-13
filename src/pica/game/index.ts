@@ -48,3 +48,5 @@ export * from "./ui/PicaRecharge/PicaRechargeMediator";
 export * from "./ui/PicaRoomUpgrade/PicaRoomUpgrade";
 export * from "./ui/PicaRoomUpgrade/PicaRoomUpgradeMediator";
 export { DecorateControlMediator } from "./ui/DecorateControl/DecorateControlMediator";
+export * from "./ui/PicaEquipUpgrade/PicaEquipUpgrade";
+export * from "./ui/PicaEquipUpgrade/PicaEquipUpgradeMediator";
