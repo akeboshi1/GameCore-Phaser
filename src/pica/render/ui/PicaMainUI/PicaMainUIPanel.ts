@@ -300,7 +300,7 @@ export class PicaMainUIPanel extends BasePanel {
         this.render.renderEmitter("openroompanel");
     }
     private onHeadHandler() {
-        this.render.renderEmitter("showPanel", "CharacterInfo");
+        this.render.renderEmitter("showPanel",ModuleName.CHARACTERINFO_NAME);
     }
 
     private onStrengthHandler() {
@@ -350,7 +350,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
 
     private onPartyHandler() {
-        this.render.renderEmitter(EventType.SHOW_MED, "PicaOpenParty");
+        this.render.renderEmitter("showPanel", ModuleName.PICAOPENPARTY_NAME);
     }
 }
 
