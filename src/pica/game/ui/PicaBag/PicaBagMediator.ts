@@ -1,19 +1,19 @@
-import { FurniBag } from "./FurniBag";
+import { PicaBag } from "./PicaBag";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
 
-export class FurniBagMediator extends BasicMediator {
+export class PicaBagMediator extends BasicMediator {
     private mScneType: op_def.SceneTypeEnum;
     private timeID: any;
     constructor(game: Game) {
-        super(ModuleName.FURNIBAG_NAME, game);
+        super(ModuleName.PICABAG_NAME, game);
         if (this.game && this.game.roomManager && this.game.roomManager.currentRoom) {
             this.mScneType = this.game.roomManager.currentRoom.sceneType;
         } else {
             this.mScneType = op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
         }
-        this.mModel = new FurniBag(game, this.mScneType);
+        this.mModel = new PicaBag(game, this.mScneType);
         this.addLisenter();
         this.game.emitter.on("packageCategory", this.onPackageCategoryHandler, this);
         this.game.emitter.on("queryPackage", this.onQueryPackageHandler, this);
@@ -183,7 +183,7 @@ export class FurniBagMediator extends BasicMediator {
         this.model.queryDressAvatarItemIDs();
     }
 
-    private get model(): FurniBag {
-        return (<FurniBag>this.mModel);
+    private get model(): PicaBag {
+        return (<PicaBag>this.mModel);
     }
 }

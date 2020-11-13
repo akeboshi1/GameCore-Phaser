@@ -2,7 +2,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
 
-export class DecorateControlPanel extends BasePanel {
+export class PicaDecorateControlPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private mExitBtn: Button;
     private mRecycleAllBtn: Button;
@@ -17,7 +17,7 @@ export class DecorateControlPanel extends BasePanel {
 
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = ModuleName.DECORATECONTROL_NAME;
+        this.key = ModuleName.PICADECORATECONTROL_NAME;
     }
 
     public addListen() {

@@ -5,7 +5,7 @@ import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
 
-export class FurniBagPanel extends BasePanel {
+export class PicaBagPanel extends BasePanel {
   private commonkey = "common_key";
   private seachKey: string = "key.seach";
   private mCloseBtn: Phaser.GameObjects.Image;
@@ -37,7 +37,7 @@ export class FurniBagPanel extends BasePanel {
   private dressAvatarIDS: string[];
   constructor(uiManager: UiManager, sceneType: any) {// sceneType: op_def.SceneTypeEnum
     super(uiManager.scene, uiManager.render);
-    this.key = ModuleName.FURNIBAG_NAME;
+    this.key = ModuleName.PICABAG_NAME;
     this.mSceneType = sceneType;
     this.setInteractive();
   }
