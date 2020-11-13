@@ -107,6 +107,7 @@ export class BasicMediator implements IMediator {
     }
 
     destroy() {
+        this.hide();
         this.mShow = false;
         this.mPanelInit = false;
         this.mShowData = null;
