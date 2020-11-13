@@ -32,6 +32,7 @@ export class ModuleName {
     public static DECORATECONTROL_NAME: string = "DecorateControl";
     public static PICAROOMUPGRADE_NAME: string = "PicaRoomUpgrade";
     public static PICAEQUIPUPGRADE_NAME: string = "PicaEquipUpgrade";
+    public static ITEMDETAIL_NAME: string = "ItemDetail";
     public static PICAROOMLIST_NAME: string = "PicaRoomList";
     public static PICAWORK_NAME: string = "PicaWork";
 }
