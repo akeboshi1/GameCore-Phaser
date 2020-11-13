@@ -34,5 +34,6 @@ export class ModuleName {
     public static PICAEQUIPUPGRADE_NAME: string = "PicaEquipUpgrade";
     public static PICAROOMLIST_NAME: string = "PicaRoomList";
     public static PICAWORK_NAME: string = "PicaWork";
+    public static PICAMINECAR_NAME: string = "PicaMineCar";
     public static PICAHOUSE_NAME: string = "PicaHouse";
 }
