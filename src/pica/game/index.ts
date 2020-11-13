@@ -56,3 +56,5 @@ export * from "./ui/PicaWork/PicaWork";
 export * from "./ui/PicaWork/PicaWorkMediator";
 export * from "./ui/PicaMineCar/PicaMineCar";
 export * from "./ui/PicaMineCar/PicaMineCarMediator";
+export * from "./ui/PicaHouse/PicaHouse";
+export * from "./ui/PicaHouse/PicaHouseMediator";
