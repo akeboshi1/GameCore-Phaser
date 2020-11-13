@@ -5,7 +5,7 @@ import { Handler, i18n } from "utils";
 import { PicaManorContentPanel } from "./PicaManorContentPanel";
 import { PicaManorScrollPanel } from "./PicaManorScrollPanel";
 
-export default class PicaManorListPanel extends BasePanel {
+export class PicaManorListPanel extends BasePanel {
     private content: PicaManorContentPanel;
     private mBackGround: Phaser.GameObjects.Graphics;
     private picScrollPanel: PicaManorScrollPanel;
