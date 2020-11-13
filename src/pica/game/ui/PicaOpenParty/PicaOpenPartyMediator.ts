@@ -39,7 +39,7 @@ export class PicaOpenPartyMediator extends BasicMediator {
     }
 
     private onCloseHandler() {
-        this.destroy();
+        this.hide();
     }
     private on_PARTY_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
         this.mView.setPartyData(content, this.game.user.userData.isSelfRoom);
