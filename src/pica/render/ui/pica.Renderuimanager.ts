@@ -1,6 +1,4 @@
 import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
-import { SceneName } from "structure";
-import { Logger } from "utils";
 export class PicaRenderUiManager extends UiManager {
     constructor(mRender: Render) {
         super(mRender);
@@ -14,7 +12,8 @@ export class PicaRenderUiManager extends UiManager {
         const ns: any = require(`./${type}/${className}`);
         const panel = new ns[className](this);
         if (!panel) {
-            Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            super._showPanel(type, param);
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
         this.mPanelMap.set(type + "Panel", panel);

@@ -38,4 +38,6 @@ export class ModuleName {
     public static PICAHOUSE_NAME: string = "PicaHouse";
     public static PICAMINESETTLE_NAME: string = "PicaMineSettle";
     public static PICAREWARDTIP_NAME: string = "PicaRewardTip";
+    public static STORAGE_NAME: string = "Storage";
+    public static BAG_NAME: string = "Bag";
 }

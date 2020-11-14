@@ -36,6 +36,7 @@ export class PicaWorkerUiManager extends UIManager {
             }
             mediator = new ns[className](this.game);
             if (!mediator) {
+                super.showMed(type, param);
                 // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
             }

@@ -93,4 +93,5 @@ export class EventType {
     public static SHOW_MED = "SHOW_MED";
     public static QUERY_PRAISE = "QUERY_PRAISE";
     public static QUERY_MARKET_REQUEST = "QUERY_MARKET_REQUEST";
+    public static REQUEST_TARGET_UI = "REQUEST_TARGET_UI";
 }
