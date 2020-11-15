@@ -1,6 +1,5 @@
 import { Panel } from "apowophaserui";
 import { MainUIScene } from "../../scenes/main.ui.scene";
-import { EventType } from "structure";
 import { Logger, Url } from "utils";
 import { Render } from "../../render";
 export class BasePanel extends Panel {

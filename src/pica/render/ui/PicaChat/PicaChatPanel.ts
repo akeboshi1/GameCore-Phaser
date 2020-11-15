@@ -42,13 +42,8 @@ export class PicaChatPanel extends BasePanel {
     }
 
     show(param?: any) {
+        super.show(param);
         this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
         if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
         if (!this.mTweening && this.mTweenBoo) {
             this.showTween(true);
@@ -148,8 +143,11 @@ export class PicaChatPanel extends BasePanel {
     }
 
     public hide() {
+        if (this.mTextArea) this.mTextArea.destroy();
+        if (this.mOutputText) this.mOutputText.destroy();
         this.mShow = false;
-        this.removeInteractive();
+        this.removeListen();
+        // this.removeInteractive();
         super.hide();
     }
 
@@ -309,7 +307,7 @@ export class PicaChatPanel extends BasePanel {
         this.mTextArea.setSliderEnable(false);
         this.resize(this.width, 133 * this.dpr);
         super.init();
-        this.removeInteractive();
+        // this.removeInteractive();
     }
 
     private onDragHandler(pointer, dragX, dragY) {
