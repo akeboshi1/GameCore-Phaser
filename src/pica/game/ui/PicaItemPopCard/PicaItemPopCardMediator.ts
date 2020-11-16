@@ -1,7 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
 
-export class ItemPopCardMediator extends BasicMediator {
+export class PicaItemPopCardMediator extends BasicMediator {
   constructor(game: Game) {
     super(ModuleName.PICAITEMPOPCARD_NAME, game);
   }

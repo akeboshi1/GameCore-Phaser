@@ -66,3 +66,5 @@ export * from "./ui/PicaCompose/PicaCompose";
 export * from "./ui/PicaCompose/PicaComposeMediator";
 export * from "./ui/PicaItemPopCard/PicaItemPopCardMediator";
 export * from "./ui/PicaMessageBox/PicaMessageBoxMediator";
+export * from "./ui/PicaElementStorage/PicaElementStorage";
+export * from "./ui/PicaElementStorage/PicaElementStorageMediator";

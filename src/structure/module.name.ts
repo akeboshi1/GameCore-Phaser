@@ -43,4 +43,5 @@ export class ModuleName {
     public static PICACOMPOSE_NAME: string = "PicaCompose";
     public static PICAITEMPOPCARD_NAME: string = "PicaItemPopCard";
     public static PICAMESSAGEBOX_NAME: string = "PicaMessageBox";
+    public static PICAELEMENTSTORAGE_NAME: string = "PicaElementStorage";
 }
