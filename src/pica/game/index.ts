@@ -64,3 +64,5 @@ export * from "./ui/PicaRewardTip/PicaRewardTip";
 export * from "./ui/PicaRewardTip/PicaRewardTipMediator";
 export * from "./ui/PicaCompose/PicaCompose";
 export * from "./ui/PicaCompose/PicaComposeMediator";
+export * from "./ui/PicaItemPopCard/PicaItemPopCardMediator";
+export * from "./ui/PicaMessageBox/PicaMessageBoxMediator";
