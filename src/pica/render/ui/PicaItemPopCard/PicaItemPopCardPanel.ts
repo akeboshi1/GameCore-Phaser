@@ -4,7 +4,7 @@ import { MessageType, ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n } from "utils";
 import { DetailDisplay } from "../PicaMarket/DetailDisplay";
 
-export class ItemPopCardPanel extends BasePanel {
+export class PicaItemPopCardPanel extends BasePanel {
   private mCardContainer: Phaser.GameObjects.Container;
   private mNickName: Phaser.GameObjects.Text;
   private mDesText: Phaser.GameObjects.Text;

@@ -42,4 +42,5 @@ export class ModuleName {
     public static BAG_NAME: string = "Bag";
     public static PICAITEMPOPCARD_NAME: string = "PicaItemPopCard";
     public static PICAMESSAGEBOX_NAME: string = "PicaMessageBox";
+    public static PICAELEMENTSTORAGE_NAME: string = "PicaElementStorage";
 }
