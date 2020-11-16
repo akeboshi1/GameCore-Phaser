@@ -40,6 +40,7 @@ export class ModuleName {
     public static PICAREWARDTIP_NAME: string = "PicaRewardTip";
     public static STORAGE_NAME: string = "Storage";
     public static BAG_NAME: string = "Bag";
+    public static PICACOMPOSE_NAME: string = "PicaCompose";
     public static PICAITEMPOPCARD_NAME: string = "PicaItemPopCard";
     public static PICAMESSAGEBOX_NAME: string = "PicaMessageBox";
     public static PICAELEMENTSTORAGE_NAME: string = "PicaElementStorage";

@@ -64,6 +64,7 @@ export * from "./PicaHouse/PicaHousePanel";
 export * from "./PicaHouse/PicaHouseInfoPanel";
 export * from "./PicaMineSettle/PicaMineSettlePanel";
 export * from "./PicaRewardTip/PicaRewardTipPanel";
+export * from "./PicaCompose/PicaComposePanel";
 export * from "./PicaItemPopCard/PicaItemPopCardPanel";
 export * from "./PicaMessageBox/PicaMessageBoxPanel";
 export * from "./PicaElementStorage/PicaElementStoragePanel";
