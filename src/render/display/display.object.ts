@@ -36,6 +36,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mTopDisplay: ElementTopDisplay;
     protected moveData: any;
     protected render: Render;
+    protected mName: string;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
@@ -78,6 +79,8 @@ export class DisplayObject extends Phaser.GameObjects.Container {
 
     removeDisplay(field: DisplayField) {
     }
+
+    public displayReady(animation) { }
 
     public destroy(fromScene?: boolean): void {
         if (this.mFlagContainer) {
@@ -157,7 +160,13 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         if (!this.mTopDisplay) {
             this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
         }
+        this.mName = name;
         this.mTopDisplay.showNickname(name);
+    }
+
+    public updatePos(x: number, y: number, z: number) {
+        if (this.mTopDisplay) this.mTopDisplay.update();
+        this.setPosition(x, y, z);
     }
 
     get nodeType(): number {

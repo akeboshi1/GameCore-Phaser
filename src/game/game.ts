@@ -65,10 +65,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public update() {
-        // if (this.roomManager) this.roomManager.currentRoom.update(this.currentTime, this.delayTime);
-        if (this.user) {
-            this.user.update();
-        }
+        if (this.user) this.user.update();
+        if (this.mRoomManager) this.mRoomManager.update(this.currentTime, this.delayTime);
     }
 
     get scaleRatio(): number {

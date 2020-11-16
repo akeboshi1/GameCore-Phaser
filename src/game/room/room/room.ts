@@ -249,7 +249,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public update(time: number, delta: number) {
         this.updateClock(time, delta);
-        this.mBlocks.update(time, delta);
+        if (this.mBlocks) this.mBlocks.update(time, delta);
         // this.mViewBlockManager.update(time, delta);
         // if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mElementManager) this.mElementManager.update(time, delta);
@@ -258,13 +258,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         for (const oneHandler of this.mUpdateHandlers) {
             oneHandler.runWith([time, delta]);
         }
-        const eles = this.mElementManager.getElements();
-        for (const ele of eles) {
-            ele.update();
+        const eles = this.mElementManager ? this.mElementManager.getElements() : null;
+        if (eles) {
+            for (const ele of eles) {
+                ele.update();
+            }
         }
-        const players = this.mPlayerManager.getElements();
-        for (const player of players) {
-            player.update();
+        const players = this.mPlayerManager ? this.mPlayerManager.getElements() : null;
+        if (players) {
+            for (const player of players) {
+                if (player.id === this.mPlayerManager.actor.id) continue;
+                player.update();
+            }
         }
     }
 
@@ -660,7 +665,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onCameraFollowHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
-        this.game.renderPeer.cameraFollow(content.id, content.effect);
+        const id = content.id ? content.id : 0;
+        this.game.renderPeer.cameraFollow(id, content.effect);
     }
 
     private onSyncStateHandler(packet: PBpacket) {

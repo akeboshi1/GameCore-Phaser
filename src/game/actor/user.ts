@@ -49,7 +49,7 @@ export class User extends Player {
         if (this.mMoving) {
             const pos = this.getPosition();
             pos.y += this.offsetY;
-            if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y -this.mTargetPoint.y) <= this.mSpeed) {
+            if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
                 this.stopMove();
                 return;
             }
@@ -209,6 +209,7 @@ export class User extends Player {
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
+        Logger.getInstance().log("showNickname===use");
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);

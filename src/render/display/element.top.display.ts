@@ -40,6 +40,10 @@ export class ElementTopDisplay {
         follow.update();
     }
 
+    public hasTopPoint(): boolean {
+        return this.mOwner && this.mOwner.topPoint;
+    }
+
     public destroy() {
         if (this.mFollows) {
             this.mFollows.forEach((follow) => follow.destroy());

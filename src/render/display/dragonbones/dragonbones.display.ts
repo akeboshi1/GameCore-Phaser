@@ -225,6 +225,13 @@ export class DragonbonesDisplay extends DisplayObject {
         super.destroy();
     }
 
+    public displayReady(animation: any) {
+        this.play(animation);
+        if (this.mTopDisplay.hasTopPoint()) {
+            this.showNickname(this.mName);
+        }
+    }
+
     protected buildDragbones() {
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.onLoadCompleteHandler();
@@ -270,7 +277,7 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         this.setData("id", this.displayInfo.id);
         this.add(this.mClickCon);
-        this.emit("initialized");
+        this.render.renderEmitter("dragonBones_initialized");
     }
 
     private loadDragonBones(resUrl: string, pngUrl: string, jsonUrl: string, dbbinUrl: string) {

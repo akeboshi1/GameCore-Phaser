@@ -496,11 +496,8 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showNickname() {
-        const displayManager = this.mRoomService.game.renderPeer.DisplayManager;
-        if (!displayManager) {
-            return;
-        }
-        displayManager.showNickname(this.id, this.mModel.nickname);
+        Logger.getInstance().log("showNickName======" + this.mModel.nickname);
+        this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
     }
 
     public hideNickname() {
@@ -708,9 +705,24 @@ export class Element extends BlockObject implements IElement {
         // if (!this.mDisplay) {
         //     this.createDisplay();
         // }
-        // this.mDisplay.once("initialized", this.onDisplayReady, this);
+        this.mRoomService.game.emitter.once("dragonBones_initialized", this.onDisplayReady, this);
         // this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
         // this.mDisplay.load(this.mDisplayInfo);
+    }
+
+    protected onDisplayReady() {
+        this.mRoomService.game.renderPeer.displayReady(this.id,this.model.currentAnimation);
+        if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
+            this.updateMounth(this.mModel.mountSprites);
+        }
+        let depth = 0;
+        if (this.model && this.model.pos) {
+            depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        }
+        this.setDepth(depth);
+        this.update();
+        // this.mDisplay.showRefernceArea();
+        // }
     }
 
     protected addDisplay() {

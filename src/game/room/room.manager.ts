@@ -28,6 +28,10 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
+    public update(time: number, delay: number) {
+        if (this.mCurRoom) this.mCurRoom.update(time, delay);
+    }
+
     public addPackListener() {
         if (this.connection) {
             this.connection.addPacketListener(this);
