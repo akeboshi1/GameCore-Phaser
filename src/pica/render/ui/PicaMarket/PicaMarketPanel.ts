@@ -5,7 +5,7 @@ import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender"
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, Handler, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-export class MarketPanel extends BasePanel {
+export class PicaMarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
   private mTIle: Phaser.GameObjects.Text;
