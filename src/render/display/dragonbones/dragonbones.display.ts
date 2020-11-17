@@ -277,6 +277,7 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         this.setData("id", this.displayInfo.id);
         this.add(this.mClickCon);
+        this.emit("initialized");
         this.render.renderEmitter("dragonBones_initialized");
     }
 

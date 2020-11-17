@@ -213,7 +213,7 @@ export class CreateRolePanel extends BasePanel {
     }, false).setVisible(false);
     this.add([this.mErrorBg, this.mError]);
 
-    this.dragonbones = new DragonbonesDisplay(this.scene, undefined);
+    this.dragonbones = new DragonbonesDisplay(this.scene, this.render);
     this.dragonbones.scale = this.dpr * 2;
     this.dragonbones.x = width >> 1;
     this.dragonbones.y = this.mNextPageBtn.y + 70 * this.dpr;
