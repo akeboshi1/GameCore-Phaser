@@ -443,6 +443,13 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num])
+    public displayReady(id: number, animation: any) {
+        const display = this.mDisplayManager.getDisplay(id);
+        if (!display) return;
+        display.displayReady(animation);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
     public soundChangeRoom(roomID: number) {
 
     }
@@ -801,7 +808,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setPosition(id: number, x: number, y: number, z?: number) {
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.setPosition(x, y, z);
+        if (display) display.updatePos(x, y, z);
     }
 
     @Export([webworker_rpc.ParamType.num])

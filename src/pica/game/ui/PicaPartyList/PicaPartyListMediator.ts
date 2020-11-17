@@ -3,6 +3,8 @@ import { PicaPartyList } from "./PicaPartyList";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
 export class PicaPartyListMediator extends BasicMediator {
+    private mPartyListData: any;
+    private mPlayerProgress: any;
     constructor(game: Game) {
         super(ModuleName.PICAPARTYLIST_NAME, game);
 
@@ -41,10 +43,24 @@ export class PicaPartyListMediator extends BasicMediator {
         return true;
     }
 
+    protected panelInit() {
+        super.panelInit();
+        if (this.mPartyListData) {
+            this.mView.setPartyListData(this.mPartyListData, this.game.user.userData.isSelfRoom);
+        }
+        if (this.mPlayerProgress) {
+            this.mView.setOnlineProgress(this.mPlayerProgress);
+        }
+    }
+
     private onCloseHandler() {
         this.hide();
     }
     private on_PARTY_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST) {
+        if (!this.mPanelInit) {
+            this.mPartyListData = content;
+            return;
+        }
         this.mView.setPartyListData(content, this.game.user.userData.isSelfRoom);
     }
     private query_PARTY_LIST() {
@@ -62,6 +78,10 @@ export class PicaPartyListMediator extends BasicMediator {
     }
 
     private on_PLAYER_PROGRESS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
+        if (!this.mPanelInit) {
+            this.mPlayerProgress = content;
+            return;
+        }
         this.mView.setOnlineProgress(content);
     }
 
