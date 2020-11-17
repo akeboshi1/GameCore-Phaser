@@ -22,3 +22,12 @@ export class UIMediatorType {
     public static MineSettle = "MineSettle"; // 矿洞结算
     public static EquipUpgrade = "EquipUpgrade"; // 装备升级
 }
+
+export enum UILayoutType {
+    None,
+    Middle,
+    Top,
+    Left,
+    Right,
+    Bottom
+}

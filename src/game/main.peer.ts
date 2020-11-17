@@ -412,5 +412,10 @@ export class MainPeer extends RPCPeer {
         super.destroy();
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.destroy();
     }
+
+    // ==== config
+    public isPlatform_PC() {
+        return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
+    }
 }
 const context: MainPeer = new MainPeer();

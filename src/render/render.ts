@@ -276,6 +276,9 @@ export class Render extends RPCPeer implements GameMain {
             this.mGame.input.mouse.capture = true;
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
+                this.mConfig.platform = "pc";
+            } else {
+                this.mConfig.platform = "nopc";
             }
             resolve();
         });

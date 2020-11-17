@@ -1,13 +1,27 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { Size } from "utils";
 import { Game } from "../game";
-import { BasicMediator } from "./basic/basic.mediator";
-import { UIMediatorType } from "./ui.mediator.type";
+import { BasicMediator, UIType } from "./basic/basic.mediator";
+import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
 
 export class UIManager extends PacketHandler {
     protected mMedMap: Map<UIMediatorType, BasicMediator>;
     protected mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
+
+    // ==== about checkUIState
+    private mNoneUIMap: Map<string, any> = new Map();
+    private mSceneUIMap: Map<string, any> = new Map();
+    private mNormalUIMap: Map<string, any> = new Map();
+    private mPopUIMap: Map<string, any> = new Map();
+    private mTipUIMap: Map<string, any> = new Map();
+    private mMonopolyUIMap: Map<string, any> = new Map();
+    private mActivityUIMap: Map<string, any> = new Map();
+    private mUILayoutMap: Map<string, UILayoutType> = new Map();
+    // 用于记录功能ui打开的顺序,最多2个
+    private mShowuiList: any[] = [];
+
     constructor(protected game: Game) {
         super();
         if (!this.mMedMap) {
@@ -127,6 +141,48 @@ export class UIManager extends PacketHandler {
         return arr;
     }
 
+    public checkUIState(medName: string, show: boolean) {
+        const mediator = this.mMedMap.get(medName);
+        if (!mediator) return;
+        const uiType: number = mediator.UIType;
+        const deskBoo: boolean = this.game.peer.isPlatform_PC();
+        let map: Map<string, any>;
+        switch (uiType) {
+            case UIType.None:
+                map = this.mNoneUIMap;
+                break;
+            case UIType.Scene:
+                map = this.mSceneUIMap;
+                this.checkSceneUImap(show, medName);
+                break;
+            case UIType.Normal:
+                map = this.mNormalUIMap;
+                // pc端场景ui无需收进，但是功能ui可以共存，需要调整位置
+                if (deskBoo) {
+                    this.checkNormalUITween(show, medName);
+                } else {
+                    this.checkBaseUImap(show);
+                }
+                break;
+            case UIType.Monopoly:
+                map = this.mMonopolyUIMap;
+                this.checkBaseUImap(show);
+                this.checkNormalUImap(show);
+                this.chekcTipUImap(show);
+                break;
+            case UIType.Tips:
+                map = this.mTipUIMap;
+                break;
+            case UIType.Pop:
+                map = this.mPopUIMap;
+                break;
+            case UIType.Activity:
+                map = this.mActivityUIMap;
+                break;
+        }
+        if (map) map.set(medName, mediator);
+    }
+
     public destroy() {
         this.removePackListener();
         if (this.mMedMap) {
@@ -217,5 +273,80 @@ export class UIManager extends PacketHandler {
                 return "PicaMessageBox";
         }
         return alias;
+    }
+
+    // ==== about checkUIState
+    private checkSceneUImap(show: boolean, medName: string) {
+        const layoutType = this.mUILayoutMap.get(medName);
+        if (layoutType === undefined || layoutType === UILayoutType.None) return;
+        if (!show) {
+            this.mSceneUIMap.forEach((med: any) => {
+                const className = med.constructor.name;
+                const tempType = this.mUILayoutMap.get(className);
+                if (tempType === layoutType && className !== medName) med.hide();
+            });
+        }
+    }
+    private checkNormalUITween(show: boolean, medName: string) {
+        const size: Size = this.game.getSize();
+        let len: number = this.mShowuiList.length;
+        let tmpName: string;
+        let med;
+        if (!show) {
+            if (this.mShowuiList.indexOf(medName) === -1) this.mShowuiList.push(medName);
+            len = this.mShowuiList.length;
+            const mPad: number = len > 1 ? size.width / 3 : 0;
+            for (let i: number = 0; i < len; i++) {
+                tmpName = this.mShowuiList[i];
+                med = this.mMedMap.get(tmpName);
+                if (len > 2 && i === 0) {
+                    med.hide();
+                } else {
+                    med.resize((i * 2 - 1) * mPad, 0);
+                }
+            }
+            if (len > 2) this.mShowuiList.shift();
+        } else {
+            let index: number;
+            for (let i: number = 0; i < len; i++) {
+                tmpName = this.mShowuiList[i];
+                med = this.mMedMap.get(tmpName);
+                if (tmpName === medName) {
+                    index = i;
+                    continue;
+                }
+                med.resize(0, 0);
+            }
+            this.mShowuiList.splice(index, 1);
+        }
+    }
+    private checkBaseUImap(show: boolean) {
+        this.mSceneUIMap.forEach((med) => {
+            if (med) med.tweenExpand(show);
+        });
+    }
+    private checkNormalUImap(show: boolean) {
+        this.mNormalUIMap.forEach((med) => {
+            if (med) {
+                if (show) {
+                    // med.show();
+                } else {
+                    med.hide();
+                }
+            }
+        });
+        if (!show) this.mNormalUIMap.clear();
+    }
+    private chekcTipUImap(show: boolean) {
+        this.mTipUIMap.forEach((med) => {
+            if (med) {
+                if (show) {
+                    // med.show();
+                } else {
+                    med.hide();
+                }
+            }
+        });
+        if (!show) this.mNormalUIMap.clear();
     }
 }
