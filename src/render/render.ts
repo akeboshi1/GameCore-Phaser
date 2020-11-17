@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game } from "tooqinggamephaser";
+import { Game, Scene } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { Url, initLocales, Logger, Size } from "utils";
 import { ServerAddress } from "../../lib/net/address";
@@ -391,6 +391,34 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public hideLogin() {
         this.sceneManager.stopScene(SceneName.LOGIN_SCENE);
+    }
+
+    @Export()
+    public showCreateRolePanel(data?: any): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const createPanel = () => {
+                this.mUiManager.showPanel(ModuleName.CREATEROLE_NAME, data).then((panel) => {
+                    if (!panel) {
+                        reject(false);
+                        return;
+                    }
+                    panel.addExportListener(() => {
+                        resolve(true);
+                    });
+                });
+            };
+            if (this.mUiManager.scene && this.mUiManager.scene.scene.key === SceneName.CREATE_ROLE_SCENE) {
+                createPanel();
+            } else {
+                this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, {
+                    sceneName: SceneName.CREATE_ROLE_SCENE,
+                    callBack: () => {
+                        createPanel();
+                    }
+                });
+            }
+
+        });
     }
 
     @Export()

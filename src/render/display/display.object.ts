@@ -165,8 +165,8 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     public updatePos(x: number, y: number, z: number) {
-        if (this.mTopDisplay) this.mTopDisplay.update();
         this.setPosition(x, y, z);
+        if (this.mTopDisplay) this.mTopDisplay.update();
     }
 
     get nodeType(): number {
