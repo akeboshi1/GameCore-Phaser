@@ -72,7 +72,10 @@ export class DisplayManager {
             return;
         }
         const scene = this.sceneManager.getSceneByName(PlayScene.name);
-        if (!scene) return;
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
         const display: DisplayObject = new DragonbonesDisplay(scene, this.render, data.id, NodeType.CharacterNodeType);
         this.displays.set(data.id, display);
         display.load(data);
@@ -84,7 +87,10 @@ export class DisplayManager {
             return;
         }
         const scene = this.sceneManager.getSceneByName(PlayScene.name);
-        if (!scene) return;
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
         const display: DisplayObject = new FramesDisplay(scene, this.render, data.id, NodeType.TerrainNodeType);
         this.displays.set(data.id, display);
         display.load(data);
@@ -96,7 +102,10 @@ export class DisplayManager {
             return;
         }
         const scene = this.sceneManager.getSceneByName(PlayScene.name);
-        if (!scene) return;
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
         const display: DisplayObject = new FramesDisplay(scene, this.render, data.id, NodeType.ElementNodeType);
         this.displays.set(data.id, display);
         display.load(data);

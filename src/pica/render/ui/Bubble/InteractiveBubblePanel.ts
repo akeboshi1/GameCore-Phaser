@@ -1,6 +1,6 @@
 import { BasePanel, PlayScene, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
-import { Handler, Pos, Tool, Url } from "utils";
+import { Handler, Logger, Pos, Tool, Url } from "utils";
 import { InteractionBubbleContainer } from "./InteractionBubbleContainer";
 export class InteractiveBubblePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
@@ -57,6 +57,10 @@ export class InteractiveBubblePanel extends BasePanel {
         }
         this.mBubble.setBubble(content, new Handler(this, this.onInteractiveBubbleHandler));
         const playScene = this.render.sceneManager.getSceneByName(PlayScene.name);
+        if (!playScene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
         this.updateBubblePos(ele, playScene);
         this.mBubble.setFollow(ele, playScene, (obj) => {
             this.updateBubblePos(ele, obj.scene);

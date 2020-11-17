@@ -56,6 +56,7 @@ export class SceneManager {
     }
 
     public getSceneByName(sceneName: string): Phaser.Scene {
+        if (!this.render || !this.render.game) return undefined;
         return this.render.game.scene.getScene(sceneName);
     }
 

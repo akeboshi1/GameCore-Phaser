@@ -1,14 +1,16 @@
-import { Logger } from "utils";
+import { Logger, ValueResolver } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "../scenes/basic.scene";
-import { Panel } from "apowophaserui";
-import { SceneName } from "structure";
 
 export class UiManager {
     protected mScene: BasicScene;
     protected mPanelMap: Map<string, BasePanel>;// key: "<ModelName>Panel"
+    /**
+     * 前端触发显示ui缓存列表
+     */
     protected mCache: any[] = [];
+    protected mRemoteCache: Map<string, { resolver: ValueResolver<BasePanel>, param?: any }> = new Map();
     private readonly mPanelClass = {
         "BaseMediator": BasePanel,
         // "LoginMediator": LoginPanel,
@@ -28,6 +30,13 @@ export class UiManager {
                 }
                 this.mCache.length = 0;
             }
+
+            if (this.mRemoteCache.size > 0) {
+                this.mRemoteCache.forEach((value, key) => {
+                    value.resolver.resolve(this._showPanel(key, value.param));
+                });
+            }
+            this.mRemoteCache.clear();
         }
     }
 
@@ -76,15 +85,13 @@ export class UiManager {
     }
 
     public showPanel(type: string, param?: any): Promise<BasePanel> {
-        return new Promise<BasePanel>((resolve, reject) => {
-            if (!this.mScene) {
-                const scene = this.render.sceneManager.currentScene;
-                if (!scene) {
-                    reject();
-                    return;
-                }
-                // this.render.sceneManager.launchScene(scene, SceneName.MAINUI_SCENE);
-                this.mCache.push({ name: type, param });
+        const scene = this.render.sceneManager.currentScene;
+        if (this.mScene) {
+            return new Promise<BasePanel>((resolve, reject) => {
+                resolve(this._showPanel(type, param));
+            });
+        } else if (scene) {
+            return new Promise<BasePanel>((resolve, reject) => {
                 this.render.emitter.once("sceneCreated", () => {
                     if (this.mCache) {
                         for (const tmp of this.mCache) {
@@ -93,11 +100,15 @@ export class UiManager {
                         this.mCache.length = 0;
                     }
                 }, this);
-                return;
-            } else {
-                resolve(this._showPanel(type, param));
-            }
-        });
+            });
+        } else {
+            const remoteCache = new ValueResolver<BasePanel>();
+            this.mRemoteCache.set(type, { resolver: remoteCache, param });
+
+            return remoteCache.promise(() => {
+                //
+            });
+        }
     }
 
     public hidePanel(type: string) {

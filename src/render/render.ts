@@ -597,11 +597,13 @@ export class Render extends RPCPeer implements GameMain {
     public getWorldView(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
-            const camera = playScene.cameras.main;
-            const rect = camera.worldView;
-            const { x, y } = rect;
-            const obj = { x, y, width: camera.width, height: camera.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
-            resolve(obj);
+            if (playScene) {
+                const camera = playScene.cameras.main;
+                const rect = camera.worldView;
+                const { x, y } = rect;
+                const obj = { x, y, width: camera.width, height: camera.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+                resolve(obj);
+            }
         });
     }
 
@@ -810,6 +812,10 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public roomstartPlay() {
         const scene = this.mSceneManager.getSceneByName("PlayScene");
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
         this.mCameraManager.camera = scene.cameras.main;
     }
 
@@ -822,7 +828,12 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
         // Logger.getInstance().log("syncCameraScroll");
-        const sceneScrale = this.mSceneManager.getSceneByName("PlayScene").scale;
+        const scene = this.mSceneManager.getSceneByName("PlayScene");
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+        const sceneScrale = scene.scale;
         this.mCameraManager.setScroll(actorX * this.scaleRatio - sceneScrale.width / 2, actorY * this.scaleRatio - sceneScrale.height / 2);
         this.syncCameraScroll();
     }
@@ -909,6 +920,10 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.boolean])
     public setLayerDepth(val: boolean) {
         const scene: BasicScene = this.mSceneManager.getSceneByName("PlayScene") as BasicScene;
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
         scene.layerManager.depthSurfaceDirty = val;
     }
 
