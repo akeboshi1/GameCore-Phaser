@@ -115,6 +115,7 @@ export class SceneManager {
         const scene = sceneManager.getScene(name) as BasicScene;
         if (!scene) return;
         scene.stop();
+        this.render.game.scene.remove(name);
     }
 
     public wakeScene(name: string, data?: any) {

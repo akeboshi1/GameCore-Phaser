@@ -83,7 +83,7 @@ export class UiManager {
                     reject();
                     return;
                 }
-                this.render.sceneManager.launchScene(scene, SceneName.MAINUI_SCENE);
+                // this.render.sceneManager.launchScene(scene, SceneName.MAINUI_SCENE);
                 this.mCache.push({ name: type, param });
                 this.render.emitter.once("sceneCreated", () => {
                     if (this.mCache) {

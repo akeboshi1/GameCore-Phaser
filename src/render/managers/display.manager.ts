@@ -61,6 +61,12 @@ export class DisplayManager {
         this.scenerys = new Map();
     }
 
+    public resize(width: number, height: number) {
+        this.scenerys.forEach((scenery) => {
+            scenery.resize(width, height);
+        });
+    }
+
     public addDragonbonesDisplay(data: IFramesModel | IDragonbonesModel): void {
         if (!data) {
             return;

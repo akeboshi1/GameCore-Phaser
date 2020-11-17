@@ -345,6 +345,7 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.boolean])
     public showMediator(name: string, isShow: boolean, param?: any) {
+        if (name.length === 0) return;
         this.game.showMediator(name, isShow, param);
     }
 

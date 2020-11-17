@@ -60,6 +60,7 @@ export class BasicMediator implements IMediator {
     }
 
     hide(): void {
+        if (!this.mView) this.mView = this.game.renderPeer[this.key];
         if (this.mView) this.mView.hide();
         this.mView = undefined;
         this.mPanelInit = false;

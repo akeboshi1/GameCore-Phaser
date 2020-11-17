@@ -150,9 +150,40 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     resize(width: number, height: number) {
-        if (this.mCameraManager) this.mCameraManager.resize(width, height);
-        if (this.mSceneManager) this.mSceneManager.resize(width, height);
-        if (this.mInputManager) this.mInputManager.resize(width, height);
+        if (this.mConfig) {
+            this.mConfig.width = width;
+            this.mConfig.height = height;
+        }
+        const w = width * window.devicePixelRatio;
+        const h = height * window.devicePixelRatio;
+        this.mScaleRatio = Math.ceil(window.devicePixelRatio || 1);
+        this.mUIRatio = Math.round(window.devicePixelRatio || 1);
+        const scaleW = (width / this.DEFAULT_WIDTH) * (window.devicePixelRatio / this.mUIRatio);
+        this.mUIScale = this.game.device.os.desktop ? 1 : scaleW;
+        if (this.mGame) {
+            this.mGame.scale.zoom = 1 / window.devicePixelRatio;
+            this.mGame.scale.resize(w, h);
+            const scenes = this.mGame.scene.scenes;
+            for (const scene of scenes) {
+                const camera = scene.cameras.main;
+                if (camera && camera.setPixelRatio) camera.setPixelRatio(this.mScaleRatio);
+                // scene.setViewPort(camera.x, camera.y, w, h);
+                // scene.cameras.main.setViewport(0, 0, w, h);
+            }
+        }
+        if (this.mUiManager) {
+            this.mUiManager.resize(w, h);
+        }
+        if (this.mInputManager) {
+            this.mInputManager.resize(w, h);
+        }
+        if (this.mDisplayManager) {
+            this.mDisplayManager.resize(w, h);
+        }
+        if (this.mCameraManager) {
+            this.mCameraManager.resize(width, height);
+        }
+        // if (this.mSceneManager) this.mSceneManager.resize(width, height);
     }
 
     onOrientationChange(oriation: number, newWidth: number, newHeight: number) {

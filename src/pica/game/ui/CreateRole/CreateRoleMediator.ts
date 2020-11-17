@@ -12,9 +12,21 @@ export class CreateRoleMediator extends BasicMediator {
     this.mCreateRole = new CreateRole(this.game);
   }
 
-  show(params?: any) {
-    super.show(params);
-  }
+  // show(param?: any) {
+  //   if (param) this.mShowData = param;
+  //   if (this.mPanelInit && this.mShow) {
+  //       this._show();
+  //       return;
+  //   }
+  //   this.mShow = true;
+  //   this.__exportProperty(() => {
+  //       this.game.peer.render.showPanel(this.key, param).then(() => {
+  //           this.mView = this.game.peer.render[this.key];
+  //           this.panelInit();
+  //       });
+  //       this.mediatorExport();
+  //   });
+  // }
 
   randomName() {
     this.mCreateRole.onRandomNameHandler();

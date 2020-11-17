@@ -27,6 +27,10 @@ export class LoginPanel extends BasePanel {
         }
     }
 
+    public hide() {
+        super.hide();
+    }
+
     public setInputVisible(val: boolean) {
         if (this.mPhoneCodeInput) {
             this.mPhoneCodeInput.visible = val;
