@@ -2,6 +2,7 @@ import { BasicScene } from "./basic.scene";
 import { UiManager } from "../ui/ui.manager";
 import { LoadingScene } from "./loading.scene";
 import { ModuleName, SceneName } from "structure";
+import { Logger } from "utils";
 
 export class CreateRoleScene extends BasicScene {
   private params: any;
@@ -15,13 +16,14 @@ export class CreateRoleScene extends BasicScene {
   }
 
   public create() {
-    super.create();
     if (this.render) {
       const uimanager: UiManager = this.render.uiManager;
       uimanager.setScene(this);
+      Logger.getInstance().log("createrole===scene");
       // uimanager.showPanel(ModuleName.CREATEROLE_NAME, this.params);
       this.render.sceneManager.sleepScene(LoadingScene.name);
     }
+    super.create();
   }
 
   public stop() {

@@ -411,13 +411,11 @@ export class Render extends RPCPeer implements GameMain {
                 createPanel();
             } else {
                 this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, {
-                    sceneName: SceneName.CREATE_ROLE_SCENE,
                     callBack: () => {
                         createPanel();
                     }
                 });
             }
-
         });
     }
 

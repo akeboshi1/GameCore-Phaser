@@ -43,9 +43,9 @@ export class CreateRoleMediator extends BasicMediator {
     }
   }
 
-  protected panelInit() {
-    this.game.renderPeer.showCreateRole(this.mShowData);
-  }
+  // protected panelInit() {
+  //   this.game.renderPeer.showCreateRole(this.mShowData);
+  // }
 
   private randomNameCallBack(val: string) {
     if (!this.mView) this.mView = this.game.peer.render[ModuleName.CREATEROLE_NAME];

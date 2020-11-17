@@ -72,6 +72,7 @@ export class SceneManager {
         this.mCurSceneName = name;
         const scene = sceneManager.getScene(name) as BasicScene;
         this.render.emitter.once("sceneCreated", () => {
+            Logger.getInstance().log("createRoleScene===scenemanager");
             if (data.callBack) data.callBack();
         }, this);
         if (scene) {
