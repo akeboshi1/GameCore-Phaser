@@ -1,5 +1,7 @@
 import { Font } from "utils";
+import { DisplayObject } from "./display.object";
 import { PlayScene } from "../scenes/play.scene";
+import { BubbleContainer } from "./bubble/bubble.container";
 
 /**
  * 人物头顶显示对象
@@ -8,6 +10,7 @@ export class ElementTopDisplay {
     private mFollows: Map<FollowEnum, FollowObject>;
     private mOwner: any;
     private mDpr: number;
+    private mBubble: BubbleContainer;
     constructor(private scene: Phaser.Scene, owner: any, dpr: number) {
         // super(scene, 0, 0);
         this.mFollows = new Map();
@@ -39,8 +42,28 @@ export class ElementTopDisplay {
         follow.setOffset(0, this.mOwner.topPoint.y);
         follow.update();
     }
+    public showBubble(text: string, setting: any) {// op_client.IChat_Setting
+        const scene = this.scene;
+        if (!scene) {
+            return;
+        }
+        if (!this.mBubble) {
+            this.mBubble = new BubbleContainer(scene, this.mDpr);
+        }
+        this.mBubble.addBubble(text, setting);
+        this.mBubble.follow(this.mOwner);
+        this.addToSceneUI(this.mBubble);
+    }
+    public clearBubble() {
+        if (!this.mBubble) {
+            return;
+        }
+        this.mBubble.destroy();
+        this.mBubble = null;
+    }
 
     public hasTopPoint(): boolean {
+        // return this.mOwner && this.mOwner.hasOwnProperty("topPoint");
         return this.mOwner && this.mOwner.topPoint;
     }
 
@@ -50,11 +73,19 @@ export class ElementTopDisplay {
             this.mFollows.clear();
             this.mFollows = undefined;
         }
+        if (this.mBubble) {
+            this.mBubble.destroy();
+            this.mBubble = undefined;
+        }
     }
 
     public update() {
-        if (!this.mFollows) return;
-        this.mFollows.forEach((follow) => follow.update());
+        if (this.mFollows) {
+            this.mFollows.forEach((follow) => follow.update());
+        }
+        if (this.mBubble) {
+            this.mBubble.follow(this.mOwner);
+        }
     }
 
     private addToSceneUI(obj: any) {

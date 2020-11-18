@@ -475,24 +475,10 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showBubble(text: string, setting: op_client.IChat_Setting) {
-        // todo 联系render showBubble
-        // const scene = this.mElementManager.scene;
-        // if (!scene) {
-        //     return;
-        // }
-        // if (!this.mBubble) {
-        //     this.mBubble = new BubbleContainer(scene, this.roomService.world.scaleRatio);
-        // }
-        // this.mBubble.addBubble(text, setting);
-        // this.mBubble.follow(this);
-        // this.roomService.addToSceneUI(this.mBubble);
+        this.mRoomService.game.peer.render.showBubble(this.id, text, setting);
     }
     public clearBubble() {
-        // if (!this.mBubble) {
-        //     return;
-        // }
-        // this.mBubble.destroy();
-        // this.mBubble = null;
+        this.mRoomService.game.peer.render.clearBubble(this.id);
     }
 
     public showNickname() {
@@ -711,7 +697,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onDisplayReady() {
-        this.mRoomService.game.renderPeer.displayReady(this.id,this.model.currentAnimation);
+        this.mRoomService.game.renderPeer.displayReady(this.id, this.model.currentAnimation);
         if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
             this.updateMounth(this.mModel.mountSprites);
         }

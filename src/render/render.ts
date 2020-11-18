@@ -879,6 +879,17 @@ export class Render extends RPCPeer implements GameMain {
         if (display) display.updatePos(x, y, z);
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public showBubble(id: number, text: string, setting: op_client.IChat_Setting) {
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) display.showBubble(text, setting);
+    }
+    @Export([webworker_rpc.ParamType.num])
+    public clearBubble(id: number) {
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) display.clearBubble();
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public startFollow(id: number) {
         // Logger.getInstance().log("target ===== startFollow");
