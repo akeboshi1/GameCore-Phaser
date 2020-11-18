@@ -169,6 +169,21 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         if (this.mTopDisplay) this.mTopDisplay.update();
     }
 
+    public showBubble(text: string, setting: any) {// op_client.IChat_Setting
+        // const scene = this.mElementManager.scene;
+        // if (!scene) {
+        //     return;
+        // }
+        if (!this.mTopDisplay) {
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+        }
+        this.mTopDisplay.showBubble(text, setting);
+    }
+    public clearBubble() {
+        if (!this.mTopDisplay) return;
+        this.mTopDisplay.clearBubble();
+    }
+
     get nodeType(): number {
         return this.mNodeType;
     }
