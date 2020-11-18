@@ -68,3 +68,4 @@ export * from "./ui/PicaItemPopCard/PicaItemPopCardMediator";
 export * from "./ui/PicaMessageBox/PicaMessageBoxMediator";
 export * from "./ui/PicaElementStorage/PicaElementStorage";
 export * from "./ui/PicaElementStorage/PicaElementStorageMediator";
+export * from "./ui/CutInMenu";

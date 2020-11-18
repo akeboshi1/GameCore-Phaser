@@ -68,3 +68,4 @@ export * from "./PicaCompose/PicaComposePanel";
 export * from "./PicaItemPopCard/PicaItemPopCardPanel";
 export * from "./PicaMessageBox/PicaMessageBoxPanel";
 export * from "./PicaElementStorage/PicaElementStoragePanel";
+export * from "./CutInMenu";

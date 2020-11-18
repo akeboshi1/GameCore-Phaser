@@ -24,6 +24,9 @@ interface ISize {
     width: number;
     height: number;
 }
+
+const fps: number = 60;
+const delayTime = 1000 / fps;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     protected mainPeer: MainPeer;
     protected connect: ConnectionService;
@@ -49,7 +52,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected isPause: boolean = false;
     protected mMoveStyle: number;
     protected mWorkerLoop: any;
-    protected delayTime: number = 20;
     protected currentTime: number = 0;
     constructor(peer: MainPeer) {
         super();
@@ -57,16 +59,24 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mSocket = new GameSocket(peer, new ConnListener(peer));
         this.connect = new Connection(this.mSocket);
         this.connect.addPacketListener(this);
-        this.currentTime = new Date().getTime();
-        this.mWorkerLoop = setInterval(() => {
-            this.currentTime = new Date().getTime();
-            this.update();
-        }, this.delayTime);
+        this.update();
     }
 
-    public update() {
-        if (this.user) this.user.update();
-        if (this.mRoomManager) this.mRoomManager.update(this.currentTime, this.delayTime);
+    public run(): Promise<any> {
+        return new Promise<any>((resolve) => {
+            this.currentTime = new Date().getTime();
+            this.mWorkerLoop = setInterval(() => {
+                resolve(new Date().getTime() - this.currentTime);
+            }, delayTime);
+        });
+    }
+
+    public async update() {
+        for (; ;) {
+            await this.run();
+            if (this.user) this.user.update();
+            if (this.mRoomManager) this.mRoomManager.update(this.currentTime, delayTime);
+        }
     }
 
     get scaleRatio(): number {
@@ -141,7 +151,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        this.mainPeer.render.addFillEffect(pos.x, pos.y, status);
+        this.mainPeer.render.addFillEffect(pos.x, pos.y, status).then(() => {
+
+        });
     }
 
     public setSize(width, height) {
@@ -436,7 +448,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         this.mClock = new Clock(this.connect, this.peer);
         // 告知render进入其他game
-        this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc.x, loc.y, loc.z);
+        this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0);
     }
 
     private clearGame(): void {

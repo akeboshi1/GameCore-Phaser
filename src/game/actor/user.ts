@@ -42,10 +42,10 @@ export class User extends Player {
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
         Logger.getInstance().log("setCameraScroller");
-        this.game.peer.render.setCameraScroller(actor.x, actor.y);
+        this.game.renderPeer.setCameraScroller(actor.x, actor.y);
     }
 
-    update() {
+    update(): Promise<void> {
         if (this.mMoving) {
             const pos = this.getPosition();
             pos.y += this.offsetY;
@@ -64,7 +64,7 @@ export class User extends Player {
             if (this.mRootMount) {
                 return;
             }
-            this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+            return new Promise<any>((resolve) => { resolve(this.game.renderPeer.setPosition(this.id, pos.x, pos.y)); });
         }
     }
 

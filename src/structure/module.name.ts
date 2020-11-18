@@ -45,4 +45,6 @@ export class ModuleName {
     public static PICAMESSAGEBOX_NAME: string = "PicaMessageBox";
     public static PICAELEMENTSTORAGE_NAME: string = "PicaElementStorage";
     public static RANK_NAME: string = "rank";
+    public static CUTINMENU_NAME: string = "CutinMenu";
+    public static USERMENUMEDIATOR_NAME: string = "UserMenuMediator";
 }
