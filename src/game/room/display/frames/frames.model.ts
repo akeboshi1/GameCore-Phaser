@@ -140,7 +140,7 @@ export class FramesModel implements IFramesModel {
         return new Sprite(spr, nodeType);
     }
 
-    public findAnimation(baseName: string, dir: Direction): RunningAnimation {
+    public findAnimation(baseName: string, dir: number): RunningAnimation {
         let animationName = this.checkDirectionAnimation(baseName, dir);
         let flip = false;
         if (animationName) {

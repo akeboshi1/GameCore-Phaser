@@ -25,7 +25,7 @@ interface ISize {
     height: number;
 }
 
-const fps: number = 60;
+const fps: number = 30;
 const delayTime = 1000 / fps;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     protected mainPeer: MainPeer;

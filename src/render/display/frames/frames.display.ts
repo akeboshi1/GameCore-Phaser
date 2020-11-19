@@ -56,7 +56,7 @@ export class FramesDisplay extends DisplayObject {
 
     public play(animation: RunningAnimation, field?: DisplayField, times?: number) {
         if (!animation) return;
-        this.mActionName = animation;
+        this.mAnimation = animation;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
         if (this.scene.textures.exists(data.gene) === false) {
@@ -177,7 +177,7 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         let { x } = mountPoint[targetIndex];
-        if (this.mActionName.flip) {
+        if (this.mAnimation.flip) {
             x = 0 - x;
         }
         display.x = x;
@@ -378,7 +378,7 @@ export class FramesDisplay extends DisplayObject {
         }
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
-                this.play(this.mActionName);
+                this.play(this.mAnimation);
                 // this.emit("initialized", this);
             } else {
                 this.playEffect();
@@ -430,7 +430,7 @@ export class FramesDisplay extends DisplayObject {
     }
 
     private onAnimationRepeatHander() {
-        const queue = this.mActionName.playingQueue;
+        const queue = this.mAnimation.playingQueue;
         if (queue.playedTimes === undefined) {
             queue.playedTimes = 1;
         } else {

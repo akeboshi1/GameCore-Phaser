@@ -31,7 +31,7 @@ export class JoystickManager extends PacketHandler {
         if (!this.user) {
             return;
         }
-        this.user.tryMove({ x, y });
+        // this.user.tryMove({ x, y });
         // Logger.getInstance().log("pointer position: ", Tool.angleToDirections(angle, 3, undefined));
     }
 

@@ -5,15 +5,15 @@ import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
 import { PlayerState } from "../room/element/element";
-import { ISprite } from "../room/display/sprite/sprite";
-import { ILogicPoint, Logger, LogicPoint, Tool } from "utils";
+import { ISprite, Sprite } from "../room/display/sprite/sprite";
+import { ILogicPoint, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 
 export class User extends Player {
     private mUserData: UserDataManager;
     private mMoveStyle: number;
-    private mSpeed: number = 3;
-    private mTargetPoint: ILogicPoint;
+    // private mSpeed: number = 3;
+    // private mTargetPoint: ILogicPoint;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -45,28 +45,28 @@ export class User extends Player {
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
     }
 
-    update(): Promise<void> {
-        if (this.mMoving) {
-            const pos = this.getPosition();
-            pos.y += this.offsetY;
-            if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
-                this.stopMove();
-                return;
-            }
-            // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
-            const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
-            const dir = Tool.calculateDirectionByRadin(angle);
-            this.setDirection(dir);
+    // update() {
+    //     if (this.mMoving) {
+    //         const pos = this.getPosition();
+    //         pos.y += this.offsetY;
+    //         if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
+    //             this.stopMove();
+    //             return;
+    //         }
+    //         // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
+    //         const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
+    //         const dir = Tool.calculateDirectionByRadin(angle);
+    //         this.setDirection(dir);
 
-            pos.x += Math.cos(angle) * this.mSpeed;
-            pos.y += Math.sin(angle) * this.mSpeed;
-            this.mModel.setPosition(pos.x, pos.y);
-            if (this.mRootMount) {
-                return;
-            }
-            return new Promise<any>((resolve) => { resolve(this.game.renderPeer.setPosition(this.id, pos.x, pos.y)); });
-        }
-    }
+    //         pos.x += Math.cos(angle) * this.mSpeed;
+    //         pos.y += Math.sin(angle) * this.mSpeed;
+    //         this.model.setPosition(pos.x, pos.y);
+    //         if (this.mRootMount) {
+    //             return;
+    //         }
+    //         this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+    //     }
+    // }
 
     public startMove() {
         super.startMove();
@@ -92,12 +92,12 @@ export class User extends Player {
             };
             this.mElementManager.connection.send(pkt);
         }
-        this.mTargetPoint = null;
+        // this.mTargetPoint = null;
     }
 
-    public tryMove(targetPoint: ILogicPoint) {
-        this.mTargetPoint = targetPoint;
-    }
+    // public tryMove(targetPoint: ILogicPoint) {
+    //     this.mTargetPoint = targetPoint;
+    // }
 
     public move(moveData: op_client.IMoveData) {
         // TODO 不能仅判断walk, 移动状态可能还有run
@@ -120,15 +120,24 @@ export class User extends Player {
         // movePath.path = [{ x: 885.000000, y: 637.50000}, { x: 915.000000, y: 637.50000}, { x: 945.000000, y: 637.50000}, { x: 975.000000, y: 637.50000}, { x: 1005.00000, y: 637.50000}, { x: 1035.00000, y: 637.50000}, { x: 1065.00000, y: 637.50000}, { x: 1080.00000, y: 645.00000}, { x: 1095.00000, y: 652.50000}, { x: 1110.00000, y: 660.00000}, { x: 1125.00000, y: 667.50000}, { x: 1140.00000, y: 675.00000}, { x: 1155.00000, y: 682.50000}, { x: 1170.00000, y: 690.00000}];
         // movePath.path = [{x: 1140.00000, y: 495.000000}, {x: 1125.00000, y: 502.500000}, {x: 1110.00000, y: 510.000000}, {x: 1095.00000, y: 517.500000}, {x: 1080.00000, y: 525.000000}, {x: 1065.00000, y: 532.500000}, {x: 1050.00000, y: 540.000000}, {x: 1035.00000, y: 547.500000}];
         // movePath.timestemp = 3965;
+        let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
         const path = movePath.path;
+        let point = null;
         let now = this.mElementManager.roomService.now();
         let duration = 0;
+        let angle = 0;
         const pathAry = path.map((value) => {
+            point = value.point3f;
+            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+            }
+            const direction = this.onCheckDirection(angle);
             now += duration;
             duration = value.timestemp - now;
             return {
-                x: value.point3f.x, y: value.point3f.y, duration, timestemp: value.timestemp
+                x: value.point3f.x, y: value.point3f.y, duration, timestemp: value.timestemp, direction
             };
+            lastPos = new LogicPos(point.x, point.y);
         });
         // this.drawPath(movePath.path);
         super.movePath(movePath);
@@ -192,11 +201,22 @@ export class User extends Player {
 
     }
 
+    private animationChange(data: any) {
+        // { id: this.id, direction: this.direction }
+        this.game.renderPeer.displayAnimationChange(data);
+    }
+
     set model(val: ISprite) {
-        this.mModel = val;
         if (!val) {
             return;
         }
+        if (!this.mModel) {
+            this.mModel = val;
+        } else {
+            Object.assign(this.mModel, val);
+        }
+        this.mModel.off("Animation_Change", this.animationChange, this);
+        this.mModel.on("Animation_Change", this.animationChange, this);
         if ((val as PlayerModel).package) {
             // this.mPackage = (val as PlayerModel).package;
             // this.mBag = new Bag(this.mElementManager.roomService.world);
@@ -205,7 +225,7 @@ export class User extends Player {
         this.load(this.mModel.displayInfo);
         if (this.mModel.pos) {
             const obj = { id: val.id, pos: val.pos, alpha: val.alpha };
-            this.game.peer.render.setDisplayData(obj);
+            this.game.renderPeer.setDisplayData(obj);
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha

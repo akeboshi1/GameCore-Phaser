@@ -11,8 +11,6 @@ export class LogicPos implements IPos {
     z?: number;
     depth?: number;
 
-    constructor()
-    constructor(x: number, y: number, z?: number, depth?: number)
     constructor(x?: number, y?: number, z?: number, depth?: number) {
         this.x = x || 0;
         this.y = y || 0;

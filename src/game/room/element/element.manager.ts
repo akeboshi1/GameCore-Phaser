@@ -203,7 +203,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!sprite.displayInfo) {
             const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
             if (displayInfo) {
-                sprite.displayInfo = displayInfo;
+                sprite.setDisplayInfo(displayInfo);
                 return displayInfo;
             }
         }

@@ -5,6 +5,7 @@ import { IElementManager } from "../element/element.manager";
 import { ISprite } from "../display/sprite/sprite";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { Element, IElement, MovePath, PlayerState } from "../element/element";
+import { Logger } from "utils";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -53,11 +54,13 @@ export class Player extends Element implements IElement {
             if (!(point.y === lastPos.y && point.x === lastPos.x)) {
                 angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
             }
+            const dir = this.onCheckDirection(angle);
             now += duration;
             duration = path.timestemp - now;
             paths.push({
                 x: point.x,
                 y: point.y + this.offsetY,
+                direction: dir,
                 duration,
                 onStartParams: angle,
                 onCompleteParams: { duration, index },
@@ -80,17 +83,13 @@ export class Player extends Element implements IElement {
     public setDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
-            this.mModel.direction = dir;
             const id = this.mModel.id;
             if (!this.mModel.currentAnimationName) {
                 this.mModel.currentAnimationName = PlayerState.IDLE;
-                // this.mElementManager.roomService.game.peer.render.playAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
             }
-            // if (this.mDisplay) this.mDisplay.play({ animationName: this.mCurState, flip: false });
-            // if (this.mDisplay) {
-            //     this.mDisplay.play(this.mModel.currentAnimation);
-            // }
-            this.mElementManager.roomService.game.peer.render.playAnimation(id, this.mModel.currentAnimation);
+            this.mModel.setDirection(dir);
+            Logger.getInstance().log("direction=====" + dir);
+            this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation);
         }
     }
 
@@ -104,7 +103,7 @@ export class Player extends Element implements IElement {
             this.mCurState = val;
             this.mModel.currentAnimationName = this.mCurState;
             const id = this.mModel.id;
-            this.mElementManager.roomService.game.peer.render.playAnimation(id, this.mModel.currentAnimation);
+            this.mElementManager.roomService.game.renderPeer.playAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
             // (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }
@@ -120,33 +119,28 @@ export class Player extends Element implements IElement {
         return pos;
     }
 
-    public startMove() {
-        super.startMove();
-
-    }
-
-    public stopMove() {
-        super.stopMove();
-    }
-
     public completeMove() {
         this.onMovePathPointComplete(this.mMoveData.onCompleteParams);
         this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
     }
 
-    protected onCheckDirection(params: any) {
+    protected onCheckDirection(params: any): number {
         if (typeof params !== "number") {
-            return;
+            return this.getDirection();
         }
         // 重叠
         if (params > 90) {
-            this.setDirection(3);
+            // this.setDirection(3);
+            return 3;
         } else if (params >= 0) {
-            this.setDirection(5);
+            // this.setDirection(5);
+            return 5;
         } else if (params >= -90) {
-            this.setDirection(7);
+            // this.setDirection(7);
+            return 7;
         } else {
-            this.setDirection(1);
+            // this.setDirection(1);
+            return 1;
         }
     }
 

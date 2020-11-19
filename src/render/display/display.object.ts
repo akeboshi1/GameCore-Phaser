@@ -1,6 +1,6 @@
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
-import { Url, LogicPoint } from "utils";
+import { Url, LogicPoint, LogicPos } from "utils";
 import { Render } from "../render";
 import { RunningAnimation, IDragonbonesModel, IFramesModel } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
@@ -32,8 +32,9 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
     protected mAntial: boolean = false;
-    protected mActionName: RunningAnimation;
+    protected mAnimation: RunningAnimation;
     protected mTopDisplay: ElementTopDisplay;
+    protected mDisplayInfo: IDragonbonesModel | IFramesModel;
     protected moveData: any;
     protected render: Render;
     protected mName: string;
@@ -42,6 +43,14 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         this.render = render;
         this.mID = id;
         this.mNodeType = type;
+    }
+
+    set direction(direction: number) {
+        this.mDirection = direction;
+    }
+
+    get direction(): number {
+        return this.mDirection;
     }
 
     public changeAlpha(val?: number) {
@@ -189,17 +198,42 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     public doMove(moveData: any) {
+        if (!moveData.posPath) {
+            return;
+        }
         this.moveData = moveData;
         const line = moveData.tweenLineAnim;
         if (line) {
             line.stop();
             line.destroy();
         }
+        const paths = [];
         const posPath = moveData.posPath;
+        let index = 0;
+        for (const path of posPath) {
+            const duration = path.duration;
+            const direction = path.direction;
+            paths.push({
+                x: path.x,
+                y: path.y,
+                direction,
+                duration,
+                onStartParams: direction,
+                onCompleteParams: { duration, index },
+                onStart: (tween, target, params) => {
+                    this.onCheckDirection(params);
+                },
+                onComplete: (tween, targets, params) => {
+                    this.onMovePathPointComplete(params);
+                }
+
+            });
+            index++;
+        }
         moveData.tweenLineAnim = this.scene.tweens.timeline({
             targets: this,
             ease: "Linear",
-            tweens: posPath,
+            tweens: paths,
             onStart: () => {
                 this.onMoveStart();
             },
@@ -225,6 +259,29 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         this.render.mainPeer.displayStopMove(this.id);
     }
 
+    public setDirection(dir: number) {
+        if (dir !== this.mDisplayInfo.avatarDir) {
+            this.mDisplayInfo.avatarDir = dir;
+            this.direction = dir;
+            this.play(this.mAnimation);
+        }
+    }
+
+    public renderSetDirection(dir: number) {
+        if (dir !== this.mDisplayInfo.avatarDir) {
+            this.mDisplayInfo.avatarDir = dir;
+            this.direction = dir;
+            this.render.setDirection(this.id, dir);
+        }
+    }
+
+    protected onMovePathPointComplete(params) {
+        if (!this.moveData) {
+            return;
+        }
+        this.moveData.step += 1;
+    }
+
     protected onMoveStart() {
         this.render.mainPeer.displayStartMove(this.id);
     }
@@ -241,6 +298,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             this.setDepth(0);
             this.moveData.tweenLastUpdate = now;
         }
+        if (this.mTopDisplay) this.mTopDisplay.update();
         // this.mDirty = true;
     }
 
@@ -300,6 +358,13 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             return;
         }
         this.mChildMap.delete(key);
+    }
+
+    protected onCheckDirection(param: number) {
+        if (typeof param !== "number") {
+            return this.mDirection;
+        }
+        this.renderSetDirection(param);
     }
 
     get id(): number {

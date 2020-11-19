@@ -359,6 +359,10 @@ export class Render extends RPCPeer implements GameMain {
         this.mainPeer.requestCurTime();
     }
 
+    public setDirection(id: number, direction: number) {
+        this.mainPeer.setDirection(id, direction);
+    }
+
     public onLoginErrorHanlerCallBack(name: string, idcard: string) {
 
     }
@@ -946,6 +950,17 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
     public showNickname(id: number, name: string) {
         this.mDisplayManager.showNickname(id, name);
+    }
+
+    @Export()
+    public displayAnimationChange(data: any) {
+        const id = data.id;
+        const direction = data.direction;
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) {
+            display.direction = direction;
+            display.play(data.animation);
+        }
     }
 
     @Export([webworker_rpc.ParamType.str])

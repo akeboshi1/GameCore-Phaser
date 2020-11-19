@@ -1,4 +1,4 @@
-import { Logger } from "utils";
+import { Logger, LogicPos } from "utils";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
@@ -255,6 +255,7 @@ export class DisplayManager {
     public setDisplayData(sprite: any) {
         const display = this.displays.get(sprite.id);
         if (!display) return;
+        if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         display.changeAlpha(sprite.alpha);
     }

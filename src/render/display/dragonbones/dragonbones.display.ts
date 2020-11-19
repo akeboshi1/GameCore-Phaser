@@ -1,4 +1,4 @@
-import { ResUtils } from "utils";
+import { Logger, ResUtils } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "src/render/render";
@@ -78,8 +78,6 @@ export class DragonbonesDisplay extends DisplayObject {
     protected mDragonbonesName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
-    private mDisplayInfo: IDragonbonesModel | undefined;
-    private mPreDirection: number;
     private replaceArr = [];
     private mHasLoadMap: Map<string, any> = new Map();
     private mLoadMap: Map<string, any> = new Map();
@@ -158,7 +156,8 @@ export class DragonbonesDisplay extends DisplayObject {
     }
 
     public play(val: RunningAnimation) {
-        this.mActionName = val;
+        Logger.getInstance().log(val.name + "=======");
+        this.mAnimation = val;
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
                 this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
@@ -336,6 +335,7 @@ export class DragonbonesDisplay extends DisplayObject {
 
     private getReplaceArr() {
         this.replaceArr.length = 0;
+        Logger.getInstance().log(this.direction);
         const avater: IAvatar = this.displayInfo.avatar;
         if (avater.bodyBaseId) {
             this.replaceArr.push({
@@ -950,10 +950,10 @@ export class DragonbonesDisplay extends DisplayObject {
     }
 
     private onArmatureLoopComplete(event: dragonBones.EventObject) {
-        if (!this.mArmatureDisplay || !this.mActionName) {
+        if (!this.mArmatureDisplay || !this.mAnimation) {
             return;
         }
-        const queue = this.mActionName.playingQueue;
+        const queue = this.mAnimation.playingQueue;
         if (queue.playedTimes === undefined) {
             queue.playedTimes = 1;
         } else {

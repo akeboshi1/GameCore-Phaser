@@ -3,28 +3,28 @@ import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_pro
 import { AnimationQueue, RunningAnimation } from "structure";
 import { IAvatar, IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
-import { IPos, LogicPos, LogicPoint, Logger, Direction } from "utils";
+import { IPos, LogicPos, LogicPoint, Logger, Direction, EventDispatcher } from "utils";
 import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel } from "../frames/frames.model";
 import NodeType = op_def.NodeType;
 export interface ISprite {
-    readonly id: number;
-    readonly avatar: IAvatar;
-    readonly nickname: string;
-    readonly alpha: number;
-    readonly displayBadgeCards: op_def.IBadgeCard[];
+    id: number;
+    avatar: IAvatar;
+    nickname: string;
+    alpha: number;
+    displayBadgeCards: op_def.IBadgeCard[];
 
-    readonly platformId: string;
-    readonly sceneId: number;
-    readonly nodeType: op_def.NodeType;
-    readonly currentAnimation: RunningAnimation;
-    readonly currentCollisionArea: number[][];
-    readonly currentWalkableArea: number[][];
-    readonly currentCollisionPoint: LogicPoint;
-    readonly hasInteractive: boolean;
-    readonly attrs: op_def.IStrPair[];
-    readonly animationQueue: AnimationQueue[];
+    platformId: string;
+    sceneId: number;
+    nodeType: op_def.NodeType;
+    currentAnimation: RunningAnimation;
+    currentCollisionArea: number[][];
+    currentWalkableArea: number[][];
+    currentCollisionPoint: LogicPoint;
+    hasInteractive: boolean;
+    attrs: op_def.IStrPair[];
+    animationQueue: AnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -35,58 +35,65 @@ export interface ISprite {
     mountSprites?: number[];
 
     newID();
+    emit(type, data);
+    on(event: string, fn: Function, context: any);
+    off(event: string, fn: Function, context: any);
+    clear();
     updateAvatar(avatar: op_gameconfig.IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
     setAnimationName(name: string, playTimes?: number): RunningAnimation;
     setAnimationQueue(queue: AnimationQueue[]);
+    setDirection(val);
+    setDisplayInfo(val);
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
 
-export class Sprite implements ISprite {
-    protected mID: number;
-    protected mPos: IPos;
-    protected mAvatar: IAvatar;
-    protected mCurrentAnimationName: string;
-    protected mDirection: number;
-    protected mBindID: number;
-    protected mSn: string;
-    protected mAlpha: number;
-    protected mNickname: string;
-    protected mDisplayBadgeCards: op_def.IBadgeCard[];
+export class Sprite extends EventDispatcher implements ISprite {
+    public id: number;
+    public pos: IPos;
+    public avatar: IAvatar;
+    public currentAnimationName: string;
+    public direction: number = 3;
+    public bindID: number;
+    public sn: string;
+    public alpha: number;
+    public nickname: string;
+    public displayBadgeCards: op_def.IBadgeCard[];
 
-    protected mPackage: op_gameconfig.IPackage;
-    protected mSceneId: number;
-    protected mUuid: number;
-    protected mPlatformId: string;
-    protected mDisplayInfo: FramesModel | DragonbonesModel;
-    protected mNodeType: NodeType;
-    protected mCurrentAnimation: RunningAnimation;
-    protected mCurrentCollisionArea: number[][];
-    protected mCurrentWalkableArea: number[][];
-    protected mCurrentCollisionPoint: LogicPoint;
-    protected mVersion: string;
-    protected mIsMoss: boolean;
-    protected mRegisterAnimation: Map<string, string>;
+    public package: op_gameconfig.IPackage;
+    public sceneId: number;
+    public uuid: number;
+    public platformId: string;
+    public displayInfo: FramesModel | DragonbonesModel;
+    public nodeType: NodeType;
+    public currentAnimation: RunningAnimation;
+    public currentCollisionArea: number[][];
+    public currentWalkableArea: number[][];
+    public currentCollisionPoint: LogicPoint;
+    public version: string;
+    public isMoss: boolean;
+    public registerAnimation: Map<string, string>;
 
-    protected _originWalkPoint: LogicPoint;
+    public originWalkPoint: LogicPoint;
 
-    protected _originCollisionPoint: LogicPoint;
+    public originCollisionPoint: LogicPoint;
 
-    protected mAttrs: op_def.IStrPair[];
+    public attrs: op_def.IStrPair[];
 
-    protected mAnimationQueue: AnimationQueue[];
+    public animationQueue: AnimationQueue[];
 
-    protected mMountSprites: number[];
+    public mountSprites: number[];
 
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
-        this.mID = obj.id;
+        super();
+        this.id = obj.id;
         if (obj.point3f) {
             const point = obj.point3f;
-            this.mPos = new LogicPos(point.x, point.y, point.z);
+            this.pos = new LogicPos(point.x, point.y, point.z);
         }
-        this.mAttrs = obj.attrs;
+        this.attrs = obj.attrs;
         if (obj.avatar) {
             this.updateAvatar(obj.avatar);
         }
@@ -94,34 +101,53 @@ export class Sprite implements ISprite {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
         if (obj.sn) {
-            this.mSn = obj.sn;
+            this.sn = obj.sn;
         }
         this.tryRegisterAnimation(obj.animationRegistrationMap);
-        this.mCurrentAnimationName = obj.currentAnimationName;
+        this.currentAnimationName = obj.currentAnimationName;
         this.direction = obj.direction || 3;
-        this.mNickname = obj.nickname;
-        this.mBindID = obj.bindId;
-        this.mAlpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
-        this.mDisplayBadgeCards = obj.displayBadgeCards;
-        this.mNodeType = nodeType;
+        this.nickname = obj.nickname;
+        this.bindID = obj.bindId;
+        this.alpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
+        this.displayBadgeCards = obj.displayBadgeCards;
+        this.nodeType = nodeType;
 
         if (obj.version) {
-            this.mVersion = obj.version;
+            this.version = obj.version;
         }
 
         if (obj.isMoss !== undefined) {
             this.isMoss = obj.isMoss;
         }
 
-        this.mMountSprites = obj.mountSprites;
+        if (!this.currentCollisionArea) {
+            this.currentCollisionArea = this.getCollisionArea();
+        }
+
+        if (!this.currentWalkableArea) {
+            this.currentWalkableArea = this.getWalkableArea();
+        }
+
+        if (!this.currentWalkableArea) {
+            this.currentWalkableArea = this.getWalkableArea();
+        }
+
+        if (!this.currentCollisionPoint) {
+            this.currentCollisionPoint = this.getOriginPoint();
+        }
+
+        this.mountSprites = obj.mountSprites;
+    }
+
+    clear() {
     }
 
     public toSprite(): op_client.ISprite {
         const sprite = op_client.Sprite.create();
         sprite.id = this.id;
-        sprite.nickname = this.mNickname;
-        if (this.mDisplayInfo instanceof FramesModel) {
-            sprite.display = this.mDisplayInfo.display;
+        sprite.nickname = this.nickname;
+        if (this.displayInfo instanceof FramesModel) {
+            sprite.display = this.displayInfo.display;
             sprite.currentAnimationName = this.currentAnimationName;
             const point3f = op_def.PBPoint3f.create();
             point3f.x = this.pos.x;
@@ -133,52 +159,52 @@ export class Sprite implements ISprite {
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
         sprite.sn = this.sn;
-        sprite.version = this.mVersion;
+        sprite.version = this.version;
         return sprite;
     }
 
     public newID() {
-        this.mID = Helpers.genId();
+        this.id = Helpers.genId();
     }
 
     public setPosition(x: number, y: number) {
-        if (!this.mPos) {
-            this.mPos = new LogicPos();
+        if (!this.pos) {
+            this.pos = new LogicPos();
         }
-        this.mPos.x = x;
-        this.mPos.y = y;
+        this.pos.x = x;
+        this.pos.y = y;
     }
 
-    public turn(): ISprite {
-        if (!this.mDisplayInfo) {
+    public turn(): any {
+        if (!this.displayInfo) {
             return;
         }
-        const dirable = this.dirable(this.mCurrentAnimationName);
-        const index = dirable.indexOf(this.mDirection);
+        const dirable = this.dirable(this.currentAnimationName);
+        const index = dirable.indexOf(this.direction);
         if (index > -1) {
             this.direction = dirable[(index + 1) % dirable.length];
         } else {
-            Logger.getInstance().error(`${Sprite.name}: error dir ${this.mDirection}`);
+            Logger.getInstance().error(`${Sprite.name}: error dir ${this.direction}`);
         }
 
         return this;
     }
 
     public updateAvatar(avatar: op_gameconfig.IAvatar) {
-        if (this.mDisplayInfo) {
-            this.mDisplayInfo.destroy();
+        if (this.displayInfo) {
+            this.displayInfo.destroy();
         }
-        this.mAvatar = { id: avatar.id };
-        this.mAvatar = Object.assign(this.mAvatar, avatar);
-        this.mDisplayInfo = new DragonbonesModel(this);
+        this.avatar = { id: avatar.id };
+        this.avatar = Object.assign(this.avatar, avatar);
+        this.displayInfo = new DragonbonesModel(this);
     }
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
         if (!display || !animations) {
             return;
         }
-        if (this.mDisplayInfo) {
-            this.mDisplayInfo.destroy();
+        if (this.displayInfo) {
+            this.displayInfo.destroy();
         }
         if (display) {
             const anis = [];
@@ -186,8 +212,8 @@ export class Sprite implements ISprite {
             for (const ani of objAnis) {
                 anis.push(new AnimationModel(ani));
             }
-            defAnimation = defAnimation || this.mCurrentAnimationName || "";
-            this.mDisplayInfo = new FramesModel({
+            defAnimation = defAnimation || this.currentAnimationName || "";
+            this.displayInfo = new FramesModel({
                 animations: {
                     defaultAnimationName: defAnimation,
                     display,
@@ -202,296 +228,151 @@ export class Sprite implements ISprite {
     }
 
     public setAnimationQueue(queue: AnimationQueue[]) {
-        this.mAnimationQueue = queue;
+        this.animationQueue = queue;
     }
 
     public setMountSprites(ids: number[]) {
-        this.mMountSprites = ids;
+        this.mountSprites = ids;
     }
 
     public updateAttr(attrs: op_def.IStrPair[]) {
-        this.mAttrs = attrs;
+        this.attrs = attrs;
     }
 
     public setAnimationName(name: string) {
-        if (this.mDisplayInfo) {
-            this.mDisplayInfo.animationName = name;
+        if (this.displayInfo) {
+            this.displayInfo.animationName = name;
         }
-        this.mCurrentAnimationName = name;
+        this.currentAnimationName = name;
         const ani = this.setAnimationData(name, this.direction);
         return ani;
     }
 
-    get id(): number {
-        return this.mID;
-    }
-
-    get pos(): IPos {
-        return this.mPos;
-    }
-
-    set pos(pos: IPos) {
-        this.mPos = pos;
-    }
-
-    get avatar(): IAvatar {
-        return this.mAvatar;
-    }
-
-    get currentAnimationName(): string {
-        return this.mCurrentAnimationName;
-    }
-
-    set currentAnimationName(animationName: string) {
-        if (this.mDisplayInfo) {
-            this.mDisplayInfo.animationName = animationName;
+    setCurrentAnimationName(animationName: string) {
+        if (this.displayInfo) {
+            this.displayInfo.animationName = animationName;
         }
-        this.mCurrentAnimationName = animationName;
+        this.currentAnimationName = animationName;
         this.setAnimationData(animationName, this.direction);
-        // this.mCurrentAnimation = this.findAnimation(animationName, this.mDirection);
+        // this.currentAnimation = this.findAnimation(animationName, this.direction);
     }
 
-    get direction(): number {
-        return this.mDirection;
-    }
-
-    set direction(val: number) {
-        this.mDirection = val || 3;
-        if (!this.mDisplayInfo) {
+    setDirection(val: number) {
+        if (!val) return;
+        this.direction = val || 3;
+        if (!this.displayInfo) {
             return;
         }
-        this.setAnimationData(this.mCurrentAnimationName, this.mDirection);
+        Logger.getInstance().log(val);
+        this.setAnimationData(this.currentAnimationName, this.direction);
     }
 
-    get nickname(): string {
-        return this.mNickname;
-    }
-
-    get bindID(): number {
-        return this.mBindID;
-    }
-
-    set bindID(id: number) {
-        this.mBindID = id;
-    }
-
-    get sn(): string {
-        return this.mSn;
-    }
-
-    set sn(value: string) {
-        this.mSn = value;
-    }
-
-    get alpha(): number {
-        return this.mAlpha;
-    }
-
-    get package(): op_gameconfig.IPackage {
-        return this.mPackage;
-    }
-
-    set package(value: op_gameconfig.IPackage) {
-        this.mPackage = value;
-    }
-
-    get sceneId(): number {
-        return this.mSceneId;
-    }
-
-    get uuid(): number {
-        return this.mUuid;
-    }
-
-    get displayBadgeCards(): op_def.IBadgeCard[] {
-        return this.mDisplayBadgeCards;
-    }
-
-    get platformId(): string {
-        return this.mPlatformId;
-    }
-
-    get displayInfo(): FramesModel | DragonbonesModel {
-        return this.mDisplayInfo;
-    }
-
-    set displayInfo(displayInfo: FramesModel | DragonbonesModel) {
-        this.mDisplayInfo = displayInfo;
-        this.mDisplayInfo.id = this.id;
+    setDisplayInfo(displayInfo: FramesModel | DragonbonesModel) {
+        this.displayInfo = displayInfo;
+        this.displayInfo.id = this.id;
         if (this.currentAnimationName) {
-            this.mDisplayInfo.animationName = this.currentAnimationName;
+            this.displayInfo.animationName = this.currentAnimationName;
             this.setAnimationData(this.currentAnimationName, this.direction);
         } else {
             if (displayInfo.animationName) this.currentAnimationName = displayInfo.animationName;
         }
     }
 
-    get isMoss() {
-        return this.mIsMoss;
-    }
-
-    set isMoss(val: boolean) {
-        this.mIsMoss = val;
-    }
-
-    get animationQueue(): AnimationQueue[] {
-        return this.mAnimationQueue;
-    }
-
-    get nodeType(): NodeType {
-        return this.mNodeType;
-    }
-
-    get currentAnimation(): RunningAnimation {
-        return this.mCurrentAnimation;
-    }
-
-    get currentCollisionArea(): number[][] {
-        if (!this.mCurrentCollisionArea) {
-            this.mCurrentCollisionArea = this.getCollisionArea();
-        }
-        return this.mCurrentCollisionArea;
-    }
-
-    get currentWalkableArea(): number[][] {
-        if (!this.mCurrentWalkableArea) {
-            this.mCurrentWalkableArea = this.getWalkableArea();
-        }
-        return this.mCurrentWalkableArea;
-    }
-
-    get currentCollisionPoint(): LogicPoint {
-        if (!this.mCurrentCollisionPoint) {
-            this.mCurrentCollisionPoint = this.getOriginPoint();
-        }
-        return this.mCurrentCollisionPoint;
-    }
-
     get hasInteractive(): boolean {
-        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+        if (!this.displayInfo || !this.currentAnimation) {
             return false;
         }
-        const { name: animationName } = this.mCurrentAnimation;
-        const area = this.mDisplayInfo.getInteractiveArea(animationName);
+        const { name: animationName } = this.currentAnimation;
+        const area = this.displayInfo.getInteractiveArea(animationName);
         if (area && area.length > 0) {
             return true;
         }
         return false;
     }
 
-    get mountSprites(): number[] {
-        return this.mMountSprites;
-    }
-
-    set mountSprites(ids: number[]) {
-        this.mMountSprites = ids;
-    }
-
-    get animationMap() {
-        if (!this.mRegisterAnimation) {
-            this.mRegisterAnimation = new Map();
-        }
-        return this.mRegisterAnimation;
-    }
-
-    public get originCollisionPoint(): LogicPoint {
-        return this._originCollisionPoint;
-    }
-
-    public get originWalkPoint(): LogicPoint {
-        return this._originWalkPoint;
-    }
-
-    public get attrs() {
-        return this.mAttrs;
-    }
-
     public setOriginCollisionPoint(value: number[] | null): void {
-        if (this._originCollisionPoint === undefined) {
-            this._originCollisionPoint = new LogicPoint();
+        if (this.originCollisionPoint === undefined) {
+            this.originCollisionPoint = new LogicPoint();
         }
         if (value && value.length > 1) {
-            this._originCollisionPoint.x = value[0];
-            this._originCollisionPoint.y = value[1];
+            this.originCollisionPoint.x = value[0];
+            this.originCollisionPoint.y = value[1];
         }
     }
 
     public setOriginWalkPoint(value: number[] | null): void {
-        if (this._originWalkPoint === undefined) {
-            this._originWalkPoint = new LogicPoint();
+        if (this.originWalkPoint === undefined) {
+            this.originWalkPoint = new LogicPoint();
         }
         if (value && value.length > 1) {
-            this._originWalkPoint.x = value[0];
-            this._originWalkPoint.y = value[1];
+            this.originWalkPoint.x = value[0];
+            this.originWalkPoint.y = value[1];
         }
     }
 
     public getInteracviveArea(): op_def.IPBPoint2i[] {
-        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+        if (!this.displayInfo || !this.currentAnimation) {
             return;
         }
-        const { name: animationName } = this.mCurrentAnimation;
-        return this.mDisplayInfo.getInteractiveArea(animationName);
+        const { name: animationName } = this.currentAnimation;
+        return this.displayInfo.getInteractiveArea(animationName);
     }
 
-    private setAnimationData(animationName: string, direction: Direction) {
+    private setAnimationData(animationName: string, direction: number) {
         if (!this.displayInfo || !animationName) {
             return;
         }
         let baseAniName = animationName.split(`_`)[0];
-        if (this.mRegisterAnimation) {
-            if (this.mRegisterAnimation.has(baseAniName)) {
-                baseAniName = this.mRegisterAnimation.get(baseAniName);
+        if (this.registerAnimation) {
+            if (this.registerAnimation.has(baseAniName)) {
+                baseAniName = this.registerAnimation.get(baseAniName);
             }
         }
-        this.mCurrentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
-        if (this.mAnimationQueue && this.mAnimationQueue.length > 0) this.mCurrentAnimation.playingQueue = this.mAnimationQueue[0];
-        if (this.mCurrentCollisionArea) {
+        this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+        if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
+        if (this.currentCollisionArea) {
             this.setArea();
         }
-        return this.mCurrentAnimation;
-        // Logger.getInstance().log("play animation name: ", this.mCurrentAnimation.animationName, this.mCurrentAnimation.flip, this.mDirection);
-        // if (animationName !== this.mCurrentAnimation.animationName) {
-        //     Logger.getInstance().error(`${Sprite.name}: play animationName: ${this.mCurrentAnimation.animationName}, recieve: ${this.mCurrentAnimationName}, direction: ${direction}`);
-        // }
+        this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation });
+        return this.currentAnimation;
     }
 
     private checkDirectionAnimation(baseAniName: string, dir: Direction) {
         const aniName = `${baseAniName}_${dir}`;
-        if (this.mDisplayInfo.existAnimation(aniName)) {
+        if (this.displayInfo.existAnimation(aniName)) {
             return aniName;
         }
         return null;
     }
 
     private setArea() {
-        this.mCurrentCollisionArea = this.getCollisionArea();
-        this.mCurrentWalkableArea = this.getWalkableArea();
-        this.mCurrentCollisionPoint = this.getOriginPoint();
+        this.currentCollisionArea = this.getCollisionArea();
+        this.currentWalkableArea = this.getWalkableArea();
+        this.currentCollisionPoint = this.getOriginPoint();
     }
 
     private getCollisionArea() {
-        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+        if (!this.displayInfo || !this.currentAnimation) {
             return;
         }
-        const { name: animationName, flip } = this.mCurrentAnimation;
-        return this.mDisplayInfo.getCollisionArea(animationName, flip);
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getCollisionArea(animationName, flip);
     }
 
     private getWalkableArea() {
-        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+        if (!this.displayInfo || !this.currentAnimation) {
             return;
         }
-        const { name: animationName, flip } = this.mCurrentAnimation;
-        return this.mDisplayInfo.getWalkableArea(animationName, flip);
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getWalkableArea(animationName, flip);
     }
 
     private getOriginPoint() {
-        if (!this.mDisplayInfo || !this.mCurrentAnimation) {
+        if (!this.displayInfo || !this.currentAnimation) {
             return;
         }
-        const { name: animationName, flip } = this.mCurrentAnimation;
-        return this.mDisplayInfo.getOriginPoint(animationName, flip);
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getOriginPoint(animationName, flip);
     }
 
     private dirable(aniName: string): number[] {
@@ -508,9 +389,9 @@ export class Sprite implements ISprite {
         if (!anis || anis.length < 1) {
             return;
         }
-        this.mRegisterAnimation = new Map();
+        this.registerAnimation = new Map();
         for (const ani of anis) {
-            this.mRegisterAnimation.set(ani.key, ani.value);
+            this.registerAnimation.set(ani.key, ani.value);
         }
     }
 }

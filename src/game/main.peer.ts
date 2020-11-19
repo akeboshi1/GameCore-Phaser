@@ -228,25 +228,31 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.num])
     public displayStartMove(id: number) {
-        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        const element = this.game.roomManager.currentRoom.playerManager.get(id);
         if (element) element.startMove();
     }
 
     @Export([webworker_rpc.ParamType.num])
     public displayCompleteMove(id: number) {
-        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        const element = this.game.roomManager.currentRoom.playerManager.get(id);
         if (element) element.completeMove();
     }
 
     @Export([webworker_rpc.ParamType.num])
     public displayStopMove(id: number) {
-        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        const element = this.game.roomManager.currentRoom.playerManager.get(id);
         if (element) element.stopMove();
     }
 
     @Export()
     public now(): number {
         return this.game.roomManager.currentRoom.now();
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public setDirection(id: number, direction: number) {
+        const element = this.game.roomManager.currentRoom.playerManager.get(id);
+        if (element) element.setDirection(direction);
     }
 
     @Export()

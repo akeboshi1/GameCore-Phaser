@@ -88,6 +88,7 @@ export interface MoveData {
 export interface MovePath {
     x: number;
     y: number;
+    direction: number;
     duration?: number;
     onStartParams?: any;
     // onStart?: Function;
@@ -262,7 +263,7 @@ export class Element extends BlockObject implements IElement {
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
-        this.mElementManager.roomService.game.peer.render.playAnimation(this.id, this.mModel.currentAnimation);
+        this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
         // this.mDisplay.play(this.model.currentAnimation, undefined, times);
     }
 
@@ -306,7 +307,7 @@ export class Element extends BlockObject implements IElement {
             this.model.currentAnimationName = PlayerState.IDLE;
         }
         if (this.model) {
-            this.model.direction = val;
+            this.model.setDirection(val);
             // this.mDisplay.play(this.model.currentAnimation);
         }
         this.play(this.model.currentAnimationName);
@@ -365,6 +366,7 @@ export class Element extends BlockObject implements IElement {
             {
                 x: moveData.destinationPoint3f.x,
                 y: moveData.destinationPoint3f.y,
+                direction: moveData.direction
             },
         ];
         this._doMove();
@@ -425,15 +427,17 @@ export class Element extends BlockObject implements IElement {
 
     public startMove() {
         this.mMoving = true;
+        Logger.getInstance().log("start_walk");
         this.changeState(PlayerState.WALK);
     }
 
     public completeMove() {
-
+        Logger.getInstance().log("complete_walk");
     }
 
     public stopMove() {
         this.mMoving = false;
+        Logger.getInstance().log("stop_walk");
         this.changeState(PlayerState.IDLE);
     }
 
@@ -621,14 +625,13 @@ export class Element extends BlockObject implements IElement {
         if (!this.mMoveData.posPath) {
             return;
         }
-
         // const line = this.mMoveData.tweenLineAnim;
         // if (line) {
         //     line.stop();
         //     line.destroy();
         // }
         // const posPath = this.mMoveData.posPath;
-        this.mElementManager.roomService.game.peer.render.doMove(this.id, this.mMoveData);
+        this.mElementManager.roomService.game.renderPeer.doMove(this.id, this.mMoveData);
         // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
         //     targets: this.mDisplay,
         //     ease: "Linear",
@@ -801,13 +804,23 @@ export class Element extends BlockObject implements IElement {
         return 0; // this.mOffsetY;
     }
 
-    protected onCheckDirection(params: any) {
+    protected onCheckDirection(params: any): number {
         if (typeof params !== "number") {
-            return;
+            return ;
         }
-        const direction = this.calculateDirectionByAngle(params);
-        if (direction !== -1) {
-            this.setDirection(direction);
+        // 重叠
+        if (params > 90) {
+            // this.setDirection(3);
+            return 3;
+        } else if (params >= 0) {
+            // this.setDirection(5);
+            return 5;
+        } else if (params >= -90) {
+            // this.setDirection(7);
+            return 7;
+        } else {
+            // this.setDirection(1);
+            return 1;
         }
     }
 
