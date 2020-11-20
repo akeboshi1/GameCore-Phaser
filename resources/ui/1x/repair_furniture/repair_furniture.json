@@ -1,163 +1,163 @@
 {
 	"frames": {
-		"arow": {
+		"frame_1": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 17,
-				"h": 30
+				"w": 96,
+				"h": 105
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 17,
-				"h": 30
+				"w": 96,
+				"h": 105
 			},
 			"sourceSize": {
-				"w": 17,
-				"h": 30
+				"w": 96,
+				"h": 105
 			}
 		},
-		"minebag_bg": {
+		"frame_2": {
 			"frame": {
-				"x": 20,
+				"x": 99,
 				"y": 1,
-				"w": 368,
-				"h": 118
+				"w": 96,
+				"h": 105
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 368,
-				"h": 118
+				"w": 96,
+				"h": 105
 			},
 			"sourceSize": {
-				"w": 368,
-				"h": 118
+				"w": 96,
+				"h": 105
 			}
 		},
-		"minebag_bg_brth": {
+		"frame_3": {
 			"frame": {
 				"x": 1,
-				"y": 121,
-				"w": 424,
-				"h": 175
+				"y": 108,
+				"w": 96,
+				"h": 105
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 424,
-				"h": 175
+				"w": 96,
+				"h": 105
 			},
 			"sourceSize": {
-				"w": 424,
-				"h": 175
+				"w": 96,
+				"h": 105
 			}
 		},
-		"minecar": {
+		"frame_4": {
 			"frame": {
-				"x": 1,
-				"y": 298,
-				"w": 138,
-				"h": 136
+				"x": 99,
+				"y": 108,
+				"w": 96,
+				"h": 105
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 138,
-				"h": 136
+				"w": 96,
+				"h": 105
 			},
 			"sourceSize": {
-				"w": 138,
-				"h": 136
+				"w": 96,
+				"h": 105
 			}
 		},
-		"text_minebag": {
+		"tips_1": {
 			"frame": {
-				"x": 141,
-				"y": 298,
-				"w": 82,
-				"h": 45
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 82,
-				"h": 45
-			},
-			"sourceSize": {
-				"w": 82,
-				"h": 45
-			}
-		},
-		"time": {
-			"frame": {
-				"x": 225,
-				"y": 298,
-				"w": 66,
-				"h": 40
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 66,
-				"h": 40
-			},
-			"sourceSize": {
-				"w": 66,
-				"h": 40
-			}
-		},
-		"work": {
-			"frame": {
-				"x": 427,
+				"x": 197,
 				"y": 1,
-				"w": 166,
-				"h": 188
+				"w": 51,
+				"h": 105
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 166,
-				"h": 188
+				"w": 51,
+				"h": 105
 			},
 			"sourceSize": {
-				"w": 166,
-				"h": 188
+				"w": 51,
+				"h": 105
 			}
 		},
-		"work_icon": {
+		"tips_2": {
 			"frame": {
-				"x": 427,
-				"y": 191,
-				"w": 123,
-				"h": 108
+				"x": 197,
+				"y": 108,
+				"w": 51,
+				"h": 105
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 123,
-				"h": 108
+				"w": 51,
+				"h": 105
 			},
 			"sourceSize": {
-				"w": 123,
-				"h": 108
+				"w": 51,
+				"h": 105
+			}
+		},
+		"tips_3": {
+			"frame": {
+				"x": 250,
+				"y": 1,
+				"w": 51,
+				"h": 105
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 51,
+				"h": 105
+			},
+			"sourceSize": {
+				"w": 51,
+				"h": 105
+			}
+		},
+		"tips_4": {
+			"frame": {
+				"x": 250,
+				"y": 108,
+				"w": 51,
+				"h": 105
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 51,
+				"h": 105
+			},
+			"sourceSize": {
+				"w": 51,
+				"h": 105
 			}
 		}
 	},
@@ -167,8 +167,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 594,
-			"h": 435
+			"w": 302,
+			"h": 214
 		},
 		"scale": "1"
 	}
