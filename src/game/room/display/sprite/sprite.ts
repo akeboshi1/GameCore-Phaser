@@ -1,6 +1,6 @@
 import { Helpers } from "game-capsule";
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { AnimationQueue, RunningAnimation } from "structure";
+import { AnimationQueue, AvatarSuit, AvatarSuitType, RunningAnimation } from "structure";
 import { IAvatar, IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
 import { IPos, LogicPos, LogicPoint, Logger, Direction, EventDispatcher } from "utils";
@@ -24,6 +24,7 @@ export interface ISprite {
     currentCollisionPoint: LogicPoint;
     hasInteractive: boolean;
     attrs: op_def.IStrPair[];
+    avatarSuits: AvatarSuit[];
     animationQueue: AnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
@@ -46,6 +47,8 @@ export interface ISprite {
     setAnimationQueue(queue: AnimationQueue[]);
     setDirection(val);
     setDisplayInfo(val);
+    updateAttr(attrs: op_def.IStrPair[]);
+    updateAvatarSuits(attrs: op_def.IStrPair[]): boolean;
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
@@ -81,7 +84,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public originCollisionPoint: LogicPoint;
 
     public attrs: op_def.IStrPair[];
-
+    public avatarSuits: AvatarSuit[];
     public animationQueue: AnimationQueue[];
 
     public mountSprites: number[];
@@ -93,9 +96,11 @@ export class Sprite extends EventDispatcher implements ISprite {
             const point = obj.point3f;
             this.pos = new LogicPos(point.x, point.y, point.z);
         }
-        this.attrs = obj.attrs;
-        if (obj.avatar) {
-            this.updateAvatar(obj.avatar);
+        this.updateAttr(obj.attrs);
+        this.updateAvatarSuits(obj.attrs);
+        this.avatar = this.avatar || obj.avatar;
+        if (this.avatar) {
+            this.updateAvatar(this.avatar);
         }
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
@@ -189,7 +194,19 @@ export class Sprite extends EventDispatcher implements ISprite {
 
         return this;
     }
-
+    public updateAvatarSuits(attrs: op_def.IStrPair[]) {
+        const suits: AvatarSuit[] = this.getAvatarSuits(attrs);
+        if (suits) {
+            if (suits.length > 0) {
+                this.avatarSuits = suits;
+                this.avatar = AvatarSuitType.createHasBaseAvatar(suits);
+            } else {
+                this.avatar = AvatarSuitType.createBaseAvatar();
+            }
+            return true;
+        }
+        return false;
+    }
     public updateAvatar(avatar: op_gameconfig.IAvatar) {
         if (this.displayInfo) {
             this.displayInfo.destroy();
@@ -197,6 +214,22 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.avatar = { id: avatar.id };
         this.avatar = Object.assign(this.avatar, avatar);
         this.displayInfo = new DragonbonesModel(this);
+    }
+    public getAvatarSuits(attrs: op_def.IStrPair[]) {
+        let suits: AvatarSuit[];
+        if (attrs) {
+            for (const attr of attrs) {
+                if (attr.key === "PKT_AVATAR_SUITS") {
+                    suits = JSON.parse(attr.value);
+                    break;
+                }
+            }
+        }
+        return suits;
+    }
+
+    public updateAttr(attrs: op_def.IStrPair[]) {
+        this.attrs = attrs;
     }
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
@@ -234,11 +267,6 @@ export class Sprite extends EventDispatcher implements ISprite {
     public setMountSprites(ids: number[]) {
         this.mountSprites = ids;
     }
-
-    public updateAttr(attrs: op_def.IStrPair[]) {
-        this.attrs = attrs;
-    }
-
     public setAnimationName(name: string) {
         if (this.displayInfo) {
             this.displayInfo.animationName = name;

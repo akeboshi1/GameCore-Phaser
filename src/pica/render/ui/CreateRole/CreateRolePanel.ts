@@ -1,6 +1,6 @@
 import { InputText, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { Font, i18n } from "utils";
-import { ModuleName } from "structure";
+import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
 import { DragonbonesDisplay, UiManager, BasePanel } from "gamecoreRender";
 
 export class CreateRolePanel extends BasePanel {
@@ -16,7 +16,7 @@ export class CreateRolePanel extends BasePanel {
   private mError: Phaser.GameObjects.Text;
   private mErrorBg: Phaser.GameObjects.Image;
   private dragonbones: DragonbonesDisplay;
-  private avatars: [];
+  private avatars: any[];
   private mCurPageNum: number = 0;
   private mMediator: any;
 
@@ -33,7 +33,8 @@ export class CreateRolePanel extends BasePanel {
 
   show(param: any) {
     if (param) {
-      this.avatars = param.avatars;
+      // this.avatars = param.avatars;
+      this.avatars = this.creatAvatars(param);
     }
     super.show(param);
   }
@@ -257,7 +258,21 @@ export class CreateRolePanel extends BasePanel {
     }
     super.destroy();
   }
-
+  private creatAvatars(content: any) {
+    const suitGroups = content.avatarSuits;
+    const avatars: any[] = [];
+    for (const group of suitGroups) {
+      const suits: AvatarSuit[] = [];
+      for (const item of group.avatarSuit) {
+        const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, sn: item.sn };
+        suits.push(suit);
+      }
+      const avatar = AvatarSuitType.createHasBaseAvatar(suits);
+      avatars.push(avatar);
+    }
+    content.avatars = avatars;
+    return avatars;
+  }
   private onRandomNameHandler() {
     this.mediator.randomName();
     this.inputText.setBlur();
@@ -265,8 +280,7 @@ export class CreateRolePanel extends BasePanel {
 
   private onSubmitHandler() {
     // this.emit("submit", this.inputText.text, this.avatars[this.mCurPageNum]);
-    this.mediator.submit(this.inputText.text, this.avatars[this.mCurPageNum]);
-    // this.mediator.submit("", this.avatars[this.mCurPageNum]);
+    this.mediator.submit(this.inputText.text, this.mCurPageNum);
     this.inputText.setBlur();
     if (this.mError) {
       this.mError.setVisible(false);

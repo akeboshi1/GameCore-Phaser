@@ -15,16 +15,16 @@ export class CreateRoleMediator extends BasicMediator {
   show(param?: any) {
     if (param) this.mShowData = param;
     if (this.mPanelInit && this.mShow) {
-        this._show();
-        return;
+      this._show();
+      return;
     }
     this.mShow = true;
     this.__exportProperty(() => {
-        this.game.peer.render.showCreateRolePanel(param).then(() => {
-            this.mView = this.game.peer.render[this.key];
-            this.panelInit();
-        });
-        this.mediatorExport();
+      this.game.peer.render.showCreateRolePanel(param).then(() => {
+        this.mView = this.game.peer.render[this.key];
+        this.panelInit();
+      });
+      this.mediatorExport();
     });
   }
 
@@ -32,8 +32,8 @@ export class CreateRoleMediator extends BasicMediator {
     this.mCreateRole.onRandomNameHandler();
   }
 
-  submit(name: string, avatar: op_gameconfig.IAvatar) {
-    this.mCreateRole.onSubmitHandler(name, avatar);
+  submit(name: string, index: number, avatar: op_gameconfig.IAvatar) {
+    this.mCreateRole.onSubmitHandler(name, index, avatar);
   }
 
   destroy() {
@@ -98,12 +98,13 @@ class CreateRole extends PacketHandler {
     connection.send(packet);
   }
 
-  public onSubmitHandler(name: string, avatar: op_gameconfig.IAvatar) {
+  public onSubmitHandler(name: string, index: number, avatar?: op_gameconfig.IAvatar) {
     const connection = this.game.connection;
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CREATE_ROLE);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CREATE_ROLE = packet.content;
     content.name = name;
-    content.avatar = avatar;
+    // content.avatar = avatar;
+    content.index = index;
     connection.send(packet);
   }
 

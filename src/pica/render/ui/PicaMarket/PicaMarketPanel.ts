@@ -2,9 +2,10 @@ import { ElementDetail } from "./ElementDetail";
 import { MarketItem } from "./item";
 import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
-import { ModuleName, RENDER_PEER } from "structure";
-import { Font, Handler, i18n } from "utils";
+import { AvatarSuitType, ModuleName, RENDER_PEER } from "structure";
+import { Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { op_client } from "pixelpai_proto";
 export class PicaMarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
   private mCloseBtn: Phaser.GameObjects.Image;
@@ -429,7 +430,12 @@ export class PicaMarketPanel extends BasePanel {
   private onSelectItemHandler(prop: any) {// op_client.IMarketCommodity
     this.mSelectItem.setProp(prop);
     this.mSelectItem.setData("propdata", prop);
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryPropResource", prop);
+    if (!prop.suitType || prop.suitType === "") {
+      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryPropResource", prop);
+    } else {
+      const content = this.getCommodityResource(prop);
+      this.setCommodityResource(content);
+    }
   }
 
   private onBuyItemHandler(prop: any) {// op_def.IOrderCommodities
@@ -462,5 +468,10 @@ export class PicaMarketPanel extends BasePanel {
   }
   private showPropFun(config: any) {// PicPropFunConfig
     this.render.mainPeer.showMediator(ModuleName.PICAPROPFUN_NAME, true, config);
+  }
+  private getCommodityResource(data: op_client.IMarketCommodity) {
+    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn);
+    return content;
   }
 }

@@ -34,6 +34,7 @@ export enum AvatarSlotType {
     HeadMous = "head_mous_$",
     HeadHair = "head_hair_$",
     HeadHats = "head_hats_$",
+    HeadFace = "head_face_$"
 }
 
 export enum AvatarPartType {
@@ -60,6 +61,7 @@ export enum AvatarPartType {
     HeadHair = "head_hair_#_$",
     HeadHairBack = "head_hair_#_$_back",
     HeadHats = "head_hats_#_$",
+    HeadFace = "head_face_#_$",
     HeadMask = "head_mask_#_$",
     HeadMous = "head_mous_#_$",
     HeadSpec = "head_spec_#_$",
@@ -279,7 +281,26 @@ export class DragonbonesDisplay extends DisplayObject {
         this.emit("initialized");
         this.render.renderEmitter("dragonBones_initialized");
     }
+    protected clearArmatureSlot() {
+        const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
+        slotList.forEach((slot: dragonBones.Slot) => {
+            if (slot) slot.display.visible = false;
+        });
+    }
+    protected showPlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
+        this.add(this.mPlaceholder);
+    }
 
+    protected closePlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = undefined;
+    }
     private loadDragonBones(resUrl: string, pngUrl: string, jsonUrl: string, dbbinUrl: string) {
         this.scene.load.dragonbone(
             this.mDragonbonesName,
@@ -297,13 +318,6 @@ export class DragonbonesDisplay extends DisplayObject {
         // );
         this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
         this.scene.load.start();
-    }
-
-    private clearArmatureSlot() {
-        const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
-        slotList.forEach((slot: dragonBones.Slot) => {
-            if (slot) slot.display.visible = false;
-        });
     }
 
     private clearReplaceArmature() {
@@ -717,6 +731,16 @@ export class DragonbonesDisplay extends DisplayObject {
             });
         }
 
+        // 新加的插槽
+        if (avater.headFaceId) {
+            this.replaceArr.push({
+                slot: AvatarSlotType.HeadFace,
+                part: AvatarPartType.HeadFace,
+                dir: 3,
+                skin: avater.headFaceId,
+            });
+        }
+
         if (avater.farmShldId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.ShldFarm,
@@ -1009,22 +1033,6 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         return false;
     }
-
-    private showPlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
-        this.add(this.mPlaceholder);
-    }
-
-    private closePlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = undefined;
-    }
-
     private onFileLoadHandler(key: string, type: string) {
         // if (!file) {
         //     return;

@@ -15,6 +15,7 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
     }
 
     public load(resName: string, resUrl: string, data?: string, compl?: Handler) {
+        this.destroy();
         this.resName = resName ? resName : resUrl;
         this.resUrl = resUrl;
         this.complHandler = compl;

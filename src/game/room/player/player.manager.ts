@@ -165,7 +165,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             if (player) {
                 //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
-                    player.model = new Sprite(sprite);
+                    player.model = new Sprite(sprite, content.nodeType);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     player.updateModel(sprite);
                 }
@@ -212,7 +212,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
-            this._add(new Sprite(sprite));
+            this._add(new Sprite(sprite,content.nodeType));
             // MineCarSimulateData.addSimulate(this.roomService, sprite);
         }
     }

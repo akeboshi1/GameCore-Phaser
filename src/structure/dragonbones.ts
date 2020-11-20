@@ -17,6 +17,7 @@ export interface IAvatar {
     headHatsId?: (string | null);
     headMaskId?: (string | null);
     headSpecId?: (string | null);
+    headFaceId?: (string | null);
     bodyBaseId?: (string | null);
     bodyCostId?: (string | null);
     bodyDresId?: (string | null);
