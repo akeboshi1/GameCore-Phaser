@@ -131,12 +131,39 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     createManager() {
-        this.mUiManager = new PicaRenderUiManager(this);
-        this.mCameraManager = new CamerasManager(this);
+        if(!this.mUiManager)this.mUiManager = new PicaRenderUiManager(this);
+        if(!this.mCameraManager)this.mCameraManager = new CamerasManager(this);
         this.mLocalStorageManager = new LocalStorageManager();
         this.mSceneManager = new SceneManager(this);
         this.mInputManager = new InputManager(this);
         this.mDisplayManager = new DisplayManager(this);
+    }
+
+    destroyManager() {
+        if (this.mUiManager) {
+            this.mUiManager.destroy();
+            this.mUiManager = undefined;
+        }
+        if (this.mCameraManager) {
+            this.mCameraManager.destroy();
+            this.mCameraManager = undefined;
+        }
+        if (this.mLocalStorageManager) {
+            this.mLocalStorageManager.destroy();
+            this.mLocalStorageManager = undefined;
+        }
+        if (this.mSceneManager) {
+            this.mSceneManager.destroy();
+            this.mSceneManager = undefined;
+        }
+        if (this.mInputManager) {
+            this.mInputManager.destroy();
+            this.mInputManager = undefined;
+        }
+        if (this.mDisplayManager) {
+            this.mDisplayManager.destroy();
+            this.mDisplayManager = undefined;
+        }
     }
 
     enterGame() {
@@ -762,10 +789,11 @@ export class Render extends RPCPeer implements GameMain {
 
     }
 
-    @Export()
-    public clearGame(callBack?: Function): Promise<void> {
+    @Export([webworker_rpc.ParamType.boolean])
+    public clearGame(boo: boolean): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.mGame) {
+                this.destroyManager();
                 this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
                 this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
@@ -779,7 +807,13 @@ export class Render extends RPCPeer implements GameMain {
                 this.mGame.plugins.removeScenePlugin("DragonBones");
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
-                    if (callBack) callBack();
+                    if (boo) {
+                        this.newGame().then(() => {
+                            this.createManager();
+                            resolve();
+                        });
+                        return;
+                    }
                     resolve();
                 });
                 this.mGame.destroy(true);

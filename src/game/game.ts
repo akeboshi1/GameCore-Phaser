@@ -327,9 +327,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     // this.mAccount.refreshToken(response);
                     this.loginEnterWorld();
                 } else {
-                    this.mUIManager.showMed("Login");
-                    // this.peer.render.login();
-                    return;
+                    if (this.mConfig && !this.mConfig.auth_token) return this.mUIManager.showMed("CreateRole");
+                    this.login();
                 }
             });
         // });
@@ -438,36 +437,42 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private _onGotoAnotherGame(gameId, worldId, sceneId, loc) {
-        this.clearGame();
-        this.isPause = false;
-        if (this.connect) {
-            this.connect.closeConnect();
-        }
-        if (this.mClock) {
-            this.mClock.destroy();
-            this.mClock = null;
-        }
-        this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc);
-        this.connect.addPacketListener(this);
-        const gateway: ServerAddress = this.mConfig.server_addr;
-        if (gateway) {
-            this.connect.startConnect(gateway);
-        }
-        this.mClock = new Clock(this.connect, this.peer);
-        // 告知render进入其他game
-        this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0);
+        this.clearGame(true).then(() => {
+            this.isPause = false;
+            if (this.connect) {
+                this.connect.closeConnect();
+            }
+            if (this.mClock) {
+                this.mClock.destroy();
+                this.mClock = null;
+            }
+            this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc);
+            this.connect.addPacketListener(this);
+            const gateway: ServerAddress = this.mConfig.server_addr;
+            if (gateway) {
+                this.connect.startConnect(gateway);
+            }
+            this.mClock = new Clock(this.connect, this.peer);
+            // 告知render进入其他game
+            this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0);
+        });
     }
 
-    private clearGame(): void {
-        if (this.mClock) {
-            this.mClock.destroy();
-            this.mClock = null;
-        }
-        if (this.roomManager) this.roomManager.destroy();
-        if (this.uiManager) this.uiManager.destroy();
-        if (this.mElementStorage) this.mElementStorage.destroy();
-        if (this.mLoadingManager) this.mLoadingManager.destroy();
-        if (this.mDataManager) this.mDataManager.clear();
+    private clearGame(bool: boolean = false): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.renderPeer.clearGame(bool).then(() => {
+                if (this.mClock) {
+                    this.mClock.destroy();
+                    this.mClock = null;
+                }
+                if (this.roomManager) this.roomManager.destroy();
+                if (this.uiManager) this.uiManager.destroy();
+                if (this.mElementStorage) this.mElementStorage.destroy();
+                if (this.mLoadingManager) this.mLoadingManager.destroy();
+                if (this.mDataManager) this.mDataManager.clear();
+                resolve();
+            });
+        });
     }
 
     private async onInitVirtualWorldPlayerInit(packet: PBpacket) {

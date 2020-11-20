@@ -17,4 +17,7 @@ export class LocalStorageManager {
     clear() {
         localStorage.clear();
     }
+    destroy() {
+        this.clear();
+    }
 }

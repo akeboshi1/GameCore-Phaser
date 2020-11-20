@@ -292,4 +292,22 @@ export class DisplayManager {
         display.showNickname(name);
         // if (display) display.showNickname(name);
     }
+
+    public destroy() {
+        if (this.displays) {
+            this.displays.forEach((display) => {
+                if (display) display.destroy();
+            });
+            this.displays.clear();
+            this.displays = undefined;
+        }
+
+        if (this.scenerys) {
+            this.scenerys.forEach((block) => {
+                if (block) block.destroy();
+            });
+            this.scenerys.clear();
+            this.scenerys = undefined;
+        }
+    }
 }

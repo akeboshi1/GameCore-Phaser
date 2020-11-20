@@ -43,7 +43,7 @@ export class UiManager {
     public resize(width: number, height: number) {
         if (this.mPanelMap) {
             this.mPanelMap.forEach((panel: BasePanel) => {
-                if (panel.isShow) panel.resize();
+                if (panel.isShow()) panel.resize();
             });
         }
     }

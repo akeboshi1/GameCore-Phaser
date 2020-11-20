@@ -394,7 +394,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mActorData = null;
         }
         if (this.mStateMap) this.mStateMap = null;
-        this.mGame.peer.render.clearGame();
         // if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
@@ -429,7 +428,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public destroy() {
-        this.mGame.peer.destroy();
         if (this.connection) this.connection.removePacketListener(this);
         this.clear();
         // if (this.mScene) {

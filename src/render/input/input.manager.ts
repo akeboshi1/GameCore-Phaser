@@ -24,4 +24,7 @@ export class InputManager {
     resize(width: number, height: number) {
         this.mMouseManager.resize(width, height);
     }
+
+    public destroy() {
+    }
 }

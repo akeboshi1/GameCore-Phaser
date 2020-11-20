@@ -171,6 +171,10 @@ export class SceneManager {
         return this.render.game.scene.getScene(name).scene.isActive();
     }
 
+    public destroy() {
+        if (this.mCurSceneName) this.mCurSceneName = undefined;
+    }
+
     private sceneCallback(scene: Phaser.Scene) {
         return Promise.resolve();
     }
