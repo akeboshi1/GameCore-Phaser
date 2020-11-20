@@ -16,7 +16,7 @@ export class PicaFriendMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on("hide", this.onHidePanel, this);
+        this.game.emitter.on("hide", this.hide, this);
         this.game.emitter.on(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.game.emitter.on(EventType.UNFOLLOW, this.onUnfollowHandler, this);
         this.game.emitter.on(EventType.FOLLOW, this.onFollowHandler, this);
@@ -31,8 +31,7 @@ export class PicaFriendMediator extends BasicMediator {
     }
 
     hide() {
-        super.hide();
-        this.game.emitter.off("hide", this.onHidePanel, this);
+        this.game.emitter.off("hide", this.hide, this);
         this.game.emitter.off(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.game.emitter.off(EventType.UNFOLLOW, this.onUnfollowHandler, this);
         this.game.emitter.off(EventType.FOLLOW, this.onFollowHandler, this);
@@ -44,18 +43,7 @@ export class PicaFriendMediator extends BasicMediator {
         this.game.emitter.off(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
         this.game.emitter.off(EventType.REQ_RELATION, this.onReRelationHandler, this);
         this.game.emitter.off(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
-    }
-
-    destroy() {
-        if (this.PicaFriend) {
-            this.PicaFriend.destroy();
-            this.PicaFriend = undefined;
-        }
-        if (this.mView) {
-            this.mView.hide();
-            this.mView = undefined;
-        }
-        super.destroy();
+        super.hide();
     }
 
     fetchCurrentFriend() {
@@ -224,13 +212,5 @@ export class PicaFriendMediator extends BasicMediator {
 
     private onReqPlayerListHanlder(ids) {
         this.PicaFriend.fetchFriendList(ids);
-    }
-
-    private onHidePanel() {
-        if (this.mView) {
-            this.mView.hide();
-        }
-        this.mView = undefined;
-        this.hide();
     }
 }
