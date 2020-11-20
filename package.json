@@ -4,7 +4,7 @@
     "main": "release/js/tooqing.js",
     "scripts": {
         "dev": "webpack-dev-server --mode development",
-        "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress && yarn mv",
+        "build": "yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
         "ver": "genversion version.js",
         "mv-dev": "move-cli dist/heartBeatWorker.js dist/js/heartBeatWorker.js",
