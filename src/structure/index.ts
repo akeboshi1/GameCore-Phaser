@@ -1,3 +1,4 @@
+
 export { RunningAnimation, AnimationQueue } from "./animation";
 export { PI_EXTENSION_REGEX, HTTP_REGEX } from "./constants";
 export { IDisplay } from "./display";
@@ -14,4 +15,5 @@ export { ModuleName } from "./module.name";
 export { FriendRelation, FriendRelationEnum, FriendData, FriendChannel, MenuData } from "./friend.relation";
 export { ChineseUnit } from "./chinese.unit";
 export { TimerCountDown } from "./TimerCountDown";
+export {AvatarSuitType, SuitAlternativeType,AvatarSuit } from "./avatar.suit.type";
 export * from "./message.type";

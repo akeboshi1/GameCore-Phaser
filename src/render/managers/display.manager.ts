@@ -67,7 +67,7 @@ export class DisplayManager {
         });
     }
 
-    public addDragonbonesDisplay(data: IFramesModel | IDragonbonesModel): void {
+    public addDragonbonesDisplay(data: IDragonbonesModel): void {
         if (!data) {
             return;
         }
@@ -76,8 +76,13 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        const display: DisplayObject = new DragonbonesDisplay(scene, this.render, data.id, NodeType.CharacterNodeType);
-        this.displays.set(data.id, display);
+        let display: DisplayObject;
+        if (!this.displays.has(data.id)) {
+            display = new DragonbonesDisplay(scene, this.render, data.id, NodeType.CharacterNodeType);
+            this.displays.set(data.id, display);
+        } else {
+            display = this.displays.get(data.id);
+        }
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
@@ -91,8 +96,13 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        const display: DisplayObject = new FramesDisplay(scene, this.render, data.id, NodeType.TerrainNodeType);
-        this.displays.set(data.id, display);
+        let display: DisplayObject;
+        if (!this.displays.has(data.id)) {
+            display = new FramesDisplay(scene, this.render, data.id, NodeType.TerrainNodeType);
+            this.displays.set(data.id, display);
+        } else {
+            display = this.displays.get(data.id);
+        }
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
@@ -106,8 +116,13 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        const display: DisplayObject = new FramesDisplay(scene, this.render, data.id, NodeType.ElementNodeType);
-        this.displays.set(data.id, display);
+        let display: DisplayObject;
+        if (!this.displays.has(data.id)) {
+            display = new FramesDisplay(scene, this.render, data.id, NodeType.ElementNodeType);
+            this.displays.set(data.id, display);
+        } else {
+            display = this.displays.get(data.id);
+        }
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }

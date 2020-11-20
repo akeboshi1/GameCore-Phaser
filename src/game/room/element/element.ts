@@ -176,6 +176,10 @@ export class Element extends BlockObject implements IElement {
         this.mDisplayInfo = displayInfo;
         this.loadDisplayInfo();
         this.addDisplay();
+        if (!this.mCreatedDisplay) {
+            this.mCreatedDisplay = true;
+            this.addToBlock();
+        }
     }
 
     public setModel(model: ISprite) {
@@ -215,9 +219,15 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
-        if (model.hasOwnProperty("avatar")) {
+        if (this.mModel.updateAvatarSuits(model.attrs)) {
+            this.mModel.updateAvatar(this.mModel.avatar);
+            this.load(this.mModel.displayInfo);
+        } else if (model.hasOwnProperty("avatar")) {
             this.mModel.updateAvatar(model.avatar);
             this.load(this.mModel.displayInfo);
+        }
+        if (model.hasOwnProperty("attrs")) {
+            this.model.updateAttr(model.attrs);
         }
         if (model.display && model.animations) {
             this.mModel.updateDisplay(model.display, model.animations);
@@ -679,7 +689,6 @@ export class Element extends BlockObject implements IElement {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
             this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo as IFramesModel);
         }
-        this.addToBlock();
         return this;
     }
 
@@ -715,10 +724,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected addDisplay() {
-        if (!this.mCreatedDisplay) {
-            this.mCreatedDisplay = true;
-            this.createDisplay();
-        }
+        // if (!this.mCreatedDisplay) {
+        //     this.mCreatedDisplay = true;
+        //     this.createDisplay();
+        // }
+        this.createDisplay();
         // this.mElementManager.roomService.game.peer.render.createDisplay();
         // this.createDisplay();
         // const room = this.roomService;
@@ -806,7 +816,7 @@ export class Element extends BlockObject implements IElement {
 
     protected onCheckDirection(params: any): number {
         if (typeof params !== "number") {
-            return ;
+            return;
         }
         // 重叠
         if (params > 90) {

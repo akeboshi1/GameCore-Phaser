@@ -2,8 +2,9 @@ import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCode
 import { BasePanel, CheckboxGroup, DynamicImage, InputPanel, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { ModuleName, RENDER_PEER } from "structure";
+import { AvatarSuitType, ModuleName, RENDER_PEER, SuitAlternativeType } from "structure";
 import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
+import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 
 export class PicaBagPanel extends BasePanel {
   private commonkey = "common_key";
@@ -34,7 +35,9 @@ export class PicaBagPanel extends BasePanel {
   private categoryType: any;// op_pkt_def.PKT_PackageType
   private mSelectedItemData: any[] = [];// op_client.ICountablePackageItem
   private mSelectedItems: Item[] = [];
-  private dressAvatarIDS: string[];
+  private dressAvatarIDS: string[] = [];
+  private dressAvatarDatas: op_client.ICountablePackageItem[] = [];
+  private isInitAvatar: boolean = false;
   constructor(uiManager: UiManager, sceneType: any) {// sceneType: op_def.SceneTypeEnum
     super(uiManager.scene, uiManager.render);
     this.key = ModuleName.PICABAG_NAME;
@@ -123,7 +126,6 @@ export class PicaBagPanel extends BasePanel {
   public setProp(props: any[], isupdate: boolean = false) {// op_client.ICountablePackageItem
     props = !props ? [] : props;
     this.mSelectedItems.length = 0;
-    if (!isupdate) this.mSelectedItemData.length = 0;
     const len = props.length;
     if (len < 24) {
       props = props.concat(new Array(24 - len));
@@ -131,30 +133,62 @@ export class PicaBagPanel extends BasePanel {
     if (!isupdate) this.mPropGrid.setT(0);
     this.mPropGrid.setItems(props);
     if (this.categoryType !== 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
+      this.mSelectedItemData.length = 0;
       if (this.mSelectedItems.length === 0) {
         this.mPropGrid.setT(0);
-        this.mSelectedItemData.length = 0;
         const cell = this.mPropGrid.getCell(0);
         this.onSelectItemHandler(cell.container);
       }
     } else {
-      this.mSelectedItemData.length = 0;
-      for (const prop of props) {
-        if (prop && prop.rightSubscript === 1) {// op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK
-          this.mSelectedItemData.push(prop);
+      if (this.dressAvatarDatas.length === 0) {
+        for (const prop of props) {
+          if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
+            this.dressAvatarDatas.push(prop);
+          }
         }
-      }
-      if (this.mSelectedItemData.length === 0) {
-        this.displayAvatar();
-      } else {
-        this.updateAvatarItems();
+        if (this.isInitAvatar) {
+          this.initBaseAvatar();
+        }
+        this.isInitAvatar = true;
       }
     }
   }
 
   public setDressAvatarIds(ids: string[]) {
     this.dressAvatarIDS = ids;
-    this.updateAvatarItems();
+    if (this.isInitAvatar) {
+      this.initBaseAvatar();
+    }
+    this.isInitAvatar = true;
+  }
+
+  public initBaseAvatar() {
+    if (this.isInitAvatar) {
+      const arr = [];
+      for (const id of this.dressAvatarIDS) {
+        for (const avatar of this.dressAvatarDatas) {
+          if (avatar.id === id) {
+            arr.push(avatar);
+            this.mSelectedItemData.push(avatar);
+          }
+        }
+      }
+      this.dressAvatarDatas.length = 0;
+      this.dressAvatarDatas = arr;
+      this.displayAvatar();
+      this.mDetailBubble.visible = false;
+    } else {
+      let property = null;
+      this.render.mainPeer.getUserData_PlayerProperty()
+        .then((val) => {
+          property = val;
+          return this.serviceTimestamp;
+        })
+        .then((t) => {
+          this.mDetailBubble.setProp(null, Math.floor(t / 1000), property);
+          this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+        });
+    }
   }
 
   public displayAvatar(content?: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
@@ -172,7 +206,8 @@ export class PicaBagPanel extends BasePanel {
           }
         }
         for (const item of this.mSelectedItemData) {
-          const dataAvatar = item.avatar;
+          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn);
+          // const dataAvatar = item.avatar;
           for (const key in dataAvatar) {
             if (dataAvatar.hasOwnProperty(key)) {
               const element = dataAvatar[key];
@@ -182,6 +217,7 @@ export class PicaBagPanel extends BasePanel {
         }
         const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
         this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
+        Logger.getInstance().error("测试调用+++++装扮重置问题", this.mSelectedItemData);
       });
   }
   public setSelectedResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
@@ -347,7 +383,7 @@ export class PicaBagPanel extends BasePanel {
     for (const key in topCategorys) {
       const index = Number(key);
       const category = topCategorys[index];
-      const button = new TabButton(this.scene, this.key, "tab_normal", "tab_down", topBtnTexts[index]);
+      const button = new TabButton(this.scene, this.key, "tab_normal", "tab_normal", topBtnTexts[index]);
       button.setTextStyle(topStyle);
       button.setData("data", category);
       button.setSize(topCapW, topCapH);
@@ -439,74 +475,56 @@ export class PicaBagPanel extends BasePanel {
     return btn;
   }
 
-  private updateAvatarItems() {
-    if (this.dressAvatarIDS && this.mSelectedItemData.length > 0) {
-      const arr = [];
-      for (const id of this.dressAvatarIDS) {
-        for (const avatar of this.mSelectedItemData) {
-          if (avatar.id === id) {
-            arr.push(avatar);
-          }
-        }
-      }
-      this.mSelectedItemData.length = 0;
-      this.mSelectedItemData = arr;
-      this.displayAvatar();
-    } else {
-      let property = null;
-      this.render.mainPeer.getUserData_PlayerProperty()
-        .then((val) => {
-          property = val;
-          return this.serviceTimestamp;
-        })
-        .then((t) => {
-          this.mDetailBubble.setProp(null, Math.floor(t / 1000), property);
-          this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
-        });
+  private setSelectAvatarSuitItem(data: op_client.ICountablePackageItem, cell: Item) {
+    const suit_type = data.suitType;
+    if (!suit_type) {
+      Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
+      return;
     }
-  }
-  private replaceSelectItem(data: any, cell: Item) {// op_client.ICountablePackageItem
-    if (this.categoryType !== 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-      if (this.mSelectedItems.length > 0) {
-        this.mSelectedItems[0].isSelect = false;
-      }
-      this.mSelectedItemData.length = 0;
-      this.mSelectedItems.length = 0;
-      this.mSelectedItemData.push(data);
-      this.mSelectedItems.push(cell);
-      cell.isSelect = true;
-    } else {
-      const dataAvatar = data.avatar;
-      if (!dataAvatar) {
-        Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
-        return;
-      }
-      const removeArr = [];
-      for (const item of this.mSelectedItemData) {
-        const avatar = item.avatar;
-        if (this.isContainProperty(avatar, dataAvatar)) {
-          removeArr.push(item);
-        }
-      }
-      for (const item of removeArr) {
-        const index = this.mSelectedItemData.indexOf(item);
-        this.mSelectedItemData.splice(index, 1);
-        for (let i = 0; i < this.mSelectedItems.length; i++) {
-          const cell1 = this.mSelectedItems[i];
-          if (cell1.propData === item) {
-            cell1.isSelect = false;
-            this.mSelectedItems.splice(i, 1);
-            break;
-          }
-        }
-      }
-
-      this.mSelectedItemData.push(data);
-      this.mSelectedItems.push(cell);
-      cell.isSelect = true;
+    for (const temp of this.mSelectedItems) {
+      temp.isSelect = false;
     }
+    const removeArr = [];
+    for (const item of this.mSelectedItemData) {
+      if (SuitAlternativeType.checkAlternative(suit_type, item.suitType)) {
+        removeArr.push(item);
+      }
+    }
+    for (const item of removeArr) {
+      const index = this.mSelectedItemData.indexOf(item);
+      this.mSelectedItemData.splice(index, 1);
+      for (let i = 0; i < this.mSelectedItems.length; i++) {
+        const cell1 = this.mSelectedItems[i];
+        if (cell1.propData === item) {
+          this.mSelectedItems.splice(i, 1);
+          break;
+        }
+      }
+    }
+    this.mSelectedItemData.push(data);
+    this.mSelectedItems.push(cell);
+    cell.isSelect = true;
+    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn);
+    content.animations = data.animations;
+    this.setSelectedResource(content);
   }
 
+  private setSelectedItem(data: op_client.ICountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
+    if (this.mSelectedItems.length > 0) {
+      this.mSelectedItems[0].isSelect = false;
+    }
+    this.mSelectedItemData.length = 0;
+    this.mSelectedItems.length = 0;
+    this.mSelectedItemData.push(data);
+    this.mSelectedItems.push(cell);
+    cell.isSelect = true;
+    this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
+    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+    content.display = data.display;
+    content.animations = data.animations;
+    this.setSelectedResource(content);
+  }
   private isContainProperty(obj: any, obj1: any) {
     let canreplace = true;
     for (const key in obj) {
@@ -520,37 +538,21 @@ export class PicaBagPanel extends BasePanel {
     return canreplace;
   }
 
-  private isSelectedItemData(data: any) {// op_client.ICountablePackageItem
+  private isSelectedItemData(data: op_client.ICountablePackageItem) {// op_client.ICountablePackageItem
     if (this.mSelectedItemData.length > 0) {
-      for (const temp of this.mSelectedItemData) {
-        if (temp.indexId === data.indexId) {
-          return true;
-        }
-      }
-    } else {
-      if (data.rightSubscript === 1) return true;// op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK
+      // for (const temp of this.mSelectedItemData) {
+      //   if (temp.indexId === data.indexId) {
+      //     return true;
+      //   }
+      // }
+      const temp = this.mSelectedItemData[this.mSelectedItemData.length - 1];
+      if (temp.indexId === data.indexId) return true;
     }
+    // else {
+    //   if (data.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) return true;
+    // }
 
     return false;
-  }
-  private setSelectedItem(prop: any) {// op_client.ICountablePackageItem
-    this.sellBtn.enable = prop.recyclable;
-    this.useBtn.enable = prop.executable;
-    this.mAdd.enable = (this.mSceneType === 2 || this.mEnableEdit);// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
-    if (this.categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-      this.saveBtn.enable = true;
-      this.resetBtn.enable = true;
-    }
-
-    this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
-    const content = { avatar: null, display: null, animations: null };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
-    if (prop.avatar) {
-      content.avatar = prop.avatar;
-    } else {
-      content.display = prop.display;
-    }
-    content.animations = prop.animations;
-    this.setSelectedResource(content);
   }
 
   private onSelectSubCategoryHandler(gameobject: TextButton) {
@@ -585,7 +587,7 @@ export class PicaBagPanel extends BasePanel {
           this.closeSeach(gameobject);
         }
         this.mSelectedCategeories = category;
-        this.queryPackege();
+        this.queryPackege(true);
       }
       this.mPreCategoryBtn = gameobject;
     }
@@ -605,7 +607,7 @@ export class PicaBagPanel extends BasePanel {
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
     if (this.mSelectedItemData.indexOf(item) !== -1) return;
-
+    this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()
       .then((val) => {
@@ -617,8 +619,16 @@ export class PicaBagPanel extends BasePanel {
         this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
       });
     if (item) {
-      this.replaceSelectItem(item, cell);
-      this.setSelectedItem(item);
+      this.sellBtn.enable = item.recyclable;
+      this.useBtn.enable = item.executable;
+      this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
+      if (this.categoryType === op_pkt_def.PKT_PackageType.AvatarPackage) {
+        this.saveBtn.enable = true;
+        this.resetBtn.enable = true;
+        this.setSelectAvatarSuitItem(item, cell);
+      } else {
+        this.setSelectedItem(item, cell);
+      }
     } else {
       if (this.categoryType !== 2 && this.mSelectedItemData.length === 0) {// op_pkt_def.PKT_PackageType.AvatarPackage
         this.sellBtn.enable = false;
@@ -647,10 +657,7 @@ export class PicaBagPanel extends BasePanel {
 
   private onTopCategoryHandler(item: Button) {
     const categoryType = item.getData("data");
-    const width = this.scaleWidth;
-    this.mSelectedItemData.length = 0;
-    // this.mDetailDisplay.setTexture(this.key, "ghost");
-    // this.mDetailDisplay.setNearest();
+    this.clearCategoryData();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
@@ -673,10 +680,10 @@ export class PicaBagPanel extends BasePanel {
         this.resetBtn.visible = false;
       }
     }
-    this.layoutTopBtn(item);
+    this.setLayoutTopButton(item);
   }
 
-  private layoutTopBtn(button: Button) {
+  private setLayoutTopButton(button: Button) {
     const width = this.scaleWidth;
     let allRadiu = 0;
     for (const btn of this.topBtns) {
@@ -694,6 +701,7 @@ export class PicaBagPanel extends BasePanel {
           color: "#2B4BB5"
         });
         posY = btn.height * 0.5;
+        btn.setFrameNormal("tab_normal");
       } else {
         btn.setTextStyle({
           fontFamily: Font.DEFULT_FONT,
@@ -701,6 +709,7 @@ export class PicaBagPanel extends BasePanel {
           color: "#8B5603"
         });
         posY = btn.height * 0.5 + 2 * this.dpr;
+        btn.setFrameNormal("tab_down");
       }
       const radiu = btn.width * 0.5;
       btn.x = offsetX + radiu;
@@ -708,7 +717,12 @@ export class PicaBagPanel extends BasePanel {
       offsetX += radiu * 2 + 12 * this.dpr;
     }
   }
-
+  private clearCategoryData() {
+    this.mSelectedItemData.length = 0;
+    this.dressAvatarIDS.length = 0;
+    this.dressAvatarDatas.length = 0;
+    this.isInitAvatar = false;
+  }
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
     if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
@@ -716,13 +730,22 @@ export class PicaBagPanel extends BasePanel {
     }
     this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_getCategories", categoryType);
   }
-
+  private getPropResource(data: op_client.ICountablePackageItem) {
+    const resource = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+    if (data.suitType) {
+      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn);
+    } else {
+      resource.display = data.display;
+    }
+    resource.animations = data.animations;
+    return resource;
+  }
   private onSellBtnHandler() {
     this.mCategoryScroll.removeListen();
     if (this.mSelectedItemData.length > 0) {
       const data = this.mSelectedItemData[0];
       const title = i18n.t("common.sold");
-      const resource = { avatar: null, display: null, animations: null };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
+      const resource = this.getPropResource(data);// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
       if (data.avatar) {
         resource.avatar = data.avatar;
       } else {
@@ -745,21 +768,24 @@ export class PicaBagPanel extends BasePanel {
     if (this.mSelectedItemData.length > 0) {
       const data = this.mSelectedItemData[0];
       const title = i18n.t("common.use");
+      const resource = this.getPropResource(data);
       const resultHandler = {
         key: this.key,
         confirmFunc: this.onUsePropsHandler.name,
         cancelFunc: this.onUsePropsFailedHandler.name
       };
-      this.showPropFun({ resultHandler, data, price: false, title });
+      this.showPropFun({ resultHandler, data, price: false, title, resource });
     }
   }
   private onSaveBtnHandler() {
     // if (this.mSelectedItemData.length > 0) {
     this.dressAvatarIDS.length = 0;
+    this.dressAvatarDatas.length = 0;
     const idsArr = [];
     for (const item of this.mSelectedItemData) {
       idsArr.push(item.id);
       this.dressAvatarIDS.push(item.id);
+      this.dressAvatarDatas.push(item);
     }
     this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querySaveAvatar", idsArr);
     // this.queryPackege();
@@ -768,7 +794,13 @@ export class PicaBagPanel extends BasePanel {
 
   private onResetBtnHandler() {
     // if (this.mSelectedItemData.length > 0)
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryResetAvatar");
+    this.mSelectedItemData.length = 0;
+    for (const data of this.dressAvatarDatas) {
+      this.mSelectedItemData.push(data);
+    }
+    this.displayAvatar();
+    this.mPropGrid.refresh();
+    // this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryResetAvatar");
   }
 
   private showSeach(parent: TextButton) {
@@ -931,7 +963,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     this.tipsbg.alpha = 0.6;
     this.tipsText = new BBCodeText(this.scene, 7 * dpr, -tipsHeight + 60 * this.dpr, "", {
       color: "#333333",
-      fontSize: 10 * this.dpr,
+      fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
       lineSpacing: 6 * dpr,
       padding: {
@@ -940,7 +972,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     }).setOrigin(0);
     this.tipsText.setWrapMode("string");
     this.mExpires = new BBCodeText(scene, 7 * dpr, 85 * dpr, "", {
-      fontSize: 10 * this.dpr,
+      fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
     }).setOrigin(0);
     this.add([this.tipsbg, this.tipsText, this.mExpires]);

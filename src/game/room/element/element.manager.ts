@@ -259,7 +259,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             element = this.get(sprite.id);
             if (element) {
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
-                    element.model = new Sprite(sprite);
+                    element.model = new Sprite(sprite,content.nodeType);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     element.updateModel(sprite);
                 }

@@ -24,10 +24,10 @@ export class FramesDisplay extends DisplayObject {
         field = !field ? DisplayField.STAGE : field;
         this.mModel = displayInfo;
         const data = displayInfo;
-        if (!data || !data.gene) return;
+        if (!data || !data.gene) return false;
         const currentDisplay = this.mDisplayDatas.get(field);
         if (currentDisplay && currentDisplay.gene === displayInfo.gene) {
-            return;
+            return false;
         }
         this.mDisplayDatas.set(field, data);
         if (this.scene.textures.exists(data.gene)) {
@@ -52,6 +52,7 @@ export class FramesDisplay extends DisplayObject {
             }
 
         }
+        return true;
     }
 
     public play(animation: RunningAnimation, field?: DisplayField, times?: number) {

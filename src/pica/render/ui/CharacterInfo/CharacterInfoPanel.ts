@@ -6,7 +6,7 @@ import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
-import { FriendRelationEnum, ModuleName } from "structure";
+import { AvatarSuit, AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
 import { BasePanel, DynamicImage, UiManager, DragonbonesDisplay, Render } from "gamecoreRender";
 
 export class CharacterInfoPanel extends BasePanel {
@@ -309,10 +309,11 @@ export class CharacterInfoPanel extends BasePanel {
         const cid = data.cid || 0;
         const levle = data.level && data.level.level ? data.level.level : 0;
         const spaceOffset = this.getspaceStr(1 * this.dpr);
-        if (this.avatar && data.currentAvatar && data.currentAvatar.avatar) {
+        if (this.avatar && data.avatarSuit) {
+            const tempavatar = this.creatAvatar(data.avatarSuit);
             this.avatar.load({
                 id: 0,
-                avatar: data.currentAvatar.avatar
+                avatar: tempavatar
             });
         }
         this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + spaceOffset + current_title);
@@ -560,7 +561,16 @@ export class CharacterInfoPanel extends BasePanel {
         this.mainCon.visible = value;
 
     }
+    private creatAvatar(avatar_suits: op_client.ICountablePackageItem[]) {
+        const suits: AvatarSuit[] = [];
+        for (const item of avatar_suits) {
+            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, sn: item.sn };
+            suits.push(suit);
+        }
+        const avatar = AvatarSuitType.createHasBaseAvatar(suits);
+        return avatar;
 
+    }
     private getRichLabel(text: string, color = "#2B4BB5") {
         const label = `[stroke=${color}][color=${color}]${text}:[/color][/stroke]`;
         return label;

@@ -1,4 +1,4 @@
-import { DragonbonesDisplay, FrameAnimation, FramesDisplay, Render } from "gamecoreRender";
+import { DragonbonesDisplay, FrameAnimation, FramesDisplay, Render, UIDragonbonesDisplay } from "gamecoreRender";
 import { IFramesModel } from "structure";
 import { Handler, Url } from "utils";
 import * as sha1 from "simple-sha1";
@@ -7,11 +7,13 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   private mDisplay: any;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
   private mUrl: string;
   private mImage: Phaser.GameObjects.Image;
-  private mDragonboneDisplay: DragonbonesDisplay;
+  private mDragonboneDisplay: UIDragonbonesDisplay;
   private mFramesDisplay: FramesDisplay;
   private complHandler: Handler;
-  private frameAni: FrameAnimation;
+  private mFrameAni: FrameAnimation;
   private mKeepScale = false;
+  private curLoadType: DisplayLoadType = DisplayLoadType.None;
+  private isLoading: boolean = false;
   constructor(scene: Phaser.Scene, protected render: Render, keepscale: boolean = false) {
     super(scene);
     this.mKeepScale = keepscale;
@@ -35,13 +37,13 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
 
   loadElement(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
+    this.curLoadType = DisplayLoadType.FramesDisplay;
     this.clearDisplay();
     this.mDisplay = content;
     const animation = content.animations;
     if (!this.mFramesDisplay) {
       this.mFramesDisplay = new FramesDisplay(this.scene, undefined, undefined);
     }
-    this.add(this.mFramesDisplay);
     const display = content.display;
     if (display && animation.length > 0) {
       const anis = [];
@@ -66,6 +68,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         const scale = this.mFramesDisplay.scale;
         this.mFramesDisplay.x = -spriteWidth * 0.5 * scale;
         this.mFramesDisplay.y = -spriteHeight * 0.5 * scale;
+        this.addDisplay();
       });
       const animations = new Map();
       for (const aniData of anis) {
@@ -78,35 +81,38 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         discriminator: "FramesModel",
         animationName: aniName
       };
-      this.mFramesDisplay.load(animode);
+      if (!this.mFramesDisplay.load(animode)) {
+        this.addDisplay();
+      }
     }
   }
 
   loadAvatar(content: any, scale: number = 1, offset?: Phaser.Geom.Point) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
+    this.curLoadType = DisplayLoadType.DragonbonesDisplay;
     this.clearDisplay();
     if (!this.mDragonboneDisplay) {
-      this.mDragonboneDisplay = new DragonbonesDisplay(this.scene, this.render);
+      this.mDragonboneDisplay = new UIDragonbonesDisplay(this.scene, this.render);
       if (offset) {
         this.mDragonboneDisplay.x += offset.x;
         this.mDragonboneDisplay.y += offset.y;
       }
     }
+    this.addDisplay();
     this.mDragonboneDisplay.once("initialized", () => {
       this.mDragonboneDisplay.play({ name: "idle", flip: false });
     });
     const dbModel = { id: 0, avatar: content.avatar };
     this.mDragonboneDisplay.load(dbModel);
     this.mDragonboneDisplay.scale = scale;
-    this.add(this.mDragonboneDisplay);
   }
 
   loadUrl(url: string, data?: string) {
     this.mUrl = url;
+    this.curLoadType = DisplayLoadType.Image;
     this.clearDisplay();
     if (!this.mImage) {
       this.mImage = this.scene.make.image(undefined, false);
     }
-    this.add(this.mImage);
     if (this.scene.textures.exists(url)) {
       this.onCompleteHandler();
     } else {
@@ -121,38 +127,36 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
 
   loadSprite(resName: string, textureurl: string, jsonurl: string, keepscale: boolean = false) {
+    this.curLoadType = DisplayLoadType.FrameAnimation;
     this.clearDisplay();
-    if (!this.frameAni) {
-      this.frameAni = new FrameAnimation(this.scene);
-    }
-    if (this.mImage) {
-      this.remove(this.mImage);
+    if (!this.mFrameAni) {
+      this.mFrameAni = new FrameAnimation(this.scene);
     }
     this.scale = 1;
-    this.frameAni.load(resName, textureurl, jsonurl, new Handler(this, () => {
+    this.mFrameAni.load(resName, textureurl, jsonurl, new Handler(this, () => {
       if (keepscale) {
-        const scaleX = this.width / this.frameAni.width;
-        const scaleY = this.height / this.frameAni.height;
-        this.frameAni.scale = scaleX > scaleY ? scaleY : scaleX;
+        const scaleX = this.width / this.mFrameAni.width;
+        const scaleY = this.height / this.mFrameAni.height;
+        this.mFrameAni.scale = scaleX > scaleY ? scaleY : scaleX;
       } else {
-        this.frameAni.scale = 1;
+        this.mFrameAni.scale = 1;
       }
+      this.addDisplay();
     }));
-    this.add(this.frameAni);
   }
-
+  displayLoading(resName: string, textureurl: string, jsonurl: string, keepscale: boolean = false) {
+    this.loadSprite(resName, textureurl, jsonurl, keepscale);
+    this.isLoading = true;
+  }
   setTexture(key: string, frame?: string) {
+    this.curLoadType = DisplayLoadType.Image;
     this.clearDisplay();
     if (!this.mImage) {
-      this.mImage = this.scene.make.image({
-        key,
-        frame
-      }, false);
+      this.mImage = this.scene.make.image({ key, frame }, false);
     } else {
       this.mImage.setTexture(key, frame);
     }
-    this.add(this.mImage);
-    this.emit("show", this.mImage);
+    this.addDisplay();
     if (this.mKeepScale) {
       this.mImage.scale = 1;
       const scaleX = this.width / this.mImage.displayWidth;
@@ -162,6 +166,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       this.mImage.scale = 1;
       this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     }
+    this.emit("show", this.mImage);
   }
 
   setNearest() {
@@ -182,6 +187,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     if (!this.scene) {
       return;
     }
+    this.addDisplay();
     if (this.mDisplay) {
       const display = this.mDisplay.display;
       const ani = this.mDisplay.animations;
@@ -207,18 +213,39 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   private clearDisplay() {
     if (this.mImage) this.remove(this.mImage);
     if (this.mDragonboneDisplay) {
-      this.mDragonboneDisplay.destroy();
-      this.mDragonboneDisplay = undefined;
+      this.remove(this.mDragonboneDisplay);
     }
     if (this.mFramesDisplay) {
-      this.mFramesDisplay.destroy();
-      this.mFramesDisplay = undefined;
+      this.remove(this.mFramesDisplay);
+    }
+    if (this.mFrameAni) {
+      if (!this.isLoading) {
+        this.remove(this.mFrameAni);
+      }
     }
     this.mDisplay = undefined;
-    if (this.frameAni) {
-      this.remove(this.frameAni);
-      this.frameAni.destroy();
-    }
     this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
   }
+  private addDisplay() {
+    if (this.isLoading) {
+      this.remove(this.mFrameAni);
+    }
+    if (this.curLoadType === DisplayLoadType.Image) {
+      this.add(this.mImage);
+    } else if (this.curLoadType === DisplayLoadType.FramesDisplay) {
+      this.add(this.mFramesDisplay);
+    } else if (this.curLoadType === DisplayLoadType.FrameAnimation) {
+      this.add(this.mFrameAni);
+    } else if (this.curLoadType === DisplayLoadType.DragonbonesDisplay) {
+      this.add(this.mDragonboneDisplay);
+    }
+    this.isLoading = false;
+  }
+}
+enum DisplayLoadType {
+  None,
+  Image,
+  DragonbonesDisplay,
+  FramesDisplay,
+  FrameAnimation
 }
