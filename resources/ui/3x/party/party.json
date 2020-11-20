@@ -1,8 +1,28 @@
 {
 	"frames": {
-		"hot": {
+		"footprint": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 61,
+				"h": 57
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 61,
+				"h": 57
+			},
+			"sourceSize": {
+				"w": 61,
+				"h": 57
+			}
+		},
+		"hot": {
+			"frame": {
+				"x": 64,
 				"y": 1,
 				"w": 19,
 				"h": 26
@@ -22,7 +42,7 @@
 		},
 		"hotel": {
 			"frame": {
-				"x": 22,
+				"x": 85,
 				"y": 1,
 				"w": 324,
 				"h": 168
@@ -42,7 +62,7 @@
 		},
 		"list_bg": {
 			"frame": {
-				"x": 348,
+				"x": 411,
 				"y": 1,
 				"w": 73,
 				"h": 120
@@ -60,9 +80,49 @@
 				"h": 120
 			}
 		},
-		"no_party": {
+		"my_home_bg": {
 			"frame": {
 				"x": 1,
+				"y": 123,
+				"w": 74,
+				"h": 120
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 74,
+				"h": 120
+			},
+			"sourceSize": {
+				"w": 74,
+				"h": 120
+			}
+		},
+		"my_house": {
+			"frame": {
+				"x": 411,
+				"y": 123,
+				"w": 61,
+				"h": 57
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 61,
+				"h": 57
+			},
+			"sourceSize": {
+				"w": 61,
+				"h": 57
+			}
+		},
+		"no_party": {
+			"frame": {
+				"x": 77,
 				"y": 171,
 				"w": 279,
 				"h": 235
@@ -82,7 +142,7 @@
 		},
 		"order_progress_bottom": {
 			"frame": {
-				"x": 423,
+				"x": 486,
 				"y": 1,
 				"w": 46,
 				"h": 31
@@ -102,8 +162,8 @@
 		},
 		"order_progress_finished": {
 			"frame": {
-				"x": 423,
-				"y": 34,
+				"x": 358,
+				"y": 182,
 				"w": 105,
 				"h": 105
 			},
@@ -122,8 +182,8 @@
 		},
 		"order_progress_ok": {
 			"frame": {
-				"x": 348,
-				"y": 141,
+				"x": 486,
+				"y": 34,
 				"w": 44,
 				"h": 33
 			},
@@ -142,8 +202,8 @@
 		},
 		"order_progress_shade": {
 			"frame": {
-				"x": 394,
-				"y": 141,
+				"x": 358,
+				"y": 289,
 				"w": 97,
 				"h": 97
 			},
@@ -162,8 +222,8 @@
 		},
 		"order_progress_top": {
 			"frame": {
-				"x": 471,
-				"y": 1,
+				"x": 1,
+				"y": 69,
 				"w": 47,
 				"h": 31
 			},
@@ -182,8 +242,8 @@
 		},
 		"order_progress_unfinished": {
 			"frame": {
-				"x": 282,
-				"y": 240,
+				"x": 358,
+				"y": 388,
 				"w": 105,
 				"h": 105
 			},
@@ -202,8 +262,8 @@
 		},
 		"party_card": {
 			"frame": {
-				"x": 389,
-				"y": 240,
+				"x": 474,
+				"y": 123,
 				"w": 58,
 				"h": 58
 			},
@@ -222,8 +282,8 @@
 		},
 		"party_icon_1": {
 			"frame": {
-				"x": 449,
-				"y": 240,
+				"x": 465,
+				"y": 183,
 				"w": 68,
 				"h": 63
 			},
@@ -242,8 +302,8 @@
 		},
 		"party_icon_2": {
 			"frame": {
-				"x": 389,
-				"y": 305,
+				"x": 1,
+				"y": 248,
 				"w": 67,
 				"h": 63
 			},
@@ -262,7 +322,7 @@
 		},
 		"party_selected_bg": {
 			"frame": {
-				"x": 530,
+				"x": 534,
 				"y": 1,
 				"w": 161,
 				"h": 161
@@ -283,7 +343,7 @@
 		"town": {
 			"frame": {
 				"x": 1,
-				"y": 408,
+				"y": 495,
 				"w": 410,
 				"h": 168
 			},
@@ -302,7 +362,7 @@
 		},
 		"user": {
 			"frame": {
-				"x": 493,
+				"x": 535,
 				"y": 164,
 				"w": 22,
 				"h": 26
@@ -327,8 +387,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 692,
-			"h": 577
+			"w": 696,
+			"h": 664
 		},
 		"scale": "1"
 	}

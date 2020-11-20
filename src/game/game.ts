@@ -392,7 +392,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.createManager();
-
+        const gameID = this.mConfig.game_id;
+        const worldId = this.mConfig.virtual_world_id;
+        if (typeof gameID !== "string") {
+            Logger.getInstance().error("gameID is not string");
+        }
+        if (typeof worldId !== "string") {
+            Logger.getInstance().error("worldId is not string");
+        }
         this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
     }
 

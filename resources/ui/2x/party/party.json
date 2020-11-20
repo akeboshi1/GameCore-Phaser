@@ -1,8 +1,28 @@
 {
 	"frames": {
-		"hot": {
+		"footprint": {
 			"frame": {
 				"x": 1,
+				"y": 1,
+				"w": 41,
+				"h": 38
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 41,
+				"h": 38
+			},
+			"sourceSize": {
+				"w": 41,
+				"h": 38
+			}
+		},
+		"hot": {
+			"frame": {
+				"x": 44,
 				"y": 1,
 				"w": 13,
 				"h": 17
@@ -22,7 +42,7 @@
 		},
 		"hotel": {
 			"frame": {
-				"x": 16,
+				"x": 59,
 				"y": 1,
 				"w": 216,
 				"h": 112
@@ -42,7 +62,7 @@
 		},
 		"list_bg": {
 			"frame": {
-				"x": 234,
+				"x": 277,
 				"y": 1,
 				"w": 49,
 				"h": 80
@@ -60,9 +80,49 @@
 				"h": 80
 			}
 		},
-		"no_party": {
+		"my_home_bg": {
 			"frame": {
 				"x": 1,
+				"y": 83,
+				"w": 50,
+				"h": 81
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 50,
+				"h": 81
+			},
+			"sourceSize": {
+				"w": 50,
+				"h": 81
+			}
+		},
+		"my_house": {
+			"frame": {
+				"x": 277,
+				"y": 83,
+				"w": 41,
+				"h": 38
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 41,
+				"h": 38
+			},
+			"sourceSize": {
+				"w": 41,
+				"h": 38
+			}
+		},
+		"no_party": {
+			"frame": {
+				"x": 53,
 				"y": 115,
 				"w": 186,
 				"h": 157
@@ -82,7 +142,7 @@
 		},
 		"order_progress_bottom": {
 			"frame": {
-				"x": 285,
+				"x": 328,
 				"y": 1,
 				"w": 31,
 				"h": 21
@@ -102,8 +162,8 @@
 		},
 		"order_progress_finished": {
 			"frame": {
-				"x": 285,
-				"y": 24,
+				"x": 241,
+				"y": 123,
 				"w": 70,
 				"h": 70
 			},
@@ -122,8 +182,8 @@
 		},
 		"order_progress_ok": {
 			"frame": {
-				"x": 234,
-				"y": 96,
+				"x": 320,
+				"y": 83,
 				"w": 44,
 				"h": 33
 			},
@@ -142,8 +202,8 @@
 		},
 		"order_progress_shade": {
 			"frame": {
-				"x": 280,
-				"y": 96,
+				"x": 241,
+				"y": 195,
 				"w": 65,
 				"h": 65
 			},
@@ -162,8 +222,8 @@
 		},
 		"order_progress_top": {
 			"frame": {
-				"x": 318,
-				"y": 1,
+				"x": 328,
+				"y": 24,
 				"w": 32,
 				"h": 21
 			},
@@ -182,8 +242,8 @@
 		},
 		"order_progress_unfinished": {
 			"frame": {
-				"x": 189,
-				"y": 163,
+				"x": 241,
+				"y": 262,
 				"w": 70,
 				"h": 70
 			},
@@ -202,8 +262,8 @@
 		},
 		"party_card": {
 			"frame": {
-				"x": 261,
-				"y": 163,
+				"x": 320,
+				"y": 118,
 				"w": 39,
 				"h": 39
 			},
@@ -222,8 +282,8 @@
 		},
 		"party_icon_1": {
 			"frame": {
-				"x": 302,
-				"y": 163,
+				"x": 313,
+				"y": 159,
 				"w": 46,
 				"h": 42
 			},
@@ -242,8 +302,8 @@
 		},
 		"party_icon_2": {
 			"frame": {
-				"x": 261,
-				"y": 207,
+				"x": 1,
+				"y": 203,
 				"w": 45,
 				"h": 42
 			},
@@ -262,7 +322,7 @@
 		},
 		"party_selected_bg": {
 			"frame": {
-				"x": 357,
+				"x": 366,
 				"y": 1,
 				"w": 108,
 				"h": 108
@@ -282,8 +342,8 @@
 		},
 		"town": {
 			"frame": {
-				"x": 189,
-				"y": 251,
+				"x": 1,
+				"y": 334,
 				"w": 274,
 				"h": 112
 			},
@@ -302,7 +362,7 @@
 		},
 		"user": {
 			"frame": {
-				"x": 347,
+				"x": 366,
 				"y": 111,
 				"w": 15,
 				"h": 17
@@ -327,8 +387,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 466,
-			"h": 364
+			"w": 475,
+			"h": 447
 		},
 		"scale": "1"
 	}

@@ -57,7 +57,8 @@
     "manager": "MANAGER",
     "sign": "SignIn",
     "editnow": "Edit Now",
-    "open": "Open"
+    "open": "Open",
+    "give": "Give"
   },
   "quantityunit": {
     "k": "k",
@@ -301,7 +302,7 @@
     "floor": "F"
   },
   "manor": {
-    "title": "Street list",
+    "title": "Manor list",
     "searchstreet": "Search Street",
     "successtitle": "CONGRATULATIONS",
     "successtips": "Successful purchase! \nCome in and take a look at your manor~",
@@ -335,6 +336,6 @@
   "treasure": {
     "tipslabel": "will give you one of the following items at random",
     "pagedown": "Page down",
-    "titleimg":"treasure_title"
+    "titleimg": "treasure_title"
   }
 }

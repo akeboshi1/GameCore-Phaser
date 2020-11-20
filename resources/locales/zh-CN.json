@@ -58,7 +58,8 @@
     "sign": "在线奖励",
     "shop": "商店",
     "editnow": "立即修改",
-    "open": "打开"
+    "open": "打开",
+    "give": "赠送"
   },
   "quantityunit": {
     "k": "千",
@@ -230,6 +231,7 @@
   },
   "create_role": {
     "enter_nick": "请输入昵称",
+    "invalid_name": "名字长度必须为3-10个中文英文或者数字呀",
     "commit": "提 交"
   },
   "chat": {
@@ -259,7 +261,7 @@
     "rewardtitle": "完成进度奖励"
   },
   "work": {
-    "title": "打 工",
+    "title": "打工",
     "vim": "精力值",
     "worktimes": "打工次数",
     "salary": "报酬",
@@ -302,7 +304,7 @@
     "floor": "层"
   },
   "manor": {
-    "title": "街区列表",
+    "title": "庄园列表",
     "searchstreet": "搜索街区",
     "successtitle": "恭喜你",
     "successtips": "购买成功！\n快进来看看你的庄园吧~",
@@ -336,6 +338,6 @@
   "treasure": {
     "tipslabel": "打开宝箱将随机获得以下一项物品",
     "pagedown": "下一页",
-    "titleimg":"treasure_title_cn"
+    "titleimg": "treasure_title_cn"
   }
 }
