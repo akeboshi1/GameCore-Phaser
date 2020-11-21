@@ -293,7 +293,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const token = await this.peer.render.getLocalStorage("token");
         const account = token ? JSON.parse(token) : null;
         if (!this.mConfig.auth_token) {
-            if (!account) {
+            if (!account||!account.token) {
                 this.login();
                 return;
             }
@@ -403,14 +403,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     protected createManager() {
-        this.mRoomManager = new RoomManager(this);
+        if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
         // this.mUiManager = new UiManager(this);
-        this.mElementStorage = new ElementStorage();
-        this.mUIManager = new UIManager(this);
-        this.mHttpService = new HttpService(this);
+        if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
+        if (!this.mUIManager) this.mUIManager = new UIManager(this);
+        if (!this.mHttpService) this.mHttpService = new HttpService(this);
         // this.mSoundManager = new SoundManager(this);
-        this.mLoadingManager = new LoadingManager(this);
-        this.mDataManager = new DataManager(this);
+        if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
+        if (!this.mDataManager) this.mDataManager = new DataManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -447,6 +447,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mClock = null;
             }
             this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc);
+            this.createManager();
             this.connect.addPacketListener(this);
             const gateway: ServerAddress = this.mConfig.server_addr;
             if (gateway) {
@@ -465,11 +466,26 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mClock.destroy();
                     this.mClock = null;
                 }
-                if (this.roomManager) this.roomManager.destroy();
-                if (this.uiManager) this.uiManager.destroy();
-                if (this.mElementStorage) this.mElementStorage.destroy();
-                if (this.mLoadingManager) this.mLoadingManager.destroy();
-                if (this.mDataManager) this.mDataManager.clear();
+                if (this.mRoomManager) {
+                    this.mRoomManager.destroy();
+                    this.mRoomManager = null;
+                }
+                if (this.mUIManager) {
+                    this.mUIManager.destroy();
+                    this.mUIManager = null;
+                }
+                if (this.mElementStorage) {
+                    this.mElementStorage.destroy();
+                    this.mElementStorage = null;
+                }
+                if (this.mLoadingManager) {
+                    this.mLoadingManager.destroy();
+                    this.mLoadingManager = null;
+                }
+                if (this.mDataManager) {
+                    this.mDataManager.clear();
+                    this.mDataManager = null;
+                }
                 resolve();
             });
         });

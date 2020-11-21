@@ -11,6 +11,7 @@ export class PicaNoticeMediator extends BasicMediator {
   }
 
   show(param?: any) {
+    super.show(param);
     if (!param) {
       Logger.getInstance().error("NoticeMediator.show with no data");
       return;
@@ -19,7 +20,6 @@ export class PicaNoticeMediator extends BasicMediator {
       this.mPanelQueue.push(param);
       return;
     }
-    super.show(param);
     this.mCreatingPanel = true;
   }
 
