@@ -1,9 +1,9 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
+import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { EventType } from "structure";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
-import { DataManager, DataMgrType } from "./DataManager";
+import { DataMgrType } from "./dataManager";
 export class SceneDataManager extends BasePacketHandler {
     constructor(game: Game) {
         super(game);

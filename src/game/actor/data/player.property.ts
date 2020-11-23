@@ -25,12 +25,12 @@ export class PlayerProperty {
         }
         this.updateBaseProperties();
     }
-    public hasProperty(key: string) {
-        if (this.propertiesMap && this.propertiesMap.has(key)) return true;
+    public hasProperty(id: string) {
+        if (this.propertiesMap && this.propertiesMap.has(id)) return true;
         return false;
     }
-    public getProperty(key: string) {
-        if (this.hasProperty(key)) return this.propertiesMap.get(key);
+    public getProperty(id: string) {
+        if (this.hasProperty(id)) return this.propertiesMap.get(id);
         return null;
     }
     public destroy() {
@@ -65,10 +65,7 @@ export class PlayerProperty {
                     let isexit = false;
                     for (const room of this.rooms) {
                         if (room.roomId === temp.roomId) {
-                            for (const key in temp) {
-                                // if (temp.hasOwnProperty(key))
-                                room[key] = temp[key];
-                            }
+                            Object.assign(room, temp);
                             isexit = true;
                         }
                     }
@@ -82,10 +79,7 @@ export class PlayerProperty {
         if (handheld) {
             if (!this.handheld) this.handheld = handheld;
             else {
-                for (const key in handheld) {
-                    // if (handheld.hasOwnProperty(key))
-                    this.handheld[key] = handheld[key];
-                }
+                Object.assign(this.handheld, handheld);
             }
         }
     }
@@ -98,10 +92,7 @@ export class PlayerProperty {
                     let isexit = false;
                     for (const proper of this.properties) {
                         if (proper.id === temp.id) {
-                            for (const key in temp) {
-                                // if (temp.hasOwnProperty(key))
-                                proper[key] = temp[key];
-                            }
+                            Object.assign(proper, temp);
                             isexit = true;
                         }
                     }

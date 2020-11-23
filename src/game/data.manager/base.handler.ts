@@ -5,15 +5,15 @@ import { Game } from "../game";
 export class BaseHandler {
     protected mEvent: EventDispatcher;
     constructor(protected game: Game) {
-        this.mEvent = new EventDispatcher();
+        this.mEvent = game.emitter;
     }
 
     clear() {
-        this.mEvent.offAll();
+        this.mEvent.offAllCaller(this);
     }
 
     destroy() {
-        this.mEvent.destroy();
+        this.clear();
         this.game = undefined;
         this.mEvent = undefined;
     }
@@ -27,5 +27,8 @@ export class BaseHandler {
 
     emit(event: string, data?: any) {
         this.mEvent.emit(event, data);
+    }
+    get Event() {
+        return this.mEvent;
     }
 }
