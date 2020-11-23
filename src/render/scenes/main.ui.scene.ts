@@ -70,12 +70,16 @@ export class MainUIScene extends BasicScene {
     this.timeOutCancelMap[id] = true;
   }
 
-  public update(time: number, delta: number) {
+  public updateFPS() {
     this.fps.setText(this.game.loop.actualFps.toFixed());
-    // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
-    // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +
-    //   "\n" + "height:" + this.mRoom.world.getSize().height + `\npixelRatio: ${window.devicePixelRatio} \nscene Scale: ${this.mRoom.world.scaleRatio} \nuiscale：${Math.round(this.mRoom.world.scaleRatio)}`;
   }
+
+  // public update(time: number, delta: number) {
+  //   this.fps.setText(this.game.loop.actualFps.toFixed());
+  //   // const orientation: string = this.mRoom.world.getSize().width > this.mRoom.world.getSize().height ? "LANDSCAPE" : "PORTRAIT";
+  //   // this.sizeTF.text = "width:" + this.mRoom.world.getSize().width +
+  //   //   "\n" + "height:" + this.mRoom.world.getSize().height + `\npixelRatio: ${window.devicePixelRatio} \nscene Scale: ${this.mRoom.world.scaleRatio} \nuiscale：${Math.round(this.mRoom.world.scaleRatio)}`;
+  // }
 
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;

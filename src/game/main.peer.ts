@@ -84,7 +84,7 @@ export class MainPeer extends RPCPeer {
         Logger.getInstance().log("render link onReady");
         this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
             this.game.createGame(this.mConfig);
-            Logger.getInstance().log("heartBeatworker onReady");
+            Logger.getInstance().log("heartBeatworker onReady in mainworker");
         });
     }
 

@@ -76,6 +76,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             await this.run();
             if (this.user) this.user.update();
             if (this.mRoomManager) this.mRoomManager.update(this.currentTime, delayTime);
+            // this.renderPeer.updateFPS();
         }
     }
 
@@ -293,7 +294,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const token = await this.peer.render.getLocalStorage("token");
         const account = token ? JSON.parse(token) : null;
         if (!this.mConfig.auth_token) {
-            if (!account||!account.accessToken) {
+            if (!account || !account.accessToken) {
                 this.login();
                 return;
             }
