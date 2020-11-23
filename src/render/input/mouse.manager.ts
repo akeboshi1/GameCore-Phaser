@@ -92,6 +92,7 @@ export class MouseManager {
                     if (displsy && displsy instanceof DisplayObject) {
                         nodeType = displsy.nodeType;
                     }
+                    if (nodeType === NodeType.ElementNodeType) (<FramesDisplay>displsy).scaleTween();
                     this.render.mainPeer.onTapHandler({ id, x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio, nodeType });
                 } else {
                     this.render.mainPeer.onTapHandler({ x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio });
