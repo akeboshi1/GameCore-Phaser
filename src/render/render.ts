@@ -131,8 +131,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     createManager() {
-        if(!this.mUiManager)this.mUiManager = new PicaRenderUiManager(this);
-        if(!this.mCameraManager)this.mCameraManager = new CamerasManager(this);
+        if (!this.mUiManager) this.mUiManager = new PicaRenderUiManager(this);
+        if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
         this.mLocalStorageManager = new LocalStorageManager();
         this.mSceneManager = new SceneManager(this);
         this.mInputManager = new InputManager(this);
@@ -376,10 +376,6 @@ export class Render extends RPCPeer implements GameMain {
 
     public destroyClock() {
         this.mainPeer.destroyClock();
-    }
-
-    public clearGameComplete() {
-        this.mainPeer.clearGameComplete();
     }
 
     public requestCurTime() {
@@ -626,6 +622,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public getWorldView(): Promise<any> {
+        if (!this.sceneManager) return;
         return new Promise<any>((resolve, reject) => {
             const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
             if (playScene) {
