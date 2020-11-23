@@ -19,6 +19,8 @@ export class FramesDisplay extends DisplayObject {
     protected mMainSprite: Phaser.GameObjects.Sprite;
     protected mCurAnimation: any;
     protected mMountList: Phaser.GameObjects.Container[];
+    protected isSetInteractive: boolean = false;
+    protected isInteracitve: boolean = false;
     private mModel: IFramesModel;
     public load(displayInfo: IFramesModel, field?: DisplayField) {
         field = !field ? DisplayField.STAGE : field;
@@ -106,6 +108,10 @@ export class FramesDisplay extends DisplayObject {
             // graphics.fillStyle(0xFF0000);
             // graphics.fillCircle(0, 0, 10);
             // this.add(graphics);
+        }
+        if (!this.isSetInteractive) {
+            this.isInteracitve ? this.setInteractive() : this.disableInteractive();
+            this.isSetInteractive = true;
         }
         // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
         this.initBaseLoc(DisplayField.STAGE, animation);
@@ -268,12 +274,9 @@ export class FramesDisplay extends DisplayObject {
         });
     }
 
-    public setInteractive(
-        shape?: Phaser.Types.Input.InputConfiguration | any,
-        callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void,
-        dropZone?: boolean
-    ): this {
+    public setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this {
         // super.setInteractive(shape, callback, dropZone);
+        this.isInteracitve = true;
         this.mDisplays.forEach((display) => {
             display.setInteractive({ pixelPerfect: true });
         });
@@ -282,8 +285,9 @@ export class FramesDisplay extends DisplayObject {
 
     public disableInteractive(): this {
         // super.disableInteractive();
-        this.mDisplays.forEach((sprite) => {
-            sprite.disableInteractive();
+        this.isInteracitve = false;
+        this.mDisplays.forEach((display) => {
+            display.disableInteractive();
         });
         return this;
     }
