@@ -9,6 +9,14 @@ export class EventType {
     public static SCENE_ELEMENT_DATA_UPDATE = "SCENE_ELEMENT_DATA_UPDATE";// 场景元素数据刷新
     public static QUERY_MARKET = "QUERY_MARKET"; // 刷新市场数据
     public static CHAT = "CHAT"; // 聊天
+    public static SCENE_POINT_ELEMENT = "SCENE_ELEMENT";// 点击的场景元素
+    public static SCENE_SHOW_UI = "SCENE_SHOW_UI";// 点击场景元素显示UI;
+    public static ELEMENT_ITEM_CONFIG = "ELEMENT_ITEM_CONFIG";// 场景元素和道具配置请求
+    public static SEND_GIFT_DATA_UPDATE = "SEND_GIFT_DATA_UPDATE";// 派对赠送礼物数据
+    public static SCENE_ELEMENT_FIND = "SCENE_ELEMENT_FIND";// 场景元素查找
+    public static SCENE_RETURN_FIND_ELEMENT = "SCENE_RETURN_FIND_ELEMENT";// 返回查找的场景元素
+    public static SCENE_PLAYER_FIND = "SCENE_PLAYER_FIND";// 场景玩家查找
+    public static SCENE_RETURN_FIND_PLAYER = "SCENE_RETURN_FIND_PLAYER";// 返回查找的场景玩家
     /**
      * 请求好友、关注、粉丝数据
      */

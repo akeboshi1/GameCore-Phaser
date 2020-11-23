@@ -12,6 +12,9 @@ export class PicaPartyListMediator extends BasicMediator {
             this.mModel = new PicaPartyList(game);
             this.game.emitter.on("questlist", this.on_PARTY_LIST, this);
             this.game.emitter.on("progresslist", this.on_PLAYER_PROGRESS, this);
+            this.game.emitter.on("myRoomList", this.onMyRoomListHandler, this);
+            this.game.emitter.on("roomList", this.onRoomListHandler, this);
+            this.game.emitter.on("enterRoomResult", this.onEnterRoomResultHandler, this);
         }
     }
 
@@ -22,6 +25,8 @@ export class PicaPartyListMediator extends BasicMediator {
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getRoomList", this.query_GET_ROOM_LIST, this);
+        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getMyRoomList", this.query_ROOM_HISTORY, this);
     }
 
     hide() {
@@ -30,12 +35,17 @@ export class PicaPartyListMediator extends BasicMediator {
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getRoomList", this.query_GET_ROOM_LIST, this);
+        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getMyRoomList", this.query_ROOM_HISTORY, this);
         super.hide();
     }
 
     destroy() {
         this.game.emitter.off("questlist", this.on_PARTY_LIST, this);
         this.game.emitter.off("progresslist", this.on_PLAYER_PROGRESS, this);
+        this.game.emitter.off("myRoomList", this.onMyRoomListHandler, this);
+        this.game.emitter.off("roomList", this.onRoomListHandler, this);
+        this.game.emitter.off("enterRoomResult", this.onEnterRoomResultHandler, this);
         super.destroy();
     }
 
@@ -83,6 +93,26 @@ export class PicaPartyListMediator extends BasicMediator {
             return;
         }
         this.mView.setOnlineProgress(content);
+    }
+
+    private query_GET_ROOM_LIST(page: number, perPage: number) {
+        this.model.query_GET_ROOM_LIST(1, 30);
+    }
+
+    private query_ROOM_HISTORY() {
+        this.model.query_ROOM_HISTORY();
+    }
+
+    private onRoomListHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST) {
+
+    }
+
+    private onMyRoomListHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
+        this.mView.setRoomListData(content);
+    }
+
+    private onEnterRoomResultHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM) {
+
     }
 
     private get model(): PicaPartyList {

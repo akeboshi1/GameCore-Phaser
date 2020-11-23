@@ -27,6 +27,7 @@ export class BasePacketHandler extends PacketHandler {
 
     destroy() {
         this.removePackListener();
+        this.mEvent.destroy();
         this.game = undefined;
         this.mEvent = undefined;
     }
@@ -45,5 +46,8 @@ export class BasePacketHandler extends PacketHandler {
         if (this.game) {
             return this.game.connection;
         }
+    }
+    get Event() {
+        return this.mEvent;
     }
 }

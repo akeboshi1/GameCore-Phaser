@@ -314,7 +314,7 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
         this.progress = new ProgressBar(scene, barConfig);
         this.add(this.progress);
         this.text = scene.make.text({ x: this.width / 2, y: -this.height * 0.5 + 11 * dpr, text: "", style: { color: "#6666FF", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
-        this.text.setStroke("#6666FF", 1 * dpr);
+        // this.text.setStroke("#6666FF", 1 * dpr);
         this.text.setOrigin(1, 0.5);
         this.add(this.text);
     }
@@ -346,12 +346,17 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
         }
         this.progress.setProgress(content.currentProgressValue, maxvalue);
 
-        // this.initCountDown(nextValue - content.currentProgressValue, maxvalue === nextValue);
-        this.initCountDown(100, maxvalue === nextValue);
+        this.initCountDown(nextValue - content.currentProgressValue, maxvalue === nextValue);
+        // this.initCountDown(100, maxvalue === nextValue);
     }
 
     public setHandler(handler: Handler) {
         this.receiveHandler = handler;
+    }
+
+    public destroy() {
+        clearInterval(this.timerID);
+        super.destroy();
     }
 
     private initCountDown(time: number, isLast: boolean) {
@@ -361,24 +366,22 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
         }
         const interval = 1000;
         const timeextu = () => {
-            if (time <= 0) {
-                if (this.timerID) {
-                    clearInterval(this.timerID);
-                    this.timerID = undefined;
-                }
-            }
-            time--;
-            // Logger.getInstance().log("timer: ", time);
             const minute = Math.floor(time / 60);
             const second = time % 60;
             const timetext = `${minute < 10 ? "0" + minute : minute + ""}:${second < 10 ? "0" + second : second + ""}`;
-
-            this.text.text = i18n.t("party.porgresstips", { timer: timetext });
+            this.text.text = i18n.t("party.progresstips", { timer: timetext });
+            time--;
+            if (time > 0) {
+                this.timerID = setTimeout(() => {
+                    timeextu();
+                }, interval);
+                return;
+            } else {
+                this.text.text = "";
+                this.timerID = undefined;
+            }
         };
-
-        this.timerID = setInterval(() => {
-            timeextu();
-        }, 1000);
+        timeextu();
     }
 }
 class SignProgressItem extends Phaser.GameObjects.Container {

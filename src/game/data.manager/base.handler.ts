@@ -4,8 +4,8 @@ import { Game } from "../game";
 
 export class BaseHandler {
     protected mEvent: EventDispatcher;
-    constructor(protected game: Game, event: EventDispatcher) {
-        this.mEvent = event;
+    constructor(protected game: Game) {
+        this.mEvent = new EventDispatcher();
     }
 
     clear() {
@@ -13,6 +13,7 @@ export class BaseHandler {
     }
 
     destroy() {
+        this.mEvent.destroy();
         this.game = undefined;
         this.mEvent = undefined;
     }

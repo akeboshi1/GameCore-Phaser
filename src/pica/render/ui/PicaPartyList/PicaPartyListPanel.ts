@@ -3,7 +3,9 @@ import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, Handler, i18n } from "utils";
+import { op_client } from "pixelpai_proto";
 import { PicaPartyNavigationPanel } from "./PicaPartyNavigationPanel";
+import { PicaMyRoomNavigationPanel } from "./PicaMyRoomNavigationPanel";
 export class PicaPartyListPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackground: Phaser.GameObjects.Graphics;
@@ -14,6 +16,7 @@ export class PicaPartyListPanel extends BasePanel {
     private searchBtn: TabButton;
     private topCheckBox: CheckboxGroup;
     private partyNavigationPanel: PicaPartyNavigationPanel;
+    private myRoomNavigationPanel: PicaMyRoomNavigationPanel;
     private mPartyData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
@@ -26,7 +29,6 @@ export class PicaPartyListPanel extends BasePanel {
         const height = this.scaleHeight;
         this.content.x = width * 0.5;
         this.content.y = height * 0.5 + 20 * this.dpr;
-        this.partyNavigationPanel.refreshMask();
         this.setSize(width, height);
     }
     show(param?: any) {
@@ -63,11 +65,13 @@ export class PicaPartyListPanel extends BasePanel {
 
     public setPartyListData(content: any, isSelf: boolean = true) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
         this.mPartyData = content;
-        // this.mineBtn.visible = isSelf;
         this.partyNavigationPanel.setPartyDataList(content);
     }
     public setOnlineProgress(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         this.partyNavigationPanel.setSignProgress(content);
+    }
+    public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
+        this.myRoomNavigationPanel.setRoomDataList(content);
     }
     protected preload() {
         this.addAtlas(this.key, "party/party.png", "party/party.json");
@@ -101,37 +105,65 @@ export class PicaPartyListPanel extends BasePanel {
         this.content.add([this.closeBtn]);
         this.navigationBtn = this.createTabButton(i18n.t("party.navigation"));
         this.mineBtn = this.createTabButton(i18n.t("party.mine"));
-        this.searchBtn = this.createTabButton(i18n.t("common.search"));
+        // this.searchBtn = this.createTabButton(i18n.t("common.search"));
         this.navigationBtn.setPosition(-this.navigationBtn.width - 2 * this.dpr, -this.content.height * 0.5 - this.navigationBtn.height * 0.5 + 5 * this.dpr);
         this.mineBtn.setPosition(this.navigationBtn.x + this.navigationBtn.width + 2 * this.dpr, this.navigationBtn.y);
-        this.searchBtn.setPosition(this.mineBtn.x + this.mineBtn.width + 2 * this.dpr, this.navigationBtn.y);
+        // this.searchBtn.setPosition(this.mineBtn.x + this.mineBtn.width + 2 * this.dpr, this.navigationBtn.y);
         this.topCheckBox = new CheckboxGroup();
-        this.topCheckBox.appendItemAll([this.navigationBtn, this.mineBtn, this.searchBtn]);
+        this.topCheckBox.appendItemAll([this.navigationBtn, this.mineBtn]);
         this.topCheckBox.on("selected", this.onTabBtnHandler, this);
-        this.content.add([this.navigationBtn, this.mineBtn, this.searchBtn]);
-        this.partyNavigationPanel = new PicaPartyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
-        this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
-        this.partyNavigationPanel.y = 0 * this.dpr;
-        this.content.add(this.partyNavigationPanel);
-        this.partyNavigationPanel.on("questreward", this.onProgressRewardHandler, this);
-        // const mblackbg = this.scene.make.graphics(undefined, false);
-        // mblackbg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-        // mblackbg.fillStyle(0, 0.66);
-        // mblackbg.fillRect(-w * 0.5, -h * 0.5 + this.itemsPanel.y, w, h);
+        this.content.add([this.navigationBtn, this.mineBtn]);
+
         this.add(this.content);
         this.resize(0, 0);
         super.init();
         this.topCheckBox.selectIndex(0);
     }
     private onTabBtnHandler(btn: TabButton) {
-        this.partyNavigationPanel.visible = false;
         if (this.navigationBtn === btn) {
-            this.partyNavigationPanel.visible = true;
+            this.openPartyNavigationPanel();
+            this.hideRoomNavigationPanel();
             this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querylist");
             this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_questprogress");
         } else if (this.mineBtn === btn) {
+            this.openRoomNavigationPanel();
+            this.hidePartyNavigationPanel();
+            this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_getMyRoomList");
         } else if (this.searchBtn === btn) {
-        } else {
+
+        }
+    }
+
+    private openPartyNavigationPanel() {
+        if (!this.partyNavigationPanel) {
+            this.partyNavigationPanel = new PicaPartyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
+            this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
+            this.partyNavigationPanel.y = 0 * this.dpr;
+            this.partyNavigationPanel.on("questreward", this.onProgressRewardHandler, this);
+        }
+        this.content.add(this.partyNavigationPanel);
+        this.partyNavigationPanel.refreshMask();
+    }
+
+    private hidePartyNavigationPanel() {
+        if (this.partyNavigationPanel)
+            this.content.remove(this.partyNavigationPanel);
+    }
+
+    private openRoomNavigationPanel() {
+        if (!this.myRoomNavigationPanel) {
+            this.myRoomNavigationPanel = new PicaMyRoomNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 34 * this.dpr, this.key, this.dpr, this.scale);
+            this.myRoomNavigationPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
+            this.myRoomNavigationPanel.y = -10 * this.dpr;
+        }
+        this.content.add(this.myRoomNavigationPanel);
+        this.myRoomNavigationPanel.refreshMask();
+    }
+
+    private hideRoomNavigationPanel() {
+        if (this.myRoomNavigationPanel) {
+            this.myRoomNavigationPanel.clear();
+            this.content.remove(this.myRoomNavigationPanel);
         }
     }
 
@@ -153,5 +185,8 @@ export class PicaPartyListPanel extends BasePanel {
     }
     private onProgressRewardHandler(index: number) {
         this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_questreward", index);
+    }
+    private onEnterRoomHandler(roomID: string) {
+        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryenter", roomID);
     }
 }
