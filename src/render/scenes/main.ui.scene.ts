@@ -71,7 +71,7 @@ export class MainUIScene extends BasicScene {
   }
 
   public updateFPS() {
-    this.fps.setText(this.game.loop.actualFps.toFixed());
+    if (this.fps) this.fps.setText(this.game.loop.actualFps.toFixed());
   }
 
   // public update(time: number, delta: number) {

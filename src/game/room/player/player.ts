@@ -52,7 +52,8 @@ export class Player extends Element implements IElement {
         for (const path of tmpPath) {
             point = path.point3f;
             if (!(point.y === lastPos.y && point.x === lastPos.x)) {
-                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+                angle = index === 0 ? Math.atan2(lastPos.y - point.y, lastPos.x - point.x) * (180 / Math.PI)
+                    : Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
             }
             const dir = this.onCheckDirection(angle);
             now += duration;
