@@ -1,5 +1,5 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { HEARTBEAT_WORKER, MAIN_WORKER } from "structure";
+import { HEARTBEAT_WORKER, MAIN_WORKER, RENDER_PEER } from "structure";
 import { Logger } from "utils";
 
 class HeartBeatPeer extends RPCPeer {
@@ -7,12 +7,33 @@ class HeartBeatPeer extends RPCPeer {
     private delayTime: number = 20000;
     private reConnectCount: number = 0;
     private startDelay: any;
+    private isStartUpdateFps: boolean = false;
+    private startUpdateFps: any;
     constructor() {
         super(HEARTBEAT_WORKER);
         // this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
         //     Logger.getInstance().log("mainworker link ready");
         // });
         // this.remote[MAIN_WORKER].Connection.on("xx", new RPCExecutor("startBeat", "HeartBeatPeer"));// TODO:使用@RemoteListener
+    }
+
+    @Export()
+    public updateFps() {
+        if (this.isStartUpdateFps) return;
+        this.isStartUpdateFps = true;
+        this.startUpdateFps = setInterval(() => {
+            this.remote[RENDER_PEER].Render.updateFPS();
+        }, 100);
+    }
+
+    @Export()
+    public endFps() {
+        if (this.startUpdateFps) {
+            clearInterval(this.startUpdateFps);
+            this.startUpdateFps = null;
+        }
+        // Logger.getInstance().log("heartBeatWorker endBeat");
+        this.remote[RENDER_PEER].MainPeer.endFPS();
     }
 
     @Export()
@@ -35,6 +56,7 @@ class HeartBeatPeer extends RPCPeer {
         this.reConnectCount = 0;
         if (this.startDelay) {
             clearInterval(this.startDelay);
+            this.startDelay = null;
         }
         // Logger.getInstance().log("heartBeatWorker endBeat");
         this.remote[MAIN_WORKER].MainPeer.endHeartBeat();

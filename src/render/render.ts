@@ -13,11 +13,12 @@ import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
 import { PicaRenderUiManager } from "picaRender";
+import { MainUIScene } from "./scenes";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -61,6 +62,7 @@ export class Render extends RPCPeer implements GameMain {
     private mUIScale: number;
 
     private mMainPeer: any;
+    private mHeartPeer: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
@@ -71,6 +73,11 @@ export class Render extends RPCPeer implements GameMain {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.createGame();
             Logger.getInstance().log("worker onReady");
+        });
+        this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
+            this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+            this.mHeartPeer.updateFps();
+            Logger.getInstance().log("heartBeatworker onReady in Render");
         });
     }
 
@@ -459,6 +466,18 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public showPlay(params?: any) {
         this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
+    }
+
+    @Export()
+    public updateFPS() {
+        if (!this.game) return;
+        const scene: MainUIScene = this.game.scene.getScene(SceneName.MAINUI_SCENE) as MainUIScene;
+        if (!scene || !scene.scene.isVisible || !scene.scene.isActive || !scene.scene.isPaused) return;
+        scene.updateFPS();
+    }
+
+    @Export()
+    public endFPS() {
     }
 
     @Export()
