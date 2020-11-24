@@ -32,10 +32,8 @@ export class CreateRolePanel extends BasePanel {
   }
 
   show(param: any) {
-    if (param) {
-      // this.avatars = param.avatars;
-      this.avatars = this.creatAvatars(param);
-    }
+    if(!param)return;
+    this.avatars = this.creatAvatars(param);
     super.show(param);
   }
 

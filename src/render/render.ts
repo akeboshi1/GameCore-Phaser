@@ -303,7 +303,7 @@ export class Render extends RPCPeer implements GameMain {
                 backgroundColor: 0x0,
                 resolution: 1,
                 fps: {
-                    target: 30,
+                    target: 45,
                     forceSetTimeOut: true
                 },
                 dom: {
@@ -723,12 +723,14 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setInteractive(id: number, type: number) {
-
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) display.setInteractive();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public disableInteractive(id: number, type: number) {
-
+        const display = this.mDisplayManager.getDisplay(id);
+        if (display) display.disableInteractive();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

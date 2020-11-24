@@ -296,7 +296,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const token = await this.peer.render.getLocalStorage("token");
         const account = token ? JSON.parse(token) : null;
         if (!this.mConfig.auth_token) {
-            if (!account || !account.token) {
+            if (!account||!account.accessToken) {
                 this.login();
                 return;
             }
@@ -330,7 +330,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     // this.mAccount.refreshToken(response);
                     this.loginEnterWorld();
                 } else {
-                    if (this.mConfig && !this.mConfig.auth_token) return this.mUIManager.showMed("CreateRole");
                     this.login();
                 }
             });

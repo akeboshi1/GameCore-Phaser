@@ -1,4 +1,5 @@
-import { Element, ISprite } from "gamecore";
+import { Element } from "./element";
+import { ISprite } from "../display/sprite/sprite";
 import { Handler } from "utils";
 export class ElementAction {
     public static hasAction(data: ISprite, actionName?: string) {
