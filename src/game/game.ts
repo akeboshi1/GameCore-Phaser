@@ -72,11 +72,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async update() {
+        let now: number = 0;
+        let tmpTime: number = new Date().getTime();
         for (; ;) {
             await this.run();
+            now = new Date().getTime();
+            // if (now - tmpTime >= delayTime) break;
             if (this.user) this.user.update();
-            if (this.mRoomManager) this.mRoomManager.update(this.currentTime, delayTime);
-            // this.renderPeer.updateFPS();
+            if (this.mRoomManager) this.mRoomManager.update(now, now - tmpTime);
+            tmpTime = now;
         }
     }
 

@@ -1,6 +1,6 @@
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
-import { Url, LogicPoint, LogicPos } from "utils";
+import { Url, LogicPoint, LogicPos, Logger } from "utils";
 import { Render } from "../render";
 import { RunningAnimation, IDragonbonesModel, IFramesModel } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
@@ -364,6 +364,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         if (typeof param !== "number") {
             return this.mDirection;
         }
+        Logger.getInstance().log("dir:====", param);
         this.renderSetDirection(param);
     }
 
