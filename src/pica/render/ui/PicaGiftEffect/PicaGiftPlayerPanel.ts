@@ -13,7 +13,7 @@ export class PicaGiftPlayerPanel extends Phaser.GameObjects.Container {
         this.dpr = dpr;
     }
     play(data: any[]) {
-        this.giftQueue.push(data);
+        this.giftQueue.push(new Array(30));
         this.playNext();
     }
 
