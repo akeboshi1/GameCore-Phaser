@@ -105,10 +105,17 @@ export class MainPeer extends RPCPeer {
         this.game.connection.startConnect(addr);
     }
 
-    @Export()
-    public closeConnect() {
-        this.terminate();
+    @Export([webworker_rpc.ParamType.boolean])
+    public closeConnect(boo: boolean) {
+        if (boo) this.terminate();
         this.game.connection.closeConnect();
+    }
+
+    @Export()
+    public reconnect() {
+        this.game.connection.closeConnect();
+        // 告诉主进程重新连接
+        this.remote[RENDER_PEER].Render.reconnect();
     }
 
     @Export()
@@ -304,12 +311,6 @@ export class MainPeer extends RPCPeer {
     @Export()
     public creareRole() {
 
-    }
-
-    @Export()
-    public reconnect() {
-        // 告诉主进程重新连接
-        this.remote[RENDER_PEER].Render.reconnect();
     }
 
     @Export([webworker_rpc.ParamType.num])

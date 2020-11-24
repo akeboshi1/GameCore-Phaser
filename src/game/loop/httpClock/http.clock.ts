@@ -54,7 +54,7 @@ export class HttpClock {
             const { code, data } = response;
             if (code === 0) {
                 if (!this.checkTimeAllowed(data) || !this.allowedPeriod(data)) {
-                    this.game.peer.closeConnect();
+                    this.game.peer.closeConnect(true);
                 }
             }
         });
