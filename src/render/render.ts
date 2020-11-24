@@ -349,8 +349,8 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
-    public closeConnect() {
-        this.mainPeer.closeConnect();
+    public closeConnect(boo: boolean) {
+        this.mainPeer.closeConnect(boo);
     }
 
     public send(packet: PBpacket) {
@@ -584,7 +584,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public reconnect() {
-        // this.mWorld.reconnect();
+        this.connectReconnect();
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -1018,6 +1018,19 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.str])
     public workerEmitter(eventType: string, data?: any) {
         this.emitter.emit(eventType, data);
+    }
+
+    private connectReconnect() {
+        // if (this.mConfig.connectFail) return this.mConfig.connectFail();
+        // if (!this.game || this.isPause || this.reconnectIng) return;
+        // this.reconnectIng = true;
+        // let gameID: string = this.mConfig.game_id;
+        // let worldID: string = this.mConfig.virtual_world_id;
+        // if (this.mAccount.gameID && this.mAccount.virtualWorldId) {
+        //     gameID = this.mAccount.gameID;
+        //     worldID = this.mAccount.virtualWorldId;
+        // }
+        // this._createAnotherGame(gameID, worldID, null, null);
     }
 
     private onFullScreenChange() {

@@ -16,8 +16,9 @@ export class PicaWorkMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
         this.game.emitter.on(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
 
-        this.game.emitter.on("questlist", this.on_ORDER_LIST, this);
+        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questlist", this.on_Work_LIST, this);
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
+        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_initialized", this.onViewInitComplete, this);
     }
 
     hide() {
@@ -26,8 +27,9 @@ export class PicaWorkMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
         this.game.emitter.off(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
 
-        this.game.emitter.off("questlist", this.on_ORDER_LIST, this);
+        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questlist", this.on_Work_LIST, this);
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
+        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_initialized", this.onViewInitComplete, this);
     }
 
     isSceneUI() {
@@ -55,8 +57,10 @@ export class PicaWorkMediator extends BasicMediator {
         this.picaWork.query_WORK_ON_JOB(id);
     }
 
-    private on_ORDER_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
-        this.mView.setWorkDataList(content);
+    private on_Work_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
+        // this.mView.setWorkDataList(content);
+        const questData = this.checkCanDoJob(content);
+        this.mView.setWorkData(questData);
         this.onUpdatePlayerInfo(this.playerInfo);
     }
     private onUpdatePlayerInfo(content: PlayerProperty) {
@@ -64,7 +68,33 @@ export class PicaWorkMediator extends BasicMediator {
         if (this.mView)
             this.mView.setProgressData(content.energy, content.workChance);
     }
+    private checkCanDoJob(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
+        const jobs: op_client.IPKT_Quest[] = [];
+        for (const job of content.jobs) {
+            const targets = job.targets;
+            let issatisfy: boolean = true;
+            for (const target of targets) {
+                const property = this.playerInfo.getProperty(target.id);
+                if (target.neededCount > property.value) {
+                    issatisfy = false;
+                    break;
+                }
+            }
+            if (issatisfy) jobs.push(job);
+        }
+        jobs.sort((a, b) => {
+            if (a.cabinType > b.cabinType) return -1;
+            else return 1;
+        });
+        return jobs[0];
+    }
     private onHideView() {
+        const uimanager = this.game.uiManager;
+        uimanager.showMed("PicaChat");
         this.destroy();
+    }
+    private onViewInitComplete() {
+        const uimanager = this.game.uiManager;
+        uimanager.hideMed("PicHandheld");
     }
 }

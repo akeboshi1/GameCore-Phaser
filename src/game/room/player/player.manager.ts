@@ -7,7 +7,7 @@ import { User } from "../../actor/user";
 import { IRoomService, Room } from "../room/room";
 import { PlayerModel } from "./player.model";
 import { ISprite, Sprite } from "../display/sprite/sprite";
-import { MessageType } from "structure";
+import { EventType, MessageType } from "structure";
 import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
@@ -34,6 +34,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
         }
+        this.addLisenter();
+    }
+
+    public addLisenter() {
+        this.mRoom.game.emitter.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+    }
+
+    public removeLisenter() {
+        this.mRoom.game.emitter.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
     }
 
     public createActor(actor: op_client.IActor) {
@@ -56,6 +65,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap) return;
         this.mPlayerMap.forEach((player) => this.removeFromMap(player.id));
         this.mPlayerMap.clear();
+        this.removeLisenter();
     }
 
     public removeFromMap(id: number) {
@@ -212,7 +222,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
-            this._add(new Sprite(sprite,content.nodeType));
+            this._add(new Sprite(sprite, content.nodeType));
             // MineCarSimulateData.addSimulate(this.roomService, sprite);
         }
     }
@@ -334,6 +344,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (play) {
             play.movePath(content);
         }
+    }
+
+    private onQueryElementHandler(id: number) {
+        const ele = this.get(id);
+        this.mRoom.game.emitter.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
     }
 
     get roomService(): IRoomService {

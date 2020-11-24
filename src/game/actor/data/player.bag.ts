@@ -145,6 +145,9 @@ class PackageData {
         }
         return item;
     }
+    public getSubCategory() {
+        return new Array(this.subMap.keys);
+    }
     public syncPackage(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE) {
         this.packageName = content.packageName;
         if (this.syncFinish) this.clear();
@@ -195,14 +198,7 @@ class PackageData {
                 }
                 if (packMap.has(tempItem.indexId)) {
                     const item = packMap.get(tempItem.indexId);
-                    // packMap.set(tempItem.indexId, tempItem);
-                    // const listIndex = this.list.indexOf(item);
-                    // if (listIndex !== -1) {
-                    //     this.list[listIndex] = tempItem;
-                    // }
-                    for (const key in tempItem) {
-                        item[key] = tempItem[key];
-                    }
+                    Object.assign(item, tempItem);
                 } else {
                     packMap.set(tempItem.indexId, tempItem);
                     this.list.push(tempItem);
@@ -226,5 +222,7 @@ class PackageData {
             values.clear();
         });
         this.subMap.clear();
+        this.syncFinish = false;
+        this.limit = undefined;
     }
 }

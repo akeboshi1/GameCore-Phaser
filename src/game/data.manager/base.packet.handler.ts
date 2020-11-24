@@ -5,9 +5,9 @@ import { Game } from "../game";
 
 export class BasePacketHandler extends PacketHandler {
     protected mEvent: EventDispatcher;
-    constructor(protected game: Game) {
+    constructor(protected game: Game,event?: EventDispatcher) {
         super();
-        this.mEvent = new EventDispatcher();
+        this.mEvent = event;
     }
     public addPackListener() {
         if (this.connection) {
@@ -22,11 +22,11 @@ export class BasePacketHandler extends PacketHandler {
     }
     clear() {
         this.removePackListener();
-        this.mEvent.offAll();
+        this.mEvent.offAllCaller(this);
     }
 
     destroy() {
-        this.removePackListener();
+        this.clear();
         this.game = undefined;
         this.mEvent = undefined;
     }
@@ -45,5 +45,8 @@ export class BasePacketHandler extends PacketHandler {
         if (this.game) {
             return this.game.connection;
         }
+    }
+    get Event() {
+        return this.mEvent;
     }
 }
