@@ -166,7 +166,7 @@ export class User extends Player {
             this.changeState(PlayerState.IDLE);
             this.stopMove();
         }
-        this._doMove();
+        // this._doMove();
     }
 
     // protected onMoving() {
@@ -229,7 +229,7 @@ export class User extends Player {
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
-        Logger.getInstance().log("showNickname===use");
+        Logger.getInstance().log("showNickname===use",this.mModel.direction);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);
