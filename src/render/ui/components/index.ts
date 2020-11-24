@@ -31,3 +31,4 @@ export * from "./icon.btn";
 export * from "./icon.select.btn";
 export * from "./material.item";
 export * from "./progress.mask.bar";
+export * from "./button.event.dispatch";

@@ -2,6 +2,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
+import { ModuleName } from "structure";
 
 export class PicaWork extends BasicModel {
     constructor(game: Game) {
@@ -49,6 +50,6 @@ export class PicaWork extends BasicModel {
     }
     private on_JOB_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST = packet.content;
-        this.event.emit("questlist", content);
+        this.event.emit(ModuleName.PICAWORK_NAME + "_questlist", content);
     }
 }

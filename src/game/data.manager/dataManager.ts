@@ -20,15 +20,15 @@ export class DataManager {
         this.initDataMap();
     }
     public initPackMap() {
-        const baseMgr = new BaseDataManager(this.mGame);
-        const sceneMgr = new SceneDataManager(this.mGame);
+        const baseMgr = new BaseDataManager(this.mGame, this.mEvent);
+        const sceneMgr = new SceneDataManager(this.mGame, this.mEvent);
         this.mPackMap.set(DataMgrType.BaseMgr, baseMgr);
         this.mPackMap.set(DataMgrType.SceneMgr, sceneMgr);
     }
 
     public initDataMap() {
-        const cacheMgr = new CacheDataManager(this.mGame);
-        const eleMgr = new ElementDataManager(this.mGame);
+        const cacheMgr = new CacheDataManager(this.mGame, this.mEvent);
+        const eleMgr = new ElementDataManager(this.mGame, this.mEvent);
         this.mDataMap.set(DataMgrType.CacheMgr, cacheMgr);
         this.mDataMap.set(DataMgrType.EleMgr, eleMgr);
 

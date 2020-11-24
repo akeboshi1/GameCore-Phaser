@@ -1,17 +1,17 @@
 import { BasePanel, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { ModuleName } from "structure";
+import { ModuleName, RENDER_PEER } from "structure";
 import { Handler } from "utils";
 import { PicTreasureOpenPanel } from "./PicaTreasureOpenPanel";
 import { PicaTreasurePreviewPanel } from "./PicaTreasurePreviewPanel";
-export class PicaTreasureOpenPanel extends BasePanel {
+export class PicaTreasurePanel extends BasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private previewPanel: PicaTreasurePreviewPanel;
     private treasureOpenPanel: PicTreasureOpenPanel;
     private content: Phaser.GameObjects.Container;
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
-        this.key = "treasure_preview";
+        this.key = ModuleName.PICATREASURE_NAME;
     }
 
     resize(w: number, h: number) {
@@ -113,6 +113,6 @@ export class PicaTreasureOpenPanel extends BasePanel {
         this.treasureOpenPanel.removeListen();
     }
     private OnCloseHandler() {
-        this.render.renderEmitter(ModuleName.PICATREASURE + "_close");
+        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
     }
 }

@@ -1,11 +1,10 @@
-import { PacketHandler } from "net-socket-packet";
 import { EventDispatcher } from "utils";
 import { Game } from "../game";
 
 export class BaseHandler {
     protected mEvent: EventDispatcher;
-    constructor(protected game: Game) {
-        this.mEvent = game.emitter;
+    constructor(protected game: Game, event?: EventDispatcher) {
+        this.mEvent = event;
     }
 
     clear() {

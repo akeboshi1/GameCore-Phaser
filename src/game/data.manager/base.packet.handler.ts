@@ -5,9 +5,9 @@ import { Game } from "../game";
 
 export class BasePacketHandler extends PacketHandler {
     protected mEvent: EventDispatcher;
-    constructor(protected game: Game) {
+    constructor(protected game: Game,event?: EventDispatcher) {
         super();
-        this.mEvent = game.emitter;
+        this.mEvent = event;
     }
     public addPackListener() {
         if (this.connection) {

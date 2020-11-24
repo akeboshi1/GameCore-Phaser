@@ -4,8 +4,8 @@ import { BaseHandler } from "./base.handler";
 export class ElementDataManager extends BaseHandler {
     private mEleMap: Map<number, string[]>;
     private mContextMap: Map<any, number[]>;
-    constructor(game: Game) {
-        super(game);
+    constructor(game: Game,event?: EventDispatcher) {
+        super(game,event);
         this.mEleMap = new Map();
         this.mContextMap = new Map();
     }

@@ -5,7 +5,7 @@ import { PicaTreasure } from "./PicaTreasure";
 export class PicaTreasureMediator extends BasicMediator {
 
     constructor(game: Game) {
-        super(ModuleName.PICATREASURE, game);
+        super(ModuleName.PICATREASURE_NAME, game);
         this.mModel = new PicaTreasure(game);
     }
 
@@ -14,12 +14,17 @@ export class PicaTreasureMediator extends BasicMediator {
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onHidePanel, this);
     }
     hide() {
+        super.hide();
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onHidePanel, this);
     }
     destroy() {
+        if (this.mModel) {
+            this.mModel.destroy();
+            this.mModel = undefined;
+        }
         super.destroy();
     }
     private onHidePanel() {
-        super.destroy();
+        this.hide();
     }
 }
