@@ -71,7 +71,7 @@ export class MainPeer extends RPCPeer {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.endBeat();
     }
     public clearBeat() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.endBeat();
+        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.clearBeat();
     }
 
     // ============== render调用主进程

@@ -287,11 +287,11 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     setDirection(val: number) {
         if (!val) return;
-        this.direction = val || 3;
+        this.direction = val;
         if (!this.displayInfo) {
             return;
         }
-        Logger.getInstance().log(val);
+        Logger.getInstance().log("setDirection:=====", val);
         this.setAnimationData(this.currentAnimationName, this.direction);
     }
 

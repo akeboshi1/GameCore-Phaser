@@ -270,7 +270,8 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     public renderSetDirection(dir: number) {
         if (dir !== this.mDisplayInfo.avatarDir) {
             this.mDisplayInfo.avatarDir = dir;
-            this.direction = dir;
+            this.setDirection(dir);
+            Logger.getInstance().log("renderSetDirection:=====", dir);
             this.render.setDirection(this.id, dir);
         }
     }
