@@ -1,5 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue } from "structure";
+import { AnimationQueue, ElementStateType } from "structure";
 import { IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
 import { IPos, Logger, LogicPos } from "utils";
@@ -146,7 +146,6 @@ export class Element extends BlockObject implements IElement {
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     // protected mDisplay: DisplayObject | undefined;
     // protected mBubble: BubbleContainer;
-    protected mFollowObjects: Map<any, FollowObject>;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
@@ -198,7 +197,7 @@ export class Element extends BlockObject implements IElement {
         }
         this.mElementManager.roomService.game.peer.render.setDisplayData(model);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
-        if (this.getFollowObject(FollowEnum.Nickname)) this.showNickname();
+        this.showNickname();
         this.setDirection(this.mModel.direction);
         // this.setRenderable(true);
         const frameModel = <IFramesModel>this.mDisplayInfo;
@@ -362,9 +361,6 @@ export class Element extends BlockObject implements IElement {
         if (this.mBlockable) {
             this.roomService.updateBlockObject(this);
         }
-        if (this.mFollowObjects) {
-            this.mFollowObjects.forEach((follow) => follow.update());
-        }
     }
 
     public move(moveData: op_client.IMoveData) {
@@ -501,7 +497,29 @@ export class Element extends BlockObject implements IElement {
     }
 
     public hideNickname() {
-        this.removeFollowObject(FollowEnum.Nickname);
+        // this.removeFollowObject(FollowEnum.Nickname);
+    }
+
+    public showTopDisplay(data?: ElementStateType) {
+        // if (!this.mDisplay || !this.model) {
+        //     return;
+        // }
+        // if (!this.mDisplay.topPoint) {
+        //     return;
+        // }
+        // const ratio = this.mRoomService.world.scaleRatio;
+        // if (!data) {
+        //     if (this.mTopDisplay)
+        //         this.mTopDisplay.destroy();
+        //     this.mTopDisplay = undefined;
+        //     return;
+        // }
+        // if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, ratio);
+        // this.mTopDisplay.loadState(data);
+    }
+
+    public removeTopDisplay() {
+
     }
 
     get nickname(): string {
@@ -616,11 +634,6 @@ export class Element extends BlockObject implements IElement {
         //     this.mAi.destroy();
         //     this.mAi = null;
         // }
-        if (this.mFollowObjects) {
-            this.mFollowObjects.forEach((follow) => follow.destroy());
-            this.mFollowObjects.clear();
-            this.mFollowObjects = undefined;
-        }
         // if (this.concomitants) {
         //     for (const ele of this.concomitants) {
         //         ele.destroy();
@@ -751,9 +764,6 @@ export class Element extends BlockObject implements IElement {
 
     protected removeDisplay() {
         super.removeDisplay();
-        if (this.mFollowObjects) {
-            this.mFollowObjects.forEach((follow) => follow.remove());
-        }
     }
 
     protected setDepth(depth: number) {
@@ -877,104 +887,48 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected updateStateHandler(state: op_def.IState) {
-        switch (state.name) {
-            // case "effect":
-            //     const buf = Buffer.from(state.packet);
-            //     const id = buf.readDoubleBE(0);
-            //     const effect = this.roomService.effectManager.get(id);
-            //     if (effect.displayInfo) {
-            //         // this.showEffected(<IFramesModel>effect.displayInfo);
-            //     } else {
-            //         // effect.once("updateDisplayInfo", this.showEffected, this);
-            //     }
-            //     break;
-        }
+        // let buf = null;
+        // let id = null;
+        // switch (state.name) {
+        //     case "effect":
+        //         buf = Buffer.from(state.packet);
+        //         id = buf.readDoubleBE(0);
+        //         const effect = this.roomService.effectManager.add(this.id, id);
+        //         if (effect.displayInfo) {
+        //             this.showEffected(effect.display);
+        //         } else {
+        //             effect.once("updateDisplayInfo", this.showEffected, this);
+        //         }
+        //         break;
+        //     case "Task":
+        //         buf = Buffer.from(state.packet);
+        //         const type = buf.readDoubleBE(0);
+        //         id = buf.readDoubleBE(8);
+        //         const ele = this.roomService.getElement(id);
+        //         if (ele) {
+        //             if (type === 0) {
+        //                 (<Element>ele).removeTopDisplay();
+        //             } else {
+        //                 (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
+        //             }
+        //         }
+        //         break;
+        // }
     }
 
     protected removeStateHandler(state: op_def.IState) {
-        switch (state.name) {
-            case "effect":
-                // this.world.removestate(state)
-                // remove
-                // if (this.mDisplay) {
-                //     this.mDisplay.removeEffect(DisplayField.Effect);
-                // }
-                break;
-        }
+        // switch (state.name) {
+        //     case "effect":
+        //         // remove
+        //         if (this.mDisplay) {
+        //             this.mDisplay.removeEffect(DisplayField.Effect);
+        //         }
+        //         // const buf = Buffer.from(state.packet);
+        //         // const id = buf.readDoubleBE(0);
+        //         this.roomService.effectManager.remove(this.id);
+        //         break;
+        //     case "Task":
+        //         break;
+        // }
     }
-
-    protected addFollowObject(key: FollowEnum, obj: FollowObject) {
-        if (!this.mFollowObjects) {
-            this.mFollowObjects = new Map();
-        }
-        this.mFollowObjects.set(key, obj);
-    }
-
-    protected removeFollowObject(key: FollowEnum) {
-        if (!this.mFollowObjects) return;
-        const follow = this.mFollowObjects.get(key);
-        if (follow) {
-            follow.destroy();
-            this.mFollowObjects.delete(key);
-        }
-    }
-
-    protected getFollowObject(key: FollowEnum): FollowObject {
-        if (!this.mFollowObjects) {
-            return;
-        }
-        return this.mFollowObjects.get(key);
-    }
-}
-
-export class FollowObject {
-    private mObject: Phaser.GameObjects.Components.Transform;
-    private mTarget: IElement;
-    private mDpr: number;
-    private mOffset: Phaser.Geom.Point;
-    constructor(object: Phaser.GameObjects.Components.Transform, target: IElement, dpr: number = 1) {
-        this.mDpr = dpr;
-        this.mOffset = new Phaser.Geom.Point();
-        this.mObject = object;
-        this.mTarget = target;
-    }
-
-    setOffset(x: number, y: number) {
-        this.mOffset.setTo(x, y);
-        this.update();
-    }
-
-    update() {
-        if (!this.mTarget || !this.mObject) {
-            return;
-        }
-        const pos = this.mTarget.getPosition();
-        this.mObject.x = Math.round((pos.x + this.mOffset.x) * this.mDpr);
-        this.mObject.y = Math.round((pos.y + this.mOffset.y) * this.mDpr);
-    }
-
-    remove() {
-        if (!this.mObject) {
-            return;
-        }
-        const display = <any>this.mObject;
-        if (display.parentContainer) display.parentContainer.remove(display);
-    }
-
-    destroy() {
-        if (this.mObject) (<any>this.mObject).destroy();
-        this.mObject = undefined;
-    }
-
-    get object() {
-        return this.mObject;
-    }
-
-    private linear(p0, p1, t) {
-        return (p1 - p0) * t + p0;
-    }
-}
-
-export enum FollowEnum {
-    Nickname
 }

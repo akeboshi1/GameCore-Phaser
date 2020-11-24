@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { Size } from "utils";
 import { Game } from "../game";
 import { BasicMediator, UIType } from "./basic/basic.mediator";
@@ -46,6 +46,7 @@ export class UIManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CLOSE_CREATE_ROLE_UI, this.onHandleCloseCreateRoleUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
+        this.game.emitter.on(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
     }
 
     public removePackListener() {
@@ -54,6 +55,7 @@ export class UIManager extends PacketHandler {
             return;
         }
         connection.removePacketListener(this);
+        this.game.emitter.off(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
     }
 
     public showMainUI() {
@@ -274,7 +276,14 @@ export class UIManager extends PacketHandler {
         }
         return alias;
     }
+    private onOpenUIMediator() {
+        if (arguments) {
+            const uiName = arguments[0];
+            const data = arguments[1];
+            this.showMed(uiName, data);
+        }
 
+    }
     // ==== about checkUIState
     private checkSceneUImap(show: boolean, medName: string) {
         const layoutType = this.mUILayoutMap.get(medName);

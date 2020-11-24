@@ -6,8 +6,8 @@ import { BaseHandler } from "./base.handler";
 export class CacheDataManager extends BaseHandler {
     private mCurRoomID: string;
     private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
-    constructor(game: Game, event: EventDispatcher) {
-        super(game, event);
+    constructor(game: Game,event?: EventDispatcher) {
+        super(game,event);
     }
     clear() {
         super.clear();

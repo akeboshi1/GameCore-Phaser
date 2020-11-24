@@ -19,7 +19,7 @@ import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
-import { DataManager } from "./data.manager/dataManager";
+import { DataManager, DataMgrType } from "./data.manager/dataManager";
 interface ISize {
     width: number;
     height: number;
@@ -175,6 +175,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
     public getGameConfig(): ILauncherConfig {
         return this.mConfig;
+    }
+    public getDataMgr<T>(type: DataMgrType) {
+        return this.dataManager.getDataMgr<T>(type);
     }
     public clearClock() {
         if (this.mClock) {

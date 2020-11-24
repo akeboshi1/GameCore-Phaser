@@ -3,6 +3,7 @@ import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { DisplayObject } from "../display/display.object";
 import { NodeType } from "../managers/display.manager";
+import { ElementAction } from "gamecore";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -92,22 +93,14 @@ export class MouseManager {
                     if (displsy && displsy instanceof DisplayObject) {
                         nodeType = displsy.nodeType;
                     }
-                    if (nodeType === NodeType.ElementNodeType) (<FramesDisplay>displsy).scaleTween();
-                    this.render.mainPeer.onTapHandler({ id, x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio, nodeType });
-                } else {
-                    this.render.mainPeer.onTapHandler({ x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio });
-                }
-
-                if (pointer.isDown === false) {
                     if (com && com instanceof FramesDisplay) {
                         if (com.nodeType === NodeType.ElementNodeType) {
                             com.scaleTween();
                         }
-                        // const ele = com.element;
-                        // if (ele instanceof Element) {
-                        //     com.scaleTween();
-                        // }
                     }
+                    this.render.mainPeer.onTapHandler({ id, x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio, nodeType });
+                } else {
+                    this.render.mainPeer.onTapHandler({ x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio });
                 }
             }
         }

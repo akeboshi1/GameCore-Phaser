@@ -4,3 +4,4 @@ export * from "./base.handler";
 export * from "./base.packet.handler";
 export * from "./cache.dataManager";
 export * from "./element.dataManager";
+export * from "./scene.data.manager";
