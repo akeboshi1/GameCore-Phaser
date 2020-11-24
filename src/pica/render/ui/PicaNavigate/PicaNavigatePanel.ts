@@ -184,7 +184,7 @@ export class PicaNavigatePanel extends BasePanel {
     this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
   }
   private checkUpdateActive() {
-    this.render.mainPeer.getActiveUIData("PicaHandheld")
+    this.render.mainPeer.getActiveUIData(ModuleName.PICAHANDHELD_NAME)
       .then((arr) => {
         if (arr) {
           for (const data of arr) {

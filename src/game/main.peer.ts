@@ -8,6 +8,8 @@ import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName } from "structure";
 import { DialogMediator, PicaChatMediator, PicaGame } from "picaWorker";
+import { CacheDataManager } from "./data.manager/cache.dataManager";
+import { DataMgrType } from "./data.manager/dataManager";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -268,21 +270,6 @@ export class MainPeer extends RPCPeer {
         return false;
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public sendMessage(val: string) {
-        (this.game.uiManager.getMed(ModuleName.PICACHAT_NAME) as PicaChatMediator).sendMessage(val);
-    }
-
-    @Export()
-    public showNavigate() {
-        (this.game.uiManager.getMed(ModuleName.PICACHAT_NAME) as PicaChatMediator).showNavigate();
-    }
-
-    @Export([webworker_rpc.ParamType.str])
-    public buyItem(name: string, data: any) {
-        (this.game.uiManager.getMed(name) as PicaChatMediator).buyItem(data);
-    }
-
     // ============= 心跳调用主进程
     @Export()
     public startHeartBeat() {
@@ -406,6 +393,12 @@ export class MainPeer extends RPCPeer {
         }
 
         return null;
+    }
+
+    @Export()
+    public getCurRoom() {
+        const mgr = this.game.dataManager.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        return mgr ? mgr.curRoom : null;
     }
 
     // ==== todo

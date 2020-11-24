@@ -1,8 +1,8 @@
 import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
-import { PBpacket } from "net-socket-packet";
+import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
-import { EventType } from "structure";
+
 export class PicaChat extends BasicModel {
   constructor(game: Game) {
     super(game);
@@ -14,6 +14,7 @@ export class PicaChat extends BasicModel {
       this.connection.addPacketListener(this);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY, this.onQueryMarketHandler);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CONFIGS, this.handleTest);
     }
   }
 
@@ -31,11 +32,23 @@ export class PicaChat extends BasicModel {
     content.chatContext = val;
     this.connection.send(pkt);
   }
+  sendTest() {
+    const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_CONFIGS);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_CONFIGS = pkt.content;
+    content.schema = "PreviewElementRewards";
+    content.request = "5e5e2724319461555c0b8496";// element_sn
+    this.connection.send(pkt);
+  }
+  handleTest(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CONFIGS = packet.content;
+    const status = content.status;
+    const data = content.data;
+    // console.log(`handleTest: ${status} - ${data}`);
+  }
 
   destroy() {
     this.unregister();
   }
-
   queryMarket(marketName: string, page: number, category: string, subCategory: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY = packet.content;
@@ -46,7 +59,6 @@ export class PicaChat extends BasicModel {
     content.marketName = marketName;
     this.connection.send(packet);
   }
-
   buyMarketCommodities(commodities: op_def.IOrderCommodities[]) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES = packet.content;
@@ -54,15 +66,8 @@ export class PicaChat extends BasicModel {
     content.marketName = "gift_shop";
     this.connection.send(packet);
   }
-
   private handleCharacterChat(packet: PBpacket) {
-    this.game.peer.workerEmitter(EventType.CHAT, packet.content);
-  }
-
-  private onQueryMarketHandler(packet: PBpacket) {
-    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY = packet.content;
-    if (content.marketName === "gift_shop")
-      this.game.peer.workerEmitter(EventType.QUERY_MARKET, packet.content);
+    this.game.emitter.emit("chat", packet.content);
   }
 
   get connection(): ConnectionService {
@@ -70,4 +75,11 @@ export class PicaChat extends BasicModel {
       return this.game.connection;
     }
   }
+
+  private onQueryMarketHandler(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY = packet.content;
+    if (content.marketName === "gift_shop")
+      this.game.emitter.emit("queryMarket", packet.content);
+  }
+
 }
