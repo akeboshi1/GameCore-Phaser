@@ -80,6 +80,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
                 this.onShowLabel();
+                this.emit("enter");
             }
         });
     }

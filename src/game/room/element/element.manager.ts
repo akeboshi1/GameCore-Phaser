@@ -112,6 +112,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
     public checkElementAction(id: number): boolean {
         const ele = this.get(id);
+        if (!ele) {
+            Logger.getInstance().error(`check element action error ${id}`);
+            return false;
+        }
         if (ElementAction.hasAction(ele.model, "TQ_PKT_Action")) {
             const eleAction = new ElementAction(ele.model, new Handler(this, (data) => {
                 if (data && data.action === "ShowUI") {
