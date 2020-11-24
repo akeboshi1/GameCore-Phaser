@@ -42,7 +42,7 @@ class HeartBeatPeer extends RPCPeer {
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
             if (this.reConnectCount >= 8) {
-                this.remote[MAIN_WORKER].MainPeer.startHeartBeat("reConnect===");
+                this.remote[MAIN_WORKER].MainPeer.reconnect("reConnect===");
                 return;
             }
             this.reConnectCount++;

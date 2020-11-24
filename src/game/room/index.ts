@@ -9,6 +9,7 @@ export * from "./effect/effect";
 export * from "./effect/effect.manager";
 export * from "./element/element";
 export * from "./element/element.manager";
+export * from "./element/element.action";
 export * from "./elementstorage/element.storage";
 export * from "./player/player";
 export * from "./player/player.manager";

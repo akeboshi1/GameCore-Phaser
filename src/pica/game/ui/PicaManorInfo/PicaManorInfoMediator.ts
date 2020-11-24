@@ -66,7 +66,7 @@ export class PicaManorInfoMediator extends BasicMediator {
     }
     get eleDataMgr() {
         if (this.game) {
-            const dataMgr = this.game.dataManager.getDataMgr<ElementDataManager>(DataMgrType.EleMgr);
+            const dataMgr = this.game.getDataMgr<ElementDataManager>(DataMgrType.EleMgr);
             return dataMgr;
         }
         return undefined;

@@ -105,10 +105,17 @@ export class MainPeer extends RPCPeer {
         this.game.connection.startConnect(addr);
     }
 
-    @Export()
-    public closeConnect() {
-        this.terminate();
+    @Export([webworker_rpc.ParamType.boolean])
+    public closeConnect(boo: boolean) {
+        if (boo) this.terminate();
         this.game.connection.closeConnect();
+    }
+
+    @Export()
+    public reconnect() {
+        this.game.connection.closeConnect();
+        // 告诉主进程重新连接
+        this.remote[RENDER_PEER].Render.reconnect();
     }
 
     @Export()
@@ -218,6 +225,8 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public sendMouseEvent(id: number, mouseEvent, point3f) {
+        const elemgr = this.game.roomManager.currentRoom.elementManager;
+        if (elemgr.checkElementAction(id)) return;
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
@@ -304,12 +313,6 @@ export class MainPeer extends RPCPeer {
     @Export()
     public creareRole() {
 
-    }
-
-    @Export()
-    public reconnect() {
-        // 告诉主进程重新连接
-        this.remote[RENDER_PEER].Render.reconnect();
     }
 
     @Export([webworker_rpc.ParamType.num])

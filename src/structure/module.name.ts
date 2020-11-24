@@ -48,4 +48,6 @@ export class ModuleName {
     public static CUTINMENU_NAME: string = "CutinMenu";
     public static USERMENU_NAME: string = "UserMenu";
     public static GM_TOOLS_NAME: string = "GMTools";
+    public static PICATREASURE_NAME: string = "PicaTreasure";
+    public static PICAGIFTEFFECT_NAME: string = "PicaGiftEffect";
 }

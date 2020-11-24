@@ -69,3 +69,7 @@ export * from "./ui/PicaMessageBox/PicaMessageBoxMediator";
 export * from "./ui/PicaElementStorage/PicaElementStorage";
 export * from "./ui/PicaElementStorage/PicaElementStorageMediator";
 export * from "./ui/CutInMenu";
+export * from "./ui/PicaTreasure/PicaTreasure";
+export * from "./ui/PicaTreasure/PicaTreasureMediator";
+export * from "./ui/PicaGiftEffect/PicaGiftEffect";
+export * from "./ui/PicaGiftEffect/PicaGiftEffectMediator";
