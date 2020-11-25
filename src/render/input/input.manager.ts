@@ -26,5 +26,7 @@ export class InputManager {
     }
 
     public destroy() {
+        if (this.mMouseManager) this.mMouseManager.destroy();
+        if (this.mJoystickManager) this.mJoystickManager.destroy();
     }
 }

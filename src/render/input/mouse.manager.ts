@@ -130,6 +130,11 @@ export class MouseManager {
         this.mScene = null;
         this.running = false;
         this.debounce = null;
+        if (this.mScene) {
+            this.mScene.input.on("gameobjectdown", this.groundDown, this);
+            this.mScene.input.on("pointerdown", this.pointerDownHandler, this);
+        }
+        this.pause();
     }
 
     private groundDown(pointer, gameObject) {

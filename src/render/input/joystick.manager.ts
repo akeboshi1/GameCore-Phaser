@@ -31,6 +31,10 @@ export class JoystickManager extends PacketHandler {
         this.scene.input.off("pointerup", this.onUpHandler, this);
     }
 
+    public destroy() {
+        this.offListener();
+    }
+
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         this.calcAngle(pointer);
     }
