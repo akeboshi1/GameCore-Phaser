@@ -158,7 +158,6 @@ export class DragonbonesDisplay extends DisplayObject {
     }
 
     public play(val: RunningAnimation) {
-        Logger.getInstance().log(val.name + "=======");
         this.mAnimation = val;
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {

@@ -89,7 +89,6 @@ export class Player extends Element implements IElement {
                 this.mModel.currentAnimationName = PlayerState.IDLE;
             }
             this.mModel.setDirection(dir);
-            Logger.getInstance().log("direction=====" + dir);
             this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation);
         }
     }
@@ -102,9 +101,10 @@ export class Player extends Element implements IElement {
         }
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
-            this.mModel.currentAnimationName = this.mCurState;
+            // this.mModel.currentAnimationName = this.mCurState;
+            this.mModel.setAnimationName(this.mCurState);
             const id = this.mModel.id;
-            this.mElementManager.roomService.game.renderPeer.playAnimation(id, { name: this.mModel.currentAnimationName, flip: false });
+            this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation);
             // (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }
