@@ -7,7 +7,7 @@ import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName } from "structure";
-import { DialogMediator, PicaChatMediator, PicaGame } from "picaWorker";
+import { PicaChatMediator, PicaGame } from "picaWorker";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -20,6 +20,7 @@ export class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady: boolean = false;
+    // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
         Logger.getInstance().log("constructor mainPeer");
@@ -33,7 +34,11 @@ export class MainPeer extends RPCPeer {
     public onConnected() {
         // 告诉主进程链接成功
         this.remote[RENDER_PEER].Render.onConnected();
-        // 调用心跳
+        // 调用心跳 非重连状态下启动心跳
+        // if (this.isReconnect) {
+        //     this.endBeat();
+        // }
+        // this.isReconnect = false;
         this.startBeat();
         // 逻辑层game链接成功
         this.game.onConnected();
@@ -113,9 +118,10 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public reconnect() {
-        this.game.connection.closeConnect();
-        // 告诉主进程重新连接
-        this.remote[RENDER_PEER].Render.reconnect();
+        // if (this.isReconnect) return;
+        // this.isReconnect = true;
+        // 告诉逻辑进程重新链接
+        this.game.reconnect();
     }
 
     @Export()
@@ -226,7 +232,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public sendMouseEvent(id: number, mouseEvent, point3f) {
         const elemgr = this.game.roomManager.currentRoom.elementManager;
-        if (elemgr.checkElementAction(id)) return;
+        // if (elemgr.checkElementAction(id)) return;
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;

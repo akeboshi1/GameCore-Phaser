@@ -189,8 +189,13 @@ export class UIManager extends PacketHandler {
         this.removePackListener();
         if (this.mMedMap) {
             this.mMedMap.forEach((basicMed: BasicMediator) => {
-                if (basicMed) basicMed.destroy();
+                if (basicMed) {
+                    basicMed.destroy();
+                    basicMed = null;
+                }
             });
+            this.mMedMap.clear();
+            this.mMedMap = null;
         }
         if (this.mAtiveUIData) this.mAtiveUIData = undefined;
     }

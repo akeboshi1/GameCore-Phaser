@@ -80,15 +80,18 @@ export class ViewblockManager implements IViewBlockManager {
         // Logger.getInstance().log("viewblock update");
         if (!this.mCameras) return;
         this.mDelay = time;
-        this.mCameras.getViewPort().then((obj) => {
-            const bound: LogicRectangle = obj;
-            this.mCameras.getMiniViewPort().then((obj45) => {
-                const miniViewPort = obj45;
-                for (const block of this.mBlocks) {
-                    block.check(bound, miniViewPort);
-                }
+        const promise = this.mCameras.getViewPort();
+        if (promise) {
+            promise.then((obj) => {
+                const bound: LogicRectangle = obj;
+                this.mCameras.getMiniViewPort().then((obj45) => {
+                    const miniViewPort = obj45;
+                    for (const block of this.mBlocks) {
+                        block.check(bound, miniViewPort);
+                    }
+                });
             });
-        });
+        }
     }
 
     public destroy(): void {

@@ -67,6 +67,11 @@ export class ConnListener implements IConnectListener {
         Logger.getInstance().info(`MainWorker[已断开]`);
     }
 
+    onRefreshConnect() {
+        this.mainPeer.reconnect();
+        Logger.getInstance().info(`MainWorker[正在刷新链接]`);
+    }
+
     // reason: SocketConnectionError | undefined
     onError(reason: SocketConnectionError | undefined): void {
         if (reason) {

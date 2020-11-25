@@ -3,7 +3,7 @@ import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { IPoint } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IPosition45Obj, Position45, IPos, LogicPos, Handler } from "utils";
+import { IPosition45Obj, Position45, IPos, LogicPos, Handler, Logger } from "utils";
 import { Game } from "../../game";
 import { IBlockObject } from "../block/iblock.object";
 import { ClockReadyListener } from "../../loop/clock/clock";
@@ -109,14 +109,24 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.moveStyle = this.mGame.moveStyle;
         this.mScaleRatio = this.mGame.scaleRatio;
         if (this.mGame) {
-            if (this.connection) {
-                this.connection.addPacketListener(this);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
-                this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
-            }
+            this.addListen();
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
+        }
+    }
+
+    public addListen() {
+        if (this.connection) {
+            this.connection.addPacketListener(this);
+        }
+    }
+
+    public removeListen() {
+        if (this.connection) {
+            this.connection.removePacketListener(this);
         }
     }
 
@@ -306,6 +316,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mLayManager) {
         //     this.layerManager.destroy();
         // }
+        Logger.getInstance().log("room startplay =====");
         this.game.renderPeer.showPlay();
         // Logger.getInstance().log("roomstartPlay");
         this.mCameraService = new CamerasManager(this.mGame, this);
@@ -358,7 +369,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         this.initSkyBox();
 
-        const joystick = new JoystickManager(this.game);
+        // const joystick = new JoystickManager(this.game);
     }
 
     public setState(states: op_def.IState[]) {
@@ -385,15 +396,25 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public clear() {
         // if (this.mLayManager) this.mLayManager.destroy();
-        if (this.mTerrainManager) this.mTerrainManager.destroy();
-        if (this.mElementManager) this.mElementManager.destroy();
-        if (this.mPlayerManager) this.mPlayerManager.destroy();
-        if (this.mBlocks) this.mBlocks.destroy();
+        if (this.mTerrainManager) {
+            this.mTerrainManager.destroy();
+            this.mTerrainManager = null;
+        }
+        if (this.mElementManager) {
+            this.mElementManager.destroy();
+            this.mElementManager = null;
+        }
+        if (this.mPlayerManager) {
+            this.mPlayerManager.destroy();
+            this.mPlayerManager = null;
+        }
+        if (this.mBlocks) {
+            this.mBlocks.destroy();
+            this.mBlocks = null;
+        }
         // if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         // if (this.mWallManager) this.mWallManager.destroy();
-        if (this.mActorData) {
-            this.mActorData = null;
-        }
+        if (this.mActorData) this.mActorData = null;
         if (this.mStateMap) this.mStateMap = null;
         // if (this.mEffectManager) this.mEffectManager.destroy();
     }

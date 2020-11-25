@@ -44,6 +44,7 @@ export class PicaChatPanel extends BasePanel {
     show(param?: any) {
         super.show(param);
         this.mShowData = param;
+        if (!this.mInitialized) return;
         if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
         if (!this.mTweening && this.mTweenBoo) {
             this.showTween(true);
@@ -251,6 +252,10 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.x = this.mHornBtn.x + this.mHornBtn.width * 0.5 + space + this.mEmojiBtn.width * 0.5;
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
         this.mEmojiBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+
+        this.mEmojiBtn.on("pointerup", () => {
+            this.render.mainPeer.reconnect();
+        }, this);
 
         this.mGiftBtn.x = this.mEmojiBtn.x + this.mEmojiBtn.width * 0.5 + space + this.mGiftBtn.width * 0.5;
         this.mGiftBtn.y = -this.mGiftBtn.height / 2 + this.mTitleBg.height;
