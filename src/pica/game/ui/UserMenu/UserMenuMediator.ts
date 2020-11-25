@@ -6,6 +6,9 @@ export class UserMenuMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.USERMENU_NAME, game);
     }
+
+    show() {
+    }
     // show(param?: any) {
     //     super.show(param);
     //     this.game.emitter.on(MessageType.SCENE_BACKGROUND_CLICK, this.onClosePanel, this);

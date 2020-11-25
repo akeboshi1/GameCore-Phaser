@@ -19,6 +19,7 @@ import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
 import { PicaRenderUiManager } from "picaRender";
 import { MainUIScene } from "./scenes";
+import { Scenery } from "gamecore";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -675,7 +676,7 @@ export class Render extends RPCPeer implements GameMain {
         data.callBack = () => {
             if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
         };
-        data.dpr = window.devicePixelRatio;
+        data.dpr = this.uiRatio;
         this.mSceneManager.startScene(SceneName.LOADING_SCENE, data);
     }
 
@@ -714,7 +715,7 @@ export class Render extends RPCPeer implements GameMain {
     }
     @Export()
     public removeScene(sceneName: string) {
-
+        this.sceneManager.remove(sceneName);
     }
     @Export()
     public showCreatePanelError(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CREATE_ROLE_ERROR_MESSAGE) {
@@ -923,6 +924,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public addSkybox(scenery: IScenery) {
         if (this.mDisplayManager) this.mDisplayManager.addSkybox(scenery);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public removeSkybox(id: number) {
+        this.mDisplayManager.removeSkybox(id);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

@@ -1,31 +1,29 @@
-import { Font, Url, Logger } from "utils";
-import { BasicScene } from "./basic.scene";
-import verion from "../../../version";
-import { SceneName } from "structure";
+import { Font, Logger, Url } from "utils";
+import { BasicScene } from ".";
+import version from "../../../version";
+import { SceneName } from "../../structure";
 
 export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;
   private mask: Phaser.GameObjects.Graphics;
   private debug: Phaser.GameObjects.Text;
-  // private mCallback: Function;
+  private mCallback: Function;
   private curtain: Curtain;
   private progressText: Phaser.GameObjects.Text;
-  private mRequestCom: boolean = false;
   private tipsText: string;
   private dpr: number;
+  private mRequestCom: boolean;
+
   constructor() {
     super({ key: SceneName.LOADING_SCENE });
   }
 
   public preload() {
     // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
-    // this.load.image("loading_bg", Url.getRes(""))
     this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
     this.load.atlas("curtain", Url.getUIRes(this.dpr, "loading/curtain.png"), Url.getUIRes(this.dpr, "loading/curtain.json"));
     this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
-    // this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));
-    this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
-    // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
+    this.load.script("webfont", Url.getRes("scripts/webfont/1.6.26/webfont.js"));
   }
 
   public init(data: any) {
@@ -33,7 +31,7 @@ export class LoadingScene extends BasicScene {
     this.createFont();
     this.dpr = data.dpr || 2;
     this.mRequestCom = false;
-    // this.mCallback = data.callBack;
+    this.mCallback = data.callBack;
     this.tipsText = data.text || "";
   }
 
@@ -65,26 +63,34 @@ export class LoadingScene extends BasicScene {
 
     this.mask = this.add.graphics(undefined);
     this.mask.fillStyle(0);
+
     this.mask.fillRect(0, 0, width, height);
 
-    this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.dpr * 2);
+    const dpr = this.render.uiRatio;
+    this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.render.uiScale * dpr * 2);
     this.bg.play("loading_anis");
 
     this.progressText = this.add.text(this.bg.x, this.bg.y + this.bg.displayHeight * 0.5, this.tipsText, {
-      fontSize: 12 * this.dpr,
+      fontSize: 12 * dpr,
       fontFamily: Font.DEFULT_FONT
     }
     ).setOrigin(0.5);
 
-    this.debug = this.add.text(width - 4 * this.dpr, height - 4 * this.dpr, `v${verion} ${this.getDebug()}`, {
-      fontSize: 12 * this.dpr,
+    this.debug = this.add.text(width - 4 * dpr, height - 4 * dpr, `v${version} ${this.getDebug()}`, {
+      fontSize: 12 * dpr,
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
+
+    if (this.mCallback) {
+      this.mCallback.call(this, this);
+      this.mCallback = undefined;
+    }
     // this.scale.on("resize", this.checkSize, this);
+
   }
 
   public async show() {
-    this.wake();
+    this.awake();
     if (!this.curtain) {
       return Promise.resolve();
     }
@@ -100,25 +106,28 @@ export class LoadingScene extends BasicScene {
     return this.curtain.close();
   }
 
-  public wake(data?: any) {
+  public awake(data?: any) {
     if (!this.scene || !this.scene.settings) {
       return;
     }
     this.displayVisible(true);
     // this.scale.on("resize", this.checkSize, this);
-    super.wake(data);
+    this.scene.wake();
     this.scene.bringToTop(LoadingScene.name);
     if (!data) {
       return;
     }
     this.tipsText = data.text;
+    if (data.callBack) {
+      data.callBack.call(this, this);
+    }
     if (data.text && this.progressText) {
       if (this.progressText.active) this.progressText.setText(data.text);
     }
   }
 
   public sleep() {
-    if (this.progressText) {
+    if (this.progressText)  {
       if (this.progressText.active) this.progressText.setText("");
     }
     if (!this.scene || !this.scene.settings) {
@@ -131,11 +140,11 @@ export class LoadingScene extends BasicScene {
       this.displayVisible(false);
       this.curtain.close().then(() => {
         // this.displayVisible(true);
-        super.sleep();
+        this.scene.sleep();
       });
     } else {
       this.displayVisible(true);
-      super.sleep();
+      this.scene.sleep();
     }
   }
 
@@ -188,10 +197,11 @@ export class LoadingScene extends BasicScene {
     const element = document.createElement("style");
     document.head.appendChild(element);
     const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
+    const font = ["en/tt0173m_.ttf", "en/tt0503m_.ttf", "04B.ttf"];
     // const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
-    const styles2 = "@font-face { font-family: 'tt0173m_'; src: url('./resources/fonts/en/tt0173m_.ttf') format('truetype');font-display:swap }\n";
-    const styles3 = "@font-face { font-family: 'tt0503m_'; src: url('./resources/fonts/en/tt0503m_.ttf') format('truetype'); font-display:swap}\n";
-    const styles4 = "@font-face { font-family: 't04B25'; src: url('./resources/fonts/04B.ttf') format('truetype'); font-display:swap}";
+    const styles2 = `@font-face { font-family: 'tt0173m_'; src: url('${Url.getRes("fonts/en/tt0173m_.ttf")}') format('truetype');font-display:swap }\n`;
+    const styles3 = `@font-face { font-family: 'tt0503m_'; src: url('${Url.getRes("fonts/en/tt0503m_.ttf")}') format('truetype'); font-display:swap}\n`;
+    const styles4 = `@font-face { font-family: 't04B25'; src: url('${Url.getRes("fonts/04B.ttf")}') format('truetype'); font-display:swap}`;
     // sheet.insertRule(styles, 0);
     sheet.insertRule(styles2, 0);
     sheet.insertRule(styles3, 0);
@@ -205,9 +215,9 @@ class Curtain {
   private upTween: Phaser.Tweens.Tween;
   private downTween: Phaser.Tweens.Tween;
   private readonly key = "curtain";
-  constructor(private scene: Phaser.Scene, uiScale: number) {
-    this.upDisplay = this.scene.add.image(0, 0, this.key, "up.png").setOrigin(0).setVisible(false).setScale(uiScale);
-    this.downDisplay = this.scene.add.image(0, 0, this.key, "down.png").setOrigin(0, 1).setVisible(false).setScale(uiScale);
+  constructor(private scene: Phaser.Scene, private dpr: number) {
+    this.upDisplay = this.scene.add.image(0, 0, this.key, "up.png").setOrigin(0).setVisible(false).setScale(this.dpr);
+    this.downDisplay = this.scene.add.image(0, 0, this.key, "down.png").setOrigin(0, 1).setVisible(false).setScale(this.dpr);
   }
 
   open() {

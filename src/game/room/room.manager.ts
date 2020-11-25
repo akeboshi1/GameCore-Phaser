@@ -136,9 +136,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         // this.mRooms.push(room);
     }
 
-    private leaveRoom(room: IRoomService) {
+    private async leaveRoom(room: IRoomService) {
         if (!room) return;
-        this.mGame.leaveRoom(room);
+        this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
+        room.destroy();
+        // await
+        // this.mGame.leaveRoom(room);
         // Logger.getInstance().log("===========leaveRoom");
         // return new Promise((resolve, reject) => {
         //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
