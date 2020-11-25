@@ -1,10 +1,10 @@
-import { PicaChatInputPanel } from "./PicaChatInputPanel";
 import { BBCodeText, TextArea, UIType } from "apowophaserui";
-import { PicaGiftPanel } from "./PicaGiftPanel";
+import { AlertView, BasePanel, InputPanel, Render, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { EventType, ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n } from "utils";
-import { EventType, ModuleName } from "structure";
-import { AlertView, BasePanel, InputPanel, UiManager } from "gamecoreRender";
+import { PicaChatInputPanel } from "./PicaChatInputPanel";
+import { PicaGiftPanel } from "./PicaGiftPanel";
 
 enum ChatChannel {
     CurrentScene = 0,
@@ -192,18 +192,13 @@ export class PicaChatPanel extends BasePanel {
         this.render.emitter.off(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
     }
 
-    updateUIState(active?: any) {
+    updateUIState(active?: any) {// op_pkt_def.IPKT_UI
         if (!this.mInitialized) {
             return;
         }
         if (active.name === "picachat.navigatebtn") {
             if (this.mNavigateBtn.visible !== active.visible) {
                 this.mNavigateBtn.visible = active.visible;
-                // if (active.visible) {
-                //     this.addListen();
-                // } else {
-                //     this.removeListen();
-                // }
             }
         }
     }
@@ -317,15 +312,13 @@ export class PicaChatPanel extends BasePanel {
         }
         this.resize(this.width, height);
     }
-
     private setGiftButtonState(isparty: boolean) {
         if (this.giftPanel) this.giftPanel.setGiftActive(isparty);
     }
-
     private onShowNavigateHandler() {
-        this.render.mainPeer.showNavigate();
+        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showNavigate");
     }
-    private async onGiftHandler() {
+    private onGiftHandler() {
         if (!this.giftPanel || !this.giftPanel.visible) {
             this.hideAllChildPanel();
             if (!this.giftPanel) {
@@ -340,10 +333,12 @@ export class PicaChatPanel extends BasePanel {
             }
             this.resize(this.width, 185 * this.dpr);
             this.giftPanel.show();
-            this.render.renderEmitter(EventType.QUERY_MARKET_REQUEST, { marketName: "gift_shop", page: 1, category: undefined, subCategory: undefined });
-            // const curRoom = await this.render.mainPeer.getCurrentRoom();
-            // const openingParty = curRoom ? curRoom.openingParty : false;
-            // this.giftPanel.setGiftActive(openingParty);
+            this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querymarket");
+            this.render.mainPeer.getCurRoom()
+                .then((curRoom) => {
+                    const openingParty = (curRoom) ? curRoom.openingParty : false;
+                    this.giftPanel.setGiftActive(openingParty);
+                });
         } else {
             this.giftPanel.hide();
             this.showChatTextArea();
@@ -380,7 +375,7 @@ export class PicaChatPanel extends BasePanel {
         if (!val) {
             return;
         }
-        this.render.mainPeer.sendMessage(val);
+        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_chat", val);
     }
 
     private openAppInputPanel() {
@@ -398,7 +393,7 @@ export class PicaChatPanel extends BasePanel {
         if (!val) {
             return;
         }
-        this.render.mainPeer.sendMessage(val);
+        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_chat", val);
     }
 
     private appCloseChat() {
@@ -406,30 +401,33 @@ export class PicaChatPanel extends BasePanel {
         this.mInputText = undefined;
         if (this.parentContainer) this.parentContainer.visible = true;
     }
-    private async checkUpdateActive() {
-        // const curRoom = await this.render.mainPeer.getCurrentRoom();
-        // if (curRoom)
-        //     this.setGiftButtonState(curRoom.openingParty);
-        const arr = await this.render.mainPeer.getActiveUIData("PicaChat");
-        if (arr) {
-            for (const data of arr) {
-                this.updateUIState(data);
-            }
-        }
-
+    private checkUpdateActive() {
+        this.render.mainPeer.getCurRoom()
+            .then((curRoom) => {
+                if (curRoom)
+                    this.setGiftButtonState(curRoom.openingParty);
+            });
+        this.render.mainPeer.getActiveUIData(ModuleName.PICACHAT_NAME)
+            .then((arr) => {
+                if (arr) {
+                    for (const data of arr) {
+                        this.updateUIState(data);
+                    }
+                }
+            });
     }
     private hideAllChildPanel() {
         if (this.giftPanel) this.giftPanel.hide();
         if (this.mTextArea) this.mTextArea.visible = false;
         this.mScrollBtn.disableInteractive();
-        this.showPanelHandler("PicaHandheld", false);
+        this.showPanelHandler(ModuleName.PICAHANDHELD_NAME, false);
     }
     private showChatTextArea() {
         this.mTextArea.visible = true;
         this.mScrollBtn.setInteractive();
-        this.showPanelHandler("PicaHandheld", true);
+        this.showPanelHandler(ModuleName.PICAHANDHELD_NAME, true);
     }
-    private onBuyItemHandler(prop: any, data: any) {
+    private onBuyItemHandler(prop: any, data: any) {// op_def.IOrderCommodities, op_client.CountablePackageItem
         const alertView = new AlertView(this.uiManager);
         const price = data.count * data.sellingPrice.price;
         if (price > 0) {
@@ -438,18 +436,21 @@ export class PicaChatPanel extends BasePanel {
                 text: i18n.t("party.sendgifttips", { count: prop.quantity, name: data.name || data.shortName }),
                 oy: 302 * this.dpr * this.render.uiScale,
                 callback: () => {
-                    this.render.mainPeer.buyItem("PicaChat", prop);
+                    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_buyItem", prop);
                 },
             });
         } else {
-            this.render.mainPeer.buyItem("PicaChat", prop);
+            this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_buyItem", prop);
         }
     }
-    private showPropFun(config: any) {
+    private showPropFun(config: any) {// PicPropFunConfig
         this.showPanelHandler(ModuleName.PICAPROPFUN_NAME, true, config);
     }
     private showNoticeHandler(text: string) {
-        this.render.mainPeer.showNoticeHandler(text);
+        const data = {
+            text: [{ text, node: undefined }]
+        };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
+        this.showPanelHandler(ModuleName.PICANOTICE_NAME, true, data);
     }
     private showPanelHandler(panelName: string, isshow: boolean, data?: any) {
         if (!this.render) {
@@ -458,7 +459,7 @@ export class PicaChatPanel extends BasePanel {
         if (isshow) {
             this.render.mainPeer.showMediator(panelName, true, data);
         } else {
-            this.render.mainPeer.hideMediator(panelName);
+            this.render.mainPeer.showMediator(panelName, false);
         }
     }
 }

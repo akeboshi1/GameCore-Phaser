@@ -1,7 +1,7 @@
-import { ClickEvent, GameGridTable, NineSliceButton } from "apowophaserui";
-import { UIAtlasKey } from "picaRes";
+import { BBCodeText, ClickEvent, GameGridTable, NineSliceButton } from "apowophaserui";
 import { DynamicImage } from "gamecoreRender";
-import { Font, Handler, i18n, Coin, Url } from "utils";
+import { UIAtlasKey } from "picaRes";
+import { Coin, Font, Handler, i18n, Url } from "utils";
 export class PicaGiftPanel extends Phaser.GameObjects.Container {
     private mPropGrid: GameGridTable;
     private curGiftItem: PicGiftItem;
@@ -13,7 +13,7 @@ export class PicaGiftPanel extends Phaser.GameObjects.Container {
     private giftValue: Phaser.GameObjects.Text;
     private sendButton: NineSliceButton;
     private giftDescr: Phaser.GameObjects.Text;
-    private curGiftData: any;
+    private curGiftData: any;// op_client.IMarketCommodity
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.key = key;
@@ -37,7 +37,7 @@ export class PicaGiftPanel extends Phaser.GameObjects.Container {
     public show() {
         this.visible = true;
     }
-    public setGiftDatas(datas: any) {
+    public setGiftDatas(datas: any[]) {// op_client.IMarketCommodity
         const len = 12 - datas.length;
         const items = len > 0 ? datas.concat(new Array(len)) : datas;
         this.mPropGrid.setItems(items);
@@ -145,6 +145,7 @@ export class PicaGiftPanel extends Phaser.GameObjects.Container {
 
     private onSendHandler() {
         if (this.curGiftData.limit > 0 && this.curGiftData.remain <= 0) {
+            const tipsdata = { text: [{ text: "", node: undefined }] };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
             this.emit("shownotice", i18n.t("party.giftsell"));
             return;
         }
@@ -152,27 +153,39 @@ export class PicaGiftPanel extends Phaser.GameObjects.Container {
         const title = i18n.t("chat.givegift");
         const url = this.curGiftData.icon;
         const slider = data.sellingPrice.price > 0 ? true : false;
-        const confirmHandler = new Handler(this, (tempdata: any, count: number) => {
+        const confirmHandler = new Handler(this, (tempdata: any, count: number) => {// op_client.CountablePackageItem
+            const prop = {
+                id: data.id,
+                quantity: count,
+                category: tempdata.category
+            };
             this.curGiftData.remain -= count;
             if (this.curGiftData.limit > 0 && this.curGiftData.remain <= 0) {
                 this.mPropGrid.refresh();
             }
-            this.emit("buyItem", { id: data.id, quantity: count, category: tempdata.category }, data);
+            this.emit("buyItem", prop, data);
         });
         const config = {
             confirmHandler, data, url, title, slider, line: true
-        };
+        };// PicaPropFunConfig
         this.emit("showpropfun", config);
     }
     private getBuyPackageData() {
-        const propdata = this.curGiftData;
-        const count = propdata.price[0] > 0 ? 99 : 1;
-        return { id: propdata.id, sellingPrice: propdata.price[0], name: propdata.name, shortName: propdata.shortName, category: propdata.category, count };
+        const propdata: any = this.curGiftData;// op_client.IMarketCommodity
+        const itemdata = {
+            id: propdata.id,
+            sellingPrice: propdata.price[0],
+            name: propdata.name,
+            shortName: propdata.shortName,
+            category: propdata.category,
+            count: propdata.price[0].price > 0 ? 99 : 1
+        };// op_client.CountablePackageItem
+        return itemdata;
     }
 }
 
 class PicGiftItem extends Phaser.GameObjects.Container {
-    public itemData: any;
+    public itemData: any;// op_client.IMarketCommodity
     public bg: Phaser.GameObjects.Image;
     public selectbg: Phaser.GameObjects.Image;
     public icon: DynamicImage;
@@ -192,7 +205,7 @@ class PicGiftItem extends Phaser.GameObjects.Container {
         this.setSize(this.selectbg.width, this.selectbg.height);
     }
 
-    public setItemData(data: any) {
+    public setItemData(data: any) {// op_client.IMarketCommodity
         this.isSelect = false;
         this.itemData = data;
         if (!data) {
