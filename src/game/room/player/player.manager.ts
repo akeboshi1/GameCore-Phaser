@@ -20,6 +20,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
+            Logger.getInstance().log("playermanager ---- addpacklistener");
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
@@ -55,17 +56,18 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public destroy() {
+        this.removeLisenter();
+        if (this.connection) {
+            Logger.getInstance().log("playermanager ---- removepacklistener");
+            this.connection.removePacketListener(this);
+        }
         if (this.mActor) {
             this.mActor.destroy();
             this.mActor = null;
         }
-        if (this.connection) {
-            this.connection.removePacketListener(this);
-        }
         if (!this.mPlayerMap) return;
         this.mPlayerMap.forEach((player) => this.removeFromMap(player.id));
         this.mPlayerMap.clear();
-        this.removeLisenter();
     }
 
     public removeFromMap(id: number) {

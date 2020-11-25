@@ -77,6 +77,10 @@ export class SceneManager {
             if (data.callBack) data.callBack();
         }, this);
         if (scene) {
+            if (this.mCurSceneName) {
+                const curScene: BasicScene = sceneManager.getScene(this.mCurSceneName) as BasicScene;
+                if (curScene) curScene.sleep();
+            }
             scene.wake(data);
             if (data.callBack) data.callBack();
         } else {
@@ -173,6 +177,7 @@ export class SceneManager {
 
     public destroy() {
         if (this.mCurSceneName) this.mCurSceneName = undefined;
+        if (this.render && this.render.hasOwnProperty(ModuleName.SCENEMANAGER_NAME)) delete this.render[ModuleName.SCENEMANAGER_NAME];
     }
 
     private sceneCallback(scene: Phaser.Scene) {

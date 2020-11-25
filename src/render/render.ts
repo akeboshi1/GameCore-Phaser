@@ -140,10 +140,10 @@ export class Render extends RPCPeer implements GameMain {
     createManager() {
         if (!this.mUiManager) this.mUiManager = new PicaRenderUiManager(this);
         if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
-        this.mLocalStorageManager = new LocalStorageManager();
-        this.mSceneManager = new SceneManager(this);
-        this.mInputManager = new InputManager(this);
-        this.mDisplayManager = new DisplayManager(this);
+        if (!this.mLocalStorageManager) this.mLocalStorageManager = new LocalStorageManager();
+        if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
+        if (!this.mInputManager) this.mInputManager = new InputManager(this);
+        if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
     }
 
     destroyManager() {
@@ -406,25 +406,30 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     public syncCameraScroll() {
-        this.mainPeer.syncCameraScroll();
+        if (this.mMainPeer) this.mMainPeer.syncCameraScroll();
     }
 
     public renderEmitter(eventType: string, data?: any) {
-        this.mMainPeer.renderEmitter(eventType, data);
+        if (this.mMainPeer) this.mMainPeer.renderEmitter(eventType, data);
     }
 
     public showMediator(name: string, isShow: boolean) {
-        this.mMainPeer.showMediator(name, isShow);
+        if (this.mMainPeer) this.mMainPeer.showMediator(name, isShow);
+    }
+
+    @Export()
+    public reconnect() {
+        this.createGame();
     }
 
     @Export()
     public showLogin() {
-        this.mSceneManager.startScene(SceneName.LOGIN_SCENE, this);
+        if (this.sceneManager) this.mSceneManager.startScene(SceneName.LOGIN_SCENE, this);
     }
 
     @Export()
     public hideLogin() {
-        this.sceneManager.stopScene(SceneName.LOGIN_SCENE);
+        if (this.sceneManager) this.sceneManager.stopScene(SceneName.LOGIN_SCENE);
     }
 
     @Export()
@@ -455,17 +460,17 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public showCreateRole(params?: any) {
-        this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
     }
 
     @Export()
     public hideCreateRole() {
-        this.mSceneManager.stopScene(SceneName.CREATE_ROLE_SCENE);
+        if (this.mSceneManager) this.mSceneManager.stopScene(SceneName.CREATE_ROLE_SCENE);
     }
 
     @Export()
     public showPlay(params?: any) {
-        this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
     }
 
     @Export()
@@ -482,7 +487,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public hidePlay() {
-        this.mSceneManager.stopScene(SceneName.PLAY_SCENE);
+        if (this.mSceneManager) this.mSceneManager.stopScene(SceneName.PLAY_SCENE);
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -502,12 +507,12 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.str])
     public hidePanel(panelName: string) {
-        this.mUiManager.hidePanel(panelName);
+        if (this.mUiManager) this.mUiManager.hidePanel(panelName);
     }
 
     @Export()
     public showJoystick() {
-        this.mInputManager.showJoystick();
+        if (this.mInputManager) this.mInputManager.showJoystick();
     }
 
     @Export([webworker_rpc.ParamType.boolean])
@@ -579,12 +584,8 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public connectFail() {
+        this.isConnect = false;
         // this.mWorld.connectFail();
-    }
-
-    @Export()
-    public reconnect() {
-        this.connectReconnect();
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -617,10 +618,11 @@ export class Render extends RPCPeer implements GameMain {
     public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number) {
         if (!this.mAccount) {
             this.mAccount = new Account();
-            this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
-                this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
-            });
         }
+        this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
+            this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+        });
+
         // if (this.mainPeer) this.mainPeer.createAccount(gameID, worldID, sceneID, loc);
     }
 
@@ -737,11 +739,12 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCamerasBounds(x: number, y: number, width: number, height: number) {
-        this.mCameraManager.setBounds(x, y, width, height);
+        if (this.mCameraManager) this.mCameraManager.setBounds(x, y, width, height);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setInteractive(id: number, type: number) {
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.setInteractive();
     }
@@ -843,12 +846,12 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public setLocalStorage(key: string, value: string) {
-        this.localStorageManager.setItem(key, value);
+        if (this.localStorageManager) this.localStorageManager.setItem(key, value);
     }
 
     @Export()
     public getLocalStorage(key: string) {
-        return this.localStorageManager.getItem(key);
+        return this.localStorageManager ? this.localStorageManager.getItem(key) : "";
     }
 
     @Export()
@@ -867,6 +870,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public roomstartPlay() {
+        if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getSceneByName("PlayScene");
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
@@ -877,6 +881,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public playAnimation(id: number, animation: any, field?: any, times?: number) {
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.play(animation, field, times);
     }
@@ -884,6 +889,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
         // Logger.getInstance().log("syncCameraScroll");
+        if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getSceneByName("PlayScene");
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
@@ -896,47 +902,49 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public createDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
-        this.mDisplayManager.addDragonbonesDisplay(displayInfo);
+        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo);
     }
 
     @Export()
     public createFramesDisplay(displayInfo: IFramesModel) {
-        this.mDisplayManager.addFramesDisplay(displayInfo);
+        if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(displayInfo);
     }
 
     @Export()
     public createTerrainDisplay(displayInfo: IFramesModel) {
-        this.mDisplayManager.addTerrainDisplay(displayInfo);
+        if (this.mDisplayManager) this.mDisplayManager.addTerrainDisplay(displayInfo);
     }
 
     @Export()
     public setDisplayData(sprite: any) {
-        this.mDisplayManager.setDisplayData(sprite);
+        if (this.mDisplayManager) this.mDisplayManager.setDisplayData(sprite);
     }
 
     @Export()
     public addSkybox(scenery: IScenery) {
-        this.mDisplayManager.addSkybox(scenery);
+        if (this.mDisplayManager) this.mDisplayManager.addSkybox(scenery);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public changeAlpha(id: number, alpha: number) {
-        this.mDisplayManager.changeAlpha(id, alpha);
+        if (this.mDisplayManager) this.mDisplayManager.changeAlpha(id, alpha);
     }
 
     @Export([webworker_rpc.ParamType.num])
     public removeBlockObject(id: number) {
-        this.mDisplayManager.removeDisplay(id);
+        if (this.mDisplayManager) this.mDisplayManager.removeDisplay(id);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setPosition(id: number, x: number, y: number, z?: number) {
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.updatePos(x, y, z);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
     public showBubble(id: number, text: string, setting: op_client.IChat_Setting) {
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.showBubble(text, setting);
     }
@@ -955,7 +963,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public stopFollow() {
-        this.mCameraManager.stopFollow();
+        if (this.mCameraManager) this.mCameraManager.stopFollow();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
@@ -981,7 +989,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public updateSkyboxState(state) {
-        this.mDisplayManager.updateSkyboxState(state);
+        if (this.mDisplayManager) this.mDisplayManager.updateSkyboxState(state);
     }
 
     @Export([webworker_rpc.ParamType.boolean])
@@ -996,12 +1004,12 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public doMove(id: number, moveData: any) {
-        this.mDisplayManager.displayDoMove(id, moveData);
+        if (this.mDisplayManager) this.mDisplayManager.displayDoMove(id, moveData);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
     public showNickname(id: number, name: string) {
-        this.mDisplayManager.showNickname(id, name);
+        if (this.mDisplayManager) this.mDisplayManager.showNickname(id, name);
     }
 
     @Export()
@@ -1020,18 +1028,10 @@ export class Render extends RPCPeer implements GameMain {
         this.emitter.emit(eventType, data);
     }
 
-    private connectReconnect() {
-        // if (this.mConfig.connectFail) return this.mConfig.connectFail();
-        // if (!this.game || this.isPause || this.reconnectIng) return;
-        // this.reconnectIng = true;
-        // let gameID: string = this.mConfig.game_id;
-        // let worldID: string = this.mConfig.virtual_world_id;
-        // if (this.mAccount.gameID && this.mAccount.virtualWorldId) {
-        //     gameID = this.mAccount.gameID;
-        //     worldID = this.mAccount.virtualWorldId;
-        // }
-        // this._createAnotherGame(gameID, worldID, null, null);
-    }
+    // private connectReconnect() {
+    //     if (!this.game) return;
+    //     this.createGame();
+    // }
 
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);

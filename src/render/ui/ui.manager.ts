@@ -72,14 +72,16 @@ export class UiManager {
         if (!this.mPanelMap) {
             return;
         }
-        this.mPanelMap.forEach((med: BasePanel) => med.destroy());
+        this.mPanelMap.forEach((med: BasePanel) => {
+            med.destroy();
+            med = null;
+        });
         this.mPanelMap.clear();
         this.mPanelMap = null;
     }
 
     public destroy() {
         this.clearPanel();
-        this.mPanelMap = undefined;
         this.clearCache();
         this.mScene = undefined;
     }

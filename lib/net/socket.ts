@@ -4,7 +4,7 @@ import { WSWrapper, ReadyState } from "./transport/websocket";
 export interface IConnectListener {
     onConnected(connection?: SocketConnection): void;
 
-    // onReconnect(connection?: SocketConnection): void;
+    onRefreshConnect(connection?: SocketConnection): void;
 
     onDisConnected(connection?: SocketConnection): void;
 

@@ -5,6 +5,7 @@ import { Game } from "../game";
 import { ConnectionService } from "../../../lib/net/connection.service";
 // import { Logger } from "utils";
 import { Lite } from "game-capsule";
+import { Logger } from "utils";
 export interface IRoomManager {
     readonly game: Game | undefined;
 
@@ -34,12 +35,14 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public addPackListener() {
         if (this.connection) {
+            Logger.getInstance().log("roommanager addPackListener");
             this.connection.addPacketListener(this);
         }
     }
 
     public removePackListener() {
         if (this.connection) {
+            Logger.getInstance().log("roommanager removePackListener");
             this.connection.removePacketListener(this);
         }
     }
@@ -70,12 +73,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public destroy() {
         this.removePackListener();
-        this.mCurRoom = null;
         for (let room of this.mRooms) {
             room.destroy();
             room = null;
         }
         this.mRooms.length = 0;
+        this.mCurRoom = null;
     }
 
     private hasRoom(id: number): boolean {
@@ -85,25 +88,27 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
-        // Logger.getInstance().log("===========enter scene=====0");
+        Logger.getInstance().log("===========enter scene=====0");
         const vw = scene;
         if (this.mCurRoom) {
+            // 客户端会接受到多次进入场景消息，这边客户端自己处理下，防止一个房间多次创建
+            if (this.mCurRoom.id === vw.scene.id) return;
             await this.leaveRoom(this.mCurRoom);
         }
         if (this.hasRoom(vw.scene.id)) {
-            // Logger.getInstance().log("===========enter scene=====1");
+            Logger.getInstance().log("===========enter scene=====1");
             this.onEnterRoom(scene);
         } else {
             this.mGame.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
-                // Logger.getInstance().log("=======enter scene load sceneConfig");
+                Logger.getInstance().log("=======enter scene load sceneConfig");
                 this.game.elementStorage.setSceneConfig(config);
                 this.onEnterRoom(scene);
             });
         }
     }
 
-    private async onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        // Logger.getInstance().log("enter===room");
+    private onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+        Logger.getInstance().log("enter===room");
         const room = new Room(this);
         this.mRooms.push(room);
         room.addActor(scene.actor);

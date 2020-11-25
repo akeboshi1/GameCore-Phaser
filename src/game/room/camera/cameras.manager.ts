@@ -28,9 +28,10 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public getViewPort(): Promise<LogicRectangle | undefined> {
-        return new Promise<LogicRectangle | undefined>((resolve) => {
+        return new Promise<LogicRectangle | undefined>((resolve, reject) => {
             this.mGame.peer.render.getWorldView().then((obj) => {
                 const worldView = obj;
+                if (!worldView) return reject();
                 this.viewPort.x = worldView.x / this.zoom + (worldView.width / this.zoom - this.viewPort.width >> 1);
                 this.viewPort.y = worldView.y / this.zoom + (worldView.height / this.zoom - this.viewPort.height >> 1);
                 resolve(this.viewPort);

@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Handler, Logger, LogicPos } from "utils";
+import { Logger, LogicPos } from "utils";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService } from "../room/room";
@@ -40,6 +40,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
+            Logger.getInstance().log("elementmanager ---- addpacklistener");
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
@@ -110,28 +111,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         element.setState(state.state);
     }
-    public checkElementAction(id: number): boolean {
-        const ele = this.get(id);
-        if (!ele) {
-            Logger.getInstance().error(`check element action error ${id}`);
-            return false;
-        }
-        if (ElementAction.hasAction(ele.model, "TQ_PKT_Action")) {
-            const eleAction = new ElementAction(ele.model, new Handler(this, (data) => {
-                if (data && data.action === "ShowUI") {
-                    const senddata = data.data;
-                    const uiName = senddata.uiName;
-                    const tempdata = { data: senddata, id: ele.id };
-                    this.mRoom.game.emitter.emit(EventType.SCENE_SHOW_UI, [uiName, tempdata]);
-                }
-            }));
-            if (eleAction.executeAction(ele, "TQ_PKT_Action"))
-                return true;
-        }
-        return false;
-    }
+
     public destroy() {
+        if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {
+            Logger.getInstance().log("elementmanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
         if (!this.mElements) return;
