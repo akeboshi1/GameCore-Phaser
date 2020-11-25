@@ -9,7 +9,7 @@ export class PicaChatMediator extends BasicMediator {
         super(ModuleName.PICACHAT_NAME, game);
         this.game.emitter.on("chat", this.onChatHandler, this);
         this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
-        this.game.dataManager.on(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this);
+        this.game.dataManager.on(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this, DataMgrType.CacheMgr);
         if (!this.mModel) {
             this.mModel = new PicaChat(this.game);
         }
@@ -43,7 +43,7 @@ export class PicaChatMediator extends BasicMediator {
     destroy() {
         this.game.emitter.off("chat", this.onChatHandler, this);
         this.game.emitter.off("queryMarket", this.onQueryResuleHandler, this);
-        this.game.dataManager.off(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this);
+        this.game.dataManager.off(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this, DataMgrType.CacheMgr);
         super.destroy();
     }
 

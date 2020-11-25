@@ -25,7 +25,7 @@ export class PicaMessageBoxMediator extends BasicMediator {
       if (data.clickhandler) data.clickhandler.run();
       this.hide();
     } else {
-      const param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mParam[0];
+      const param: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mParam;
       const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
       const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = pkt.content;
       content.uiId = param.id;
