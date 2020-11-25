@@ -22,7 +22,7 @@ export class PicaMessageBoxPanel extends BasePanel {
       this.preload();
       return;
     }
-    const data = param[0];
+    const data = param;
     this.mButtons = [];
     if (data) {
       if (data.text && data.text[0]) {

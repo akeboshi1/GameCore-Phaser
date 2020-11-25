@@ -3,6 +3,7 @@ import { ModuleName } from "structure";
 import { Font, i18n } from "utils";
 import { UiManager } from "../ui.manager";
 import { BasePanel } from "./base.panel";
+import { MainUIScene } from "../../scenes/main.ui.scene";
 
 export class AlertView extends BasePanel {
     private mOkBtn: Button;
@@ -21,7 +22,8 @@ export class AlertView extends BasePanel {
         this.mShowData = config;
         super.show(config);
         if (this.mInitialized) {
-            this.mWorld.uiManager.getUILayerManager().addToDialogLayer(this);
+            // this.render.uiManager.getUILayerManager().addToDialogLayer(this);
+            (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_DIALOG, this);
             const { ox, oy } = config;
             this.x = (ox || this.scene.cameras.main.width / 2);
             this.y = (oy || this.scene.cameras.main.height / 2);

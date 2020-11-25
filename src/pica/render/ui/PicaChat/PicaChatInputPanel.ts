@@ -1,6 +1,6 @@
 import { BBCodeText, Button, ClickEvent, GameScroller, InputText, NineSliceButton, NineSlicePatch } from "apowophaserui";
-import { UIAtlasKey } from "picaRes";
 import { Render } from "gamecoreRender";
+import { UIAtlasKey } from "picaRes";
 import { Font, i18n } from "utils";
 
 export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
@@ -13,6 +13,7 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
     private cancelBtn: Button;
     private mInput: InputText;
     private mOutputText: BBCodeText;
+    private render: Render;
     private dpr: number;
     private scene: Phaser.Scene;
     private gamescroll: GameScroller;
@@ -25,9 +26,10 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
     private isSendChat: boolean = false;
     private quickChatAtt: string[];
     private isDispose: boolean = false;
-    constructor(scene: Phaser.Scene, private render: Render, key: string, chatArr: string[]) {
+    constructor(scene: Phaser.Scene, render: Render, key: string, chatArr: string[]) {
         super();
         this.key = key;
+        this.render = render;
         this.dpr = window.devicePixelRatio;
         this.scene = scene;
         this.chatArr = chatArr;
@@ -409,6 +411,7 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
         this.quickCon.destroy();
         this.gamescroll.clearItems(true);
         this.scene = undefined;
+        this.render = undefined;
         this.gamescroll = undefined;
         this.mOutputText = undefined;
         this.quickChatScroll = undefined;
