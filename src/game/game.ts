@@ -375,10 +375,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async refreshToken() {
-        const account = await this.peer.render.getAccount();
-        const accountData = account.accountData;
+        const token = await this.peer.render.getLocalStorage("token");
+        const account = token ? JSON.parse(token) : null;
+        if (!account || !account.accessToken) {
+            this.login();
+            return;
+        }
         // this.peer.render[ModuleName.].then((account) => {
-        this.httpService.refreshToekn(accountData.refreshToken, accountData.accessToken)
+        this.httpService.refreshToekn(account.refreshToken, account.accessToken)
             .then((response: any) => {
                 if (response.code === 200) {
                     this.peer.render.refreshAccount(response);
@@ -387,6 +391,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 } else {
                     this.login();
                 }
+            }).catch((error) => {
+                Logger.getInstance().error("refreshToken:", error);
+                this.login();
             });
         // });
     }
