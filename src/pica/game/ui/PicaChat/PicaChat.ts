@@ -1,6 +1,6 @@
 import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
-import { PacketHandler, PBpacket } from "net-socket-packet";
+import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 
 export class PicaChat extends BasicModel {
@@ -11,7 +11,7 @@ export class PicaChat extends BasicModel {
   register() {
     const connection = this.connection;
     if (connection) {
-      this.connection.addPacketListener(this);
+      connection.addPacketListener(this);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY, this.onQueryMarketHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CONFIGS, this.handleTest);
@@ -21,7 +21,7 @@ export class PicaChat extends BasicModel {
   unregister() {
     const connection = this.connection;
     if (connection) {
-      this.connection.removePacketListener(this);
+      connection.removePacketListener(this);
     }
   }
 

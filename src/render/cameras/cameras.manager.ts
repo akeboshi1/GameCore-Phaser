@@ -169,6 +169,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public destroy() {
+        Logger.getInstance().log("camerasmanager destroy");
         this.mMain = undefined;
         this.mCameras = [];
     }

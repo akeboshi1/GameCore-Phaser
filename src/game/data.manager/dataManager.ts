@@ -47,7 +47,7 @@ export class DataManager {
 
     public removePackListener() {
         this.mPackMap.forEach((value) => {
-            value.addPackListener();
+            value.removePackListener();
         });
     }
 

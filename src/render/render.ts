@@ -156,10 +156,10 @@ export class Render extends RPCPeer implements GameMain {
             this.mCameraManager.destroy();
             this.mCameraManager = undefined;
         }
-        if (this.mLocalStorageManager) {
-            this.mLocalStorageManager.destroy();
-            this.mLocalStorageManager = undefined;
-        }
+        // if (this.mLocalStorageManager) {
+        //     this.mLocalStorageManager.destroy();
+        //     this.mLocalStorageManager = undefined;
+        // }
         if (this.mSceneManager) {
             this.mSceneManager.destroy();
             this.mSceneManager = undefined;
@@ -172,6 +172,26 @@ export class Render extends RPCPeer implements GameMain {
             this.mDisplayManager.destroy();
             this.mDisplayManager = undefined;
         }
+    }
+
+    clearManager() {
+        if (this.mUiManager)
+            this.mUiManager.destroy();
+
+        if (this.mCameraManager)
+            this.mCameraManager.destroy();
+
+        // if (this.mLocalStorageManager)
+        //     this.mLocalStorageManager.destroy();
+
+        if (this.mSceneManager)
+            this.mSceneManager.destroy();
+
+        if (this.mInputManager)
+            this.mInputManager.destroy();
+
+        if (this.mDisplayManager)
+            this.mDisplayManager.destroy();
     }
 
     enterGame() {
@@ -809,6 +829,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public addFillEffect(posX: number, posY: number, status: number) {
 
+    }
+
+    @Export()
+    public clearRoom() {
+        this.clearManager();
     }
 
     @Export([webworker_rpc.ParamType.boolean])

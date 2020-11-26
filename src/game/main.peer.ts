@@ -36,11 +36,6 @@ export class MainPeer extends RPCPeer {
     public onConnected() {
         // 告诉主进程链接成功
         this.remote[RENDER_PEER].Render.onConnected();
-        // 调用心跳 非重连状态下启动心跳
-        // if (this.isReconnect) {
-        //     this.endBeat();
-        // }
-        // this.isReconnect = false;
         this.startBeat();
         // 逻辑层game链接成功
         this.game.onConnected();

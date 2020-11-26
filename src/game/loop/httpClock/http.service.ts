@@ -137,16 +137,16 @@ export class HttpService {
     }
 
     public async post(uri: string, body: any, headers?: any): Promise<any> {
-        const account = await this.game.peer.render.getAccount();
+        const account = await this.game.peer.render.getLocalStorage("token");
         if (!account) {
             return Promise.reject("account does not exist");
         }
-        if (!account.accountData) {
-            return Promise.reject("token does not exist");
-        }
+        // if (!account.accountData) {
+        //     return Promise.reject("token does not exist");
+        // }
         headers = Object.assign({
             "Content-Type": "application/json",
-            "X-Pixelpai-TK": account.accountData.accessToken
+            "X-Pixelpai-TK": account.accessToken
         }, headers);
         const data = {
             body: JSON.stringify(body),
@@ -158,17 +158,17 @@ export class HttpService {
 
     public get(uri: string) {
         return new Promise((resolve, reject) => {
-            this.game.peer.render.getAccount().then((account) => {
+            this.game.peer.render.getLocalStorage("token").then((account) => {
                 if (!account) {
                     reject("account does not exist");
                 }
-                if (!account.accountData) {
-                    reject("token does not exist");
-                }
+                // if (!account.accountData) {
+                //     reject("token does not exist");
+                // }
                 const data = {
                     method: "GET",
                     headers: {
-                        "X-Pixelpai-TK": account.accountData.accessToken
+                        "X-Pixelpai-TK": account.accessToken
                     }
                 };
                 resolve(fetch(`${this.api_root}${uri}`, data).then((response) => response.json()));

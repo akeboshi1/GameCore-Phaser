@@ -319,7 +319,6 @@ export class DisplayManager {
                 if (display) display.destroy();
             });
             this.displays.clear();
-            this.displays = undefined;
         }
 
         if (this.scenerys) {
@@ -327,7 +326,6 @@ export class DisplayManager {
                 if (block) block.destroy();
             });
             this.scenerys.clear();
-            this.scenerys = undefined;
         }
     }
 }

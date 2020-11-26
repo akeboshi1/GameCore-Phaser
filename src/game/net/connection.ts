@@ -92,8 +92,9 @@ export class Connection implements ConnectionService {
     private isConnect: boolean = false;
     private isPause: boolean = false;
     private mClock: Clock;
-    constructor(socket: GameSocket) {
-        this.mSocket = socket;
+    private mPeer: MainPeer;
+    constructor(peer: MainPeer) {
+        this.mPeer = peer;
     }
 
     get pause(): boolean {
@@ -104,15 +105,26 @@ export class Connection implements ConnectionService {
         return this.isConnect;
     }
 
+    get socket(): SocketConnection {
+        return this.mSocket;
+    }
+
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         this.mCachedServerAddress = addr;
+        if (!this.mSocket) {
+            this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
+        }
         this.mSocket.startConnect(this.mCachedServerAddress);
     }
 
     closeConnect(): void {
         this.isConnect = false;
         this.mCachedServerAddress = undefined;
-        this.mSocket.stopConnect();
+        if (this.mSocket) {
+            this.mSocket.stopConnect();
+            this.mSocket.destroy();
+            this.mSocket = null;
+        }
         this.clearPacketListeners();
     }
 
@@ -121,6 +133,8 @@ export class Connection implements ConnectionService {
     }
 
     addPacketListener(listener: PacketHandler) {
+        const idx: number = this.mPacketHandlers.indexOf(listener);
+        if (idx !== -1) return;
         this.mPacketHandlers.push(listener);
     }
 

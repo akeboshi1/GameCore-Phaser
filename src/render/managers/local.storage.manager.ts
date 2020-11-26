@@ -18,6 +18,6 @@ export class LocalStorageManager {
         localStorage.clear();
     }
     destroy() {
-        this.clear();
+       this.clear();
     }
 }
