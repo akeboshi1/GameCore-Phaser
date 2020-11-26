@@ -115,7 +115,7 @@ export class Terrain extends BlockObject implements IElement {
 
     public destroy() {
         this.mCreatedDisplay = false;
-        this.mElementManager.roomService.game.peer.render.removeBlockObject(this.mDisplayInfo.id);
+        this.mElementManager.roomService.game.peer.render.removeBlockObject(this.id);
         super.destroy();
     }
 

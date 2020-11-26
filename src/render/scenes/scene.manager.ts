@@ -168,6 +168,10 @@ export class SceneManager {
         scene.scene.resume(name);
     }
 
+    public remove(key: string) {
+        this.render.game.scene.remove(key);
+    }
+
     public isActive(name: string): boolean {
         if (!this.render.game.scene.getScene(name)) {
             return false;

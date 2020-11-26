@@ -286,8 +286,13 @@ export class DisplayManager {
         });
     }
 
-    public removeSkybox(scenery: IScenery) {
-
+    public removeSkybox(id: number) {
+        const scenery = this.scenerys.get(id);
+        if (!scenery) {
+            return;
+        }
+        scenery.destroy();
+        this.scenerys.delete(id);
     }
 
     public getDisplay(id: number): DisplayObject {

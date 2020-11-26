@@ -76,6 +76,7 @@ export class SkyBoxManager extends PacketHandler {
       }
     }
     // this.mScenetys.forEach((scenery: BlockManager) => scenery.destroy());
+    this.mScenetys.forEach((scenery: IScenery) => this.mGame.renderPeer.removeSkybox(scenery.id));
     this.mScenetys.clear();
   }
 

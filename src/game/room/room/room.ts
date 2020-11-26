@@ -18,7 +18,7 @@ import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery } from "structure";
+import { IScenery, SceneName } from "structure";
 import { JoystickManager } from "../../input.manager/joystick.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -452,6 +452,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public destroy() {
         if (this.connection) this.connection.removePacketListener(this);
         this.clear();
+        this.game.renderPeer.removeScene(SceneName.PLAY_SCENE);
         // if (this.mScene) {
         //   this.mScene = null;
         // }

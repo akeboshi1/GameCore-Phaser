@@ -34,7 +34,7 @@ export class BasicScene extends Phaser.Scene {
     }
 
     public wake(data?: any) {
-        this.scene.wake();
+        this.scene.wake(undefined, data);
     }
 
     public sleep() {
