@@ -4,7 +4,7 @@ import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
 import { IPoint, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
-import { IConnectListener } from "../../lib/net/socket";
+import { IConnectListener, SocketConnection } from "../../lib/net/socket";
 import { Logger, ResUtils, Tool, load, EventDispatcher } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, ConnListener, GameSocket } from "./net/connection";
@@ -30,7 +30,6 @@ const delayTime = 1000 / fps;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     protected mainPeer: MainPeer;
     protected connect: ConnectionService;
-    protected mSocket: GameSocket;
     protected mUser: User;
     // protected mUiManager: UiManager;
     // protected mMoveStyle: number = -1;
@@ -58,8 +57,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
-        this.mSocket = new GameSocket(peer, new ConnListener(peer));
-        this.connect = new Connection(this.mSocket);
+        this.connect = new Connection(peer);
         this.addPacketListener();
         this.update();
     }
@@ -295,7 +293,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     get socket(): GameSocket {
-        return this.mSocket;
+        return this.connect.socket as GameSocket;
     }
 
     get uiManager(): UIManager {
@@ -502,6 +500,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mUser.clear();
             }
             if (this.connect) {
+                this.removePacketListener();
                 this.connect.closeConnect();
             }
             if (this.mClock) {
@@ -512,7 +511,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             // this.mConfig.game_id = gameId;
             // this.mConfig.virtual_world_id = worldId;
             this.createManager();
-            this.removePacketListener();
             this.addPacketListener();
             const gateway: ServerAddress = this.mConfig.server_addr;
             if (gateway) {
