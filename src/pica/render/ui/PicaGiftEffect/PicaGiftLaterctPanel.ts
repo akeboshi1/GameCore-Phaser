@@ -7,13 +7,14 @@ export class PicaGiftLaterctPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private giftQueue: any[] = [];
     private isPlaying: boolean = false;
-    constructor(scene: Phaser.Scene, private render: Render, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, private render: Render, width: number, height: number, key: string, dpr: number) {
         super(scene);
+        this.setSize(width, height);
         this.key = key;
         this.dpr = dpr;
     }
     play(data: any[]) {
-        this.giftQueue.push(data);
+        this.giftQueue = this.giftQueue.concat(new Array(30));
         this.playNext();
     }
 
@@ -26,8 +27,13 @@ export class PicaGiftLaterctPanel extends Phaser.GameObjects.Container {
                 this.isPlaying = false;
                 this.playNext();
             }));
-            item.playMove();
+            const from = -this.width * 0.5 - item.width * 0.5 - 10 * this.dpr;
+            const to = -this.width * 0.5 + item.width * 0.5 + 10 * this.dpr;
+            item.x = from;
+            item.y = this.height * 0.5 - 100 * this.dpr;
+            item.playMove(from, to);
             this.add(item);
+
             this.isPlaying = true;
         }
     }

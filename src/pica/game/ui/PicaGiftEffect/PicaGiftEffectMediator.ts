@@ -6,7 +6,7 @@ import { PicaGiftEffect } from "./PicaGiftEffect";
 
 export class PicaGiftEffectMediator extends BasicMediator {
     private picagift: PicaGiftEffect;
-    private tempDataQueue: any[];
+    private tempDataQueue: any[]=[];
     constructor(game: Game) {
         super(ModuleName.PICAGIFTEFFECT_NAME, game);
         this.picagift = new PicaGiftEffect(this.game);

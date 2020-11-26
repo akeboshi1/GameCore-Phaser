@@ -19,34 +19,38 @@ export class PicaGiftLateralItem extends Phaser.GameObjects.Container {
         this.add(this.bg);
         this.setSize(this.bg.width, this.bg.height);
         this.headicon = scene.make.image({ key, frame: "gift_head" });
-        this.headicon.x = -this.width * 0.5 + this.headicon.width * 0.5;
+        this.headicon.x = -this.width * 0.5 + this.headicon.width * 0.5 + 2 * dpr;
         this.add(this.headicon);
         this.titletext = new BBCodeText(scene, 0, 0, "", UIHelper.whiteStyle(dpr)).setOrigin(0);
-        this.titletext.x = this.headicon.x + this.headicon.width * 0.5 + 3 * dpr;
+        this.titletext.x = this.headicon.x + this.headicon.width * 0.5 + 10 * dpr;
         this.titletext.y = -this.height * 0.5 + 2 * dpr;
         this.add(this.titletext);
         this.giftIcon = new DynamicImage(scene, this.width * 0.5 - 50 * dpr, 0);
         this.add(this.giftIcon);
         this.countTex = this.scene.make.text({
-            x: this.width * 0.5 - 15 * dpr, y: 0, text: "",
+            x: this.width * 0.5 - 5 * dpr, y: 0, text: "", padding: {
+                left: 0,
+                right: 10 * dpr,
+            },
             style: { fontFamily: Font.DEFULT_FONT, fontSize: 28 * dpr, color: "#FCF863" }
-        }).setFontStyle("bold italic").setStroke("#C25E0D", 1 * dpr).setOrigin(0, 0.5);
+        }).setFontStyle("bold italic").setStroke("#C25E0D", 2 * dpr).setOrigin(0.5);
+        this.add(this.countTex);
     }
 
     public setItemData(compl: Handler) {
         this.compl = compl;
-        this.titletext.setText(`${"一只狐狸"}\n${i18n.t("common.give")}${"能量电池"}`);
+        this.titletext.setText(`${"一只狐狸"}\n${i18n.t("common.give")}[color=#FFFF41]${"能量电池"}[/color]`);
         // this.giftIcon
-        this.countTex.text = "x200";
+        this.countTex.text = "";
         this.giftCount = Math.floor(Math.random() * 50);
     }
 
-    playMove() {
+    playMove(from: number, to: number) {
         const tween = this.scene.tweens.add({
             targets: this,
-            y: {
-                from: -this.width + 20 * this.dpr,
-                to: this.width * 0.5 + 10 * this.dpr
+            x: {
+                from,
+                to
             },
             ease: "Linear",
             duration: 300,
@@ -70,7 +74,7 @@ export class PicaGiftLateralItem extends Phaser.GameObjects.Container {
             const tween = this.scene.tweens.add({
                 targets: this.countTex,
                 scale: {
-                    from: 0.1,
+                    from: 0.5,
                     to: 1
                 },
                 ease: "Linear",
@@ -80,7 +84,7 @@ export class PicaGiftLateralItem extends Phaser.GameObjects.Container {
                     tween.remove();
                     if (tempcount < this.giftCount) {
                         setTimeout(() => {
-                            this.playCount();
+                            tweenFun();
                         }, temp.interval);
                     } else {
                         setTimeout(() => {
@@ -90,7 +94,7 @@ export class PicaGiftLateralItem extends Phaser.GameObjects.Container {
                 },
             });
         };
-
+        tweenFun();
     }
 
     playAlpha() {
@@ -100,7 +104,7 @@ export class PicaGiftLateralItem extends Phaser.GameObjects.Container {
                 from: 1,
                 to: 0
             },
-            ease: "Back.easeOut",
+            ease: "Linear",
             duration: 200,
             onComplete: () => {
                 tween.stop();
@@ -114,11 +118,11 @@ export class PicaGiftLateralItem extends Phaser.GameObjects.Container {
     private getCountTweenData(count: number) {
         let data: { duration: number, interval: number, acc: number };
         if (count < 10) {
-            data = { duration: 40, interval: 10, acc: 0 };
+            data = { duration: 300, interval: 20, acc: 0 };
         } else if (count >= 10 && count < 30) {
-            data = { duration: 40, interval: 10, acc: 1 };
+            data = { duration: 300, interval: 20, acc: 1 };
         } else if (count >= 30) {
-            data = { duration: 40, interval: 0, acc: 3 };
+            data = { duration: 300, interval:20, acc: 2 };
         }
         return data;
     }
