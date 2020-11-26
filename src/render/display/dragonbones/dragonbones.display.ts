@@ -233,6 +233,7 @@ export class DragonbonesDisplay extends DisplayObject {
     }
 
     protected buildDragbones() {
+        if (!this.scene.cache.custom.dragonbone) return;
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.onLoadCompleteHandler();
         } else {

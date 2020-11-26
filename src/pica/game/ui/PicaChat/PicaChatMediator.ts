@@ -2,11 +2,12 @@ import { PicaChat } from "./PicaChat";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game, IElement, UIType } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { i18n } from "utils";
+import { i18n, Logger } from "utils";
 
 export class PicaChatMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICACHAT_NAME, game);
+        Logger.getInstance().log("picachatmed=====create");
         this.game.emitter.on("chat", this.onChatHandler, this);
         this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
         // this.game.dataManager.on(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this);

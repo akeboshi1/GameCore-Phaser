@@ -10,14 +10,14 @@ export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {
         super(game);
         this.mMedMap.set("LoginMediator", new LoginMediator(this.game));
-    }
-
-    public showMainUI() {
         this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
         this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
         this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
         this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
         this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
+    }
+
+    public showMainUI() {
         super.showMainUI();
     }
 

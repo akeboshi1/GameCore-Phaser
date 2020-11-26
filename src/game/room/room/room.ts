@@ -398,19 +398,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mLayManager) this.mLayManager.destroy();
         if (this.mTerrainManager) {
             this.mTerrainManager.destroy();
-            this.mTerrainManager = null;
         }
         if (this.mElementManager) {
             this.mElementManager.destroy();
-            this.mElementManager = null;
         }
         if (this.mPlayerManager) {
             this.mPlayerManager.destroy();
-            this.mPlayerManager = null;
         }
         if (this.mBlocks) {
             this.mBlocks.destroy();
-            this.mBlocks = null;
         }
         // if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         // if (this.mWallManager) this.mWallManager.destroy();
@@ -418,6 +414,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mStateMap) this.mStateMap = null;
         Logger.getInstance().log("room clear");
         this.game.renderPeer.clearRoom();
+        this.game.uiManager.recover();
         // if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
@@ -452,7 +449,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public destroy() {
-        if (this.connection) this.connection.removePacketListener(this);
+        this.removeListen();
         this.clear();
         this.game.renderPeer.removeScene(SceneName.PLAY_SCENE);
         // if (this.mScene) {

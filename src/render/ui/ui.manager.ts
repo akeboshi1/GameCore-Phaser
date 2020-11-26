@@ -2,6 +2,8 @@ import { Logger, ValueResolver } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "../scenes/basic.scene";
+import { MainUIScene } from "../scenes";
+import { SceneName } from "structure";
 
 export class UiManager {
     protected mScene: BasicScene;
@@ -92,25 +94,33 @@ export class UiManager {
             return new Promise<BasePanel>((resolve, reject) => {
                 resolve(this._showPanel(type, param));
             });
-        } else if (scene) {
-            return new Promise<BasePanel>((resolve, reject) => {
-                this.render.emitter.once("sceneCreated", () => {
-                    if (this.mCache) {
-                        for (const tmp of this.mCache) {
-                            resolve(this._showPanel(tmp.name, tmp.param));
-                        }
-                        this.mCache.length = 0;
-                    }
-                }, this);
-            });
         } else {
-            const remoteCache = new ValueResolver<BasePanel>();
-            this.mRemoteCache.set(type, { resolver: remoteCache, param });
+            this.mScene = this.render.game.scene.getScene(SceneName.MAINUI_SCENE) as BasicScene;
+            if (!this.mScene) {
+                const remoteCache = new ValueResolver<BasePanel>();
+                this.mRemoteCache.set(type, { resolver: remoteCache, param });
 
-            return remoteCache.promise(() => {
-                //
-            });
+                return remoteCache.promise(() => {
+                    //
+                });
+            } else {
+                return new Promise<BasePanel>((resolve, reject) => {
+                    resolve(this._showPanel(type, param));
+                });
+            }
         }
+        // else if (scene) {
+        //     return new Promise<BasePanel>((resolve, reject) => {
+        //         this.render.emitter.once("sceneCreated", () => {
+        //             if (this.mCache) {
+        //                 for (const tmp of this.mCache) {
+        //                     resolve(this._showPanel(tmp.name, tmp.param));
+        //                 }
+        //                 this.mCache.length = 0;
+        //             }
+        //         }, this);
+        //     });
+        // }
     }
 
     public hidePanel(type: string) {

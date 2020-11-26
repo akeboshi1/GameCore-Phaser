@@ -396,6 +396,9 @@ export class CharacterInfoPanel extends BasePanel {
     public destroy() {
         this.mSkillGrideTable.destroy();
         this.mCategoryScroll.destroy();
+        if (this.mBackGround) {
+            this.mBackGround.clear();
+        }
         super.destroy();
     }
 

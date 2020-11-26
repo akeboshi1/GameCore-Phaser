@@ -33,6 +33,14 @@ export class UIManager extends PacketHandler {
         return this.mMedMap.get(name);
     }
 
+    public recover() {
+        this.mMedMap.forEach((mediator: any) => {
+            if (mediator && mediator.isShow()) {
+                mediator.hide();
+            }
+        });
+    }
+
     public addPackListener() {
         const connection = this.game.connection;
         if (!connection) {

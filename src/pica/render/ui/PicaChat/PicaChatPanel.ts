@@ -167,7 +167,9 @@ export class PicaChatPanel extends BasePanel {
         this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
         this.mGiftBtn.on("pointerup", this.onGiftHandler, this);
-
+        this.mEmojiBtn.on("pointerup", () => {
+            this.render.mainPeer.reconnect();
+        }, this);
         this.render.emitter.on(EventType.CHAT, this.chatHandler, this);
         this.render.emitter.on(EventType.QUERY_MARKET_REQUEST, this.setGiftData, this);
         this.render.emitter.on(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
@@ -182,7 +184,9 @@ export class PicaChatPanel extends BasePanel {
         this.mNavigateBtn.disableInteractive();
         this.mGiftBtn.disableInteractive();
         this.mTextArea.childrenMap.child.disableInteractive();
-
+        this.mEmojiBtn.off("pointerup", () => {
+            this.render.mainPeer.reconnect();
+        }, this);
         this.mScrollBtn.off("drag", this.onDragHandler, this);
         this.mNavigateBtn.off("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
@@ -247,10 +251,6 @@ export class PicaChatPanel extends BasePanel {
         this.mEmojiBtn.x = this.mHornBtn.x + this.mHornBtn.width * 0.5 + space + this.mEmojiBtn.width * 0.5;
         this.mEmojiBtn.y = -this.mEmojiBtn.height / 2 + this.mTitleBg.height;
         this.mEmojiBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-
-        this.mEmojiBtn.on("pointerup", () => {
-            this.render.mainPeer.reconnect();
-        }, this);
 
         this.mGiftBtn.x = this.mEmojiBtn.x + this.mEmojiBtn.width * 0.5 + space + this.mGiftBtn.width * 0.5;
         this.mGiftBtn.y = -this.mGiftBtn.height / 2 + this.mTitleBg.height;
