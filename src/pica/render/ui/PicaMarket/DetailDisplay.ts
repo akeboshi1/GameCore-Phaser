@@ -179,6 +179,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.complHandler = handler;
   }
 
+  setPlayAnimation(aniName: string, flip: boolean) {
+    if (this.mDragonboneDisplay)
+      this.mDragonboneDisplay.play({ name: aniName, flip });
+  }
   get display(): any {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
     return this.mDisplay;
   }

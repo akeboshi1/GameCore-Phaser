@@ -1,4 +1,4 @@
-import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch } from "apowophaserui";
+import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch, ClickEvent } from "apowophaserui";
 import { BasePanel, CheckboxGroup, DynamicImage, InputPanel, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
@@ -9,7 +9,7 @@ import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 export class PicaBagPanel extends BasePanel {
   private commonkey = "common_key";
   private seachKey: string = "key.seach";
-  private mCloseBtn: Phaser.GameObjects.Image;
+  private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
   private mBackground: Phaser.GameObjects.Graphics;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
@@ -26,6 +26,7 @@ export class PicaBagPanel extends BasePanel {
   private useBtn: NineSliceButton;
   private saveBtn: NineSliceButton;
   private resetBtn: NineSliceButton;
+  private rotateAvatarBtn: Button;
   private topBtns: TabButton[] = [];
 
   private mDetailBubble: DetailBubble;
@@ -38,11 +39,11 @@ export class PicaBagPanel extends BasePanel {
   private dressAvatarIDS: string[] = [];
   private dressAvatarDatas: op_client.ICountablePackageItem[] = [];
   private isInitAvatar: boolean = false;
+  private avatarDirection: number = 0;// 0-正向，1-反向
   constructor(uiManager: UiManager, sceneType: any) {// sceneType: op_def.SceneTypeEnum
     super(uiManager.scene, uiManager.render);
     this.key = ModuleName.PICABAG_NAME;
     this.mSceneType = sceneType;
-    this.setInteractive();
   }
 
   resize(w: number, h: number) {
@@ -81,12 +82,16 @@ export class PicaBagPanel extends BasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
+    this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
+    this.rotateAvatarBtn.x = width / 2 + 100 * this.dpr;
+    this.rotateAvatarBtn.y = this.mBg.y - 20 * this.dpr;
     this.mPropGrid.x = width / 2;
     this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 50 * this.dpr;
     this.mPropGrid.layout();
     this.mPropGrid.resetMask();
     this.mCategoryScroll.refreshMask();
     this.setSize(width, height);
+    this.setInteractive();
   }
 
   setCategories(subcategorys: any[]) {// op_def.IStrPair
@@ -130,12 +135,10 @@ export class PicaBagPanel extends BasePanel {
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
-    if (!isupdate) this.mPropGrid.setT(0);
     this.mPropGrid.setItems(props);
     if (this.categoryType !== 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-      this.mSelectedItemData.length = 0;
-      if (this.mSelectedItems.length === 0) {
-        this.mPropGrid.setT(0);
+      if (!isupdate) {
+        this.mSelectedItemData.length = 0;
         const cell = this.mPropGrid.getCell(0);
         this.onSelectItemHandler(cell.container);
       }
@@ -238,24 +241,26 @@ export class PicaBagPanel extends BasePanel {
 
   public addListen() {
     if (!this.mInitialized) return;
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
+    this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
     this.mSeachInput.on("seach", this.onSeachHandler, this);
-    this.mAdd.on("pointerup", this.onAddFurniToSceneHandler, this);
-    this.sellBtn.on("pointerup", this.onSellBtnHandler, this);
-    this.useBtn.on("pointerup", this.onUseBtnHandler, this);
-    this.saveBtn.on("pointerup", this.onSaveBtnHandler, this);
-    this.resetBtn.on("pointerup", this.onResetBtnHandler, this);
+    this.mAdd.on(ClickEvent.Tap, this.onAddFurniToSceneHandler, this);
+    this.sellBtn.on(ClickEvent.Tap, this.onSellBtnHandler, this);
+    this.useBtn.on(ClickEvent.Tap, this.onUseBtnHandler, this);
+    this.saveBtn.on(ClickEvent.Tap, this.onSaveBtnHandler, this);
+    this.resetBtn.on(ClickEvent.Tap, this.onResetBtnHandler, this);
+    this.rotateAvatarBtn.on(ClickEvent.Tap, this.onRotateAvatarHandler, this);
   }
 
   public removeListen() {
     if (!this.mInitialized) return;
-    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+    this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
     this.mSeachInput.off("seach", this.onSeachHandler, this);
-    this.mAdd.off("pointerup", this.onAddFurniToSceneHandler, this);
-    this.sellBtn.off("pointerup", this.onSellBtnHandler, this);
-    this.useBtn.off("pointerup", this.onUseBtnHandler, this);
-    this.saveBtn.on("pointerup", this.onSaveBtnHandler, this);
-    this.resetBtn.on("pointerup", this.onResetBtnHandler, this);
+    this.mAdd.off(ClickEvent.Tap, this.onAddFurniToSceneHandler, this);
+    this.sellBtn.off(ClickEvent.Tap, this.onSellBtnHandler, this);
+    this.useBtn.off(ClickEvent.Tap, this.onUseBtnHandler, this);
+    this.saveBtn.off(ClickEvent.Tap, this.onSaveBtnHandler, this);
+    this.resetBtn.off(ClickEvent.Tap, this.onResetBtnHandler, this);
+    this.rotateAvatarBtn.off(ClickEvent.Tap, this.onRotateAvatarHandler, this);
   }
 
   destroy() {
@@ -309,13 +314,8 @@ export class PicaBagPanel extends BasePanel {
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.mCloseBtn = this.scene.make.image({
-      key: this.key,
-      frame: "back_arrow",
-      x: 21 * this.dpr,
-      y: 30 * this.dpr
-    });
-    this.mCloseBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+    this.mCloseBtn = new Button(this.scene, this.key, "back_arrow", "back_arrow");
+    this.mCloseBtn.setPosition(21 * this.dpr, 30 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
     const btnwidth = 90 * this.dpr;
     const btnHeight = 38 * this.dpr;
@@ -327,6 +327,8 @@ export class PicaBagPanel extends BasePanel {
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.use"), "#996600");
     this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.save"), "#996600");
     this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY - btnHeight - 5 * this.dpr, 38 * this.dpr, 38 * this.dpr, this.commonkey, "red_btn");
+    this.rotateAvatarBtn = new Button(this.scene, this.key, "backpack_turn-back", "backpack_turn-back");
+    this.rotateAvatarBtn.visible = false;
     const reseticon = this.scene.make.image({ key: this.key, frame: "restore" });
     reseticon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.resetBtn.add(reseticon);
@@ -337,6 +339,7 @@ export class PicaBagPanel extends BasePanel {
     }));
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
+    this.mDetailDisplay.on("pointerup", this.onAvatarClickHandler, this);
     //  this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
@@ -361,7 +364,7 @@ export class PicaBagPanel extends BasePanel {
       }
     });
     this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategoryScroll]);
-    this.add([this.sellBtn, this.useBtn, this.mAdd, this.saveBtn, this.resetBtn]);
+    this.add([this.sellBtn, this.useBtn, this.mAdd, this.saveBtn, this.resetBtn, this.rotateAvatarBtn]);
     this.mShelfContainer.add(this.mCategoriesBar);
 
     const topCapW = 67 * this.dpr;
@@ -587,7 +590,9 @@ export class PicaBagPanel extends BasePanel {
           this.closeSeach(gameobject);
         }
         this.mSelectedCategeories = category;
-        this.queryPackege(true);
+        this.mPropGrid.setT(0);
+        const isupdate = this.mSelectedItemData.length === 0 ? false : true;
+        this.queryPackege(isupdate);
       }
       this.mPreCategoryBtn = gameobject;
     }
@@ -666,18 +671,21 @@ export class PicaBagPanel extends BasePanel {
         this.useBtn.visible = false;
         this.saveBtn.visible = false;
         this.resetBtn.visible = false;
+        this.rotateAvatarBtn.visible = false;
       } else if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-        this.sellBtn.visible = false;
         this.saveBtn.visible = true;
+        this.rotateAvatarBtn.visible = true;
         this.resetBtn.visible = true;
         this.useBtn.visible = false;
         this.mAdd.visible = false;
+        this.sellBtn.visible = false;
       } else {
         this.sellBtn.visible = true;
         this.useBtn.visible = true;
         this.mAdd.visible = false;
         this.saveBtn.visible = false;
         this.resetBtn.visible = false;
+        this.rotateAvatarBtn.visible = false;
       }
     }
     this.setLayoutTopButton(item);
@@ -722,6 +730,7 @@ export class PicaBagPanel extends BasePanel {
     this.dressAvatarIDS.length = 0;
     this.dressAvatarDatas.length = 0;
     this.isInitAvatar = false;
+    this.avatarDirection = 0;
   }
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
@@ -803,6 +812,43 @@ export class PicaBagPanel extends BasePanel {
     // this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryResetAvatar");
   }
 
+  private onRotateAvatarHandler() {
+    this.avatarDirection++;
+    const data = this.getAvatarAni();
+    this.mDetailDisplay.setPlayAnimation("idle" + data.addName, data.flip);
+  }
+
+  private onAvatarClickHandler() {
+    const anis = ["idle", "run", "mining", "crafting"];
+    const ani = anis[Math.floor(Math.random() * (anis.length - 1))];
+    const data = this.getAvatarAni();
+    this.mDetailDisplay.setPlayAnimation(ani + data.addName, data.flip);
+  }
+
+  private getAvatarAni() {
+    let addName = "";
+    let flip = false;
+    switch (this.avatarDirection) {
+      case 0:
+        addName = "";
+        flip = false;
+        break;
+      case 1:
+        addName = "_back";
+        flip = false;
+        break;
+      case 2:
+        addName = "_back";
+        flip = true;
+        break;
+      case 3:
+        addName = "";
+        flip = true;
+        this.avatarDirection = -1;
+        break;
+    }
+    return { addName, flip };
+  }
   private showSeach(parent: TextButton) {
     this.mCategoryScroll.addItemAt(this.mSeachInput, 1);
     this.mCategoryScroll.setInteractiveObject(this.mSeachInput.seachBtn);

@@ -80,6 +80,7 @@ export class DragonbonesDisplay extends DisplayObject {
     protected mDragonbonesName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
+    protected mInteractive: boolean = true;
     private replaceArr = [];
     private mHasLoadMap: Map<string, any> = new Map();
     private mLoadMap: Map<string, any> = new Map();
@@ -87,7 +88,6 @@ export class DragonbonesDisplay extends DisplayObject {
     private mNeedReplaceTexture: boolean = false;
     private mPlaceholder: Phaser.GameObjects.Image;
     private mBoardPoint: Phaser.Geom.Point;
-
     private readonly UNPACKSLOTS = [AvatarSlotType.WeapFarm, AvatarSlotType.WeapBarm];
     private readonly UNCHECKAVATARPROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
 
@@ -232,6 +232,21 @@ export class DragonbonesDisplay extends DisplayObject {
         }
     }
 
+    public setClickInteractive(active: boolean) {
+        this.mInteractive = active;
+        if (active) {
+            const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
+            if (!this.mClickCon) {
+                this.mClickCon = this.scene.make.container(undefined, false);
+                this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
+                this.mClickCon.x = -rect.width >> 1;
+                this.mClickCon.y = -rect.height;
+            }
+        } else {
+            if (this.mClickCon) this.mClickCon.destroy();
+        }
+    }
+
     protected buildDragbones() {
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.onLoadCompleteHandler();
@@ -268,15 +283,16 @@ export class DragonbonesDisplay extends DisplayObject {
         // this.mArmatureDisplay.x = this.baseLoc.x;
         // this.mArmatureDisplay.y = this.baseLoc.y;
         const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
-
-        if (!this.mClickCon) {
-            this.mClickCon = this.scene.make.container(undefined, false);
-            this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
-            this.mClickCon.x = -rect.width >> 1;
-            this.mClickCon.y = -rect.height;
+        if (this.mInteractive) {
+            if (!this.mClickCon) {
+                this.mClickCon = this.scene.make.container(undefined, false);
+                this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
+                this.mClickCon.x = -rect.width >> 1;
+                this.mClickCon.y = -rect.height;
+            }
+            this.add(this.mClickCon);
         }
         this.setData("id", this.displayInfo.id);
-        this.add(this.mClickCon);
         this.emit("initialized");
         this.render.renderEmitter("dragonBones_initialized");
     }
@@ -995,7 +1011,7 @@ export class DragonbonesDisplay extends DisplayObject {
     private onSoundEventHandler(event: dragonBones.EventObject) {
         // Logger.getInstance().log("sound event: ", event.name);
         if (event.name) {
-            throw new Error("todo");
+           // throw new Error("todo");
             // this.mRoomService.world.playSound({
             //     field: SoundField.Element,
             //     key: event.name,
