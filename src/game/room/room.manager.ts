@@ -109,6 +109,16 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         Logger.getInstance().log("enter===room");
+        const id = scene.scene.id;
+        let boo: boolean = false;
+        // tslint:disable-next-line:no-shadowed-variable
+        this.mRooms.forEach((room) => {
+            if (room && room.id === id) {
+                boo = true;
+                return;
+            }
+        });
+        if (boo) return;
         const room = new Room(this);
         this.mRooms.push(room);
         room.addActor(scene.actor);

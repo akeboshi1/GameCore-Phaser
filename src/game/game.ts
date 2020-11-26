@@ -60,8 +60,16 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer = peer;
         this.mSocket = new GameSocket(peer, new ConnListener(peer));
         this.connect = new Connection(this.mSocket);
-        this.connect.addPacketListener(this);
+        this.addPacketListener();
         this.update();
+    }
+
+    public addPacketListener() {
+        if (this.connect) this.connect.addPacketListener(this);
+    }
+
+    public removePacketListener() {
+        if (this.connect) this.connect.removePacketListener(this);
     }
 
     public run(): Promise<any> {
@@ -490,6 +498,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private _createAnotherGame(gameId, worldId, sceneId, loc, spawnPointId?) {
         this.clearGame(true).then(() => {
             this.isPause = false;
+            if (this.mUser) {
+                this.mUser.clear();
+            }
             if (this.connect) {
                 this.connect.closeConnect();
             }
@@ -501,7 +512,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             // this.mConfig.game_id = gameId;
             // this.mConfig.virtual_world_id = worldId;
             this.createManager();
-            this.connect.addPacketListener(this);
+            this.removePacketListener();
+            this.addPacketListener();
             const gateway: ServerAddress = this.mConfig.server_addr;
             if (gateway) {
                 // connect to game server.
@@ -527,7 +539,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc);
             this.createManager();
-            this.connect.addPacketListener(this);
+            this.removePacketListener();
+            this.addPacketListener();
             const gateway: ServerAddress = this.mConfig.server_addr;
             if (gateway) {
                 this.connect.startConnect(gateway);

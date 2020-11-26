@@ -121,6 +121,8 @@ export class Connection implements ConnectionService {
     }
 
     addPacketListener(listener: PacketHandler) {
+        const idx: number = this.mPacketHandlers.indexOf(listener);
+        if (idx !== -1) return;
         this.mPacketHandlers.push(listener);
     }
 
