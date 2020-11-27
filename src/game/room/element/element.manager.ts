@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger, LogicPos } from "utils";
+import { Handler, Logger, LogicPos } from "utils";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService } from "../room/room";
@@ -111,7 +111,25 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         element.setState(state.state);
     }
-
+    public checkElementAction(id: number): boolean {
+        const ele = this.get(id);
+        if (!ele) return false;
+        if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
+        const actionTag = "TQ_PKT_Action";
+        if (ElementAction.hasAction(ele.model, actionTag)) {
+            const eleAction = new ElementAction(ele.model, new Handler(this, (data) => {
+                if (data && data.action === "ShowUI") {
+                    const senddata = data.data;
+                    const uiName = senddata.uiName;
+                    const tempdata = { data: senddata, id: ele.id };
+                    this.mRoom.game.emitter.emit(EventType.SCENE_SHOW_UI, [uiName, tempdata]);
+                }
+            }));
+            if (eleAction.executeAction(ele, actionTag))
+                return true;
+        }
+        return false;
+    }
     public destroy() {
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {

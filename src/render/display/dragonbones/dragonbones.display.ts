@@ -166,7 +166,8 @@ export class DragonbonesDisplay extends DisplayObject {
             if (val.playingQueue && val.playingQueue.complete) {
                 this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
-            this.mArmatureDisplay.animation.play(val.name);
+            const times = val.times === undefined ? 1 : val.times;
+            this.mArmatureDisplay.animation.play(val.name, times);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
 
             if (this.mArmatureDisplay && this.mArmatureDisplay.armature) {
@@ -999,7 +1000,8 @@ export class DragonbonesDisplay extends DisplayObject {
         } else {
             queue.playedTimes++;
         }
-        if (queue.playedTimes >= queue.playTimes) {
+        const times = queue.playTimes === undefined ? -1 : queue.playTimes;
+        if (queue.playedTimes >= times && times > 0) {
             this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             // this.emit("animationComplete");
             if (queue.complete) {
@@ -1012,7 +1014,7 @@ export class DragonbonesDisplay extends DisplayObject {
     private onSoundEventHandler(event: dragonBones.EventObject) {
         // Logger.getInstance().log("sound event: ", event.name);
         if (event.name) {
-           // throw new Error("todo");
+            // throw new Error("todo");
             // this.mRoomService.world.playSound({
             //     field: SoundField.Element,
             //     key: event.name,

@@ -820,7 +820,7 @@ export class PicaBagPanel extends BasePanel {
 
   private onAvatarClickHandler() {
     const anis = ["idle", "run", "mining", "crafting"];
-    const ani = anis[Math.floor(Math.random() * (anis.length - 1))];
+    const ani = anis[Math.floor(Math.random() * (anis.length))];
     const data = this.getAvatarAni();
     this.mDetailDisplay.setPlayAnimation(ani + data.addName, data.flip);
   }
@@ -835,7 +835,8 @@ export class PicaBagPanel extends BasePanel {
         break;
       case 1:
         addName = "_back";
-        flip = false;
+        flip = true;
+        this.avatarDirection = -1;
         break;
       case 2:
         addName = "_back";
@@ -844,7 +845,6 @@ export class PicaBagPanel extends BasePanel {
       case 3:
         addName = "";
         flip = true;
-        this.avatarDirection = -1;
         break;
     }
     return { addName, flip };
@@ -1285,8 +1285,8 @@ class Item extends Phaser.GameObjects.Container {
   private onPropLoadCompleteHandler() {
     if (this.mPropImage && this.mPropImage.texture) {
       const texture = this.mPropImage.texture;
-      this.mPropImage.displayHeight = 45 * this.dpr;
-      this.mPropImage.scaleX = this.mPropImage.scaleY;
+      // this.mPropImage.displayHeight = 43 * this.dpr;
+      // this.mPropImage.scaleX = this.mPropImage.scaleY;
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }

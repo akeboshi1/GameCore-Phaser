@@ -1,4 +1,4 @@
-import { Element } from "./element";
+import { Element } from "../element/element";
 import { ISprite } from "../display/sprite/sprite";
 import { Handler } from "utils";
 export class ElementAction {

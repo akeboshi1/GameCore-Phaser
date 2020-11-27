@@ -667,7 +667,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // content.localeCode = i18n.language;
         content.localeCode = "zh-CN";
         this.mainPeer.send(i18Packet.Serialization());
-        // this.mPlayerDataManager.querySYNC_ALL_PACKAGE();
+        this.user.userData.querySYNC_ALL_PACKAGE();
     }
 
     private decodeConfigs(req): Promise<Lite> {
