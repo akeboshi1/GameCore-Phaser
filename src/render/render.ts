@@ -114,7 +114,7 @@ export class Render extends RPCPeer implements GameMain {
         return this.mCameraManager;
     }
 
-    get DisplayManager(): DisplayManager {
+    get displayManager(): DisplayManager {
         return this.mDisplayManager;
     }
 
@@ -929,6 +929,10 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public createDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
         if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo);
+    }
+    @Export()
+    public createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
+        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo, true);
     }
 
     @Export()

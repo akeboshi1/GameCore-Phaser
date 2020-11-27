@@ -8,6 +8,7 @@ import { PlayerState } from "../room/element/element";
 import { ISprite, Sprite } from "../room/display/sprite/sprite";
 import { ILogicPoint, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
+import { IDragonbonesModel, IFramesModel } from "structure";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -18,6 +19,10 @@ export class User extends Player {
         super(undefined, undefined);
         this.mBlockable = false;
         this.mUserData = new UserDataManager(game);
+    }
+
+    public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false) {
+        super.load(displayInfo, true);
     }
 
     addPackListener() {
@@ -222,14 +227,14 @@ export class User extends Player {
             // this.mBag = new Bag(this.mElementManager.roomService.world);
             // this.mBag.register();
         }
-        this.load(this.mModel.displayInfo);
+        this.load(this.mModel.displayInfo, this.isUser);
         if (this.mModel.pos) {
             const obj = { id: val.id, pos: val.pos, alpha: val.alpha };
             this.game.renderPeer.setDisplayData(obj);
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
-        Logger.getInstance().log("showNickname===use",this.mModel.direction);
+        Logger.getInstance().log("showNickname===use", this.mModel.direction);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);

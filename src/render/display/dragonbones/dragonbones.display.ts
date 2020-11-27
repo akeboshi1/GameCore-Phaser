@@ -163,11 +163,10 @@ export class DragonbonesDisplay extends DisplayObject {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
                 this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
-            if (val.playingQueue && val.playingQueue.complete) {
+            if (val.playingQueue && (val.playingQueue.playTimes && val.playingQueue.playTimes > 0)) {
                 this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
-            const times = val.times === undefined ? 1 : val.times;
-            this.mArmatureDisplay.animation.play(val.name, times);
+            this.mArmatureDisplay.animation.play(val.name, val.times);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
 
             if (this.mArmatureDisplay && this.mArmatureDisplay.armature) {
@@ -1004,10 +1003,7 @@ export class DragonbonesDisplay extends DisplayObject {
         if (queue.playedTimes >= times && times > 0) {
             this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             // this.emit("animationComplete");
-            if (queue.complete) {
-                queue.complete.call(this);
-                delete queue.complete;
-            }
+            this.render.mainPeer.completeDragonBonesAnimationQueue(this.id);
         }
     }
 

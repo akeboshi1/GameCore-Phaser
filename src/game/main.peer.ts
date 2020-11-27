@@ -95,6 +95,30 @@ export class MainPeer extends RPCPeer {
         this.game.refreshToken();
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public completeDragonBonesAnimationQueue(id: number) {
+        const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
+        if (dragonbones) dragonbones.completeAnimationQueue();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public completeFrameAnimationQueue(id: number) {
+        const frames = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (frames) frames.completeAnimationQueue();
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num])
+    public changePlayerState(id: number, state: string, times: number) {
+        const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
+        if (dragonbones) dragonbones.changeState(state, times);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public setDragonBonesQueue(id: number, animation: any) {
+        const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
+        if (dragonbones) dragonbones.setQueue(animation);
+    }
+
     @Export()
     public loginEnterWorld() {
         Logger.getInstance().log("game======loginEnterWorld");

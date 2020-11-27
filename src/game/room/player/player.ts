@@ -18,7 +18,6 @@ export class Player extends Element implements IElement {
     }
 
     setModel(val: ISprite) {
-        super.setModel(val);
         this.showNickname();
     }
 
@@ -93,7 +92,7 @@ export class Player extends Element implements IElement {
         }
     }
 
-    public changeState(val?: string) {
+    public changeState(val?: string, times?: number) {
         if (this.mCurState === val) return;
         // if (!val) val = PlayerState.IDLE;
         if (!val) {
@@ -102,9 +101,9 @@ export class Player extends Element implements IElement {
         if (this.mCheckStateHandle(val)) {
             this.mCurState = val;
             // this.mModel.currentAnimationName = this.mCurState;
-            this.mModel.setAnimationName(this.mCurState);
+            this.mModel.setAnimationName(this.mCurState, times);
             const id = this.mModel.id;
-            this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation);
+            this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation, undefined, times);
             // (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
         }
     }

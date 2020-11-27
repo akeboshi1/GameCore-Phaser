@@ -95,6 +95,8 @@ export class Terrain extends BlockObject implements IElement {
 
     public setQueue() { }
 
+    public completeAnimationQueue() { }
+
     public update() { }
 
     public mount() {

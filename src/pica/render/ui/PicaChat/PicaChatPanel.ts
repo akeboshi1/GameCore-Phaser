@@ -1,5 +1,6 @@
 import { BBCodeText, TextArea, UIType } from "apowophaserui";
-import { AlertView, BasePanel, InputPanel, Render, UiManager } from "gamecoreRender";
+import { PlayerState } from "gamecore";
+import { AlertView, BasePanel, DragonbonesDisplay, InputPanel, Render, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n } from "utils";
@@ -167,9 +168,7 @@ export class PicaChatPanel extends BasePanel {
         this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
         this.mGiftBtn.on("pointerup", this.onGiftHandler, this);
-        this.mEmojiBtn.on("pointerup", () => {
-            this.render.mainPeer.reconnect();
-        }, this);
+        this.mEmojiBtn.on("pointerup", this.onEmojiHandler, this);
         this.render.emitter.on(EventType.CHAT, this.chatHandler, this);
         this.render.emitter.on(EventType.QUERY_MARKET_REQUEST, this.setGiftData, this);
         this.render.emitter.on(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
@@ -184,9 +183,7 @@ export class PicaChatPanel extends BasePanel {
         this.mNavigateBtn.disableInteractive();
         this.mGiftBtn.disableInteractive();
         this.mTextArea.childrenMap.child.disableInteractive();
-        this.mEmojiBtn.off("pointerup", () => {
-            this.render.mainPeer.reconnect();
-        }, this);
+        this.mEmojiBtn.off("pointerup", this.onEmojiHandler, this);
         this.mScrollBtn.off("drag", this.onDragHandler, this);
         this.mNavigateBtn.off("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
@@ -322,6 +319,12 @@ export class PicaChatPanel extends BasePanel {
     }
     private onShowNavigateHandler() {
         this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_showNavigate");
+    }
+    private onEmojiHandler() {
+        const id = this.render.displayManager.user.id;
+
+        this.render.mainPeer.setDragonBonesQueue(id, [{ animationName: "idle", scale: false }]);
+        this.render.mainPeer.changePlayerState(id, "jump", 1);
     }
     private onGiftHandler() {
         if (!this.giftPanel || !this.giftPanel.visible) {

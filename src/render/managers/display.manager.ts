@@ -54,20 +54,23 @@ export class DisplayManager {
     private sceneManager: SceneManager;
     private displays: Map<number, DisplayObject>;
     private scenerys: Map<number, BlockManager>;
-
+    private mUser: DisplayObject;
     constructor(private render: Render) {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
         this.scenerys = new Map();
     }
 
+    get user(): DisplayObject {
+        return this.mUser;
+    }
     public resize(width: number, height: number) {
         this.scenerys.forEach((scenery) => {
             scenery.resize(width, height);
         });
     }
 
-    public addDragonbonesDisplay(data: IDragonbonesModel): void {
+    public addDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false) {
         if (!data) {
             return;
         }
@@ -85,6 +88,7 @@ export class DisplayManager {
         }
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        if (isUser) this.mUser = display;
     }
 
     public addTerrainDisplay(data: IFramesModel) {
