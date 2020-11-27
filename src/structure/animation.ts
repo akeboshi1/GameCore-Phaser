@@ -9,5 +9,4 @@ export interface AnimationQueue {
     name: string;
     playTimes?: number;
     playedTimes?: number;
-    complete?: Function;
 }

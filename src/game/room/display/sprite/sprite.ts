@@ -267,12 +267,12 @@ export class Sprite extends EventDispatcher implements ISprite {
     public setMountSprites(ids: number[]) {
         this.mountSprites = ids;
     }
-    public setAnimationName(name: string) {
+    public setAnimationName(name: string, times?: number) {
         if (this.displayInfo) {
             this.displayInfo.animationName = name;
         }
         this.currentAnimationName = name;
-        const ani = this.setAnimationData(name, this.direction);
+        const ani = this.setAnimationData(name, this.direction, times);
         return ani;
     }
 
@@ -346,7 +346,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         return this.displayInfo.getInteractiveArea(animationName);
     }
 
-    private setAnimationData(animationName: string, direction: number) {
+    private setAnimationData(animationName: string, direction: number, times?: number) {
         if (!this.displayInfo || !animationName) {
             return;
         }
@@ -357,11 +357,12 @@ export class Sprite extends EventDispatcher implements ISprite {
             }
         }
         this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+        this.currentAnimation.times = times;
         if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
         if (this.currentCollisionArea) {
             this.setArea();
         }
-        this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation });
+        this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
         return this.currentAnimation;
     }
 

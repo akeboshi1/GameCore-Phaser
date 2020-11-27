@@ -47,6 +47,8 @@ export interface IElement {
 
     setQueue(queue: op_client.IChangeAnimation[]);
 
+    completeAnimationQueue();
+
     mount(ele: IElement): this;
 
     unmount(): this;
@@ -159,6 +161,7 @@ export class Element extends BlockObject implements IElement {
     protected mMounts: IElement[];
     protected mDirty: boolean = false;
     protected mCreatedDisplay: boolean = false;
+    protected isUser: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager ? mElementManager.roomService : undefined);
         if (!sprite) {
@@ -171,8 +174,9 @@ export class Element extends BlockObject implements IElement {
         throw new Error("Method not implemented.");
     }
 
-    public load(displayInfo: IFramesModel | IDragonbonesModel) {
+    public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false) {
         this.mDisplayInfo = displayInfo;
+        this.isUser = isUser;
         this.loadDisplayInfo();
         this.addDisplay();
         if (!this.mCreatedDisplay) {
@@ -286,26 +290,39 @@ export class Element extends BlockObject implements IElement {
                 name: animation.animationName,
                 playTimes: animation.times,
             };
-            if (animation.times > 0) {
-                aq.complete = () => {
-                    const anis = this.model.animationQueue;
-                    anis.shift();
-                    let aniName: string = PlayerState.IDLE;
-                    let playTiems;
-                    if (anis.length > 0) {
-                        aniName = anis[0].name;
-                        playTiems = anis[0].playTimes;
-                    }
-                    this.play(aniName, playTiems);
-                    // const aniName = anis.length > 0 ? anis[0].name : PlayerState.IDLE;
-                };
-            }
+            // if (animation.times > 0) {
+            //     aq.complete = () => {
+            //         const anis = this.model.animationQueue;
+            //         anis.shift();
+            //         let aniName: string = PlayerState.IDLE;
+            //         let playTiems;
+            //         if (anis.length > 0) {
+            //             aniName = anis[0].name;
+            //             playTiems = anis[0].playTimes;
+            //         }
+            //         this.play(aniName, playTiems);
+            //         // const aniName = anis.length > 0 ? anis[0].name : PlayerState.IDLE;
+            //     };
+            // }
             queue.push(aq);
         }
         this.mModel.setAnimationQueue(queue);
         if (queue.length > 0) {
             this.play(animations[0].animationName, animations[0].times);
         }
+    }
+
+    public completeAnimationQueue() {
+        const anis = this.model.animationQueue;
+        if (!anis || anis.length < 1) return;
+        let aniName: string = PlayerState.IDLE;
+        let playTiems;
+        if (anis.length > 0) {
+            aniName = anis[0].name;
+            playTiems = anis[0].playTimes;
+        }
+        this.play(aniName, playTiems);
+        anis.shift();
     }
 
     public setDirection(val: number) {
@@ -697,7 +714,11 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
-            this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo as IDragonbonesModel);
+            if (this.isUser) {
+                this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
+            } else {
+                this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo as IDragonbonesModel);
+            }
         } else {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
             this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo as IFramesModel);

@@ -163,10 +163,10 @@ export class DragonbonesDisplay extends DisplayObject {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
                 this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
-            if (val.playingQueue && val.playingQueue.complete) {
+            if (val.playingQueue && (val.playingQueue.playTimes && val.playingQueue.playTimes > 0)) {
                 this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
-            this.mArmatureDisplay.animation.play(val.name);
+            this.mArmatureDisplay.animation.play(val.name, val.times);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
 
             if (this.mArmatureDisplay && this.mArmatureDisplay.armature) {
@@ -999,20 +999,18 @@ export class DragonbonesDisplay extends DisplayObject {
         } else {
             queue.playedTimes++;
         }
-        if (queue.playedTimes >= queue.playTimes) {
+        const times = queue.playTimes === undefined ? -1 : queue.playTimes;
+        if (queue.playedTimes >= times && times > 0) {
             this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             // this.emit("animationComplete");
-            if (queue.complete) {
-                queue.complete.call(this);
-                delete queue.complete;
-            }
+            this.render.mainPeer.completeDragonBonesAnimationQueue(this.id);
         }
     }
 
     private onSoundEventHandler(event: dragonBones.EventObject) {
         // Logger.getInstance().log("sound event: ", event.name);
         if (event.name) {
-           // throw new Error("todo");
+            // throw new Error("todo");
             // this.mRoomService.world.playSound({
             //     field: SoundField.Element,
             //     key: event.name,

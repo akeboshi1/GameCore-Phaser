@@ -446,10 +446,7 @@ export class FramesDisplay extends DisplayObject {
                 this.mMainSprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
             }
             // this.emit("animationComplete");
-            if (queue.complete) {
-                queue.complete.call(this);
-                delete queue.complete;
-            }
+            this.render.mainPeer.completeFrameAnimationQueue(this.id);
         }
     }
 
