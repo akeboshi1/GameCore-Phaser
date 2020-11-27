@@ -266,7 +266,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mModel.currentAnimationName !== animationName) {
-            this.mModel.currentAnimationName = animationName;
+            this.mModel.setAnimationName(animationName);
         }
         // 部分动画可能会重新播放
         // if (!this.mDisplay) {

@@ -323,7 +323,7 @@ export class PicaChatPanel extends BasePanel {
     private onEmojiHandler() {
         const id = this.render.displayManager.user.id;
 
-        this.render.mainPeer.setDragonBonesQueue(id, [{ animationName: "idle", scale: false }]);
+        this.render.mainPeer.setDragonBonesQueue(id, [{ animationName: "idle", scale: false, times: 1 }]);
         this.render.mainPeer.changePlayerState(id, "jump", 1);
     }
     private onGiftHandler() {

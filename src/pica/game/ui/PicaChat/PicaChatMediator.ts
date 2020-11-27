@@ -8,8 +8,6 @@ export class PicaChatMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICACHAT_NAME, game);
         Logger.getInstance().log("picachatmed=====create");
-        this.game.emitter.on("chat", this.onChatHandler, this);
-        this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
         // this.game.dataManager.on(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this);
         if (!this.mModel) {
             this.mModel = new PicaChat(this.game);
@@ -24,11 +22,14 @@ export class PicaChatMediator extends BasicMediator {
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_chat", this.onSendChatHandler, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_initialized", this.onViewInitComplete, this);
-
+        this.game.emitter.on("chat", this.onChatHandler, this);
+        this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
         this.onViewInitComplete();
     }
 
     hide() {
+        this.game.emitter.off("chat", this.onChatHandler, this);
+        this.game.emitter.off("queryMarket", this.onQueryResuleHandler, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_showNavigate", this.onShowNavigateHandler, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_querymarket", this.queryMarket, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_chat", this.onSendChatHandler, this);

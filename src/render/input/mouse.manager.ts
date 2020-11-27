@@ -27,8 +27,13 @@ export class MouseManager {
     private zoom: number;
     private readonly delay = 500;
     private debounce: any;
+    private mClickID: number;
     constructor(private render: Render) {
         this.zoom = this.render.scaleRatio || 1;
+    }
+
+    get clickID(): number {
+        return this.mClickID;
     }
 
     public changeScene(scene: Phaser.Scene) {
@@ -185,6 +190,7 @@ export class MouseManager {
     }
 
     private sendMouseEvent(mouseEvent: MouseEvent[], id, point3f: { x: number, y: number, z?: number }) {
+        this.mClickID = id;
         this.render.mainPeer.sendMouseEvent(id, mouseEvent, point3f);
         // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
