@@ -20,7 +20,7 @@ export class PicaHandheldMediator extends BasicMediator {
     }
 
     hide() {
-        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICACHAT_NAME];
+        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAHANDHELD_NAME];
         super.hide();
         this.game.emitter.off(ModuleName.PICAHANDHELD_NAME + "_changehandheld", this.onChangeHandheld, this);
         this.game.emitter.off(ModuleName.PICAHANDHELD_NAME + "_clearhandheld", this.onClearHandheld, this);

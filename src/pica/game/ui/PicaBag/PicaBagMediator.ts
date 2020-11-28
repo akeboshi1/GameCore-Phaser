@@ -136,15 +136,18 @@ export class PicaBagMediator extends BasicMediator {
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
         if (this.playerData) {
             const items = this.playerData.getItemsByCategory(data.packType, data.key);
-            let tempitem: op_client.ICountablePackageItem;
-            for (let i = items.length - 1; i >= 0; i--) {
-                if (items[i].tag === "remove") {
-                    tempitem = items[i];
-                    items.splice(i, 1);
+            if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage&&items) {
+                let tempitem: op_client.ICountablePackageItem;
+                for (let i = items.length - 1; i >= 0; i--) {
+                    const tag = items[i].tag;
+                    if (tag !== undefined && tag !== "" && JSON.parse(tag).type === "remove") {
+                        tempitem = items[i];
+                        items.splice(i, 1);
+                    }
                 }
-            }
-            if (data.key !== "alltype" && tempitem) {
-                items.unshift(tempitem);
+                if (data.key !== "alltype" && tempitem) {
+                    items.unshift(tempitem);
+                }
             }
             this.mView.setProp(items, data.isupdate);
         }

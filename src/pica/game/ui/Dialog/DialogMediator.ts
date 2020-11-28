@@ -9,8 +9,11 @@ export class DialogMediator extends BasicMediator {
         this.dialog = new Dialog(game);
     }
 
-    public onQueryNextDialog(uiid: number, comid: number, data?: number[]) {
-        this.dialog.queryNextDialog(uiid, comid, data);
+    public onQueryNextDialog(data: any) {
+        const uiid = data.id;
+        const comid = data.nodeid;
+        const tempdata = undefined;
+        this.dialog.queryNextDialog(uiid, comid, tempdata);
     }
 
     show(param?: any) {
@@ -25,6 +28,10 @@ export class DialogMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.DIALOG_NAME + "_hide", this.onHideHandler, this);
     }
 
+    update(param?: any) {
+        super.update(param);
+        if (this.panelInit) this.mView.update(param);
+    }
     destroy() {
         if (this.dialog) {
             this.dialog.destroy();

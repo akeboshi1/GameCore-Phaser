@@ -1284,10 +1284,12 @@ class Item extends Phaser.GameObjects.Container {
       this.timeIcon.visible = false;
       return;
     }
-    if (prop.tag !== "remove") {
+    if (!prop.tag || JSON.parse(prop.tag).type !== "remove") {
+      this.mPropImage.scale = this.dpr;
       this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     } else {
       this.mPropImage.setTexture(this.key, "backpack_close");
+      this.mPropImage.scale = 1;
     }
     this.mPropImage.visible = true;
     this.timeIcon.visible = prop.expiredTime > 0;
