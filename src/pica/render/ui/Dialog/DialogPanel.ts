@@ -2,6 +2,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { Font, Handler, Url } from "utils";
 import { ModuleName } from "structure";
 import { BasePanel, DynamicImage, UiManager } from "gamecoreRender";
+import { UIAtlasKey, UIAtlasName } from "picaRes";
 
 enum HorizontalAlignment {
     HORIZONTAL_LEFT = 0,
@@ -27,6 +28,7 @@ export class DialogPanel extends BasePanel {
     private bg: Phaser.GameObjects.Image;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
+        this.key = ModuleName.DIALOG_NAME;
     }
     resize(w: number, h: number) {
         const width = this.scaleWidth;
@@ -48,7 +50,7 @@ export class DialogPanel extends BasePanel {
     }
 
     preload() {
-        this.addAtlas(this.key, "common/ui_base.png", "common/ui_base.json");
+        this.addAtlas(this.key, UIAtlasName.textureUrl(UIAtlasName.commonUrl), UIAtlasName.jsonUrl(UIAtlasName.commonUrl));
         super.preload();
     }
 
@@ -59,7 +61,9 @@ export class DialogPanel extends BasePanel {
             this.preload();
             return;
         }
-        if (this.mShow) return;
+        if (this.mShow) {
+            return;
+        }
         if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
         if (!this.mTweening && this.mTweenBoo) {
             this.showTween(true);
@@ -199,12 +203,12 @@ export class DialogPanel extends BasePanel {
             temp.select = false;
         }
         item.select = true;
-        const data = this.showData[0];
+        const data = this.showData;
         this.render.renderEmitter(this.key + "_querydialog", { id: data.id, nodeid: item.itemData.node.id });
     }
 
     private onNextDialogHandler() {
-        const data = this.showData[0];
+        const data = this.showData;
         this.render.renderEmitter(this.key + "_querydialog", { id: data.id, nodeid: 0 });
     }
 

@@ -73,3 +73,5 @@ export * from "./ui/PicaTreasure/PicaTreasure";
 export * from "./ui/PicaTreasure/PicaTreasureMediator";
 export * from "./ui/PicaGiftEffect/PicaGiftEffect";
 export * from "./ui/PicaGiftEffect/PicaGiftEffectMediator";
+export * from "./ui/PicaFurniFun/PicaFurniFun";
+export * from "./ui/PicaFurniFun/PicaFurniFunMediator";
