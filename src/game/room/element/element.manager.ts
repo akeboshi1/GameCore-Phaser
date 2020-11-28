@@ -13,7 +13,7 @@ import { IDragonbonesModel } from "structure";
 import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 import { DataMgrType } from "../../data.manager";
-import { ElementAction } from "./element.action";
+import { ElementActionManager } from "../elementaction/element.action.manager";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -36,6 +36,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     protected mMap: number[][];
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
+    private mActionMgr: ElementActionManager;
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -62,6 +63,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mMap[i] = new Array(size.cols).fill(-1);
         }
         this.mStateMgr = new ElementStateManager(mRoom);
+        this.mActionMgr = new ElementActionManager(mRoom.game);
         this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
     }
 
@@ -115,20 +117,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const ele = this.get(id);
         if (!ele) return false;
         if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
-        const actionTag = "TQ_PKT_Action";
-        if (ElementAction.hasAction(ele.model, actionTag)) {
-            const eleAction = new ElementAction(ele.model, new Handler(this, (data) => {
-                if (data && data.action === "ShowUI") {
-                    const senddata = data.data;
-                    const uiName = senddata.uiName;
-                    const tempdata = { data: senddata, id: ele.id };
-                    this.mRoom.game.emitter.emit(EventType.SCENE_SHOW_UI, [uiName, tempdata]);
-                }
-            }));
-            if (eleAction.executeAction(ele, actionTag))
-                return true;
+        if (this.mActionMgr.checkAllAction(ele.model).length > 0) {
+            this.mActionMgr.executeElementActions(ele.model);
         }
-        return false;
     }
     public destroy() {
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
@@ -140,6 +131,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
         this.mStateMgr.destroy();
+        this.mActionMgr.destroy();
     }
 
     public update(time: number, delta: number) { }
@@ -368,7 +360,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!eleDataMgr) return;
         for (const ele of eles) {
             if (eleDataMgr.hasAction(ele.id, EventType.SCENE_ELEMENT_DATA_UPDATE)) {
-                eleDataMgr.actionEmitter(ele.id, EventType.SCENE_ELEMENT_DATA_UPDATE, ElementAction.getActionData(ele.model, "TQ_PKT_Action").data);
+                eleDataMgr.actionEmitter(ele.id, EventType.SCENE_ELEMENT_DATA_UPDATE, this.mActionMgr.getActionData(ele.model, "TQ_PKT_Action").data);
             }
         }
     }

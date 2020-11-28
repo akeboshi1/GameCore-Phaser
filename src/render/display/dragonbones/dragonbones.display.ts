@@ -297,6 +297,24 @@ export class DragonbonesDisplay extends DisplayObject {
         this.emit("initialized");
         this.render.renderEmitter("dragonBones_initialized");
     }
+
+    protected onArmatureLoopComplete(event: dragonBones.EventObject) {
+        if (!this.mArmatureDisplay || !this.mAnimation) {
+            return;
+        }
+        const queue = this.mAnimation.playingQueue;
+        if (queue.playedTimes === undefined) {
+            queue.playedTimes = 1;
+        } else {
+            queue.playedTimes++;
+        }
+        const times = queue.playTimes === undefined ? -1 : queue.playTimes;
+        if (queue.playedTimes >= times && times > 0) {
+            this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
+            // this.emit("animationComplete");
+            this.render.mainPeer.completeDragonBonesAnimationQueue(this.id);
+        }
+    }
     protected clearArmatureSlot() {
         const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
         slotList.forEach((slot: dragonBones.Slot) => {
@@ -986,24 +1004,6 @@ export class DragonbonesDisplay extends DisplayObject {
         if (this.mFadeTween) {
             this.mFadeTween.stop();
             this.mFadeTween.remove();
-        }
-    }
-
-    private onArmatureLoopComplete(event: dragonBones.EventObject) {
-        if (!this.mArmatureDisplay || !this.mAnimation) {
-            return;
-        }
-        const queue = this.mAnimation.playingQueue;
-        if (queue.playedTimes === undefined) {
-            queue.playedTimes = 1;
-        } else {
-            queue.playedTimes++;
-        }
-        const times = queue.playTimes === undefined ? -1 : queue.playTimes;
-        if (queue.playedTimes >= times && times > 0) {
-            this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
-            // this.emit("animationComplete");
-            this.render.mainPeer.completeDragonBonesAnimationQueue(this.id);
         }
     }
 

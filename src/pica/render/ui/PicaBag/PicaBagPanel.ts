@@ -2,7 +2,7 @@ import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCode
 import { BasePanel, CheckboxGroup, DynamicImage, InputPanel, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { AvatarSuitType, ModuleName, RENDER_PEER, SuitAlternativeType } from "structure";
+import { AvatarSuitType, ModuleName, RENDER_PEER, RunningAnimation, SuitAlternativeType } from "structure";
 import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 
@@ -815,14 +815,26 @@ export class PicaBagPanel extends BasePanel {
   private onRotateAvatarHandler() {
     this.avatarDirection++;
     const data = this.getAvatarAni();
-    this.mDetailDisplay.setPlayAnimation("idle" + data.addName, data.flip);
+    const aniData: RunningAnimation = {
+      name: ("idle" + data.addName),
+      flip: data.flip
+    };
+    this.mDetailDisplay.setPlayAnimation(aniData);
   }
 
   private onAvatarClickHandler() {
     const anis = ["idle", "run", "mining", "crafting"];
     const ani = anis[Math.floor(Math.random() * (anis.length))];
     const data = this.getAvatarAni();
-    this.mDetailDisplay.setPlayAnimation(ani + data.addName, data.flip);
+    const aniData: RunningAnimation = {
+      name: (ani + data.addName),
+      flip: data.flip,
+      times: 1,
+      playingQueue: {
+        name: "idle", playTimes: -1
+      }
+    };
+    this.mDetailDisplay.setPlayAnimation(aniData);
   }
 
   private getAvatarAni() {
@@ -847,7 +859,9 @@ export class PicaBagPanel extends BasePanel {
         flip = true;
         break;
     }
-    return { addName, flip };
+    return {
+      addName, flip
+    };
   }
   private showSeach(parent: TextButton) {
     this.mCategoryScroll.addItemAt(this.mSeachInput, 1);
@@ -1219,10 +1233,12 @@ class Item extends Phaser.GameObjects.Container {
   private timeIcon: Phaser.GameObjects.Image;
   private dpr: number;
   private zoom: number;
+  private key: string;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
     super(scene, x, y);
     this.dpr = dpr;
     this.zoom = zoom;
+    this.key = key;
     const background = scene.make.image({
       key,
       frame: "grid_bg"
@@ -1268,7 +1284,11 @@ class Item extends Phaser.GameObjects.Container {
       this.timeIcon.visible = false;
       return;
     }
-    this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+    if (prop.tag !== "remove") {
+      this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+    } else {
+      this.mPropImage.setTexture(this.key, "backpack_close");
+    }
     this.mPropImage.visible = true;
     this.timeIcon.visible = prop.expiredTime > 0;
     if (prop.count > 1) {
