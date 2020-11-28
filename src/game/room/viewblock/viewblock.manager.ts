@@ -1,5 +1,5 @@
 
-import { IPosition45Obj, IPos, LogicRectangle } from "utils";
+import { IPosition45Obj, IPos, LogicRectangle, Logger } from "utils";
 import { IBlockObject } from "../block/iblock.object";
 import { Viewblock } from "./view.block";
 import { ICameraService } from "../camera/cameras.manager";
@@ -90,6 +90,8 @@ export class ViewblockManager implements IViewBlockManager {
                         block.check(bound, miniViewPort);
                     }
                 });
+            }).catch((error) => {
+                Logger.getInstance().error(error);
             });
         }
     }

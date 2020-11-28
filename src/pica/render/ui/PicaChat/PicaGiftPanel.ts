@@ -144,6 +144,7 @@ export class PicaGiftPanel extends Phaser.GameObjects.Container {
     }
 
     private onSendHandler() {
+        if (!this.curGiftData) return;
         if (this.curGiftData.limit > 0 && this.curGiftData.remain <= 0) {
             const tipsdata = { text: [{ text: "", node: undefined }] };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
             this.emit("shownotice", i18n.t("party.giftsell"));

@@ -24,6 +24,7 @@ export class PicaPropFunPanel extends BasePanel {
     private slider: GameSlider;
     private thumb: Phaser.GameObjects.Image;
     private line: boolean = false;
+    private prop;
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAPROPFUN_NAME;
@@ -198,20 +199,20 @@ export class PicaPropFunPanel extends BasePanel {
     }
 
     public setProp(config: any) {// PicPropFunConfig
-        const prop = config.data;
+        this.prop = config;
         let price = (config.price !== undefined ? config.price : true);
-        price = prop.sellingPrice ? price : false;
+        price = this.prop.data.sellingPrice ? price : false;
         const slider = (config.slider !== undefined ? config.slider : true);
         this.line = config.line || false;
-        this.itemData = prop;
+        this.itemData = this.prop.data;
         if (slider)
             this.itemCount = 1;
-        else this.itemCount = prop.count;
+        else this.itemCount = this.itemData.count;
         if (config.resource)
             this.setResource(config.resource);
         if (config.url)
             this.mDetailDisplay.loadUrl(config.url);
-        this.itemName.text = prop.name || prop.shortName;
+        this.itemName.text = this.itemData.name || this.itemData.shortName;
         this.itemCountText.text = this.itemCount + "";
         if (config.title) {
             this.titleName.text = config.title;
@@ -221,8 +222,8 @@ export class PicaPropFunPanel extends BasePanel {
             this.priceBg.visible = true;
             this.mCoinIcon.visible = true;
             this.slider.y = 70 * this.dpr;
-            this.pricText.text = `${Coin.getName(prop.sellingPrice.coinType)} x ${prop.sellingPrice.price * this.itemCount}`;
-            const coinIcon = Coin.getIcon(prop.sellingPrice.coinType);
+            this.pricText.text = `${Coin.getName(this.itemData.sellingPrice.coinType)} x ${this.itemData.sellingPrice.price * this.itemCount}`;
+            const coinIcon = Coin.getIcon(this.itemData.sellingPrice.coinType);
             this.mCoinIcon.setFrame(coinIcon);
         } else {
             this.pricText.visible = false;
@@ -266,18 +267,24 @@ export class PicaPropFunPanel extends BasePanel {
     }
 
     private onCancelBtnHandler() {
-        if (this.cancelHandler) {
-            this.cancelHandler(this.itemData);
+        const panel = this.uiManager.getPanel(`${this.prop.resultHandler.key}Panel`);
+        if (panel) {
+            if (this.cancelHandler) {
+                this.cancelHandler.apply(panel, this.itemData);
+            }
         }
         this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
     }
 
     private onConfirmBtnHandler() {
         if (this.confirmHandler) {
-            if (this.confirmHandlerAddData) {
-                this.confirmHandler(this.confirmHandlerAddData, this.itemData, this.itemCount);
-            } else {
-                this.confirmHandler(this.itemData, this.itemCount);
+            const panel = this.uiManager.getPanel(`${this.prop.resultHandler.key}Panel`);
+            if (panel) {
+                if (this.confirmHandlerAddData) {
+                    this.confirmHandler.apply(panel, [this.confirmHandlerAddData, this.itemData, this.itemCount]);
+                } else {
+                    this.confirmHandler.apply(panel, [this.itemData, this.itemCount]);
+                }
             }
         }
         this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");

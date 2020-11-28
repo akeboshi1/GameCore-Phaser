@@ -1,4 +1,5 @@
 import { DynamicImage } from "gamecoreRender";
+import { ModuleName } from "structure";
 import { Coin, Font, Logger, Url } from "utils";
 
 export class MarketItem extends Phaser.GameObjects.Container {
@@ -16,14 +17,14 @@ export class MarketItem extends Phaser.GameObjects.Container {
     super(scene, x, y);
     this.dpr = dpr;
     this.mBackground = this.scene.make.image({
-      key: "market",
+      key: ModuleName.PICAMARKET_NAME,
       frame: "border"
     }, false).setOrigin(0);
     this.mBackground.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mBorder = this.scene.make.image({
       x: 3 * dpr,
       y: 3 * dpr,
-      key: "market",
+      key: ModuleName.PICAMARKET_NAME,
       frame: "item_border"
     }, false).setOrigin(0);
     this.mBorder.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
@@ -43,13 +44,13 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mCoinIcon = this.scene.make.image({
       x: 45 * this.dpr,
       y: 40 * this.dpr,
-      key: "market",
+      key: ModuleName.PICAMARKET_NAME,
     }, false).setOrigin(0);
 
     const priceBg = this.scene.make.image({
       x: 62 * this.dpr,
       y: 39 * this.dpr,
-      key: "market",
+      key: ModuleName.PICAMARKET_NAME,
       frame: "price_border"
     }, false).setOrigin(0);
 
@@ -64,7 +65,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     this.mTagIcon = this.scene.make.image({
-      key: "market",
+      key: ModuleName.PICAMARKET_NAME,
       frame: "tip_red",
       x: -86 * this.dpr,
       y: -34 * this.dpr

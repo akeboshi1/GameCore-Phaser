@@ -280,7 +280,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         if (this.mModel.currentAnimationName !== animationName) {
-            this.mModel.currentAnimationName = animationName;
+            this.mModel.setAnimationName(animationName);
         }
         // 部分动画可能会重新播放
         // if (!this.mDisplay) {
@@ -290,7 +290,7 @@ export class Element extends BlockObject implements IElement {
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
-        this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
+        if (this.mElementManager) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
         // this.mDisplay.play(this.model.currentAnimation, undefined, times);
     }
 
@@ -493,6 +493,9 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setPosition(p: IPos, update: boolean = false) {
+        if (!this.mElementManager) {
+            return;
+        }
         if (this.mMoving) {
             this.stopMove();
         }
@@ -523,6 +526,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showNickname() {
+        if (!this.mModel) return;
         Logger.getInstance().log("showNickName======" + this.mModel.nickname);
         this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
     }
@@ -649,7 +653,7 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData.tweenAnim = null;
             this.mMoveData = null;
         }
-        this.mElementManager.roomService.game.peer.render.removeBlockObject(this.id);
+        if (!this.mElementManager) this.mElementManager.roomService.game.peer.render.removeBlockObject(this.id);
         // if (this.mDisplay) {
         //     if (this.mBlockable) {
         //         this.roomService.removeBlockObject(this);
@@ -676,7 +680,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected _doMove() {
-        if (!this.mMoveData.posPath) {
+        if (!this.mMoveData.posPath || !this.mElementManager) {
             return;
         }
         // const line = this.mMoveData.tweenLineAnim;
@@ -724,7 +728,7 @@ export class Element extends BlockObject implements IElement {
         // }
         // return this.mDisplay;
         // TODO
-        if (!this.mDisplayInfo) {
+        if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
@@ -802,6 +806,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected setDepth(depth: number) {
+        if (!this.mElementManager) return;
         this.mElementManager.roomService.game.peer.render.setLayerDepth(true);
         // if (this.mDisplay) {
         //     // this.mDisplay.setDepth(depth);

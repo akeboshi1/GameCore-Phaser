@@ -74,7 +74,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     this.mIncreaseBtn.off("pointerdown", this.onIncreaseDownHandler, this);
     this.mReduceBtn.off("pointerup", this.onReduceHandler, this);
     this.mReduceBtn.off("pointerdown", this.onReduceDownHandler, this);
-    this.scene.input.off("pointerdown", this.pointerDownHandler, this);
+    if (this.scene) this.scene.input.off("pointerdown", this.pointerDownHandler, this);
   }
 
   setCounter(num: number) {

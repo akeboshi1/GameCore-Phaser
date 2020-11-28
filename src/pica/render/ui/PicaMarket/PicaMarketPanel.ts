@@ -444,7 +444,7 @@ export class PicaMarketPanel extends BasePanel {
     const data = itemdata;
     const title = i18n.t("market.payment");
     const resource = this.mSelectItem.getData("display");
-    const resultHandler = { key: this.key, confirmFunc: this.onPropConfirmHandler.name, confirmAddData: prop };
+    const resultHandler = { key: this.key, confirmFunc: "onPropConfirmHandler", confirmAddData: prop };
     this.showPropFun({ resultHandler, data, resource, slider: false, title });
   }
 
