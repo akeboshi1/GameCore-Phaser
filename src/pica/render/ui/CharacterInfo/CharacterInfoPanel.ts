@@ -295,7 +295,7 @@ export class CharacterInfoPanel extends BasePanel {
     reqPlayerInfo() {
         this.render.renderEmitter("queryOwnerInfo");
     }
-    public setPlayerData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO | op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+    public setPlayerData(data: any) {
         if (!this.mInitialized) {
             this.mShowData = data;
             return;
@@ -326,7 +326,7 @@ export class CharacterInfoPanel extends BasePanel {
         const subArr: Map<any, any[]> = new Map();
         const lifeSkills = data.lifeSkills ? data.lifeSkills : [];
         subArr.set(CharacterOptionType.Skill, lifeSkills);
-        if (data instanceof op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
+        if (data.isUser) {
             this.nickName.setText(this.getRichLabel(i18n.t("player_info.nick_name")) + spaceOffset + nickname);
             this.likeBtn.setFrame("praise_aft");
             subArr.set(CharacterOptionType.Attribute, data.properties ? data.properties : []);

@@ -61,6 +61,7 @@ export class CharacterInfoMediator extends BasicMediator {
 
     private onOwnerCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
         this.mShowData = content;
+        this.mShowData.isUser = true;
         if (!this.mPanelInit) {
             return;
         }
@@ -70,6 +71,7 @@ export class CharacterInfoMediator extends BasicMediator {
 
     private onOtherCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         this.mShowData = content;
+        this.mShowData.isUser = false;
         if (!this.mPanelInit) {
             return;
         }

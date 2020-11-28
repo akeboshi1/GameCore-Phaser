@@ -66,6 +66,7 @@ export class PicaMainUIMediator extends BasicMediator {
 
     private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
         this.mRoomInfo = content;
+        this.game.user.userData.curRoomID = content.roomId;
         if (this.mPanelInit) {
             this.mShowData = this.mRoomInfo;
             if (this.mView && this.mShowData)
