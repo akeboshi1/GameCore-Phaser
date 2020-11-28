@@ -53,6 +53,6 @@ export class PicaOpenParty extends BasicModel {
 
     private on_PARTY_REQUIREMENTS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS = packet.content;
-        this.event.emit("themelist", content);
+        this.game.emitter.emit("themelist", content);
     }
 }

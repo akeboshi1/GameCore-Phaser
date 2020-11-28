@@ -9,6 +9,14 @@ export class PicaOpenPartyMediator extends BasicMediator {
         this.picOpen = new PicaOpenParty(game);
     }
 
+    show(param?: any) {
+        super.show(param);
+        this.game.emitter.on(ModuleName.PICAOPENPARTY_NAME + "_close", this.onCloseHandler, this);
+        this.game.emitter.on(ModuleName.PICAOPENPARTY_NAME + "_querytheme", this.query_PARTY_REQUIREMENTS, this);
+        this.game.emitter.on(ModuleName.PICAOPENPARTY_NAME + "_queryopen", this.query_CREATE_PARTY, this);
+        this.game.emitter.on("themelist", this.on_PARTY_REQUIREMENTS, this);
+    }
+
     hide() {
         if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAOPENPARTY_NAME];
         super.hide();
@@ -32,16 +40,19 @@ export class PicaOpenPartyMediator extends BasicMediator {
 
     protected panelInit() {
         super.panelInit();
-        this.game.emitter.on(ModuleName.PICAOPENPARTY_NAME + "_close", this.onCloseHandler, this);
-        this.game.emitter.on(ModuleName.PICAOPENPARTY_NAME + "_querytheme", this.query_PARTY_REQUIREMENTS, this);
-        this.game.emitter.on(ModuleName.PICAOPENPARTY_NAME + "_queryopen", this.query_CREATE_PARTY, this);
-        this.game.emitter.on("themelist", this.on_PARTY_REQUIREMENTS, this);
+        if (this.mShowData) {
+            this.mView.setPartyData(this.mShowData, this.game.user.userData.isSelfRoom);
+        }
     }
 
     private onCloseHandler() {
         this.hide();
     }
     private on_PARTY_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
+        this.mShowData = content;
+        if (!this.mPanelInit) {
+            return;
+        }
         this.mView.setPartyData(content, this.game.user.userData.isSelfRoom);
     }
     private query_PARTY_REQUIREMENTS() {
