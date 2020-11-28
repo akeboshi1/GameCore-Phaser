@@ -504,6 +504,7 @@ export class PicaBagPanel extends BasePanel {
         }
       }
     }
+    if(this)
     this.mSelectedItemData.push(data);
     this.mSelectedItems.push(cell);
     cell.isSelect = true;
@@ -511,6 +512,14 @@ export class PicaBagPanel extends BasePanel {
     content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn);
     content.animations = data.animations;
     this.setSelectedResource(content);
+  }
+
+  private isRemoveTag(data: op_client.ICountablePackageItem) {
+    const tag = data.tag;
+    if (tag !== undefined && tag !== "" && JSON.parse(tag).type === "remove") {
+      return true;
+    }
+    return false;
   }
 
   private setSelectedItem(data: op_client.ICountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
