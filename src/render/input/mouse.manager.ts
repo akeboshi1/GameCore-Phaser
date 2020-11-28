@@ -3,7 +3,6 @@ import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { DisplayObject } from "../display/display.object";
 import { NodeType } from "../managers/display.manager";
-import { ElementAction } from "gamecore";
 
 export enum MouseEvent {
     RightMouseDown = 1,

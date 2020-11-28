@@ -1,5 +1,5 @@
 import { DragonbonesDisplay, FrameAnimation, FramesDisplay, Render, UIDragonbonesDisplay } from "gamecoreRender";
-import { IFramesModel } from "structure";
+import { IFramesModel, RunningAnimation } from "structure";
 import { Handler, Url } from "utils";
 import * as sha1 from "simple-sha1";
 
@@ -179,9 +179,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.complHandler = handler;
   }
 
-  setPlayAnimation(aniName: string, flip: boolean) {
-    if (this.mDragonboneDisplay)
-      this.mDragonboneDisplay.play({ name: aniName, flip });
+  setPlayAnimation(ani: RunningAnimation) {
+    if (this.mDragonboneDisplay) {
+      this.mDragonboneDisplay.play(ani);
+    }
   }
   get display(): any {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
     return this.mDisplay;

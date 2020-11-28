@@ -255,6 +255,20 @@ export class Element extends BlockObject implements IElement {
         }
         this.update();
     }
+    public setWeapon(weaponid: string) {
+        if (!this.mModel || !this.mModel.avatar) return;
+        const avatar = this.model.avatar;
+        avatar.farmWeapId = weaponid;
+        avatar.barmWeapId = weaponid;
+        this.model.updateAvatar(this.mModel.avatar);
+        this.load(this.mModel.displayInfo);
+    }
+
+    public removeWeapon() {
+        if (!this.mModel || !this.mModel.avatar) return;
+        this.mModel.updateAvatarSuits(this.mModel.attrs);
+        this.load(this.mModel.displayInfo);
+    }
 
     scaleTween(): void {
         this.mRoomService.game.peer.render.scaleTween(this.id, this.type);

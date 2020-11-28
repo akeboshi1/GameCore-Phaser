@@ -81,6 +81,7 @@ export class AvatarSuitType {
         headMousId: "5cd28238fb073710972a73c2",
         bodyCostId: "5cd28238fb073710972a73c2"
     };
+    public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
 }
 export class SuitAlternativeType {
     public static suitAlternative: SuitAlternativeType;

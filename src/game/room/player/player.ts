@@ -18,7 +18,7 @@ export class Player extends Element implements IElement {
     }
 
     setModel(val: ISprite) {
-        this.showNickname();
+        super.setModel(val);
     }
 
     public move(moveData: op_client.IMoveData) {
