@@ -62,8 +62,8 @@ export class PicaOpenPartyPanel extends BasePanel {
 
     public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, isSelf: boolean = true) {
         this.settingBtn.visible = isSelf;
-        const username = this.mWorld.user.userData.playerProperty.nickname;
-        this.partyCreatePanel.setPartyData(content, username, Math.ceil(this.mWorld.clock.unixTime / 1000));
+        const username = this.render.mainPeer.getRoomUserName();
+        this.partyCreatePanel.setPartyData(content, username, Math.ceil(this.render.mainPeer.getClockNow() / 1000));
         if (content.created) {
             this.partyBtn.setText(i18n.t("party.partymgr"));
         } else {
@@ -160,8 +160,7 @@ export class PicaOpenPartyPanel extends BasePanel {
         }
         const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
         data.text = [{ text, node: undefined }];
-        const uiManager = this.mWorld.uiManager;
-        uiManager.showMed(panelName, data);
+        this.render.mainPeer.showMediator(panelName, true, data);
     }
     private onQueryThemeHandler() {
         this.render.renderEmitter(ModuleName.PICAOPENPARTY_NAME + "_querytheme");

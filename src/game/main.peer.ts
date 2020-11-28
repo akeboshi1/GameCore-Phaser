@@ -429,6 +429,16 @@ export class MainPeer extends RPCPeer {
         return mgr ? mgr.curRoom : null;
     }
 
+    @Export()
+    public getRoomUserName() {
+        return this.game.user.userData.playerProperty.nickname;
+    }
+
+    @Export()
+    public getClockNow() {
+        return this.game.clock.unixTime;
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();
