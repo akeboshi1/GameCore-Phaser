@@ -170,7 +170,7 @@ export class PicaChatPanel extends BasePanel {
         this.mGiftBtn.on("pointerup", this.onGiftHandler, this);
         this.mEmojiBtn.on("pointerup", this.onEmojiHandler, this);
         this.render.emitter.on(EventType.CHAT, this.chatHandler, this);
-        this.render.emitter.on(EventType.QUERY_MARKET_REQUEST, this.setGiftData, this);
+        // this.render.emitter.on("queryMarket", this.setGiftData, this);
         this.render.emitter.on(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
     }
 
@@ -190,7 +190,7 @@ export class PicaChatPanel extends BasePanel {
         this.mGiftBtn.off("pointerup", this.onGiftHandler, this);
 
         this.render.emitter.off(EventType.CHAT, this.chatHandler, this);
-        this.render.emitter.off(EventType.QUERY_MARKET_REQUEST, this.setGiftData, this);
+        // this.render.emitter.off("queryMarket", this.setGiftData, this);
         this.render.emitter.off(EventType.UPDATE_PARTY_STATE, this.setGiftButtonState, this);
     }
 

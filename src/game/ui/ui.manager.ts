@@ -305,7 +305,7 @@ export class UIManager extends PacketHandler {
             this.mSceneUIMap.forEach((med: any) => {
                 const className = med.constructor.name;
                 const tempType = this.mUILayoutMap.get(className);
-                if (tempType === layoutType && className !== medName) med.hide();
+                if (tempType === layoutType && className !== medName && med.isShow() === true) med.hide();
             });
         }
     }
@@ -322,7 +322,7 @@ export class UIManager extends PacketHandler {
                 tmpName = this.mShowuiList[i];
                 med = this.mMedMap.get(tmpName);
                 if (len > 2 && i === 0) {
-                    med.hide();
+                    if (med.isShow()) med.hide();
                 } else {
                     med.resize((i * 2 - 1) * mPad, 0);
                 }
@@ -353,7 +353,7 @@ export class UIManager extends PacketHandler {
                 if (show) {
                     // med.show();
                 } else {
-                    med.hide();
+                    if (med.isShow()) med.hide();
                 }
             }
         });
@@ -365,7 +365,7 @@ export class UIManager extends PacketHandler {
                 if (show) {
                     // med.show();
                 } else {
-                    med.hide();
+                    if (med.isShow()) med.hide();
                 }
             }
         });
