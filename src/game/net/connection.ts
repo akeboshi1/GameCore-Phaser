@@ -14,7 +14,6 @@ for (const key in protos) {
 
 export class GameSocket extends SocketConnection {
     protected mUuid: number = 0;
-    private _pause: boolean = false;
     private mainPeer: MainPeer;
     // private socketList: any[];
     // private mTimestamp: number;
@@ -29,7 +28,6 @@ export class GameSocket extends SocketConnection {
     //         this.mTimestamp += delta;
     // }
     send(data: any): void {
-        if (this._pause) return;
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         protobuf_packet.header.uuid = this.mUuid || 0;
@@ -37,7 +35,6 @@ export class GameSocket extends SocketConnection {
         Logger.getInstance().info(`MainWorker[发送] >>> ${protobuf_packet.toString()}`);
     }
     protected onData(data: any) {
-        if (this._pause) return;
         const protobuf_packet: PBpacket = new PBpacket();
         protobuf_packet.Deserialization(new Buffer(data));
         this.mUuid = protobuf_packet.header.uuid;
@@ -45,10 +42,6 @@ export class GameSocket extends SocketConnection {
         // Send the packet to parent thread
         const buffer = protobuf_packet.Serialization();
         this.mainPeer.onData(buffer);
-    }
-
-    set pause(value: boolean) {
-        this._pause = value;
     }
 }
 
@@ -105,6 +98,10 @@ export class Connection implements ConnectionService {
         return this.isConnect;
     }
 
+    set connect(val) {
+        this.isConnect = val;
+    }
+
     get socket(): SocketConnection {
         return this.mSocket;
     }
@@ -139,7 +136,7 @@ export class Connection implements ConnectionService {
     }
 
     send(packet: PBpacket) {
-        if (!this.isPause) return;
+        if (this.isPause) return;
         packet.header.timestamp = this.mClock ? this.mClock.unixTime : 0;
         this.mSocket.send(packet.Serialization());
     }
@@ -165,7 +162,7 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        if (!this.isPause) return;
+        if (this.isPause) return;
         const protobufPacket: PBpacket = new PBpacket();
         protobufPacket.Deserialization(new Buffer(data));
         const handlers = this.mPacketHandlers;

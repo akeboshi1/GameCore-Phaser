@@ -750,7 +750,7 @@ export class Render extends RPCPeer implements GameMain {
     }
     @Export()
     public removeScene(sceneName: string) {
-        this.sceneManager.remove(sceneName);
+        if (this.sceneManager) this.sceneManager.remove(sceneName);
     }
     @Export()
     public showCreatePanelError(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CREATE_ROLE_ERROR_MESSAGE) {
@@ -1137,6 +1137,7 @@ export class Render extends RPCPeer implements GameMain {
         }
         this.isPause = false;
         if (this.mGame) {
+            if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.resume();
             this.mainPeer.onFocus();
             // this.mConnection.onFocus();
             // this.mRoomMamager.onFocus();
@@ -1162,13 +1163,14 @@ export class Render extends RPCPeer implements GameMain {
         }
         this.isPause = true;
         if (this.mGame) {
+            if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.pause();
             this.mainPeer.onBlur();
             // this.mConnection.onBlur();
             // this.mRoomMamager.onBlur();
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
-            this.mGame.scene.start(GamePauseScene.name, { world: this });
+            this.mGame.scene.start(GamePauseScene.name, { render: this });
         }
     }
 

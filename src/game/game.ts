@@ -116,6 +116,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         Logger.getInstance().info(`enterVirtualWorld`);
+        this.connect.connect = true;
         this.enterVirtualWorld();
         // this.login();
     }
@@ -352,7 +353,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onFocus() {
-        this.socket.pause = false;
+        this.connect.onFocus();
         if (this.connection) {
             if (!this.connection.connect) {
                 if (this.mConfig.connectFail) {
@@ -374,7 +375,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onBlur() {
-        this.socket.pause = true;
+        this.connect.onBlur();
         Logger.getInstance().log("#BlackSceneFromBackground; world.onBlur()");
         if (this.connection) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
