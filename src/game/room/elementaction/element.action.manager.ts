@@ -1,10 +1,11 @@
 import { Game, ISprite } from "gamecore";
 import { ElementBaseAction } from "./element.base.action";
+import { FuritElementAction } from "./furit.element.action";
 import { PKTElementAction } from "./pkt.element.action";
 import { TAGElementAction } from "./tag.element.action";
 
 export class ElementActionManager {
-    private mActionTags = ["TQ_PKT_Action", "TQ_PKT_tag"];
+    private mActionTags = ["TQ_PKT_Action", "TQ_PKT_tag", "frozenType"];
     private game: Game;
     constructor(game) {
         this.game = game;
@@ -66,6 +67,8 @@ export class ElementActionManager {
                 eleaction = new PKTElementAction(this.game, data);
             case "TQ_PKT_tag":
                 eleaction = new TAGElementAction(this.game, data);
+            case "frozenType":
+                eleaction = new FuritElementAction(this.game, data);
         }
         return eleaction;
     }

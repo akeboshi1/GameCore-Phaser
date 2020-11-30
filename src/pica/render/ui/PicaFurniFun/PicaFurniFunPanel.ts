@@ -1,12 +1,12 @@
 
-import { op_client } from "pixelpai_proto";
+import { op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText, ClickEvent, Button } from "apowophaserui";
-import { BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
+import { AnimationModel, BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
-import { FramesModel } from "gamecore";
+import { FramesModel, IAnimationData, ISprite } from "gamecore";
 export class PicaFurniFunPanel extends BasePanel {
     private confirmBtn: NineSliceButton;
     private blackGraphic: Phaser.GameObjects.Graphics;
@@ -22,6 +22,7 @@ export class PicaFurniFunPanel extends BasePanel {
     private selectMaterial: MaterialItem;
     private itemName: Phaser.GameObjects.Text;
     private itemtips: ItemInfoTips;
+    private materials: op_client.ICountablePackageItem[];
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAFURNIFUN_NAME;
@@ -56,7 +57,8 @@ export class PicaFurniFunPanel extends BasePanel {
         }
         this.setInteractive();
         this.addListen();
-        this.updateData();
+        this.setFuritDisplay();
+        this.setMaterialsData(this.materials);
     }
 
     addListen() {
@@ -200,16 +202,12 @@ export class PicaFurniFunPanel extends BasePanel {
         super.destroy();
     }
 
-    updateData() {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT = this.mShowData;
-        if (!content.ids) return;
-        const eleMgr = this.mWorld.roomManager.currentRoom.elementManager;
-        const ele = eleMgr.get(content.ids[0]);
-        if (!ele) return;
-        const display = (ele.model.displayInfo as FramesModel);
+    setFuritDisplay() {
+        const sprite: ISprite = this.mShowData;
+        const display = (sprite.displayInfo as FramesModel);
         const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
         resData.display = display.display;
-        const animas = display.createProtocolObject();
+        const animas = this.createProtocolObject(display.animations);
         if (animas.length > 1) {
             const arr = [];
             for (const ani of animas) {
@@ -224,8 +222,25 @@ export class PicaFurniFunPanel extends BasePanel {
             resData.animations = animas;
         }
         this.mDetailDisplay.loadDisplay(resData);
-        this.itemName.text = ele.model.nickname;
-        this.setMaterialItems(content.materials);
+        this.itemName.text = sprite.nickname;
+    }
+
+    setMaterialsData(materials: op_client.ICountablePackageItem[]) {
+        this.materials = materials;
+        if (!this.mInitialized || !materials) return;
+        this.setMaterialItems(this.materials);
+    }
+
+    private createProtocolObject(animations: Map<string, any>): any[] {
+        const anis: any[] = [];
+        animations.forEach((model: AnimationModel) => {
+            const modelData: any = { node: model["mNode"], baseLoc: "0,0", originPoint: [0, 0], layer: [] };
+            const animodel = new AnimationModel(modelData);
+            Object.assign(animodel, model);
+            const ani = animodel.createProtocolObject();
+            anis.push(ani);
+        }, this);
+        return anis;
     }
 
     private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
@@ -245,11 +260,11 @@ export class PicaFurniFunPanel extends BasePanel {
     private onConfirmBtnClick() {
         const data = this.showData;
         if (!data || !data.ids) return;
-        this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_queryunlock",data.ids);
+        this.render.renderEmitter(this.key + "_queryunlock", data.ids);
         this.OnClosePanel();
     }
     private OnClosePanel() {
-        this.render.renderEmitter(ModuleName.PICAHANDHELD_NAME + "_close");
+        this.render.renderEmitter(this.key + "_close");
     }
 
     private onMaterialItemHandler(gameobject: MaterialItem) {

@@ -1286,10 +1286,10 @@ class Item extends Phaser.GameObjects.Container {
     this.propData = prop;
     this.isSelect = false;
     this.isEquip = false;
+    this.mPropImage.visible = false;
     if (!prop) {
       // this.mPropImage.setFrame("");
       this.mCounter.visible = false;
-      this.mPropImage.visible = false;
       this.timeIcon.visible = false;
       return;
     }
@@ -1299,8 +1299,8 @@ class Item extends Phaser.GameObjects.Container {
     } else {
       this.mPropImage.setTexture(this.key, "backpack_close");
       this.mPropImage.scale = 1;
+      this.mPropImage.visible = true;
     }
-    this.mPropImage.visible = true;
     this.timeIcon.visible = prop.expiredTime > 0;
     if (prop.count > 1) {
       this.mCounter.visible = true;
@@ -1316,8 +1316,7 @@ class Item extends Phaser.GameObjects.Container {
   private onPropLoadCompleteHandler() {
     if (this.mPropImage && this.mPropImage.texture) {
       const texture = this.mPropImage.texture;
-      // this.mPropImage.displayHeight = 43 * this.dpr;
-      // this.mPropImage.scaleX = this.mPropImage.scaleY;
+      this.mPropImage.visible = true;
       if (texture) {
         texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
       }
