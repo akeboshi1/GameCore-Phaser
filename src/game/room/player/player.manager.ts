@@ -338,7 +338,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     private onMovePath(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
+        let content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
         if (content.nodeType !== NodeType.CharacterNodeType) {
             return;
         }
@@ -346,6 +346,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (play) {
             play.movePath(content);
         }
+        content = null;
     }
 
     private onQueryElementHandler(id: number) {
