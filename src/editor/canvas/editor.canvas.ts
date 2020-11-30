@@ -8,7 +8,6 @@ export interface IEditorCanvasConfig {
     parent?: string;
 }
 
-// 编辑器画布基类
 export class EditorCanvas {
 
     protected mGame: Phaser.Game | undefined;

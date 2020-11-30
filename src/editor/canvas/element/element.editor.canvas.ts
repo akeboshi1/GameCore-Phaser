@@ -2,7 +2,7 @@ import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { ElementNode, DisplayNode } from "game-capsule";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
-import { Logger } from "utils";
+import { Logger } from "../../../utils/log";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
 import { IImage } from "game-capsule";
 
@@ -20,7 +20,9 @@ export enum ElementEditorEmitType {
     Update_Frame_Sumb = "updateFrameSumb"
 }
 
-// 物件编辑画布
+/**
+ * api:https://dej4esdop1.feishu.cn/docs/doccn1Ez79LjYywnNiAGbaP35Tc
+ */
 export class ElementEditorCanvas extends EditorCanvas {
 
     public mData: ElementNode;
