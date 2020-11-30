@@ -262,6 +262,11 @@ export class MainPeer extends RPCPeer {
         this.game.connection.send(pkt);
     }
 
+    @Export()
+    public exitUser() {
+        this.game.exitUser();
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public displayStartMove(id: number) {
         const element = this.game.roomManager.currentRoom.playerManager.get(id);

@@ -406,6 +406,10 @@ export class Render extends RPCPeer implements GameMain {
         this.mainPeer.destroyClock();
     }
 
+    public exitUser() {
+        this.mainPeer.exitUser();
+    }
+
     public requestCurTime() {
         this.mainPeer.requestCurTime();
     }
@@ -436,6 +440,16 @@ export class Render extends RPCPeer implements GameMain {
 
     public showMediator(name: string, isShow: boolean) {
         if (this.mMainPeer) this.mMainPeer.showMediator(name, isShow);
+    }
+
+    @Export()
+    public async destroyAccount(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.mAccount) {
+                this.mAccount.destroy();
+            }
+            resolve();
+        });
     }
 
     @Export()

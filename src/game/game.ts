@@ -183,6 +183,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this._createAnotherGame(gameID, worldID, null, null);
     }
 
+    public exitUser() {
+        this.mConfig.token_expire = this.mConfig.token_fingerprint = this.mConfig.user_id = this.mConfig.auth_token = null;
+        this.renderPeer.destroyAccount().then(() => {
+            this._createAnotherGame(this.mConfig.game_id, this.mConfig.virtual_world_id, null, null);
+        });
+    }
+
     public onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
