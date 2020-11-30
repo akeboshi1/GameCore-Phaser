@@ -9,6 +9,7 @@ export class SceneDataManager extends BasePacketHandler {
     constructor(game: Game,event?: EventDispatcher) {
         super(game,event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
+        this.addPackListener();
     }
     clear() {
         super.clear();

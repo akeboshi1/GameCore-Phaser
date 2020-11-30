@@ -1,15 +1,20 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { Logger } from "utils";
+import { Logger } from "../../../utils/log";
 import { AvatarNode, IImage } from "game-capsule";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { IAvatarSet } from "game-capsule";
+import { Scene } from "tooqinggamephaser";
 
-// 换装编辑画布
+/**
+ * api:https://dej4esdop1.feishu.cn/docs/doccn2zhhTyXaB3HYm69a0sIYhh
+ * 尺寸规范链接：https://dej4esdop1.feishu.cn/docs/doccn5QVnqQ9XQz5baCBayOy49f?from=from_copylink
+ */
 export class AvatarEditorCanvas extends EditorCanvas {
 
     public mData: AvatarEditorConfigNode;
 
     private readonly SCENEKEY: string = "AvatarEditorScene";
+    private readonly SCENEKEY_SNAPSHOT: string = "AvatarEditorSnapshotScene";
 
     private mDragonbone: AvatarEditorDragonbone;
 
@@ -21,7 +26,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
         // start
         this.mData = config.node as AvatarEditorConfigNode;
-        this.mGame.scene.start(this.SCENEKEY, this);
+        this.mGame.scene.start(this.SCENEKEY, { onCreated: this.onSceneCreated.bind(this), onUpdate: this.update.bind(this), onDestroy: this.onSceneDestroy.bind(this) });
     }
 
     public destroy() {
@@ -44,8 +49,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
         return null;
     }
 
-    public onSceneCreated() {
-        const scene = this.getScene();
+    public onSceneCreated(scene: Phaser.Scene) {
         this.mDragonbone = new AvatarEditorDragonbone(scene, this.mData.WEB_AVATAR_PATH, this.mEmitter);
     }
     public update() {
@@ -83,13 +87,76 @@ export class AvatarEditorCanvas extends EditorCanvas {
     }
 
     public generateShopIcon(width: number, height: number): Promise<string> {
-        if (this.mDragonbone) {
-            return this.mDragonbone.generateShopIcon(width, height);
-        }
+        return new Promise<string>((resolve, reject) => {
+            // 使用width height 创建新的场景
+            // new AvatarEditorDragonbone
+            // Dragonbone.generateShopIcon(width, height);
+            const curScene = this.getScene();
+            const curSets = this.mDragonbone.curSets;
+            if (this.mGame.scene.getScene(this.SCENEKEY_SNAPSHOT)) {
+                // is running
+                Logger.getInstance().error("generating!");
+                reject("generating!");
+                return;
+            }
+
+            // resize game
+            this.mGame.scale.resize(width, height);
+
+            this.mGame.scene.add(this.SCENEKEY_SNAPSHOT, AvatarEditorScene, false);
+            curScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
+                onCreated: (s: Scene) => {
+                    const a = new AvatarEditorDragonbone(s, this.mData.WEB_AVATAR_PATH, this.mEmitter, curSets,
+                        (dragonbone) => {
+                            dragonbone.generateShopIcon(width, height).then((src) => {
+                                resolve(src);
+
+                                // resize game
+                                this.mGame.scale.resize(this.mConfig.width, this.mConfig.height);
+                                this.mGame.scene.stop(this.SCENEKEY_SNAPSHOT);
+                                this.mGame.scene.remove(this.SCENEKEY_SNAPSHOT);
+                            });
+                        });
+                }
+            });
+        });
     }
 
-    public batchGenerateShopIcon(size: { width: number, height: number }, datas: IAvatarSet[]) {
-        if (this.mDragonbone) this.mDragonbone.batchGenerateShopIcon(size, datas);
+    public generateHeadIcon(width: number, height: number): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            // 使用width height 创建新的场景
+            // new AvatarEditorDragonbone
+            // Dragonbone.generateShopIcon(width, height);
+            const curScene = this.getScene();
+            const curSets = this.mDragonbone.curSets;
+            if (this.mGame.scene.getScene(this.SCENEKEY_SNAPSHOT)) {
+                // is running
+                Logger.getInstance().error("generating!");
+                reject("generating!");
+                return;
+            }
+
+            // resize game
+            const gameSize = this.mDragonbone.getHeadIconGameSize(width, height);
+            this.mGame.scale.resize(gameSize.width, gameSize.height);
+
+            this.mGame.scene.add(this.SCENEKEY_SNAPSHOT, AvatarEditorScene, false);
+            curScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
+                onCreated: (s: Scene) => {
+                    const a = new AvatarEditorDragonbone(s, this.mData.WEB_AVATAR_PATH, this.mEmitter, curSets,
+                        (dragonbone) => {
+                            dragonbone.generateHeadIcon(width, height).then((src) => {
+                                resolve(src);
+
+                                // resize game
+                                this.mGame.scale.resize(this.mConfig.width, this.mConfig.height);
+                                this.mGame.scene.stop(this.SCENEKEY_SNAPSHOT);
+                                this.mGame.scene.remove(this.SCENEKEY_SNAPSHOT);
+                            });
+                        });
+                }
+            });
+        });
     }
 
     // 监听事件
@@ -103,22 +170,26 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
 class AvatarEditorScene extends Phaser.Scene {
 
-    private mCanvas: AvatarEditorCanvas;
+    private onSceneCreated: (scene: Phaser.Scene) => any;
+    private onSceneUpdate: () => any;
+    private onSceneDestroy: () => any;
 
-    public init(canvas: AvatarEditorCanvas): void {
-        this.mCanvas = canvas;
+    public init(data: { onCreated?: (scene: Phaser.Scene) => any, onUpdate?: () => any, onDestroy?: () => any }): void {
+        this.onSceneCreated = data.onCreated;
+        this.onSceneUpdate = data.onUpdate;
+        this.onSceneDestroy = data.onDestroy;
     }
 
-    public create(game: Phaser.Scene): void {
-        if (this.mCanvas) this.mCanvas.onSceneCreated();
+    public create(): void {
+        if (this.onSceneCreated) this.onSceneCreated(this);
     }
 
     public update() {
-        if (this.mCanvas) this.mCanvas.update();
+        if (this.onSceneUpdate) this.onSceneUpdate();
     }
 
     public destroy() {
-        if (this.mCanvas) this.mCanvas.onSceneDestroy();
+        if (this.onSceneDestroy) this.onSceneDestroy();
     }
 }
 
@@ -127,6 +198,5 @@ export interface AvatarEditorConfigNode {
 }
 
 export enum AvatarEditorEmitType {
-    Shop_Icon_Generated = "shopIconGenerated",
-    Shop_Icon_Generate_Finished = "shopIconGenerateFinished"
+    ERROR = "error",
 }

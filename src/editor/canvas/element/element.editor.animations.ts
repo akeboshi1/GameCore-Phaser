@@ -1,10 +1,12 @@
 import { ElementNode, AnimationsNode, AnimationDataNode, DisplayNode } from "game-capsule";
-import { Logger } from "utils";
+import { Logger } from "../../../utils/log";
 import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";
 import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
+import { Url } from "../../../utils/resUtil";
+import version from "../../../../version";
 
 export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
 
@@ -309,7 +311,8 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
     }
 
     private loadMountDragonBones() {
-        const res = "./resources/dragonbones";
+        // const res = Url.getRes("dragonbones");
+        const res = `./resources_v${version}/dragonbones`;
         const pngUrl = `${res}/${this.MOUNT_DRAGONBONES_KEY}_tex.png`;
         const jsonUrl = `${res}/${this.MOUNT_DRAGONBONES_KEY}_tex.json`;
         const dbbinUrl = `${res}/${this.MOUNT_DRAGONBONES_KEY}_ske.dbbin`;
