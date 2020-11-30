@@ -12,7 +12,6 @@ export class PicaFurniFun extends PacketHandler {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-          //  this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT, this.onRetOpenPanel);
         }
     }
 
@@ -32,11 +31,6 @@ export class PicaFurniFun extends PacketHandler {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UNLOCK_ELEMENT = packet.content;
         content.ids = ids;
         this.connection.send(packet);
-    }
-
-    private onRetOpenPanel(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT = packet.content;
-        this.game.emitter.emit("showpicafunipanel", content);
     }
 
     get connection(): ConnectionService {

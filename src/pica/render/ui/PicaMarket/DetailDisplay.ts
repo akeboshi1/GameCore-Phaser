@@ -1,4 +1,4 @@
-import { DragonbonesDisplay, FrameAnimation, FramesDisplay, Render, UIDragonbonesDisplay } from "gamecoreRender";
+import { AnimationModel, DragonbonesDisplay, FrameAnimation, FramesDisplay, Render, UIDragonbonesDisplay } from "gamecoreRender";
 import { IFramesModel, RunningAnimation } from "structure";
 import { Handler, Url } from "utils";
 import * as sha1 from "simple-sha1";
@@ -53,7 +53,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         for (const layer of ani.layer) {
           layer.offsetLoc = { x: 0, y: 0 };
         }
-        anis.push(new Animation(ani));
+        anis.push(new AnimationModel(ani));
       }
       this.mFramesDisplay.once("initialized", () => {
         this.mFramesDisplay.play({ name: aniName, flip: false });

@@ -135,8 +135,8 @@ export class MouseManager {
         this.running = false;
         this.debounce = null;
         if (this.mScene) {
-            this.mScene.input.on("gameobjectdown", this.groundDown, this);
-            this.mScene.input.on("pointerdown", this.pointerDownHandler, this);
+            this.mScene.input.off("gameobjectdown", this.groundDown, this);
+            this.mScene.input.off("pointerdown", this.pointerDownHandler, this);
         }
         this.pause();
     }

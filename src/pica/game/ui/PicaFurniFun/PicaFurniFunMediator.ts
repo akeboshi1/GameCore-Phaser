@@ -1,21 +1,20 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaFurniFun } from "./PicaFurniFun";
-import { ModuleName } from "structure";
-import { BasicMediator, Game } from "gamecore";
+import { EventType, ModuleName } from "structure";
+import { BaseDataManager, BasicMediator, DataMgrType, Game, ISprite } from "gamecore";
 
 export class PicaFurniFunMediator extends BasicMediator {
     private picFurni: PicaFurniFun;
     constructor(game: Game) {
         super(ModuleName.PICAFURNIFUN_NAME, game);
         this.picFurni = new PicaFurniFun(this.game);
-        this.picFurni.register();
-       // this.game.emitter.on("showpicafunipanel", this.onOpenView, this);
     }
 
     show(param?: any) {
         super.show(param);
         this.game.emitter.on(ModuleName.PICAFURNIFUN_NAME + "_queryunlock", this.queryUnlockElement, this);
         this.game.emitter.on(ModuleName.PICAFURNIFUN_NAME + "_close", this.onCloseHandler, this);
+        this.game.emitter.on(EventType.SEND_FURNITURE_REQUIREMENTS, this.onSyncSNMaterials, this);
     }
 
     hide() {
@@ -23,6 +22,7 @@ export class PicaFurniFunMediator extends BasicMediator {
         super.hide();
         this.game.emitter.off(ModuleName.PICAFURNIFUN_NAME + "_queryunlock", this.queryUnlockElement, this);
         this.game.emitter.off(ModuleName.PICAFURNIFUN_NAME + "_close", this.onCloseHandler, this);
+        this.game.emitter.off(EventType.SEND_FURNITURE_REQUIREMENTS, this.onSyncSNMaterials, this);
     }
 
     destroy() {
@@ -40,17 +40,29 @@ export class PicaFurniFunMediator extends BasicMediator {
         return user.userData.playerBag;
     }
 
-    private onCloseHandler() {
-        super.destroy();
+    panelInit() {
+        super.panelInit();
+        this.querySNMaterial();
     }
-
-    private onOpenView(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UNLOCK_ELEMENT_REQUIREMENT) {
-        if (content.materials) this.updateMaterials(content.materials);
-        this.setParam(content);
-        this.show();
+    private querySNMaterial() {
+        const mgr = this.game.getDataMgr<BaseDataManager>(DataMgrType.BaseMgr);
+        mgr.query_FURNITURE_UNFROZEN_REQUIREMENTS([this.mShowData.sn]);
+    }
+    private onCloseHandler() {
+        this.hide();
     }
     private queryUnlockElement(ids: number[]) {
         this.picFurni.queryUnlockElement(ids);
+    }
+
+    private onSyncSNMaterials(map: Map<string, op_client.ICountablePackageItem[]>) {
+        const data: ISprite = this.mShowData;
+        const sn = data.sn;
+        if (map.has(sn)) {
+            const value: op_client.ICountablePackageItem[] = map.get(sn);
+            this.updateMaterials(value);
+            if (this.mView) this.mView.setMaterialsData(value);
+        }
     }
     private updateMaterials(materials: op_client.ICountablePackageItem[]) {
         if (this.playerData) {

@@ -156,7 +156,7 @@ export class ElementStateManager extends PacketHandler {
 
     protected getElementStateType(element: Element) {
         const sprite = element.model;
-        if (this.getFrozenType(sprite) === " ") {
+        if (this.getFrozenType(sprite) === "FROZEN") {
             return ElementStateType.UNFROZEN;
         }
         return ElementStateType.NONE;
