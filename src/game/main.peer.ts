@@ -10,7 +10,6 @@ import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, R
 import { PicaGame } from "picaWorker";
 import { CacheDataManager } from "./data.manager/cache.dataManager";
 import { DataMgrType } from "./data.manager/dataManager";
-import { MouseEvent } from "gamecoreRender";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }

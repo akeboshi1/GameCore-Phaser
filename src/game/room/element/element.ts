@@ -7,6 +7,7 @@ import { BlockObject } from "../block/block.object";
 import { ISprite } from "../display/sprite/sprite";
 import { IRoomService, Room } from "../room/room";
 import { IElementManager } from "./element.manager";
+import { fps } from "../../game";
 
 export interface IElement {
     readonly id: number;
@@ -491,9 +492,22 @@ export class Element extends BlockObject implements IElement {
     }
 
     public startMove() {
-        this.mMoving = true;
-        Logger.getInstance().log("start_walk");
+        if (!this.mMoveData) {
+            return;
+        }
+        const path = this.mMoveData.path;
+        if (!path || path.length < 1) {
+            return;
+        }
         this.changeState(PlayerState.WALK);
+        this.mMoving = true;
+        this.setStatic(false);
+
+        const pos = this.getPosition();
+        // pos.y += this.offsetY;
+        const angle = Math.atan2(path[0].y - pos.y, path[0].x - pos.x);
+        const speed = this.mModel.speed * fps;
+        this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public completeMove() {
@@ -502,8 +516,24 @@ export class Element extends BlockObject implements IElement {
 
     public stopMove() {
         this.mMoving = false;
-        Logger.getInstance().log("stop_walk");
+        // TODO display未创建的情况下处理
+        // if (!this.mDisplay) {
+        //     // Logger.getInstance().error(`can't stopMove, display does not exist`);
+        //     return;
+        // }
+        if (this.mMoveData && this.mMoveData.posPath) {
+            // this.mModel.setPosition(this.mDisplay.x, this.mDisplay.y);
+            // delete this.mMoveData.destPos;
+            delete this.mMoveData.posPath;
+            if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
+            if (this.mMoveData.tweenLineAnim) {
+                this.mMoveData.tweenLineAnim.stop();
+                this.mMoveData.tweenLineAnim.destroy();
+            }
+        }
         this.changeState(PlayerState.IDLE);
+        this.setVelocity(0, 0);
+        this.setStatic(true);
     }
 
     public getPosition(): IPos {
