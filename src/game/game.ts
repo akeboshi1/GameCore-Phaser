@@ -351,6 +351,41 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return render;
     }
 
+    public onFocus() {
+        this.socket.pause = false;
+        if (this.connection) {
+            if (!this.connection.connect) {
+                if (this.mConfig.connectFail) {
+                    return this.mConfig.connectFail();
+                } else {
+                    return this.onDisConnected();
+                }
+            }
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+            context.gameStatus = op_def.GameStatus.Focus;
+            this.connection.send(pkt);
+            // 同步心跳
+            this.mClock.sync(-1);
+        } else {
+            Logger.getInstance().error("connection is undefined");
+            return this.onDisConnected();
+        }
+    }
+
+    public onBlur() {
+        this.socket.pause = true;
+        Logger.getInstance().log("#BlackSceneFromBackground; world.onBlur()");
+        if (this.connection) {
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS);
+            const context: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_GAME_STATUS = pkt.content;
+            context.gameStatus = op_def.GameStatus.Blur;
+            this.connection.send(pkt);
+        } else {
+            Logger.getInstance().error("connection is undefined");
+        }
+    }
+
     public async enterVirtualWorld() {
         if (!this.mConfig || !this.connect) {
             return;

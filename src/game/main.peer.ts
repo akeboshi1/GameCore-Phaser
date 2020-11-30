@@ -146,14 +146,13 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public focus() {
-        this.game.socket.pause = false;
-        // todo manager resume
+    public onFocus() {
+        this.game.onFocus();
     }
 
     @Export()
-    public blur() {
-        this.game.socket.pause = true;
+    public onBlur() {
+        this.game.onBlur();
         // todo manager pause
     }
 

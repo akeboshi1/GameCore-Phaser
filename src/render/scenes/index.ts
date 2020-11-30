@@ -10,3 +10,4 @@ export * from "./room.scene";
 export * from "./scene.manager";
 export * from "./select.role.scene";
 export * from "./sky.box.scene";
+export * from "./game.pause.scene";

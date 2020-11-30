@@ -18,7 +18,7 @@ import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
 import { PicaRenderUiManager } from "picaRender";
-import { MainUIScene } from "./scenes";
+import { GamePauseScene, MainUIScene } from "./scenes";
 import { Scenery } from "gamecore";
 // import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
 for (const key in protos) {
@@ -64,6 +64,7 @@ export class Render extends RPCPeer implements GameMain {
 
     private mMainPeer: any;
     private mHeartPeer: any;
+    private isPause: boolean = false;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
@@ -387,11 +388,11 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     public onFocus() {
-        this.mainPeer.focus();
+        this.resumeScene();
     }
 
     public onBlur() {
-        this.mainPeer.blur();
+        this.pauseScene();
     }
 
     public syncClock(times: number) {
@@ -1127,6 +1128,48 @@ export class Render extends RPCPeer implements GameMain {
         Url.RES_PATH = "./resources/";
         Url.RESUI_PATH = "./resources/ui/";
         initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
+    }
+
+    private resumeScene() {
+        Logger.getInstance().log(`#BlackSceneFromBackground; world.resumeScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
+        if (this.mConfig.isEditor || !this.isPause) {
+            return;
+        }
+        this.isPause = false;
+        if (this.mGame) {
+            this.mainPeer.onFocus();
+            // this.mConnection.onFocus();
+            // this.mRoomMamager.onFocus();
+            const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
+            if (pauseScene) {
+                (pauseScene as GamePauseScene).sleep();
+                this.mGame.scene.stop(GamePauseScene.name);
+            }
+            // if (!this.mConnection.isConnect) {
+            //     if (this.mConfig.connectFail) {
+            //         return this.mConfig.connectFail();
+            //     } else {
+            //         return this.onDisConnected();
+            //     }
+            // }
+        }
+    }
+
+    private pauseScene() {
+        Logger.getInstance().log(`#BlackSceneFromBackground; world.pauseScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
+        if (this.mConfig.isEditor || this.isPause) {
+            return;
+        }
+        this.isPause = true;
+        if (this.mGame) {
+            this.mainPeer.onBlur();
+            // this.mConnection.onBlur();
+            // this.mRoomMamager.onBlur();
+            if (!this.mGame.scene.getScene(GamePauseScene.name)) {
+                this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
+            }
+            this.mGame.scene.start(GamePauseScene.name, { world: this });
+        }
     }
 
     get mainPeer() {
