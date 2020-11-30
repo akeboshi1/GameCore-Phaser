@@ -23,6 +23,7 @@ export interface ISprite {
     currentWalkableArea: number[][];
     currentCollisionPoint: LogicPoint;
     hasInteractive: boolean;
+    interactive: op_def.IPBPoint2f[];
     attrs: op_def.IStrPair[];
     avatarSuits: AvatarSuit[];
     animationQueue: AnimationQueue[];
@@ -34,6 +35,7 @@ export interface ISprite {
     sn: string;
     isMoss?: boolean;
     mountSprites?: number[];
+    speed: number;
 
     newID();
     emit(type, data);
@@ -89,6 +91,9 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public mountSprites: number[];
 
+    public speed: number;
+    public interactive: op_def.IPBPoint2f[];
+
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         super();
         this.id = obj.id;
@@ -141,7 +146,12 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.currentCollisionPoint = this.getOriginPoint();
         }
 
+        if (!this.interactive) {
+            // this.interactive = this.
+        }
+
         this.mountSprites = obj.mountSprites;
+        this.speed = obj.speed;
     }
 
     clear() {
@@ -267,6 +277,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public setMountSprites(ids: number[]) {
         this.mountSprites = ids;
     }
+
     public setAnimationName(name: string, times?: number) {
         if (this.displayInfo) {
             this.displayInfo.animationName = name;

@@ -34,6 +34,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
         }
         this.addLisenter();
     }
@@ -258,7 +260,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (content.moveData) {
             const moveDataList: op_client.IMoveData[] = content.moveData;
             const len: number = moveDataList.length;
-            const type: op_def.NodeType = content.nodeType || null;
             let moveData: op_client.IMoveData;
             let playID: number;
             let player: Player;
@@ -267,7 +268,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 playID = moveData.moveObjectId;
                 player = this.get(playID);
                 if (player) {
-                    player.move(moveData);
+                    // player.move(moveData);
+                    const { x, y } = moveData.destinationPoint3f;
+                    player.move([{ x, y }]);
                 }
             }
         }
@@ -333,6 +336,25 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             player = this.get(id);
             if (player) {
                 player.setQueue(content.changeAnimation);
+            }
+        }
+    }
+
+    private onStop(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_STOP = packet.content;
+        const sprites = content.sprites;
+        let player: Player = null;
+        for (const sprite of sprites) {
+            if (sprite.id === this.mActor.id) {
+                this.mActor.move([{ x: sprite.point3f.x, y: sprite.point3f.y}]);
+                continue;
+            }
+            player = this.get(sprite.id);
+            if (player) {
+                // player.updateModel(sprite);
+                // player.stopMove();
+                const { point3f, direction } = sprite;
+                player.stopAt({ x: point3f.x, y: point3f.y, stopDir: direction });
             }
         }
     }

@@ -321,7 +321,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!element) {
                     continue;
                 }
-                element.move(moveData);
+                const { x, y } = moveData.destinationPoint3f;
+                element.move([{ x, y }]);
+                // element.move(moveData);
             }
         }
     }
