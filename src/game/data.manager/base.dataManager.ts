@@ -13,6 +13,7 @@ export class BaseDataManager extends BasePacketHandler {
         this.mSNIDConfig = new Map();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_REQUIRE_FURNITURE_UNFROZEN_REQUIREMENTS, this.on_FURNITURE_UNFROZEN_REQUIREMENTS);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CONFIGS, this.on_ELEMENT_ITEM_REQUIREMENTS);
+        this.addPackListener();
     }
     clear() {
         super.clear();
