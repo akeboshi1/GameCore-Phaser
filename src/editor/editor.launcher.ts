@@ -20,6 +20,12 @@ export enum EditorCanvasType {
 }
 
 export class EditorLauncher {
+    // public static CreateCanvas<T extends EditorCanvas>(type: string, config: IEditorCanvasConfig): T {
+    //     var canvas = Object.create(window[type].prototype);
+    //     canvas.constructor.apply(canvas, config);
+    //     return canvas as T;
+    // }
+
     public static CreateCanvas(type: EditorCanvasType, config: IEditorCanvasConfig) {
         switch (type) {
             case EditorCanvasType.Element:
