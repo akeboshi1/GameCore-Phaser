@@ -21,19 +21,19 @@ export class Player extends Element implements IElement {
         super.setModel(val);
     }
 
-    public move(moveData: op_client.IMoveData) {
-        if (this.getDirection() !== moveData.direction) {
-            if (this.roomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-                if (this.mId !== this.roomService.playerManager.actor.id) {
-                    this.setDirection(moveData.direction);
-                }
-            } else {
-                this.setDirection(moveData.direction);
-            }
-        }
-        moveData.destinationPoint3f.y += this.offsetY;
-        super.move(moveData);
-    }
+    // public move(moveData: op_client.IMoveData) {
+    //     if (this.getDirection() !== moveData.direction) {
+    //         if (this.roomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+    //             if (this.mId !== this.roomService.playerManager.actor.id) {
+    //                 this.setDirection(moveData.direction);
+    //             }
+    //         } else {
+    //             this.setDirection(moveData.direction);
+    //         }
+    //     }
+    //     moveData.destinationPoint3f.y += this.offsetY;
+    //     super.move(moveData);
+    // }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
         const tmpPath = movePath.path;
@@ -115,7 +115,7 @@ export class Player extends Element implements IElement {
 
     public getPosition() {
         const pos = super.getPosition();
-        pos.y -= this.offsetY;
+        // pos.y -= this.offsetY;
         return pos;
     }
 
@@ -124,23 +124,29 @@ export class Player extends Element implements IElement {
         this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
     }
 
+    protected checkDirection() {
+        if (!this.body) {
+            return;
+        }
+        const prePos = (<any>this.body).positionPrev;
+        const pos = this.body.position;
+        const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
+        this.onCheckDirection(angle * (180 / Math.PI));
+    }
+
     protected onCheckDirection(params: any): number {
         if (typeof params !== "number") {
-            return this.getDirection();
+            return;
         }
         // 重叠
         if (params > 90) {
-            // this.setDirection(3);
-            return 3;
+            this.setDirection(3);
         } else if (params >= 0) {
-            // this.setDirection(5);
-            return 5;
+            this.setDirection(5);
         } else if (params >= -90) {
-            // this.setDirection(7);
-            return 7;
+            this.setDirection(7);
         } else {
-            // this.setDirection(1);
-            return 1;
+            this.setDirection(1);
         }
     }
 

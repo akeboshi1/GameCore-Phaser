@@ -945,6 +945,7 @@ export class Render extends RPCPeer implements GameMain {
     public createDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
         if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo);
     }
+
     @Export()
     public createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
         if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo, true);
@@ -998,6 +999,7 @@ export class Render extends RPCPeer implements GameMain {
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.showBubble(text, setting);
     }
+
     @Export([webworker_rpc.ParamType.num])
     public clearBubble(id: number) {
         const display = this.mDisplayManager.getDisplay(id);

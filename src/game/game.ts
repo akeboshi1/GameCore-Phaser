@@ -20,6 +20,11 @@ import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
+import decomp from "poly-decomp";
+// The World act as the global Phaser.World instance;
+// @ts-ignore
+global.decomp = decomp;
+
 interface ISize {
     width: number;
     height: number;

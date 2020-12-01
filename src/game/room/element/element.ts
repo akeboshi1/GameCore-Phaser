@@ -2,10 +2,10 @@ import { op_client, op_def } from "pixelpai_proto";
 import { AnimationQueue, ElementStateType } from "structure";
 import { IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
-import { IPos, Logger, LogicPos } from "utils";
+import { IPos, Logger, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { ISprite } from "../display/sprite/sprite";
-import { IRoomService } from "../room/room";
+import { IRoomService, Room } from "../room/room";
 import { IElementManager } from "./element.manager";
 
 export interface IElement {
@@ -85,6 +85,13 @@ export interface MoveData {
     onCompleteParams?: any;
     // onComplete?: Function;
     step?: number;
+    path?: MovePos[];
+}
+
+export interface MovePos {
+    x: number;
+    y: number;
+    stopDir?: number;
 }
 
 export interface MovePath {
@@ -394,19 +401,40 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public move(moveData: op_client.IMoveData) {
+    // public move(moveData: op_client.IMoveData) {
+    //     if (!this.mElementManager) {
+    //         return; // Logger.getInstance().error(`Element::move - Empty element-manager.`);
+    //     }
+    //     this.mMoveData.arrivalTime = moveData.timestemp;
+    //     this.mMoveData.posPath = [
+    //         {
+    //             x: moveData.destinationPoint3f.x,
+    //             y: moveData.destinationPoint3f.y,
+    //             direction: moveData.direction
+    //         },
+    //     ];
+    //     this._doMove();
+    // }
+
+    public move(path: MovePos[]) {
         if (!this.mElementManager) {
             return; // Logger.getInstance().error(`Element::move - Empty element-manager.`);
         }
-        this.mMoveData.arrivalTime = moveData.timestemp;
-        this.mMoveData.posPath = [
-            {
-                x: moveData.destinationPoint3f.x,
-                y: moveData.destinationPoint3f.y,
-                direction: moveData.direction
-            },
-        ];
-        this._doMove();
+        // TODO display未创建的情况
+        // if (!this.mDisplay) {
+        //     return;
+        // }
+        this.mMoveData.path = path;
+        this.startMove();
+    }
+
+    public stopAt(pos: MovePos) {
+        let path = this.mMoveData.path;
+        if (!path) {
+            path = [];
+        }
+        path.push(pos);
+        this.startMove();
     }
 
     public movePosition(pos: LogicPos, angel: number) {
@@ -557,6 +585,25 @@ export class Element extends BlockObject implements IElement {
 
     }
 
+    public getInteractivePosition() {
+        const interactives = this.mModel.interactive;
+        if (!interactives || interactives.length < 1) {
+            return;
+        }
+        const pos45 = this.mRoomService.transformToMini45(this.getPosition());
+        let walkablePos = null;
+        for (const interactive of interactives) {
+            if ((<Room>this.mRoomService).isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+                walkablePos = interactive;
+                break;
+            }
+        }
+        if (!walkablePos) {
+            return;
+        }
+        return this.mRoomService.transformToMini90(new LogicPos(pos45.x + walkablePos.x, pos45.y + walkablePos.y));
+    }
+
     get nickname(): string {
         return this.mModel.nickname;
     }
@@ -679,17 +726,17 @@ export class Element extends BlockObject implements IElement {
         super.destroy();
     }
 
-    protected _doMove() {
-        if (!this.mMoveData.posPath || !this.mElementManager) {
-            return;
-        }
+    // protected _doMove() {
+        // if (!this.mMoveData.posPath || !this.mElementManager) {
+        //     return;
+        // }
         // const line = this.mMoveData.tweenLineAnim;
         // if (line) {
         //     line.stop();
         //     line.destroy();
         // }
         // const posPath = this.mMoveData.posPath;
-        this.mElementManager.roomService.game.renderPeer.doMove(this.id, this.mMoveData);
+        // this.mElementManager.roomService.game.renderPeer.doMove(this.id, this.mMoveData);
         // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
         //     targets: this.mDisplay,
         //     ease: "Linear",
@@ -705,6 +752,31 @@ export class Element extends BlockObject implements IElement {
         //     },
         //     onCompleteParams: [this],
         // });
+    // }
+
+    protected _doMove(time?: number, delta?: number) {
+        if (!this.mMoving || !this.body) {
+            return;
+        }
+        const _pos = this.body.position;
+        const pos = new LogicPos(_pos.x / this.mRoomService.game.scaleRatio, _pos.y / this.mRoomService.game.scaleRatio);
+        // TODO setPosition
+        // this.mDisplay.setPosition(pos.x, pos.y);
+
+        this.checkDirection();
+        const path = this.mMoveData.path;
+        const speed = this.mModel.speed * delta;
+        if (Tool.twoPointDistance(pos, path[0]) <= speed) {
+            if (path.length > 1) {
+                path.shift();
+                this.startMove();
+            } else {
+                if (path[0].stopDir) {
+                    this.stopMove();
+                    this.setDirection(path[0].stopDir);
+                }
+            }
+        }
     }
 
     protected createDisplay() {
@@ -862,6 +934,9 @@ export class Element extends BlockObject implements IElement {
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
         return 0; // this.mOffsetY;
+    }
+
+    protected checkDirection() {
     }
 
     protected onCheckDirection(params: any): number {

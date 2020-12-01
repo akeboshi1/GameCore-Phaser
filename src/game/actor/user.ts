@@ -4,17 +4,19 @@ import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { PlayerState } from "../room/element/element";
-import { ISprite, Sprite } from "../room/display/sprite/sprite";
-import { ILogicPoint, Logger, LogicPoint, LogicPos, Tool } from "utils";
+import { MoveData, MovePos, PlayerState } from "../room/element/element";
+import { ISprite } from "../room/display/sprite/sprite";
+import { Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { IDragonbonesModel, IFramesModel } from "structure";
+import { Export } from "webworker-rpc";
 
 export class User extends Player {
     private mUserData: UserDataManager;
     private mMoveStyle: number;
-    // private mSpeed: number = 3;
-    // private mTargetPoint: ILogicPoint;
+    private mTargetPoint: IMoveTarget;
+    private mSyncTime: number = 0;
+    private mSyncDirty: boolean = false;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -73,10 +75,67 @@ export class User extends Player {
     //     }
     // }
 
+    @Export()
+    public moveMotion(x: number, y: number, targetId?: number) {
+        if (this.mRootMount) {
+            this.mRootMount.removeMount(this);
+        }
+
+    }
+
+    @Export()
+    public findPath(x: number, y: number, targetId?: number) {
+        if (this.mRootMount) {
+            this.mRootMount.removeMount(this);
+        }
+        const path = this.roomService.findPath(this.getPosition(), new LogicPos(x, y));
+        if (!path) {
+            return;
+        }
+        if (path.length < 1) {
+            return;
+        }
+        this.matterWorld.setSensor(this.body, true);
+        this.mTargetPoint = { path, targetId };
+        this.startMove();
+    }
+
+    public syncPosition() {
+        if (!this.mTargetPoint) {
+            return;
+        }
+        const target = op_def.PBPoint3f.create();
+        target.x = this.mTargetPoint.path[0].x;
+        target.y = this.mTargetPoint.path[0].y;
+
+        const userPos = this.getPosition();
+        const pos = op_def.PBPoint3f.create();
+        pos.x = userPos.x;
+        pos.y = userPos.y;
+
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SELF);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SELF = packet.content;
+        content.goal = target;
+        content.position = pos;
+        content.targetId = this.mTargetPoint.targetId;
+        this.game.connection.send(packet);
+    }
+
     public startMove() {
-        super.startMove();
-        // const med: ControlFMediator = this.mRoom.world.uiManager.getMediator(ControlFMediator.NAME) as ControlFMediator;
-        // if (med) med.hide();
+        const path = this.mTargetPoint.path;
+        if (path.length < 1) {
+            return;
+        }
+        this.changeState(PlayerState.WALK);
+        this.mMoving = true;
+        this.setStatic(false);
+
+        const pos = this.getPosition();
+        // pos.y += this.offsetY;
+        const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
+        // TODO
+        const speed = this.mModel.speed * 33.333;
+        this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public stopMove() {
@@ -104,16 +163,19 @@ export class User extends Player {
     //     this.mTargetPoint = targetPoint;
     // }
 
-    public move(moveData: op_client.IMoveData) {
-        // TODO 不能仅判断walk, 移动状态可能还有run
-        if (this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-            if (this.mCurState !== PlayerState.WALK) {
-                return;
-            }
-        } else {
-            this.startMove();
-        }
-        super.move(moveData);
+    // public move(moveData: op_client.IMoveData) {
+    //     // TODO 不能仅判断walk, 移动状态可能还有run
+    //     if (this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+    //         if (this.mCurState !== PlayerState.WALK) {
+    //             return;
+    //         }
+    //     } else {
+    //         this.startMove();
+    //     }
+    //     super.move(moveData);
+    // }
+    public move(moveData: MovePos[]) {
+        // this.drawMovePath(moveData[0].x, moveData[0].y);
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
@@ -161,6 +223,31 @@ export class User extends Player {
         this.destroy();
     }
 
+    protected tryStopMove() {
+        this.stopMove();
+        const pos = this.getPosition();
+        const position = op_def.PBPoint3f.create();
+        position.x = pos.x;
+        position.y = pos.y;
+        position.z = pos.z;
+        const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = packet.content;
+        content.position = position;
+        this.game.connection.send(packet);
+
+        this.activeSprite();
+    }
+
+    protected activeSprite() {
+        if (!this.mTargetPoint || !this.mTargetPoint.targetId) {
+            return;
+        }
+        const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE = packet.content;
+        content.spriteId = this.mTargetPoint.targetId;
+        this.game.connection.send(packet);
+    }
+
     protected onMoveComplete() {
         this.preMoveComplete();
         if (this.mCurState !== PlayerState.WALK) {
@@ -172,6 +259,41 @@ export class User extends Player {
             this.stopMove();
         }
         // this._doMove();
+    }
+
+    protected _doMove(time?: number, delta?: number) {
+        if (!this.mMoving || !this.body) {
+            return;
+        }
+        if (!this.mMoving || !this.mTargetPoint || !this.body) return;
+        const path = this.mTargetPoint.path;
+        const _pos = this.body.position;
+        const pos = new LogicPos((_pos.x - this._offset.x) / this.roomService.game.scaleRatio, (_pos.y - this._offset.y) / this.mElementManager.roomService.game.scaleRatio);
+        // pos.y -= this.offsetY;
+        // TODO setPosition
+        // this.mDisplay.setPosition(Math.round(pos.x), Math.round(pos.y));
+        const speed = this.mModel.speed * delta;
+        this.checkDirection();
+
+        // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
+        if (Tool.twoPointDistance(pos, path[0]) <= speed) {
+            if (path.length > 1) {
+                path.shift();
+                this.startMove();
+            } else {
+                this.tryStopMove();
+                return;
+            }
+        }
+        this.mSyncTime += delta;
+        if (this.mSyncTime > 50 ) {
+            this.mSyncTime = 0;
+            this.mSyncDirty = true;
+        }
+        if (this.mSyncDirty) {
+            this.mSyncDirty = false;
+            this.syncPosition();
+        }
     }
 
     // protected onMoving() {
@@ -267,4 +389,8 @@ export class User extends Player {
     get moveStyle() {
         return this.mMoveStyle;
     }
+}
+
+interface IMoveTarget extends MoveData {
+    targetId?: number;
 }

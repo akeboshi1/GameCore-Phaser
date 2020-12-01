@@ -19,7 +19,8 @@ import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { IScenery, SceneName } from "structure";
-import { JoystickManager } from "../../input.manager/joystick.manager";
+import { MatterWorld } from "../physical/matter.world";
+import { AStar } from "../path.finding/astar";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -38,6 +39,7 @@ export interface IRoomService {
     readonly game: Game;
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
+    readonly matterWorld: MatterWorld;
 
     now(): number;
 
@@ -75,6 +77,8 @@ export interface IRoomService {
 
     initUI(): void;
 
+    findPath(start: IPos, end: IPos): IPos[];
+
     destroy();
 }
 
@@ -100,6 +104,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
+    protected mMatterWorld: MatterWorld;
+    protected mAstar: AStar;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
@@ -330,6 +336,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mGroupManager = new GroupManager(this);
         // this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
+        this.mMatterWorld = new MatterWorld(this);
         // this.mEffectManager = new EffectManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
@@ -369,6 +376,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         this.initSkyBox();
 
+        this.mAstar = new AStar(this);
+
         // const joystick = new JoystickManager(this.game);
     }
 
@@ -392,6 +401,34 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public initUI() {
         if (this.game.uiManager) this.game.uiManager.showMainUI();
+    }
+
+    public isWalkableAt(x: number, y: number) {
+        const reult = this.mAstar.isWalkableAt(x, y);
+        return reult;
+    }
+
+    public setTerrainWalkable(x: number, y: number, val: boolean) {
+        const map = this.mElementManager.map;
+        const value = map[x][y];
+        if (value === 0) {
+            this.mAstar.setWalkableAt(y, x, false);
+        } else {
+            this.mAstar.setWalkableAt(y, x, val);
+        }
+    }
+
+    public setElementWalkable(x: number, y: number, val: boolean) {
+        // const map = this.mTerrainManager.map;
+        // const value = map[y][x];
+        // if (value) {
+
+        // }
+        this.mAstar.setWalkableAt(y, x, val);
+    }
+
+    public findPath(startPos: IPos, endPos: IPos) {
+        return this.mAstar.find(startPos, endPos);
     }
 
     public clear() {
@@ -596,6 +633,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get sceneType(): op_def.SceneTypeEnum {
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
+    }
+
+    get matterWorld() {
+        return this.mMatterWorld;
     }
 
     private tryMove() {

@@ -1,16 +1,18 @@
 import { IPos, LogicPos } from "utils";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element";
+import { MatterObject } from "../physical/matter.object";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
 
-export abstract class BlockObject implements IBlockObject {
+export abstract class BlockObject extends MatterObject implements IBlockObject {
     public isUsed = false;
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = true;
     protected mModel: ISprite;
     protected mInputEnable: InputEnable;
-    constructor(protected mRoomService: IRoomService) {
+    constructor(room: IRoomService) {
+        super(room);
         this.isUsed = true;
     }
 
