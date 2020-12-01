@@ -1,1 +1,1 @@
-export { UIAtlasName, UIAtlasKey } from "./ui.atals.name";
+export { UIAtlasName, UIAtlasKey } from "./ui.atlas.name";

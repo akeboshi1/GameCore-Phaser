@@ -3,43 +3,39 @@ import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, PlayerProperty } from "gamecore";
 import { EventType, ModuleName } from "structure";
 export class PicaNewRoleMediator extends BasicMediator {
-    private picaWork: PicaNewRole;
+    private picaNewRole: PicaNewRole;
     private mPlayerInfo: PlayerProperty;
     constructor(game: Game) {
-        super(ModuleName.PICAWORK_NAME, game);
-        this.picaWork = new PicaNewRole(game);
+        super(ModuleName.PICANEWROLE_NAME, game);
+        this.picaNewRole = new PicaNewRole(game);
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
-        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
-
-        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questlist", this.on_Work_LIST, this);
-        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
-        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_initialized", this.onViewInitComplete, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_queryanotherinfo", this.query_Another_Info, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_hide", this.onHideView, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_initialized", this.onViewInitComplete, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
-        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
-
-        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questlist", this.on_Work_LIST, this);
-        this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
-        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_initialized", this.onViewInitComplete, this);
-    }
-
-    isSceneUI() {
-        return true;
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_queryanotherinfo", this.query_Another_Info, this);
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_hide", this.onHideView, this);
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_initialized", this.onViewInitComplete, this);
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
     }
 
     destroy() {
-        if (this.picaWork) {
-            this.picaWork.destroy();
-            this.picaWork = undefined;
+        if (this.picaNewRole) {
+            this.picaNewRole.destroy();
+            this.picaNewRole = undefined;
         }
         this.mPlayerInfo = undefined;
         super.destroy();
@@ -49,44 +45,28 @@ export class PicaNewRoleMediator extends BasicMediator {
         if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;
         return this.mPlayerInfo;
     }
-    private query_ORDER_LIST() {
-        this.picaWork.query_JOB_LIST();
+    private query_Another_Info(id: string) {
+        this.picaNewRole.fetchAnotherInfo(id);
     }
 
-    private query_WORK_ON_JOB(id: string) {
-        this.picaWork.query_WORK_ON_JOB(id);
-    }
-
-    private on_Work_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
-        // this.mView.setWorkDataList(content);
-        const questData = this.checkCanDoJob(content);
-        this.mView.setWorkData(questData);
-        this.onUpdatePlayerInfo(this.playerInfo);
-    }
-    private onUpdatePlayerInfo(content: PlayerProperty) {
-        this.mPlayerInfo = content;
-        if (this.mView)
-            this.mView.setProgressData(content.energy, content.workChance);
-    }
-    private checkCanDoJob(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
-        const jobs: op_client.IPKT_Quest[] = [];
-        for (const job of content.jobs) {
-            const targets = job.targets;
-            let issatisfy: boolean = true;
-            for (const target of targets) {
-                const property = this.playerInfo.getProperty(target.id);
-                if (target.neededCount > property.value) {
-                    issatisfy = false;
-                    break;
-                }
-            }
-            if (issatisfy) jobs.push(job);
+    private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+        if (this.panelInit) {
+            this.mShowData = content;
+            this.mView.setRoleData(content);
         }
-        jobs.sort((a, b) => {
-            if (a.cabinType > b.cabinType) return -1;
-            else return 1;
-        });
-        return jobs[0];
+    }
+    private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+        const uimanager = this.game.uiManager;
+        uimanager.showMed("CharacterInfo", this.mShowData);
+        this.destroy();
+    }
+
+    private onFollowHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+
+    }
+
+    private onTradingHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+
     }
     private onHideView() {
         const uimanager = this.game.uiManager;

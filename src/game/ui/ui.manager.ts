@@ -27,6 +27,7 @@ export class UIManager extends PacketHandler {
         if (!this.mMedMap) {
             this.mMedMap = new Map();
         }
+        this.initUILayoutType();
     }
 
     public getMed(name: string): BasicMediator {
@@ -370,5 +371,11 @@ export class UIManager extends PacketHandler {
             }
         });
         if (!show) this.mNormalUIMap.clear();
+    }
+    private initUILayoutType() {
+        this.mUILayoutMap.set(ModuleName.PICACHAT_NAME, UILayoutType.Bottom);
+        this.mUILayoutMap.set(ModuleName.PICANAVIGATE_NAME, UILayoutType.Bottom);
+        this.mUILayoutMap.set(ModuleName.PICAWORK_NAME, UILayoutType.Bottom);
+        this.mUILayoutMap.set(ModuleName.PICANEWROLE_NAME, UILayoutType.Bottom);
     }
 }

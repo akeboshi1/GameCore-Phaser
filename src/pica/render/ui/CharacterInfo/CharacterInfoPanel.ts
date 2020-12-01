@@ -275,7 +275,7 @@ export class CharacterInfoPanel extends BasePanel {
             bottom: 12 * this.dpr
         });
 
-        // this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.tade_btn"), this.dpr, this.scale, {
+        // this.tradeBtn = new NineSliceButton(this.scene, -bottomBtnPosx, bottomBtnPosy, 94 * this.dpr, 37 * this.dpr, this.commonkey, "red_btn", i18n.t("player_info.trading"), this.dpr, this.scale, {
         //     left: 12 * this.dpr,
         //     top: 12 * this.dpr,
         //     right: 12 * this.dpr,

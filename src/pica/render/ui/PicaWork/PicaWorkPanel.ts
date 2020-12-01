@@ -5,7 +5,7 @@ import { BasePanel, ButtonEventDispatcher, DynamicImage, ImageValue, ItemInfoTip
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
-export class PicWorkPanel extends BasePanel {
+export class PicaWorkPanel extends BasePanel {
     private bg: Phaser.GameObjects.Image;
     private titleName: Phaser.GameObjects.Text;
     private closeBtn: Button;

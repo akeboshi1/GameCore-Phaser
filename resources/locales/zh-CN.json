@@ -85,7 +85,7 @@
     "option_title": "称号",
     "option_attribute": "属性",
     "add_friend": "添加好友",
-    "tade_btn": "交易",
+    "trading": "交易",
     "private_chat": "私聊",
     "edit_profile": "编辑资料",
     "user_name": "用 户 名",
@@ -100,7 +100,8 @@
     "track": "追踪",
     "add_black": "拉黑",
     "remove_black": "移除黑名单",
-    "operation": "操作"
+    "operation": "操作",
+    "follow":"关注"
   },
   "compose": {
     "title": "合成",

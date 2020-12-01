@@ -12,7 +12,7 @@ export class PicaWorkMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questlist", this.query_ORDER_LIST, this);
+        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questlist", this.query_WORK_LIST, this);
         this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
         this.game.emitter.on(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
 
@@ -23,7 +23,7 @@ export class PicaWorkMediator extends BasicMediator {
 
     hide() {
         super.hide();
-        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questlist", this.query_ORDER_LIST, this);
+        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questlist", this.query_WORK_LIST, this);
         this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
         this.game.emitter.off(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
 
@@ -49,7 +49,7 @@ export class PicaWorkMediator extends BasicMediator {
         if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;
         return this.mPlayerInfo;
     }
-    private query_ORDER_LIST() {
+    private query_WORK_LIST() {
         this.picaWork.query_JOB_LIST();
     }
 

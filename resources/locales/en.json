@@ -84,7 +84,7 @@
     "option_attribute": "ATTRIBUTE",
     "option_title": "TITLE",
     "add_friend": "D: Add Friend",
-    "tade_btn": "D: Trade",
+    "trading": "TRADING",
     "private_chat": "Private Chat",
     "edit_profile": "Edit Profile",
     "user_name": "D: User Name",
@@ -99,7 +99,8 @@
     "track": "track",
     "add_black": "Add blacklist",
     "remove_black": "Rdd blacklist",
-    "operation": "Operation"
+    "operation": "Operation",
+    "follow": "FOLLOW"
   },
   "compose": {
     "title": "Produce",
