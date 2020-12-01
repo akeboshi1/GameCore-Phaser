@@ -10,7 +10,6 @@ import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, R
 import { PicaGame } from "picaWorker";
 import { CacheDataManager } from "./data.manager/cache.dataManager";
 import { DataMgrType } from "./data.manager/dataManager";
-import { MouseEvent } from "gamecoreRender";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -444,6 +443,16 @@ export class MainPeer extends RPCPeer {
     @Export()
     public getClockNow() {
         return this.game.clock.unixTime;
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public findPath(x: number, y: number, targetId?: number) {
+        this.game.user.findPath(x, y, targetId);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public moveMotion(x: number, y: number, targetId?: number) {
+        this.game.user.moveMotion(x, y, targetId);
     }
 
     // ==== todo

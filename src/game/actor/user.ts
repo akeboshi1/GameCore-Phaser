@@ -1,6 +1,6 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Game } from "../game";
+import { Game, fps } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
@@ -75,7 +75,6 @@ export class User extends Player {
     //     }
     // }
 
-    @Export()
     public moveMotion(x: number, y: number, targetId?: number) {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this);
@@ -83,7 +82,6 @@ export class User extends Player {
 
     }
 
-    @Export()
     public findPath(x: number, y: number, targetId?: number) {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this);
@@ -134,7 +132,7 @@ export class User extends Player {
         // pos.y += this.offsetY;
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
         // TODO
-        const speed = this.mModel.speed * 33.333;
+        const speed = this.mModel.speed * fps;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
