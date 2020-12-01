@@ -51,4 +51,5 @@ export class ModuleName {
     public static PICATREASURE_NAME: string = "PicaTreasure";
     public static PICAGIFTEFFECT_NAME: string = "PicaGiftEffect";
     public static PICAFURNIFUN_NAME: string = "PicaFurniFun";
+    public static PICANEWROLE_NAME: string = "picaNewRole";
 }

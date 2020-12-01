@@ -1,13 +1,7 @@
 import { Handler } from "../../../utils";
-import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
-export class FrameAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
-    public resName: string;
-    public resUrl: string;
-    public animUrlData: AnimationUrlData;
-    public loaded: boolean = false;
-    public isPlaying: boolean = false;
-    public loop: boolean = false;
-    public curAniName: string;
+import { BaseAnimation } from "./base.animation";
+import { AnimationUrlData } from "./ianimationbase";
+export class FrameAnimation extends BaseAnimation {
     private frameAnim: Phaser.GameObjects.Sprite;
     private complHandler: Handler;
     constructor(scene: Phaser.Scene) {
@@ -15,9 +9,7 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
     }
 
     public load(resName: string, resUrl: string, data?: string, compl?: Handler) {
-        this.destroy();
-        this.resName = resName ? resName : resUrl;
-        this.resUrl = resUrl;
+        super.load(resName, resUrl, data);
         this.complHandler = compl;
         this.animUrlData = new AnimationUrlData();
         if (resName)
@@ -34,27 +26,24 @@ export class FrameAnimation extends Phaser.GameObjects.Container implements IAni
     }
 
     public play(aniName?: string) {
-        this.curAniName = aniName ? aniName : this.resName;
-        this.isPlaying = true;
+        super.play(aniName);
         if (!this.frameAnim) return;
         this.frameAnim.play(this.curAniName);
     }
     public destroy() {
+        super.destroy();
         if (this.frameAnim) this.frameAnim.destroy();
-        if (this.animUrlData) this.animUrlData.dispose();
         this.frameAnim = null;
-        this.animUrlData = null;
         this.complHandler = undefined;
-        this.isPlaying = false;
     }
 
-    private onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
+    public onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
         this.loaded = true;
         // this.scene.anims.generateFrameNames(this.resName, { prefix: "diamond_", end: 15, zeroPad: 4 }),
 
-        if (!this.scene.anims.exists(this.resName)) {
+        if (!this.scene.anims.exists(this.curAniName)) {
             this.scene.anims.create({
-                key: this.resName,
+                key: this.curAniName,
                 frames: this.scene.anims.generateFrameNames(this.resName),
                 // frames: this.scene.anims.generateFrameNames(this.resName, { prefix: "loading_ui_", start: 1, end: 45, zeroPad: 2 }),
                 repeat: -1

@@ -1,20 +1,13 @@
-import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
-
-export class BubbleAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
-    public resName: string;
-    public resUrl: string;
-    public animUrlData: AnimationUrlData;
-    public loaded: boolean = false;
-    public isPlaying: boolean = false;
-    public loop: boolean = false;
+import { BaseAnimation } from "./base.animation";
+import { AnimationUrlData } from "./ianimationbase";
+export class BubbleAnimation extends BaseAnimation {
     private frameAnim: Phaser.GameObjects.Image;
     private bubblebg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
     public load(resName: string, resUrl: string, data?: string) {
-        this.resName = resName ? resName : resUrl;
-        this.resUrl = resUrl;
+        super.load(resName, resUrl, data);
         this.animUrlData = new AnimationUrlData();
         if (resName)
             this.animUrlData.setData(this.resName, this.resUrl);
@@ -30,7 +23,7 @@ export class BubbleAnimation extends Phaser.GameObjects.Container implements IAn
     }
 
     public play(aniName?: string) {
-        this.isPlaying = true;
+        super.play(aniName);
         if (!this.frameAnim) return;
         this.setScale(0.2, 0.2);
         this.y = 50;
@@ -42,14 +35,13 @@ export class BubbleAnimation extends Phaser.GameObjects.Container implements IAn
         });
     }
     public destroy() {
+        super.destroy();
         if (this.frameAnim) this.frameAnim.destroy();
         if (this.bubblebg) this.bubblebg.destroy();
-        if (this.animUrlData) this.animUrlData.dispose();
         this.frameAnim = null;
-        this.animUrlData = null;
         this.bubblebg = null;
     }
-    private onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
+    public onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
         this.loaded = true;
         this.bubblebg = this.scene.add.image(0, 0, this.resName);
         this.frameAnim = this.scene.add.image(0, 0, this.animUrlData.jsonUrl);

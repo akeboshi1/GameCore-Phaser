@@ -8,6 +8,8 @@ export interface IAnimationBase {
     loop: boolean;
     load(resName: string, resUrl: string, data?: string);
     play(aniName: string);
+    destroy();
+    onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number);
 }
 
 export class AnimationUrlData {
