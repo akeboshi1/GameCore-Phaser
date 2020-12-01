@@ -91,7 +91,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             await this.run();
             now = new Date().getTime();
             // if (now - tmpTime >= delayTime) break;
-            if (this.user) this.user.update();
+            // if (this.user) this.user.update();
             if (this.mRoomManager) this.mRoomManager.update(now, now - tmpTime);
             tmpTime = now;
         }
@@ -688,10 +688,20 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     private loadGameConfig(remotePath): Promise<Lite> {
         const configPath = ResUtils.getGameConfig(remotePath);
+        let index = 0;
         return load(configPath, "arraybuffer").then((req: any) => {
             this.mLoadingManager.start(LoadingTips.parseConfig());
             Logger.getInstance().log("start decodeConfig");
             return this.decodeConfigs(req);
+        }, (reason) => {
+            if (index > 3) {
+                // app reload
+                Logger.getInstance().log("load res error");
+                return;
+            }
+            index++;
+            Logger.getInstance().log("reload res", index);
+            return this.loadGameConfig(remotePath);
         });
     }
 

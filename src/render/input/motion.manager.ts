@@ -1,4 +1,5 @@
 import { Render } from "gamecoreRender";
+import { Logger } from "utils";
 
 export class MotionManager {
     public enable: boolean;
@@ -48,11 +49,11 @@ export class MotionManager {
         // this.dirty = false;
         const pointer = this.scene.input.activePointer;
         if (!pointer) return;
-        // const pos = this.render.user.getPosition();
-        // const tmpX = pointer.worldX / this.scaleRatio - pos.x;
-        // const tmpY = pointer.worldY / this.scaleRatio - pos.y;
-        // const position = this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
-        // this.start(position.x / this.scaleRatio, position.y / this.scaleRatio);
+        const { x, y } = this.render.displayManager.user;
+        const tmpX = pointer.worldX / this.scaleRatio - x;
+        const tmpY = pointer.worldY / this.scaleRatio - y;
+        const position = this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
+        this.start(position.x / this.scaleRatio, position.y / this.scaleRatio);
     }
 
     setScene(scene: Phaser.Scene) {
@@ -73,9 +74,8 @@ export class MotionManager {
         // if (!user) {
         //     return;
         // }
-        // worldX /= this.world.scaleRatio;
-        // worldY /= this.world.scaleRatio;
         // this.render.user.moveMotion(worldX, worldY, id);
+        this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
     private movePath(worldX: number, worldY: number, id?: number) {
@@ -84,13 +84,15 @@ export class MotionManager {
         //     return;
         // }
         // this.render.user.findPath(worldX, worldY, id);
+        this.render.mainPeer.findPath(worldX, worldY, id);
     }
 
     private stop() {
+        this.render.mainPeer.stopMove();
         // this.render.user.stopMove();
     }
 
-    private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+    private async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         this.dirty = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
@@ -101,12 +103,12 @@ export class MotionManager {
                 if (id) {
                     const ele = this.render.displayManager.getDisplay(id);
                     // const position = ele.getPosition();
-                    // const walkpos = (<Element>ele).getInteractivePosition();
-                    // if (walkpos) {
-                    //     this.movePath(walkpos.x, walkpos.y, id);
-                    // } else {
-                    this.movePath(ele.x, ele.y, id);
-                    // }
+                    const walkpos = await this.render.mainPeer.getInteractivePosition(id);
+                    if (walkpos) {
+                        this.movePath(walkpos.x, walkpos.y, id);
+                    } else {
+                        this.movePath(ele.x, ele.y, id);
+                    }
                 }
             } else {
                 this.movePath(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio);

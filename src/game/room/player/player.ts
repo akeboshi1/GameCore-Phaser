@@ -109,7 +109,7 @@ export class Player extends Element implements IElement {
     }
 
     public setPosition(pos: IPos) {
-        pos.y += this.offsetY;
+        // pos.y += this.offsetY;
         super.setPosition(pos);
     }
 

@@ -16,7 +16,7 @@ export interface IElement {
 
     model: ISprite;
 
-    update();
+    update(time?: number, delta?: number);
 
     setModel(model: ISprite);
 
@@ -57,6 +57,8 @@ export interface IElement {
     addMount(ele: IElement, index?: number): this;
 
     removeMount(ele: IElement): this;
+
+    getInteractivePosition(): IPos;
 }
 
 export enum PlayerState {
@@ -198,6 +200,7 @@ export class Element extends BlockObject implements IElement {
         if (!model) {
             return;
         }
+        this.mElementManager.removeFromMap(model);
         // this.mDisplayInfo = this.mModel.displayInfo;
         this.mQueueAnimations = undefined;
         this.load(this.mModel.displayInfo);
@@ -223,7 +226,8 @@ export class Element extends BlockObject implements IElement {
         if (model.mountSprites && model.mountSprites.length > 0) {
             this.updateMounth(model.mountSprites);
         }
-        this.update();
+        // this.update();
+        this.mElementManager.addToMap(model);
     }
 
     public updateModel(model: op_client.ISprite) {
@@ -254,14 +258,14 @@ export class Element extends BlockObject implements IElement {
         }
         if (model.hasOwnProperty("mountSprites")) {
             const mounts = model.mountSprites;
-            this.mergeMounth(mounts);
-            this.updateMounth(mounts);
+            // this.mergeMounth(mounts);
+            // this.updateMounth(mounts);
         }
         if (model.hasOwnProperty("point3f")) {
             const pos = model.point3f;
             this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
-        this.update();
+        // this.update();
     }
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
@@ -389,10 +393,11 @@ export class Element extends BlockObject implements IElement {
         return this.mRenderable;
     }
 
-    public update() {
-        if (this.mDirty === false) {
+    public update(time?: number, delta?: number) {
+        if (this.mDirty === false && this.mMoving === false) {
             return;
         }
+        this._doMove(time, delta);
         this.mDirty = false;
         // if (this.mBubble) {
         //     this.mBubble.follow(this);
@@ -551,6 +556,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setPosition(p: IPos, update: boolean = false) {
+        super.setPosition(p);
         if (!this.mElementManager) {
             return;
         }
@@ -616,7 +622,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public getInteractivePosition() {
-        const interactives = this.mModel.interactive;
+        const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
             return;
         }
@@ -901,10 +907,12 @@ export class Element extends BlockObject implements IElement {
         //     });
         // }
         this.setDepth(depth);
+        this.addBody();
     }
 
     protected removeDisplay() {
         super.removeDisplay();
+        this.removeBody();
     }
 
     protected setDepth(depth: number) {

@@ -13,5 +13,6 @@ export class PlayerModel extends Sprite {
         this.sceneId = data.sceneId;
         this.uuid = data.uuid;
         this.platformId = data.platformId;
+        this.setAnimationName("idle");
     }
 }

@@ -264,6 +264,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public update(time: number, delta: number) {
+        if (this.matterWorld) this.matterWorld.update();
         this.updateClock(time, delta);
         if (this.mBlocks) this.mBlocks.update(time, delta);
         // this.mViewBlockManager.update(time, delta);
@@ -277,14 +278,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const eles = this.mElementManager ? this.mElementManager.getElements() : null;
         if (eles) {
             for (const ele of eles) {
-                ele.update();
+                ele.update(time, delta);
             }
         }
         const players = this.mPlayerManager ? this.mPlayerManager.getElements() : null;
         if (players) {
             for (const player of players) {
-                if (player.id === this.mPlayerManager.actor.id) continue;
-                player.update();
+                // if (player.id === this.mPlayerManager.actor.id) continue;
+                player.update(time, delta);
             }
         }
     }
@@ -342,8 +343,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
         const padding = 199 * this.mScaleRatio;
+        const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
         this.mGame.peer.render.roomstartPlay();
-        this.mGame.peer.render.setCamerasBounds(-padding, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
+        this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         //     // init block
         this.mBlocks.int(this.mSize);
 
@@ -375,8 +377,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
 
         this.initSkyBox();
+        this.mTerrainManager.init();
 
         this.mAstar = new AStar(this);
+        const map = [];
+        for (let i = 0; i < this.miniSize.rows; i++) {
+            map[i] = [];
+            for (let j = 0; j < this.miniSize.cols; j++) {
+                map[i][j] = 1;
+            }
+        }
+        this.mAstar.init(map);
 
         // const joystick = new JoystickManager(this.game);
     }
@@ -556,10 +567,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     return;
                 }
                 let { x, y, width, height } = bounds;
-                if (x === null || y === null) {
-                    x = (this.mSize.sceneWidth - width) * 0.5;
-                    y = (this.mSize.sceneHeight - height) * 0.5;
-                }
+                x = -width * 0.5 + (x ? x : 0);
+                y = (this.mSize.sceneHeight - height) * 0.5 + (y ? y : 0);
                 x *= this.mScaleRatio;
                 y *= this.mScaleRatio;
                 width *= this.mScaleRatio;

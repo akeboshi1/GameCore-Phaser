@@ -6,10 +6,9 @@ import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
 import { MoveData, MovePos, PlayerState } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
-import { Logger, LogicPos, Tool } from "utils";
+import { Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { IDragonbonesModel, IFramesModel } from "structure";
-import { Export } from "webworker-rpc";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -43,6 +42,7 @@ export class User extends Player {
         this.mId = actor.id;
         this.mRoomService = room;
         this.mElementManager = room.playerManager;
+        this.setMatterWorld(room.matterWorld);
         this.model = new PlayerModel(actor);
 
         // if (room.game.inputManager) room.game.inputManager.addListener(this);
@@ -79,7 +79,10 @@ export class User extends Player {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this);
         }
-
+        this.mTargetPoint = { path: [new LogicPos(x, y)], targetId };
+        this.mSyncDirty = true;
+        this.matterWorld.setSensor(this.body, false);
+        this.startMove();
     }
 
     public findPath(x: number, y: number, targetId?: number) {
@@ -266,10 +269,9 @@ export class User extends Player {
         if (!this.mMoving || !this.mTargetPoint || !this.body) return;
         const path = this.mTargetPoint.path;
         const _pos = this.body.position;
-        const pos = new LogicPos((_pos.x - this._offset.x) / this.roomService.game.scaleRatio, (_pos.y - this._offset.y) / this.mElementManager.roomService.game.scaleRatio);
-        // pos.y -= this.offsetY;
-        // TODO setPosition
-        // this.mDisplay.setPosition(Math.round(pos.x), Math.round(pos.y));
+        const pos = new LogicPos(Math.round((_pos.x - this._offset.x) / this.roomService.game.scaleRatio), Math.round((_pos.y - this._offset.y) / this.mElementManager.roomService.game.scaleRatio));
+        this.mModel.setPosition(pos.x, pos.y);
+        this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         const speed = this.mModel.speed * delta;
         this.checkDirection();
 

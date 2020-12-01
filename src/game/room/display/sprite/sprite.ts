@@ -51,6 +51,10 @@ export interface ISprite {
     setDisplayInfo(val);
     updateAttr(attrs: op_def.IStrPair[]);
     updateAvatarSuits(attrs: op_def.IStrPair[]): boolean;
+    getCollisionArea(): number[][];
+    getWalkableArea(): number[][];
+    getOriginPoint(): IPos;
+    getInteractive(): op_def.IPBPoint2f[];
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
@@ -115,7 +119,8 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
         this.tryRegisterAnimation(obj.animationRegistrationMap);
         this.currentAnimationName = obj.currentAnimationName;
-        this.direction = obj.direction || 3;
+        // this.direction = obj.direction || 3;
+        this.setDirection(obj.direction || 3);
         this.nickname = obj.nickname;
         this.bindID = obj.bindId;
         this.alpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
@@ -287,15 +292,6 @@ export class Sprite extends EventDispatcher implements ISprite {
         return ani;
     }
 
-    setCurrentAnimationName(animationName: string) {
-        if (this.displayInfo) {
-            this.displayInfo.animationName = animationName;
-        }
-        this.currentAnimationName = animationName;
-        this.setAnimationData(animationName, this.direction);
-        // this.currentAnimation = this.findAnimation(animationName, this.direction);
-    }
-
     setDirection(val: number) {
         if (!val) return;
         this.direction = val;
@@ -329,6 +325,14 @@ export class Sprite extends EventDispatcher implements ISprite {
         return false;
     }
 
+    public getInteractive() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName } = this.currentAnimation;
+        return this.displayInfo.getInteractiveArea(animationName);
+    }
+
     public setOriginCollisionPoint(value: number[] | null): void {
         if (this.originCollisionPoint === undefined) {
             this.originCollisionPoint = new LogicPoint();
@@ -355,6 +359,30 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
         const { name: animationName } = this.currentAnimation;
         return this.displayInfo.getInteractiveArea(animationName);
+    }
+
+    public getCollisionArea() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getCollisionArea(animationName, flip);
+    }
+
+    public getWalkableArea() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getWalkableArea(animationName, flip);
+    }
+
+    public getOriginPoint() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getOriginPoint(animationName, flip);
     }
 
     private setAnimationData(animationName: string, direction: number, times?: number) {
@@ -389,30 +417,6 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.currentCollisionArea = this.getCollisionArea();
         this.currentWalkableArea = this.getWalkableArea();
         this.currentCollisionPoint = this.getOriginPoint();
-    }
-
-    private getCollisionArea() {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getCollisionArea(animationName, flip);
-    }
-
-    private getWalkableArea() {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getWalkableArea(animationName, flip);
-    }
-
-    private getOriginPoint() {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getOriginPoint(animationName, flip);
     }
 
     private dirable(aniName: string): number[] {

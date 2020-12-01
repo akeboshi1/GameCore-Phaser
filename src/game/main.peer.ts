@@ -455,6 +455,20 @@ export class MainPeer extends RPCPeer {
         this.game.user.moveMotion(x, y, targetId);
     }
 
+    @Export()
+    public stopMove() {
+        this.game.user.stopMove();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public getInteractivePosition(id: number) {
+        const ele = this.game.roomManager.currentRoom.getElement(id);
+        if (ele) {
+            return ele.getInteractivePosition();
+        }
+        return null;
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();
