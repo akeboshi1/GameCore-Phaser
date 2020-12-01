@@ -68,17 +68,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.mActor = null;
         }
         if (!this.mPlayerMap) return;
-        this.mPlayerMap.forEach((player) => this.removeFromMap(player.id));
+        this.mPlayerMap.forEach((player) => this.remove(player.id));
         this.mPlayerMap.clear();
-    }
-
-    public removeFromMap(id: number) {
-        const player = this.mPlayerMap.get(id);
-        if (player) {
-            // MineCarSimulateData.destroyMineCar(this.roomService.elementManager, player.model);
-            this.mPlayerMap.delete(id);
-            player.destroy();
-        }
     }
 
     public get(id: number): Player {
@@ -104,10 +95,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.mPlayerMap.delete(id);
             element.destroy();
         }
-        if (this.mActor) {
-            this.mActor.destroy();
-            this.mActor = null;
-        }
+        // if (this.mActor) {
+        //     this.mActor.destroy();
+        //     this.mActor = null;
+        // }
         return element;
     }
 
@@ -115,6 +106,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mActor = user;
         this.mPlayerMap.set(user.id, user);
     }
+
+    public addToMap(sprite: ISprite) { }
+
+    public removeFromMap(sprite: ISprite) { }
 
     public getElements(): IElement[] {
         return Array.from(this.mPlayerMap.values());
@@ -251,7 +246,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const id of ids) {
-            this.removeFromMap(id);
+            this.remove(id);
         }
     }
 

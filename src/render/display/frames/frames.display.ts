@@ -112,10 +112,10 @@ export class FramesDisplay extends DisplayObject {
             // graphics.fillCircle(0, 0, 10);
             // this.add(graphics);
         }
-        if (!this.isSetInteractive) {
-            this.isInteracitve ? this.setInteractive() : this.disableInteractive();
-            this.isSetInteractive = true;
-        }
+        // if (!this.isSetInteractive) {
+        this.isInteracitve ? this.setInteractive() : this.disableInteractive();
+        this.isSetInteractive = true;
+        // }
         // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
         this.initBaseLoc(DisplayField.STAGE, animation);
         // }

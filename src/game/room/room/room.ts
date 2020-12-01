@@ -377,13 +377,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
 
         this.initSkyBox();
+        this.mTerrainManager.init();
 
         this.mAstar = new AStar(this);
         const map = [];
         for (let i = 0; i < this.miniSize.rows; i++) {
             map[i] = [];
             for (let j = 0; j < this.miniSize.cols; j++) {
-                map[i][j] = 0;
+                map[i][j] = 1;
             }
         }
         this.mAstar.init(map);

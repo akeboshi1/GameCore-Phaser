@@ -104,6 +104,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
 
     public destroy() {
         this.mRoomService.game.peer.render.displayDestroy(this.id, this.type);
+        super.destroy();
     }
 
     public clear() {

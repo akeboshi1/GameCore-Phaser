@@ -4,7 +4,7 @@ import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Handler, Logger, LogicPos } from "utils";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { IElementStorage } from "../elementstorage/element.storage";
-import { IRoomService } from "../room/room";
+import { IRoomService, Room } from "../room/room";
 
 import { IElement, Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
@@ -22,6 +22,8 @@ export interface IElementManager {
     add(sprite: ISprite[]);
     remove(id: number): IElement;
     getElements(): IElement[];
+    addToMap(sprite: ISprite);
+    removeFromMap(sprite: ISprite);
     destroy();
 }
 
@@ -96,6 +98,78 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public add(sprites: ISprite[], addMap?: boolean) {
         for (const sprite of sprites) {
             this._add(sprite, addMap);
+        }
+    }
+
+    public addToMap(sprite: ISprite) {
+        const displayInfo = sprite.displayInfo;
+        if (!displayInfo) {
+            return;
+        }
+        const collision = sprite.getCollisionArea();
+        let walkable = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision || !walkable) {
+            return;
+        }
+        const rows = collision.length;
+        const cols = collision[0].length;
+        const pos = this.mRoom.transformToMini45(sprite.pos);
+        if (!walkable) {
+            walkable = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkable[i] = new Array(cols).fill(0);
+            }
+        }
+        let row = 0;
+        let col = 0;
+        for (let i = 0; i < rows; i++) {
+            row = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                if (collision[i][j] === 1) {
+                    col = pos.x + j - origin.x;
+                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                        if (walkable[i] === undefined || walkable[i][j] === undefined) {
+                            this.mMap[row][col] = 0;
+                        } else {
+                            this.mMap[row][col] = walkable[i][j];
+                        }
+                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
+                    }
+                }
+            }
+        }
+    }
+
+    public removeFromMap(sprite: ISprite) {
+        if (!sprite) return;
+        const collision = sprite.getCollisionArea();
+        let walkable = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision || !walkable) {
+            return;
+        }
+        const rows = collision.length;
+        const cols = collision[0].length;
+        const pos = this.mRoom.transformToMini45(sprite.pos);
+        if (!walkable) {
+            walkable = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkable[i] = new Array(cols).fill(0);
+            }
+        }
+        let row = 0;
+        let col = 0;
+        for (let i = 0; i < rows; i++) {
+            row = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                if (collision[i][j] === 1) {
+                    col = pos.x + j - origin.x;
+                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                        this.mMap[row][col] = 0;
+                    }
+                }
+            }
         }
     }
 

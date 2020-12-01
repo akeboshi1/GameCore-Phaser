@@ -64,6 +64,7 @@ export class DisplayManager {
     get user(): DisplayObject {
         return this.mUser;
     }
+
     public resize(width: number, height: number) {
         this.scenerys.forEach((scenery) => {
             scenery.resize(width, height);
