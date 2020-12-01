@@ -1,6 +1,6 @@
 import { op_def } from "pixelpai_proto";
 import { RunningAnimation, IAvatar, IDragonbonesModel } from "structure";
-import { Direction } from "utils";
+import { Direction, IPos, LogicPoint, LogicPos } from "utils";
 
 export class DragonbonesModel implements IDragonbonesModel {
     discriminator: string = "DragonbonesModel";
@@ -30,15 +30,15 @@ export class DragonbonesModel implements IDragonbonesModel {
     }
 
     public getCollisionArea(aniName: string): number[][] {
-        return [[1, 1], [1, 1]];
+        return [[1]];
     }
 
     public getWalkableArea(): number[][] {
-        return [[1, 1], [1, 1]];
+        return [[0]];
     }
 
-    public getOriginPoint(aniName): Phaser.Geom.Point {
-        return new Phaser.Geom.Point(1, 1);
+    public getOriginPoint(aniName): LogicPoint {
+        return new LogicPoint(1, 1);
     }
 
     public getInteractiveArea(): op_def.IPBPoint2i[] {

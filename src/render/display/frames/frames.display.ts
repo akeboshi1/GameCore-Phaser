@@ -22,6 +22,7 @@ export class FramesDisplay extends DisplayObject {
     protected isSetInteractive: boolean = false;
     protected isInteracitve: boolean = false;
     private mModel: IFramesModel;
+
     public load(displayInfo: IFramesModel, field?: DisplayField) {
         field = !field ? DisplayField.STAGE : field;
         this.mModel = displayInfo;
@@ -32,6 +33,7 @@ export class FramesDisplay extends DisplayObject {
             return false;
         }
         this.mDisplayDatas.set(field, data);
+        this.setData("id", data.id);
         if (this.scene.textures.exists(data.gene)) {
             this.onLoadCompleted(field);
         } else {
@@ -93,6 +95,7 @@ export class FramesDisplay extends DisplayObject {
             } else {
                 display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
             }
+            display.setData("id", this.id);
             this.mDisplays.push(display);
             display.scaleX = animation.flip ? -1 : 1;
             let x = offsetLoc.x;

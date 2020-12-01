@@ -1,5 +1,5 @@
 import { Bodies, Body, Vector } from "matter-js";
-import { Pos } from "utils";
+import { IPos } from "utils";
 import { IRoomService } from "../room/room";
 import { MatterWorld } from "./matter.world";
 
@@ -57,7 +57,7 @@ export class MatterObject {
         Body.setVelocity(this.body, Vector.create(x, y));
     }
 
-    public setPosition(pos: Pos) {
+    public setPosition(pos: IPos) {
         // if (x === undefined) { x = 0; }
         // if (y === undefined) { y = x; }
 

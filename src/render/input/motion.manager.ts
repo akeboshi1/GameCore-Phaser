@@ -48,11 +48,11 @@ export class MotionManager {
         // this.dirty = false;
         const pointer = this.scene.input.activePointer;
         if (!pointer) return;
-        // const pos = this.render.user.getPosition();
-        // const tmpX = pointer.worldX / this.scaleRatio - pos.x;
-        // const tmpY = pointer.worldY / this.scaleRatio - pos.y;
-        // const position = this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
-        // this.start(position.x / this.scaleRatio, position.y / this.scaleRatio);
+        const { x, y } = this.render.displayManager.user;
+        const tmpX = pointer.worldX / this.scaleRatio - x;
+        const tmpY = pointer.worldY / this.scaleRatio - y;
+        const position = this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
+        this.start(position.x / this.scaleRatio, position.y / this.scaleRatio);
     }
 
     setScene(scene: Phaser.Scene) {
@@ -73,9 +73,8 @@ export class MotionManager {
         // if (!user) {
         //     return;
         // }
-        // worldX /= this.world.scaleRatio;
-        // worldY /= this.world.scaleRatio;
         // this.render.user.moveMotion(worldX, worldY, id);
+        this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
     private movePath(worldX: number, worldY: number, id?: number) {
@@ -84,9 +83,11 @@ export class MotionManager {
         //     return;
         // }
         // this.render.user.findPath(worldX, worldY, id);
+        this.render.mainPeer.findPath(worldX, worldY, id);
     }
 
     private stop() {
+        this.render.mainPeer.stopMove();
         // this.render.user.stopMove();
     }
 

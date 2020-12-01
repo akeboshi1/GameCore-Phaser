@@ -29,6 +29,10 @@ export class InputManager {
         this.mMouseManager.resize(width, height);
     }
 
+    update(time: number, delta: number) {
+        this.mMotionManager.update(time, delta);
+    }
+
     public destroy() {
         if (this.mMouseManager) this.mMouseManager.destroy();
         if (this.mJoystickManager) this.mJoystickManager.destroy();
