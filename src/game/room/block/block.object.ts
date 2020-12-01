@@ -1,4 +1,5 @@
-import { IPos, LogicPos } from "utils";
+import { Bodies } from "matter-js";
+import { IPos, Logger, LogicPos, Position45 } from "utils";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element";
 import { MatterObject } from "../physical/matter.object";
@@ -147,6 +148,85 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     protected enableBlock() {
         this.mBlockable = true;
         this.addToBlock();
+    }
+
+    protected setBody() {
+        this.drawBody();
+    }
+
+    protected drawBody() {
+        const collision = this.mModel.getCollisionArea();
+        if (!collision) {
+            return;
+        }
+        const collisionArea = [...collision];
+        let walkableArea = this.mModel.getWalkableArea();
+        if (!walkableArea) {
+            walkableArea = [];
+        }
+
+        const cols = collisionArea.length;
+        const rows = collisionArea[0].length;
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                if (walkableArea[i] && walkableArea[i][j] === 1) {
+                    collisionArea[i][j] = 0;
+                }
+            }
+        }
+
+        const walkable = (val: number) => val === 0;
+
+        const resule = collisionArea.some((val: number[]) => val.some(walkable));
+        const dpr = this.mRoomService.game.scaleRatio;
+        const transformToMini90 = this.mRoomService.transformToMini90.bind(this.mRoomService);
+        let paths = [];
+        const miniSize = this.mRoomService.miniSize;
+        let index = 0;
+        if (resule) {
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    if (collisionArea[i][j] === 1) {
+                        if (!paths[index]) paths[index] = [];
+                        const pos = Position45.transformTo90(new LogicPos(i, j), miniSize);
+                        paths[index].push({ x: pos.x, y: -miniSize.tileHeight * 0.5 + pos.y }, { x: pos.x + miniSize.tileWidth * 0.5, y: pos.y }, { x: pos.x, y: pos.y + miniSize.tileHeight * 0.5 }, { x: pos.x - miniSize.tileWidth * 0.5, y: pos.y });
+                        index++;
+                    }
+                }
+                if (paths[index]) index++;
+            }
+        } else {
+            paths = [[transformToMini90(new LogicPos(0, 0)), transformToMini90(new LogicPos(rows, 0)), transformToMini90(new LogicPos(rows, cols)), transformToMini90(new LogicPos(0, cols))]];
+        }
+
+        const mapHeight = (rows + cols) * (miniSize.tileHeight / 2) * dpr;
+        const mapWidth = (rows + cols) * (miniSize.tileWidth / 2) * dpr;
+        const scaleDpr = (pos) => {
+            pos.x *= dpr;
+            pos.y *= dpr;
+        };
+        paths.map((path) => path.map(scaleDpr));
+        if (paths.length < 1 || paths[0].length < 3) {
+            Logger.getInstance().log("can't draw paths: ", this.mModel.nickname, this.mModel.id);
+            return;
+        }
+        // const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];
+        const curOrigin = this.mModel.getOriginPoint();
+        const originPos = new LogicPos(curOrigin.x, curOrigin.y);
+        const origin = Position45.transformTo90(originPos, miniSize);
+        origin.x *= dpr;
+        origin.y *= dpr;
+
+        // this._offset.x = origin.x;
+        // this._offset.y = mapHeight * 0.5 - origin.y;
+        this._offset.x = mapWidth * 0.5 - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
+        this._offset.y = mapHeight * 0.5 - origin.y;
+
+        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true });
+        body.inertia = Infinity;
+        body.inverseInertia = Infinity;
+        body.friction = 1;
+        this.setExistingBody(body, true);
     }
 
     get id(): number {

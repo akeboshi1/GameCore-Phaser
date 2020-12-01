@@ -51,6 +51,9 @@ export interface ISprite {
     setDisplayInfo(val);
     updateAttr(attrs: op_def.IStrPair[]);
     updateAvatarSuits(attrs: op_def.IStrPair[]): boolean;
+    getCollisionArea(): number[][];
+    getWalkableArea(): number[][];
+    getOriginPoint(): IPos;
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
@@ -287,15 +290,6 @@ export class Sprite extends EventDispatcher implements ISprite {
         return ani;
     }
 
-    setCurrentAnimationName(animationName: string) {
-        if (this.displayInfo) {
-            this.displayInfo.animationName = animationName;
-        }
-        this.currentAnimationName = animationName;
-        this.setAnimationData(animationName, this.direction);
-        // this.currentAnimation = this.findAnimation(animationName, this.direction);
-    }
-
     setDirection(val: number) {
         if (!val) return;
         this.direction = val;
@@ -357,6 +351,30 @@ export class Sprite extends EventDispatcher implements ISprite {
         return this.displayInfo.getInteractiveArea(animationName);
     }
 
+    public getCollisionArea() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getCollisionArea(animationName, flip);
+    }
+
+    public getWalkableArea() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getWalkableArea(animationName, flip);
+    }
+
+    public getOriginPoint() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getOriginPoint(animationName, flip);
+    }
+
     private setAnimationData(animationName: string, direction: number, times?: number) {
         if (!this.displayInfo || !animationName) {
             return;
@@ -389,30 +407,6 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.currentCollisionArea = this.getCollisionArea();
         this.currentWalkableArea = this.getWalkableArea();
         this.currentCollisionPoint = this.getOriginPoint();
-    }
-
-    private getCollisionArea() {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getCollisionArea(animationName, flip);
-    }
-
-    private getWalkableArea() {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getWalkableArea(animationName, flip);
-    }
-
-    private getOriginPoint() {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getOriginPoint(animationName, flip);
     }
 
     private dirable(aniName: string): number[] {
