@@ -1,10 +1,8 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { ElementNode, DisplayNode } from "game-capsule";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
-import { Logger } from "../../../utils/log";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
-import { IImage } from "game-capsule";
+import { Logger } from "utils";
 
 export enum ElementEditorBrushType {
     Drag,
@@ -25,7 +23,7 @@ export enum ElementEditorEmitType {
  */
 export class ElementEditorCanvas extends EditorCanvas {
 
-    public mData: ElementNode;
+    public mData: any;// ElementNode
 
     private readonly SCENEKEY: string = "ElementEditorScene";
     private readonly ERROR_UNINITED: string = "canvas not inited";
@@ -42,7 +40,7 @@ export class ElementEditorCanvas extends EditorCanvas {
         this.mGame.scene.add(this.SCENEKEY, ElementEditorScene);
 
         // start
-        this.mData = config.node as ElementNode;
+        this.mData = config.node;// ElementNode
         this.mResManager = new ElementEditorResourceManager(this.mData, this.mEmitter, this.mConfig.LOCAL_HOME_PATH);
         this.mGame.scene.start(this.SCENEKEY, this);
     }
@@ -103,12 +101,12 @@ export class ElementEditorCanvas extends EditorCanvas {
     }
 
     // 解析数据
-    public deserializeDisplay(): Promise<IImage[]> {
+    public deserializeDisplay(): Promise<any[]> {// IImage
         return this.mResManager.deserializeDisplay();
     }
 
     // 合图
-    public generateSpriteSheet(images: IImage[]): Promise<{ url: string, json: string }> {
+    public generateSpriteSheet(images: any[]): Promise<{ url: string, json: string }> {// IImage
         return this.mResManager.generateSpriteSheet(images);
     }
 

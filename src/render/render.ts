@@ -19,8 +19,8 @@ import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
 import { PicaRenderUiManager } from "picaRender";
 import { GamePauseScene, MainUIScene } from "./scenes";
-import { Scenery } from "gamecore";
-// import MainWorker from "worker-loader?filename=js/[name].js!../game/game";
+import { EditorCanvasManager } from "./managers/editor.canvas.manager";
+
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -43,6 +43,7 @@ export class Render extends RPCPeer implements GameMain {
     protected mUiManager: PicaRenderUiManager;
     protected mDisplayManager: DisplayManager;
     protected mLocalStorageManager: LocalStorageManager;
+    protected mEditorCanvasManager: EditorCanvasManager;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
@@ -123,6 +124,10 @@ export class Render extends RPCPeer implements GameMain {
         return this.mLocalStorageManager;
     }
 
+    get editorCanvasManager(): EditorCanvasManager {
+        return this.mEditorCanvasManager;
+    }
+
     get game(): Phaser.Game {
         return this.mGame;
     }
@@ -146,6 +151,7 @@ export class Render extends RPCPeer implements GameMain {
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
+        if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
     }
 
     destroyManager() {
@@ -173,6 +179,10 @@ export class Render extends RPCPeer implements GameMain {
             this.mDisplayManager.destroy();
             this.mDisplayManager = undefined;
         }
+        if (this.mEditorCanvasManager) {
+            this.mEditorCanvasManager.destroy();
+            this.mEditorCanvasManager = undefined;
+        }
     }
 
     clearManager() {
@@ -193,6 +203,9 @@ export class Render extends RPCPeer implements GameMain {
 
         if (this.mDisplayManager)
             this.mDisplayManager.destroy();
+
+        if (this.mEditorCanvasManager)
+            this.mEditorCanvasManager.destroy();
     }
 
     enterGame() {

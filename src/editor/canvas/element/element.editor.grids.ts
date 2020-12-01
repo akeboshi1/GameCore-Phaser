@@ -1,7 +1,5 @@
-import { IPoint } from "game-capsule";
-import { AnimationDataNode } from "game-capsule";
+import { Logger } from "utils";
 import Position45Utils from "../../utils/position45.utils";
-import { Logger } from "../../../utils/log";
 import { ElementEditorCanvas, ElementEditorBrushType } from "./element.editor.canvas";
 
 export default class ElementEditorGrids extends Phaser.GameObjects.Container {
@@ -21,11 +19,11 @@ export default class ElementEditorGrids extends Phaser.GameObjects.Container {
     private mCollisionArea: CollisionGrid[][];
     private mBasicCollisionArea: number[][];
     private mInteractiveArea: CollisionGrid[][];
-    private mBasicInteractiveArea: IPoint[];
+    private mBasicInteractiveArea: any[];// IPoint
     private mCurToolType: ElementEditorBrushType;
-    private mAnimationData: AnimationDataNode;
+    private mAnimationData: any;// AnimationDataNode
 
-    constructor(scene: Phaser.Scene, node: AnimationDataNode) {
+    constructor(scene: Phaser.Scene, node: any) {// AnimationDataNode
         super(scene);
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
@@ -50,7 +48,7 @@ export default class ElementEditorGrids extends Phaser.GameObjects.Container {
         this.setAnimationData(node);
     }
 
-    public setAnimationData(animationData: AnimationDataNode) {
+    public setAnimationData(animationData: any) {// AnimationDataNode
         this.clear();
         this.mAnimationData = animationData;
         if (!this.mAnimationData) {

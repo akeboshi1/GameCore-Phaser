@@ -1,9 +1,7 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { Logger } from "../../../utils/log";
-import { AvatarNode, IImage } from "game-capsule";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
-import { IAvatarSet } from "game-capsule";
 import { Scene } from "tooqinggamephaser";
+import { Logger } from "utils";
 
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn2zhhTyXaB3HYm69a0sIYhh
@@ -62,7 +60,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
         }
     }
 
-    public loadLocalResources(img: IImage, part: string, dir: string, layer?: string) {
+    public loadLocalResources(img: any, part: string, dir: string, layer?: string) {// IImage
         if (this.mDragonbone) this.mDragonbone.loadLocalResources(img, part, dir);
     }
 
@@ -78,11 +76,11 @@ export class AvatarEditorCanvas extends EditorCanvas {
         if (this.mDragonbone) this.mDragonbone.clearParts();
     }
 
-    public mergeParts(sets: IAvatarSet[]) {
+    public mergeParts(sets: any[]) {// IAvatarSet
         if (this.mDragonbone) this.mDragonbone.mergeParts(sets);
     }
 
-    public cancelParts(sets: IAvatarSet[]) {
+    public cancelParts(sets: any[]) {// IAvatarSet
         if (this.mDragonbone) this.mDragonbone.cancelParts(sets);
     }
 
@@ -173,6 +171,12 @@ class AvatarEditorScene extends Phaser.Scene {
     private onSceneCreated: (scene: Phaser.Scene) => any;
     private onSceneUpdate: () => any;
     private onSceneDestroy: () => any;
+
+    public preload() {
+        Logger.getInstance().log("AvatarEditorScene preload");
+
+        this.game.plugins.installScenePlugin("DragonBones", dragonBones.phaser.plugin.DragonBonesScenePlugin, "dragonbone", this, true);
+    }
 
     public init(data: { onCreated?: (scene: Phaser.Scene) => any, onUpdate?: () => any, onDestroy?: () => any }): void {
         this.onSceneCreated = data.onCreated;

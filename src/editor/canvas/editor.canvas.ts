@@ -1,10 +1,8 @@
-import { IRectangle } from "game-capsule";
-
 export interface IEditorCanvasConfig {
     width: number;
     height: number;
     node: {};
-    LOCAL_HOME_PATH: string;
+    LOCAL_HOME_PATH?: string;
     parent?: string;
 }
 
@@ -47,7 +45,7 @@ export class EditorCanvas {
         this.mEmitter = new Phaser.Events.EventEmitter();
     }
 
-    public resize(bounds: IRectangle) {
+    public resize(bounds: any) {// IRectangle
         if (this.mGame) {
             this.mGame.scale.setGameSize(bounds.width, bounds.height);
         }
