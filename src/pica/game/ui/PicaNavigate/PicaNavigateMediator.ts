@@ -1,12 +1,12 @@
 import { PicaChatMediator } from "../PicaChat/PicaChatMediator";
 import { PicaNavigate } from "./PicaNavigate";
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, Game, UIType } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-
 export class PicaNavigateMediator extends BasicMediator {
   constructor(game: Game) {
     super(ModuleName.PICANAVIGATE_NAME, game);
     this.mModel = new PicaNavigate(this.game);
+    this.mUIType = UIType.Scene;
   }
 
   show(param?: any) {

@@ -1,6 +1,6 @@
 import { op_client } from "pixelpai_proto";
 import { PicaWork } from "./PicaWork";
-import { BasicMediator, Game, PlayerProperty } from "gamecore";
+import { BasicMediator, Game, PlayerProperty, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
 export class PicaWorkMediator extends BasicMediator {
     private picaWork: PicaWork;
@@ -8,6 +8,7 @@ export class PicaWorkMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICAWORK_NAME, game);
         this.picaWork = new PicaWork(game);
+        this.mUIType = UIType.Scene;
     }
 
     show(param?: any) {

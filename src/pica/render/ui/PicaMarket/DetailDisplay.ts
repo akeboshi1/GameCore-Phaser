@@ -79,7 +79,8 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         id: content.id,
         gene: sha1.sync(display.dataPath + display.texturePath),
         discriminator: "FramesModel",
-        animationName: aniName
+        animationName: aniName,
+        display
       };
       if (!this.mFramesDisplay.load(animode)) {
         this.addDisplay();

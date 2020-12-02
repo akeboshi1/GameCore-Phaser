@@ -101,7 +101,8 @@
     "add_black": "拉黑",
     "remove_black": "移除黑名单",
     "operation": "操作",
-    "follow":"关注"
+    "follow":"关注",
+    "followed":"已关注"
   },
   "compose": {
     "title": "合成",

@@ -1,12 +1,14 @@
 import { op_client } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
-import { BasicMediator, Game, PlayerProperty } from "gamecore";
+import { BasicMediator, Game, PlayerProperty, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
 export class PicaNewRoleMediator extends BasicMediator {
     private picaNewRole: PicaNewRole;
+    private uid: string;
     constructor(game: Game) {
         super(ModuleName.PICANEWROLE_NAME, game);
         this.picaNewRole = new PicaNewRole(game);
+        this.mUIType = UIType.Scene;
     }
 
     show(param?: any) {
@@ -36,8 +38,11 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
     panelInit() {
         super.panelInit();
-        this.query_Another_Info(this.mShowData);
+        this.uid = this.mShowData;
+        this.query_Another_Info(this.uid);
+        this.checkFollowState(this.uid);
     }
+
     private query_Another_Info(id: string) {
         this.picaNewRole.fetchAnotherInfo(id);
     }
@@ -51,10 +56,30 @@ export class PicaNewRoleMediator extends BasicMediator {
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         const uimanager = this.game.uiManager;
         uimanager.showMed("CharacterInfo", this.mShowData);
-        this.destroy();
+        this.hide();
     }
 
-    private onFollowHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+    private onFollowHandler(data: { uid: string, follow: boolean }) {
+        if (this.uid !== data.uid) return;
+        if (!data.follow) {
+            this.game.httpService.follow(data.uid).then((response: any) => {
+                const { code, tdata } = response;
+                if (code === 200 || code === 201) {
+                    if (this.mView) {
+                        this.mView.setFollowButton(true);
+                    }
+                }
+            });
+        } else {
+            this.game.httpService.unfollow(data.uid).then((response: any) => {
+                const { code, tdata } = response;
+                if (code === 200 || code === 201) {
+                    if (this.mView) {
+                        this.mView.setFollowButton(false);
+                    }
+                }
+            });
+        }
 
     }
 
@@ -64,10 +89,22 @@ export class PicaNewRoleMediator extends BasicMediator {
     private onHideView() {
         const uimanager = this.game.uiManager;
         uimanager.showMed("PicaChat");
-        this.destroy();
+        this.hide();
     }
     private onViewInitComplete() {
         const uimanager = this.game.uiManager;
         uimanager.hideMed("PicHandheld");
+    }
+    private checkFollowState(uid: string) {
+        this.game.httpService.checkFollowed([uid]).then((response: any) => {
+            const { code, data } = response;
+            if (code === 200) {
+                if (data.length > 0) {
+                    this.mView.setFollowButton(true);
+                } else {
+                    this.mView.setFollowButton(false);
+                }
+            }
+        });
     }
 }

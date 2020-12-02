@@ -100,7 +100,8 @@
     "add_black": "Add blacklist",
     "remove_black": "Rdd blacklist",
     "operation": "Operation",
-    "follow": "FOLLOW"
+    "follow": "FOLLOW",
+    "followed":"FOLLOWED"
   },
   "compose": {
     "title": "Produce",

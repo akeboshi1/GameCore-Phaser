@@ -82,7 +82,7 @@ export class ThreeSliceButton extends BaseUI implements IButtonState {
         this.off("pointermove", this.onPointerMoveHandler, this);
     }
 
-    public set enable(value) {
+    public setEnable(value, tint: boolean = true) {
         if (value) {
             if (this.mBackground) {
                 this.mBackground.clearTint();
@@ -90,7 +90,7 @@ export class ThreeSliceButton extends BaseUI implements IButtonState {
             }
             this.setInteractive();
         } else {
-            if (this.mBackground) {
+            if (this.mBackground && tint) {
                 this.mBackground.setTintFill(0x666666);
                 if (this.mText) this.mText.setTintFill(0x777777);
             }

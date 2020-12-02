@@ -939,6 +939,7 @@ export class DragonbonesDisplay extends DisplayObject {
             if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
                 { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
             this.mDragonBonesRenderTexture.clear();
+            this.mDragonBonesRenderTexture.scale = 3;
             // this.scene.add.existing(this.mDragonBonesRenderTexture);
             for (let i: number = 0, len = frames.length; i < len; i++) {
                 // =============龙骨贴图资源frames里面的key "test resources/xxxxx"

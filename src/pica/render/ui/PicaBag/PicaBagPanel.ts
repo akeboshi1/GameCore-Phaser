@@ -504,8 +504,8 @@ export class PicaBagPanel extends BasePanel {
         }
       }
     }
-    if(this)
-    this.mSelectedItemData.push(data);
+    if (this)
+      this.mSelectedItemData.push(data);
     this.mSelectedItems.push(cell);
     cell.isSelect = true;
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
@@ -533,7 +533,7 @@ export class PicaBagPanel extends BasePanel {
     cell.isSelect = true;
     this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.display = data.display;
+    content.display = this.categoryType === 1 ? data.animationDisplay : data.display;
     content.animations = data.animations;
     this.setSelectedResource(content);
   }

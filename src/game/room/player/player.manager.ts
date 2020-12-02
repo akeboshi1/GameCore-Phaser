@@ -43,10 +43,12 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public addLisenter() {
         this.mRoom.game.emitter.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
     }
 
     public removeLisenter() {
         this.mRoom.game.emitter.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
     }
 
     public createActor(actor: op_client.IActor) {
