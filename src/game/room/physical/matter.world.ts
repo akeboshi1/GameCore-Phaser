@@ -1,5 +1,5 @@
 import { Bodies, Body, Composite, Engine, World, Events } from "matter-js";
-import { Pos } from "utils";
+import { Logger, Pos } from "utils";
 import { IRoomService } from "../room/room";
 import { MatterObject } from "./matter.object";
 
@@ -9,15 +9,18 @@ export class MatterWorld {
     public enabled = true;
     public autoUpdate = true;
     private room: IRoomService;
+    private drawBodies: boolean = true;
+    private ignoreSensors?: Map<number, MatterObject>;
     // private elements: Map<number, MatterObject>;
 
-    private debugGraphics: Phaser.GameObjects.Graphics;
     constructor(room: IRoomService) {
         this.room = room;
         this.engine = Engine.create(undefined, { positionIterations: 8, velocityIterations: 10 });
         this.localWorld = this.engine.world;
         this.localWorld.gravity.x = 0;
         this.localWorld.gravity.y = 0;
+
+        this.ignoreSensors = new Map();
 
         // this.debugGraphics = room.scene.make.graphics(undefined);
         // room.addToSceneUI(this.debugGraphics);
@@ -41,10 +44,9 @@ export class MatterWorld {
     public update() {
         if (this.enabled && this.autoUpdate) {
             Engine.update(this.engine);
-            if (!this.debugGraphics) {
+            if (!this.drawBodies) {
                 return;
             }
-            this.debugGraphics.clear();
             const bodies = Composite.allBodies(this.localWorld);
             this.renderWireframes(bodies);
         }
@@ -57,7 +59,9 @@ export class MatterWorld {
         body.isSensor = val;
         const pairs = this.engine.pairs;
         const list = pairs.list;
-        list.map((pair) => pair.isSensor = val);
+        list.map((pair: any) => {
+            pair.isSensor = val;
+        });
         // Logger.getInstance().log(this.localWorld, this.enabled);
     }
 
@@ -65,6 +69,7 @@ export class MatterWorld {
         if (!this.localWorld) {
             return;
         }
+        // if (ignoreSensor) this.
         // const bodys = [].concat(body);
         // for (const b of bodys) {
         //     if (ele) this.elements.set(b.id, ele);
@@ -119,36 +124,30 @@ export class MatterWorld {
     }
 
     private renderWireframes(bodies: Body[]) {
-        const graphics = this.debugGraphics;
-        graphics.lineStyle(1, 0xFF0000);
-        graphics.beginPath();
+        const result = [];
         for (const body of bodies) {
             if (!body.render.visible) {
                 continue;
             }
+            result.push([]);
             for (let k = (body.parts.length > 1) ? 1 : 0; k < body.parts.length; k++) {
                 const part = body.parts[k];
 
                 const vertLength = part.vertices.length;
-
-                graphics.moveTo(part.vertices[0].x, part.vertices[0].y);
-
-                for (let j = 1; j < vertLength; j++) {
-                    // if (!part.vertices[j - 1].isInternal || showInternalEdges) {
-                        graphics.lineTo(part.vertices[j].x, part.vertices[j].y);
-                    // }
-                    // } else {
-                    //     graphics.moveTo(part.vertices[j].x, part.vertices[j].y);
-                    // }
-
-                    // if (part.vertices[j].isInternal && !showInternalEdges) {
-                        // graphics.moveTo(part.vertices[(j + 1) % vertLength].x, part.vertices[(j + 1) % vertLength].y);
-                    // }
+                result[result.length - 1].push(part.vertices);
+                for (let i = 0; i < vertLength; i++) {
+                    result[result.length - 1][i] = { x: part.vertices[i].x, y: part.vertices[i].y };
                 }
-                graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
+
+                // graphics.moveTo(part.vertices[0].x, part.vertices[0].y);
+
+                // for (let j = 1; j < vertLength; j++) {
+                //     graphics.lineTo(part.vertices[j].x, part.vertices[j].y);
+                // }
+                // graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
             }
         }
-
-        graphics.strokePath();
+        this.room.game.peer.render.showMatterDebug(result);
+        // Logger.getInstance().log("=====>>", result);
     }
 }

@@ -10,6 +10,7 @@ import { Render } from "../render";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { RunningAnimation } from "structure";
+import { MatterBodies } from "../display/debugs/matter";
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -55,6 +56,7 @@ export class DisplayManager {
     private displays: Map<number, DisplayObject>;
     private scenerys: Map<number, BlockManager>;
     private mUser: DisplayObject;
+    private matterBodies: MatterBodies;
     constructor(private render: Render) {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
@@ -316,6 +318,15 @@ export class DisplayManager {
         }
         display.showNickname(name);
         // if (display) display.showNickname(name);
+    }
+
+    public showMatterDebug(bodies) {
+        if (!this.matterBodies) {
+            const scene = this.sceneManager.getSceneByName(PlayScene.name);
+            this.matterBodies = new MatterBodies(scene);
+            (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.matterBodies.graphics);
+        }
+        this.matterBodies.renderWireframes(bodies);
     }
 
     public destroy() {

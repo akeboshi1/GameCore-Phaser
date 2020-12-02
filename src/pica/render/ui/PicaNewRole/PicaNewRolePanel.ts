@@ -1,10 +1,10 @@
 
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
-import { NineSlicePatch, Button, GameScroller, NineSliceButton, ClickEvent, ProgressBar, UIType } from "apowophaserui";
-import { BasePanel, ButtonEventDispatcher, DynamicImage, ImageValue, ItemInfoTips, ProgressMaskBar, ThreeSliceButton, ThreeSlicePath, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
+import { op_client } from "pixelpai_proto";
+import { Button, ClickEvent, UIType } from "apowophaserui";
+import { BasePanel, ImageValue, ThreeSliceButton, ThreeSlicePath, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
 import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
+import { UIAtlasName } from "picaRes";
+import { i18n, UIHelper } from "utils";
 export class PicaNewRolePanel extends BasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: ThreeSlicePath;
@@ -36,6 +36,10 @@ export class PicaNewRolePanel extends BasePanel {
         this.content.y = h + this.content.height * 0.5 + 10 * this.dpr;
         this.content.setInteractive();
         this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w * 2, h * 2), Phaser.Geom.Rectangle.Contains);
+
+        const fromy = this.scaleHeight + this.content.height * 0.5 + 10 * this.dpr;
+        const toy = this.scaleHeight - this.content.height * 0.5;
+        this.playMove(fromy, toy);
     }
 
     public show(param?: any) {
@@ -105,7 +109,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.nameImage.setTextStyle(UIHelper.whiteStyle(this.dpr, 14));
         this.nameImage.setLayout(1);
         this.nameImage.setText("");
-        this.nameImage.x = this.headAvatar.x + 80 * this.dpr;
+        this.nameImage.x = this.headAvatar.x + 70 * this.dpr;
         this.nameImage.y = -conHeight * 0.5 + 15 * this.dpr;
         this.content.add(this.nameImage);
         this.levelLabel = this.scene.make.text({ x: this.nameImage.x - 8 * this.dpr, y: this.nameImage.y + 20 * this.dpr, text: "", style: UIHelper.whiteStyle(this.dpr) });
@@ -157,16 +161,12 @@ export class PicaNewRolePanel extends BasePanel {
         this.tradingBtn.setFrameNormal(tnormals, tnormals);
         this.tradingBtn.setTextColor("#000000");
         this.tradingBtn.setEnable(false, false);
-        const fromy = this.scaleHeight + this.content.height * 0.5 + 10 * this.dpr;
-        const toy = this.scaleHeight - this.content.height * 0.5;
-        this.playMove(fromy, toy);
-
     }
 
     public setFollowButton(follow: boolean) {
         this.followed = follow;
         if (!this.mInitialized) return;
-        this.followBtn.setText(follow ? i18n.t("player_info.followed") : i18n.t("player_info.follow"));
+        this.followBtn.setText(follow ? i18n.t("friendlist.unfollow") : i18n.t("friendlist.follow"));
     }
 
     private creatAvatars(avatarSuits: op_client.ICountablePackageItem[]) {

@@ -992,6 +992,11 @@ export class Render extends RPCPeer implements GameMain {
         this.mDisplayManager.removeSkybox(id);
     }
 
+    @Export()
+    public showMatterDebug(vertices) {
+        this.mDisplayManager.showMatterDebug(vertices);
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public changeAlpha(id: number, alpha: number) {
         if (this.mDisplayManager) this.mDisplayManager.changeAlpha(id, alpha);

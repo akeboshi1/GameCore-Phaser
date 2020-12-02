@@ -5,7 +5,7 @@ import { IElementManager } from "../element/element.manager";
 import { ISprite } from "../display/sprite/sprite";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { Element, IElement, MovePath, PlayerState } from "../element/element";
-import { Logger } from "utils";
+import { Body } from "matter-js";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -217,6 +217,11 @@ export class Player extends Element implements IElement {
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
         return this.mOffsetY;
+    }
+
+    protected setExistingBody(body: Body, addToWorld?: boolean) {
+        super.setExistingBody(body, addToWorld);
+        body.isSensor = true;
     }
 
     private mCheckStateHandle(val: string): boolean {
