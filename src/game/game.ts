@@ -30,8 +30,8 @@ interface ISize {
     height: number;
 }
 
-export const fps: number = 30;
-const delayTime = 1000 / fps;
+export const fps: number = 45;
+export const delayTime = 1000 / fps;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     protected mainPeer: MainPeer;
     protected connect: ConnectionService;
@@ -92,6 +92,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             now = new Date().getTime();
             // if (now - tmpTime >= delayTime) break;
             // if (this.user) this.user.update();
+            // Logger.getInstance().log("updateTime:====", now - tmpTime);
             if (this.mRoomManager) this.mRoomManager.update(now, now - tmpTime);
             tmpTime = now;
         }
