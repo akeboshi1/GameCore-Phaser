@@ -1,7 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
-import { BasicMediator, Game, PlayerProperty, UIType } from "gamecore";
-import { EventType, ModuleName } from "structure";
+import { BasicMediator, Game, UIType } from "gamecore";
+import { ModuleName } from "structure";
 export class PicaNewRoleMediator extends BasicMediator {
     private picaNewRole: PicaNewRole;
     private uid: string;
@@ -55,7 +55,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         const uimanager = this.game.uiManager;
-        uimanager.showMed("CharacterInfo", this.mShowData);
+        uimanager.showMed(ModuleName.CHARACTERINFO_NAME, this.mShowData);
         this.hide();
     }
 
@@ -88,12 +88,12 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
     private onHideView() {
         const uimanager = this.game.uiManager;
-        uimanager.showMed("PicaChat");
+        uimanager.showMed(ModuleName.PICACHAT_NAME);
         this.hide();
     }
     private onViewInitComplete() {
         const uimanager = this.game.uiManager;
-        uimanager.hideMed("PicHandheld");
+        uimanager.hideMed(ModuleName.PICACHAT_NAME);
     }
     private checkFollowState(uid: string) {
         this.game.httpService.checkFollowed([uid]).then((response: any) => {

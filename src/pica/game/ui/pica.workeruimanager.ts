@@ -9,7 +9,7 @@ import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
 export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {
         super(game);
-        this.mMedMap.set("LoginMediator", new LoginMediator(this.game));
+        this.mMedMap.set(ModuleName.LOGIN_NAME, new LoginMediator(this.game));
         this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
         this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
         this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
@@ -27,7 +27,7 @@ export class PicaWorkerUiManager extends UIManager {
         }
         type = this.getPanelNameByAlias(type);
         const className: string = type + "Mediator";
-        let mediator: BasicMediator = this.mMedMap.get(className);
+        let mediator: BasicMediator = this.mMedMap.get(type);
         if (!mediator) {
             // const path: string = `./${type}/${type}Mediator`;
             let ns: any = require(`./${type}/${className}`);
@@ -40,11 +40,12 @@ export class PicaWorkerUiManager extends UIManager {
                 // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
             }
-            this.mMedMap.set(className, mediator);
+            this.mMedMap.set(type, mediator);
             // mediator.setName(type);
         }
         // if (mediator.showing) return;
         if (param) mediator.setParam(param);
+        if (mediator.isShow()) return;
         mediator.show(param);
     }
 }

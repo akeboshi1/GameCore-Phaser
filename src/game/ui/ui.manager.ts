@@ -84,7 +84,7 @@ export class UIManager extends PacketHandler {
         }
         type = this.getPanelNameByAlias(type);
         const className: string = type + "Mediator";
-        let mediator: BasicMediator = this.mMedMap.get(className);
+        let mediator: BasicMediator = this.mMedMap.get(type);
         if (!mediator) {
             // const path: string = `./${type}/${type}Mediator`;
             const ns: any = require(`./${type}/${className}`);
@@ -93,11 +93,12 @@ export class UIManager extends PacketHandler {
                 // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
             }
-            this.mMedMap.set(className, mediator);
+            this.mMedMap.set(type, mediator);
             // mediator.setName(type);
         }
         // if (mediator.showing) return;
         if (param) mediator.setParam(param);
+        if (mediator.isShow()) return;
         mediator.show(param);
     }
 
@@ -105,7 +106,7 @@ export class UIManager extends PacketHandler {
         if (!this.mMedMap) {
             return;
         }
-        const name: string = `${type}Mediator`;
+        const name: string = `${type}`;
         const mediator: BasicMediator = this.mMedMap.get(name);
         if (!mediator) {
             // Logger.getInstance().error(`error ${type} no panel can show!!!`);
@@ -120,22 +121,23 @@ export class UIManager extends PacketHandler {
             return;
         }
         type = this.getPanelNameByAlias(type);
-        const medName: string = `${type}Mediator`;
+        const medName: string = `${type}`;
         const mediator: BasicMediator = this.mMedMap.get(medName);
         if (!mediator) {
             // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
+        if (!mediator.isShow()) return;
         mediator.hide();
     }
 
-    public showExistMed(type: string, extendName = "Mediator") {
+    public showExistMed(type: string, extendName = "") {
         if (!this.mMedMap) {
             return;
         }
         type = this.getPanelNameByAlias(type);
         const className: string = type + extendName;
-        const mediator: BasicMediator = this.mMedMap.get(className);
+        const mediator: BasicMediator = this.mMedMap.get(type);
         if (mediator) mediator.show();
     }
 
@@ -215,7 +217,7 @@ export class UIManager extends PacketHandler {
             const paneltags = tag.split(".");
             const panelName = this.getPanelNameByStateTag(paneltags[0]);
             if (panelName) {
-                const mediator: BasicMediator = this.mMedMap.get(panelName + "Mediator");
+                const mediator: BasicMediator = this.mMedMap.get(panelName);
                 if (mediator) {
                     if (paneltags.length === 1) {
                         if (ui.visible || ui.visible === undefined) {
