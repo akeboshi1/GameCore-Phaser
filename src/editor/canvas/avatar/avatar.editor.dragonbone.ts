@@ -402,7 +402,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const dirs = ["1", "3"];
             for (const dir of dirs) {
                 for (const part of set.parts) {
-                    const imgKey = this.relativeUri(part, set.id, dir);
+                    const imgKey = this.relativeUri(part, set.id, dir, set.version);
                     if (this.scene.textures.exists(imgKey)) {
                         this.scene.textures.remove(imgKey);
                         this.scene.textures.removeKey(imgKey);
@@ -488,7 +488,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 slotName = this.slotName(partName, this.mCurDir + "");
                 const avatarSet = parts[partName];
                 if (avatarSet) {
-                    uri = this.relativeUri(partName, avatarSet.id, this.mCurDir + "");
+                    uri = this.relativeUri(partName, avatarSet.id, this.mCurDir + "", avatarSet.version);
                 } else {
                     uri = "";
                 }
@@ -540,7 +540,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     } else if (dir === 1 && key === "head_mous") {
                         // Do nothing
                     } else {
-                        res.push(this.relativeUri(key, set.id, dir + ""));
+                        res.push(this.relativeUri(key, set.id, dir + "", set.version));
                     }
                 }
             }
@@ -556,7 +556,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         return res;
     }
     // 从部件ID转换为资源相对路径 同时也是TextureManager中的key
-    private relativeUri(part: string, id: string, dir: string) {
+    // tslint:disable-next-line:no-shadowed-variable
+    private relativeUri(part: string, id: string, dir: string, version?: string) {
         let _layer = null;
         let _part = part;
         if (part === "head_back") {
@@ -567,10 +568,19 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             _layer = "dres";
         }
 
+        let result = "";
         if (_layer) {
-            return `/avatar/part/${_part}_${id}_${dir}_${_layer}.png`;
+            result = `/avatar/part/${_part}_${id}_${dir}_${_layer}`;
+        } else {
+            result = `/avatar/part/${_part}_${id}_${dir}`;
         }
-        return `/avatar/part/${_part}_${id}_${dir}.png`;
+
+        if (version !== undefined && version.length > 0) {
+            result = `${result}_${version}`;
+        }
+
+        result = `${result}.png`;
+        return result;
     }
     // 部件名转换为插槽名
     private slotName(part: string, dir: string) {
