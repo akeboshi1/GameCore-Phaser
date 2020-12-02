@@ -43,12 +43,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public addLisenter() {
         this.mRoom.game.emitter.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
-        this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
     }
 
     public removeLisenter() {
         this.mRoom.game.emitter.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
-        this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
     }
 
     public createActor(actor: op_client.IActor) {
@@ -75,9 +73,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.clear();
     }
 
-    public has(id: number) {
-        return this.mPlayerMap.has(id);
-    }
     public get(id: number): Player {
         if (!this.mPlayerMap) {
             return;
@@ -92,6 +87,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return player;
     }
 
+    has(id: number) {
+        return this.mPlayerMap.has(id);
+    }
     add(sprite: ISprite[]) {
     }
 
@@ -376,7 +374,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const ele = this.get(id);
         this.mRoom.game.emitter.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
     }
-
     private checkPlayerAction(id: number) {
         if (this.has(id)) {
             const ele = this.get(id);
@@ -384,7 +381,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             action.executeAction();
         }
     }
-
     get roomService(): IRoomService {
         return this.mRoom;
     }
