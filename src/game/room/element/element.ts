@@ -57,6 +57,8 @@ export interface IElement {
     addMount(ele: IElement, index?: number): this;
 
     removeMount(ele: IElement): this;
+
+    getInteractivePosition(): IPos;
 }
 
 export enum PlayerState {
@@ -198,6 +200,7 @@ export class Element extends BlockObject implements IElement {
         if (!model) {
             return;
         }
+        this.mElementManager.removeFromMap(model);
         // this.mDisplayInfo = this.mModel.displayInfo;
         this.mQueueAnimations = undefined;
         this.load(this.mModel.displayInfo);
@@ -224,6 +227,7 @@ export class Element extends BlockObject implements IElement {
             this.updateMounth(model.mountSprites);
         }
         // this.update();
+        this.mElementManager.addToMap(model);
     }
 
     public updateModel(model: op_client.ISprite) {
@@ -254,8 +258,8 @@ export class Element extends BlockObject implements IElement {
         }
         if (model.hasOwnProperty("mountSprites")) {
             const mounts = model.mountSprites;
-            this.mergeMounth(mounts);
-            this.updateMounth(mounts);
+            // this.mergeMounth(mounts);
+            // this.updateMounth(mounts);
         }
         if (model.hasOwnProperty("point3f")) {
             const pos = model.point3f;
@@ -618,7 +622,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public getInteractivePosition() {
-        const interactives = this.mModel.interactive;
+        const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
             return;
         }

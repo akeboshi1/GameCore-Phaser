@@ -22,10 +22,12 @@ export class Terrain extends BlockObject implements IElement {
         if (!val) {
             return;
         }
+        this.mElementManager.removeFromMap(val);
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
         this.setPosition45(this.mModel.pos);
+        this.mElementManager.addToMap(val);
         // this.addDisplay();
     }
 
@@ -113,6 +115,10 @@ export class Terrain extends BlockObject implements IElement {
 
     public removeMount() {
         return this;
+    }
+
+    public getInteractivePosition() {
+        return null;
     }
 
     public destroy() {

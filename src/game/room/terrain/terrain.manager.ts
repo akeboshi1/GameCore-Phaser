@@ -5,11 +5,13 @@ import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IElementStorage } from "../elementstorage/element.storage";
-import { IRoomService, SpriteAddCompletedListener } from "../room/room";
+import { IRoomService, Room, SpriteAddCompletedListener } from "../room/room";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { ConnectionService } from "lib/net/connection.service";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
+import { EmptyTerrain } from "./empty.terrain";
+import { IPos, Logger, LogicPos } from "utils";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -20,6 +22,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected mListener: SpriteAddCompletedListener;
     // ---- by 7
     protected mMap: number[][];
+    private mEmptyMap: EmptyTerrain[][];
 
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
@@ -41,14 +44,21 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
 
         const miniSize = this.roomService.miniSize;
-        this.mMap = new Array(miniSize.cols);
+        this.mMap = new Array(miniSize.rows);
         for (let i = 0; i < miniSize.rows; i++) {
-            this.mMap[i] = new Array(miniSize.rows).fill(0);
+            this.mMap[i] = new Array(miniSize.cols).fill(0);
         }
     }
 
     public init() {
-        // this.destroy();
+        const roomSize = this.roomService.roomSize;
+        this.mEmptyMap = new Array(roomSize.cols);
+        for (let i = 0; i < roomSize.cols; i++) {
+            this.mEmptyMap[i] = new Array(roomSize.rows);
+            for (let j = 0; j < roomSize.rows; j++) {
+                this.addEmpty(this.roomService.transformTo90(new LogicPos(i, j)));
+            }
+        }
     }
 
     public destroy() {
@@ -84,6 +94,82 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         return terrain;
     }
 
+    public addToMap(sprite: ISprite) {
+        if (!sprite) return;
+        const collision = sprite.getCollisionArea();
+        let walkable = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision || !walkable) {
+            return;
+        }
+        let rows = collision.length;
+        let cols = collision[0].length;
+        const { x, y } = sprite.pos;
+        const pos = this.mRoom.transformTo45(new LogicPos(x, y));
+        // terrain pos为60*30大格子
+        pos.x *= 2;
+        pos.y *= 2;
+        if (!walkable) {
+            walkable = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkable[i] = new Array(cols).fill(0);
+            }
+        }
+        if (rows === 1 && cols === 1) {
+            rows = 2;
+            cols = 2;
+        }
+        let row = 0;
+        let col = 0;
+        for (let i = 0; i < rows; i++) {
+            row = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                col = pos.x + j - origin.x;
+                if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                    if (collision.length > i && collision[i][j] === 1) {
+                        this.mMap[row][col] = walkable[i][j];
+                    } else {
+                        this.mMap[row][col] = 1;
+                    }
+                    (<Room>this.roomService).setTerrainWalkable(row, col, this.mMap[row][col] === 1);
+                }
+            }
+        }
+    }
+
+    public removeFromMap(sprite: ISprite) {
+        if (!sprite) return;
+        const collision = sprite.getCollisionArea();
+        const walkable = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision || !walkable) {
+            return;
+        }
+        let rows = collision.length;
+        let cols = collision[0].length;
+        // const pos = sprite.pos;
+        const { x, y } = sprite.pos;
+        const pos = new LogicPos(x, y);
+        // terrain pos为60*30大格子
+        pos.x *= 2;
+        pos.y *= 2;
+        if (rows === 1 && cols === 1) {
+            rows = 2;
+            cols = 2;
+        }
+        let row = 0;
+        let col = 0;
+        for (let i = 0; i < rows; i++) {
+            row = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                col = pos.x + j - origin.x;
+                if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                    this.mMap[row][col] = 0;
+                }
+            }
+        }
+    }
+
     public getElements(): IElement[] {
         return Array.from(this.mTerrains.values());
     }
@@ -107,6 +193,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         // sprites 服务端
         for (const sprite of sprites) {
             point = sprite.point3f;
+            this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
                 const s = new Sprite(sprite, type);
                 if (!s.displayInfo) {
@@ -149,7 +236,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const id of ids) {
-            this.remove(id);
+            const terrain = this.remove(id);
+            if (terrain) {
+                this.addEmpty(terrain.model.pos);
+            }
         }
         // Logger.getInstance().log("remove terrain length: ", ids.length);
     }
@@ -251,6 +341,21 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             if (terrain) {
                 // terrain.play(ani.animationName);
             }
+        }
+    }
+
+    private addEmpty(pos: IPos) {
+        const block = new EmptyTerrain(this.roomService, pos);
+        const pos45 = this.roomService.transformTo45(pos);
+        this.mEmptyMap[pos45.x][pos45.y] = block;
+    }
+
+    private removeEmpty(pos: IPos) {
+        const pos45 = this.roomService.transformTo45(pos);
+        const block = this.mEmptyMap[pos45.x][pos45.y];
+        if (block) {
+            this.mEmptyMap[pos45.x][pos45.y] = undefined;
+            block.destroy();
         }
     }
 

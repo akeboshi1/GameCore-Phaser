@@ -3,6 +3,7 @@ import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { DisplayObject } from "../display/display.object";
 import { NodeType } from "../managers/display.manager";
+import { Logger } from "utils";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -177,6 +178,10 @@ export class MouseManager {
 
     private holdHandler(pointer, gameobject) {
         // this.worldService.emitter.emit(MessageType.PRESS_ELEMENT, pointer, gameobject);
+        clearTimeout(this.mDownTime);
+        if (Math.abs(pointer.downX - pointer.x) > 5 * this.zoom || Math.abs(pointer.downY - pointer.y) > 5 * this.zoom) {
+            return;
+        }
 
         let id = 0;
         let com = null;

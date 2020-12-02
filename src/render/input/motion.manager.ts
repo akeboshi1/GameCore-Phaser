@@ -1,4 +1,5 @@
 import { Render } from "gamecoreRender";
+import { Logger } from "utils";
 
 export class MotionManager {
     public enable: boolean;
@@ -91,7 +92,7 @@ export class MotionManager {
         // this.render.user.stopMove();
     }
 
-    private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+    private async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         this.dirty = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
@@ -102,12 +103,12 @@ export class MotionManager {
                 if (id) {
                     const ele = this.render.displayManager.getDisplay(id);
                     // const position = ele.getPosition();
-                    // const walkpos = (<Element>ele).getInteractivePosition();
-                    // if (walkpos) {
-                    //     this.movePath(walkpos.x, walkpos.y, id);
-                    // } else {
-                    this.movePath(ele.x, ele.y, id);
-                    // }
+                    const walkpos = await this.render.mainPeer.getInteractivePosition(id);
+                    if (walkpos) {
+                        this.movePath(walkpos.x, walkpos.y, id);
+                    } else {
+                        this.movePath(ele.x, ele.y, id);
+                    }
                 }
             } else {
                 this.movePath(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio);

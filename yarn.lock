@@ -5523,8 +5523,8 @@ toidentifier@1.0.0:
 
 tooqinggamephaser@^0.2.4:
   version "0.2.4"
-  resolved "https://registry.npmjs.org/tooqinggamephaser/-/tooqinggamephaser-0.2.4.tgz#de591a2a1b7ab6d9d98071d033b592b1e6f89dd3"
-  integrity sha512-jHGeuSQMes2PMWv4ugGjPcvw81jUyZ9HaGWpDV1HJjiLw2rtTNwVSG/UdGX8BN8UxIO83zWzeJYOJpvh0+P4JQ==
+  resolved "https://registry.npm.taobao.org/tooqinggamephaser/download/tooqinggamephaser-0.2.4.tgz#de591a2a1b7ab6d9d98071d033b592b1e6f89dd3"
+  integrity sha1-3lkaKht6ttnZgHHQM7WSseb4ndM=
   dependencies:
     eventemitter3 "^4.0.4"
     exports-loader "^1.0.0"

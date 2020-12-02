@@ -54,6 +54,7 @@ export interface ISprite {
     getCollisionArea(): number[][];
     getWalkableArea(): number[][];
     getOriginPoint(): IPos;
+    getInteractive(): op_def.IPBPoint2f[];
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }
@@ -118,7 +119,8 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
         this.tryRegisterAnimation(obj.animationRegistrationMap);
         this.currentAnimationName = obj.currentAnimationName;
-        this.direction = obj.direction || 3;
+        // this.direction = obj.direction || 3;
+        this.setDirection(obj.direction || 3);
         this.nickname = obj.nickname;
         this.bindID = obj.bindId;
         this.alpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
@@ -321,6 +323,14 @@ export class Sprite extends EventDispatcher implements ISprite {
             return true;
         }
         return false;
+    }
+
+    public getInteractive() {
+        if (!this.displayInfo || !this.currentAnimation) {
+            return;
+        }
+        const { name: animationName } = this.currentAnimation;
+        return this.displayInfo.getInteractiveArea(animationName);
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {
