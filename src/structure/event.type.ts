@@ -18,6 +18,7 @@ export class EventType {
     public static SCENE_PLAYER_FIND = "SCENE_PLAYER_FIND";// 场景玩家查找
     public static SCENE_RETURN_FIND_PLAYER = "SCENE_RETURN_FIND_PLAYER";// 返回查找的场景玩家
     public static SCENE_INTERACTION_ELEMENT = "SCENE_INTERACTION_ELEMENT";// 场景交互元素
+    public static SCENE_PLAYER_ACTION = "SCENE_PLAYER_ACTION";// 场景玩家执行行为动作
     /**
      * 请求好友、关注、粉丝数据
      */

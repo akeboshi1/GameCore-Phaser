@@ -251,12 +251,6 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public sendMouseEvent(id: number, mouseEvent: any[], point3f) {
-        if (id !== 0 && mouseEvent.indexOf(4) !== -1) {
-            const playermgr = this.game.roomManager.currentRoom.playerManager;
-            if (playermgr.has(id)) {
-                this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, id);
-            }
-        }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
         content.id = id;
@@ -310,6 +304,14 @@ export class MainPeer extends RPCPeer {
             return this.game.roomManager.currentRoom.enableEdit;
         }
         return false;
+    }
+
+    @Export()
+    public activePlayer(id: number) {
+        const playermgr = this.game.roomManager.currentRoom.playerManager;
+        if (playermgr.has(id)) {
+            this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, id);
+        }
     }
 
     // ============= 心跳调用主进程

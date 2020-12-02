@@ -109,7 +109,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.nameImage.setTextStyle(UIHelper.whiteStyle(this.dpr, 14));
         this.nameImage.setLayout(1);
         this.nameImage.setText("");
-        this.nameImage.x = this.headAvatar.x + 80 * this.dpr;
+        this.nameImage.x = this.headAvatar.x + 70 * this.dpr;
         this.nameImage.y = -conHeight * 0.5 + 15 * this.dpr;
         this.content.add(this.nameImage);
         this.levelLabel = this.scene.make.text({ x: this.nameImage.x - 8 * this.dpr, y: this.nameImage.y + 20 * this.dpr, text: "", style: UIHelper.whiteStyle(this.dpr) });

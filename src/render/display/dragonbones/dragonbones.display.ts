@@ -774,6 +774,12 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 3,
                 skin: avater.headFaceId,
             });
+            this.replaceArr.push({
+                slot: AvatarSlotType.HeadFace,
+                part: AvatarPartType.HeadFace,
+                dir: 1,
+                skin: avater.headFaceId,
+            });
         }
 
         if (avater.farmShldId) {

@@ -12,6 +12,7 @@ import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { PlayerElementAction } from "../elementaction/player.element.action";
+import { TAGElementAction } from "../elementaction/tag.element.action";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -37,6 +38,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSprite);
         }
         this.addLisenter();
     }
@@ -44,11 +46,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public addLisenter() {
         this.mRoom.game.emitter.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
+        this.mRoom.game.emitter.on(EventType.SCENE_PLAYER_ACTION, this.onActiveSprite, this);
     }
 
     public removeLisenter() {
         this.mRoom.game.emitter.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
+        this.mRoom.game.emitter.off(EventType.SCENE_PLAYER_ACTION, this.onActiveSprite, this);
     }
 
     public createActor(actor: op_client.IActor) {
@@ -128,6 +132,33 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.set(id, player);
     }
 
+    public onActiveSprite(id: number, data: any) {
+        if (this.has(id)) {
+            if (data) {
+                const element = this.get(id);
+                if (data.weaponID) {
+                    element.setWeapon(data.weaponID);
+                }
+                if (data.animator) {
+                    element.play(data.animator, data.times);
+                }
+            }
+        }
+    }
+
+    public addWeapon(id: number, weaponID: string) {
+        if (this.has(id)) {
+            const element = this.get(id);
+            element.setWeapon(weaponID);
+        }
+    }
+
+    public playAnimator(id: number, aniName: string, times?: number) {
+        if (this.has(id)) {
+            const element = this.get(id);
+            element.play(aniName, times);
+        }
+    }
     // public addPlayer(obj: op_client.IActor): void {
     //     const playerInfo: PlayerInfo = new PlayerInfo();
     //     playerInfo.setInfo(obj);
