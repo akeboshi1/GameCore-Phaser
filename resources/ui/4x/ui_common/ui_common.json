@@ -10,7 +10,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "people_panel bg_left",
+					"filename": "people_panel_bg_left",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "people_panel bg_right",
+					"filename": "people_panel_bg_right",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -52,7 +52,7 @@
 					}
 				},
 				{
-					"filename": "people_panel bg_middle",
+					"filename": "people_panel_bg_middle",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {

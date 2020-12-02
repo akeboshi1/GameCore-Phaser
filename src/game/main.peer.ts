@@ -6,7 +6,7 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { Logger, LogicPoint } from "utils";
-import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName } from "structure";
+import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType } from "structure";
 import { PicaGame } from "picaWorker";
 import { CacheDataManager } from "./data.manager/cache.dataManager";
 import { DataMgrType } from "./data.manager/dataManager";
@@ -252,8 +252,10 @@ export class MainPeer extends RPCPeer {
     @Export()
     public sendMouseEvent(id: number, mouseEvent: any[], point3f) {
         if (id !== 0 && mouseEvent.indexOf(4) !== -1) {
-            const elemgr = this.game.roomManager.currentRoom.elementManager;
-            elemgr.checkElementAction(id);
+            const playermgr = this.game.roomManager.currentRoom.playerManager;
+            if (playermgr.has(id)) {
+                this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, id);
+            }
         }
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;

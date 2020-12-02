@@ -8,7 +8,7 @@ import { MoveData, MovePos, PlayerState } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { IDragonbonesModel, IFramesModel } from "structure";
+import { EventType, IDragonbonesModel, IFramesModel } from "structure";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -245,8 +245,10 @@ export class User extends Player {
         }
         const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE = packet.content;
-        content.spriteId = this.mTargetPoint.targetId;
+        const targetId = this.mTargetPoint.targetId;
+        content.spriteId = targetId;
         this.game.connection.send(packet);
+        this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId);
     }
 
     protected onMoveComplete() {
@@ -286,7 +288,7 @@ export class User extends Player {
             }
         }
         this.mSyncTime += delta;
-        if (this.mSyncTime > 50 ) {
+        if (this.mSyncTime > 50) {
             this.mSyncTime = 0;
             this.mSyncDirty = true;
         }

@@ -77,3 +77,4 @@ export * from "./PicaGiftEffect/PicaGiftLateralItem";
 export * from "./PicaGiftEffect/PicaGiftLaterctPanel";
 export * from "./PicaGiftEffect/PicaGiftPlayerPanel";
 export * from "./PicaFurniFun/PicaFurniFunPanel";
+export * from "./PicaNewRole/PicaNewRolePanel";

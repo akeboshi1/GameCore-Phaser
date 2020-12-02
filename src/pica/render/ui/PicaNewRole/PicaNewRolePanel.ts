@@ -33,6 +33,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.content.x = w * 0.5;
         this.content.y = h - this.content.height * 0.5;
         this.content.setInteractive();
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w * 2, h * 2), Phaser.Geom.Rectangle.Contains);
     }
 
     public show(param?: any) {
@@ -85,7 +86,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWdith, conHeight);
         this.add(this.content);
-        this.bg = new ThreeSlicePath(this.scene, 0, conHeight * 0.5 - this.bg.height * 0.5, conWdith, 87 * this.dpr, this.key,
+        this.bg = new ThreeSlicePath(this.scene, 0, 0, conWdith, 87 * this.dpr, this.key,
             ["people_panel_bg_left", "people_panel_bg_middle", "people_panel_bg_right"], this.dpr);
         this.bg.y = conHeight * 0.5 - this.bg.height * 0.5;
         this.content.add(this.bg);
@@ -102,9 +103,9 @@ export class PicaNewRolePanel extends BasePanel {
         this.nameImage.x = this.headAvatar.x + 50 * this.dpr;
         this.nameImage.y = -conHeight * 0.5 + 10 * this.dpr;
         this.content.add(this.nameImage);
-        this.levelLabel = this.scene.make.text({ x: this.nameImage.x, y: this.nameImage.y + 10 * this.dpr, text: i18n.t("work.salary") + ":", style: UIHelper.whiteStyle(this.dpr, 11) });
+        this.levelLabel = this.scene.make.text({ x: this.nameImage.x, y: this.nameImage.y + 10 * this.dpr, text: "", style: UIHelper.whiteStyle(this.dpr, 11) });
         this.levelLabel.setOrigin(0, 0.5);
-        this.add(this.levelLabel);
+        this.content.add(this.levelLabel);
         // this.vipvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasKey.commonKey, "iv_coin", this.dpr);
         // this.vipvalue.setOffset(-this.dpr, 0);
         // this.vipvalue.setTextStyle({ color: "#FFEA00" });
@@ -121,11 +122,13 @@ export class PicaNewRolePanel extends BasePanel {
         this.content.add(this.openBigBtn);
         const fnormals = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
         this.followBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, fnormals, fnormals, i18n.t("player_info.follow"));
+        this.followBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
         this.followBtn.y = conHeight * 0.5 - this.followBtn.height * 0.5 - 5 * this.dpr;
         this.followBtn.x = -this.followBtn.width * 0.5 - 20 * this.dpr;
         this.content.add(this.followBtn);
         const tnormals = ["butt_red_left_s", "butt_red_middle_s", "butt_red_right_s"];
         this.tradingBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, tnormals, tnormals, i18n.t("player_info.trading"));
+        this.tradingBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
         this.tradingBtn.y = this.followBtn.y;
         this.tradingBtn.x = this.tradingBtn.width * 0.5 + 20 * this.dpr;
         this.content.add(this.tradingBtn);

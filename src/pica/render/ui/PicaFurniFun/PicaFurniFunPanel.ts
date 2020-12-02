@@ -70,7 +70,7 @@ export class PicaFurniFunPanel extends BasePanel {
     removeListen() {
         if (!this.mInitialized) return;
         this.confirmBtn.off(ClickEvent.Tap, this.onConfirmBtnClick, this);
-        this.closeBtn.on(ClickEvent.Tap, this.OnClosePanel, this);
+        this.closeBtn.off(ClickEvent.Tap, this.OnClosePanel, this);
     }
 
     preload() {
@@ -197,6 +197,7 @@ export class PicaFurniFunPanel extends BasePanel {
     }
 
     destroy() {
+        this.removeListen();
         if (this.confirmBtn) this.confirmBtn.destroy();
         this.confirmBtn = null;
         super.destroy();
@@ -259,8 +260,8 @@ export class PicaFurniFunPanel extends BasePanel {
 
     private onConfirmBtnClick() {
         const data = this.showData;
-        if (!data || !data.ids) return;
-        this.render.renderEmitter(this.key + "_queryunlock", data.ids);
+        if (!data) return;
+        this.render.renderEmitter(this.key + "_queryunlock", [data.id]);
         this.OnClosePanel();
     }
     private OnClosePanel() {

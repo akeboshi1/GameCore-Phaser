@@ -11,6 +11,7 @@ import { EventType, MessageType } from "structure";
 import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
+import { PlayerElementAction } from "../elementaction/player.element.action";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -42,10 +43,12 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public addLisenter() {
         this.mRoom.game.emitter.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
     }
 
     public removeLisenter() {
         this.mRoom.game.emitter.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkPlayerAction, this);
     }
 
     public createActor(actor: op_client.IActor) {
@@ -81,6 +84,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public has(id: number) {
+        return this.mPlayerMap.has(id);
+    }
     public get(id: number): Player {
         if (!this.mPlayerMap) {
             return;
@@ -346,7 +352,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         let player: Player = null;
         for (const sprite of sprites) {
             if (sprite.id === this.mActor.id) {
-                this.mActor.move([{ x: sprite.point3f.x, y: sprite.point3f.y}]);
+                this.mActor.move([{ x: sprite.point3f.x, y: sprite.point3f.y }]);
                 continue;
             }
             player = this.get(sprite.id);
@@ -374,6 +380,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private onQueryElementHandler(id: number) {
         const ele = this.get(id);
         this.mRoom.game.emitter.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
+    }
+
+    private checkPlayerAction(id: number) {
+        if (this.has(id)) {
+            const ele = this.get(id);
+            const action = new PlayerElementAction(this.mRoom.game, ele.model);
+            action.executeAction();
+        }
     }
 
     get roomService(): IRoomService {

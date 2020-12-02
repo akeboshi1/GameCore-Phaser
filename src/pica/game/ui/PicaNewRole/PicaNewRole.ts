@@ -28,7 +28,6 @@ export class PicaNewRole extends BasicModel {
     destroy() {
         super.destroy();
         this.unregister();
-        this.event.destroy();
     }
 
     get connection(): ConnectionService {

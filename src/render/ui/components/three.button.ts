@@ -47,7 +47,7 @@ export class ThreeSliceButton extends BaseUI implements IButtonState {
         this.setSize(width, height);
         this.createBackground();
         if (text) {
-            this.mText = this.scene.make.text(undefined, false)
+            this.mText = this.scene.make.text({ color: "#ffffff", fontSize: 16 * dpr }, false)
                 .setOrigin(0.5, 0.5)
                 .setText(text);
             if (this.mBackground) {

@@ -4,7 +4,6 @@ import { BasicMediator, Game, PlayerProperty } from "gamecore";
 import { EventType, ModuleName } from "structure";
 export class PicaNewRoleMediator extends BasicMediator {
     private picaNewRole: PicaNewRole;
-    private mPlayerInfo: PlayerProperty;
     constructor(game: Game) {
         super(ModuleName.PICANEWROLE_NAME, game);
         this.picaNewRole = new PicaNewRole(game);
@@ -33,17 +32,11 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.picaNewRole) {
-            this.picaNewRole.destroy();
-            this.picaNewRole = undefined;
-        }
-        this.mPlayerInfo = undefined;
         super.destroy();
     }
-
-    get playerInfo() {
-        if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;
-        return this.mPlayerInfo;
+    panelInit() {
+        super.panelInit();
+        this.query_Another_Info(this.mShowData);
     }
     private query_Another_Info(id: string) {
         this.picaNewRole.fetchAnotherInfo(id);

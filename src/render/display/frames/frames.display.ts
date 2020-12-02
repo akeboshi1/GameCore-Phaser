@@ -387,7 +387,7 @@ export class FramesDisplay extends DisplayObject {
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
                 this.play(this.mAnimation);
-                // this.emit("initialized", this);
+                this.emit("initialized", this);
             } else {
                 this.playEffect();
             }

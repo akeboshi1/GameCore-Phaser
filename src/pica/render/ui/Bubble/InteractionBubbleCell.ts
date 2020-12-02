@@ -1,8 +1,9 @@
 import { BubbleAnimation, DragonbonesAnimation, FrameAnimation } from "gamecoreRender";
+import { BaseAnimation } from "src/render/display/animation/base.animation";
 import { Handler } from "utils";
 
 export class InteractionBubbleCell extends Phaser.GameObjects.Container {
-    private mBubbleAni: DragonbonesAnimation | FrameAnimation | BubbleAnimation;
+    private mBubbleAni: BaseAnimation;
     private mWdith: number = 78;
     private mHeight: number = 78;
     private content: any;// op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE;

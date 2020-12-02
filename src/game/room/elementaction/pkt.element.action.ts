@@ -9,7 +9,7 @@ export class PKTElementAction extends ElementBaseAction {
             const senddata = data.data;
             const uiName = senddata.uiName;
             const tempdata = { data: senddata, id: data.id };
-            this.game.emitter.emit(EventType.SCENE_SHOW_UI, [uiName, tempdata]);
+            this.game.emitter.emit(EventType.SCENE_SHOW_UI, uiName, tempdata);
         }
     }
 }

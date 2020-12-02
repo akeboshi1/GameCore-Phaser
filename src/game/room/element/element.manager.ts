@@ -65,12 +65,16 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mStateMgr = new ElementStateManager(mRoom);
         this.mActionMgr = new ElementActionManager(mRoom.game);
         this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
     }
 
     public init() {
         // this.destroy();
     }
 
+    public has(id: number) {
+        return this.mElements.has(id);
+    }
     public get(id: number): Element {
         const element: Element = this.mElements.get(id);
         if (!element) {
@@ -114,14 +118,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
         element.setState(state.state);
     }
     public checkElementAction(id: number): boolean {
+        if (!this.has(id)) return false;
         const ele = this.get(id);
-        if (!ele) return false;
         if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
         if (this.mActionMgr.checkAllAction(ele.model).length > 0) {
             this.mActionMgr.executeElementActions(ele.model);
         }
     }
     public destroy() {
+        this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {
             Logger.getInstance().log("elementmanager ---- removepacklistener");
