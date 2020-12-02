@@ -1,12 +1,10 @@
-import { ElementNode, AnimationsNode, AnimationDataNode, DisplayNode } from "game-capsule";
-import { Logger } from "../../../utils/log";
 import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";
 import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
-import { Url } from "../../../utils/resUtil";
 import version from "../../../../version";
+import { Logger } from "utils";
 
 export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
 
@@ -20,7 +18,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
     private mEmitter: Phaser.Events.EventEmitter;
     private mDisplays: Map<number, Phaser.GameObjects.Sprite> = new Map<number, Phaser.GameObjects.Sprite>();
     private mSelectedGameObjects = [];
-    private mAnimationData: AnimationDataNode;
+    private mAnimationData: any;// AnimationDataNode
     private mMountArmatureParent: Phaser.GameObjects.Container;
     private mMountArmatures: dragonBones.phaser.display.ArmatureDisplay[] = [];// 互动模拟骨架
     private mDragonBonesLoaded: boolean = false;
@@ -29,7 +27,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
     private mInteractive: boolean = true;
     private mMountAnimationTimer: Phaser.Time.TimerEvent;
 
-    constructor(scene: Phaser.Scene, node: AnimationDataNode, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter) {
+    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter) {// AnimationDataNode
         super(scene);
         this.mGrids = grids;
         this.mEmitter = emitter;
@@ -47,7 +45,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
         this.setAnimationData(node);
     }
 
-    public setAnimationData(data: AnimationDataNode) {
+    public setAnimationData(data: any) {// AnimationDataNode
         this.clear();
         this.mAnimationData = data;
         this.mCurFrameIdx = 0;

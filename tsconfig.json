@@ -40,6 +40,9 @@
       "picaRes": [
         "./src/pica/res/index"
       ],
+      "editorCanvas": [
+        "./src/editor/index"
+      ],
     },
   },
   "exclude": [

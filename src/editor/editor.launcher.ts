@@ -2,7 +2,6 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { EditorCanvas, IEditorCanvasConfig } from "./canvas/editor.canvas";
 import { ElementEditorCanvas } from "./canvas/element/element.editor.canvas";
-import { Capsule } from "game-capsule";
 import { AvatarEditorCanvas } from "./canvas/avatar/avatar.editor.canvas";
 
 /*

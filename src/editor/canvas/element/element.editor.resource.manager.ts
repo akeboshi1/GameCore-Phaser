@@ -1,27 +1,22 @@
 import Atlas from "../../utils/atlas";
-import { IImage } from "game-capsule";
-import { DisplayNode, ElementNode } from "game-capsule";
 import * as path from "path";
-import * as os from "os";
 import IFrame from "../../utils/iframe";
 import { MaxRectsPacker } from "maxrects-packer";
 import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
-import ElementEditorAnimations from "./element.editor.animations";
-import { Logger } from "../../../utils/log";
+import { Logger } from "utils";
 
-// export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
 export const WEB_HOME_PATH: string = "https://osd.tooqing.com/";
 export const SPRITE_SHEET_KEY: string = "ELEMENT_EDITOR_SPRITE_SHEET_KEY";
 export const IMAGE_BLANK_KEY: string = "blank";
 
 export default class ElementEditorResourceManager {
-    private mElementNode: ElementNode;
+    private mElementNode: any;// ElementNode
     private mScene: Phaser.Scene;
     private mEmitter: Phaser.Events.EventEmitter;
     private mResourcesChangeListeners: ResourcesChangeListener[] = [];
     private mLocalHomePath: string;
 
-    constructor(data: ElementNode, emitter: Phaser.Events.EventEmitter, localHomePath: string) {
+    constructor(data: any, emitter: Phaser.Events.EventEmitter, localHomePath: string) {// ElementNode
         this.mElementNode = data;
         this.mEmitter = emitter;
         this.mLocalHomePath = localHomePath;
@@ -68,7 +63,7 @@ export default class ElementEditorResourceManager {
         this.mScene.load.start();
     }
 
-    public generateSpriteSheet(images: IImage[]): Promise<{ url: string, json: string }> {
+    public generateSpriteSheet(images: any[]): Promise<{ url: string, json: string }> {// IImage
         return new Promise<{ url: string, json: string }>((resolve, reject) => {
             if (!this.mScene) {
                 Logger.getInstance().warn("ResourceManager not inited");
@@ -143,8 +138,8 @@ export default class ElementEditorResourceManager {
     /**
      * 解析sprite sheet
      */
-    public deserializeDisplay(): Promise<IImage[]> {
-        return new Promise<IImage[]>((resolve, reject) => {
+    public deserializeDisplay(): Promise<any[]> {// IImage
+        return new Promise<any[]>((resolve, reject) => {
             if (!this.mScene.textures.exists(SPRITE_SHEET_KEY)) {
                 reject([]);
             } else {
