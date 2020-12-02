@@ -291,6 +291,7 @@ export class DragonbonesDisplay extends DisplayObject {
                 this.mClickCon.x = -rect.width >> 1;
                 this.mClickCon.y = -rect.height;
             }
+            this.mClickCon.setData("id", this.displayInfo.id);
             this.add(this.mClickCon);
         }
         this.setData("id", this.displayInfo.id);

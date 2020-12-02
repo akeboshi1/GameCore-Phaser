@@ -154,6 +154,7 @@ export class Render extends RPCPeer implements GameMain {
         if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
     }
 
+    // 切游戏的时候销毁各个manmager
     destroyManager() {
         if (this.mUiManager) {
             this.mUiManager.destroy();
@@ -185,6 +186,7 @@ export class Render extends RPCPeer implements GameMain {
         }
     }
 
+    // 切换scene时，清除各个manager缓存
     clearManager() {
         if (this.mUiManager)
             this.mUiManager.destroy();
@@ -204,8 +206,8 @@ export class Render extends RPCPeer implements GameMain {
         if (this.mDisplayManager)
             this.mDisplayManager.destroy();
 
-        if (this.mEditorCanvasManager)
-            this.mEditorCanvasManager.destroy();
+        // if (this.mEditorCanvasManager)
+        //     this.mEditorCanvasManager.destroy();
     }
 
     enterGame() {

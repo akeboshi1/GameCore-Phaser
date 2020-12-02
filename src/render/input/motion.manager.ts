@@ -1,6 +1,5 @@
 import { Render } from "gamecoreRender";
-import { Logger } from "utils";
-
+import { NodeType } from "../managers";
 export class MotionManager {
     public enable: boolean;
     private scaleRatio: number;
@@ -102,6 +101,11 @@ export class MotionManager {
                 const id = this.gameObject.getData("id");
                 if (id) {
                     const ele = this.render.displayManager.getDisplay(id);
+                    if (ele.nodeType === NodeType.CharacterNodeType) {
+                        // TODO
+                        this.clearGameObject();
+                        return;
+                    }
                     // const position = ele.getPosition();
                     const walkpos = await this.render.mainPeer.getInteractivePosition(id);
                     if (walkpos) {
@@ -114,8 +118,7 @@ export class MotionManager {
                 this.movePath(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio);
             }
         }
-        this.gameObject = null;
-        clearTimeout(this.holdTime);
+        this.clearGameObject();
     }
 
     private onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -142,5 +145,10 @@ export class MotionManager {
     }
 
     private onGameObjectUpHandler(pointer, gameObject) {
+    }
+
+    private clearGameObject() {
+        this.gameObject = null;
+        clearTimeout(this.holdTime);
     }
 }

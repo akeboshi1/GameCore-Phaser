@@ -7,7 +7,7 @@ import { BlockObject } from "../block/block.object";
 import { ISprite } from "../display/sprite/sprite";
 import { IRoomService, Room } from "../room/room";
 import { IElementManager } from "./element.manager";
-import { fps } from "../../game";
+import { delayTime } from "../../game";
 
 export interface IElement {
     readonly id: number;
@@ -511,7 +511,7 @@ export class Element extends BlockObject implements IElement {
         const pos = this.getPosition();
         // pos.y += this.offsetY;
         const angle = Math.atan2(path[0].y - pos.y, path[0].x - pos.x);
-        const speed = this.mModel.speed * fps;
+        const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
