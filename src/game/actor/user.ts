@@ -263,9 +263,6 @@ export class User extends Player {
     }
 
     protected _doMove(time?: number, delta?: number) {
-        if (!this.mMoving || !this.body) {
-            return;
-        }
         if (!this.mMoving || !this.mTargetPoint || !this.body) return;
         const path = this.mTargetPoint.path;
         const _pos = this.body.position;
