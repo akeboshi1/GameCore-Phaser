@@ -103,6 +103,7 @@ export class MotionManager {
                     const ele = this.render.displayManager.getDisplay(id);
                     if (ele.nodeType === NodeType.CharacterNodeType) {
                         // TODO
+                        this.render.mainPeer.activePlayer(id);
                         this.clearGameObject();
                         return;
                     }
