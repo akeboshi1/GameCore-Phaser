@@ -10,7 +10,7 @@ import { Render } from "../render";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { RunningAnimation } from "structure";
-import { MatterBodies } from "../display/debug/matter";
+import { MatterBodies } from "../display/debugs/matter";
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
