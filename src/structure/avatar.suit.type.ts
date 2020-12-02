@@ -2,6 +2,22 @@ import { op_gameconfig } from "pixelpai_proto";
 import { IAvatar } from "./dragonbones";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
+    static suitPart = {
+        "costume": ["body_cost", "body_dres", "farm_cost", "barm_cost", "fleg_cost", "bleg_cost"],
+        "hair": ["head_hair", "head_back"],
+        "eye": ["head_eyes"],
+        "mouse": ["head_mous"],
+        "hat": ["head_hats"],
+        "mask": ["head_mask"],
+        "face": ["head_face"],
+        "weapon": ["weap_farm", "weap_barm"],
+        "shield": ["shld_farm", "shld_barm"],
+        "tail": ["body_tail"],
+        "wing": ["body_wing"],
+        "helmet": ["head_spec"],
+        "shell": ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"]
+    };
+
     static createAvatar(suits: AvatarSuit[], avatar?: op_gameconfig.Avatar) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || new op_gameconfig.Avatar();

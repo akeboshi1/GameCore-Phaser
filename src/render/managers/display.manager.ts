@@ -323,7 +323,7 @@ export class DisplayManager {
     public showMatterDebug(bodies) {
         if (!this.matterBodies) {
             const scene = this.sceneManager.getSceneByName(PlayScene.name);
-            this.matterBodies = new MatterBodies(scene);
+            this.matterBodies = new MatterBodies(scene, this.render);
             (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.matterBodies.graphics);
         }
         this.matterBodies.renderWireframes(bodies);
@@ -342,6 +342,10 @@ export class DisplayManager {
                 if (block) block.destroy();
             });
             this.scenerys.clear();
+        }
+        if (this.matterBodies) {
+            this.matterBodies.destroy();
+            this.matterBodies = null;
         }
     }
 }

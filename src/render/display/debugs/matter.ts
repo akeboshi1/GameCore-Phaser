@@ -1,6 +1,8 @@
+import { Render } from "gamecoreRender";
+
 export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, private render: Render) {
         this.mGraphics =  scene.make.graphics(undefined, false);
     }
 
@@ -13,15 +15,22 @@ export class MatterBodies {
         graphics.clear();
         graphics.lineStyle(1, 0xFF0000);
         graphics.beginPath();
+        const dpr = this.render.scaleRatio;
         for (const bodie of bodies) {
-            graphics.moveTo(bodie[0].x / 2, bodie[0].y / 2);
+            graphics.moveTo(bodie[0].x / dpr, bodie[0].y / dpr);
             for (let j = 1; j < bodie.length; j++) {
-                graphics.lineTo(bodie[j].x / 2, bodie[j].y / 2);
+                graphics.lineTo(bodie[j].x / dpr, bodie[j].y / dpr);
             }
-            graphics.lineTo(bodie[0].x / 2, bodie[0].y / 2);
+            graphics.lineTo(bodie[0].x / dpr, bodie[0].y / dpr);
 
         }
         graphics.strokePath();
+    }
+
+    destroy() {
+        if (this.mGraphics) {
+            this.mGraphics.destroy();
+        }
     }
 
     get graphics() {

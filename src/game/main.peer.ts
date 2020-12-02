@@ -471,6 +471,11 @@ export class MainPeer extends RPCPeer {
         return null;
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public uploadHeadImage(url: string) {
+        this.game.httpService.uploadHeadImage(url);
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();

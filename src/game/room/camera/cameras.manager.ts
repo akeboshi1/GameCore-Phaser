@@ -70,8 +70,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
         const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
         // TODO zoom统一使用一个
-        size.width = cameraView.width / cameraView.zoom;
-        size.height = cameraView.height / cameraView.zoom;
+        size.width = cameraView.width / this.zoom;
+        size.height = cameraView.height / this.zoom;
         this.connection.send(packet);
     }
 

@@ -136,6 +136,14 @@ export class HttpService {
         return this.post("game/played_duration", { gameId }, { "App-Key": Appid });
     }
 
+    /**
+     * 上传人物头像
+     * @param file
+     */
+    uploadHeadImage(file: string) {
+        return this.post("update_blob", { file });
+    }
+
     public async post(uri: string, body: any, headers?: any): Promise<any> {
         const account = await this.game.peer.render.getAccount();
         if (!account) {

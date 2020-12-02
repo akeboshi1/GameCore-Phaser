@@ -795,7 +795,7 @@ export class PicaBagPanel extends BasePanel {
       this.showPropFun({ resultHandler, data, price: false, title, resource });
     }
   }
-  private onSaveBtnHandler() {
+  private async onSaveBtnHandler() {
     // if (this.mSelectedItemData.length > 0) {
     this.dressAvatarIDS.length = 0;
     this.dressAvatarDatas.length = 0;
@@ -808,6 +808,14 @@ export class PicaBagPanel extends BasePanel {
     this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querySaveAvatar", idsArr);
     // this.queryPackege();
     // }
+    // const str = await new EditorCanvasManager(this.render).createHeadIcon(idsArr);
+    const result = [];
+    const suitPart = AvatarSuitType.suitPart;
+    for (const avatar of this.dressAvatarDatas) {
+      result.push({ "parts": suitPart[avatar.suitType], id: avatar.sn });
+    }
+    const str = await this.render.editorCanvasManager.createHeadIcon(result);
+    this.render.mainPeer.uploadHeadImage(str);
   }
 
   private onResetBtnHandler() {
