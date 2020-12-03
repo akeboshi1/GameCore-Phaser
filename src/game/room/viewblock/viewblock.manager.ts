@@ -84,12 +84,12 @@ export class ViewblockManager implements IViewBlockManager {
         if (promise) {
             promise.then((obj) => {
                 const bound: LogicRectangle = obj;
-                this.mCameras.getMiniViewPort().then((obj45) => {
-                    const miniViewPort = obj45;
-                    for (const block of this.mBlocks) {
-                        block.check(bound, miniViewPort);
-                    }
-                });
+                for (const block of this.mBlocks) {
+                    block.check(bound);
+                }
+                // this.mCameras.getMiniViewPort().then((obj45) => {
+                //     const miniViewPort = obj45;
+                // });
             }).catch((error) => {
                 Logger.getInstance().error(error);
             });

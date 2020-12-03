@@ -193,39 +193,52 @@ export class DisplayManager {
         display.play(animation, field, times);
     }
 
-    public mount(displayID: number, ele: Phaser.GameObjects.Container, targetIndex?: number) {
-        if (!this.displays.has(displayID)) {
+    public mount(displayID: number, targetID: number, targetIndex?: number) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
-        display.mount(ele, targetIndex);
+        const target = this.displays.get(targetID);
+        if (!target) {
+            Logger.getInstance().error("DisplayObject not found: ", targetID);
+            return;
+        }
+        target.setRootMount(display);
+        display.mount(target, targetIndex);
     }
 
-    public unmount(displayID: number, ele: Phaser.GameObjects.Container) {
-        if (!this.displays.has(displayID)) {
+    public unmount(displayID: number, targetID: number) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
-        display.unmount(ele);
+
+        const target = this.displays.get(targetID);
+        if (!target) {
+            Logger.getInstance().error("DisplayObject not found: ", targetID);
+            return;
+        }
+        target.setRootMount(null);
+        display.unmount(target);
     }
 
     public removeEffect(displayID: number, field: DisplayField) {
-        if (!this.displays.has(displayID)) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
         display.removeEffect(field);
     }
 
     public removeDisplayField(displayID: number, field: DisplayField) {
-        if (!this.displays.has(displayID)) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
         display.removeDisplay(field);
     }
 

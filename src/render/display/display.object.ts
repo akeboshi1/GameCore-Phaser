@@ -35,6 +35,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mAnimation: RunningAnimation;
     protected mTopDisplay: ElementTopDisplay;
     protected mDisplayInfo: IDragonbonesModel | IFramesModel;
+    protected mRootMount: Phaser.GameObjects.Container;
     protected moveData: any;
     protected render: Render;
     protected mName: string;
@@ -156,7 +157,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         }
     }
 
-    scaleTween(): void { }
+    public scaleTween(): void { }
 
     public getElement(key: string) {
         if (!this.mChildMap) {
@@ -265,6 +266,19 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             this.direction = dir;
             this.play(this.mAnimation);
         }
+    }
+
+    public getPosition() {
+        const pos = new LogicPos(this.x, this.y);
+        if (this.mRootMount) {
+            pos.x += this.mRootMount.x;
+            pos.y += this.mRootMount.y;
+        }
+        return pos;
+    }
+
+    public setRootMount(gameObject: Phaser.GameObjects.Container) {
+        this.mRootMount = gameObject;
     }
 
     public renderSetDirection(dir: number) {

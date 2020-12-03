@@ -1,6 +1,7 @@
 import { BasicMediator, Game, PlayerProperty } from "gamecore";
 import { op_client } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { Logger } from "utils";
 import { PicaMainUI } from "./PicaMainUI";
 
 export class PicaMainUIMediator extends BasicMediator {
@@ -17,6 +18,7 @@ export class PicaMainUIMediator extends BasicMediator {
         this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
         this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
+        this.game.emitter.on("updateDetail", this.onUpdateDetailHandler, this);
     }
 
     hide() {
@@ -25,6 +27,7 @@ export class PicaMainUIMediator extends BasicMediator {
         this.game.emitter.off("openroompanel", this.onOpenRoomHandler, this);
         this.game.emitter.off("querypraise", this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.off("updateroom", this.onUpdateRoomHandler, this);
+        this.game.emitter.off("updateDetail", this.onUpdateDetailHandler, this);
     }
 
     destroy() {
@@ -58,6 +61,7 @@ export class PicaMainUIMediator extends BasicMediator {
         } else if (panel === ModuleName.PICAOPENPARTY_NAME) {
 
         }
+
         // const uiManager = this.world.uiManager;
         // if (data)
         //     uiManager.showMed(panel, data);
@@ -72,6 +76,7 @@ export class PicaMainUIMediator extends BasicMediator {
             if (this.mView && this.mShowData)
                 this.mView.update(this.mShowData);
         }
+        this.fetchDetail();
     }
 
     private onOpenRoomHandler() {
@@ -84,6 +89,19 @@ export class PicaMainUIMediator extends BasicMediator {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const roomid = this.mRoomInfo.roomId;
         (<PicaMainUI>this.mModel).query_PRAISE_ROOM(roomid, praise);
+    }
+
+    private async fetchDetail() {
+        const account = await this.game.renderPeer.getAccount();
+        if (account) {
+            const accoutnData = account.accountData;
+            const detail: any = await this.game.httpService.userDetail(accoutnData.id);
+            this.mView.updateDetail(detail.data);
+        }
+    }
+
+    private onUpdateDetailHandler() {
+        this.fetchDetail();
     }
 
     get playerInfo() {

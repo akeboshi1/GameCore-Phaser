@@ -480,7 +480,9 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.str])
     public uploadHeadImage(url: string) {
-        this.game.httpService.uploadHeadImage(url);
+        this.game.httpService.uploadHeadImage(url).then(() => {
+            this.game.emitter.emit("updateDetail");
+        });
     }
 
     // ==== todo

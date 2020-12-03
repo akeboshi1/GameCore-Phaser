@@ -2,9 +2,9 @@ import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Render } from "src/render/render";
-import { BasePanel, TextToolTips, UiManager } from "gamecoreRender";
+import { BasePanel, DynamicImage, TextToolTips, UiManager } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";
-import { Font, Handler, i18n, Logger } from "utils";
+import { Font, Handler, i18n, Logger, Url } from "utils";
 export class PicaMainUIPanel extends BasePanel {
     private mCoinValue: ValueContainer;
     private mDiamondValue: ValueContainer;
@@ -23,6 +23,7 @@ export class PicaMainUIPanel extends BasePanel {
     private partyBtn: Button;
     private playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     private roomInfo: any;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
+    private headImage: DynamicImage;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAMAINUI_NAME;
@@ -119,6 +120,21 @@ export class PicaMainUIPanel extends BasePanel {
             }
         }
         this.mSceneName.rightIcon.visible = this.isSelfRoom;
+    }
+
+    updateDetail(detail: any) {
+        if (!detail) {
+            return;
+        }
+        if (!this.headImage) {
+            this.headImage = new DynamicImage(this.scene, 0, 0);
+            this.headImage.setScale(this.dpr);
+            this.add(this.headImage);
+        }
+        this.headImage.load(Url.getOsdRes(detail.avatar), this, () => {
+            this.headImage.x = this.headImage.width * 0.5 + 4 * this.dpr;
+            this.headImage.y = this.headImage.height * 0.5 + 4 * this.dpr;
+        });
     }
 
     getCoin(): op_pkt_def.IPKT_Property {
@@ -355,6 +371,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
     private onOpenRechargeHandler() {
         this.render.renderEmitter("showPanel", ModuleName.PICARECHARGE_NAME);
+        // this.render.editorCanvasManager.createHeadIcon(this.render.editorCanvasManager.AVATAR_CANVAS_TEST_DATA);
     }
 }
 

@@ -1101,6 +1101,16 @@ export class Render extends RPCPeer implements GameMain {
         this.emitter.emit(eventType, data);
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public mount(id: number, targetID: number, targetIndex: number) {
+        this.mDisplayManager.mount(id, targetID, targetIndex);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public unmount(id: number, targetID: number) {
+        this.mDisplayManager.unmount(id, targetID);
+    }
+
     // private connectReconnect() {
     //     if (!this.game) return;
     //     this.createGame();

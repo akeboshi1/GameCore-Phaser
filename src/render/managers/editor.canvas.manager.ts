@@ -36,6 +36,7 @@ export class EditorCanvasManager {
 
             ifrm = document.createElement("iframe");
             ifrm.setAttribute("id", this.AVATAR_CANVAS_PARENT);
+            ifrm.style.height = "0px";
             renderParent.appendChild(ifrm);
         }
 
