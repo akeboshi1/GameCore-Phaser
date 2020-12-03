@@ -113,7 +113,7 @@ export class LoadingScene extends BasicScene {
     this.displayVisible(true);
     // this.scale.on("resize", this.checkSize, this);
     this.scene.wake();
-    this.scene.bringToTop(LoadingScene.name);
+    this.scene.bringToTop(SceneName.LOADING_SCENE);
     if (!data) {
       return;
     }
@@ -127,7 +127,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
-    if (this.progressText)  {
+    if (this.progressText) {
       if (this.progressText.active) this.progressText.setText("");
     }
     if (!this.scene || !this.scene.settings) {
