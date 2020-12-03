@@ -284,12 +284,15 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public setAnimationName(name: string, times?: number) {
-        if (this.displayInfo) {
-            this.displayInfo.animationName = name;
+        if (!this.currentAnimation || this.currentAnimationName !== name) {
+            if (this.displayInfo) {
+                this.displayInfo.animationName = name;
+            }
+            this.currentAnimationName = name;
+            const ani = this.setAnimationData(name, this.direction, times);
+            return ani;
         }
-        this.currentAnimationName = name;
-        const ani = this.setAnimationData(name, this.direction, times);
-        return ani;
+        return null;
     }
 
     setDirection(val: number) {
