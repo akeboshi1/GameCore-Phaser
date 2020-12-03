@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game, Scene } from "tooqinggamephaser";
+import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { Url, initLocales, Logger, Size } from "utils";
 import { ServerAddress } from "../../lib/net/address";
