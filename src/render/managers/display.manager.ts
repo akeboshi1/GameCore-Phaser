@@ -11,6 +11,7 @@ import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { RunningAnimation } from "structure";
 import { MatterBodies } from "../display/debugs/matter";
+import { ServerPosition } from "../display/debugs/server.pointer";
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -57,6 +58,7 @@ export class DisplayManager {
     private scenerys: Map<number, BlockManager>;
     private mUser: DisplayObject;
     private matterBodies: MatterBodies;
+    private serverPosition: ServerPosition;
     constructor(private render: Render) {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
@@ -335,11 +337,16 @@ export class DisplayManager {
 
     public showMatterDebug(bodies) {
         if (!this.matterBodies) {
-            const scene = this.sceneManager.getSceneByName(PlayScene.name);
-            this.matterBodies = new MatterBodies(scene, this.render);
-            (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.matterBodies.graphics);
+            this.matterBodies = new MatterBodies(this.render);
         }
         this.matterBodies.renderWireframes(bodies);
+    }
+
+    public drawServerPosition(x: number, y: number) {
+        if (!this.serverPosition) {
+            this.serverPosition = new ServerPosition(this.render);
+        }
+        this.serverPosition.draw(x, y);
     }
 
     public destroy() {
@@ -359,6 +366,10 @@ export class DisplayManager {
         if (this.matterBodies) {
             this.matterBodies.destroy();
             this.matterBodies = null;
+        }
+        if (this.serverPosition) {
+            this.serverPosition.destroy();
+            this.serverPosition = null;
         }
     }
 }

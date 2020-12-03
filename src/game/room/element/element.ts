@@ -734,7 +734,7 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData.tweenAnim = null;
             this.mMoveData = null;
         }
-        if (!this.mElementManager) this.mElementManager.roomService.game.peer.render.removeBlockObject(this.id);
+        if (this.mRoomService) this.mRoomService.game.renderPeer.removeBlockObject(this.id);
         // if (this.mDisplay) {
         //     if (this.mBlockable) {
         //         this.roomService.removeBlockObject(this);
@@ -794,7 +794,8 @@ export class Element extends BlockObject implements IElement {
         }
         const _pos = this.body.position;
         const pos = new LogicPos(_pos.x / this.mRoomService.game.scaleRatio, _pos.y / this.mRoomService.game.scaleRatio);
-        // TODO setPosition
+        this.mModel.setPosition(pos.x, pos.y);
+        this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         // this.mDisplay.setPosition(pos.x, pos.y);
 
         this.checkDirection();

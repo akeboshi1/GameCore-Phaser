@@ -298,9 +298,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         const sceneHeight = this.scene.scale.height;
         this.mArmatureBottomArea = this.DEFAULTSCALEBOTTOMPIX * sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME);
-        for (const slot of this.mArmatureDisplay.armature.getSlots()) {
-            Logger.getInstance().log("ZW-- slot: ", slot.name);
-        }
+        // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
+            // Logger.getInstance().log("ZW-- slot: ", slot.name);
+        // }
         this.mArmatureDisplay.animation.play(this.mCurAnimationName);
         this.mArmatureDisplay.scale = sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay.x = this.scene.scale.width >> 1;
@@ -308,9 +308,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.add(this.mArmatureDisplay);
         this.mArmatureBottomArea_head = this.mArmatureBottomArea - this.ARMATURELEGPERCENT * this.ARMATUREHEIGHT * sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay_head = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME_HEAD);
-        for (const slot of this.mArmatureDisplay.armature.getSlots()) {
-            Logger.getInstance().log("ZW-- half-length slot: ", slot.name);
-        }
+        // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
+            // Logger.getInstance().log("ZW-- half-length slot: ", slot.name);
+        // }
         // this.mArmatureDisplay_head.animation.play("idle_3");
         this.mArmatureDisplay_head.scale = sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay_head.x = this.scene.scale.width >> 1;

@@ -831,11 +831,6 @@ export class Render extends RPCPeer implements GameMain {
         return this._curTime = curTime;
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public displayDestroy(id: number, type: number) {
-
-    }
-
     @Export()
     public createGameCallBack(keyEvents: any) {
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
@@ -995,6 +990,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public showMatterDebug(vertices) {
         this.mDisplayManager.showMatterDebug(vertices);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public drawServerPosition(x: number, y: number) {
+        this.mDisplayManager.drawServerPosition(x, y);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
