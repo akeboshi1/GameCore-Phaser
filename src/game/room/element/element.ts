@@ -258,14 +258,14 @@ export class Element extends BlockObject implements IElement {
         }
         if (model.hasOwnProperty("mountSprites")) {
             const mounts = model.mountSprites;
-            // this.mergeMounth(mounts);
-            // this.updateMounth(mounts);
+            this.mergeMounth(mounts);
+            this.updateMounth(mounts);
         }
         if (model.hasOwnProperty("point3f")) {
             const pos = model.point3f;
             this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
-        // this.update();
+        this.update();
     }
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
@@ -683,7 +683,8 @@ export class Element extends BlockObject implements IElement {
 
     public addMount(ele: IElement, index: number) {
         if (!this.mMounts) this.mMounts = [];
-        // ele.mount(this);
+        ele.mount(this);
+        this.mRoomService.game.renderPeer.mount(this.id, ele.id, index);
         // if (this.mDisplay) {
         //     this.mDisplay.mount(ele.getDisplay(), index);
         // }
@@ -699,6 +700,7 @@ export class Element extends BlockObject implements IElement {
         // if (this.mDisplay) {
         //     this.mDisplay.unmount(ele.getDisplay());
         // }
+        this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
         const index = this.mMounts.indexOf(ele);
         if (index > -1) {
             this.mMounts.splice(index, 1);

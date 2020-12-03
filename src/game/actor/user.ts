@@ -75,6 +75,21 @@ export class User extends Player {
     //     }
     // }
 
+    public unmount() {
+        if (this.mRootMount) {
+            const pos = this.mRootMount.getInteractivePosition();
+            if (!pos) {
+                return;
+            }
+            this.mRootMount = null;
+            this.setPosition(pos);
+            this.getInteractivePosition();
+            this.enableBlock();
+            this.mDirty = true;
+        }
+        return this;
+    }
+
     public moveMotion(x: number, y: number, targetId?: number) {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this);
