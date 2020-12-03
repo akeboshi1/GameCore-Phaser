@@ -1,9 +1,12 @@
 import { Render } from "gamecoreRender";
+import { PlayScene } from "../../scenes/play.scene";
 
 export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
-    constructor(scene: Phaser.Scene, private render: Render) {
+    constructor(private render: Render) {
+        const scene = this.render.sceneManager.getSceneByName(PlayScene.name);
         this.mGraphics =  scene.make.graphics(undefined, false);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.mGraphics);
     }
 
     update() {
@@ -31,9 +34,5 @@ export class MatterBodies {
         if (this.mGraphics) {
             this.mGraphics.destroy();
         }
-    }
-
-    get graphics() {
-        return this.mGraphics;
     }
 }
