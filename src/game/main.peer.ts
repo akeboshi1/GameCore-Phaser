@@ -43,7 +43,6 @@ export class MainPeer extends RPCPeer {
         this.startBeat();
         // 逻辑层game链接成功
         this.game.onConnected();
-        this.heartBeatPeer.startUpdate();
     }
 
     public onDisConnected() {
