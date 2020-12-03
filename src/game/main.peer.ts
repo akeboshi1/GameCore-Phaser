@@ -95,11 +95,6 @@ export class MainPeer extends RPCPeer {
         });
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public update(now: number, delayTime: number) {
-        this.game.update(now, delayTime);
-    }
-
     @Export()
     public refreshToken() {
         this.game.refreshToken();

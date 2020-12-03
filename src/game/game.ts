@@ -57,16 +57,39 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mMoveStyle: number;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
+    protected currentTime: number = 0;
+    protected mWorkerLoop: any;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
         this.connect = new Connection(peer);
         this.addPacketListener();
+        this.update();
     }
 
-    public update(now: number, delay: number) {
-        Logger.getInstance().log("updateTime===", delay, "delayTime===", delayTime);
-        if (this.mRoomManager) this.mRoomManager.update(now, delay);
+    public run(): Promise<any> {
+        return new Promise<any>((resolve) => {
+            this.currentTime = new Date().getTime();
+            const self = this;
+            this.mWorkerLoop = setInterval(() => {
+                resolve(new Date().getTime() - self.currentTime);
+                clearInterval(self.mWorkerLoop);
+            }, delayTime);
+        });
+    }
+
+    public async update() {
+        let now: number = 0;
+        let tmpTime: number = new Date().getTime();
+        for (; ;) {
+            await this.run();
+            now = new Date().getTime();
+            let delay = now - tmpTime;
+            if (delay < delayTime) delay = delayTime;
+            Logger.getInstance().log("updateTime===", delay, "delayTime===", delayTime);
+            if (this.mRoomManager) this.mRoomManager.update(now, delay);
+            tmpTime = now;
+        }
     }
 
     public addPacketListener() {
@@ -361,6 +384,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onFocus() {
+        if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
+        this.update();
         this.connect.onFocus();
         if (this.connection) {
             if (!this.connection.connect) {
@@ -383,6 +408,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onBlur() {
+        this.currentTime = 0;
+        if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
         this.connect.onBlur();
         Logger.getInstance().log("#BlackSceneFromBackground; world.onBlur()");
         if (this.connection) {
