@@ -11,7 +11,6 @@ import { PicaNewChatPanel } from "./PicaNewChatPanel";
 import { PicaNewHeadPanel } from "./PicaNewHeadPanel";
 import { PicaNewLeftPanel } from "./PicaNewLeftPanel";
 import { PicaNewNavigatePanel } from "./PicaNewNavigatePanel";
-import { PicaNewSceneInfoPanel } from "./PicaNewSceneInfoPanel";
 export class PicaNewMainPanel extends PicaBasePanel {
 
     protected activityPanel: PicaNewActivityPanel;
@@ -19,7 +18,6 @@ export class PicaNewMainPanel extends PicaBasePanel {
     protected headPanel: PicaNewHeadPanel;
     protected leftPanel: PicaNewLeftPanel;
     protected navigatePanel: PicaNewNavigatePanel;
-    protected scenePanel: PicaNewSceneInfoPanel;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon];
@@ -29,6 +27,16 @@ export class PicaNewMainPanel extends PicaBasePanel {
     resize(w: number, h: number) {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
+        this.headPanel.x = width * 0.5;
+        this.headPanel.y = this.headPanel.height * 0.5;
+        this.leftPanel.x = this.leftPanel.width * 0.5 - 20 * this.dpr;
+        this.leftPanel.y = this.headPanel.height + this.leftPanel.height * 0.5 + 30 * this.dpr;
+        this.activityPanel.x = width - this.activityPanel.width * 0.5 - 20 * this.dpr;
+        this.activityPanel.y = this.headPanel.height + this.activityPanel.height * 0.5 + 30 * this.dpr;
+        this.navigatePanel.x = width * 0.5;
+        this.navigatePanel.y = height - this.navigatePanel.height * 0.5;
+        this.chatPanel.x = width * 0.5;
+        this.chatPanel.y = height - this.navigatePanel.height - this.chatPanel.height * 0.5;
         super.resize(width, height);
     }
 
@@ -65,6 +73,13 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.headPanel = new PicaNewHeadPanel(this.scene, width, 70 * this.dpr, this.key, this.dpr);
         this.add(this.headPanel);
         this.leftPanel = new PicaNewLeftPanel(this.scene, 40 * this.dpr, 189 * this.dpr, this.key, this.dpr);
+        this.add(this.leftPanel);
+        this.activityPanel = new PicaNewActivityPanel(this.scene, 40 * this.dpr, 180 * this.dpr, this.key, this.dpr);
+        this.add(this.activityPanel);
+        this.chatPanel = new PicaNewChatPanel(this.scene, width, 201 * this.dpr, this.key, this.dpr);
+        this.add(this.chatPanel);
+        this.navigatePanel = new PicaNewNavigatePanel(this.scene, width, 48 * this.dpr, this.key, this.dpr);
+        this.add(this.navigatePanel);
         this.resize(width, height);
         super.init();
     }
