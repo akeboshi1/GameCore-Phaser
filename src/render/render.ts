@@ -404,10 +404,12 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     public onFocus() {
+        this.mHeartPeer.onFocus();
         this.resumeScene();
     }
 
     public onBlur() {
+        this.mHeartPeer.onBlur();
         this.pauseScene();
     }
 

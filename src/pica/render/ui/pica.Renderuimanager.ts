@@ -1,9 +1,17 @@
 import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
+import { AtlasManager } from "picaRes";
 export class PicaRenderUiManager extends UiManager {
+
+    protected mAtalsManager: AtlasManager;
     constructor(mRender: Render) {
         super(mRender);
+        this.mAtalsManager = new AtlasManager();
+        this.mAtalsManager.init(mRender);
     }
 
+    public getAtlas(atlas: string[]) {
+        return this.mAtalsManager.getAtalsArr(atlas);
+    }
     protected _showPanel(type: string, param?: any): BasePanel {
         if (!this.mPanelMap) {
             this.mPanelMap = new Map();

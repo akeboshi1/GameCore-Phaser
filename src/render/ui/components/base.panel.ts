@@ -34,8 +34,26 @@ export class BasePanel extends Panel {
         return this.mInitialized;
     }
 
+    show(param?: any) {
+        this.mShowData = param;
+        if (this.mPreLoad) return;
+        if (!this.mInitialized) {
+            this.preload();
+            return;
+        }
+        if (this.mShow) return;
+        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
+        if (!this.mTweening && this.mTweenBoo) {
+            this.showTween(true);
+        } else {
+            this.mShow = true;
+        }
+        this.onShow();
+    }
+
     public hide() {
         super.hide();
+        this.onHide();
     }
 
     public destroy() {
@@ -108,5 +126,13 @@ export class BasePanel extends Panel {
             listener();
         }
         this.exportListeners.length = 0;
+    }
+
+    protected onShow() {
+
+    }
+
+    protected onHide() {
+
     }
 }

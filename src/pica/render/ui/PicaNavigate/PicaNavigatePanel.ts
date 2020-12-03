@@ -62,11 +62,13 @@ export class PicaNavigatePanel extends BasePanel {
   public hide() {
     this.mShow = false;
     super.hide();
+    this.removeListen();
   }
 
   show(param?: any) {
     super.show(param);
     this.checkUpdateActive();
+    this.addListen();
   }
   updateUIState(active?: any) {// op_pkt_def.IPKT_UI
     if (!this.mInitialized) {

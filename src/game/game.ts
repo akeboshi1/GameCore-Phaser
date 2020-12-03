@@ -55,8 +55,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected gameConfigUrl: string;
     protected isPause: boolean = false;
     protected mMoveStyle: number;
-    protected mWorkerLoop: any;
-    protected currentTime: number = 0;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
     constructor(peer: MainPeer) {
@@ -64,7 +62,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer = peer;
         this.connect = new Connection(peer);
         this.addPacketListener();
-        this.update();
+    }
+
+    public update(now: number, delay: number) {
+        Logger.getInstance().log("updateTime===", delay, "delayTime===", delayTime);
+        if (this.mRoomManager) this.mRoomManager.update(now, delay);
     }
 
     public addPacketListener() {
@@ -75,28 +77,28 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.connect) this.connect.removePacketListener(this);
     }
 
-    public run(): Promise<any> {
-        return new Promise<any>((resolve) => {
-            this.currentTime = new Date().getTime();
-            this.mWorkerLoop = setInterval(() => {
-                resolve(new Date().getTime() - this.currentTime);
-            }, delayTime);
-        });
-    }
+    // public run(): Promise<any> {
+    //     return new Promise<any>((resolve) => {
+    //         this.currentTime = new Date().getTime();
+    //         this.mWorkerLoop = setInterval(() => {
+    //             resolve(new Date().getTime() - this.currentTime);
+    //         }, delayTime);
+    //     });
+    // }
 
-    public async update() {
-        let now: number = 0;
-        let tmpTime: number = new Date().getTime();
-        for (; ;) {
-            await this.run();
-            now = new Date().getTime();
-            // if (now - tmpTime >= delayTime) break;
-            // if (this.user) this.user.update();
-            // Logger.getInstance().log("updateTime:====", now - tmpTime);
-            if (this.mRoomManager) this.mRoomManager.update(now, now - tmpTime);
-            tmpTime = now;
-        }
-    }
+    // public async update() {
+    //     let now: number = 0;
+    //     let tmpTime: number = new Date().getTime();
+    //     for (; ;) {
+    //         await this.run();
+    //         now = new Date().getTime();
+    //         // if (now - tmpTime >= delayTime) break;
+    //         // if (this.user) this.user.update();
+    //         // Logger.getInstance().log("updateTime:====", now - tmpTime);
+    //         if (this.mRoomManager) this.mRoomManager.update(now, now - tmpTime);
+    //         tmpTime = now;
+    //     }
+    // }
 
     get scaleRatio(): number {
         return this.mConfig.devicePixelRatio;

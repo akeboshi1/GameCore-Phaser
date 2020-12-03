@@ -1,5 +1,6 @@
-import { Game } from "gamecore";
-import { Handler } from "utils";
+import { Render } from "gamecoreRender";
+import { Handler, Logger } from "utils";
+import { UIAtlasName } from "./ui.atlas.name";
 
 export enum UILoadType {
     none = 1,
@@ -21,29 +22,39 @@ export class AtlasUrlData {
 }
 export class AtlasManager {
 
-    private game: Game;
+    public render: Render;
     private atlasMap: Map<string, AtlasUrlData> = new Map<string, AtlasUrlData>();
-    public init(game: Game) {
-        this.game = game;
+    public init(render: Render) {
+        this.render = render;
+        this.add(UIAtlasName.uicommon, UILoadType.atlas);
     }
 
     public add(atlasName: string, loadType = UILoadType.none, folder?: string) {
-        // if (loadType === UILoadType.atlas) {
-        //     var atlasUrl = UrlUtil.getUIAtlasUrl(atlasName, folder);
-        //     var atlasJsonUrl = UrlUtil.getUIAtlasJsonUrl(atlasName, folder);
-        //     var data = new AtlasUrlData(atlasName, atlasUrl, atlasJsonUrl, loadType);
-
-        // } else if (loadType === UILoadType.font) {
-        //     var atlasUrl = UrlUtil.getFontUrl(atlasName, folder);
-        //     var atlasJsonUrl = UrlUtil.getFontJsonUrl(atlasName, folder);
-        //     var data = new AtlasUrlData(atlasName, atlasUrl, atlasJsonUrl, loadType);
-        // } else if (loadType === UILoadType.texture) {
-        //     var atlasUrl = UrlUtil.getTextureUrl(atlasName, folder);
-        //     var data = new AtlasUrlData(atlasName, atlasUrl, null, loadType);
-        // }
-        // this.atlasMap.set(atlasName, data);
+        let data: AtlasUrlData;
+        if (loadType === UILoadType.atlas) {
+            const url = `${atlasName}/${atlasName}`;
+            data = new AtlasUrlData(atlasName, `${url}.png`, `${url}.json`, UILoadType.atlas);
+        } else if (loadType === UILoadType.font) {
+            const url = `${atlasName}/${atlasName}`;
+            data = new AtlasUrlData(atlasName, `${url}.png`, `${url}.json`, UILoadType.font);
+        } else if (loadType === UILoadType.texture) {
+            const url = `${atlasName}/${atlasName}`;
+            data = new AtlasUrlData(atlasName, `${url}.png`, undefined, UILoadType.texture);
+        }
+        this.atlasMap.set(atlasName, data);
     }
-
+    public getAtalsArr(atalsNames: string[]) {
+        const tempUrls: AtlasUrlData[] = [];
+        for (const name of atalsNames) {
+            try {
+                const urlData = this.atlasMap.get(name);
+                tempUrls.push(urlData);
+            } catch (error) {
+                Logger.getInstance().error("图集${name}不存在");
+            }
+        }
+        return tempUrls;
+    }
     public loadAtlas(urls: string[], arr: string[], comp: Handler, progress?: Handler) {
 
     }
@@ -62,12 +73,5 @@ export class AtlasManager {
 
     public loadFont(fontName: string, compl: Handler) {
 
-    }
-    private getUILoadType(tag: string) {
-        if (tag === "Atlas") {
-            return UILoadType.atlas;
-        } else if (tag === "Texture") {
-            return UILoadType.texture;
-        }
     }
 }

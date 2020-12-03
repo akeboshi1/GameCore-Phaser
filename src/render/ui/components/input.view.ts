@@ -119,12 +119,9 @@ export class InputView extends BasePanel {
         }
     }
     private onTextChangeHandler() {
-        const length = this.showData.length;
-        if (!length) return;
-        const len = this.mInput.text.length;
-        if (Font.fontSzie(13 * this.dpr, this.mInput.text) > length) {
-            this.mInput.text = this.mInput.text.slice(0, len - 2);
-        }
+        const maxWidth = this.showData.maxWidth;
+        if (!maxWidth) return;
+        this.mInput.text = UIHelper.spliceText(maxWidth, this.mInput.text, 17 * this.dpr, this.scene);
     }
 }
 interface IViewConfig {

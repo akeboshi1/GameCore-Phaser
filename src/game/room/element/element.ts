@@ -282,18 +282,14 @@ export class Element extends BlockObject implements IElement {
         this.load(this.mModel.displayInfo);
     }
 
-    scaleTween(): void {
-        this.mRoomService.game.peer.render.scaleTween(this.id, this.type);
-    }
-
     public play(animationName: string, times?: number): void {
         if (!this.mModel) {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        if (this.mModel.currentAnimationName !== animationName) {
-            this.mModel.setAnimationName(animationName);
-        }
+        // if (this.mModel.currentAnimationName !== animationName) {
+        this.mModel.setAnimationName(animationName);
+        // }
         // 部分动画可能会重新播放
         // if (!this.mDisplay) {
         //     return Logger.getInstance().warn("display can't initlized");
@@ -765,31 +761,31 @@ export class Element extends BlockObject implements IElement {
     }
 
     // protected _doMove() {
-        // if (!this.mMoveData.posPath || !this.mElementManager) {
-        //     return;
-        // }
-        // const line = this.mMoveData.tweenLineAnim;
-        // if (line) {
-        //     line.stop();
-        //     line.destroy();
-        // }
-        // const posPath = this.mMoveData.posPath;
-        // this.mElementManager.roomService.game.renderPeer.doMove(this.id, this.mMoveData);
-        // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
-        //     targets: this.mDisplay,
-        //     ease: "Linear",
-        //     tweens: posPath,
-        //     onStart: () => {
-        //         this.onMoveStart();
-        //     },
-        //     onComplete: () => {
-        //         this.onMoveComplete();
-        //     },
-        //     onUpdate: () => {
-        //         this.onMoving();
-        //     },
-        //     onCompleteParams: [this],
-        // });
+    // if (!this.mMoveData.posPath || !this.mElementManager) {
+    //     return;
+    // }
+    // const line = this.mMoveData.tweenLineAnim;
+    // if (line) {
+    //     line.stop();
+    //     line.destroy();
+    // }
+    // const posPath = this.mMoveData.posPath;
+    // this.mElementManager.roomService.game.renderPeer.doMove(this.id, this.mMoveData);
+    // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
+    //     targets: this.mDisplay,
+    //     ease: "Linear",
+    //     tweens: posPath,
+    //     onStart: () => {
+    //         this.onMoveStart();
+    //     },
+    //     onComplete: () => {
+    //         this.onMoveComplete();
+    //     },
+    //     onUpdate: () => {
+    //         this.onMoving();
+    //     },
+    //     onCompleteParams: [this],
+    // });
     // }
 
     protected _doMove(time?: number, delta?: number) {

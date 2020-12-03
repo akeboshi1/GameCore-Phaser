@@ -1006,6 +1006,7 @@ export class DragonbonesDisplay extends DisplayObject {
 
         this.closePlaceholder();
         this.mArmatureDisplay.visible = true;
+        this.emit("replacefinished");
     }
 
     private clearFadeTween() {
