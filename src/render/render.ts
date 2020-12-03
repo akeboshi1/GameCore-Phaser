@@ -984,17 +984,17 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public removeSkybox(id: number) {
-        this.mDisplayManager.removeSkybox(id);
+        if (this.mDisplayManager) this.mDisplayManager.removeSkybox(id);
     }
 
     @Export()
     public showMatterDebug(vertices) {
-        this.mDisplayManager.showMatterDebug(vertices);
+        if (this.mDisplayManager) this.mDisplayManager.showMatterDebug(vertices);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public drawServerPosition(x: number, y: number) {
-        this.mDisplayManager.drawServerPosition(x, y);
+        if (this.mDisplayManager) this.mDisplayManager.drawServerPosition(x, y);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

@@ -337,9 +337,10 @@ export class DragonbonesDisplay extends DisplayObject {
         this.mPlaceholder = undefined;
     }
     private loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
-        const loadQueue: LoadQueue = new LoadQueue(this.scene, this.mDragonbonesName);
+        const loadQueue: LoadQueue = new LoadQueue(this.scene);
         loadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
-        loadQueue.on(this.mDragonbonesName + "_QueueProgress", this.onFileLoadHandler, this);
+        loadQueue.on("QueueProgress", this.onFileLoadHandler, this);
+        loadQueue.on("QueueComplete", this.onLoadCompleteHandler, this);
         loadQueue.startLoad();
         // this.scene.load.dragonbone(
         //     this.mDragonbonesName,
@@ -946,7 +947,6 @@ export class DragonbonesDisplay extends DisplayObject {
             // if (this.mLoadMap.size > 0) {
             // }
             const renderTextureKey = "bones_" + this.displayInfo.id;// "bones_" + this.mDisplayInfo.id;// "bones_human01";
-            const renderTexture = this.scene.textures.get(renderTextureKey);
             if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
                 { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
             this.mDragonBonesRenderTexture.clear();
@@ -1060,7 +1060,7 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         return false;
     }
-    private onFileLoadHandler(key: string, type: string) {
+    private onFileLoadHandler(progress: number, key: string, type: string) {
         // if (!file) {
         //     return;
         // }
@@ -1071,7 +1071,7 @@ export class DragonbonesDisplay extends DisplayObject {
         if (key !== this.mDragonbonesName || type !== "image") {
             return;
         }
-        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
+        // this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
         this.onLoadCompleteHandler();
     }
 }

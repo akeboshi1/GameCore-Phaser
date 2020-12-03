@@ -5,6 +5,7 @@ export enum LoadType {
     DRAGONBONES,
 }
 enum LoadState {
+    NONE,
     PRELOAD,
     PROGRESS,
     COMPLETE,
@@ -21,11 +22,11 @@ export interface ILoadObject {
 }
 
 export class LoadQueue extends Phaser.Events.EventEmitter {
-    protected mQueue: Map<string, ILoadObject>;
+    protected mQueue: any[];
     private mIndex: number = 0;
-    constructor(protected scene: Phaser.Scene, private key: string) {
+    constructor(protected scene: Phaser.Scene) {
         super();
-        this.mQueue = new Map();
+        this.mQueue = [];
     }
 
     add(list: ILoadObject[]) {
@@ -49,12 +50,15 @@ export class LoadQueue extends Phaser.Events.EventEmitter {
                         this.scene.load.dragonbone(key, textureUrl, jsonUrl, boneUrl, null, null, { responseType: "arraybuffer" });
                         break;
                 }
-                this.mQueue.set(key, loadObject);
+                this.mQueue.push(loadObject);
             }
         });
     }
 
     startLoad() {
+        this.mQueue.forEach((loadObject) => {
+            loadObject.state = LoadState.PROGRESS;
+        });
         this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.fileComplete, this);
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.totalComplete, this);
         this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.fileLoadError, this);
@@ -67,29 +71,28 @@ export class LoadQueue extends Phaser.Events.EventEmitter {
     }
 
     private totalComplete() {
-        this.emit(this.key + "_QueueComplete");
+        this.emit("QueueComplete");
         this.clearQueue();
 
     }
 
-    private fileComplete(key: string, type: string) {
-        if (!this.mQueue.get(key)) return;
+    private fileComplete(key: string, type?: string) {
         this.mIndex++;
-        const len: number = this.mQueue.size;
-        this.emit(this.key + "_QueueProgress", this.mIndex / len, key);
+        const len: number = this.mQueue.length;
+        this.emit("QueueProgress", this.mIndex / len, key, type);
     }
 
     private fileLoadError(file) {
         // Logger.getInstance().log("queue load error", file);
-        this.emit(this.key + "_QueueError", file.key);
+        this.emit("QueueError", file.key);
     }
 
     private clearQueue() {
         this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.fileComplete, this);
         this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.totalComplete, this);
         this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.fileLoadError, this);
-        this.mQueue.clear();
-        this.mQueue = new Map();
+        this.mQueue.length = 0;
+        this.mQueue = [];
         this.mIndex = 0;
     }
 }
