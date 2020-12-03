@@ -36,6 +36,7 @@ export class BasePanel extends Panel {
 
     show(param?: any) {
         super.show(param);
+        if (!this.mInitialized) return;
         this.onShow();
     }
 
