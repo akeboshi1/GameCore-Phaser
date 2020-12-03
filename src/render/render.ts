@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game, Scene } from "tooqinggamephaser";
+import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { Url, initLocales, Logger, Size } from "utils";
 import { ServerAddress } from "../../lib/net/address";
@@ -404,12 +404,10 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     public onFocus() {
-        this.mHeartPeer.onFocus();
         this.resumeScene();
     }
 
     public onBlur() {
-        this.mHeartPeer.onBlur();
         this.pauseScene();
     }
 
@@ -833,11 +831,6 @@ export class Render extends RPCPeer implements GameMain {
         return this._curTime = curTime;
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public displayDestroy(id: number, type: number) {
-
-    }
-
     @Export()
     public createGameCallBack(keyEvents: any) {
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
@@ -1000,6 +993,11 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public drawServerPosition(x: number, y: number) {
+        this.mDisplayManager.drawServerPosition(x, y);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public changeAlpha(id: number, alpha: number) {
         if (this.mDisplayManager) this.mDisplayManager.changeAlpha(id, alpha);
     }
@@ -1101,6 +1099,16 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.str])
     public workerEmitter(eventType: string, data?: any) {
         this.emitter.emit(eventType, data);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public mount(id: number, targetID: number, targetIndex: number) {
+        this.mDisplayManager.mount(id, targetID, targetIndex);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public unmount(id: number, targetID: number) {
+        this.mDisplayManager.unmount(id, targetID);
     }
 
     // private connectReconnect() {

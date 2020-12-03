@@ -17,11 +17,12 @@ export class Viewblock {
     public add(element: IBlockObject, miniViewPort?: LogicRectangle45) {
         // this.mElements.push(element);
         this.mElements.set(element.id, element);
-        if (!miniViewPort) {
-            return;
-        }
-        const pos = element.getPosition45();
-        element.setRenderable(miniViewPort.contains(pos.x, pos.y) && this.mInCamera);
+        element.setRenderable(this.mInCamera);
+        // if (!miniViewPort) {
+        //     return;
+        // }
+        // const pos = element.getPosition45();
+        // element.setRenderable(miniViewPort.contains(pos.x, pos.y) && this.mInCamera);
     }
 
     public remove(ele: IBlockObject): boolean {
@@ -34,7 +35,7 @@ export class Viewblock {
     }
 
     // tick running... powered by manager.
-    public check(bound: LogicRectangle, miniViewPort: LogicRectangle45) {
+    public check(bound: LogicRectangle) {
         if (!bound) return;
         const newStat = Intersects.RectangleToRectangle(bound, this.rectangle);
         // if (this.mInCamera !== newStat) {
@@ -43,17 +44,17 @@ export class Viewblock {
         //         e.setRenderable(newStat);
         //     }
         // }
-        if (!miniViewPort) return;
-        if (this.mInCamera) {
+        // if (!miniViewPort) return;
+        // if (this.mInCamera) {
             // for (const ele of this.mElements) {
             //     const pos = ele.getPosition45();
             //     ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1000);
             // }
-            this.mElements.forEach((ele) => {
-                const pos = ele.getPosition45();
-                ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 0);
-            });
-        }
+        this.mElements.forEach((ele) => {
+            // const pos = ele.getPosition45();
+            ele.setRenderable(this.mInCamera, 0);
+        });
+        // }
         this.mInCamera = newStat;
     }
 

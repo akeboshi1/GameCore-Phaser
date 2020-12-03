@@ -11,6 +11,7 @@ import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { RunningAnimation } from "structure";
 import { MatterBodies } from "../display/debugs/matter";
+import { ServerPosition } from "../display/debugs/server.pointer";
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -57,6 +58,7 @@ export class DisplayManager {
     private scenerys: Map<number, BlockManager>;
     private mUser: DisplayObject;
     private matterBodies: MatterBodies;
+    private serverPosition: ServerPosition;
     constructor(private render: Render) {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
@@ -193,39 +195,52 @@ export class DisplayManager {
         display.play(animation, field, times);
     }
 
-    public mount(displayID: number, ele: Phaser.GameObjects.Container, targetIndex?: number) {
-        if (!this.displays.has(displayID)) {
+    public mount(displayID: number, targetID: number, targetIndex?: number) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
-        display.mount(ele, targetIndex);
+        const target = this.displays.get(targetID);
+        if (!target) {
+            Logger.getInstance().error("DisplayObject not found: ", targetID);
+            return;
+        }
+        target.setRootMount(display);
+        display.mount(target, targetIndex);
     }
 
-    public unmount(displayID: number, ele: Phaser.GameObjects.Container) {
-        if (!this.displays.has(displayID)) {
+    public unmount(displayID: number, targetID: number) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
-        display.unmount(ele);
+
+        const target = this.displays.get(targetID);
+        if (!target) {
+            Logger.getInstance().error("DisplayObject not found: ", targetID);
+            return;
+        }
+        target.setRootMount(null);
+        display.unmount(target);
     }
 
     public removeEffect(displayID: number, field: DisplayField) {
-        if (!this.displays.has(displayID)) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
         display.removeEffect(field);
     }
 
     public removeDisplayField(displayID: number, field: DisplayField) {
-        if (!this.displays.has(displayID)) {
+        const display = this.displays.get(displayID);
+        if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        const display = this.displays.get(displayID);
         display.removeDisplay(field);
     }
 
@@ -322,11 +337,16 @@ export class DisplayManager {
 
     public showMatterDebug(bodies) {
         if (!this.matterBodies) {
-            const scene = this.sceneManager.getSceneByName(PlayScene.name);
-            this.matterBodies = new MatterBodies(scene, this.render);
-            (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.matterBodies.graphics);
+            this.matterBodies = new MatterBodies(this.render);
         }
         this.matterBodies.renderWireframes(bodies);
+    }
+
+    public drawServerPosition(x: number, y: number) {
+        if (!this.serverPosition) {
+            this.serverPosition = new ServerPosition(this.render);
+        }
+        this.serverPosition.draw(x, y);
     }
 
     public destroy() {
@@ -346,6 +366,10 @@ export class DisplayManager {
         if (this.matterBodies) {
             this.matterBodies.destroy();
             this.matterBodies = null;
+        }
+        if (this.serverPosition) {
+            this.serverPosition.destroy();
+            this.serverPosition = null;
         }
     }
 }

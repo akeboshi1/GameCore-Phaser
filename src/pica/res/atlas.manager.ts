@@ -27,6 +27,7 @@ export class AtlasManager {
     public init(render: Render) {
         this.render = render;
         this.add(UIAtlasName.uicommon, UILoadType.atlas);
+        this.add(UIAtlasName.iconcommon, UILoadType.atlas);
     }
 
     public add(atlasName: string, loadType = UILoadType.none, folder?: string) {
