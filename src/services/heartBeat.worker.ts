@@ -32,8 +32,10 @@ class HeartBeatPeer extends RPCPeer {
     public run(): Promise<any> {
         return new Promise<any>((resolve) => {
             this.currentTime = new Date().getTime();
-            this.mWorkerLoop = setTimeout(() => {
-                resolve(new Date().getTime() - this.currentTime);
+            const self = this;
+            this.mWorkerLoop = setInterval(() => {
+                clearInterval(self.mWorkerLoop);
+                resolve(new Date().getTime() - self.currentTime);
             }, delayTime);
         });
     }
@@ -53,14 +55,14 @@ class HeartBeatPeer extends RPCPeer {
 
     @Export()
     public onFocus() {
-        if (this.mWorkerLoop) clearTimeout(this.mWorkerLoop);
+        if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
         this.update();
     }
 
     @Export()
     public onBlur() {
         this.currentTime = 0;
-        if (this.mWorkerLoop) clearTimeout(this.mWorkerLoop);
+        if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
     }
 
     @Export()
