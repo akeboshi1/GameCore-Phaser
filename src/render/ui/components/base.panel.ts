@@ -35,19 +35,7 @@ export class BasePanel extends Panel {
     }
 
     show(param?: any) {
-        this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
+        super.show(param);
         this.onShow();
     }
 

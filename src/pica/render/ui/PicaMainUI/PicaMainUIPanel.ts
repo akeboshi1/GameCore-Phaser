@@ -371,6 +371,7 @@ export class PicaMainUIPanel extends BasePanel {
     }
     private onOpenRechargeHandler() {
         this.render.renderEmitter("showPanel", ModuleName.PICARECHARGE_NAME);
+        // this.render.editorCanvasManager.createHeadIcon(this.render.editorCanvasManager.AVATAR_CANVAS_TEST_DATA);
     }
 }
 
