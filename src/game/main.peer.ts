@@ -32,6 +32,10 @@ export class MainPeer extends RPCPeer {
     get render() {
         return this.remote[RENDER_PEER].Render;
     }
+
+    get heartBeatPeer() {
+        return this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+    }
     // ============= connection调用主进程
     public onConnected() {
         // 告诉主进程链接成功
@@ -39,6 +43,7 @@ export class MainPeer extends RPCPeer {
         this.startBeat();
         // 逻辑层game链接成功
         this.game.onConnected();
+        this.heartBeatPeer.startUpdate();
     }
 
     public onDisConnected() {
@@ -88,6 +93,11 @@ export class MainPeer extends RPCPeer {
             this.game.createGame(this.mConfig);
             Logger.getInstance().log("heartBeatworker onReady in mainworker");
         });
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public update(now: number, delayTime: number) {
+        this.game.update(now, delayTime);
     }
 
     @Export()

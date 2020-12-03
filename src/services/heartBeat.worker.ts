@@ -2,8 +2,12 @@ import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { HEARTBEAT_WORKER, MAIN_WORKER, RENDER_PEER } from "structure";
 import { Logger } from "utils";
 
+export const fps: number = 45;
+export const delayTime = 1000 / fps;
 class HeartBeatPeer extends RPCPeer {
     public inited: boolean = false;
+    protected currentTime: number = 0;
+    protected mWorkerLoop: any;
     private delayTime: number = 20000;
     private reConnectCount: number = 0;
     private startDelay: any;
@@ -15,6 +19,53 @@ class HeartBeatPeer extends RPCPeer {
         //     Logger.getInstance().log("mainworker link ready");
         // });
         // this.remote[MAIN_WORKER].Connection.on("xx", new RPCExecutor("startBeat", "HeartBeatPeer"));// TODO:使用@RemoteListener
+    }
+
+    get mainPeer() {
+        return this.remote[MAIN_WORKER].MainPeer;
+    }
+
+    get render() {
+        return this.remote[RENDER_PEER].Render;
+    }
+
+    public run(): Promise<any> {
+        return new Promise<any>((resolve) => {
+            this.currentTime = new Date().getTime();
+            this.mWorkerLoop = setTimeout(() => {
+                resolve(new Date().getTime() - this.currentTime);
+            }, delayTime);
+        });
+    }
+
+    public async update() {
+        let now: number = 0;
+        let tmpTime: number = new Date().getTime();
+        for (; ;) {
+            await this.run();
+            now = new Date().getTime();
+            let delay = now - tmpTime;
+            if (delay < delayTime) delay = delayTime;
+            if (this.mainPeer) this.mainPeer.update(now, delay);
+            tmpTime = now;
+        }
+    }
+
+    @Export()
+    public onFocus() {
+        if (this.mWorkerLoop) clearTimeout(this.mWorkerLoop);
+        this.update();
+    }
+
+    @Export()
+    public onBlur() {
+        this.currentTime = 0;
+        if (this.mWorkerLoop) clearTimeout(this.mWorkerLoop);
+    }
+
+    @Export()
+    public startUpdate() {
+        this.update();
     }
 
     @Export()
