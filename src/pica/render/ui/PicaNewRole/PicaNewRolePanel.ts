@@ -148,13 +148,14 @@ export class PicaNewRolePanel extends BasePanel {
     public setRoleData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         this.roleData = content;
         if (!this.mInitialized || !this.roleData) return;
-        this.headAvatar.once("initialized", () => {
-            this.headAvatar.play({ name: "idle", flip: false });
-        });
         const avatar = this.creatAvatars(content.avatarSuit);
         const dbModel = { id: content.id, avatar };
+        this.headAvatar.visible = false;
+        this.headAvatar.once("replacefinished", () => {
+            this.headAvatar.play({ name: "idle", flip: false });
+            this.headAvatar.visible = true;
+        });
         this.headAvatar.load(dbModel);
-        this.headAvatar.visible = true;
         this.nameImage.setFrameValue(content.nickname, this.key, "people_man");
         this.levelLabel.text = `${i18n.t("common.lv")} ${content.level.level}`;
         const tnormals = ["butt_gray_left_s", "butt_gray_middle_s", "butt_gray_right_s"];
@@ -186,7 +187,7 @@ export class PicaNewRolePanel extends BasePanel {
                 to
             },
             ease: "Linear",
-            duration: 300,
+            duration: 150,
             onComplete: () => {
                 tween.stop();
                 tween.remove();

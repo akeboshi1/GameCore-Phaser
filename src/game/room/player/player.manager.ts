@@ -408,7 +408,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mRoom.game.emitter.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
     }
     private checkPlayerAction(id: number) {
-        if (this.has(id)) {
+        if (this.has(id) && id !== this.mRoom.game.user.id) {
             const ele = this.get(id);
             const action = new PlayerElementAction(this.mRoom.game, ele.model);
             action.executeAction();
