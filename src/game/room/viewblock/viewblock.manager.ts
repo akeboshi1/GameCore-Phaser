@@ -15,18 +15,18 @@ export class ViewblockManager implements IViewBlockManager {
     public add(e: IBlockObject): boolean {
         // Logger.getInstance().log("viewblock add");
         if (!this.mCameras) return false;
-        this.mCameras.getMiniViewPort().then((obj) => {
-            const miniView = obj;
-            for (const block of this.mBlocks) {
-                const rect = block.rectangle;
-                const ePos: IPos = e.getPosition();
-                if (!ePos) return;
-                if (rect.contains(ePos.x, ePos.y)) {
-                    block.add(e, miniView);
-                    return;
-                }
+        // this.mCameras.getMiniViewPort().then((obj) => {
+        // const miniView = obj;
+        for (const block of this.mBlocks) {
+            const rect = block.rectangle;
+            const ePos: IPos = e.getPosition();
+            if (!ePos) return;
+            if (rect.contains(ePos.x, ePos.y)) {
+                block.add(e);
+                return;
             }
-        });
+        }
+        // });
     }
 
     public remove(e: IBlockObject): boolean {
@@ -66,10 +66,11 @@ export class ViewblockManager implements IViewBlockManager {
         const viewH = (colSize + colSize) * (size.tileHeight / 2);
         const blockW = size.sceneWidth / viewW;
         const blockH = size.sceneHeight / viewH;
+        const offsetX = size.rows * (size.tileWidth / 2);
         let index = 0;
         for (let i = 0; i < blockW; i++) {
             for (let j = 0; j < blockH; j++) {
-                const block = new Viewblock(new LogicRectangle(i * viewW, j * viewH, viewW, viewH), index++);
+                const block = new Viewblock(new LogicRectangle(i * viewW - offsetX, j * viewH, viewW, viewH), index++);
                 this.mBlocks.push(block);
                 // this.layerManager.addToAtmosphere(block.drawBoard(this.scene));
             }

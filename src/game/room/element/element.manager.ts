@@ -148,9 +148,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public removeFromMap(sprite: ISprite) {
         if (!sprite) return;
         const collision = sprite.getCollisionArea();
+        if (collision) return;
         let walkable = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();
-        if (!collision || !walkable) {
+        if (!walkable) {
             return;
         }
         const rows = collision.length;

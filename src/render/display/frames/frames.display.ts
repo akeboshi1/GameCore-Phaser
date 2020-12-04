@@ -60,8 +60,8 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public play(animation: RunningAnimation, field?: DisplayField, times?: number) {
-        if (!animation) return;
         this.mAnimation = animation;
+        if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
         if (this.scene.textures.exists(data.gene) === false) {
@@ -386,7 +386,7 @@ export class FramesDisplay extends DisplayObject {
         }
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
-                this.play(this.mAnimation);
+                if (this.mAnimation) this.play(this.mAnimation);
                 this.emit("initialized", this);
             } else {
                 this.playEffect();

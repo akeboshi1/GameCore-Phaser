@@ -124,7 +124,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     // }
 
     get scaleRatio(): number {
-        return this.mConfig.devicePixelRatio;
+        return this.mConfig.scale_ratio;
     }
 
     public createGame(config?: ILauncherConfig) {

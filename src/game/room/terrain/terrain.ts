@@ -149,6 +149,8 @@ export class Terrain extends BlockObject implements IElement {
             this.mCreatedDisplay = true;
             this.createDisplay();
         }
+        const pos = this.mModel.pos;
+        this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
         // if (!this.mDisplay) {
         //     // Logger.getInstance().error("display does not exist");
         //     return;
