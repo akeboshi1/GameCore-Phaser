@@ -188,7 +188,7 @@ export class Element extends BlockObject implements IElement {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
         this.loadDisplayInfo();
-        this.addDisplay();
+        // this.addDisplay();
         if (!this.mCreatedDisplay) {
             this.mCreatedDisplay = true;
             this.addToBlock();
@@ -228,6 +228,9 @@ export class Element extends BlockObject implements IElement {
         }
         // this.update();
         this.mElementManager.addToMap(model);
+        if (this.mRenderable) {
+            this.addBody();
+        }
     }
 
     public updateModel(model: op_client.ISprite) {
@@ -842,19 +845,20 @@ export class Element extends BlockObject implements IElement {
             if (this.isUser) {
                 this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
             } else {
-                this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo as IDragonbonesModel);
+                this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo as IDragonbonesModel, this.mModel.pos, this.mModel.currentAnimation);
             }
         } else {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
-            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo as IFramesModel);
+            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo as IFramesModel, this.mModel.pos, this.mModel.currentAnimation);
         }
+        const pos = this.mModel.pos;
+        this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+        this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        this.setInputEnable(this.mInputEnable);
         return this;
     }
 
     protected loadDisplayInfo() {
-        // if () {
-
-        // }
         // this.mElementManager.roomService.game.peer.render.loadDisplayInfo(this.mDisplayInfo);
         // if (!this.mDisplayInfo) {
         //     return;

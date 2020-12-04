@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, Logger, Size } from "utils";
+import { Url, initLocales, Logger, Size, LogicPos } from "utils";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
@@ -13,7 +13,7 @@ import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, RunningAnimation } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
@@ -228,6 +228,7 @@ export class Render extends RPCPeer implements GameMain {
         const w = width * window.devicePixelRatio;
         const h = height * window.devicePixelRatio;
         this.mScaleRatio = Math.ceil(window.devicePixelRatio || 1);
+        this.mConfig.scale_ratio = this.mScaleRatio;
         this.mUIRatio = Math.round(window.devicePixelRatio || 1);
         const scaleW = (width / this.DEFAULT_WIDTH) * (window.devicePixelRatio / this.mUIRatio);
         this.mUIScale = this.game.device.os.desktop ? 1 : scaleW;
@@ -808,11 +809,6 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public removeDisplay(id: number, type: number) {
-
-    }
-
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public fadeIn(id: number, type: number) {
 
     }
@@ -954,7 +950,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public createDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo);
+        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo, false);
     }
 
     @Export()
@@ -1155,6 +1151,7 @@ export class Render extends RPCPeer implements GameMain {
             this.mConfig.height = window.innerHeight;
         }
         this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 1);
+        this.mConfig.scale_ratio = this.mScaleRatio;
         this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 1);
         this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
         Url.OSD_PATH = this.mConfig.osd;

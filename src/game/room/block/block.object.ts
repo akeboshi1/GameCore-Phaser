@@ -113,7 +113,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     protected addDisplay() { }
 
     protected removeDisplay() {
-        this.mRoomService.game.peer.render.removeDisplay(this.id, this.type);
+        this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
     protected addToBlock() {
