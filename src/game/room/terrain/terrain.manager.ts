@@ -352,6 +352,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     private removeEmpty(pos: IPos) {
         const pos45 = this.roomService.transformTo45(pos);
+        if (pos45.x >= this.mEmptyMap.length || pos45.y >= this.mEmptyMap[0].length) {
+            Logger.getInstance().log(`position ${pos.x} ${pos.y} exceed the map boundary`);
+            return;
+        }
         const block = this.mEmptyMap[pos45.x][pos45.y];
         if (block) {
             this.mEmptyMap[pos45.x][pos45.y] = undefined;
