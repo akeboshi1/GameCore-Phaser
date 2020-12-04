@@ -86,7 +86,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             now = new Date().getTime();
             let delay = now - tmpTime;
             if (delay < delayTime) delay = delayTime;
-            // Logger.getInstance().log("updateTime===", delay, "delayTime===", delayTime);
+            Logger.getInstance().log("updateTime===", delay, "delayTime===", delayTime);
             if (this.mRoomManager) this.mRoomManager.update(now, delay);
             tmpTime = now;
         }

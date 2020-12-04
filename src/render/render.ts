@@ -952,24 +952,24 @@ export class Render extends RPCPeer implements GameMain {
         this.syncCameraScroll();
     }
 
-    @Export()
-    public createDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo);
+    @Export([webworker_rpc.ParamType.num])
+    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel) {
+        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo);
     }
 
     @Export()
     public createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(displayInfo, true);
+        if (this.mDisplayManager) this.mDisplayManager.addUserDragonbonesDisplay(displayInfo, true);
     }
 
-    @Export()
-    public createFramesDisplay(displayInfo: IFramesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(displayInfo);
+    @Export([webworker_rpc.ParamType.num])
+    public createFramesDisplay(id: number, displayInfo: IFramesModel) {
+        if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo);
     }
 
-    @Export()
-    public createTerrainDisplay(displayInfo: IFramesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addTerrainDisplay(displayInfo);
+    @Export([webworker_rpc.ParamType.num])
+    public createTerrainDisplay(id: number, displayInfo: IFramesModel) {
+        if (this.mDisplayManager) this.mDisplayManager.addTerrainDisplay(id, displayInfo);
     }
 
     @Export()

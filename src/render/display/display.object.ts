@@ -13,6 +13,12 @@ export enum DisplayField {
     Effect
 }
 
+enum TitleMask {
+    TQ_NickName = 0x00010000,
+    TQ_Badge = 0x00020000,
+    // TQ_   = 0x0004;
+}
+
 export class DisplayObject extends Phaser.GameObjects.Container {
     /**
      * 实际透明度，避免和tween混淆
@@ -39,11 +45,28 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected moveData: any;
     protected render: Render;
     protected mName: string;
+    protected mTitleMask: number;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
         this.mID = id;
         this.mNodeType = type;
+    }
+
+    set titleMask(val: number) {
+        this.mTitleMask = val;
+    }
+
+    get titleMask(): number {
+        return this.mTitleMask;
+    }
+
+    isShowName(): boolean {
+        return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
+    }
+
+    isShowBadge(): boolean {
+        return (this.mTitleMask & TitleMask.TQ_Badge) > 0;
     }
 
     set direction(direction: number) {
@@ -130,6 +153,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     public setDisplayBadges(cards) {
+        if (!this.isShowBadge()) return;
         if (!this.mBadges) this.mBadges = [];
         else this.clearBadges();
         for (const card of cards) {
@@ -170,6 +194,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         if (!this.mTopDisplay) {
             this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
         }
+        if (!this.isShowName()) return;
         this.mName = name;
         this.mTopDisplay.showNickname(name);
     }
