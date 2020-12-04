@@ -78,6 +78,7 @@ export class MatterWorld {
 
     public debugDisable() {
         this.drawBodies = false;
+        this.room.game.renderPeer.showMatterDebug();
     }
 
     public add(body: Body | Body[], ignoreSensor: boolean = false, ele?: MatterObject) {
@@ -170,7 +171,7 @@ export class MatterWorld {
                 // graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
             }
         }
-        this.room.game.peer.render.showMatterDebug(result);
+        this.room.game.renderPeer.showMatterDebug(result);
         // Logger.getInstance().log("=====>>", result);
     }
 }
