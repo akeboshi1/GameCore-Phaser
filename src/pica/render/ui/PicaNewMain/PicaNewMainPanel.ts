@@ -1,6 +1,6 @@
 import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { Render } from "src/render/render";
 import { TextToolTips, UiManager } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";
@@ -20,8 +20,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
     protected navigatePanel: PicaNewNavigatePanel;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.uicommon];
-        this.key = ModuleName.PICAMAINUI_NAME;
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
+        this.key = ModuleName.PICANEWMAIN_NAME;
     }
 
     resize(w: number, h: number) {
@@ -56,12 +56,12 @@ export class PicaNewMainPanel extends PicaBasePanel {
         super.update();
     }
 
-    setPlayerInfo(player: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
-
+    setPlayerInfo(level: op_pkt_def.IPKT_Level, energy: op_def.IValueBar, money: number, diamond: number) {
+        this.headPanel.setHeadData(level, energy, money, diamond);
     }
 
-    setRoomInfo(room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
-
+    setRoomInfo(sceneName: string, isPraise: boolean, people: number) {
+        this.headPanel.setSceneData(sceneName, isPraise, people);
     }
 
     updateUIState(active?: any) {
@@ -71,6 +71,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.headPanel = new PicaNewHeadPanel(this.scene, width, 70 * this.dpr, this.key, this.dpr);
+        this.headPanel.setHandler(new Handler(this, this.onHeadHandler));
         this.add(this.headPanel);
         this.leftPanel = new PicaNewLeftPanel(this.scene, 40 * this.dpr, 189 * this.dpr, this.key, this.dpr);
         this.add(this.leftPanel);
@@ -87,18 +88,15 @@ export class PicaNewMainPanel extends PicaBasePanel {
     private onOpenRoomPanel() {
         this.render.renderEmitter("openroompanel");
     }
-    private onHeadHandler() {
-        this.render.renderEmitter("showPanel", ModuleName.CHARACTERINFO_NAME);
-    }
-
-    private onPraiseHandler(praise: boolean) {
-        this.render.renderEmitter(EventType.QUERY_PRAISE, praise);
-    }
-
-    private onPartyHandler() {
-        this.render.renderEmitter("showPanel", ModuleName.PICAOPENPARTY_NAME);
-    }
-    private onOpenRechargeHandler() {
-        this.render.renderEmitter("showPanel", ModuleName.PICARECHARGE_NAME);
+    private onHeadHandler(tag: string, data: any) {
+        if (tag === "head") {
+            this.render.renderEmitter("showPanel", ModuleName.CHARACTERINFO_NAME);
+        } else if (tag === "energy") {
+            // this.render.renderEmitter("showPanel", ModuleName.CHARACTERINFO_NAME);
+        } else if (tag === "praise") {
+            this.render.renderEmitter(EventType.QUERY_PRAISE, data);
+        } else if (tag === "recharge") {
+            this.render.renderEmitter("showPanel", ModuleName.PICARECHARGE_NAME);
+        }
     }
 }

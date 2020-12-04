@@ -108,6 +108,6 @@ export class UserDataManager extends PacketHandler {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO = packet.content;
         this.playerProperty.syncData(content);
         this.game.emitter.emit(EventType.UPDATE_PLAYER_INFO, content);
-        this.game.peer.workerEmitter(EventType.UPDATE_PLAYER_INFO, content);
+        this.game.peer.workerEmitter(EventType.UPDATE_PLAYER_INFO, this.playerProperty);
     }
 }

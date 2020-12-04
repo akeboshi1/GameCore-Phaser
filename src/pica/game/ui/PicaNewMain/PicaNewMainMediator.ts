@@ -1,38 +1,35 @@
-import { BasicMediator, Game, PlayerProperty } from "gamecore";
+import { BasicMediator, DataMgrType, Game, PlayerProperty, SceneDataManager } from "gamecore";
 import { op_client } from "pixelpai_proto";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { PicaNewMain } from "./PicaNewMain";
 
 export class PicaNewMainMediator extends BasicMediator {
-    private mPlayerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
-    private mRoomInfo: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
+
     constructor(protected game: Game) {
-        super(ModuleName.PICAMAINUI_NAME, game);
+        super(ModuleName.PICANEWMAIN_NAME, game);
         this.mModel = new PicaNewMain(this.game);
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
-        this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
-        this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
-        this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
+        this.game.emitter.on(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
+        this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
+        this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
+        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off("showPanel", this.onShowPanelHandler, this);
-        this.game.emitter.off("openroompanel", this.onOpenRoomHandler, this);
-        this.game.emitter.off("querypraise", this.onQuery_PRAISE_ROOM, this);
-        this.game.emitter.off("updateroom", this.onUpdateRoomHandler, this);
+        this.game.emitter.off(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
+        this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
+        this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
+        this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
 
     destroy() {
         if (this.mModel) {
             this.mModel.destroy();
         }
-        this.mPlayerInfo = undefined;
-        this.mRoomInfo = undefined;
         super.destroy();
     }
 
@@ -42,39 +39,27 @@ export class PicaNewMainMediator extends BasicMediator {
 
     protected panelInit() {
         if (this.mView) {
-            this.mShowData = this.playerInfo;
-            this.mView.update(this.mShowData);
+            if (this.playerInfo) this.onUpdatePlayerHandler(this.playerInfo);
+            if (this.roomInfo) this.onUpdateRoomHandler(this.roomInfo);
         }
-    }
-
-    private onShowPanelHandler(panel: string, data?: any) {
-        if (!this.mModel || !this.game) {
-            return;
-        }
-        const uiManager = this.game.uiManager;
-        uiManager.showMed(panel);
-        if (panel === ModuleName.CHARACTERINFO_NAME) {
-            (<PicaNewMain>this.mModel).fetchPlayerInfo();
-        } else if (panel === ModuleName.PICAOPENPARTY_NAME) {
-
-        }
-        // const uiManager = this.world.uiManager;
-        // if (data)
-        //     uiManager.showMed(panel, data);
-        // else uiManager.showMed(panel);
     }
 
     private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
-        this.mRoomInfo = content;
-        this.game.user.userData.curRoomID = content.roomId;
         if (this.mPanelInit) {
-            this.mShowData = this.mRoomInfo;
-            if (this.mView && this.mShowData)
-                this.mView.update(this.mShowData);
+            if (this.mView)
+                this.mView.setRoomInfo(content.name, content.hasPraised, content.playerCount);
         }
     }
 
-    private onOpenRoomHandler() {
+    private onUpdatePlayerHandler(content: PlayerProperty) {
+        if (this.mPanelInit) {
+            if (this.mView) {
+                this.mView.setPlayerInfo(content.level, content.energy, content.coin.value, content.diamond.value);
+            }
+        }
+    }
+
+    private onOpenHouseHandler() {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const uimanager = this.game.uiManager;
         uimanager.showMed("PicHouse");
@@ -82,17 +67,18 @@ export class PicaNewMainMediator extends BasicMediator {
 
     private onQuery_PRAISE_ROOM(praise: boolean) {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
-        const roomid = this.mRoomInfo.roomId;
+        const roomid = this.roomInfo.roomId;
         (<PicaNewMain>this.mModel).query_PRAISE_ROOM(roomid, praise);
     }
 
     get playerInfo() {
-        if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty.playerInfo;
-        return this.mPlayerInfo;
+        const info = this.game.user.userData.playerProperty;
+        return info;
     }
 
     get roomInfo() {
-        return this.mRoomInfo;
+        const dataMgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
+        return dataMgr.curRoom;
     }
 
     get isSelfRoom() {

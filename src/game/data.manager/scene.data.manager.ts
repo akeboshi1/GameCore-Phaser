@@ -6,17 +6,21 @@ import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
 import { DataMgrType } from "./dataManager";
 export class SceneDataManager extends BasePacketHandler {
-    constructor(game: Game,event?: EventDispatcher) {
-        super(game,event);
+    private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
+    constructor(game: Game, event?: EventDispatcher) {
+        super(game, event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onUpdateModeRoomInfo);
         this.addPackListener();
     }
     clear() {
         super.clear();
+        this.mCurRoom = undefined;
     }
 
     destroy() {
         super.destroy();
+        this.mCurRoom = undefined;
     }
 
     private on_SEND_GIFT_DATA(packet: PBpacket) {
@@ -31,5 +35,21 @@ export class SceneDataManager extends BasePacketHandler {
         if (mgr) {
             mgr.query_ELEMENT_ITEM_REQUIREMENTS(content.itemId, "QueryItems");
         }
+    }
+    private onUpdateModeRoomInfo(packet: PBpacket) {
+        const room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO = packet.content;
+        if (!this.mCurRoom) this.mCurRoom = room;
+        else Object.assign(this.mCurRoom, room);
+        this.mEvent.emit(EventType.UPDATE_ROOM_INFO, room);
+        this.mEvent.emit(EventType.UPDATE_PARTY_STATE, room.openingParty);
+
+    }
+    get curRoomID() {
+        if (this.mCurRoom) return this.mCurRoom.roomId;
+        return undefined;
+    }
+
+    get curRoom() {
+        return this.mCurRoom;
     }
 }
