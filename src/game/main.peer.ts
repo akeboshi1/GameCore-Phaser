@@ -43,7 +43,6 @@ export class MainPeer extends RPCPeer {
         this.startBeat();
         // 逻辑层game链接成功
         this.game.onConnected();
-        this.heartBeatPeer.startUpdate();
     }
 
     public onDisConnected() {
@@ -93,11 +92,6 @@ export class MainPeer extends RPCPeer {
             this.game.createGame(this.mConfig);
             Logger.getInstance().log("heartBeatworker onReady in mainworker");
         });
-    }
-
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public update(now: number, delayTime: number) {
-        this.game.update(now, delayTime);
     }
 
     @Export()
@@ -485,7 +479,9 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.str])
     public uploadHeadImage(url: string) {
-        this.game.httpService.uploadHeadImage(url);
+        this.game.httpService.uploadHeadImage(url).then(() => {
+            this.game.emitter.emit("updateDetail");
+        });
     }
 
     // ==== todo

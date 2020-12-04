@@ -75,6 +75,21 @@ export class User extends Player {
     //     }
     // }
 
+    public unmount() {
+        if (this.mRootMount) {
+            const pos = this.mRootMount.getInteractivePosition();
+            if (!pos) {
+                return;
+            }
+            this.mRootMount = null;
+            this.setPosition(pos);
+            this.getInteractivePosition();
+            this.enableBlock();
+            this.mDirty = true;
+        }
+        return this;
+    }
+
     public moveMotion(x: number, y: number, targetId?: number) {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this);
@@ -177,6 +192,7 @@ export class User extends Player {
     // }
     public move(moveData: MovePos[]) {
         // this.drawMovePath(moveData[0].x, moveData[0].y);
+        this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
     }
 
     public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {

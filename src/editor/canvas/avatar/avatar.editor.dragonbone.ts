@@ -298,9 +298,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         const sceneHeight = this.scene.scale.height;
         this.mArmatureBottomArea = this.DEFAULTSCALEBOTTOMPIX * sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME);
-        for (const slot of this.mArmatureDisplay.armature.getSlots()) {
-            Logger.getInstance().log("ZW-- slot: ", slot.name);
-        }
+        // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
+        // Logger.getInstance().log("ZW-- slot: ", slot.name);
+        // }
         this.mArmatureDisplay.animation.play(this.mCurAnimationName);
         this.mArmatureDisplay.scale = sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay.x = this.scene.scale.width >> 1;
@@ -308,9 +308,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.add(this.mArmatureDisplay);
         this.mArmatureBottomArea_head = this.mArmatureBottomArea - this.ARMATURELEGPERCENT * this.ARMATUREHEIGHT * sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay_head = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME_HEAD);
-        for (const slot of this.mArmatureDisplay.armature.getSlots()) {
-            Logger.getInstance().log("ZW-- half-length slot: ", slot.name);
-        }
+        // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
+        // Logger.getInstance().log("ZW-- half-length slot: ", slot.name);
+        // }
         // this.mArmatureDisplay_head.animation.play("idle_3");
         this.mArmatureDisplay_head.scale = sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
         this.mArmatureDisplay_head.x = this.scene.scale.width >> 1;
@@ -422,7 +422,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             return;
         }
         this.cleanUp();
-        const resources = this.getResourcesByDir(this.mCurDir);
+        const resources = this.getWebResourcesByDir(this.mCurDir);
         for (const resource of resources) {
             const path = url.resolve(this.mWebHomePath, resource);
             this.loadPart(resource, path);
@@ -526,7 +526,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     // 获取整个avatar的部件标签对应的资源相对路径
-    private getResourcesByDir(dir: number): string[] {
+    private getWebResourcesByDir(dir: number): string[] {
         const res: string[] = [];
         const parts = this.mParts;
 
@@ -534,14 +534,18 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             if (parts.hasOwnProperty(key)) {
                 const set = parts[key];
                 if (set) {
+                    if (set.id.length === 10) {
+                        // 临时资源 id为editor随机生成
+                        continue;
+                    }
                     // eyes mous 没有背面素材
                     if (dir === 1 && key === "head_eyes") {
-                        // Do nothing
-                    } else if (dir === 1 && key === "head_mous") {
-                        // Do nothing
-                    } else {
-                        res.push(this.relativeUri(key, set.id, dir + "", set.version));
+                        continue;
                     }
+                    if (dir === 1 && key === "head_mous") {
+                        continue;
+                    }
+                    res.push(this.relativeUri(key, set.id, dir + "", set.version));
                 }
             }
         }

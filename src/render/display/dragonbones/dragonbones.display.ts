@@ -1,7 +1,8 @@
 import { Logger, ResUtils } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
-import { Render } from "src/render/render";
+import { Render } from "../../render";
+import { LoadQueue, LoadType } from "../../loadqueue";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -75,7 +76,6 @@ export enum AvatarPartType {
  * 龙骨显示对象
  */
 export class DragonbonesDisplay extends DisplayObject {
-
     protected mAnimationName: string = "Armature";
     protected mDragonbonesName: string = "";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
@@ -256,7 +256,7 @@ export class DragonbonesDisplay extends DisplayObject {
             const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
             const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
             const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
-            this.loadDragonBones(res, pngUrl, jsonUrl, dbbinUrl);
+            this.loadDragonBones(pngUrl, jsonUrl, dbbinUrl);
         }
     }
 
@@ -336,23 +336,28 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         this.mPlaceholder = undefined;
     }
-    private loadDragonBones(resUrl: string, pngUrl: string, jsonUrl: string, dbbinUrl: string) {
-        this.scene.load.dragonbone(
-            this.mDragonbonesName,
-            pngUrl,
-            jsonUrl,
-            dbbinUrl,
-            null,
-            null,
-            { responseType: "arraybuffer" },
-        );
+    private loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
+        const loadQueue: LoadQueue = new LoadQueue(this.scene);
+        loadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
+        loadQueue.on("QueueProgress", this.onFileLoadHandler, this);
+        loadQueue.on("QueueComplete", this.onLoadCompleteHandler, this);
+        loadQueue.startLoad();
+        // this.scene.load.dragonbone(
+        //     this.mDragonbonesName,
+        //     pngUrl,
+        //     jsonUrl,
+        //     dbbinUrl,
+        //     null,
+        //     null,
+        //     { responseType: "arraybuffer" },
+        // );
         // this.scene.load.once(
         //     Phaser.Loader.Events.COMPLETE,
         //     this.onLoadCompleteHandler,
         //     this,
         // );
-        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
-        this.scene.load.start();
+        // this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
+        // this.scene.load.start();
     }
 
     private clearReplaceArmature() {
@@ -942,7 +947,6 @@ export class DragonbonesDisplay extends DisplayObject {
             // if (this.mLoadMap.size > 0) {
             // }
             const renderTextureKey = "bones_" + this.displayInfo.id;// "bones_" + this.mDisplayInfo.id;// "bones_human01";
-            const renderTexture = this.scene.textures.get(renderTextureKey);
             if (!this.mDragonBonesRenderTexture) this.mDragonBonesRenderTexture = this.scene.make.renderTexture(
                 { x: 0, y: 0, width: dragonBonesTexture.source[0].width, height: dragonBonesTexture.source[0].height }, false);
             this.mDragonBonesRenderTexture.clear();
@@ -1056,7 +1060,7 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         return false;
     }
-    private onFileLoadHandler(key: string, type: string) {
+    private onFileLoadHandler(progress: number, key: string, type: string) {
         // if (!file) {
         //     return;
         // }
@@ -1067,7 +1071,7 @@ export class DragonbonesDisplay extends DisplayObject {
         if (key !== this.mDragonbonesName || type !== "image") {
             return;
         }
-        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
+        // this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
         this.onLoadCompleteHandler();
     }
 }
