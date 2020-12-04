@@ -132,7 +132,7 @@ export class Terrain extends BlockObject implements IElement {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
-        this.mRoomService.game.peer.render.createTerrainDisplay(this.mDisplayInfo, this.mModel, this.mModel.currentAnimation);
+        this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo);
         // const scene = this.mElementManager.scene;
         // if (scene) {
         //     this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);

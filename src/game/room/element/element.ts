@@ -845,11 +845,11 @@ export class Element extends BlockObject implements IElement {
             if (this.isUser) {
                 this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
             } else {
-                this.mElementManager.roomService.game.peer.render.createDragonBones(this.mDisplayInfo as IDragonbonesModel, this.mModel.pos, this.mModel.currentAnimation);
+                this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
             }
         } else {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
-            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.mDisplayInfo as IFramesModel, this.mModel.pos, this.mModel.currentAnimation);
+            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
         }
         const pos = this.mModel.pos;
         this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);

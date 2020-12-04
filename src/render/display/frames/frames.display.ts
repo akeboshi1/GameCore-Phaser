@@ -33,7 +33,7 @@ export class FramesDisplay extends DisplayObject {
             return false;
         }
         this.mDisplayDatas.set(field, data);
-        this.setData("id", data.id);
+        this.setData("id", this.id);
         if (this.scene.textures.exists(data.gene)) {
             this.onLoadCompleted(field);
         } else {
@@ -75,7 +75,7 @@ export class FramesDisplay extends DisplayObject {
         let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
         if (!container) {
             container = this.scene.make.container(undefined, false);
-            container.setData("id", data.id);
+            container.setData("id", this.id);
             this.addAt(container, DisplayField.STAGE);
             this.mSprites.set(DisplayField.STAGE, container);
         }
