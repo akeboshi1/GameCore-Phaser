@@ -106,6 +106,13 @@ export class PicaChatMediator extends BasicMediator {
         if (val === "whosyourdaddy") {
             this.game.uiManager.showMed("DebugLogger");
         }
+        if (val === "##show matter") {
+            return this.game.roomManager.currentRoom.matterWorld.debugEnable();
+        }
+
+        if (val === "##hide matter") {
+            return this.game.roomManager.currentRoom.matterWorld.debugDisable();
+        }
         this.model.sendMessage(val);
     }
 

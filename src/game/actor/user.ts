@@ -323,6 +323,11 @@ export class User extends Player {
         this.addDisplay();
     }
 
+    protected addBody() {
+        this._sensor = false;
+        this.setBody();
+    }
+
     private drawPath(pos: op_client.IMovePoint[]) {
         // if (!pos && pos.length > 0) {
         //     return;
