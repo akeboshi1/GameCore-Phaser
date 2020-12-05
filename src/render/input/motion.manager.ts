@@ -1,5 +1,6 @@
 import { Render } from "gamecoreRender";
 import { NodeType } from "../managers";
+import { MainUIScene } from "../scenes";
 export class MotionManager {
     public enable: boolean;
     private scaleRatio: number;
@@ -47,6 +48,14 @@ export class MotionManager {
         this.curtime = 0;
         // this.dirty = false;
         const pointer = this.scene.input.activePointer;
+        if (pointer.camera) {
+            if (pointer.camera.scene && pointer.camera.scene.sys.settings.key === MainUIScene.name) {
+                this.dirty = false;
+                this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+                this.clearGameObject();
+                return;
+            }
+        }
         if (!pointer) return;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;
