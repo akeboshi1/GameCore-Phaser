@@ -42,7 +42,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.emailButton = emailButton;
         this.emailButton.on(ClickEvent.Tap, this.onEmailHandler, this);
 
-        this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_1", "home_more_1");
+        this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_2", "home_more_2");
         this.arrowButton.y = emailButton.y + emailButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
         this.arrowButton.on(ClickEvent.Tap, this.onArrowHandler, this);
 

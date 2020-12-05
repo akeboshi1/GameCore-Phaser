@@ -133,6 +133,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public onActiveSprite(id: number, data: any) {
+        id = id || this.mRoom.game.user.id;
         if (this.has(id)) {
             if (data) {
                 const element = this.get(id);

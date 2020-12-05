@@ -109,12 +109,6 @@ export class Player extends Element implements IElement {
         super.setPosition(pos);
     }
 
-    public getPosition() {
-        const pos = super.getPosition();
-        // pos.y -= this.offsetY;
-        return pos;
-    }
-
     public completeMove() {
         this.onMovePathPointComplete(this.mMoveData.onCompleteParams);
         this.mMovePathPointFinished(this.mMoveData.onCompleteParams);

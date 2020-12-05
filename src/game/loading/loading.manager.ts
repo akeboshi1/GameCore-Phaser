@@ -67,7 +67,7 @@ export class LoadingManager {
             this.loadAsset(asset);
         }
         // this.scene.load.start();
-        this.mGame.peer.render.sceneStartLoad(SceneName.LOADING_SCENE);
+        // this.mGame.peer.render.sceneStartLoad(SceneName.LOADING_SCENE);
         this.mLoading = true;
     }
 
@@ -79,7 +79,7 @@ export class LoadingManager {
 
     private loadAsset(asset: IAsset) {
         const type = this.getLoadType(asset.type);
-        this.mGame.peer.render.sceneAddLoadRes(SceneName.LOADING_SCENE, type, asset.key, asset.source);
+        // this.mGame.peer.render.sceneAddLoadRes(SceneName.LOADING_SCENE, type, asset.key, asset.source);
         // if (this.scene.load[type]) {
         //     this.scene.load[type](asset.key, asset.source);
         // }
