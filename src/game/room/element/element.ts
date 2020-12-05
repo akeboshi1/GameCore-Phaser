@@ -119,11 +119,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     get roomService(): IRoomService {
-        if (!this.mElementManager) {
-            // Logger.getInstance().error("element manager is undefined");
-            return;
-        }
-        return this.mElementManager.roomService;
+        return this.mRoomService;
     }
 
     get id(): number {

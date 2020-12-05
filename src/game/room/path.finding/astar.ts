@@ -40,7 +40,7 @@ export class AStar {
         const start45 = this.roomService.transformToMini45(startPos);
         const end45 = this.roomService.transformToMini45(endPos);
         const { rows, cols } = this.roomService.miniSize;
-        if (end45.x < 0 || end45.x > cols || end45.y < 0 || end45.y > rows) {
+        if (end45.x < 0 || end45.x >= cols || end45.y < 0 || end45.y >= rows) {
             return;
         }
         const result = [];

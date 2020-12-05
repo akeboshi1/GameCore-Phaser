@@ -6,7 +6,7 @@ import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
 import { MoveData, MovePos, PlayerState } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
-import { Logger, LogicPoint, LogicPos, Tool } from "utils";
+import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { EventType, IDragonbonesModel, IFramesModel } from "structure";
 
@@ -45,7 +45,6 @@ export class User extends Player {
         this.setMatterWorld(room.matterWorld);
         this.model = new PlayerModel(actor);
 
-        // if (room.game.inputManager) room.game.inputManager.addListener(this);
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
         Logger.getInstance().log("setCameraScroller");
@@ -111,6 +110,7 @@ export class User extends Player {
         if (path.length < 1) {
             return;
         }
+        path.map((pos: IPos) => pos.y += this.offsetY);
         this.matterWorld.setSensor(this.body, true);
         this.mTargetPoint = { path, targetId };
         this.startMove();
@@ -284,7 +284,7 @@ export class User extends Player {
         if (!this.mMoving || !this.mTargetPoint || !this.body) return;
         const path = this.mTargetPoint.path;
         const _pos = this.body.position;
-        const pos = new LogicPos(Math.round((_pos.x - this._offset.x) / this.roomService.game.scaleRatio), Math.round((_pos.y - this._offset.y) / this.mElementManager.roomService.game.scaleRatio));
+        const pos = new LogicPos(Math.round(_pos.x / this.roomService.game.scaleRatio), Math.round(_pos.y / this.mElementManager.roomService.game.scaleRatio));
         this.mModel.setPosition(pos.x, pos.y);
         this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         const speed = this.mModel.speed * delta;
@@ -300,6 +300,7 @@ export class User extends Player {
                 return;
             }
         }
+        if (delta === undefined) delta = 0;
         this.mSyncTime += delta;
         if (this.mSyncTime > 50) {
             this.mSyncTime = 0;
