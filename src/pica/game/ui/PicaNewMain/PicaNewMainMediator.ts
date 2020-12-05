@@ -14,6 +14,7 @@ export class PicaNewMainMediator extends BasicMediator {
         super.show(param);
         this.game.emitter.on(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
@@ -22,6 +23,7 @@ export class PicaNewMainMediator extends BasicMediator {
         super.hide();
         this.game.emitter.off(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
@@ -38,6 +40,7 @@ export class PicaNewMainMediator extends BasicMediator {
     }
 
     protected panelInit() {
+        super.panelInit();
         if (this.mView) {
             if (this.playerInfo) this.onUpdatePlayerHandler(this.playerInfo);
             if (this.roomInfo) this.onUpdateRoomHandler(this.roomInfo);
@@ -54,7 +57,9 @@ export class PicaNewMainMediator extends BasicMediator {
     private onUpdatePlayerHandler(content: PlayerProperty) {
         if (this.mPanelInit) {
             if (this.mView) {
-                this.mView.setPlayerInfo(content.level, content.energy, content.coin.value, content.diamond.value);
+                const money = content.coin ? content.coin.value : 0;
+                const diamond = content.diamond ? content.diamond.value : 0;
+                this.mView.setPlayerInfo(content.level, content.energy, money, diamond);
             }
         }
     }
@@ -70,7 +75,18 @@ export class PicaNewMainMediator extends BasicMediator {
         const roomid = this.roomInfo.roomId;
         (<PicaNewMain>this.mModel).query_PRAISE_ROOM(roomid, praise);
     }
+    private onShowPanelHandler(panel: string, data?: any) {
+        if (!this.mModel || !this.game) {
+            return;
+        }
+        const uiManager = this.game.uiManager;
+        uiManager.showMed(panel);
+        if (panel === ModuleName.CHARACTERINFO_NAME) {
+            (<PicaNewMain>this.mModel).fetchPlayerInfo();
+        } else if (panel === ModuleName.PICAOPENPARTY_NAME) {
 
+        }
+    }
     get playerInfo() {
         const info = this.game.user.userData.playerProperty;
         return info;
