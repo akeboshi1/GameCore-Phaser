@@ -741,15 +741,15 @@ export class Render extends RPCPeer implements GameMain {
         this.mSceneManager.sleepScene(SceneName.LOADING_SCENE);
     }
 
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public sceneAddLoadRes(sceneName: string, type: string, key: string, source: string) {
+    // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
+    // public sceneAddLoadRes(sceneName: string, type: string, key: string, source: string) {
 
-    }
+    // }
 
-    @Export([webworker_rpc.ParamType.str])
-    public sceneStartLoad(secenName: string) {
+    // @Export([webworker_rpc.ParamType.str])
+    // public sceneStartLoad(secenName: string) {
 
-    }
+    // }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public loadStart(str: string, scene) {
