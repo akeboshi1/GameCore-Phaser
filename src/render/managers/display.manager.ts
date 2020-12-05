@@ -161,7 +161,7 @@ export class DisplayManager {
 
     public removeDisplay(displayID: number): void {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("DisplayObject not found: ", displayID);
+            // Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);

@@ -23,13 +23,13 @@ export class PicaChatMediator extends BasicMediator {
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
         this.game.emitter.on(RENDER_PEER + "_" + this.key + "_initialized", this.onViewInitComplete, this);
         this.game.emitter.on("chat", this.onChatHandler, this);
-        this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
+        this.game.emitter.on(ModuleName.PICACHAT_NAME + "_queryMarket", this.onQueryResuleHandler, this);
         this.onViewInitComplete();
     }
 
     hide() {
         this.game.emitter.off("chat", this.onChatHandler, this);
-        this.game.emitter.off("queryMarket", this.onQueryResuleHandler, this);
+        this.game.emitter.off(ModuleName.PICACHAT_NAME + "_queryMarket", this.onQueryResuleHandler, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_showNavigate", this.onShowNavigateHandler, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_querymarket", this.queryMarket, this);
         this.game.emitter.off(RENDER_PEER + "_" + this.key + "_chat", this.onSendChatHandler, this);
@@ -44,7 +44,7 @@ export class PicaChatMediator extends BasicMediator {
 
     destroy() {
         this.game.emitter.off("chat", this.onChatHandler, this);
-        this.game.emitter.off("queryMarket", this.onQueryResuleHandler, this);
+        this.game.emitter.off(ModuleName.PICACHAT_NAME + "_queryMarket", this.onQueryResuleHandler, this);
         // this.game.dataManager.off(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this);
         super.destroy();
     }
@@ -105,6 +105,13 @@ export class PicaChatMediator extends BasicMediator {
         }
         if (val === "whosyourdaddy") {
             this.game.uiManager.showMed("DebugLogger");
+        }
+        if (val === "##show matter") {
+            return this.game.roomManager.currentRoom.matterWorld.debugEnable();
+        }
+
+        if (val === "##hide matter") {
+            return this.game.roomManager.currentRoom.matterWorld.debugDisable();
         }
         this.model.sendMessage(val);
     }

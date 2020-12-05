@@ -2,7 +2,7 @@ import { ElementDetail } from "./ElementDetail";
 import { MarketItem } from "./item";
 import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
 import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
-import { AvatarSuitType, ModuleName, RENDER_PEER } from "structure";
+import { AvatarSuitType, ModuleName } from "structure";
 import { Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
@@ -150,7 +150,7 @@ export class PicaMarketPanel extends BasePanel {
   }
 
   public onPropConfirmHandler(prop: any, count: number) {// op_client.CountablePackageItem
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_buyItem", prop);
+    this.render.renderEmitter(this.key + "_buyItem", prop);
   }
 
   protected layoutCategories() {
@@ -365,7 +365,7 @@ export class PicaMarketPanel extends BasePanel {
     this.add(this.mPropGrid);
     this.resize(0, 0);
 
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_getCategories");
+    this.render.renderEmitter(this.key + "_getCategories");
   }
 
   protected setSelect() {
@@ -424,14 +424,14 @@ export class PicaMarketPanel extends BasePanel {
   }
 
   private queryProp(category: string, subCategory: string) {
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryProp", { page: 1, category, subCategory });
+    this.render.renderEmitter(this.key + "_queryProp", { page: 1, category, subCategory });
   }
 
   private onSelectItemHandler(prop: any) {// op_client.IMarketCommodity
     this.mSelectItem.setProp(prop);
     this.mSelectItem.setData("propdata", prop);
     if (!prop.suitType || prop.suitType === "") {
-      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryPropResource", prop);
+      this.render.renderEmitter(this.key + "_queryPropResource", prop);
     } else {
       const content = this.getCommodityResource(prop);
       this.setCommodityResource(content);
@@ -449,12 +449,12 @@ export class PicaMarketPanel extends BasePanel {
   }
 
   private onCloseHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
+    this.render.renderEmitter(this.key + "_close");
   }
 
   private onPopItemCardHandler(prop, display) {
     if (prop) {
-      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_popItemCard", { prop, display });
+      this.render.renderEmitter(this.key + "_popItemCard", { prop, display });
     }
   }
   private getBuyPackageData() {

@@ -5,16 +5,12 @@ import { IElementManager } from "../element/element.manager";
 import { ISprite } from "../display/sprite/sprite";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { Element, IElement, MovePath, PlayerState } from "../element/element";
-import { Body } from "matter-js";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
-        // if (this.mDisplay) {
-        //     if (sprite.displayBadgeCards && sprite.displayBadgeCards.length > 0) this.mDisplay.setDisplayBadges(sprite.displayBadgeCards);
-        // }
     }
 
     setModel(val: ISprite) {
@@ -219,9 +215,9 @@ export class Player extends Element implements IElement {
         return this.mOffsetY;
     }
 
-    protected setExistingBody(body: Body, addToWorld?: boolean) {
-        super.setExistingBody(body, addToWorld);
-        body.isSensor = true;
+    protected addBody() {
+        this._sensor = true;
+        this.setBody();
     }
 
     private mCheckStateHandle(val: string): boolean {

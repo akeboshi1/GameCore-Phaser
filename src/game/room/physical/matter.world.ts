@@ -9,7 +9,7 @@ export class MatterWorld {
     public enabled = true;
     public autoUpdate = true;
     private room: IRoomService;
-    private drawBodies: boolean = true;
+    private drawBodies: boolean = false;
     private ignoreSensors?: Map<number, MatterObject>;
     // private elements: Map<number, MatterObject>;
 
@@ -56,18 +56,40 @@ export class MatterWorld {
         if (!body) {
             return;
         }
+        if (this.ignoreSensors.get(body.id)) {
+            return;
+        }
         body.isSensor = val;
         const pairs = this.engine.pairs;
         const list = pairs.list;
         list.map((pair: any) => {
-            pair.isSensor = val;
+            const bodyA = this.ignoreSensors.get(pair.bodyA.id);
+            const bodyB = this.ignoreSensors.get(pair.bodyB.id);
+            if (!bodyA && !bodyB) {
+                pair.isSensor = val;
+            }
         });
         // Logger.getInstance().log(this.localWorld, this.enabled);
     }
 
-    public add(body: Body | Body[], ele?: MatterObject) {
+    public debugEnable() {
+        this.drawBodies = true;
+    }
+
+    public debugDisable() {
+        this.drawBodies = false;
+        this.room.game.renderPeer.showMatterDebug();
+    }
+
+    public add(body: Body | Body[], ignoreSensor: boolean = false, ele?: MatterObject) {
         if (!this.localWorld) {
             return;
+        }
+        const bodys = [].concat(body);
+        for (const b of bodys) {
+            if (ignoreSensor) {
+                this.ignoreSensors.set(b.id, b);
+            }
         }
         // if (ignoreSensor) this.
         // const bodys = [].concat(body);
@@ -82,6 +104,8 @@ export class MatterWorld {
             return;
         }
         const body = (object.body) ? object.body : object;
+
+        this.ignoreSensors.delete(body.id);
 
         // this.elements.delete(body.id);
 
@@ -147,7 +171,7 @@ export class MatterWorld {
                 // graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
             }
         }
-        this.room.game.peer.render.showMatterDebug(result);
+        this.room.game.renderPeer.showMatterDebug(result);
         // Logger.getInstance().log("=====>>", result);
     }
 }
