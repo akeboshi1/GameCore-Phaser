@@ -65,10 +65,13 @@ export class ElementActionManager {
         switch (actionName) {
             case "TQ_PKT_Action":
                 eleaction = new PKTElementAction(this.game, data);
+                break;
             case "TQ_PKT_tag":
                 eleaction = new TAGElementAction(this.game, data);
+                break;
             case "frozenType":
                 eleaction = new FuritElementAction(this.game, data);
+                break;
         }
         return eleaction;
     }

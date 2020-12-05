@@ -66,8 +66,8 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.powerAddBtn.y = this.powerPro.y;
         this.powerAddBtn.on(ClickEvent.Tap, this.onEnergyHandler, this);
         this.headCon.add([this.powerPro, headbg, vipmark, this.levelTex, headclickCon, this.powerTex, this.powerAddBtn]);
-        this.headCon.x = -this.width * 0.5 + 30 * this.dpr;
-        this.headCon.y = -5 * this.dpr;
+        this.headCon.x = -this.width * 0.5 + 33 * this.dpr;
+        this.headCon.y = -2 * this.dpr;
 
         const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
             left: 17 * this.dpr,
@@ -141,11 +141,10 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         diamond = diamond || 0;
         this.diamondvalue.setText(diamond + "");
         if (this.money !== money || this.diamond !== diamond) {
-            // this.moveMoneyCon();
+            this.moveMoneyCon();
         }
         this.money = money;
         this.diamond = diamond;
-        this.moveMoneyCon();
     }
 
     public setSceneData(sceneName: string, isPraise: boolean, people: number) {
