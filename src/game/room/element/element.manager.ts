@@ -148,9 +148,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public removeFromMap(sprite: ISprite) {
         if (!sprite) return;
         const collision = sprite.getCollisionArea();
+        if (collision) return;
         let walkable = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();
-        if (!collision || !walkable) {
+        if (!walkable) {
             return;
         }
         const rows = collision.length;
@@ -192,8 +193,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         element.setState(state.state);
     }
     public checkElementAction(id: number): boolean {
-        if (!this.has(id)) return false;
         const ele = this.get(id);
+        if (!ele) return;
         if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
         if (this.mActionMgr.checkAllAction(ele.model).length > 0) {
             this.mActionMgr.executeElementActions(ele.model);

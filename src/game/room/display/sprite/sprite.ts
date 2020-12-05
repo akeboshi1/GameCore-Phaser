@@ -8,9 +8,16 @@ import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel } from "../frames/frames.model";
 import NodeType = op_def.NodeType;
+
+enum TitleMask {
+    TQ_NickName = 0x00010000,
+    TQ_Badge = 0x00020000,
+    // TQ_   = 0x0004;
+}
 export interface ISprite {
     id: number;
     avatar: IAvatar;
+    titleMask: number;
     nickname: string;
     alpha: number;
     displayBadgeCards: op_def.IBadgeCard[];
@@ -62,6 +69,7 @@ export interface ISprite {
 export class Sprite extends EventDispatcher implements ISprite {
     public id: number;
     public pos: IPos;
+    public titleMask: number;
     public avatar: IAvatar;
     public currentAnimationName: string;
     public direction: number = 3;
@@ -120,6 +128,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.tryRegisterAnimation(obj.animationRegistrationMap);
         this.currentAnimationName = obj.currentAnimationName;
         // this.direction = obj.direction || 3;
+        this.titleMask = obj.titleMask;
         this.setDirection(obj.direction || 3);
         this.nickname = obj.nickname;
         this.bindID = obj.bindId;
@@ -181,6 +190,14 @@ export class Sprite extends EventDispatcher implements ISprite {
         sprite.sn = this.sn;
         sprite.version = this.version;
         return sprite;
+    }
+
+    public showNickName(): boolean {
+        return (this.titleMask & TitleMask.TQ_NickName) > 0;
+    }
+
+    public showBadge(): boolean {
+        return (this.titleMask & TitleMask.TQ_Badge) > 0;
     }
 
     public newID() {

@@ -33,7 +33,7 @@ export class FramesDisplay extends DisplayObject {
             return false;
         }
         this.mDisplayDatas.set(field, data);
-        this.setData("id", data.id);
+        this.setData("id", this.id);
         if (this.scene.textures.exists(data.gene)) {
             this.onLoadCompleted(field);
         } else {
@@ -60,8 +60,8 @@ export class FramesDisplay extends DisplayObject {
     }
 
     public play(animation: RunningAnimation, field?: DisplayField, times?: number) {
-        if (!animation) return;
         this.mAnimation = animation;
+        if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
         if (this.scene.textures.exists(data.gene) === false) {
@@ -75,7 +75,7 @@ export class FramesDisplay extends DisplayObject {
         let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
         if (!container) {
             container = this.scene.make.container(undefined, false);
-            container.setData("id", data.id);
+            container.setData("id", this.id);
             this.addAt(container, DisplayField.STAGE);
             this.mSprites.set(DisplayField.STAGE, container);
         }
@@ -386,7 +386,7 @@ export class FramesDisplay extends DisplayObject {
         }
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
-                this.play(this.mAnimation);
+                if (this.mAnimation) this.play(this.mAnimation);
                 this.emit("initialized", this);
             } else {
                 this.playEffect();

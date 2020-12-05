@@ -78,6 +78,9 @@ export class FramesModel implements IFramesModel {
 
     public getWalkableArea(aniName: string, flip: boolean = false): number[][] {
         const ani = this.getAnimations(aniName);
+        if (!ani) {
+            return;
+        }
         if (flip) {
             return Helpers.flipArray(ani.walkableArea);
         }

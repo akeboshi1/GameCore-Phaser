@@ -16,6 +16,7 @@ export class MatterBodies {
     renderWireframes(bodies) {
         const graphics = this.mGraphics;
         graphics.clear();
+        if (!bodies) return;
         graphics.lineStyle(1, 0xFF0000);
         graphics.beginPath();
         const dpr = this.render.scaleRatio;

@@ -75,7 +75,27 @@ export class DisplayManager {
         });
     }
 
-    public addDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false) {
+    public addDragonbonesDisplay(id: number, data: IDragonbonesModel) {
+        if (!data) {
+            return;
+        }
+        const scene = this.sceneManager.getSceneByName(PlayScene.name);
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+        let display: DisplayObject;
+        if (!this.displays.has(id)) {
+            display = new DragonbonesDisplay(scene, this.render, id, NodeType.CharacterNodeType);
+            this.displays.set(id, display);
+        } else {
+            display = this.displays.get(id);
+        }
+        display.load(data);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+    }
+
+    public addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false) {
         if (!data) {
             return;
         }
@@ -96,7 +116,7 @@ export class DisplayManager {
         if (isUser) this.mUser = display;
     }
 
-    public addTerrainDisplay(data: IFramesModel) {
+    public addTerrainDisplay(id: number, data: IFramesModel) {
         if (!data) {
             return;
         }
@@ -106,17 +126,17 @@ export class DisplayManager {
             return;
         }
         let display: DisplayObject;
-        if (!this.displays.has(data.id)) {
-            display = new FramesDisplay(scene, this.render, data.id, NodeType.TerrainNodeType);
-            this.displays.set(data.id, display);
+        if (!this.displays.has(id)) {
+            display = new FramesDisplay(scene, this.render, id, NodeType.TerrainNodeType);
+            this.displays.set(id, display);
         } else {
-            display = this.displays.get(data.id);
+            display = this.displays.get(id);
         }
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
-    public addFramesDisplay(data: IFramesModel) {
+    public addFramesDisplay(id: number, data: IFramesModel) {
         if (!data) {
             return;
         }
@@ -126,11 +146,11 @@ export class DisplayManager {
             return;
         }
         let display: DisplayObject;
-        if (!this.displays.has(data.id)) {
-            display = new FramesDisplay(scene, this.render, data.id, NodeType.ElementNodeType);
-            this.displays.set(data.id, display);
+        if (!this.displays.has(id)) {
+            display = new FramesDisplay(scene, this.render, id, NodeType.ElementNodeType);
+            this.displays.set(id, display);
         } else {
-            display = this.displays.get(data.id);
+            display = this.displays.get(id);
         }
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
@@ -293,6 +313,7 @@ export class DisplayManager {
         const display = this.displays.get(sprite.id);
         if (!display) return;
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
+        display.titleMask = sprite.titleMask;
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         display.changeAlpha(sprite.alpha);
     }

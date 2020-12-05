@@ -8,6 +8,7 @@ export class MatterObject {
     protected matterWorld: MatterWorld;
     protected _tempVec2: Vector;
     protected _offset: Vector;
+    protected _sensor: boolean = false;
     constructor(protected mRoomService: IRoomService) {
         if (this.mRoomService) this.setMatterWorld(mRoomService.matterWorld);
         this._tempVec2 = Vector.create(0, 0);
@@ -109,10 +110,16 @@ export class MatterObject {
         if (this.body) {
             this.matterWorld.remove(this.body, true);
         }
+        const sensor = this.getSensor();
         this.body = body;
+        body.isSensor = this._sensor;
 
         if (addToWorld) {
-            this.matterWorld.add(body, this);
+            this.matterWorld.add(body, this._sensor, this);
         }
+    }
+
+    protected getSensor() {
+        return false;
     }
 }

@@ -323,6 +323,11 @@ export class User extends Player {
         this.addDisplay();
     }
 
+    protected addBody() {
+        this._sensor = false;
+        this.setBody();
+    }
+
     private drawPath(pos: op_client.IMovePoint[]) {
         // if (!pos && pos.length > 0) {
         //     return;
@@ -366,7 +371,7 @@ export class User extends Player {
         }
         this.load(this.mModel.displayInfo, this.isUser);
         if (this.mModel.pos) {
-            const obj = { id: val.id, pos: val.pos, alpha: val.alpha };
+            const obj = { id: val.id, pos: val.pos, alpha: val.alpha, titleMask: val.titleMask | 0x00010000 };
             this.game.renderPeer.setDisplayData(obj);
             this.setPosition(this.mModel.pos);
         }
