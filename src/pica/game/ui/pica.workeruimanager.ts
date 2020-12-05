@@ -6,15 +6,17 @@ import { DialogMediator } from "./Dialog";
 import { LoginMediator } from "./login";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaMainUIMediator } from "./PicaMainUI/PicaMainUIMediator";
+import { PicaNewMainMediator } from "./PicaNewMain/PicaNewMainMediator";
 export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {
         super(game);
         this.mMedMap.set(ModuleName.LOGIN_NAME, new LoginMediator(this.game));
         this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
         this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
-        this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
+       // this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
         this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
-        this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
+        // this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
+        this.mMedMap.set(ModuleName.PICANEWMAIN_NAME, new PicaNewMainMediator(this.game));
     }
 
     public showMainUI() {

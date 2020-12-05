@@ -2,6 +2,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { ModuleName } from "structure";
 
 export class PicaChat extends BasicModel {
   constructor(game: Game) {
@@ -79,7 +80,7 @@ export class PicaChat extends BasicModel {
   private onQueryMarketHandler(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY = packet.content;
     if (content.marketName === "gift_shop")
-      this.game.emitter.emit("queryMarket", packet.content);
+      this.game.emitter.emit(ModuleName.PICACHAT_NAME + "_queryMarket", packet.content);
   }
 
 }

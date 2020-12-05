@@ -14,7 +14,6 @@ export class PicaNewMain extends BasicModel {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onUpdateModeRoomInfo);
         }
     }
 
@@ -28,7 +27,6 @@ export class PicaNewMain extends BasicModel {
     destroy() {
         this.unregister();
     }
-
     query_PRAISE_ROOM(roomid: string, praise: boolean) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_PRAISE_ROOM);
         const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_PRAISE_ROOM = packet.content;
@@ -36,18 +34,10 @@ export class PicaNewMain extends BasicModel {
         content.praise = praise;
         this.connection.send(packet);
     }
-
     fetchPlayerInfo() {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELF_PLAYER_INFO);
         this.connection.send(packet);
     }
-
-    private onUpdateModeRoomInfo(packet: PBpacket) {
-        this.game.emitter.emit("updateroom", packet.content);
-        this.game.peer.workerEmitter(EventType.UPDATE_ROOM_INFO, packet.content);
-        this.game.peer.workerEmitter(EventType.UPDATE_PARTY_STATE, packet.content.openingParty);
-    }
-
     get connection(): ConnectionService {
         if (this.game) {
             return this.game.connection;

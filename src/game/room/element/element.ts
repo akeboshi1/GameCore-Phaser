@@ -394,12 +394,6 @@ export class Element extends BlockObject implements IElement {
         }
         this._doMove(time, delta);
         this.mDirty = false;
-        // if (this.mBubble) {
-        //     this.mBubble.follow(this);
-        // }
-        if (this.mBlockable) {
-            this.roomService.updateBlockObject(this);
-        }
     }
 
     // public move(moveData: op_client.IMoveData) {

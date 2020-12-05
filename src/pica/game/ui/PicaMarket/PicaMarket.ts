@@ -2,6 +2,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { ModuleName } from "structure";
 
 export class PicaMarket extends BasicModel {
   private market_name: string;
@@ -76,23 +77,23 @@ export class PicaMarket extends BasicModel {
 
   private onGetMarketCategoriesHandler(packet: PBpacket) {
     // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES = ;
-    this.game.emitter.emit("getMarketCategories", packet.content);
+    this.game.emitter.emit(ModuleName.PICAMARKET_NAME + "_getMarketCategories", packet.content);
   }
 
   private onQueryMarketHandler(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY = packet.content;
-    this.game.emitter.emit("queryMarket", content);
+    this.game.emitter.emit(ModuleName.PICAMARKET_NAME + "_queryMarket", content);
   }
 
   private onQueryCommodityResultHandler(packet: PBpacket) {
     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE = packet.content;
     packet.content.market_name = this.market_name;
-    this.game.emitter.emit("queryCommodityResource", packet.content);
+    this.game.emitter.emit(ModuleName.PICAMARKET_NAME + "_queryCommodityResource", packet.content);
   }
 
   private openMarketPanel(packge: PBpacket) {
     const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
-    this.game.emitter.emit("showopen", content);
+    this.game.emitter.emit(ModuleName.PICAMARKET_NAME + "_showopen", content);
   }
 
   get connection(): ConnectionService {

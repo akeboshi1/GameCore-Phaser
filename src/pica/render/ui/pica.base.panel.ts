@@ -23,7 +23,7 @@ export class PicaBasePanel extends BasePanel {
 
     protected preload() {
         this.initResource();
-        this.preload();
+        super.preload();
     }
 
 }
