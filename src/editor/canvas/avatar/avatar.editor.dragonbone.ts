@@ -74,21 +74,22 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "bleg_spec"
     ];
 
-    private readonly DEFAULTSCALEGAMEHEIGHT = 72;// 默认展示龙骨时，游戏尺寸
-    private readonly DEFAULTSCALEBOTTOMPIX = 4;// 默认展示龙骨时，龙骨所处位置下方的区域（/像素）
-    private readonly ARMATUREHEIGHT = 61;// 龙骨设计高度
-    private readonly ARMATURELEGPERCENT = 0.15;// 龙骨中，腿部占整个身高比重
-    private readonly HEADICONHIDEPIX = 22;// 头像截图中，下方隐藏的龙骨高度
-    private readonly HEADICONDEFAULTSNAPSHOTWIDTH = 71;// 头像截图中，图片宽度
-    private readonly HEADICONDEFAULTSNAPSHOTHEIGHT = 57;// 头像截图中，图片高度
-    private readonly HEADICONDEFAULTSNAPSHOTTOTALHEIGHT = 79;// 头像截图中，含隐藏部分的整个高度
-    private readonly HEADICONDEFAULTBOTTOMPIX = 0;// 头像截图中，龙骨所处位置下方的区域（/像素）
+    private readonly DEFAULT_SCALE_GAME_HEIGHT = 72;// 默认展示龙骨时，游戏尺寸
+    private readonly DEFAULT_SCALE_BOTTOM_PIX = 4;// 默认展示龙骨时，龙骨所处位置下方的区域（/像素）
+    private readonly ARMATURE_HEIGHT = 61;// 龙骨设计高度
+    private readonly ARMATURE_LEG_PERCENT = 0.15;// 龙骨中，腿部占整个身高比重
+    private readonly HEAD_ICON_HIDE_PIX = 22;// 头像截图中，下方隐藏的龙骨高度
+    private readonly HEAD_ICON_WIDTH = 71;// 头像截图中，图片宽度
+    private readonly HEAD_ICON_HEIGHT = 57;// 头像截图中，图片高度
+    private readonly HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT = 79;// 头像截图中，含隐藏部分的整个高度
+    private readonly HEAD_ICON_DEFAULT_BOTTOM_PIX = 0;// 头像截图中，龙骨所处位置下方的区域（/像素）
     // private readonly ARMATUREBOTTOMAREA = 0.36;
 
     private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
     private mArmatureDisplay_head: dragonBones.phaser.display.ArmatureDisplay;
 
     private mEmitter: Phaser.Events.EventEmitter;
+    private mAutoScale: boolean = true;// 截图时不能临时改变龙骨scale（除y*-1以外），只能在创建时就设置好scale
     private mWebHomePath: string;
     private mCurAnimationName: string = "idle";
     private mCurDir = 3;
@@ -100,11 +101,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mArmatureBottomArea_head: number = 0;
     private mOnReadyForSnapshot: (a: AvatarEditorDragonbone) => any;
 
-    constructor(scene: Phaser.Scene, webHomePath: string, emitter: Phaser.Events.EventEmitter, startSets?: any[], onReadyForSnapshot?: (a: AvatarEditorDragonbone) => any) {
+    constructor(scene: Phaser.Scene, webHomePath: string, emitter: Phaser.Events.EventEmitter, autoScale: boolean, startSets?: any[], onReadyForSnapshot?: (a: AvatarEditorDragonbone) => any) {
         super(scene);
 
         this.mWebHomePath = webHomePath;
         this.mEmitter = emitter;
+        this.mAutoScale = autoScale;
 
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
@@ -219,20 +221,19 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         });
     }
 
-    public generateHeadIcon(width, height): Promise<string> {
+    public generateHeadIcon(): Promise<string> {
         return new Promise((resolve, reject) => {
-            if (width === 0 || height === 0) {
-                reject("width and height must not be 0");
-                return;
-            }
             if (!this.mArmatureDisplay) {
                 reject("no armature");
                 return;
             }
+            if (this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT > this.scene.scale.height) {
+                reject("game size is not enough, must larger than " + this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT);
+                return;
+            }
 
-            const snapshotTotalHeight = this.scene.scale.height * this.HEADICONDEFAULTSNAPSHOTTOTALHEIGHT / this.DEFAULTSCALEGAMEHEIGHT;
-            const modelData = { armature: this.mArmatureDisplay, bottomArea: this.HEADICONDEFAULTBOTTOMPIX - snapshotTotalHeight + this.scene.scale.height, baseSets: this.DEFAULTSETS };
-            this.snapshot({ x: 0, y: this.scene.scale.height - height, width, height }, modelData)
+            const modelData = { armature: this.mArmatureDisplay, x: this.HEAD_ICON_WIDTH / 2, y: this.HEAD_ICON_DEFAULT_BOTTOM_PIX, baseSets: this.DEFAULTSETS };
+            this.snapshot({ x: 0, y: this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - this.HEAD_ICON_HEIGHT, width: this.HEAD_ICON_WIDTH, height: this.HEAD_ICON_HEIGHT }, modelData)
                 .then((result) => {
                     resolve(result);
                 })
@@ -249,15 +250,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     public get curSets() {
         return this.mSets;
-    }
-
-    // 将头像截图尺寸换算为所需的游戏尺寸（加上隐藏区域）
-    public getHeadIconGameSize(targetWidth: number, targetHeight: number): { width: number, height: number } {
-        const result = { width: targetWidth, height: targetHeight };
-
-        const snapshotHeight = targetHeight * this.HEADICONDEFAULTSNAPSHOTTOTALHEIGHT / this.HEADICONDEFAULTSNAPSHOTHEIGHT;
-        result.height = snapshotHeight * this.DEFAULTSCALEGAMEHEIGHT / this.HEADICONDEFAULTSNAPSHOTTOTALHEIGHT;
-        return result;
     }
 
     private loadDragonbone() {
@@ -296,23 +288,23 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             this.mArmatureDisplay_head.destroy();
         }
         const sceneHeight = this.scene.scale.height;
-        this.mArmatureBottomArea = this.DEFAULTSCALEBOTTOMPIX * sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
+        this.mArmatureBottomArea = this.DEFAULT_SCALE_BOTTOM_PIX * sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
         this.mArmatureDisplay = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME);
         // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
         // Logger.getInstance().log("ZW-- slot: ", slot.name);
         // }
         this.mArmatureDisplay.animation.play(this.mCurAnimationName);
-        this.mArmatureDisplay.scale = sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
+        if (this.mAutoScale) this.mArmatureDisplay.scale = sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
         this.mArmatureDisplay.x = this.scene.scale.width >> 1;
         this.mArmatureDisplay.y = this.scene.scale.height - this.mArmatureBottomArea;
         this.add(this.mArmatureDisplay);
-        this.mArmatureBottomArea_head = this.mArmatureBottomArea - this.ARMATURELEGPERCENT * this.ARMATUREHEIGHT * sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
+        this.mArmatureBottomArea_head = this.mArmatureBottomArea - this.ARMATURE_LEG_PERCENT * this.ARMATURE_HEIGHT * sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
         this.mArmatureDisplay_head = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME_HEAD);
         // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
         // Logger.getInstance().log("ZW-- half-length slot: ", slot.name);
         // }
         // this.mArmatureDisplay_head.animation.play("idle_3");
-        this.mArmatureDisplay_head.scale = sceneHeight / this.DEFAULTSCALEGAMEHEIGHT;
+        if (this.mAutoScale) this.mArmatureDisplay_head.scale = sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
         this.mArmatureDisplay_head.x = this.scene.scale.width >> 1;
         this.mArmatureDisplay_head.y = this.scene.scale.height - this.mArmatureBottomArea_head + 1000;
         this.add(this.mArmatureDisplay_head);
@@ -661,36 +653,33 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         });
     }
 
-    private getSnapshotModelData(): { armature: dragonBones.phaser.display.ArmatureDisplay, bottomArea: number, baseSets: any[] } {
+    private getSnapshotModelData(): { armature: dragonBones.phaser.display.ArmatureDisplay, x: number, y: number, baseSets: any[] } {
         for (const set of this.mSets) {
             for (const part of set.parts) {
                 if (this.BOTTOMBODYPARTS.includes(part)) {
                     // Logger.getInstance().log("ZW-- snapshotArmature: body");
-                    return { armature: this.mArmatureDisplay, bottomArea: this.mArmatureBottomArea, baseSets: this.MODELSETS };
+                    return { armature: this.mArmatureDisplay, x: this.mArmatureDisplay.x, y: this.mArmatureBottomArea, baseSets: this.MODELSETS };
                 }
             }
         }
 
         // Logger.getInstance().log("ZW-- snapshotArmature: head");
-        return { armature: this.mArmatureDisplay_head, bottomArea: this.mArmatureBottomArea_head, baseSets: this.MODELSETS };
+        return { armature: this.mArmatureDisplay_head, x: this.mArmatureDisplay.x, y: this.mArmatureBottomArea_head, baseSets: this.MODELSETS };
     }
 
-    private snapshot(area: { x: number, y: number, width: number, height: number }, modelData: { armature: dragonBones.phaser.display.ArmatureDisplay, bottomArea: number, baseSets: any[] }): Promise<string> {
+    private snapshot(area: { x: number, y: number, width: number, height: number }, modelData: { armature: dragonBones.phaser.display.ArmatureDisplay, x: number, y: number, baseSets: any[] }): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.setBaseSets(modelData.baseSets);
             this.replaceDisplay()
                 .then(() => {
                     const gameWidth = this.scene.scale.width;
                     const gameHeight = this.scene.scale.height;
-                    // const scaleX = (gameWidth / gameHeight) / (size.width / size.height);
                     Logger.getInstance().log(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
                     const rt = this.scene.make.renderTexture({ x: 0, y: 0, width: gameWidth, height: gameHeight }, false);
                     modelData.armature.scaleY *= -1;
-                    // modelData.armature.scaleX *= scaleX;
-                    rt.draw(modelData.armature, modelData.armature.x, modelData.bottomArea);
+                    rt.draw(modelData.armature, modelData.x, modelData.y);
                     rt.snapshotArea(area.x, area.y, area.width, area.height, (img: HTMLImageElement) => {
                         modelData.armature.scaleY *= -1;
-                        // modelData.armature.scaleX /= scaleX;
                         // reverse parts
                         this.setBaseSets(this.DEFAULTSETS);
                         this.replaceDisplay()

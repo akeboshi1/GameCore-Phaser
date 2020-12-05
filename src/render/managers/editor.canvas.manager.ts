@@ -1,55 +1,42 @@
-import { AvatarEditorCanvas, EditorCanvasType, EditorLauncher } from "editorCanvas";
+import { Scene } from "tooqinggamephaser";
+import { AvatarEditorScene } from "../../editor/canvas/avatar/avatar.editor.canvas";
+import { AvatarEditorDragonbone } from "../../editor/canvas/avatar/avatar.editor.dragonbone";
 import { Render } from "../render";
 
 export class EditorCanvasManager {
     public readonly AVATAR_CANVAS_TEST_DATA = [{ id: "5facff1a67d3b140e835e1d0", parts: ["head_hair"] }];
 
-    private readonly AVATAR_CANVAS_WIDTH = 72;
-    private readonly AVATAR_CANVAS_HEIGHT = 72;
     private readonly AVATAR_CANVAS_RESOURCE_PATH = "https://osd-alpha.tooqing.com/avatar/part";
     private readonly AVATAR_CANVAS_PARENT = "avatarCanvas";
-    private readonly HEAD_ICON_WIDTH = 71;// 头像截图中，图片宽度
-    private readonly HEAD_ICON_HEIGHT = 57;// 头像截图中，图片高度
-
-    private avatarCanvas: AvatarEditorCanvas;
+    private readonly SCENEKEY_SNAPSHOT: string = "AvatarEditorSnapshotScene";
 
     constructor(private render: Render) {
-        this.createAvatarCanvas();
     }
 
     public destroy() {
-        if (this.avatarCanvas) this.avatarCanvas.destroy();
-        const ifrm = document.getElementById(this.AVATAR_CANVAS_PARENT);
-        if (ifrm) ifrm.remove();
+        if (this.render.game) {
+            this.render.game.scene.stop(this.SCENEKEY_SNAPSHOT);
+            this.render.game.scene.remove(this.SCENEKEY_SNAPSHOT);
+        }
     }
 
     public createHeadIcon(sets: any[]): Promise<string> {// IAvatarSet
-        this.avatarCanvas.mergeParts(sets);
-        return this.avatarCanvas.generateHeadIcon(this.HEAD_ICON_WIDTH, this.HEAD_ICON_HEIGHT);
-    }
+        return new Promise<string>((resolve, reject) => {
+            this.render.game.scene.add(this.SCENEKEY_SNAPSHOT, AvatarEditorScene, false);
+            this.render.sceneManager.currentScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
+                onCreated: (s: Scene) => {
+                    this.render.game.scene.sendToBack(this.SCENEKEY_SNAPSHOT);
+                    const a = new AvatarEditorDragonbone(s, this.AVATAR_CANVAS_RESOURCE_PATH, this.render.emitter, false, sets,
+                        (dragonbone) => {
+                            dragonbone.generateHeadIcon().then((src) => {
+                                resolve(src);
 
-    private createAvatarCanvas() {
-        let ifrm = document.getElementById(this.AVATAR_CANVAS_PARENT);
-        if (!ifrm) {
-            const renderParentName = this.render.config.parent;
-            const renderParent = document.getElementById(renderParentName);
-
-            ifrm = document.createElement("iframe");
-            ifrm.setAttribute("id", this.AVATAR_CANVAS_PARENT);
-            ifrm.style.height = "0px";
-            renderParent.appendChild(ifrm);
-        }
-
-        this.avatarCanvas = EditorLauncher.CreateCanvas(
-            EditorCanvasType.Avatar,
-            {
-                width: this.AVATAR_CANVAS_WIDTH,
-                height: this.AVATAR_CANVAS_HEIGHT,
-                parent: this.AVATAR_CANVAS_PARENT,
-                node: {
-                    WEB_AVATAR_PATH: this.AVATAR_CANVAS_RESOURCE_PATH
-                },
-            }
-        ) as AvatarEditorCanvas;
+                                this.render.game.scene.stop(this.SCENEKEY_SNAPSHOT);
+                                this.render.game.scene.remove(this.SCENEKEY_SNAPSHOT);
+                            });
+                        });
+                }
+            });
+        });
     }
 }
