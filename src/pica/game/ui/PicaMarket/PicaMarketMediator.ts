@@ -8,10 +8,6 @@ export class PicaMarketMediator extends BasicMediator {
     super(ModuleName.PICAMARKET_NAME, game);
     if (!this.mModel) {
       this.mModel = new PicaMarket(game);
-      this.game.emitter.on("getMarketCategories", this.onCategoriesHandler, this);
-      this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
-      this.game.emitter.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
-      this.game.emitter.on("showopen", this.onShowOpenPanel, this);
     }
   }
 
@@ -23,30 +19,35 @@ export class PicaMarketMediator extends BasicMediator {
     } else {
       this.model.setMarketName("shop");
     }
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_popItemCard", this.onPopItemCardHandler, this);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
+    this.game.emitter.on(this.key + "_getMarketCategories", this.onCategoriesHandler, this);
+    this.game.emitter.on(this.key + "_queryMarket", this.onQueryResuleHandler, this);
+    this.game.emitter.on(this.key + "_queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+    this.game.emitter.on(this.key + "_showopen", this.onShowOpenPanel, this);
+
+    this.game.emitter.on(this.key + "_getCategories", this.onGetCategoriesHandler, this);
+    this.game.emitter.on(this.key + "_queryProp", this.onQueryPropHandler, this);
+    this.game.emitter.on(this.key + "_buyItem", this.onBuyItemHandler, this);
+    this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
+    this.game.emitter.on(this.key + "_popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.on(this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
   }
 
   hide() {
-    this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
-    this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryProp", this.onQueryPropHandler, this);
-    this.game.emitter.off(RENDER_PEER + "_" + this.key + "_buyItem", this.onBuyItemHandler, this);
-    this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-    this.game.emitter.off(RENDER_PEER + "_" + this.key + "_popItemCard", this.onPopItemCardHandler, this);
-    this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
+    this.game.emitter.off(this.key + "_getMarketCategories", this.onCategoriesHandler, this);
+    this.game.emitter.off(this.key + "_queryMarket", this.onQueryResuleHandler, this);
+    this.game.emitter.off(this.key + "_queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+    this.game.emitter.off(this.key + "_showopen", this.onShowOpenPanel, this);
+
+    this.game.emitter.off(this.key + "_getCategories", this.onGetCategoriesHandler, this);
+    this.game.emitter.off(this.key + "_queryProp", this.onQueryPropHandler, this);
+    this.game.emitter.off(this.key + "_buyItem", this.onBuyItemHandler, this);
+    this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
+    this.game.emitter.off(this.key + "_popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.off(this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
     super.hide();
   }
 
   destroy() {
-    this.game.emitter.off("getMarketCategories", this.onCategoriesHandler, this);
-    this.game.emitter.off("queryMarket", this.onQueryResuleHandler, this);
-    this.game.emitter.off("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
-    this.game.emitter.off("showopen", this.onShowOpenPanel, this);
-
     if (this.model) this.model.destroy();
     this.mModel = null;
     super.destroy();

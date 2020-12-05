@@ -480,8 +480,8 @@ anymatch@~3.1.1:
 
 apowophaserui@^0.9.1:
   version "0.9.1"
-  resolved "https://registry.npmjs.org/apowophaserui/-/apowophaserui-0.9.1.tgz#ee6ce7b122e4ddca80fa6a22b3effece300f6fca"
-  integrity sha512-XXjDvaQd7AZhU2u0swV6ZzAkDYurza720ljpnqHLYak4g4kYzrimsu/uW5/svmpuUBbz8uWA47CUC8SdexYLog==
+  resolved "https://registry.npm.taobao.org/apowophaserui/download/apowophaserui-0.9.1.tgz#ee6ce7b122e4ddca80fa6a22b3effece300f6fca"
+  integrity sha1-7mznsSLk3cqA+mois+/+zjAPb8o=
   dependencies:
     "@types/node" "^14.0.13"
     eventemitter3 "^3.1.2"

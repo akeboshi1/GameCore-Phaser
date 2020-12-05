@@ -15,40 +15,47 @@ export class PicaBagMediator extends BasicMediator {
         }
         this.mModel = new PicaBag(game, this.mScneType);
         this.addLisenter();
-        this.game.emitter.on("packageCategory", this.onPackageCategoryHandler, this);
-        this.game.emitter.on("queryPackage", this.onQueryPackageHandler, this);
-        this.game.emitter.on("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
-        this.game.emitter.on("queryResetAvatar", this.onResetAvatar, this);
-        this.game.emitter.on("avatarIDs", this.onDressAvatarIDS, this);
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPackage", this.onQueryPackage, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropResourceHandler, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_seachPackage", this.onSeachPackageHandler, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_addFurniToScene", this.onAddFurniHandler, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_sellProps", this.onSellPropsHandler, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_useprops", this.onUsePropsHandler, this);
+        this.game.emitter.on(this.key + "_packageCategory", this.onPackageCategoryHandler, this);
+        this.game.emitter.on(this.key + "_queryPackage", this.onQueryPackageHandler, this);
+        this.game.emitter.on(this.key + "_queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+        this.game.emitter.on(this.key + "_queryResetAvatar", this.onResetAvatar, this);
+        this.game.emitter.on(this.key + "_avatarIDs", this.onDressAvatarIDS, this);
+
+        this.game.emitter.on(this.key + "_getCategories", this.onGetCategoriesHandler, this);
+        this.game.emitter.on(this.key + "_queryPackage", this.onQueryPackage, this);
+        this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
+        this.game.emitter.on(this.key + "_queryPropResource", this.onQueryPropResourceHandler, this);
+        this.game.emitter.on(this.key + "_seachPackage", this.onSeachPackageHandler, this);
+        this.game.emitter.on(this.key + "_addFurniToScene", this.onAddFurniHandler, this);
+        this.game.emitter.on(this.key + "_sellProps", this.onSellPropsHandler, this);
+        this.game.emitter.on(this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
+        this.game.emitter.on(this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
+        this.game.emitter.on(this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
+        this.game.emitter.on(this.key + "_useprops", this.onUsePropsHandler, this);
     }
 
     hide() {
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getCategories", this.onGetCategoriesHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryPackage", this.onQueryPackage, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryPropResource", this.onQueryPropResourceHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_seachPackage", this.onSeachPackageHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_addFurniToScene", this.onAddFurniHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_sellProps", this.onSellPropsHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_useprops", this.onUsePropsHandler, this);
+        this.game.emitter.off(this.key + "_packageCategory", this.onPackageCategoryHandler, this);
+        this.game.emitter.off(this.key + "_queryPackage", this.onQueryPackageHandler, this);
+        this.game.emitter.off(this.key + "_queryCommodityResource", this.onQueryCommodityResourceHandler, this);
+        this.game.emitter.off(this.key + "_queryResetAvatar", this.onResetAvatar, this);
+        this.game.emitter.off(this.key + "_avatarIDs", this.onDressAvatarIDS, this);
+
+        this.game.emitter.off(this.key + "_getCategories", this.onGetCategoriesHandler, this);
+        this.game.emitter.off(this.key + "_queryPackage", this.onQueryPackage, this);
+        this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
+        this.game.emitter.off(this.key + "_queryPropResource", this.onQueryPropResourceHandler, this);
+        this.game.emitter.off(this.key + "_seachPackage", this.onSeachPackageHandler, this);
+        this.game.emitter.off(this.key + "_addFurniToScene", this.onAddFurniHandler, this);
+        this.game.emitter.off(this.key + "_sellProps", this.onSellPropsHandler, this);
+        this.game.emitter.off(this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
+        this.game.emitter.off(this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
+        this.game.emitter.off(this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
+        this.game.emitter.off(this.key + "_useprops", this.onUsePropsHandler, this);
         super.hide();
     }
 
@@ -136,7 +143,7 @@ export class PicaBagMediator extends BasicMediator {
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
         if (this.playerData) {
             const items = this.playerData.getItemsByCategory(data.packType, data.key);
-            if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage&&items) {
+            if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage && items) {
                 let tempitem: op_client.ICountablePackageItem;
                 for (let i = items.length - 1; i >= 0; i--) {
                     const tag = items[i].tag;

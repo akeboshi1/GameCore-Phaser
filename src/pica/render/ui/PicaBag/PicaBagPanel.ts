@@ -2,7 +2,7 @@ import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCode
 import { BasePanel, CheckboxGroup, DynamicImage, InputPanel, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { AvatarSuitType, ModuleName, RENDER_PEER, RunningAnimation, SuitAlternativeType } from "structure";
+import { AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
 import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 
@@ -279,7 +279,7 @@ export class PicaBagPanel extends BasePanel {
 
   public onSellPropsHandler(category: number, prop: any, count: number) {// op_client.CountablePackageItem
     this.mCategoryScroll.addListen();
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_sellProps", { prop, count, category });
+    this.render.renderEmitter(this.key + "_sellProps", { prop, count, category });
   }
   public onSellPropsFailedHandler(prop: any) {
     this.mCategoryScroll.addListen();
@@ -287,7 +287,7 @@ export class PicaBagPanel extends BasePanel {
 
   public onUsePropsHandler(prop: any, count: number) {// op_client.CountablePackageItem
     this.mCategoryScroll.addListen();
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_useprops", { itemid: prop.id, count });
+    this.render.renderEmitter(this.key + "_useprops", { itemid: prop.id, count });
   }
   public onUsePropsFailedHandler(prop: any) {
     this.mCategoryScroll.addListen();
@@ -609,12 +609,12 @@ export class PicaBagPanel extends BasePanel {
   }
 
   private onCloseHandler() {
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
+    this.render.renderEmitter(this.key + "_close");
   }
 
   private queryPackege(isupdate: boolean = false) {
     if (this.mSelectedCategeories) {
-      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryPackage", { packType: this.categoryType, key: this.mSelectedCategeories.key, isupdate });
+      this.render.renderEmitter(this.key + "_queryPackage", { packType: this.categoryType, key: this.mSelectedCategeories.key, isupdate });
     }
   }
 
@@ -658,7 +658,7 @@ export class PicaBagPanel extends BasePanel {
 
   private onSeachHandler(val: string) {
     if (this.mSelectedCategeories && val.length > 0) {
-      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_seachPackage", { query: val, categories: this.mSelectedCategeories.key });
+      this.render.renderEmitter(this.key + "_seachPackage", { query: val, categories: this.mSelectedCategeories.key });
     }
   }
 
@@ -666,7 +666,7 @@ export class PicaBagPanel extends BasePanel {
     if (!this.mSelectedItemData) {
       return;
     }
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_addFurniToScene", this.mSelectedItemData[0].id);
+    this.render.renderEmitter(this.key + "_addFurniToScene", this.mSelectedItemData[0].id);
   }
 
   private onTopCategoryHandler(item: Button) {
@@ -744,9 +744,9 @@ export class PicaBagPanel extends BasePanel {
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
     if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryDressAvatarIDS");
+      this.render.renderEmitter(this.key + "_queryDressAvatarIDS");
     }
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_getCategories", categoryType);
+    this.render.renderEmitter(this.key + "_getCategories", categoryType);
   }
   private getPropResource(data: op_client.ICountablePackageItem) {
     const resource = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
@@ -805,7 +805,7 @@ export class PicaBagPanel extends BasePanel {
       this.dressAvatarIDS.push(item.id);
       this.dressAvatarDatas.push(item);
     }
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querySaveAvatar", idsArr);
+    this.render.renderEmitter(this.key + "_querySaveAvatar", idsArr);
     // this.queryPackege();
     // }
     // const str = await new EditorCanvasManager(this.render).createHeadIcon(idsArr);

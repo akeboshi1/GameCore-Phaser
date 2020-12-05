@@ -1,16 +1,21 @@
 
-import { BaseUI } from "apowophaserui";
+import { BaseUI, NineSlicePatch } from "apowophaserui";
 export class ProgressMaskBar extends BaseUI {
     protected mBackground: Phaser.GameObjects.Image;
-    protected mBar: Phaser.GameObjects.Image;
+    protected mBar: Phaser.GameObjects.Image | NineSlicePatch;
     protected maskGraphics: Phaser.GameObjects.Graphics;
     protected mText: Phaser.GameObjects.Text;
     protected zoom: number = 1;
-    constructor(scene: Phaser.Scene, key: string, background: string, bar: string, style?: any) {
+    constructor(scene: Phaser.Scene, key: string, background: string, bar: string, style?: any, config?: any) {
         super(scene);
         this.mBackground = scene.make.image({ key, frame: background });
         this.setSize(this.mBackground.width, this.mBackground.height);
-        this.mBar = scene.make.image({ key, frame: bar });
+        if (config) {
+            const barW = config.width || this.width;
+            const barH = config.height || this.height;
+            this.mBar = new NineSlicePatch(scene, 0, 0, barW, barH, key, bar, config);
+        } else
+            this.mBar = scene.make.image({ key, frame: bar });
         if (style) {
             this.mText = scene.make.text({
                 style
@@ -50,7 +55,6 @@ export class ProgressMaskBar extends BaseUI {
                 this.add(this.mText);
         }
     }
-
     get text() {
         return this.mText;
     }
