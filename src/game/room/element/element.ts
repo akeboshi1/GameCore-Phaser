@@ -189,10 +189,11 @@ export class Element extends BlockObject implements IElement {
         this.isUser = isUser;
         this.loadDisplayInfo();
         // this.addDisplay();
-        if (!this.mCreatedDisplay) {
-            this.mCreatedDisplay = true;
-            this.addToBlock();
-        }
+        this.addToBlock();
+        // if (!this.mCreatedDisplay) {
+        //     this.mCreatedDisplay = true;
+        //     this.addToBlock();
+        // }
     }
 
     public setModel(model: ISprite) {
@@ -847,7 +848,8 @@ export class Element extends BlockObject implements IElement {
         }
         const pos = this.mModel.pos;
         this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-        this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        const currentAnimation = this.mModel.currentAnimation;
+        if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         this.setInputEnable(this.mInputEnable);
         return this;
     }
@@ -969,6 +971,11 @@ export class Element extends BlockObject implements IElement {
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
         return 0; // this.mOffsetY;
+    }
+
+    protected addToBlock() {
+        if (!this.mDisplayInfo) return;
+        super.addToBlock();
     }
 
     protected checkDirection() {
