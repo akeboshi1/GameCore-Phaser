@@ -356,6 +356,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             Logger.getInstance().log(`position ${pos.x} ${pos.y} exceed the map boundary`);
             return;
         }
+        if (!this.mEmptyMap[pos45.x] || !this.mEmptyMap[pos45.x][pos45.y]) return;
         const block = this.mEmptyMap[pos45.x][pos45.y];
         if (block) {
             this.mEmptyMap[pos45.x][pos45.y] = undefined;

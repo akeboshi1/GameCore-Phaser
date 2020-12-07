@@ -95,6 +95,16 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public updateMoss(moss) {
+        this.game.elementStorage.updateMoss(moss);
+    }
+
+    @Export()
+    public updatePalette(palette) {
+        this.game.elementStorage.updatePalette(palette);
+    }
+
+    @Export()
     public refreshToken() {
         this.game.refreshToken();
     }
