@@ -1,7 +1,5 @@
-import { SceneName } from "structure";
 import { Game } from "../game";
 import { IAsset } from "../room";
-
 export class LoadingManager {
     private readonly mGame: Game;
     private mResources: IAsset[];
@@ -12,8 +10,8 @@ export class LoadingManager {
         this.mResources = [];
     }
 
-    start(text?: string) {
-        this.mGame.peer.render.showLoading({ "dpr": this.mGame.getGameConfig().scale_ratio, text });
+    start(state?: number) {
+        this.mGame.peer.render.showLoading({ "dpr": this.mGame.getGameConfig().scale_ratio, state });
         // const sceneManager = this.game.scene;
         // if (!sceneManager) {
         //     return Promise.reject("start faild. SceneManager does not exist");

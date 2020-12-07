@@ -12,8 +12,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { LoadingTips } from "./loading/loading.tips";
-import { ILauncherConfig } from "structure";
+import { ILauncherConfig, LoadState } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "./room/elementstorage/element.storage";
@@ -88,6 +87,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             if (delay < delayTime) delay = delayTime;
             // Logger.getInstance().log("updateTime===", delay, "delayTime===", delayTime);
             if (this.mRoomManager) this.mRoomManager.update(now, delay);
+            // Logger.getInstance().log("delayTime===", new Date().getTime() - now);
             tmpTime = now;
         }
     }
@@ -236,7 +236,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public loadSceneConfig(sceneID: string): Promise<any> {
         const remotePath = this.getConfigUrl(sceneID);
-        this.mLoadingManager.start(LoadingTips.downloadSceneConfig());
+        this.mLoadingManager.start(LoadState.DOWNLOADSCENECONFIG);
         return this.loadGameConfig(remotePath);
     }
 
@@ -478,7 +478,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public async loginEnterWorld() {
         Logger.getInstance().log("loginEnterWorld");
-        this.mLoadingManager.start(LoadingTips.enterGame());
+        this.mLoadingManager.start(LoadState.ENTERGAME);
         this.renderPeer.hideLogin();
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
@@ -701,7 +701,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             game_id = game_id.split(".")[1];
         }
         const mainGameConfigUrl = this.gameConfigUrl;
-        this.mLoadingManager.start(LoadingTips.downloadGameConfig());
+        this.mLoadingManager.start(LoadState.DOWNLOADGAMECONFIG);
         // this.connect.loadRes([mainGameConfigUrl]);
         Logger.getInstance().log("onInitVirtualWorldPlayerInit====loadGameConfig");
         this.loadGameConfig(mainGameConfigUrl)
@@ -720,7 +720,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const configPath = ResUtils.getGameConfig(remotePath);
         let index = 0;
         return load(configPath, "arraybuffer").then((req: any) => {
-            this.mLoadingManager.start(LoadingTips.parseConfig());
+            this.mLoadingManager.start(LoadState.PARSECONFIG);
             Logger.getInstance().log("start decodeConfig");
             return this.decodeConfigs(req);
         }, (reason) => {
@@ -738,7 +738,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private gameCreated() {
         if (this.connection) {
             Logger.getInstance().log("connection gameCreat");
-            this.mLoadingManager.start(LoadingTips.waitEnterRoom());
+            this.mLoadingManager.start(LoadState.WAITENTERROOM);
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
         } else {
@@ -766,6 +766,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     const gameConfig = new Lite();
                     gameConfig.deserialize(new Uint8Array(arraybuffer));
                     Logger.getInstance().log("TCL: World -> gameConfig", gameConfig);
+                    // const list = (<any>gameConfig)._root._moss._peersDict;
+                    // list.forEach((dat) => {
+                    //     if (dat.id === 1229472650) {
+                    //         Logger.getInstance().log("地毯=======", dat);
+                    //     }
+                    // });
                     resolve(gameConfig);
                 } catch (error) {
                     Logger.getInstance().log("catch error", error);

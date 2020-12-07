@@ -1,7 +1,6 @@
 import { BasicScene } from "./basic.scene";
 import { UiManager } from "../ui/ui.manager";
-import { LoadingScene } from "./loading.scene";
-import { ModuleName, SceneName } from "structure";
+import { SceneName } from "structure";
 import { Logger } from "utils";
 
 export class CreateRoleScene extends BasicScene {

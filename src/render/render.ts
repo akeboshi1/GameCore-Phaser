@@ -289,12 +289,12 @@ export class Render extends RPCPeer implements GameMain {
     setGameConfig(config): void {
 
     }
-    updatePalette(palett): void {
-
+    updatePalette(palette): void {
+        this.mainPeer.updatePalette(palette);
     }
 
     updateMoss(moss): void {
-
+        this.mainPeer.updateMoss(moss);
     }
     restart(config?: ILauncherConfig, callBack?: Function) {
 
