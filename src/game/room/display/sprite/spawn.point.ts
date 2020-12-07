@@ -31,9 +31,8 @@ export class SpawnPoint implements ISprite {
     sn: string;
     attrs: op_def.IStrPair[];
     animationQueue: AnimationQueue[];
-    avatarSuits: AvatarSuit[];
-    titleMask: number;
     suits: AvatarSuit[];
+    titleMask: number;
 
     constructor() {
         this.id = 100;

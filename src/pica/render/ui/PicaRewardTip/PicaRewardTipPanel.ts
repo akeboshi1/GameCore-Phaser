@@ -1,6 +1,7 @@
 import { BasePanel, DynamicImage, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, Url } from "utils";
+import { op_client } from "pixelpai_proto";
 
 export class PicaRewardTipPanel extends BasePanel {
     private mTips: any[] = [];// op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS
@@ -17,7 +18,7 @@ export class PicaRewardTipPanel extends BasePanel {
         }
     }
 
-    public appendAward(tips: any) {// op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS
+    public appendAward(tips: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS) {
         // const award = new AwardItem(this.scene);
         // this.add(award);
         this.mTips.push(tips);
@@ -74,6 +75,10 @@ export class PicaRewardTipPanel extends BasePanel {
     }
 
     private onDestroyHanlder(item) {
+        if (this.mTips.length < 1) {
+            this.render.renderEmitter(ModuleName.PICAREWARDTIP_NAME + "_hide");
+            return;
+        }
         const index = this.showingList.indexOf(item);
         if (index > -1) {
             this.showingList.splice(index, 1);
@@ -115,7 +120,7 @@ class AwardItem extends Phaser.GameObjects.Container {
         this.setSize(this.mBg.width * zoom, this.mBg.height * zoom);
     }
 
-    setProp(award: any) {// op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS
+    setProp(award: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS) {
         if (!award) {
             return;
         }
@@ -127,6 +132,7 @@ class AwardItem extends Phaser.GameObjects.Container {
     }
 
     showTween() {
+        const self = this;
         this.scene.tweens.add({
             targets: this,
             props: {
