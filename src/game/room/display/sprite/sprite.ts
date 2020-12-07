@@ -32,7 +32,7 @@ export interface ISprite {
     hasInteractive: boolean;
     interactive: op_def.IPBPoint2f[];
     attrs: op_def.IStrPair[];
-    avatarSuits: AvatarSuit[];
+    suits: AvatarSuit[];
     animationQueue: AnimationQueue[];
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
@@ -53,7 +53,7 @@ export interface ISprite {
     setDirection(val);
     setDisplayInfo(val);
     updateAttr(attrs: op_def.IStrPair[]);
-    updateAvatarSuits(attrs: op_def.IStrPair[]): boolean;
+    updateAvatarSuits(suits: AvatarSuit[]): boolean;
     getCollisionArea(): number[][];
     getWalkableArea(): number[][];
     getOriginPoint(): IPos;
@@ -94,7 +94,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public originCollisionPoint: LogicPoint;
 
     public attrs: op_def.IStrPair[];
-    public avatarSuits: AvatarSuit[];
+    public suits: AvatarSuit[];
     public animationQueue: AnimationQueue[];
 
     public mountSprites: number[];
@@ -110,7 +110,8 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.pos = new LogicPos(point.x, point.y, point.z);
         }
         this.updateAttr(obj.attrs);
-        this.updateAvatarSuits(obj.attrs);
+        if (this.suits)
+            this.updateAvatarSuits(this.suits);
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
             this.updateAvatar(this.avatar);
@@ -222,11 +223,10 @@ export class Sprite extends EventDispatcher implements ISprite {
 
         return this;
     }
-    public updateAvatarSuits(attrs: op_def.IStrPair[]) {
-        const suits: AvatarSuit[] = this.getAvatarSuits(attrs);
+    public updateAvatarSuits(suits: AvatarSuit[]) {
         if (suits) {
             if (suits.length > 0) {
-                this.avatarSuits = suits;
+                this.suits = suits;
                 this.avatar = AvatarSuitType.createHasBaseAvatar(suits);
             } else {
                 this.avatar = AvatarSuitType.createBaseAvatar();
@@ -258,6 +258,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public updateAttr(attrs: op_def.IStrPair[]) {
         this.attrs = attrs;
+        this.suits = this.getAvatarSuits(attrs);
     }
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {

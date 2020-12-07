@@ -1,5 +1,6 @@
-import { ModuleName } from "structure";
+import { LoadState, ModuleName } from "structure";
 import { Logger } from "utils";
+import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
 import { BasicScene } from "./basic.scene";
 import { CreateRoleScene } from "./create.role.scene";
@@ -70,6 +71,32 @@ export class SceneManager {
             return;// Promise.reject("className error: " + name);
         }
         data.render = this.render;
+        if (data.state !== undefined) {
+            const state = data.state;
+            switch (state) {
+                case LoadState.ENTERGAME:
+                    data.text = LoadingTips.enterGame();
+                    break;
+                case LoadState.DOWNLOADGAMECONFIG:
+                    data.text = LoadingTips.downloadGameConfig();
+                    break;
+                case LoadState.DOWNLOADSCENECONFIG:
+                    data.text = LoadingTips.downloadSceneConfig();
+                    break;
+                case LoadState.LOADINGRESOURCES:
+                    data.text = LoadingTips.loadingResources();
+                    break;
+                case LoadState.LOGINGAME:
+                    data.text = LoadingTips.loginGame();
+                    break;
+                case LoadState.PARSECONFIG:
+                    data.text = LoadingTips.parseConfig();
+                    break;
+                case LoadState.WAITENTERROOM:
+                    data.text = LoadingTips.waitEnterRoom();
+                    break;
+            }
+        }
         this.mCurSceneName = name;
         const scene = sceneManager.getScene(name) as BasicScene;
         this.render.emitter.once("sceneCreated", () => {
@@ -77,7 +104,7 @@ export class SceneManager {
             if (data.callBack) data.callBack();
         }, this);
         if (scene) {
-            if (this.mCurSceneName) {
+            if (this.mCurSceneName !== name) {
                 const curScene: BasicScene = sceneManager.getScene(this.mCurSceneName) as BasicScene;
                 if (curScene) curScene.sleep();
             }

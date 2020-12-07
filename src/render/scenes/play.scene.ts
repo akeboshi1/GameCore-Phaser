@@ -1,4 +1,4 @@
-import { LoadingTips } from "../../game/loading/loading.tips";
+import { LoadingTips } from "../loadqueue/loading.tips";
 import { Logger } from "utils";
 import { PlayCamera } from "../cameras/play.camera";
 import { BasicLayer } from "../managers/layer.manager";
@@ -52,7 +52,8 @@ export class PlayScene extends RoomScene {
 
         // ======= render startPlay
         this.render.camerasManager.startRoomPlay(this);
-        this.render.showLoading({ "text": LoadingTips.loadingResources() });
+        const txt = LoadingTips.loadingResources();
+        this.render.showLoading({ "text": txt });
         this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.onLoadCompleteHandler();
 

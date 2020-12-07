@@ -4,6 +4,7 @@ import { Url, LogicPoint, LogicPos, Logger } from "utils";
 import { Render } from "../render";
 import { RunningAnimation, IDragonbonesModel, IFramesModel } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
+import { LoadQueue } from "../loadqueue";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -46,11 +47,21 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected render: Render;
     protected mName: string;
     protected mTitleMask: number;
+    protected mLoadQueue: LoadQueue;
+    protected mProgress: number;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
         this.mID = id;
         this.mNodeType = type;
+        this.mLoadQueue = new LoadQueue(scene);
+        this.mLoadQueue.once("QueueComplete", this.allComplete, this);
+        this.mLoadQueue.on("QueueProgress", this.fileComplete, this);
+        this.mLoadQueue.on("QueueError", this.fileError, this);
+    }
+
+    get progress(): number {
+        return this.mProgress;
     }
 
     set titleMask(val: number) {
@@ -147,6 +158,11 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         }
         if (this.mTopDisplay) {
             this.mTopDisplay.destroy();
+        }
+        if (this.mLoadQueue) {
+            this.mLoadQueue.off("QueueProgress", this.fileComplete, this);
+            this.mLoadQueue.off("QueueError", this.fileError, this);
+            this.mLoadQueue.destroy();
         }
         // this.removeAll(true);
         super.destroy(fromScene);
@@ -313,6 +329,16 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             Logger.getInstance().log("renderSetDirection:=====", dir);
             this.render.setDirection(this.id, dir);
         }
+    }
+
+    protected allComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
+    }
+
+    protected fileComplete(progress: number, key: string, type?: string) {
+        this.mProgress = progress;
+    }
+
+    protected fileError(key: string) {
     }
 
     protected onMovePathPointComplete(params) {

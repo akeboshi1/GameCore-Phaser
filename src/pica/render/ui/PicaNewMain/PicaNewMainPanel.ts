@@ -18,6 +18,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
     protected headPanel: PicaNewHeadPanel;
     protected leftPanel: PicaNewLeftPanel;
     protected navigatePanel: PicaNewNavigatePanel;
+    protected foldButton: Button;
+    private isFold: boolean = false;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
@@ -27,6 +29,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
     resize(w: number, h: number) {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
+        this.foldButton.x = this.foldButton.width * 0.5 + 5 * this.dpr;
+        this.foldButton.y = this.foldButton.height * 0.5 + 5 * this.dpr;
         this.headPanel.x = width * 0.5;
         this.headPanel.y = this.headPanel.height * 0.5;
         this.leftPanel.x = this.leftPanel.width * 0.5 + 10 * this.dpr;
@@ -70,6 +74,9 @@ export class PicaNewMainPanel extends PicaBasePanel {
     init() {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
+        this.foldButton = new Button(this.scene, UIAtlasName.uicommon, "home_retract");
+        this.foldButton.on(ClickEvent.Tap, this.onFoldButtonHandler, this);
+        this.add(this.foldButton);
         this.headPanel = new PicaNewHeadPanel(this.scene, width, 70 * this.dpr, this.key, this.dpr);
         this.headPanel.setHandler(new Handler(this, this.onHeadHandler));
         this.add(this.headPanel);
@@ -86,6 +93,21 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.add(this.navigatePanel);
         this.resize(width, height);
         super.init();
+    }
+
+    private onFoldButtonHandler() {
+        this.isFold = !this.isFold;
+        if (this.isFold) {
+            this.foldButton.setFrameNormal("home_spread", "home_spread");
+            this.headPanel.visible = false;
+            this.leftPanel.visible = false;
+            this.activityPanel.visible = false;
+        } else {
+            this.foldButton.setFrameNormal("home_retract", "home_retract");
+            this.headPanel.visible = true;
+            this.leftPanel.visible = true;
+            this.activityPanel.visible = true;
+        }
     }
 
     private onHeadHandler(tag: string, data: any) {
@@ -112,9 +134,9 @@ export class PicaNewMainPanel extends PicaBasePanel {
 
     private onActivityHandler(tag: string, data: any) {
         if (tag === "activity") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPARTYLIST_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAORDER_NAME);
         } else if (tag === "indent") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICATASK_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPARTYLIST_NAME);
         } else if (tag === "recharge") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICATASK_NAME);
         } else if (tag === "email") {
