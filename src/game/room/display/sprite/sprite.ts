@@ -45,10 +45,6 @@ export interface ISprite {
     speed: number;
 
     newID();
-    emit(type, data);
-    on(event: string, fn: Function, context: any);
-    off(event: string, fn: Function, context: any);
-    clear();
     updateAvatar(avatar: IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);

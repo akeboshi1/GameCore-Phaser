@@ -2,6 +2,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
+import { ModuleName } from "structure";
 
 export class PicaOrder extends BasicModel {
     constructor(game: Game) {
@@ -66,11 +67,11 @@ export class PicaOrder extends BasicModel {
     }
     private on_ORDER_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = packet.content;
-        this.event.emit("questlist", content);
+        this.event.emit(ModuleName.PICAORDER_NAME + "_modelQuestlist", content);
     }
     private on_PLAYER_PROGRESS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
-        this.event.emit("progresslist", content);
+        this.event.emit(ModuleName.PICAORDER_NAME + "_modelProgresslist", content);
     }
 
     private on_CLIENT_TEST(packet: PBpacket) {

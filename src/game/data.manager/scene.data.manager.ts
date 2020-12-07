@@ -1,6 +1,6 @@
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { EventType } from "structure";
+import { EventType, ModuleName } from "structure";
 import { EventDispatcher } from "utils";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
@@ -11,6 +11,7 @@ export class SceneDataManager extends BasePacketHandler {
         super(game, event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onUpdateModeRoomInfo);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         this.addPackListener();
     }
     clear() {
@@ -23,13 +24,18 @@ export class SceneDataManager extends BasePacketHandler {
         this.mCurRoom = undefined;
     }
 
+    private openComposePanel(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, content);
+    }
+
     private on_SEND_GIFT_DATA(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT = packet.content;
         this.mEvent.emit(EventType.SEND_GIFT_DATA_UPDATE, content);
         this.sendOpenGiftEffect(content);
     }
     private sendOpenGiftEffect(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT) {
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ["PicGiftEffect", content]);
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAGIFTEFFECT_NAME, content);
         const dataMgr = this.game.dataManager;
         const mgr = dataMgr.getDataMgr<any>(DataMgrType.BaseMgr);
         if (mgr) {

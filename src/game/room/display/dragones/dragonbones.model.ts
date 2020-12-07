@@ -37,7 +37,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     }
 
     public getOriginPoint(aniName): LogicPoint {
-        return new LogicPoint(1, 1);
+        return new LogicPoint(0, 0);
     }
 
     public getInteractiveArea(): op_def.IPBPoint2i[] {

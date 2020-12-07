@@ -150,7 +150,6 @@ export class DragonbonesDisplay extends DisplayObject {
             this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
         } else {
         }
-
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -250,7 +249,7 @@ export class DragonbonesDisplay extends DisplayObject {
     protected buildDragbones() {
         if (!this.scene.cache.custom.dragonbone) return;
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
-            this.onLoadCompleteHandler();
+            this.allComplete();
         } else {
             const res = "./resources/dragonbones";
             const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
@@ -260,7 +259,29 @@ export class DragonbonesDisplay extends DisplayObject {
         }
     }
 
-    protected onLoadCompleteHandler(loader?: any, totalComplete?: number, totalFailed?: number) {
+    protected fileComplete(progress: number, key: string, type: string) {
+        super.fileComplete(progress, key, type);
+        // if (!file) {
+        //     return;
+        // }
+        // const multi = file.multiFile;
+        // if (!multi || multi.key !== this.mDragonbonesName || multi.pending !== 1) {
+        //     return;
+        // }
+        Logger.getInstance().log("key===", key);
+        if (key !== this.mDragonbonesName || type !== "image") {
+            return;
+        }
+        // this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
+        this.allComplete();
+    }
+
+    protected fileError(key: string) {
+
+    }
+
+    protected allComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
+        super.allComplete(loader, totalComplete, totalFailed);
         if (!this.scene) return;
         if (!this.mArmatureDisplay) {
             this.mArmatureDisplay = this.scene.add.armature(
@@ -337,11 +358,8 @@ export class DragonbonesDisplay extends DisplayObject {
         this.mPlaceholder = undefined;
     }
     private loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
-        const loadQueue: LoadQueue = new LoadQueue(this.scene);
-        loadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
-        loadQueue.on("QueueProgress", this.onFileLoadHandler, this);
-        loadQueue.on("QueueComplete", this.onLoadCompleteHandler, this);
-        loadQueue.startLoad();
+        this.mLoadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
+        this.mLoadQueue.startLoad();
         // this.scene.load.dragonbone(
         //     this.mDragonbonesName,
         //     pngUrl,
@@ -353,7 +371,7 @@ export class DragonbonesDisplay extends DisplayObject {
         // );
         // this.scene.load.once(
         //     Phaser.Loader.Events.COMPLETE,
-        //     this.onLoadCompleteHandler,
+        //     this.allComplete,
         //     this,
         // );
         // this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
@@ -863,7 +881,7 @@ export class DragonbonesDisplay extends DisplayObject {
         const tempskin = this.formattingSkin(skin);
         const key = soltPart.replace("#", tempskin.sn).replace("$", soltDir.toString()) + tempskin.version;
         const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
-        if (this.scene.cache.custom.dragonbone.get(this.dragonBonesName)) {
+        if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             const partName: string = ResUtils.getPartName(key);
             const frameName: string = "test resources/" + key;
             if (this.mErrorLoadMap.get(partName)) return;
@@ -899,7 +917,7 @@ export class DragonbonesDisplay extends DisplayObject {
     private startLoad() {
         const configList: Phaser.Types.Loader.FileTypes.ImageFileConfig[] = [];
         // ============只有check到新资源时才会重新load，否则直接从当前龙骨的贴图资源上，获取对应贴图
-        this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, totalComplete: integer, totalFailed: integer) => {
+        this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, allComplete: integer, totalFailed: integer) => {
             if (!configList || !this.scene) return;
             this.refreshAvatar();
             this.mLoadMap.clear();
@@ -910,6 +928,12 @@ export class DragonbonesDisplay extends DisplayObject {
             this.mLoadMap.delete(e.key);
             this.mErrorLoadMap.set(e.key, e);
         }, this);
+
+        // const loadQueue: LoadQueue = new LoadQueue(this.scene);
+        // loadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
+        // loadQueue.on("QueueProgress", this.onFileLoadHandler, this);
+        // loadQueue.on("QueueComplete", this.allComplete, this);
+        // loadQueue.startLoad();
 
         this.mLoadMap.forEach((data) => {
             const nextLoad: string[] = data;
@@ -1073,19 +1097,5 @@ export class DragonbonesDisplay extends DisplayObject {
             if (preAvatar[key] !== newAvatar[key]) return true;
         }
         return false;
-    }
-    private onFileLoadHandler(progress: number, key: string, type: string) {
-        // if (!file) {
-        //     return;
-        // }
-        // const multi = file.multiFile;
-        // if (!multi || multi.key !== this.mDragonbonesName || multi.pending !== 1) {
-        //     return;
-        // }
-        if (key !== this.mDragonbonesName || type !== "image") {
-            return;
-        }
-        // this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
-        this.onLoadCompleteHandler();
     }
 }

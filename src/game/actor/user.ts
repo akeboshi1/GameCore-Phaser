@@ -363,8 +363,8 @@ export class User extends Player {
         } else {
             Object.assign(this.mModel, val);
         }
-        this.mModel.off("Animation_Change", this.animationChange, this);
-        this.mModel.on("Animation_Change", this.animationChange, this);
+        // this.mModel.off("Animation_Change", this.animationChange, this);
+        // this.mModel.on("Animation_Change", this.animationChange, this);
         if ((val as PlayerModel).package) {
             // this.mPackage = (val as PlayerModel).package;
             // this.mBag = new Bag(this.mElementManager.roomService.world);

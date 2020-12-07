@@ -98,7 +98,7 @@ export class ActivityPanel extends BasePanel {
         } else if (name === "2") {
             this.render.renderEmitter("showPanel", ModuleName.PICAORDER_NAME);
         } else if (name === "1") {
-            this.render.renderEmitter("showPanel", "PicaRecharge");
+            this.render.renderEmitter("showPanel", ModuleName.PICARECHARGE_NAME);
         }
     }
     private async checkUpdateActive() {
