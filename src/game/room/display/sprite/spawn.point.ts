@@ -33,6 +33,7 @@ export class SpawnPoint implements ISprite {
     animationQueue: AnimationQueue[];
     avatarSuits: AvatarSuit[];
     titleMask: number;
+    suits: AvatarSuit[];
 
     constructor() {
         this.id = 100;
@@ -76,8 +77,8 @@ export class SpawnPoint implements ISprite {
         throw new Error("Method not implemented.");
     }
 
-    updateAvatarSuits(attrs: op_def.IStrPair[]): boolean {
-        throw new Error("Method not implemented.");
+    updateAvatarSuits(suits: AvatarSuit[]): boolean {
+        throw false;
     }
 
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {

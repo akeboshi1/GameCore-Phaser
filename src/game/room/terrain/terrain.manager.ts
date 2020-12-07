@@ -328,7 +328,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         // }
     }
 
-    private onChangeAnimation(packet: PBpacket) {
+    protected onChangeAnimation(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
         if (content.nodeType !== NodeType.TerrainNodeType) {
             return;
@@ -344,13 +344,13 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private addEmpty(pos: IPos) {
+    protected addEmpty(pos: IPos) {
         const block = new EmptyTerrain(this.roomService, pos);
         const pos45 = this.roomService.transformTo45(pos);
         this.mEmptyMap[pos45.x][pos45.y] = block;
     }
 
-    private removeEmpty(pos: IPos) {
+    protected removeEmpty(pos: IPos) {
         const pos45 = this.roomService.transformTo45(pos);
         if (pos45.x >= this.mEmptyMap.length || pos45.y >= this.mEmptyMap[0].length) {
             Logger.getInstance().log(`position ${pos.x} ${pos.y} exceed the map boundary`);

@@ -18,13 +18,13 @@ export class DecorateTerrainManager extends TerrainManager {
     }
   }
 
-  public remove(id: number): IElement {
-    const terrain = super.remove(id);
-    if (terrain) {
-      this.removeMap(terrain.model);
-    }
-    return terrain;
-  }
+  // public remove(id: number): IElement {
+  //   const terrain = super.remove(id);
+  //   if (terrain) {
+  //     this.removeMap(terrain.model);
+  //   }
+  //   return terrain;
+  // }
 
   public canPut(pos45: IPos, collisionArea: number[][], origin: Phaser.Geom.Point) {
     let row = 0;
@@ -44,14 +44,23 @@ export class DecorateTerrainManager extends TerrainManager {
     }
   }
 
-  protected _add(sprite: ISprite): Terrain {
-    const terrain = super._add(sprite);
-    const displayInfo = sprite.displayInfo;
-    if (displayInfo) {
-      this.addMap(sprite);
-    }
-    return terrain;
+  public addToMap(sprite: ISprite) {
   }
+
+  public removeFromMap(sprite: ISprite) {
+  }
+
+  public removeEmpty() {
+  }
+
+  // protected _add(sprite: ISprite): Terrain {
+  //   const terrain = super._add(sprite);
+  //   const displayInfo = sprite.displayInfo;
+  //   if (displayInfo) {
+  //     this.addMap(sprite);
+  //   }
+  //   return terrain;
+  // }
 
   protected onSyncSprite(packet: PBpacket) {
     const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
@@ -74,11 +83,11 @@ export class DecorateTerrainManager extends TerrainManager {
   }
 
   protected addMap(sprite: ISprite) {
-    this.setMap(sprite, 1);
+    // this.setMap(sprite, 1);
   }
 
   protected removeMap(sprite: ISprite) {
-    this.setMap(sprite, 0);
+    // this.setMap(sprite, 0);
   }
 
   protected setMap(sprite: ISprite, type: number) {

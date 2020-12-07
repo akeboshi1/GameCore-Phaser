@@ -32,6 +32,15 @@ export class DecorateElementManager extends ElementManager {
     return true;
   }
 
+  public addToMap(sprite: ISprite) {
+  }
+
+  public removeFromMap(sprite: ISprite) {
+  }
+
+  public removeEmpty() {
+  }
+
   protected _add(sprite: ISprite, addMap?: boolean): Element {
     if (addMap === undefined) addMap = true;
     let ele = this.mElements.get(sprite.id);
@@ -82,4 +91,5 @@ export class DecorateElementManager extends ElementManager {
   get map(): number[][] {
     return this.mMap;
   }
+
 }

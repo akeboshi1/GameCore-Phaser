@@ -79,7 +79,6 @@ export class UIManager extends PacketHandler {
     }
 
     public showDecorateUI() {
-        //
     }
 
     public showMed(type: string, param?: any) {

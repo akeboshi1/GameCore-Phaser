@@ -43,7 +43,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mTerrainManager: DecorateTerrainManager;
     private mElementManager: DecorateElementManager;
     private mCameraService: ICameraService;
-    private mScene: Phaser.Scene | undefined;
     private mSelectorElement;
     private mSkyboxManager: SkyBoxManager;
     private mMap: number[][];
@@ -95,6 +94,11 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         for (let i = 0; i < rows; i++) {
             this.mMap[i] = new Array(cols).fill(0);
         }
+
+        this.game.showLoading({
+            "dpr": this.mScaleRatio,
+            "sceneName": "DecorateScene"
+        });
         // if (!this.world.game.scene.getScene(LoadingScene.name))
         //     this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
         // this.world.game.scene.start(LoadingScene.name, {
@@ -125,7 +129,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         // if (this.game.uiManager) {
         //     this.game.uiManager.showDecorateUI();
         // }
-        if (this.game.uiManager) this.game.uiManager.showMainUI();
+        if (this.game.uiManager) this.game.uiManager.showDecorateUI();
     }
 
     destroy() {
@@ -139,10 +143,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         // this.game.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
         // this.game.emitter.off(MessageType.PUT_ELEMENT, this.onPutElement, this);
         // this.game.emitter.off(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
-        if (!this.mScene) return;
-        this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
-        this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
-        this.mScene.input.off("gameobjectdown", this.onGameobjectUpHandler, this);
+        // if (!this.mScene) return;
+        // this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
+        // this.mScene.input.off("pointerdown", this.onPointerDownHandler, this);
+        // this.mScene.input.off("gameobjectdown", this.onGameobjectUpHandler, this);
     }
 
     now(): number {
@@ -150,9 +154,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     pause(): void {
-        if (this.mScene) {
-            this.mScene.scene.pause();
-        }
+        // if (this.mScene) {
+        //     this.mScene.scene.pause();
+        // }
     }
 
     removeBlockObject(object: IBlockObject) {
@@ -165,9 +169,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     resume(name: string): void {
-        if (this.mScene) {
-            this.mScene.scene.resume(name);
-        }
     }
 
     startLoad() {
@@ -182,14 +183,16 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.mBlocks = new ViewblockManager(this.mCameraService);
         this.mSkyboxManager = new SkyBoxManager(this);
         this.mBlocks.int(this.mSize);
-        this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
-        this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
-        this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
+        // this.mScene.input.on("pointerup", this.onPointerUpHandler, this);
+        // this.mScene.input.on("pointerdown", this.onPointerDownHandler, this);
+        // this.mScene.input.on("gameobjectdown", this.onGameobjectUpHandler, this);
         // const mainCameras = this.mScene.cameras.main;
-        const camera = this.scene.cameras.main;
+        // const camera = this.scene.cameras.main;
         // this.mCameraService.camera = camera;
-        const zoom = Math.ceil(window.devicePixelRatio);
-        this.game.renderPeer.setCamerasBounds(-camera.width >> 1, -camera.height >> 1, this.mSize.sceneWidth * zoom + camera.width, this.mSize.sceneHeight * zoom + camera.height);
+        const padding = 199 * this.mScaleRatio;
+        const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
+        this.game.renderPeer.roomstartPlay();
+        this.game.renderPeer.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         if (this.cameraPos) {
             // this.mCameraService.scrollTargetPoint(this.cameraPos.x, this.cameraPos.y);
             this.mCameraService.syncCameraScroll();
@@ -205,7 +208,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         // this.world.emitter.on(MessageType.CANCEL_PUT, this.onCancelPutHandler, this);
 
         // this.mLoadState = [];
-        this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
 
         this.initSkyBox();
     }
@@ -361,7 +364,16 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const scenerys = this.game.elementStorage.getScenerys();
         if (scenerys) {
             for (const scenery of scenerys) {
-                this.addSkyBox(scenery);
+                this.addSkyBox({
+                    id: scenery.id,
+                    uris: scenery.uris,
+                    depth: scenery.depth,
+                    width: scenery.width,
+                    height: scenery.height,
+                    speed: scenery.speed,
+                    offset: scenery.offset,
+                    fit: scenery.fit
+                });
             }
         }
     }
@@ -371,15 +383,15 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private addPointerMoveHandler() {
-        if (!this.mScene) return;
-        this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.on("gameout", this.onGameOutHandler, this);
+        // if (!this.mScene) return;
+        // this.mScene.input.on("pointermove", this.onPointerMoveHandler, this);
+        // this.mScene.input.on("gameout", this.onGameOutHandler, this);
     }
 
     private removePointerMoveHandler() {
-        if (!this.mScene) return;
-        this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.mScene.input.off("gameout", this.onGameOutHandler, this);
+        // if (!this.mScene) return;
+        // this.mScene.input.off("pointermove", this.onPointerMoveHandler, this);
+        // this.mScene.input.off("gameout", this.onGameOutHandler, this);
     }
 
     private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
@@ -701,10 +713,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     get cameraService(): ICameraService {
         return this.mCameraService;
-    }
-
-    get scene(): Phaser.Scene | undefined {
-        return this.mScene;
     }
 
     get connection(): ConnectionService {

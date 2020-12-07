@@ -4,6 +4,7 @@ import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
 import { BasicScene } from "./basic.scene";
 import { CreateRoleScene } from "./create.role.scene";
+import { DecorateScene } from "./decorate.scene";
 import { GamePauseScene } from "./game.pause.scene";
 import { LoadingScene } from "./loading.scene";
 import { LoginAccountScene } from "./login.account.scene";
@@ -26,10 +27,12 @@ export class SceneManager {
         "PlayScene": PlayScene,
         "RoomScene": RoomScene,
         "SelectRoleScene": SelectRoleScene,
-        "SkyBoxScene": SkyBoxScene
+        "SkyBoxScene": SkyBoxScene,
+        "DecorateScene": DecorateScene
     };
 
     private mCurSceneName: string;
+    private mMainScene: Phaser.Scene;
     constructor(private render: Render) {
         this.render.exportProperty(this, this.render, ModuleName.SCENEMANAGER_NAME)
             .onceReady(() => {
@@ -209,6 +212,15 @@ export class SceneManager {
     public destroy() {
         if (this.mCurSceneName) this.mCurSceneName = undefined;
         if (this.render && this.render.hasOwnProperty(ModuleName.SCENEMANAGER_NAME)) delete this.render[ModuleName.SCENEMANAGER_NAME];
+        this.mMainScene = undefined;
+    }
+
+    public setMainScene(scene: Phaser.Scene) {
+        this.mMainScene = scene;
+    }
+
+    public getMainScene() {
+        return this.mMainScene;
     }
 
     private sceneCallback(scene: Phaser.Scene) {
