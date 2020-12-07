@@ -54,12 +54,13 @@ export class PicaChatMediator extends BasicMediator {
             return;
         }
         const mgr = this.game.dataManager.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        const uiManager = this.game.uiManager;
         if (mgr && mgr.curRoom)
             this.onGiftStateHandler(mgr.curRoom.openingParty);
         if (this.mView && this.mView.isShowChatPanel()) {
-            const uiManager = this.game.uiManager;
             uiManager.showMed(ModuleName.PICAHANDHELD_NAME);
         }
+        uiManager.hideMed(ModuleName.PICANAVIGATE_NAME);
     }
 
     private onShowNavigateHandler() {
