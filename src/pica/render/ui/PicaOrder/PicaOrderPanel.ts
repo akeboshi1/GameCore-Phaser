@@ -1,4 +1,3 @@
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
 import { AlertView, BasePanel, DynamicImage, ImageValue, ItemInfoTips, Render, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
@@ -14,10 +13,10 @@ export class PicaOrderPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private orderProgressPanel: OrderProgressPanel;
     private goldImageValue: ImageValue;
-    private royalOrderLimit: op_def.IValueBar;
+    private royalOrderLimit: any;// op_def.IValueBar
     private itemtips: ItemInfoTips;
     // private itemsPanel: ItemsConsumeFunPanel;
-    private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
+    private progressData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAORDER_NAME;
@@ -148,7 +147,7 @@ export class PicaOrderPanel extends BasePanel {
         this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_questprogress");
     }
 
-    public setOrderDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST) {
+    public setOrderDataList(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST
         this.goldImageValue.visible = true;
         this.orderProgressPanel.visible = true;
         const orders = content.orders;
@@ -159,7 +158,7 @@ export class PicaOrderPanel extends BasePanel {
         this.goldImageValue.x = this.content.width * 0.5 - this.goldImageValue.width * 0.5 - 20 * this.dpr;
     }
 
-    public setOrderProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
+    public setOrderProgress(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         this.progressData = content;
         this.orderProgressPanel.setProgressDatas(content);
     }
@@ -171,8 +170,8 @@ export class PicaOrderPanel extends BasePanel {
         this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_hide");
     }
 
-    private onSendHandler(index: number, orderOperator: op_pkt_def.PKT_Order_Operator) {
-        if (orderOperator === op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE) {
+    private onSendHandler(index: number, orderOperator: any) {// op_pkt_def.PKT_Order_Operator
+        if (orderOperator === 2) {// op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE
             const alertView = new AlertView(this.uiManager);
             alertView.show({
                 text: i18n.t("order.refreshtips"),
@@ -245,7 +244,7 @@ export class PicaOrderPanel extends BasePanel {
 }
 
 class OrderItem extends Phaser.GameObjects.Container {
-    private orderData: op_client.IPKT_Quest;
+    private orderData: any;// op_client.IPKT_Quest
     private key: string;
     private dpr: number;
     private bg: Phaser.GameObjects.Image;
@@ -265,7 +264,7 @@ class OrderItem extends Phaser.GameObjects.Container {
     private tipsHandler: Handler;
     private refreshHandler: Handler;
     private index: number;
-    private orderOperator: op_pkt_def.PKT_Order_Operator;
+    private orderOperator: any;// op_pkt_def.PKT_Order_Operator
     private timeID: any;
     private mRender: Render;
     private mScene: Phaser.Scene;
@@ -329,12 +328,12 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.tipsHandler = tips;
         this.refreshHandler = refresh;
     }
-    public setOrderData(data: op_client.IPKT_Quest, index: number) {
+    public setOrderData(data: any, index: number) {// op_client.IPKT_Quest
         this.orderData = data;
         this.index = index;
         this.hideAllElement();
-        this.bg.setFrame(data.questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_bg" : "order_ordinary_bg");
-        if (data.stage !== op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
+        this.bg.setFrame(data.questType === 5 ? "order_precious_bg" : "order_ordinary_bg");// op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION
+        if (data.stage !== 4) {// op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END
             const url = Url.getOsdRes(data.display.texturePath);
             this.headIcon.load(url, this, () => {
                 this.headIcon.scale = 1;
@@ -343,18 +342,18 @@ class OrderItem extends Phaser.GameObjects.Container {
             });
             this.headIcon.visible = true;
         }
-        if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_ACCEPTABLE) {
+        if (data.stage === 1) {// op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_ACCEPTABLE
             this.deliveryState(data);
-            this.orderOperator = op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELIVERY;
-        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
+            this.orderOperator = 0;// op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELIVERY
+        } else if (data.stage === 2) {// op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING
             this.deliveryingState(data);
-        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
+        } else if (data.stage === 3) {// op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED
             this.rewardState(data);
-            this.orderOperator = op_pkt_def.PKT_Order_Operator.PKT_ORDER_GET_REWARD;
+            this.orderOperator = 3;// op_pkt_def.PKT_Order_Operator.PKT_ORDER_GET_REWARD
 
-        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
+        } else if (data.stage === 4) {// op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END
             this.cooldownState(data);
-            this.orderOperator = op_pkt_def.PKT_Order_Operator.PKT_ORDER_SPEED_UP;
+            this.orderOperator = 1;// op_pkt_def.PKT_Order_Operator.PKT_ORDER_SPEED_UP
         }
     }
 
@@ -378,15 +377,15 @@ class OrderItem extends Phaser.GameObjects.Container {
     }
 
     private onRefreshHandler() {
-        if (this.sendHandler) this.sendHandler.runWith([this.index, op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE]);
+        if (this.sendHandler) this.sendHandler.runWith([this.index, 2]);// op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE
     }
 
-    private deliveryState(data: op_client.IPKT_Quest) {
+    private deliveryState(data: any) {// op_client.IPKT_Quest
         const questType = data.questType;
-        this.headbg.setFrame(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_head_bg" : "order_ordinary_head_bg");
+        this.headbg.setFrame(questType === 5 ? "order_precious_head_bg" : "order_ordinary_head_bg");// op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION
         this.refreshBtn.visible = true;
         this.refreshBtn.setInteractive();
-        this.refreshBtn.setFrameNormal(questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "order_precious_delete_bg" : "order_delete_bg");
+        this.refreshBtn.setFrameNormal(questType === 5 ? "order_precious_delete_bg" : "order_delete_bg");// op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION
         let offsetpos = -this.width * 0.5 + 58 * this.dpr;
         let isenough = true;
         for (let i = 0; i < data.targets.length; i++) {
@@ -432,7 +431,7 @@ class OrderItem extends Phaser.GameObjects.Container {
             }
             item.setOffset(0, this.dpr);
             item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
-            item.setTextStyle({ color: questType === op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION ? "#ffffff" : "#2154BD" });
+            item.setTextStyle({ color: questType === 5 ? "#ffffff" : "#2154BD" });// op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
             item.y = this.height * 0.5 - item.height * 0.5 - 4 * this.dpr;
@@ -440,7 +439,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         }
     }
 
-    private deliveryingState(data: op_client.IPKT_Quest) {
+    private deliveryingState(data: any) {// op_client.IPKT_Quest
         if (!this.deliverybg) {
             this.deliverybg = this.scene.make.image({ key: this.key, frame: "order_transport" });
             // this.deliverybg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
@@ -496,7 +495,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         }
     }
 
-    private rewardState(data: op_client.IPKT_Quest) {
+    private rewardState(data: any) {// op_client.IPKT_Quest
         this.headbg.setFrame("order_ordinary_head_bg");
         // this.refreshBtn.visible = true;
         // this.refreshBtn.setInteractive();
@@ -526,7 +525,7 @@ class OrderItem extends Phaser.GameObjects.Container {
 
     }
 
-    private cooldownState(data: op_client.IPKT_Quest) {
+    private cooldownState(data: any) {// op_client.IPKT_Quest
         this.headbg.setFrame("order_unknown_head");
         this.headIcon.visible = false;
         // this.refreshBtn.visible = false;
@@ -598,7 +597,7 @@ class OrderItem extends Phaser.GameObjects.Container {
 }
 
 class MaterialItem extends Phaser.GameObjects.Container {
-    public itemData: op_client.ICountablePackageItem;
+    public itemData: any;// op_client.ICountablePackageItem
     private key: string;
     private dpr: number;
     private bg: Phaser.GameObjects.Image;
@@ -621,7 +620,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.icon, this.value]);
         this.setInteractive();
     }
-    public setMaterialData(data: op_client.ICountablePackageItem) {
+    public setMaterialData(data: any) {// op_client.ICountablePackageItem
         this.itemData = data;
         const url = Url.getOsdRes(data.display.texturePath);
         this.icon.load(url, this, () => {
@@ -670,7 +669,7 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.icon]);
     }
 
-    public setItemData(data: op_client.ICountablePackageItem) {
+    public setItemData(data: any) {// op_client.ICountablePackageItem
         this.imageValue = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, undefined, this.dpr);
         this.imageValue.setFrameValue(`${data.count}`, this.key, this.getIconName(data.display.texturePath) + "_s");
         this.imageValue.x = -4 * this.dpr;
@@ -741,7 +740,7 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
         this.add(this.progress);
     }
 
-    public setProgressDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
+    public setProgressDatas(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         const len = content.steps.length;
         let maxvalue = 100;
         for (let i = 0; i < len; i++) {
@@ -768,7 +767,7 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
     }
 }
 class OrderProgressItem extends Phaser.GameObjects.Container {
-    public progressData: op_client.IPKT_Progress;
+    public progressData: any;// op_client.IPKT_Progress
     public index: number;
     private key: string;
     private dpr: number;
@@ -797,7 +796,7 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         this.finishIcon.visible = false;
     }
 
-    public setItemData(data: op_client.IPKT_Progress, index: number, curvalue: number) {
+    public setItemData(data: any, index: number, curvalue: number) {// op_client.IPKT_Progress
         this.progressData = data;
         this.index = index;
         this.text.text = data.targetValue + "";
