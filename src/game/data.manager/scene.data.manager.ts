@@ -12,6 +12,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onUpdateModeRoomInfo);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS, this.onReAwardTipsHandler);
         this.addPackListener();
     }
     clear() {
@@ -22,6 +23,11 @@ export class SceneDataManager extends BasePacketHandler {
     destroy() {
         super.destroy();
         this.mCurRoom = undefined;
+    }
+
+    private onReAwardTipsHandler(packet: PBpacket) {
+        this.game.showMediator(ModuleName.PICAREWARDTIP_NAME, true, packet.content);
+        // this.mEvent.emit("showAward", packet.content);
     }
 
     private openComposePanel(packge: PBpacket) {
