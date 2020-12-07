@@ -13,7 +13,7 @@ export class ProgressMaskBar extends BaseUI {
         if (config) {
             const barW = config.width || this.width;
             const barH = config.height || this.height;
-            this.mBar = new NineSlicePatch(scene, 0, 0, barW, barH, key, bar, config);
+            this.mBar = new NineSlicePatch(scene, 0, -2 * this.dpr, barW, barH, key, bar, config);
         } else
             this.mBar = scene.make.image({ key, frame: bar });
         if (style) {
