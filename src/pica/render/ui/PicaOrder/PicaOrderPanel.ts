@@ -365,7 +365,7 @@ class OrderItem extends Phaser.GameObjects.Container {
         super.destroy(fromScene);
     }
 
-    private get serviceTimestamp() {
+    private getServiceTimestamp(): Promise<number> {
         return this.mRender.mainPeer.now();
     }
     private onAcceleHandler() {
@@ -455,8 +455,9 @@ class OrderItem extends Phaser.GameObjects.Container {
             clearTimeout(this.timeID);
             this.timeID = undefined;
         }
-        const timeextu = () => {
-            let intervalTime = Math.ceil(data.deliveryDeadline - this.serviceTimestamp / 1000);
+        const timeextu = async () => {
+            const timeStamp = await this.getServiceTimestamp();
+            let intervalTime = Math.ceil(data.deliveryDeadline - timeStamp / 1000);
             if (intervalTime < 0) intervalTime = 0;
             const minute = Math.floor(intervalTime / 60);
             const second = intervalTime % 60;
@@ -539,8 +540,9 @@ class OrderItem extends Phaser.GameObjects.Container {
             clearTimeout(this.timeID);
             this.timeID = undefined;
         }
-        const timeextu = () => {
-            let intervalTime = Math.ceil(data.refreshDeadline - this.serviceTimestamp / 1000);
+        const timeextu = async () => {
+            const timeStamp = await this.getServiceTimestamp();
+            let intervalTime = Math.ceil(data.refreshDeadline - timeStamp / 1000);
             if (intervalTime < 0) intervalTime = 0;
             const minute = Math.floor(intervalTime / 60);
             const second = intervalTime % 60;
