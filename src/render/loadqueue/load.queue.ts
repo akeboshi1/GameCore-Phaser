@@ -91,6 +91,7 @@ export class LoadQueue extends Phaser.Events.EventEmitter {
         this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.fileComplete, this);
         this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.totalComplete, this);
         this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.fileLoadError, this);
+        if (!this.mQueue) return;
         this.mQueue.length = 0;
         this.mQueue = [];
         this.mIndex = 0;
