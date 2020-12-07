@@ -81,16 +81,16 @@ export class LoadingScene extends BasicScene {
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
 
-    if (this.mCallback) {
-      this.mCallback.call(this, this);
-      this.mCallback = undefined;
-    }
+    // if (this.mCallback) {
+    //   this.mCallback.call(this, this);
+    //   this.mCallback = undefined;
+    // }
     // this.scale.on("resize", this.checkSize, this);
 
   }
 
   public async show() {
-    this.awake();
+    this.wake();
     if (!this.curtain) {
       return Promise.resolve();
     }
@@ -106,21 +106,24 @@ export class LoadingScene extends BasicScene {
     return this.curtain.close();
   }
 
-  public awake(data?: any) {
+  public wake(data?: any) {
     if (!this.scene || !this.scene.settings) {
       return;
     }
-    this.displayVisible(true);
-    // this.scale.on("resize", this.checkSize, this);
-    this.scene.wake();
-    this.scene.bringToTop(SceneName.LOADING_SCENE);
+    if (!this.scene.isActive) {
+      this.displayVisible(true);
+      // this.scale.on("resize", this.checkSize, this);
+      this.scene.wake();
+      this.scene.bringToTop(SceneName.LOADING_SCENE);
+      super.wake(data);
+    }
     if (!data) {
       return;
     }
     this.tipsText = data.text;
-    if (data.callBack) {
-      data.callBack.call(this, this);
-    }
+    // if (data.callBack) {
+    //   data.callBack.call(this, this);
+    // }
     if (data.text && this.progressText) {
       if (this.progressText.active) this.progressText.setText(data.text);
     }

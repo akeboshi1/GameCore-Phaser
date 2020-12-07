@@ -60,11 +60,6 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     destroy() {
-        this.game.emitter.off("packageCategory", this.onPackageCategoryHandler, this);
-        this.game.emitter.off("queryPackage", this.onQueryPackageHandler, this);
-        this.game.emitter.off("queryCommodityResource", this.onQueryCommodityResourceHandler, this);
-        this.game.emitter.off("queryResetAvatar", this.onResetAvatar, this);
-        this.game.emitter.off("avatarIDs", this.onDressAvatarIDS, this);
         super.destroy();
         this.removeLisenter();
     }

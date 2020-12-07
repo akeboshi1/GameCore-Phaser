@@ -18,3 +18,4 @@ export { TimerCountDown } from "./TimerCountDown";
 export { AvatarSuitType, SuitAlternativeType, AvatarSuit } from "./avatar.suit.type";
 export { StateConfig, ElementStateType } from "./element.state.data";
 export * from "./message.type";
+export * from "./load.state";

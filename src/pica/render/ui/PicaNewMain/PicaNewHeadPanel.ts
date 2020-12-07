@@ -47,7 +47,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             x: 0, y: 0, text: "", style: { color: "#0089D3", fontSize: 14 * this.dpr, fontFamily: Font.NUMBER }
         }).setStroke("#ffffff", 2 * this.dpr).setFontStyle("bold").setOrigin(0.5);
         this.powerPro = new ProgressMaskBar(this.scene, UIAtlasName.uicommon, "home_progress_bottom", "strength_progress", undefined, {
-            width: 39 * this.dpr, height: 11 * this.dpr, left: 4 * this.dpr, right: 4 * this.dpr, top: 0, bottom: 0
+            width: 41 * this.dpr, height: 11 * this.dpr, left: 4 * this.dpr, right: 4 * this.dpr, top: 0, bottom: 0
         });
         this.powerPro.x = 0;
         this.powerPro.y = headbg.height * 0.5 + this.powerPro.height * 0.5 - 4 * this.dpr;
@@ -55,11 +55,11 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             color: "#ffffff", fontSize: 8 * this.dpr, fontFamily: Font.NUMBER
         });
         this.powerTex.y = this.powerPro.y;
-        this.powerTex.x = -12 * this.dpr;
+        this.powerTex.x = -2 * this.dpr;
         this.powerTex.setFontStyle("bold");
         this.powerTex.setStroke("#000000", 2 * this.dpr);
         this.powerTex.setOffset(-4 * this.dpr, 0);
-        this.powerTex.setLayout(1);
+        this.powerTex.setLayout(2);
         this.powerTex.setText("");
         this.powerAddBtn = new Button(this.scene, UIAtlasName.uicommon, "add_btn", "add_btn");
         this.powerAddBtn.x = this.powerPro.x + this.powerPro.width * 0.5 + 7 * this.dpr;

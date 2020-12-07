@@ -20,7 +20,7 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.init();
     }
     init() {
-        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "butt_yellow_middle_b" });
+        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bg" });
         this.bg.displayWidth = this.width;
         const bagButton = this.createButton("home_bag");
         bagButton.x = -this.width * 0.5 + bagButton.width * 0.5 + 17 * this.dpr;
