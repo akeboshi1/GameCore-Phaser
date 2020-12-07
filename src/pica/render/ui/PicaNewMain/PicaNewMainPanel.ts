@@ -64,8 +64,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.headPanel.setHeadData(level, energy, money, diamond);
     }
 
-    setRoomInfo(sceneName: string, isPraise: boolean, people: number) {
-        this.headPanel.setSceneData(sceneName, isPraise, people);
+    setRoomInfo(sceneName: string, isPraise: boolean, people: number, roomType: string) {
+        this.headPanel.setSceneData(sceneName, isPraise, people, roomType);
     }
 
     updateUIState(active?: any) {
@@ -88,7 +88,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.add(this.activityPanel);
         this.chatPanel = new PicaNewChatPanel(this.scene, width, 201 * this.dpr, this.key, this.dpr);
         this.add(this.chatPanel);
-        this.navigatePanel = new PicaNewNavigatePanel(this.scene, width, 48 * this.dpr, this.key, this.dpr);
+        this.navigatePanel = new PicaNewNavigatePanel(this.scene, width, 56 * this.dpr, this.key, this.dpr);
         this.navigatePanel.setHandler(new Handler(this, this.onNavigateHandler));
         this.add(this.navigatePanel);
         this.resize(width, height);
