@@ -573,7 +573,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 y *= this.mScaleRatio;
                 width *= this.mScaleRatio;
                 height *= this.mScaleRatio;
-                this.mGame.renderPeer.setCamerasBounds(x, y, width, height);
+                // this.mGame.renderPeer.setCamerasBounds(\x, y, width, height);
                 break;
         }
     }

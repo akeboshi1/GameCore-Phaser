@@ -9,6 +9,7 @@ export class MatterObject {
     protected _tempVec2: Vector;
     protected _offset: Vector;
     protected _sensor: boolean = false;
+    protected _bodyOrigin: Vector;
     constructor(protected mRoomService: IRoomService) {
         if (this.mRoomService) this.setMatterWorld(mRoomService.matterWorld);
         this._tempVec2 = Vector.create(0, 0);
