@@ -49,7 +49,7 @@ export interface ISprite {
     on(event: string, fn: Function, context: any);
     off(event: string, fn: Function, context: any);
     clear();
-    updateAvatar(avatar: op_gameconfig.IAvatar);
+    updateAvatar(avatar: IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
     setAnimationName(name: string, playTimes?: number): RunningAnimation;
@@ -239,7 +239,8 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
         return false;
     }
-    public updateAvatar(avatar: op_gameconfig.IAvatar) {
+
+    public updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar) {
         if (this.displayInfo) {
             this.displayInfo.destroy();
         }

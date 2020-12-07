@@ -209,7 +209,7 @@ export class PicaBagPanel extends BasePanel {
           }
         }
         for (const item of this.mSelectedItemData) {
-          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn);
+          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn, item.version);
           // const dataAvatar = item.avatar;
           for (const key in dataAvatar) {
             if (dataAvatar.hasOwnProperty(key)) {
@@ -509,7 +509,7 @@ export class PicaBagPanel extends BasePanel {
     this.mSelectedItems.push(cell);
     cell.isSelect = true;
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn);
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.version);
     content.animations = data.animations;
     this.setSelectedResource(content);
   }
@@ -751,7 +751,7 @@ export class PicaBagPanel extends BasePanel {
   private getPropResource(data: op_client.ICountablePackageItem) {
     const resource = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     if (data.suitType) {
-      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn);
+      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.version);
     } else {
       resource.display = data.display;
     }

@@ -8,7 +8,6 @@ export class DragonbonesModel implements IDragonbonesModel {
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
-
     constructor(data: any) {
         // this.id = id;
         // this.avatar = avatar;
