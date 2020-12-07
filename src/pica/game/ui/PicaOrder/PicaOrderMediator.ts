@@ -11,8 +11,8 @@ export class PicaOrderMediator extends BasicMediator {
     constructor(game: PicaGame) {
         super(ModuleName.PICAORDER_NAME, game);
         this.mModel = new PicaOrder(game);
-        this.game.emitter.on("questlist", this.on_ORDER_LIST, this);
-        this.game.emitter.on("progresslist", this.on_PLAYER_PROGRESS, this);
+        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_modelQuestlist", this.on_ORDER_LIST, this);
+        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_modelProgresslist", this.on_PLAYER_PROGRESS, this);
     }
 
     isSceneUI() {
@@ -38,8 +38,8 @@ export class PicaOrderMediator extends BasicMediator {
     }
 
     destroy() {
-        this.game.emitter.off("questlist", this.on_ORDER_LIST, this);
-        this.game.emitter.off("progresslist", this.on_PLAYER_PROGRESS, this);
+        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_modelQuestlist", this.on_ORDER_LIST, this);
+        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_modelProgresslist", this.on_PLAYER_PROGRESS, this);
         super.destroy();
     }
 
