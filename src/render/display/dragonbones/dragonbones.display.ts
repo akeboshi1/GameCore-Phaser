@@ -1,5 +1,5 @@
 import { Logger, ResUtils } from "utils";
-import { IAvatar, IDragonbonesModel, RunningAnimation } from "structure";
+import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "../../render";
 import { LoadQueue, LoadType } from "../../loadqueue";
@@ -875,10 +875,11 @@ export class DragonbonesDisplay extends DisplayObject {
     }
 
     // set loadMap
-    private replacePartDisplay(soltName: string, soltPart: string, soltDir: number, skin: number): void {
+    private replacePartDisplay(soltName: string, soltPart: string, soltDir: number, skin: SlotSkin | string | number): void {
         const part: string = soltName.replace("$", soltDir.toString());
         const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
-        const key = soltPart.replace("#", skin.toString()).replace("$", soltDir.toString());
+        const tempskin = this.formattingSkin(skin);
+        const key = soltPart.replace("#", tempskin.sn).replace("$", soltDir.toString()) + tempskin.version;
         const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             const partName: string = ResUtils.getPartName(key);
@@ -950,7 +951,8 @@ export class DragonbonesDisplay extends DisplayObject {
         for (const rep of this.replaceArr) {
             const part: string = rep.slot.replace("$", rep.dir.toString());
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
-            const key = rep.part.replace("#", rep.skin.toString()).replace("$", rep.dir.toString());
+            const skin = this.formattingSkin(rep.skin);
+            const key = rep.part.replace("#", skin.sn.toString()).replace("$", rep.dir.toString()) + skin.version;
             const partName: string = ResUtils.getPartName(key);
             const frameName: string = "test resources/" + key;
             if (!this.UNPACKSLOTS.includes(rep.slot)) {
@@ -989,7 +991,8 @@ export class DragonbonesDisplay extends DisplayObject {
                 // 原始资源
                 if (!loadArr) {
                     for (const obj of this.replaceArr) {
-                        const tmpKey = obj.part.replace("#", obj.skin.toString()).replace("$", obj.dir.toString());
+                        const skin = this.formattingSkin(obj.skin);
+                        const tmpKey = obj.part.replace("#", skin.sn.toString()).replace("$", obj.dir.toString()) + skin.version;
                         const partName: string = ResUtils.getPartName(tmpKey);
                         const frameName: string = "test resources/" + tmpKey;
                         const part: string = obj.slot.replace("$", obj.dir.toString());
@@ -1035,6 +1038,17 @@ export class DragonbonesDisplay extends DisplayObject {
         this.closePlaceholder();
         this.mArmatureDisplay.visible = true;
         this.emit("replacefinished");
+    }
+
+    private formattingSkin(skin: any) {
+        let version = "", sn = "";
+        if (typeof skin === "string" || typeof skin === "number") {
+            sn = skin.toString();
+        } else {
+            version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
+            sn = skin.sn;
+        }
+        return { sn, version };
     }
 
     private clearFadeTween() {

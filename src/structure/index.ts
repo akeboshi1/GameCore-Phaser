@@ -2,7 +2,7 @@
 export { RunningAnimation, AnimationQueue } from "./animation";
 export { PI_EXTENSION_REGEX, HTTP_REGEX } from "./constants";
 export { IDisplay } from "./display";
-export { IDragonbonesModel, IAvatar } from "./dragonbones";
+export { IDragonbonesModel, IAvatar, SlotSkin } from "./dragonbones";
 export { IFramesModel } from "./frame";
 export { GameMain } from "./game.main";
 export { ILauncherConfig } from "./lanucher.config";
