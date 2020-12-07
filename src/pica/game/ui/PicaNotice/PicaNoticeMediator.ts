@@ -7,7 +7,6 @@ export class PicaNoticeMediator extends BasicMediator {
   private mCreatingPanel: boolean = false;
   constructor(game: Game) {
     super(ModuleName.PICANOTICE_NAME, game);
-    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
   }
 
   show(param?: any) {
@@ -16,6 +15,7 @@ export class PicaNoticeMediator extends BasicMediator {
       Logger.getInstance().error("NoticeMediator.show with no data");
       return;
     }
+    this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
     if (this.mView || this.mCreatingPanel) {
       this.mPanelQueue.push(param);
       return;
@@ -34,10 +34,7 @@ export class PicaNoticeMediator extends BasicMediator {
   }
 
   private onCloseHandler() {
-    if (this.mView) {
-      this.mView.hide();
-      this.mView = undefined;
-    }
+    this.hide();
     if (this.mPanelQueue.length > 0) {
       const param = this.mPanelQueue.shift();
       this.show(param);
