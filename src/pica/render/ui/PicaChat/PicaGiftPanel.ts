@@ -50,6 +50,18 @@ export class PicaGiftPanel extends Phaser.GameObjects.Container {
     public setGiftActive(active: boolean) {
         (<any>(this.sendButton)).enable = active;
     }
+    public onUsePropHandler(data: any, tempdata: any, count: number) {// op_client.IMarketCommodity
+        const prop = {
+            id: data.id,
+            quantity: count,
+            category: tempdata.category
+        };
+        this.curGiftData.remain -= count;
+        if (this.curGiftData.limit > 0 && this.curGiftData.remain <= 0) {
+            this.mPropGrid.refresh();
+        }
+        this.emit("buyItem", prop, data);
+    }
 
     protected init() {
         const mBackground = this.scene.make.graphics(undefined, false);
@@ -154,23 +166,13 @@ export class PicaGiftPanel extends Phaser.GameObjects.Container {
         const title = i18n.t("chat.givegift");
         const url = this.curGiftData.icon;
         const slider = data.sellingPrice.price > 0 ? true : false;
-        const confirmHandler = new Handler(this, (tempdata: any, count: number) => {// op_client.CountablePackageItem
-            const prop = {
-                id: data.id,
-                quantity: count,
-                category: tempdata.category
-            };
-            this.curGiftData.remain -= count;
-            if (this.curGiftData.limit > 0 && this.curGiftData.remain <= 0) {
-                this.mPropGrid.refresh();
-            }
-            this.emit("buyItem", prop, data);
-        });
+        const resultHandler = { key: this.key, confirmFunc: "onUsePropHandler", confirmAddData: data };
         const config = {
-            confirmHandler, data, url, title, slider, line: true
+            resultHandler, data, url, title, slider, line: true
         };// PicaPropFunConfig
         this.emit("showpropfun", config);
     }
+
     private getBuyPackageData() {
         const propdata: any = this.curGiftData;// op_client.IMarketCommodity
         const itemdata = {

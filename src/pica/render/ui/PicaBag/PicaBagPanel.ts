@@ -772,8 +772,8 @@ export class PicaBagPanel extends BasePanel {
       resource.animations = data.animations;
       const resultHandler = {
         key: this.key,
-        confirmFunc: this.onSellPropsHandler.name,
-        cancelFunc: this.onSellPropsFailedHandler.name,
+        confirmFunc: "onSellPropsHandler",
+        cancelFunc: "onSellPropsFailedHandler",
         confirmAddData: this.categoryType
       };
 
@@ -789,8 +789,8 @@ export class PicaBagPanel extends BasePanel {
       const resource = this.getPropResource(data);
       const resultHandler = {
         key: this.key,
-        confirmFunc: this.onUsePropsHandler.name,
-        cancelFunc: this.onUsePropsFailedHandler.name
+        confirmFunc: "onUsePropsHandler",
+        cancelFunc: "onUsePropsFailedHandler"
       };
       this.showPropFun({ resultHandler, data, price: false, title, resource });
     }
