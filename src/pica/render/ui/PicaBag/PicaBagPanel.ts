@@ -293,6 +293,10 @@ export class PicaBagPanel extends BasePanel {
     this.mCategoryScroll.addListen();
   }
 
+  public getEnableEdit() {
+    return this.mEnableEdit;
+  }
+
   protected preload() {
     this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
     this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
@@ -917,10 +921,6 @@ export class PicaBagPanel extends BasePanel {
 
     this.mCategoryScroll.setAlign();
 
-  }
-
-  get enableEdit() {
-    return this.mEnableEdit;
   }
 
   private showPropFun(config: any) {// PicPropFunConfig

@@ -176,7 +176,8 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     private onAddFurniHandler(id: string) {
-        if (this.mView.enableEdit) {
+        const enable = this.game.roomManager.currentRoom.enableEdit;
+        if (enable) {
             this.model.enterEditAndSelectedSprite(id);
         } else {
             this.model.addFurniToScene(id);

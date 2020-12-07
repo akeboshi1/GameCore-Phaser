@@ -25,7 +25,7 @@ export class LogicPos implements IPos {
         return this;
     }
 
-    public equal(p: LogicPos): boolean {
+    public equal(p: IPos): boolean {
         return p.x === this.x && p.y === this.y && p.z === this.z && p.depth === this.depth;
     }
 
