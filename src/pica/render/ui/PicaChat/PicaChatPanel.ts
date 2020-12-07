@@ -26,7 +26,6 @@ export class PicaChatPanel extends BasePanel {
     private mHornBtn: Phaser.GameObjects.Image;
     private mEmojiBtn: Phaser.GameObjects.Image;
     private mGiftBtn: Phaser.GameObjects.Image;
-    private mNavigateBtn: Phaser.GameObjects.Image;
     private mOutputText: BBCodeText;
     private mTextArea: TextArea;
     private mInputText: InputPanel | PicaChatInputPanel;
@@ -79,7 +78,6 @@ export class PicaChatPanel extends BasePanel {
         const textMask = this.mTextArea.childrenMap.text;
         textMask.y = 8 * this.dpr;
         this.mTextArea.scrollToBottom();
-        this.mNavigateBtn.x = width / this.scale - this.mNavigateBtn.width * 0.5 - 5 * this.dpr;
         if (this.giftPanel) {
             this.giftPanel.resize();
             this.giftPanel.y = this.height - this.giftPanel.height * 0.5;
@@ -159,13 +157,11 @@ export class PicaChatPanel extends BasePanel {
         this.mChatBtn.setInteractive();
         this.mEmojiBtn.setInteractive();
         if (this.mTextArea.visible) this.mScrollBtn.setInteractive();
-        this.mNavigateBtn.setInteractive();
         this.mGiftBtn.setInteractive();
         this.mTextArea.childrenMap.child.setInteractive();
 
         this.mScrollBtn.on("drag", this.onDragHandler, this);
         this.scene.input.setDraggable(this.mScrollBtn, true);
-        this.mNavigateBtn.on("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.on("pointerup", this.onShowInputHanldler, this);
         this.mGiftBtn.on("pointerup", this.onGiftHandler, this);
         this.mEmojiBtn.on("pointerup", this.onEmojiHandler, this);
@@ -180,12 +176,10 @@ export class PicaChatPanel extends BasePanel {
         this.mChatBtn.disableInteractive();
         this.mEmojiBtn.disableInteractive();
         this.mScrollBtn.disableInteractive();
-        this.mNavigateBtn.disableInteractive();
         this.mGiftBtn.disableInteractive();
         this.mTextArea.childrenMap.child.disableInteractive();
         this.mEmojiBtn.off("pointerup", this.onEmojiHandler, this);
         this.mScrollBtn.off("drag", this.onDragHandler, this);
-        this.mNavigateBtn.off("pointerup", this.onShowNavigateHandler, this);
         this.mChatBtn.off("pointerup", this.onShowInputHanldler, this);
         this.mGiftBtn.off("pointerup", this.onGiftHandler, this);
 
@@ -198,11 +192,11 @@ export class PicaChatPanel extends BasePanel {
         if (!this.mInitialized) {
             return;
         }
-        if (active.name === "picachat.navigatebtn") {
-            if (this.mNavigateBtn.visible !== active.visible) {
-                this.mNavigateBtn.visible = active.visible;
-            }
-        }
+        // if (active.name === "picachat.navigatebtn") {
+        //     if (this.mNavigateBtn.visible !== active.visible) {
+        //         this.mNavigateBtn.visible = active.visible;
+        //     }
+        // }
     }
 
     public destroy() {
@@ -231,7 +225,7 @@ export class PicaChatPanel extends BasePanel {
         this.mHornBtn = this.scene.make.image({ x: 159 * this.dpr * zoom, key: this.key, frame: "horn_icon" }, false).setScale(zoom);
         this.mEmojiBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "emoji" }, false).setScale(zoom);
         this.mGiftBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "party_gift_icon" }, false).setScale(zoom);
-        this.mNavigateBtn = this.scene.make.image({ x: 281 * this.dpr, key: this.key, frame: "more_btn" }, false).setScale(zoom);
+       // this.mNavigateBtn = this.scene.make.image({ x: 281 * this.dpr, key: this.key, frame: "more_btn" }, false).setScale(zoom);
         const space = 20 * this.dpr;
         this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.mScrollBtn.x = this.mScrollBtn.width * 0.5 + 5 * this.dpr;
@@ -252,8 +246,8 @@ export class PicaChatPanel extends BasePanel {
         this.mGiftBtn.x = this.mEmojiBtn.x + this.mEmojiBtn.width * 0.5 + space + this.mGiftBtn.width * 0.5;
         this.mGiftBtn.y = -this.mGiftBtn.height / 2 + this.mTitleBg.height;
         this.mGiftBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.mNavigateBtn.y = -this.mNavigateBtn.height / 2 + this.mTitleBg.height;
-        this.mNavigateBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        // this.mNavigateBtn.y = -this.mNavigateBtn.height / 2 + this.mTitleBg.height;
+        // this.mNavigateBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         this.mOutputText = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: 14 * this.dpr / zoom + "px",
@@ -292,7 +286,6 @@ export class PicaChatPanel extends BasePanel {
             this.mEmojiBtn,
             this.mGiftBtn,
             this.mScrollBtn,
-            this.mNavigateBtn
         ]);
         this.add([
             this.mBackground,

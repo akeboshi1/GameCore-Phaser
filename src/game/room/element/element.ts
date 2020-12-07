@@ -234,15 +234,16 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
-        if (this.mModel.updateAvatarSuits(model.attrs)) {
+        if (model.hasOwnProperty("attrs")) {
+            this.model.updateAttr(model.attrs);
+        }
+        if (this.mModel.suits) {
+            this.mModel.updateAvatarSuits(this.mModel.suits);
             this.mModel.updateAvatar(this.mModel.avatar);
             this.load(this.mModel.displayInfo);
         } else if (model.hasOwnProperty("avatar")) {
             this.mModel.updateAvatar(model.avatar);
             this.load(this.mModel.displayInfo);
-        }
-        if (model.hasOwnProperty("attrs")) {
-            this.model.updateAttr(model.attrs);
         }
         if (model.display && model.animations) {
             this.mModel.updateDisplay(model.display, model.animations);
@@ -278,7 +279,7 @@ export class Element extends BlockObject implements IElement {
 
     public removeWeapon() {
         if (!this.mModel || !this.mModel.avatar) return;
-        this.mModel.updateAvatarSuits(this.mModel.attrs);
+        this.mModel.updateAvatarSuits(this.mModel.suits);
         this.load(this.mModel.displayInfo);
     }
 

@@ -39,6 +39,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEnd);
         }
         this.addLisenter();
     }
@@ -144,6 +145,16 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                     element.play(data.animator, data.times);
                 }
             }
+        }
+    }
+
+    public onActiveSpriteEnd(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END = packet.content;
+        const playerid = content.spriteId;
+        if (this.has(playerid)) {
+            const element = this.get(playerid);
+            element.removeWeapon();
+            element.play("idle");
         }
     }
 
