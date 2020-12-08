@@ -148,9 +148,10 @@ export class PicaNewRolePanel extends BasePanel {
     public setRoleData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         this.roleData = content;
         if (!this.mInitialized || !this.roleData) return;
-        const avatar = this.creatAvatars(content.avatarSuit);
-        const dbModel = { id: content.id, avatar };
+        const temp: any = this.creatAvatars(content.avatarSuit);
+        const dbModel = { id: content.id, avatar: temp[0] };
         this.headAvatar.visible = false;
+        this.headAvatar.setSuits(temp[1]);
         this.headAvatar.once("replacefinished", () => {
             this.headAvatar.play({ name: "idle", flip: false });
             this.headAvatar.visible = true;
@@ -173,11 +174,11 @@ export class PicaNewRolePanel extends BasePanel {
     private creatAvatars(avatarSuits: op_client.ICountablePackageItem[]) {
         const suits: AvatarSuit[] = [];
         for (const item of avatarSuits) {
-            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, sn: item.sn };
+            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, tag: item.tag, sn: item.sn };
             suits.push(suit);
         }
         const avatar = AvatarSuitType.createHasBaseAvatar(suits);
-        return avatar;
+        return [avatar, suits];
     }
     private playMove(from: number, to: number) {
         const tween = this.scene.tweens.add({

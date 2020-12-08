@@ -591,21 +591,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showTopDisplay(data?: ElementStateType) {
-        // if (!this.mDisplay || !this.model) {
-        //     return;
-        // }
-        // if (!this.mDisplay.topPoint) {
-        //     return;
-        // }
-        // const ratio = this.mRoomService.world.scaleRatio;
-        // if (!data) {
-        //     if (this.mTopDisplay)
-        //         this.mTopDisplay.destroy();
-        //     this.mTopDisplay = undefined;
-        //     return;
-        // }
-        // if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, ratio);
-        // this.mTopDisplay.loadState(data);
+        this.mRoomService.game.renderPeer.showTopDisplay(this.id, data);
     }
 
     public removeTopDisplay() {

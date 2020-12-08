@@ -32,7 +32,7 @@ export class CreateRolePanel extends BasePanel {
   }
 
   show(param: any) {
-    if(!param)return;
+    if (!param) return;
     this.avatars = this.creatAvatars(param);
     super.show(param);
   }
@@ -262,7 +262,7 @@ export class CreateRolePanel extends BasePanel {
     for (const group of suitGroups) {
       const suits: AvatarSuit[] = [];
       for (const item of group.avatarSuit) {
-        const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, sn: item.sn };
+        const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, tag: item.tag, sn: item.sn };
         suits.push(suit);
       }
       const avatar = AvatarSuitType.createHasBaseAvatar(suits);

@@ -143,18 +143,19 @@ export class ElementDetail extends Phaser.GameObjects.Container {
       });
   }
 
-  setResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
+  setResource(content: any) {
     if (content.display) {
       this.mDetailDisplay.loadDisplay(content);
     } else if (content.avatar) {
       this.render.mainPeer.getPlayerAvatar()
-        .then((avatar) => {
+        .then(({ avatar, suits }) => {
           for (const key in avatar) {
             if (avatar.hasOwnProperty(key)) {
               const element = avatar[key];
               if (element && !content.avatar[key]) content.avatar[key] = element;
             }
           }
+          if (suits) content.suits = content.suits.concat(suits);
           const offset = new Phaser.Geom.Point(0, 35 * 2);
           this.mDetailDisplay.loadAvatar(content, 2, offset);
         });

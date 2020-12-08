@@ -10,6 +10,8 @@ export class PicaMainUIMediator extends BasicMediator {
     constructor(protected game: Game) {
         super(ModuleName.PICAMAINUI_NAME, game);
         this.mModel = new PicaMainUI(this.game);
+        this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
+        this.game.emitter.on("updateDetail", this.onUpdateDetailHandler, this);
     }
 
     show(param?: any) {
@@ -17,8 +19,6 @@ export class PicaMainUIMediator extends BasicMediator {
         this.game.emitter.on("showPanel", this.onShowPanelHandler, this);
         this.game.emitter.on("openroompanel", this.onOpenRoomHandler, this);
         this.game.emitter.on("querypraise", this.onQuery_PRAISE_ROOM, this);
-        this.game.emitter.on("updateroom", this.onUpdateRoomHandler, this);
-        this.game.emitter.on("updateDetail", this.onUpdateDetailHandler, this);
     }
 
     hide() {
@@ -26,16 +26,13 @@ export class PicaMainUIMediator extends BasicMediator {
         this.game.emitter.off("showPanel", this.onShowPanelHandler, this);
         this.game.emitter.off("openroompanel", this.onOpenRoomHandler, this);
         this.game.emitter.off("querypraise", this.onQuery_PRAISE_ROOM, this);
-        this.game.emitter.off("updateroom", this.onUpdateRoomHandler, this);
-        this.game.emitter.off("updateDetail", this.onUpdateDetailHandler, this);
     }
 
     destroy() {
-        if (this.mModel) {
-            this.mModel.destroy();
-        }
         this.mPlayerInfo = undefined;
         this.mRoomInfo = undefined;
+        this.game.emitter.off("updateroom", this.onUpdateRoomHandler, this);
+        this.game.emitter.off("updateDetail", this.onUpdateDetailHandler, this);
         super.destroy();
     }
 
@@ -44,6 +41,7 @@ export class PicaMainUIMediator extends BasicMediator {
     }
 
     protected panelInit() {
+        super.panelInit();
         if (this.mView) {
             this.mShowData = this.playerInfo;
             this.mView.update(this.mShowData);
@@ -70,7 +68,7 @@ export class PicaMainUIMediator extends BasicMediator {
 
     private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
         this.mRoomInfo = content;
-        this.game.user.userData.curRoomID = content.roomId;
+        // this.game.user.userData.curRoomID = content.roomId;
         if (this.mPanelInit) {
             this.mShowData = this.mRoomInfo;
             if (this.mView && this.mShowData)

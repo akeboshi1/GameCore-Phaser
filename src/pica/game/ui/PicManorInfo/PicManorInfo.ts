@@ -3,7 +3,7 @@ import { op_client, op_virtual_world, op_gameconfig, op_pkt_def, op_def } from "
 import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 
-export class PicaManorInfo extends BasicModel {
+export class PicManorInfo extends BasicModel {
     private market_name = "manor_shop";
     constructor(game: Game) {
         super(game);
