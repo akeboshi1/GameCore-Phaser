@@ -100,23 +100,23 @@ export class SceneManager {
                     break;
             }
         }
-        this.mCurSceneName = name;
         const scene = sceneManager.getScene(name) as BasicScene;
-        this.render.emitter.once("sceneCreated", () => {
-            Logger.getInstance().log("createRoleScene===scenemanager");
-            if (data.callBack) data.callBack();
-        }, this);
         if (scene) {
-            if (this.mCurSceneName !== name) {
-                const curScene: BasicScene = sceneManager.getScene(this.mCurSceneName) as BasicScene;
-                if (curScene) curScene.sleep();
-            }
-            scene.wake(data);
+            if (!scene.scene.isActive()) scene.wake(data);
             if (data.callBack) data.callBack();
         } else {
+            this.render.emitter.once("sceneCreated", () => {
+                Logger.getInstance().log("sceneCreated===scenemanager");
+                if (this.mCurSceneName !== name) {
+                    const curScene: BasicScene = sceneManager.getScene(this.mCurSceneName) as BasicScene;
+                    if (curScene) curScene.sleep();
+                }
+                if (data.callBack) data.callBack();
+            }, this);
             sceneManager.add(name, this.sceneClass[name]);
             sceneManager.start(name, data);
         }
+        this.mCurSceneName = name;
     }
 
     public launchScene(startScene: BasicScene, LaunchName: string, data?: any) {
@@ -176,6 +176,7 @@ export class SceneManager {
             return;
         }
         const scene = this.render.game.scene.getScene(name) as BasicScene;
+        if (!scene.scene.isActive()) return;
         scene.sleep();
     }
 
