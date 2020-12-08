@@ -1,12 +1,12 @@
 import { BasicMediator, DataMgrType, ElementDataManager, Game } from "gamecore";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { IManorBillboardData, PicaManorInfo } from "./PicaManorInfo";
+import { IManorBillboardData, PicManorInfo } from "./PicManorInfo";
 
-export class PicaManorInfoMediator extends BasicMediator {
+export class PicManorInfoMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICAMANORINFO_NAME, game);
-        this.mModel = new PicaManorInfo(this.game);
+        this.mModel = new PicManorInfo(this.game);
         this.game.emitter.on("getMarketCategories", this.onCategoriesHandler, this);
         this.game.emitter.on("queryMarket", this.onQueryResuleHandler, this);
     }
@@ -100,7 +100,7 @@ export class PicaManorInfoMediator extends BasicMediator {
     private onUsingItemHandler(id: string) {
         this.model.use_MANOR_SHOP_USE_COMMODITY(id);
     }
-    private get model(): PicaManorInfo {
-        return (<PicaManorInfo>this.mModel);
+    private get model(): PicManorInfo {
+        return (<PicManorInfo>this.mModel);
     }
 }
