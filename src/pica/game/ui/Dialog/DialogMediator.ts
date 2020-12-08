@@ -3,17 +3,16 @@ import { Game } from "src/game/game";
 import { ModuleName } from "structure";
 import { BasicMediator } from "gamecore";
 export class DialogMediator extends BasicMediator {
-    private dialog: Dialog;
     constructor(protected game: Game) {
         super(ModuleName.DIALOG_NAME, game);
-        this.dialog = new Dialog(game);
+        this.mModel = new Dialog(game);
     }
 
     public onQueryNextDialog(data: any) {
         const uiid = data.id;
         const comid = data.nodeid;
         const tempdata = undefined;
-        this.dialog.queryNextDialog(uiid, comid, tempdata);
+        this.model.queryNextDialog(uiid, comid, tempdata);
     }
 
     show(param?: any) {
@@ -32,15 +31,12 @@ export class DialogMediator extends BasicMediator {
         super.update(param);
         if (this.panelInit) this.mView.update(param);
     }
-    destroy() {
-        if (this.dialog) {
-            this.dialog.destroy();
-            this.dialog = undefined;
-        }
-        super.destroy();
-    }
 
     private onHideHandler() {
         this.hide();
+    }
+
+    private get model(): Dialog {
+        return <Dialog>this.mModel;
     }
 }
