@@ -216,14 +216,13 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     public showTopDisplay(data?: ElementStateType) {
-        const ratio = this.render.uiRatio;
         if (!data) {
             if (this.mTopDisplay)
                 this.mTopDisplay.destroy();
             this.mTopDisplay = undefined;
             return;
         }
-        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, ratio);
+        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
         this.mTopDisplay.loadState(data);
     }
 
