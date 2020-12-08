@@ -359,23 +359,7 @@ export class DragonbonesDisplay extends DisplayObject {
     }
     private loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
         this.mLoadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
-        this.mLoadQueue.startLoad();
-        // this.scene.load.dragonbone(
-        //     this.mDragonbonesName,
-        //     pngUrl,
-        //     jsonUrl,
-        //     dbbinUrl,
-        //     null,
-        //     null,
-        //     { responseType: "arraybuffer" },
-        // );
-        // this.scene.load.once(
-        //     Phaser.Loader.Events.COMPLETE,
-        //     this.allComplete,
-        //     this,
-        // );
-        // this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
-        // this.scene.load.start();
+        // this.mLoadQueue.startLoad();
     }
 
     private clearReplaceArmature() {
