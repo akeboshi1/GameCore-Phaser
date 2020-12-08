@@ -235,6 +235,10 @@ class Curtain {
         resolve();
         return;
       }
+      if (this.upTween || this.downTween) {
+        reject();
+        return;
+      }
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = -this.upDisplay.displayHeight;
       this.downDisplay.y = height + this.downDisplay.displayHeight;
