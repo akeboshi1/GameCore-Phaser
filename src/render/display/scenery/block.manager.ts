@@ -37,7 +37,7 @@ export class BlockManager implements IBlockManager {
     this.mScaleRatio = this.render.scaleRatio;
     this.setSize(scenery.width, scenery.height);
 
-    const playScene = render.sceneManager.getSceneByName("PlayScene");
+    const playScene = render.sceneManager.getMainScene();
     if (!playScene) {
       Logger.getInstance().fatal(`${BlockManager.name} scene does not exist`);
       return;

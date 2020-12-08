@@ -79,7 +79,7 @@ export class DisplayManager {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.getSceneByName(PlayScene.name);
+        const scene = this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
@@ -99,7 +99,7 @@ export class DisplayManager {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.getSceneByName(PlayScene.name);
+        const scene = this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
@@ -120,7 +120,7 @@ export class DisplayManager {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.getSceneByName(PlayScene.name);
+        const scene = this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
@@ -140,7 +140,7 @@ export class DisplayManager {
         if (!data) {
             return;
         }
-        const scene = this.sceneManager.getSceneByName(PlayScene.name);
+        const scene = this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;

@@ -54,6 +54,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
         }
         if (this.mRoom && this.mRoom.game) {
             this.mGameConfig = this.mRoom.game.elementStorage;
@@ -192,12 +193,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         element.setState(state.state);
     }
-    public checkElementAction(id: number): boolean {
+    public checkElementAction(id: number, userid?: number): boolean {
         const ele = this.get(id);
         if (!ele) return;
         if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
         if (this.mActionMgr.checkAllAction(ele.model).length > 0) {
-            this.mActionMgr.executeElementActions(ele.model);
+            this.mActionMgr.executeElementActions(ele.model, userid);
         }
     }
     public destroy() {
@@ -450,5 +451,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
     private onQueryElementHandler(id: number) {
         const ele = this.get(id);
         this.eleDataMgr.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
+    }
+    private onActiveSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
+        this.checkElementAction(content.targetId, content.spriteId);
     }
 }

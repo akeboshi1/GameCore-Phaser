@@ -8,14 +8,13 @@ export class PicaComposeMediator extends BasicMediator {
         super(ModuleName.PICACOMPOSE_NAME, game);
         if (!this.picaCompose) {
             this.picaCompose = new PicaCompose(this.game);
-
         }
     }
 
     show(param?: any) {
         super.show(param);
         this.game.emitter.on("formulaDetial", this.onRetFormulaDetial, this);
-        this.game.emitter.on("showopen", this.onShowPanel, this);
+        // this.game.emitter.on("showopen", this.onShowPanel, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.onReqUseFormula, this);
@@ -26,7 +25,7 @@ export class PicaComposeMediator extends BasicMediator {
     hide() {
         super.hide();
         this.game.emitter.off("formulaDetial", this.onRetFormulaDetial, this);
-        this.game.emitter.off("showopen", this.onShowPanel, this);
+        // this.game.emitter.off("showopen", this.onShowPanel, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.onReqUseFormula, this);

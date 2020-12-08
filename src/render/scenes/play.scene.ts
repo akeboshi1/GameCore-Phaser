@@ -6,16 +6,19 @@ import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
 import { SceneName } from "structure";
+import { MotionManager } from "../input/motion.manager";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
-    private readonly LAYER_GROUNDCLICK = "groundClickLayer";
-    private readonly LAYER_GROUND2 = "groundLayer2";
-    private readonly LAYER_GROUND = "groundLayer";
-    private readonly LAYER_MIDDLE = "middleLayer";
-    private readonly LAYER_SURFACE = "surfaceLayer";
-    private readonly LAYER_ATMOSPHERE = "atmosphere";
-    private readonly LAYER_SCENEUI = "sceneUILayer";
+    protected readonly LAYER_GROUNDCLICK = "groundClickLayer";
+    protected readonly LAYER_GROUND2 = "groundLayer2";
+    protected readonly LAYER_GROUND = "groundLayer";
+    protected readonly LAYER_MIDDLE = "middleLayer";
+    protected readonly LAYER_SURFACE = "surfaceLayer";
+    protected readonly LAYER_ATMOSPHERE = "atmosphere";
+    protected readonly LAYER_SCENEUI = "sceneUILayer";
+
+    protected motionManager: MotionManager;
 
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: SceneName.PLAY_SCENE });
@@ -51,6 +54,8 @@ export class PlayScene extends RoomScene {
         this.scale.on("resize", this.checkSize, this);
 
         // ======= render startPlay
+        this.render.sceneManager.setMainScene(this);
+        this.initInput();
         this.render.camerasManager.startRoomPlay(this);
         const txt = LoadingTips.loadingResources();
         this.render.showLoading({ "text": txt });
@@ -81,6 +86,7 @@ export class PlayScene extends RoomScene {
     update(time: number, delta: number) {
         this.render.updateRoom(time, delta);
         this.layerManager.update(time, delta);
+        if (this.motionManager) this.motionManager.update(time, delta);
     }
 
     // setViewPort(x: number, y: number, width: number, height: number) {
@@ -90,6 +96,11 @@ export class PlayScene extends RoomScene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+    }
+
+    protected initInput() {
+        this.motionManager = new MotionManager(this.render);
+        this.motionManager.setScene(this);
     }
 
     private onPointerDownHandler(pointer: Phaser.Input.Pointer) {

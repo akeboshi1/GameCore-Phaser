@@ -7,9 +7,11 @@ export class ElementBaseAction {
     public data: ISprite;
     public game: Game;
     public actionTag: string;
-    constructor(game: Game, data: ISprite) {
+    public userid: number;
+    constructor(game: Game, data: ISprite, userid?: number) {
         this.data = data;
         this.game = game;
+        this.userid = userid;
     }
     public executeAction() {
 

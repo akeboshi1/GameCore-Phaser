@@ -5,4 +5,5 @@ export class SceneName {
     public static SKYBOX_SCENE = "SkyboxScene";
     public static LOGIN_SCENE = "LoginScene";
     public static MAINUI_SCENE = "MainUIScene";
+    public static DECORATE_SCENE = "DecorateScene";
 }

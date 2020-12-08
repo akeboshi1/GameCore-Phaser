@@ -20,6 +20,8 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private praiseImg: Phaser.GameObjects.Image;
     private sceneTex: Phaser.GameObjects.Text;
     private peoplevalue: ImageValue;
+    private praisebg: NineSlicePatch;
+    private peoplebg: Phaser.GameObjects.Image;
     private money: number = 0;
     private diamond: number = 0;
     private praise: boolean = false;
@@ -98,27 +100,30 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
 
         const peoplebg = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_persons_bg" }, false);
         peoplebg.x = -peoplebg.width * 0.5;
+        this.peoplebg = peoplebg;
         this.peoplevalue = new ImageValue(this.scene, 45 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_persons", this.dpr, {
             color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT
         });
         this.peoplevalue.setLayout(1);
         this.peoplevalue.x = peoplebg.x;
 
-        const praisebg = new NineSlicePatch(this.scene, 0, 0, 100 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
+        const praisebg = new NineSlicePatch(this.scene, 0, 0, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
             left: 16 * this.dpr,
             top: 0 * this.dpr,
             right: 16 * this.dpr,
             bottom: 0 * this.dpr
         });
-        praisebg.x = -peoplebg.width - 10 * this.dpr - praisebg.width * 0.5;
+        praisebg.x = -peoplebg.width - 15 * this.dpr - praisebg.width * 0.5;
         this.sceneTex = this.scene.make.text({
-            x: praisebg.x - 10 * this.dpr, y: 0, text: "", style: { color: "#FFF449", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT }
+            x: praisebg.x - 10 * this.dpr, y: this.dpr, text: "", style: { color: "#FFF449", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5);
+        this.praisebg = praisebg;
         this.praiseButton = new Button(this.scene, UIAtlasName.uicommon, "home_praise_bg", "home_praise_bg");
         this.praiseImg = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_praise" }, false);
         this.praiseButton.add(this.praiseImg);
-        this.praiseButton.x = -peoplebg.width - 25 * this.dpr;
-        this.praiseButton.on(ClickEvent.Tap, this.onPraiseHandler, this);
+        this.praiseButton.x = -peoplebg.width - 29 * this.dpr;
+        this.praiseButton.y = this.dpr;
+        this.praiseButton.visible = false;
         const sceneclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         sceneclickCon.setSize(100 * this.dpr, 30 * this.dpr);
         sceneclickCon.enable = true;
@@ -147,11 +152,24 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.diamond = diamond;
     }
 
-    public setSceneData(sceneName: string, isPraise: boolean, people: number) {
+    public setSceneData(sceneName: string, isPraise: boolean, people: number, roomType: string) {
         this.sceneTex.text = sceneName;
-        this.praiseImg.setFrame(isPraise ? "home_praise_1" : "home_praise");
         this.praise = isPraise;
         this.peoplevalue.setText(people + "");
+        if (this.canPraise(roomType)) {
+            this.praiseButton.visible = true;
+            this.praiseButton.on(ClickEvent.Tap, this.onPraiseHandler, this);
+            this.praiseImg.setFrame(isPraise ? "home_praise_1" : "home_praise");
+            this.praisebg.resize(this.sceneTex.width + 40 * this.dpr, 25 * this.dpr);
+            this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
+            this.sceneTex.x = this.praisebg.x - 11 * this.dpr;
+        } else {
+            this.praisebg.resize(this.sceneTex.width + 20 * this.dpr, 25 * this.dpr);
+            this.praiseButton.off(ClickEvent.Tap, this.onPraiseHandler, this);
+            this.praiseButton.visible = false;
+            this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
+            this.sceneTex.x = this.praisebg.x;
+        }
     }
 
     public setHandler(send: Handler) {
@@ -215,6 +233,11 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
                 this.remove(this.moneyCon);
             },
         });
+    }
+
+    private canPraise(roomType: string) {
+        if (roomType !== "room" && roomType !== "store") return false;
+        return true;
     }
 
 }

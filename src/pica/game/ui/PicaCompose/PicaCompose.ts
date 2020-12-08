@@ -13,7 +13,6 @@ export class PicaCompose extends BasicModel {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA, this.onRetFormulaDetial);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         }
     }
 
@@ -52,9 +51,4 @@ export class PicaCompose extends BasicModel {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA = packge.content;
         this.event.emit("formulaDetial", content);
     }
-    private openComposePanel(packge: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
-        this.event.emit("showopen", content);
-    }
-
 }

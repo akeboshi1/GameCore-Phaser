@@ -295,7 +295,7 @@ export class PicaComposePanel extends BasePanel {
                         text: i18n.t("common.confirm"),
                         local: true,
                         clickhandler: new Handler(this, () => {
-                            this.emit("reqUseFormula", this.mSelectItemData.skill.id);
+                            this.render.renderEmitter(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.mSelectItemData.skill.id);
                         })
                     },
                     {
@@ -310,7 +310,7 @@ export class PicaComposePanel extends BasePanel {
 
     }
     private onBackHandler() {
-        this.emit("hide");
+        this.render.renderEmitter(ModuleName.PICACOMPOSE_NAME + "_hide");
     }
 }
 

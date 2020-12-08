@@ -698,7 +698,7 @@ export class Render extends RPCPeer implements GameMain {
     public getWorldView(): Promise<any> {
         if (!this.sceneManager) return;
         return new Promise<any>((resolve, reject) => {
-            const playScene: Phaser.Scene = this.sceneManager.getSceneByName("PlayScene");
+            const playScene: Phaser.Scene = this.sceneManager.getMainScene();
             if (playScene) {
                 const camera = playScene.cameras.main;
                 const rect = camera.worldView;
@@ -919,7 +919,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public roomstartPlay() {
         if (!this.mSceneManager || !this.mCameraManager) return;
-        const scene = this.mSceneManager.getSceneByName("PlayScene");
+        const scene = this.mSceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
@@ -938,7 +938,7 @@ export class Render extends RPCPeer implements GameMain {
     public setCameraScroller(actorX: number, actorY: number) {
         // Logger.getInstance().log("syncCameraScroll");
         if (!this.mSceneManager || !this.mCameraManager) return;
-        const scene = this.mSceneManager.getSceneByName("PlayScene");
+        const scene = this.mSceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
@@ -1063,7 +1063,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.boolean])
     public setLayerDepth(val: boolean) {
-        const scene: BasicScene = this.mSceneManager.getSceneByName("PlayScene") as BasicScene;
+        const scene: BasicScene = this.mSceneManager.getMainScene() as BasicScene;
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;

@@ -6,6 +6,7 @@ import { ConnectionService } from "../../../lib/net/connection.service";
 // import { Logger } from "utils";
 import { Lite } from "game-capsule";
 import { Logger } from "utils";
+import { DecorateRoom } from "./room/decorate.room";
 export interface IRoomManager {
     readonly game: Game | undefined;
 
@@ -88,7 +89,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         // this.destroy();
-        Logger.getInstance().log("===========enter scene=====0");
         const vw = scene;
         if (this.mCurRoom) {
             // 客户端会接受到多次进入场景消息，这边客户端自己处理下，防止一个房间多次创建
@@ -96,11 +96,9 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             await this.leaveRoom(this.mCurRoom);
         }
         if (this.hasRoom(vw.scene.id)) {
-            Logger.getInstance().log("===========enter scene=====1");
             this.onEnterRoom(scene);
         } else {
             this.mGame.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
-                Logger.getInstance().log("=======enter scene load sceneConfig");
                 this.game.elementStorage.setSceneConfig(config);
                 this.onEnterRoom(scene);
             });
@@ -127,15 +125,15 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private async onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        // if (this.mCurRoom) {
-        //     await this.leaveRoom(this.mCurRoom);
-        // }
-        // const room: DecorateRoom = new DecorateRoom(this);
-        // room.enter(scene.scene);
-        // const actor = scene.actor;
-        // if (actor) room.setEnterPos(actor.x, actor.y);
-        // this.mRooms.push(room);
-        // this.mCurRoom = room;
+        if (this.mCurRoom) {
+            await this.leaveRoom(this.mCurRoom);
+        }
+        const room: DecorateRoom = new DecorateRoom(this);
+        room.enter(scene.scene);
+        const actor = scene.actor;
+        if (actor) room.setEnterPos(actor.x, actor.y);
+        this.mRooms.push(room);
+        this.mCurRoom = room;
     }
 
     private onEnterEditor(packet: PBpacket) {

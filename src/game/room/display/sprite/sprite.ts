@@ -7,6 +7,7 @@ import { IPos, LogicPos, LogicPoint, Logger, Direction, EventDispatcher } from "
 import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel } from "../frames/frames.model";
+import { Animator } from "./animator";
 import NodeType = op_def.NodeType;
 
 enum TitleMask {
@@ -43,13 +44,10 @@ export interface ISprite {
     isMoss?: boolean;
     mountSprites?: number[];
     speed: number;
+    animator?: Animator;
 
     newID();
-    emit(type, data);
-    on(event: string, fn: Function, context: any);
-    off(event: string, fn: Function, context: any);
-    clear();
-    updateAvatar(avatar: op_gameconfig.IAvatar);
+    updateAvatar(avatar: IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
     setAnimationName(name: string, playTimes?: number): RunningAnimation;
@@ -105,6 +103,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public speed: number;
     public interactive: op_def.IPBPoint2f[];
+    public animator?: Animator;
 
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         super();
@@ -239,7 +238,8 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
         return false;
     }
-    public updateAvatar(avatar: op_gameconfig.IAvatar) {
+
+    public updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar) {
         if (this.displayInfo) {
             this.displayInfo.destroy();
         }
@@ -263,6 +263,10 @@ export class Sprite extends EventDispatcher implements ISprite {
     public updateAttr(attrs: op_def.IStrPair[]) {
         this.attrs = attrs;
         this.suits = this.getAvatarSuits(attrs);
+        if (this.suits) {
+            if (!this.animator) this.animator = new Animator(this.suits);
+            else this.animator.setSuits(this.suits);
+        }
     }
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
@@ -304,6 +308,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public setAnimationName(name: string, times?: number) {
         if (!this.currentAnimation || this.currentAnimationName !== name) {
             if (this.displayInfo) {
+                name = this.animator ? this.animator.getAnimationName(name) : name;
                 this.displayInfo.animationName = name;
             }
             this.currentAnimationName = name;

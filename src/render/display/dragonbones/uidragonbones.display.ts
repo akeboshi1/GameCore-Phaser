@@ -1,3 +1,4 @@
+import { Animator } from "gamecore";
 import { RunningAnimation } from "structure";
 import { Handler } from "utils";
 import { DragonbonesDisplay } from "./dragonbones.display";
@@ -5,6 +6,7 @@ import { DragonbonesDisplay } from "./dragonbones.display";
 export class UIDragonbonesDisplay extends DragonbonesDisplay {
     protected mInteractive: boolean = false;
     private mComplHandler: Handler;
+    private animator: Animator;
     public play(val: RunningAnimation) {
         super.play(val);
         if (this.mArmatureDisplay) {

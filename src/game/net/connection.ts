@@ -136,7 +136,7 @@ export class Connection implements ConnectionService {
     }
 
     send(packet: PBpacket) {
-        if (this.isPause) return;
+        // if (this.isPause) return;
         packet.header.timestamp = this.mClock ? this.mClock.unixTime : 0;
         this.mSocket.send(packet.Serialization());
     }
@@ -162,7 +162,7 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        if (this.isPause) return;
+        // if (this.isPause) return;
         const protobufPacket: PBpacket = new PBpacket();
         protobufPacket.Deserialization(new Buffer(data));
         const handlers = this.mPacketHandlers;

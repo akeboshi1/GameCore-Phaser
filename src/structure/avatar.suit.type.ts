@@ -18,26 +18,26 @@ export class AvatarSuitType {
         "shell": ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"]
     };
 
-    static createAvatar(suits: AvatarSuit[], avatar?: op_gameconfig.Avatar) {
+    static createAvatar(suits: AvatarSuit[], avatar?: any) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
-        avatar = avatar || new op_gameconfig.Avatar();
+        avatar = avatar || {};
         for (const suit of suits) {
             const suitType = this.avatarSuit;
             const slots = suitType[suit.suit_type];
             for (const slot of slots) {
-                avatar[slot] = suit.sn;
+                avatar[slot] = { sn: suit.sn, suitType: suit.suit_type, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createAvatarBySn(suit_type: string, sn: string, avatar?: op_gameconfig.Avatar) {
+    static createAvatarBySn(suit_type: string, sn: string, version?: string, avatar?: any) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
-        avatar = avatar || new op_gameconfig.Avatar();
+        avatar = avatar || {};
         const suitType = this.avatarSuit;
         const slots = suitType[suit_type];
         for (const slot of slots) {
-            avatar[slot] = sn;
+            avatar[slot] = { sn, suitType: suit_type, version };
         }
         return avatar;
     }
@@ -49,26 +49,26 @@ export class AvatarSuitType {
             const suitType = this.avatarSuit;
             const slots = suitType[suit.suit_type];
             for (const slot of slots) {
-                avatar[slot] = suit.sn;
+                avatar[slot] = { sn: suit.sn, suitType: suit.suit_type, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createHasBaseAvatarBySn(suit_type: string, sn: string) {
+    static createHasBaseAvatarBySn(suit_type: string, sn: string, version?: string) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         const avatar = this.createBaseAvatar();
         const suitType = this.avatarSuit;
         const slots = suitType[suit_type];
         for (const slot of slots) {
-            avatar[slot] = sn;
+            avatar[slot] = { sn, suitType: suit_type, version };
         }
         return avatar;
     }
 
     static createBaseAvatar() {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
-        const avatar = new op_gameconfig.Avatar(this.avatarSuit.baseSlots);
+        const avatar = this.avatarSuit.baseSlots;
         return avatar;
     }
     public costume = ["bodyCostId", "bodyDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
@@ -86,16 +86,16 @@ export class AvatarSuitType {
     public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
     public baseSlots: IAvatar = {
         id: "10000",
-        barmBaseId: "0001",
-        blegBaseId: "0001",
-        bodyBaseId: "0001",
-        farmBaseId: "0001",
-        flegBaseId: "0001",
-        headBaseId: "0001",
-        headHairId: "5cd28238fb073710972a73c2",
-        headEyesId: "5cd28238fb073710972a73c2",
-        headMousId: "5cd28238fb073710972a73c2",
-        bodyCostId: "5cd28238fb073710972a73c2"
+        barmBaseId: { sn: "0001" },
+        blegBaseId: { sn: "0001" },
+        bodyBaseId: { sn: "0001" },
+        farmBaseId: { sn: "0001" },
+        flegBaseId: { sn: "0001" },
+        headBaseId: { sn: "0001" },
+        headHairId: { sn: "5cd28238fb073710972a73c2" },
+        headEyesId: { sn: "5cd28238fb073710972a73c2" },
+        headMousId: { sn: "5cd28238fb073710972a73c2" },
+        bodyCostId: { sn: "5cd28238fb073710972a73c2" }
     };
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
 }
@@ -126,4 +126,6 @@ export interface AvatarSuit {
     id: string;
     sn: string;
     suit_type: string;
+    version?: string;
+    tag?: string;
 }
