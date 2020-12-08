@@ -1,13 +1,13 @@
-import { Animator } from "gamecore";
-import { RunningAnimation } from "structure";
+import { AvatarSuit, RunningAnimation } from "structure";
 import { Handler } from "utils";
 import { DragonbonesDisplay } from "./dragonbones.display";
 
 export class UIDragonbonesDisplay extends DragonbonesDisplay {
     protected mInteractive: boolean = false;
     private mComplHandler: Handler;
-    private animator: Animator;
+    private AniAction: any[];
     public play(val: RunningAnimation) {
+        val.name = this.getAnimationName(val.name);
         super.play(val);
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
@@ -21,6 +21,25 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
 
     public setCompleteHandler(compl: Handler) {
         this.mComplHandler = compl;
+    }
+    public setSuits(suits: AvatarSuit[]) {
+        if (suits) {
+            for (const suit of suits) {
+                if (suit.suit_type === "weapon") {
+                    if (suit.tag) {
+                        this.AniAction = JSON.parse(suit.tag);
+                    }
+                }
+            }
+        }
+    }
+
+    public getAnimationName(name) {
+        if (this.AniAction) {
+            if (name === "idle") return this.AniAction[0];
+            else if (name === "walk") return this.AniAction[1];
+        }
+        return name;
     }
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {
         if (!this.mArmatureDisplay || !this.mAnimation) {
@@ -45,4 +64,5 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
     }
     protected clearArmatureSlot() {
     }
+
 }
