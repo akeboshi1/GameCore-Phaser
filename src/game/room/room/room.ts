@@ -77,7 +77,7 @@ export interface IRoomService {
 
     initUI(): void;
 
-    findPath(start: IPos, end: IPos): IPos[];
+    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[];
 
     destroy();
 }
@@ -438,8 +438,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mAstar.setWalkableAt(y, x, val);
     }
 
-    public findPath(startPos: IPos, endPos: IPos) {
-        return this.mAstar.find(startPos, endPos);
+    public findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
+        return this.mAstar.find(startPos, targetPosList, toReverse);
     }
 
     public clear() {
