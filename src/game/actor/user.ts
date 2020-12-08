@@ -74,15 +74,24 @@ export class User extends Player {
     //     }
     // }
 
-    public unmount() {
+    public unmount(targetPos?: IPos) {
         if (this.mRootMount) {
-            const pos = this.mRootMount.getInteractivePosition();
-            if (!pos) {
+            let landingPos: IPos;
+            const pos = this.mRootMount.getInteractivePositionList();
+            if (pos.length === 0) {
                 return;
             }
             this.mRootMount = null;
-            this.setPosition(pos);
-            this.getInteractivePosition();
+            if (targetPos != null) {
+                const path = this.roomService.findPath(targetPos, pos, true);
+                if (path.length === 0) {
+                    return;
+                }
+                landingPos = path[0];
+            } else {
+                landingPos = pos[0];
+            }
+            this.setPosition(landingPos);
             this.enableBlock();
             this.mDirty = true;
         }
@@ -99,11 +108,12 @@ export class User extends Player {
         this.startMove();
     }
 
-    public findPath(x: number, y: number, targetId?: number) {
+    public findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
         if (this.mRootMount) {
-            this.mRootMount.removeMount(this);
+            this.mRootMount.removeMount(this, targets[0]);
         }
-        const path = this.roomService.findPath(this.getPosition(), new LogicPos(x, y));
+
+        const path = this.roomService.findPath(this.getPosition(), targets, toReverse);
         if (!path) {
             return;
         }

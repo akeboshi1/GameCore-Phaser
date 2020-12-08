@@ -356,7 +356,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return ele;
     }
 
-    public findPath(start: IPos, end: IPos): IPos[]  {
+    public findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[]  {
         return [];
     }
 

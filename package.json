@@ -46,7 +46,7 @@
         "matter-js": "^0.14.2",
         "maxrects-packer": "^2.6.0",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
-        "pathfinding": "^0.4.18",
+        "pathfinding": "https://github.com/raymanyoung/PathFinding.js",
         "poly-decomp": "^0.3.0",
         "simple-sha1": "^3.0.1",
         "tooqinggamephaser": "^0.2.4",
