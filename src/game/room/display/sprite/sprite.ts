@@ -7,6 +7,7 @@ import { IPos, LogicPos, LogicPoint, Logger, Direction, EventDispatcher } from "
 import { AnimationModel } from "../animation/animation.model";
 import { DragonbonesModel } from "../dragones/dragonbones.model";
 import { FramesModel } from "../frames/frames.model";
+import { Animator } from "./animator";
 import NodeType = op_def.NodeType;
 
 enum TitleMask {
@@ -43,6 +44,7 @@ export interface ISprite {
     isMoss?: boolean;
     mountSprites?: number[];
     speed: number;
+    animator?: Animator;
 
     newID();
     updateAvatar(avatar: IAvatar);
@@ -101,6 +103,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public speed: number;
     public interactive: op_def.IPBPoint2f[];
+    public animator?: Animator;
 
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         super();
@@ -260,6 +263,10 @@ export class Sprite extends EventDispatcher implements ISprite {
     public updateAttr(attrs: op_def.IStrPair[]) {
         this.attrs = attrs;
         this.suits = this.getAvatarSuits(attrs);
+        if (this.suits) {
+            if (!this.animator) this.animator = new Animator(this.suits);
+            else this.animator.setSuits(this.suits);
+        }
     }
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
@@ -301,6 +308,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public setAnimationName(name: string, times?: number) {
         if (!this.currentAnimation || this.currentAnimationName !== name) {
             if (this.displayInfo) {
+                name = this.animator ? this.animator.getAnimationName(name) : name;
                 this.displayInfo.animationName = name;
             }
             this.currentAnimationName = name;

@@ -10,10 +10,10 @@ export class ElementActionManager {
     constructor(game) {
         this.game = game;
     }
-    public executeElementActions(data: ISprite) {
+    public executeElementActions(data: ISprite, userid?: number) {
         const temptag = this.checkAllAction(data);
         for (const tag of temptag) {
-            const action = this.createElementAction(data, tag);
+            const action = this.createElementAction(data, tag, userid);
             action.executeAction();
         }
     }
@@ -60,17 +60,17 @@ export class ElementActionManager {
         this.mActionTags = undefined;
     }
 
-    private createElementAction(data: ISprite, actionName: string) {
+    private createElementAction(data: ISprite, actionName: string, userid?: number) {
         let eleaction: ElementBaseAction;
         switch (actionName) {
             case "TQ_PKT_Action":
-                eleaction = new PKTElementAction(this.game, data);
+                eleaction = new PKTElementAction(this.game, data,userid);
                 break;
             case "TQ_PKT_tag":
-                eleaction = new TAGElementAction(this.game, data);
+                eleaction = new TAGElementAction(this.game, data,userid);
                 break;
             case "frozenType":
-                eleaction = new FuritElementAction(this.game, data);
+                eleaction = new FuritElementAction(this.game, data,userid);
                 break;
         }
         return eleaction;

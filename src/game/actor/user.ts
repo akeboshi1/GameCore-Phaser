@@ -264,7 +264,7 @@ export class User extends Player {
         const targetId = this.mTargetPoint.targetId;
         content.spriteId = targetId;
         this.game.connection.send(packet);
-        this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId);
+        this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
     }
 
     protected onMoveComplete() {

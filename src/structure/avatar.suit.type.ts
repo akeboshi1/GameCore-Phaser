@@ -127,4 +127,5 @@ export interface AvatarSuit {
     sn: string;
     suit_type: string;
     version?: string;
+    tag?: string;
 }
