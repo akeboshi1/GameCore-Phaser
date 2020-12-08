@@ -96,6 +96,7 @@ export class UserDataManager extends PacketHandler {
         const bag = this.playerBag.syncPackage(content);
         if (bag.syncFinish) {
             this.game.peer.workerEmitter(EventType.PACKAGE_SYNC_FINISH, content.packageName);
+            this.game.emitter.emit(EventType.PACKAGE_SYNC_FINISH, content.packageName);
         }
     }
     public onUPDATE_PACKAGE(packet: PBpacket) {

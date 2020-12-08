@@ -217,11 +217,9 @@ export class PicaBagPanel extends BasePanel {
           }
           if (item.suitType === "weapon") {
             const suit = { suit_type: item.suitType, tag: item.tag };
-            if (suits) suits.push(suit);
-            else suits = [suit];
+            content.suits = [suit];
           }
         }
-        content.suits = suits;
         const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
         this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
         Logger.getInstance().error("测试调用+++++装扮重置问题", this.mSelectedItemData);
