@@ -22,11 +22,9 @@ export interface ILoadObject {
 }
 
 export class LoadQueue extends Phaser.Events.EventEmitter {
-    protected mQueue: any[];
-    private mIndex: number = 0;
+    protected mQueue: any[] = [];
     constructor(protected scene: Phaser.Scene) {
         super();
-        this.mQueue = [];
     }
 
     add(list: ILoadObject[]) {
@@ -51,35 +49,50 @@ export class LoadQueue extends Phaser.Events.EventEmitter {
                         break;
                 }
                 this.mQueue.push(loadObject);
+                // 如果load没有在加载，且load状态处于准备状态，可自动开启startLoad
+                if (!this.scene.load.isLoading() && this.scene.load.isReady()) {
+                    this.startLoad();
+                }
             }
         });
     }
 
+    // 现改为add自动调用，可外部手动调用
     startLoad() {
         this.mQueue.forEach((loadObject) => {
             loadObject.state = LoadState.PROGRESS;
         });
-        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.fileComplete, this);
-        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.totalComplete, this);
-        this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.fileLoadError, this);
+        this.addListen();
         this.scene.load.start();
     }
 
     public destroy() {
-        this.clearQueue();
+        this.removeListen();
         if (this.mQueue) this.mQueue = null;
+        super.destroy();
+    }
+
+    private addListen() {
+        // 默认先清理下该loadqueue下的load监听，防止多次监听
+        this.removeListen();
+        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.fileComplete, this);
+        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.totalComplete, this);
+        this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.fileLoadError, this);
+    }
+
+    private removeListen() {
+        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.fileComplete, this);
+        this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.totalComplete, this);
+        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.fileLoadError, this);
     }
 
     private totalComplete() {
         this.emit("QueueComplete");
         this.clearQueue();
-
     }
 
     private fileComplete(key: string, type?: string) {
-        this.mIndex++;
-        const len: number = this.mQueue.length;
-        this.emit("QueueProgress", this.mIndex / len, key, type);
+        this.emit("QueueProgress", this.scene.load.progress, key, type);
     }
 
     private fileLoadError(file) {
@@ -88,12 +101,9 @@ export class LoadQueue extends Phaser.Events.EventEmitter {
     }
 
     private clearQueue() {
-        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.fileComplete, this);
-        this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.totalComplete, this);
-        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.fileLoadError, this);
+        this.removeListen();
         if (!this.mQueue) return;
         this.mQueue.length = 0;
         this.mQueue = [];
-        this.mIndex = 0;
     }
 }
