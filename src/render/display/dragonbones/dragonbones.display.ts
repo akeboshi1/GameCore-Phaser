@@ -1045,7 +1045,7 @@ export class DragonbonesDisplay extends DisplayObject {
         if (typeof skin === "string" || typeof skin === "number") {
             sn = skin.toString();
         } else {
-            version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
+            version = "";// (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
         }
         return { sn, version };

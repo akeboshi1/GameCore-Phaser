@@ -25,19 +25,19 @@ export class AvatarSuitType {
             const suitType = this.avatarSuit;
             const slots = suitType[suit.suit_type];
             for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suitType: suit.suit_type, version: suit.version };
+                avatar[slot] = suit.sn;// { sn: suit.sn, suit_type: suit.suit_type, tag: suit.tag, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createAvatarBySn(suit_type: string, sn: string, version?: string, avatar?: any) {
+    static createAvatarBySn(suit_type: string, sn: string, tag: string, version?: string, avatar?: any) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || {};
         const suitType = this.avatarSuit;
         const slots = suitType[suit_type];
         for (const slot of slots) {
-            avatar[slot] = { sn, suitType: suit_type, version };
+            avatar[slot] = sn;// { sn, suit_type, tag, version };
         }
         return avatar;
     }
@@ -49,19 +49,19 @@ export class AvatarSuitType {
             const suitType = this.avatarSuit;
             const slots = suitType[suit.suit_type];
             for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suitType: suit.suit_type, version: suit.version };
+                avatar[slot] = suit.sn;// { sn: suit.sn, suit_type: suit.suit_type, tag: suit.tag, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createHasBaseAvatarBySn(suit_type: string, sn: string, version?: string) {
+    static createHasBaseAvatarBySn(suit_type: string, sn: string, tag: string, version?: string) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         const avatar = this.createBaseAvatar();
         const suitType = this.avatarSuit;
         const slots = suitType[suit_type];
         for (const slot of slots) {
-            avatar[slot] = { sn, suitType: suit_type, version };
+            avatar[slot] = sn;// { sn, suit_type, tag, version };
         }
         return avatar;
     }
@@ -86,16 +86,16 @@ export class AvatarSuitType {
     public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
     public baseSlots: IAvatar = {
         id: "10000",
-        barmBaseId: { sn: "0001" },
-        blegBaseId: { sn: "0001" },
-        bodyBaseId: { sn: "0001" },
-        farmBaseId: { sn: "0001" },
-        flegBaseId: { sn: "0001" },
-        headBaseId: { sn: "0001" },
-        headHairId: { sn: "5cd28238fb073710972a73c2" },
-        headEyesId: { sn: "5cd28238fb073710972a73c2" },
-        headMousId: { sn: "5cd28238fb073710972a73c2" },
-        bodyCostId: { sn: "5cd28238fb073710972a73c2" }
+        barmBaseId: "0001", // { sn: "0001" },
+        blegBaseId: "0001", // { sn: "0001" },
+        bodyBaseId: "0001", // { sn: "0001" },
+        farmBaseId: "0001", // { sn: "0001" },
+        flegBaseId: "0001", // { sn: "0001" },
+        headBaseId: "0001", // { sn: "0001" },
+        headHairId: "5cd28238fb073710972a73c2", // { sn: "5cd28238fb073710972a73c2" },
+        headEyesId: "5cd28238fb073710972a73c2", // { sn: "5cd28238fb073710972a73c2" },
+        headMousId: "5cd28238fb073710972a73c2", // { sn: "5cd28238fb073710972a73c2" },
+        bodyCostId: "5cd28238fb073710972a73c2", // { sn: "5cd28238fb073710972a73c2" }
     };
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
 }

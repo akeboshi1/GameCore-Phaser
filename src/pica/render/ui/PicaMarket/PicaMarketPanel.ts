@@ -470,8 +470,9 @@ export class PicaMarketPanel extends BasePanel {
     this.render.mainPeer.showMediator(ModuleName.PICAPROPFUN_NAME, true, config);
   }
   private getCommodityResource(data: op_client.IMarketCommodity) {
-    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
-    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn);
+    const content: any = {};
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.tag, data.version);
+    content.suits = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
     return content;
   }
 }

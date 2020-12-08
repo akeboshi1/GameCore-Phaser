@@ -244,9 +244,11 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public getPlayerAvatar(): any {
-        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.playerManager && this.game.roomManager.currentRoom.playerManager.actor)
-            return this.game.roomManager.currentRoom.playerManager.actor.model.avatar;
-
+        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.playerManager && this.game.roomManager.currentRoom.playerManager.actor) {
+            const avatar = this.game.roomManager.currentRoom.playerManager.actor.model.avatar;
+            const suits = this.game.roomManager.currentRoom.playerManager.actor.model.suits;
+            return { avatar, suits };
+        }
         return null;
     }
 
