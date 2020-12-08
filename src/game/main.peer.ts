@@ -465,9 +465,9 @@ export class MainPeer extends RPCPeer {
         return this.game.clock.unixTime;
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public findPath(x: number, y: number, targetId?: number) {
-        this.game.user.findPath(x, y, targetId);
+    @Export()
+    public findPath(targets: [], targetId?: number, toReverse: boolean = false) {
+        this.game.user.findPath(targets, targetId, toReverse);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -484,7 +484,7 @@ export class MainPeer extends RPCPeer {
     public getInteractivePosition(id: number) {
         const ele = this.game.roomManager.currentRoom.getElement(id);
         if (ele) {
-            return ele.getInteractivePosition();
+            return ele.getInteractivePositionList();
         }
         return null;
     }

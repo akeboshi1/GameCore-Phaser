@@ -117,8 +117,8 @@ export class Terrain extends BlockObject implements IElement {
         return this;
     }
 
-    public getInteractivePosition() {
-        return null;
+    public getInteractivePositionList() {
+        return [];
     }
 
     public destroy() {

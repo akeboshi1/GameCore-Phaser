@@ -123,8 +123,7 @@ export class ElementTopDisplay {
 
     public getYOffset() {
         const pos = new Phaser.Geom.Point();
-        const display = this.mOwner.getDisplay();
-        pos.x = 0, pos.y = display.topPoint.y;
+        pos.x = 0, pos.y = this.mOwner.topPoint.y;
         // if (this.mFollows.has(FollowEnum.Nickname)) {
         //     const follow = this.mFollows.get(FollowEnum.Nickname);
         //     if (follow && follow.object) {

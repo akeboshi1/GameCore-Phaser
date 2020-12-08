@@ -63,6 +63,7 @@ export class Task extends BasicModel {
 
     private onRetQuestDetail(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_DETAIL = packet.content;
-        this.event.emit("questdetail", content.quest);
+        const quests: any = CopyProtoType.copyProtoParam([content.quest]);
+        this.event.emit("questdetail", quests[0]);
     }
 }

@@ -52,13 +52,13 @@ export interface IElement {
 
     mount(ele: IElement): this;
 
-    unmount(): this;
+    unmount(targetPos?: IPos): this;
 
     addMount(ele: IElement, index?: number): this;
 
-    removeMount(ele: IElement): this;
+    removeMount(ele: IElement, targetPos?: IPos): this;
 
-    getInteractivePosition(): IPos;
+    getInteractivePositionList(): IPos[];
 }
 
 export enum PlayerState {
@@ -591,44 +591,26 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showTopDisplay(data?: ElementStateType) {
-        // if (!this.mDisplay || !this.model) {
-        //     return;
-        // }
-        // if (!this.mDisplay.topPoint) {
-        //     return;
-        // }
-        // const ratio = this.mRoomService.world.scaleRatio;
-        // if (!data) {
-        //     if (this.mTopDisplay)
-        //         this.mTopDisplay.destroy();
-        //     this.mTopDisplay = undefined;
-        //     return;
-        // }
-        // if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, ratio);
-        // this.mTopDisplay.loadState(data);
+        this.mRoomService.game.renderPeer.showTopDisplay(this.id, data);
     }
 
     public removeTopDisplay() {
 
     }
 
-    public getInteractivePosition() {
+    public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
             return;
         }
         const pos45 = this.mRoomService.transformToMini45(this.getPosition());
-        let walkablePos = null;
+        const result: IPos[] = [];
         for (const interactive of interactives) {
             if ((<Room>this.mRoomService).isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
-                walkablePos = interactive;
-                break;
+                result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
             }
         }
-        if (!walkablePos) {
-            return;
-        }
-        return this.mRoomService.transformToMini90(new LogicPos(pos45.x + walkablePos.x, pos45.y + walkablePos.y));
+        return result;
     }
 
     get nickname(): string {
@@ -685,8 +667,8 @@ export class Element extends BlockObject implements IElement {
         return this;
     }
 
-    public removeMount(ele: IElement) {
-        ele.unmount();
+    public removeMount(ele: IElement, targetPos?: IPos) {
+        ele.unmount(targetPos);
         if (!this.mMounts) return this;
         // if (this.mDisplay) {
         //     this.mDisplay.unmount(ele.getDisplay());

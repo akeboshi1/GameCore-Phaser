@@ -2,7 +2,7 @@ import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
 import { Url, LogicPoint, LogicPos, Logger } from "utils";
 import { Render } from "../render";
-import { RunningAnimation, IDragonbonesModel, IFramesModel } from "structure";
+import { RunningAnimation, IDragonbonesModel, IFramesModel, ElementStateType } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
 import { LoadQueue } from "../loadqueue";
 
@@ -213,6 +213,17 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         if (!this.isShowName()) return;
         this.mName = name;
         this.mTopDisplay.showNickname(name);
+    }
+
+    public showTopDisplay(data?: ElementStateType) {
+        if (!data) {
+            if (this.mTopDisplay)
+                this.mTopDisplay.destroy();
+            this.mTopDisplay = undefined;
+            return;
+        }
+        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+        this.mTopDisplay.loadState(data);
     }
 
     public updatePos(x: number, y: number, z: number) {

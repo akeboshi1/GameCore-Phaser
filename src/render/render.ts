@@ -13,7 +13,7 @@ import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, RunningAnimation } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, RunningAnimation, ElementStateType } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
@@ -1079,6 +1079,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
     public showNickname(id: number, name: string) {
         if (this.mDisplayManager) this.mDisplayManager.showNickname(id, name);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public showTopDisplay(id: number, state?: ElementStateType) {
+        if (this.mDisplayManager) this.mDisplayManager.showTopDisplay(id, state);
     }
 
     @Export()

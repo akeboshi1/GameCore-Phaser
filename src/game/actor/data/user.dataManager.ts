@@ -5,8 +5,9 @@ import { Game } from "src/game/game";
 import { EventType } from "structure";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
+import { SceneDataManager } from "../../data.manager/scene.data.manager";
+import { DataMgrType } from "../../data.manager/dataManager";
 export class UserDataManager extends PacketHandler {
-    private mCurRoomID: string;
     private readonly mPlayerBag: PlayerBag;
     private readonly mProperty: PlayerProperty;
     constructor(private game: Game) {
@@ -62,19 +63,17 @@ export class UserDataManager extends PacketHandler {
 
     get isSelfRoom() {
         if (this.mProperty.rooms) {
-            const curRoomid = this.mCurRoomID;
+            const curRoomid = this.curRoomID;
             for (const room of this.mProperty.rooms) {
                 if (room.roomId === curRoomid) return true;
             }
         }
         return false;
     }
-    set curRoomID(roomID: string) {
-        this.mCurRoomID = roomID;
-    }
 
     get curRoomID() {
-        return this.mCurRoomID;
+        const dataMgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
+        return dataMgr.curRoomID;
     }
     get cid() {
         return this.playerProperty.cid;

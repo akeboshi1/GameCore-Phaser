@@ -138,6 +138,9 @@ export class UiManager {
     }
 
     public updateUIState(panelName: string, ui: any) {
+        if (!this.mPanelMap) {
+            return;
+        }
         const panel = this.mPanelMap.get(panelName);
         if (panel) {
             panel.updateUIState(ui);

@@ -59,7 +59,6 @@ export class PlayScene extends RoomScene {
         this.render.camerasManager.startRoomPlay(this);
         const txt = LoadingTips.loadingResources();
         this.render.showLoading({ "text": txt });
-        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.onLoadCompleteHandler();
 
         // set layers
@@ -80,7 +79,7 @@ export class PlayScene extends RoomScene {
 
         this.input.on("pointerdown", this.onPointerDownHandler, this);
         this.input.on("pointerup", this.onPointerUpHandler, this);
-        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        // this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
     }
 
     update(time: number, delta: number) {
@@ -141,7 +140,7 @@ export class PlayScene extends RoomScene {
     private onLoadCompleteHandler() {
         Logger.getInstance().log("playload complete");
         this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-        this.render.hideLoading();
+        // this.render.hideLoading();
     }
 
     private checkOriention(orientation) {
