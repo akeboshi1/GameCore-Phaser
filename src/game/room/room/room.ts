@@ -479,12 +479,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!actor) {
             return;
         }
-        const pos45 = actor.getPosition45();
-        const click45 = this.transformTo45(new LogicPos(x, y));
-        if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
-            this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
-            return;
-        }
+        // const pos45 = actor.getPosition45();
+        // const click45 = this.transformTo45(new LogicPos(x, y));
+        // if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
+        // this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
+        //     return;
+        // }
 
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH = pkt.content;
@@ -713,17 +713,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // }
     }
 
-    private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        // if (!this.scene) {
-        //     Logger.getInstance().log("Room scene  does not exist");
-        //     return;
-        // }
-        // const fall = new FallEffect(this.scene, this.mScaleRatio);
-        // fall.show(status);
-        // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
-        // this.addToSceneUI(fall);
-        this.mGame.addFillEffect(pos, status);
-    }
+    // private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+    //     // if (!this.scene) {
+    //     //     Logger.getInstance().log("Room scene  does not exist");
+    //     //     return;
+    //     // }
+    //     // const fall = new FallEffect(this.scene, this.mScaleRatio);
+    //     // fall.show(status);
+    //     // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
+    //     // this.addToSceneUI(fall);
+    //     this.mGame.addFillEffect(pos, status);
+    // }
 
     private onMovePathHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
@@ -732,7 +732,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
         const pos = content.targetPos;
-        this.addFillEffect({ x: pos.x, y: pos.y }, status);
+        // this.addFillEffect({ x: pos.x, y: pos.y }, status);
     }
 
     private onCameraFollowHandler(packet: PBpacket) {

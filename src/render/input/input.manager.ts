@@ -1,6 +1,5 @@
 import { Render } from "../render";
 import { JoystickManager } from "./joystick.manager";
-import { MotionManager } from "./motion.manager";
 import { MouseManager } from "./mouse.manager";
 
 export class InputManager {

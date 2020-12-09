@@ -24,6 +24,10 @@ export class PlayScene extends RoomScene {
         super(config || { key: SceneName.PLAY_SCENE });
     }
 
+    get motionMgr(): MotionManager {
+        return this.motionManager;
+    }
+
     public preload() { }
 
     public create() {

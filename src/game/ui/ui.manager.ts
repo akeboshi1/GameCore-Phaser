@@ -55,6 +55,7 @@ export class UIManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CLOSE_CREATE_ROLE_UI, this.onHandleCloseCreateRoleUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_FORCE_OFFLINE, this.onForceOfflineHandler);
         this.game.emitter.on(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
     }
 
@@ -212,6 +213,10 @@ export class UIManager extends PacketHandler {
             this.mMedMap = null;
         }
         if (this.mAtiveUIData) this.mAtiveUIData = undefined;
+    }
+
+    protected onForceOfflineHandler(packet: PBpacket) {
+        this.game.peer.render.onForceOfflineHandler();
     }
 
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {

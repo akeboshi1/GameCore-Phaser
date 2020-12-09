@@ -87,13 +87,13 @@ export class MotionManager {
         this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
-    private movePath(targets: {}, id?: number) {
+    private movePath(x: number, y: number, targets: {}, id?: number) {
         // const user = this.render.user;
         // if (!user) {
         //     return;
         // }
         // this.render.user.findPath(worldX, worldY, id);
-        this.render.mainPeer.findPath(targets, id);
+        this.render.mainPeer.findPath(x, y, targets, id);
     }
 
     private stop() {
@@ -122,10 +122,10 @@ export class MotionManager {
                     if (!targets || targets.length === 0) {
                         targets = [ele];
                     }
-                    this.movePath(targets, id);
+                    this.movePath(pointer.worldX, pointer.worldY, targets, id);
                 }
             } else {
-                this.movePath([new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+                this.movePath(pointer.worldX, pointer.worldY, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
         this.clearGameObject();
