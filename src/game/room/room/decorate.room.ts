@@ -1,6 +1,4 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import IActor = op_client.IActor;
-import NodeType = op_def.NodeType;
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IPosition45Obj, Position45, IPos, LogicPos, Logger } from "utils";
 import { Game } from "../../game";
@@ -13,11 +11,9 @@ import { PlayerManager } from "../player/player.manager";
 import { IElement } from "../element/element";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery, SceneName } from "structure";
-import { MatterWorld } from "../physical/matter.world";
+import { IScenery } from "structure";
 import { IRoomService } from "./room";
 import { ISprite, Sprite } from "../display/sprite/sprite";
-import { PlayScene } from "gamecoreRender";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { DecorateTerrainManager } from "../terrain/decorate.terrain.manager";
 import { DecorateElementManager } from "../element/decorate.element.manager";
@@ -25,7 +21,7 @@ import { SpawnPoint } from "../display/sprite/spawn.point";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
-    readonly selectedSprite: IElement | undefined;
+    // readonly selectedSprite: IElement | undefined;
 
     canPut(pos: LogicPos, collisionArea: number[][], origin: Phaser.Geom.Point): boolean;
 }
@@ -99,15 +95,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             "dpr": this.mScaleRatio,
             "sceneName": "DecorateScene"
         });
-        // if (!this.world.game.scene.getScene(LoadingScene.name))
-        //     this.world.game.scene.add(LoadingScene.name, LoadingScene, false);
-        // this.world.game.scene.start(LoadingScene.name, {
-        //     world: this.world,
-        //     room: this
-        // });
-        // this.game.showLoading().then(() => {
-        //     this.completeLoad();
-        // });
     }
 
     addBlockObject(object: IBlockObject) {
@@ -120,15 +107,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     completeLoad() {
-        // this.game.game.scene.add(PlayScene.name, PlayScene, true, {
-        //     room: this
-        // });
     }
 
     initUI() {
-        // if (this.game.uiManager) {
-        //     this.game.uiManager.showDecorateUI();
-        // }
         if (this.game.uiManager) this.game.uiManager.showDecorateUI();
     }
 
@@ -137,6 +118,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
+        this.game.renderPeer.clearRoom();
+        this.game.uiManager.recover();
         this.removePointerMoveHandler();
         // this.game.game.scene.remove(PlayScene.name);
         // this.game.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
@@ -169,9 +152,6 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     resume(name: string): void {
-    }
-
-    startLoad() {
     }
 
     startPlay() {

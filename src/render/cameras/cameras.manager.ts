@@ -95,8 +95,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             return;
         }
         for (const camera of this.mCameras) {
-            camera.scrollX += x / this.camera.zoom;
-            camera.scrollY += y / this.camera.zoom;
+            camera.scrollX += x;
+            camera.scrollY += y;
         }
         this.moving = true;
         // this.mCamera.setScroll(x, y);
@@ -171,6 +171,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     public destroy() {
         Logger.getInstance().log("camerasmanager destroy");
         this.mMain = undefined;
+        this.mTarget = undefined;
         this.mCameras = [];
     }
 

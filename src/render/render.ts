@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, Logger, Size, LogicPos } from "utils";
+import { Url, initLocales, Logger, Size, LogicPos, i18n } from "utils";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
@@ -741,6 +741,11 @@ export class Render extends RPCPeer implements GameMain {
         this.mSceneManager.sleepScene(SceneName.LOADING_SCENE);
     }
 
+    @Export()
+    public onForceOfflineHandler() {
+        this.uiManager.showAlertView(i18n.t("common.offline"), true);
+    }
+
     // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     // public sceneAddLoadRes(sceneName: string, type: string, key: string, source: string) {
 
@@ -849,8 +854,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public addFillEffect(posX: number, posY: number, status: number) {
-
+    public addFillEffect(posX: number, posY: number, status: any) {
+        this.displayManager.addFillEffect(posX, posY, status);
     }
 
     @Export()
@@ -890,6 +895,11 @@ export class Render extends RPCPeer implements GameMain {
                 resolve();
             }
         });
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public getMessage(val: string) {
+        return i18n.t(val);
     }
 
     @Export()

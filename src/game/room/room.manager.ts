@@ -180,8 +180,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return this.mGame;
     }
 
-    get currentRoom(): Room {
-        return <Room>this.mCurRoom;
+    get currentRoom(): IRoomService {
+        return this.mCurRoom;
     }
 
     get connection(): ConnectionService {

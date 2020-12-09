@@ -21,6 +21,7 @@ export class UIMediatorType {
     public static Shop = "Shop";  // 内购商城
     public static MineSettle = "MineSettle"; // 矿洞结算
     public static EquipUpgrade = "EquipUpgrade"; // 装备升级
+    public static DecorateControll = "DecorateControll"; // 布置控制
 }
 
 export enum UILayoutType {

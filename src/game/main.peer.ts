@@ -311,7 +311,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public onTapHandler(obj: any) {
-        if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
+        // if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
     }
 
     @Export()
@@ -465,9 +465,9 @@ export class MainPeer extends RPCPeer {
         return this.game.clock.unixTime;
     }
 
-    @Export()
-    public findPath(targets: [], targetId?: number, toReverse: boolean = false) {
-        this.game.user.findPath(targets, targetId, toReverse);
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public findPath(x: number, y: number, targets: [], targetId?: number, toReverse: boolean = false) {
+        this.game.user.findPath(x, y, targets, targetId, toReverse);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

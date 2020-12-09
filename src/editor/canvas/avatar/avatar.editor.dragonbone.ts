@@ -325,6 +325,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         // 复制值
         const temp: any[] = [];
         for (const newSet of newSets) {
+            // fix dumplicate sets
+            const existSetIdx = this.mSets.findIndex((x) => (x.id === newSet.id && JSON.stringify(x.parts) === JSON.stringify(newSet.parts)));
+            if (existSetIdx >= 0) continue;
             temp.push(Object.assign({}, newSet));
         }
         newSets = temp;

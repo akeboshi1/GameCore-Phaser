@@ -57,7 +57,9 @@ export class AStar {
         for (const path of paths) {
             result.push(this.roomService.transformToMini90(new LogicPos(path[0], path[1])));
         }
-        // result.shift();
+        if (toReverse === false) {
+            result.shift(); // 正向走的时候移除第一格是为了防止人物走的过程中忽然回头，反向的时候是人从家具上下来，如果移除掉第一格会造成人物从交互点的下一格开始走
+        }
         return result;
     }
 

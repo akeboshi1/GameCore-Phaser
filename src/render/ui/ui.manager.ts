@@ -2,8 +2,8 @@ import { Logger, ValueResolver } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "../scenes/basic.scene";
-import { MainUIScene } from "../scenes";
 import { SceneName } from "structure";
+import { AlertView, Buttons } from "./components";
 
 export class UiManager {
     protected mScene: BasicScene;
@@ -80,6 +80,19 @@ export class UiManager {
         });
         this.mPanelMap.clear();
         this.mPanelMap = null;
+    }
+
+    public showAlertView(text: string, ok: boolean, cancel: boolean = false, callBack?: Function) {
+        if (!this.mScene) {
+            return;
+        }
+        const alert = new AlertView(this).show({
+            text,
+            callback: () => {
+                if (callBack) callBack();
+            },
+            btns: Buttons.Ok
+        });
     }
 
     public destroy() {

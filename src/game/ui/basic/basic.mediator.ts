@@ -61,7 +61,7 @@ export class BasicMediator implements IMediator {
     }
 
     hide(): void {
-        if (this.mView && this.mShow !== false) this.mView.hide();
+        if (this.game.peer.render.hasOwnProperty(this.key) && this.mView && this.mShow !== false) this.mView.hide();
         this.mView = undefined;
         this.mPanelInit = false;
         this.mShow = false;
@@ -87,8 +87,10 @@ export class BasicMediator implements IMediator {
         this.mShow = true;
         this.__exportProperty(() => {
             this.game.peer.render.showPanel(this.key, param).then(() => {
-                this.mView = this.game.peer.render[this.key];
-                this.panelInit();
+                if (this.game.peer.render.hasOwnProperty(this.key)) {
+                    this.mView = this.game.peer.render[this.key];
+                    this.panelInit();
+                }
             });
             this.mediatorExport();
         });
