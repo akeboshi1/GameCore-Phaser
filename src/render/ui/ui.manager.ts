@@ -188,7 +188,7 @@ export class UiManager {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
-        this.mPanelMap.set(type + "Panel", panel);
+        this.mPanelMap.set(type, panel);
         panel.show(param);
         return panel;
     }
