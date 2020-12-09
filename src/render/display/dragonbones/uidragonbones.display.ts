@@ -27,11 +27,13 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
             for (const suit of suits) {
                 if (suit.suit_type === "weapon") {
                     if (suit.tag) {
-                        this.AniAction = JSON.parse(suit.tag);
+                        this.AniAction = JSON.parse(suit.tag).action;
+                        return;
                     }
                 }
             }
         }
+        this.AniAction = undefined;
     }
 
     public getAnimationName(name) {

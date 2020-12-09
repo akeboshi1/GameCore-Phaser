@@ -18,7 +18,7 @@ import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery, SceneName } from "structure";
+import { IScenery, LoadState, SceneName } from "structure";
 import { MatterWorld } from "../physical/matter.world";
 import { AStar } from "../path.finding/astar";
 export interface SpriteAddCompletedListener {
@@ -157,10 +157,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
+
         // create render scene
         this.mGame.showLoading({
             "dpr": this.mScaleRatio,
-            "sceneName": "PlayScene"
+            "sceneName": "PlayScene",
+            "state": LoadState.CREATESCENE
         });
     }
 

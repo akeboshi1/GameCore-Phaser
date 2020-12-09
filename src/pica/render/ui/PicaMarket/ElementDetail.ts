@@ -155,7 +155,14 @@ export class ElementDetail extends Phaser.GameObjects.Container {
               if (element && !content.avatar[key]) content.avatar[key] = element;
             }
           }
-          if (suits) content.suits = content.suits.concat(suits);
+          if (suits) {
+            const newsuit = content.suits[0];
+            for (const suit of suits) {
+              if (suit.suit_type !== newsuit.suit_type) {
+                content.suits.push(suit);
+              }
+            }
+          }
           const offset = new Phaser.Geom.Point(0, 35 * 2);
           this.mDetailDisplay.loadAvatar(content, 2, offset);
         });

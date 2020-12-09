@@ -106,6 +106,15 @@ export class LoadingScene extends BasicScene {
     return this.curtain.close();
   }
 
+  public updateProgress(text: any) {
+    if (!text) return;
+    // 更新load状态
+    this.tipsText = text;
+    if (text && this.progressText) {
+      if (this.progressText.active) this.progressText.setText(text);
+    }
+  }
+
   public wake(data?: any) {
     if (!this.scene || !this.scene.settings) {
       return;
@@ -125,9 +134,7 @@ export class LoadingScene extends BasicScene {
     }
     // 更新load状态
     this.tipsText = data.text;
-    // if (data.callBack) {
-    //   data.callBack.call(this, this);
-    // }
+    Logger.getInstance().log("loadState:----", data.text);
     if (data.text && this.progressText) {
       if (this.progressText.active) this.progressText.setText(data.text);
     }

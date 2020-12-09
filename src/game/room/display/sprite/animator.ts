@@ -15,7 +15,7 @@ export class Animator {
             for (const suit of suits) {
                 if (suit.suit_type === "weapon") {
                     if (suit.tag) {
-                        this.AniAction = JSON.parse(suit.tag);
+                        this.AniAction = JSON.parse(suit.tag).action;
                     }
                 }
             }
