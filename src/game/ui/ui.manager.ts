@@ -293,14 +293,14 @@ export class UIManager extends PacketHandler {
         this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
     }
 
-    protected onForceOfflineHandler(packet: PBpacket) {
-        // const alert = new AlertView(this.mScene, this.worldService).show({
-        //     text: i18n.t("common.offline"),
-        //     callback: () => {
-        //     },
-        //     btns: Buttons.Ok
-        // });
-    }
+    // protected onForceOfflineHandler(packet: PBpacket) {
+    //     // const alert = new AlertView(this.mScene, this.worldService).show({
+    //     //     text: i18n.t("common.offline"),
+    //     //     callback: () => {
+    //     //     },
+    //     //     btns: Buttons.Ok
+    //     // });
+    // }
 
     protected onHandleCloseCreateRoleUI() {
         this.hideMed(ModuleName.CREATEROLE_NAME);
