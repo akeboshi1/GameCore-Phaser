@@ -897,6 +897,11 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public getMessage(val: string) {
+        return i18n.t(val);
+    }
+
     @Export()
     public setLocalStorage(key: string, value: string) {
         if (this.localStorageManager) this.localStorageManager.setItem(key, value);
