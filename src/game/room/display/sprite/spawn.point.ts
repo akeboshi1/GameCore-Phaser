@@ -75,7 +75,9 @@ export class SpawnPoint implements ISprite {
     updateAvatar(avatar: op_gameconfig.IAvatar) {
         throw new Error("Method not implemented.");
     }
-
+    setTempAvatar(avatar: IAvatar) {
+        throw new Error("Method not implemented.");
+    }
     updateAvatarSuits(suits: AvatarSuit[]): boolean {
         throw false;
     }

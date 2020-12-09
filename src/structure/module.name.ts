@@ -15,6 +15,7 @@ export class ModuleName {
     public static SCENEMANAGER_NAME: string = "SceneManager";
     public static BUBBLE_NAME: string = "Bubble";
     public static PICABAG_NAME: string = "PicaBag";
+    public static PICAAVATAR_NAME: string = "PicaAvatar";
     public static PICAMARKET_NAME: string = "PicaMarket";
     public static PICAORDER_NAME: string = "PicaOrder";
     public static PICAPROPFUN_NAME: string = "PicaPropFun";

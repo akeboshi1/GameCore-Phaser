@@ -48,6 +48,7 @@ export interface ISprite {
     updateSuits?: boolean;
     newID();
     updateAvatar(avatar: IAvatar);
+    setTempAvatar(avatar: IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
     setPosition(x: number, y: number);
     setAnimationName(name: string, playTimes?: number): RunningAnimation;
@@ -248,6 +249,16 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.avatar = { id: avatar.id };
         this.avatar = Object.assign(this.avatar, avatar);
         this.displayInfo = new DragonbonesModel(this);
+    }
+
+    public setTempAvatar(avatar: IAvatar) {
+        if (this.displayInfo) {
+            this.displayInfo.destroy();
+        }
+        let tempAvatar = { id: avatar.id };
+        tempAvatar = Object.assign(tempAvatar, this.avatar);
+        tempAvatar = Object.assign(tempAvatar, avatar);
+        this.displayInfo = new DragonbonesModel({ id: this.id, avatar: tempAvatar });
     }
     public getAvatarSuits(attrs: op_def.IStrPair[]) {
         let suits: AvatarSuit[];

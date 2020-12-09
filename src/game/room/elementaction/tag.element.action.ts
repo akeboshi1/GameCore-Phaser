@@ -18,8 +18,7 @@ export class TAGElementAction extends ElementBaseAction {
     }
 
     private executeMine() {
-        // const data = { weaponID: "5f912f98c4486f3a23bd2eb4", animation: "crafting" };
-        const data = { weaponID: "5f912fc1f1d58a7199b745f0", animation: "crafting" };
+        const data = { weaponID: "5f912f98c4486f3a23bd2eb4", animation: "mining" };
         this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, data);
     }
 

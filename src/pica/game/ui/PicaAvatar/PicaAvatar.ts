@@ -4,7 +4,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 
-export class PicaBag extends BasicModel {
+export class PicaAvatar extends BasicModel {
   private mSceneType: op_def.SceneTypeEnum;
   private categoryType: op_pkt_def.PKT_PackageType;
   constructor(game: Game, sceneType: op_def.SceneTypeEnum) {
@@ -17,9 +17,7 @@ export class PicaBag extends BasicModel {
     if (connection) {
       this.connection.addPacketListener(this);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES, this.onPackageCategoriesHandler);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE, this.onQueryMarketPackage);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE, this.onQueryCommodityResultHandler);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE, this.onQueryEditPackage);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR, this.onQueryResetAvatar);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID, this.onRetDressAvatarItemIDS);
     }
@@ -55,45 +53,6 @@ export class PicaBag extends BasicModel {
     this.connection.send(packet);
   }
 
-  addFurniToScene(id: string) {
-    if (this.mSceneType !== op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
-      return;
-    }
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE = packet.content;
-    content.id = id;
-    this.connection.send(packet);
-  }
-
-  enterEditAndSelectedSprite(id: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENABLE_AND_SELECTED_SPRITE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENABLE_AND_SELECTED_SPRITE = packet.content;
-    content.id = id;
-    this.connection.send(packet);
-  }
-
-  seachPackage(seach: string, category: string) {
-    this.queryPackage(category, seach);
-  }
-
-  sellProps(prop: op_client.CountablePackageItem, count: number, category: number) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM = packet.content;
-    content.category = category;
-    const item = op_client.CountablePackageItem.create(prop);
-    item.count = count;
-    content.items = [item];
-    content.totalPrice = item.sellingPrice;
-    content.totalPrice.price *= count;
-    this.connection.send(packet);
-  }
-  useProps(itemid: string, count: number) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_USE_ITEM);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_USE_ITEM = packet.content;
-    content.itemId = itemid;
-    content.count = count;
-    this.connection.send(packet);
-  }
   querySaveAvatar(avatarids: string[]) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_DRESS_UP_AVATAR = packet.content;
@@ -118,31 +77,16 @@ export class PicaBag extends BasicModel {
   private onPackageCategoriesHandler(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
     if (content.category === this.categoryType) {
-      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retpackageCategory", content.subcategory);
-    }
-  }
-
-  private onQueryMarketPackage(packge: PBpacket) {
-    // OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE
-    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE = packge.content;
-    if (content.category === this.categoryType) {
-      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retPackage", content);
-    }
-  }
-
-  private onQueryEditPackage(packet: PBpacket) {
-    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE = packet.content;
-    if (content.category === this.categoryType) {
-      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retPackage", content);
+      this.game.emitter.emit(ModuleName.PICAAVATAR_NAME + "_retpackageCategory", content.subcategory);
     }
   }
 
   private onQueryCommodityResultHandler(packet: PBpacket) {
-    this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retCommodityResource", packet.content);
+    this.game.emitter.emit(ModuleName.PICAAVATAR_NAME + "_retcommodityresource", packet.content);
   }
   private onQueryResetAvatar(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR = packet.content;
-    this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retResetAvatar", content);
+    this.game.emitter.emit(ModuleName.PICAAVATAR_NAME + "_retResetAvatar", content);
   }
   private queryMarketPackage(key: string, queryString?: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
@@ -167,7 +111,7 @@ export class PicaBag extends BasicModel {
   }
   private onRetDressAvatarItemIDS(packet: PBpacket) {
     const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;
-    this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retavatarIDs", content.avatarItemIds);
+    this.game.emitter.emit(ModuleName.PICAAVATAR_NAME + "_retavatarIDs", content.avatarItemIds);
   }
   get connection(): ConnectionService {
     if (this.game) {

@@ -77,3 +77,5 @@ export * from "./ui/PicaFurniFun/PicaFurniFun";
 export * from "./ui/PicaFurniFun/PicaFurniFunMediator";
 export * from "./ui/PicaNewRole/PicaNewRole";
 export * from "./ui/PicaNewRole/PicaNewRoleMediator";
+export * from "./ui/PicaAvatar/PicaAvatar";
+export * from "./ui/PicaAvatar/PicaAvatarMediator";

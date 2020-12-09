@@ -8,7 +8,7 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
     private AniAction: any[];
     private isBack: boolean = false;
     public play(val: RunningAnimation) {
-        val.name = this.getAnimationName(val.name) + this.isBack ? "_back" : "";
+        val.name = this.getAnimationName(val.name) + (this.isBack ? "_back" : "");
         super.play(val);
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
@@ -45,6 +45,9 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
             else if (name === "walk") return this.AniAction[1];
         }
         return name;
+    }
+    public get back() {
+        return this.isBack;
     }
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {
         if (!this.mArmatureDisplay || !this.mAnimation) {

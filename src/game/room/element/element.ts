@@ -270,17 +270,22 @@ export class Element extends BlockObject implements IElement {
     }
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
-        const avatar = this.model.avatar;
-        avatar.farmWeapId = weaponid;
-        avatar.barmWeapId = weaponid;
-        this.model.updateAvatar(this.mModel.avatar);
+        const avatar: any = { farmWeapId: weaponid, barmWeapId: weaponid };
+        this.model.setTempAvatar(avatar);
         this.load(this.mModel.displayInfo);
     }
 
     public removeWeapon() {
-        if (!this.mModel || !this.mModel.avatar) return;
-        this.mModel.updateAvatarSuits(this.mModel.suits);
-        this.load(this.mModel.displayInfo);
+        if (!this.mModel) return;
+        if (this.mModel.suits) {
+            this.mModel.updateAvatarSuits(this.mModel.suits);
+            this.model.updateAvatar(this.mModel.avatar);
+            this.load(this.mModel.displayInfo);
+        } else if (this.mModel.avatar) {
+            this.model.updateAvatar(this.mModel.avatar);
+            this.load(this.mModel.displayInfo);
+        }
+
     }
 
     public play(animationName: string, times?: number): void {
