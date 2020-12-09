@@ -1,4 +1,3 @@
-import { op_gameconfig } from "pixelpai_proto";
 import { IAvatar } from "./dragonbones";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
@@ -68,8 +67,7 @@ export class AvatarSuitType {
 
     static createBaseAvatar() {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
-        const avatar: IAvatar = { id: undefined };
-        Object.assign(avatar, this.avatarSuit.baseSlots);
+        const avatar: IAvatar = new BaseAvatar();
         return avatar;
     }
     public costume = ["bodyCostId", "bodyDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
@@ -122,6 +120,19 @@ export class SuitAlternativeType {
     public wing = 0x000400;
     public helmet = 0x0007e;
     public shell = 0x000601;
+}
+class BaseAvatar {
+    id = "10000";
+    barmBaseId = { sn: "0001" };
+    blegBaseId = { sn: "0001" };
+    bodyBaseId = { sn: "0001" };
+    farmBaseId = { sn: "0001" };
+    flegBaseId = { sn: "0001" };
+    headBaseId = { sn: "0001" };
+    headHairId = { sn: "5cd28238fb073710972a73c2" };
+    headEyesId = { sn: "5cd28238fb073710972a73c2" };
+    headMousId = { sn: "5cd28238fb073710972a73c2" };
+    bodyCostId = { sn: "5cd28238fb073710972a73c2" };
 }
 export interface AvatarSuit {
     id: string;
