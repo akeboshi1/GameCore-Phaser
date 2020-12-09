@@ -6,5 +6,6 @@ export enum LoadState {
     PARSECONFIG,
     WAITENTERROOM,
     LOADINGRESOURCES,
-    LOGINGAME
+    LOGINGAME,
+    CREATESCENE,
 }

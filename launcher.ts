@@ -146,11 +146,19 @@ export class Launcher {
         }, 4 * 60 * 60 * 1000 /* ms */);
 
         import(/* webpackChunkName: "game" */ "./src/render/render").then((game) => {
+            if (!game) {
+                // tslint:disable-next-line:no-console
+                console.log("no game error");
+                return;
+            }
             this.world = new game.Render(this.config, this.mCompleteFunc);
             if (config.isEditor) {
                 this.world.createGame();
             }
             this.disableClick();
+        }).catch(() => {
+            // tslint:disable-next-line:no-console
+            console.log("import game error");
         });
     }
 

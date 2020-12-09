@@ -98,11 +98,19 @@ export class SceneManager {
                 case LoadState.WAITENTERROOM:
                     data.text = LoadingTips.waitEnterRoom();
                     break;
+                case LoadState.CREATESCENE:
+                    data.text = LoadingTips.createScene();
+                    break;
             }
         }
         const scene = sceneManager.getScene(name) as BasicScene;
         if (scene) {
-            if (!scene.scene.isActive()) scene.wake(data);
+            const isActive = scene.scene.isActive(name);
+            if (!isActive) {
+                scene.wake(data);
+            } else {
+                scene.updateProgress(data.text);
+            }
             if (data.callBack) data.callBack();
         } else {
             this.render.emitter.once("sceneCreated", () => {
