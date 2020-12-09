@@ -103,9 +103,9 @@ export class MouseManager {
                             com.scaleTween();
                         }
                     }
-                    this.render.mainPeer.onTapHandler({ id, x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio, nodeType });
+                    this.render.mainPeer.onTapHandler({ id, x: pointer.worldX, y: pointer.worldY, nodeType });
                 } else {
-                    this.render.mainPeer.onTapHandler({ x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio });
+                    this.render.mainPeer.onTapHandler({ x: pointer.worldX, y: pointer.worldY });
                 }
             }
         }

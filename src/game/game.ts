@@ -246,7 +246,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
         this.mainPeer.render.addFillEffect(pos.x, pos.y, status).then(() => {
-
         });
     }
 

@@ -10,8 +10,11 @@ import { Render } from "../render";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { RunningAnimation } from "structure";
+import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
+import { BasicScene } from "../scenes";
+import { FallEffect } from "picaRender";
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -168,6 +171,14 @@ export class DisplayManager {
         display.removeFromParent();
         display.destroy();
         this.displays.delete(displayID);
+    }
+
+    public addFillEffect(x: number, y: number, status: op_def.PathReachableStatus) {
+        const mainScene: BasicScene = this.render.sceneManager.getMainScene() as BasicScene;
+        const fall = new FallEffect(mainScene, this.render.scaleRatio);
+        fall.show(status);
+        fall.setPosition(x, y);
+        mainScene.layerManager.addToLayer("sceneUILayer", fall);
     }
 
     public load(displayID: number, data: any, field?: DisplayField) {

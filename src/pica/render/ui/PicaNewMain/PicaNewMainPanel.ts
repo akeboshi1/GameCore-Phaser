@@ -56,6 +56,10 @@ export class PicaNewMainPanel extends PicaBasePanel {
         super.destroy();
     }
 
+    hide() {
+        super.hide();
+    }
+
     update(param) {
         super.update();
     }

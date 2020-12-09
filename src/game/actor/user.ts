@@ -9,6 +9,7 @@ import { ISprite } from "../room/display/sprite/sprite";
 import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { EventType, IDragonbonesModel, IFramesModel } from "structure";
+import { IPoint } from "game-capsule";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -108,7 +109,7 @@ export class User extends Player {
         this.startMove();
     }
 
-    public findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
+    public findPath(x: number, y: number, targets: IPos[], targetId?: number, toReverse: boolean = false) {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this, targets[0]);
         }
@@ -118,11 +119,13 @@ export class User extends Player {
             return;
         }
         if (path.length < 1) {
+            this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
             return;
         }
         path.map((pos: IPos) => pos.y += this.offsetY);
         this.matterWorld.setSensor(this.body, true);
         this.mTargetPoint = { path, targetId };
+        this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();
     }
 
@@ -337,6 +340,10 @@ export class User extends Player {
     protected addBody() {
         this._sensor = false;
         this.setBody();
+    }
+
+    private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+        this.game.addFillEffect(pos, status);
     }
 
     private drawPath(pos: op_client.IMovePoint[]) {
