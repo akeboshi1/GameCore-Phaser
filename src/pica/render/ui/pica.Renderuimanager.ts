@@ -21,18 +21,15 @@ export class PicaRenderUiManager extends UiManager {
         if (!this.mPanelMap) {
             this.mPanelMap = new Map();
         }
-        let panel = this.mPanelMap.get(type);
+        const className: string = type + "Panel";
+        const ns: any = require(`./${type}/${className}`);
+        const panel = new ns[className](this);
         if (!panel) {
-            const className: string = type + "Panel";
-            const ns: any = require(`./${type}/${className}`);
-            panel = new ns[className](this);
-            if (!panel) {
-                super._showPanel(type, param);
-                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-                return;
-            }
-            this.mPanelMap.set(type, panel);
+            super._showPanel(type, param);
+            // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+            return;
         }
+        this.mPanelMap.set(type, panel);
         panel.show(param);
         return panel;
     }
