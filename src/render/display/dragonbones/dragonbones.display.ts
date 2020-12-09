@@ -247,7 +247,6 @@ export class DragonbonesDisplay extends DisplayObject {
     }
 
     protected buildDragbones() {
-        this.showPlaceholder();
         if (!this.scene.cache.custom.dragonbone) return;
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.allComplete();

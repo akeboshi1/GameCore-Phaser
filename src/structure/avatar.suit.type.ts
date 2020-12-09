@@ -83,19 +83,6 @@ export class AvatarSuitType {
     public wing = ["bodyWingId"];
     public helmet = ["headSpecId"];
     public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
-    public baseSlots: IAvatar = {
-        id: "10000",
-        barmBaseId: { sn: "0001" },
-        blegBaseId: { sn: "0001" },
-        bodyBaseId: { sn: "0001" },
-        farmBaseId: { sn: "0001" },
-        flegBaseId: { sn: "0001" },
-        headBaseId: { sn: "0001" },
-        headHairId: { sn: "5cd28238fb073710972a73c2" },
-        headEyesId: { sn: "5cd28238fb073710972a73c2" },
-        headMousId: { sn: "5cd28238fb073710972a73c2" },
-        bodyCostId: { sn: "5cd28238fb073710972a73c2" }
-    };
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
 }
 export class SuitAlternativeType {
@@ -121,7 +108,7 @@ export class SuitAlternativeType {
     public helmet = 0x0007e;
     public shell = 0x000601;
 }
-class BaseAvatar {
+export class BaseAvatar {
     id = "10000";
     barmBaseId = { sn: "0001" };
     blegBaseId = { sn: "0001" };

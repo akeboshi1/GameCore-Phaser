@@ -181,8 +181,9 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.complHandler = handler;
   }
 
-  setPlayAnimation(ani: RunningAnimation) {
+  setPlayAnimation(ani: RunningAnimation, back: boolean = false) {
     if (this.mDragonboneDisplay) {
+      this.mDragonboneDisplay.setBack(back);
       this.mDragonboneDisplay.play(ani);
     }
   }

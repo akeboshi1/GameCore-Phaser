@@ -237,7 +237,7 @@ export class Element extends BlockObject implements IElement {
         if (model.hasOwnProperty("attrs")) {
             this.model.updateAttr(model.attrs);
         }
-        if (this.mModel.suits) {
+        if (this.mModel.updateSuits) {
             this.mModel.updateAvatarSuits(this.mModel.suits);
             this.mModel.updateAvatar(this.mModel.avatar);
             this.load(this.mModel.displayInfo);

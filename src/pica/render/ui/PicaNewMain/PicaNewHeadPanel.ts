@@ -107,7 +107,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.peoplevalue.setLayout(1);
         this.peoplevalue.x = peoplebg.x;
 
-        const praisebg = new NineSlicePatch(this.scene, 0, 0, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
+        const praisebg = new NineSlicePatch(this.scene, 0, -this.dpr, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
             left: 16 * this.dpr,
             top: 0 * this.dpr,
             right: 16 * this.dpr,
@@ -115,14 +115,14 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         });
         praisebg.x = -peoplebg.width - 15 * this.dpr - praisebg.width * 0.5;
         this.sceneTex = this.scene.make.text({
-            x: praisebg.x - 10 * this.dpr, y: this.dpr, text: "", style: { color: "#FFF449", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT }
+            x: praisebg.x - 10 * this.dpr, y: 0, text: "", style: { color: "#FFF449", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5);
         this.praisebg = praisebg;
         this.praiseButton = new Button(this.scene, UIAtlasName.uicommon, "home_praise_bg", "home_praise_bg");
         this.praiseImg = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_praise" }, false);
         this.praiseButton.add(this.praiseImg);
         this.praiseButton.x = -peoplebg.width - 29 * this.dpr;
-        this.praiseButton.y = this.dpr;
+        this.praiseButton.y = 0;
         this.praiseButton.visible = false;
         const sceneclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         sceneclickCon.setSize(100 * this.dpr, 30 * this.dpr);
@@ -156,16 +156,20 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.sceneTex.text = sceneName;
         this.praise = isPraise;
         this.peoplevalue.setText(people + "");
+        this.praiseButton.off(ClickEvent.Tap, this.onPraiseHandler, this);
         if (this.canPraise(roomType)) {
             this.praiseButton.visible = true;
             this.praiseButton.on(ClickEvent.Tap, this.onPraiseHandler, this);
             this.praiseImg.setFrame(isPraise ? "home_praise_1" : "home_praise");
-            this.praisebg.resize(this.sceneTex.width + 40 * this.dpr, 25 * this.dpr);
+            let bgwidth = this.sceneTex.width + 40 * this.dpr;
+            bgwidth = bgwidth < 60 * this.dpr ? 60 * this.dpr : bgwidth;
+            this.praisebg.resize(bgwidth, 25 * this.dpr);
             this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
             this.sceneTex.x = this.praisebg.x - 11 * this.dpr;
         } else {
-            this.praisebg.resize(this.sceneTex.width + 20 * this.dpr, 25 * this.dpr);
-            this.praiseButton.off(ClickEvent.Tap, this.onPraiseHandler, this);
+            let bgwidth = this.sceneTex.width + 20 * this.dpr;
+            bgwidth = bgwidth < 40 * this.dpr ? 40 * this.dpr : bgwidth;
+            this.praisebg.resize(bgwidth, 25 * this.dpr);
             this.praiseButton.visible = false;
             this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
             this.sceneTex.x = this.praisebg.x;
@@ -196,6 +200,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     }
 
     private moveMoneyCon() {
+        if (!this.scene) return;
         const from = this.width + 190 * this.dpr;
         const to = this.width * 0.5 - 10 * this.dpr;
         this.moneyCon.x = from;
@@ -219,6 +224,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         });
     }
     private fadeOutHeadCon() {
+        if (!this.scene) return;
         const tween = this.scene.tweens.add({
             targets: this.moneyCon,
             alpha: {

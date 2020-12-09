@@ -6,8 +6,9 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
     protected mInteractive: boolean = false;
     private mComplHandler: Handler;
     private AniAction: any[];
+    private isBack: boolean = false;
     public play(val: RunningAnimation) {
-        val.name = this.getAnimationName(val.name);
+        val.name = this.getAnimationName(val.name) + this.isBack ? "_back" : "";
         super.play(val);
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
@@ -18,7 +19,9 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
             }
         }
     }
-
+    public setBack(back: boolean) {
+        this.isBack = back;
+    }
     public setCompleteHandler(compl: Handler) {
         this.mComplHandler = compl;
     }

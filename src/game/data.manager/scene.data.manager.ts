@@ -52,9 +52,10 @@ export class SceneDataManager extends BasePacketHandler {
         const room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO = packet.content;
         if (!this.mCurRoom) this.mCurRoom = room;
         else Object.assign(this.mCurRoom, room);
-        this.mEvent.emit(EventType.UPDATE_ROOM_INFO, room);
-        this.mEvent.emit(EventType.UPDATE_PARTY_STATE, room.openingParty);
-
+        this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
+        this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
+        // tslint:disable-next-line:no-console
+        console.error(room);
     }
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;

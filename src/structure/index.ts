@@ -15,7 +15,7 @@ export { ModuleName } from "./module.name";
 export { FriendRelation, FriendRelationEnum, FriendData, FriendChannel, MenuData } from "./friend.relation";
 export { ChineseUnit } from "./chinese.unit";
 export { TimerCountDown } from "./TimerCountDown";
-export { AvatarSuitType, SuitAlternativeType, AvatarSuit } from "./avatar.suit.type";
+export { AvatarSuitType, SuitAlternativeType, AvatarSuit, BaseAvatar } from "./avatar.suit.type";
 export { StateConfig, ElementStateType } from "./element.state.data";
 export * from "./message.type";
 export * from "./load.state";

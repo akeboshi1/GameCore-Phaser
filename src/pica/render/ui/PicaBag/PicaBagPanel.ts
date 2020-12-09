@@ -645,6 +645,7 @@ export class PicaBagPanel extends BasePanel {
       if (this.categoryType === op_pkt_def.PKT_PackageType.AvatarPackage) {
         this.saveBtn.enable = true;
         this.resetBtn.enable = true;
+        this.avatarDirection = 0;
         this.setSelectAvatarSuitItem(item, cell);
       } else {
         this.setSelectedItem(item, cell);
@@ -840,10 +841,11 @@ export class PicaBagPanel extends BasePanel {
     this.avatarDirection++;
     const data = this.getAvatarAni();
     const aniData: RunningAnimation = {
-      name: ("idle" + data.addName),
+      name: ("idle"),
       flip: data.flip
     };
-    this.mDetailDisplay.setPlayAnimation(aniData);
+    const back = data.back;
+    this.mDetailDisplay.setPlayAnimation(aniData, back);
   }
 
   private onAvatarClickHandler() {
@@ -851,40 +853,41 @@ export class PicaBagPanel extends BasePanel {
     const ani = anis[Math.floor(Math.random() * (anis.length))];
     const data = this.getAvatarAni();
     const aniData: RunningAnimation = {
-      name: (ani + data.addName),
+      name: (ani),
       flip: data.flip,
       times: 1,
       playingQueue: {
         name: "idle", playTimes: -1
       }
     };
-    this.mDetailDisplay.setPlayAnimation(aniData);
+    const back = data.back;
+    this.mDetailDisplay.setPlayAnimation(aniData, back);
   }
 
   private getAvatarAni() {
-    let addName = "";
+    let back = false;
     let flip = false;
     switch (this.avatarDirection) {
       case 0:
-        addName = "";
+        back = false;
         flip = false;
         break;
       case 1:
-        addName = "_back";
+        back = true;
         flip = true;
         this.avatarDirection = -1;
         break;
       case 2:
-        addName = "_back";
+        back = true;
         flip = true;
         break;
       case 3:
-        addName = "";
+        back = false;
         flip = true;
         break;
     }
     return {
-      addName, flip
+      back, flip
     };
   }
   private showSeach(parent: TextButton) {

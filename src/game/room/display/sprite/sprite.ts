@@ -45,7 +45,7 @@ export interface ISprite {
     mountSprites?: number[];
     speed: number;
     animator?: Animator;
-
+    updateSuits?: boolean;
     newID();
     updateAvatar(avatar: IAvatar);
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
@@ -104,6 +104,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public speed: number;
     public interactive: op_def.IPBPoint2f[];
     public animator?: Animator;
+    public updateSuits: boolean = false;
 
     constructor(obj: op_client.ISprite, nodeType?: NodeType) {
         super();
@@ -113,7 +114,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.pos = new LogicPos(point.x, point.y, point.z);
         }
         this.updateAttr(obj.attrs);
-        if (this.suits)
+        if (this.updateSuits)
             this.updateAvatarSuits(this.suits);
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
@@ -227,6 +228,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         return this;
     }
     public updateAvatarSuits(suits: AvatarSuit[]) {
+        this.updateSuits = false;
         if (suits) {
             if (suits.length > 0) {
                 this.suits = suits;
@@ -262,8 +264,10 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public updateAttr(attrs: op_def.IStrPair[]) {
         this.attrs = attrs;
-        this.suits = this.getAvatarSuits(attrs);
-        if (this.suits) {
+        const suits = this.getAvatarSuits(attrs);
+        if (suits && suits.length > 0) {
+            this.suits = suits;
+            this.updateSuits = true;
             if (!this.animator) this.animator = new Animator(this.suits);
             else this.animator.setSuits(this.suits);
         }
