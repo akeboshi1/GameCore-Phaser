@@ -11,7 +11,7 @@ import { PlayerManager } from "../player/player.manager";
 import { IElement } from "../element/element";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery } from "structure";
+import { IScenery, LoadState } from "structure";
 import { IRoomService } from "./room";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
@@ -93,7 +93,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
         this.game.showLoading({
             "dpr": this.mScaleRatio,
-            "sceneName": "DecorateScene"
+            "sceneName": "DecorateScene",
+            "state": LoadState.CREATESCENE
         });
     }
 
@@ -336,7 +337,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return ele;
     }
 
-    public findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[]  {
+    public findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[] {
         return [];
     }
 

@@ -184,7 +184,7 @@ export class SceneManager {
             return;
         }
         const scene = this.render.game.scene.getScene(name) as BasicScene;
-        if (!scene.scene.isActive()) return;
+        // if (!scene.scene.isActive()) return;
         scene.sleep();
     }
 
