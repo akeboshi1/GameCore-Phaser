@@ -1,10 +1,10 @@
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { InteractiveBubble } from "./InteractiveBubble";
-import { BasicMediator, Game, Room } from "gamecore";
+import { BasicMediator, Game, IRoomService, Room } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
 
 export class InteractiveBubbleMediator extends BasicMediator {
-    private mCurRoom: Room;
+    private mCurRoom: IRoomService;
     constructor(game: Game) {
         super(ModuleName.BUBBLE_NAME, game);
         this.game.emitter.on("showbubble", this.onShowInteractiveBubble, this);
@@ -24,12 +24,12 @@ export class InteractiveBubbleMediator extends BasicMediator {
         super.hide();
     }
 
-    get currentRoom(): Room {
+    get currentRoom(): IRoomService {
         return this.game.roomManager.currentRoom;
     }
 
     destroy() {
-        if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);
+        // if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);
         if (this.mModel) {
             this.mModel.destroy();
             this.mModel = undefined;
@@ -47,9 +47,9 @@ export class InteractiveBubbleMediator extends BasicMediator {
 
     private onShowInteractiveBubble(content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_INTERACTIVE_BUBBLE) {
         if (this.mCurRoom !== this.currentRoom) {
-            if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);
+            // if (this.mCurRoom) this.mCurRoom.removeUpdateHandler(this, this.update);
             this.mCurRoom = this.currentRoom;
-            this.mCurRoom.addUpdateHandler(this, this.update);
+            // this.mCurRoom.addUpdateHandler(this, this.update);
         }
         let element = this.currentRoom.elementManager.get(content.receiverId);
         if (!element) element = this.currentRoom.playerManager.get(content.receiverId);

@@ -108,6 +108,8 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (obj.point3f) {
             const point = obj.point3f;
             this.pos = new LogicPos(point.x, point.y, point.z);
+        } else {
+            this.pos = new LogicPos(0, 0);
         }
         this.updateAttr(obj.attrs);
         if (this.suits)

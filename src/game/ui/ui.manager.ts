@@ -55,6 +55,7 @@ export class UIManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CLOSE_CREATE_ROLE_UI, this.onHandleCloseCreateRoleUI);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_FORCE_OFFLINE, this.onForceOfflineHandler);
         this.game.emitter.on(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
     }
 
@@ -79,6 +80,11 @@ export class UIManager extends PacketHandler {
     }
 
     public showDecorateUI() {
+        this.mMedMap.forEach((mediator: any) => {
+            if (mediator.isSceneUI() && !mediator.isShow()) {
+                mediator.show();
+            }
+        });
     }
 
     public showMed(type: string, param?: any) {
@@ -283,6 +289,15 @@ export class UIManager extends PacketHandler {
         this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
     }
 
+    protected onForceOfflineHandler(packet: PBpacket) {
+        // const alert = new AlertView(this.mScene, this.worldService).show({
+        //     text: i18n.t("common.offline"),
+        //     callback: () => {
+        //     },
+        //     btns: Buttons.Ok
+        // });
+    }
+
     protected onHandleCloseCreateRoleUI() {
         this.hideMed(ModuleName.CREATEROLE_NAME);
         // this.game.peer.render.hideCreateRole();
@@ -295,6 +310,12 @@ export class UIManager extends PacketHandler {
         }
         return alias;
     }
+
+    protected clearMediator() {
+        this.mMedMap.forEach((mediator) => mediator.destroy());
+        this.mMedMap.clear();
+    }
+
     private onOpenUIMediator() {
         if (arguments) {
             const uiName = arguments[0];

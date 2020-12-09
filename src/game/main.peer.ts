@@ -309,7 +309,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public onTapHandler(obj: any) {
-        if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
+        // if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
     }
 
     @Export()

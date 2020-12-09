@@ -78,9 +78,7 @@ export class PlayScene extends RoomScene {
         this.render.startRoomPlay();
         this.render.changeScene(this);
 
-        this.input.on("pointerdown", this.onPointerDownHandler, this);
-        this.input.on("pointerup", this.onPointerUpHandler, this);
-        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        this.initListener();
     }
 
     update(time: number, delta: number) {
@@ -103,20 +101,26 @@ export class PlayScene extends RoomScene {
         this.motionManager.setScene(this);
     }
 
-    private onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+    protected initListener() {
+        this.input.on("pointerdown", this.onPointerDownHandler, this);
+        this.input.on("pointerup", this.onPointerUpHandler, this);
+        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+    }
+
+    protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
         this.addPointerMoveHandler();
     }
 
-    private onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+    protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         this.removePointerMoveHandler();
     }
 
-    private addPointerMoveHandler() {
+    protected addPointerMoveHandler() {
         this.input.on("pointermove", this.onPointerMoveHandler, this);
         this.input.on("gameout", this.onGameOutHandler, this);
     }
 
-    private removePointerMoveHandler() {
+    protected removePointerMoveHandler() {
         this.input.off("pointermove", this.onPointerMoveHandler, this);
         this.input.off("gameout", this.onGameOutHandler, this);
         if (this.render.camerasManager.moving) {
@@ -125,7 +129,7 @@ export class PlayScene extends RoomScene {
         }
     }
 
-    private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
+    protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         if (!this.render.camerasManager.targetFollow) {
             this.render.camerasManager.offsetScroll(
                 pointer.prevPosition.x - pointer.position.x,
@@ -134,23 +138,23 @@ export class PlayScene extends RoomScene {
         }
     }
 
-    private onGameOutHandler() {
+    protected onGameOutHandler() {
         this.removePointerMoveHandler();
     }
 
-    private onLoadCompleteHandler() {
+    protected onLoadCompleteHandler() {
         Logger.getInstance().log("playload complete");
         this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.render.hideLoading();
     }
 
-    private checkOriention(orientation) {
+    protected checkOriention(orientation) {
         if (orientation === Phaser.Scale.PORTRAIT) {
         } else if (orientation === Phaser.Scale.LANDSCAPE) {
         }
     }
 
-    private checkSize(size: Size) {
+    protected checkSize(size: Size) {
         const width: number = size.width;
         const height: number = size.height;
     }

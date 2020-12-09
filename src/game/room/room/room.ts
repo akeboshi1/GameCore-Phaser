@@ -43,9 +43,9 @@ export interface IRoomService {
 
     now(): number;
 
-    startLoad();
-
     enter(room: op_client.IScene): void;
+
+    startPlay(): void;
 
     pause(): void;
 
@@ -185,8 +185,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public onClockReady(): void {
         // TODO: Unload loading-scene
     }
-
-    public startLoad() { }
 
     public pause() {
         this.mGame.roomPause(this.mID);

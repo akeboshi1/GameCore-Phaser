@@ -161,7 +161,7 @@ export class BlockManager implements IBlockManager {
     if (!this.render) {
       return;
     }
-    const playScene = this.render.sceneManager.getSceneByName("PlayScene");
+    const playScene = this.render.sceneManager.getMainScene();
     if (!this.mScenery || !playScene) {
       Logger.getInstance().fatal(`scene does not exist`);
       return;
