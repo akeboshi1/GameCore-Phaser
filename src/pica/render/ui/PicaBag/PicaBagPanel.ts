@@ -2,7 +2,7 @@ import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCode
 import { BasePanel, CheckboxGroup, DynamicImage, InputPanel, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
+import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
 import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 
@@ -194,14 +194,12 @@ export class PicaBagPanel extends BasePanel {
     }
   }
 
-  public displayAvatar(content?: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
+  public displayAvatar(content?: any) {
     if (!content) {
-      // content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-      // content.avatar = new op_gameconfig.Avatar();
       content = { avatar: {} };
     }
     this.render.mainPeer.getPlayerAvatar()
-      .then((avatar) => {
+      .then(({ avatar, suits }) => {
         for (const key in avatar) {
           if (avatar.hasOwnProperty(key)) {
             const element = avatar[key];
@@ -209,13 +207,17 @@ export class PicaBagPanel extends BasePanel {
           }
         }
         for (const item of this.mSelectedItemData) {
-          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn, item.version);
+          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn, item.tag, item.version);
           // const dataAvatar = item.avatar;
           for (const key in dataAvatar) {
             if (dataAvatar.hasOwnProperty(key)) {
               const element = dataAvatar[key];
               if (element) content.avatar[key] = element;
             }
+          }
+          if (item.suitType === "weapon") {
+            const suit = { suit_type: item.suitType, tag: item.tag };
+            content.suits = [suit];
           }
         }
         const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
@@ -513,7 +515,7 @@ export class PicaBagPanel extends BasePanel {
     this.mSelectedItems.push(cell);
     cell.isSelect = true;
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.version);
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.tag, data.version);
     content.animations = data.animations;
     this.setSelectedResource(content);
   }
@@ -753,12 +755,13 @@ export class PicaBagPanel extends BasePanel {
     this.render.renderEmitter(this.key + "_getCategories", categoryType);
   }
   private getPropResource(data: op_client.ICountablePackageItem) {
-    const resource = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+    const resource: any = {};
     if (data.suitType) {
-      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.version);
+      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.tag, data.version);
     } else {
       resource.display = data.display;
     }
+    resource.suit = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
     resource.animations = data.animations;
     return resource;
   }

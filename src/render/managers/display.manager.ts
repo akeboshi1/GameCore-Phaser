@@ -4,14 +4,17 @@ import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { IScenery } from "structure";
+import { ElementStateType, IScenery } from "structure";
 import { BlockManager } from "../display/scenery/block.manager";
 import { Render } from "../render";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { RunningAnimation } from "structure";
+import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
+import { BasicScene } from "../scenes";
+import { FallEffect } from "picaRender";
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -168,6 +171,14 @@ export class DisplayManager {
         display.removeFromParent();
         display.destroy();
         this.displays.delete(displayID);
+    }
+
+    public addFillEffect(x: number, y: number, status: op_def.PathReachableStatus) {
+        const mainScene: BasicScene = this.render.sceneManager.getMainScene() as BasicScene;
+        const fall = new FallEffect(mainScene, this.render.scaleRatio);
+        fall.show(status);
+        fall.setPosition(x, y);
+        mainScene.layerManager.addToLayer("sceneUILayer", fall);
     }
 
     public load(displayID: number, data: any, field?: DisplayField) {
@@ -354,6 +365,14 @@ export class DisplayManager {
         }
         display.showNickname(name);
         // if (display) display.showNickname(name);
+    }
+
+    public showTopDisplay(id: number, state?: ElementStateType) {
+        const display = this.getDisplay(id);
+        if (!display) {
+            return;
+        }
+        display.showTopDisplay(state);
     }
 
     public showMatterDebug(bodies) {

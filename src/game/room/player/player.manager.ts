@@ -10,7 +10,7 @@ import { ISprite, Sprite } from "../display/sprite/sprite";
 import { EventType, MessageType } from "structure";
 import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { IElement } from "../element/element";
+import { IElement, PlayerState } from "../element/element";
 import { PlayerElementAction } from "../elementaction/player.element.action";
 import { TAGElementAction } from "../elementaction/tag.element.action";
 
@@ -38,8 +38,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSprite);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEnd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEndHandler);
         }
         this.addLisenter();
     }
@@ -141,20 +141,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 if (data.weaponID) {
                     element.setWeapon(data.weaponID);
                 }
-                if (data.animator) {
-                    element.play(data.animator, data.times);
+                if (data.animation) {
+                    element.play(data.animation, data.times);
                 }
             }
-        }
-    }
-
-    public onActiveSpriteEnd(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END = packet.content;
-        const playerid = content.spriteId;
-        if (this.has(playerid)) {
-            const element = this.get(playerid);
-            element.removeWeapon();
-            element.play("idle");
         }
     }
 
@@ -424,6 +414,21 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             const ele = this.get(id);
             const action = new PlayerElementAction(this.mRoom.game, ele.model);
             action.executeAction();
+        }
+    }
+    private onActiveSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
+        if (this.has(content.targetId)) {
+            this.onActiveSprite(content.spriteId, content.param);
+        }
+    }
+    private onActiveSpriteEndHandler(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END = packet.content;
+        const playerid = content.spriteId;
+        if (this.has(playerid)) {
+            const element = this.get(playerid);
+            element.removeWeapon();
+            element.play(PlayerState.IDLE);
         }
     }
     get roomService(): IRoomService {

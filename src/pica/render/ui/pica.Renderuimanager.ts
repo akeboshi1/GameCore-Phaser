@@ -12,6 +12,11 @@ export class PicaRenderUiManager extends UiManager {
     public getAtlas(atlas: string[]) {
         return this.mAtalsManager.getAtalsArr(atlas);
     }
+
+    public showAlertView(text: string, ok: boolean, cancel: boolean = false, callBack?: Function) {
+        super.showAlertView(text, ok, cancel, callBack);
+    }
+
     protected _showPanel(type: string, param?: any): BasePanel {
         if (!this.mPanelMap) {
             this.mPanelMap = new Map();

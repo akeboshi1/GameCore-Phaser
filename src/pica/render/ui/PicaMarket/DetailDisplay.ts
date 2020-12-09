@@ -99,6 +99,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       }
     }
     this.addDisplay();
+    if (content.suits) this.mDragonboneDisplay.setSuits(content.suits);
     this.mDragonboneDisplay.once("initialized", () => {
       this.mDragonboneDisplay.play({ name: "idle", flip: false });
     });

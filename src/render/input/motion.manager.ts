@@ -1,6 +1,7 @@
 import { Render } from "gamecoreRender";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes";
+import { LogicPos } from "utils";
 export class MotionManager {
     public enable: boolean;
     private scaleRatio: number;
@@ -86,13 +87,13 @@ export class MotionManager {
         this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
-    private movePath(worldX: number, worldY: number, id?: number) {
+    private movePath(x: number, y: number, targets: {}, id?: number) {
         // const user = this.render.user;
         // if (!user) {
         //     return;
         // }
         // this.render.user.findPath(worldX, worldY, id);
-        this.render.mainPeer.findPath(worldX, worldY, id);
+        this.render.mainPeer.findPath(x, y, targets, id);
     }
 
     private stop() {
@@ -117,15 +118,14 @@ export class MotionManager {
                         return;
                     }
                     // const position = ele.getPosition();
-                    const walkpos = await this.render.mainPeer.getInteractivePosition(id);
-                    if (walkpos) {
-                        this.movePath(walkpos.x, walkpos.y, id);
-                    } else {
-                        this.movePath(ele.x, ele.y, id);
+                    let targets = await this.render.mainPeer.getInteractivePosition(id);
+                    if (!targets || targets.length === 0) {
+                        targets = [ele];
                     }
+                    this.movePath(pointer.worldX, pointer.worldY, targets, id);
                 }
             } else {
-                this.movePath(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio);
+                this.movePath(pointer.worldX, pointer.worldY, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
         this.clearGameObject();

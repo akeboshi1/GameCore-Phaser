@@ -28,7 +28,7 @@ export class AStar {
         return this.grid.isWalkableAt(x, y);
     }
 
-    find(startPos: IPos, endPos: IPos): LogicPos[] {
+    find(startPos: IPos, targetList: IPos[], toReverse: boolean): LogicPos[] {
         if (!this.finder) {
             Logger.getInstance().error(`finder not exist`);
             return;
@@ -37,19 +37,33 @@ export class AStar {
             Logger.getInstance().error(`can't find path. grid not exist`);
             return;
         }
-        const start45 = this.roomService.transformToMini45(startPos);
-        const end45 = this.roomService.transformToMini45(endPos);
         const { rows, cols } = this.roomService.miniSize;
-        if (end45.x < 0 || end45.x >= cols || end45.y < 0 || end45.y >= rows) {
+        const start45 = this.roomService.transformToMini45(startPos);
+        const end45List = [];
+        targetList.forEach((p) => {
+            p = this.roomService.transformToMini45(p);
+            if (!this._invalidPoint(p, cols, rows)) {
+                end45List.push(p);
+            }
+        });
+
+        if (end45List.length === 0) {
             return;
         }
+
         const result = [];
         this.gridBackup = this.grid.clone();
-        const paths = this.finder.findPath(start45.x, start45.y, end45.x, end45.y, this.gridBackup);
+        const paths = this.finder.findPathToMultipleEnds(start45.x, start45.y, end45List, this.gridBackup, toReverse);
         for (const path of paths) {
             result.push(this.roomService.transformToMini90(new LogicPos(path[0], path[1])));
         }
-        result.shift();
+        if (toReverse === false) {
+            result.shift(); // 正向走的时候移除第一格是为了防止人物走的过程中忽然回头，反向的时候是人从家具上下来，如果移除掉第一格会造成人物从交互点的下一格开始走
+        }
         return result;
+    }
+
+    _invalidPoint(position: IPos, cols: number, rows: number) {
+        return position.x < 0 || position.x >= cols || position.y < 0 || position.y >= rows;
     }
 }

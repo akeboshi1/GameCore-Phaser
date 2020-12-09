@@ -9,6 +9,7 @@ import { ISprite } from "../room/display/sprite/sprite";
 import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { EventType, IDragonbonesModel, IFramesModel } from "structure";
+import { IPoint } from "game-capsule";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -74,15 +75,24 @@ export class User extends Player {
     //     }
     // }
 
-    public unmount() {
+    public unmount(targetPos?: IPos) {
         if (this.mRootMount) {
-            const pos = this.mRootMount.getInteractivePosition();
-            if (!pos) {
+            let landingPos: IPos;
+            const pos = this.mRootMount.getInteractivePositionList();
+            if (pos.length === 0) {
                 return;
             }
             this.mRootMount = null;
-            this.setPosition(pos);
-            this.getInteractivePosition();
+            if (targetPos != null) {
+                const path = this.roomService.findPath(targetPos, pos, true);
+                if (path.length === 0) {
+                    return;
+                }
+                landingPos = path[0];
+            } else {
+                landingPos = pos[0];
+            }
+            this.setPosition(landingPos);
             this.enableBlock();
             this.mDirty = true;
         }
@@ -99,20 +109,23 @@ export class User extends Player {
         this.startMove();
     }
 
-    public findPath(x: number, y: number, targetId?: number) {
+    public findPath(x: number, y: number, targets: IPos[], targetId?: number, toReverse: boolean = false) {
         if (this.mRootMount) {
-            this.mRootMount.removeMount(this);
+            this.mRootMount.removeMount(this, targets[0]);
         }
-        const path = this.roomService.findPath(this.getPosition(), new LogicPos(x, y));
+
+        const path = this.roomService.findPath(this.getPosition(), targets, toReverse);
         if (!path) {
             return;
         }
         if (path.length < 1) {
+            this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
             return;
         }
         path.map((pos: IPos) => pos.y += this.offsetY);
         this.matterWorld.setSensor(this.body, true);
         this.mTargetPoint = { path, targetId };
+        this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();
     }
 
@@ -264,7 +277,7 @@ export class User extends Player {
         const targetId = this.mTargetPoint.targetId;
         content.spriteId = targetId;
         this.game.connection.send(packet);
-        this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId);
+        this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
     }
 
     protected onMoveComplete() {
@@ -327,6 +340,10 @@ export class User extends Player {
     protected addBody() {
         this._sensor = false;
         this.setBody();
+    }
+
+    private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+        this.game.addFillEffect(pos, status);
     }
 
     private drawPath(pos: op_client.IMovePoint[]) {

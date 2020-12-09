@@ -4,6 +4,14 @@ import { ModuleName, RENDER_PEER } from "structure";
 import { PicaBusinessStreet } from "./PicaBusinessStreet";
 
 export class PicaBusinessStreetMediator extends BasicMediator {
+    private mCacheData_MyStore: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE = null;
+    private mCacheData_Street: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET = null;
+    private mCacheData_Models: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS = null;
+    private mCacheData_RankindList: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST = null;
+    private mCacheData_RankindDetail: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL = null;
+    private mCacheData_RankindReward: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD = null;
+    private mCacheData_History: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_ENTER_HISTORY = null;
+
     constructor(game: Game) {
         super(ModuleName.PICABUSINESSSTREET_NAME, game);
         this.mModel = new PicaBusinessStreet(this.game);
@@ -57,6 +65,38 @@ export class PicaBusinessStreetMediator extends BasicMediator {
         super.destroy();
     }
 
+    protected panelInit() {
+        super.panelInit();
+        if (this.mCacheData_MyStore) {
+            this.onMyStoreList(this.mCacheData_MyStore);
+            this.mCacheData_MyStore = null;
+        }
+        if (this.mCacheData_Street) {
+            this.onCOMMERCIAL_STREET(this.mCacheData_Street);
+            this.mCacheData_Street = null;
+        }
+        if (this.mCacheData_Models) {
+            this.onINDUSTRY_MODELS(this.mCacheData_Models);
+            this.mCacheData_Models = null;
+        }
+        if (this.mCacheData_RankindList) {
+            this.onSTORE_RANKING_LIST(this.mCacheData_RankindList);
+            this.mCacheData_RankindList = null;
+        }
+        if (this.mCacheData_RankindDetail) {
+            this.onSTORE_RANKING_DETAIL(this.mCacheData_RankindDetail);
+            this.mCacheData_RankindDetail = null;
+        }
+        if (this.mCacheData_RankindReward) {
+            this.onSTORE_RANKING_REWARD(this.mCacheData_RankindReward);
+            this.mCacheData_RankindReward = null;
+        }
+        if (this.mCacheData_History) {
+            this.onSTORE_ENTER_HISTORY(this.mCacheData_History);
+            this.mCacheData_History = null;
+        }
+    }
+
     private onHidePanel() {
         this.hide();
     }
@@ -98,25 +138,53 @@ export class PicaBusinessStreetMediator extends BasicMediator {
         this.model.query_STORE_ENTER_HISTORY();
     }
     private onMyStoreList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MY_STORE) {
+        if (!this.mPanelInit) {
+            this.mCacheData_MyStore = content;
+            return;
+        }
         this.mView.setMyStore(content);
     }
     private onCOMMERCIAL_STREET(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMMERCIAL_STREET) {
+        if (!this.mPanelInit) {
+            this.mCacheData_Street = content;
+            return;
+        }
         this.mView.setCommercialStreet(content);
     }
 
     private onINDUSTRY_MODELS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS) {
+        if (!this.mPanelInit) {
+            this.mCacheData_Models = content;
+            return;
+        }
         this.mView.setIndustryModels(content);
     }
     private onSTORE_RANKING_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST) {
+        if (!this.mPanelInit) {
+            this.mCacheData_RankindList = content;
+            return;
+        }
         this.mView.setStoreRankingList(content);
     }
     private onSTORE_RANKING_DETAIL(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_DETAIL) {
+        if (!this.mPanelInit) {
+            this.mCacheData_RankindDetail = content;
+            return;
+        }
         this.mView.setStoreRankingDetial(content);
     }
     private onSTORE_RANKING_REWARD(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_REWARD) {
+        if (!this.mPanelInit) {
+            this.mCacheData_RankindReward = content;
+            return;
+        }
         this.mView.setStoreRankingReward(content);
     }
     private onSTORE_ENTER_HISTORY(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_ENTER_HISTORY) {
+        if (!this.mPanelInit) {
+            this.mCacheData_History = content;
+            return;
+        }
         this.mView.setEnterHistory(content);
     }
     private get model(): PicaBusinessStreet {

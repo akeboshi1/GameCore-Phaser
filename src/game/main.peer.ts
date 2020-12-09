@@ -244,9 +244,11 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public getPlayerAvatar(): any {
-        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.playerManager && this.game.roomManager.currentRoom.playerManager.actor)
-            return this.game.roomManager.currentRoom.playerManager.actor.model.avatar;
-
+        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.playerManager && this.game.roomManager.currentRoom.playerManager.actor) {
+            const avatar = this.game.roomManager.currentRoom.playerManager.actor.model.avatar;
+            const suits = this.game.roomManager.currentRoom.playerManager.actor.model.suits;
+            return { avatar, suits };
+        }
         return null;
     }
 
@@ -464,8 +466,8 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public findPath(x: number, y: number, targetId?: number) {
-        this.game.user.findPath(x, y, targetId);
+    public findPath(x: number, y: number, targets: [], targetId?: number, toReverse: boolean = false) {
+        this.game.user.findPath(x, y, targets, targetId, toReverse);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -482,7 +484,7 @@ export class MainPeer extends RPCPeer {
     public getInteractivePosition(id: number) {
         const ele = this.game.roomManager.currentRoom.getElement(id);
         if (ele) {
-            return ele.getInteractivePosition();
+            return ele.getInteractivePositionList();
         }
         return null;
     }

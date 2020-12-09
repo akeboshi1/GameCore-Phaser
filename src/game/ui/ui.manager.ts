@@ -220,6 +220,10 @@ export class UIManager extends PacketHandler {
         if (this.mAtiveUIData) this.mAtiveUIData = undefined;
     }
 
+    protected onForceOfflineHandler(packet: PBpacket) {
+        this.game.peer.render.onForceOfflineHandler();
+    }
+
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
             const tag = ui.name;

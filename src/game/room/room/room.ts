@@ -18,7 +18,7 @@ import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery, SceneName } from "structure";
+import { IScenery, LoadState, SceneName } from "structure";
 import { MatterWorld } from "../physical/matter.world";
 import { AStar } from "../path.finding/astar";
 export interface SpriteAddCompletedListener {
@@ -77,7 +77,7 @@ export interface IRoomService {
 
     initUI(): void;
 
-    findPath(start: IPos, end: IPos): IPos[];
+    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[];
 
     destroy();
 }
@@ -157,10 +157,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
+
         // create render scene
         this.mGame.showLoading({
             "dpr": this.mScaleRatio,
-            "sceneName": "PlayScene"
+            "sceneName": "PlayScene",
+            "state": LoadState.CREATESCENE
         });
     }
 
@@ -436,8 +438,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mAstar.setWalkableAt(y, x, val);
     }
 
-    public findPath(startPos: IPos, endPos: IPos) {
-        return this.mAstar.find(startPos, endPos);
+    public findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
+        return this.mAstar.find(startPos, targetPosList, toReverse);
     }
 
     public clear() {
@@ -475,12 +477,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!actor) {
             return;
         }
-        const pos45 = actor.getPosition45();
-        const click45 = this.transformTo45(new LogicPos(x, y));
-        if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
-            this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
-            return;
-        }
+        // const pos45 = actor.getPosition45();
+        // const click45 = this.transformTo45(new LogicPos(x, y));
+        // if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
+        // this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
+        //     return;
+        // }
 
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH = pkt.content;
@@ -709,17 +711,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // }
     }
 
-    private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        // if (!this.scene) {
-        //     Logger.getInstance().log("Room scene  does not exist");
-        //     return;
-        // }
-        // const fall = new FallEffect(this.scene, this.mScaleRatio);
-        // fall.show(status);
-        // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
-        // this.addToSceneUI(fall);
-        this.mGame.addFillEffect(pos, status);
-    }
+    // private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+    //     // if (!this.scene) {
+    //     //     Logger.getInstance().log("Room scene  does not exist");
+    //     //     return;
+    //     // }
+    //     // const fall = new FallEffect(this.scene, this.mScaleRatio);
+    //     // fall.show(status);
+    //     // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
+    //     // this.addToSceneUI(fall);
+    //     this.mGame.addFillEffect(pos, status);
+    // }
 
     private onMovePathHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
@@ -728,7 +730,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return;
         }
         const pos = content.targetPos;
-        this.addFillEffect({ x: pos.x, y: pos.y }, status);
+        // this.addFillEffect({ x: pos.x, y: pos.y }, status);
     }
 
     private onCameraFollowHandler(packet: PBpacket) {

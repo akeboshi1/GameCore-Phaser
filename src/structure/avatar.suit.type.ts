@@ -25,19 +25,19 @@ export class AvatarSuitType {
             const suitType = this.avatarSuit;
             const slots = suitType[suit.suit_type];
             for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suitType: suit.suit_type, version: suit.version };
+                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, tag: suit.tag, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createAvatarBySn(suit_type: string, sn: string, version?: string, avatar?: any) {
+    static createAvatarBySn(suit_type: string, sn: string, tag: string, version?: string, avatar?: any) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || {};
         const suitType = this.avatarSuit;
         const slots = suitType[suit_type];
         for (const slot of slots) {
-            avatar[slot] = { sn, suitType: suit_type, version };
+            avatar[slot] = { sn, suit_type, tag, version };
         }
         return avatar;
     }
@@ -49,26 +49,27 @@ export class AvatarSuitType {
             const suitType = this.avatarSuit;
             const slots = suitType[suit.suit_type];
             for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suitType: suit.suit_type, version: suit.version };
+                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, tag: suit.tag, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createHasBaseAvatarBySn(suit_type: string, sn: string, version?: string) {
+    static createHasBaseAvatarBySn(suit_type: string, sn: string, tag: string, version?: string) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         const avatar = this.createBaseAvatar();
         const suitType = this.avatarSuit;
         const slots = suitType[suit_type];
         for (const slot of slots) {
-            avatar[slot] = { sn, suitType: suit_type, version };
+            avatar[slot] = { sn, suit_type, tag, version };
         }
         return avatar;
     }
 
     static createBaseAvatar() {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
-        const avatar = this.avatarSuit.baseSlots;
+        const avatar: IAvatar = { id: undefined };
+        Object.assign(avatar, this.avatarSuit.baseSlots);
         return avatar;
     }
     public costume = ["bodyCostId", "bodyDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
@@ -127,4 +128,5 @@ export interface AvatarSuit {
     sn: string;
     suit_type: string;
     version?: string;
+    tag?: string;
 }

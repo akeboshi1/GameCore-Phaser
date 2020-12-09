@@ -90,7 +90,9 @@ export class PicaChatMediator extends BasicMediator {
         if (content.chatSetting) {
             color = content.chatSetting.textColor;
         }
-        this.appendChat(`[color=${color}][${this.getChannel(content.chatChannel)}]${speaker}: ${content.chatContext}[/color]\n`);
+        this.getChannel(content.chatChannel).then((str) => {
+            this.appendChat(`[color=${color}][${str}]${speaker}: ${content.chatContext}[/color]\n`);
+        });
     }
 
     private appendChat(chat: string) {
@@ -117,15 +119,26 @@ export class PicaChatMediator extends BasicMediator {
         this.model.sendMessage(val);
     }
 
-    private getChannel(channel: op_def.ChatChannel) {
-        switch (channel) {
-            case op_def.ChatChannel.CurrentScene:
-                return i18n.t("chat.current");
-            case op_def.ChatChannel.World:
-                return i18n.t("chat.world");
-            default:
-                return i18n.t("chat.system");
-        }
+    private async getChannel(channel: op_def.ChatChannel): Promise<string> {
+        return new Promise<string>(async (resolve, rejcet) => {
+            let str = "";
+            if (channel === op_def.ChatChannel.CurrentScene) {
+                str = await this.game.peer.render.getMessage("chat.current");
+            } else if (channel === op_def.ChatChannel.World) {
+                str = await this.game.peer.render.getMessage("chat.world");
+            } else {
+                str = await this.game.peer.render.getMessage("chat.system");
+            }
+            // switch (channel) {
+            //     case op_def.ChatChannel.CurrentScene:
+            //         str = await this.game.peer.render.getMessage("chat.current");
+            //     case op_def.ChatChannel.World:
+            //         str = await this.game.peer.render.getMessage("chat.world");
+            //     default:
+            //         str = await this.game.peer.render.getMessage("chat.system");
+            // }
+            resolve(str);
+        });
     }
 
     private getSpeaker(id: number): IElement {

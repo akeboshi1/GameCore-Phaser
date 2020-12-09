@@ -24,6 +24,10 @@ export class PlayScene extends RoomScene {
         super(config || { key: SceneName.PLAY_SCENE });
     }
 
+    get motionMgr(): MotionManager {
+        return this.motionManager;
+    }
+
     public preload() { }
 
     public create() {
@@ -59,7 +63,6 @@ export class PlayScene extends RoomScene {
         this.render.camerasManager.startRoomPlay(this);
         const txt = LoadingTips.loadingResources();
         this.render.showLoading({ "text": txt });
-        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.onLoadCompleteHandler();
 
         // set layers
@@ -145,7 +148,7 @@ export class PlayScene extends RoomScene {
     protected onLoadCompleteHandler() {
         Logger.getInstance().log("playload complete");
         this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-        this.render.hideLoading();
+        // this.render.hideLoading();
     }
 
     protected checkOriention(orientation) {

@@ -106,24 +106,35 @@ export class LoadingScene extends BasicScene {
     return this.curtain.close();
   }
 
+  public updateProgress(text: any) {
+    if (!text) return;
+    // 更新load状态
+    this.tipsText = text;
+    if (text && this.progressText) {
+      if (this.progressText.active) this.progressText.setText(text);
+    }
+  }
+
   public wake(data?: any) {
     if (!this.scene || !this.scene.settings) {
       return;
     }
-    if (!this.scene.isActive) {
+    if (this.curtain) {
       this.displayVisible(true);
+      this.curtain.open().then(() => {
+        // this.displayVisible(true);
+        this.scene.wake();
+      });
       // this.scale.on("resize", this.checkSize, this);
-      this.scene.wake();
       this.scene.bringToTop(SceneName.LOADING_SCENE);
       super.wake(data);
     }
     if (!data) {
       return;
     }
+    // 更新load状态
     this.tipsText = data.text;
-    // if (data.callBack) {
-    //   data.callBack.call(this, this);
-    // }
+    Logger.getInstance().log("loadState:----", data.text);
     if (data.text && this.progressText) {
       if (this.progressText.active) this.progressText.setText(data.text);
     }
@@ -136,9 +147,9 @@ export class LoadingScene extends BasicScene {
     if (!this.scene || !this.scene.settings) {
       return;
     }
-    if (!this.scene.settings.active) {
-      return;
-    }
+    // if (!this.scene.settings.active) {
+    //   return;
+    // }
     if (this.curtain) {
       this.displayVisible(false);
       this.curtain.close().then(() => {
@@ -231,6 +242,10 @@ class Curtain {
         resolve();
         return;
       }
+      if (this.upTween || this.downTween) {
+        reject();
+        return;
+      }
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = -this.upDisplay.displayHeight;
       this.downDisplay.y = height + this.downDisplay.displayHeight;
@@ -264,6 +279,7 @@ class Curtain {
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = 0;
       this.downDisplay.y = height;
+      this.clearTween();
       this.upTween = this.scene.add.tween({
         targets: this.upDisplay,
         props: { y: -this.upDisplay.displayHeight },
@@ -274,8 +290,8 @@ class Curtain {
         props: { y: height + this.downDisplay.displayHeight },
         duration: 1000,
         onComplete: () => {
-          this.downDisplay.visible = false;
-          this.upDisplay.visible = false;
+          // this.downDisplay.visible = false;
+          // this.upDisplay.visible = false;
           this.clearTween();
           resolve();
         }
@@ -284,7 +300,6 @@ class Curtain {
   }
 
   destroy() {
-    this.destroy();
   }
 
   private clearTween() {

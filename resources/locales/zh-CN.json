@@ -224,7 +224,8 @@
     "downloading_scene_config": "下载场景配置...",
     "parse_config": "解析配置...",
     "wait_enter_room": "等待进入房间",
-    "loading_resources": "正在加载资源...."
+    "loading_resources": "正在加载资源....",
+    "create_scene":"正在创建游戏场景..."
   },
   "coin": {
     "coin": "银币",

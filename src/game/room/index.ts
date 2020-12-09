@@ -5,6 +5,7 @@ export * from "./display/animation/animation.model";
 export * from "./display/dragones/dragonbones.model";
 export * from "./display/frames/frames.model";
 export * from "./display/sprite/sprite";
+export * from "./display/sprite/animator";
 export * from "./effect/effect";
 export * from "./effect/effect.manager";
 export * from "./element/element";

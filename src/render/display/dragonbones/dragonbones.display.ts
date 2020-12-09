@@ -247,6 +247,7 @@ export class DragonbonesDisplay extends DisplayObject {
     }
 
     protected buildDragbones() {
+        this.showPlaceholder();
         if (!this.scene.cache.custom.dragonbone) return;
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.allComplete();
@@ -290,13 +291,13 @@ export class DragonbonesDisplay extends DisplayObject {
             );
             this.mArmatureDisplay.visible = false;
             this.showPlaceholder();
-            this.add(this.mArmatureDisplay);
+            this.addAt(this.mArmatureDisplay, 0);
         }
         this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
         this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
 
         // ==========只有在创建龙骨时才会调用全部清除，显示通过后续通信做处理
-        this.clearArmatureSlot();
+        // this.clearArmatureSlot();
         // ==========替换相应格位的display，服务端通信后可调用
         this.getReplaceArr();
         this.showReplaceArmatrue();
@@ -359,23 +360,7 @@ export class DragonbonesDisplay extends DisplayObject {
     }
     private loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
         this.mLoadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
-        this.mLoadQueue.startLoad();
-        // this.scene.load.dragonbone(
-        //     this.mDragonbonesName,
-        //     pngUrl,
-        //     jsonUrl,
-        //     dbbinUrl,
-        //     null,
-        //     null,
-        //     { responseType: "arraybuffer" },
-        // );
-        // this.scene.load.once(
-        //     Phaser.Loader.Events.COMPLETE,
-        //     this.allComplete,
-        //     this,
-        // );
-        // this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileLoadHandler, this);
-        // this.scene.load.start();
+        // this.mLoadQueue.startLoad();
     }
 
     private clearReplaceArmature() {
@@ -947,6 +932,7 @@ export class DragonbonesDisplay extends DisplayObject {
 
     private refreshAvatar() {
         // replace unpacked slots
+        this.clearArmatureSlot();
         const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
         for (const rep of this.replaceArr) {
             const part: string = rep.slot.replace("$", rep.dir.toString());

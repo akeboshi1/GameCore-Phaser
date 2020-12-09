@@ -24,7 +24,7 @@ export class ModuleName {
     public static PICAOPENPARTY_NAME: string = "PicaOpenParty";
     public static PICAMANORLIST_NAME: string = "PicaManorList";
     public static PICATASK_NAME: string = "Task";
-    public static PICAMANORINFO_NAME: string = "PicaManorInfo";
+    public static PICAMANORINFO_NAME: string = "PicManorInfo";// TODO: rename
     public static PICABUSINESSSTREET_NAME: string = "PicaBusinessStreet";
     public static PICABUSINESSMARKETINGPLAN_NAME: string = "PicaBusinessMarketingPlan";
     public static PICARECHARGE_NAME: string = "PicaRecharge";
