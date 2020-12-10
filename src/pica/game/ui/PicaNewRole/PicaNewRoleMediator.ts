@@ -50,7 +50,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         if (this.panelInit) {
             this.mShowData = content;
-            this.mView.setRoleData(content);
+            if (this.mView) this.mView.setRoleData(content);
         }
     }
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {

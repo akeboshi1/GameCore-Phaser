@@ -4,7 +4,7 @@
 			"image": "ui_common",
 			"format": "RGBA8888",
 			"size": {
-				"w": 1928,
+				"w": 1944,
 				"h": 1808
 			},
 			"scale": 1,
@@ -70,6 +70,27 @@
 						"y": 1,
 						"w": 19,
 						"h": 1701
+					}
+				},
+				{
+					"filename": "avater_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 14,
+						"h": 1622
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 14,
+						"h": 1622
+					},
+					"frame": {
+						"x": 1929,
+						"y": 1,
+						"w": 14,
+						"h": 1622
 					}
 				},
 				{
@@ -1758,6 +1779,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:d1493bbe99992fb65854005e077d064b:9f746909bc68b192cd2e9e111331e43d:a8edfd34bd4bdd749bff3a4153c4d507$"
+		"smartupdate": "$TexturePacker:SmartUpdate:cd99276413c4c8d3c9f4c910a9316c51:cb24ce2f6c946f366df59f163cd59f9b:a8edfd34bd4bdd749bff3a4153c4d507$"
 	}
 }
