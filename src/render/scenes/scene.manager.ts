@@ -115,10 +115,10 @@ export class SceneManager {
         } else {
             this.render.emitter.once("sceneCreated", () => {
                 Logger.getInstance().log("sceneCreated===scenemanager");
-                if (this.mCurSceneName !== name) {
-                    const curScene: BasicScene = sceneManager.getScene(this.mCurSceneName) as BasicScene;
-                    if (curScene) curScene.sleep();
-                }
+                // if (this.mCurSceneName !== name) {
+                //     const curScene: BasicScene = sceneManager.getScene(this.mCurSceneName) as BasicScene;
+                //     if (curScene) curScene.sleep();
+                // }
                 if (data.callBack) data.callBack();
             }, this);
             sceneManager.add(name, this.sceneClass[name]);
@@ -184,7 +184,7 @@ export class SceneManager {
             return;
         }
         const scene = this.render.game.scene.getScene(name) as BasicScene;
-        // if (!scene.scene.isActive()) return;
+        if (!scene.scene.isActive(name)) return;
         scene.sleep();
     }
 

@@ -9,10 +9,21 @@ export class DecorateScene extends PlayScene {
         super(config || { key: SceneName.DECORATE_SCENE });
     }
 
+    // public create() {
+    //     super.create();
+    //     this.onLoadCompleteHandler();
+    // }
+
+    // protected onLoadCompleteHandler() {
+    //     Logger.getInstance().log("decorateload complete");
+    //     this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+    // }
+
     protected initListener() {
         this.input.on("pointerup", this.onPointerUpHandler, this);
         this.input.on("pointerdown", this.onPointerDownHandler, this);
         this.input.on("gameobjectdown", this.onGameobjectDownHandler, this);
+        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         // this.input.on("gameobjectup", this.onGameobjectUpHandler, this);
 
     }
@@ -22,15 +33,15 @@ export class DecorateScene extends PlayScene {
     }
 
     protected onGameobjectDownHandler(pointer, gameobject) {
-         if (!gameobject) {
+        if (!gameobject) {
             return;
-         }
-         const id = gameobject.getData("id");
+        }
+        const id = gameobject.getData("id");
         //  const decorate = this.render.mainPeer[ModuleName.PICADECORATE_NAME];
-         if (!id) {
+        if (!id) {
             return;
-         }
-         this.mDecorateManager.setElement(id);
+        }
+        this.mDecorateManager.setElement(id);
         //  decorate.setElement(id);
     }
 
