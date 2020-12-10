@@ -1,4 +1,4 @@
-import { Bodies } from "matter-js";
+import { Bodies, Body } from "matter-js";
 import { IPos, Logger, LogicPos, Position45 } from "utils";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element";
@@ -222,10 +222,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
 
-        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true });
-        body.inertia = Infinity;
-        body.inverseInertia = Infinity;
-        body.friction = 1;
+        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 1 });
         this.setExistingBody(body, true);
     }
 
