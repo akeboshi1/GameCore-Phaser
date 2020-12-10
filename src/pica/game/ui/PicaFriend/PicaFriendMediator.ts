@@ -1,7 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { PicaFriend } from "./PicaFriend";
 import { PicaFriendRelation } from "./PicaFriendRelation";
-import { ModuleName, FriendChannel, EventType } from "structure";
+import { ModuleName, FriendChannel, EventType, RENDER_PEER } from "structure";
 import { BasicMediator, Game } from "gamecore";
 
 export class PicaFriendMediator extends BasicMediator {
@@ -16,7 +16,7 @@ export class PicaFriendMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on("hide", this.hide, this);
+        this.game.emitter.on(RENDER_PEER + this.key + "_hide", this.hide, this);
         this.game.emitter.on(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.game.emitter.on(EventType.UNFOLLOW, this.onUnfollowHandler, this);
         this.game.emitter.on(EventType.FOLLOW, this.onFollowHandler, this);
@@ -31,7 +31,7 @@ export class PicaFriendMediator extends BasicMediator {
     }
 
     hide() {
-        this.game.emitter.off("hide", this.hide, this);
+        this.game.emitter.off(RENDER_PEER + this.key + "_hide", this.hide, this);
         this.game.emitter.off(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.game.emitter.off(EventType.UNFOLLOW, this.onUnfollowHandler, this);
         this.game.emitter.off(EventType.FOLLOW, this.onFollowHandler, this);

@@ -4,7 +4,7 @@ import Container = Phaser.GameObjects.Container;
 import { op_client } from "pixelpai_proto";
 import { Button, ClickEvent, GameGridTable, CheckBox, NineSlicePatch, TabButton, NineSliceButton, BBCodeText } from "apowophaserui";
 import { BasePanel, Render, UiManager } from "gamecoreRender";
-import { EventType, FriendChannel, FriendData, FriendRelation, FriendRelationEnum, ModuleName } from "structure";
+import { EventType, FriendChannel, FriendData, FriendRelation, FriendRelationEnum, ModuleName, RENDER_PEER } from "structure";
 import { UIAtlasName, UIAtlasKey } from "picaRes";
 import { Font, Handler, i18n } from "utils";
 import { LabelInput, CheckboxGroup } from "gamecoreRender";
@@ -16,7 +16,7 @@ export class PicaFriendPanel extends BasePanel {
     private mBackGround: Phaser.GameObjects.Graphics;
     private mShowingSubContainer: SubFriendContainer;
     private mSubContanerMap: Map<FriendChannel, any>;
-    constructor(uiManager: UiManager) {
+    constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAFRIEND_NAME;
         this.mSubContanerMap = new Map();
@@ -170,7 +170,7 @@ export class PicaFriendPanel extends BasePanel {
     }
 
     private OnClosePanel() {
-        this.render.renderEmitter("hide");
+        this.render.renderEmitter(RENDER_PEER + this.key + "_hide");
     }
 
     private onFetchFriendHandler(index: number) {
@@ -187,7 +187,7 @@ export class PicaFriendPanel extends BasePanel {
         }
         const classType = this.mSubContanerMap.get(type);
         if (!classType) return;
-        this.mShowingSubContainer = new classType(this.scene, this.bg.width, this.bg.height, this.key, this.dpr, this.scale);
+        this.mShowingSubContainer = new classType(this.uiManager, this.bg.width, this.bg.height, this.key, this.dpr, this.scale);
         this.mShowingSubContainer.register();
         this.mShowingSubContainer.on("hide", this.onHideSearchHandler, this);
         this.mShowingSubContainer.on(EventType.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
@@ -414,7 +414,7 @@ class MainContainer extends FriendContainer {
             }
         }
         this.friendDatas.set(type, result);
-        if (ids.length > 0) this.render.renderEmitter(EventType.REQ_PLAYER_LIST, ids);
+        if (ids.length > 0) this.emit(EventType.REQ_PLAYER_LIST, ids);
         this.showFriend(type, result);
     }
 
@@ -475,7 +475,7 @@ class MainContainer extends FriendContainer {
         if (!this.channelGroup || this.channelGroup.selectedIndex < 0) {
             return;
         }
-        this.render.renderEmitter(EventType.FETCH_FRIEND, this.channelGroup.selectedIndex);
+        this.emit(EventType.FETCH_FRIEND, this.channelGroup.selectedIndex);
     }
 
     protected draw() {
@@ -555,7 +555,7 @@ class MainContainer extends FriendContainer {
 
     private onFtechPlayerHandler(friend: FriendData) {
         if (friend.lv !== undefined) {
-            this.render.renderEmitter(EventType.REQ_FRIEND_ATTRIBUTES, friend.id);
+            this.emit(EventType.REQ_FRIEND_ATTRIBUTES, friend.id);
         }
         this.searchInput.setBlur();
     }
@@ -570,7 +570,7 @@ class MainContainer extends FriendContainer {
             return;
         }
         if (data.type === FriendChannel.Menu) {
-            this.render.renderEmitter("shwoAddFriend", data.menuData.type);
+            this.emit("shwoAddFriend", data.menuData.type);
         }
     }
 
@@ -584,7 +584,7 @@ class MainContainer extends FriendContainer {
     }
 
     private onShowAddFriendHandler() {
-        this.render.renderEmitter("shwoAddFriend", FriendChannel.Search);
+        this.emit("shwoAddFriend", FriendChannel.Search);
         this.searchInput.setBlur();
     }
 
@@ -650,7 +650,7 @@ class PicFriendItem extends Container {
     }
 
     protected onHeadhandler() {
-        this.render.renderEmitter(EventType.REQ_FRIEND_ATTRIBUTES, this.itemData);
+        this.emit(EventType.REQ_FRIEND_ATTRIBUTES, this.itemData);
     }
 
     private createRenderer(type: FriendChannel) {
@@ -969,7 +969,7 @@ class SubFriendContainer extends FriendContainer {
     }
 
     protected onBackHandler() {
-        this.render.renderEmitter("hide");
+        this.emit("hide");
     }
 
     protected onItemClickHandler() {
@@ -977,7 +977,7 @@ class SubFriendContainer extends FriendContainer {
     }
 
     protected onFtechPlayerHandler(friend: FriendData) {
-        this.render.renderEmitter(EventType.REQ_FRIEND_ATTRIBUTES, friend.id);
+        this.emit(EventType.REQ_FRIEND_ATTRIBUTES, friend.id);
     }
 
     protected onRendererEventHandler(event: string, ...args) {
@@ -1003,7 +1003,7 @@ class SearchContainer extends SubFriendContainer {
             const { platformId, nickname, level } = player;
             result.push({ type: this.friendType, nickname, id: platformId, lv: level.level });
         }
-        this.render.renderEmitter(EventType.REQ_FRIEND_RELATION, result);
+        this.emit(EventType.REQ_FRIEND_RELATION, result);
         this.items = result;
         // super.setItems(result);
     }
@@ -1088,7 +1088,7 @@ class BlackContainer extends SubFriendContainer {
         }
         super.setItems(result);
         if (ids.length > 0) {
-            this.render.renderEmitter(EventType.REQ_PLAYER_LIST, ids);
+            this.emit(EventType.REQ_PLAYER_LIST, ids);
         }
     }
 
@@ -1130,7 +1130,7 @@ class SearchInput extends LabelInput {
 
     private onSearchHandler() {
         this.setBlur();
-        this.render.renderEmitter("search", this.text);
+        this.emit("search", this.text);
     }
 }
 
@@ -1167,7 +1167,7 @@ class NoticeContainer extends SubFriendContainer {
         }
         super.setItems(result);
         if (ids.length > 0) {
-            this.render.renderEmitter(EventType.REQ_PLAYER_LIST, ids);
+            this.emit(EventType.REQ_PLAYER_LIST, ids);
         }
     }
 
