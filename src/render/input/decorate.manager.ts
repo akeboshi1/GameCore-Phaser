@@ -7,7 +7,6 @@ import { DisplayManager } from "../managers";
 
 export class DecorateManager extends Phaser.Events.EventEmitter {
     private mSelecting: boolean = false;
-    private mSourceData: SourceSprite;
     private mDpr: number;
     private mDisplayManager: DisplayManager;
     private mSelectorElement: DisplayObject;
@@ -56,11 +55,4 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
     get selecting(): boolean {
         return this.mSelecting;
     }
-}
-
-interface SourceSprite {
-    x?: number;
-    y?: number;
-    z?: number;
-    direction: number;
 }

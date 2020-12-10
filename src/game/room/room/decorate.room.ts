@@ -23,7 +23,7 @@ export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
     // readonly selectedSprite: IElement | undefined;
 
-    canPut(pos: LogicPos, collisionArea: number[][], origin: Phaser.Geom.Point): boolean;
+    canPut(pos: IPos, collisionArea: number[][], origin: IPos): boolean;
 }
 
 export class DecorateRoom extends PacketHandler implements DecorateRoomService {
@@ -41,7 +41,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mCameraService: ICameraService;
     private mSelectorElement;
     private mSkyboxManager: SkyBoxManager;
-    private mMap: number[][];
+    private mMap: boolean[][];
     private mScaleRatio: number;
     private cameraPos: LogicPos;
     // private mLoadState: ElementLoadState[];
@@ -86,9 +86,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             sceneHeight: (rows + cols) * (tileHeight / 2),
         };
 
-        this.mMap = new Array(rows);
-        for (let i = 0; i < rows; i++) {
-            this.mMap[i] = new Array(cols).fill(0);
+        this.mMap = new Array(this.mMiniSize.rows);
+        for (let i = 0; i < this.mMiniSize.rows; i++) {
+            this.mMap[i] = new Array(this.mMiniSize.cols).fill(true);
         }
 
         this.game.showLoading({
@@ -174,6 +174,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
         this.game.renderPeer.roomstartPlay();
         this.game.renderPeer.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
+        this.game.renderPeer.setCamerasScroll(-this.mSize.sceneWidth * 0.5, -this.mSize.sceneHeight * 0.5);
         if (this.cameraPos) {
             // this.mCameraService.scrollTargetPoint(this.cameraPos.x, this.cameraPos.y);
             this.mCameraService.syncCameraScroll();
@@ -286,44 +287,47 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.transformToMini90(bound);
     }
 
-    public canPut(pos: LogicPos, collisionArea: number[][], origin: Phaser.Geom.Point) {
+    public canPut(pos: IPos, collisionArea: number[][], origin: IPos) {
         if (!collisionArea || !origin) {
             return;
         }
         const pos45 = this.transformToMini45(pos);
-        if (pos45.x < 0 || pos45.y < 0 || pos45.y > this.miniSize.rows || pos45.x > this.miniSize.cols) {
+        if (pos45.x < 0 || pos45.y < 0 || pos45.y > this.mMiniSize.rows || pos45.x > this.mMiniSize.cols) {
             return false;
         }
-        const eles = [this.mElementManager, this.mTerrainManager];
-        for (const manager of eles) {
-            if (manager.canPut(pos45, collisionArea, origin) === false) {
+        // return true;
+        let row = 0;
+        let col = 0;
+        const map = this.mMap;
+        for (let i = 0; i < collisionArea.length; i++) {
+            row = i + pos45.y - origin.y;
+            if (row >= map.length) {
                 return false;
+            }
+            for (let j = 0; j < collisionArea[i].length; j++) {
+                col = j + pos45.x - origin.x;
+                if (col >= map[i].length || map[row][col] === false) {
+                    return false;
+                }
             }
         }
         return true;
-        // let row = 0;
-        // let col = 0;
-        // const map = this.terrainManager.map;
-        // for (let i = 0; i < collisionArea.length; i++) {
-        //     row = i + pos45.y - origin.y;
-        //     if (row >= map.length) {
-        //         return false;
-        //     }
-        //     for (let j = 0; j < collisionArea[i].length; j++) {
-        //         col = j + pos45.x - origin.x;
-        //         if (col >= map[i].length || map[row][col] === 1) {
-        //             return false;
-        //         }
-        //     }
-        // }
-        // return true;
     }
 
-    public setMap(cols: number, rows: number, type: number) {
-        if (rows < 0 || cols < 0 || this.mMap.length < rows || this.mMap[0].length < cols) {
-            return;
+    public setElementWalkable(x: number, y: number, val: boolean) {
+        this.mMap[x][y] = val;
+    }
+
+    public setTerrainWalkable(x: number, y: number, val: boolean) {
+        const map = this.mElementManager.map;
+        const value = map[x][y];
+        if (value === 0) {
+            this.mMap[x][y] = false;
+            // this.mAstar.setWalkableAt(y, x, false);
+        } else {
+            this.mMap[x][y] = val;
+            // this.mAstar.setWalkableAt(y, x, val);
         }
-        this.mMap[cols][rows] = type;
     }
 
     public getElement(id: number): IElement {

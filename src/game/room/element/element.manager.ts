@@ -43,7 +43,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
-            Logger.getInstance().log("elementmanager ---- addpacklistener");
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);

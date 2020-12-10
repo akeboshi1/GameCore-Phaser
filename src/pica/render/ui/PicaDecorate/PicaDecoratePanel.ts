@@ -95,14 +95,15 @@ export class PicaDecoratePanel extends BasePanel {
             return;
         }
         // const pos = this.mDisplayObject.getPosition();
-        this.x = this.mDisplayObject.x * this.render.scaleRatio;
-        this.y = this.mDisplayObject.y * this.render.scaleRatio;
+        // this.x = this.mDisplayObject.x * this.render.scaleRatio;
+        // this.y = this.mDisplayObject.y * this.render.scaleRatio;
+        this.setPos(this.mDisplayObject.x, this.mDisplayObject.y);
 
         // this.updateArrowPos(ele);
         this.addListen();
     }
 
-    public canPUt(val: boolean) {
+    public canPut(val: boolean) {
         if (val !== this.mCanPut) {
             this.mCanPut = val;
             if (!this.mOkBtn) {
@@ -402,10 +403,18 @@ export class PicaDecoratePanel extends BasePanel {
 
     private onTurnHandler() {
         // this.mWorld.emitter.emit(MessageType.TURN_ELEMENT, this.mDisplayObject);
+        const mediator = this.mediator;
+        if (mediator) {
+            mediator.turn();
+        }
     }
 
     private onRecycleHandler() {
         // this.mWorld.emitter.emit(MessageType.RECYCLE_ELEMENT, this.mDisplayObject);
+        const mediator = this.mediator;
+        if (mediator) {
+            mediator.recycle();
+        }
     }
 
     private onCancelHandler() {
@@ -418,6 +427,8 @@ export class PicaDecoratePanel extends BasePanel {
 
     private onAddHandler() {
         if (this.mCanPut) {
+            const mediator = this.mediator;
+            if (mediator) mediator.putElement();
             // this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
         }
     }
