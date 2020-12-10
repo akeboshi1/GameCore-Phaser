@@ -73,6 +73,7 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     protected panelInit() {
+
     }
 
     protected mediatorExport() {

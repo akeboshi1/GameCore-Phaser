@@ -43,7 +43,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     const height = this.scaleHeight;
     super.resize(width, height);
     this.mBackground.clear();
-    this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x01cdff, 0x01cdff);
+    this.mBackground.fillStyle(0x01cdff);
     this.mBackground.fillRect(0, 0, width, height);
     this.mShelfContainer.setSize(width, 295 * this.dpr);
     this.mShelfContainer.y = height - this.mShelfContainer.height + 6 * this.dpr;
@@ -53,10 +53,10 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.height / 2 + 10 * this.dpr;
     this.mDetailDisplay.x = width / 2;
-    this.mDetailDisplay.y = this.mBg.y;
+    this.mDetailDisplay.y = (height - this.mShelfContainer.height - 80 * this.dpr) * 0.5 + 80 * this.dpr;
     this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
     this.rotateAvatarBtn.x = width / 2 + 100 * this.dpr;
-    this.rotateAvatarBtn.y = this.mBg.y - 20 * this.dpr;
+    this.rotateAvatarBtn.y = this.mDetailDisplay.y;
     this.mPropGrid.x = width / 2 + 3 * this.dpr;
     this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 48 * this.dpr;
     this.mPropGrid.layout();
@@ -214,6 +214,9 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.resetBtn.off(ClickEvent.Tap, this.onResetBtnHandler, this);
     this.rotateAvatarBtn.off(ClickEvent.Tap, this.onRotateAvatarHandler, this);
   }
+  public fetchCategory() {
+    this.onSelectedCategory(op_pkt_def.PKT_PackageType.AvatarPackage);
+  }
 
   destroy() {
     if (this.mCategoryScroll) {
@@ -233,6 +236,9 @@ export class PicaAvatarPanel extends PicaBasePanel {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
     this.mBackground = this.scene.make.graphics(undefined, false);
+    const background = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_bg" });
+    background.displayWidth = width;
+    background.x = width * 0.5;
     this.mBg = this.scene.make.image({
       key: UIAtlasName.uicommon,
       frame: "avater_bg_stripe"
@@ -298,9 +304,8 @@ export class PicaAvatarPanel extends PicaBasePanel {
         this.onSelectSubCategoryHandler(gameobject);
       }
     });
-    this.add([this.mBackground, leftbg, rightbg, this.mBg, this.mCloseBtn, nameBg, this.nameText, this.mDetailDisplay, this.mDetailBubble]);
+    this.add([this.mBackground, background, leftbg, rightbg, this.mBg, this.mCloseBtn, nameBg, this.nameText, this.mDetailDisplay, this.mDetailBubble]);
     this.add([this.mShelfContainer, this.mCategoryScroll, this.saveBtn, this.resetBtn, this.rotateAvatarBtn]);
-    this.onSelectedCategory(op_pkt_def.PKT_PackageType.AvatarPackage);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "avater_icon_check");
     const capW = (propFrame.width + 2 * this.dpr);
     const capH = (propFrame.height + 2 * this.dpr);
