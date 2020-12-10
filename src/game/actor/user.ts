@@ -262,12 +262,11 @@ export class User extends Player {
         this.destroy();
     }
 
-    public tryStopMove(x?: number, y?: number) {
+    public tryStopMove(stopPos?: IPos) {
         this.stopMove();
 
-        if (x !== undefined && y !== undefined) {
-            this.mModel.setPosition(x, y);
-            this.mRoomService.game.peer.render.setPosition(this.id, x, y);
+        if (!stopPos) {
+            this.setPosition(stopPos);
         }
         const pos = this.getPosition();
         const position = op_def.PBPoint3f.create();
@@ -323,7 +322,7 @@ export class User extends Player {
                 path.shift();
                 this.startMove();
             } else {
-                this.tryStopMove(path[0].x, path[0].y);
+                this.tryStopMove(path[0]);
                 return;
             }
         }
