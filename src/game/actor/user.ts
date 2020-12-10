@@ -110,10 +110,19 @@ export class User extends Player {
     }
 
     public findPath(x: number, y: number, targets: IPos[], targetId?: number, toReverse: boolean = false) {
+        if (!targets) {
+            return;
+        }
         if (this.mRootMount) {
             this.mRootMount.removeMount(this, targets[0]);
         }
-
+        const pos = this.mModel.pos;
+        for (const target of targets) {
+            if (target.x === pos.x && target.y === pos.y) {
+                this.tryStopMove();
+                return;
+            }
+        }
         const path = this.roomService.findPath(this.getPosition(), targets, toReverse);
         if (!path) {
             return;
@@ -122,7 +131,7 @@ export class User extends Player {
             this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
             return;
         }
-        path.map((pos: IPos) => pos.y += this.offsetY);
+        // path.map((pos: IPos) => pos.y += this.offsetY);
         this.matterWorld.setSensor(this.body, true);
         this.mTargetPoint = { path, targetId };
         this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
@@ -253,8 +262,12 @@ export class User extends Player {
         this.destroy();
     }
 
-    protected tryStopMove() {
+    public tryStopMove(stopPos?: IPos) {
         this.stopMove();
+
+        if (stopPos) {
+            this.setPosition(stopPos);
+        }
         const pos = this.getPosition();
         const position = op_def.PBPoint3f.create();
         position.x = pos.x;
@@ -309,7 +322,7 @@ export class User extends Player {
                 path.shift();
                 this.startMove();
             } else {
-                this.tryStopMove();
+                this.tryStopMove(path[0]);
                 return;
             }
         }
