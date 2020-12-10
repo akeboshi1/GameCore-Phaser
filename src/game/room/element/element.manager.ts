@@ -269,7 +269,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const eles = [];
         for (const obj of objs) {
             point = obj.point3f;
-            Logger.getInstance().log("add element: ", point);
             if (point) {
                 sprite = new Sprite(obj, content.nodeType);
                 if (!sprite.displayInfo) {
