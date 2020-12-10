@@ -265,7 +265,7 @@ export class User extends Player {
     public tryStopMove(stopPos?: IPos) {
         this.stopMove();
 
-        if (!stopPos) {
+        if (stopPos) {
             this.setPosition(stopPos);
         }
         const pos = this.getPosition();
