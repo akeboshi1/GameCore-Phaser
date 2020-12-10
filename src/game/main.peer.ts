@@ -477,7 +477,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public stopMove() {
-        this.game.user.stopMove();
+        this.game.user.tryStopMove();
     }
 
     @Export([webworker_rpc.ParamType.num])

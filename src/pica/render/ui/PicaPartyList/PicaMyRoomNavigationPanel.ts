@@ -1,7 +1,6 @@
 import { BBCodeText, GameScroller, NineSlicePatch } from "apowophaserui";
 import { ImageBBCodeValue, ImageValue } from "gamecoreRender";
 import { UIAtlasKey } from "picaRes";
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { Font, Handler, i18n } from "utils";
 export class PicaMyRoomNavigationPanel extends Phaser.GameObjects.Container {
     private gameScroll: GameScroller;
@@ -47,14 +46,14 @@ export class PicaMyRoomNavigationPanel extends Phaser.GameObjects.Container {
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
-    public setRoomDataList(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
+    public setRoomDataList(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY
         this.gameScroll.clearItems(true);
         this.setMyRoomDatas(content.selfRooms, new Handler(this, () => {
             this.setHistoryDatas(content.historyRooms);
         }));
     }
 
-    private setMyRoomDatas(datas: op_client.IEditModeRoom[], compl?: Handler) {
+    private setMyRoomDatas(datas: any[], compl?: Handler) {// op_client.IEditModeRoom
         const titleimg: ImageValue = new ImageValue(this.scene, 78 * this.dpr, 15 * this.dpr, this.key, "my_house", this.dpr, {
             color: "#FFC51A", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT
         });
@@ -65,7 +64,7 @@ export class PicaMyRoomNavigationPanel extends Phaser.GameObjects.Container {
         this.createRoomItemByFrame(datas, "my_home_bg", "#744803", compl);
     }
 
-    private createRoomItemByFrame(datas: op_client.IEditModeRoom[], bg: string = "list_bg", color: string = "#333333", compl?: Handler) {
+    private createRoomItemByFrame(datas: any[], bg: string = "list_bg", color: string = "#333333", compl?: Handler) {// op_client.IEditModeRoom
         const frameCount = 5;
         let indexed = 0;
         const framefun = () => {
@@ -88,7 +87,7 @@ export class PicaMyRoomNavigationPanel extends Phaser.GameObjects.Container {
         framefun();
     }
 
-    private setHistoryDatas(datas: op_client.IEditModeRoom[]) {
+    private setHistoryDatas(datas: any[]) {// op_client.IEditModeRoom
         const titleimg: ImageValue = new ImageValue(this.scene, 78 * this.dpr, 30 * this.dpr, this.key, "footprint", this.dpr, {
             color: "#FFC51A", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT
         });
@@ -103,13 +102,13 @@ export class PicaMyRoomNavigationPanel extends Phaser.GameObjects.Container {
             this.onSendHandler(item.roomData);
     }
 
-    private onSendHandler(data: op_client.IEditModeRoom) {
+    private onSendHandler(data: any) {// op_client.IEditModeRoom
         if (this.sendHandler) this.sendHandler.runWith(data.roomId);
     }
 }
 
 class RoomListItem extends Phaser.GameObjects.Container {
-    public roomData: op_client.IEditModeRoom;
+    public roomData: any;// op_client.IEditModeRoom
     private key: string;
     private dpr: number;
     private bg: NineSlicePatch;
@@ -151,7 +150,7 @@ class RoomListItem extends Phaser.GameObjects.Container {
         this.playerCount.x = this.width * 0.5 - 35 * dpr;
         this.add(this.playerCount);
     }
-    public setRoomData(data: op_client.IEditModeRoom) {
+    public setRoomData(data: any) {// op_client.IEditModeRoom
         this.roomData = data;
         this.roomName.text = `[b]${data.name}[/b]`;
         this.playerCount.setText(`[b]${data.playerCount}[/b]`);
