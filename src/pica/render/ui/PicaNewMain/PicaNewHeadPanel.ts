@@ -25,6 +25,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private money: number = 0;
     private diamond: number = 0;
     private praise: boolean = false;
+    private isself: boolean = false;
     private sendHandler: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
@@ -112,7 +113,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             top: 0 * this.dpr,
             right: 16 * this.dpr,
             bottom: 0 * this.dpr
-        });
+        }, this.dpr, this.scale, 0);
         praisebg.x = -peoplebg.width - 15 * this.dpr - praisebg.width * 0.5;
         this.sceneTex = this.scene.make.text({
             x: praisebg.x - 10 * this.dpr, y: 0, text: "", style: { color: "#FFF449", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT }
@@ -152,15 +153,20 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.diamond = diamond;
     }
 
-    public setSceneData(sceneName: string, isPraise: boolean, people: number, roomType: string) {
+    public setSceneData(sceneName: string, isPraise: boolean, people: number, roomType: string, isself: boolean = false) {
         this.sceneTex.text = sceneName;
         this.praise = isPraise;
+        this.isself = isself;
         this.peoplevalue.setText(people + "");
         this.praiseButton.off(ClickEvent.Tap, this.onPraiseHandler, this);
         if (this.canPraise(roomType)) {
             this.praiseButton.visible = true;
             this.praiseButton.on(ClickEvent.Tap, this.onPraiseHandler, this);
-            this.praiseImg.setFrame(isPraise ? "home_praise_1" : "home_praise");
+            if (isself) {
+                this.praiseImg.setFrame("home_set");
+            } else {
+                this.praiseImg.setFrame(isPraise ? "home_praise_1" : "home_praise");
+            }
             let bgwidth = this.sceneTex.width + 40 * this.dpr;
             bgwidth = bgwidth < 60 * this.dpr ? 60 * this.dpr : bgwidth;
             this.praisebg.resize(bgwidth, 25 * this.dpr);
@@ -189,7 +195,10 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     }
 
     private onPraiseHandler() {
-        if (this.sendHandler) this.sendHandler.runWith(["praise", !this.praise]);
+        if (this.isself) {
+            if (this.sendHandler) this.sendHandler.runWith(["party"]);
+        } else
+            if (this.sendHandler) this.sendHandler.runWith(["praise", !this.praise]);
     }
 
     private onRechargeHandler() {

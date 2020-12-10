@@ -73,6 +73,9 @@ export class PicaAvatarMediator extends BasicMediator {
     }
 
     protected panelInit() {
+        if (this.panelInit) {
+            if (this.mView) this.mView.fetchCategory();
+        }
     }
 
     protected mediatorExport() {
@@ -104,7 +107,7 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private onPackageCategoryHandler(subcategory: op_def.IStrPair[]) {
 
-        if (this.mView)  this.mView.setCategories(subcategory);
+        if (this.mView) this.mView.setCategories(subcategory);
     }
 
     private onQueryCommodityResourceHandler(
@@ -156,7 +159,8 @@ export class PicaAvatarMediator extends BasicMediator {
     }
 
     private onDressAvatarIDS(ids: string[]) {
-        if (this.mView) this.mView.setDressAvatarIds(ids);
+        //  if (this.mView)
+        this.mView.setDressAvatarIds(ids);
     }
 
     private queryDressAvatarIDS() {

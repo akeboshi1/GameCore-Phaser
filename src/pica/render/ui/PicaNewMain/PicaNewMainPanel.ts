@@ -68,8 +68,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.headPanel.setHeadData(level, energy, money, diamond);
     }
 
-    setRoomInfo(sceneName: string, isPraise: boolean, people: number, roomType: string) {
-        this.headPanel.setSceneData(sceneName, isPraise, people, roomType);
+    setRoomInfo(sceneName: string, isPraise: boolean, people: number, roomType: string, isself: boolean = false) {
+        this.headPanel.setSceneData(sceneName, isPraise, people, roomType, isself);
     }
 
     updateUIState(active?: any) {
@@ -125,6 +125,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICARECHARGE_NAME);
         } else if (tag === "room") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_openhousepanel");
+        } else if (tag === "party") {
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAOPENPARTY_NAME);
         }
     }
 
