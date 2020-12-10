@@ -156,9 +156,9 @@ export class Launcher {
                 this.world.createGame();
             }
             this.disableClick();
-        }).catch(() => {
+        }).catch((error) => {
             // tslint:disable-next-line:no-console
-            console.log("import game error");
+            console.log("import game error", error);
         });
     }
 
