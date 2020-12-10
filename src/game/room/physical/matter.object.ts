@@ -23,6 +23,10 @@ export class MatterObject {
 
     public setStatic(value: boolean) {
         if (this.body) {
+            // 重复设置会拿到错误的inertia导致position为NaN
+            if (value === this.body.isStatic) {
+                return this;
+            }
             Body.setStatic(this.body, value);
         }
         return this;
@@ -57,7 +61,11 @@ export class MatterObject {
         // this._tempVec2.y = this.body.velocity.y;
         x *= this.mRoomService.game.scaleRatio;
         y *= this.mRoomService.game.scaleRatio;
+        if (!this.body) {
+            return;
+        }
         Body.setVelocity(this.body, Vector.create(x, y));
+        Body.setInertia(this.body, Infinity);
     }
 
     public setPosition(pos: IPos) {

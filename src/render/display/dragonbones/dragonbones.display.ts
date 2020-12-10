@@ -2,7 +2,7 @@ import { Logger, ResUtils } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "../../render";
-import { LoadQueue, LoadType } from "../../loadqueue";
+import { LoadType } from "../../loadqueue";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_$_dres",
@@ -359,7 +359,7 @@ export class DragonbonesDisplay extends DisplayObject {
     }
     private loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
         this.mLoadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
-        // this.mLoadQueue.startLoad();
+        // this.startLoad();
     }
 
     private clearReplaceArmature() {
@@ -383,7 +383,7 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         // this.hideUnreplacedParts();
         if (this.mLoadMap && this.mLoadMap.size > 0) {
-            this.startLoad();
+            this.startLoadPartRes();
         } else {
             this.refreshAvatar();
         }
@@ -898,7 +898,7 @@ export class DragonbonesDisplay extends DisplayObject {
         }
     }
 
-    private startLoad() {
+    private startLoadPartRes() {
         const configList: Phaser.Types.Loader.FileTypes.ImageFileConfig[] = [];
         // ============只有check到新资源时才会重新load，否则直接从当前龙骨的贴图资源上，获取对应贴图
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, allComplete: integer, totalFailed: integer) => {
@@ -917,7 +917,7 @@ export class DragonbonesDisplay extends DisplayObject {
         // loadQueue.add([{ type: LoadType.DRAGONBONES, key: this.mDragonbonesName, textureUrl: pngUrl, jsonUrl, boneUrl: dbbinUrl }]);
         // loadQueue.on("QueueProgress", this.onFileLoadHandler, this);
         // loadQueue.on("QueueComplete", this.allComplete, this);
-        // loadQueue.startLoad();
+        // loadQueue.startLoadPartRes();
 
         this.mLoadMap.forEach((data) => {
             const nextLoad: string[] = data;
