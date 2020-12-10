@@ -3,7 +3,7 @@ import { DynamicImage, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
-import { Coin, Font, Handler, i18n, Logger, Url } from "utils";
+import { Coin, Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 
@@ -18,8 +18,9 @@ export class PicaAvatarPanel extends PicaBasePanel {
   private mPropGrid: GameGridTable;
   private mCategoryScroll: GameScroller;
   private saveBtn: NineSliceButton;
-  private resetBtn: NineSliceButton;
+  private resetBtn: Button;
   private rotateAvatarBtn: Button;
+  private nameText: Phaser.GameObjects.Text;
 
   private mDetailBubble: DetailBubble;
   private mSceneType: any;// op_def.SceneTypeEnum
@@ -42,28 +43,22 @@ export class PicaAvatarPanel extends PicaBasePanel {
     const height = this.scaleHeight;
     super.resize(width, height);
     this.mBackground.clear();
-    this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
+    this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x01cdff, 0x01cdff);
     this.mBackground.fillRect(0, 0, width, height);
     this.mShelfContainer.setSize(width, 295 * this.dpr);
-    this.mShelfContainer.y = height - this.mShelfContainer.height;
+    this.mShelfContainer.y = height - this.mShelfContainer.height + 6 * this.dpr;
     this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
-
+    this.mCategoryScroll.x = width * 0.5;
+    this.mCategoryScroll.y = this.mShelfContainer.y + 20 * this.dpr;
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.height / 2 + 10 * this.dpr;
-
-    this.resetBtn.x = width - this.resetBtn.width / 2 - 10 * this.dpr;
-    this.resetBtn.y = this.mShelfContainer.y - this.resetBtn.height / 2 - 9 * this.dpr;
-
-    this.saveBtn.x = this.resetBtn.x - (this.saveBtn.width + this.resetBtn.width) / 2 - 10 * this.dpr;
-    this.saveBtn.y = this.resetBtn.y;
-
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = this.mBg.y;
     this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
     this.rotateAvatarBtn.x = width / 2 + 100 * this.dpr;
     this.rotateAvatarBtn.y = this.mBg.y - 20 * this.dpr;
-    this.mPropGrid.x = width / 2+5*this.dpr;
-    this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 53 * this.dpr;
+    this.mPropGrid.x = width / 2 + 3 * this.dpr;
+    this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 48 * this.dpr;
     this.mPropGrid.layout();
     this.mPropGrid.resetMask();
     this.mCategoryScroll.refreshMask();
@@ -90,7 +85,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
       item.setData("item", subcategorys[i]);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);
-
+      item.setChangeColor("#FFD248");
       items[i] = item;
       item.setFontSize(17 * this.dpr);
       item.setFontStyle("bold");
@@ -240,7 +235,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mBackground = this.scene.make.graphics(undefined, false);
     this.mBg = this.scene.make.image({
       key: UIAtlasName.uicommon,
-      frame: "bg"
+      frame: "avater_bg_stripe"
     }, false);
     this.mBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mShelfContainer = this.scene.make.container(undefined, false);
@@ -248,22 +243,33 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mShelfContainer.y = height - this.mShelfContainer.height;
     const categoryBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_nav" });
     categoryBg.displayWidth = width;
+    categoryBg.x = width * 0.5;
+    categoryBg.y = categoryBg.height * 0.5;
     this.mShelfContainer.add(categoryBg);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 30 * this.dpr);
+    this.mCloseBtn.setPosition(21 * this.dpr, 50 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
+    const nameBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_name_bg" });
+    nameBg.x = width * 0.5;
+    nameBg.y = this.mCloseBtn.y;
+    this.nameText = this.scene.make.text({ x: nameBg.x, y: nameBg.y, text: "", style: UIHelper.whiteStyle(this.dpr, 14) }).setOrigin(0.5);
+    const leftbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_bg_adorn" });
+    leftbg.x = leftbg.width * 0.5;
+    leftbg.y = leftbg.height * 0.5;
+    leftbg.scaleX = -1;
+    const rightbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_bg_adorn" });
+    rightbg.x = width - leftbg.width * 0.5;
+    rightbg.y = leftbg.height * 0.5;
     const btnwidth = 90 * this.dpr;
     const btnHeight = 38 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
     const btnPosY = this.mShelfContainer.y - 25 * this.dpr;
-    this.saveBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.save"), "#996600");
-    this.resetBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY - btnHeight - 5 * this.dpr, 38 * this.dpr, 38 * this.dpr, UIAtlasName.uicommon, "red_btn");
-    this.rotateAvatarBtn = new Button(this.scene, UIAtlasName.uicommon, "backpack_turn-back", "backpack_turn-back");
-    this.rotateAvatarBtn.visible = false;
-    const reseticon = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "restore" });
-    reseticon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    this.resetBtn.add(reseticon);
+    this.saveBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.save"), "#996600");
+    this.resetBtn = new Button(this.scene, UIAtlasName.uicommon, "avater_repeal");
+    this.resetBtn.x = width - 30 * this.dpr;
+    this.resetBtn.y = this.mCloseBtn.y;
+    this.rotateAvatarBtn = new Button(this.scene, UIAtlasName.uicommon, "avater_turn_back", "avater_turn_back");
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render, true);
     this.mDetailDisplay.setSize(110 * this.dpr, 110 * this.dpr);
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
@@ -292,12 +298,12 @@ export class PicaAvatarPanel extends PicaBasePanel {
         this.onSelectSubCategoryHandler(gameobject);
       }
     });
-    this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategoryScroll]);
-    this.add([this.saveBtn, this.resetBtn, this.rotateAvatarBtn]);
+    this.add([this.mBackground, leftbg, rightbg, this.mBg, this.mCloseBtn, nameBg, this.nameText, this.mDetailDisplay, this.mDetailBubble]);
+    this.add([this.mShelfContainer, this.mCategoryScroll, this.saveBtn, this.resetBtn, this.rotateAvatarBtn]);
     this.onSelectedCategory(op_pkt_def.PKT_PackageType.AvatarPackage);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "avater_icon_check");
-    const capW = (propFrame.width);
-    const capH = (propFrame.height);
+    const capW = (propFrame.width + 2 * this.dpr);
+    const capH = (propFrame.height + 2 * this.dpr);
     const tableConfig = {
       x: 0,
       y: 0,
@@ -460,6 +466,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     if (item) {
       this.avatarDirection = 0;
       this.setSelectAvatarSuitItem(item, cell);
+      this.nameText.text = item.name;
     }
   }
 
@@ -619,8 +626,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
       fontFamily: Font.DEFULT_FONT,
     }).setOrigin(0);
     this.add([this.tipsbg, this.tipsText, this.mExpires]);
-    this.tipsText.addImage("iv_coin", { key: UIAtlasName.uicommon, frame: "iv_coin", y: -3 * this.dpr });
-    this.tipsText.addImage("iv_diamond", { key: UIAtlasName.uicommon, frame: "iv_diamond", y: -3 * this.dpr });
+    this.tipsText.addImage("iv_coin", { key: UIAtlasName.uicommon, frame: "home_silver", y: -3 * this.dpr });
+    this.tipsText.addImage("iv_diamond", { key: UIAtlasName.uicommon, frame: "home_diamond", y: -3 * this.dpr });
   }
 
   setProp(prop: any, servertime: number, property: any): this {// op_client.ICountablePackageItem, PlayerProperty

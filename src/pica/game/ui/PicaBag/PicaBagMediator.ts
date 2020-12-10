@@ -22,8 +22,6 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_retpackageCategory", this.onPackageCategoryHandler, this);
         this.game.emitter.on(this.key + "_retPackage", this.onQueryPackageHandler, this);
         this.game.emitter.on(this.key + "_retCommodityResource", this.onQueryCommodityResourceHandler, this);
-        this.game.emitter.on(this.key + "_retResetAvatar", this.onResetAvatar, this);
-        this.game.emitter.on(this.key + "_retavatarIDs", this.onDressAvatarIDS, this);
 
         this.game.emitter.on(this.key + "_getCategories", this.onGetCategoriesHandler, this);
         this.game.emitter.on(this.key + "_queryPackage", this.onQueryPackage, this);
@@ -32,9 +30,6 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_seachPackage", this.onSeachPackageHandler, this);
         this.game.emitter.on(this.key + "_addFurniToScene", this.onAddFurniHandler, this);
         this.game.emitter.on(this.key + "_sellProps", this.onSellPropsHandler, this);
-        this.game.emitter.on(this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
-        this.game.emitter.on(this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
-        this.game.emitter.on(this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
         this.game.emitter.on(this.key + "_useprops", this.onUsePropsHandler, this);
     }
 
@@ -42,8 +37,6 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_retpackageCategory", this.onPackageCategoryHandler, this);
         this.game.emitter.off(this.key + "_retPackage", this.onQueryPackageHandler, this);
         this.game.emitter.off(this.key + "_retCommodityResource", this.onQueryCommodityResourceHandler, this);
-        this.game.emitter.off(this.key + "_retResetAvatar", this.onResetAvatar, this);
-        this.game.emitter.off(this.key + "_retavatarIDs", this.onDressAvatarIDS, this);
 
         this.game.emitter.off(this.key + "_getCategories", this.onGetCategoriesHandler, this);
         this.game.emitter.off(this.key + "_queryPackage", this.onQueryPackage, this);
@@ -52,9 +45,6 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_seachPackage", this.onSeachPackageHandler, this);
         this.game.emitter.off(this.key + "_addFurniToScene", this.onAddFurniHandler, this);
         this.game.emitter.off(this.key + "_sellProps", this.onSellPropsHandler, this);
-        this.game.emitter.off(this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
-        this.game.emitter.off(this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
-        this.game.emitter.off(this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
         this.game.emitter.off(this.key + "_useprops", this.onUsePropsHandler, this);
         super.hide();
     }
@@ -159,13 +149,6 @@ export class PicaBagMediator extends BasicMediator {
         this.model.queryCommodityResource(prop.id);
     }
 
-    private onQuerySaveAvatar(avatarids: string[]) {
-        this.model.querySaveAvatar(avatarids);
-    }
-
-    private onQueryResetAvatar(avatar: op_gameconfig.Avatar) {
-        this.model.queryResetAvatar(avatar);
-    }
     private onSeachPackageHandler(data: { query: string, categories: string }) {
         this.model.seachPackage(data.query, data.categories);
     }
@@ -186,17 +169,6 @@ export class PicaBagMediator extends BasicMediator {
 
     private onUsePropsHandler(data: { itemid: string, count: number }) {
         this.model.useProps(data.itemid, data.count);
-    }
-    private onResetAvatar(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR) {
-        this.mView.resetAvatar(content);
-    }
-
-    private onDressAvatarIDS(ids: string[]) {
-        this.mView.setDressAvatarIds(ids);
-    }
-
-    private queryDressAvatarIDS() {
-        this.model.queryDressAvatarItemIDs();
     }
 
     private get model(): PicaBag {
