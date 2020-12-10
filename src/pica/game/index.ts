@@ -14,7 +14,7 @@ export { ActivityMediator } from "./ui/Activity/ActivityMediator";
 export * from "./ui/CutIn";
 export * from "./ui/Dialog";
 export * from "./ui/UserMenu";
-export * from "./ui/login";
+export * from "./ui/Login";
 export { PicaGame } from "./pica.game";
 export { InteractiveBubble } from "./ui/Bubble/InteractiveBubble";
 export { InteractiveBubbleMediator } from "./ui/Bubble/InteractiveBubbleMediator";

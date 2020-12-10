@@ -1,4 +1,3 @@
-import { LoadingTips } from "../loadqueue/loading.tips";
 import { Logger } from "utils";
 import { PlayCamera } from "../cameras/play.camera";
 import { BasicLayer } from "../managers/layer.manager";
@@ -28,10 +27,7 @@ export class PlayScene extends RoomScene {
         return this.motionManager;
     }
 
-    public preload() { }
-
     public create() {
-        super.create();
         Logger.getInstance().log("create playscene");
         const oldCamera = this.cameras.main;
         const { width, height } = this.sys.scale;
@@ -61,8 +57,6 @@ export class PlayScene extends RoomScene {
         this.render.sceneManager.setMainScene(this);
         this.initInput();
         this.render.camerasManager.startRoomPlay(this);
-        const txt = LoadingTips.loadingResources();
-        this.render.showLoading({ "text": txt });
         this.onLoadCompleteHandler();
 
         // set layers
@@ -82,6 +76,7 @@ export class PlayScene extends RoomScene {
         this.render.changeScene(this);
 
         this.initListener();
+        super.create();
     }
 
     update(time: number, delta: number) {

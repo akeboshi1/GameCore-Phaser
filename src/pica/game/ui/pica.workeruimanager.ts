@@ -2,7 +2,7 @@ import { UIManager, Game, BasicMediator } from "gamecore";
 import { ModuleName } from "structure";
 import { CutInMediator } from "./CutIn";
 import { DialogMediator } from "./Dialog";
-import { LoginMediator } from "./login";
+import { LoginMediator } from "./Login";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaDecorateMediator } from "./PicaDecorate/PicaDecorateMediator";
 import { PicaDecorateControlMediator } from "./PicaDecorateControl/PicaDecorateControlMediator";

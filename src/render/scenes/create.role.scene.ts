@@ -20,7 +20,7 @@ export class CreateRoleScene extends BasicScene {
       uimanager.setScene(this);
       Logger.getInstance().log("createrole===scene");
       // uimanager.showPanel(ModuleName.CREATEROLE_NAME, this.params);
-      this.render.hideLoading();
+      // this.render.hideLoading();
     }
     super.create();
   }

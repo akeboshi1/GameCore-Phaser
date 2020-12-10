@@ -1,3 +1,5 @@
+import { SceneName } from "structure";
+import { LoadingTips } from "../loadqueue";
 import { LayerManager } from "../managers/layer.manager";
 import { Render } from "../render";
 
@@ -14,6 +16,10 @@ export class BasicScene extends Phaser.Scene {
         if (data) {
             this.render = data.render;
         }
+    }
+
+    public preload() {
+        if (this.render) this.render.showLoading({ "text": LoadingTips.loadingResources() });
     }
 
     setScale(zoom: number) {
