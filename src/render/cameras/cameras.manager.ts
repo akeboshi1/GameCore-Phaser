@@ -165,7 +165,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         if (!this.mMain) {
             return;
         }
-        this.setScroll(x * this.render.scaleRatio - this.mMain.width / 2, y * this.render.scaleRatio - this.mMain.height / 2);
+        this.setScroll(x, y);
     }
 
     public destroy() {
