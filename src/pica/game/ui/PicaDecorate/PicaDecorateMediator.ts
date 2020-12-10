@@ -36,6 +36,7 @@ export class PicaDecorateMediator extends BasicMediator {
         }
         this.showPane(() => {
             this.mView.setElement(id);
+            this.checkCanPut();
         });
     }
 

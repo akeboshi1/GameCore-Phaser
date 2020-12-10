@@ -339,6 +339,7 @@ export class User extends Player {
 
     protected addBody() {
         this._sensor = false;
+        this._offsetOrigin.y = 0;
         this.setBody();
     }
 

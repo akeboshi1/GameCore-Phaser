@@ -148,7 +148,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public removeFromMap(sprite: ISprite) {
         if (!sprite) return;
         const collision = sprite.getCollisionArea();
-        if (collision) return;
+        if (!collision) return;
         let walkable = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();
         if (!walkable) {
@@ -173,6 +173,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                         this.mMap[row][col] = 0;
                     }
+                    (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
                 }
             }
         }
