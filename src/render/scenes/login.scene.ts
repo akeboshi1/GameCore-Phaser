@@ -8,12 +8,16 @@ export class LoginScene extends BasicScene {
         super({ key: SceneName.LOGIN_SCENE });
     }
 
+    preload() {
+    }
+
     public create() {
         super.create();
         if (this.render) {
             this.render.showMediator("Login", true);
             const uimanager: UiManager = this.render.uiManager;
             uimanager.setScene(this);
+            this.render.hideLoading();
             // uimanager.showPanel(ModuleName.LOGIN_NAME);
         }
     }
