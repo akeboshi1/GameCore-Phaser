@@ -232,7 +232,7 @@ export class PicaPropFunPanel extends BasePanel {
             this.slider.y = 50 * this.dpr;
         }
         if (config.resultHandler.key && config.resultHandler.key.length > 0) {
-            const panel = this.uiManager.getPanel(`${config.resultHandler.key}Panel`);
+            const panel = this.uiManager.getPanel(`${config.resultHandler.key}`);
             if (panel) {
                 if (config.resultHandler.confirmFunc && config.resultHandler.confirmFunc in panel && typeof panel[config.resultHandler.confirmFunc] === "function") {
                     this.confirmHandler = panel[config.resultHandler.confirmFunc];
@@ -267,7 +267,7 @@ export class PicaPropFunPanel extends BasePanel {
     }
 
     private onCancelBtnHandler() {
-        const panel = this.uiManager.getPanel(`${this.prop.resultHandler.key}Panel`);
+        const panel = this.uiManager.getPanel(`${this.prop.resultHandler.key}`);
         if (panel) {
             if (this.cancelHandler) {
                 this.cancelHandler.apply(panel, this.itemData);
@@ -278,7 +278,7 @@ export class PicaPropFunPanel extends BasePanel {
 
     private onConfirmBtnHandler() {
         if (this.confirmHandler) {
-            const panel = this.uiManager.getPanel(`${this.prop.resultHandler.key}Panel`);
+            const panel = this.uiManager.getPanel(`${this.prop.resultHandler.key}`);
             if (panel) {
                 if (this.confirmHandlerAddData) {
                     this.confirmHandler.apply(panel, [this.confirmHandlerAddData, this.itemData, this.itemCount]);
