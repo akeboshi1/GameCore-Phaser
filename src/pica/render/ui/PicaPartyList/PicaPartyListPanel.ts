@@ -3,7 +3,6 @@ import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, Handler, i18n } from "utils";
-import { op_client } from "pixelpai_proto";
 import { PicaPartyNavigationPanel } from "./PicaPartyNavigationPanel";
 import { PicaMyRoomNavigationPanel } from "./PicaMyRoomNavigationPanel";
 export class PicaPartyListPanel extends BasePanel {
@@ -70,7 +69,7 @@ export class PicaPartyListPanel extends BasePanel {
     public setOnlineProgress(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         this.partyNavigationPanel.setSignProgress(content);
     }
-    public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
+    public setRoomListData(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY
         this.myRoomNavigationPanel.setRoomDataList(content);
     }
     protected preload() {

@@ -55,7 +55,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
         // tslint:disable-next-line:no-console
-        console.error(room);
+        // console.error(room);
     }
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;

@@ -6,10 +6,9 @@ import { PicaFriendMediator } from "../PicaFriend/PicaFriendMediator";
 import { BasicMediator, Game } from "gamecore";
 
 export class CharacterInfoMediator extends BasicMediator {
-    private characterInfo: CharacterInfo;
     constructor(game: Game) {
         super(ModuleName.CHARACTERINFO_NAME, game);
-        this.characterInfo = new CharacterInfo(this.game);
+        this.mModel = new CharacterInfo(this.game);
         this.game.emitter.on("ownerInfo", this.onOwnerCharacterInfo, this);
         this.game.emitter.on("otherInfo", this.onOtherCharacterInfo, this);
     }
@@ -43,16 +42,22 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.characterInfo) {
-            this.characterInfo.destroy();
-            this.characterInfo = undefined;
-        }
+        this.game.emitter.off("ownerInfo", this.onOwnerCharacterInfo, this);
+        this.game.emitter.off("otherInfo", this.onOtherCharacterInfo, this);
         super.destroy();
     }
 
     protected panelInit() {
         super.panelInit();
-        if (this.mShowData && this.mView) this.mView.update(this.mShowData);
+        if (this.mShowData) {
+            if (this.mShowData.isUser) {
+                this.onOwnerCharacterInfo(this.mShowData);
+            } else {
+                this.onOtherCharacterInfo(this.mShowData);
+            }
+
+            this.mShowData = null;
+        }
     }
 
     private onHidePanel() {
@@ -60,9 +65,9 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     private onOwnerCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
-        this.mShowData = content;
-        this.mShowData.isUser = true;
         if (!this.mPanelInit) {
+            this.mShowData = content;
+            this.mShowData.isUser = true;
             return;
         }
         if (this.mView)
@@ -70,9 +75,9 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     private onOtherCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-        this.mShowData = content;
-        this.mShowData.isUser = false;
         if (!this.mPanelInit) {
+            this.mShowData = content;
+            this.mShowData.isUser = false;
             return;
         }
         if (this.mView) {
@@ -140,15 +145,15 @@ export class CharacterInfoMediator extends BasicMediator {
     }
 
     private onQueryOwnerInfo() {
-        this.characterInfo.queryPlayerInfo();
+        this.model.queryPlayerInfo();
     }
 
     private onTrackHandler(id: string) {
-        this.characterInfo.track(id);
+        this.model.track(id);
     }
 
     private onInviteHandler(id: string) {
-        this.characterInfo.invite(id);
+        this.model.invite(id);
     }
 
     private updateFrind() {
@@ -157,5 +162,9 @@ export class CharacterInfoMediator extends BasicMediator {
         if (PicaFriend) {
             PicaFriend.fetchCurrentFriend();
         }
+    }
+
+    private get model(): CharacterInfo {
+        return <CharacterInfo>this.mModel;
     }
 }
