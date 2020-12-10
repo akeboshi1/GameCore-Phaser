@@ -13,7 +13,7 @@ export class DecorateElementManager extends ElementManager {
     super(room);
   }
 
-  public canPut(pos45: IPos, collisionArea: number[][], origin: Phaser.Geom.Point) {
+  public canPut(pos45: IPos, collisionArea: number[][], origin: IPos) {
     let row = 0;
     let col = 0;
     const map = this.map;
@@ -24,7 +24,7 @@ export class DecorateElementManager extends ElementManager {
       }
       for (let j = 0; j < collisionArea[i].length; j++) {
         col = j + pos45.x - origin.x;
-        if (col >= map[i].length || map[row][col] === 1) {
+        if (col >= map[i].length || map[row][col] !== 1) {
           return false;
         }
       }
@@ -32,11 +32,11 @@ export class DecorateElementManager extends ElementManager {
     return true;
   }
 
-  public addToMap(sprite: ISprite) {
-  }
+  // public addToMap(sprite: ISprite) {
+  // }
 
-  public removeFromMap(sprite: ISprite) {
-  }
+  // public removeFromMap(sprite: ISprite) {
+  // }
 
   public removeEmpty() {
   }
@@ -71,22 +71,22 @@ export class DecorateElementManager extends ElementManager {
     return frozenType;
   }
 
-  protected onSync(packet: PBpacket) {
-    const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
-    if (content.nodeType !== NodeType.ElementNodeType) {
-      return;
-    }
-    let element: Element = null;
-    const sprites = content.sprites;
-    for (const sprite of sprites) {
-      element = this.get(sprite.id);
-      if (element) {
-        const sp = new Sprite(sprite, content.nodeType);
-        element.model = sp;
-        // this.addToMap(sp);
-      }
-    }
-  }
+  // protected onSync(packet: PBpacket) {
+  //   const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+  //   if (content.nodeType !== NodeType.ElementNodeType) {
+  //     return;
+  //   }
+  //   let element: Element = null;
+  //   const sprites = content.sprites;
+  //   for (const sprite of sprites) {
+  //     element = this.get(sprite.id);
+  //     if (element) {
+  //       const sp = new Sprite(sprite, content.nodeType);
+  //       element.model = sp;
+  //       // this.addToMap(sp);
+  //     }
+  //   }
+  // }
 
   get map(): number[][] {
     return this.mMap;

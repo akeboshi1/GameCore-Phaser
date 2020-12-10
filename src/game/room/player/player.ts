@@ -211,6 +211,7 @@ export class Player extends Element implements IElement {
 
     protected addBody() {
         this._sensor = true;
+        this._offsetOrigin.y = 0;
         this.setBody();
     }
 

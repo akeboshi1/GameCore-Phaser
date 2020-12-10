@@ -11,22 +11,9 @@ export class DecorateTerrainManager extends TerrainManager {
   protected mRoom: DecorateRoomService;
   constructor(roomService: DecorateRoomService) {
     super(roomService);
-    const miniSize = roomService.miniSize;
-    this.mMap = new Array(miniSize.rows);
-    for (let i = 0; i < miniSize.rows; i++) {
-      this.mMap[i] = new Array(miniSize.cols).fill(0);
-    }
   }
 
-  // public remove(id: number): IElement {
-  //   const terrain = super.remove(id);
-  //   if (terrain) {
-  //     this.removeMap(terrain.model);
-  //   }
-  //   return terrain;
-  // }
-
-  public canPut(pos45: IPos, collisionArea: number[][], origin: Phaser.Geom.Point) {
+  public canPut(pos45: IPos, collisionArea: number[][], origin: IPos) {
     let row = 0;
     let col = 0;
     const map = this.map;
@@ -37,18 +24,19 @@ export class DecorateTerrainManager extends TerrainManager {
       }
       for (let j = 0; j < collisionArea[i].length; j++) {
         col = j + pos45.x - origin.x;
-        if (col >= map[i].length || map[row][col] === 0) {
-          return false;
+        if (col >= map[i].length || map[row][col] !== 1) {
+          // return false;
         }
       }
     }
+    return true;
   }
 
-  public addToMap(sprite: ISprite) {
-  }
+  // public addToMap(sprite: ISprite) {
+  // }
 
-  public removeFromMap(sprite: ISprite) {
-  }
+  // public removeFromMap(sprite: ISprite) {
+  // }
 
   public removeEmpty() {
   }
@@ -62,25 +50,25 @@ export class DecorateTerrainManager extends TerrainManager {
   //   return terrain;
   // }
 
-  protected onSyncSprite(packet: PBpacket) {
-    const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
-    if (content.nodeType !== op_def.NodeType.TerrainNodeType) {
-      return;
-    }
-    let terrain: Terrain = null;
-    const sprites = content.sprites;
-    for (const sprite of sprites) {
-      terrain = this.get(sprite.id);
-      if (terrain) {
-        const sp = new Sprite(sprite, content.nodeType);
-        terrain.model = sp;
-        if (sp.displayInfo) {
-          this.addMap(sp);
-        }
-        // terrain.setRenderable(true);
-      }
-    }
-  }
+  // protected onSyncSprite(packet: PBpacket) {
+  //   const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
+  //   if (content.nodeType !== op_def.NodeType.TerrainNodeType) {
+  //     return;
+  //   }
+  //   let terrain: Terrain = null;
+  //   const sprites = content.sprites;
+  //   for (const sprite of sprites) {
+  //     terrain = this.get(sprite.id);
+  //     if (terrain) {
+  //       const sp = new Sprite(sprite, content.nodeType);
+  //       terrain.model = sp;
+  //       if (sp.displayInfo) {
+  //         this.addMap(sp);
+  //       }
+  //       // terrain.setRenderable(true);
+  //     }
+  //   }
+  // }
 
   protected addMap(sprite: ISprite) {
     // this.setMap(sprite, 1);

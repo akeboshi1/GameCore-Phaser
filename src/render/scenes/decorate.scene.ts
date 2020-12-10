@@ -58,9 +58,4 @@ export class DecorateScene extends PlayScene {
         }
         this.mDecorateManager.moveElement(pointer);
     }
-
-    protected onLoadCompleteHandler() {
-        super.onLoadCompleteHandler();
-        this.render.hideLoading();
-    }
 }

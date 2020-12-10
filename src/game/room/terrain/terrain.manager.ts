@@ -193,6 +193,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         // sprites 服务端
         for (const sprite of sprites) {
             point = sprite.point3f;
+            // Logger.getInstance().log("add terrain: ", point);
             this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
                 const s = new Sprite(sprite, type);

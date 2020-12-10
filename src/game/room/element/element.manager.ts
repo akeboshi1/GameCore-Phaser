@@ -43,7 +43,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
-            Logger.getInstance().log("elementmanager ---- addpacklistener");
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
@@ -149,7 +148,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public removeFromMap(sprite: ISprite) {
         if (!sprite) return;
         const collision = sprite.getCollisionArea();
-        if (collision) return;
+        if (!collision) return;
         let walkable = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();
         if (!walkable) {
@@ -174,6 +173,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                         this.mMap[row][col] = 0;
                     }
+                    (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
                 }
             }
         }

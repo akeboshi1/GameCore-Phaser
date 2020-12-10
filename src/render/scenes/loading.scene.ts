@@ -154,6 +154,7 @@ export class LoadingScene extends BasicScene {
       this.displayVisible(false);
       this.curtain.close().then(() => {
         // this.displayVisible(true);
+        this.render.hideLoading();
         this.scene.sleep();
       });
     } else {

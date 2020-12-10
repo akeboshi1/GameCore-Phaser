@@ -801,6 +801,14 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public setCamerasScroll(x: number, y: number) {
+        if (!this.mCameraManager) {
+            return;
+        }
+        this.mCameraManager.scrollTargetPoint(x, y);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setInteractive(id: number, type: number) {
         if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);

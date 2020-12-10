@@ -234,6 +234,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
+        this.mElementManager.removeFromMap(this.mModel);
         if (model.hasOwnProperty("attrs")) {
             this.model.updateAttr(model.attrs);
         }
@@ -267,6 +268,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
         this.update();
+        this.mElementManager.addToMap(this.mModel);
     }
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;

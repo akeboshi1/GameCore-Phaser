@@ -92,7 +92,7 @@ export class MouseManager {
             if (diffX < 10 && diffY < 10) {
                 // events.push(MouseEvent.Tap);
                 // this.render.emitter.emit(ClickEvent.Tap, pointer, gameobject);
-                if (gameobject) {
+                if (gameobject && gameobject.parentContainer) {
                     const displsy = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
                     let nodeType = -1;
                     if (displsy && displsy instanceof DisplayObject) {
