@@ -101,7 +101,7 @@
     "remove_black": "Rdd blacklist",
     "operation": "Operation",
     "follow": "FOLLOW",
-    "followed":"FOLLOWED"
+    "followed": "FOLLOWED"
   },
   "compose": {
     "title": "Produce",
@@ -339,5 +339,8 @@
     "tipslabel": "will give you one of the following items at random",
     "pagedown": "Page down",
     "titleimg": "treasure_title"
+  },
+  "online": {
+    "title": "Online Personnel"
   }
 }

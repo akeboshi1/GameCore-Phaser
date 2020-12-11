@@ -3,7 +3,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_virtual_world } from "pixelpai_proto";
 
-export class PicaRoomUpgrade extends BasicModel {
+export class PicRoomUpgrade extends BasicModel {
     constructor(game: Game) {
         super(game);
         this.register();
@@ -24,9 +24,8 @@ export class PicaRoomUpgrade extends BasicModel {
     }
 
     destroy() {
-        super.destroy();
         this.unregister();
-        this.event.destroy();
+        super.destroy();
     }
 
     get connection(): ConnectionService {

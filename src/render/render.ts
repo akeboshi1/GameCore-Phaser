@@ -311,6 +311,7 @@ export class Render extends RPCPeer implements GameMain {
     updateRoom(time: number, delta: number) {
         // this.remote[MAIN_WORKER].MainPeer.updateRoom(time, delta);
         this.mInputManager.update(time, delta);
+        this.mDisplayManager.update(time, delta);
     }
 
     destroy(): Promise<void> {

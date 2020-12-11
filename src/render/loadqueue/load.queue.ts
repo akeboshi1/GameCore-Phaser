@@ -50,9 +50,9 @@ export class LoadQueue extends Phaser.Events.EventEmitter {
                 }
                 this.mQueue.push(loadObject);
                 // 如果load没有在加载，且load状态处于准备状态，可自动开启startLoad
-                if (!this.scene.load.isLoading() && this.scene.load.isReady()) {
-                    this.startLoad();
-                }
+                // if (!this.scene.load.isLoading() && this.scene.load.isReady()) {
+                //     this.startLoad();
+                // }
             }
         });
     }
