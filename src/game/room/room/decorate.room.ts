@@ -11,7 +11,7 @@ import { PlayerManager } from "../player/player.manager";
 import { IElement } from "../element/element";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery, LoadState, ModuleName } from "structure";
+import { IScenery, LoadState, ModuleName, SceneName } from "structure";
 import { IRoomService } from "./room";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
@@ -127,6 +127,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
         this.removePointerMoveHandler();
+        this.game.renderPeer.removeScene(SceneName.DECORATE_SCENE);
         // this.game.game.scene.remove(PlayScene.name);
         // this.game.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         // this.game.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
