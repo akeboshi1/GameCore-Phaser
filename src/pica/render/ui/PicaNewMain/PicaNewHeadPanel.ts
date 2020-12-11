@@ -107,7 +107,11 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         });
         this.peoplevalue.setLayout(1);
         this.peoplevalue.x = peoplebg.x;
-
+        const peopeclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
+        peopeclickCon.setSize(40 * this.dpr, 40 * this.dpr);
+        peopeclickCon.enable = true;
+        peopeclickCon.on(ClickEvent.Tap, this.onHeadHandler, this);
+        peopeclickCon.x = this.peoplevalue.x;
         const praisebg = new NineSlicePatch(this.scene, 0, -this.dpr, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
             left: 16 * this.dpr,
             top: 0 * this.dpr,
@@ -130,7 +134,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         sceneclickCon.enable = true;
         sceneclickCon.on(ClickEvent.Tap, this.onOpenHouseHandler, this);
         sceneclickCon.x = praisebg.x;
-        this.sceneCon.add([peoplebg, this.peoplevalue, praisebg, this.sceneTex, sceneclickCon, this.praiseButton]);
+        this.sceneCon.add([peoplebg, this.peoplevalue, peopeclickCon, praisebg, this.sceneTex, sceneclickCon, this.praiseButton]);
         this.sceneCon.x = this.width * 0.5 - 10 * this.dpr;
         this.sceneCon.y = -5 * this.dpr;
     }
@@ -206,6 +210,10 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     }
     private onOpenHouseHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["room"]);
+    }
+
+    private onOpenOnlineHandler() {
+        if (this.sendHandler) this.sendHandler.runWith("online");
     }
 
     private moveMoneyCon() {

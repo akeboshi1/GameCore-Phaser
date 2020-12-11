@@ -17,31 +17,22 @@ export class PicaPartyListPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAONLINE_NAME;
+        this.atlasNames = [UIAtlasName.uicommon];
     }
 
     public resize(w: number, h: number) {
         const scale = this.scale;
         const width = this.scaleWidth;
         const height = this.scaleHeight;
-        this.content.x = width * 0.5;
-        this.content.y = height * 0.5 + 20 * this.dpr;
+        this.mBackground.clear();
+        this.mBackground.fillStyle(0x01CDFF, 1);
+        this.mBackground.fillRect(0, 0, this.content.width, h - this.bg.height);
+        this.mBackground.x = -this.content.width * 0.5;
+        this.mBackground.y = -this.content.height * 0.5 + this.bg.height;
+        this.content.x = width + this.content.width * 0.5;
+        this.content.y = height * 0.5;
+        this.mGameGrid.resetMask();
         this.setSize(width, height);
-    }
-    show(param?: any) {
-        this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
-        this.addListen();
     }
 
     public addListen() {
@@ -60,43 +51,39 @@ export class PicaPartyListPanel extends PicaBasePanel {
 
     public setOnlineDatas(datas: any) {
         // this.onlineDatas = content;
-
-    }
-
-    protected preload() {
-        this.addAtlas(this.key, "party/party.png", "party/party.json");
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
-        this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
-        super.preload();
+        const arr = new Array(60);
+        this.mGameGrid.setItems(arr);
     }
 
     protected init() {
         if (this.mInitialized) return;
         const w = this.scaleWidth;
         const h = this.scaleHeight;
+        this.mBlack = this.scene.make.graphics(undefined, false);
+        this.mBlack.fillStyle(0, 0.66);
+        this.mBlack.fillRect(0, 0, w, h);
+        this.mBlack.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
         this.mBackground = this.scene.make.graphics(undefined, false);
-        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-        this.mBackground.fillStyle(0, 0.66);
-        this.mBackground.fillRect(0, 0, w, h);
-        this.add(this.mBackground);
         this.content = this.scene.make.container(undefined, false);
-        const bgwidth = 295 * this.dpr, bgheight = 490 * this.dpr;
-        this.content.setSize(bgwidth, bgheight);
-        // this.bg = new NineSlicePatch(this.scene, 0, 0, bgwidth, bgheight, UIAtlasKey.commonKey, "bg", {
-        //     left: 20 * this.dpr,
-        //     top: 20 * this.dpr,
-        //     right: 20 * this.dpr,
-        //     bottom: 60 * this.dpr
-        // });
-        this.content.add(this.bg);
+        const bgwidth = 295 * this.dpr;
+        this.content.setSize(bgwidth, h);
+        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "online_bg" });
+        this.bg.displayWidth = bgwidth;
+        this.bg.y = -h * 0.5 + this.bg.height * 0.5;
+        this.titleTex = this.scene.make.text({ x: 0, y: 0, text: i18n.t("online.title"), style: UIHelper.whiteStyle(this.dpr, 18) });
+        this.peopleImg = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "people_woman", this.dpr);
+        this.peopleImg.setOffset(-this.dpr, 0);
+        this.peopleImg.setTextStyle(UIHelper.whiteStyle(this.dpr, 14));
+        this.peopleImg.setLayout(1);
+        this.peopleImg.setText("");
         const tableConfig = {
             x: 0,
             y: 60 * this.dpr,
             table: {
-                width: 254 * this.dpr,
-                height: 330 * this.dpr,
+                width: bgwidth,
+                height: this.height,
                 columns: 1,
-                cellWidth: 254 * this.dpr,
+                cellWidth: bgwidth,
                 cellHeight: 50 * this.dpr,
                 reuseCellContainer: true,
                 zoom: this.scale
@@ -117,7 +104,7 @@ export class PicaPartyListPanel extends PicaBasePanel {
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
         this.mGameGrid.on("cellTap", this.onGridTableHandler, this);
-        this.add(this.mGameGrid);
+        this.content.add([this.mBlack, this.mBackground, this.bg, this.titleTex, this.peopleImg, this.mGameGrid]);
 
         this.add(this.content);
         this.resize(0, 0);
@@ -136,6 +123,7 @@ class OnlineItem extends ButtonEventDispatcher {
     private nameImage: ImageValue;
     private levelLabel: Phaser.GameObjects.Text;
     private vipImage: ImageValue;
+    private line: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene, 0, 0);
         this.key = key;
@@ -167,6 +155,9 @@ class OnlineItem extends ButtonEventDispatcher {
         this.vipImage.x = this.levelLabel.x + 70 * this.dpr;
         this.vipImage.y = -this.width * 0.5 + 15 * this.dpr;
         this.add(this.vipImage);
+        this.line = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "online_divider" });
+        this.line.y = this.height * 0.5;
+        this.add(this.line);
 
     }
     public setPlayerInfo(data: any) {// op_client.IEditModeRoom
