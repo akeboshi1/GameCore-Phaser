@@ -54,7 +54,7 @@ export * from "./PicaBusinessMarketingPlan/PicaBusinessMarketingPlanPanel";
 export * from "./PicaBusinessMarketingPlan/PicaBusinessPlanPanel";
 export * from "./PicaRecharge/PicaRechargePanel";
 export * from "./PicaDecorateControl/PicaDecorateControlPanel";
-export * from "./PicaRoomUpgrade/PicaRoomUpgradePanel";
+export * from "./PicRoomUpgrade/PicRoomUpgradePanel";
 export * from "./PicaEquipUpgrade/PicaEquipUpgradeItem";
 export * from "./PicaEquipUpgrade/PicaEquipUpgradePanel";
 export * from "./PicaRoomList/PicaRoomListPanel";
