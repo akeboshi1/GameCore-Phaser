@@ -1008,6 +1008,7 @@ export class DragonbonesDisplay extends DisplayObject {
                 }
             }
             this.mDragonBonesRenderTexture.snapshotArea(0, 0, dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height, (snapshot: Phaser.Display.Color | HTMLImageElement) => {
+                if (this.mCallBack) this.mCallBack();
                 if (snapshot instanceof HTMLImageElement) {
                     if (this.scene.game.textures.exists(renderTextureKey))
                         this.scene.game.textures.removeKey(renderTextureKey);
@@ -1016,7 +1017,6 @@ export class DragonbonesDisplay extends DisplayObject {
                     //     changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                     // }
                     this.mArmatureDisplay.armature.replacedTexture = changeTexture;
-                    if (this.mCallBack) this.mCallBack();
                 }
             });
         }
