@@ -62,14 +62,24 @@ export class DisplayManager {
     private mUser: DisplayObject;
     private matterBodies: MatterBodies;
     private serverPosition: ServerPosition;
+    private preLoadList: any[];
+    private loading: boolean = false;
     constructor(private render: Render) {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
         this.scenerys = new Map();
+        this.preLoadList = [];
     }
 
     get user(): DisplayObject {
         return this.mUser;
+    }
+
+    public update(time: number, delta: number) {
+        if (this.preLoadList && this.preLoadList.length > 0 && !this.loading) {
+            this.loading = true;
+            this.loadProgress();
+        }
     }
 
     public resize(width: number, height: number) {
@@ -91,10 +101,11 @@ export class DisplayManager {
         if (!this.displays.has(id)) {
             display = new DragonbonesDisplay(scene, this.render, id, NodeType.CharacterNodeType);
             this.displays.set(id, display);
+            this.preLoadList.push(display);
+            display.load(data);
         } else {
             display = this.displays.get(id);
         }
-        display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
@@ -114,7 +125,9 @@ export class DisplayManager {
         } else {
             display = this.displays.get(data.id);
         }
+        // 主角龙骨无视其余资源优先加载
         display.load(data);
+        display.startLoad();
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
         if (isUser) this.mUser = display;
     }
@@ -390,6 +403,11 @@ export class DisplayManager {
     }
 
     public destroy() {
+        this.loading = false;
+        if (this.preLoadList) {
+            this.preLoadList.length = 0;
+            this.preLoadList = [];
+        }
         if (this.displays) {
             this.displays.forEach((display) => {
                 if (display) display.destroy();
@@ -411,5 +429,18 @@ export class DisplayManager {
             this.serverPosition.destroy();
             this.serverPosition = null;
         }
+    }
+
+    private loadProgress() {
+        const display: DisplayObject = this.preLoadList.shift();
+        if (!display) {
+            this.loading = false;
+            return;
+        }
+        display.startLoad().then(() => {
+            this.loadProgress();
+        }).catch(() => {
+            this.loadProgress();
+        });
     }
 }
