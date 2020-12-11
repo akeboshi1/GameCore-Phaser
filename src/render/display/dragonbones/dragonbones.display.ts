@@ -1016,6 +1016,7 @@ export class DragonbonesDisplay extends DisplayObject {
                     //     changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                     // }
                     this.mArmatureDisplay.armature.replacedTexture = changeTexture;
+                    if (this.mCallBack) this.mCallBack();
                 }
             });
         }

@@ -437,7 +437,7 @@ export class DisplayManager {
             this.loading = false;
             return;
         }
-        display.startLoad().then(() => {
+        display.startLoad(() => {
             this.loadProgress();
         }).catch(() => {
             this.loadProgress();

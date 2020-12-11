@@ -50,6 +50,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mLoadQueue: LoadQueue;
     protected mProgress: number;
     protected mInitialized: boolean = false;
+    protected mCallBack: Function;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
@@ -76,7 +77,8 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         return this.mTitleMask;
     }
 
-    startLoad(): Promise<any> {
+    startLoad(callBack?: Function): Promise<any> {
+        this.mCallBack = callBack;
         return new Promise<any>((resolve, reject) => {
             if (!this.mLoadQueue || this.mInitialized) {
                 resolve();
