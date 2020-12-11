@@ -120,7 +120,8 @@ export class MotionManager {
                     // const position = ele.getPosition();
                     let targets = await this.render.mainPeer.getInteractivePosition(id);
                     if (!targets || targets.length === 0) {
-                        targets = [ele];
+                        const { x, y } = ele;
+                        targets = [{ x, y }];
                     }
                     this.movePath(pointer.worldX, pointer.worldY, targets, id);
                 }
