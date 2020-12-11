@@ -85,3 +85,4 @@ export * from "./PicaNewMain/PicaNewLeftPanel";
 export * from "./PicaNewMain/PicaNewNavigatePanel";
 export * from "./PicaNewMain/PicaNewMainPanel";
 export * from "./PicaAvatar/PicaAvatarPanel";
+export * from "./PicaOnline/PicaOnlinePanel";

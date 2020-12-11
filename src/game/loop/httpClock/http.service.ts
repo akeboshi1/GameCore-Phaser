@@ -144,6 +144,9 @@ export class HttpService {
         return this.post("update_blob", { file });
     }
 
+    userHeadsImage(uids: string[]) {
+        return this.get(`account/get_head_img?uids=${JSON.stringify(uids)}`);
+    }
     public async post(uri: string, body: any, headers?: any): Promise<any> {
         const account = await this.game.peer.render.getAccount();
         if (!account) {

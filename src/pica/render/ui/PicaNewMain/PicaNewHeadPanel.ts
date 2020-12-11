@@ -110,7 +110,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         const peopeclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         peopeclickCon.setSize(40 * this.dpr, 40 * this.dpr);
         peopeclickCon.enable = true;
-        peopeclickCon.on(ClickEvent.Tap, this.onHeadHandler, this);
+        peopeclickCon.on(ClickEvent.Tap, this.onOpenOnlineHandler, this);
         peopeclickCon.x = this.peoplevalue.x;
         const praisebg = new NineSlicePatch(this.scene, 0, -this.dpr, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
             left: 16 * this.dpr,
