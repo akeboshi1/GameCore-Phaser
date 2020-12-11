@@ -57,7 +57,7 @@ export class PlayScene extends RoomScene {
         this.render.sceneManager.setMainScene(this);
         this.initInput();
         this.render.camerasManager.startRoomPlay(this);
-        this.onLoadCompleteHandler();
+        // this.onLoadCompleteHandler();
 
         // set layers
         // ==========背景层
@@ -143,7 +143,7 @@ export class PlayScene extends RoomScene {
     protected onLoadCompleteHandler() {
         Logger.getInstance().log("playload complete");
         this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-        // this.render.hideLoading();
+        this.render.hideLoading();
     }
 
     protected checkOriention(orientation) {

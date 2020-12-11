@@ -49,15 +49,19 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mTitleMask: number;
     protected mLoadQueue: LoadQueue;
     protected mProgress: number;
+    protected mInitialized: boolean = false;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
         this.mID = id;
         this.mNodeType = type;
         this.mLoadQueue = new LoadQueue(scene);
-        this.mLoadQueue.once("QueueComplete", this.allComplete, this);
         this.mLoadQueue.on("QueueProgress", this.fileComplete, this);
         this.mLoadQueue.on("QueueError", this.fileError, this);
+    }
+
+    get initialize(): boolean {
+        return this.mInitialized;
     }
 
     get progress(): number {
@@ -70,6 +74,20 @@ export class DisplayObject extends Phaser.GameObjects.Container {
 
     get titleMask(): number {
         return this.mTitleMask;
+    }
+
+    startLoad(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (!this.mLoadQueue || this.mInitialized) {
+                resolve();
+                return;
+            }
+            this.mLoadQueue.once("QueueComplete", () => {
+                this.mInitialized = true;
+                resolve();
+            }, this);
+            this.mLoadQueue.startLoad();
+        });
     }
 
     isShowName(): boolean {
@@ -343,6 +361,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     protected allComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
+        this.mInitialized = true;
     }
 
     protected fileComplete(progress: number, key: string, type?: string) {

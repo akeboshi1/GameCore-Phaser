@@ -44,6 +44,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mMap: boolean[][];
     private mScaleRatio: number;
     private cameraPos: LogicPos;
+
+    // ====
+    private isSleep: boolean = false;
     // private mLoadState: ElementLoadState[];
 
     constructor(manager: IRoomManager) {
@@ -115,6 +118,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     destroy() {
+        this.isSleep = false;
+        this.connection.removePacketListener(this);
         if (this.mTerrainManager) this.mTerrainManager.destroy();
         if (this.mElementManager) this.mElementManager.destroy();
         if (this.mBlocks) this.mBlocks.destroy();
@@ -656,6 +661,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     private onSpriteEndHandler() {
+        if (this.isSleep) return;
+        this.isSleep = true;
+        this.game.peer.render.hideLoading();
         // if (this.mLoadState.indexOf(ElementLoadState.Model) === -1) {
         //     this.mLoadState.push(ElementLoadState.Model);
         // }

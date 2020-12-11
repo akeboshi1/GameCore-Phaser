@@ -14,6 +14,9 @@ export class SkyBoxScene extends BasicScene {
     }
   }
 
+  preload() {
+  }
+
   create() {
     super.create();
     const oldCamera = this.cameras.main;
