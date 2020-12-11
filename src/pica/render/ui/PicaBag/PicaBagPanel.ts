@@ -31,10 +31,9 @@ export class PicaBagPanel extends BasePanel {
   private categoryType: any;// op_pkt_def.PKT_PackageType
   private mSelectedItemData: any[] = [];// op_client.ICountablePackageItem
   private mSelectedItems: Item[] = [];
-  constructor(uiManager: UiManager, sceneType: any) {// sceneType: op_def.SceneTypeEnum
+  constructor(uiManager: UiManager) {// sceneType: op_def.SceneTypeEnum
     super(uiManager.scene, uiManager.render);
     this.key = ModuleName.PICABAG_NAME;
-    this.mSceneType = sceneType;
   }
 
   resize(w: number, h: number) {
@@ -293,6 +292,8 @@ export class PicaBagPanel extends BasePanel {
           this.topCheckBox.selectIndex(0);
         }
       });
+    this.render.mainPeer.getCurrentRoomType()
+      .then((val) => this.mSceneType = val);
     const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
     const capW = (propFrame.width);
     const capH = (propFrame.height);

@@ -1,13 +1,14 @@
-import { Pos, Logger, IPosition45Obj, Position45, LogicPoint } from "utils";
+import { Render } from "gamecoreRender";
+import { Pos, Logger, IPosition45Obj, Position45, LogicPoint, IPos } from "utils";
 
 export class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize: IPosition45Obj;
-    private mOrigin: LogicPoint;
-    constructor(scene: Phaser.Scene, private mRoomService: any) {
+    private mOrigin: IPos;
+    constructor(scene: Phaser.Scene, private render: Render) {
         super(scene);
     }
 
-    draw(area: number[][], origin: LogicPoint) {
+    async draw(area: number[][], origin: IPos) {
         this.clear();
         if (area.length === 0 || area[0].length === 0) {
             return;
@@ -18,7 +19,7 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
         let p4: Pos;
         const rows = area.length;
         const cols = area[0].length;
-        const roomSize = this.mRoomService.roomSize;
+        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
         const tileWidth = roomSize.tileWidth / 2;
         const tileHeight = roomSize.tileHeight / 2;
         this.mOrigin = origin;
@@ -49,7 +50,8 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
 
     setPosition(x?: number, y?: number, z?: number, w?: number): this {
         if (!this.mSize) return;
-        const _x = x - this.mSize.rows * (this.mSize.tileWidth >> 1) - (this.mOrigin.x - this.mOrigin.y) * (this.mSize.tileWidth >> 1);
+        // const _x = x - this.mSize.rows * (this.mSize.tileWidth >> 1) - (this.mOrigin.x - this.mOrigin.y) * (this.mSize.tileWidth >> 1);
+        const _x = x - (this.mOrigin.x - this.mOrigin.y) * (this.mSize.tileWidth >> 1);
         const _y = y - (this.mOrigin.x + this.mOrigin.y + 0.5) * (this.mSize.tileHeight >> 1);
         return super.setPosition(_x, _y, z, w);
     }

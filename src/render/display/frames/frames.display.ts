@@ -432,9 +432,9 @@ export class FramesDisplay extends DisplayObject {
         // this.mCollisionArea = data.getCollisionArea(name, flip);
         // this.mOriginPoint = data.getOriginPoint(name, flip);
 
-        if (this.mReferenceArea) {
-            this.showRefernceArea();
-        }
+        // if (this.mReferenceArea) {
+        //     this.showRefernceArea();
+        // }
     }
 
     private onAnimationRepeatHander() {

@@ -32,6 +32,7 @@ export class PicaDecoratePanel extends BasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager.render.sceneManager.getMainScene(), uiManager.render);
         this.key = ModuleName.PICADECORATE_NAME;
+        this.mScaleRatio = uiManager.render.scaleRatio;
     }
 
     public show(param?: any) {
@@ -90,16 +91,11 @@ export class PicaDecoratePanel extends BasePanel {
 
     public setElement(id: number) {
         this.mDisplayObject = this.render.displayManager.getDisplay(id);
-        // this.mSprite = ele.model;
         if (!this.mInitialized) {
             return;
         }
-        // const pos = this.mDisplayObject.getPosition();
-        // this.x = this.mDisplayObject.x * this.render.scaleRatio;
-        // this.y = this.mDisplayObject.y * this.render.scaleRatio;
         this.setPos(this.mDisplayObject.x, this.mDisplayObject.y);
 
-        // this.updateArrowPos(ele);
         this.addListen();
     }
 
@@ -110,11 +106,6 @@ export class PicaDecoratePanel extends BasePanel {
                 return;
             }
             this.mOkBtn.enable = val;
-            // if (val) {
-            //     this.mOkBtn.clearTint();
-            // } else {
-            //     this.mOkBtn.setTint(0x666666);
-            // }
         }
     }
 
@@ -122,6 +113,12 @@ export class PicaDecoratePanel extends BasePanel {
         this.x = x * this.mScaleRatio;
         this.y = (y + this.offset.y) * this.mScaleRatio;
         this.z = z || 0;
+    }
+
+    public setOffset(x: number, y: number) {
+        this.offset.x = x;
+        this.offset.y = y;
+        if (this.mDisplayObject) this.setPos(this.mDisplayObject.x, this.mDisplayObject.y);
     }
 
     public destroy() {
@@ -135,9 +132,6 @@ export class PicaDecoratePanel extends BasePanel {
     }
 
     protected preload() {
-        // this.scene.load.image(Border.getName(), Border.getPNG());
-        // this.scene.load.image("arrow", Url.getRes("ui/common/common_arrow.png"));
-        // this.scene.load.atlas(this.resKey, Url.getRes("ui/decorate/decorate_atlas.png"), Url.getRes("ui/decorate/decorate_atlas.json"));
         this.addAtlas(this.key, "decorate_edit_menu/decorate_edit_menu.png", "decorate_edit_menu/decorate_edit_menu.json");
         super.preload();
     }
@@ -162,49 +156,10 @@ export class PicaDecoratePanel extends BasePanel {
         this.mMenuContainer.y = this.mOkBtn.height * 0.5;
         this.mSubMenus.y = this.mMenuContainer.y + 60 * this.dpr;
 
-        // this.mOkBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "ok_btn.png"
-        // }, false).setInteractive().setOrigin(0);
-
-        // this.mRecycleBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "recycly_btn.png"
-        // }, false).setInteractive().setOrigin(0);
-        // this.mTurnBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "turn_btn.png"
-        // }, false).setInteractive().setOrigin(0);
-
-        // this.mCancelBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "cancel_btn.png"
-        // }, false).setInteractive().setOrigin(0);
-        // this.add([this.mControllContainer, this.mArrow1, this.mArrow7, this.mArrow3, this.mArrow5]);
-
         this.mHorizontalBtn = new Button(this.scene, this.key, "horizontal_btn.png");
         this.mMoveBtn = new Button(this.scene, this.key, "move_btn.png");
         this.mRepeatBtn = new Button(this.scene, this.key, "repeat_btn.png");
         this.mExtendBtn = new Button(this.scene, this.key, "extend_btn.png");
-        // this.mHorizontalBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "horizontal_btn.png"
-        // }, false).setInteractive().setOrigin(0);
-
-        // this.mMoveBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "move_btn.png"
-        // }, false).setInteractive().setOrigin(0);
-
-        // this.mRepeatBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "repeat_btn.png"
-        // }, false).setInteractive().setOrigin(0);
-
-        // this.mExtendBtn = this.scene.make.image({
-        //     key: this.key,
-        //     frame: "extend_btn.png"
-        // }, false).setInteractive().setOrigin(0);
 
         this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
         this.mMoveMenuContainer.y = this.mSubMenus.y + 15 * this.dpr + this.mMoveMenuContainer.height;
@@ -243,11 +198,6 @@ export class PicaDecoratePanel extends BasePanel {
         this.mMoveMenuContainer.x = this.mSubMenus.x + this.mMoveBtn.x + 29 * this.dpr;
         this.mRepeatMenuContainer.x = this.mSubMenus.x + this.mRepeatBtn.x + 29 * this.dpr;
 
-        // if (this.mCanPut) {
-        //     this.mOkBtn.clearTint();
-        // } else {
-        //     this.mOkBtn.setTint(0x666666);
-        // }
         this.mOkBtn.enable = this.mCanPut;
 
         super.init();
@@ -255,154 +205,7 @@ export class PicaDecoratePanel extends BasePanel {
         if (this.mDisplayObject) this.setElement(this.mDisplayObject);
     }
 
-    private onLeftUpHandler() {
-        if (!this.mDisplayObject) {
-            return;
-        }
-        // const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
-        // pos45.x -= 1;
-        // this.onMoveElement(pos45);
-    }
-
-    private onLeftDownHandler() {
-        // const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
-        // pos45.y += 1;
-        // this.onMoveElement(pos45);
-    }
-
-    private onRightUpHandler() {
-        // const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
-        // pos45.y -= 1;
-        // this.onMoveElement(pos45);
-    }
-
-    private onRightDownHandler() {
-        // const pos45 = this.mRoomService.transformToMini45(this.mDisplayObject.getPosition());
-        // pos45.x = pos45.x + 1;
-        // this.onMoveElement(pos45);
-    }
-
-    private getNorthWestPoints(count: number = 10) {
-        const area = this.mSprite.currentCollisionArea;
-        const origin = this.mSprite.currentCollisionPoint;
-        const posList = [];
-        // const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        // for (let i = 0; i < count; i++) {
-        //     posList[i] = this.mRoomService.transformToMini90(pos45);
-        //     pos45.x -= area[0].length;
-        // }
-        return this.checkNextPos(posList, area, origin);
-    }
-
-    private getWestSouthPoints(count: number = 10) {
-        const area = this.mSprite.currentCollisionArea;
-        const origin = this.mSprite.currentCollisionPoint;
-        const posList = [];
-        // const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        // for (let i = 0; i < count; i++) {
-        //     posList[i] = this.mRoomService.transformToMini90(pos45);
-        //     pos45.y += area.length;
-        // }
-        return this.checkNextPos(posList, area, origin);
-    }
-
-    private getSouthEastPoints(count: number = 10) {
-        const area = this.mSprite.currentCollisionArea;
-        const origin = this.mSprite.currentCollisionPoint;
-        const posList = [];
-        // const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        // for (let i = 0; i < count; i++) {
-        //     posList[i] = this.mRoomService.transformToMini90(pos45);
-        //     pos45.x += area[0].length;
-        // }
-        return this.checkNextPos(posList, area, origin);
-    }
-
-    private getEastNorthPoints(count: number = 10) {
-        const area = this.mSprite.currentCollisionArea;
-        const origin = this.mSprite.currentCollisionPoint;
-        const posList = [];
-        // const pos45 = this.mRoomService.transformToMini45(this.mSprite.pos);
-        // for (let i = 0; i < count; i++) {
-        //     posList[i] = this.mRoomService.transformToMini90(pos45);
-        //     pos45.y -= area.length;
-        // }
-        return this.checkNextPos(posList, area, origin);
-    }
-
-    private checkNextPos(pos45: LogicPos[], collisionArea: number[][], origin: Phaser.Geom.Point) {
-        const result = [];
-        for (const pos of pos45) {
-            const nextPos = this.getNextRepeatPos(pos, collisionArea, origin);
-            if (nextPos) {
-                result.push(nextPos);
-            } else {
-                break;
-            }
-        }
-        return result;
-    }
-
-    private getNextRepeatPos(pos: LogicPos, collisionArea: number[][], origin: Phaser.Geom.Point) {
-        // if (this.mRoomService.canPut(pos, collisionArea, origin)) {
-        //     return pos;
-        // }
-        return new LogicPos();
-    }
-
-    private onMoveElement(pos45: LogicPos) {
-        if (!this.mDisplayObject) {
-            return;
-        }
-        // const position = this.mRoomService.transformToMini90(pos45);
-        // this.emit("moveElement", position);
-    }
-
-    private createImage(key: string, frame?: string, x?: number, y?: number): Phaser.GameObjects.Image {
-        return this.scene.make.image({ key, frame, x, y }, false).setInteractive().setOrigin(0);
-    }
-
-    private validateGrid(val: number): number {
-        if (val > this.maxGrid) {
-            val = this.maxGrid;
-        }
-        if (val < this.minGrid) {
-            val = this.minGrid;
-        }
-        return val;
-    }
-
-    private updateArrowPos(ele) {
-        if (!ele || !ele.model || !ele.getDisplay()) {
-            return;
-        }
-        // return;
-        const display = ele.getDisplay();
-        let rows = ele.model.currentCollisionArea.length;
-        let cols = ele.model.currentCollisionArea[0].length;
-
-        rows = this.validateGrid(rows);
-        cols = this.validateGrid(cols);
-        if (ele.getDisplay().scaleX === -1) {
-            [rows, cols] = [cols, rows];
-        }
-
-        const miniSize = {tileWidth: 10, tileHeight: 10};
-        const position: IPosition45Obj = {
-            rows,
-            cols,
-            tileWidth: miniSize.tileWidth / 2,
-            tileHeight: miniSize.tileHeight / 2,
-        };
-
-        const sprite = ele.model;
-        const pos = Position45.transformTo90(new LogicPos(cols - sprite.currentCollisionPoint.y, rows - sprite.currentCollisionPoint.x), position);
-        this.offset.y = pos.y;
-
-    }
-
     private onTurnHandler() {
-        // this.mWorld.emitter.emit(MessageType.TURN_ELEMENT, this.mDisplayObject);
         const mediator = this.mediator;
         if (mediator) {
             mediator.turn();
@@ -410,7 +213,6 @@ export class PicaDecoratePanel extends BasePanel {
     }
 
     private onRecycleHandler() {
-        // this.mWorld.emitter.emit(MessageType.RECYCLE_ELEMENT, this.mDisplayObject);
         const mediator = this.mediator;
         if (mediator) {
             mediator.recycle();
@@ -418,7 +220,6 @@ export class PicaDecoratePanel extends BasePanel {
     }
 
     private onCancelHandler() {
-        // this.mWorld.emitter.emit(MessageType.CANCEL_PUT, this.mDisplayObject);
         const mediator = this.mediator;
         if (mediator) {
             mediator.cancel();
@@ -429,7 +230,6 @@ export class PicaDecoratePanel extends BasePanel {
         if (this.mCanPut) {
             const mediator = this.mediator;
             if (mediator) mediator.putElement();
-            // this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
         }
     }
 
@@ -437,62 +237,20 @@ export class PicaDecoratePanel extends BasePanel {
         if (typeof dir !== "number") {
             return;
         }
-        switch (dir) {
-            case Direction.north_west:
-                this.onLeftUpHandler();
-                break;
-            case Direction.west_south:
-                this.onLeftDownHandler();
-                break;
-            case Direction.south_east:
-                this.onRightDownHandler();
-                break;
-            case Direction.east_north:
-                this.onRightUpHandler();
-                break;
-        }
-    }
-
-    private onPutHandler() {
-        this.mWorld.emitter.emit(MessageType.PUT_ELEMENT, this.mDisplayObject);
+        const mediator = this.mediator;
+        if (mediator) mediator.moveDir(dir);
     }
 
     private onRepeatHandler(dir: Direction) {
-        let result = null;
-        switch (dir) {
-            case Direction.north_west:
-                result = this.getNorthWestPoints(2);
-                break;
-            case Direction.west_south:
-                result = this.getWestSouthPoints(2);
-                break;
-            case Direction.south_east:
-                result = this.getSouthEastPoints(2);
-                break;
-            case Direction.east_north:
-                result = this.getEastNorthPoints(2);
-                break;
-        }
-        this.onSendAddSingleSprite(result);
+        const mediator = this.mediator;
+        if (!mediator) return;
+        mediator.repeatAdd(dir, 2);
     }
 
     private onHoldRepeatHandler(dir: Direction) {
-        let result = null;
-        switch (dir) {
-            case Direction.north_west:
-                result = this.getNorthWestPoints();
-                break;
-            case Direction.west_south:
-                result = this.getWestSouthPoints();
-                break;
-            case Direction.south_east:
-                result = this.getSouthEastPoints();
-                break;
-            case Direction.east_north:
-                result = this.getEastNorthPoints();
-                break;
-        }
-        this.onSendAddSprites(result);
+        const mediator = this.mediator;
+        if (!mediator) return;
+        mediator.repeatAdd(dir, 10);
     }
 
     private onShowMoveMenuHandler() {
@@ -506,20 +264,6 @@ export class PicaDecoratePanel extends BasePanel {
     }
 
     private onShowExtendsHandler() {
-        // this.mRoomService.canPut()
-        // this.mDisplayObject.
-    }
-
-    private onSendAddSprites(points: LogicPos[]) {
-        if (points.length > 1) {
-            this.emit("addSprite", this.mSprite, points);
-        }
-    }
-
-    private onSendAddSingleSprite(points: LogicPos[]) {
-        if (points.length > 1) {
-            this.emit("addSingleSprite", this.mSprite, points);
-        }
     }
 
     get mediator() {
@@ -570,9 +314,6 @@ class MoveMenu extends Phaser.GameObjects.Container {
     }
 
     public register() {
-        // for (const btn of this.mBtns) {
-        //     btn.on("pointerup", this.onArrowHandler, this);
-        // }
         this.mArrow1.on(ClickEvent.Hold, this.onHoldHandler, this);
         this.mArrow1.on(ClickEvent.Tap, this.onClickHandler, this);
         this.mArrow3.on(ClickEvent.Hold, this.onHoldHandler, this);

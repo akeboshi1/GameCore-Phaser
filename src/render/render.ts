@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, Logger, Size, LogicPos, i18n } from "utils";
+import { Url, initLocales, Logger, Size, LogicPos, i18n, IPos } from "utils";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
@@ -1102,6 +1102,20 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public showTopDisplay(id: number, state?: ElementStateType) {
         if (this.mDisplayManager) this.mDisplayManager.showTopDisplay(id, state);
+    }
+
+    @Export()
+    public showRefernceArea(id: number, area: number[][], origin: IPos) {
+        const ele = this.mDisplayManager.getDisplay(id);
+        if (!ele) return;
+        ele.showRefernceArea(area, origin);
+    }
+
+    @Export()
+    public hideRefernceArea(id: number) {
+        const ele = this.mDisplayManager.getDisplay(id);
+        if (!ele) return;
+        ele.hideRefernceArea();
     }
 
     @Export()
