@@ -11,7 +11,7 @@ import { PlayerManager } from "../player/player.manager";
 import { IElement } from "../element/element";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery, LoadState } from "structure";
+import { IScenery, LoadState, ModuleName, SceneName } from "structure";
 import { IRoomService } from "./room";
 import { ISprite, Sprite } from "../display/sprite/sprite";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
@@ -91,7 +91,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
         this.mMap = new Array(this.mMiniSize.rows);
         for (let i = 0; i < this.mMiniSize.rows; i++) {
-            this.mMap[i] = new Array(this.mMiniSize.cols).fill(true);
+            this.mMap[i] = new Array(this.mMiniSize.cols).fill(false);
         }
 
         this.game.showLoading({
@@ -127,6 +127,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
         this.removePointerMoveHandler();
+        this.game.renderPeer.removeScene(SceneName.DECORATE_SCENE);
         // this.game.game.scene.remove(PlayScene.name);
         // this.game.emitter.off(MessageType.TURN_ELEMENT, this.onTurnElementHandler, this);
         // this.game.emitter.off(MessageType.RECYCLE_ELEMENT, this.onRecycleHandler, this);
@@ -306,12 +307,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const map = this.mMap;
         for (let i = 0; i < collisionArea.length; i++) {
             row = i + pos45.y - origin.y;
-            if (row >= map.length) {
+            if (row < 0 || row >= map.length) {
                 return false;
             }
             for (let j = 0; j < collisionArea[i].length; j++) {
                 col = j + pos45.x - origin.x;
-                if (col >= map[i].length || map[row][col] === false) {
+                if (col < 0 || col >= map[i].length || map[row][col] === false) {
                     return false;
                 }
             }
@@ -456,7 +457,9 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         }
     }
 
-    private selectedElement(element: IElement, isClone: boolean = true) {
+    private selectedElement(element: number, isClone: boolean = true) {
+        const med: any = this.game.uiManager.getMed(ModuleName.PICADECORATE_NAME);
+        med.setElement(element, isClone);
         // if (!element) {
         //     return;
         // }
@@ -608,8 +611,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const sprite = new Sprite(content.sprite, content.nodeType);
         // sprite.setPosition((camera.scrollX + camera.width / 2) / this.game.scaleRatio, (camera.scrollY + camera.height / 2) / this.game.scaleRatio);
         this.addElement(sprite);
-        const element = this.mElementManager.get(content.sprite.id);
-        if (element) this.selectedElement(element, false);
+        // const element = this.mElementManager.get(content.sprite.id);
+        this.selectedElement(sprite.id, false);
     }
 
     private onShowSpawnPointHandler(packet: PBpacket) {
@@ -619,7 +622,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         spawnPoint.setPosition(pos.x, pos.y);
         this.addElement(spawnPoint);
 
-        this.selectedElement(this.mElementManager.get(spawnPoint.id), false);
+        this.selectedElement(spawnPoint.id, false);
         // this.mSelectedElement.setSprite(spawnPoint);
         // this.mCameraService.scrollTargetPoint(pos.x, pos.y);
     }
@@ -644,11 +647,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             if (sprites.length > 0) {
                 this.mElementManager.add(sprites);
                 const ele = this.mElementManager.get(sprites[sprites.length - 1].id);
-                if (ele) {
-                    this.cancelSelector();
-                    this.selectedElement(ele);
-                    if (this.mSelectorElement) this.mSelectorElement.selecting = false;
-                }
+                this.selectedElement(sprites[sprites.length - 1].id);
+                // if (ele) {
+                //     this.cancelSelector();
+                //     this.selectedElement(ele);
+                //     if (this.mSelectorElement) this.mSelectorElement.selecting = false;
+                // }
             }
         }
     }

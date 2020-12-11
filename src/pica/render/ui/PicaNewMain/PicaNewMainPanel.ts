@@ -127,6 +127,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_openhousepanel");
         } else if (tag === "party") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAOPENPARTY_NAME);
+        } else if (tag === "online") {
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAONLINE_NAME);
         }
     }
 

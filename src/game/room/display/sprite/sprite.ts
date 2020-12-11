@@ -352,7 +352,10 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.displayInfo.animationName = this.currentAnimationName;
             this.setAnimationData(this.currentAnimationName, this.direction);
         } else {
-            if (displayInfo.animationName) this.currentAnimationName = displayInfo.animationName;
+            if (displayInfo.animationName) {
+                this.setAnimationName(displayInfo.animationName);
+            }
+            // if (displayInfo.animationName) this.currentAnimationName = displayInfo.animationName;
         }
     }
 

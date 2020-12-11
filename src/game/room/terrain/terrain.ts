@@ -87,6 +87,10 @@ export class Terrain extends BlockObject implements IElement {
 
     public hideNickname() { }
 
+    public showRefernceArea() { }
+
+    public hideRefernceArea() { }
+
     public showEffected() { }
 
     public turn() { }

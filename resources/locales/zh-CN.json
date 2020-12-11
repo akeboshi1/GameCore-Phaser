@@ -101,8 +101,8 @@
     "add_black": "拉黑",
     "remove_black": "移除黑名单",
     "operation": "操作",
-    "follow":"关注",
-    "followed":"已关注"
+    "follow": "关注",
+    "followed": "已关注"
   },
   "compose": {
     "title": "合成",
@@ -225,7 +225,7 @@
     "parse_config": "解析配置...",
     "wait_enter_room": "等待进入房间",
     "loading_resources": "正在加载资源....",
-    "create_scene":"正在创建游戏场景..."
+    "create_scene": "正在创建游戏场景..."
   },
   "coin": {
     "coin": "银币",
@@ -342,5 +342,8 @@
     "tipslabel": "打开宝箱将随机获得以下一项物品",
     "pagedown": "下一页",
     "titleimg": "treasure_title_cn"
+  },
+  "online": {
+    "title": "在线人员"
   }
 }

@@ -1,8 +1,7 @@
-import { op_client } from "pixelpai_proto";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, i18n } from "utils";
-export class PicaRoomUpgradePanel extends BasePanel {
+export class PicRoomUpgradePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackground: Phaser.GameObjects.Graphics;
     private mTitleName: Phaser.GameObjects.Text;
@@ -44,7 +43,7 @@ export class PicaRoomUpgradePanel extends BasePanel {
         this.removeListen();
     }
     updateData() {
-        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
+        const data: any = this.mShowData;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
         this.mTitleName.text = data.text[0].text;
         const lv = data.data[0];
         this.roomIcon.on(Phaser.Animations.Events.SPRITE_ANIMATION_REPEAT, this.animationRepeat, this);
@@ -114,7 +113,7 @@ export class PicaRoomUpgradePanel extends BasePanel {
         if (this.mPlayedTimes < this.MAX_TIMES) {
             return;
         }
-        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
+        const data: any = this.mShowData;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
         this.render.renderEmitter(ModuleName.PICAROOMUPGRADE_NAME + "_querytargetui", data.id);
     }
 

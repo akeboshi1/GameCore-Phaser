@@ -237,6 +237,11 @@ export class MainPeer extends RPCPeer {
         return this.game.roomManager.currentRoom.roomSize;
     }
 
+    @Export()
+    public getCurrentRoomMiniSize(): any {
+        return this.game.roomManager.currentRoom.miniSize;
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public getPlayerName(id: number): string {
         return this.game.roomManager.currentRoom.playerManager.get(id).nickname;
@@ -320,6 +325,11 @@ export class MainPeer extends RPCPeer {
             return this.game.roomManager.currentRoom.enableEdit;
         }
         return false;
+    }
+
+    @Export()
+    public getCurrentRoomType() {
+        return this.game.roomManager.currentRoom.sceneType;
     }
 
     @Export()

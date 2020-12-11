@@ -1,4 +1,4 @@
-import { Logger, LogicPos } from "utils";
+import { IPos, Logger, LogicPos } from "utils";
 import { DisplayField, DisplayObject } from "../display/display.object";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
@@ -297,13 +297,13 @@ export class DisplayManager {
         display.setDisplayBadges(cards);
     }
 
-    public showRefernceArea(displayID: number) {
+    public showRefernceArea(displayID: number, area: number[][], origin: IPos) {
         if (!this.displays.has(displayID)) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
-        display.showRefernceArea();
+        display.showRefernceArea(area, origin);
     }
 
     public hideRefernceArea(displayID: number) {
