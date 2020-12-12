@@ -1,6 +1,6 @@
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
-import { Url, LogicPoint, LogicPos, Logger } from "utils";
+import { Url, LogicPoint, LogicPos, Logger, IPos } from "utils";
 import { Render } from "../render";
 import { RunningAnimation, IDragonbonesModel, IFramesModel, ElementStateType } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
@@ -50,6 +50,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mLoadQueue: LoadQueue;
     protected mProgress: number;
     protected mInitialized: boolean = false;
+    protected mCallBack: Function;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
@@ -76,7 +77,8 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         return this.mTitleMask;
     }
 
-    startLoad(): Promise<any> {
+    startLoad(callBack?: Function): Promise<any> {
+        this.mCallBack = callBack;
         return new Promise<any>((resolve, reject) => {
             if (!this.mLoadQueue || this.mInitialized) {
                 resolve();
@@ -198,13 +200,13 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         }
     }
 
-    public showRefernceArea() {
+    public showRefernceArea(area: number[][], origin: IPos) {
+        if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {
-            this.mReferenceArea = new ReferenceArea(this.scene, undefined);
+            this.mReferenceArea = new ReferenceArea(this.scene, this.render);
             this.addChildMap("reference", this.mReferenceArea);
         }
-        if (!this.mCollisionArea || this.mCollisionArea.length <= 0) return;
-        this.mReferenceArea.draw(this.mCollisionArea, new Phaser.Geom.Point(this.mOriginPoint.x, this.mOriginPoint.y));
+        this.mReferenceArea.draw(area, origin);
         this.addAt(this.mReferenceArea, 0);
     }
 

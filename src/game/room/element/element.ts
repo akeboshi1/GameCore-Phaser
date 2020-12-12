@@ -40,6 +40,10 @@ export interface IElement {
 
     hideNickname();
 
+    showRefernceArea();
+
+    hideRefernceArea();
+
     // scaleTween();
 
     turn();
@@ -603,6 +607,17 @@ export class Element extends BlockObject implements IElement {
 
     public removeTopDisplay() {
 
+    }
+
+    public showRefernceArea() {
+        const area = this.mModel.getCollisionArea();
+        const origin = this.mModel.getOriginPoint();
+        if (!area || !origin) return;
+        this.mRoomService.game.renderPeer.showRefernceArea(this.id, area, origin);
+    }
+
+    public hideRefernceArea() {
+        this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
     public getInteractivePositionList(): IPos[] {
