@@ -9,11 +9,9 @@ export class PicaGiftEffectPanel extends BasePanel {
     private laterctPanel: PicaGiftLaterctPanel;
     private playerPanel: PicaGiftPlayerPanel;
     private content: Phaser.GameObjects.Container;
-    private tempDataQueue: any[];
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAGIFTEFFECT_NAME;
-        this.tempDataQueue = [];
     }
 
     resize(w: number, h: number) {
@@ -60,10 +58,8 @@ export class PicaGiftEffectPanel extends BasePanel {
     }
 
     play(data: any[]) {
-        this.tempDataQueue.push(data);
         if (!this.mInitialized) return;
-        this.laterctPanel.play(this.tempDataQueue);
-        this.playerPanel.play(this.tempDataQueue);
-        this.tempDataQueue.length = 0;
+        this.laterctPanel.play(data);
+        this.playerPanel.play(data);
     }
 }

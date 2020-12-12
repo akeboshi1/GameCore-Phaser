@@ -144,7 +144,8 @@
     "needMaterials": "修复所需材料",
     "sold": "可售卖：",
     "notrading": "不可交易",
-    "title": "家具修复"
+    "title": "家具修复",
+    "successrepair": "成功已修复:"
   },
   "room_upgrade": {
     "clicktocontinue": "点击任意处继续"

@@ -86,3 +86,5 @@ export * from "./PicaNewMain/PicaNewNavigatePanel";
 export * from "./PicaNewMain/PicaNewMainPanel";
 export * from "./PicaAvatar/PicaAvatarPanel";
 export * from "./PicaOnline/PicaOnlinePanel";
+export * from "./PicaEffectMgr/PicaEffectMgrPanel";
+export * from "./PicaEffectMgr/PicaFurniUnlockEffectPanel";
