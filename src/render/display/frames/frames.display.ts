@@ -168,7 +168,7 @@ export class FramesDisplay extends DisplayObject {
         this.mSprites.set(DisplayField.FRONTEND, effects[0]);
     }
 
-    public mount(display: Phaser.GameObjects.Container, targetIndex?: number) {
+    public mount(display: DisplayObject, targetIndex?: number) {
         if (!display) return;
         if (this.mDisplays.length <= 0) {
             return;
@@ -201,6 +201,7 @@ export class FramesDisplay extends DisplayObject {
             if (container) container.addAt(this.mMountContainer, index);
         }
         this.mMountContainer.addAt(display, targetIndex);
+        display.setRootMount(this);
         this.mMountList[targetIndex] = display;
         if (this.mMainSprite) {
             // 侦听前先移除，避免重复添加
@@ -209,11 +210,12 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    public unmount(display: Phaser.GameObjects.Container) {
+    public unmount(display: DisplayObject) {
         if (!this.mMountContainer) {
             return;
         }
         this.mMountContainer.remove(display);
+        display.setRootMount(undefined);
         const index = this.mMountList.indexOf(display);
         display.visible = true;
         if (index > -1) {

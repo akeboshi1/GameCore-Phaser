@@ -232,8 +232,9 @@ class FollowObject {
         if (!this.mTarget || !this.mObject) {
             return;
         }
-        this.mObject.x = Math.round((this.mTarget.x + this.mOffset.x) * this.mDpr);
-        this.mObject.y = Math.round((this.mTarget.y + this.mOffset.y) * this.mDpr);
+        const pos = this.mTarget.getPosition();
+        this.mObject.x = Math.round((pos.x + this.mOffset.x) * this.mDpr);
+        this.mObject.y = Math.round((pos.y + this.mOffset.y) * this.mDpr);
     }
 
     remove() {
