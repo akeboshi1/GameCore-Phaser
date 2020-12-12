@@ -226,7 +226,7 @@ export class DragonbonesDisplay extends DisplayObject {
 
     public displayReady(animation: any) {
         this.play(animation);
-        if (this.mTopDisplay.hasTopPoint()) {
+        if (this.mTopDisplay && this.mTopDisplay.hasTopPoint()) {
             this.showNickname(this.mName);
         }
     }
