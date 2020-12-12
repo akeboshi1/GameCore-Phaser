@@ -22,7 +22,7 @@ export class EditorCanvasManager {
 
     public createHeadIcon(sets: any[]): Promise<string> {// IAvatarSet
         return new Promise<string>((resolve, reject) => {
-            this.render.game.scene.add(this.SCENEKEY_SNAPSHOT, AvatarEditorScene, false);
+            if (!this.render.game.scene.getScene(this.SCENEKEY_SNAPSHOT)) this.render.game.scene.add(this.SCENEKEY_SNAPSHOT, AvatarEditorScene, false);
             this.render.sceneManager.currentScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
                 onCreated: (s: Scene) => {
                     this.render.game.scene.sendToBack(this.SCENEKEY_SNAPSHOT);
