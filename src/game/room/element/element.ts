@@ -13,6 +13,7 @@ export interface IElement {
     readonly id: number;
     readonly dir: number;
     readonly roomService: IRoomService;
+    readonly created: boolean;
 
     model: ISprite;
 
@@ -136,6 +137,10 @@ export class Element extends BlockObject implements IElement {
 
     set model(val: ISprite) {
         this.setModel(val);
+    }
+
+    get created() {
+        return this.mCreatedDisplay;
     }
 
     // get scene(): Phaser.Scene {
@@ -852,6 +857,8 @@ export class Element extends BlockObject implements IElement {
         const currentAnimation = this.mModel.currentAnimation;
         if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         this.setInputEnable(this.mInputEnable);
+        this.mCreatedDisplay = true;
+        this.roomService.game.emitter.emit("ElementCreated", this.id);
         return this;
     }
 

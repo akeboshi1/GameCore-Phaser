@@ -611,13 +611,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const sprite = new Sprite(content.sprite, content.nodeType);
 
         const camera = await this.game.renderPeer.getWorldView();
-        sprite.setPosition((camera.x + camera.width) / 1, (camera.y + camera.height) / 1);
-        // sprite.setPosition((camera.scrollX + camera.width / 2) / this.game.scaleRatio, (camera.scrollY + camera.height / 2) / this.game.scaleRatio);
+        sprite.setPosition((camera.x + camera.width * 0.5) / this.game.scaleRatio, (camera.y + camera.height * 0.5) / this.game.scaleRatio);
         this.addElement(sprite);
         // const element = this.mElementManager.get(content.sprite.id);
-        setTimeout(() => {
-            this.selectedElement(sprite.id, false);
-        }, 100);
+        this.selectedElement(sprite.id, false);
     }
 
     private onShowSpawnPointHandler(packet: PBpacket) {

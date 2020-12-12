@@ -33,9 +33,20 @@ export class PicaDecorateMediator extends BasicMediator {
             }
             this.cancelSelect();
         }
-        this.room.getElement(id);
         this.selectedElemetn = this.room.getElement(id);
         if (!this.selectedElemetn) {
+            return;
+        }
+        if (!this.selectedElemetn.created) {
+            const cb = (_id) => {
+                if (id === _id) {
+                    this.setElement(id, root);
+                    this.room.game.emitter.off("ElementCreated", cb, this);
+                }
+            };
+            this.room.game.emitter.on("ElementCreated", (_id: number) => {
+                if (id === _id) this.setElement(id, root);
+            }, this);
             return;
         }
         this.room.elementManager.removeFromMap(this.selectedElemetn.model);

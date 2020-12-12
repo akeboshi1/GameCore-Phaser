@@ -20,7 +20,7 @@ export class DecorateManager extends Phaser.Events.EventEmitter {
     public setElement(id: number) {
         this.mSelectorElement = this.mDisplayManager.getDisplay(id);
         const mediator = this.mediator;
-        mediator.setElement(id);
+        mediator.setElement(id, true);
         this.mSelecting = true;
     }
 
