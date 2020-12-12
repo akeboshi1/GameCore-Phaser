@@ -351,6 +351,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
 
     public setRootMount(gameObject: Phaser.GameObjects.Container) {
         this.mRootMount = gameObject;
+        if (this.mTopDisplay) this.mTopDisplay.update();
     }
 
     public renderSetDirection(dir: number) {
