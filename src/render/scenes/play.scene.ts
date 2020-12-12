@@ -57,6 +57,7 @@ export class PlayScene extends RoomScene {
         this.render.sceneManager.setMainScene(this);
         this.initInput();
         this.render.camerasManager.startRoomPlay(this);
+
         // this.onLoadCompleteHandler();
 
         // set layers

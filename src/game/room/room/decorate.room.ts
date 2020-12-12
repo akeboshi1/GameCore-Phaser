@@ -180,7 +180,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
         this.game.renderPeer.roomstartPlay();
         this.game.renderPeer.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
-        this.game.renderPeer.setCamerasScroll(-this.mSize.sceneWidth * 0.5, -this.mSize.sceneHeight * 0.5);
+        this.game.renderPeer.setCamerasScroll(0, this.mSize.sceneHeight * 0.5);
         if (this.cameraPos) {
             // this.mCameraService.scrollTargetPoint(this.cameraPos.x, this.cameraPos.y);
             this.mCameraService.syncCameraScroll();
@@ -605,14 +605,19 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         this.connection.send(packet);
     }
 
-    private onSelectSpriteHandler(packet: PBpacket) {
+    private async onSelectSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_SELECTED_SPRITE = packet.content;
         // const camera = this.cameraService.camera;
         const sprite = new Sprite(content.sprite, content.nodeType);
+
+        const camera = await this.game.renderPeer.getWorldView();
+        sprite.setPosition((camera.x + camera.width) / 1, (camera.y + camera.height) / 1);
         // sprite.setPosition((camera.scrollX + camera.width / 2) / this.game.scaleRatio, (camera.scrollY + camera.height / 2) / this.game.scaleRatio);
         this.addElement(sprite);
         // const element = this.mElementManager.get(content.sprite.id);
-        this.selectedElement(sprite.id, false);
+        setTimeout(() => {
+            this.selectedElement(sprite.id, false);
+        }, 100);
     }
 
     private onShowSpawnPointHandler(packet: PBpacket) {

@@ -573,7 +573,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 y *= this.mScaleRatio;
                 width *= this.mScaleRatio;
                 height *= this.mScaleRatio;
-                // this.mGame.renderPeer.setCamerasBounds(\x, y, width, height);
+                this.mGame.renderPeer.setCamerasBounds(x, y, width, height);
                 break;
         }
     }
@@ -735,8 +735,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onCameraFollowHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
-        const id = content.id ? content.id : 0;
-        this.game.renderPeer.cameraFollow(id, content.effect);
+        if (content.hasOwnProperty("id")) {
+            const id = content.id ? content.id : 0;
+            this.game.renderPeer.cameraFollow(id, content.effect);
+        }
+        if (content.hasOwnProperty("pos")) {
+            const pos = content.pos;
+            this.game.renderPeer.setCamerasScroll(pos.x, pos.y, content.effect);
+        }
     }
 
     private onSyncStateHandler(packet: PBpacket) {

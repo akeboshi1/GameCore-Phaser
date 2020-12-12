@@ -232,7 +232,27 @@ export class SceneManager {
         return this.mMainScene;
     }
 
+    public updateInput(val: SceneInputEnum) {
+        const scenes = this.render.game.scene.getScenes();
+        scenes.map((scene: Phaser.Scene) => scene.input.enabled = (val !== SceneInputEnum.Disable));
+        // switch(val) {
+        //     case SceneInputEnum.Disable:
+        //         scenes.map((scene: Phaser.Scene) => scene.input.enabled = false);
+        //         break;
+        //     default:
+        //         scenes.map((scene: Phaser.Scene) => scene.input.enabled = true);
+        //         break;
+        // }
+    }
+
     private sceneCallback(scene: Phaser.Scene) {
         return Promise.resolve();
     }
+}
+
+enum SceneInputEnum {
+    Disable = 0,
+    Mouse,
+    Keyboard,
+    All
 }

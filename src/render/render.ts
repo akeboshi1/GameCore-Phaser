@@ -807,11 +807,11 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public setCamerasScroll(x: number, y: number) {
+    public setCamerasScroll(x: number, y: number, effect?: string) {
         if (!this.mCameraManager) {
             return;
         }
-        this.mCameraManager.scrollTargetPoint(x, y);
+        this.mCameraManager.scrollTargetPoint(x, y, effect);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1148,6 +1148,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public unmount(id: number, targetID: number) {
         this.mDisplayManager.unmount(id, targetID);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public updateInput(val: number) {
+        this.sceneManager.updateInput(val);
     }
 
     // private connectReconnect() {
