@@ -42,7 +42,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.mDisplay = content;
     const animation = content.animations;
     if (!this.mFramesDisplay) {
-      this.mFramesDisplay = new FramesDisplay(this.scene, undefined, undefined);
+      this.mFramesDisplay = new FramesDisplay(this.scene, this.render, undefined);
     }
     const display = content.display;
     if (display && animation.length > 0) {
