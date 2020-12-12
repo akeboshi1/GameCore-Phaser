@@ -59,6 +59,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         this.mLoadQueue = new LoadQueue(scene);
         this.mLoadQueue.on("QueueProgress", this.fileComplete, this);
         this.mLoadQueue.on("QueueError", this.fileError, this);
+        this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
     }
 
     get initialize(): boolean {
