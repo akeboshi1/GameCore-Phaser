@@ -3,11 +3,13 @@ export class UIAtlasName {
     public static common2Url = "ui_base2/ui_base2";
     public static common3Url = "ui_base3/ui_base3";
     public static uicommonurl = "ui_common/ui_common";
-    public static uicommon = "ui_common";
-    public static iconcommon = "icon_common";
     public static uibase = "ui_base";
     public static uibase2 = "ui_base2";
     public static uibase3 = "ui_base3";
+
+    public static uicommon = "ui_common";
+    public static iconcommon = "icon_common";
+    public static effectcommon = "effect_commom";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

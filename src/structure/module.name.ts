@@ -55,4 +55,5 @@ export class ModuleName {
     public static PICANEWROLE_NAME: string = "PicaNewRole";
     public static PICANEWMAIN_NAME: string = "PicaNewMain";
     public static PICAONLINE_NAME: string = "PicaOnline";
+    public static PICAEFFECTMGR_NAME: string = "PicaEffectMgr";
 }

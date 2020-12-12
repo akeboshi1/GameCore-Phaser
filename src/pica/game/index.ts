@@ -81,3 +81,4 @@ export * from "./ui/PicaAvatar/PicaAvatar";
 export * from "./ui/PicaAvatar/PicaAvatarMediator";
 export * from "./ui/PicaOnline/PicaOnline";
 export * from "./ui/PicaOnline/PicaOnlineMediator";
+export * from "./ui/PicaEffectMgr/PicaEffectMgr";

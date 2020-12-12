@@ -1,5 +1,6 @@
 import { HTTP_REGEX } from "structure";
 import { Font } from "./font";
+import { Handler } from "./Handler";
 import { i18n } from "./i18n";
 
 export enum CoinType {
@@ -380,6 +381,21 @@ export class UIHelper {
             this.mText = scene.make.text(this.whiteStyle, false);
         }
         return this.mText;
+    }
+
+    public static createSprite(scene: Phaser.Scene, key: string, animkey: string, frame: string, indexs: number[], frameRate: number = 30, repeat = 0, compl?: Handler) {
+        const sprite = scene.make.sprite({ key, frame: frame + "1" });
+        sprite.visible = false;
+        const anima: any = scene.anims.create({ key: animkey, frames: scene.anims.generateFrameNames(key, { prefix: frame + "", start: indexs[0], end: indexs[1] }), frameRate, repeat });
+        anima.removeAllListeners();
+        anima.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+            sprite.visible = false;
+            if (compl) compl.run();
+        }, this);
+        anima.on(Phaser.Animations.Events.ANIMATION_START, () => {
+            sprite.visible = true;
+        }, this);
+        return sprite;
     }
     private static mText: Phaser.GameObjects.Text;
 }
