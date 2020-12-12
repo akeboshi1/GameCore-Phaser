@@ -4,7 +4,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { PicaEffectMgr } from "./PicaEffectMgr";
 
-export class PicaGiftEffectMediator extends BasicMediator {
+export class PicaEffectMgrMediator extends BasicMediator {
     private picagift: PicaEffectMgr;
     private tempDataQueue: any[] = [];
     constructor(game: Game) {

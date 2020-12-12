@@ -21,7 +21,7 @@ export class PicaEffectMgrPanel extends PicaBasePanel {
         this.content.x = width / 2;
         this.content.y = height / 2;
         super.resize(width, height);
-        this.setSize(width * this.scale, height * this.scale);
+        this.setSize(width, height);
 
     }
 

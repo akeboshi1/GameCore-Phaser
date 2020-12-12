@@ -3,7 +3,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 
-export class PicaGiftEffect extends PacketHandler {
+export class PicaEffectMgr extends PacketHandler {
     constructor(private game: Game) {
         super();
         this.register();
