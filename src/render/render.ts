@@ -512,6 +512,11 @@ export class Render extends RPCPeer implements GameMain {
         });
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public updateModel(id: number, displayInfo: any) {
+        if (this.displayManager) this.displayManager.updateModel(id, displayInfo);
+    }
+
     @Export()
     public showCreateRole(params?: any) {
         if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
