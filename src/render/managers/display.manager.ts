@@ -88,6 +88,18 @@ export class DisplayManager {
         });
     }
 
+    public updateModel(id: number, data: IDragonbonesModel) {
+        const scene = this.sceneManager.getMainScene();
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+        const display: DisplayObject = this.displays.get(id);
+        if (display) {
+            display.load(data);
+        }
+    }
+
     public addDragonbonesDisplay(id: number, data: IDragonbonesModel) {
         if (!data) {
             return;
@@ -102,10 +114,10 @@ export class DisplayManager {
             display = new DragonbonesDisplay(scene, this.render, id, NodeType.CharacterNodeType);
             this.displays.set(id, display);
             this.preLoadList.push(display);
-            display.load(data);
         } else {
             display = this.displays.get(id);
         }
+        display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
