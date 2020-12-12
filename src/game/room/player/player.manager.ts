@@ -40,6 +40,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEndHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR, this.onSyncActorHandler);
         }
         this.addLisenter();
     }
@@ -431,6 +432,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             element.play(PlayerState.IDLE);
         }
     }
+
+    private onSyncActorHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR = packet.content;
+        this.mActor.updateModel(content.actor);
+        // Logger.getInstance().log("====>>", content);
+    }
+
     get roomService(): IRoomService {
         return this.mRoom;
     }

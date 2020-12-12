@@ -94,7 +94,7 @@ export class PicaDecoratePanel extends BasePanel {
         if (!this.mInitialized) {
             return;
         }
-        this.setPos(this.mDisplayObject.x, this.mDisplayObject.y);
+        if (this.mDisplayObject) this.setPos(this.mDisplayObject.x, this.mDisplayObject.y);
 
         this.addListen();
     }

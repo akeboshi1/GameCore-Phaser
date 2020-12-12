@@ -84,6 +84,8 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         if (!this.mMain) {
             return;
         }
+        x -= this.mMain.width * 0.5;
+        y -= this.mMain.height * 0.5;
         for (const camera of this.mCameras) {
             camera.setScroll(x, y);
         }
@@ -161,11 +163,16 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         // this.mMain.setPosition(x, y);
     }
 
-    public scrollTargetPoint(x: number, y: number) {
+    public scrollTargetPoint(x: number, y: number, effect?: string) {
         if (!this.mMain) {
             return;
         }
-        this.setScroll(x, y);
+        this.stopFollow();
+        if (effect) {
+            this.pan(x, y, 1000);
+        } else {
+            this.setScroll(x, y);
+        }
     }
 
     public destroy() {

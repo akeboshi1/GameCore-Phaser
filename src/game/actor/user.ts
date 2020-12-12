@@ -17,6 +17,7 @@ export class User extends Player {
     private mTargetPoint: IMoveTarget;
     private mSyncTime: number = 0;
     private mSyncDirty: boolean = false;
+    private mInputMask: number;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -279,6 +280,15 @@ export class User extends Player {
         this.game.connection.send(packet);
 
         this.activeSprite();
+    }
+
+    public updateModel(model: op_client.IActor) {
+        if (model.hasOwnProperty("inputMask")) {
+            this.mInputMask = model.inputMask;
+            this.game.renderPeer.updateInput(this.mInputMask);
+            // this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
+        }
+        super.updateModel(model);
     }
 
     protected activeSprite() {
