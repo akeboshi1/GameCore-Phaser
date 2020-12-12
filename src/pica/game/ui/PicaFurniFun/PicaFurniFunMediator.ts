@@ -5,6 +5,7 @@ import { BaseDataManager, BasicMediator, DataMgrType, Game, ISprite } from "game
 
 export class PicaFurniFunMediator extends BasicMediator {
     private picFurni: PicaFurniFun;
+    private unlockType: string;
     constructor(game: Game) {
         super(ModuleName.PICAFURNIFUN_NAME, game);
         this.picFurni = new PicaFurniFun(this.game);
@@ -13,6 +14,7 @@ export class PicaFurniFunMediator extends BasicMediator {
     show(param?: any) {
         super.show(param);
         this.game.emitter.on(ModuleName.PICAFURNIFUN_NAME + "_queryunlock", this.queryUnlockElement, this);
+        this.game.emitter.emit(ModuleName.PICAFURNIFUN_NAME + "_teambuild", this.onTeamBuild, this);
         this.game.emitter.on(ModuleName.PICAFURNIFUN_NAME + "_close", this.onCloseHandler, this);
         this.game.emitter.on(EventType.SEND_FURNITURE_REQUIREMENTS, this.onSyncSNMaterials, this);
     }
@@ -21,6 +23,7 @@ export class PicaFurniFunMediator extends BasicMediator {
         if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAFURNIFUN_NAME];
         super.hide();
         this.game.emitter.off(ModuleName.PICAFURNIFUN_NAME + "_queryunlock", this.queryUnlockElement, this);
+        this.game.emitter.emit(ModuleName.PICAFURNIFUN_NAME + "_teambuild", this.onTeamBuild, this);
         this.game.emitter.off(ModuleName.PICAFURNIFUN_NAME + "_close", this.onCloseHandler, this);
         this.game.emitter.off(EventType.SEND_FURNITURE_REQUIREMENTS, this.onSyncSNMaterials, this);
     }
@@ -73,5 +76,13 @@ export class PicaFurniFunMediator extends BasicMediator {
                 }
             }
         }
+    }
+
+    private onTeamBuild(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_TEAMBUILD_ELEMENT_REQUIREMENT) {
+        this.setParam(content);
+        this.show();
+    }
+    private query_TEAM_BUILD(ids: number[]) {
+        this.picFurni.queryTeamBuild(ids);
     }
 }
