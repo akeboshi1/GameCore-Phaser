@@ -864,6 +864,7 @@ export class Element extends BlockObject implements IElement {
         //     this.createDisplay();
         // }
         this.mRoomService.game.emitter.once("dragonBones_initialized", this.onDisplayReady, this);
+        this.mRoomService.game.renderPeer.updateModel(this.id, this.mDisplayInfo);
         // this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
         // this.mDisplay.load(this.mDisplayInfo);
     }
