@@ -122,7 +122,7 @@ export class User extends Player {
         const pos = this.mModel.pos;
         for (const target of targets) {
             if (target.x === pos.x && target.y === pos.y) {
-                this.mTargetPoint.targetId = targetId;
+                this.mTargetPoint = { targetId };
                 this.tryStopMove();
                 return;
             }
