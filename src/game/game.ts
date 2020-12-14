@@ -477,7 +477,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public async loginEnterWorld() {
         Logger.getInstance().log("loginEnterWorld");
-        this.mLoadingManager.start(LoadState.ENTERGAME);
+        this.mLoadingManager.start(LoadState.ENTERWORLD);
         this.renderPeer.hideLogin();
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;

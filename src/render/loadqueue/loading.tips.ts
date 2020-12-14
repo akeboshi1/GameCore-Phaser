@@ -2,7 +2,7 @@ import { i18n } from "utils";
 
 export class LoadingTips {
     // 进入游戏 socket链接成功
-    static enterGame() {
+    static enterWorld() {
         return i18n.t("loading.enter_game");
     }
 

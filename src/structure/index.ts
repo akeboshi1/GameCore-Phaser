@@ -19,3 +19,4 @@ export { AvatarSuitType, SuitAlternativeType, AvatarSuit, BaseAvatar } from "./a
 export { StateConfig, ElementStateType } from "./element.state.data";
 export * from "./message.type";
 export * from "./load.state";
+export * from "./game.state";

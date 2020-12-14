@@ -77,8 +77,8 @@ export class SceneManager {
         if (data.state !== undefined) {
             const state = data.state;
             switch (state) {
-                case LoadState.ENTERGAME:
-                    data.text = LoadingTips.enterGame();
+                case LoadState.ENTERWORLD:
+                    data.text = LoadingTips.enterWorld();
                     break;
                 case LoadState.DOWNLOADGAMECONFIG:
                     data.text = LoadingTips.downloadGameConfig();
