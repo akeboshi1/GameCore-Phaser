@@ -17,7 +17,6 @@ export class User extends Player {
     private mTargetPoint: IMoveTarget;
     private mSyncTime: number = 0;
     private mSyncDirty: boolean = false;
-    private mSyncCameraTime: number = 0;
     private mInputMask: number;
     constructor(private game: Game) {
         super(undefined, undefined);
@@ -331,6 +330,7 @@ export class User extends Player {
         this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         const speed = this.mModel.speed * delta;
         this.checkDirection();
+        this.roomService.cameraService.syncDirty = true;
 
         // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
         if (Tool.twoPointDistance(pos, path[0]) <= speed) {
@@ -351,11 +351,6 @@ export class User extends Player {
         if (this.mSyncDirty) {
             this.mSyncDirty = false;
             this.syncPosition();
-        }
-        this.mSyncCameraTime += delta;
-        if (this.mSyncCameraTime > 200) {
-            this.mSyncCameraTime = 0;
-            this.syncCameraPosition();
         }
     }
 

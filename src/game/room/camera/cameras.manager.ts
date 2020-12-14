@@ -6,6 +6,7 @@ import { Game } from "../../game";
 import { IRoomService } from "../room/room";
 
 export interface ICameraService {
+    syncDirty: boolean;
     getViewPort(): Promise<LogicRectangle | undefined>;
     getMiniViewPort(): Promise<LogicRectangle45 | undefined>;
     syncToEditor(): void;
@@ -13,15 +14,22 @@ export interface ICameraService {
     syncCamera(): void;
     syncCameraScroll(): void;
     resetCameraSize(width: number, height: number);
+    startFollow(target: any, effect?: string);
+    stopFollow();
+    setCamerasScroll(x: number, y: number, effect?: string);
+    update(time?: number, delta?: number): void;
     destroy(): void;
 }
 
 export class CamerasManager extends PacketHandler implements ICameraService {
+    public syncDirty: boolean = false;
     readonly MINI_VIEW_SIZE = 50;
     readonly VIEW_PORT_SIZE = 50;
     protected viewPort = new LogicRectangle();
     protected miniViewPort = new LogicRectangle();
     private zoom: number = 1;
+    private syncTime: number = 0;
+    private target: any;
     constructor(protected mGame: Game, private mRoomService: IRoomService) {
         super();
         this.zoom = this.mGame.scaleRatio;
@@ -98,7 +106,34 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         this.syncCamera();
     }
 
+    public update(time?: number, delta?: number) {
+        if ((this.target && this.syncDirty) === false) {
+            return;
+        }
+        // 除了客户端移动镜头，后端也会改变镜头位置
+        this.syncTime += delta;
+        if (this.syncTime > 200) {
+            this.syncTime = 0;
+            this.syncCameraScroll();
+            this.syncDirty = false;
+        }
+    }
+
     public destroy() {
+    }
+
+    public startFollow(target: any, effect?: string) {
+        this.target = target;
+        this.mGame.renderPeer.cameraFollow(target, effect);
+    }
+
+    public stopFollow() {
+        this.target = undefined;
+        this.mGame.renderPeer.stopFollow();
+    }
+
+    public setCamerasScroll(x: number, y: number, effect?: string) {
+        this.mGame.renderPeer.setCamerasScroll(x, y, effect);
     }
 
     get connection(): ConnectionService {
