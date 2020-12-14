@@ -128,6 +128,12 @@ export class Launcher {
         if (config) {
             Object.assign(this.mConfig, config);
         }
+        if (config.osd) {
+            config.osd = decodeURIComponent(config.osd);
+        }
+        if (config.api_root) {
+            config.api_root = decodeURIComponent(config.api_root);
+        }
 
         this.intervalId = setInterval(() => {
             // const xhr = new XMLHttpRequest(); // TODO
