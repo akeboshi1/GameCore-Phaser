@@ -17,6 +17,7 @@ export class User extends Player {
     private mTargetPoint: IMoveTarget;
     private mSyncTime: number = 0;
     private mSyncDirty: boolean = false;
+    private mSyncCameraTime: number = 0;
     private mInputMask: number;
     constructor(private game: Game) {
         super(undefined, undefined);
@@ -291,6 +292,11 @@ export class User extends Player {
         super.updateModel(model);
     }
 
+    public setPosition(pos: IPos) {
+        super.setPosition(pos);
+        this.syncCameraPosition();
+    }
+
     protected activeSprite() {
         if (!this.mTargetPoint || !this.mTargetPoint.targetId) {
             return;
@@ -346,6 +352,11 @@ export class User extends Player {
             this.mSyncDirty = false;
             this.syncPosition();
         }
+        this.mSyncCameraTime += delta;
+        if (this.mSyncCameraTime > 200) {
+            this.mSyncCameraTime = 0;
+            this.syncCameraPosition();
+        }
     }
 
     // protected onMoving() {
@@ -364,6 +375,10 @@ export class User extends Player {
         this._sensor = false;
         this._offsetOrigin.y = 0;
         this.setBody();
+    }
+
+    protected syncCameraPosition() {
+        this.roomService.cameraService.syncCameraScroll();
     }
 
     private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
