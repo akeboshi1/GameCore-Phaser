@@ -5538,10 +5538,10 @@ toidentifier@1.0.0:
   resolved "https://registry.npm.taobao.org/toidentifier/download/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha1-fhvjRw8ed5SLxD2Uo8j013UrpVM=
 
-tooqinggamephaser@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.npmjs.org/tooqinggamephaser/-/tooqinggamephaser-0.2.5.tgz#430f9789c9d35319e91f1b7dd223622f297082c5"
-  integrity sha512-KD5FzzSmIH259Avt4SYxpIaygQwWqpV3A04FGBTwYztYg7d2aQQ5Q6vnGKHk/iiwLozcQWyzmezjgBGFKd5Eig==
+tooqinggamephaser@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.npmjs.org/tooqinggamephaser/-/tooqinggamephaser-0.2.8.tgz#01533ebd2cace5ada9989656a3683790c73b14e6"
+  integrity sha512-6oU3+M0Ul28z1rBb+ZtefdjKdglcfQ8WCW7JzgBXFCu2FemdAiODOmgZVWa8hUUXh5vV+gor13VDqMgLt+I42Q==
   dependencies:
     eventemitter3 "^4.0.4"
     exports-loader "^1.0.0"

@@ -674,7 +674,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number): Promise<boolean> {
+    public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (!this.mAccount) {
                 this.mAccount = new Account();

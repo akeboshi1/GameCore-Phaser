@@ -540,7 +540,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (typeof worldId !== "string") {
             Logger.getInstance().error("worldId is not string");
         }
-        await this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
+        await this.mainPeer.render.createAccount(this.mConfig.game_id + "", this.mConfig.virtual_world_id + "");
     }
 
     protected createManager() {
