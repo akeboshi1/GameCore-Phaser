@@ -1,5 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue, ElementStateType } from "structure";
+import { AnimationQueue, ElementStateType, PlayerState } from "structure";
 import { IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
 import { IPos, Logger, LogicPos, Tool } from "utils";
@@ -65,24 +65,6 @@ export interface IElement {
 
     getInteractivePositionList(): IPos[];
 }
-
-export enum PlayerState {
-    IDLE = "idle",
-    WALK = "walk",
-    RUN = "run",
-    ATTACK = "attack",
-    JUMP = "jump",
-    INJURED = "injured",
-    FAILED = "failed",
-    DANCE01 = "dance01",
-    DANCE02 = "dance02",
-    FISHING = "fishing",
-    GREET01 = "greet01",
-    SIT = "sit",
-    LIE = "lit",
-    EMOTION01 = "emotion01",
-}
-
 export interface MoveData {
     destPos?: LogicPos;
     posPath?: MovePath[];

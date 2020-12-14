@@ -4,11 +4,11 @@ import { Game, delayTime } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { MoveData, MovePos, PlayerState } from "../room/element/element";
+import { MoveData, MovePos } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { EventType, IDragonbonesModel, IFramesModel } from "structure";
+import { EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
 import { IPoint } from "game-capsule";
 
 export class User extends Player {

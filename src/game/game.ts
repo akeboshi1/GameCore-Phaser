@@ -127,9 +127,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mConfig.scale_ratio;
     }
 
-    public createGame(config?: ILauncherConfig) {
+    public async createGame(config?: ILauncherConfig) {
         this.mConfig = config;
-        this.initWorld();
+        await this.initWorld();
         this.initGame();
         this.hasClear = false;
         const gateway: ServerAddress = this.mConfig.server_addr;
@@ -524,7 +524,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mUIManager.hideMed(name);
     }
 
-    protected initWorld() {
+    protected async initWorld() {
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
@@ -540,7 +540,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (typeof worldId !== "string") {
             Logger.getInstance().error("worldId is not string");
         }
-        this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
+        await this.peer.render.createAccount(this.mConfig.game_id, this.mConfig.virtual_world_id);
     }
 
     protected createManager() {
