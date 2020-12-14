@@ -399,14 +399,6 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
     }
 
-    public getInteracviveArea(): op_def.IPBPoint2i[] {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName } = this.currentAnimation;
-        return this.displayInfo.getInteractiveArea(animationName);
-    }
-
     public getCollisionArea() {
         if (!this.displayInfo || !this.currentAnimation) {
             return;

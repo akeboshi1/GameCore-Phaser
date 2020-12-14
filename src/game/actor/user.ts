@@ -291,6 +291,11 @@ export class User extends Player {
         super.updateModel(model);
     }
 
+    public setPosition(pos: IPos) {
+        super.setPosition(pos);
+        this.syncCameraPosition();
+    }
+
     protected activeSprite() {
         if (!this.mTargetPoint || !this.mTargetPoint.targetId) {
             return;
@@ -325,6 +330,7 @@ export class User extends Player {
         this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         const speed = this.mModel.speed * delta;
         this.checkDirection();
+        this.roomService.cameraService.syncDirty = true;
 
         // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
         if (Tool.twoPointDistance(pos, path[0]) <= speed) {
@@ -364,6 +370,10 @@ export class User extends Player {
         this._sensor = false;
         this._offsetOrigin.y = 0;
         this.setBody();
+    }
+
+    protected syncCameraPosition() {
+        this.roomService.cameraService.syncCameraScroll();
     }
 
     private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {

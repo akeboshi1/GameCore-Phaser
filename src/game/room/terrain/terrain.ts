@@ -232,4 +232,8 @@ export class Terrain extends BlockObject implements IElement {
         }
         return "";
     }
+
+    get created() {
+        return true;
+    }
 }

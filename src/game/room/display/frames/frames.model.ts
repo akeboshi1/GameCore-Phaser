@@ -87,9 +87,20 @@ export class FramesModel implements IFramesModel {
         return ani.walkableArea;
     }
 
-    public getInteractiveArea(aniName: string): op_def.IPBPoint2i[] | undefined {
+    public getInteractiveArea(aniName: string, flip: boolean = false): op_def.IPBPoint2i[] | undefined {
         const ani = this.getAnimations(aniName);
-        return ani ? ani.interactiveArea : undefined;
+        if (ani) {
+            if (flip) {
+                const area = [];
+                const interactiveArea = ani.interactiveArea;
+                for (const interactive of interactiveArea) {
+                    area.push( {x: interactive.y, y: interactive.x });
+                }
+                return area;
+            }
+            return ani.interactiveArea;
+        }
+        return;
     }
 
     public getOriginPoint(aniName, flip: boolean = false): LogicPoint {

@@ -272,6 +272,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mElementManager) this.mElementManager.update(time, delta);
         // if (this.mHandlerManager) this.handlerManager.update(time, delta);
         if (this.mGame.httpClock) this.mGame.httpClock.update(time, delta);
+        if (this.mCameraService) this.mCameraService.update(time, delta);
         for (const oneHandler of this.mUpdateHandlers) {
             oneHandler.runWith([time, delta]);
         }
@@ -737,11 +738,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
         if (content.hasOwnProperty("id")) {
             const id = content.id ? content.id : 0;
-            this.game.renderPeer.cameraFollow(id, content.effect);
+            this.cameraService.startFollow(id, content.effect);
+        } else {
+            this.cameraService.stopFollow();
         }
         if (content.hasOwnProperty("pos")) {
             const pos = content.pos;
-            this.game.renderPeer.setCamerasScroll(pos.x, pos.y, content.effect);
+            this.cameraService.setCamerasScroll(pos.x, pos.y, content.effect);
         }
     }
 
