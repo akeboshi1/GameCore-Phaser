@@ -1,10 +1,9 @@
-import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
-import { Render } from "src/render/render";
-import { TextToolTips, UiManager } from "gamecoreRender";
+import { ClickEvent, Button } from "apowophaserui";
+import { UIAtlasName } from "picaRes";
+import { op_pkt_def, op_def } from "pixelpai_proto";
+import { UiManager } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";
-import { Font, Handler, i18n, Logger } from "utils";
+import { Handler} from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";

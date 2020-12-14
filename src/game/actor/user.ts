@@ -83,6 +83,7 @@ export class User extends Player {
             if (pos.length === 0) {
                 return;
             }
+            const mountID = this.mRootMount.id;
             this.mRootMount = null;
             if (targetPos != null) {
                 const path = this.roomService.findPath(targetPos, pos, true);
@@ -94,6 +95,7 @@ export class User extends Player {
                 landingPos = pos[0];
             }
             this.setPosition(landingPos);
+            this.unmountSprite(mountID, landingPos);
             this.enableBlock();
             this.mDirty = true;
         }
@@ -120,6 +122,7 @@ export class User extends Player {
         const pos = this.mModel.pos;
         for (const target of targets) {
             if (target.x === pos.x && target.y === pos.y) {
+                this.mTargetPoint.targetId = targetId;
                 this.tryStopMove();
                 return;
             }
@@ -306,6 +309,18 @@ export class User extends Player {
         content.spriteId = targetId;
         this.game.connection.send(packet);
         this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
+    }
+
+    protected unmountSprite(id: number, pos: IPos) {
+        const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE = packet.content;
+        const pos3f = op_def.PBPoint3f.create();
+        pos3f.x = pos.x;
+        pos3f.y = pos.y;
+        pos3f.z = pos.z;
+        content.pos = pos;
+        content.spriteId = id;
+        this.game.connection.send(packet);
     }
 
     protected onMoveComplete() {

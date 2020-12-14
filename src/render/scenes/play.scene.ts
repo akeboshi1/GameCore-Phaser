@@ -122,11 +122,10 @@ export class PlayScene extends RoomScene {
     protected removePointerMoveHandler() {
         this.input.off("pointermove", this.onPointerMoveHandler, this);
         this.input.off("gameout", this.onGameOutHandler, this);
-        // 镜头每200ms会同步一次
-        // if (this.render.camerasManager.moving) {
-        //     this.render.syncCameraScroll();
-        //     this.render.camerasManager.moving = false;
-        // }
+        if (this.render.camerasManager.moving) {
+            this.render.syncCameraScroll();
+            this.render.camerasManager.moving = false;
+        }
     }
 
     protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {

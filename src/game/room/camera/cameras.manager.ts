@@ -107,7 +107,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public update(time?: number, delta?: number) {
-        if ((this.target && this.syncDirty) === false) {
+        if (!this.syncDirty) {
             return;
         }
         // 除了客户端移动镜头，后端也会改变镜头位置
