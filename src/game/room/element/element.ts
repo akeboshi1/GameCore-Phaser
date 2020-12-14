@@ -691,6 +691,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mMounts.indexOf(ele) === -1) {
             this.mMounts.push(ele);
         }
+        this.removeBody();
         return this;
     }
 
@@ -705,6 +706,7 @@ export class Element extends BlockObject implements IElement {
         if (index > -1) {
             this.mMounts.splice(index, 1);
         }
+        this.addBody();
         return this;
     }
 
