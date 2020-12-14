@@ -1,7 +1,4 @@
-import { AvatarSuit } from "structure";
-import { PlayerState } from "../../element/element";
-import { ISprite } from "./sprite";
-
+import { AvatarSuit, PlayerState } from "structure";
 export class Animator {
     public AniAction: any;
     constructor(suits?: AvatarSuit[]) {

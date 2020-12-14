@@ -6,6 +6,7 @@ import { LoginMediator } from "./Login";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaDecorateMediator } from "./PicaDecorate/PicaDecorateMediator";
 import { PicaDecorateControlMediator } from "./PicaDecorateControl/PicaDecorateControlMediator";
+import { PicaFurniFunMediator } from "./PicaFurniFun/PicaFurniFunMediator";
 import { PicaNewMainMediator } from "./PicaNewMain/PicaNewMainMediator";
 export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {
@@ -21,6 +22,9 @@ export class PicaWorkerUiManager extends UIManager {
         this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
         // this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
         this.mMedMap.set(ModuleName.PICANEWMAIN_NAME, new PicaNewMainMediator(this.game));
+
+        this.mMedMap.set(ModuleName.PICAFURNIFUN_NAME, new PicaFurniFunMediator(this.game)); // 这个的确要弄成全局的..
+
         super.showMainUI();
     }
 

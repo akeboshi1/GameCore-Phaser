@@ -20,7 +20,7 @@ export class LoginMediator extends BasicMediator {
         this.game.httpService.requestPhoneCode(phone, areaCode);
     }
 
-    public enterGame(adult: boolean) {
+    public enterWorld(adult: boolean) {
         this.game.peer.httpClockEnable(!adult);
         if (adult) {
             this.destroy();
@@ -51,11 +51,11 @@ export class LoginMediator extends BasicMediator {
                 // localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
                 // const verifiedEnable = CONFIG["verified_enable"];
                 if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
-                    this.enterGame(!this.verifiedEnable);
+                    this.enterWorld(!this.verifiedEnable);
                     return;
                 }
                 if (data.hasIdentityInfo) {
-                    this.enterGame(data.adult);
+                    this.enterWorld(data.adult);
                 } else {
                     // TODO
                     this.game.renderPeer.setInputVisible(false);
@@ -86,8 +86,8 @@ export class LoginMediator extends BasicMediator {
         this.game.httpService.verified(name, idcard).then((response: any) => {
             const { code, data } = response;
             if (code === 200 || code === 201 || code === 0) {
-                // this.enterGame(data.adult);
-                this.enterGame(true);
+                // this.enterWorld(data.adult);
+                this.enterWorld(true);
             } else if (code === 10001 || code >= 400) {
                 // 验证失败
                 this.game.renderPeer.setVerifiedEnable(false);

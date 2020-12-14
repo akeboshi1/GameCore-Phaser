@@ -58,7 +58,7 @@ export class PicaFurniFunPanel extends BasePanel {
         this.setInteractive();
         this.addListen();
         this.setFuritDisplay();
-        this.setMaterialsData(this.materials);
+        this.setMaterialsData(this._getMaterialData());
     }
 
     addListen() {
@@ -204,7 +204,7 @@ export class PicaFurniFunPanel extends BasePanel {
     }
 
     setFuritDisplay() {
-        const sprite: ISprite = this.mShowData;
+        const sprite: ISprite = this._getDisplayData();
         const display = (sprite.displayInfo as FramesModel);
         const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
         resData.display = display.display;
@@ -224,6 +224,26 @@ export class PicaFurniFunPanel extends BasePanel {
         }
         this.mDetailDisplay.loadDisplay(resData);
         this.itemName.text = sprite.nickname;
+    }
+
+    isTeamBuild() {
+        return this.mShowData.tag && this.mShowData.tag === "teambuild";
+    }
+
+    _getDisplayData() {
+        if (this.isTeamBuild()) {
+            return this.mShowData.element;
+        } else {
+            return this.mShowData;
+        }
+    }
+
+    _getMaterialData() {
+        if (this.isTeamBuild()) {
+            return this.mShowData.materials;
+        } else {
+            return this.materials;
+        }
     }
 
     setMaterialsData(materials: op_client.ICountablePackageItem[]) {
@@ -261,7 +281,11 @@ export class PicaFurniFunPanel extends BasePanel {
     private onConfirmBtnClick() {
         const data = this.showData;
         if (!data) return;
-        this.render.renderEmitter(this.key + "_queryunlock", [data.id]);
+        if (this.isTeamBuild()) {
+            this.render.renderEmitter(this.key + "_queryTeamBuild", [data.element.id]);
+        } else {
+            this.render.renderEmitter(this.key + "_queryunlock", [data.id]);
+        }
         this.OnClosePanel();
     }
     private OnClosePanel() {
@@ -328,7 +352,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
     }
     public setItemData(data: op_client.ICountablePackageItem) {
         this.itemData = data;
-        this.itemCount.text = this.getCountText(data.count, data.neededCount);
+        this.itemCount.text = this.getCountText(data);
         const url = Url.getOsdRes(data.display.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.scale = this.dpr;
@@ -343,9 +367,12 @@ class MaterialItem extends Phaser.GameObjects.Container {
     public get select() {
         return this.mselect;
     }
-    private getCountText(count: number, needcount: number) {
-        const color = (count >= needcount ? "#000000" : "#ff0000");
-        const text = `[color=${color}]${count}[/color]/` + needcount;
+    private getCountText(data: op_client.ICountablePackageItem) {
+        const color = (data.count >= data.neededCount ? "#000000" : "#ff0000");
+        let text = `[color=${color}]${data.count}[/color]/` + data.neededCount;
+        if (data.hasOwnProperty("recommended")) {
+            text = data.recommended + "/" + text;
+        }
         return text;
     }
 }

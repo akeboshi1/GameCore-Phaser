@@ -14,6 +14,7 @@ export interface ILauncherConfig {
     keyboardHeight: number;
     width: number;
     height: number;
+    osd?: string;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;
@@ -21,7 +22,6 @@ export interface ILauncherConfig {
     readonly game_created?: Function;
     readonly connection?: any;
     readonly isEditor?: boolean;
-    readonly osd?: string;
     readonly closeGame: Function;
     readonly connectFail?: Function;
     readonly parent?: string;

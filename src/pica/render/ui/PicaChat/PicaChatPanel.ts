@@ -1,5 +1,4 @@
 import { BBCodeText, TextArea, UIType } from "apowophaserui";
-import { PlayerState } from "gamecore";
 import { AlertView, BasePanel, DragonbonesDisplay, InputPanel, Render, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
