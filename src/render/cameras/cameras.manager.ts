@@ -169,9 +169,12 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         }
         this.stopFollow();
         if (effect) {
-            this.pan(x, y, 1000);
+            this.pan(x, y, 1000).then(() => {
+                this.render.syncCameraScroll();
+            });
         } else {
             this.setScroll(x, y);
+            this.render.syncCameraScroll();
         }
     }
 
