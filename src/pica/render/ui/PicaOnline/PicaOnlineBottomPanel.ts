@@ -51,14 +51,14 @@ export class PicaOnlineBottomPanel extends Phaser.GameObjects.Container {
         this.nameText.setOrigin(0, 0.5);
         this.content.add(this.nameText);
         const fnormals = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
-        this.reportBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, fnormals, fnormals, i18n.t("player_info.follow"));
+        this.reportBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, fnormals, fnormals, i18n.t("player_info.blockuer"));
         this.reportBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
         this.reportBtn.y = conHeight * 0.5 - this.reportBtn.height * 0.5 - 5 * this.dpr;
         this.reportBtn.x = this.reportBtn.width * 0.5 + 20 * this.dpr;
         this.reportBtn.on(ClickEvent.Tap, this.onReportHandler, this);
         this.content.add(this.reportBtn);
         const tnormals = ["butt_red_left_s", "butt_red_middle_s", "butt_red_right_s"];
-        this.blockBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, tnormals, tnormals, i18n.t("player_info.trading"));
+        this.blockBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, tnormals, tnormals, i18n.t("player_info.blockuer"));
         this.blockBtn.setTextStyle(UIHelper.whiteStyle(this.dpr));
         this.blockBtn.y = this.reportBtn.y;
         this.blockBtn.x = -this.blockBtn.width * 0.5 - 5 * this.dpr;

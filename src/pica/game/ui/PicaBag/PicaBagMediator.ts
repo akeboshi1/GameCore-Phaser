@@ -54,15 +54,15 @@ export class PicaBagMediator extends BasicMediator {
         this.removeLisenter();
     }
 
-    get playerData() {
-        const bag = this.bag;
+    get bagData() {
+        const bag = this.userData;
         if (!bag) {
             return;
         }
-        return this.bag.playerBag;
+        return this.userData.playerBag;
     }
 
-    get bag() {
+    get userData() {
         if (!this.game.user || !this.game.user.userData) {
             return;
         }
@@ -73,7 +73,10 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     protected panelInit() {
-
+        super.panelInit();
+        if (this.mPanelInit) {
+            this.mView.setSceneData(this.mScneType, this.game.roomManager.currentRoom.enableEdit);
+        }
     }
 
     protected mediatorExport() {
@@ -84,13 +87,13 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     private addLisenter() {
-        if (!this.bag) return;
+        if (!this.userData) return;
         this.game.emitter.on(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.on(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
 
     private removeLisenter() {
-        if (!this.bag) return;
+        if (!this.userData) return;
         this.game.emitter.off(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.off(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
@@ -127,8 +130,8 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
-        if (this.playerData) {
-            const items = this.playerData.getItemsByCategory(data.packType, data.key);
+        if (this.bagData) {
+            const items = this.bagData.getItemsByCategory(data.packType, data.key);
             if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage && items) {
                 let tempitem: op_client.ICountablePackageItem;
                 for (let i = items.length - 1; i >= 0; i--) {

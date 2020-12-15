@@ -1,22 +1,22 @@
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { BasePanel, CheckboxGroup, DynamicImage, TextButton, UiManager } from "gamecoreRender";
+import { BasePanel, CheckboxGroup, CommonBackground, DynamicImage, ImageValue, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
-import { Coin, Font, Handler, i18n, Url } from "utils";
+import { Coin, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
+import { PicaBasePanel } from "../pica.base.panel";
 
-export class PicaBagPanel extends BasePanel {
+export class PicaBagPanel extends PicaBasePanel {
   private commonkey = "common_key";
-  private seachKey: string = "key.seach";
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
-  private mBackground: Phaser.GameObjects.Graphics;
+  private mBackground: CommonBackground;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
-  private mShelfContainer: Phaser.GameObjects.Container;
+  private mCategoryCon: Phaser.GameObjects.Container;
   private mDetailDisplay: DetailDisplay;
   private mAdd: NineSliceButton;
-  private mBg: Phaser.GameObjects.Image;
+  private mIconBg: Phaser.GameObjects.Image;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: any;// op_def.IStrPair
   private mPropGrid: GameGridTable;
@@ -24,15 +24,24 @@ export class PicaBagPanel extends BasePanel {
   private sellBtn: NineSliceButton;
   private useBtn: NineSliceButton;
   private topBtns: TabButton[] = [];
+  private moneyCon: Phaser.GameObjects.Container;
+  private moneyvalue: ImageValue;
+  private diamondvalue: ImageValue;
+  private moneyAddBtn: Button;
+  private nameText: Phaser.GameObjects.Text;
+  private moreButton: Button;
 
   private mDetailBubble: DetailBubble;
-  private mSceneType: any;// op_def.SceneTypeEnum
+  private mSceneType: any;
   private mEnableEdit: boolean = false;
-  private categoryType: any;// op_pkt_def.PKT_PackageType
-  private mSelectedItemData: any[] = [];// op_client.ICountablePackageItem
+  private categoryType: any;
+  private mSelectedItemData: any[] = [];
   private mSelectedItems: Item[] = [];
-  constructor(uiManager: UiManager) {// sceneType: op_def.SceneTypeEnum
-    super(uiManager.scene, uiManager.render);
+  private sceneData: any;
+  private moneyData: any;
+  constructor(uiManager: UiManager) {
+    super(uiManager);
+    this.atlasNames = [UIAtlasName.uicommon];
     this.key = ModuleName.PICABAG_NAME;
   }
 
@@ -40,23 +49,21 @@ export class PicaBagPanel extends BasePanel {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
     super.resize(width, height);
-    this.mBackground.clear();
-    this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
-    this.mBackground.fillRect(0, 0, width, height);
-    this.mShelfContainer.setSize(width, 295 * this.dpr);
-    this.mShelfContainer.y = height - this.mShelfContainer.height;
-    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+    this.mBackground.x = width * 0.5;
+    this.mBackground.y = height * 0.5;
+    this.mCategoryCon.setSize(width, 79 * this.dpr);
+    this.mCategoryCon.y = height - this.mPropGrid.height - this.mCategoryCon.height * 0.5 - 50 * this.dpr;
+    this.mCategoryCon.x = width * 0.5;
+    this.mDetailBubble.y = this.mCategoryCon.y - 10 * this.dpr - this.mDetailBubble.height;
+    this.mCategoriesBar.y = 40 * this.dpr;
+    this.mCategoriesBar.x = -width * 0.5;
     this.mCategoriesBar.clear();
-    this.mCategoriesBar.fillStyle(0x33ccff);
+    this.mCategoriesBar.fillStyle(0x3EE1FF);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
-    this.mCategoriesBar.fillStyle(0x00cccc);
+    this.mCategoriesBar.fillStyle(0x06B5D5);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
-
-    this.mBg.x = width / 2;
-    this.mBg.y = this.mBg.height / 2 + 10 * this.dpr;
-
     this.mAdd.x = width - this.mAdd.width / 2 - 10 * this.dpr;
-    this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr;
+    this.mAdd.y = this.mCategoryCon.y - this.mAdd.height / 2 - 9 * this.dpr;
 
     this.useBtn.x = this.mAdd.x;
     this.useBtn.y = this.mAdd.y;
@@ -65,10 +72,12 @@ export class PicaBagPanel extends BasePanel {
     this.sellBtn.y = this.mAdd.y;
 
     this.mDetailDisplay.x = width / 2;
-    this.mDetailDisplay.y = this.mBg.y;
+    this.mDetailDisplay.y = (height - 296 * this.dpr - 60 * this.dpr) * 0.5 + 60 * this.dpr;
     this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
-    this.mPropGrid.x = width / 2;
-    this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 50 * this.dpr;
+    this.mIconBg.x = this.mDetailDisplay.x;
+    this.mIconBg.y = this.mDetailDisplay.y;
+    this.mPropGrid.x = width / 2 + 3 * this.dpr;
+    this.mPropGrid.y = height - this.mPropGrid.height * 0.5 - 3 * this.dpr;
     this.mPropGrid.layout();
     this.mPropGrid.resetMask();
     this.mCategoryScroll.refreshMask();
@@ -77,33 +86,25 @@ export class PicaBagPanel extends BasePanel {
   }
 
   setCategories(subcategorys: any[]) {// op_def.IStrPair
-    // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
     const capW = 60 * this.dpr;
     const capH = 41 * this.dpr;
     const items = [];
     (<any>this.mCategoryScroll).clearItems();
-    const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
-    seachBtn.setData("item", { key: this.seachKey, value: i18n.t("common.search") });
-    seachBtn.y = capH - 40 * this.dpr;
-    this.mCategoryScroll.addItem(seachBtn);
-    const allCategory = { value: "", key: "" };// op_def.StrPair
-    allCategory.value = i18n.t("common.all");
-    allCategory.key = "alltype";
+    const allCategory = { value: i18n.t("common.all"), key: "alltype" };
     subcategorys.unshift(allCategory);
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].value, 0, 0);
-      item.x = i * capW;
-      item.y = capH - item.text.height - 20 * this.dpr;
       item.setData("item", subcategorys[i]);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);
-
       items[i] = item;
-      item.setFontSize(17 * this.dpr);
+      item.setFontSize(18 * this.dpr);
       item.setFontStyle("bold");
     }
+    this.mCategoryScroll.Sort();
+    this.mCategoryScroll.refreshMask();
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
     this.updateCategeoriesLoc(false);
   }
@@ -122,18 +123,28 @@ export class PicaBagPanel extends BasePanel {
       this.onSelectItemHandler(cell.container);
     }
   }
+
+  public setMoneyData(money: number, diamond: number) {
+    money = money || 0;
+    diamond = diamond || 0;
+    this.moneyData = { money, diamond };
+    if (!this.mInitialized) return;
+    this.moneyvalue.setText(money + "");
+    this.diamondvalue.setText(diamond + "");
+  }
+
+  public setSceneData(sceneType: number, editor: boolean) {
+    this.mSceneType = sceneType;
+    this.mEnableEdit = editor;
+    this.sceneData = { sceneType, editor };
+    if (!this.mInitialized) return;
+    this.createCategory(sceneType, editor);
+  }
+
   public setSelectedResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
     if (content.display) {
       this.mDetailDisplay.loadDisplay(content);
     }
-  }
-
-  public resetAvatar(avatar: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR
-    const content = { avatar: null };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
-    content.avatar = avatar.avatar;
-    const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
-    this.mSelectedItemData.length = 0;
   }
 
   public addListen() {
@@ -182,8 +193,14 @@ export class PicaBagPanel extends BasePanel {
     this.mCategoryScroll.addListen();
   }
 
-  public getEnableEdit() {
-    return this.mEnableEdit;
+  protected onInitialized() {
+    if (this.moneyData) {
+      this.moneyvalue.setText(this.moneyData.money + "");
+      this.diamondvalue.setText(this.moneyData.diamond + "");
+    }
+    if (this.sceneData) {
+      this.createCategory(this.sceneData.sceneType, this.sceneData.editor);
+    }
   }
 
   protected preload() {
@@ -196,25 +213,60 @@ export class PicaBagPanel extends BasePanel {
   protected init() {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
-    this.mBackground = this.scene.make.graphics(undefined, false);
-    this.mBg = this.scene.make.image({
+    this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
+    this.mIconBg = this.scene.make.image({
       key: this.key,
       frame: "bg"
     }, false);
-    this.mBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    this.mShelfContainer = this.scene.make.container(undefined, false);
-    this.mShelfContainer.setSize(width, 295 * this.dpr);
-    this.mShelfContainer.y = height - this.mShelfContainer.height;
+    this.mIconBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+    this.mCategoryCon = this.scene.make.container(undefined, false);
+    this.mCategoryCon.setSize(width, 295 * this.dpr);
+    this.mCategoryCon.y = height - this.mCategoryCon.height;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = new Button(this.scene, this.key, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 30 * this.dpr);
+    this.mCloseBtn.setPosition(21 * this.dpr, 40 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
-    const btnwidth = 90 * this.dpr;
-    const btnHeight = 38 * this.dpr;
-    const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
-    const btnPosY = this.mShelfContainer.y - 25 * this.dpr;
+    const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
+      left: 17 * this.dpr,
+      top: 0 * this.dpr,
+      right: 17 * this.dpr,
+      bottom: 0 * this.dpr
+    });
+    moneybg.x = -moneybg.width * 0.5;
+    const moneyline = this.scene.make.image({ x: moneybg.x, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_division" }, false);
+    this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_silver", this.dpr, {
+      color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
+    });
+    this.moneyvalue.setLayout(1);
+    this.moneyvalue.x = moneybg.x - moneybg.width * 0.5 + 22 * this.dpr;
+    this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_diamond", this.dpr, {
+      color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
+    });
+    this.diamondvalue.setLayout(1);
+    this.diamondvalue.x = moneybg.x + 22 * this.dpr;
+    this.moneyAddBtn = new Button(this.scene, UIAtlasName.uicommon, "home_praise_bg", "home_praise_bg");
+    const moneyAddicon = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_add" }, false);
+    this.moneyAddBtn.add(moneyAddicon);
+    this.moneyAddBtn.x = -this.moneyAddBtn.width * 0.5 - 4 * this.dpr;
+    this.moneyAddBtn.on(ClickEvent.Tap, this.onRechargeHandler, this);
+    this.moneyCon = this.scene.make.container(undefined, false);
+    this.moneyCon.setSize(moneybg.width, moneybg.height);
+    this.moneyCon.add([moneybg, moneyline, this.moneyvalue, this.diamondvalue, this.moneyAddBtn]);
+    this.moneyCon.x = width - 20 * this.dpr;
+    this.moneyCon.y = this.mCloseBtn.y;
 
+    const nameBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_name_bg" });
+    nameBg.x = width * 0.5;
+    nameBg.y = this.mCloseBtn.y + 40 * this.dpr;
+    this.nameText = this.scene.make.text({ x: nameBg.x, y: nameBg.y, text: "", style: UIHelper.whiteStyle(this.dpr, 14) }).setOrigin(0.5);
+    this.nameText.setFontStyle("bold");
+    this.moreButton = new Button(this.scene, UIAtlasName.uicommon, "online_more");
+    this.moreButton.x = width - this.moreButton.width * 0.5 - 20 * this.dpr;
+    this.moreButton.y = nameBg.y;
+    this.moreButton.on(ClickEvent.Tap, this.onMoreHandler, this);
+    const btnwidth = 90 * this.dpr, btnHeight = 38 * this.dpr;
+    const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.mAdd = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), "#996600");
     this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("common.sold"), "#FFFFFF");
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.use"), "#996600");
@@ -225,84 +277,35 @@ export class PicaBagPanel extends BasePanel {
     }));
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
-    //  this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
-    this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
+    this.mDetailDisplay.y = this.mIconBg.y + this.mIconBg.height / 2;
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 10 * this.dpr;
 
     this.mCategoryScroll = new GameScroller(this.scene, {
-      x: width * 0.5,
-      y: this.mShelfContainer.y + 20 * this.dpr,
+      x: 0,
+      y: 60 * this.dpr,
       width,
       height: 41 * this.dpr,
       zoom: this.scale,
       orientation: 1,
       dpr: this.dpr,
-      // valuechangeCallback: (newValue) => {
-      //   this.refreshPos(newValue);
-      // },
+      space: 10 * this.dpr,
       cellupCallBack: (gameobject) => {
         this.onSelectSubCategoryHandler(gameobject);
       }
     });
-    this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategoryScroll]);
+    this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
+    this.add([this.mBackground, this.mIconBg, this.mCloseBtn, this.moneyCon, nameBg, this.nameText, this.moreButton, this.mDetailDisplay, this.mDetailBubble, this.mCategoryCon]);
     this.add([this.sellBtn, this.useBtn, this.mAdd]);
-    this.mShelfContainer.add(this.mCategoriesBar);
-
-    const topCapW = 67 * this.dpr;
-    const topCapH = 30 * this.dpr;
-    const topPosY = 30 * this.dpr;
-    const topStyle = {
-      fontFamily: Font.DEFULT_FONT,
-      fontSize: 20 * this.dpr,
-      color: "#FFFFFF"
-    };
-    this.topCheckBox = new CheckboxGroup();
-    let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
-    let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];
-    if (this.mSceneType === 2) {// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
-      topCategorys = [5];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
-      topBtnTexts = [i18n.t("furni_bag.furni")];
-    }
-    const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1) - 20 * this.dpr;
-    for (const key in topCategorys) {
-      const index = Number(key);
-      const category = topCategorys[index];
-      const button = new TabButton(this.scene, this.key, "tab_normal", "tab_normal", topBtnTexts[index]);
-      button.setTextStyle(topStyle);
-      button.setData("data", category);
-      button.setSize(topCapW, topCapH);
-      button.setFontStyle("bold");
-      button.y = topPosY;
-      button.x = topPosX + topCapW * index;
-      this.topBtns.push(button);
-    }
-    this.topCheckBox.appendItemAll(this.topBtns);
-    this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
-    this.topBtns.forEach((btn) => {
-      this.add(btn);
-    });
-    this.render.mainPeer.isCurrentRoomEditEnable()
-      .then((val) => {
-        this.mEnableEdit = val;
-        if (this.mEnableEdit) {
-          const index = topCategorys.indexOf(5);// op_pkt_def.PKT_PackageType.EditFurniturePackage
-          this.topCheckBox.selectIndex(index);
-        } else {
-          this.topCheckBox.selectIndex(0);
-        }
-      });
-    this.render.mainPeer.getCurrentRoomType()
-      .then((val) => this.mSceneType = val);
     const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
-    const capW = (propFrame.width);
-    const capH = (propFrame.height);
+    const capW = (propFrame.width) + this.dpr;
+    const capH = (propFrame.height) + this.dpr;
     const tableConfig = {
       x: 0,
       y: 0,
       table: {
         width,
-        height: 260 * this.dpr,
+        height: 241 * this.dpr,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
@@ -312,7 +315,6 @@ export class PicaBagPanel extends BasePanel {
       },
       scrollMode: 1,
       clamplChildOY: false,
-      // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
@@ -343,6 +345,42 @@ export class PicaBagPanel extends BasePanel {
     super.init();
   }
 
+  private createCategory(sceneType: number, editor: boolean) {
+    const width = this.scaleWidth;
+    const topCapW = 90 * this.dpr;
+    const topCapH = 35 * this.dpr;
+    const topPosY = -30 * this.dpr;
+    this.topCheckBox = new CheckboxGroup();
+    let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
+    let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];
+    if (sceneType === 2) {// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
+      topCategorys = [5];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
+      topBtnTexts = [i18n.t("furni_bag.furni")];
+    }
+    const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1) - 20 * this.dpr;
+    for (const key in topCategorys) {
+      const index = Number(key);
+      const category = topCategorys[index];
+      const button = new TabButton(this.scene, this.key, "tab_normal", "tab_normal", topBtnTexts[index]);
+      button.setTextStyle(UIHelper.whiteStyle(this.dpr, 18));
+      button.setData("data", category);
+      button.setSize(topCapW, topCapH);
+      button.setFontStyle("bold");
+      button.y = topPosY;
+      button.x = topPosX + topCapW * index;
+      this.topBtns.push(button);
+    }
+    this.topCheckBox.appendItemAll(this.topBtns);
+    this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
+    this.mCategoryCon.add(this.topBtns);
+    if (editor) {
+      const index = topCategorys.indexOf(5);// op_pkt_def.PKT_PackageType.EditFurniturePackage
+      this.topCheckBox.selectIndex(index);
+    } else {
+      this.topCheckBox.selectIndex(0);
+    }
+  }
+
   private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
     const btn = new NineSliceButton(this.scene, x, y, width, height, key, frame, text, this.dpr, 1, {
       left: 14 * this.dpr,
@@ -366,6 +404,7 @@ export class PicaBagPanel extends BasePanel {
     if (this.mSelectedItems.length > 0) {
       this.mSelectedItems[0].isSelect = false;
     }
+    this.nameText.text = data.name || data.shortName;
     this.mSelectedItemData.length = 0;
     this.mSelectedItems.length = 0;
     this.mSelectedItemData.push(data);
@@ -434,7 +473,7 @@ export class PicaBagPanel extends BasePanel {
       })
       .then((t) => {
         this.mDetailBubble.setProp(item, Math.floor(t / 1000), property);
-        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+        this.mDetailBubble.y = this.mCategoryCon.y - 10 * this.dpr - this.mDetailBubble.height;
       });
     if (item) {
       this.sellBtn.enable = item.recyclable;
@@ -573,7 +612,11 @@ export class PicaBagPanel extends BasePanel {
       this.showPropFun({ resultHandler, data, price: false, title, resource });
     }
   }
+  private onRechargeHandler() {
+  }
+  private onMoreHandler() {
 
+  }
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategoryScroll.getItemList();
     const h = 41 * this.dpr;

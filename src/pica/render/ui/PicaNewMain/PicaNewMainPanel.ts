@@ -20,6 +20,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
     protected navigatePanel: PicaNewNavigatePanel;
     protected foldButton: Button;
     private isFold: boolean = false;
+    private headData: any;
+    private sceneData: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
@@ -65,10 +67,14 @@ export class PicaNewMainPanel extends PicaBasePanel {
     }
 
     setPlayerInfo(level: op_pkt_def.IPKT_Level, energy: op_def.IValueBar, money: number, diamond: number) {
+        this.headData = { level, energy, money, diamond };
+        if (!this.mInitialized) return;
         this.headPanel.setHeadData(level, energy, money, diamond);
     }
 
     setRoomInfo(sceneName: string, isPraise: boolean, people: number, roomType: string, isself: boolean = false) {
+        this.sceneData = { sceneName, isPraise, people, roomType, isself };
+        if (!this.mInitialized) return;
         this.headPanel.setSceneData(sceneName, isPraise, people, roomType, isself);
     }
 
@@ -97,6 +103,11 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.add(this.navigatePanel);
         this.resize(width, height);
         super.init();
+    }
+
+    protected onInitialized() {
+        if (this.headData) this.headPanel.setHeadData(this.headData.level, this.headData.energy, this.headData.money, this.headData.diamond);
+        if (this.sceneData) this.headPanel.setSceneData(this.sceneData.sceneName, this.sceneData.isPraise, this.sceneData.people, this.sceneData.roomType, this.sceneData.isself);
     }
 
     private onFoldButtonHandler() {
