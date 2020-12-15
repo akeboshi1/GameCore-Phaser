@@ -375,8 +375,8 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (!this.displayInfo || !this.currentAnimation) {
             return;
         }
-        const { name: animationName } = this.currentAnimation;
-        return this.displayInfo.getInteractiveArea(animationName);
+        const { name: animationName, flip } = this.currentAnimation;
+        return this.displayInfo.getInteractiveArea(animationName, flip);
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {
@@ -397,14 +397,6 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.originWalkPoint.x = value[0];
             this.originWalkPoint.y = value[1];
         }
-    }
-
-    public getInteracviveArea(): op_def.IPBPoint2i[] {
-        if (!this.displayInfo || !this.currentAnimation) {
-            return;
-        }
-        const { name: animationName } = this.currentAnimation;
-        return this.displayInfo.getInteractiveArea(animationName);
     }
 
     public getCollisionArea() {

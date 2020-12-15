@@ -391,7 +391,6 @@ export class DragonbonesDisplay extends DisplayObject {
 
     private getReplaceArr() {
         this.replaceArr.length = 0;
-        Logger.getInstance().log(this.direction);
         const avater: IAvatar = this.displayInfo.avatar;
         if (avater.bodyBaseId) {
             this.replaceArr.push({

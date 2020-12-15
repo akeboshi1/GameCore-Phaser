@@ -4,11 +4,11 @@ import { Game, delayTime } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { MoveData, MovePos, PlayerState } from "../room/element/element";
+import { MoveData, MovePos } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { EventType, IDragonbonesModel, IFramesModel } from "structure";
+import { EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
 import { IPoint } from "game-capsule";
 
 export class User extends Player {
@@ -17,7 +17,6 @@ export class User extends Player {
     private mTargetPoint: IMoveTarget;
     private mSyncTime: number = 0;
     private mSyncDirty: boolean = false;
-    private mSyncCameraTime: number = 0;
     private mInputMask: number;
     constructor(private game: Game) {
         super(undefined, undefined);
@@ -84,6 +83,7 @@ export class User extends Player {
             if (pos.length === 0) {
                 return;
             }
+            const mountID = this.mRootMount.id;
             this.mRootMount = null;
             if (targetPos != null) {
                 const path = this.roomService.findPath(targetPos, pos, true);
@@ -95,6 +95,7 @@ export class User extends Player {
                 landingPos = pos[0];
             }
             this.setPosition(landingPos);
+            this.unmountSprite(mountID, landingPos);
             this.enableBlock();
             this.mDirty = true;
         }
@@ -121,6 +122,7 @@ export class User extends Player {
         const pos = this.mModel.pos;
         for (const target of targets) {
             if (target.x === pos.x && target.y === pos.y) {
+                this.mTargetPoint = { targetId };
                 this.tryStopMove();
                 return;
             }
@@ -309,6 +311,18 @@ export class User extends Player {
         this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
     }
 
+    protected unmountSprite(id: number, pos: IPos) {
+        const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE = packet.content;
+        const pos3f = op_def.PBPoint3f.create();
+        pos3f.x = pos.x;
+        pos3f.y = pos.y;
+        pos3f.z = pos.z;
+        content.pos = pos;
+        content.spriteId = id;
+        this.game.connection.send(packet);
+    }
+
     protected onMoveComplete() {
         this.preMoveComplete();
         if (this.mCurState !== PlayerState.WALK) {
@@ -331,6 +345,7 @@ export class User extends Player {
         this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         const speed = this.mModel.speed * delta;
         this.checkDirection();
+        this.roomService.cameraService.syncDirty = true;
 
         // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
         if (Tool.twoPointDistance(pos, path[0]) <= speed) {
@@ -351,11 +366,6 @@ export class User extends Player {
         if (this.mSyncDirty) {
             this.mSyncDirty = false;
             this.syncPosition();
-        }
-        this.mSyncCameraTime += delta;
-        if (this.mSyncCameraTime > 200) {
-            this.mSyncCameraTime = 0;
-            this.syncCameraPosition();
         }
     }
 

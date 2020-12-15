@@ -94,6 +94,10 @@ export class MatterObject {
     }
 
     protected addBody() {
+        if (this.body) {
+            this.setExistingBody(this.body);
+            return;
+        }
         this.setBody();
     }
 

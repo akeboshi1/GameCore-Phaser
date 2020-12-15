@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.405",
+    "version": "1.0.408",
     "main": "release/js/tooqing.js",
     "scripts": {
         "dev": "webpack-dev-server --mode development",
@@ -49,7 +49,7 @@
         "pathfinding": "https://github.com/raymanyoung/PathFinding.js",
         "poly-decomp": "^0.3.0",
         "simple-sha1": "^3.0.1",
-        "tooqinggamephaser": "^0.2.4",
+        "tooqinggamephaser": "^0.2.8",
         "webworker-rpc": "git://github.com/ApowoGames/webworker-rpc",
         "worker-loader": "^3.0.2"
     }

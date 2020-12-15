@@ -674,14 +674,16 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number) {
-        if (!this.mAccount) {
-            this.mAccount = new Account();
-        }
-        this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
-            this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+    public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (!this.mAccount) {
+                this.mAccount = new Account();
+            }
+            this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
+                this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+                resolve();
+            });
         });
-
         // if (this.mainPeer) this.mainPeer.createAccount(gameID, worldID, sceneID, loc);
     }
 
