@@ -98,9 +98,10 @@ export class DragonbonesDisplay extends DisplayObject {
 
     private renderTextureKey: string;
     private tmpIndex: number = 0;
-
-    public constructor(scene: Phaser.Scene, render: Render, id?: number, type?: number) {
+    private uuid: number = 0;
+    public constructor(scene: Phaser.Scene, render: Render, id?: number, uuid?: number, type?: number) {
         super(scene, render, id, type);
+        this.uuid = uuid;
         this.scene.textures.on("onload", this.onLoadFunc, this);
     }
 
@@ -959,9 +960,10 @@ export class DragonbonesDisplay extends DisplayObject {
             // ==============重绘贴图方式
             // if (this.mLoadMap.size > 0) {
             // }
-            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex;
+            this.tmpIndex++;
+            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex + this.uuid;
             // if (this.scene.textures.exists(this.renderTextureKey)) {
-            //     this.scene.textures.remove(this.renderTextureKey);
+            //     this.scene.textures.remove(this.renderTextureKey);\
             // }
             const canvas = this.scene.textures.createCanvas(this.renderTextureKey + "_canvas", dragonBonesTexture.source[0].width, dragonBonesTexture.source[0].height);
             // this.scene.add.existing(this.mDragonBonesTexture);
@@ -1007,16 +1009,14 @@ export class DragonbonesDisplay extends DisplayObject {
                     //     drawTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                     // }
                     canvas.drawFrame(drawTextureKey, drawTexture.firstFrame, dat.cutX, dat.cutY);
-                    Logger.getInstance().log(drawTextureKey, drawTexture);
                 }
             }
             const url = canvas.canvas.toDataURL("image/png", 1);
-            Logger.getInstance().log(url);
+            Logger.getInstance().log(this);
             // if (this.scene.textures.exists(this.renderTextureKey)) {
             //     this.scene.textures.remove(this.renderTextureKey);
             // }
             this.scene.textures.addBase64(this.renderTextureKey, url);
-            this.tmpIndex++;
             canvas.destroy();
         }
 
