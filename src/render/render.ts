@@ -225,15 +225,15 @@ export class Render extends RPCPeer implements GameMain {
             this.mConfig.width = width;
             this.mConfig.height = height;
         }
-        const w = width * window.devicePixelRatio;
-        const h = height * window.devicePixelRatio;
-        this.mScaleRatio = Math.ceil(window.devicePixelRatio || 1);
+        const w = width * this.mConfig.devicePixelRatio;
+        const h = height * this.mConfig.devicePixelRatio;
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 1);
         this.mConfig.scale_ratio = this.mScaleRatio;
-        this.mUIRatio = Math.round(window.devicePixelRatio || 1);
-        const scaleW = (width / this.DEFAULT_WIDTH) * (window.devicePixelRatio / this.mUIRatio);
+        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 1);
+        const scaleW = (width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
         this.mUIScale = this.game.device.os.desktop ? 1 : scaleW;
         if (this.mGame) {
-            this.mGame.scale.zoom = 1 / window.devicePixelRatio;
+            this.mGame.scale.zoom = 1 / this.mConfig.devicePixelRatio;
             this.mGame.scale.resize(w, h);
             const scenes = this.mGame.scene.scenes;
             for (const scene of scenes) {
