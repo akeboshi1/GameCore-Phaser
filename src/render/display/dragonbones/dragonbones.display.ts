@@ -933,7 +933,7 @@ export class DragonbonesDisplay extends DisplayObject {
 
     private refreshAvatar() {
         // replace unpacked slots
-        // this.clearArmatureSlot();
+        this.clearArmatureSlot();
         const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
         for (const rep of this.replaceArr) {
             const part: string = rep.slot.replace("$", rep.dir.toString());
@@ -1016,6 +1016,7 @@ export class DragonbonesDisplay extends DisplayObject {
             //     this.scene.textures.remove(this.renderTextureKey);
             // }
             this.scene.textures.addBase64(this.renderTextureKey, url);
+            this.tmpIndex++;
             canvas.destroy();
         }
 
@@ -1027,7 +1028,6 @@ export class DragonbonesDisplay extends DisplayObject {
     private onLoadFunc(key: string, texture: Phaser.Textures.Texture) {
         if (key !== this.renderTextureKey) return;
         if (this.mCallBack) this.mCallBack();
-        this.tmpIndex++;
         // if (this.mAntial) {
         //     changeTexture.setFilter(Phaser.Textures.FilterMode.NEAREST);
         // }
