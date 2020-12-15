@@ -342,7 +342,7 @@ export class Render extends RPCPeer implements GameMain {
             }
             // Logger.getInstance().log("dragonbones: ", dragonBones);
             this.gameConfig = {
-                type: Phaser.WEBGL,
+                type: Phaser.AUTO,
                 parent: this.mConfig.parent,
                 scene: null,
                 disableContextMenu: true,
