@@ -103,6 +103,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     }
 
     public destroy() {
+        this.removeFromBlock();
         super.destroy();
     }
 

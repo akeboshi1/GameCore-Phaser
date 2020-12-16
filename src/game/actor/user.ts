@@ -87,10 +87,11 @@ export class User extends Player {
             this.mRootMount = null;
             if (targetPos != null) {
                 const path = this.roomService.findPath(targetPos, pos, true);
-                if (path.length === 0) {
-                    return;
+                if (path.length > 0) {
+                    landingPos = path[0];
+                } else {
+                    landingPos = pos[0];
                 }
-                landingPos = path[0];
             } else {
                 landingPos = pos[0];
             }

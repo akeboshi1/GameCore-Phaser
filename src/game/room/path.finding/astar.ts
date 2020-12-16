@@ -37,8 +37,13 @@ export class AStar {
             Logger.getInstance().error(`can't find path. grid not exist`);
             return;
         }
+
+        const result = [];
         const { rows, cols } = this.roomService.miniSize;
+
         const start45 = this.roomService.transformToMini45(startPos);
+        if (this._invalidPoint(start45, cols, rows)) return result;
+
         const end45List = [];
         targetList.forEach((p) => {
             p = this.roomService.transformToMini45(p);
@@ -48,10 +53,9 @@ export class AStar {
         });
 
         if (end45List.length === 0) {
-            return;
+            return result;
         }
 
-        const result = [];
         this.gridBackup = this.grid.clone();
         const paths = this.finder.findPathToMultipleEnds(start45.x, start45.y, end45List, this.gridBackup, toReverse);
         for (const path of paths) {
