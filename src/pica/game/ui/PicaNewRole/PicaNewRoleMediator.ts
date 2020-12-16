@@ -89,11 +89,13 @@ export class PicaNewRoleMediator extends BasicMediator {
     private onHideView() {
         const uimanager = this.game.uiManager;
         uimanager.showMed(ModuleName.PICACHAT_NAME);
+        uimanager.showMed(ModuleName.PICANEWMAIN_NAME);
         this.hide();
     }
     private onViewInitComplete() {
         const uimanager = this.game.uiManager;
         uimanager.hideMed(ModuleName.PICACHAT_NAME);
+        uimanager.hideMed(ModuleName.PICANEWMAIN_NAME);
     }
     private checkFollowState(uid: string) {
         this.game.httpService.checkFollowed([uid]).then((response: any) => {

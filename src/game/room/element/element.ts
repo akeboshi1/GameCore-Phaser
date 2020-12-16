@@ -171,19 +171,14 @@ export class Element extends BlockObject implements IElement {
         throw new Error("Method not implemented.");
     }
 
-    public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false) {
+    public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
         this.loadDisplayInfo();
-        // this.addDisplay();
-        this.addToBlock();
-        // if (!this.mCreatedDisplay) {
-        //     this.mCreatedDisplay = true;
-        //     this.addToBlock();
-        // }
+        return this.addToBlock();
     }
 
-    public setModel(model: ISprite) {
+    public async setModel(model: ISprite) {
         this.mModel = model;
         if (!model) {
             return;
@@ -191,7 +186,7 @@ export class Element extends BlockObject implements IElement {
         this.mElementManager.removeFromMap(model);
         // this.mDisplayInfo = this.mModel.displayInfo;
         this.mQueueAnimations = undefined;
-        this.load(this.mModel.displayInfo);
+        await this.load(this.mModel.displayInfo);
         // if (!this.mDisplay) {
         //     return;
         // }
@@ -783,39 +778,19 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    protected createDisplay() {
-        // if (!this.mDisplayInfo) {
-        //     Logger.getInstance().error(`displayinfo does not exist, Create ${this.model.nickname} failed`);
-        //     return;
-        // }
-        // if (this.mDisplay) {
-        //     return this.mDisplay;
-        // }
-        // const scene = this.mElementManager.scene;
-        // if (scene) {
-        //     if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
-        //         this.mDisplay = new DragonbonesDisplay(scene, this.mElementManager.roomService, this);
-        //     } else {
-        //         this.mDisplay = new FramesDisplay(scene, this.mElementManager.roomService, this);
-        //     }
-        //     const pos = this.mModel.pos;
-        //     if (pos) this.mDisplay.setPosition(pos.x, pos.y, pos.z);
-        //     this.addToBlock();
-        // }
-        // return this.mDisplay;
-        // TODO
+    protected async createDisplay(): Promise<any> {
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
-                this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
+                await this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
             } else {
-                this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
+                await this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
             }
         } else {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
-            this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
+            await this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
         }
         const pos = this.mModel.pos;
         this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
@@ -824,7 +799,6 @@ export class Element extends BlockObject implements IElement {
         this.setInputEnable(this.mInputEnable);
         this.mCreatedDisplay = true;
         this.roomService.game.emitter.emit("ElementCreated", this.id);
-        return this;
     }
 
     protected loadDisplayInfo() {
@@ -856,29 +830,12 @@ export class Element extends BlockObject implements IElement {
         // }
     }
 
-    protected addDisplay() {
-        // if (!this.mCreatedDisplay) {
-        //     this.mCreatedDisplay = true;
-        //     this.createDisplay();
-        // }
-        this.createDisplay();
-        // this.mElementManager.roomService.game.peer.render.createDisplay();
-        // this.createDisplay();
-        // const room = this.roomService;
-        // if (!room || !this.mDisplay) {
-        //     // Logger.getInstance().error("roomService is undefined");
-        //     return;
-        // }
-        // room.addToSurface(this.mDisplay);
+    protected async addDisplay(): Promise<any> {
+        await this.createDisplay();
         let depth = 0;
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
-        // if (this.mFollowObjects) {
-        //     this.mFollowObjects.forEach((follow) => {
-        //         if (follow.object) room.addToSceneUI(<any> follow.object);
-        //     });
-        // }
         this.setDepth(depth);
         this.addBody();
     }
@@ -947,9 +904,9 @@ export class Element extends BlockObject implements IElement {
         return 0; // this.mOffsetY;
     }
 
-    protected addToBlock() {
+    protected addToBlock(): Promise<any> {
         if (!this.mDisplayInfo) return;
-        super.addToBlock();
+        return super.addToBlock();
     }
 
     protected checkDirection() {

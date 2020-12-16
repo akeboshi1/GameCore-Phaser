@@ -64,6 +64,9 @@ export class DisplayManager {
     private serverPosition: ServerPosition;
     private preLoadList: any[];
     private loading: boolean = false;
+
+    // ====实例id
+    private uuid: number = 0;
     constructor(private render: Render) {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
@@ -111,7 +114,7 @@ export class DisplayManager {
         }
         let display: DisplayObject;
         if (!this.displays.has(id)) {
-            display = new DragonbonesDisplay(scene, this.render, id, NodeType.CharacterNodeType);
+            display = new DragonbonesDisplay(scene, this.render, id, this.uuid++, NodeType.CharacterNodeType);
             this.displays.set(id, display);
             this.preLoadList.push(display);
         } else {
@@ -132,7 +135,7 @@ export class DisplayManager {
         }
         let display: DisplayObject;
         if (!this.displays.has(data.id)) {
-            display = new DragonbonesDisplay(scene, this.render, data.id, NodeType.CharacterNodeType);
+            display = new DragonbonesDisplay(scene, this.render, data.id, this.uuid++, NodeType.CharacterNodeType);
             this.displays.set(data.id, display);
         } else {
             display = this.displays.get(data.id);

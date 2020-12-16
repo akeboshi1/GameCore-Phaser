@@ -14,8 +14,8 @@ export class Player extends Element implements IElement {
         super(sprite, mElementManager);
     }
 
-    setModel(val: ISprite) {
-        super.setModel(val);
+    setModel(val: ISprite): Promise<any> {
+        return super.setModel(val);
     }
 
     // public move(moveData: op_client.IMoveData) {

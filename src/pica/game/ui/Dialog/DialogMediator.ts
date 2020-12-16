@@ -29,7 +29,7 @@ export class DialogMediator extends BasicMediator {
 
     update(param?: any) {
         super.update(param);
-        if (this.panelInit) this.mView.update(param);
+        if (this.mView) this.mView.update(param);
     }
 
     private onHideHandler() {

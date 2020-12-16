@@ -132,11 +132,11 @@ export class LoginPanel extends BasePanel {
             style: {
                 color: "#FFEC48",
                 align: "center",
-                fontSize: 11 * this.dpr,
+                fontSize: 11 * this.dpr + "px",
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
-        label1.setResolution(this.dpr);
+       // label1.setResolution(this.dpr);
         label1.y = height - 50 * this.dpr - label1.height * 0.5;
 
         const label2 = this.scene.make.text({
@@ -149,7 +149,7 @@ export class LoginPanel extends BasePanel {
                 fontFamily: Font.DEFULT_FONT
             }
         }).setOrigin(0.5);
-        label2.setResolution(this.dpr);
+        // label2.setResolution(this.dpr);
         label2.y = height - 16 * this.dpr - label2.height * 0.5;
 
         const line = this.scene.make.image({
@@ -161,13 +161,13 @@ export class LoginPanel extends BasePanel {
         this.fetchCode = this.scene.make.text({
             text: "获取验证码",
             style: {
-                fontSize: 14 * this.dpr,
+                fontSize: 14 * this.dpr+ "px",
                 fontFamily: Font.DEFULT_FONT,
                 color: "#2B5AF3"
             }
         }, false).setOrigin(0.5).setInteractive();
         this.fetchCode.x = (codeContainer.width - this.fetchCode.width) * 0.5 - 22 * this.dpr;
-        this.fetchCode.setResolution(this.dpr);
+        // this.fetchCode.setResolution(this.dpr);
         this.fetchCode.on("pointerup", this.onFetchCodeHandler, this);
         this.fetchCode.on("pointerdown", this.onFetchCodeDownHandler, this);
         codeContainer.add([line, this.fetchCode]);
@@ -198,7 +198,7 @@ export class LoginPanel extends BasePanel {
                 Helpers.openUrl("https://picatown.com/con_news/news.php?nid=1201");
             }
         });
-        label.setResolution(this.dpr);
+        // label.setResolution(this.dpr);
 
         this.acceptBtn = new CheckBox(this.scene, this.key, "accept_unchecked", "accept_checked").on(String(ClickEvent.Tap), this.onCheckboxHandler, this);
         label.x = this.loginBtn.x + 8 * this.dpr;

@@ -103,6 +103,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     }
 
     public destroy() {
+        this.removeFromBlock();
         super.destroy();
     }
 
@@ -110,17 +111,17 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this.isUsed = false;
     }
 
-    protected addDisplay() { }
+    protected addDisplay(): Promise<any> { return Promise.resolve(); }
 
     protected removeDisplay() {
         this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
-    protected addToBlock() {
+    protected addToBlock(): Promise<any> {
         if (this.mBlockable) {
-            this.mRoomService.addBlockObject(this);
+            return this.mRoomService.addBlockObject(this);
         } else {
-            this.addDisplay();
+            return this.addDisplay();
         }
     }
 
