@@ -31,7 +31,6 @@ export class PicaFurniUnlockEffectPanel extends Phaser.GameObjects.Container {
             const from = offsetY + item.width * 0.5 - 10 * this.dpr;
             const to = offsetY + 20 * this.dpr;
             item.x = 0;
-            item.y = from;
             item.alpha = 0;
             item.playMove(from, to);
             this.add(item);
@@ -49,7 +48,7 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private compl: Handler;
-    private relativepoints = [0, -297, -280, -289, -282, -289, -284];
+    private relativepoints = [0, -67, -50, -59, -52, -59, -54];
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
@@ -80,41 +79,41 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
     }
 
     playMove(from: number, to: number) {
-
+        if (!this.scene) return;
+        const paths = [];
+        this.y = from + this.relativepoints[0] * this.dpr;
+        for (const value of this.relativepoints) {
+            paths.push({ y: from + value * this.dpr });
+        }
+        this.alpha = 0;
         const tween = this.scene.tweens.add({
             targets: this,
-            y: { from, to, duration: 700, ease: "Bounce.easeOut" },
-            alpha: { from: 0, to: 1, duration: 400, ease: "Linear" },
+            alpha: { from: 0, to: 1, duration: 200, ease: "Cubic.easeIn" },
+            delay: 50,
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+            },
+        });
+        const tween1 = this.scene.tweens.timeline({
+            targets: this,
+            ease: "Linear",
+            tweens: paths,
+            totalDuration: 700,
+            onComplete: () => {
                 this.playAlphaAni(this.sprite1);
                 setTimeout(() => {
                     this.playAlphaAni(this.sprite2);
                 }, 300);
                 setTimeout(() => {
-                    this.playAlpha();
+                    this.playFadeout();
                 }, 3000);
-            },
+            }
         });
-        // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
-        //     targets: this.mDisplay,
-        //     ease: "Linear",
-        //     tweens: posPath,
-        //     onStart: () => {
-        //         this.onMoveStart();
-        //     },
-        //     onComplete: () => {
-        //         this.onMoveComplete();
-        //     },
-        //     onUpdate: () => {
-        //         this.onMoving();
-        //     },
-        //     onCompleteParams: [this],
-        // });
     }
 
     playAlphaAni(target, yoyo: boolean = true, times: number = 0, duration: number = 400) {
+        if (!this.scene) return;
         const tween = this.scene.tweens.add({
             targets: target,
             alpha: {
@@ -138,7 +137,8 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
         });
     }
 
-    playAlpha() {
+    playFadeout() {
+        if (!this.scene) return;
         const tween = this.scene.tweens.add({
             targets: this,
             alpha: {

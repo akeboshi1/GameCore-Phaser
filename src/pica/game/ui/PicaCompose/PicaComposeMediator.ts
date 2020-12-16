@@ -12,9 +12,10 @@ export class PicaComposeMediator extends BasicMediator {
     }
 
     show(param?: any) {
+        this.updateSkills(param.skills);
         super.show(param);
         this.game.emitter.on("formulaDetial", this.onRetFormulaDetial, this);
-        // this.game.emitter.on("showopen", this.onShowPanel, this);
+        this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_showpanel", this.onShowPanel, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.onReqUseFormula, this);
@@ -25,7 +26,7 @@ export class PicaComposeMediator extends BasicMediator {
     hide() {
         super.hide();
         this.game.emitter.off("formulaDetial", this.onRetFormulaDetial, this);
-        // this.game.emitter.off("showopen", this.onShowPanel, this);
+        this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_showpanel", this.onShowPanel, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.onReqUseFormula, this);
@@ -41,7 +42,7 @@ export class PicaComposeMediator extends BasicMediator {
 
     private onSyncFinishHandler() {
         if (this.mView) {
-            const skills = this.mParam[0].skills;
+            const skills = this.mShowData.skills;
             this.updateSkills(skills);
             this.mView.setComposeData(skills);
         }
@@ -49,14 +50,14 @@ export class PicaComposeMediator extends BasicMediator {
 
     private onUpdateHandler() {
         if (this.mView) {
-            const skills = this.mParam[0].skills;
+            const skills = this.mShowData.skills;
             this.updateSkills(skills);
             this.mView.setComposeData(skills);
         }
     }
-    get playerData() {
-        if (this.bag) {
-            return this.bag.playerBag;
+    get playerBag() {
+        if (this.userData) {
+            return this.userData.playerBag;
         }
         return null;
     }
@@ -70,20 +71,15 @@ export class PicaComposeMediator extends BasicMediator {
         this.mView.setComposeDetialData(content);
     }
 
+    private onShowPanel(data: { panel: string, data?: any }) {
+        const uimanager = this.game.uiManager;
+        uimanager.showMed(data.panel, data.data);
+    }
     private onHideView() {
         super.hide();
     }
-
-    private onShowPanel(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS) {
-        const skills = content.skills;
-        this.updateSkills(skills);
-        this.setParam([content]);
-        if (!this.mPanelInit) return;
-        this.show();
-    }
-
     private updateSkills(skills: op_client.IPKT_CRAFT_SKILL[]) {
-        if (this.playerData) {
+        if (this.playerBag) {
             for (const item of skills) {
                 item.skill.qualified = this.isQualified(item);
             }
@@ -91,12 +87,12 @@ export class PicaComposeMediator extends BasicMediator {
     }
 
     private isQualified(item: op_client.IPKT_CRAFT_SKILL) {
-        if (this.playerData) {
+        if (this.playerBag) {
             let qualified = true;
             const materials = item.materials;
             if (materials) {
                 for (const data of materials) {
-                    const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
+                    const count = this.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
                     data.count = count;
                     if (count < data.neededCount) {
                         qualified = false;
@@ -108,7 +104,7 @@ export class PicaComposeMediator extends BasicMediator {
         return false;
     }
 
-    get bag() {
+    get userData() {
         const user = this.game.user;
         if (!user || !user.userData) {
             return;

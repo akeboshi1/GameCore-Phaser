@@ -35,8 +35,8 @@ export class PicaMessageBoxPanel extends BasePanel {
       }
     }
     const buttons: any[] = data.button.sort((a, b) => {
-      if (a.param > b.param) return -1;
-      else return 1;
+      if (a.param > b.param) return 1;
+      else return -1;
     });
     if (buttons) {
       const btnWid: number = 114 * this.dpr;
@@ -153,7 +153,18 @@ export class PicaMessageBoxPanel extends BasePanel {
     if (!btn) {
       return;
     }
-    this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_click", btn);
+    if (btn.local) {
+      if (btn.clickhandler) {
+        const panel = this.render.uiManager.getPanel(`${btn.clickhandler.key}`);
+        if (panel && btn.clickhandler.clickfun) {
+          const clickfun = panel[btn.clickhandler.clickfun];
+          clickfun.apply(panel, btn.data);
+        }
+      }
+      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_hide");
+    } else {
+      this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_click", btn);
+    }
   }
 
   private onCloseHandler() {
