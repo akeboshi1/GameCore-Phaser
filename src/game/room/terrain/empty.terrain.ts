@@ -15,8 +15,9 @@ export class EmptyTerrain extends BlockObject {
         return this.pos;
     }
 
-    addDisplay() {
+    addDisplay(): Promise<any> {
         this.addBody();
+        return Promise.resolve();
     }
 
     removeDisplay() {

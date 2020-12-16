@@ -14,8 +14,8 @@ export class Player extends Element implements IElement {
         super(sprite, mElementManager);
     }
 
-    setModel(val: ISprite) {
-        super.setModel(val);
+    setModel(val: ISprite): Promise<any> {
+        return super.setModel(val);
     }
 
     // public move(moveData: op_client.IMoveData) {
@@ -114,7 +114,25 @@ export class Player extends Element implements IElement {
         this.onMovePathPointComplete(this.mMoveData.onCompleteParams);
         this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
     }
+    public setWeapon(weaponid: string) {
+        if (!this.mModel || !this.mModel.avatar) return;
+        const avatar: any = { farmWeapId: weaponid, barmWeapId: weaponid };
+        this.model.setTempAvatar(avatar);
+        this.load(this.mModel.displayInfo);
+    }
 
+    public removeWeapon() {
+        if (!this.mModel) return;
+        if (this.mModel.suits) {
+            this.mModel.updateAvatarSuits(this.mModel.suits);
+            this.model.updateAvatar(this.mModel.avatar);
+            this.load(this.mModel.displayInfo);
+        } else if (this.mModel.avatar) {
+            this.model.updateAvatar(this.mModel.avatar);
+            this.load(this.mModel.displayInfo);
+        }
+
+    }
     protected checkDirection() {
         if (!this.body) {
             return;

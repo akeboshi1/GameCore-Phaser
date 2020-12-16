@@ -102,7 +102,9 @@
     "remove_black": "移除黑名单",
     "operation": "操作",
     "follow": "关注",
-    "followed": "已关注"
+    "followed": "已关注",
+    "report":"举报",
+    "blockuer": "拉黑"
   },
   "compose": {
     "title": "合成",

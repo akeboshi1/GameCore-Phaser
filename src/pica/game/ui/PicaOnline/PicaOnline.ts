@@ -47,7 +47,16 @@ export class PicaOnline extends BasicModel {
         content.platformId = id;
         this.connection.send(packet);
     }
-
+    fetchPlayerInfo() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELF_PLAYER_INFO);
+        this.connection.send(packet);
+    }
+    getBanlist(): Promise<any> {
+        return new Promise<any>((resolve) => { resolve(this.game.httpService.get(`user/banlist`)); });
+    }
+    getHeadImgList(uids: string[]): Promise<any> {
+        return new Promise<any>((resolve) => { resolve(this.game.httpService.userHeadsImage(uids)); });
+    }
     private onRetOnlineInfo(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_ROOM_PLAYER_LIST = packge.content;
         this.game.emitter.emit(ModuleName.PICAONLINE_NAME + "_retOnlineInfo", content);

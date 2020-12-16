@@ -158,6 +158,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     }
     this.render.mainPeer.getPlayerAvatar()
       .then(({ avatar, suits }) => {
+        avatar = avatar || AvatarSuitType.createBaseAvatar();
         for (const key in avatar) {
           if (avatar.hasOwnProperty(key)) {
             const element = avatar[key];

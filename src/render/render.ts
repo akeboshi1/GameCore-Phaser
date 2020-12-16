@@ -338,7 +338,7 @@ export class Render extends RPCPeer implements GameMain {
     public newGame(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (this.mGame) {
-                resolve();
+                resolve(true);
             }
             // Logger.getInstance().log("dragonbones: ", dragonBones);
             this.gameConfig = {
@@ -385,7 +385,7 @@ export class Render extends RPCPeer implements GameMain {
             } else {
                 this.mConfig.platform = "nopc";
             }
-            resolve();
+            resolve(true);
         });
     }
 
@@ -681,7 +681,7 @@ export class Render extends RPCPeer implements GameMain {
             }
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
                 this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
-                resolve();
+                resolve(true);
             });
         });
         // if (this.mainPeer) this.mainPeer.createAccount(gameID, worldID, sceneID, loc);
@@ -937,7 +937,7 @@ export class Render extends RPCPeer implements GameMain {
             }
             const panel = this.uiManager.showPanel(name);
             this.exportProperty(panel, this, key).onceReady(() => {
-                resolve();
+                resolve(true);
             });
         });
     }
