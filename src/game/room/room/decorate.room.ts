@@ -101,10 +101,11 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         });
     }
 
-    addBlockObject(object: IBlockObject) {
+    addBlockObject(object: IBlockObject): Promise<any> {
         if (this.mBlocks) {
             this.mBlocks.add(object);
         }
+        return Promise.resolve();
     }
 
     addToUI(element: Phaser.GameObjects.Container | Phaser.GameObjects.Container[]) {

@@ -148,10 +148,10 @@ export class Terrain extends BlockObject implements IElement {
         return this;
     }
 
-    protected addDisplay() {
+    protected async addDisplay(): Promise<any> {
         if (!this.mCreatedDisplay) {
             this.mCreatedDisplay = true;
-            this.createDisplay();
+            await this.createDisplay();
         }
         const pos = this.mModel.pos;
         this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
