@@ -9,7 +9,7 @@ export interface IBlockObject {
 
     getPosition45(): IPos;
 
-    setRenderable(isRenderable: boolean, delay?: number): void;
+    setRenderable(isRenderable: boolean, delay?: number): Promise<any>;
 
     getRenderable(): boolean;
 

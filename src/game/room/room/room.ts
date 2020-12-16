@@ -201,11 +201,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addBlockObject(object: IBlockObject): Promise<any> {
-        // Logger.getInstance().log("rooms add");
-        if (this.blocks) {
-            this.blocks.add(object);
-        }
-        return Promise.resolve();
+        return new Promise<any>((resolve, reject) => {
+            if (this.blocks) {
+                this.blocks.add(object).then((val) => {
+                    resolve(val);
+                });
+            } else {
+                reject(false);
+            }
+        });
     }
 
     public removeBlockObject(object: IBlockObject) {

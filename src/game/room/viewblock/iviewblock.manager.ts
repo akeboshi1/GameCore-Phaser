@@ -6,7 +6,7 @@ export interface IViewBlockManager {
 
     int(size: IPosition45Obj): void;
 
-    add(e: IBlockObject): boolean;
+    add(e: IBlockObject): Promise<boolean>;
 
     remove(e: IBlockObject): boolean;
 
