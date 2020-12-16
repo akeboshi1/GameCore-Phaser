@@ -6,8 +6,6 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { Coin, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-import { DllPlugin } from "webpack";
-
 export class PicaBagPanel extends PicaBasePanel {
   private commonkey = "common_key";
   private mCloseBtn: Button;
@@ -233,7 +231,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = new Button(this.scene, this.key, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 40 * this.dpr);
+    this.mCloseBtn.setPosition(21 * this.dpr, 35 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
     const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
       left: 17 * this.dpr,
@@ -273,6 +271,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.moreButton.x = width - this.moreButton.width * 0.5 - 20 * this.dpr;
     this.moreButton.y = nameBg.y;
     this.moreButton.on(ClickEvent.Tap, this.onMoreHandler, this);
+    this.moreButton.visible = false;
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.use"), "#996600");
@@ -487,11 +486,11 @@ export class PicaBagPanel extends PicaBasePanel {
           this.setItemAttribute(item, property);
       });
     if (item) {
-      this.useBtn.enable = item.executable;
+      // this.useBtn.visible = item.executable;
       this.setSelectedItem(item, cell);
     } else {
       if (this.categoryType !== 2 && this.mSelectedItemData === undefined) {// op_pkt_def.PKT_PackageType.AvatarPackage
-        this.useBtn.enable = false;
+        // this.useBtn.enable = false;
         this.mDetailDisplay.setTexture(this.key, "ghost");
         this.mDetailDisplay.setNearest();
       }
@@ -511,10 +510,10 @@ export class PicaBagPanel extends PicaBasePanel {
         img = this.mAttributes[i];
         img.visible = true;
       } else {
-        const bg = new NineSlicePatch(this.scene, 0, 0, 56 * this.dpr, 21 * this.dpr, UIAtlasName.uicommon, "bag_attribute_bg", {
-          left: 11 * this.dpr, right: 11 * this.dpr, top: 0, bottom: 0
+        const bg = new NineSlicePatch(this.scene, 0, 0, 56 * this.dpr, 22 * this.dpr, UIAtlasName.uicommon, "bag_attribute_bg", {
+          left: 12 * this.dpr, right: 12 * this.dpr, top: 0, bottom: 0
         });
-        img = new DynamicImageValue(this.scene, 56 * this.dpr, 21 * this.dpr, UIAtlasName.uicommon, "", this.dpr);
+        img = new DynamicImageValue(this.scene, 56 * this.dpr, 22 * this.dpr, UIAtlasName.uicommon, "", this.dpr);
         img.setOffset(-3 * this.dpr, 0);
         img.addAt(bg, 0);
         img.setLayout(2);
@@ -527,8 +526,8 @@ export class PicaBagPanel extends PicaBasePanel {
           img.setText(proper.value > 0 ? "+" + proper.value : proper.value);
           if (proper.display)
             img.load(Url.getOsdRes(proper.display.texturePath));
-        }
-      }
+        } else img.visible = false;
+      } else img.visible = false;
     }
     this.setLayoutAttribute();
   }
@@ -544,7 +543,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const space = 23 * this.dpr;
     const posx = this.scaleWidth * 0.5;
     let posy = this.nameText.y + 30 * this.dpr;
-    const length = arr.length;
+    const length = arr.length > 3 ? 3 : arr.length;
     const allLen = cellWidth * length + space * (length - 1);
     let offsetx = posx - allLen * 0.5;
     let index: number = 0;
@@ -552,11 +551,11 @@ export class PicaBagPanel extends PicaBasePanel {
       item.x = offsetx + cellWidth * 0.5;
       item.y = posy;
       offsetx += (cellWidth + space);
-      if (index === 5) {
-        offsetx = posx - allLen * 0.5;
-        posy += 10 * this.dpr + cellHeight;
-      }
       index++;
+      if (index === 3) {
+        offsetx = posx - allLen * 0.5;
+        posy += 13 * this.dpr + cellHeight;
+      }
     }
     arr.length = 0;
   }
@@ -567,6 +566,12 @@ export class PicaBagPanel extends PicaBasePanel {
     }
     if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit)
       this.render.renderEmitter(this.key + "_addFurniToScene", this.mSelectedItemData.id);
+    else {
+      const data = {
+        text: [{ text: i18n.t("furni_bag.placetips"), node: undefined }]
+      };
+      this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+    }
   }
 
   private onTopCategoryHandler(item: NinePatchTabButton) {
@@ -575,11 +580,12 @@ export class PicaBagPanel extends PicaBasePanel {
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
-        this.useBtn.visible = false;
-      } else if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-        this.useBtn.visible = false;
+        this.useBtn.visible = true;
+        this.useBtn.setText(i18n.t("furni_bag.add"));
       } else {
         this.useBtn.visible = true;
+        this.useBtn.setText(i18n.t("common.use"));
+
       }
     }
   }
@@ -589,9 +595,6 @@ export class PicaBagPanel extends PicaBasePanel {
   }
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
-    if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-      this.render.renderEmitter(this.key + "_queryDressAvatarIDS");
-    }
     this.render.renderEmitter(this.key + "_getCategories", categoryType);
   }
   private getPropResource(data: op_client.ICountablePackageItem) {
@@ -640,23 +643,28 @@ export class PicaBagPanel extends PicaBasePanel {
   private onUseBtnHandler() {
     this.mCategoryScroll.removeListen();
     if (this.mSelectedItemData) {
-      const data = this.mSelectedItemData;
-      const title = i18n.t("common.use");
-      const resource = this.getPropResource(data);
-      const resultHandler = {
-        key: this.key,
-        confirmFunc: "onUsePropsHandler",
-        cancelFunc: "onUsePropsFailedHandler"
-      };
-      this.showPropFun({ resultHandler, data, price: false, title, resource });
+      if (this.categoryType === 1 || this.categoryType === 5) {
+        this.onAddFurniToSceneHandler();
+      } else {
+        const data = this.mSelectedItemData;
+        const title = i18n.t("common.use");
+        const resource = this.getPropResource(data);
+        const resultHandler = {
+          key: this.key,
+          confirmFunc: "onUsePropsHandler",
+          cancelFunc: "onUsePropsFailedHandler"
+        };
+        this.showPropFun({ resultHandler, data, price: false, title, resource });
+      }
     }
+
   }
   private onRechargeHandler() {
   }
   private onMoreHandler() {
-    if (!this.mSelectedItemData) return;
-    this.moreButtonPanel.show();
-    this.moreButtonPanel.setItemData(this.mSelectedItemData, this.categoryType);
+    // if (!this.mSelectedItemData) return;
+    // this.moreButtonPanel.show();
+    // this.moreButtonPanel.setItemData(this.mSelectedItemData, this.categoryType);
   }
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategoryScroll.getItemList();

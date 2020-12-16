@@ -58,6 +58,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected hasClear: boolean = false;
     protected currentTime: number = 0;
     protected mWorkerLoop: any;
+    protected mAvatarType: op_def.AvatarStyle;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
@@ -382,6 +383,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return render;
     }
 
+    get avatarType() {
+        return this.mAvatarType;
+    }
     public onFocus() {
         if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
         this.update();
@@ -531,6 +535,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
         this.createManager();
         const gameID = this.mConfig.game_id;
         const worldId = this.mConfig.virtual_world_id;
@@ -784,5 +789,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
     private heartBeatCallBack() {
         this.mainPeer.clearBeat();
+    }
+    private onAvatarGameModeHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
+        this.mAvatarType = content.avatarStyle;
     }
 }

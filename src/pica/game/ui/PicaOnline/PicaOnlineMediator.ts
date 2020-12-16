@@ -83,7 +83,8 @@ export class PicaOnlineMediator extends BasicMediator {
             }
         });
         const mgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
-        this.mView.setOnlineDatas(infos, mgr.curRoom.playerCount, this.game.user.userData.cid);
+        if (mgr.curRoom)
+            this.mView.setOnlineDatas(infos, mgr.curRoom.playerCount, this.game.user.userData.cid);
     }
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         if (this.panelInit) {

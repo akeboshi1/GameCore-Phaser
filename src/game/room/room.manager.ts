@@ -27,7 +27,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mGame = game;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
@@ -175,19 +174,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 this.onEnterDecorate(content);
                 break;
         }
-    }
-
-    private onAvatarGameModeHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
-        // const scene = content.scene;
-        // switch (scene.sceneType) {
-        //     case op_def.SceneTypeEnum.NORMAL_SCENE_TYPE:
-        //         this.onEnterScene(content);
-        //         break;
-        //     case op_def.SceneTypeEnum.EDIT_SCENE_TYPE:
-        //         this.onEnterDecorate(content);
-        //         break;
-        // }
     }
 
     get game(): Game {

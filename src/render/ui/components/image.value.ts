@@ -116,6 +116,7 @@ export class DynamicImageValue extends ImageValue {
             this.icon.scale = 1;
             this.icon.displayHeight = this.height - 4 * this.dpr;
             this.icon.scaleX = this.icon.scaleY;
+            this.icon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
             this.resetSize();
         });
     }

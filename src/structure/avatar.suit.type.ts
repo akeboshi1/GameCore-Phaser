@@ -70,6 +70,18 @@ export class AvatarSuitType {
         const avatar: IAvatar = new BaseAvatar();
         return avatar;
     }
+    static hasAvatarSuit(attrs: any) {
+        if (attrs) {
+            for (const attr of attrs) {
+                if (attr.key === "PKT_AVATAR_SUITS") {
+                    if (attr.value && attr.value.length > 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     public costume = ["bodyCostId", "bodyDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
     public hair = ["headHairId", "headBackId"];
     public eye = ["headEyesId"];

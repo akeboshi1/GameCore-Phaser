@@ -36,7 +36,8 @@
     "expires": "Expired",
     "timelimit": "Expires",
     "properties": "Prop Properties",
-    "needproper": "Requirement"
+    "needproper": "Requirement",
+    "placetips":"Put down when editing room"
   },
   "common": {
     "cancel": "Cancel",

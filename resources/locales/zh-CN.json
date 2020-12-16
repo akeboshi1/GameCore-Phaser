@@ -37,7 +37,8 @@
     "expires": "已过期",
     "timelimit": "限时",
     "properties": "道具属性",
-    "needproper": "需求属性"
+    "needproper": "需求属性",
+    "placetips":"布置自己的小屋的时候才能放置"
   },
   "common": {
     "cancel": "取消",

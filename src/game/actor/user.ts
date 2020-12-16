@@ -8,8 +8,9 @@ import { MoveData, MovePos } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
 import { IPoint } from "game-capsule";
+import { AvatarSlotType } from "gamecoreRender";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -45,8 +46,12 @@ export class User extends Player {
         this.mRoomService = room;
         this.mElementManager = room.playerManager;
         this.setMatterWorld(room.matterWorld);
+        if (this.game.avatarType === op_def.AvatarStyle.SuitType) {
+            if (!AvatarSuitType.hasAvatarSuit(actor["attrs"])) {
+                if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
+            }
+        }
         this.model = new PlayerModel(actor);
-
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
         Logger.getInstance().log("setCameraScroller");
