@@ -106,6 +106,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT
         });
         this.peoplevalue.setLayout(1);
+        this.peoplevalue.setText("0");
         this.peoplevalue.x = peoplebg.x;
         const peopeclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         peopeclickCon.setSize(40 * this.dpr, 40 * this.dpr);

@@ -256,25 +256,6 @@ export class Element extends BlockObject implements IElement {
         this.update();
         this.mElementManager.addToMap(this.mModel);
     }
-    public setWeapon(weaponid: string) {
-        if (!this.mModel || !this.mModel.avatar) return;
-        const avatar: any = { farmWeapId: weaponid, barmWeapId: weaponid };
-        this.model.setTempAvatar(avatar);
-        this.load(this.mModel.displayInfo);
-    }
-
-    public removeWeapon() {
-        if (!this.mModel) return;
-        if (this.mModel.suits) {
-            this.mModel.updateAvatarSuits(this.mModel.suits);
-            this.model.updateAvatar(this.mModel.avatar);
-            this.load(this.mModel.displayInfo);
-        } else if (this.mModel.avatar) {
-            this.model.updateAvatar(this.mModel.avatar);
-            this.load(this.mModel.displayInfo);
-        }
-
-    }
 
     public play(animationName: string, times?: number): void {
         if (!this.mModel) {

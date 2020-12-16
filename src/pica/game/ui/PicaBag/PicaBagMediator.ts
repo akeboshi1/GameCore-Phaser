@@ -54,15 +54,15 @@ export class PicaBagMediator extends BasicMediator {
         this.removeLisenter();
     }
 
-    get playerData() {
-        const bag = this.bag;
+    get bagData() {
+        const bag = this.userData;
         if (!bag) {
             return;
         }
-        return this.bag.playerBag;
+        return this.userData.playerBag;
     }
 
-    get bag() {
+    get userData() {
         if (!this.game.user || !this.game.user.userData) {
             return;
         }
@@ -73,7 +73,11 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     protected panelInit() {
-
+        super.panelInit();
+        if (this.mPanelInit) {
+            this.mView.setSceneData(this.mScneType, this.game.roomManager.currentRoom.enableEdit);
+            this.mView.setMoneyData(this.userData.money, this.userData.diamond);
+        }
     }
 
     protected mediatorExport() {
@@ -84,13 +88,13 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     private addLisenter() {
-        if (!this.bag) return;
+        if (!this.userData) return;
         this.game.emitter.on(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.on(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
 
     private removeLisenter() {
-        if (!this.bag) return;
+        if (!this.userData) return;
         this.game.emitter.off(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.off(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
@@ -127,21 +131,8 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
-        if (this.playerData) {
-            const items = this.playerData.getItemsByCategory(data.packType, data.key);
-            if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage && items) {
-                let tempitem: op_client.ICountablePackageItem;
-                for (let i = items.length - 1; i >= 0; i--) {
-                    const tag = items[i].tag;
-                    if (tag !== undefined && tag !== "" && JSON.parse(tag).type === "remove") {
-                        tempitem = items[i];
-                        items.splice(i, 1);
-                    }
-                }
-                if (data.key !== "alltype" && tempitem) {
-                    items.unshift(tempitem);
-                }
-            }
+        if (this.bagData) {
+            const items = this.bagData.getItemsByCategory(data.packType, "alltype");
             this.mView.setProp(items, data.isupdate);
         }
     }

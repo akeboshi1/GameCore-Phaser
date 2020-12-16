@@ -162,7 +162,6 @@ export class ThreeSliceButton extends BaseUI implements IButtonState {
     protected setBgFrame(frame: string[]) {
         if (this.mBackground) {
             this.mBackground.setFrame(frame);
-            this.setSize(this.mBackground.width, this.mBackground.height);
         }
     }
 

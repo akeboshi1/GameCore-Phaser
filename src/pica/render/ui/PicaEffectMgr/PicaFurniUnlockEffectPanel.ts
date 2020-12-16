@@ -49,6 +49,7 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private compl: Handler;
+    private relativepoints = [0, -297, -280, -289, -282, -289, -284];
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
@@ -79,6 +80,7 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
     }
 
     playMove(from: number, to: number) {
+
         const tween = this.scene.tweens.add({
             targets: this,
             y: { from, to, duration: 700, ease: "Bounce.easeOut" },
@@ -95,6 +97,21 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
                 }, 3000);
             },
         });
+        // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
+        //     targets: this.mDisplay,
+        //     ease: "Linear",
+        //     tweens: posPath,
+        //     onStart: () => {
+        //         this.onMoveStart();
+        //     },
+        //     onComplete: () => {
+        //         this.onMoveComplete();
+        //     },
+        //     onUpdate: () => {
+        //         this.onMoving();
+        //     },
+        //     onCompleteParams: [this],
+        // });
     }
 
     playAlphaAni(target, yoyo: boolean = true, times: number = 0, duration: number = 400) {
