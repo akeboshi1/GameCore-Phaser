@@ -216,7 +216,7 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public updateModel(model: op_client.ISprite) {
+    public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
         if (this.mModel.id !== model.id) {
             return;
         }
@@ -224,14 +224,19 @@ export class Element extends BlockObject implements IElement {
         if (model.hasOwnProperty("attrs")) {
             this.model.updateAttr(model.attrs);
         }
-        if (this.mModel.updateSuits) {
-            this.mModel.updateAvatarSuits(this.mModel.suits);
-            this.mModel.updateAvatar(this.mModel.avatar);
-            this.load(this.mModel.displayInfo);
-        } else if (model.hasOwnProperty("avatar")) {
-            this.mModel.updateAvatar(model.avatar);
-            this.load(this.mModel.displayInfo);
+        if (avatarType === op_def.AvatarStyle.SuitType) {
+            if (this.mModel.updateSuits) {
+                this.mModel.updateAvatarSuits(this.mModel.suits);
+                this.mModel.updateAvatar(this.mModel.avatar);
+                this.load(this.mModel.displayInfo);
+            }
+        } else if (avatarType === op_def.AvatarStyle.OriginAvatar) {
+            if (model.hasOwnProperty("avatar")) {
+                this.mModel.updateAvatar(model.avatar);
+                this.load(this.mModel.displayInfo);
+            }
         }
+
         if (model.display && model.animations) {
             this.mModel.updateDisplay(model.display, model.animations);
             this.load(this.mModel.displayInfo);

@@ -600,7 +600,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private getPropResource(data: op_client.ICountablePackageItem) {
     const resource: any = {};
     if (data.suitType) {
-      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.tag, data.version);
+      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn,data.slot, data.tag, data.version);
     } else {
       resource.display = data.display;
     }

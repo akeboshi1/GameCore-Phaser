@@ -215,7 +215,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     player.model = new Sprite(sprite, content.nodeType);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
-                    player.updateModel(sprite);
+                    player.updateModel(sprite, this.mRoom.game.avatarType);
                 }
             }
         }
