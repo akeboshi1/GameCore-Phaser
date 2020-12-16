@@ -33,3 +33,4 @@ export * from "./material.item";
 export * from "./progress.mask.bar";
 export * from "./button.event.dispatch";
 export * from "./common.background";
+export * from "./background.scale.button";

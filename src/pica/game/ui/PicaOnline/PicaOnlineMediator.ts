@@ -4,6 +4,7 @@ import { PicaOnline } from "./PicaOnline";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 export class PicaOnlineMediator extends BasicMediator {
     protected mModel: PicaOnline;
+    protected blacklist = [];
     constructor(game: Game) {
         super(ModuleName.PICAONLINE_NAME, game);
         this.mModel = new PicaOnline(this.game);
@@ -15,6 +16,7 @@ export class PicaOnlineMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_retOnlineInfo", this.onOnlineHandler, this);
         this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
+        this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_block", this.onBlockUserHandler, this);
         this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_close", this.onCloseHandler, this);
     }
 
@@ -22,6 +24,7 @@ export class PicaOnlineMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_retOnlineInfo", this.onOnlineHandler, this);
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
+        this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_block", this.onBlockUserHandler, this);
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_close", this.onCloseHandler, this);
         super.hide();
     }
@@ -29,6 +32,18 @@ export class PicaOnlineMediator extends BasicMediator {
     panelInit() {
         if (this.panelInit) {
             this.mModel.fetchOnlineInfo();
+            this.blacklist.length = 0;
+            this.mModel.getBanlist().then((response) => {
+                if (response.code === 200) {
+                    const arrs = response.data;
+                    for (const item of arrs) {
+                        if (item.ban) {
+                            this.blacklist.push(item.ban_user._id);
+                        }
+                    }
+                    this.mView.setBlackList(this.blacklist);
+                }
+            });
         }
     }
 
@@ -52,23 +67,23 @@ export class PicaOnlineMediator extends BasicMediator {
 
     private async onOnlineHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_ROOM_PLAYER_LIST) {
         const uids = [];
-        const map = new Map<string, any>();
+        const infos = [];
         for (const data of content.playerInfos) {
             uids.push(data.platformId);
-            map.set(data.platformId, data);
+            infos.push(data);
         }
-        const headimg: any = await this.game.httpService.userHeadsImage(uids);
-        if (headimg.code === 200) {
-            const datas: any[] = headimg.data;
-            for (const data of datas) {
-                const id = data._id;
-                const avatar = data.avatar;
-                const info = map.get(id);
-                info.avatar = avatar;
+        const avatars = [];
+        this.mModel.getHeadImgList(uids).then((response) => {
+            if (response.code === 200) {
+                const datas: any[] = response.data;
+                for (const data of datas) {
+                    avatars.push(data);
+                }
+                this.mView.setAvatarList(avatars);
             }
-        }
+        });
         const mgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
-        this.mView.setOnlineDatas(Array.from(map.values()), mgr.curRoom.playerCount);
+        this.mView.setOnlineDatas(infos, mgr.curRoom.playerCount, this.game.user.userData.cid);
     }
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         if (this.panelInit) {
@@ -78,6 +93,38 @@ export class PicaOnlineMediator extends BasicMediator {
         }
     }
     private onOpeningCharacterHandler(id: string) {
-        this.mModel.fetchAnotherInfo(id);
+        if (id === this.game.user.userData.cid) {
+            const uimanager = this.game.uiManager;
+            uimanager.showMed(ModuleName.CHARACTERINFO_NAME);
+            this.mModel.fetchPlayerInfo();
+        } else {
+            this.mModel.fetchAnotherInfo(id);
+        }
     }
+
+    private onBlockUserHandler(data: { uid: string, black: boolean }) {
+        if (data.black) {
+            this.game.httpService.banUser(data.uid).then((response: any) => {
+                const { code, temp } = response;
+                if (code === 200 || code === 201) {
+                    this.blacklist.push(data.uid);
+                    this.mView.setBlackList(this.blacklist);
+                }
+            });
+        } else {
+            this.game.httpService.removeBanUser(data.uid).then((response: any) => {
+                const { code, temp } = response;
+                if (code === 200 || code === 201) {
+                    //  this.checkRelation(id);
+                    const index = this.blacklist.indexOf(data.uid);
+                    if (index !== -1) {
+                        this.blacklist.splice(index, 1);
+                        this.mView.setBlackList(this.blacklist);
+                    }
+                }
+            });
+        }
+
+    }
+
 }

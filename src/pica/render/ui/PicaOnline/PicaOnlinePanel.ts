@@ -15,7 +15,10 @@ export class PicaOnlinePanel extends PicaBasePanel {
     private peopleImg: ImageValue;
     private mGameGrid: GameGridTable;
     private bottomPanel: PicaOnlineBottomPanel;
-    private onlineDatas: op_pkt_def.PKT_PlayerInfo;
+    private userid: string;
+    private blackList: string[];
+    private onlineData: any;
+    private people: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAONLINE_NAME;
@@ -52,10 +55,38 @@ export class PicaOnlinePanel extends PicaBasePanel {
         super.destroy();
     }
 
-    public setOnlineDatas(datas: op_pkt_def.PKT_PlayerInfo[], people: number) {
-        // this.onlineDatas = content;
+    public setOnlineDatas(datas: op_pkt_def.PKT_PlayerInfo[], people: number, userid: string) {
+        this.onlineData = datas;
+        this.userid = userid;
+        this.people = people;
+        if (!this.mInitialized) return;
         this.peopleImg.setText(people + "");
         this.mGameGrid.setItems(datas);
+    }
+
+    public setBlackList(blacklist: string[]) {
+        this.blackList = blacklist;
+        if (!this.mInitialized) return;
+        this.refreshBottomPanel();
+    }
+
+    public setAvatarList(avatars: any) {
+        for (const player of this.onlineData) {
+            for (const data of avatars) {
+                const id = data._id;
+                const avatar = data.avatar;
+                if (player.platformId === id) {
+                    player.avatar = avatar;
+                }
+            }
+        }
+        if (!this.mInitialized) return;
+        this.mGameGrid.refresh();
+    }
+
+    protected onInitialized() {
+        if (this.onlineData) this.mGameGrid.setItems(this.onlineData);
+        if (this.people) this.peopleImg.setText(this.people + "");
     }
 
     protected init() {
@@ -156,16 +187,29 @@ export class PicaOnlinePanel extends PicaBasePanel {
     }
 
     private onSimpleHandler(data: any) {
-        this.add(this.bottomPanel);
-        this.bottomPanel.show();
-        this.bottomPanel.setRoleData(data);
+        if (data.platformId === this.userid) {
+            this.render.renderEmitter(this.key + "_openingcharacter", data.platformId);
+        } else {
+            this.add(this.bottomPanel);
+            this.bottomPanel.show();
+            const black = this.blackList.indexOf(data.platformId) !== -1;
+            this.bottomPanel.setRoleData(data, black);
+        }
+    }
+
+    private refreshBottomPanel() {
+        if (this.bottomPanel.visible) {
+            const platformId = this.bottomPanel.roleData.platformId;
+            const black = this.blackList.indexOf(platformId) !== -1;
+            this.bottomPanel.refreshBlack(black);
+        }
     }
 
     private onBottomPanelHandler(tag: string, data: any) {
         if (tag === "report") {
 
         } else if (tag === "block") {
-
+            this.render.renderEmitter(this.key + "_block", data);
         } else if (tag === "close") {
             this.closeBottomPanel();
         }

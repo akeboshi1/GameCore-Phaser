@@ -76,6 +76,7 @@ export class PicaBagMediator extends BasicMediator {
         super.panelInit();
         if (this.mPanelInit) {
             this.mView.setSceneData(this.mScneType, this.game.roomManager.currentRoom.enableEdit);
+            this.mView.setMoneyData(this.userData.money, this.userData.diamond);
         }
     }
 
@@ -131,20 +132,7 @@ export class PicaBagMediator extends BasicMediator {
 
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
         if (this.bagData) {
-            const items = this.bagData.getItemsByCategory(data.packType, data.key);
-            if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage && items) {
-                let tempitem: op_client.ICountablePackageItem;
-                for (let i = items.length - 1; i >= 0; i--) {
-                    const tag = items[i].tag;
-                    if (tag !== undefined && tag !== "" && JSON.parse(tag).type === "remove") {
-                        tempitem = items[i];
-                        items.splice(i, 1);
-                    }
-                }
-                if (data.key !== "alltype" && tempitem) {
-                    items.unshift(tempitem);
-                }
-            }
+            const items = this.bagData.getItemsByCategory(data.packType, "alltype");
             this.mView.setProp(items, data.isupdate);
         }
     }
