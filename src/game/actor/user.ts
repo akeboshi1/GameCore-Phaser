@@ -255,9 +255,10 @@ export class User extends Player {
     }
 
     // override super's method.
-    public setRenderable(isRenderable: boolean): void {
+    public setRenderable(isRenderable: boolean): Promise<any> {
         // do nothing!
         // Actor is always renderable!!!
+        return Promise.resolve();
     }
 
     public clear() {
