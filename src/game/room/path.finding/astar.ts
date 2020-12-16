@@ -68,6 +68,6 @@ export class AStar {
     }
 
     _invalidPoint(position: IPos, cols: number, rows: number) {
-        return position.x < 0 || position.x >= cols || position.y < 0 || position.y >= rows;
+        return position.x < 0 || position.x >= cols || position.y < 0 || position.y >= rows || !this.isWalkableAt(position.x, position.y);
     }
 }
