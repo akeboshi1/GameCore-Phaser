@@ -704,7 +704,8 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData.tweenAnim = null;
             this.mMoveData = null;
         }
-        if (this.mRoomService) this.mRoomService.game.renderPeer.removeBlockObject(this.id);
+        this.removeDisplay();
+        this.mElementManager.removeFromMap(this.mModel);
         // if (this.mDisplay) {
         //     if (this.mBlockable) {
         //         this.roomService.removeBlockObject(this);

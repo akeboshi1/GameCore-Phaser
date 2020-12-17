@@ -9,6 +9,7 @@ export class PicaChat extends BasicModel {
     super(game);
     this.register();
   }
+
   register() {
     const connection = this.connection;
     if (connection) {
@@ -33,6 +34,7 @@ export class PicaChat extends BasicModel {
     content.chatContext = val;
     this.connection.send(pkt);
   }
+
   sendTest() {
     const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_CONFIGS);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_CONFIGS = pkt.content;
@@ -40,6 +42,7 @@ export class PicaChat extends BasicModel {
     content.request = "5e5e2724319461555c0b8496";// element_sn
     this.connection.send(pkt);
   }
+
   handleTest(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CONFIGS = packet.content;
     const status = content.status;
@@ -50,6 +53,7 @@ export class PicaChat extends BasicModel {
   destroy() {
     this.unregister();
   }
+
   queryMarket(marketName: string, page: number, category: string, subCategory: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY = packet.content;
@@ -60,6 +64,7 @@ export class PicaChat extends BasicModel {
     content.marketName = marketName;
     this.connection.send(packet);
   }
+
   buyMarketCommodities(commodities: op_def.IOrderCommodities[]) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES = packet.content;
@@ -67,14 +72,9 @@ export class PicaChat extends BasicModel {
     content.marketName = "gift_shop";
     this.connection.send(packet);
   }
+
   private handleCharacterChat(packet: PBpacket) {
     this.game.emitter.emit("chat", packet.content);
-  }
-
-  get connection(): ConnectionService {
-    if (this.game) {
-      return this.game.connection;
-    }
   }
 
   private onQueryMarketHandler(packet: PBpacket) {
@@ -83,4 +83,9 @@ export class PicaChat extends BasicModel {
       this.game.emitter.emit(ModuleName.PICACHAT_NAME + "_queryMarket", packet.content);
   }
 
+  get connection(): ConnectionService {
+    if (this.game) {
+      return this.game.connection;
+    }
+  }
 }
