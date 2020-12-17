@@ -471,7 +471,7 @@ export class PicaMarketPanel extends BasePanel {
   }
   private getCommodityResource(data: op_client.IMarketCommodity) {
     const content: any = {};
-    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.tag, data.version);
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     content.suits = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
     return content;
   }
