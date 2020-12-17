@@ -1,4 +1,4 @@
-import { Bodies, Body } from "matter-js";
+import { Bodies, Body, Vertices } from "matter-js";
 import { IPos, Logger, LogicPos, Position45 } from "utils";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element";
@@ -182,18 +182,16 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         const transformToMini90 = this.mRoomService.transformToMini90.bind(this.mRoomService);
         let paths = [];
         const miniSize = this.mRoomService.miniSize;
-        let index = 0;
         if (resule) {
+            paths[0] = [];
             for (let i = 0; i < cols; i++) {
+                if (i !== 0 && i !== cols - 1) continue;
                 for (let j = 0; j < rows; j++) {
                     if (collisionArea[i][j] === 1) {
-                        if (!paths[index]) paths[index] = [];
                         const pos = Position45.transformTo90(new LogicPos(i, j), miniSize);
-                        paths[index].push({ x: pos.x, y: -miniSize.tileHeight * 0.5 + pos.y }, { x: pos.x + miniSize.tileWidth * 0.5, y: pos.y }, { x: pos.x, y: pos.y + miniSize.tileHeight * 0.5 }, { x: pos.x - miniSize.tileWidth * 0.5, y: pos.y });
-                        index++;
+                        paths[0].push({ x: pos.x, y: -miniSize.tileHeight * 0.5 + pos.y }, { x: pos.x + miniSize.tileWidth * 0.5, y: pos.y }, { x: pos.x, y: pos.y + miniSize.tileHeight * 0.5 }, { x: pos.x - miniSize.tileWidth * 0.5, y: pos.y });
                     }
                 }
-                if (paths[index]) index++;
             }
         } else {
             paths = [[transformToMini90(new LogicPos(0, 0)), transformToMini90(new LogicPos(rows, 0)), transformToMini90(new LogicPos(rows, cols)), transformToMini90(new LogicPos(0, cols))]];
@@ -221,8 +219,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         // this._offset.y = mapHeight * 0.5 - origin.y;
         this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
-
-        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true });
+        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 1 });
         this.setExistingBody(body, true);
     }
 
