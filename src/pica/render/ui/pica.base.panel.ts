@@ -25,5 +25,13 @@ export class PicaBasePanel extends BasePanel {
         this.initResource();
         super.preload();
     }
+    protected setLinear(key: string) {
+        super.setLinear(key);
+        if (this.atlasNames) {
+            for (const atlas of this.atlasNames) {
+                super.setLinear(atlas);
+            }
+        }
+    }
 
 }

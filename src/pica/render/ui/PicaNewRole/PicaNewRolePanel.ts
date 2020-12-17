@@ -122,7 +122,7 @@ export class PicaNewRolePanel extends BasePanel {
         // this.vipvalue.x = this.levelLabel.x + this.levelLabel.width +  20* this.dpr;
         // this.vipvalue.y = this.levelLabel.y;
         // this.content.add(this.vipvalue);
-        this.openBigBtn = new Button(this.scene, this.key, "people_more", "people_more");
+        this.openBigBtn = new Button(this.scene, this.key, "people_minute", "people_minute");
         this.openBigBtn.setSize(20 * this.dpr, 20 * this.dpr);
         this.openBigBtn.removeInteractive();
         this.openBigBtn.setInteractive();

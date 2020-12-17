@@ -26,7 +26,7 @@ export class Terrain extends BlockObject implements IElement {
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
-        this.setPosition45(this.mModel.pos);
+        this.setPosition(this.mModel.pos);
         this.mElementManager.addToMap(val);
         // this.addDisplay();
     }
@@ -127,7 +127,8 @@ export class Terrain extends BlockObject implements IElement {
 
     public destroy() {
         this.mCreatedDisplay = false;
-        this.mElementManager.roomService.game.peer.render.removeBlockObject(this.id);
+        this.removeDisplay();
+        this.mElementManager.removeFromMap(this.mModel);
         super.destroy();
     }
 

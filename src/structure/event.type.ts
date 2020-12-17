@@ -104,4 +104,9 @@ export class EventType {
     public static QUERY_PRAISE = "QUERY_PRAISE";
     public static QUERY_MARKET_REQUEST = "QUERY_MARKET_REQUEST";
     public static REQUEST_TARGET_UI = "REQUEST_TARGET_UI";
+
+    /**
+     * navigate初始化好，修改PlayCamera大小
+     */
+    public static NAVIGATE_RESIZE = "navigateResize";
 }

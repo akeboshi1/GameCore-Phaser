@@ -11,12 +11,26 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   private mFramesDisplay: FramesDisplay;
   private complHandler: Handler;
   private mFrameAni: FrameAnimation;
-  private mKeepScale = false;
+  private mFixedSize: number = 0;// 0 -不固定  1 - 固定尺寸，2 - 固定尺寸缩放取整
   private curLoadType: DisplayLoadType = DisplayLoadType.None;
   private isLoading: boolean = false;
-  constructor(scene: Phaser.Scene, protected render: Render, keepscale: boolean = false) {
+  private mFixScale: number = 1;
+
+  constructor(scene: Phaser.Scene, protected render: Render) {
     super(scene);
-    this.mKeepScale = keepscale;
+
+  }
+
+  /**
+   *
+   * @param fixeScale 整体缩放比例 默认是1;
+   * @param fixedSize 0 -不固定  1 - 固定尺寸，2 - 固定尺寸缩放取整
+   */
+  setFixedScale(fixeScale: number = 1, fixedSize: number = 0) {
+    this.mFixedSize = fixedSize;
+    this.mFixScale = fixeScale;
+    this.scale = fixeScale;
+    return this;
   }
 
   loadDisplay(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
@@ -58,12 +72,15 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       this.mFramesDisplay.once("initialized", () => {
         this.mFramesDisplay.play({ name: aniName, flip: false });
         const { spriteWidth, spriteHeight } = this.mFramesDisplay;
-        if (this.mKeepScale) {
+        if (this.mFixedSize !== 0) {
+          this.scale = 1;
           const scaleX = this.width / spriteWidth;
           const scaleY = this.height / spriteHeight;
-          this.mFramesDisplay.scale = scaleX > scaleY ? scaleY : scaleX;
+          const tempscale = scaleX > scaleY ? scaleY : scaleX;
+          this.mFramesDisplay.scale = this.mFixedSize === 1 ? tempscale : Math.round(tempscale);
         } else {
           this.mFramesDisplay.scale = 1;
+          this.scale = this.mFixScale;
         }
         const scale = this.mFramesDisplay.scale;
         this.mFramesDisplay.x = -spriteWidth * 0.5 * scale;
@@ -107,6 +124,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     const dbModel = { id: 0, avatar: content.avatar };
     this.mDragonboneDisplay.load(dbModel);
     this.mDragonboneDisplay.scale = scale;
+    this.scale = 1;
   }
 
   loadUrl(url: string, data?: string) {
@@ -129,26 +147,28 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
   }
 
-  loadSprite(resName: string, textureurl: string, jsonurl: string, keepscale: boolean = false) {
+  loadSprite(resName: string, textureurl: string, jsonurl: string, fixedSize: boolean = false) {
     this.curLoadType = DisplayLoadType.FrameAnimation;
     this.clearDisplay();
     if (!this.mFrameAni) {
       this.mFrameAni = new FrameAnimation(this.scene);
     }
-    this.scale = 1;
     this.mFrameAni.load(resName, textureurl, jsonurl, new Handler(this, () => {
-      if (keepscale) {
+      if (fixedSize) {
+        this.scale = 1;
         const scaleX = this.width / this.mFrameAni.width;
         const scaleY = this.height / this.mFrameAni.height;
-        this.mFrameAni.scale = scaleX > scaleY ? scaleY : scaleX;
+        const scale = scaleX > scaleY ? scaleY : scaleX;
+        this.mFrameAni.scale = this.mFixedSize === 2 ? scale : Math.round(scale);
       } else {
         this.mFrameAni.scale = 1;
+        this.scale = this.mFixScale;
       }
       this.addDisplay();
     }));
   }
-  displayLoading(resName: string, textureurl: string, jsonurl: string, keepscale: boolean = false) {
-    this.loadSprite(resName, textureurl, jsonurl, keepscale);
+  displayLoading(resName: string, textureurl: string, jsonurl: string, fixedSize: boolean = false) {
+    this.loadSprite(resName, textureurl, jsonurl, fixedSize);
     this.isLoading = true;
   }
   setTexture(key: string, frame?: string) {
@@ -160,12 +180,15 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
       this.mImage.setTexture(key, frame);
     }
     this.addDisplay();
-    if (this.mKeepScale) {
+    if (this.mFixedSize !== 0) {
+      this.scale = 1;
       this.mImage.scale = 1;
       const scaleX = this.width / this.mImage.displayWidth;
       const scaleY = this.height / this.mImage.displayHeight;
-      this.mImage.scale = scaleX > scaleY ? scaleY : scaleX;
+      const scale = scaleX > scaleY ? scaleY : scaleX;
+      this.mImage.scale = this.mFixedSize === 1 ? scale : Math.round(scale);
     } else {
+      this.scale = this.mFixScale;
       this.mImage.scale = 1;
       this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     }
@@ -207,12 +230,16 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     } else {
       this.mImage.setTexture(this.mUrl);
     }
-    if (this.mKeepScale) {
+    if (this.mFixedSize !== 0) {
+      this.scale = 1;
       this.mImage.scale = 1;
       const scaleX = this.width / this.mImage.displayWidth;
       const scaleY = this.height / this.mImage.displayHeight;
-      this.mImage.scale = scaleX > scaleY ? scaleY : scaleX;
+      const scale = scaleX > scaleY ? scaleY : scaleX;
+      this.mImage.scale = this.mFixedSize === 1 ? scale : Math.round(scale);
     } else {
+      this.mImage.scale = this.mFixScale;
+      this.mImage.scale = 1;
       this.setSize(this.mImage.width * this.scale, this.mImage.height * this.scale);
     }
     this.emit("show", this.mImage);

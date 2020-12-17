@@ -9,14 +9,14 @@ import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";
 import { PicaNewHeadPanel } from "./PicaNewHeadPanel";
 import { PicaNewLeftPanel } from "./PicaNewLeftPanel";
-import { PicaNewNavigatePanel } from "./PicaNewNavigatePanel";
+// import { PicaNewNavigatePanel } from "./PicaNewNavigatePanel";
 export class PicaNewMainPanel extends PicaBasePanel {
 
     protected activityPanel: PicaNewActivityPanel;
     protected chatPanel: PicaNewChatPanel;
     protected headPanel: PicaNewHeadPanel;
     protected leftPanel: PicaNewLeftPanel;
-    protected navigatePanel: PicaNewNavigatePanel;
+    // protected navigatePanel: PicaNewNavigatePanel;
     protected foldButton: Button;
     private isFold: boolean = false;
     private headData: any;
@@ -38,10 +38,10 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.leftPanel.y = this.headPanel.height + this.leftPanel.height * 0.5 + 20 * this.dpr;
         this.activityPanel.x = width - this.activityPanel.width * 0.5 - 10 * this.dpr;
         this.activityPanel.y = this.headPanel.height + this.activityPanel.height * 0.5 + 0 * this.dpr;
-        this.navigatePanel.x = width * 0.5;
-        this.navigatePanel.y = height - this.navigatePanel.height * 0.5;
-        this.chatPanel.x = width * 0.5;
-        this.chatPanel.y = height - this.navigatePanel.height - this.chatPanel.height * 0.5;
+        // this.navigatePanel.x = width * 0.5;
+        // this.navigatePanel.y = height - this.navigatePanel.height * 0.5;
+        // this.chatPanel.x = width * 0.5;
+        // this.chatPanel.y = height - this.navigatePanel.height - this.chatPanel.height * 0.5;
         super.resize(width, height);
     }
 
@@ -97,9 +97,9 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.add(this.activityPanel);
         this.chatPanel = new PicaNewChatPanel(this.scene, width, 201 * this.dpr, this.key, this.dpr);
         this.add(this.chatPanel);
-        this.navigatePanel = new PicaNewNavigatePanel(this.scene, width, 56 * this.dpr, this.key, this.dpr);
-        this.navigatePanel.setHandler(new Handler(this, this.onNavigateHandler));
-        this.add(this.navigatePanel);
+        // this.navigatePanel = new PicaNewNavigatePanel(this.scene, width, 56 * this.dpr, this.key, this.dpr);
+        // this.navigatePanel.setHandler(new Handler(this, this.onNavigateHandler));
+        // this.add(this.navigatePanel);
         this.resize(width, height);
         super.init();
     }

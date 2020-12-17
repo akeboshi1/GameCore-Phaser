@@ -91,10 +91,9 @@ export class PicaComposePanel extends BasePanel {
         backBtn.on(ClickEvent.Tap, this.onBackHandler, this);
         this.content.add(backBtn);
 
-        this.mDetailDisplay = new DetailDisplay(this.scene, this.render, true);
+        this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
         this.mDetailDisplay.y = -140 * this.dpr;
-        this.mDetailDisplay.setSize(126 * this.dpr, 126 * this.dpr);
-        // this.mDetailDisplay.scale = this.dpr * 2;
+        this.mDetailDisplay.setFixedScale(2 * this.dpr/this.scale);
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;

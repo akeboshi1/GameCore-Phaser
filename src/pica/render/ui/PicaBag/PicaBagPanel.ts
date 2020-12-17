@@ -7,7 +7,6 @@ import { Coin, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 export class PicaBagPanel extends PicaBasePanel {
-  private commonkey = "common_key";
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
   private mBackground: CommonBackground;
@@ -209,20 +208,13 @@ export class PicaBagPanel extends PicaBasePanel {
     }
   }
 
-  protected preload() {
-    this.addAtlas(this.key, "furni_bag/furni_bag.png", "furni_bag/furni_bag.json");
-    this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
-    this.commonkey = UIAtlasKey.commonKey;
-    super.preload();
-  }
-
   protected init() {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
     this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
     this.mIconBg = this.scene.make.image({
-      key: this.key,
-      frame: "bg"
+      key: UIAtlasName.uicommon,
+      frame: "bag_bg"
     }, false);
     this.mIconBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mCategoryCon = this.scene.make.container(undefined, false);
@@ -230,7 +222,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mCategoryCon.y = height - this.mCategoryCon.height;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.mCloseBtn = new Button(this.scene, this.key, "back_arrow", "back_arrow");
+    this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
     this.mCloseBtn.setPosition(21 * this.dpr, 35 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
     const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
@@ -274,16 +266,16 @@ export class PicaBagPanel extends PicaBasePanel {
     this.moreButton.visible = false;
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
-    this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.use"), "#996600");
-    this.mDetailDisplay = new DetailDisplay(this.scene, this.render, true);
-    this.mDetailDisplay.setSize(110 * this.dpr, 110 * this.dpr);
+    this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.use"), "#996600");
+    this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
+    this.mDetailDisplay.setFixedScale(2 * this.dpr / this.scale);
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    this.mDetailDisplay.setTexture(this.key, "ghost");
+    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mIconBg.y + this.mIconBg.height / 2;
-    this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
+    this.mDetailBubble = new DetailBubble(this.scene, UIAtlasName.uicommon, this.dpr);
     this.mDetailBubble.x = 10 * this.dpr;
 
     this.mCategoryScroll = new GameScroller(this.scene, {
@@ -302,7 +294,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
     this.add([this.mBackground, this.mIconBg, this.mCloseBtn, this.moneyCon, nameBg, this.nameText,
     this.moreButton, this.mDetailDisplay, this.mDetailBubble, this.mCategoryCon, this.useBtn]);
-    const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
+    const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "grid_choose");
     const capW = (propFrame.width) + this.dpr;
     const capH = (propFrame.height) + this.dpr;
     const tableConfig = {
@@ -324,7 +316,7 @@ export class PicaBagPanel extends PicaBasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new Item(scene, 0, 0, this.key, this.dpr);
+          cellContainer = new Item(scene, 0, 0, UIAtlasName.uicommon, this.dpr);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);
@@ -491,7 +483,7 @@ export class PicaBagPanel extends PicaBasePanel {
     } else {
       if (this.categoryType !== 2 && this.mSelectedItemData === undefined) {// op_pkt_def.PKT_PackageType.AvatarPackage
         // this.useBtn.enable = false;
-        this.mDetailDisplay.setTexture(this.key, "ghost");
+        this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
         this.mDetailDisplay.setNearest();
       }
     }
@@ -600,7 +592,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private getPropResource(data: op_client.ICountablePackageItem) {
     const resource: any = {};
     if (data.suitType) {
-      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn,data.slot, data.tag, data.version);
+      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     } else {
       resource.display = data.display;
     }
@@ -704,6 +696,7 @@ export class PicaBagPanel extends PicaBasePanel {
 class DetailBubble extends Phaser.GameObjects.Container {
 
   private dpr: number;
+  private key: string;
   private timeID: any;
   private tipsbg: NineSlicePatch;
   private tipsText: BBCodeText;
@@ -712,10 +705,11 @@ class DetailBubble extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
     super(scene);
     this.dpr = dpr;
+    this.key = key;
     const tipsWidth = 100 * dpr;
     const tipsHeight = 96 * dpr;
     this.setSize(tipsWidth, tipsHeight);
-    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", {
+    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", {
       left: 10 * this.dpr,
       top: 10 * this.dpr,
       right: 10 * this.dpr,
@@ -738,8 +732,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
       fontFamily: Font.DEFULT_FONT,
     }).setOrigin(0);
     this.add([this.tipsbg, this.tipsText, this.mExpires]);
-    this.tipsText.addImage("iv_coin", { key: UIAtlasKey.commonKey, frame: "iv_coin", y: -3 * this.dpr });
-    this.tipsText.addImage("iv_diamond", { key: UIAtlasKey.commonKey, frame: "iv_diamond", y: -3 * this.dpr });
+    this.tipsText.addImage("iv_coin", { key: this.key, frame: "home_silver", y: -3 * this.dpr });
+    this.tipsText.addImage("iv_diamond", { key: this.key, frame: "home_diamond", y: -3 * this.dpr });
   }
 
   setProp(prop: any, servertime: number, property: any): this {// op_client.ICountablePackageItem, PlayerProperty
@@ -973,7 +967,7 @@ class Item extends Phaser.GameObjects.Container {
       this.mPropImage.scale = this.dpr;
       this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     } else {
-      this.mPropImage.setTexture(this.key, "backpack_close");
+      this.mPropImage.setTexture(UIAtlasName.uicommon, "backpack_close");
       this.mPropImage.scale = 1;
       this.mPropImage.visible = true;
     }

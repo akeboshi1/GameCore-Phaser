@@ -16,11 +16,12 @@ export class ElementDetail extends Phaser.GameObjects.Container {
   private mDetailDisplay: DetailDisplay;
   private readonly key: string;
   private readonly dpr: number;
-  constructor(scene: Phaser.Scene, protected render: Render, $key: string, dpr: number) {
+  private zoom: number;
+  constructor(scene: Phaser.Scene, protected render: Render, $key: string, dpr: number, zoom: number) {
     super(scene);
     this.key = $key;
     this.dpr = dpr;
-
+    this.zoom = zoom;
     this.setPosition(0, 0);
     this.mCounter = new NumberCounter(this.scene, $key, 360, 700, this.dpr, render.uiScale);
     const frame = this.scene.textures.getFrame(this.key, "yellow_button_normal");
@@ -64,7 +65,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     });
     priceBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
-    this.mDetailDisplay.scale = this.dpr;
+    this.mDetailDisplay.setFixedScale(2 * this.dpr / this.zoom);
     this.mDetailDisplay.y = 110 * this.dpr;
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 4 * this.dpr;
@@ -164,7 +165,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
             }
           }
           const offset = new Phaser.Geom.Point(0, 35 * 2);
-          this.mDetailDisplay.loadAvatar(content, 2, offset);
+          this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
         });
     } else {
       this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);

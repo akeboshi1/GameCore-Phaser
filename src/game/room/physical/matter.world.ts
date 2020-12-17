@@ -137,7 +137,7 @@ export class MatterWorld {
             curVertex = vertexSets[i];
             nextBody = vertexSets[i + 1];
             if (!nextBody) nextBody = vertexSets[0];
-            walls[i] = Bodies.fromVertices(curVertex.x - (curVertex.x - nextBody.x >> 1), curVertex.y - (curVertex.y - nextBody.y >> 1), [[{ x: curVertex.x, y: curVertex.y }, { x: nextBody.x, y: nextBody.y }, { x: nextBody.x, y: nextBody.y - 1 }, { x: curVertex.x, y: curVertex.y - 1 }]], { isStatic: true });
+            walls[i] = Bodies.fromVertices(curVertex.x - (curVertex.x - nextBody.x >> 1), curVertex.y - (curVertex.y - nextBody.y >> 1), [[{ x: curVertex.x, y: curVertex.y }, { x: nextBody.x, y: nextBody.y }, { x: nextBody.x, y: nextBody.y - 5 * this.room.game.scaleRatio }, { x: curVertex.x, y: curVertex.y - 5 * this.room.game.scaleRatio }]], { isStatic: true });
         }
 
         walls.map((body) => {
