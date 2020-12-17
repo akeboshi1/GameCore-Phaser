@@ -293,7 +293,7 @@ export class PicaChatPanel extends BasePanel {
             this.mOutputText,
             background,
         ]);
-        this.mTextArea.setSliderEnable(false);
+        // this.mTextArea.setSliderEnable(false);
         this.resize(this.width, 133 * this.dpr);
         super.init();
         // this.removeInteractive();

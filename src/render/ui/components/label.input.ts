@@ -8,6 +8,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
     private mInputConfig: any;
     private mOriginX: number;
     private mOriginY: number;
+    private mPlaceholder: string;
     constructor(scene: Phaser.Scene, config: any) {
         super(scene);
 
@@ -16,8 +17,9 @@ export class LabelInput extends Phaser.GameObjects.Container {
         };
         const clickW = config.width || 100;
         const clickH = config.height || 100;
+        this.mPlaceholder = config.placeholder;
         this.mLabel = this.scene.make.text({
-            text: config.placeholder,
+            text: this.mPlaceholder,
             style: Object.assign(labelConfig, config)
         }, false).setInteractive(new Phaser.Geom.Rectangle(-clickW * 0.5, -clickH * 0.5, clickW, clickH), Phaser.Geom.Rectangle.Contains);
         this.mOriginX = this.mLabel.originX;
@@ -31,7 +33,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
     }
 
     setText(val: string) {
-        this.mLabel.setText(val);
+        this.mLabel.setText(this.mPlaceholder ? val ? val : this.mPlaceholder: val);
         if (this.mInputText) {
             this.mInputText.text = val;
         }

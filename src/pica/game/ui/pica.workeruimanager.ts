@@ -1,8 +1,10 @@
 import { UIManager, Game, BasicMediator } from "gamecore";
 import { ModuleName } from "structure";
+import { ChatMediator } from "./Chat/ChatMediator";
 import { CutInMediator } from "./CutIn";
 import { DialogMediator } from "./Dialog";
 import { LoginMediator } from "./Login";
+import { BottomMediator } from "./Bottom/BottomMediator";
 import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaDecorateMediator } from "./PicaDecorate/PicaDecorateMediator";
 import { PicaDecorateControlMediator } from "./PicaDecorateControl/PicaDecorateControlMediator";
@@ -19,7 +21,8 @@ export class PicaWorkerUiManager extends UIManager {
         this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
         this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
        // this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
-        this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
+        // this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
+        this.mMedMap.set(ModuleName.CHAT_NAME, new BottomMediator(this.game));
         // this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
         this.mMedMap.set(ModuleName.PICANEWMAIN_NAME, new PicaNewMainMediator(this.game));
 

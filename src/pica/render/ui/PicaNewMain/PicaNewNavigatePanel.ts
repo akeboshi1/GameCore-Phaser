@@ -12,16 +12,19 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private shopButton: Button;
     private vipButton: Button;
     private sendHandler: Handler;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
-        this.setSize(width, height);
         this.dpr = dpr;
         this.key = key;
         this.init();
     }
     init() {
-        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bg" });
-        this.bg.displayWidth = this.width;
+        const shape = this.scene.make.graphics(undefined, false);
+        const w = this.scene.cameras.main.width;
+        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bg" }).setOrigin(0);
+        this.bg.displayWidth = w;
+        // this.bg.x = w * 0.5;
+        this.setSize(this.bg.width, this.bg.height);
         const bagButton = this.createButton("home_bag");
         bagButton.x = -this.width * 0.5 + bagButton.width * 0.5 + 17 * this.dpr;
         this.bagButton = bagButton;
@@ -39,6 +42,8 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.vipButton = vipButton;
         this.add([this.bg, bagButton, friendButton, avatarButton, shopButton, vipButton]);
         this.addListen();
+
+        // this.render.emitter.emit(EventType.NAVIGATE_RESIZE, this.width, this.height);
     }
     public addListen() {
         this.bagButton.on(ClickEvent.Tap, this.onBagHandler, this);
@@ -77,6 +82,7 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private createButton(frame: string) {
         if (this.isZh_CN) frame = frame + "_1";
         const button = new Button(this.scene, UIAtlasName.iconcommon, frame, frame);
+        button.y = (this.height) * 0.5;
         return button;
     }
 

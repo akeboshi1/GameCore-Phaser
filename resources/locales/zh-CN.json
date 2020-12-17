@@ -246,7 +246,8 @@
     "world": "世界",
     "current": "当前",
     "system": "系统",
-    "givegift": "赠送"
+    "givegift": "赠送",
+    "placeholder": "随便说点什么..."
   },
   "minecar": {
     "discard": "丢弃",
