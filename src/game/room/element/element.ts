@@ -1,5 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue, ElementStateType, PlayerState } from "structure";
+import { AnimationQueue, AvatarSuitType, ElementStateType, PlayerState } from "structure";
 import { IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
 import { IPos, Logger, LogicPos, Tool } from "utils";
@@ -227,6 +227,7 @@ export class Element extends BlockObject implements IElement {
         if (avatarType === op_def.AvatarStyle.SuitType) {
             if (this.mModel.updateSuits) {
                 this.mModel.updateAvatarSuits(this.mModel.suits);
+                if (!this.mModel.avatar) this.mModel.avatar = AvatarSuitType.createBaseAvatar();
                 this.mModel.updateAvatar(this.mModel.avatar);
                 this.load(this.mModel.displayInfo);
             }

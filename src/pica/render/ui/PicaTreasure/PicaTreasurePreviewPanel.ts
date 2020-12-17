@@ -67,9 +67,8 @@ export class PicaTreasurePreviewPanel extends Phaser.GameObjects.Container {
         this.bgicon.y = this.titleName.y + this.bgicon.height * 0.5 + 34 * this.dpr;
         this.add([this.bg, this.bgicon]);
         this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
-        // this.mDetailDisplay.setTexture(this.key, "");
         this.mDetailDisplay.y = this.bgicon.y;
-        this.mDetailDisplay.scale = this.dpr / this.scale;
+        this.mDetailDisplay.setFixedScale(this.dpr / this.scale);
         this.mDetailDisplay.setSize(72 * this.dpr, 72 * this.dpr);
         this.add(this.mDetailDisplay);
         const rewardConWdith = 360 * this.dpr, rewardConHeight = 92 * this.dpr;

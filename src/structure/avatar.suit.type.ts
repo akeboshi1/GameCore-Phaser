@@ -79,7 +79,7 @@ export class AvatarSuitType {
         if (attrs) {
             for (const attr of attrs) {
                 if (attr.key === "PKT_AVATAR_SUITS") {
-                    if (attr.value && attr.value.length > 0) {
+                    if (attr.value && attr.value.length > 0 && JSON.parse(attr.value).length > 0) {
                         return true;
                     }
                 }
