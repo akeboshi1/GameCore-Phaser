@@ -151,7 +151,7 @@ export class PicaItemPopCardPanel extends BasePanel {
     }, false).setInteractive();
 
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
-    this.mDetailDisplay.scale = this.dpr * 2;
+    this.mDetailDisplay.scale = this.dpr*2/this.scale;
     // this.mDetailDisplay.y = -150;
 
     this.mCloseBtn = this.scene.make.image({

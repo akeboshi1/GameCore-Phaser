@@ -277,8 +277,8 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.resetBtn.x = width - 30 * this.dpr;
     this.resetBtn.y = this.mCloseBtn.y;
     this.rotateAvatarBtn = new Button(this.scene, UIAtlasName.uicommon, "avater_turn_back", "avater_turn_back");
-    this.mDetailDisplay = new DetailDisplay(this.scene, this.render, true);
-    this.mDetailDisplay.setSize(110 * this.dpr, 110 * this.dpr);
+    this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
+    this.mDetailDisplay.scale = this.dpr / this.scale;
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
@@ -406,7 +406,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mSelectedItems.push(cell);
     cell.isSelect = true;
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn,data.slot, data.tag, data.version);
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     content.animations = data.animations;
     this.setSelectedResource(content);
   }

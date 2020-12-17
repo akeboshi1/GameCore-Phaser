@@ -1880,7 +1880,7 @@ eventemitter3@^3.1.2:
   resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
   integrity sha1-LT1I+cNGaY/Og6hdfWZOmFNd9uc=
 
-eventemitter3@^4.0.0, eventemitter3@^4.0.4:
+eventemitter3@^4.0.0, eventemitter3@^4.0.4, eventemitter3@^4.0.7:
   version "4.0.7"
   resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha1-Lem2j2Uo1WRO9cWVJqG0oHMGFp8=
@@ -1938,7 +1938,7 @@ expand-tilde@^2.0.0, expand-tilde@^2.0.2:
   dependencies:
     homedir-polyfill "^1.0.1"
 
-exports-loader@^1.0.0, exports-loader@^1.1.0:
+exports-loader@^1.0.0, exports-loader@^1.1.0, exports-loader@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/exports-loader/download/exports-loader-1.1.1.tgz#88c9a6877ee6a5519d7c41a016bdd99148421e69"
   integrity sha1-iMmmh37mpVGdfEGgFr3ZkUhCHmk=
@@ -2785,7 +2785,7 @@ imports-loader@^0.8.0:
     loader-utils "^1.0.2"
     source-map "^0.6.1"
 
-imports-loader@^1.1.0:
+imports-loader@^1.1.0, imports-loader@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npm.taobao.org/imports-loader/download/imports-loader-1.2.0.tgz#b06823d0bb42e6f5ff89bc893829000eda46693f"
   integrity sha1-sGgj0LtC5vX/ibyJOCkADtpGaT8=
@@ -4309,7 +4309,17 @@ performance-now@^2.1.0:
   resolved "https://registry.npm.taobao.org/performance-now/download/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-phaser@^3.23.0, phaser@^3.24.1:
+phaser@^3.23.0:
+  version "3.50.0"
+  resolved "https://registry.npm.taobao.org/phaser/download/phaser-3.50.0.tgz#aef157e51af7881e4e869a489b836d38598b8544"
+  integrity sha1-rvFX5Rr3iB5OhppIm4NtOFmLhUQ=
+  dependencies:
+    eventemitter3 "^4.0.7"
+    exports-loader "^1.1.1"
+    imports-loader "^1.2.0"
+    path "^0.12.7"
+
+phaser@^3.24.1:
   version "3.24.1"
   resolved "https://registry.npm.taobao.org/phaser/download/phaser-3.24.1.tgz#376e0c965d2a35af37c06ee78627dafbde5be017"
   integrity sha1-N24Mll0qNa83wG7nhifa+95b4Bc=
@@ -4352,8 +4362,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.383"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#133da03b9326ba7aef90918e9cde90e064ef9fb6"
+  version "1.0.385"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#8796762e0560c98449ce4bb3853cc119ae9ce0e4"
   dependencies:
     protobufjs "^6.8.8"
 

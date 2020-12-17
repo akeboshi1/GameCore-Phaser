@@ -135,7 +135,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     if (!this.mFrameAni) {
       this.mFrameAni = new FrameAnimation(this.scene);
     }
-    this.scale = 1;
     this.mFrameAni.load(resName, textureurl, jsonurl, new Handler(this, () => {
       if (keepscale) {
         const scaleX = this.width / this.mFrameAni.width;

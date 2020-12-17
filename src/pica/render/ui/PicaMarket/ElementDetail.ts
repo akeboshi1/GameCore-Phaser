@@ -64,7 +64,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     });
     priceBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
-    this.mDetailDisplay.scale = this.dpr;
+    this.mDetailDisplay.scale = this.dpr / this.scale;
     this.mDetailDisplay.y = 110 * this.dpr;
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 4 * this.dpr;
