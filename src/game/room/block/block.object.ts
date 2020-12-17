@@ -222,7 +222,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
 
-        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 1 });
+        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true });
         this.setExistingBody(body, true);
     }
 
