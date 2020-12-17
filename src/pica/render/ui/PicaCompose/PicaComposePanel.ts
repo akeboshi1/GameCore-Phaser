@@ -93,7 +93,7 @@ export class PicaComposePanel extends BasePanel {
 
         this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
         this.mDetailDisplay.y = -140 * this.dpr;
-        this.mDetailDisplay.scale = this.dpr/this.scale;
+        this.mDetailDisplay.setFixedScale(2 * this.dpr/this.scale);
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;

@@ -268,7 +268,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.use"), "#996600");
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
-    this.mDetailDisplay.scale = 2 * this.dpr / this.scale;
+    this.mDetailDisplay.setFixedScale(2 * this.dpr / this.scale);
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));

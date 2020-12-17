@@ -14,7 +14,7 @@ export class PicaFurniUnlockEffectPanel extends Phaser.GameObjects.Container {
         this.dpr = dpr;
     }
     play(data: any[]) {
-        this.effectQueue = this.effectQueue.concat(new Array(10));
+        this.effectQueue = this.effectQueue.concat(data);
         this.playNext();
     }
 
@@ -23,7 +23,7 @@ export class PicaFurniUnlockEffectPanel extends Phaser.GameObjects.Container {
         if (this.effectQueue.length > 0) {
             const data = this.effectQueue.shift();
             const item = new PicaUnlockEffectItem(this.scene, UIAtlasName.effectcommon, this.dpr);
-            item.setItemData(Handler.create(this, () => {
+            item.setItemData(data, Handler.create(this, () => {
                 this.isPlaying = false;
                 this.playNext();
             }));
@@ -73,9 +73,14 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
         this.add([this.sprite1, this.sprite2]);
     }
 
-    public setItemData(compl: Handler) {
+    public setItemData(data: any, compl: Handler) {
         this.compl = compl;
-        this.titletext.setText(`[b][color=#00CCFF]${i18n.t("furni_unlock.successrepair")}\n${"皮卡堂大熊餐厨"}*${1}[/color][/b]`);
+        let line1 = `[b][color=#00CCFF]${data.line1}[/color][/b]`;
+        if (data.line2) {
+            line1 += "\n" + `[b][color=#00CCFF]${data.line2}[/color][/b]`;
+        }
+        // `[b][color=#00CCFF]${i18n.t("furni_unlock.successrepair")}\n${"皮卡堂大熊餐厨"}*${1}[/color][/b]`
+        this.titletext.setText(line1);
     }
 
     playMove(from: number, to: number) {

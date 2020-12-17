@@ -221,7 +221,7 @@ export class PicaMarketPanel extends BasePanel {
     this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mPropContainer]);
     this.add([this.mShelfContainer, this.mSubCategeoriesContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.render, this.key, this.dpr);
+    this.mSelectItem = new ElementDetail(this.scene, this.render, this.key, this.dpr, this.scale);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
 
     this.mTIle = this.scene.make.text({

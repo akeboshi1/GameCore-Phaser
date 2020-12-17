@@ -278,7 +278,6 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.resetBtn.y = this.mCloseBtn.y;
     this.rotateAvatarBtn = new Button(this.scene, UIAtlasName.uicommon, "avater_turn_back", "avater_turn_back");
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
-    this.mDetailDisplay.scale = this.dpr / this.scale;
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));

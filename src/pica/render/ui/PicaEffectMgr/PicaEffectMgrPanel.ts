@@ -9,6 +9,7 @@ export class PicaEffectMgrPanel extends PicaBasePanel {
 
     private content: Phaser.GameObjects.Container;
     private furniEffectPanel: PicaFurniUnlockEffectPanel;
+    private tempQueue: Map<string, any[]> = new Map();
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAEFFECTMGR_NAME;
@@ -35,17 +36,29 @@ export class PicaEffectMgrPanel extends PicaBasePanel {
         this.content.add(this.furniEffectPanel);
         this.resize(0, 0);
         super.init();
-        this.play(undefined, "unlock");
-    }
-
-    destroy() {
-        super.destroy();
     }
 
     play(data: any[], type: string) {
-        if (!this.mInitialized) return;
-        if (type === "unlock") {
-            this.furniEffectPanel.play(data);
+        if (!this.mInitialized) {
+            let arr = this.tempQueue.get(type);
+            if (!arr) {
+                arr = data;
+            } else {
+                arr = arr.concat(data);
+            }
+            this.tempQueue.set(type, arr);
+        } else {
+            if (type === "unlock") {
+                this.furniEffectPanel.play(data);
+            }
+        }
+    }
+
+    protected onShow() {
+        if (this.tempQueue.size > 0) {
+            this.tempQueue.forEach((value, key) => {
+                this.play(value, key);
+            });
         }
     }
 }
