@@ -1,4 +1,4 @@
-import { Logger, ResUtils } from "utils";
+import { ResUtils } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "../../render";
@@ -272,7 +272,7 @@ export class DragonbonesDisplay extends DisplayObject {
         // if (!multi || multi.key !== this.mDragonbonesName || multi.pending !== 1) {
         //     return;
         // }
-        Logger.getInstance().log("key===", key);
+        // Logger.getInstance().log("key===", key);
         if (key !== this.mDragonbonesName || type !== "image") {
             return;
         }
@@ -1012,7 +1012,7 @@ export class DragonbonesDisplay extends DisplayObject {
                 }
             }
             const url = canvas.canvas.toDataURL("image/png", 1);
-            Logger.getInstance().log(this);
+            // Logger.getInstance().log(this);
             // if (this.scene.textures.exists(this.renderTextureKey)) {
             //     this.scene.textures.remove(this.renderTextureKey);
             // }

@@ -8,8 +8,9 @@ import { MoveData, MovePos } from "../room/element/element";
 import { ISprite } from "../room/display/sprite/sprite";
 import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
 import { IPoint } from "game-capsule";
+import { AvatarSlotType } from "gamecoreRender";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -24,8 +25,8 @@ export class User extends Player {
         this.mUserData = new UserDataManager(game);
     }
 
-    public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false) {
-        super.load(displayInfo, true);
+    public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
+        return super.load(displayInfo, true);
     }
 
     addPackListener() {
@@ -45,8 +46,12 @@ export class User extends Player {
         this.mRoomService = room;
         this.mElementManager = room.playerManager;
         this.setMatterWorld(room.matterWorld);
+        if (this.game.avatarType === op_def.AvatarStyle.SuitType) {
+            if (!AvatarSuitType.hasAvatarSuit(actor["attrs"])) {
+                if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
+            }
+        }
         this.model = new PlayerModel(actor);
-
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
         Logger.getInstance().log("setCameraScroller");
@@ -255,9 +260,10 @@ export class User extends Player {
     }
 
     // override super's method.
-    public setRenderable(isRenderable: boolean): void {
+    public setRenderable(isRenderable: boolean): Promise<any> {
         // do nothing!
         // Actor is always renderable!!!
+        return Promise.resolve();
     }
 
     public clear() {
@@ -292,7 +298,7 @@ export class User extends Player {
             this.game.renderPeer.updateInput(this.mInputMask);
             // this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
-        super.updateModel(model);
+        super.updateModel(model, this.game.avatarType);
     }
 
     public setPosition(pos: IPos) {
@@ -378,8 +384,8 @@ export class User extends Player {
     //     super.onMoving();
     // }
 
-    protected addToBlock() {
-        this.addDisplay();
+    protected addToBlock(): Promise<any> {
+        return this.addDisplay();
     }
 
     protected addBody() {

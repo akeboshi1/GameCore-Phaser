@@ -36,7 +36,8 @@
     "expires": "Expired",
     "timelimit": "Expires",
     "properties": "Prop Properties",
-    "needproper": "Requirement"
+    "needproper": "Requirement",
+    "placetips":"Put down when editing room"
   },
   "common": {
     "cancel": "Cancel",
@@ -101,7 +102,9 @@
     "remove_black": "Rdd blacklist",
     "operation": "Operation",
     "follow": "FOLLOW",
-    "followed": "FOLLOWED"
+    "followed": "FOLLOWED",
+    "report": "Report",
+    "blockuer": "Block User"
   },
   "compose": {
     "title": "Produce",

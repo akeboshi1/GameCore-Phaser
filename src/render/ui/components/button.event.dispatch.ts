@@ -1,4 +1,4 @@
-import { BaseUI, ClickEvent, ISoundGroup } from "apowophaserui";
+import { BaseUI, ButtonState, ClickEvent, ISoundGroup } from "apowophaserui";
 export class ButtonEventDispatcher extends BaseUI {
     protected soundGroup: any;
     protected mDownTime: number = 0;
@@ -54,6 +54,7 @@ export class ButtonEventDispatcher extends BaseUI {
             return;
         this.mIsMove = true;
         this.emit(ClickEvent.Move);
+        this.EventStateChange(ClickEvent.Move);
     }
 
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
@@ -72,10 +73,12 @@ export class ButtonEventDispatcher extends BaseUI {
     protected pointerUp(pointer) {
         const isdown = this.checkPointerInBounds(this, pointer.worldX, pointer.worldY);
         this.emit(ClickEvent.Up, this);
+        this.EventStateChange(ClickEvent.Up);
         if (isdown && this.mIsDown) {
             if (this.soundGroup && this.soundGroup.up)
                 this.playSound(this.soundGroup.up);
             this.emit(ClickEvent.Tap, pointer, this);
+            this.EventStateChange(ClickEvent.Tap);
         }
         clearTimeout(this.mPressTime);
         this.mIsMove = false;
@@ -87,6 +90,7 @@ export class ButtonEventDispatcher extends BaseUI {
         if (this.mTweenBoo && pointer.isDown) {
             this.tween(false);
         }
+        this.EventStateChange(ClickEvent.Out);
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -101,10 +105,12 @@ export class ButtonEventDispatcher extends BaseUI {
         this.mDownTime = Date.now();
         this.mPressTime = setTimeout(() => {
             this.emit(ClickEvent.Hold, this);
+            this.EventStateChange(ClickEvent.Hold);
         }, this.mPressDelay);
         if (this.mTweenBoo) this.tween(true);
         this.emit(ClickEvent.Down, this);
         this.mIsDown = true;
+        this.EventStateChange(ClickEvent.Down);
     }
 
     protected checkPointerInBounds(gameObject: any, pointerx: number, pointery: number): boolean {
@@ -125,7 +131,9 @@ export class ButtonEventDispatcher extends BaseUI {
         }
         return false;
     }
+    protected EventStateChange(state: ClickEvent) {
 
+    }
     protected tween(show, callback?: any) {
         this.mTweening = true;
         const scale = show ? this.tweenScale : 1;
@@ -135,7 +143,7 @@ export class ButtonEventDispatcher extends BaseUI {
             this.mTween = undefined;
         }
         this.mTween = this.scene.tweens.add({
-            targets: this.list,
+            targets: this,
             duration: this.mDuration,
             ease: "Linear",
             props: {

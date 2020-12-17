@@ -158,6 +158,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     }
     this.render.mainPeer.getPlayerAvatar()
       .then(({ avatar, suits }) => {
+        avatar = avatar || AvatarSuitType.createBaseAvatar();
         for (const key in avatar) {
           if (avatar.hasOwnProperty(key)) {
             const element = avatar[key];
@@ -165,7 +166,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
           }
         }
         for (const item of this.mSelectedItemData) {
-          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn, item.tag, item.version);
+          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn, item.slot, item.tag, item.version);
           // const dataAvatar = item.avatar;
           for (const key in dataAvatar) {
             if (dataAvatar.hasOwnProperty(key)) {
@@ -405,7 +406,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mSelectedItems.push(cell);
     cell.isSelect = true;
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.tag, data.version);
+    content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn,data.slot, data.tag, data.version);
     content.animations = data.animations;
     this.setSelectedResource(content);
   }

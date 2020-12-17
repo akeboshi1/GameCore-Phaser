@@ -568,7 +568,7 @@ export class CharacterInfoPanel extends BasePanel {
     private creatAvatar(avatar_suits: op_client.ICountablePackageItem[]) {
         const suits: AvatarSuit[] = [];
         for (const item of avatar_suits) {
-            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, tag: item.tag, sn: item.sn };
+            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, slot: item.slot, tag: item.tag, sn: item.sn };
             suits.push(suit);
         }
         const avatar = AvatarSuitType.createHasBaseAvatar(suits);

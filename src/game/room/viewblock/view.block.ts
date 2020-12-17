@@ -14,15 +14,9 @@ export class Viewblock {
         this.mIndex = index;
     }
 
-    public add(element: IBlockObject, miniViewPort?: LogicRectangle45) {
-        // this.mElements.push(element);
+    public add(element: IBlockObject, miniViewPort?: LogicRectangle45): Promise<any> {
         this.mElements.set(element.id, element);
-        element.setRenderable(this.mInCamera);
-        // if (!miniViewPort) {
-        //     return;
-        // }
-        // const pos = element.getPosition45();
-        // element.setRenderable(miniViewPort.contains(pos.x, pos.y) && this.mInCamera);
+        return element.setRenderable(this.mInCamera);
     }
 
     public remove(ele: IBlockObject): boolean {
@@ -46,10 +40,10 @@ export class Viewblock {
         // }
         // if (!miniViewPort) return;
         // if (this.mInCamera) {
-            // for (const ele of this.mElements) {
-            //     const pos = ele.getPosition45();
-            //     ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1000);
-            // }
+        // for (const ele of this.mElements) {
+        //     const pos = ele.getPosition45();
+        //     ele.setRenderable(miniViewPort.contains(pos.x, pos.y), 1000);
+        // }
         this.mElements.forEach((ele) => {
             // const pos = ele.getPosition45();
             ele.setRenderable(this.mInCamera, 0);

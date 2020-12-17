@@ -1,38 +1,46 @@
-import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { BasePanel, CheckboxGroup, DynamicImage, TextButton, UiManager } from "gamecoreRender";
+import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
+import { BackgroundScaleButton, BasePanel, CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, TextButton, ThreeSlicePath, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
-import { Coin, Font, Handler, i18n, Url } from "utils";
+import { Coin, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
-
-export class PicaBagPanel extends BasePanel {
+import { PicaBasePanel } from "../pica.base.panel";
+export class PicaBagPanel extends PicaBasePanel {
   private commonkey = "common_key";
-  private seachKey: string = "key.seach";
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
-  private mBackground: Phaser.GameObjects.Graphics;
+  private mBackground: CommonBackground;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
-  private mShelfContainer: Phaser.GameObjects.Container;
+  private mCategoryCon: Phaser.GameObjects.Container;
   private mDetailDisplay: DetailDisplay;
-  private mAdd: NineSliceButton;
-  private mBg: Phaser.GameObjects.Image;
+  private mIconBg: Phaser.GameObjects.Image;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: any;// op_def.IStrPair
   private mPropGrid: GameGridTable;
   private mCategoryScroll: GameScroller;
-  private sellBtn: NineSliceButton;
   private useBtn: NineSliceButton;
   private topBtns: TabButton[] = [];
+  private moneyCon: Phaser.GameObjects.Container;
+  private moneyvalue: ImageValue;
+  private diamondvalue: ImageValue;
+  private moneyAddBtn: Button;
+  private nameText: Phaser.GameObjects.Text;
+  private moreButton: Button;
+  private moreButtonPanel: MoreButtonPanel;
 
   private mDetailBubble: DetailBubble;
-  private mSceneType: any;// op_def.SceneTypeEnum
+  private mSceneType: any;
   private mEnableEdit: boolean = false;
-  private categoryType: any;// op_pkt_def.PKT_PackageType
-  private mSelectedItemData: any[] = [];// op_client.ICountablePackageItem
-  private mSelectedItems: Item[] = [];
-  constructor(uiManager: UiManager) {// sceneType: op_def.SceneTypeEnum
-    super(uiManager.scene, uiManager.render);
+  private categoryType: any;
+  private mSelectedItemData;
+  private mSelectedItem: Item;
+  private mAttributes: DynamicImageValue[] = [];
+  private sceneData: any;
+  private moneyData: any;
+  constructor(uiManager: UiManager) {
+    super(uiManager);
+    this.atlasNames = [UIAtlasName.uicommon];
     this.key = ModuleName.PICABAG_NAME;
   }
 
@@ -40,115 +48,124 @@ export class PicaBagPanel extends BasePanel {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
     super.resize(width, height);
-    this.mBackground.clear();
-    this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
-    this.mBackground.fillRect(0, 0, width, height);
-    this.mShelfContainer.setSize(width, 295 * this.dpr);
-    this.mShelfContainer.y = height - this.mShelfContainer.height;
-    this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+    this.mBackground.x = width * 0.5;
+    this.mBackground.y = height * 0.5;
+    this.mCategoryCon.setSize(width, 79 * this.dpr);
+    this.mCategoryCon.y = height - this.mPropGrid.height - this.mCategoryCon.height * 0.5 - 50 * this.dpr;
+    this.mCategoryCon.x = width * 0.5;
+    this.mDetailBubble.y = this.mCategoryCon.y - 10 * this.dpr - this.mDetailBubble.height;
+    this.mCategoriesBar.y = 40 * this.dpr;
+    this.mCategoriesBar.x = -width * 0.5;
     this.mCategoriesBar.clear();
-    this.mCategoriesBar.fillStyle(0x33ccff);
+    this.mCategoriesBar.fillStyle(0x3EE1FF);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
-    this.mCategoriesBar.fillStyle(0x00cccc);
+    this.mCategoriesBar.fillStyle(0x06B5D5);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
 
-    this.mBg.x = width / 2;
-    this.mBg.y = this.mBg.height / 2 + 10 * this.dpr;
-
-    this.mAdd.x = width - this.mAdd.width / 2 - 10 * this.dpr;
-    this.mAdd.y = this.mShelfContainer.y - this.mAdd.height / 2 - 9 * this.dpr;
-
-    this.useBtn.x = this.mAdd.x;
-    this.useBtn.y = this.mAdd.y;
-
-    this.sellBtn.x = Math.floor(this.mAdd.x - this.sellBtn.width - 10 * this.dpr);
-    this.sellBtn.y = this.mAdd.y;
+    this.useBtn.x = width - this.useBtn.width / 2 - 10 * this.dpr;
+    this.useBtn.y = this.mCategoryCon.y - this.useBtn.height / 2;
 
     this.mDetailDisplay.x = width / 2;
-    this.mDetailDisplay.y = this.mBg.y;
+    this.mDetailDisplay.y = (height - 296 * this.dpr - 60 * this.dpr) * 0.5 + 60 * this.dpr;
     this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
-    this.mPropGrid.x = width / 2;
-    this.mPropGrid.y = this.mShelfContainer.y + this.mPropGrid.height * 0.5 + 50 * this.dpr;
+    this.mIconBg.x = this.mDetailDisplay.x;
+    this.mIconBg.y = this.mDetailDisplay.y;
+    this.mPropGrid.x = width / 2 + 3 * this.dpr;
+    this.mPropGrid.y = height - this.mPropGrid.height * 0.5 - 3 * this.dpr;
     this.mPropGrid.layout();
     this.mPropGrid.resetMask();
     this.mCategoryScroll.refreshMask();
+    this.moreButtonPanel.x = width * 0.5;
+    this.moreButtonPanel.y = height * 0.5;
     this.setSize(width, height);
     this.setInteractive();
   }
 
   setCategories(subcategorys: any[]) {// op_def.IStrPair
-    // subcategorys.unshift({ key: this.seachKey, value: "搜索" });
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
     const capW = 60 * this.dpr;
     const capH = 41 * this.dpr;
     const items = [];
     (<any>this.mCategoryScroll).clearItems();
-    const seachBtn = new Button(this.scene, this.key, "seach_normal", "seach_down");
-    seachBtn.setData("item", { key: this.seachKey, value: i18n.t("common.search") });
-    seachBtn.y = capH - 40 * this.dpr;
-    this.mCategoryScroll.addItem(seachBtn);
-    const allCategory = { value: "", key: "" };// op_def.StrPair
-    allCategory.value = i18n.t("common.all");
-    allCategory.key = "alltype";
+    const allCategory = { value: i18n.t("common.all"), key: "alltype" };
     subcategorys.unshift(allCategory);
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].value, 0, 0);
-      item.x = i * capW;
-      item.y = capH - item.text.height - 20 * this.dpr;
       item.setData("item", subcategorys[i]);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);
-
       items[i] = item;
-      item.setFontSize(17 * this.dpr);
+      item.setFontSize(18 * this.dpr);
       item.setFontStyle("bold");
     }
+    this.mCategoryScroll.Sort();
+    this.mCategoryScroll.refreshMask();
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
     this.updateCategeoriesLoc(false);
   }
 
   public setProp(props: any[], isupdate: boolean = false) {// op_client.ICountablePackageItem
     props = !props ? [] : props;
-    this.mSelectedItems.length = 0;
-    const len = props.length;
-    if (len < 24) {
-      props = props.concat(new Array(24 - len));
+    let subProps = [];
+    const subcategoryType = this.mSelectedCategeories.key;
+    this.mSelectedItem = undefined;
+    let sameid: boolean = false;
+    for (const prop of props) {
+      if (this.mSelectedItemData && prop.indexId === this.mSelectedItemData.indexId) sameid = true;
+      if (subcategoryType === "alltype" || subcategoryType === prop.subcategory) {
+        subProps.push(prop);
+      }
     }
-    this.mPropGrid.setItems(props);
+    if (isupdate) {
+      if (!this.mSelectedItemData) isupdate = false;
+      if (!sameid) isupdate = false;
+    }
+
+    const len = subProps.length;
+    if (len < 24) {
+      subProps = subProps.concat(new Array(24 - len));
+    }
+    this.mPropGrid.setItems(subProps);
     if (!isupdate) {
-      this.mSelectedItemData.length = 0;
+      this.mSelectedItemData = undefined;
       const cell = this.mPropGrid.getCell(0);
       this.onSelectItemHandler(cell.container);
     }
   }
+
+  public setMoneyData(money: number, diamond: number) {
+    money = money || 0;
+    diamond = diamond || 0;
+    this.moneyData = { money, diamond };
+    if (!this.mInitialized) return;
+    this.moneyvalue.setText(money + "");
+    this.diamondvalue.setText(diamond + "");
+  }
+
+  public setSceneData(sceneType: number, editor: boolean) {
+    this.mSceneType = sceneType;
+    this.mEnableEdit = editor;
+    this.sceneData = { sceneType, editor };
+    if (!this.mInitialized) return;
+    this.createCategory(sceneType, editor);
+  }
+
   public setSelectedResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
     if (content.display) {
       this.mDetailDisplay.loadDisplay(content);
     }
   }
 
-  public resetAvatar(avatar: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR
-    const content = { avatar: null };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
-    content.avatar = avatar.avatar;
-    const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
-    this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
-    this.mSelectedItemData.length = 0;
-  }
-
   public addListen() {
     if (!this.mInitialized) return;
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
-    this.mAdd.on(ClickEvent.Tap, this.onAddFurniToSceneHandler, this);
-    this.sellBtn.on(ClickEvent.Tap, this.onSellBtnHandler, this);
     this.useBtn.on(ClickEvent.Tap, this.onUseBtnHandler, this);
   }
 
   public removeListen() {
     if (!this.mInitialized) return;
     this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
-    this.mAdd.off(ClickEvent.Tap, this.onAddFurniToSceneHandler, this);
-    this.sellBtn.off(ClickEvent.Tap, this.onSellBtnHandler, this);
     this.useBtn.off(ClickEvent.Tap, this.onUseBtnHandler, this);
   }
 
@@ -182,8 +199,14 @@ export class PicaBagPanel extends BasePanel {
     this.mCategoryScroll.addListen();
   }
 
-  public getEnableEdit() {
-    return this.mEnableEdit;
+  protected onInitialized() {
+    if (this.moneyData) {
+      this.moneyvalue.setText(this.moneyData.money + "");
+      this.diamondvalue.setText(this.moneyData.diamond + "");
+    }
+    if (this.sceneData) {
+      this.createCategory(this.sceneData.sceneType, this.sceneData.editor);
+    }
   }
 
   protected preload() {
@@ -196,27 +219,61 @@ export class PicaBagPanel extends BasePanel {
   protected init() {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
-    this.mBackground = this.scene.make.graphics(undefined, false);
-    this.mBg = this.scene.make.image({
+    this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
+    this.mIconBg = this.scene.make.image({
       key: this.key,
       frame: "bg"
     }, false);
-    this.mBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    this.mShelfContainer = this.scene.make.container(undefined, false);
-    this.mShelfContainer.setSize(width, 295 * this.dpr);
-    this.mShelfContainer.y = height - this.mShelfContainer.height;
+    this.mIconBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+    this.mCategoryCon = this.scene.make.container(undefined, false);
+    this.mCategoryCon.setSize(width, 295 * this.dpr);
+    this.mCategoryCon.y = height - this.mCategoryCon.height;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = new Button(this.scene, this.key, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 30 * this.dpr);
+    this.mCloseBtn.setPosition(21 * this.dpr, 35 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
-    const btnwidth = 90 * this.dpr;
-    const btnHeight = 38 * this.dpr;
-    const btnPosX = width - btnwidth / 2 - 20 * this.dpr;
-    const btnPosY = this.mShelfContainer.y - 25 * this.dpr;
+    const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
+      left: 17 * this.dpr,
+      top: 0 * this.dpr,
+      right: 17 * this.dpr,
+      bottom: 0 * this.dpr
+    });
+    moneybg.x = -moneybg.width * 0.5;
+    const moneyline = this.scene.make.image({ x: moneybg.x, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_division" }, false);
+    this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_silver", this.dpr, {
+      color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
+    });
+    this.moneyvalue.setLayout(1);
+    this.moneyvalue.x = moneybg.x - moneybg.width * 0.5 + 22 * this.dpr;
+    this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_diamond", this.dpr, {
+      color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
+    });
+    this.diamondvalue.setLayout(1);
+    this.diamondvalue.x = moneybg.x + 22 * this.dpr;
+    this.moneyAddBtn = new Button(this.scene, UIAtlasName.uicommon, "home_praise_bg", "home_praise_bg");
+    const moneyAddicon = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_add" }, false);
+    this.moneyAddBtn.add(moneyAddicon);
+    this.moneyAddBtn.x = -this.moneyAddBtn.width * 0.5 - 4 * this.dpr;
+    this.moneyAddBtn.on(ClickEvent.Tap, this.onRechargeHandler, this);
+    this.moneyCon = this.scene.make.container(undefined, false);
+    this.moneyCon.setSize(moneybg.width, moneybg.height);
+    this.moneyCon.add([moneybg, moneyline, this.moneyvalue, this.diamondvalue, this.moneyAddBtn]);
+    this.moneyCon.x = width - 20 * this.dpr;
+    this.moneyCon.y = this.mCloseBtn.y;
 
-    this.mAdd = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("furni_bag.add"), "#996600");
-    this.sellBtn = this.createNineButton(btnPosX, btnPosY, btnwidth, btnHeight, this.commonkey, "red_btn", i18n.t("common.sold"), "#FFFFFF");
+    const nameBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_name_bg" });
+    nameBg.x = width * 0.5;
+    nameBg.y = this.mCloseBtn.y + 40 * this.dpr;
+    this.nameText = this.scene.make.text({ x: nameBg.x, y: nameBg.y, text: "", style: UIHelper.whiteStyle(this.dpr, 14) }).setOrigin(0.5);
+    this.nameText.setFontStyle("bold");
+    this.moreButton = new Button(this.scene, UIAtlasName.uicommon, "online_more");
+    this.moreButton.x = width - this.moreButton.width * 0.5 - 20 * this.dpr;
+    this.moreButton.y = nameBg.y;
+    this.moreButton.on(ClickEvent.Tap, this.onMoreHandler, this);
+    this.moreButton.visible = false;
+    const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
+    const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, this.commonkey, "yellow_btn", i18n.t("common.use"), "#996600");
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render, true);
     this.mDetailDisplay.setSize(110 * this.dpr, 110 * this.dpr);
@@ -225,84 +282,35 @@ export class PicaBagPanel extends BasePanel {
     }));
     this.mDetailDisplay.setTexture(this.key, "ghost");
     this.mDetailDisplay.setNearest();
-    //  this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
-    this.mDetailDisplay.y = this.mBg.y + this.mBg.height / 2;
+    this.mDetailDisplay.y = this.mIconBg.y + this.mIconBg.height / 2;
     this.mDetailBubble = new DetailBubble(this.scene, this.key, this.dpr);
     this.mDetailBubble.x = 10 * this.dpr;
 
     this.mCategoryScroll = new GameScroller(this.scene, {
-      x: width * 0.5,
-      y: this.mShelfContainer.y + 20 * this.dpr,
+      x: 0,
+      y: 60 * this.dpr,
       width,
       height: 41 * this.dpr,
       zoom: this.scale,
       orientation: 1,
       dpr: this.dpr,
-      // valuechangeCallback: (newValue) => {
-      //   this.refreshPos(newValue);
-      // },
+      space: 10 * this.dpr,
       cellupCallBack: (gameobject) => {
         this.onSelectSubCategoryHandler(gameobject);
       }
     });
-    this.add([this.mBackground, this.mBg, this.mCloseBtn, this.mDetailDisplay, this.mDetailBubble, this.mShelfContainer, this.mCategoryScroll]);
-    this.add([this.sellBtn, this.useBtn, this.mAdd]);
-    this.mShelfContainer.add(this.mCategoriesBar);
-
-    const topCapW = 67 * this.dpr;
-    const topCapH = 30 * this.dpr;
-    const topPosY = 30 * this.dpr;
-    const topStyle = {
-      fontFamily: Font.DEFULT_FONT,
-      fontSize: 20 * this.dpr,
-      color: "#FFFFFF"
-    };
-    this.topCheckBox = new CheckboxGroup();
-    let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
-    let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];
-    if (this.mSceneType === 2) {// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
-      topCategorys = [5];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
-      topBtnTexts = [i18n.t("furni_bag.furni")];
-    }
-    const topPosX = width * 0.5 - topCapW * 0.5 * (topCategorys.length - 1) - 20 * this.dpr;
-    for (const key in topCategorys) {
-      const index = Number(key);
-      const category = topCategorys[index];
-      const button = new TabButton(this.scene, this.key, "tab_normal", "tab_normal", topBtnTexts[index]);
-      button.setTextStyle(topStyle);
-      button.setData("data", category);
-      button.setSize(topCapW, topCapH);
-      button.setFontStyle("bold");
-      button.y = topPosY;
-      button.x = topPosX + topCapW * index;
-      this.topBtns.push(button);
-    }
-    this.topCheckBox.appendItemAll(this.topBtns);
-    this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
-    this.topBtns.forEach((btn) => {
-      this.add(btn);
-    });
-    this.render.mainPeer.isCurrentRoomEditEnable()
-      .then((val) => {
-        this.mEnableEdit = val;
-        if (this.mEnableEdit) {
-          const index = topCategorys.indexOf(5);// op_pkt_def.PKT_PackageType.EditFurniturePackage
-          this.topCheckBox.selectIndex(index);
-        } else {
-          this.topCheckBox.selectIndex(0);
-        }
-      });
-    this.render.mainPeer.getCurrentRoomType()
-      .then((val) => this.mSceneType = val);
+    this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
+    this.add([this.mBackground, this.mIconBg, this.mCloseBtn, this.moneyCon, nameBg, this.nameText,
+    this.moreButton, this.mDetailDisplay, this.mDetailBubble, this.mCategoryCon, this.useBtn]);
     const propFrame = this.scene.textures.getFrame(this.key, "grid_choose");
-    const capW = (propFrame.width);
-    const capH = (propFrame.height);
+    const capW = (propFrame.width) + this.dpr;
+    const capH = (propFrame.height) + this.dpr;
     const tableConfig = {
       x: 0,
       y: 0,
       table: {
         width,
-        height: 260 * this.dpr,
+        height: 241 * this.dpr,
         columns: 4,
         cellWidth: capW,
         cellHeight: capH,
@@ -312,7 +320,6 @@ export class PicaBagPanel extends BasePanel {
       },
       scrollMode: 1,
       clamplChildOY: false,
-      // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
       createCellContainerCallback: (cell, cellContainer) => {
         const scene = cell.scene,
           item = cell.item;
@@ -323,10 +330,7 @@ export class PicaBagPanel extends BasePanel {
         cellContainer.setProp(item);
         if (item && this.isSelectedItemData(item)) {
           cellContainer.isSelect = true;
-          this.mSelectedItems.push(cellContainer);
-        } else {
-          const index = this.mSelectedItems.indexOf(cellContainer);
-          if (index !== -1) this.mSelectedItems.splice(index, 1);
+          this.mSelectedItem = cellContainer;
         }
         return cellContainer;
       },
@@ -339,8 +343,63 @@ export class PicaBagPanel extends BasePanel {
       }
     });
     this.add(this.mPropGrid);
+    this.moreButtonPanel = new MoreButtonPanel(this.scene, width, height, this.dpr);
+    this.moreButtonPanel.setHandler(new Handler(this, this.onMoreButtonHandler));
+    this.add(this.moreButtonPanel);
+    this.moreButtonPanel.hide();
     this.resize(0, 0);
     super.init();
+  }
+
+  private createCategory(sceneType: number, editor: boolean) {
+    const width = this.scaleWidth;
+    const topCapW = 90 * this.dpr;
+    const topCapH = 35 * this.dpr;
+    const topPosY = 22 * this.dpr;
+    this.topCheckBox = new CheckboxGroup();
+    let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
+    let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];
+    if (sceneType === 2) {// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
+      topCategorys = [5];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
+      topBtnTexts = [i18n.t("furni_bag.furni")];
+    }
+    let topPosX = -width * 0.5 + topCapW * 0.5 + 1 * this.dpr;
+    const frame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_tab_uncheck");
+    let w = 60;
+    let h = 65;
+    if (frame) {
+      w = frame.width;
+      h = frame.height;
+    }
+    const config0 = {
+      left: w / 2,
+      top: 12 * this.dpr,
+      right: 4 * this.dpr,
+      bottom: 2 * this.dpr
+    };
+    for (const key in topCategorys) {
+      const index = Number(key);
+      const category = topCategorys[index];
+      const button = new NinePatchTabButton(this.scene, topCapW, topCapH, UIAtlasName.uicommon, "bag_tab_uncheck", "bag_tab_select", topBtnTexts[index], [config0]);
+      button.tweenScale = 1;
+      button.setTextStyle(UIHelper.whiteStyle(this.dpr, 18));
+      button.setData("data", category);
+      button.setSize(topCapW, topCapH);
+      button.setFontStyle("bold");
+      button.y = topPosY;
+      button.x = topPosX;
+      topPosX += topCapW + 3 * this.dpr;
+      this.topBtns.push(button);
+    }
+    this.topCheckBox.appendItemAll(this.topBtns);
+    this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
+    this.mCategoryCon.add(this.topBtns);
+    if (editor) {
+      const index = topCategorys.indexOf(5);// op_pkt_def.PKT_PackageType.EditFurniturePackage
+      this.topCheckBox.selectIndex(index);
+    } else {
+      this.topCheckBox.selectIndex(0);
+    }
   }
 
   private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
@@ -363,13 +422,12 @@ export class PicaBagPanel extends BasePanel {
   }
 
   private setSelectedItem(data: op_client.ICountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
-    if (this.mSelectedItems.length > 0) {
-      this.mSelectedItems[0].isSelect = false;
+    if (this.mSelectedItem) {
+      this.mSelectedItem.isSelect = false;
     }
-    this.mSelectedItemData.length = 0;
-    this.mSelectedItems.length = 0;
-    this.mSelectedItemData.push(data);
-    this.mSelectedItems.push(cell);
+    this.nameText.text = data.name || data.shortName;
+    this.mSelectedItemData = data;
+    this.mSelectedItem = cell;
     cell.isSelect = true;
     this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
@@ -379,19 +437,8 @@ export class PicaBagPanel extends BasePanel {
   }
 
   private isSelectedItemData(data: op_client.ICountablePackageItem) {// op_client.ICountablePackageItem
-    if (this.mSelectedItemData.length > 0) {
-      // for (const temp of this.mSelectedItemData) {
-      //   if (temp.indexId === data.indexId) {
-      //     return true;
-      //   }
-      // }
-      const temp = this.mSelectedItemData[this.mSelectedItemData.length - 1];
-      if (temp.indexId === data.indexId) return true;
-    }
-    // else {
-    //   if (data.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) return true;
-    // }
-
+    if (!this.mSelectedItemData) return false;
+    if (this.mSelectedItemData.indexId === data.indexId) return true;
     return false;
   }
 
@@ -405,7 +452,7 @@ export class PicaBagPanel extends BasePanel {
         gameobject.changeDown();
       this.mSelectedCategeories = category;
       this.mPropGrid.setT(0);
-      const isupdate = this.mSelectedItemData.length === 0 ? false : true;
+      const isupdate = this.mSelectedItemData === undefined ? false : true;
       this.queryPackege(isupdate);
       this.mPreCategoryBtn = gameobject;
     }
@@ -424,7 +471,7 @@ export class PicaBagPanel extends BasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if (this.mSelectedItemData.indexOf(item) !== -1) return;
+    if (this.mSelectedItemData === item) return;
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()
@@ -434,101 +481,126 @@ export class PicaBagPanel extends BasePanel {
       })
       .then((t) => {
         this.mDetailBubble.setProp(item, Math.floor(t / 1000), property);
-        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+        this.mDetailBubble.y = this.mCategoryCon.y - 10 * this.dpr - this.mDetailBubble.height;
+        if (item)
+          this.setItemAttribute(item, property);
       });
     if (item) {
-      this.sellBtn.enable = item.recyclable;
-      this.useBtn.enable = item.executable;
-      this.mAdd.enable = (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit);
+      // this.useBtn.visible = item.executable;
       this.setSelectedItem(item, cell);
     } else {
-      if (this.categoryType !== 2 && this.mSelectedItemData.length === 0) {// op_pkt_def.PKT_PackageType.AvatarPackage
-        this.sellBtn.enable = false;
-        this.useBtn.enable = false;
-        this.mAdd.enable = false;
+      if (this.categoryType !== 2 && this.mSelectedItemData === undefined) {// op_pkt_def.PKT_PackageType.AvatarPackage
+        // this.useBtn.enable = false;
         this.mDetailDisplay.setTexture(this.key, "ghost");
         this.mDetailDisplay.setNearest();
       }
     }
   }
 
+  private setItemAttribute(item: op_client.CountablePackageItem, property: any) {
+    for (const img of this.mAttributes) {
+      img.visible = false;
+    }
+    if (!item.affectValues) return;
+    const length = item.affectValues.length >= 6 ? 6 : item.affectValues.length;
+    for (let i = 0; i < length; i++) {
+      const affect = item.affectValues[i];
+      let img: DynamicImageValue;
+      if (i < this.mAttributes.length) {
+        img = this.mAttributes[i];
+        img.visible = true;
+      } else {
+        const bg = new NineSlicePatch(this.scene, 0, 0, 56 * this.dpr, 22 * this.dpr, UIAtlasName.uicommon, "bag_attribute_bg", {
+          left: 12 * this.dpr, right: 12 * this.dpr, top: 0, bottom: 0
+        });
+        img = new DynamicImageValue(this.scene, 56 * this.dpr, 22 * this.dpr, UIAtlasName.uicommon, "", this.dpr);
+        img.setOffset(-3 * this.dpr, 0);
+        img.addAt(bg, 0);
+        img.setLayout(2);
+        this.add(img);
+        this.mAttributes.push(img);
+      }
+      if (property.propertiesMap) {
+        const proper = property.propertiesMap.get(affect.key);
+        if (proper) {
+          img.setText(proper.value > 0 ? "+" + proper.value : proper.value);
+          if (proper.display)
+            img.load(Url.getOsdRes(proper.display.texturePath));
+        } else img.visible = false;
+      } else img.visible = false;
+    }
+    this.setLayoutAttribute();
+  }
+
+  private setLayoutAttribute() {
+    const arr = [];
+    this.mAttributes.forEach((value) => {
+      if (value.visible) arr.push(value);
+    });
+    if (arr.length === 0) return;
+    const cellWidth = 56 * this.dpr;
+    const cellHeight = 21 * this.dpr;
+    const space = 23 * this.dpr;
+    const posx = this.scaleWidth * 0.5;
+    let posy = this.nameText.y + 30 * this.dpr;
+    const length = arr.length > 3 ? 3 : arr.length;
+    const allLen = cellWidth * length + space * (length - 1);
+    let offsetx = posx - allLen * 0.5;
+    let index: number = 0;
+    for (const item of arr) {
+      item.x = offsetx + cellWidth * 0.5;
+      item.y = posy;
+      offsetx += (cellWidth + space);
+      index++;
+      if (index === 3) {
+        offsetx = posx - allLen * 0.5;
+        posy += 13 * this.dpr + cellHeight;
+      }
+    }
+    arr.length = 0;
+  }
+
   private onAddFurniToSceneHandler() {
     if (!this.mSelectedItemData) {
       return;
     }
-    this.render.renderEmitter(this.key + "_addFurniToScene", this.mSelectedItemData[0].id);
+    if (this.mSceneType === op_def.SceneTypeEnum.EDIT_SCENE_TYPE || this.mEnableEdit)
+      this.render.renderEmitter(this.key + "_addFurniToScene", this.mSelectedItemData.id);
+    else {
+      const data = {
+        text: [{ text: i18n.t("furni_bag.placetips"), node: undefined }]
+      };
+      this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+    }
   }
 
-  private onTopCategoryHandler(item: Button) {
+  private onTopCategoryHandler(item: NinePatchTabButton) {
     const categoryType = item.getData("data");
     this.clearCategoryData();
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
-        this.sellBtn.visible = true;
-        this.mAdd.visible = true;
-        this.useBtn.visible = false;
-      } else if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-        this.useBtn.visible = false;
-        this.mAdd.visible = false;
-        this.sellBtn.visible = false;
-      } else {
-        this.sellBtn.visible = true;
         this.useBtn.visible = true;
-        this.mAdd.visible = false;
-      }
-    }
-    this.setLayoutTopButton(item);
-  }
-
-  private setLayoutTopButton(button: Button) {
-    const width = this.scaleWidth;
-    let allRadiu = 0;
-    for (const btn of this.topBtns) {
-      allRadiu += btn.width + 5 * this.dpr;
-    }
-    allRadiu /= 2;
-    let offsetX: number = width * 0.5 - allRadiu;
-
-    for (const btn of this.topBtns) {
-      let posY = 0;
-      if (btn !== button) {
-        btn.setTextStyle({
-          fontFamily: Font.DEFULT_FONT,
-          fontSize: 12 * this.dpr,
-          color: "#2B4BB5"
-        });
-        posY = btn.height * 0.5;
-        btn.setFrameNormal("tab_normal");
+        this.useBtn.setText(i18n.t("furni_bag.add"));
       } else {
-        btn.setTextStyle({
-          fontFamily: Font.DEFULT_FONT,
-          fontSize: 16 * this.dpr,
-          color: "#8B5603"
-        });
-        posY = btn.height * 0.5 + 2 * this.dpr;
-        btn.setFrameNormal("tab_down");
+        this.useBtn.visible = true;
+        this.useBtn.setText(i18n.t("common.use"));
+
       }
-      const radiu = btn.width * 0.5;
-      btn.x = offsetX + radiu;
-      btn.y = posY;
-      offsetX += radiu * 2 + 12 * this.dpr;
     }
   }
+
   private clearCategoryData() {
-    this.mSelectedItemData.length = 0;
+    this.mSelectedItemData = undefined;
   }
   private onSelectedCategory(categoryType: number) {
     this.categoryType = categoryType;
-    if (categoryType === 2) {// op_pkt_def.PKT_PackageType.AvatarPackage
-      this.render.renderEmitter(this.key + "_queryDressAvatarIDS");
-    }
     this.render.renderEmitter(this.key + "_getCategories", categoryType);
   }
   private getPropResource(data: op_client.ICountablePackageItem) {
     const resource: any = {};
     if (data.suitType) {
-      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.tag, data.version);
+      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn,data.slot, data.tag, data.version);
     } else {
       resource.display = data.display;
     }
@@ -536,10 +608,19 @@ export class PicaBagPanel extends BasePanel {
     resource.animations = data.animations;
     return resource;
   }
+
+  private onMoreButtonHandler(tag: string) {
+    if (tag === "place") {
+      this.onAddFurniToSceneHandler();
+    } else if (tag === "sell") {
+      this.onSellBtnHandler();
+    }
+  }
   private onSellBtnHandler() {
     this.mCategoryScroll.removeListen();
-    if (this.mSelectedItemData.length > 0) {
-      const data = this.mSelectedItemData[0];
+    if (this.mSelectedItemData) {
+      const data = this.mSelectedItemData;
+      if (!data.recyclable) return;
       const title = i18n.t("common.sold");
       const resource = this.getPropResource(data);// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
       if (data.avatar) {
@@ -561,19 +642,30 @@ export class PicaBagPanel extends BasePanel {
 
   private onUseBtnHandler() {
     this.mCategoryScroll.removeListen();
-    if (this.mSelectedItemData.length > 0) {
-      const data = this.mSelectedItemData[0];
-      const title = i18n.t("common.use");
-      const resource = this.getPropResource(data);
-      const resultHandler = {
-        key: this.key,
-        confirmFunc: "onUsePropsHandler",
-        cancelFunc: "onUsePropsFailedHandler"
-      };
-      this.showPropFun({ resultHandler, data, price: false, title, resource });
+    if (this.mSelectedItemData) {
+      if (this.categoryType === 1 || this.categoryType === 5) {
+        this.onAddFurniToSceneHandler();
+      } else {
+        const data = this.mSelectedItemData;
+        const title = i18n.t("common.use");
+        const resource = this.getPropResource(data);
+        const resultHandler = {
+          key: this.key,
+          confirmFunc: "onUsePropsHandler",
+          cancelFunc: "onUsePropsFailedHandler"
+        };
+        this.showPropFun({ resultHandler, data, price: false, title, resource });
+      }
     }
-  }
 
+  }
+  private onRechargeHandler() {
+  }
+  private onMoreHandler() {
+    // if (!this.mSelectedItemData) return;
+    // this.moreButtonPanel.show();
+    // this.moreButtonPanel.setItemData(this.mSelectedItemData, this.categoryType);
+  }
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategoryScroll.getItemList();
     const h = 41 * this.dpr;
@@ -698,10 +790,12 @@ class DetailBubble extends Phaser.GameObjects.Container {
         const len = prop.affectValues.length;
         for (let i = 0; i < len; i++) {
           const affect = prop.affectValues[i];
-          if (property.hasProperty(affect.key)) {
-            const proper = property.getProperty(affect.key);
-            const value = affect.value > 0 ? `[color=#ffff00]+${affect.value}[/color]` : `[color=#ff0000]${affect.value}[/color]`;
-            attri += `\n${proper.name}: ${value}`;
+          if (property.propertiesMap) {
+            const proper = property.propertiesMap.get(affect.key);
+            if (proper) {
+              const value = affect.value > 0 ? `[color=#ffff00]+${affect.value}[/color]` : `[color=#ff0000]${affect.value}[/color]`;
+              attri += `\n${proper.name}: ${value}`;
+            }
           }
         }
         if (attri.length > 0) {
@@ -716,10 +810,12 @@ class DetailBubble extends Phaser.GameObjects.Container {
         const len = prop.requireValues.length;
         for (let i = 0; i < len; i++) {
           const require = prop.requireValues[i];
-          if (property.hasProperty(require.key)) {
+          if (property.propertiesMap) {
             const proper = property.propertiesMap.get(require.key);
-            const value = proper.value >= require.value ? `[color=#00ff00](${require.value})[/color]` : `[color=#ff0000](${require.value})[/color]`;
-            need += `\n${proper.name}: ${value}`;
+            if (proper) {
+              const value = proper.value >= require.value ? `[color=#00ff00](${require.value})[/color]` : `[color=#ff0000](${require.value})[/color]`;
+              need += `\n${proper.name}: ${value}`;
+            }
           }
         }
         if (need.length > 0) {
@@ -910,4 +1006,98 @@ class Item extends Phaser.GameObjects.Container {
   public set isEquip(value) {
     this.selectIcon.visible = value;
   }
+}
+
+class MoreButtonPanel extends Phaser.GameObjects.Container {
+  private blackGraphic: Phaser.GameObjects.Graphics;
+  private topbg: ThreeSlicePath;
+  private place: BackgroundScaleButton;
+  private sell: BackgroundScaleButton;
+  private dpr: number;
+  private send: Handler;
+  private itemdata: op_client.CountablePackageItem;
+  constructor(scene: Phaser.Scene, width: number, height: number, dpr) {
+    super(scene);
+    this.dpr = dpr;
+    this.setSize(width, height);
+    this.init();
+  }
+
+  public setItemData(data: op_client.CountablePackageItem, category: number) {
+    this.itemdata = data;
+    this.setLayoutType(category);
+  }
+  /**
+   *
+   * @param type 1 || 5 - 家具 3 - 道具
+   */
+  public setLayoutType(type: number) {
+    this.place.visible = false;
+    this.sell.visible = false;
+    this.removeListen();
+    if (type === 1 || type === 5) {
+      this.place.visible = true;
+      this.place.y = this.height * 0.5 - this.place.height * 0.5;
+      this.topbg.y = this.place.y - this.place.height * 0.5 - this.topbg.height * 0.5;
+      this.place.on(ClickEvent.Tap, this.onPlaceHandler, this);
+    } else if (type === 3) {
+      this.sell.visible = true;
+      this.sell.y = this.height * 0.5 - this.sell.height * 0.5;
+      this.topbg.y = this.sell.y - this.sell.height * 0.5 - this.topbg.height * 0.5;
+      this.sell.on(ClickEvent.Tap, this.onSellHandler, this);
+    }
+    this.on("pointerdown", this.hide, this);
+  }
+
+  public setHandler(send: Handler) {
+    this.send = send;
+  }
+
+  public show() {
+    this.addListen();
+    this.visible = true;
+  }
+
+  public hide() {
+    this.removeListen();
+    this.visible = false;
+  }
+
+  protected addListen() {
+    // this.place.on(ClickEvent.Tap, this.onPlaceHandler, this);
+    // this.sell.on(ClickEvent.Tap, this.onSellHandler, this);
+    // this.on("pointerdown", this.hide, this);
+  }
+
+  protected removeListen() {
+    this.place.off(ClickEvent.Tap, this.onPlaceHandler, this);
+    this.sell.off(ClickEvent.Tap, this.onSellHandler, this);
+    this.off("pointerdown", this.hide, this);
+  }
+  protected init() {
+    this.blackGraphic = this.scene.make.graphics(undefined, false);
+    this.blackGraphic.clear();
+    this.blackGraphic.fillStyle(0x000000, 0.66);
+    this.blackGraphic.fillRect(0, 0, this.width, this.height);
+    this.blackGraphic.x = -this.width * 0.5;
+    this.blackGraphic.y = -this.height * 0.5;
+    this.topbg = new ThreeSlicePath(this.scene, 0, 0, 327 * this.dpr, 10 * this.dpr, UIAtlasName.uicommon, ["bag_more_left", "bag_more_middle", "bag_more_right"]);
+    this.place = new BackgroundScaleButton(this.scene, 327 * this.dpr, 53 * this.dpr, UIAtlasName.uicommon, "bag_more_uncheck", "bag_more_select", i18n.t("furni_bag.add"), this.dpr, 1, false);
+    this.place.setTextStyle(UIHelper.blackStyle(this.dpr, 20));
+    this.sell = new BackgroundScaleButton(this.scene, 327 * this.dpr, 53 * this.dpr, UIAtlasName.uicommon, "bag_more_uncheck", "bag_more_select", i18n.t("common.sold"), this.dpr, 1, false);
+    this.sell.setTextStyle(UIHelper.blackStyle(this.dpr, 20));
+    this.add([this.blackGraphic, this.topbg, this.place, this.sell]);
+    this.setInteractive();
+  }
+
+  private onPlaceHandler() {
+    if (this.send) this.send.runWith(["place", this.itemdata]);
+    this.hide();
+  }
+
+  private onSellHandler() {
+    if (this.send) this.send.runWith(["sell", this.itemdata]);
+    this.hide();
+  }
+
 }

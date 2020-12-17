@@ -59,7 +59,7 @@ export interface IRoomService {
 
     transformToMini90(p: IPos): IPos;
 
-    addBlockObject(object: IBlockObject);
+    addBlockObject(object: IBlockObject): Promise<any>;
 
     removeBlockObject(object: IBlockObject);
 
@@ -200,11 +200,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mActorData = data;
     }
 
-    public addBlockObject(object: IBlockObject) {
-        // Logger.getInstance().log("rooms add");
-        if (this.blocks) {
-            this.blocks.add(object);
-        }
+    public addBlockObject(object: IBlockObject): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (this.blocks) {
+                this.blocks.add(object).then((val) => {
+                    resolve(val);
+                });
+            } else {
+                reject(false);
+            }
+        });
     }
 
     public removeBlockObject(object: IBlockObject) {

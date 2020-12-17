@@ -292,22 +292,26 @@ export class PicaComposePanel extends BasePanel {
                 }],
                 button: [
                     {
-                        text: i18n.t("common.confirm"),
-                        local: true,
-                        clickhandler: new Handler(this, () => {
-                            this.render.renderEmitter(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.mSelectItemData.skill.id);
-                        })
-                    },
-                    {
                         text: i18n.t("common.cancel"),
                         local: true,
+                        param: 0
+                    },
+                    {
+                        text: i18n.t("common.confirm"),
+                        local: true,
+                        clickhandler: {
+                            key: this.key,
+                            clickfun: "onConfirmMakeHandler",
+                        },
+                        param: 1
                     }
                 ]
             };
-            const uimanager = this.mWorld.uiManager;
-            uimanager.showMed("MessageBox", content);
+            this.render.renderEmitter(ModuleName.PICACOMPOSE_NAME + "_showpanel", { panel: ModuleName.PICAMESSAGEBOX_NAME, data: content });
         }
-
+    }
+    private onConfirmMakeHandler() {
+        this.render.renderEmitter(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.mSelectItemData.skill.id);
     }
     private onBackHandler() {
         this.render.renderEmitter(ModuleName.PICACOMPOSE_NAME + "_hide");

@@ -7,7 +7,7 @@ import { User } from "../../actor/user";
 import { IRoomService, Room } from "../room/room";
 import { PlayerModel } from "./player.model";
 import { ISprite, Sprite } from "../display/sprite/sprite";
-import { EventType, MessageType, PlayerState } from "structure";
+import { AvatarSuitType, EventType, MessageType, PlayerState } from "structure";
 import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
@@ -215,7 +215,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     player.model = new Sprite(sprite, content.nodeType);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
-                    player.updateModel(sprite);
+                    player.updateModel(sprite, this.mRoom.game.avatarType);
                 }
             }
         }
@@ -260,6 +260,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
+            if (this.mRoom.game.avatarType === op_def.AvatarStyle.SuitType) {
+                if (!AvatarSuitType.hasAvatarSuit(sprite["attrs"])) {
+                    if (!sprite.avatar) sprite.avatar = <any>(AvatarSuitType.createBaseAvatar());
+                }
+            }
             this._add(new Sprite(sprite, content.nodeType));
             // MineCarSimulateData.addSimulate(this.roomService, sprite);
         }

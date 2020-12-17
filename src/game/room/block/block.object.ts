@@ -17,12 +17,11 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this.isUsed = true;
     }
 
-    public setRenderable(isRenderable: boolean, delay: number = 0) {
-        // Logger.getInstance().log(isRenderable, "=====blockobject");
+    public async setRenderable(isRenderable: boolean, delay: number = 0): Promise<any> {
         if (this.mRenderable !== isRenderable) {
             this.mRenderable = isRenderable;
             if (isRenderable) {
-                this.addDisplay();
+                await this.addDisplay();
                 if (delay > 0) {
                     this.fadeIn();
                 }
@@ -111,17 +110,17 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this.isUsed = false;
     }
 
-    protected addDisplay() { }
+    protected addDisplay(): Promise<any> { return Promise.resolve(); }
 
     protected removeDisplay() {
         this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
-    protected addToBlock() {
+    protected addToBlock(): Promise<any> {
         if (this.mBlockable) {
-            this.mRoomService.addBlockObject(this);
+            return this.mRoomService.addBlockObject(this);
         } else {
-            this.addDisplay();
+            return this.addDisplay();
         }
     }
 

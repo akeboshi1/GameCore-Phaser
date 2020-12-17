@@ -66,6 +66,7 @@ export class BasePanel extends Panel {
         this.setLinear(this.key);
         Logger.getInstance().log("init========", this.key);
         this.__exportProperty();
+        this.onInitialized();
     }
 
     protected setLinear(key: string) {
@@ -122,6 +123,10 @@ export class BasePanel extends Panel {
     }
 
     protected onHide() {
+
+    }
+
+    protected onInitialized() {
 
     }
 }

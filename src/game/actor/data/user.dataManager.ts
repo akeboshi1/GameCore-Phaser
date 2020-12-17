@@ -61,6 +61,13 @@ export class UserDataManager extends PacketHandler {
         }
     }
 
+    get money(): number {
+        if (this.mProperty && this.mProperty.coin) return this.mProperty.coin.value;
+    }
+    get diamond(): number {
+        if (this.mProperty && this.mProperty.diamond) return this.mProperty.diamond.value;
+        return 0;
+    }
     get isSelfRoom() {
         if (this.mProperty.rooms) {
             const curRoomid = this.curRoomID;

@@ -1,9 +1,10 @@
 import { BBCodeText } from "apowophaserui";
-import { Font } from "utils";
+import { Font, UIHelper } from "utils";
+import { DynamicImage } from "./dynamic.image";
 
 export class ImageValue extends Phaser.GameObjects.Container {
     protected dpr: number;
-    protected icon: Phaser.GameObjects.Image;
+    protected icon: Phaser.GameObjects.Image | DynamicImage;
     protected value: BBCodeText | Phaser.GameObjects.Text;
     protected offset: Phaser.Geom.Point;
     protected layoutType: number = 1;
@@ -99,6 +100,31 @@ export class ImageBBCodeValue extends ImageValue {
             color: "#ffffff",
         };
         this.value = new BBCodeText(this.scene, 0, 0, "10", style);
+        this.value.setOrigin(0, 0.5);
+        const width = this.icon.displayWidth + this.value.width;
+        this.setSize(width, this.height);
+    }
+}
+
+export class DynamicImageValue extends ImageValue {
+    protected icon: DynamicImage;
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string, dpr: number, style?: any) {
+        super(scene, width, height, key, frame, dpr, style);
+    }
+    public load(url: string) {
+        this.icon.load(url, this, () => {
+            this.icon.scale = 1;
+            this.icon.displayHeight = this.height - 4 * this.dpr;
+            this.icon.scaleX = this.icon.scaleY;
+            this.icon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+            this.resetSize();
+        });
+    }
+    protected create(key: string, frame: string, style: any) {
+        this.icon = new DynamicImage(this.scene, 0, 0);
+        this.icon.scale = this.dpr;
+        if (!style) style = UIHelper.whiteStyle(this.dpr);
+        this.value = this.scene.make.text({ x: 0, y: 0, text: "10", style });
         this.value.setOrigin(0, 0.5);
         const width = this.icon.displayWidth + this.value.width;
         this.setSize(width, this.height);

@@ -37,7 +37,8 @@
     "expires": "已过期",
     "timelimit": "限时",
     "properties": "道具属性",
-    "needproper": "需求属性"
+    "needproper": "需求属性",
+    "placetips":"布置自己的小屋的时候才能放置"
   },
   "common": {
     "cancel": "取消",
@@ -102,7 +103,9 @@
     "remove_black": "移除黑名单",
     "operation": "操作",
     "follow": "关注",
-    "followed": "已关注"
+    "followed": "已关注",
+    "report":"举报",
+    "blockuer": "拉黑"
   },
   "compose": {
     "title": "合成",

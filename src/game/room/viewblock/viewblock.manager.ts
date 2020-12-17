@@ -12,21 +12,27 @@ export class ViewblockManager implements IViewBlockManager {
         this.mCameras = cameras;
     }
 
-    public add(e: IBlockObject): boolean {
-        // Logger.getInstance().log("viewblock add");
-        if (!this.mCameras) return false;
-        // this.mCameras.getMiniViewPort().then((obj) => {
-        // const miniView = obj;
-        for (const block of this.mBlocks) {
-            const rect = block.rectangle;
-            const ePos: IPos = e.getPosition();
-            if (!ePos) return;
-            if (rect.contains(ePos.x, ePos.y)) {
-                block.add(e);
+    public add(e: IBlockObject): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            if (!this.mCameras) {
+                resolve(false);
                 return;
             }
-        }
-        // });
+            const ePos: IPos = e.getPosition();
+            if (!ePos) {
+                resolve(false);
+                return;
+            }
+            for (const block of this.mBlocks) {
+                const rect = block.rectangle;
+                if (rect.contains(ePos.x, ePos.y)) {
+                    block.add(e).then(() => {
+                        resolve(true);
+                    });
+                    return;
+                }
+            }
+        });
     }
 
     public remove(e: IBlockObject): boolean {
