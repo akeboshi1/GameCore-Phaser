@@ -122,7 +122,7 @@ export class PicaPropFunPanel extends BasePanel {
         }, false).setOrigin(0.5);
         const iconOffset: number = -40 * dpr;
         this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
-        this.mDetailDisplay.scale = this.dpr * 0.8;
+        this.mDetailDisplay.scale = this.dpr / this.scale;
         this.mDetailDisplay.y = iconOffset;
         // this.mDetailDisplay.setSize(110 * this.dpr, 110 * this.dpr);
         const priceOffset: number = 30 * dpr;
