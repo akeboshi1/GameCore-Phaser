@@ -206,7 +206,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.mTextArea.scrollToBottom();
         // resize(width, h);
         // this.background.input = undefined;
-        // this.background.setInteractive(new Phaser.Geom.Rectangle(0, 0, width / this.scale, height / this.scale), Phaser.Geom.Rectangle.Contains);
+        this.background.setInteractive(new Phaser.Geom.Rectangle(0, 0, width / this.scale, height / this.scale), Phaser.Geom.Rectangle.Contains);
     }
 
     public expand() {
