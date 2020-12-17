@@ -298,7 +298,7 @@ export class User extends Player {
             this.game.renderPeer.updateInput(this.mInputMask);
             // this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
-        super.updateModel(model);
+        super.updateModel(model, this.game.avatarType);
     }
 
     public setPosition(pos: IPos) {

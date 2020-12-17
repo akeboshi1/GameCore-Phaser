@@ -243,7 +243,8 @@
     "world": "World",
     "current": "Scene",
     "system": "System",
-    "givegift": "Gifts"
+    "givegift": "Gifts",
+    "placeholder": "Say something…"
   },
   "minecar": {
     "discard": "discard",

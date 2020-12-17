@@ -26,7 +26,7 @@ export class Terrain extends BlockObject implements IElement {
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
-        this.setPosition45(this.mModel.pos);
+        this.setPosition(this.mModel.pos);
         this.mElementManager.addToMap(val);
         // this.addDisplay();
     }

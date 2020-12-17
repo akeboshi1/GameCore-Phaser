@@ -174,7 +174,7 @@ export class PicaNewRolePanel extends BasePanel {
     private creatAvatars(avatarSuits: op_client.ICountablePackageItem[]) {
         const suits: AvatarSuit[] = [];
         for (const item of avatarSuits) {
-            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, tag: item.tag, sn: item.sn };
+            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, slot: item.slot, tag: item.tag, sn: item.sn };
             suits.push(suit);
         }
         const avatar = AvatarSuitType.createHasBaseAvatar(suits);

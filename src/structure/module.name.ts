@@ -3,6 +3,8 @@ export class ModuleName {
     public static PICAHANDHELD_NAME: string = "PicaHandheld";
     public static PICAMAINUI_NAME: string = "PicaMainUI";
     public static PICACHAT_NAME: string = "PicaChat";
+    public static CHAT_NAME: string = "Chat";
+    public static BOTTOM: string = "Bottom";
     public static LOGIN_NAME: string = "Login";
     public static CUTIN_NAME: string = "CutIn";
     public static ACTIVITY_NAME: string = "Activity";
@@ -24,7 +26,7 @@ export class ModuleName {
     public static ALERTVIEW_NAME: string = "AlertView";
     public static PICAOPENPARTY_NAME: string = "PicaOpenParty";
     public static PICAMANORLIST_NAME: string = "PicaManorList";
-    public static PICATASK_NAME: string = "Task";
+    public static PICATASK_NAME: string = "PicaTask";
     public static PICAMANORINFO_NAME: string = "PicManorInfo";// TODO: rename
     public static PICABUSINESSSTREET_NAME: string = "PicaBusinessStreet";
     public static PICABUSINESSMARKETINGPLAN_NAME: string = "PicaBusinessMarketingPlan";

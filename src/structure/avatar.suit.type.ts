@@ -1,4 +1,5 @@
 import { IAvatar } from "./dragonbones";
+import { op_def } from "pixelpai_proto";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
     static suitPart = {
@@ -16,27 +17,29 @@ export class AvatarSuitType {
         "helmet": ["head_spec"],
         "shell": ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"]
     };
-
+    static slotBitMap: Map<string, number>;
     static createAvatar(suits: AvatarSuit[], avatar?: any) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || {};
         for (const suit of suits) {
             const suitType = this.avatarSuit;
-            const slots = suitType[suit.suit_type];
+            // const slots = suitType[suit.suit_type];
+            const slots = this.checkSlotValue(suit.suit_type, suit.slot);
             for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, tag: suit.tag, version: suit.version };
+                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createAvatarBySn(suit_type: string, sn: string, tag: string, version?: string, avatar?: any) {
+    static createAvatarBySn(suit_type: string, sn: string, slot: string, tag: string, version?: string, avatar?: any) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || {};
         const suitType = this.avatarSuit;
-        const slots = suitType[suit_type];
-        for (const slot of slots) {
-            avatar[slot] = { sn, suit_type, tag, version };
+        // const slots = suitType[suit_type];
+        const slots = this.checkSlotValue(suit_type, slot);
+        for (const tslot of slots) {
+            avatar[tslot] = { sn, suit_type, slot, tag, version };
         }
         return avatar;
     }
@@ -46,21 +49,23 @@ export class AvatarSuitType {
         const avatar = this.createBaseAvatar();
         for (const suit of suits) {
             const suitType = this.avatarSuit;
-            const slots = suitType[suit.suit_type];
+            // const slots = suitType[suit.suit_type];
+            const slots = this.checkSlotValue(suit.suit_type, suit.slot);
             for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, tag: suit.tag, version: suit.version };
+                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
             }
         }
         return avatar;
     }
 
-    static createHasBaseAvatarBySn(suit_type: string, sn: string, tag: string, version?: string) {
+    static createHasBaseAvatarBySn(suit_type: string, sn: string, slot: string, tag: string, version?: string) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         const avatar = this.createBaseAvatar();
         const suitType = this.avatarSuit;
-        const slots = suitType[suit_type];
-        for (const slot of slots) {
-            avatar[slot] = { sn, suit_type, tag, version };
+        // const slots = suitType[suit_type];
+        const slots = this.checkSlotValue(suit_type, slot);
+        for (const tslot of slots) {
+            avatar[tslot] = { sn, suit_type, slot, tag, version };
         }
         return avatar;
     }
@@ -81,6 +86,46 @@ export class AvatarSuitType {
             }
         }
         return false;
+    }
+
+    static checkSlotValue(suitType: string, slotbit: string) {
+        if (!this.slotBitMap) {
+            this.slotBitMap = new Map();
+            const avatarSlot: any = op_def.AvatarSlot;
+            for (const key in avatarSlot) {
+                if (typeof key === "string") {
+                    const humpName = this.toHumpName(key) + "Id";
+                    this.slotBitMap.set(humpName, avatarSlot[key]);
+                }
+            }
+        }
+        const slotArr = [];
+        const suitPart = this.avatarSuit;
+        const slots = suitPart[suitType];
+        const slotbits = slotbit === undefined ? [] : slotbit.split("#");
+        // tslint:disable-next-line:prefer-for-of
+        for (let i = 0; i < slots.length; i++) {
+            const slot = slots[i];
+            const value = this.slotBitMap.get(slot);
+            const bit = 1 << (value % 32);
+            const index = Math.floor(value / 32);
+            if (slotbits.length > index) {
+                const bitstr = slotbits[index];
+                const binary = parseInt(atob(bitstr), 10);
+                if ((bit & binary) === bit) {
+                    slotArr.push(slot);
+                }
+            } else {
+                slotArr.push(slot);
+            }
+        }
+        return slotArr;
+    }
+
+    static toHumpName(str: string) {
+        return str.replace(/([^_])(?:_+([^_]))/g, ($0, $1, $2) => {
+            return $1 + $2.toUpperCase();
+        });
     }
     public costume = ["bodyCostId", "bodyDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
     public hair = ["headHairId", "headBackId"];
@@ -136,6 +181,7 @@ export class BaseAvatar {
 export interface AvatarSuit {
     id: string;
     sn: string;
+    slot: string;
     suit_type: string;
     version?: string;
     tag?: string;
