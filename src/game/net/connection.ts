@@ -13,7 +13,6 @@ for (const key in protos) {
 }
 
 export class GameSocket extends SocketConnection {
-    protected mUuid: number = 0;
     private mainPeer: MainPeer;
     // private socketList: any[];
     // private mTimestamp: number;
@@ -22,26 +21,12 @@ export class GameSocket extends SocketConnection {
         this.mainPeer = mainPeer;
         // this.socketList = [];
     }
-    // update(time: number, delta: number) {
-    //     if (!this.mTimestamp) this.mTimestamp = time;
-    //     else
-    //         this.mTimestamp += delta;
-    // }
+
     send(data: any): void {
-        const protobuf_packet: PBpacket = new PBpacket();
-        protobuf_packet.Deserialization(new Buffer(data));
-        protobuf_packet.header.uuid = this.mUuid || 0;
-        super.send(protobuf_packet.Serialization());
-        Logger.getInstance().info(`MainWorker[发送] >>> ${protobuf_packet.toString()}`);
+        super.send(data);
     }
     protected onData(data: any) {
-        const protobuf_packet: PBpacket = new PBpacket();
-        protobuf_packet.Deserialization(new Buffer(data));
-        this.mUuid = protobuf_packet.header.uuid;
-        Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
-        // Send the packet to parent thread
-        const buffer = protobuf_packet.Serialization();
-        this.mainPeer.onData(buffer);
+        this.mainPeer.onData(data);
     }
 }
 
@@ -79,6 +64,8 @@ export class ConnListener implements IConnectListener {
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export class Connection implements ConnectionService {
+    protected mUuid: number = 0;
+
     protected mPacketHandlers: PacketHandler[] = [];
     private mCachedServerAddress: ServerAddress | undefined;
     private mSocket: GameSocket;
@@ -138,7 +125,9 @@ export class Connection implements ConnectionService {
     send(packet: PBpacket) {
         // if (this.isPause) return;
         packet.header.timestamp = this.mClock ? this.mClock.unixTime : 0;
+        packet.header.uuid = this.mUuid || 0;
         this.mSocket.send(packet.Serialization());
+        Logger.getInstance().info(`MainWorker[发送] >>> ${packet.toString()}`);
     }
 
     removePacketListener(listener: PacketHandler) {
@@ -162,12 +151,13 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        // if (this.isPause) return;
-        const protobufPacket: PBpacket = new PBpacket();
-        protobufPacket.Deserialization(new Buffer(data));
+        const protobuf_packet: PBpacket = new PBpacket();
+        protobuf_packet.Deserialization(new Buffer(data));
+        this.mUuid = protobuf_packet.header.uuid;
+        Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
         const handlers = this.mPacketHandlers;
         handlers.forEach((handler: PacketHandler) => {
-            handler.onPacketArrived(protobufPacket);
+            handler.onPacketArrived(protobuf_packet);
         });
     }
 
