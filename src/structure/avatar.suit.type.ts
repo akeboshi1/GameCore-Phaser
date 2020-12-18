@@ -23,10 +23,14 @@ export class AvatarSuitType {
         avatar = avatar || {};
         for (const suit of suits) {
             const suitType = this.avatarSuit;
-            // const slots = suitType[suit.suit_type];
+            const allslots = suitType[suit.suit_type];
             const slots = this.checkSlotValue(suit.suit_type, suit.slot);
-            for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+            for (const tslot of allslots) {
+                if (slots.indexOf(tslot) !== -1) {
+                    avatar[tslot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                } else {
+                    avatar[tslot] = { sn: "", suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                }
             }
         }
         return avatar;
@@ -36,10 +40,14 @@ export class AvatarSuitType {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || {};
         const suitType = this.avatarSuit;
-        // const slots = suitType[suit_type];
+        const allslots = suitType[suit_type];
         const slots = this.checkSlotValue(suit_type, slot);
-        for (const tslot of slots) {
-            avatar[tslot] = { sn, suit_type, slot, tag, version };
+        for (const tslot of allslots) {
+            if (slots.indexOf(tslot) !== -1) {
+                avatar[tslot] = { sn, suit_type, slot, tag, version };
+            } else {
+                avatar[tslot] = { sn: "", suit_type, slot, tag, version };
+            }
         }
         return avatar;
     }
@@ -49,10 +57,14 @@ export class AvatarSuitType {
         const avatar = this.createBaseAvatar();
         for (const suit of suits) {
             const suitType = this.avatarSuit;
-            // const slots = suitType[suit.suit_type];
+            const allslots = suitType[suit.suit_type];
             const slots = this.checkSlotValue(suit.suit_type, suit.slot);
-            for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+            for (const tslot of allslots) {
+                if (slots.indexOf(tslot) !== -1) {
+                    avatar[tslot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                } else {
+                    avatar[tslot] = { sn: "", suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                }
             }
         }
         return avatar;
@@ -62,10 +74,14 @@ export class AvatarSuitType {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         const avatar = this.createBaseAvatar();
         const suitType = this.avatarSuit;
-        // const slots = suitType[suit_type];
+        const allslots = suitType[suit_type];
         const slots = this.checkSlotValue(suit_type, slot);
-        for (const tslot of slots) {
-            avatar[tslot] = { sn, suit_type, slot, tag, version };
+        for (const tslot of allslots) {
+            if (slots.indexOf(tslot) !== -1) {
+                avatar[tslot] = { sn, suit_type, slot, tag, version };
+            } else {
+                avatar[tslot] = { sn: "", suit_type, slot, tag, version };
+            }
         }
         return avatar;
     }
