@@ -135,7 +135,9 @@
     "task_quest": "任务要求：",
     "main": "【主线】",
     "side": "【支线】",
-    "daily": "【每日】"
+    "daily": "【每日】",
+    "receive": "领取",
+    "go": "前往"
   },
   "furni_unlock": {
     "unlock": "修 复",

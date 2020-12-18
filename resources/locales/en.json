@@ -134,7 +134,9 @@
     "task_quest": "Quest:",
     "main": "[main]",
     "side": "[side]",
-    "daily": "[daily]"
+    "daily": "[daily]",
+    "receive": "Receive",
+    "go": "Go"
   },
   "furni_unlock": {
     "unlock": "REPAIR",

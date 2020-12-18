@@ -12,9 +12,10 @@ export class PicaTaskMediator extends BasicMediator {
     show(param?: any) {
         super.show(param);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.on(ModuleName.PICATASK_NAME + "_questlist", this.onQueryQuestList, this);
+        this.game.emitter.on(ModuleName.PICATASK_NAME + "_questlist", this.onQueryQuestGroup, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_questdetail", this.onQueryQuestDetail, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_submitquest", this.onQuerySubmitQuest, this);
+        this.game.emitter.on(ModuleName.PICATASK_NAME + "_queryreward", this.onQueryQuestReward, this);
 
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestlist", this.onRetQuestList, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
@@ -25,9 +26,10 @@ export class PicaTaskMediator extends BasicMediator {
         if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICATASK_NAME];
         super.hide();
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.off(ModuleName.PICATASK_NAME + "_questlist", this.onQueryQuestList, this);
+        this.game.emitter.off(ModuleName.PICATASK_NAME + "_questlist", this.onQueryQuestGroup, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_questdetail", this.onQueryQuestDetail, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_submitquest", this.onQuerySubmitQuest, this);
+        this.game.emitter.off(ModuleName.PICATASK_NAME + "_queryreward", this.onQueryQuestReward, this);
 
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestlist", this.onRetQuestList, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
@@ -38,14 +40,18 @@ export class PicaTaskMediator extends BasicMediator {
         this.hide();
     }
 
-    private onQueryQuestList() {
-        this.mModel.queryQuestList();
-    }
-
+    // private onQueryQuestList() {
+    //     this.mModel.queryQuestList();
+    // }
     private onQueryQuestDetail(id: string) {
         this.mModel.queryQuestDetail(id);
     }
-
+    private onQueryQuestGroup(type: number) {
+        this.mModel.queryQuestGroup(type);
+    }
+    private onQueryQuestReward(type: number) {
+        this.mModel.queryGroupRewards(type);
+    }
     private onQuerySubmitQuest(id: string) {
         this.mModel.querySubmitQuest(id);
     }

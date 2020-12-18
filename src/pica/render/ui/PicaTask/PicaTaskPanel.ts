@@ -94,7 +94,7 @@ export class PicaTaskPanel extends PicaBasePanel {
     }
 
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
-        if (!this.mInitialized) return;
+        this.mainPanel.setTaskDatas(content, this.questType);
     }
 
     setTaskDetail(quest: op_client.PKT_Quest) {
@@ -111,11 +111,13 @@ export class PicaTaskPanel extends PicaBasePanel {
 
     private onMainPanelHandler(tag: string, data?: any) {
         if (tag === "finish") {
-            this.render.renderEmitter(ModuleName.PICATASK_NAME + "_submitquest", { id: data, type: this.questType });
+            this.render.renderEmitter(ModuleName.PICATASK_NAME + "_submitquest", data);
         } else if (tag === "go") {
 
         } else if (tag === "detail") {
-            this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questdetail", { id: data, type: this.questType });
+            // this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questdetail", { id: data, type: this.questType });
+        } else if (tag === "reward") {
+            this.render.renderEmitter(ModuleName.PICATASK_NAME + "_queryreward", this.questType);
         }
     }
     private OnClosePanel() {

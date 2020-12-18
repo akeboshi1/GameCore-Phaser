@@ -44,7 +44,7 @@ export class PicaTask extends BasicModel {
         this.connection.send(packet);
     }
 
-    public queryQuestMainGroup(type: op_pkt_def.PKT_Quest_Type) {
+    public queryQuestGroup(type: op_pkt_def.PKT_Quest_Type) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_GROUP);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_GROUP = packet.content;
         content.questType = type;

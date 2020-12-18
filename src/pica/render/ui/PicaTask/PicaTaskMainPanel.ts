@@ -9,6 +9,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private gameScroller: GameScroller;
     private curTaskItem: PicaTaskItem;
     private taskItems: PicaTaskItem[] = [];
+    private mainItem: MainTaskItem;
     private dpr: number;
     private zoom: number;
     private send: Handler;
@@ -26,8 +27,13 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     refreshMask() {
         this.gameScroller.refreshMask();
     }
-    setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
+    setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         if (this.curTaskItem) this.curTaskItem.setExtend(false);
+        if (!this.mainItem) {
+            this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+            this.gameScroller.addItem(this.mainItem);
+        }
+        this.mainItem.setMainTaskData(content, questType);
         this.setTaskItems(content.quests);
     }
 
@@ -51,7 +57,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             } else {
                 item = new PicaTaskItem(this.scene, this.dpr);
                 this.gameScroller.addItem(item);
-                item.setHandler(new Handler(this, this.onExtendsHandler), new Handler(this, this.onFinishHandler));
+                item.setHandler(new Handler(this, this.onTaskItemHandler));
                 this.taskItems.push(item);
             }
             item.setTaskData(quests[i]);
@@ -62,15 +68,15 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     protected init() {
         this.gameScroller = new GameScroller(this.scene, {
             x: 0,
-            y: 0,
+            y: 18 * this.dpr,
             width: this.width,
-            height: this.height,
+            height: this.height - 70 * this.dpr,
             zoom: this.zoom,
             dpr: this.dpr,
             align: 2,
             orientation: 0,
-            space: 10 * this.dpr,
-            selfevent: true,
+            space: 20 * this.dpr,
+            padding: { top: 2 * this.dpr },
             cellupCallBack: (gameobject) => {
                 this.onPointerUpHandler(gameobject);
             }
@@ -79,20 +85,35 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
 
     private onPointerUpHandler(gameobject) {
+        if (gameobject instanceof MainTaskItem) {
+
+        } else {
+        }
     }
 
-    private onFinishHandler(id: string) {
-        if (this.send) this.send.runWith(["finish", id]);
+    private onTaskItemHandler(tag: string, data: any) {
+        if (tag === "extend") {
+            const extend = data.extend;
+            const item = data.item;
+            this.onExtendsHandler(extend, item);
+        } else if (tag === "go") {
+
+        } else if (tag === "finish") {
+            this.send.runWith(["finish", data]);
+        }
+    }
+    private onRewardHandler(id: string) {
+        if (this.send) this.send.runWith(["reward", id]);
     }
 
     private onExtendsHandler(isExtend: boolean, item: PicaTaskItem) {
         if (this.curTaskItem) {
             this.curTaskItem.setExtend(false, false);
         }
-        this.curTaskItem = item;
         if (isExtend) {
-            if (this.send) this.send.runWith(["detail", item.questData.id]);
-        } else this.curTaskItem = null;
+            this.curTaskItem = item;
+        } else
+            this.curTaskItem = null;
         this.gameScroller.Sort(true);
     }
 }
@@ -119,7 +140,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.init();
     }
-    public SetMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+    public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.titleTex.text = content.name;
         this.taskDes.text = content.des;
         const max = content.quests.length;

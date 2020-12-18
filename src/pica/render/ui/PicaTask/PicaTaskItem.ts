@@ -13,8 +13,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     private taskButton: ThreeSliceButton;
     private extend: TaskItemExtend;
     private dpr: number;
-    private extendHandler: Handler;
-    private finishHandler: Handler;
+    private send: Handler;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
@@ -54,8 +53,10 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         });
         if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
             this.taskButton.setFrameNormal(UIHelper.threeGreenSmall);
+            this.taskButton.setText(i18n.t("task.go"));
         } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
             this.taskButton.setFrameNormal(UIHelper.threeYellowSmall);
+            this.taskButton.setText(i18n.t("task.receive"));
         }
     }
 
@@ -63,45 +64,40 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         if (this.extend) this.extend.setItemData(data);
     }
 
-    public setHandler(extend: Handler, finish: Handler) {
-        this.extendHandler = extend;
-        this.finishHandler = finish;
+    public setHandler(send: Handler) {
+        this.send = send;
     }
 
     public setExtend(isExtend: boolean, haveCallBack: boolean = true) {
         if (isExtend) {
             if (haveCallBack)
-                this.onTaskButtonHandler();
-            else this.openExtend();
+                if (this.send) this.send.runWith(["extend", { extend: true, item: this }]);
+            this.openExtend();
         } else {
-            if (haveCallBack)
-                this.onCloseHandler();
-            else this.closeExtend();
+            if (haveCallBack) {
+                if (this.send)
+                    this.send.runWith(["extend", { extend: false, item: this }]);
+            }
+            this.closeExtend();
         }
 
     }
     private onTaskButtonHandler() {
-        if (this.extendHandler) this.extendHandler.runWith([true, this]);
+        if (this.questData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
+            if (this.send) this.send.runWith(["go", this.questData]);
+        } else if (this.questData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
+            if (this.send) this.send.runWith(["finish", this.questData.id]);
+        }
     }
     private openExtend() {
         if (!this.extend) {
             this.extend = new TaskItemExtend(this.scene, this.dpr);
-            this.extend.setFinishHandler(new Handler(this, this.onFinishHandler));
             this.add(this.extend);
-            this.extend.y = this.height * 0.5 + this.extend.height * 0.5;
         }
         this.extend.visible = true;
         this.height = this.content.height + this.extend.height;
         this.content.y = -this.height * 0.5 + this.content.height * 0.5;
         this.extend.y = -this.height * 0.5 + this.content.height + this.extend.height * 0.5;
-    }
-    private onFinishHandler() {
-        if (this.finishHandler) this.finishHandler.runWith(this.questData.id);
-    }
-
-    private onCloseHandler() {
-        this.closeExtend();
-        if (this.extendHandler) this.extendHandler.runWith([false, this]);
     }
 
     private closeExtend() {
@@ -135,7 +131,6 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     private rewardArr: TaskCell[] = [];
     private line: Phaser.GameObjects.Image;
     private dpr: number = 0;
-    private finishHandler: Handler;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         const width = 253 * dpr;
@@ -181,10 +176,6 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.sortItem(this.rewardArr, taskPosy);
     }
 
-    public setFinishHandler(comp: Handler) {
-        this.finishHandler = comp;
-    }
-
     public sortItem(taskcells: TaskCell[], posY: number = 0) {
         const posx = -this.width * 0.5 + 10 * this.dpr;
         const list = taskcells;
@@ -214,10 +205,6 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
             item.setCellData(dataArr[i], isTask);
         }
         return arr;
-    }
-
-    private onFinishHandler() {
-        if (this.finishHandler) this.finishHandler.run();
     }
 
     private getTaskTargetText(questData: op_client.PKT_Quest) {
