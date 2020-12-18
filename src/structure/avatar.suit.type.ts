@@ -3,8 +3,8 @@ import { op_def } from "pixelpai_proto";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
     static suitPart = {
-        "costume": ["body_cost", "body_dres", "farm_cost", "barm_cost", "fleg_cost", "bleg_cost"],
-        "hair": ["head_hair", "head_back"],
+        "costume": ["body_cost", "body_cost_dres", "farm_cost", "barm_cost", "fleg_cost", "bleg_cost"],
+        "hair": ["head_hair", "head_hair_back"],
         "eye": ["head_eyes"],
         "mouse": ["head_mous"],
         "hat": ["head_hats"],
@@ -127,8 +127,8 @@ export class AvatarSuitType {
             return $1 + $2.toUpperCase();
         });
     }
-    public costume = ["bodyCostId", "bodyDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
-    public hair = ["headHairId", "headBackId"];
+    public costume = ["bodyCostId", "bodyCostDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
+    public hair = ["headHairId", "headHairBackId"];
     public eye = ["headEyesId"];
     public mouse = ["headMousId"];
     public hat = ["headHatsId"];

@@ -469,17 +469,20 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 1,
                 skin: avater.bodyCostId,
             });
+        }
+
+        if (avater.bodyCostDresId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyCostDres,
                 part: AvatarPartType.BodyCostDres,
                 dir: 3,
-                skin: avater.bodyCostId,
+                skin: avater.bodyCostDresId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyCostDres,
                 part: AvatarPartType.BodyCostDres,
                 dir: 1,
-                skin: avater.bodyCostId,
+                skin: avater.bodyCostDresId,
             });
         }
 
@@ -705,17 +708,20 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 1,
                 skin: avater.headHairId,
             });
+        }
+
+        if (avater.headHairBackId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadHairBack,
                 part: AvatarPartType.HeadHairBack,
                 dir: 3,
-                skin: avater.headHairId,
+                skin: avater.headHairBackId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadHairBack,
                 part: AvatarPartType.HeadHairBack,
                 dir: 1,
-                skin: avater.headHairId,
+                skin: avater.headHairBackId,
             });
         }
 
@@ -805,17 +811,20 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 1,
                 skin: avater.farmShldId,
             });
+        }
+
+        if (avater.barmShldId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.ShldBarm,
                 part: AvatarPartType.ShldBarm,
                 dir: 3,
-                skin: avater.farmShldId,
+                skin: avater.barmShldId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.ShldBarm,
                 part: AvatarPartType.ShldBarm,
                 dir: 1,
-                skin: avater.farmShldId,
+                skin: avater.barmShldId,
             });
         }
 
@@ -832,17 +841,20 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 1,
                 skin: avater.farmWeapId,
             });
+        }
+
+        if (avater.farmBaseId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.WeapBarm,
                 part: AvatarPartType.WeapBarm,
                 dir: 3,
-                skin: avater.farmWeapId,
+                skin: avater.farmBaseId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.WeapBarm,
                 part: AvatarPartType.WeapBarm,
                 dir: 1,
-                skin: avater.farmWeapId,
+                skin: avater.farmBaseId,
             });
         }
     }
