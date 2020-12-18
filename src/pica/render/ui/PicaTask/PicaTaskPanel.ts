@@ -27,15 +27,15 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.setSize(w, h);
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.5);
-        this.blackBg.fillRoundedRect(-this.x, -this.y, w, h);
+        this.blackBg.fillRect(-this.x, -this.y, w, h);
         this.bg.clear();
         this.bg.fillStyle(0, 0.5);
-        this.bg.fillRoundedRect(0, 0, this.content.width, h);
+        this.bg.fillRect(0, 0, this.content.width, h);
         this.bg.x = -this.content.width * 0.5;
         this.bg.y = -this.content.height * 0.5;
         this.selectLine.clear();
         this.selectLine.fillStyle(0, 0.5);
-        this.selectLine.fillRect(0, 0, 58 * this.dpr, 2 * this.dpr);
+        this.selectLine.fillRect(-29 * this.dpr, 0, 58 * this.dpr, 2 * this.dpr);
         this.content.x = this.content.width * 0.5;
         this.content.y = h * 0.5;
         this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
@@ -57,10 +57,14 @@ export class PicaTaskPanel extends PicaBasePanel {
         const conHeight = this.height;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWdith, conHeight);
+        this.content.setInteractive();
         this.add([this.blackBg, this.content]);
         this.bg = this.scene.make.graphics(undefined, false);
-        this.tilteName = this.scene.make.text({ x: 0, y: 12 * this.dpr, text: i18n.t("task.title"), style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
+        this.tilteName = this.scene.make.text({ text: i18n.t("task.title"), style: UIHelper.whiteStyle(this.dpr, 18) });
+        this.tilteName.setOrigin(0, 0.5);
         this.tilteName.setFontStyle("bold");
+        this.tilteName.x = -conWdith * 0.5 + 20 * this.dpr;
+        this.tilteName.y = -conHeight * 0.5 + 50 * this.dpr;
         this.selectLine = this.scene.make.graphics(undefined, false);
         this.content.add([this.bg, this.tilteName, this.selectLine]);
         this.mainPanel = new PicaTaskMainPanel(this.scene, this.content.width, this.height - 76 * this.dpr, this.dpr, this.scale);
@@ -68,6 +72,7 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.content.add(this.mainPanel);
         this.resize();
         super.init();
+        this.createOptionButtons();
     }
 
     createOptionButtons() {
@@ -76,11 +81,12 @@ export class PicaTaskPanel extends PicaBasePanel {
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
         let posx = -allLin / 2;
-        const posy = 90 * this.dpr;
+        const posy = -this.height * 0.5 + 90 * this.dpr;
+        let tempitem: ToggleColorButton;
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < arr.length; i++) {
             const data = arr[i];
-            const item = new ToggleColorButton(this.scene, cellwidth, this.height, this.dpr, data.text);
+            const item = new ToggleColorButton(this.scene, cellwidth, 20 * this.dpr, this.dpr, data.text);
             item.on(ClickEvent.Tap, this.onToggleButtonHandler, this);
             item.x = posx + cellwidth * 0.5;
             item.y = posy;
@@ -90,7 +96,9 @@ export class PicaTaskPanel extends PicaBasePanel {
             item.setChangeColor("#FFF449");
             item.setFontSize(14 * this.dpr);
             posx += cellwidth;
+            if (!tempitem) tempitem = item;
         }
+        this.onToggleButtonHandler(undefined, tempitem);
     }
 
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
@@ -107,6 +115,8 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.curToggleItem = toggle;
         this.questType = toggle.getData("item");
         this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questlist", this.questType);
+        this.selectLine.x = toggle.x;
+        // this.selectLine
     }
 
     private onMainPanelHandler(tag: string, data?: any) {
