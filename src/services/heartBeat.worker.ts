@@ -46,12 +46,10 @@ class HeartBeatPeer extends RPCPeer {
 
     @Export()
     public startBeat() {
-        // tslint:disable-next-line:no-console
-        console.log("startBeat======");
+        Logger.getInstance().log("startBeat======");
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
-            // tslint:disable-next-line:no-console
-            console.log("heartbeat++++interval");
+            Logger.getInstance().log("heartbeat++++interval");
             if (this.reConnectCount >= 8) {
                 this.remote[MAIN_WORKER].MainPeer.reconnect();
                 return;
@@ -75,8 +73,7 @@ class HeartBeatPeer extends RPCPeer {
 
     @Export()
     public clearBeat() {
-        // tslint:disable-next-line:no-console
-        console.log("clearBeat======");
+        Logger.getInstance().log("clearBeat======");
         this.reConnectCount = 0;
         // Logger.getInstance().log("heartBeatWorker clearBeat");
         this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();

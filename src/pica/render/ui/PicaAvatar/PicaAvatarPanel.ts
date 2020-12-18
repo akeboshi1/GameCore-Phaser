@@ -1,7 +1,7 @@
 import { NineSliceButton, GameGridTable, GameScroller, Button, BBCodeText, NineSlicePatch, ClickEvent } from "apowophaserui";
 import { DynamicImage, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasName } from "picaRes";
 import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
 import { Coin, Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
@@ -608,7 +608,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     const tipsWidth = 100 * dpr;
     const tipsHeight = 96 * dpr;
     this.setSize(tipsWidth, tipsHeight);
-    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", {
+    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasName.uicommon, "tips_bg", {
       left: 10 * this.dpr,
       top: 10 * this.dpr,
       right: 10 * this.dpr,

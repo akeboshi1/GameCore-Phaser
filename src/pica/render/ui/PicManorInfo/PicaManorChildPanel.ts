@@ -1,7 +1,7 @@
 import { BBCodeText, Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { DynamicImage, InputView, Render } from "gamecoreRender";
 import { UIAtlasKey } from "picaRes";
-import { Font, Handler, i18n, UIHelper } from "utils";
+import { Font, Handler, i18n, Logger, UIHelper } from "utils";
 import { PicaManorBasePanel } from "./PicaManorBasePanel";
 
 export class PicaManorChildPanel extends PicaManorBasePanel {
@@ -72,8 +72,7 @@ export class PicaManorChildPanel extends PicaManorBasePanel {
             }
         }).setInteractive()
             .on("areadown", (key) => {
-                // tslint:disable-next-line:no-console
-                console.log(key);
+                Logger.getInstance().log(key);
             })
             .on("areaup", (key) => {
                 // tslint:disable-next-line:no-console

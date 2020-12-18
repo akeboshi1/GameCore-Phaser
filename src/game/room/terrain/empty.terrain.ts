@@ -20,8 +20,9 @@ export class EmptyTerrain extends BlockObject {
         return Promise.resolve();
     }
 
-    removeDisplay() {
+    removeDisplay(): Promise<any> {
         this.removeBody();
+        return Promise.resolve();
     }
 
     drawBody() {

@@ -47,7 +47,6 @@ export class PicaChat extends BasicModel {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CONFIGS = packet.content;
     const status = content.status;
     const data = content.data;
-    // console.log(`handleTest: ${status} - ${data}`);
   }
 
   destroy() {

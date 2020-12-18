@@ -2,6 +2,7 @@ import { BasicMediator, BasicModel, Game, IElement, UIType } from "gamecore";
 import { ModuleName } from "structure";
 import { op_def, op_client } from "pixelpai_proto";
 import { PicaChat } from "picaWorker";
+import { Logger } from "utils";
 
 export class BottomMediator extends BasicMediator {
     constructor(game: Game) {
@@ -31,18 +32,34 @@ export class BottomMediator extends BasicMediator {
         if (!model) {
             return;
         }
-        if (val === "whosyourdaddy") {
-            this.game.uiManager.showMed("DebugLogger");
-        }
 
-        if (val === "##show matter") {
-            return this.game.roomManager.currentRoom.matterWorld.debugEnable();
-        }
-
-        if (val === "##hide matter") {
-            return this.game.roomManager.currentRoom.matterWorld.debugDisable();
+        const patt = new RegExp("##(\\D+)\\.(\\D+)");
+        const params = patt.exec(val);
+        if (params && params.length > 0) {
+            this.applyChatCommand(params);
+            return;
         }
         model.sendMessage(val);
+    }
+
+    // "##matterWorld.debugEnable"
+    // => this.game.roomManager.currentRoom.matterWorld.debugEnable();
+    private applyChatCommand(params: string[]) {
+        if (params.length !== 3) return;
+
+        const contextStr = params[1];
+        let context = null;
+        if (contextStr === "matterWorld") {
+            context = this.game.roomManager.currentRoom.matterWorld;
+        } else if (contextStr === "logger") {
+            context = Logger.getInstance();
+        }
+        if (context === null) {
+            return;
+        }
+
+        const functionStr = params[2];
+        context[functionStr].apply(context);
     }
 
     private onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {

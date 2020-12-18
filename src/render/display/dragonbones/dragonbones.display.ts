@@ -108,7 +108,6 @@ export class DragonbonesDisplay extends DisplayObject {
     public set displayInfo(val: IDragonbonesModel | undefined) {
         if (this.mNeedReplaceTexture === false) {
             this.mNeedReplaceTexture = this.checkNeedReplaceTexture(this.mDisplayInfo, val);
-            // console.log("ZW-- set displayInfo:", val, this.mNeedReplaceTexture);
         }
         this.mDisplayInfo = val;
     }

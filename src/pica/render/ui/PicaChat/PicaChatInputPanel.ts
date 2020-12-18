@@ -1,7 +1,7 @@
 import { BBCodeText, Button, ClickEvent, GameScroller, InputText, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { Render } from "gamecoreRender";
 import { UIAtlasKey } from "picaRes";
-import { Font, i18n } from "utils";
+import { Font, i18n, Logger } from "utils";
 
 export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -258,7 +258,6 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
         //     "   " +
         //     camheight;
         // // tslint:disable-next-line:no-console
-        // console.log(this.mInput.text + "    ");
         this.setQuickChatItems();
     }
 
@@ -273,8 +272,7 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
         }
         this.mOutputText.text = text;
         this.gamescroll.Sort();
-        // tslint:disable-next-line:no-console
-        console.log(datas);
+        Logger.getInstance().log(datas);
         // this.mInput.setFocus();
     }
     public appendChat(val: string) {
@@ -289,8 +287,7 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onKeyboardHandler(e) {
-        // tslint:disable-next-line:no-console
-        console.log(e.keyboardHeight);
+        Logger.getInstance().log(e.keyboardHeight);
         if (this.keyboardHeight > 0 && e.keyboardHeight === this.keyboardHeight)
             return;
         window.removeEventListener(
