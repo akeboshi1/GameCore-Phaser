@@ -66,7 +66,6 @@ export class PicaBagPanel extends PicaBasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = (height - 296 * this.dpr - 60 * this.dpr) * 0.5 + 60 * this.dpr;
-    this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
     this.mIconBg.x = this.mDetailDisplay.x;
     this.mIconBg.y = this.mDetailDisplay.y;
     this.mPropGrid.x = width / 2 + 3 * this.dpr;
@@ -449,6 +448,13 @@ export class PicaBagPanel extends PicaBasePanel {
       this.mPreCategoryBtn = gameobject;
     }
     this.mPropGrid.setT(0);
+    if (this.categoryType === 3) {
+      if (this.mSelectedCategeories.key !== "pkt_market_tag_20013") {
+        this.useBtn.visible = false;
+      } else this.useBtn.visible = true;
+    } else {
+      this.useBtn.visible = true;
+    }
   }
 
   private onCloseHandler() {
@@ -569,13 +575,14 @@ export class PicaBagPanel extends PicaBasePanel {
   private onTopCategoryHandler(item: NinePatchTabButton) {
     const categoryType = item.getData("data");
     this.clearCategoryData();
+    this.useBtn.visible = false;
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
-        this.useBtn.visible = true;
+        //  this.useBtn.visible = true;
         this.useBtn.setText(i18n.t("furni_bag.add"));
       } else {
-        this.useBtn.visible = true;
+        // this.useBtn.visible = true;
         this.useBtn.setText(i18n.t("common.use"));
 
       }

@@ -4,7 +4,7 @@ import { UIAtlasName } from "picaRes";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, UIHelper, Url } from "utils";
 export class PicaTaskItem extends Phaser.GameObjects.Container {
-    public questData: op_client.PKT_Quest;
+    public questData: op_client.IPKT_Quest;
     private content: Phaser.GameObjects.Container;
     private bg: NineSlicePatch;
     private headIcon: DynamicImage;
@@ -43,7 +43,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
     }
 
-    public setTaskData(data: op_client.PKT_Quest) {
+    public setTaskData(data: op_client.IPKT_Quest) {
         this.questData = data;
         this.taskName.text = data.name;
         this.setTextLimit(this.taskName, data.name);

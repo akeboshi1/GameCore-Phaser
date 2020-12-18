@@ -3,7 +3,7 @@ import { NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowoph
 import { Render } from "gamecoreRender";
 import { NumberCounter } from "./NumberCounter";
 import { Coin, Font, i18n } from "utils";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "picaRes";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mCounter: NumberCounter;
@@ -223,7 +223,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     const tipsWidth = 100 * dpr;
     const tipsHeight = 96 * dpr;
     this.setSize(tipsWidth, tipsHeight);
-    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", {
+    this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, UIAtlasName.uicommon, "tips_bg", {
       left: 10 * this.dpr,
       top: 10 * this.dpr,
       right: 10 * this.dpr,

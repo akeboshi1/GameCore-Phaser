@@ -59,9 +59,6 @@ export class PicaOnlineMediator extends BasicMediator {
         if (!this.game) {
             return;
         }
-        const uiManager = this.game.uiManager;
-        const mediator = uiManager.getMed(ModuleName.PICACHAT_NAME);
-        mediator.show();
         this.hide();
     }
 

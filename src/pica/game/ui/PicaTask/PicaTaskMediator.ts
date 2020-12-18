@@ -34,10 +34,6 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
     }
 
-    panelInit() {
-        super.panelInit();
-        this.mModel.queryQuestMainGroup();
-    }
     private onHideView() {
         this.hide();
     }
