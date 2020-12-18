@@ -52,9 +52,10 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mCategoryScroll.y = this.mShelfContainer.y + 20 * this.dpr;
     this.mBg.x = width / 2;
     this.mBg.y = this.mBg.height / 2 + 10 * this.dpr;
+    const tempHeight = (height - this.mShelfContainer.height - 80 * this.dpr);
     this.mDetailDisplay.x = width / 2;
-    this.mDetailDisplay.y = (height - this.mShelfContainer.height - 80 * this.dpr) * 0.5 + 80 * this.dpr;
-    this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
+    this.mDetailDisplay.y = tempHeight * 0.5 + 80 * this.dpr;
+    this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, tempHeight), Phaser.Geom.Rectangle.Contains);
     this.rotateAvatarBtn.x = width / 2 + 100 * this.dpr;
     this.rotateAvatarBtn.y = this.mDetailDisplay.y;
     this.mPropGrid.x = width / 2 + 3 * this.dpr;

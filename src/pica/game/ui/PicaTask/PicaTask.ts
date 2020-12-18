@@ -2,7 +2,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { UIAtlasName } from "picaRes";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { CopyProtoType } from "utils";
 
@@ -44,13 +44,17 @@ export class PicaTask extends BasicModel {
         this.connection.send(packet);
     }
 
-    public queryQuestMainGroup() {
+    public queryQuestMainGroup(type: op_pkt_def.PKT_Quest_Type) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_GROUP);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_GROUP = packet.content;
+        content.questType = type;
         this.connection.send(packet);
     }
 
-    public queryGroupRewards() {
+    public queryGroupRewards(type: op_pkt_def.PKT_Quest_Type) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GET_QUEST_GROUP_REWARDS);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GET_QUEST_GROUP_REWARDS = packet.content;
+        content.questType = type;
         this.connection.send(packet);
     }
 
