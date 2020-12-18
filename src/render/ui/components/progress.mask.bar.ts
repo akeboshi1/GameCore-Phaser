@@ -1,31 +1,17 @@
 
 import { BaseUI, NineSlicePatch } from "apowophaserui";
 export class ProgressMaskBar extends BaseUI {
-    protected mBackground: Phaser.GameObjects.Image;
+    protected mBackground: Phaser.GameObjects.Image | NineSlicePatch;
     protected mBar: Phaser.GameObjects.Image | NineSlicePatch;
     protected maskGraphics: Phaser.GameObjects.Graphics;
     protected mText: Phaser.GameObjects.Text;
     protected zoom: number = 1;
-    constructor(scene: Phaser.Scene, key: string, background: string, bar: string, style?: any, config?: any) {
+    constructor(scene: Phaser.Scene, key: string, background: string, bar: string, style?: any, barconfig?: any, bgconfig?: any) {
         super(scene);
-        this.mBackground = scene.make.image({ key, frame: background });
-        this.setSize(this.mBackground.width, this.mBackground.height);
-        if (config) {
-            const barW = config.width || this.width;
-            const barH = config.height || this.height;
-            this.mBar = new NineSlicePatch(scene, 0, -2 * this.dpr, barW, barH, key, bar, config);
-        } else
-            this.mBar = scene.make.image({ key, frame: bar });
-        if (style) {
-            this.mText = scene.make.text({
-                style
-            }, false);
-        }
-
+        this.createBackgroundBar(key, background, bar, style, barconfig, bgconfig);
         this.maskGraphics = this.scene.make.graphics(undefined, false);
         this.maskGraphics.fillStyle(0, 1);
         this.maskGraphics.fillRect(0, 0, this.width, this.height);
-        // this.mBarSkin.mask = this.mBarMaskGraphics.createGeometryMask();
         this.mBar.setMask(this.maskGraphics.createGeometryMask());
         this.add([this.mBackground, this.mBar]);
         if (this.mText) this.add(this.mText);
@@ -61,5 +47,28 @@ export class ProgressMaskBar extends BaseUI {
 
     get bar() {
         return this.mBar;
+    }
+
+    protected createBackgroundBar(key: string, background: string, bar: string, style?: any, barconfig?: any, bgconfig?: any) {
+        if (bgconfig) {
+            const bgW = bgconfig.width || this.width;
+            const bgH = bgconfig.height || this.height;
+            this.mBackground = new NineSlicePatch(this.scene, 0, -2 * this.dpr, bgW, bgH, key, bar, bgconfig);
+            this.setSize(bgW, bgH);
+        } else {
+            this.mBackground = this.scene.make.image({ key, frame: background });
+            this.setSize(this.mBackground.width, this.mBackground.height);
+        }
+        if (barconfig) {
+            const barW = barconfig.width || this.width;
+            const barH = barconfig.height || this.height;
+            this.mBar = new NineSlicePatch(this.scene, 0, -2 * this.dpr, barW, barH, key, bar, barconfig);
+        } else
+            this.mBar = this.scene.make.image({ key, frame: bar });
+        if (style) {
+            this.mText = this.scene.make.text({
+                style
+            }, false);
+        }
     }
 }

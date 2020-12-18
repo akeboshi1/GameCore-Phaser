@@ -3,11 +3,11 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { PicaCompose } from "./PicaCompose";
 export class PicaComposeMediator extends BasicMediator {
-    private picaCompose: PicaCompose;
+    protected mModel: PicaCompose;
     constructor(game: Game) {
         super(ModuleName.PICACOMPOSE_NAME, game);
-        if (!this.picaCompose) {
-            this.picaCompose = new PicaCompose(this.game);
+        if (!this.mModel) {
+            this.mModel = new PicaCompose(this.game);
         }
     }
 
@@ -34,12 +34,6 @@ export class PicaComposeMediator extends BasicMediator {
         this.game.emitter.off(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
 
-    destroy() {
-        if (this.picaCompose) this.picaCompose.destroy();
-        this.picaCompose = undefined;
-        super.destroy();
-    }
-
     private onSyncFinishHandler() {
         if (this.mView) {
             const skills = this.mShowData.skills;
@@ -62,10 +56,10 @@ export class PicaComposeMediator extends BasicMediator {
         return null;
     }
     private onReqFormulaDetial(id: string) {
-        this.picaCompose.onReqFormulaDetail(id);
+        this.mModel.onReqFormulaDetail(id);
     }
     private onReqUseFormula(id: string) {
-        this.picaCompose.onReqUseFormula(id);
+        this.mModel.onReqUseFormula(id);
     }
     private onRetFormulaDetial(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
         this.mView.setComposeDetialData(content);
@@ -76,7 +70,7 @@ export class PicaComposeMediator extends BasicMediator {
         uimanager.showMed(data.panel, data.data);
     }
     private onHideView() {
-        super.hide();
+        this.hide();
     }
     private updateSkills(skills: op_client.IPKT_CRAFT_SKILL[]) {
         if (this.playerBag) {
