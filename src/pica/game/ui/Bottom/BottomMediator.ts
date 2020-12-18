@@ -2,7 +2,7 @@ import { BasicMediator, BasicModel, Game, IElement, UIType } from "gamecore";
 import { ModuleName } from "structure";
 import { op_def, op_client } from "pixelpai_proto";
 import { PicaChat } from "picaWorker";
-import { Logger } from "utils";
+import { ChatCommandInterface, Logger } from "utils";
 
 export class BottomMediator extends BasicMediator {
     constructor(game: Game) {
@@ -33,7 +33,7 @@ export class BottomMediator extends BasicMediator {
             return;
         }
 
-        const patt = new RegExp("##(\\D+)\\.(\\D+)");
+        const patt = new RegExp("^##(\\w+)\\s*(.*)");
         const params = patt.exec(val);
         if (params && params.length > 0) {
             this.applyChatCommand(params);
@@ -45,21 +45,23 @@ export class BottomMediator extends BasicMediator {
     // "##matterWorld.debugEnable"
     // => this.game.roomManager.currentRoom.matterWorld.debugEnable();
     private applyChatCommand(params: string[]) {
-        if (params.length !== 3) return;
+        if (params.length < 2) return;
 
         const contextStr = params[1];
-        let context = null;
-        if (contextStr === "matterWorld") {
-            context = this.game.roomManager.currentRoom.matterWorld;
-        } else if (contextStr === "logger") {
-            context = Logger.getInstance();
-        }
-        if (context === null) {
+        const contextMap = {
+            "box": this.game.roomManager.currentRoom.matterWorld,
+            "log": Logger.getInstance()
+        };
+        const context: ChatCommandInterface = contextMap[contextStr];
+        if (context === undefined || context === null) {
             return;
         }
-
-        const functionStr = params[2];
-        context[functionStr].apply(context);
+        if (params.length > 2 && params[2].length > 0) {
+            const functionStr = params[2];
+            context[functionStr].apply(context);
+        } else {
+            context.v();
+        }
     }
 
     private onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {

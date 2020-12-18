@@ -1,5 +1,7 @@
+import { ChatCommandInterface } from "./chat.command";
+
 /* tslint:disable */
-export class Logger {
+export class Logger implements ChatCommandInterface {
   public isDebug: boolean = false;
   private static _instance: Logger;
   private mErrorList: string[];
@@ -52,10 +54,10 @@ export class Logger {
     return this.mWarnList;
   }
 
-  debugEnable() {
+  v() {
     this.isDebug = true;
   }
-  debugDisable() {
+  q() {
     this.isDebug = false;
   }
 }
