@@ -17,7 +17,7 @@ export enum AvatarSlotType {
     BarmSpec = "barm_spec_$",
     BarmBase = "barm_base_$",
     BarmCost = "barm_cost_$",
-    WeapBarm = "barm_weap_$",
+    BarmWeap = "barm_weap_$",
     ShldBarm = "barm_shld_$",
     BlegSpec = "bleg_spec_$",
     BlegBase = "bleg_base_$",
@@ -26,7 +26,7 @@ export enum AvatarSlotType {
     FarmBase = "farm_base_$",
     FarmCost = "farm_cost_$",
     ShldFarm = "farm_shld_$",
-    WeapFarm = "farm_weap_$",
+    FarmWeap = "farm_weap_$",
     HeadSpec = "head_spec_$",
     HeadMask = "head_mask_$",
     HeadEyes = "head_eyes_$",
@@ -88,7 +88,7 @@ export class DragonbonesDisplay extends DisplayObject {
     private mNeedReplaceTexture: boolean = false;
     private mPlaceholder: Phaser.GameObjects.Image;
     private mBoardPoint: Phaser.Geom.Point;
-    private readonly UNPACKSLOTS = [AvatarSlotType.WeapFarm, AvatarSlotType.WeapBarm];
+    private readonly UNPACKSLOTS = [AvatarSlotType.FarmWeap, AvatarSlotType.BarmWeap];
     private readonly UNCHECKAVATARPROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
 
     /**
@@ -681,13 +681,13 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         if (avater.barmWeapId) {
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
+                slot: AvatarSlotType.BarmWeap,
                 part: AvatarPartType.WeapBarm,
                 dir: 3,
                 skin: avater.barmWeapId,
             });
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
+                slot: AvatarSlotType.BarmWeap,
                 part: AvatarPartType.WeapBarm,
                 dir: 1,
                 skin: avater.barmWeapId,
@@ -829,13 +829,13 @@ export class DragonbonesDisplay extends DisplayObject {
 
         if (avater.farmWeapId) {
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapFarm,
+                slot: AvatarSlotType.FarmWeap,
                 part: AvatarPartType.WeapFarm,
                 dir: 3,
                 skin: avater.farmWeapId,
             });
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapFarm,
+                slot: AvatarSlotType.FarmWeap,
                 part: AvatarPartType.WeapFarm,
                 dir: 1,
                 skin: avater.farmWeapId,
@@ -844,14 +844,14 @@ export class DragonbonesDisplay extends DisplayObject {
 
         if (avater.farmBaseId) {
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
-                part: AvatarPartType.WeapBarm,
+                slot: AvatarSlotType.FarmBase,
+                part: AvatarPartType.FarmBase,
                 dir: 3,
                 skin: avater.farmBaseId,
             });
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
-                part: AvatarPartType.WeapBarm,
+                slot: AvatarSlotType.FarmBase,
+                part: AvatarPartType.FarmBase,
                 dir: 1,
                 skin: avater.farmBaseId,
             });
@@ -877,6 +877,7 @@ export class DragonbonesDisplay extends DisplayObject {
         const part: string = soltName.replace("$", soltDir.toString());
         const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
         const tempskin = this.formattingSkin(skin);
+        if (!tempskin.sn) return;
         const key = soltPart.replace("#", tempskin.sn).replace("$", soltDir.toString()) + tempskin.version;
         const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
