@@ -2,7 +2,7 @@ import { PicaChat } from "./PicaChat";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game, IElement, UIType } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { i18n, Logger } from "utils";
+import { ChatCommandInterface, i18n, Logger } from "utils";
 
 export class PicaChatMediator extends BasicMediator {
     constructor(game: Game) {
@@ -106,17 +106,36 @@ export class PicaChatMediator extends BasicMediator {
         if (!this.model) {
             return;
         }
-        if (val === "whosyourdaddy") {
-            this.game.uiManager.showMed("DebugLogger");
-        }
-        if (val === "##show matter") {
-            return this.game.roomManager.currentRoom.matterWorld.debugEnable();
-        }
 
-        if (val === "##hide matter") {
-            return this.game.roomManager.currentRoom.matterWorld.debugDisable();
+        const patt = new RegExp("^##(\\w+)\\s*(.*)");
+        const params = patt.exec(val);
+        if (params && params.length > 0) {
+            this.applyChatCommand(params);
+            return;
         }
         this.model.sendMessage(val);
+    }
+
+    // "##matterWorld.debugEnable"
+    // => this.game.roomManager.currentRoom.matterWorld.debugEnable();
+    private applyChatCommand(params: string[]) {
+        if (params.length < 2) return;
+
+        const contextStr = params[1];
+        const contextMap = {
+            "box": this.game.roomManager.currentRoom.matterWorld,
+            "log": Logger.getInstance()
+        };
+        const context: ChatCommandInterface = contextMap[contextStr];
+        if (context === undefined || context === null) {
+            return;
+        }
+        if (params.length > 2 && params[2].length > 0) {
+            const functionStr = params[2];
+            context[functionStr].apply(context);
+        } else {
+            context.v();
+        }
     }
 
     private async getChannel(channel: op_def.ChatChannel): Promise<string> {

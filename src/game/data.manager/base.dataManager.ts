@@ -8,7 +8,7 @@ export class BaseDataManager extends BasePacketHandler {
     private mSNRequirements: Map<string, op_client.ICountablePackageItem[]>;
     private mSNIDConfig: Map<string, any>;
     constructor(game: Game, event?: EventDispatcher) {
-        super(game,event);
+        super(game, event);
         this.mSNRequirements = new Map();
         this.mSNIDConfig = new Map();
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_REQUIRE_FURNITURE_UNFROZEN_REQUIREMENTS, this.on_FURNITURE_UNFROZEN_REQUIREMENTS);
@@ -87,7 +87,6 @@ export class BaseDataManager extends BasePacketHandler {
             }
         }
         this.mEvent.emit(EventType.ELEMENT_ITEM_CONFIG, { status, data });
-        // console.log(`handleTest: ${status} - ${data}`);
     }
 
 }

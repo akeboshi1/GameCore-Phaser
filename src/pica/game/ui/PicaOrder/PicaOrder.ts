@@ -3,6 +3,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { Logger } from "utils";
 
 export class PicaOrder extends BasicModel {
     constructor(game: Game) {
@@ -76,7 +77,6 @@ export class PicaOrder extends BasicModel {
 
     private on_CLIENT_TEST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_TEST = packet.content;
-        // tslint:disable-next-line:no-console
-        console.log("++++++++++++++++++++    ", content);
+        Logger.getInstance().log("++++++++++++++++++++    ", content);
     }
 }

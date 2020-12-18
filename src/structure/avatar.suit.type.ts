@@ -3,8 +3,8 @@ import { op_def } from "pixelpai_proto";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
     static suitPart = {
-        "costume": ["body_cost", "body_dres", "farm_cost", "barm_cost", "fleg_cost", "bleg_cost"],
-        "hair": ["head_hair", "head_back"],
+        "costume": ["body_cost", "body_cost_dres", "farm_cost", "barm_cost", "fleg_cost", "bleg_cost"],
+        "hair": ["head_hair", "head_hair_back"],
         "eye": ["head_eyes"],
         "mouse": ["head_mous"],
         "hat": ["head_hats"],
@@ -23,10 +23,14 @@ export class AvatarSuitType {
         avatar = avatar || {};
         for (const suit of suits) {
             const suitType = this.avatarSuit;
-            // const slots = suitType[suit.suit_type];
+            const allslots = suitType[suit.suit_type];
             const slots = this.checkSlotValue(suit.suit_type, suit.slot);
-            for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+            for (const tslot of allslots) {
+                if (slots.indexOf(tslot) !== -1) {
+                    avatar[tslot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                } else {
+                    avatar[tslot] = { sn: "", suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                }
             }
         }
         return avatar;
@@ -36,10 +40,14 @@ export class AvatarSuitType {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || {};
         const suitType = this.avatarSuit;
-        // const slots = suitType[suit_type];
+        const allslots = suitType[suit_type];
         const slots = this.checkSlotValue(suit_type, slot);
-        for (const tslot of slots) {
-            avatar[tslot] = { sn, suit_type, slot, tag, version };
+        for (const tslot of allslots) {
+            if (slots.indexOf(tslot) !== -1) {
+                avatar[tslot] = { sn, suit_type, slot, tag, version };
+            } else {
+                avatar[tslot] = { sn: "", suit_type, slot, tag, version };
+            }
         }
         return avatar;
     }
@@ -49,10 +57,14 @@ export class AvatarSuitType {
         const avatar = this.createBaseAvatar();
         for (const suit of suits) {
             const suitType = this.avatarSuit;
-            // const slots = suitType[suit.suit_type];
+            const allslots = suitType[suit.suit_type];
             const slots = this.checkSlotValue(suit.suit_type, suit.slot);
-            for (const slot of slots) {
-                avatar[slot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+            for (const tslot of allslots) {
+                if (slots.indexOf(tslot) !== -1) {
+                    avatar[tslot] = { sn: suit.sn, suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                } else {
+                    avatar[tslot] = { sn: "", suit_type: suit.suit_type, slot: suit.slot, tag: suit.tag, version: suit.version };
+                }
             }
         }
         return avatar;
@@ -62,10 +74,14 @@ export class AvatarSuitType {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         const avatar = this.createBaseAvatar();
         const suitType = this.avatarSuit;
-        // const slots = suitType[suit_type];
+        const allslots = suitType[suit_type];
         const slots = this.checkSlotValue(suit_type, slot);
-        for (const tslot of slots) {
-            avatar[tslot] = { sn, suit_type, slot, tag, version };
+        for (const tslot of allslots) {
+            if (slots.indexOf(tslot) !== -1) {
+                avatar[tslot] = { sn, suit_type, slot, tag, version };
+            } else {
+                avatar[tslot] = { sn: "", suit_type, slot, tag, version };
+            }
         }
         return avatar;
     }
@@ -127,8 +143,8 @@ export class AvatarSuitType {
             return $1 + $2.toUpperCase();
         });
     }
-    public costume = ["bodyCostId", "bodyDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
-    public hair = ["headHairId", "headBackId"];
+    public costume = ["bodyCostId", "bodyCostDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
+    public hair = ["headHairId", "headHairBackId"];
     public eye = ["headEyesId"];
     public mouse = ["headMousId"];
     public hat = ["headHatsId"];

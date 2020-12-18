@@ -1,6 +1,8 @@
+import { ChatCommandInterface } from "./chat.command";
+
 /* tslint:disable */
-export class Logger {
-  public isDebug: boolean = true;
+export class Logger implements ChatCommandInterface {
+  public isDebug: boolean = false;
   private static _instance: Logger;
   private mErrorList: string[];
   private mWarnList: string[];
@@ -14,9 +16,7 @@ export class Logger {
     return Logger._instance;
   }
   fatal(message?: any, ...optionalParams: any[]) {
-    return console.error(message, ...optionalParams);
-    // }
-
+    // return console.error(message, ...optionalParams);
     throw message;
   }
   log(message?: any, ...optionalParams: any[]) {
@@ -25,8 +25,8 @@ export class Logger {
   }
 
   error(message?: any, ...optionalParams: any[]) {
-    if (this.isDebug)
-      console.error(message, ...optionalParams);
+    // if (this.isDebug)
+    console.error(message, ...optionalParams);
     this.mErrorList.push(message);
   }
 
@@ -52,6 +52,13 @@ export class Logger {
 
   getWarnList(): string[] {
     return this.mWarnList;
+  }
+
+  v() {
+    this.isDebug = true;
+  }
+  q() {
+    this.isDebug = false;
   }
 }
 

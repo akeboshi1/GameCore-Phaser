@@ -17,7 +17,7 @@ export enum AvatarSlotType {
     BarmSpec = "barm_spec_$",
     BarmBase = "barm_base_$",
     BarmCost = "barm_cost_$",
-    WeapBarm = "barm_weap_$",
+    BarmWeap = "barm_weap_$",
     ShldBarm = "barm_shld_$",
     BlegSpec = "bleg_spec_$",
     BlegBase = "bleg_base_$",
@@ -26,7 +26,7 @@ export enum AvatarSlotType {
     FarmBase = "farm_base_$",
     FarmCost = "farm_cost_$",
     ShldFarm = "farm_shld_$",
-    WeapFarm = "farm_weap_$",
+    FarmWeap = "farm_weap_$",
     HeadSpec = "head_spec_$",
     HeadMask = "head_mask_$",
     HeadEyes = "head_eyes_$",
@@ -88,7 +88,7 @@ export class DragonbonesDisplay extends DisplayObject {
     private mNeedReplaceTexture: boolean = false;
     private mPlaceholder: Phaser.GameObjects.Image;
     private mBoardPoint: Phaser.Geom.Point;
-    private readonly UNPACKSLOTS = [AvatarSlotType.WeapFarm, AvatarSlotType.WeapBarm];
+    private readonly UNPACKSLOTS = [AvatarSlotType.FarmWeap, AvatarSlotType.BarmWeap];
     private readonly UNCHECKAVATARPROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
 
     /**
@@ -108,7 +108,6 @@ export class DragonbonesDisplay extends DisplayObject {
     public set displayInfo(val: IDragonbonesModel | undefined) {
         if (this.mNeedReplaceTexture === false) {
             this.mNeedReplaceTexture = this.checkNeedReplaceTexture(this.mDisplayInfo, val);
-            // console.log("ZW-- set displayInfo:", val, this.mNeedReplaceTexture);
         }
         this.mDisplayInfo = val;
     }
@@ -469,17 +468,20 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 1,
                 skin: avater.bodyCostId,
             });
+        }
+
+        if (avater.bodyCostDresId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyCostDres,
                 part: AvatarPartType.BodyCostDres,
                 dir: 3,
-                skin: avater.bodyCostId,
+                skin: avater.bodyCostDresId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.BodyCostDres,
                 part: AvatarPartType.BodyCostDres,
                 dir: 1,
-                skin: avater.bodyCostId,
+                skin: avater.bodyCostDresId,
             });
         }
 
@@ -679,13 +681,13 @@ export class DragonbonesDisplay extends DisplayObject {
         }
         if (avater.barmWeapId) {
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
+                slot: AvatarSlotType.BarmWeap,
                 part: AvatarPartType.WeapBarm,
                 dir: 3,
                 skin: avater.barmWeapId,
             });
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
+                slot: AvatarSlotType.BarmWeap,
                 part: AvatarPartType.WeapBarm,
                 dir: 1,
                 skin: avater.barmWeapId,
@@ -705,17 +707,20 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 1,
                 skin: avater.headHairId,
             });
+        }
+
+        if (avater.headHairBackId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadHairBack,
                 part: AvatarPartType.HeadHairBack,
                 dir: 3,
-                skin: avater.headHairId,
+                skin: avater.headHairBackId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.HeadHairBack,
                 part: AvatarPartType.HeadHairBack,
                 dir: 1,
-                skin: avater.headHairId,
+                skin: avater.headHairBackId,
             });
         }
 
@@ -805,44 +810,50 @@ export class DragonbonesDisplay extends DisplayObject {
                 dir: 1,
                 skin: avater.farmShldId,
             });
+        }
+
+        if (avater.barmShldId) {
             this.replaceArr.push({
                 slot: AvatarSlotType.ShldBarm,
                 part: AvatarPartType.ShldBarm,
                 dir: 3,
-                skin: avater.farmShldId,
+                skin: avater.barmShldId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotType.ShldBarm,
                 part: AvatarPartType.ShldBarm,
                 dir: 1,
-                skin: avater.farmShldId,
+                skin: avater.barmShldId,
             });
         }
 
         if (avater.farmWeapId) {
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapFarm,
+                slot: AvatarSlotType.FarmWeap,
                 part: AvatarPartType.WeapFarm,
                 dir: 3,
                 skin: avater.farmWeapId,
             });
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapFarm,
+                slot: AvatarSlotType.FarmWeap,
                 part: AvatarPartType.WeapFarm,
                 dir: 1,
                 skin: avater.farmWeapId,
             });
+        }
+
+        if (avater.farmBaseId) {
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
-                part: AvatarPartType.WeapBarm,
+                slot: AvatarSlotType.FarmBase,
+                part: AvatarPartType.FarmBase,
                 dir: 3,
-                skin: avater.farmWeapId,
+                skin: avater.farmBaseId,
             });
             this.replaceArr.push({
-                slot: AvatarSlotType.WeapBarm,
-                part: AvatarPartType.WeapBarm,
+                slot: AvatarSlotType.FarmBase,
+                part: AvatarPartType.FarmBase,
                 dir: 1,
-                skin: avater.farmWeapId,
+                skin: avater.farmBaseId,
             });
         }
     }
@@ -866,6 +877,7 @@ export class DragonbonesDisplay extends DisplayObject {
         const part: string = soltName.replace("$", soltDir.toString());
         const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
         const tempskin = this.formattingSkin(skin);
+        if (!tempskin.sn) return;
         const key = soltPart.replace("#", tempskin.sn).replace("$", soltDir.toString()) + tempskin.version;
         const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {

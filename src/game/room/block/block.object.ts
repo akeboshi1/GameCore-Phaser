@@ -23,16 +23,15 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
             if (isRenderable) {
                 await this.addDisplay();
                 if (delay > 0) {
-                    this.fadeIn();
+                    return this.fadeIn();
                 }
-                return;
             } else {
                 if (delay > 0) {
                     this.fadeOut(() => {
-                        this.removeDisplay();
+                        return this.removeDisplay();
                     });
                 } else {
-                    this.removeDisplay();
+                    return this.removeDisplay();
                 }
             }
         }
@@ -53,12 +52,12 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         return this.mRenderable;
     }
 
-    public fadeIn(callback?: () => void) {
-        this.mRoomService.game.peer.render.fadeIn(this.id, this.type);
+    public fadeIn(callback?: () => void): Promise<any> {
+        return this.mRoomService.game.peer.render.fadeIn(this.id, this.type);
     }
 
-    public fadeOut(callback?: () => void) {
-        this.mRoomService.game.peer.render.fadeOut(this.id, this.type);
+    public fadeOut(callback?: () => void): Promise<any> {
+        return this.mRoomService.game.peer.render.fadeOut(this.id, this.type);
     }
 
     public fadeAlpha(alpha: number) {
@@ -112,8 +111,8 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
 
     protected addDisplay(): Promise<any> { return Promise.resolve(); }
 
-    protected removeDisplay() {
-        this.mRoomService.game.peer.render.removeBlockObject(this.id);
+    protected removeDisplay(): Promise<any> {
+        return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
     protected addToBlock(): Promise<any> {
@@ -219,7 +218,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         // this._offset.y = mapHeight * 0.5 - origin.y;
         this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
-        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 1 });
+        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 0 });
         this.setExistingBody(body, true);
     }
 

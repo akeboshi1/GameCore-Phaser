@@ -20,8 +20,9 @@ export class EmptyTerrain extends BlockObject {
         return Promise.resolve();
     }
 
-    removeDisplay() {
+    removeDisplay(): Promise<any> {
         this.removeBody();
+        return Promise.resolve();
     }
 
     drawBody() {
@@ -34,7 +35,7 @@ export class EmptyTerrain extends BlockObject {
         const body = Bodies.fromVertices(this._tempVec2.x, this._tempVec2.y + height * 0.5, [paths], { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
         body.inertia = Infinity;
         body.inverseInertia = Infinity;
-        body.friction = 1;
+        body.friction = 0;
         this.setExistingBody(body, true);
     }
 
