@@ -132,12 +132,12 @@ export class Terrain extends BlockObject implements IElement {
         super.destroy();
     }
 
-    protected createDisplay() {
+    protected async createDisplay(): Promise<any> {
         if (!this.mDisplayInfo) {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
-        this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo);
+        await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo);
         // const scene = this.mElementManager.scene;
         // if (scene) {
         //     this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
@@ -145,8 +145,7 @@ export class Terrain extends BlockObject implements IElement {
         //     this.addToBlock();
         //     // this.mDisplay.load(this.mDisplayInfo);
         // }
-        this.addToBlock();
-        return this;
+        return this.addToBlock();
     }
 
     protected async addDisplay(): Promise<any> {
@@ -155,7 +154,7 @@ export class Terrain extends BlockObject implements IElement {
             await this.createDisplay();
         }
         const pos = this.mModel.pos;
-        this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
+        return this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
         // if (!this.mDisplay) {
         //     // Logger.getInstance().error("display does not exist");
         //     return;

@@ -1,9 +1,9 @@
 import { Bodies, Body, Composite, Engine, World, Events } from "matter-js";
-import { Logger, Pos } from "utils";
+import { ChatCommandInterface, Logger, Pos } from "utils";
 import { IRoomService } from "../room/room";
 import { MatterObject } from "./matter.object";
 
-export class MatterWorld {
+export class MatterWorld implements ChatCommandInterface {
     public readonly engine: Engine;
     public readonly localWorld: World;
     public enabled = true;
@@ -28,14 +28,14 @@ export class MatterWorld {
         // this.elements = new Map();
 
         // Events.on(this.engine, "collisionStart", (event) => {
-            // const pairs = event.pairs;
-            // for (const pair of pairs) {
-            //     const bodyA = pair.bodyA,
-            //           bodyB = pair.bodyB;
-            //     if (bodyA.label === "User" && bodyB.label === "Element" || bodyB.label === "User" && bodyA.label === "Element") {
-            //         // TODO
-            //     }
-            // }
+        // const pairs = event.pairs;
+        // for (const pair of pairs) {
+        //     const bodyA = pair.bodyA,
+        //           bodyB = pair.bodyB;
+        //     if (bodyA.label === "User" && bodyB.label === "Element" || bodyB.label === "User" && bodyA.label === "Element") {
+        //         // TODO
+        //     }
+        // }
         // });
 
         this.drawWall();
@@ -145,6 +145,13 @@ export class MatterWorld {
             body.inverseInertia = Infinity;
         });
         this.add(walls);
+    }
+
+    public v() {
+        this.debugEnable();
+    }
+    public q() {
+        this.debugDisable();
     }
 
     private renderWireframes(bodies: Body[]) {

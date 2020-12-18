@@ -2,7 +2,7 @@ import { PicaChat } from "./PicaChat";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game, IElement, UIType } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { i18n, Logger } from "utils";
+import { ChatCommandInterface, i18n, Logger } from "utils";
 
 export class PicaChatMediator extends BasicMediator {
     constructor(game: Game) {
@@ -107,7 +107,7 @@ export class PicaChatMediator extends BasicMediator {
             return;
         }
 
-        const patt = new RegExp("##(\\D+)\\.(\\D+)");
+        const patt = new RegExp("^##(\\w+)\\s*(.*)");
         const params = patt.exec(val);
         if (params && params.length > 0) {
             this.applyChatCommand(params);
@@ -119,21 +119,23 @@ export class PicaChatMediator extends BasicMediator {
     // "##matterWorld.debugEnable"
     // => this.game.roomManager.currentRoom.matterWorld.debugEnable();
     private applyChatCommand(params: string[]) {
-        if (params.length !== 3) return;
+        if (params.length < 2) return;
 
         const contextStr = params[1];
-        let context = null;
-        if (contextStr === "matterWorld") {
-            context = this.game.roomManager.currentRoom.matterWorld;
-        } else if (contextStr === "logger") {
-            context = Logger.getInstance();
-        }
-        if (context === null) {
+        const contextMap = {
+            "box": this.game.roomManager.currentRoom.matterWorld,
+            "log": Logger.getInstance()
+        };
+        const context: ChatCommandInterface = contextMap[contextStr];
+        if (context === undefined || context === null) {
             return;
         }
-
-        const functionStr = params[2];
-        context[functionStr].apply(context);
+        if (params.length > 2 && params[2].length > 0) {
+            const functionStr = params[2];
+            context[functionStr].apply(context);
+        } else {
+            context.v();
+        }
     }
 
     private async getChannel(channel: op_def.ChatChannel): Promise<string> {
