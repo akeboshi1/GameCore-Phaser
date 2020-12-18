@@ -280,6 +280,33 @@ export class UIHelper {
         return ["butt_yellow_left", "butt_yellow_middle", "butt_yellow_right"];
     }
 
+    public static get threeGreenSmall() {
+        return ["butt_green_left_s", "butt_green_middle_s", "butt_green_right_s"];
+    }
+    public static get threeRedSmall() {
+        return ["butt_red_left_s", "butt_red_middle_s", "butt_red_right_s"];
+    }
+    public static get threeYellowSmall() {
+        return ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
+    }
+
+    public static get threeGreenBig() {
+        return ["butt_green_left_b", "butt_green_middle_b", "butt_green_right_b"];
+    }
+    public static get threeRedBig() {
+        return ["butt_red_left_b", "butt_red_middle_b", "butt_red_right_b"];
+    }
+    public static get threeYellowBig() {
+        return ["butt_yellow_left_b", "butt_yellow_middle_b", "butt_yellow_right_b"];
+    }
+
+    public static colorStyle(color: string, fontSize: number) {
+        return {
+            fontSize,
+            fontFamily: Font.DEFULT_FONT,
+            color
+        };
+    }
     public static titleYellowStyle_m(dpr, size: number = 20) {
         return {
             fontSize: size * dpr,

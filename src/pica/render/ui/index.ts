@@ -88,3 +88,7 @@ export * from "./PicaAvatar/PicaAvatarPanel";
 export * from "./PicaOnline/PicaOnlinePanel";
 export * from "./PicaEffectMgr/PicaEffectMgrPanel";
 export * from "./PicaEffectMgr/PicaFurniUnlockEffectPanel";
+export * from "./PicaTask/PicaTaskItem";
+export * from "./PicaTask/PicaTaskMainPanel";
+export * from "./PicaTask/PicaTaskPanel";
+export * from "./PicaTask/PicaTaskSidePanel";

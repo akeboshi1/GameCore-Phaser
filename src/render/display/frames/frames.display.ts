@@ -93,7 +93,7 @@ export class FramesDisplay extends DisplayObject {
                     this.mMainSprite = <Phaser.GameObjects.Sprite>display;
                 }
             } else {
-                display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
+                display = this.scene.make.image({ key: data.gene, frame: frameName[0] });
             }
             display.setData("id", this.id);
             this.mDisplays.push(display);

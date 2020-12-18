@@ -57,12 +57,8 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWdith, conHeight);
         this.add(this.content);
-        this.bg = new NineSlicePatch(this.scene, 0, 0, conWdith, conHeight, UIAtlasKey.commonKey, "bg", {
-            left: 40,
-            top: 40,
-            bottom: 50,
-            right: 50,
-        });
+      //  this.bg = this.scene.make.graphics(undefined, false);
+
         const bgwidth = this.bg.width;
         const bgHeight = this.bg.height;
         const posY = -this.bg.height * 0.5;
