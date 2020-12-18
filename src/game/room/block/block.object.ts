@@ -23,16 +23,15 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
             if (isRenderable) {
                 await this.addDisplay();
                 if (delay > 0) {
-                    this.fadeIn();
+                    return this.fadeIn();
                 }
-                return;
             } else {
                 if (delay > 0) {
                     this.fadeOut(() => {
-                        this.removeDisplay();
+                        return this.removeDisplay();
                     });
                 } else {
-                    this.removeDisplay();
+                    return this.removeDisplay();
                 }
             }
         }
@@ -53,12 +52,12 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         return this.mRenderable;
     }
 
-    public fadeIn(callback?: () => void) {
-        this.mRoomService.game.peer.render.fadeIn(this.id, this.type);
+    public fadeIn(callback?: () => void): Promise<any> {
+        return this.mRoomService.game.peer.render.fadeIn(this.id, this.type);
     }
 
-    public fadeOut(callback?: () => void) {
-        this.mRoomService.game.peer.render.fadeOut(this.id, this.type);
+    public fadeOut(callback?: () => void): Promise<any> {
+        return this.mRoomService.game.peer.render.fadeOut(this.id, this.type);
     }
 
     public fadeAlpha(alpha: number) {
@@ -112,8 +111,8 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
 
     protected addDisplay(): Promise<any> { return Promise.resolve(); }
 
-    protected removeDisplay() {
-        this.mRoomService.game.peer.render.removeBlockObject(this.id);
+    protected removeDisplay(): Promise<any> {
+        return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
     protected addToBlock(): Promise<any> {
