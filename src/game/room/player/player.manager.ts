@@ -213,6 +213,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             if (player) {
                 //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
+                    this.checkSuitAvatarSprite(sprite);
                     player.model = new Sprite(sprite, content.nodeType);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     player.updateModel(sprite, this.mRoom.game.avatarType);
@@ -260,11 +261,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
-            if (this.mRoom.game.avatarType === op_def.AvatarStyle.SuitType) {
-                if (!AvatarSuitType.hasAvatarSuit(sprite["attrs"])) {
-                    if (!sprite.avatar) sprite.avatar = <any>(AvatarSuitType.createBaseAvatar());
-                }
-            }
+            this.checkSuitAvatarSprite(sprite);
             this._add(new Sprite(sprite, content.nodeType));
             // MineCarSimulateData.addSimulate(this.roomService, sprite);
         }
@@ -275,6 +272,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap.has(sprite.id)) {
             const player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
+        }
+    }
+
+    private checkSuitAvatarSprite(sprite: op_client.ISprite) {
+        if (this.mRoom.game.avatarType === op_def.AvatarStyle.SuitType) {
+            if (!AvatarSuitType.hasAvatarSuit(sprite["attrs"])) {
+                if (!sprite.avatar) sprite.avatar = <any>(AvatarSuitType.createBaseAvatar());
+            }
         }
     }
 

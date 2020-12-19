@@ -222,6 +222,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.rewardsImg = new DynamicImage(this.scene, 0, 0);
         this.rewardsImg.x = rewardbg.x;
         this.rewardsImg.y = rewardbg.y;
+        this.rewardsImg.scale = this.dpr / 4;
         const config = { width: 153 * this.dpr, height: 11 * this.dpr, correct: 0 };
         const barbgs = ["task_chapter_progress_bott_left", "task_chapter_progress_bott_middle", "task_chapter_progress_bott_right"];
         const bars = ["task_chapter_progress_top_left", "task_chapter_progress_top_middle", "task_chapter_progress_top_right"];

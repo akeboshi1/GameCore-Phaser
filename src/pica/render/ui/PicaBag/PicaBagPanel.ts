@@ -467,7 +467,7 @@ export class PicaBagPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if (item && this.mSelectedItemData === item) return;
+    if ( item && this.mSelectedItemData === item||this.mSelectedItemData&&!item) return;
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()
@@ -495,6 +495,7 @@ export class PicaBagPanel extends PicaBasePanel {
         this.useBtn.visible = false;
         this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
         this.mDetailDisplay.setNearest();
+        this.nameText.text = "";
       }
     }
   }
