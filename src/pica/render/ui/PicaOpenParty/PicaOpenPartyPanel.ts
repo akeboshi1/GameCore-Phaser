@@ -60,9 +60,9 @@ export class PicaOpenPartyPanel extends BasePanel {
         super.destroy();
     }
 
-    public setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, isSelf: boolean = true) {
+    public async setPartyData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS, isSelf: boolean = true) {
         this.settingBtn.visible = isSelf;
-        const username = this.render.mainPeer.getRoomUserName();
+        const username = await this.render.mainPeer.getRoomUserName();
         this.partyCreatePanel.setPartyData(content, username, Math.ceil(this.render.mainPeer.getClockNow() / 1000));
         if (content.created) {
             this.partyBtn.setText(i18n.t("party.partymgr"));
