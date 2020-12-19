@@ -644,7 +644,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     } else {
       this.tipsText.setWrapWidth(undefined);
       const name = `[color=#32347b][b][size=${14 * this.dpr}]${prop.shortName || prop.name}[/size][/b][/color]`;
-      let price = "";
+      // let price = "";
       let source = "";
       let describle = "";
       let attri = "";
