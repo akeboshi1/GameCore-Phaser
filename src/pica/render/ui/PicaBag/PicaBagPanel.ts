@@ -111,7 +111,10 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mSelectedItem = undefined;
     let sameid: boolean = false;
     for (const prop of props) {
-      if (this.mSelectedItemData && prop.indexId === this.mSelectedItemData.indexId) sameid = true;
+      if (this.mSelectedItemData && prop.indexId === this.mSelectedItemData.indexId) {
+        this.mSelectedItemData = prop;
+        sameid = true;
+      }
       if (subcategoryType === "alltype" || subcategoryType === prop.subcategory) {
         subProps.push(prop);
       }
@@ -323,6 +326,7 @@ export class PicaBagPanel extends PicaBasePanel {
         if (item && this.isSelectedItemData(item)) {
           cellContainer.isSelect = true;
           this.mSelectedItem = cellContainer;
+          this.mSelectedItemData = item;
         }
         return cellContainer;
       },
@@ -463,7 +467,7 @@ export class PicaBagPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if (item && this.mSelectedItemData === item) return;
+    if ( item && this.mSelectedItemData === item||this.mSelectedItemData&&!item) return;
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()
@@ -491,6 +495,7 @@ export class PicaBagPanel extends PicaBasePanel {
         this.useBtn.visible = false;
         this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
         this.mDetailDisplay.setNearest();
+        this.nameText.text = "";
       }
     }
   }

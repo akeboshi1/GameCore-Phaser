@@ -63,6 +63,6 @@ export class PicaTaskMediator extends BasicMediator {
         this.mView.setTaskDetail(quest);
     }
     private onRetQuestGroup(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
-
+        this.mView.setTaskDatas(content);
     }
 }

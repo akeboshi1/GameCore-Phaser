@@ -1,6 +1,8 @@
 
 import { BaseUI, NineSlicePatch } from "apowophaserui";
 export class ProgressMaskBar extends BaseUI {
+    public value: number = 0;
+    public max: number = 1;
     protected mBackground: Phaser.GameObjects.Image | NineSlicePatch;
     protected mBar: Phaser.GameObjects.Image | NineSlicePatch;
     protected maskGraphics: Phaser.GameObjects.Graphics;
@@ -22,16 +24,9 @@ export class ProgressMaskBar extends BaseUI {
         let value = curVal / maxVal;
         if (value > 1) value = 1;
         else if (value < 0) value = 0;
-        const world = this.getWorldTransformMatrix();
-        if (this.zoom !== world.scaleX) {
-            this.zoom = world.scaleX;
-            this.maskGraphics.clear();
-            this.maskGraphics.fillRect(0, 0, this.width * this.zoom, this.height * this.zoom);
-        }
-        const offsetx = world.tx - this.width * this.zoom * 1.5;
-        const tx = offsetx + this.width * this.zoom * value;
-        const ty = world.ty - this.height * this.zoom * 0.5;
-        this.maskGraphics.setPosition(tx, ty);
+        this.value = value;
+        this.max = maxVal;
+        this.refreshMask();
     }
 
     setText(val) {
@@ -40,6 +35,19 @@ export class ProgressMaskBar extends BaseUI {
             if (!this.mText.parentContainer)
                 this.add(this.mText);
         }
+    }
+
+    refreshMask() {
+        const world = this.getWorldTransformMatrix();
+        if (this.zoom !== world.scaleX) {
+            this.zoom = world.scaleX;
+            this.maskGraphics.clear();
+            this.maskGraphics.fillRect(0, 0, this.width * this.zoom, this.height * this.zoom);
+        }
+        const offsetx = world.tx - this.width * this.zoom * 1.5;
+        const tx = offsetx + this.width * this.zoom * this.value;
+        const ty = world.ty - this.height * this.zoom * 0.5;
+        this.maskGraphics.setPosition(tx, ty);
     }
     get text() {
         return this.mText;

@@ -15,7 +15,8 @@ export class ProgressThreeMaskBar extends ProgressMaskBar {
         if (bgconfig) {
             const bgW = bgconfig.width || this.width;
             const bgH = bgconfig.height || this.height;
-            this.mBackground = new ThreeSlicePath(this.scene, 0, -2 * this.dpr, bgW, bgH, key, background);
+            const correct = barconfig.correct;
+            this.mBackground = new ThreeSlicePath(this.scene, 0, -2 * this.dpr, bgW, bgH, key, background, 1, 1, correct);
             this.setSize(bgW, bgH);
         } else {
             this.mBackground = this.scene.make.image({ key, frame: background });
@@ -24,7 +25,8 @@ export class ProgressThreeMaskBar extends ProgressMaskBar {
         if (barconfig) {
             const barW = barconfig.width || this.width;
             const barH = barconfig.height || this.height;
-            this.mBar = new ThreeSlicePath(this.scene, 0, -2 * this.dpr, barW, barH, key, bar);
+            const correct = barconfig.correct;
+            this.mBar = new ThreeSlicePath(this.scene, 0, -2 * this.dpr, barW, barH, key, bar, 1, 1, correct);
         } else
             this.mBar = this.scene.make.image({ key, frame: bar });
         if (style) {

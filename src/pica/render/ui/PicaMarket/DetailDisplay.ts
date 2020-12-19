@@ -263,6 +263,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.onCompleteHandler, this);
   }
   private addDisplay() {
+    if (!this.scene) return;
     if (this.isLoading) {
       this.remove(this.mFrameAni);
     }

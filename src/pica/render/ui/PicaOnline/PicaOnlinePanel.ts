@@ -43,11 +43,12 @@ export class PicaOnlinePanel extends PicaBasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-
+        this.mBlack.on("pointerup", this.onCloseHandler, this);
     }
 
     public removeListen() {
         if (!this.mInitialized) return;
+        this.mBlack.off("pointerup", this.onCloseHandler, this);
     }
 
     public destroy() {
@@ -97,7 +98,6 @@ export class PicaOnlinePanel extends PicaBasePanel {
         this.mBlack.fillStyle(0, 0.66);
         this.mBlack.fillRect(0, 0, w, h);
         this.mBlack.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-        this.mBlack.on("pointerdown", this.onCloseHandler, this);
         this.add(this.mBlack);
         this.mBackground = this.scene.make.graphics(undefined, false);
         this.content = this.scene.make.container(undefined, false);
