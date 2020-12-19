@@ -1,7 +1,7 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { Font, Handler, Url } from "utils";
 import { ModuleName } from "structure";
-import { BasePanel, DynamicImage, UiManager } from "gamecoreRender";
+import { BasePanel, DynamicImage, MainUIScene, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 
 enum HorizontalAlignment {
@@ -115,6 +115,7 @@ export class DialogPanel extends BasePanel {
         this.add(this.content);
         this.resize(0, 0);
         super.init();
+        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_UI, this);
     }
 
     public setLayoutItems(arr: any) {
