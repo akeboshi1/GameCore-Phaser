@@ -40,15 +40,15 @@ export class PlayScene extends RoomScene {
         if (!this.game.scene.getScene(MainUIScene.name)) {
             this.game.scene.add(MainUIScene.name, MainUIScene, false);
         }
-        // const scene = this.game.scene.getScene(MainUIScene.name);
-        // if (!scene.scene.isActive()) {
-        //     this.scene.launch(MainUIScene.name, {
-        //         "render": this.render,
-        //     });
-        // } else {
-        //     this.render.initUI();
-        //     // this.mRoom.initUI();
-        // }
+        const scene = this.game.scene.getScene(MainUIScene.name);
+        if (!scene.scene.isActive()) {
+            this.scene.launch(MainUIScene.name, {
+                "render": this.render,
+            });
+        } else {
+            this.render.initUI();
+            // this.mRoom.initUI();
+        }
         this.scene.sendToBack();
         this.scale.on("orientationchange", this.checkOriention, this);
         this.scale.on("resize", this.checkSize, this);
@@ -143,15 +143,15 @@ export class PlayScene extends RoomScene {
 
     protected onLoadCompleteHandler() {
         Logger.getInstance().log("playload complete");
-        const scene = this.game.scene.getScene(MainUIScene.name);
-        if (!scene.scene.isActive()) {
-            this.scene.launch(MainUIScene.name, {
-                "render": this.render,
-            });
-        } else {
-            this.render.initUI();
-            // this.mRoom.initUI();
-        }
+        // const scene = this.game.scene.getScene(MainUIScene.name);
+        // if (!scene.scene.isActive()) {
+        //     this.scene.launch(MainUIScene.name, {
+        //         "render": this.render,
+        //     });
+        // } else {
+        //     this.render.initUI();
+        //     // this.mRoom.initUI();
+        // }
         this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
         this.render.hideLoading();
     }

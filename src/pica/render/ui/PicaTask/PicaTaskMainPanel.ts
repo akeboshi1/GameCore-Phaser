@@ -69,15 +69,16 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     protected init() {
         this.gameScroller = new GameScroller(this.scene, {
             x: 0,
-            y: 18 * this.dpr,
+            y: 0 * this.dpr,
             width: this.width,
-            height: this.height - 70 * this.dpr,
+            height: this.height,
             zoom: this.zoom,
             dpr: this.dpr,
             align: 2,
             orientation: 0,
-            space: 20 * this.dpr,
+            space: 10 * this.dpr,
             padding: { top: 2 * this.dpr },
+            selfevent: true,
             cellupCallBack: (gameobject) => {
                 this.onPointerUpHandler(gameobject);
             }
@@ -86,9 +87,9 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
 
     private onPointerUpHandler(gameobject) {
-        if (gameobject instanceof MainTaskItem) {
-
-        } else {
+        if (!(gameobject instanceof MainTaskItem)) {
+            const extend = gameobject.extend ? false : true;
+            gameobject.setExtend(extend, true);
         }
     }
 
@@ -171,51 +172,55 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             left: 8 * this.dpr, top: 8 * this.dpr, right: 8 * this.dpr, bottom: 8 * this.dpr
         });
         this.titleCon = this.scene.make.container(undefined, false);
-        this.titleCon.y = 15 * this.dpr;
+        this.titleCon.y = -this.height * 0.5 + 21 * this.dpr;
         const leftTitleBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_title_left" });
-        leftTitleBg.x = -56 * this.dpr;
         const rightTitleBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_title_right" });
-        rightTitleBg.x = -56 * this.dpr;
         const middleTitleBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_title_middle" });
+        middleTitleBg.y = -5 * this.dpr;
+        leftTitleBg.x = -middleTitleBg.width * 0.5 - leftTitleBg.width * 0.5 + 7 * this.dpr;
+        rightTitleBg.x = middleTitleBg.width * 0.5 + rightTitleBg.width * 0.5 - 7 * this.dpr;
         this.titleTex = this.scene.make.text({
             text: "", style: {
                 fontSize: 12 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#FFF6CA"
             }
-        });
+        }).setOrigin(0.5);
         this.titleTex.setFontStyle("bold");
+        this.titleTex.y = middleTitleBg.y;
         this.titleCon.add([leftTitleBg, middleTitleBg, rightTitleBg, this.titleTex]);
         this.taskDes = this.scene.make.text({
-            x: -this.width * 0.5 + 10 * this.dpr,
-            y: -10 * this.dpr,
+            x: -this.width * 0.5 + 12 * this.dpr,
+            y: -2 * this.dpr,
             text: "", style: {
                 fontSize: 12 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,
                 color: "#8C6003"
             }
-        }).setOrigin(0);
-        this.taskDes.setWordWrapWidth(151 * this.dpr, false);
+        }).setOrigin(0, 0.5);
+        this.taskDes.setWordWrapWidth(160 * this.dpr, true);
         const rewardbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg" });
         rewardbg.x = this.width * 0.5 - 10 * this.dpr - rewardbg.width * 0.5;
-        rewardbg.y = 20 * this.dpr;
+        rewardbg.y = 10 * this.dpr;
         const rewardButton = new ButtonEventDispatcher(this.scene, 0, 0);
         rewardButton.setSize(rewardbg.width, rewardbg.height);
         rewardButton.enable = true;
         rewardButton.on(ClickEvent.Tap, this.onReceiveAwardHandler, this);
         this.rewardRotateImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg1" });
         this.rewardRotateImg.x = rewardbg.x;
-        this.rewardsImg.y = rewardbg.y;
+        this.rewardRotateImg.y = rewardbg.y;
         this.rewardsImg = new DynamicImage(this.scene, 0, 0);
         this.rewardsImg.x = rewardbg.x;
         this.rewardsImg.y = rewardbg.y;
-        const config = { width: 153 * this.dpr, height: 11 * this.dpr };
-        this.progress = new ProgressThreeMaskBar(this.scene, UIAtlasName.uicommon, [], [], undefined, config, config);
+        const config = { width: 153 * this.dpr, height: 11 * this.dpr, correct: 0 };
+        const barbgs = ["task_chapter_progress_bott_left", "task_chapter_progress_bott_middle", "task_chapter_progress_bott_right"];
+        const bars = ["task_chapter_progress_top_left", "task_chapter_progress_top_middle", "task_chapter_progress_top_right"];
+        this.progress = new ProgressThreeMaskBar(this.scene, UIAtlasName.uicommon, barbgs, bars, undefined, config, config);
         this.progress.x = -this.width * 0.5 + this.progress.width * 0.5 + 15 * this.dpr;
-        this.progress.y = 20 * this.dpr;
+        this.progress.y = 34 * this.dpr;
         this.progressTex = this.scene.make.text({
-            x: this.progress.y,
-            y: this.progress.y + 10 * this.dpr,
+            x: this.progress.x,
+            y: this.progress.y + 15 * this.dpr,
             text: "", style: {
                 fontSize: 12 * this.dpr,
                 fontFamily: Font.DEFULT_FONT,

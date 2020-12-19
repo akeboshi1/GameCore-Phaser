@@ -11,35 +11,43 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     private taskName: Phaser.GameObjects.Text;
     private taskDes: Phaser.GameObjects.Text;
     private taskButton: ThreeSliceButton;
-    private extend: TaskItemExtend;
+    private mExtend: TaskItemExtend;
     private dpr: number;
     private send: Handler;
+    private mIsExtend: boolean = false;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
-        const width = 272 * dpr;
-        const height = 70 * dpr;
+        const cellWidth = 272 * dpr;
+        const cellHeight = 70 * dpr;
+        this.setSize(cellWidth, cellHeight);
         this.content = scene.make.container(undefined, false);
-        this.content.setSize(width, height);
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon, "task_list_bg", {
+        this.content.setSize(cellWidth, cellHeight);
+        this.bg = new NineSlicePatch(this.scene, 0, 0, cellWidth, cellHeight, UIAtlasName.uicommon, "task_list_bg", {
             left: 6 * dpr,
             top: 6 * dpr,
             bottom: 6 * dpr,
             right: 6 * dpr,
         });
-        const posx = -width * 0.5, posy = -height * 0.5;
+        const posx = -cellWidth * 0.5, posy = -cellHeight * 0.5;
         const headbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_head_frame" });
         headbg.x = posx + 25 * dpr;
         this.headIcon = new DynamicImage(scene, headbg.x, 0);
-        this.headIcon.setTexture(UIAtlasName.uicommon, "head_test");
-        this.taskName = scene.make.text({ x: this.headIcon.x + 20 * dpr, y: -9 * dpr, text: "", style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
-        this.taskDes = scene.make.text({ x: this.headIcon.x + 25 * dpr, y: 10 * dpr, text: "", style: UIHelper.colorStyle("#FFF449", 12 * dpr) }).setOrigin(0, 0.5);
-        this.taskButton = new ThreeSliceButton(this.scene, 62 * dpr, 25 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, "");
-        this.taskButton.setPosition(width * 0.5 - 25 * dpr, 4 * dpr);
+        this.headIcon.scale = dpr;
+        this.headIcon.y = -10 * dpr;
+        this.taskName = scene.make.text({ text: "", style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
+        this.taskName.x = this.headIcon.x + 28 * dpr;
+        this.taskName.y = -cellHeight * 0.5 + 15 * dpr;
+        this.taskDes = scene.make.text({ text: "", style: UIHelper.colorStyle("#FFF449", 12 * dpr) }).setOrigin(0);
+        this.taskDes.x = this.taskName.x;
+        this.taskDes.y = this.taskName.y + 15 * dpr;
+        this.taskButton = new ThreeSliceButton(this.scene, 62 * dpr, 25 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, i18n.t("task.receive"));
+        this.taskButton.setFontStyle("bold");
+        this.taskButton.x = cellWidth * 0.5 - this.taskButton.width * 0.5 - 10 * dpr;
         this.taskButton.on(ClickEvent.Tap, this.onTaskButtonHandler, this);
         this.content.add([this.bg, headbg, this.headIcon, this.taskName, this.taskDes, this.taskButton]);
         this.add(this.content);
-        this.setSize(width, height);
+        this.setSize(cellWidth, cellHeight);
     }
 
     public setTaskData(data: op_client.IPKT_Quest) {
@@ -54,14 +62,18 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
             this.taskButton.setFrameNormal(UIHelper.threeGreenSmall);
             this.taskButton.setText(i18n.t("task.go"));
+            this.taskButton.setTextStyle(UIHelper.colorStyle("#022B55", 12 * this.dpr));
+
         } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
             this.taskButton.setFrameNormal(UIHelper.threeYellowSmall);
             this.taskButton.setText(i18n.t("task.receive"));
+            this.taskButton.setTextStyle(UIHelper.brownishStyle(this.dpr));
+
         }
     }
 
     public setTaskDetail(data: op_client.PKT_Quest) {
-        if (this.extend) this.extend.setItemData(data);
+        if (this.mExtend) this.mExtend.setItemData(data);
     }
 
     public setHandler(send: Handler) {
@@ -70,17 +82,21 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
 
     public setExtend(isExtend: boolean, haveCallBack: boolean = true) {
         if (isExtend) {
+            this.openExtend();
             if (haveCallBack)
                 if (this.send) this.send.runWith(["extend", { extend: true, item: this }]);
-            this.openExtend();
         } else {
+            this.closeExtend();
             if (haveCallBack) {
                 if (this.send)
                     this.send.runWith(["extend", { extend: false, item: this }]);
             }
-            this.closeExtend();
         }
 
+    }
+
+    get extend() {
+        return this.mIsExtend;
     }
     private onTaskButtonHandler() {
         if (this.questData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
@@ -90,20 +106,23 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         }
     }
     private openExtend() {
-        if (!this.extend) {
-            this.extend = new TaskItemExtend(this.scene, this.dpr);
-            this.add(this.extend);
+        if (!this.mExtend) {
+            this.mExtend = new TaskItemExtend(this.scene, this.width, 223 * this.dpr, this.dpr);
+            this.add(this.mExtend);
         }
-        this.extend.visible = true;
-        this.height = this.content.height + this.extend.height;
+        this.mExtend.visible = true;
+        this.height = this.content.height + this.mExtend.height;
         this.content.y = -this.height * 0.5 + this.content.height * 0.5;
-        this.extend.y = -this.height * 0.5 + this.content.height + this.extend.height * 0.5;
+        this.mExtend.y = -this.height * 0.5 + this.content.height + this.mExtend.height * 0.5;
+        this.mIsExtend = true;
+        this.mExtend.setItemData(this.questData);
     }
 
     private closeExtend() {
-        if (this.extend) this.extend.visible = false;
+        if (this.mExtend) this.mExtend.visible = false;
         this.height = this.content.height;
         this.content.y = 0;
+        this.mIsExtend = false;
     }
 
     private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 15) {
@@ -131,10 +150,9 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     private rewardArr: TaskCell[] = [];
     private line: Phaser.GameObjects.Image;
     private dpr: number = 0;
-    constructor(scene: Phaser.Scene, dpr: number) {
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
         super(scene);
-        const width = 253 * dpr;
-        const height = 202 * dpr;
+        this.setSize(width, height);
         this.dpr = dpr;
         const bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon, "task_list_unfold_bg", {
             left: 4,
@@ -143,29 +161,29 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
             bottom: 4
         });
         const posx = -width * 0.5 + 10 * dpr;
-        const posy = -height * 0.5 + 5 * dpr;
+        const posy = -height * 0.5 + 8 * dpr;
         this.taskLabel = scene.make.text({ x: posx, y: posy, text: i18n.t("task.objective"), style: UIHelper.colorStyle("#625AC6", 12 * dpr) });
         this.taskTex = scene.make.text({ x: posx, y: posy + 18 * dpr, text: i18n.t("task.collect_materials"), style: UIHelper.colorStyle("#625AC6", 12 * dpr) });
         this.taskTex.setWordWrapWidth(width - 10 * dpr, true);
         this.rewardLabel = scene.make.text({ x: posx, y: posy + 90 * dpr, text: i18n.t("task.rewards"), style: UIHelper.colorStyle("#625AC6", 12 * dpr) });
         const line = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_reward_divider" });
         line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        line.setPosition(0, posy + 110 * dpr);
+        line.setPosition(-10 * dpr, posy + 110 * dpr);
         this.line = line;
         this.add([bg, this.taskLabel, this.taskTex, this.rewardLabel, line]);
         this.setSize(width, height);
     }
 
-    public setItemData(questData: op_client.PKT_Quest) {
+    public setItemData(questData: op_client.IPKT_Quest) {
         let taskPosy = 0;
-        const cellHeight = 33 * this.dpr;
+        const cellHeight = 56 * this.dpr;
         this.taskTex.text = this.getTaskTargetText(questData);
         this.createTaskCells(this.needArr, questData.targets, true);
-        taskPosy = this.taskTex.y + this.taskTex.height + 5 * this.dpr;
+        taskPosy = this.taskTex.y + 30 * this.dpr;// this.taskTex.y + this.taskTex.height + 8 * this.dpr;
         if (questData.targets.length > 0) {
             taskPosy += cellHeight * 0.5;
             this.sortItem(this.needArr, taskPosy);
-            taskPosy += cellHeight * 0.5 + 8 * this.dpr;
+            taskPosy += cellHeight * 0.5 + 23 * this.dpr;
         }
         this.rewardLabel.y = taskPosy;
         taskPosy += this.rewardLabel.height + 5 * this.dpr;
@@ -207,7 +225,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         return arr;
     }
 
-    private getTaskTargetText(questData: op_client.PKT_Quest) {
+    private getTaskTargetText(questData: op_client.IPKT_Quest) {
         const targets = questData.targets;
         const text: string = questData.detail;
         // if (targets.length === 0) {
@@ -229,12 +247,12 @@ class TaskCell extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
-        this.bg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_bg" });
+        this.bg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_icon_bg" });
         this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.countTex = new BBCodeText(this.scene, 0, 0, "", UIHelper.whiteStyle(dpr))
-            .setOrigin(0.5);
+        this.countTex = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorNumberStyle("#ffffff", 12 * dpr))
+            .setOrigin(0.5).setStroke("#000000", 2 * dpr);
         (<any>this.countTex).setPosition(this.width * 0.5, this.height * 0.5 - 2 * dpr);
         this.add([this.bg, this.itemIcon, this.countTex]);
     }
@@ -244,20 +262,25 @@ class TaskCell extends Phaser.GameObjects.Container {
         this.bg.setTexture(UIAtlasName.uicommon, frame);
         const url = Url.getOsdRes(itemData.display.texturePath);
         this.itemIcon.load(url, this, () => {
-            this.itemIcon.scale = this.dpr * 0.6;
+            this.itemIcon.scale = this.dpr;
         });
         if (!isTask) {
             this.countTex.text = `[stroke=#2D2D2D][color=#ffffff]${itemData.count}[/color][/stroke]`;
-
+            this.countTex.x = this.width * 0.5 - 2 * this.dpr;
+            this.countTex.y = this.height * 0.5;
+            this.countTex.setOrigin(1, 1);
         } else {
             this.countTex.text = this.getCountText(itemData.count, itemData.neededCount);
+            this.countTex.setOrigin(0.5);
+            this.countTex.x = 0;
+            this.countTex.y = this.height * 0.5 + 7 * this.dpr;
         }
     }
     private getCountText(count: number, needcount: number) {
         const color = (count >= needcount ? "#0054FF" : "#FF0000");
-        const countText = `[stroke=${color}][color=${color}]${count}[/color][/stroke]`;
-        const needText = `[stroke=#2D2D2D][color=#2D2D2D]${needcount}[/color][/stroke]`;
-        const text = `${countText}/${needText}`;
+        const countText = `[color=${color}]${count}[/color]`;
+        const needText = `[color=#2D2D2D]/${needcount}[/color]`;
+        const text = `${countText}${needText}`;
         return text;
     }
 }

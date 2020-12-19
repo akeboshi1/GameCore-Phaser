@@ -6,6 +6,7 @@ export class ToggleColorButton extends ButtonEventDispatcher {
     private mText: Phaser.GameObjects.Text;
     private normalColor: string = "#FFFFFF";
     private changeColor: string = "#0099cc";
+    private mIsOn: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, text?: string) {
         super(scene, 0, 0);
         this.setSize(width, height);
@@ -40,6 +41,16 @@ export class ToggleColorButton extends ButtonEventDispatcher {
         this.changeColor = color;
     }
 
+    set isOn(value: boolean) {
+        this.mIsOn = value;
+        if (this.mIsOn) this.changeDown();
+        else this.changeNormal();
+    }
+
+    get isOn() {
+        return this.mIsOn;
+    }
+
     changeDown() {
         this.mText.setFill(this.changeColor);
     }
@@ -59,10 +70,15 @@ export class ToggleColorButton extends ButtonEventDispatcher {
                 this.changeDown();
                 break;
             case ClickEvent.Tap:
+                this.isOn = true;
                 this.changeDown();
                 break;
             case ClickEvent.Out:
-                this.changeNormal();
+                if (this.isOn) {
+                    this.changeDown();
+                } else {
+                    this.changeNormal();
+                }
                 break;
         }
     }

@@ -307,6 +307,13 @@ export class UIHelper {
             color
         };
     }
+    public static colorNumberStyle(color: string, fontSize: number) {
+        return {
+            fontSize,
+            fontFamily: Font.NUMBER,
+            color
+        };
+    }
     public static titleYellowStyle_m(dpr, size: number = 20) {
         return {
             fontSize: size * dpr,

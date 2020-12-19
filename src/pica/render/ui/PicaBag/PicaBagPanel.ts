@@ -111,7 +111,10 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mSelectedItem = undefined;
     let sameid: boolean = false;
     for (const prop of props) {
-      if (this.mSelectedItemData && prop.indexId === this.mSelectedItemData.indexId) sameid = true;
+      if (this.mSelectedItemData && prop.indexId === this.mSelectedItemData.indexId) {
+        this.mSelectedItemData = prop;
+        sameid = true;
+      }
       if (subcategoryType === "alltype" || subcategoryType === prop.subcategory) {
         subProps.push(prop);
       }
@@ -323,6 +326,7 @@ export class PicaBagPanel extends PicaBasePanel {
         if (item && this.isSelectedItemData(item)) {
           cellContainer.isSelect = true;
           this.mSelectedItem = cellContainer;
+          this.mSelectedItemData = item;
         }
         return cellContainer;
       },
