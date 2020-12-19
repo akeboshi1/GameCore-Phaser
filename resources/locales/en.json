@@ -37,7 +37,7 @@
     "timelimit": "Expires",
     "properties": "Prop Properties",
     "needproper": "Requirement",
-    "placetips":"Put down when editing room"
+    "placetips": "Put down when editing room"
   },
   "common": {
     "cancel": "Cancel",
@@ -122,15 +122,11 @@
   },
   "task": {
     "title": "Quests",
-    "main_quest": "Main Quest",
-    "side_quest": "Optional Quest",
-    "active_task": "Event Quest",
-    "daily_quest": "Daily Quest",
+    "main_quest": "Main Line",
+    "side_quest": "Side",
+    "active_task": "Event",
+    "daily_quest": "Daily",
     "all_task": "All",
-    "m": "M",
-    "s": "O",
-    "a": "E",
-    "d": "D",
     "objective": "Objective",
     "rewards": "Rewards",
     "collect_materials": "Collect:",
@@ -138,7 +134,9 @@
     "task_quest": "Quest:",
     "main": "[main]",
     "side": "[side]",
-    "daily": "[daily]"
+    "daily": "[daily]",
+    "receive": "Receive",
+    "go": "Go"
   },
   "furni_unlock": {
     "unlock": "REPAIR",

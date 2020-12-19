@@ -20,7 +20,7 @@ export class CommonBackground extends Phaser.GameObjects.Container {
     }
     protected init() {
         this.background = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "online_bg" });
-        this.background.displayWidth = this.width;
+        this.background.displayWidth = this.width * 1.2;
         this.graphic = this.scene.make.graphics(undefined, false);
         this.add([this.graphic, this.background]);
         this.resize(this.width, this.height);

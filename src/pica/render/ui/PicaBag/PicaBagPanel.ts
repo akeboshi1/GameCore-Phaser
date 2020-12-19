@@ -6,6 +6,7 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { Coin, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
+import { EvalSourceMapDevToolPlugin } from "webpack";
 export class PicaBagPanel extends PicaBasePanel {
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
@@ -66,7 +67,6 @@ export class PicaBagPanel extends PicaBasePanel {
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = (height - 296 * this.dpr - 60 * this.dpr) * 0.5 + 60 * this.dpr;
-    this.mDetailDisplay.setInteractive(new Phaser.Geom.Rectangle(0, 0, 110 * this.dpr, 110 * this.dpr), Phaser.Geom.Rectangle.Contains);
     this.mIconBg.x = this.mDetailDisplay.x;
     this.mIconBg.y = this.mDetailDisplay.y;
     this.mPropGrid.x = width / 2 + 3 * this.dpr;
@@ -463,7 +463,7 @@ export class PicaBagPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if (this.mSelectedItemData === item) return;
+    if (item && this.mSelectedItemData === item) return;
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()
@@ -478,11 +478,17 @@ export class PicaBagPanel extends PicaBasePanel {
           this.setItemAttribute(item, property);
       });
     if (item) {
-      // this.useBtn.visible = item.executable;
+      if (this.categoryType === 3) {
+        if (item.subcategory !== "pkt_market_tag_20013") {
+          this.useBtn.visible = false;
+        } else this.useBtn.visible = true;
+      } else {
+        this.useBtn.visible = true;
+      }
       this.setSelectedItem(item, cell);
     } else {
       if (this.categoryType !== 2 && this.mSelectedItemData === undefined) {// op_pkt_def.PKT_PackageType.AvatarPackage
-        // this.useBtn.enable = false;
+        this.useBtn.visible = false;
         this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
         this.mDetailDisplay.setNearest();
       }
@@ -515,9 +521,17 @@ export class PicaBagPanel extends PicaBasePanel {
       if (property.propertiesMap) {
         const proper = property.propertiesMap.get(affect.key);
         if (proper) {
-          img.setText(proper.value > 0 ? "+" + proper.value : proper.value);
-          if (proper.display)
+          const value = affect.value > 0 ? "+" + affect.value : affect.value + "";
+
+          if (proper.display) {
             img.load(Url.getOsdRes(proper.display.texturePath));
+            img.setText(value);
+            img.setOffset(-3 * this.dpr, 0);
+          } else {
+            // const temptext = `${proper.name}:${value}`;
+            img.setText(value);
+            img.setOffset(-10 * this.dpr, 0);
+          }
         } else img.visible = false;
       } else img.visible = false;
     }
@@ -572,12 +586,9 @@ export class PicaBagPanel extends PicaBasePanel {
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
-        this.useBtn.visible = true;
         this.useBtn.setText(i18n.t("furni_bag.add"));
       } else {
-        this.useBtn.visible = true;
         this.useBtn.setText(i18n.t("common.use"));
-
       }
     }
   }
@@ -744,7 +755,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     } else {
       this.tipsText.setWrapWidth(undefined);
       const name = `[color=#32347b][b][size=${14 * this.dpr}]${prop.shortName || prop.name}[/size][/b][/color]`;
-      let price = "";
+      // let price = "";
       let source = "";
       let describle = "";
       let attri = "";
@@ -753,23 +764,23 @@ class DetailBubble extends Phaser.GameObjects.Container {
       let maxWidth: number = 100 * this.dpr;
       this.tipsText.text = tips;
       maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-      if (prop.recyclable) {
-        if (prop.sellingPrice) {
-          price = `${i18n.t("furni_bag.sale_price")}: [img=${Coin.getIcon(prop.sellingPrice.coinType)}] ${prop.sellingPrice.price}`;
-          tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
-          this.tipsText.text = price;
-          maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-        }
-      } else {
-        price = i18n.t("furni_bag.not_sale");
-        tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
-        this.tipsText.text = price;
-        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-      }
+      // if (prop.recyclable) {
+      //   // if (prop.sellingPrice) {
+      //   //   price = `${i18n.t("furni_bag.sale_price")}: [img=${Coin.getIcon(prop.sellingPrice.coinType)}] ${prop.sellingPrice.price}`;
+      //   //   tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
+      //   //   this.tipsText.text = price;
+      //   //   maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      //   // }
+      // } else {
+      //   price = i18n.t("furni_bag.not_sale");
+      //   tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
+      //   this.tipsText.text = price;
+      //   maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      // }
       if (prop.source) {
         // source = `${i18n.t("furni_bag.source")}：${prop.source}`;
         source = `${prop.source}`;
-        tips += `\n[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
+        tips += `[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
         this.tipsText.text = source;
         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
       }

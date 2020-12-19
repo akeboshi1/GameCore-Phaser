@@ -38,7 +38,7 @@
     "timelimit": "限时",
     "properties": "道具属性",
     "needproper": "需求属性",
-    "placetips":"布置自己的小屋的时候才能放置"
+    "placetips": "布置自己的小屋的时候才能放置"
   },
   "common": {
     "cancel": "取消",
@@ -104,7 +104,7 @@
     "operation": "操作",
     "follow": "关注",
     "followed": "已关注",
-    "report":"举报",
+    "report": "举报",
     "blockuer": "拉黑"
   },
   "compose": {
@@ -123,15 +123,11 @@
   },
   "task": {
     "title": "任务",
-    "main_quest": "主线任务",
-    "side_quest": "支线任务",
-    "active_task": "活动任务",
-    "daily_quest": "每日任务",
+    "main_quest": "主线",
+    "side_quest": "支线",
+    "active_task": "活动",
+    "daily_quest": "每日",
     "all_task": "全部",
-    "m": "主",
-    "s": "支",
-    "a": "活",
-    "d": "日",
     "objective": "任务目标：",
     "rewards": "任务奖励：",
     "collect_materials": "收集物资：",
@@ -139,7 +135,9 @@
     "task_quest": "任务要求：",
     "main": "【主线】",
     "side": "【支线】",
-    "daily": "【每日】"
+    "daily": "【每日】",
+    "receive": "领取",
+    "go": "前往"
   },
   "furni_unlock": {
     "unlock": "修 复",

@@ -171,10 +171,10 @@ export class Element extends BlockObject implements IElement {
         throw new Error("Method not implemented.");
     }
 
-    public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
+    public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
-        this.loadDisplayInfo();
+        await this.loadDisplayInfo();
         return this.addToBlock();
     }
 
@@ -800,15 +800,16 @@ export class Element extends BlockObject implements IElement {
             await this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
         }
         const pos = this.mModel.pos;
-        this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+        await this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         const currentAnimation = this.mModel.currentAnimation;
-        if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        if (currentAnimation) await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         this.setInputEnable(this.mInputEnable);
         this.mCreatedDisplay = true;
         this.roomService.game.emitter.emit("ElementCreated", this.id);
+        return Promise.resolve();
     }
 
-    protected loadDisplayInfo() {
+    protected loadDisplayInfo(): Promise<any> {
         // this.mElementManager.roomService.game.peer.render.loadDisplayInfo(this.mDisplayInfo);
         // if (!this.mDisplayInfo) {
         //     return;
@@ -817,7 +818,7 @@ export class Element extends BlockObject implements IElement {
         //     this.createDisplay();
         // }
         this.mRoomService.game.emitter.once("dragonBones_initialized", this.onDisplayReady, this);
-        this.mRoomService.game.renderPeer.updateModel(this.id, this.mDisplayInfo);
+        return this.mRoomService.game.renderPeer.updateModel(this.id, this.mDisplayInfo);
         // this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
         // this.mDisplay.load(this.mDisplayInfo);
     }
@@ -845,11 +846,13 @@ export class Element extends BlockObject implements IElement {
         }
         this.setDepth(depth);
         this.addBody();
+        return Promise.resolve();
     }
 
     protected async removeDisplay(): Promise<any> {
         await super.removeDisplay();
         this.removeBody();
+        return Promise.resolve();
     }
 
     protected setDepth(depth: number) {
@@ -912,7 +915,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected addToBlock(): Promise<any> {
-        if (!this.mDisplayInfo) return;
+        if (!this.mDisplayInfo) return Promise.resolve();
         return super.addToBlock();
     }
 

@@ -1,34 +1,83 @@
-import { GameScroller, NineSlicePatch } from "apowophaserui";
-import { DynamicImage, ProgressThreeMaskBar } from "gamecoreRender";
+import { ClickEvent, GameScroller, NineSlicePatch } from "apowophaserui";
+import { ButtonEventDispatcher, DynamicImage, ProgressThreeMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
-import { Font } from "utils";
+import { Font, Handler, Url } from "utils";
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { PicaTaskItem } from "./PicaTaskItem";
 
 export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private gameScroller: GameScroller;
+    private curTaskItem: PicaTaskItem;
+    private taskItems: PicaTaskItem[] = [];
+    private mainItem: MainTaskItem;
     private dpr: number;
     private zoom: number;
+    private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
         this.dpr = dpr;
         this.zoom = zoom;
+        this.init();
     }
 
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
     refreshMask() {
         this.gameScroller.refreshMask();
+    }
+    setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+        if (this.curTaskItem) this.curTaskItem.setExtend(false);
+        if (!this.mainItem) {
+            this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+            this.gameScroller.addItem(this.mainItem);
+            this.mainItem.setHandler(new Handler(this, this.onRewardHandler));
+        }
+        this.mainItem.setMainTaskData(content, questType);
+        this.setTaskItems(content.quests);
+    }
+
+    setTaskDetail(quest: op_client.PKT_Quest) {
+        if (this.curTaskItem && quest) {
+            if (this.curTaskItem.questData.id === quest.id) {
+                this.curTaskItem.setTaskDetail(quest);
+            }
+        }
+    }
+
+    setTaskItems(quests: op_client.IPKT_Quest[]) {
+        for (const item of this.taskItems) {
+            const task = <PicaTaskItem>item;
+            task.visible = false;
+        }
+        for (let i = 0; i < quests.length; i++) {
+            let item: PicaTaskItem;
+            if (i < this.taskItems.length) {
+                item = this.taskItems[i];
+            } else {
+                item = new PicaTaskItem(this.scene, this.dpr);
+                this.gameScroller.addItem(item);
+                item.setHandler(new Handler(this, this.onTaskItemHandler));
+                this.taskItems.push(item);
+            }
+            item.setTaskData(quests[i]);
+            item.visible = true;
+        }
+        this.gameScroller.Sort();
     }
     protected init() {
         this.gameScroller = new GameScroller(this.scene, {
             x: 0,
-            y: 0,
+            y: 18 * this.dpr,
             width: this.width,
-            height: this.height,
+            height: this.height - 70 * this.dpr,
             zoom: this.zoom,
             dpr: this.dpr,
             align: 2,
             orientation: 0,
-            space: 10 * this.dpr,
-            selfevent: true,
+            space: 20 * this.dpr,
+            padding: { top: 2 * this.dpr },
             cellupCallBack: (gameobject) => {
                 this.onPointerUpHandler(gameobject);
             }
@@ -37,6 +86,36 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
 
     private onPointerUpHandler(gameobject) {
+        if (gameobject instanceof MainTaskItem) {
+
+        } else {
+        }
+    }
+
+    private onTaskItemHandler(tag: string, data: any) {
+        if (tag === "extend") {
+            const extend = data.extend;
+            const item = data.item;
+            this.onExtendsHandler(extend, item);
+        } else if (tag === "go") {
+
+        } else if (tag === "finish") {
+            this.send.runWith(["finish", data]);
+        }
+    }
+    private onRewardHandler(id: string) {
+        if (this.send) this.send.runWith(["reward", id]);
+    }
+
+    private onExtendsHandler(isExtend: boolean, item: PicaTaskItem) {
+        if (this.curTaskItem) {
+            this.curTaskItem.setExtend(false, false);
+        }
+        if (isExtend) {
+            this.curTaskItem = item;
+        } else
+            this.curTaskItem = null;
+        this.gameScroller.Sort(true);
     }
 }
 
@@ -51,12 +130,40 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private rewardsImg: DynamicImage;
     private rewardRotateImg: Phaser.GameObjects.Image;
     private bg: NineSlicePatch;
+    private mainData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
+    private isFinish: boolean = false;
+    private questType: op_pkt_def.PKT_Quest_Type;
+    private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
         this.zoom = zoom;
         this.setSize(width, height);
         this.init();
+    }
+    public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+        this.titleTex.text = content.name;
+        this.taskDes.text = content.des;
+        const max = content.quests.length;
+        if (this.questType !== questType) {
+            const fvalue = this.getFinishProgress(content);
+            this.progress.setProgress(fvalue, max);
+            this.progressTex.text = Math.floor((fvalue * 1000 / max)) / 10 + "%";
+        } else {
+            const from = this.getFinishProgress(this.mainData);
+            const to = this.getFinishProgress(content);
+            this.playProgressTween(from, to, max);
+        }
+        const url = Url.getOsdRes(content.reward.display.texturePath);
+        this.rewardsImg.load(url, this, () => {
+
+        });
+        this.mainData = content;
+
+    }
+
+    public setHandler(send: Handler) {
+        this.send = send;
     }
 
     protected init() {
@@ -92,6 +199,10 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         const rewardbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg" });
         rewardbg.x = this.width * 0.5 - 10 * this.dpr - rewardbg.width * 0.5;
         rewardbg.y = 20 * this.dpr;
+        const rewardButton = new ButtonEventDispatcher(this.scene, 0, 0);
+        rewardButton.setSize(rewardbg.width, rewardbg.height);
+        rewardButton.enable = true;
+        rewardButton.on(ClickEvent.Tap, this.onReceiveAwardHandler, this);
         this.rewardRotateImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg1" });
         this.rewardRotateImg.x = rewardbg.x;
         this.rewardsImg.y = rewardbg.y;
@@ -114,4 +225,42 @@ class MainTaskItem extends Phaser.GameObjects.Container {
 
         this.add([this.bg, this.titleCon, this.taskDes, this.progress, this.progressTex, rewardbg, this.rewardRotateImg, this.rewardsImg]);
     }
+
+    private onReceiveAwardHandler() {
+        if (this.isFinish && this.mainData.rewardsReceived) {
+            if (this.send) this.send.runWith([this.mainData.id]);
+        }
+    }
+    private getFinishProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
+        const quests = content.quests;
+        let endNum = 0;
+        for (const quest of quests) {
+            if (quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
+                endNum++;
+            }
+        }
+        return endNum;
+    }
+
+    private playProgressTween(from: number, to: number, max: number) {
+        const tween = this.scene.tweens.addCounter({
+            from,
+            to,
+            ease: "Linear",
+            duration: 150,
+            onUpdate: (cope: any, param: any) => {
+                if (!this.scene) {
+                    tween.stop();
+                    tween.remove();
+                }
+                const value = param.value;
+                this.progress.setProgress(value, max);
+                this.progressTex.text = Math.floor((value * 1000 / max)) / 10 + "%";
+            },
+            onComplete: () => {
+                tween.stop();
+            },
+        });
+    }
+
 }
