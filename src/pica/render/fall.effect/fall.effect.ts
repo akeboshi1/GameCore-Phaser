@@ -109,7 +109,7 @@ class EnableDisplay extends Phaser.GameObjects.Container {
         // this.mEllipse = scene.make.graphics(undefined, false);
         // this.mEllipse.fillStyle(0, 0.6);
         // this.mEllipse.fillEllipse(0, 0, 30, 15)
-        this.mEllipse = scene.make.sprite({key:"fall_effect",frame:"enable"}, false);
+        this.mEllipse = scene.make.sprite(undefined, false);
         this.addAt(this.mEllipse, 0);
 
         const config = {
