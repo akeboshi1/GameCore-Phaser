@@ -644,7 +644,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     } else {
       this.tipsText.setWrapWidth(undefined);
       const name = `[color=#32347b][b][size=${14 * this.dpr}]${prop.shortName || prop.name}[/size][/b][/color]`;
-      let price = "";
+      // let price = "";
       let source = "";
       let describle = "";
       let attri = "";
@@ -653,23 +653,23 @@ class DetailBubble extends Phaser.GameObjects.Container {
       let maxWidth: number = 100 * this.dpr;
       this.tipsText.text = tips;
       maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-      if (prop.recyclable) {
-        if (prop.sellingPrice) {
-          price = `${i18n.t("furni_bag.sale_price")}: [img=${Coin.getIcon(prop.sellingPrice.coinType)}] ${prop.sellingPrice.price}`;
-          tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
-          this.tipsText.text = price;
-          maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-        }
-      } else {
-        price = i18n.t("furni_bag.not_sale");
-        tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
-        this.tipsText.text = price;
-        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
-      }
+      // if (prop.recyclable) {
+      //   // if (prop.sellingPrice) {
+      //   //   price = `${i18n.t("furni_bag.sale_price")}: [img=${Coin.getIcon(prop.sellingPrice.coinType)}] ${prop.sellingPrice.price}`;
+      //   //   tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
+      //   //   this.tipsText.text = price;
+      //   //   maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      //   // }
+      // } else {
+      //   price = i18n.t("furni_bag.not_sale");
+      //   tips += `[color=#ff0000][size=${12 * this.dpr}]${price}[/size][/color]`;
+      //   this.tipsText.text = price;
+      //   maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      // }
       if (prop.source) {
         // source = `${i18n.t("furni_bag.source")}：${prop.source}`;
         source = `${prop.source}`;
-        tips += `\n[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
+        tips += `[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
         this.tipsText.text = source;
         maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
       }
