@@ -308,6 +308,7 @@ export class CreateRolePanel extends BasePanel {
       id: 0,
       avatar: this.avatars[this.mCurPageNum]
     });
+    this.dragonbones.startLoad();
   }
 
   private onResize(gameSize) {
