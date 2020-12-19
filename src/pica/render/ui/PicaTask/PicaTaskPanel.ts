@@ -40,7 +40,7 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.selectLine.clear();
         this.selectLine.fillStyle(0xFFF449, 0.5);
         this.selectLine.fillRect(-29 * this.dpr, 0, 58 * this.dpr, 2 * this.dpr);
-        this.content.x = this.content.width * 0.5;
+        this.content.x = -this.content.width * 0.5 - 10 * this.dpr;
         this.content.y = h * 0.5;
         this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
         this.mainPanel.refreshMask();
@@ -80,9 +80,10 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.mainPanel.setHandler(new Handler(this, this.onMainPanelHandler));
         this.mainPanel.y = this.height * 0.5 - mainHeight * 0.5;
         this.content.add(this.mainPanel);
+        this.createOptionButtons();
         this.resize();
         super.init();
-        this.createOptionButtons();
+        this.playMove();
     }
 
     createOptionButtons() {
@@ -143,5 +144,25 @@ export class PicaTaskPanel extends PicaBasePanel {
     }
     private OnClosePanel() {
         this.render.renderEmitter(ModuleName.PICATASK_NAME + "_hide");
+    }
+
+    private playMove() {
+        const width = this.scaleWidth;
+        const from = -this.content.width * 0.5 - 10 * this.dpr;
+        const to = this.content.width * 0.5;
+        const tween = this.scene.tweens.add({
+            targets: this.content,
+            x: {
+                from,
+                to
+            },
+            ease: "Linear",
+            duration: 300,
+            onComplete: () => {
+                tween.stop();
+                tween.remove();
+                this.mainPanel.refreshMask();
+            },
+        });
     }
 }

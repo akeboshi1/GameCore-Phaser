@@ -26,6 +26,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
     refreshMask() {
         this.gameScroller.refreshMask();
+        if (this.mainItem) this.mainItem.refreshMask();
     }
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         if (this.curTaskItem) this.curTaskItem.setExtend(false);
@@ -47,11 +48,17 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
 
     setTaskItems(quests: op_client.IPKT_Quest[]) {
+        const tempArr = [];
+        for (const quest of quests) {
+            if (quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING || quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
+                tempArr.push(quest);
+            }
+        }
         for (const item of this.taskItems) {
             const task = <PicaTaskItem>item;
             task.visible = false;
         }
-        for (let i = 0; i < quests.length; i++) {
+        for (let i = 0; i < tempArr.length; i++) {
             let item: PicaTaskItem;
             if (i < this.taskItems.length) {
                 item = this.taskItems[i];
@@ -61,7 +68,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
                 item.setHandler(new Handler(this, this.onTaskItemHandler));
                 this.taskItems.push(item);
             }
-            item.setTaskData(quests[i]);
+            item.setTaskData(tempArr[i]);
             item.visible = true;
         }
         this.gameScroller.Sort();
@@ -141,6 +148,9 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.zoom = zoom;
         this.setSize(width, height);
         this.init();
+    }
+    refreshMask() {
+        this.progress.refreshMask();
     }
     public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.titleTex.text = content.name;
