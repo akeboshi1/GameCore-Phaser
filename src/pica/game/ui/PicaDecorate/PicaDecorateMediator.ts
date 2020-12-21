@@ -45,9 +45,7 @@ export class PicaDecorateMediator extends BasicMediator {
                     this.room.game.emitter.off("ElementCreated", cb, this);
                 }
             };
-            this.room.game.emitter.on("ElementCreated", (_id: number) => {
-                if (id === _id) this.setElement(id, root);
-            }, this);
+            this.room.game.emitter.on("ElementCreated", cb, this);
             return;
         }
         this.selectedElemetn = element;
