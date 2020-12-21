@@ -225,15 +225,14 @@ export class Render extends RPCPeer implements GameMain {
         if (panel) {
             const inputs = this.game.domContainer.getElementsByTagName("input");
             if (inputs && inputs.length > 0) {
-                if (window.document.activeElement === inputs[0]) {
-                    panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
-                    return;
-                } else {
-                    panel.hideKeyboard();
+                // tslint:disable-next-line:prefer-for-of
+                for (let i = 0; i < inputs.length; i++) {
+                    if (window.document.activeElement === inputs[i]) {
+                        panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
+                        return;
+                    }
                 }
-                // Logger.getInstance().log("activeElement: ======>>>", window.document.activeElement, window.document.activeElement === inputs[0]);
-                // for (const input of inputs) {
-                // }
+                panel.hideKeyboard();
             }
         }
         // Logger.getInstance().log("input: ", input);

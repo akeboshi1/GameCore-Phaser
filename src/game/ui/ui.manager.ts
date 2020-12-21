@@ -21,6 +21,7 @@ export class UIManager extends PacketHandler {
     private mUILayoutMap: Map<string, UILayoutType> = new Map();
     // 用于记录功能ui打开的顺序,最多2个
     private mShowuiList: any[] = [];
+    private mLoadingCache: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[] = [];
 
     constructor(protected game: Game) {
         super();
@@ -77,6 +78,10 @@ export class UIManager extends PacketHandler {
                 mediator.show();
             }
         });
+        for (const oneCache of this.mLoadingCache) {
+            this.showMed(oneCache.name, oneCache);
+        }
+        this.mLoadingCache.length = 0;
     }
 
     public showDecorateUI() {
@@ -276,17 +281,33 @@ export class UIManager extends PacketHandler {
 
     protected handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
-        this.showMed(ui.name, ui);
+        // TODO 根据远程scene状态缓存命令
+        if (this.game.roomManager.currentRoom && !this.game.roomManager.currentRoom.isLoading) {
+            this.showMed(ui.name, ui);
+        } else {
+            this.mLoadingCache.push(ui);
+        }
     }
 
     protected handleUpdateUI(packet: PBpacket) {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
-        this.updateMed(ui.name, ui);
+        // TODO 根据远程scene状态缓存命令
+        if (this.game.roomManager.currentRoom && !this.game.roomManager.currentRoom.isLoading) {
+            this.updateMed(ui.name, ui);
+        }
     }
 
     protected handleCloseUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
-        this.hideMed(ui.name);
+        // TODO 根据远程scene状态缓存命令
+        if (this.game.roomManager.currentRoom && !this.game.roomManager.currentRoom.isLoading) {
+            this.hideMed(ui.name);
+        } else {
+            const idx = this.mLoadingCache.findIndex((x) => x.name === ui.name);
+            if (idx >= 0) {
+                this.mLoadingCache.splice(idx, 1);
+            }
+        }
     }
 
     protected onHandleShowCreateRoleUI(packet: PBpacket) {

@@ -33,11 +33,12 @@ export class PicaDecorateMediator extends BasicMediator {
             }
             this.cancelSelect();
         }
-        this.selectedElemetn = this.room.getElement(id);
-        if (!this.selectedElemetn) {
+        const element = this.room.getElement(id);
+        if (!element) {
+            this.selectedElemetn = null;
             return;
         }
-        if (!this.selectedElemetn.created) {
+        if (!element.created) {
             const cb = (_id) => {
                 if (id === _id) {
                     this.setElement(id, root);
@@ -49,6 +50,7 @@ export class PicaDecorateMediator extends BasicMediator {
             }, this);
             return;
         }
+        this.selectedElemetn = element;
         this.room.elementManager.removeFromMap(this.selectedElemetn.model);
         this.selectedElemetn.showRefernceArea();
         if (root) this.clone();

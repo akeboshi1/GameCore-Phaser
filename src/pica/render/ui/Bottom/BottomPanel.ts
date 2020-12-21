@@ -84,8 +84,8 @@ export class BottomPanel extends PicaBasePanel {
         this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr);
         this.add([this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
         this.resize(this.width, this.mOutput.height + this.mInput.height + this.mNavigate.height);
-        this.onToggleSizeHandler(false);
         super.init();
+        this.onToggleSizeHandler(false);
     }
 
     private checkUpdateActive() {
@@ -207,27 +207,27 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0, 0.6);
         this.background.fillRect(0, 0, width + 1 * this.dpr, height);
-        this.mTextArea.childrenMap.child.setMinSize(width * this.scaleRatio, (height - 4 * this.dpr) * this.scaleRatio);
+        this.mTextArea.childrenMap.child.setMinSize(width * this.scaleRatio, (height - 8 * this.dpr) * this.scaleRatio);
         this.mTextArea.layout();
         this.updateLayout();
         const textMask = this.mTextArea.childrenMap.text;
-        textMask.y = 0;
+        textMask.y = 4 * this.dpr;
         this.mTextArea.scrollToBottom();
     }
 
     public expand() {
         this.resize(this.scene.cameras.main.width, 125.33 * this.dpr);
-        this.mTextArea.setScrollerEnable(true);
+        // this.mTextArea.setScrollerEnable(true);
     }
 
     public collapse() {
         this.resize(296 * this.dpr, 40 * this.dpr);
-        this.mTextArea.setScrollerEnable(false);
+        // this.mTextArea.setScrollerEnable(false);
     }
 
     public updateLayout() {
         const matrix = this.getWorldTransformMatrix(this.getLocalTransformMatrix());
-        this.mTextArea.setPosition(this.width * this.scaleRatio * 0.5 + 8 * this.dpr, matrix.ty + this.mTextArea.height * 0.5);
+        this.mTextArea.setPosition(this.width * this.scaleRatio * 0.5 + 8 * this.dpr, matrix.ty + this.mTextArea.height * 0.5 + 4 * this.dpr);
         this.mTextArea.scrollToBottom();
     }
 
@@ -262,6 +262,8 @@ class InputContainer extends Phaser.GameObjects.Container {
         }).setOrigin(0, 0.5);
         this.add([this.background, this.emoji, this.inputText]);
         this.inputText.on("enter", this.onEnterHandler, this);
+        this.inputText.on("blur", this.onInputBlurHandler, this);
+        this.inputText.on("focus", this.onInputFocusHandler, this);
     }
 
     public resize() {
@@ -285,6 +287,18 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.emit("enter", text);
         this.inputText.setBlur();
         this.inputText.setText("");
+    }
+
+    private onInputBlurHandler() {
+        this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
+    }
+
+    private onInputFocusHandler() {
+        this.scene.input.on("pointerdown", this.onPointerSceneHandler, this);
+    }
+
+    private onPointerSceneHandler() {
+        this.inputText.setBlur();
     }
 }
 

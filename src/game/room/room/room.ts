@@ -40,6 +40,7 @@ export interface IRoomService {
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
     readonly matterWorld: MatterWorld;
+    readonly isLoading: boolean;
 
     now(): number;
 
@@ -106,6 +107,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mStateMap: Map<string, State>;
     protected mMatterWorld: MatterWorld;
     protected mAstar: AStar;
+    protected mIsLoading: boolean = false;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
@@ -164,6 +166,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             "sceneName": "PlayScene",
             "state": LoadState.CREATESCENE
         });
+
+        this.mIsLoading = true;
     }
 
     // public completeLoad() {
@@ -418,6 +422,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public initUI() {
         if (this.game.uiManager) this.game.uiManager.showMainUI();
+        this.mIsLoading = false;
     }
 
     public isWalkableAt(x: number, y: number) {
@@ -536,6 +541,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             item.clear();
         }
         this.mUpdateHandlers.length = 0;
+    }
+
+    public get isLoading(): boolean {
+        return this.mIsLoading;
     }
     //
 
