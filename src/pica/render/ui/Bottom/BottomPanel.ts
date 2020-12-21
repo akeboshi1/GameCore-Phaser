@@ -233,9 +233,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
 
     public appendChat(val: string) {
         if (this.mTextArea) {
-            for (let i = 0; i < 20; i++) {
-                this.mTextArea.appendText(val);
-            }
+            this.mTextArea.appendText(val);
             this.mTextArea.scrollToBottom();
         }
     }
