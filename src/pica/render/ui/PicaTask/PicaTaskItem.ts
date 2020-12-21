@@ -67,7 +67,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
             this.taskButton.setText(i18n.t("task.go"));
             this.taskButton.setTextStyle(UIHelper.colorStyle("#022B55", 12 * this.dpr));
 
-        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
+        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED || this.questData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             this.taskButton.setFrameNormal(UIHelper.threeYellowSmall);
             this.taskButton.setText(i18n.t("task.receive"));
             this.taskButton.setTextStyle(UIHelper.brownishStyle(this.dpr));
