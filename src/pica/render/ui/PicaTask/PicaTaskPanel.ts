@@ -147,7 +147,6 @@ export class PicaTaskPanel extends PicaBasePanel {
     }
 
     private playMove() {
-        const width = this.scaleWidth;
         const from = -this.content.width * 0.5 - 10 * this.dpr;
         const to = this.content.width * 0.5;
         const tween = this.scene.tweens.add({
@@ -162,6 +161,7 @@ export class PicaTaskPanel extends PicaBasePanel {
                 tween.stop();
                 tween.remove();
                 this.mainPanel.refreshMask();
+                this.mainPanel.moveFinish();
             },
         });
     }
