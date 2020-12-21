@@ -155,7 +155,7 @@ export class PicaComposePanel extends BasePanel {
             }
         });
         this.materialCon.add(this.materialGameScroll);
-        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
+        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.commonKey, "tips_bg", this.dpr);
         this.itemtips.setVisible(false);
         this.content.add(this.itemtips);
         const propFrame = this.scene.textures.getFrame(this.key, "bprint_bg_2");
