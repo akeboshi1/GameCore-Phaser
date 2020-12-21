@@ -1,5 +1,5 @@
 import { IAvatar } from "./dragonbones";
-import { op_def } from "pixelpai_proto";
+import { op_def, op_client } from "pixelpai_proto";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
     static suitPart = {
@@ -143,6 +143,17 @@ export class AvatarSuitType {
             return $1 + $2.toUpperCase();
         });
     }
+
+    static getSuitsFromItem(avatarSuits: op_client.ICountablePackageItem[]) {
+        const suits: AvatarSuit[] = [];
+        for (const item of avatarSuits) {
+            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, slot: item.slot, tag: item.tag, sn: item.sn, version: item.version };
+            suits.push(suit);
+        }
+        const avatar = AvatarSuitType.createHasBaseAvatar(suits);
+        return { avatar, suits };
+    }
+
     public costume = ["bodyCostId", "bodyCostDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
     public hair = ["headHairId", "headHairBackId"];
     public eye = ["headEyesId"];
