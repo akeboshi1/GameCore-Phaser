@@ -16,9 +16,11 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     private dpr: number;
     private send: Handler;
     private mIsExtend: boolean = false;
-    constructor(scene: Phaser.Scene, dpr: number) {
+    private zoom: number = 1;
+    constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
+        this.zoom = zoom;
         const conWidth = 272 * dpr;
         const conHeight = 70 * dpr;
         this.setSize(conWidth, conHeight);
@@ -34,7 +36,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         const headbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_head_frame" });
         headbg.x = posx + 25 * dpr;
         this.headIcon = new DynamicImage(scene, headbg.x, 0);
-        this.headIcon.scale = dpr;
+        this.headIcon.scale = dpr / this.zoom;
         this.headIcon.y = -10 * dpr;
         this.taskName = scene.make.text({ text: "", style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
         this.taskName.x = this.headIcon.x + 28 * dpr;
@@ -110,7 +112,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     }
     private openExtend() {
         if (!this.mExtend) {
-            this.mExtend = new TaskItemExtend(this.scene, this.width, 0, this.dpr);
+            this.mExtend = new TaskItemExtend(this.scene, this.width, 0, this.dpr, this.zoom);
             this.add(this.mExtend);
         }
         this.mExtend.setItemData(this.questData);
@@ -157,10 +159,12 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     private rewardArr: TaskCell[] = [];
     private line: Phaser.GameObjects.Image;
     private dpr: number = 0;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
+    private zoom: number = 1;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.width = width;
         this.dpr = dpr;
+        this.zoom = zoom;
         this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon, "task_list_unfold_bg", {
             left: 4,
             top: 4,
@@ -225,7 +229,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
             if (i < arr.length) {
                 item = arr[i];
             } else {
-                item = new TaskCell(this.scene, this.dpr);
+                item = new TaskCell(this.scene, this.dpr, this.zoom);
                 arr.push(item);
                 this.add(item);
             }
@@ -253,14 +257,17 @@ class TaskCell extends Phaser.GameObjects.Container {
     private bg: Phaser.GameObjects.Image;
     private itemIcon: DynamicImage;
     private countTex: BBCodeText;
-    private dpr;
-    constructor(scene: Phaser.Scene, dpr: number) {
+    private dpr: number;
+    private zoom: number;
+    constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
+        this.zoom = zoom;
         this.bg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_icon_bg" });
         this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
+        this.itemIcon.scale = this.dpr / this.zoom;
         this.countTex = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorNumberStyle("#ffffff", 12 * dpr))
             .setOrigin(0.5).setStroke("#000000", 2 * dpr);
         (<any>this.countTex).setPosition(this.width * 0.5, this.height * 0.5 - 2 * dpr);
@@ -272,7 +279,6 @@ class TaskCell extends Phaser.GameObjects.Container {
         this.bg.setTexture(UIAtlasName.uicommon, frame);
         const url = Url.getOsdRes(itemData.display.texturePath);
         this.itemIcon.load(url, this, () => {
-            this.itemIcon.scale = this.dpr;
         });
         if (!isTask) {
             this.countTex.text = `[stroke=#2D2D2D][color=#ffffff]${itemData.count}[/color][/stroke]`;

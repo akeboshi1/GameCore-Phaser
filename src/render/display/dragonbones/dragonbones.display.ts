@@ -973,7 +973,7 @@ export class DragonbonesDisplay extends DisplayObject {
             // if (this.mLoadMap.size > 0) {
             // }
             this.tmpIndex++;
-            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex + this.uuid;
+            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex + (this.uuid || 0);
             // if (this.scene.textures.exists(this.renderTextureKey)) {
             //     this.scene.textures.remove(this.renderTextureKey);\
             // }

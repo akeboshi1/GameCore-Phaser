@@ -11,11 +11,13 @@ export class MarketItem extends Phaser.GameObjects.Container {
   private mPriceText: Phaser.GameObjects.Text;
   private mTagIcon: Phaser.GameObjects.Image;
   private mProp: any;// op_client.IMarketCommodity
+  private zoom: number = 1;
   private readonly dpr: number;
 
-  constructor(scene: Phaser.Scene, x, y, dpr) {
+  constructor(scene: Phaser.Scene, x, y, dpr, zoom) {
     super(scene, x, y);
     this.dpr = dpr;
+    this.zoom = zoom;
     this.mBackground = this.scene.make.image({
       key: ModuleName.PICAMARKET_NAME,
       frame: "border"
@@ -29,7 +31,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     }, false).setOrigin(0);
     this.mBorder.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mPropImage = new DynamicImage(scene, 0, 0);
-    this.mPropImage.scale = this.dpr;
+    this.mPropImage.scale = this.dpr / this.zoom;
 
     this.mNickName = this.scene.make.text({
       x: 62 * this.dpr,
