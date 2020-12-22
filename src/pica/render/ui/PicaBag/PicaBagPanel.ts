@@ -319,7 +319,7 @@ export class PicaBagPanel extends PicaBasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new Item(scene, 0, 0, UIAtlasName.uicommon, this.dpr);
+          cellContainer = new Item(scene, 0, 0, UIAtlasName.uicommon, this.dpr, this.scale);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);
@@ -467,7 +467,7 @@ export class PicaBagPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if ( item && this.mSelectedItemData === item||this.mSelectedItemData&&!item) return;
+    if (item && this.mSelectedItemData === item || this.mSelectedItemData && !item) return;
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()
@@ -951,7 +951,7 @@ class Item extends Phaser.GameObjects.Container {
     }, false).setOrigin(1).setPosition(this.width * 0.5, this.height * 0.5);
     this.selectIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
-    this.mPropImage.scale = dpr;
+    this.mPropImage.scale = dpr / this.zoom;
     this.timeIcon = scene.make.image({ key, frame: "time" });
     this.timeIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.timeIcon.setPosition(-this.width * 0.5 + this.timeIcon.width * 0.5, -this.height * 0.5 + this.timeIcon.height * 0.5);
@@ -980,7 +980,7 @@ class Item extends Phaser.GameObjects.Container {
       return;
     }
     if (!prop.tag || JSON.parse(prop.tag).type !== "remove") {
-      this.mPropImage.scale = this.dpr;
+      this.mPropImage.scale = this.dpr / this.zoom;
       this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     } else {
       this.mPropImage.setTexture(UIAtlasName.uicommon, "backpack_close");

@@ -110,15 +110,16 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     }
     private openExtend() {
         if (!this.mExtend) {
-            this.mExtend = new TaskItemExtend(this.scene, this.width, 223 * this.dpr, this.dpr);
+            this.mExtend = new TaskItemExtend(this.scene, this.width, 0, this.dpr);
             this.add(this.mExtend);
         }
+        this.mExtend.setItemData(this.questData);
         this.mExtend.visible = true;
         this.height = this.content.height + this.mExtend.height;
         this.content.y = -this.height * 0.5 + this.content.height * 0.5;
-        this.mExtend.y = -this.height * 0.5 + this.content.height + this.mExtend.height * 0.5;
+        this.mExtend.y = this.content.y + this.content.height * 0.5;
         this.mIsExtend = true;
-        this.mExtend.setItemData(this.questData);
+        // this.mExtend.setItemData(this.questData);
         this.arrow.visible = false;
     }
 
@@ -148,6 +149,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     }
 }
 class TaskItemExtend extends Phaser.GameObjects.Container {
+    private bg: NineSlicePatch;
     private taskLabel: Phaser.GameObjects.Text;
     private taskTex: Phaser.GameObjects.Text;
     private needArr: TaskCell[] = [];
@@ -157,9 +159,9 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     private dpr: number = 0;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
         super(scene);
-        this.setSize(width, height);
+        this.width = width;
         this.dpr = dpr;
-        const bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon, "task_list_unfold_bg", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon, "task_list_unfold_bg", {
             left: 4,
             top: 4,
             right: 4,
@@ -175,7 +177,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         line.setPosition(-10 * dpr, posy + 110 * dpr);
         this.line = line;
-        this.add([bg, this.taskLabel, this.taskTex, this.rewardLabel, line]);
+        this.add([this.bg, this.taskLabel, this.taskTex, this.rewardLabel, line]);
         this.setSize(width, height);
     }
 
@@ -184,7 +186,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         const cellHeight = 56 * this.dpr;
         this.taskTex.text = this.getTaskTargetText(questData);
         this.createTaskCells(this.needArr, questData.targets, true);
-        taskPosy = this.taskTex.y + 30 * this.dpr;// this.taskTex.y + this.taskTex.height + 8 * this.dpr;
+        taskPosy = this.taskTex.y + this.taskTex.height + 8 * this.dpr;
         if (questData.targets.length > 0) {
             taskPosy += cellHeight * 0.5;
             this.sortItem(this.needArr, taskPosy);
@@ -197,6 +199,9 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.createTaskCells(this.rewardArr, questData.rewards, false);
         taskPosy += cellHeight * 0.5;
         this.sortItem(this.rewardArr, taskPosy);
+        this.height = taskPosy + cellHeight * 0.5 + 10 * this.dpr;
+        this.bg.resize(this.width, this.height);
+        this.bg.y = this.height * 0.5;
     }
 
     public sortItem(taskcells: TaskCell[], posY: number = 0) {

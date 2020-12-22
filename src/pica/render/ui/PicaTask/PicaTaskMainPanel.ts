@@ -16,6 +16,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private send: Handler;
     private isMoveFinish = false;
     private questType: op_pkt_def.PKT_Quest_Type;
+    private isFinishGroup: boolean = false;
     private taskGroupData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
@@ -46,8 +47,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             for (const item of this.taskItems) {
                 if (item.visible) tempitems.push(item);
             }
-            this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.mainItem, tempitems, this.width, this.dpr);
-            if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();
+
         } else {
             const tempArr = this.getTaskQuests(content.quests, this.taskGroupData.quests);
             this.setTaskItems(tempArr);
@@ -55,8 +55,14 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             for (const item of this.taskItems) {
                 if (item.visible) tempitems.push(item);
             }
-            const animation = new MainTaskGooutAnimation(this.scene, tempitems, this.width, this.dpr);
-            animation.playGoOutAnimation();
+            if (this.isFinishGroup) {
+                this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.mainItem, tempitems, this.width, this.dpr);
+                if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();
+                this.isFinishGroup = false;
+            } else {
+                const animation = new MainTaskGooutAnimation(this.scene, tempitems, this.width, this.dpr);
+                animation.playGoOutAnimation();
+            }
         }
         this.taskGroupData = content;
         this.questType = questType;
@@ -163,6 +169,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
     private onRewardHandler(id: string) {
         if (this.send) this.send.runWith(["reward", id]);
+        this.isFinishGroup = true;
     }
 
     private onExtendsHandler(isExtend: boolean, item: PicaTaskItem) {
@@ -330,7 +337,9 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             },
             onComplete: () => {
                 tween.stop();
-                this.playRotateTween(1, 100, 1500);
+                if (to === max) {
+                    this.playRotateTween(1, 100, 1500);
+                }
             },
         });
     }
