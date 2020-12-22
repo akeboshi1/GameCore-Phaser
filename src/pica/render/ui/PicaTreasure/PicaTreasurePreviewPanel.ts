@@ -1,11 +1,10 @@
 
 import { op_client } from "pixelpai_proto";
-import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText, ClickEvent, Button } from "apowophaserui";
+import { NineSlicePatch, GameScroller, BBCodeText, ClickEvent, Button } from "apowophaserui";
 import { DetailDisplay } from "picaRender";
 import { ItemInfoTips, MaterialItem, Render } from "gamecoreRender";
 import { Font, Handler, i18n, UIHelper } from "utils";
 import { UIAtlasKey } from "picaRes";
-import { FramesModel, ISprite } from "gamecore";
 export class PicaTreasurePreviewPanel extends Phaser.GameObjects.Container {
     private confirmBtn: Button;
     private bg: NineSlicePatch;
@@ -140,26 +139,26 @@ export class PicaTreasurePreviewPanel extends Phaser.GameObjects.Container {
         this.setTreasureItems(null);
     }
 
-    private getDisplayInfo(isprite: ISprite) {
-        const display = (isprite.displayInfo as FramesModel);
-        const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
-        resData.display = display.display;
-        const animas = display.createProtocolObject();
-        if (animas.length > 1) {
-            const arr = [];
-            for (const ani of animas) {
-                if (ani.node.name !== "lock") {
-                    ani.frameName = ani.layer[0].frameName;
-                    arr.push(ani);
-                }
-            }
-            if (arr.length === 0) arr.push(animas[0]);
-            resData.animations = arr;
-        } else {
-            resData.animations = animas;
-        }
-        return resData;
-    }
+    // private getDisplayInfo(isprite: any) {
+    //     const display = isprite.displayInfo;
+    //     const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
+    //     resData.display = display.display;
+    //     const animas = display.createProtocolObject();
+    //     if (animas.length > 1) {
+    //         const arr = [];
+    //         for (const ani of animas) {
+    //             if (ani.node.name !== "lock") {
+    //                 ani.frameName = ani.layer[0].frameName;
+    //                 arr.push(ani);
+    //             }
+    //         }
+    //         if (arr.length === 0) arr.push(animas[0]);
+    //         resData.animations = arr;
+    //     } else {
+    //         resData.animations = animas;
+    //     }
+    //     return resData;
+    // }
 
     private setTreasureItems(datas: op_client.ICountablePackageItem[]) {
         const len = 10;// datas.length;

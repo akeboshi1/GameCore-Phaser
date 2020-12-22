@@ -1,12 +1,11 @@
 
-import { op_client, op_gameconfig_01 } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText, ClickEvent, Button } from "apowophaserui";
 import { AnimationModel, BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "picaRender";
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
-import { FramesModel, IAnimationData, ISprite } from "gamecore";
 export class PicaFurniFunPanel extends BasePanel {
     private confirmBtn: NineSliceButton;
     private blackGraphic: Phaser.GameObjects.Graphics;
@@ -204,8 +203,8 @@ export class PicaFurniFunPanel extends BasePanel {
     }
 
     setFuritDisplay() {
-        const sprite: ISprite = this._getDisplayData();
-        const display = (sprite.displayInfo as FramesModel);
+        const sprite = this._getDisplayData();
+        const display = sprite.displayInfo;
         const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE();
         resData.display = display.display;
         const animas = this.createProtocolObject(display.animations);
