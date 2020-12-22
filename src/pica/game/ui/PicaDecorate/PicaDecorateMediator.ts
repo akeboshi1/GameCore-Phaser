@@ -14,7 +14,7 @@ export class PicaDecorateMediator extends BasicMediator {
     private dpr: number;
     constructor(game: Game) {
         super(ModuleName.PICADECORATE_NAME, game);
-        this.room = <DecorateRoom> game.roomManager.currentRoom;
+        this.room = <DecorateRoom>game.roomManager.currentRoom;
         this.dpr = game.scaleRatio;
         this.__exportProperty();
     }
@@ -151,18 +151,18 @@ export class PicaDecorateMediator extends BasicMediator {
         const origin = model.getOriginPoint();
         const pos45 = this.room.transformToMini45(model.pos);
         let result = null;
-        switch(dir) {
+        switch (dir) {
             case Direction.north_west:
-                result = this.getNorthWestPoints(area, origin ,pos45, count);
+                result = this.getNorthWestPoints(area, origin, pos45, count);
                 break;
             case Direction.west_south:
-                result = this.getWestSouthPoints(area, origin ,pos45, count);
+                result = this.getWestSouthPoints(area, origin, pos45, count);
                 break;
             case Direction.south_east:
-                result = this.getSouthEastPoints(area, origin ,pos45, count);
+                result = this.getSouthEastPoints(area, origin, pos45, count);
                 break;
             case Direction.east_north:
-                result = this.getEastNorthPoints(area, origin ,pos45, count);
+                result = this.getEastNorthPoints(area, origin, pos45, count);
                 break;
         }
         if (!result || result.length < 1) {
@@ -305,6 +305,7 @@ export class PicaDecorateMediator extends BasicMediator {
         if (!this.selectedElemetn || !this.mView) return;
         const model = this.selectedElemetn.model;
         const area = model.getCollisionArea();
+        if (!area) return;
         const origin = model.getOriginPoint();
         let rows = area.length;
         let cols = area[0].length;
