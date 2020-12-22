@@ -1,5 +1,5 @@
 import { UiManager, LabelInput } from "gamecoreRender";
-import { BBCodeText, Button, ClickEvent, dragSpeed, TextArea } from "apowophaserui";
+import { BBCodeText, Button, ClickEvent, TextArea } from "apowophaserui";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
 import { UIAtlasName } from "picaRes";
@@ -15,7 +15,6 @@ export class BottomPanel extends PicaBasePanel {
     private chatMaxLen: number = 100;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        // this.scale = 1;
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
         this.key = ModuleName.BOTTOM;
     }
@@ -30,12 +29,11 @@ export class BottomPanel extends PicaBasePanel {
     resize(w: number, h: number) {
         const zoom = this.scale;
         const width = this.scene.cameras.main.width;
-        const height = this.scene.cameras.main.height / this.scale;
+        const height = this.scene.cameras.main.height;
         this.mInput.resize();
-        this.mNavigate.y = height - this.mNavigate.height;
+        this.y = height;
+        this.mNavigate.y = -this.mNavigate.height;
         this.mInput.y = this.mNavigate.y - this.mInput.height;
-        this.resizeColtroll.x = this.resizeColtroll.width * 0.5;
-        this.setSize(width, h + this.mInput.height);
     }
 
     addListen() {
@@ -63,6 +61,21 @@ export class BottomPanel extends PicaBasePanel {
         super.preload();
     }
 
+    showKeyboard(width: number, height: number) {
+        const ch = this.cameraHeight / this.scale;
+        const keyboard = ch - height / this.scale;
+        if (keyboard === 0) {
+            // 第三方输入法收起键盘没有事件
+            this.hideKeyboard();
+            return;
+        }
+        this.mInput.y = (-keyboard - this.mInput.height);
+    }
+
+    hideKeyboard() {
+        this.mInput.y = this.mNavigate.y - this.mInput.height;
+    }
+
     protected init() {
         this.mOutput = new OutputContainer(this.scene, this.dpr, this.scale);
         this.mInput = new InputContainer(this.scene, this.key, this.dpr);
@@ -71,8 +84,8 @@ export class BottomPanel extends PicaBasePanel {
         this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr);
         this.add([this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
         this.resize(this.width, this.mOutput.height + this.mInput.height + this.mNavigate.height);
-        this.onToggleSizeHandler(true);
         super.init();
+        this.onToggleSizeHandler(false);
     }
 
     private checkUpdateActive() {
@@ -121,14 +134,18 @@ export class BottomPanel extends PicaBasePanel {
     private onToggleSizeHandler(expand: boolean) {
         if (expand) {
             this.mOutput.expand();
+            this.resizeColtroll.expand();
             this.mOutput.x = 0;
             this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
             this.resizeColtroll.y = this.mOutput.y - this.resizeColtroll.height * 0.5;
+            this.mOutput.expand();
         } else {
             this.mOutput.collapse();
+            this.resizeColtroll.collapse();
             this.mOutput.x = this.resizeColtroll.width - 1 * this.dpr;
             this.mOutput.y = this.mInput.y - 1 * this.dpr  - this.mOutput.height;
             this.resizeColtroll.y = this.mInput.y - 1 * this.dpr - this.resizeColtroll.height * 0.5;
+            this.mOutput.collapse();
         }
         this.mOutput.updateLayout();
     }
@@ -145,15 +162,15 @@ class OutputContainer extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, private dpr: number, private scaleRatio: number) {
         super(scene);
         this.background = this.scene.make.graphics(undefined, false);
+        this.background.clear();
 
         const width = this.scene.cameras.main.width;
         const zoom = this.scaleRatio;
         this.mOutputText = new BBCodeText(this.scene, 0, 0, "", {
-            fontSize: 12 * this.dpr / zoom + "px",
+            fontSize: 12 * this.dpr + "px",
             fontFamily: Font.DEFULT_FONT,
             stroke: "#000000",
             strokeThickness: 1 * this.dpr * zoom,
-            // textMask: false,
             shadow: {
                 offsetX: 0,
                 offsetY: 0,
@@ -168,58 +185,50 @@ class OutputContainer extends Phaser.GameObjects.Container {
             }
         });
 
-        const shape = this.scene.add.graphics();
-        shape.fillStyle(0xFF9900, 0.2);
-        shape.fillRoundedRect(0, 0, 2, 2, 2);
-
         this.mTextArea = new TextArea(this.scene, {
-            x: 0 + 4 * this.dpr * zoom,
+            x: width * 0.5 + 8 * this.dpr * zoom,
             y: 6 * this.dpr,
-            background: shape,
             textWidth: width - 4 * this.dpr * zoom,
             textHeight: 126 * this.dpr * zoom,
             text: this.mOutputText,
-            textMask: false
+            // textMask: false
         })
             .layout();
-
+        this.updateLayout();
         this.add([
             this.background,
             this.mTextArea,
             this.mOutputText,
         ]);
-
-        this.expand();
     }
 
     resize(width: number, height: number) {
-        // const h = 30 * this.dpr;
         this.setSize(width, height);
         this.background.clear();
         this.background.fillStyle(0, 0.6);
-        this.background.fillRect(0, 0, width, height);
-        this.mTextArea.childrenMap.child.setMinSize(width, (height - 2 * this.dpr) * this.scaleRatio);
+        this.background.fillRect(0, 0, width + 1 * this.dpr, height);
+        this.mTextArea.childrenMap.child.setMinSize(width * this.scaleRatio, (height - 8 * this.dpr) * this.scaleRatio);
         this.mTextArea.layout();
-        this.mTextArea.setPosition(this.width / 2 + 4 * this.dpr, 6 * this.dpr * this.scaleRatio);
+        this.updateLayout();
         const textMask = this.mTextArea.childrenMap.text;
-        textMask.y = 6 * this.dpr;
+        textMask.y = 4 * this.dpr;
         this.mTextArea.scrollToBottom();
-        // resize(width, h);
-        // this.background.input = undefined;
-        this.background.setInteractive(new Phaser.Geom.Rectangle(0, 0, width / this.scale, height / this.scale), Phaser.Geom.Rectangle.Contains);
     }
 
     public expand() {
         this.resize(this.scene.cameras.main.width, 125.33 * this.dpr);
+        // this.mTextArea.setScrollerEnable(true);
     }
 
     public collapse() {
         this.resize(296 * this.dpr, 40 * this.dpr);
+        // this.mTextArea.setScrollerEnable(false);
     }
 
     public updateLayout() {
         const matrix = this.getWorldTransformMatrix(this.getLocalTransformMatrix());
-        // this.mTextArea.setPosition(matrix.tx + this.width / 2 + 4 * this.dpr, matrix.ty + this.height * 0.5 + 6 * this.dpr * this.scaleRatio);
+        this.mTextArea.setPosition(this.width * this.scaleRatio * 0.5 + 8 * this.dpr, matrix.ty + this.mTextArea.height * 0.5 + 4 * this.dpr);
+        this.mTextArea.scrollToBottom();
     }
 
     public appendChat(val: string) {
@@ -253,6 +262,8 @@ class InputContainer extends Phaser.GameObjects.Container {
         }).setOrigin(0, 0.5);
         this.add([this.background, this.emoji, this.inputText]);
         this.inputText.on("enter", this.onEnterHandler, this);
+        this.inputText.on("blur", this.onInputBlurHandler, this);
+        this.inputText.on("focus", this.onInputFocusHandler, this);
     }
 
     public resize() {
@@ -260,6 +271,7 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.setSize(w, 38.33 * this.dpr);
         this.inputText.x = 46 * this.dpr;
         this.inputText.y = this.height * 0.5;
+        this.inputText.setSize(this.inputText.width, this.height);
 
         this.emoji.y = this.height * 0.5;
 
@@ -271,41 +283,56 @@ class InputContainer extends Phaser.GameObjects.Container {
         // this.inputText.resize(w - 46 * this.dpr, this.height);
     }
 
-    private onEnterHandler() {
-        this.emit("enter", this.inputText.text);
+    private onEnterHandler(text: string) {
+        this.emit("enter", text);
         this.inputText.setBlur();
         this.inputText.setText("");
+    }
+
+    private onInputBlurHandler() {
+        this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
+    }
+
+    private onInputFocusHandler() {
+        this.scene.input.on("pointerdown", this.onPointerSceneHandler, this);
+    }
+
+    private onPointerSceneHandler() {
+        this.inputText.setBlur();
     }
 }
 
 class ResizeControll extends Phaser.GameObjects.Container {
-    private background: Phaser.GameObjects.Image;
+    private background: Button;
     private bubble: Phaser.GameObjects.Image;
-    private arrow: Button;
+    private arrow: Phaser.GameObjects.Image;
     private expaned: boolean = true;
     constructor(scene: Phaser.Scene, key: string, private dpr: number) {
         super(scene);
-        this.background = this.scene.make.image({
-            key,
-            frame: "home_chat_pack_up_bg"
-        });
+        this.background = new Button(this.scene, key, "home_chat_pack_up_bg");
+        this.background.tweenEnable = false;
         this.bubble = this.scene.make.image({
             key,
             frame: "home_chat"
         });
-        this.arrow = new Button(this.scene, key, "home_unwind");
-        this.expand();
+        this.arrow = this.scene.make.image({
+            key,
+            frame: "home_unwind"
+        });
+        // this.arrow = new Button(this.scene, key, "home_unwind");
+        this.setSize(this.background.width, this.background.height);
         this.bubble.x = (-this.width + this.bubble.width) * 0.5 + 12.67 * dpr;
         this.arrow.x = (-this.width + this.arrow.width) * 0.5 + 43 * dpr;
         this.add([this.background, this.bubble, this.arrow]);
+        this.x = this.background.width * 0.5;
     }
 
     addListen() {
-        this.arrow.on(ClickEvent.Tap, this.onToggleSizeHandler, this);
+        this.background.on(ClickEvent.Tap, this.onToggleSizeHandler, this);
     }
 
     removeListen() {
-        this.arrow.off(ClickEvent.Tap, this.onToggleSizeHandler, this);
+        this.background.off(ClickEvent.Tap, this.onToggleSizeHandler, this);
     }
 
     public expand() {
@@ -313,8 +340,6 @@ class ResizeControll extends Phaser.GameObjects.Container {
         this.arrow.scaleY = -1;
         this.expaned = true;
         this.setSize(this.background.width, this.background.height);
-
-        this.emit("toggleSize", this.expaned);
     }
 
     public collapse() {
@@ -322,8 +347,6 @@ class ResizeControll extends Phaser.GameObjects.Container {
         this.arrow.scaleY = 1;
         this.expaned = false;
         this.setSize(this.background.width, this.background.height);
-
-        this.emit("toggleSize", this.expaned);
     }
 
     public getExpaned() {
@@ -331,10 +354,7 @@ class ResizeControll extends Phaser.GameObjects.Container {
     }
 
     private onToggleSizeHandler() {
-        if (this.expaned) {
-            this.collapse();
-        } else {
-            this.expand();
-        }
+        this.expaned = !this.expaned;
+        this.emit("toggleSize", this.expaned);
     }
 }

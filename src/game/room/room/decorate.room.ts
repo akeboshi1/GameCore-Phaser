@@ -745,4 +745,8 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     get matterWorld() {
         return undefined;
     }
+
+    get isLoading() {
+        return false;
+    }
 }

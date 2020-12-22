@@ -457,7 +457,8 @@ export class PicaAvatarPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if (this.mSelectedItemData.indexOf(item) !== -1) return;
+    cell.isSelect = true;
+    if (this.isSelectedItemData(item)) return;
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()

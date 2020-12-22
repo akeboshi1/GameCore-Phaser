@@ -6,7 +6,7 @@ import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
-import { AvatarSuit, AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
+import { AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
 import { BasePanel, DynamicImage, UiManager, Render, UIDragonbonesDisplay } from "gamecoreRender";
 
 export class CharacterInfoPanel extends BasePanel {
@@ -310,11 +310,11 @@ export class CharacterInfoPanel extends BasePanel {
         const levle = data.level && data.level.level ? data.level.level : 0;
         const spaceOffset = this.getspaceStr(1 * this.dpr);
         if (this.avatar && data.avatarSuit) {
-            const temp: any = this.creatAvatar(data.avatarSuit);
-            this.avatar.setSuits(temp[1]);
+            const temp: any = AvatarSuitType.getSuitsFromItem(data.avatarSuit);
+            this.avatar.setSuits(temp.suits);
             this.avatar.load({
                 id: 0,
-                avatar: temp[0],
+                avatar: temp.avatar,
             });
         }
         this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + spaceOffset + current_title);
@@ -565,16 +565,7 @@ export class CharacterInfoPanel extends BasePanel {
         this.mainCon.visible = value;
 
     }
-    private creatAvatar(avatar_suits: op_client.ICountablePackageItem[]) {
-        const suits: AvatarSuit[] = [];
-        for (const item of avatar_suits) {
-            const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, slot: item.slot, tag: item.tag, sn: item.sn };
-            suits.push(suit);
-        }
-        const avatar = AvatarSuitType.createHasBaseAvatar(suits);
-        return [avatar, suits];
 
-    }
     private getRichLabel(text: string, color = "#2B4BB5") {
         const label = `[stroke=${color}][color=${color}]${text}:[/color][/stroke]`;
         return label;

@@ -92,3 +92,4 @@ export * from "./PicaTask/PicaTaskItem";
 export * from "./PicaTask/PicaTaskMainPanel";
 export * from "./PicaTask/PicaTaskPanel";
 export * from "./PicaTask/PicaTaskSidePanel";
+export * from "./PicaElevator/PicaElevatorPanel";

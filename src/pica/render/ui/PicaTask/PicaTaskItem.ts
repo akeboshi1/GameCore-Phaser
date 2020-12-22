@@ -11,6 +11,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     private taskName: Phaser.GameObjects.Text;
     private taskDes: Phaser.GameObjects.Text;
     private taskButton: ThreeSliceButton;
+    private arrow: Phaser.GameObjects.Image;
     private mExtend: TaskItemExtend;
     private dpr: number;
     private send: Handler;
@@ -18,18 +19,18 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.dpr = dpr;
-        const cellWidth = 272 * dpr;
-        const cellHeight = 70 * dpr;
-        this.setSize(cellWidth, cellHeight);
+        const conWidth = 272 * dpr;
+        const conHeight = 70 * dpr;
+        this.setSize(conWidth, conHeight);
         this.content = scene.make.container(undefined, false);
-        this.content.setSize(cellWidth, cellHeight);
-        this.bg = new NineSlicePatch(this.scene, 0, 0, cellWidth, cellHeight, UIAtlasName.uicommon, "task_list_bg", {
+        this.content.setSize(conWidth, conHeight);
+        this.bg = new NineSlicePatch(this.scene, 0, 0, conWidth, conHeight, UIAtlasName.uicommon, "task_list_bg", {
             left: 6 * dpr,
             top: 6 * dpr,
             bottom: 6 * dpr,
             right: 6 * dpr,
         });
-        const posx = -cellWidth * 0.5, posy = -cellHeight * 0.5;
+        const posx = -conWidth * 0.5, posy = -conHeight * 0.5;
         const headbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_head_frame" });
         headbg.x = posx + 25 * dpr;
         this.headIcon = new DynamicImage(scene, headbg.x, 0);
@@ -37,17 +38,19 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.headIcon.y = -10 * dpr;
         this.taskName = scene.make.text({ text: "", style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
         this.taskName.x = this.headIcon.x + 28 * dpr;
-        this.taskName.y = -cellHeight * 0.5 + 15 * dpr;
+        this.taskName.y = -conHeight * 0.5 + 15 * dpr;
         this.taskDes = scene.make.text({ text: "", style: UIHelper.colorStyle("#FFF449", 12 * dpr) }).setOrigin(0);
         this.taskDes.x = this.taskName.x;
         this.taskDes.y = this.taskName.y + 15 * dpr;
         this.taskButton = new ThreeSliceButton(this.scene, 62 * dpr, 25 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, i18n.t("task.receive"));
         this.taskButton.setFontStyle("bold");
-        this.taskButton.x = cellWidth * 0.5 - this.taskButton.width * 0.5 - 10 * dpr;
+        this.taskButton.x = conWidth * 0.5 - this.taskButton.width * 0.5 - 10 * dpr;
         this.taskButton.on(ClickEvent.Tap, this.onTaskButtonHandler, this);
-        this.content.add([this.bg, headbg, this.headIcon, this.taskName, this.taskDes, this.taskButton]);
+        this.arrow = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_list_arrow" });
+        this.arrow.y = conHeight * 0.5 - this.arrow.height * 0.5;
+        this.content.add([this.bg, headbg, this.headIcon, this.taskName, this.taskDes, this.taskButton, this.arrow]);
         this.add(this.content);
-        this.setSize(cellWidth, cellHeight);
+        this.setSize(conWidth, conHeight);
     }
 
     public setTaskData(data: op_client.IPKT_Quest) {
@@ -64,7 +67,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
             this.taskButton.setText(i18n.t("task.go"));
             this.taskButton.setTextStyle(UIHelper.colorStyle("#022B55", 12 * this.dpr));
 
-        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
+        } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED || this.questData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             this.taskButton.setFrameNormal(UIHelper.threeYellowSmall);
             this.taskButton.setText(i18n.t("task.receive"));
             this.taskButton.setTextStyle(UIHelper.brownishStyle(this.dpr));
@@ -116,6 +119,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.mExtend.y = -this.height * 0.5 + this.content.height + this.mExtend.height * 0.5;
         this.mIsExtend = true;
         this.mExtend.setItemData(this.questData);
+        this.arrow.visible = false;
     }
 
     private closeExtend() {
@@ -123,6 +127,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.height = this.content.height;
         this.content.y = 0;
         this.mIsExtend = false;
+        this.arrow.visible = true;
     }
 
     private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 15) {

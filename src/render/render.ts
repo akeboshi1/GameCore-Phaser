@@ -221,6 +221,21 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     resize(width: number, height: number) {
+        const panel: any = this.uiManager.getPanel(ModuleName.BOTTOM);
+        if (panel) {
+            const inputs = this.game.domContainer.getElementsByTagName("input");
+            if (inputs && inputs.length > 0) {
+                // tslint:disable-next-line:prefer-for-of
+                for (let i = 0; i < inputs.length; i++) {
+                    if (window.document.activeElement === inputs[i]) {
+                        panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
+                        return;
+                    }
+                }
+                panel.hideKeyboard();
+            }
+        }
+        // Logger.getInstance().log("input: ", input);
         if (this.mConfig) {
             this.mConfig.width = width;
             this.mConfig.height = height;

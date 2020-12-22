@@ -35,7 +35,7 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
         if (this.mBubbles.length === 0) {
             return;
         }
-        const position = target;
+        const position = target.getPosition();
         if (!position) {
             return;
         }

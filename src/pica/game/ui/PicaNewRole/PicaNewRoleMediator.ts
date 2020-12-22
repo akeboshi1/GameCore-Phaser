@@ -56,7 +56,6 @@ export class PicaNewRoleMediator extends BasicMediator {
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         const uimanager = this.game.uiManager;
         uimanager.showMed(ModuleName.CHARACTERINFO_NAME, this.mShowData);
-        this.hide();
     }
 
     private onFollowHandler(data: { uid: string, follow: boolean }) {
@@ -87,15 +86,13 @@ export class PicaNewRoleMediator extends BasicMediator {
 
     }
     private onHideView() {
-        const uimanager = this.game.uiManager;
-        // uimanager.showMed(ModuleName.PICACHAT_NAME);
-        uimanager.showMed(ModuleName.PICANEWMAIN_NAME);
+        // const uimanager = this.game.uiManager;
+        // uimanager.showMed(ModuleName.PICANEWMAIN_NAME);
         this.hide();
     }
     private onViewInitComplete() {
-        const uimanager = this.game.uiManager;
-        // uimanager.hideMed(ModuleName.PICACHAT_NAME);
-        uimanager.hideMed(ModuleName.PICANEWMAIN_NAME);
+        // const uimanager = this.game.uiManager;
+        // uimanager.hideMed(ModuleName.PICANEWMAIN_NAME);
     }
     private checkFollowState(uid: string) {
         this.game.httpService.checkFollowed([uid]).then((response: any) => {

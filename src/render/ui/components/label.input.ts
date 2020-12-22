@@ -9,6 +9,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
     private mOriginX: number;
     private mOriginY: number;
     private mPlaceholder: string;
+
     constructor(scene: Phaser.Scene, config: any) {
         super(scene);
 
@@ -24,6 +25,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         }, false).setInteractive(new Phaser.Geom.Rectangle(-clickW * 0.5, -clickH * 0.5, clickW, clickH), Phaser.Geom.Rectangle.Contains);
         this.mOriginX = this.mLabel.originX;
         this.mOriginY = this.mLabel.originY;
+        this.mLabel.on("pointerdown", this.onPointerDownHandler, this);
         this.mLabel.on("pointerup", this.onShowInputHandler, this);
         this.add(this.mLabel);
 
@@ -60,6 +62,12 @@ export class LabelInput extends Phaser.GameObjects.Container {
         this.addAt(this.mBackground, 0);
     }
 
+    setSize(w: number, h: number) {
+        super.setSize(w, h);
+        this.mLabel.input.hitArea = new Phaser.Geom.Rectangle(-this.width * this.mLabel.originX, -this.height * this.mLabel.originX, this.width, this.height);
+        return this;
+    }
+
     public setBlur() {
         this.onShowLabel();
     }
@@ -81,8 +89,8 @@ export class LabelInput extends Phaser.GameObjects.Container {
         this.mInputText.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {
+                this.emit("enter", this.mInputText.text);
                 this.onShowLabel();
-                this.emit("enter");
             }
         });
     }
@@ -95,6 +103,9 @@ export class LabelInput extends Phaser.GameObjects.Container {
         if (this.mInputConfig.placeholder !== this.mLabel.text)
             this.mInputText.setText(this.mLabel.text);
         this.mInputText.setFocus();
+    }
+
+    private onPointerDownHandler() {
     }
 
     private onShowLabel() {
@@ -123,7 +134,10 @@ export class LabelInput extends Phaser.GameObjects.Container {
     private onTextBlurHandler() {
         this.emit("blur");
     }
-    private onTextFocusHandler() {
+    private onTextFocusHandler(e) {
+        // e.preventDefault(); e.stopPropagation();
+        // window.scrollTo(0, 0);
+        // document.body.scrollTop = 0;
         this.emit("focus");
     }
     get object(): Phaser.GameObjects.Text | InputText {
