@@ -138,6 +138,8 @@ export class Terrain extends BlockObject implements IElement {
             return;
         }
         await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo);
+        const currentAnimation = this.mModel.currentAnimation;
+        if (currentAnimation) await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         // const scene = this.mElementManager.scene;
         // if (scene) {
         //     this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
