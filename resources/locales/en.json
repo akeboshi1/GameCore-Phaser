@@ -345,5 +345,12 @@
   },
   "online": {
     "title": "Online Personnel"
+  },
+  "creatrole": {
+    "next": "Next",
+    "gointo": "Enter Game",
+    "hair": "Hair",
+    "eye": "Eye",
+    "mouth": "Mouth"
   }
 }

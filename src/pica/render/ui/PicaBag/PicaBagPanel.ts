@@ -275,7 +275,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
+    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "bag_nothing", 1);
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.y = this.mIconBg.y + this.mIconBg.height / 2;
     this.mDetailBubble = new DetailBubble(this.scene, UIAtlasName.uicommon, this.dpr);
@@ -290,6 +290,7 @@ export class PicaBagPanel extends PicaBasePanel {
       orientation: 1,
       dpr: this.dpr,
       space: 10 * this.dpr,
+      selfevent: true,
       cellupCallBack: (gameobject) => {
         this.onSelectSubCategoryHandler(gameobject);
       }
@@ -493,7 +494,7 @@ export class PicaBagPanel extends PicaBasePanel {
     } else {
       if (this.categoryType !== 2 && this.mSelectedItemData === undefined) {// op_pkt_def.PKT_PackageType.AvatarPackage
         this.useBtn.visible = false;
-        this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
+        this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "bag_nothing", 1);
         this.mDetailDisplay.setNearest();
         this.nameText.text = "";
       }
@@ -582,6 +583,7 @@ export class PicaBagPanel extends PicaBasePanel {
         text: [{ text: i18n.t("furni_bag.placetips"), node: undefined }]
       };
       this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+      this.mCategoryScroll.addListen();
     }
   }
 

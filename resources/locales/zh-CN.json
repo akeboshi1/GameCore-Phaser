@@ -348,5 +348,12 @@
   },
   "online": {
     "title": "在线人员"
+  },
+  "creatrole": {
+    "next": "下一步",
+    "gointo": "进入游戏",
+    "hair":"头发",
+    "eye":"眼睛",
+    "mouth":"嘴巴"
   }
 }
