@@ -1004,7 +1004,7 @@ export class DragonbonesDisplay extends DisplayObject {
                             //     texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                             // }
                             if (dragonBonesTexture.frames[frameName]) {
-                                canvas.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                                canvas.drawFrame(this.mDragonbonesName, frameName, dat.cutX, dat.cutY);
                                 break;
                             } else {
                                 canvas.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);
