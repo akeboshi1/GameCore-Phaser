@@ -347,7 +347,7 @@ export class PicaMarketPanel extends BasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new MarketItem(scene, 0, 0, this.dpr);
+          cellContainer = new MarketItem(scene, 0, 0, this.dpr, this.scale);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);

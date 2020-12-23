@@ -1,5 +1,5 @@
 import { ClickEvent, dragSpeed, GameScroller, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, DynamicImage, ProgressThreeMaskBar } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ProgressThreeBar, ProgressThreeMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
@@ -16,6 +16,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private send: Handler;
     private isMoveFinish = false;
     private questType: op_pkt_def.PKT_Quest_Type;
+    private isFinishGroup: boolean = false;
     private taskGroupData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
@@ -41,13 +42,13 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
         this.mainItem.setMainTaskData(content, questType);
         if (this.questType !== questType) {
-            this.setTaskItems(content.quests);
+            const tempArr = this.getTaskQuests(content.quests, undefined);
+            this.setTaskItems(tempArr);
             const tempitems = [];
             for (const item of this.taskItems) {
                 if (item.visible) tempitems.push(item);
             }
-            this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.mainItem, tempitems, this.width, this.dpr);
-            if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();
+
         } else {
             const tempArr = this.getTaskQuests(content.quests, this.taskGroupData.quests);
             this.setTaskItems(tempArr);
@@ -55,8 +56,14 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             for (const item of this.taskItems) {
                 if (item.visible) tempitems.push(item);
             }
-            const animation = new MainTaskGooutAnimation(this.scene, tempitems, this.width, this.dpr);
-            animation.playGoOutAnimation();
+            if (this.isFinishGroup) {
+                this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.mainItem, tempitems, this.width, this.dpr);
+                if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();
+                this.isFinishGroup = false;
+            } else {
+                const animation = new MainTaskGooutAnimation(this.scene, tempitems, this.width, this.dpr);
+                animation.playGoOutAnimation();
+            }
         }
         this.taskGroupData = content;
         this.questType = questType;
@@ -80,7 +87,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             if (i < this.taskItems.length) {
                 item = this.taskItems[i];
             } else {
-                item = new PicaTaskItem(this.scene, this.dpr);
+                item = new PicaTaskItem(this.scene, this.dpr, this.zoom);
                 this.gameScroller.addItem(item);
                 item.setHandler(new Handler(this, this.onTaskItemHandler));
                 this.taskItems.push(item);
@@ -163,6 +170,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
     private onRewardHandler(id: string) {
         if (this.send) this.send.runWith(["reward", id]);
+        this.isFinishGroup = true;
     }
 
     private onExtendsHandler(isExtend: boolean, item: PicaTaskItem) {
@@ -183,7 +191,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private titleCon: Phaser.GameObjects.Container;
     private titleTex: Phaser.GameObjects.Text;
     private taskDes: Phaser.GameObjects.Text;
-    private progress: ProgressThreeMaskBar;
+    private progress: ProgressThreeBar;
     private progressTex: Phaser.GameObjects.Text;
     private rewardsImg: DynamicImage;
     private rewardRotateImg: Phaser.GameObjects.Image;
@@ -200,7 +208,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.init();
     }
     refreshMask() {
-        this.progress.refreshMask();
+        // this.progress.refreshMask();
     }
     public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.titleTex.text = content.name;
@@ -210,12 +218,14 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             const fvalue = this.getFinishProgress(content);
             this.progress.setProgress(fvalue, max);
             this.progressTex.text = Math.floor((fvalue * 1000 / max)) / 10 + "%";
+            this.isFinish = fvalue === max;
         } else {
             const from = this.getFinishProgress(this.mainData);
             const to = this.getFinishProgress(content);
             const allTime = 2000;
             const duration = allTime * to / max;
             this.playProgressTween(from, to, max, duration);
+            this.isFinish = to === max;
         }
         const url = Url.getOsdRes(content.reward.display.texturePath);
         this.rewardsImg.load(url, this, () => {
@@ -269,17 +279,19 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         rewardButton.setSize(rewardbg.width, rewardbg.height);
         rewardButton.enable = true;
         rewardButton.on(ClickEvent.Tap, this.onReceiveAwardHandler, this);
+        rewardButton.x = rewardbg.x;
+        rewardButton.y = rewardbg.y;
         this.rewardRotateImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg1" });
         this.rewardRotateImg.x = rewardbg.x;
         this.rewardRotateImg.y = rewardbg.y;
         this.rewardsImg = new DynamicImage(this.scene, 0, 0);
         this.rewardsImg.x = rewardbg.x;
         this.rewardsImg.y = rewardbg.y;
-        this.rewardsImg.scale = this.dpr / 4;
+        this.rewardsImg.scale = this.dpr / (4 * this.zoom);
         const config = { width: 153 * this.dpr, height: 11 * this.dpr, correct: 0 };
         const barbgs = ["task_chapter_progress_bott_left", "task_chapter_progress_bott_middle", "task_chapter_progress_bott_right"];
         const bars = ["task_chapter_progress_top_left", "task_chapter_progress_top_middle", "task_chapter_progress_top_right"];
-        this.progress = new ProgressThreeMaskBar(this.scene, UIAtlasName.uicommon, barbgs, bars, undefined, config, config);
+        this.progress = new ProgressThreeBar(this.scene, UIAtlasName.uicommon, barbgs, bars, undefined, config, config);
         this.progress.x = -this.width * 0.5 + this.progress.width * 0.5 + 15 * this.dpr;
         this.progress.y = 34 * this.dpr;
         this.progressTex = this.scene.make.text({
@@ -292,11 +304,11 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             }
         }).setOrigin(0.5);
 
-        this.add([this.bg, this.titleCon, this.taskDes, this.progress, this.progressTex, rewardbg, this.rewardRotateImg, this.rewardsImg]);
+        this.add([this.bg, this.titleCon, this.taskDes, this.progress, this.progressTex, rewardbg, this.rewardRotateImg, this.rewardsImg, rewardButton]);
     }
 
     private onReceiveAwardHandler() {
-        if (this.isFinish && this.mainData.rewardsReceived) {
+        if (this.isFinish && !this.mainData.rewardsReceived) {
             if (this.send) this.send.runWith([this.mainData.id]);
         }
     }
@@ -330,7 +342,9 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             },
             onComplete: () => {
                 tween.stop();
-                this.playRotateTween(1, 100, 1500);
+                if (to === max) {
+                    this.playRotateTween(1, 100, 1500);
+                }
             },
         });
     }
@@ -553,6 +567,10 @@ class MainTaskGooutAnimation {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                if (!this.scene) return;
+                for (const item of target) {
+                    item.visible = false;
+                }
             },
         });
     }

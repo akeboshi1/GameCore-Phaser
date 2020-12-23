@@ -267,7 +267,7 @@ export class PicaFurniFunPanel extends BasePanel {
         const len = datas.length;
         (<any>this.materialGameScroll).clearItems();
         for (let i = 0; i < len; i++) {
-            const item = new MaterialItem(this.scene, this.key, this.dpr);
+            const item = new MaterialItem(this.scene, this.key, this.dpr, this.scale);
             item.y = 0;
             item.setItemData(datas[i]);
             item.setData("itemData", datas[i]);
@@ -333,16 +333,19 @@ class MaterialItem extends Phaser.GameObjects.Container {
     public itemData: op_client.ICountablePackageItem;
     private readonly dpr: number;
     private readonly key: string;
+    private zoom: number;
     private itemIcon: DynamicImage;
     private itemCount: BBCodeText;
     private bg: Phaser.GameObjects.Image;
     private mselect: boolean = false;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
+        this.zoom = zoom;
         this.bg = this.scene.make.image({ key: this.key, frame: "bg_m" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
+        this.itemIcon.scale = this.dpr / this.zoom;
         this.itemCount = new BBCodeText(this.scene, 0, 15 * dpr, "10/20", { color: "#000000" })
             .setOrigin(0.5).setFontSize(11 * dpr).setFontFamily(Font.DEFULT_FONT);
         this.add([this.bg, this.itemIcon, this.itemCount]);
@@ -354,8 +357,6 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.itemCount.text = this.getCountText(data);
         const url = Url.getOsdRes(data.display.texturePath);
         this.itemIcon.load(url, this, () => {
-            this.itemIcon.scale = this.dpr;
-            this.itemIcon.setPosition(0, 0);
         });
     }
 
