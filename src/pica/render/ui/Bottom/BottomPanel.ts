@@ -13,6 +13,7 @@ export class BottomPanel extends PicaBasePanel {
     private resizeColtroll: ResizeControll;
     private chatCatchArr: string[] = [];
     private chatMaxLen: number = 100;
+    private expanded: boolean;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
@@ -34,16 +35,22 @@ export class BottomPanel extends PicaBasePanel {
         this.y = height;
         this.mNavigate.y = -this.mNavigate.height;
         this.mInput.y = this.mNavigate.y - this.mInput.height;
+
+        this.updateOutputLayout();
     }
 
     addListen() {
         this.mInput.on("enter", this.onSendMsgHandler, this);
+        this.mInput.on("pointerScene", this.onPointerSceneHandler, this);
         this.resizeColtroll.addListen();
         this.resizeColtroll.on("toggleSize", this.onToggleSizeHandler, this);
+        // this.mInput.on("focus", this.onFocusHandler, this);
+        // this.mInput.on("blur", this.onBlurHandler, this);
     }
 
     removeListen() {
         this.mInput.on("enter", this.onSendMsgHandler, this);
+        this.mInput.off("pointerScene", this.onPointerSceneHandler, this);
         this.resizeColtroll.removeListen();
         this.resizeColtroll.off("toggleSize", this.onToggleSizeHandler, this);
     }
@@ -70,10 +77,18 @@ export class BottomPanel extends PicaBasePanel {
             return;
         }
         this.mInput.y = (-keyboard - this.mInput.height);
+        // this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
+        // this.resizeColtroll.y = this.mInput.y - this.resizeColtroll.height * 0.5;
+        // this.mOutput.updateLayout();
+        this.updateOutputLayout();
     }
 
     hideKeyboard() {
         this.mInput.y = this.mNavigate.y - this.mInput.height;
+        this.updateOutputLayout();
+        // this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
+        // this.resizeColtroll.y = this.mInput.y - this.resizeColtroll.height * 0.5;
+        // this.mOutput.updateLayout();
     }
 
     protected init() {
@@ -132,22 +147,48 @@ export class BottomPanel extends PicaBasePanel {
     }
 
     private onToggleSizeHandler(expand: boolean) {
+        this.expanded = expand;
         if (expand) {
             this.mOutput.expand();
             this.resizeColtroll.expand();
+        } else {
+            this.mOutput.collapse();
+            this.resizeColtroll.collapse();
+        }
+        this.updateOutputLayout();
+    }
+
+    private onPointerSceneHandler(gameobjects?: Phaser.GameObjects.GameObject[]) {
+        if (gameobjects && gameobjects.length > 0) {
+            for (const gameobject of gameobjects) {
+                const parent = gameobject.parentContainer;
+                if (parent === this.resizeColtroll) return;
+            }
+        }
+        this.mInput.blurInput();
+    }
+
+    private updateOutputLayout() {
+        if (this.expanded) {
             this.mOutput.x = 0;
             this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
             this.resizeColtroll.y = this.mOutput.y - this.resizeColtroll.height * 0.5;
             this.mOutput.expand();
         } else {
-            this.mOutput.collapse();
-            this.resizeColtroll.collapse();
             this.mOutput.x = this.resizeColtroll.width - 1 * this.dpr;
             this.mOutput.y = this.mInput.y - 1 * this.dpr  - this.mOutput.height;
             this.resizeColtroll.y = this.mInput.y - 1 * this.dpr - this.resizeColtroll.height * 0.5;
             this.mOutput.collapse();
         }
         this.mOutput.updateLayout();
+    }
+
+    private onFocusHandler() {
+        this.showKeyboard(window.document.documentElement.clientWidth * window.devicePixelRatio, window.document.documentElement.clientHeight * window.devicePixelRatio);
+    }
+
+    private onBlurHandler() {
+        this.hideKeyboard();
     }
 
     get mediator() {
@@ -191,7 +232,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
             textWidth: width - 4 * this.dpr * zoom,
             textHeight: 126 * this.dpr * zoom,
             text: this.mOutputText,
-            // textMask: false
+            textMask: false
         })
             .layout();
         this.updateLayout();
@@ -217,12 +258,12 @@ class OutputContainer extends Phaser.GameObjects.Container {
 
     public expand() {
         this.resize(this.scene.cameras.main.width, 125.33 * this.dpr);
-        // this.mTextArea.setScrollerEnable(true);
+        this.mTextArea.setScrollerEnable(true);
     }
 
     public collapse() {
         this.resize(296 * this.dpr, 40 * this.dpr);
-        // this.mTextArea.setScrollerEnable(false);
+        this.mTextArea.setScrollerEnable(false);
     }
 
     public updateLayout() {
@@ -259,7 +300,7 @@ class InputContainer extends Phaser.GameObjects.Container {
             placeholder: text,
             fontSize: 11 * this.dpr + "px",
             color: "#ffffff",
-        }).setOrigin(0, 0.5);
+        }).setOrigin(0, 0.5).setAutoBlur(false);
         this.add([this.background, this.emoji, this.inputText]);
         this.inputText.on("enter", this.onEnterHandler, this);
         this.inputText.on("blur", this.onInputBlurHandler, this);
@@ -283,22 +324,33 @@ class InputContainer extends Phaser.GameObjects.Container {
         // this.inputText.resize(w - 46 * this.dpr, this.height);
     }
 
+    public setText(text: string) {
+        this.inputText.setText(text);
+    }
+
+    public blurInput() {
+        this.inputText.setBlur();
+    }
+
     private onEnterHandler(text: string) {
         this.emit("enter", text);
-        this.inputText.setBlur();
+        // this.inputText.setBlur();
         this.inputText.setText("");
     }
 
     private onInputBlurHandler() {
         this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
+        // this.emit("blur");
     }
 
     private onInputFocusHandler() {
         this.scene.input.on("pointerdown", this.onPointerSceneHandler, this);
+        // this.emit("focus");
     }
 
-    private onPointerSceneHandler() {
-        this.inputText.setBlur();
+    private onPointerSceneHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
+        this.emit("pointerScene", currentlyOver);
+        // this.inputText.setBlur();
     }
 }
 
