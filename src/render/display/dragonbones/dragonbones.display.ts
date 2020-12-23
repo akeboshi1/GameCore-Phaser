@@ -5,7 +5,7 @@ import { Render } from "../../render";
 import { LoadType } from "../../loadqueue";
 
 export enum AvatarSlotType {
-    BodyCostDres = "body_cost_$_dres",
+    BodyCostDres = "body_cost_dres_$",
     BodyCost = "body_cost_$",
     BodyTail = "body_tail_$",
     BodyWing = "body_wing_$",
@@ -31,7 +31,7 @@ export enum AvatarSlotType {
     HeadMask = "head_mask_$",
     HeadEyes = "head_eyes_$",
     HeadBase = "head_base_$",
-    HeadHairBack = "head_hair_$_back",
+    HeadHairBack = "head_hair_back_$",
     HeadMous = "head_mous_$",
     HeadHair = "head_hair_$",
     HeadHats = "head_hats_$",
@@ -47,7 +47,7 @@ export enum AvatarPartType {
     BlegSpec = "bleg_spec_#_$",
     BodyBase = "body_base_#_$",
     BodyCost = "body_cost_#_$",
-    BodyCostDres = "body_cost_#_$_dres",
+    BodyCostDres = "body_cost_dres_#_$",
     BodySpec = "body_spec_#_$",
     BodyTail = "body_tail_#_$",
     BodyWing = "body_wing_#_$",
@@ -60,7 +60,7 @@ export enum AvatarPartType {
     HeadBase = "head_base_#_$",
     HeadEyes = "head_eyes_#_$",
     HeadHair = "head_hair_#_$",
-    HeadHairBack = "head_hair_#_$_back",
+    HeadHairBack = "head_hair_back_#_$",
     HeadHats = "head_hats_#_$",
     HeadFace = "head_face_#_$",
     HeadMask = "head_mask_#_$",
@@ -973,7 +973,7 @@ export class DragonbonesDisplay extends DisplayObject {
             // if (this.mLoadMap.size > 0) {
             // }
             this.tmpIndex++;
-            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex + this.uuid;
+            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex + (this.uuid || 0);
             // if (this.scene.textures.exists(this.renderTextureKey)) {
             //     this.scene.textures.remove(this.renderTextureKey);\
             // }
@@ -1004,7 +1004,7 @@ export class DragonbonesDisplay extends DisplayObject {
                             //     texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                             // }
                             if (dragonBonesTexture.frames[frameName]) {
-                                canvas.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                                canvas.drawFrame(this.mDragonbonesName, frameName, dat.cutX, dat.cutY);
                                 break;
                             } else {
                                 canvas.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);

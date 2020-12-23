@@ -124,6 +124,8 @@ export class LoadingScene extends BasicScene {
       this.curtain.open().then(() => {
         // this.displayVisible(true);
         this.scene.wake();
+      }).catch((error) => {
+        Logger.getInstance().log(error);
       });
       // this.scale.on("resize", this.checkSize, this);
       this.scene.bringToTop(SceneName.LOADING_SCENE);
@@ -238,7 +240,7 @@ class Curtain {
   open() {
     this.upDisplay.visible = true;
     this.downDisplay.visible = true;
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.scene.cameras.main) {
         resolve();
         return;
@@ -272,9 +274,9 @@ class Curtain {
   close() {
     this.downDisplay.visible = true;
     this.upDisplay.visible = true;
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.scene.cameras.main) {
-        resolve();
+        resolve(null);
         return;
       }
       const height = this.scene.cameras.main.height;

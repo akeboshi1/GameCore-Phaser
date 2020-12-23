@@ -1,9 +1,10 @@
 import { BasicMediator, Game } from "gamecore";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { PicaTask } from "./PicaTask";
 export class PicaTaskMediator extends BasicMediator {
     protected mModel: PicaTask;
+    protected taskGroup: any;
     constructor(game: Game) {
         super(ModuleName.PICATASK_NAME, game);
         this.mModel = new PicaTask(game);
@@ -35,7 +36,13 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
     }
-
+    panelInit() {
+        super.panelInit();
+        if (this.taskGroup) {
+            this.onRetQuestGroup(this.taskGroup);
+            this.taskGroup = undefined;
+        }
+    }
     private onHideView() {
         this.hide();
     }
@@ -56,13 +63,14 @@ export class PicaTaskMediator extends BasicMediator {
         this.mModel.querySubmitQuest(id);
     }
     private onRetQuestList(quests: op_client.PKT_Quest[]) {
-        this.mView.setTaskDatas(quests);
+        if (this.mView) this.mView.setTaskDatas(quests);
     }
 
     private onRetQuestDetail(quest: op_client.PKT_Quest) {
-        this.mView.setTaskDetail(quest);
+        if (this.mView) this.mView.setTaskDetail(quest);
     }
     private onRetQuestGroup(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
-        this.mView.setTaskDatas(content);
+        if (this.mView) this.mView.setTaskDatas(content);
+        else this.taskGroup = content;
     }
 }

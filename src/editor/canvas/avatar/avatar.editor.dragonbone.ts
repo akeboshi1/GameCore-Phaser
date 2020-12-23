@@ -8,18 +8,18 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private readonly DRAGONBONENAME_HEAD = "bones_model_head";
     private readonly DRAGONBONEARMATURENAME = "Armature";
     private readonly BACKMAP = {
-        ["head_hair"]: ["head_hair", "head_back"],
-        ["body_cost"]: ["body_cost", "body_dres"]
+        ["head_hair"]: ["head_hair", "head_hair_back"],
+        ["body_cost"]: ["body_cost", "body_cost_dres"]
     };
     private readonly DEFAULTSETS = [
         { id: "0001", parts: ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"] },
         { id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"] },
     ];
     private readonly SPECIALSETS = {
-        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_back", "head_hats", "head_mask", "head_face", "head_base"],
-        ["body_spec"]: ["body_cost", "body_dres", "body_tail", "body_wing", "body_base"],
-        ["farm_spec"]: ["farm_cost", "shld_farm", "weap_farm", "farm_base"],
-        ["barm_spec"]: ["barm_cost", "shld_barm", "weap_barm", "barm_base"],
+        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_mask", "head_face", "head_base"],
+        ["body_spec"]: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
+        ["farm_spec"]: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
+        ["barm_spec"]: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
         ["fleg_spec"]: ["fleg_cost", "fleg_base"],
         ["bleg_spec"]: ["bleg_cost", "bleg_base"],
     };
@@ -32,7 +32,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "bleg_cost",
         "bleg_spec",
         "body_cost",
-        "body_dres",
+        "body_cost_dres",
         "body_spec",
         "body_tail",
         "body_wing",
@@ -43,28 +43,28 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "head_eyes",
         "head_hair",
         "head_mous",
-        "head_back",
+        "head_hair_back",
         "head_hats",
         "head_mask",
         "head_spec",
         "head_face",
-        "shld_barm",
-        "shld_farm",
-        "weap_barm",
-        "weap_farm",
+        "barm_shld",// shld_barm
+        "farm_shld",// shld_farm
+        "barm_weap",// weap_barm
+        "farm_weap",// weap_farm
     ];
     // 下半身插槽名
     private readonly BOTTOMBODYPARTS = [
         "body_cost",
-        "body_dres",
+        "body_cost_dres",
         "farm_cost",
         "barm_cost",
         "fleg_cost",
         "bleg_cost",
-        "weap_barm",
-        "weap_farm",
-        "shld_barm",
-        "shld_farm",
+        "barm_weap",
+        "farm_weap",
+        "barm_shld",
+        "farm_shld",
         "body_tail",
         "body_wing",
         "body_spec",
@@ -557,23 +557,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     // 从部件ID转换为资源相对路径 同时也是TextureManager中的key
     // tslint:disable-next-line:no-shadowed-variable
     private relativeUri(part: string, id: string, dir: string, version?: string) {
-        let _layer = null;
-        let _part = part;
-        if (part === "head_back") {
-            _part = "head_hair";
-            _layer = "back";
-        } else if (part === "body_dres") {
-            _part = "body_cost";
-            _layer = "dres";
-        }
-
-        let result = "";
-        if (_layer) {
-            result = `/avatar/part/${_part}_${id}_${dir}_${_layer}`;
-        } else {
-            result = `/avatar/part/${_part}_${id}_${dir}`;
-        }
-
+        let result = `/avatar/part/${part}_${id}_${dir}`;
         if (version !== undefined && version.length > 0) {
             result = `${result}_${version}`;
         }
@@ -583,20 +567,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
     // 部件名转换为插槽名
     private slotName(part: string, dir: string) {
-        let _layer = null;
-        let _part = part;
-        if (part === "head_back") {
-            _part = "head_hair";
-            _layer = "back";
-        } else if (part === "body_dres") {
-            _part = "body_cost";
-            _layer = "dres";
-        }
-
-        if (_layer) {
-            return `${_part}_${dir}_${_layer}`;
-        }
-        return `${_part}_${dir}`;
+        return `${part}_${dir}`;
     }
 
     private findPartInSets(part: string, sets: any[]): any {
