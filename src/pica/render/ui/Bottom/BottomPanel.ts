@@ -300,7 +300,7 @@ class InputContainer extends Phaser.GameObjects.Container {
             placeholder: text,
             fontSize: 11 * this.dpr + "px",
             color: "#ffffff",
-        }).setOrigin(0, 0.5);
+        }).setOrigin(0, 0.5).setAutoBlur(false);
         this.add([this.background, this.emoji, this.inputText]);
         this.inputText.on("enter", this.onEnterHandler, this);
         this.inputText.on("blur", this.onInputBlurHandler, this);
