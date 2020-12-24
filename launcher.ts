@@ -45,7 +45,8 @@ export interface GameMain {
     scaleChange(scale: number);
     enableClick();
     disableClick();
-    setKeyBoardHeight(height: number);
+    keyboardDidShow(height: number);
+    keyboardDidHide(): void;
     startFullscreen(): void;
     stopFullscreen(): void;
     createGame(): void;
@@ -176,8 +177,12 @@ export class Launcher {
         if (this.world) this.world.onFocus();
     }
 
-    public keyBoardHeight(height: number) {
-        if (this.world) this.world.setKeyBoardHeight(height);
+    public keyboardDidShow(height: number) {
+        if (this.world) this.world.keyboardDidShow(height);
+    }
+
+    public keyboardDidHide(height: number) {
+        if (this.world) this.world.keyboardDidHide();
     }
 
     public enableClick() {

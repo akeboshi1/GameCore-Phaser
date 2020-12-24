@@ -289,8 +289,20 @@ export class Render extends RPCPeer implements GameMain {
 
     }
 
-    setKeyBoardHeight(height: number) {
+    keyboardDidShow(keyboardHeight: number) {
+        const bottom: any = this.uiManager.getPanel(ModuleName.BOTTOM);
+        const width = this.mConfig.width;
+        const height = this.mConfig.height - keyboardHeight;
+        if (bottom) {
+            bottom.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
+        }
+    }
 
+    keyboardDidHide() {
+        const bottom: any = this.uiManager.getPanel(ModuleName.BOTTOM);
+        if (bottom) {
+            bottom.hideKeyboard();
+        }
     }
 
     startFullscreen(): void {
