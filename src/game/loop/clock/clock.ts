@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Algorithm } from "utils";
+import { Algorithm, Logger } from "utils";
 import { MainPeer } from "../../main.peer";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
@@ -18,22 +18,16 @@ export interface ClockReadyListener {
 export class Clock extends PacketHandler {
     // clock是否同步完成
     private mClockSync: boolean = false;
-    private mAutoSync: boolean = false;
+    private mDeltaTimeToServer: number = 0;
     protected get sysUnixTime(): number {
         return new Date().getTime();
     }
 
-    set unixTime(t: number) {
-        this.mTimestamp = t;
-    }
-
     get unixTime(): number {
-        return this.mTimestamp;
+        return this.sysUnixTime + this.mDeltaTimeToServer;
     }
 
-    private mTimestamp: number = 0; // The timestamp in JavaScript is expressed in milliseconds.
     private mConn: ConnectionService;
-    private mLatency: number[] = [];
     private mIntervalId: any;
     private mListener: ClockReadyListener;
     private mainPeer: MainPeer;
@@ -61,18 +55,12 @@ export class Clock extends PacketHandler {
         }
     }
 
-    public update(time: number, delta: number) {
-        if (!this.mTimestamp) this.mTimestamp = time;
-        else
-            this.mTimestamp += delta;
-    }
-
     public clearTime() {
         this.mClockSync = false;
         if (this.mIntervalId) {
             clearInterval(this.mIntervalId);
         }
-        this.mTimestamp = 0;
+        this.mDeltaTimeToServer = 0;
         this._check();
     }
 
@@ -84,7 +72,6 @@ export class Clock extends PacketHandler {
         if (this.mIntervalId) {
             clearInterval(this.mIntervalId);
         }
-        this.mLatency = undefined;
     }
 
     public get clockSync(): boolean {
@@ -103,42 +90,15 @@ export class Clock extends PacketHandler {
         const local_receive = this.sysUnixTime
             , local_send = ct.clientStartTs
             , remote_receive = ct.serverReceiveTs
-            , remote_send = ct.serverSendTs
-            , server_run = remote_send - remote_receive
-            , total_delay = (local_receive - local_send) - server_run
-            , latency = Math.round(total_delay / 2);
-        let timeSychronDelta: number = 0;
-        if (latency < 0) return;
+            , remote_send = ct.serverSendTs;
 
-        this.mLatency.push(latency);
-        if (this.mLatency.length > LATENCY_SAMPLES) {
-            this.mLatency.shift();
-        }
-        const median_latency = Algorithm.median(this.mLatency);
-        timeSychronDelta = median_latency + server_run;
-
-        const remote_time = remote_send - timeSychronDelta; // the real remote-time.
-        const mistake = Math.abs(remote_time - this.mTimestamp);
-        // update timesychron
-        if (mistake > MAX_DELAY) {
-            this.mTimestamp = remote_time;
-            this.mAutoSync = true;
-            // Logger.getInstance().debug("正在同步clock");
-            // if (this.mAutoSync) {
-            this.sync(-1);
-            return;
-            //  }
-        }
-        this.mAutoSync = false;
-        if (this.mListener && this.mLatency.length >= MIN_READY_SAMPLES && !this.mAutoSync) {
+        // 参考文档：https://zhuanlan.zhihu.com/p/106069365
+        this.mDeltaTimeToServer = Math.floor(((remote_receive - local_send) + (remote_send - local_receive)) / 2);
+        if (this.mListener) {
             this.mClockSync = true;
             // Logger.getInstance().debug("clock同步完成");
             this.mListener.onClockReady();
         }
-        // Logger.getInstance().debug(`total_delay: ${total_delay} / latency: ${latency} | timeSychronDelta: ${timeSychronDelta} / remote_time: ${remote_time} / mistake: ${mistake}`);
-    }
-
-    get medianLatency() {
-        return Algorithm.median(this.mLatency);
+        // Logger.getInstance().debug(`mDeltaTimeToServer: ${this.mDeltaTimeToServer}`);
     }
 }
