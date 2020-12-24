@@ -1,6 +1,4 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_virtual_world, op_gameconfig } from "pixelpai_proto";
-import { Logger } from "utils";
+import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { BasicMediator, Game } from "gamecore";
 import { PicaCreateRole } from "./PicaCreateRole";
@@ -9,32 +7,28 @@ export class PicaCreateRoleMediator extends BasicMediator {
   protected mModel: PicaCreateRole;
   constructor(game: Game) {
     super(ModuleName.PICACREATEROLE_NAME, game);
-    this.game.emitter.on("GenerateName", this.randomNameCallBack, this);
     this.mModel = new PicaCreateRole(this.game);
   }
-
   show(param?: any) {
-    super.show(param);
+    if (param) this.mShowData = param;
+    if (this.mPanelInit && this.mShow) {
+      this._show();
+      return;
+    }
+    this.mShow = true;
+    this.__exportProperty(() => {
+      this.game.peer.render.showCreateRolePanel(param).then(() => {
+        this.mView = this.game.peer.render[this.key];
+        this.panelInit();
+      });
+      this.mediatorExport();
+    });
   }
 
-  hide() {
-    super.hide();
-
+  submit(gender: op_def.Gender, ids: string[]) {
+    this.mModel.onSubmitHandler(gender, ids);
   }
-  randomName() {
-    this.mModel.onRandomNameHandler();
-  }
-
-  submit(name: string, index: number, avatar: op_gameconfig.IAvatar) {
-    this.mModel.onSubmitHandler(name, index, avatar);
-  }
-
   protected panelInit() {
 
-  }
-
-  private randomNameCallBack(val: string) {
-    if (!this.mView) this.mView = this.game.peer.render[ModuleName.CREATEROLE_NAME];
-    this.mView.setNickName(val);
   }
 }
