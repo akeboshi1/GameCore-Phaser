@@ -517,7 +517,7 @@ export class Render extends RPCPeer implements GameMain {
     public showCreateRolePanel(data?: any): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const createPanel = () => {
-                this.mUiManager.showPanel(ModuleName.CREATEROLE_NAME, data).then((panel) => {
+                this.mUiManager.showPanel(ModuleName.PICACREATEROLE_NAME, data).then((panel) => {
                     if (!panel) {
                         reject(false);
                         return;

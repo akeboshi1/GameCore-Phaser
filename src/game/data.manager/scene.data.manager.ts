@@ -61,6 +61,7 @@ export class SceneDataManager extends BasePacketHandler {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_BLING_PANEL = packet.content;
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEFFECTMGR_NAME, content);
     }
+
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;
         return undefined;

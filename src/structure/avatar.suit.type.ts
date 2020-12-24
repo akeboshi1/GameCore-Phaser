@@ -119,7 +119,7 @@ export class AvatarSuitType {
         const slotArr = [];
         const suitPart = this.avatarSuit;
         const slots = suitPart[suitType];
-        const slotbits = slotbit === undefined ? [] : slotbit.split("#");
+        const slotbits = slotbit === undefined || slotbit === "" ? [] : slotbit.split("#");
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < slots.length; i++) {
             const slot = slots[i];

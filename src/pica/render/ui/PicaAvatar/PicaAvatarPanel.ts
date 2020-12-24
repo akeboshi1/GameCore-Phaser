@@ -282,7 +282,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
+    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "bag_nothing",1);
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.on("pointerup", this.onAvatarClickHandler, this);
     //  this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
@@ -457,8 +457,11 @@ export class PicaAvatarPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    cell.isSelect = true;
-    if (this.isSelectedItemData(item)) return;
+    if (!item) return;
+    if (this.isSelectedItemData(item)) {
+      cell.isSelect = true;
+      return;
+    }
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()

@@ -1,5 +1,5 @@
-import { ClickEvent, dragSpeed, GameScroller, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, DynamicImage, ProgressThreeBar, ProgressThreeMaskBar } from "gamecoreRender";
+import { ClickEvent, GameScroller, NineSlicePatch } from "apowophaserui";
+import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressThreeBar } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
@@ -11,6 +11,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private taskItems: PicaTaskItem[] = [];
     private mainItem: MainTaskItem;
     private mainTaskAnimation: MainTaskAnimation;
+    private itemTips: ItemInfoTips;
     private dpr: number;
     private zoom: number;
     private send: Handler;
@@ -147,7 +148,9 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
                 this.onPointerUpHandler(gameobject);
             }
         });
-        this.add(this.gameScroller);
+        this.itemTips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
+        this.itemTips.setVisible(false);
+        this.add([this.gameScroller, this.itemTips]);
     }
 
     private onPointerUpHandler(gameobject) {
@@ -166,6 +169,8 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
 
         } else if (tag === "finish") {
             this.send.runWith(["finish", data]);
+        } else if (tag === "item") {
+            this.onMaterialItemHandler(data);
         }
     }
     private onRewardHandler(id: string) {
@@ -182,6 +187,13 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         } else
             this.curTaskItem = null;
         this.gameScroller.Sort(true);
+    }
+    private onMaterialItemHandler(gameobj: any) {
+        this.itemTips.setVisible(true);
+        const data = gameobj.itemData;
+        this.itemTips.setItemData(data);
+        this.itemTips.setTipsPosition(gameobj, this, 10 * this.dpr);
+
     }
 }
 
@@ -287,7 +299,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.rewardsImg = new DynamicImage(this.scene, 0, 0);
         this.rewardsImg.x = rewardbg.x;
         this.rewardsImg.y = rewardbg.y;
-        this.rewardsImg.scale = this.dpr / (4 * this.zoom);
+        this.rewardsImg.scale = this.dpr / this.zoom;
         const config = { width: 153 * this.dpr, height: 11 * this.dpr, correct: 0 };
         const barbgs = ["task_chapter_progress_bott_left", "task_chapter_progress_bott_middle", "task_chapter_progress_bott_right"];
         const bars = ["task_chapter_progress_top_left", "task_chapter_progress_top_middle", "task_chapter_progress_top_right"];
@@ -415,6 +427,7 @@ class MainTaskAnimation {
 
     private playNextAnimation() {
         if (this.isDispose) return;
+        if (this.taskItems.length === 0) return;
         if (this.indexed === -1) {
             this.indexed = this.taskItems.length - 1;
         } else {
