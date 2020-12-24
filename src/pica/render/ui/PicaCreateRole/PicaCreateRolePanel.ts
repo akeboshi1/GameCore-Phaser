@@ -1,7 +1,7 @@
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { Handler, i18n, UIHelper } from "utils";
-import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
-import { UiManager, CommonBackground, UIDragonbonesDisplay } from "gamecoreRender";
+import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
+import { UiManager, CommonBackground, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { UIAtlasName } from "picaRes";
 import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
@@ -10,8 +10,8 @@ export class PicaCreateRolePanel extends PicaBasePanel {
   private mBottomBg: Phaser.GameObjects.Image;
   private content: Phaser.GameObjects.Container;
   private sixCon: Phaser.GameObjects.Container;
-  private manButton: Button;
-  private womanButton: Button;
+  private manButton: ToggleButton;
+  private womanButton: ToggleButton;
   private manIcon: Phaser.GameObjects.Image;
   private womanIcon: Phaser.GameObjects.Image;
   private nextButton: NineSliceButton;
@@ -88,11 +88,16 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     this.dragonbones.scale = this.dpr * 2.2;
     this.dragonbones.y = mTopBg.y + 45 * this.dpr;
     this.dragonbones.on("initialized", this.loadDragonbonesComplete, this);
+    const avatarclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
+    avatarclickCon.setSize(130 * this.dpr, 130 * this.dpr);
+    avatarclickCon.enable = true;
+    avatarclickCon.on(ClickEvent.Tap, this.onAvatarClickHandler, this);
+    avatarclickCon.y = this.dragonbones.y - 65 * this.dpr;
     this.backButton = new Button(this.scene, UIAtlasName.uicommon, "back_arrow");
     this.backButton.x = -width * 0.5 + this.backButton.width * 0.5 + 20 * this.dpr;
     this.backButton.y = -height * 0.5 + this.backButton.height * 0.5 + 23 * this.dpr;
     this.backButton.on(ClickEvent.Tap, this.onBackHandler, this);
-    this.content.add([this.commonBackground, this.mBottomBg, mTopBg, this.dragonbones]);
+    this.content.add([this.commonBackground, this.mBottomBg, mTopBg, this.dragonbones, avatarclickCon]);
     this.createSixCon();
     this.createSuitCon();
 
@@ -103,13 +108,13 @@ export class PicaCreateRolePanel extends PicaBasePanel {
   protected createSixCon() {
     this.sixCon = this.scene.make.container(undefined, false);
     this.sixCon.y = 70 * this.dpr;
-    this.manButton = new Button(this.scene, UIAtlasName.uicommon, "Create_gender_uncheck", "Create_gender_select");
+    this.manButton = new ToggleButton(this.scene, 0, 0, UIAtlasName.uicommon, "Create_gender_uncheck", "Create_gender_select", this.dpr);
     this.manButton.on(ClickEvent.Tap, this.onSixHandler, this);
     this.manIcon = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Create_gender_boy" });
     this.manButton.add(this.manIcon);
     this.manButton.x = -60 * this.dpr;
     this.manButton.y = -60 * this.dpr;
-    this.womanButton = new Button(this.scene, UIAtlasName.uicommon, "Create_gender_uncheck", "Create_gender_select");
+    this.womanButton = new ToggleButton(this.scene, 0, 0, UIAtlasName.uicommon, "Create_gender_uncheck", "Create_gender_select", this.dpr);
     this.womanButton.on(ClickEvent.Tap, this.onSixHandler, this);
     this.womanIcon = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Create_gender_girl" });
     this.womanButton.add(this.womanIcon);
@@ -174,16 +179,28 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     this.content.remove(this.sixCon);
     this.content.add(this.backButton);
   }
-
+  private onAvatarClickHandler() {
+    const anis = ["walk", "run", "greet01"];
+    const ani = anis[Math.floor(Math.random() * (anis.length))];
+    const aniData: RunningAnimation = {
+      name: (ani),
+      flip: false,
+      times: 1,
+      playingQueue: {
+        name: "idle", playTimes: -1
+      }
+    };
+    this.dragonbones.play(aniData);
+  }
   private onSixHandler(pointer, button) {
-    this.manButton.changeNormal();
-    this.womanButton.changeNormal();
-    button.changeDown();
     if (this.manButton === button) {
       this.mgender = op_def.Gender.Male;
+      this.womanButton.isOn = false;
     } else if (this.womanButton === button) {
       this.mgender = op_def.Gender.Female;
+      this.manButton.isOn = false;
     }
+    button.isOn = true;
   }
 
   private onBackHandler() {
@@ -197,9 +214,9 @@ export class PicaCreateRolePanel extends PicaBasePanel {
 
   private onSkinHandler(pointer, button) {
     const suitType = "base";
-    const index = Number(button.name);
-    const data = this.suitDatasMap.get(suitType)[0];
-    data.sn = "000" + index;
+    const index = Number(button.name) - 1;
+    const arr = this.suitDatasMap.get(suitType);
+    const data = arr[index];
     this.curSuitMap.set(suitType, data);
     this.selectSkinBg.x = button.x;
     this.selectSkinBg.y = button.y;

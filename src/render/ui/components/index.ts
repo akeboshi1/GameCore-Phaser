@@ -37,3 +37,4 @@ export * from "./background.scale.button";
 export * from "./progress.three.mask.bar";
 export * from "./progress.three.bar";
 export * from "./toggle.color.button";
+export * from "./toggle.button";
