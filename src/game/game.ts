@@ -30,7 +30,7 @@ interface ISize {
 }
 
 export const fps: number = 45;
-export const delayTime = 1000 / fps;
+export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     protected mainPeer: MainPeer;
     protected connect: ConnectionService;
@@ -59,38 +59,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected currentTime: number = 0;
     protected mWorkerLoop: any;
     protected mAvatarType: op_def.AvatarStyle;
+    protected mRunning: boolean = true;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
         this.connect = new Connection(peer);
         this.addPacketListener();
-        this.update();
-    }
-
-    public run(): Promise<any> {
-        return new Promise<any>((resolve) => {
-            this.currentTime = new Date().getTime();
-            const self = this;
-            this.mWorkerLoop = setInterval(() => {
-                resolve(new Date().getTime() - self.currentTime);
-                clearInterval(self.mWorkerLoop);
-            }, delayTime);
-        });
-    }
-
-    public async update() {
-        let now: number = 0;
-        let tmpTime: number = new Date().getTime();
-        for (; ;) {
-            await this.run();
-            now = new Date().getTime();
-            let delay = now - tmpTime;
-            if (delay < delayTime) delay = delayTime;
-            // Logger.getInstance().log("updateTime===", delay, "delayTime===", delayTime);
-            if (this.mRoomManager) this.mRoomManager.update(now, delay);
-            // Logger.getInstance().log("delayTime===", new Date().getTime() - now);
-            tmpTime = now;
-        }
+        this.update(new Date().getTime());
     }
 
     public addPacketListener() {
@@ -100,29 +75,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public removePacketListener() {
         if (this.connect) this.connect.removePacketListener(this);
     }
-
-    // public run(): Promise<any> {
-    //     return new Promise<any>((resolve) => {
-    //         this.currentTime = new Date().getTime();
-    //         this.mWorkerLoop = setInterval(() => {
-    //             resolve(new Date().getTime() - this.currentTime);
-    //         }, delayTime);
-    //     });
-    // }
-
-    // public async update() {
-    //     let now: number = 0;
-    //     let tmpTime: number = new Date().getTime();
-    //     for (; ;) {
-    //         await this.run();
-    //         now = new Date().getTime();
-    //         // if (now - tmpTime >= delayTime) break;
-    //         // if (this.user) this.user.update();
-    //         // Logger.getInstance().log("updateTime:====", now - tmpTime);
-    //         if (this.mRoomManager) this.mRoomManager.update(now, now - tmpTime);
-    //         tmpTime = now;
-    //     }
-    // }
 
     get scaleRatio(): number {
         return this.mConfig.scale_ratio;
@@ -388,7 +340,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
     public onFocus() {
         if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
-        this.update();
+        this.mRunning = true;
         this.connect.onFocus();
         if (this.connection) {
             if (!this.connection.connect) {
@@ -412,7 +364,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onBlur() {
         this.currentTime = 0;
-        if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
+        // if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
+        this.mRunning = false;
         this.connect.onBlur();
         Logger.getInstance().log("#BlackSceneFromBackground; world.onBlur()");
         if (this.connection) {
@@ -793,5 +746,34 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private onAvatarGameModeHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
         this.mAvatarType = content.avatarStyle;
+    }
+
+    private _run(current: number, delta: number) {
+        if (!this.mRunning) return;
+        // Logger.getInstance.log(`_run at ${current} + delta: ${delta}`);
+
+        // TODO do something here.
+        if (this.mRoomManager) this.mRoomManager.update(current, delta);
+    }
+
+    private update(current: number, delta: number = 0) {
+
+        this._run(current, delta);
+
+        const now: number = new Date().getTime();
+        const run_time: number = now - current;
+
+        if (run_time >= interval) {
+            // I am late.
+            Logger.getInstance().info(`Update late.  run_time: ${run_time} `);
+            this.update(now, run_time);
+        } else {
+            // Logger.getInstance().info(`${interval - run_time}`);
+            setTimeout(() => {
+                const when: number = new Date().getTime();
+                this.update(when, when - now);
+
+            }, interval - run_time);
+        }
     }
 }

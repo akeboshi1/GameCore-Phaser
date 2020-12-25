@@ -1,4 +1,4 @@
-import { ResUtils } from "utils";
+import { Logger, ResUtils } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "../../render";
@@ -985,8 +985,9 @@ export class DragonbonesDisplay extends DisplayObject {
                 // =============龙骨part资源key 带图片资源名及方向
                 const key = name.split("/")[1].split("_");
                 // =============front || back单独也有格位
-                const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[3] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
-                // const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
+                const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[2] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
+                const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
+                if (!slot) Logger.getInstance().warn("dragonbonesDisplay, get slot error: ", slotKey, slot);
                 const dat = dragonBonesTexture.get(name);
                 const loadArr = this.mLoadMap.get(slotKey);
                 // 原始资源

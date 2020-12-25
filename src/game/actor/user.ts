@@ -1,6 +1,6 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Game, delayTime } from "../game";
+import { Game, interval } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
@@ -181,8 +181,8 @@ export class User extends Player {
         const pos = this.getPosition();
         // pos.y += this.offsetY;
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
-        // TODO
-        const speed = this.mModel.speed * delayTime;
+        // TODO 待优化 使用update中的delta
+        const speed = this.mModel.speed * interval;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
