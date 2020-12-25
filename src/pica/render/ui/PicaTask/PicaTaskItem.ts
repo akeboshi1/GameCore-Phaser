@@ -1,5 +1,5 @@
 import { BBCodeText, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { DynamicImage, ThreeSliceButton } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ThreeSliceButton } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, UIHelper, Url } from "utils";
@@ -113,6 +113,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     private openExtend() {
         if (!this.mExtend) {
             this.mExtend = new TaskItemExtend(this.scene, this.width, 0, this.dpr, this.zoom);
+            this.mExtend.setHandler(this.send);
             this.add(this.mExtend);
         }
         this.mExtend.setItemData(this.questData);
@@ -160,6 +161,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     private line: Phaser.GameObjects.Image;
     private dpr: number = 0;
     private zoom: number = 1;
+    private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.width = width;
@@ -220,6 +222,10 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         }
     }
 
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+
     private createTaskCells(arr: TaskCell[], dataArr: op_client.ICountablePackageItem[], isTask: boolean = true) {
         for (const item of arr) {
             item.visible = false;
@@ -230,6 +236,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
                 item = arr[i];
             } else {
                 item = new TaskCell(this.scene, this.dpr, this.zoom);
+                item.on(ClickEvent.Tap, this.onTaskCellHandler, this);
                 arr.push(item);
                 this.add(item);
             }
@@ -252,15 +259,20 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         // }
         return text;
     }
+
+    private onTaskCellHandler(pointer, gameobject) {
+        if (this.send) this.send.runWith(["item", gameobject]);
+    }
 }
-class TaskCell extends Phaser.GameObjects.Container {
+class TaskCell extends ButtonEventDispatcher {
+    public itemData: op_client.ICountablePackageItem;
+    protected dpr: number;
+    protected zoom: number;
     private bg: Phaser.GameObjects.Image;
     private itemIcon: DynamicImage;
     private countTex: BBCodeText;
-    private dpr: number;
-    private zoom: number;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
-        super(scene);
+        super(scene, 0, 0);
         this.dpr = dpr;
         this.zoom = zoom;
         this.bg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_icon_bg" });
@@ -272,9 +284,11 @@ class TaskCell extends Phaser.GameObjects.Container {
             .setOrigin(0.5).setStroke("#000000", 2 * dpr);
         (<any>this.countTex).setPosition(this.width * 0.5, this.height * 0.5 - 2 * dpr);
         this.add([this.bg, this.itemIcon, this.countTex]);
+        this.enable = true;
     }
 
     public setCellData(itemData: op_client.ICountablePackageItem, isTask: boolean = true) {
+        this.itemData = itemData;
         const frame = isTask ? "task_icon_bg" : "task_reward_bg";
         this.bg.setTexture(UIAtlasName.uicommon, frame);
         const url = Url.getOsdRes(itemData.display.texturePath);
