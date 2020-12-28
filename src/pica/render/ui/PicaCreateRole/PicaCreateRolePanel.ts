@@ -73,7 +73,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         this.curSuitMap.set(key, value[0]);
       }
     });
-    this.onSkinHandler(undefined, this.skinCon.getAt(0));
+    this.onSkinHandler(undefined, this.skinCon.getAt(1));
     this.onSixHandler(undefined, this.manButton);
   }
 
