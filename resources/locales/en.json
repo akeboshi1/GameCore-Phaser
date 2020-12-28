@@ -352,5 +352,12 @@
     "hair": "Hair",
     "eye": "Eye",
     "mouth": "Mouth"
+  },
+  "furnicompose": {
+    "selecttips": "Must choose 5 furniture of same star class",
+    "onestar": " One Star",
+    "twostar": "Two Star",
+    "threestar": "Three Star",
+    "fourstar": "Four Star"
   }
 }

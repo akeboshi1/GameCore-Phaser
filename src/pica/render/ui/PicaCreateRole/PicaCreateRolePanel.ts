@@ -67,11 +67,14 @@ export class PicaCreateRolePanel extends PicaBasePanel {
       if (key !== "base" && key !== "costume") {
         const item = this.suitItemMap.get(key);
         item.setSuitDatas(value);
+      } else if (key === "base") {
+        this.curSuitMap.set(key, value[1]);
+      } else if (key === "costume") {
+        this.curSuitMap.set(key, value[0]);
       }
     });
     this.onSkinHandler(undefined, this.skinCon.getAt(0));
     this.onSixHandler(undefined, this.manButton);
-    this.displayAvatar();
   }
 
   init() {
@@ -201,8 +204,19 @@ export class PicaCreateRolePanel extends PicaBasePanel {
       this.manButton.isOn = false;
     }
     button.isOn = true;
+    this.setSixedSuitsData(this.mgender);
   }
 
+  private setSixedSuitsData(gender: op_def.Gender) {
+    const hairindexed = gender === op_def.Gender.Female ? 3 : 0;
+    const eyeIndexed = gender === op_def.Gender.Female ? 2 : 0;
+    const mouthIndexed = gender === op_def.Gender.Female ? 3 : 0;
+    this.suitItemMap.get("hair").setInexed(hairindexed);
+    this.suitItemMap.get("eye").setInexed(eyeIndexed);
+    this.suitItemMap.get("mouse").setInexed(mouthIndexed);
+    this.displayAvatar();
+
+  }
   private onBackHandler() {
     if (this.suitCon.parentContainer) {
       this.suitCon.visible = false;
@@ -225,7 +239,9 @@ export class PicaCreateRolePanel extends PicaBasePanel {
 
   private onSuitDataHandler(tag: string, data: any) {
     this.curSuitMap.set(tag, data);
-    this.displayAvatar();
+    if (this.suitCon.visible) {
+      this.displayAvatar();
+    }
   }
 
   private displayAvatar() {
@@ -280,6 +296,10 @@ class SelectSuitAvatarItem extends Phaser.GameObjects.Container {
 
   public setSuitDatas(datas: op_client.CountablePackageItem[]) {
     this.suitDatas = datas;
+  }
+
+  public setInexed(indexed: number) {
+    this.indexed = indexed;
     this.updateCurrentSuitData();
   }
 
@@ -300,13 +320,13 @@ class SelectSuitAvatarItem extends Phaser.GameObjects.Container {
   }
 
   private onLeftButtonHandler() {
-    if (this.indexed === 0) return;
     this.indexed--;
+    if (this.indexed === -1) this.indexed = this.suitDatas.length - 1;
     this.updateCurrentSuitData();
   }
   private onRightButtonHandler() {
-    if (this.indexed === this.suitDatas.length - 1) return;
     this.indexed++;
+    if (this.indexed === this.suitDatas.length) this.indexed = 0;
     this.updateCurrentSuitData();
   }
 

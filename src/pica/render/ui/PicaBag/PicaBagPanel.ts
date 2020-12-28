@@ -305,8 +305,8 @@ export class PicaBagPanel extends PicaBasePanel {
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
-    this.add([this.mBackground, this.mPropGridBg,this.mIconBg, this.mCloseBtn, this.moneyCon, nameBg, this.nameText, this.starImage,
-    this.moreButton, this.mDetailDisplay, this.mDetailBubble, this.mCategoryCon, this.useBtn]);
+    this.add([this.mBackground, this.mPropGridBg, this.mIconBg, this.mCloseBtn, this.moneyCon, this.mDetailDisplay, nameBg, this.nameText, this.starImage,
+    this.moreButton, this.mDetailBubble, this.mCategoryCon, this.useBtn]);
 
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
@@ -330,7 +330,7 @@ export class PicaBagPanel extends PicaBasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new ItemButton(scene, this.dpr, this.scale, false);
+          cellContainer = new ItemButton(scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, false);
         }
         cellContainer.setData({ item });
         cellContainer.setItemData(item);
@@ -362,7 +362,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const width = this.scaleWidth;
     const topCapW = 90 * this.dpr;
     const topCapH = 35 * this.dpr;
-    const topPosY = 22 * this.dpr;
+    const topPosY = 23 * this.dpr;
     this.topCheckBox = new CheckboxGroup();
     let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
     let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];

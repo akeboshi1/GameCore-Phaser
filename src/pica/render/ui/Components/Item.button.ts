@@ -13,11 +13,11 @@ export class ItemButton extends ButtonEventDispatcher {
     private itemIcon: DynamicImage;
     private countTex: Phaser.GameObjects.Text;
     private starImg: Phaser.GameObjects.Image;
-    constructor(scene: Phaser.Scene, dpr: number, zoom: number, enable: boolean) {
+    constructor(scene: Phaser.Scene, key: string, bg: string, dpr: number, zoom: number, enable: boolean) {
         super(scene, 0, 0);
         this.dpr = dpr;
         this.zoom = zoom;
-        this.bg = scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_icon_common_bg" });
+        this.bg = scene.make.image({ key, frame: bg });
         this.selectbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_icon_common_bg" });
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
