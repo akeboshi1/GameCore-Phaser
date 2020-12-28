@@ -4,10 +4,10 @@ import { EventType, ModuleName } from "structure";
 import { CutInMenu } from "./CutInMenu";
 
 export class CutInMenuMediator extends BasicMediator {
-    private cutInMenu: CutInMenu;
+    protected mModel: CutInMenu;
     constructor(game: Game) {
         super(ModuleName.CUTINMENU_NAME, game);
-        this.cutInMenu = new CutInMenu(game);
+        this.mModel = new CutInMenu(game);
     }
 
     show(param?: any) {
@@ -18,10 +18,10 @@ export class CutInMenuMediator extends BasicMediator {
         if (this.buttonType === "work") {
             this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         }
-        if (this.playerInfo) this.onUpdatePlayerInfo(this.playerInfo);
     }
 
     hide() {
+        super.hide();
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_rightButton", this.onRightButtonHandler, this);
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_openmed", this.openPanelMediator, this);
@@ -30,16 +30,9 @@ export class CutInMenuMediator extends BasicMediator {
         }
     }
 
-    isSceneUI() {
-        return true;
-    }
-
-    destroy() {
-        if (this.cutInMenu) {
-            this.cutInMenu.destroy();
-            this.cutInMenu = undefined;
-        }
-        super.destroy();
+    panelInit() {
+        super.panelInit();
+        if (this.playerInfo) this.onUpdatePlayerInfo(this.playerInfo);
     }
     get playerInfo() {
         const playerInfo = this.game.user.userData.playerProperty;
@@ -50,7 +43,7 @@ export class CutInMenuMediator extends BasicMediator {
             this.mView.setPopData(content.workChance.value);
     }
     private onRightButtonHandler(uiid: number, btnid: number) {
-        this.cutInMenu.reqRightButton(uiid, btnid);
+        this.mModel.reqRightButton(uiid, btnid);
     }
 
     private openPanelMediator(panel: string, data: any) {

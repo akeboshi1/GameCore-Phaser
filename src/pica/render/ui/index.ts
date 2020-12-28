@@ -69,7 +69,7 @@ export * from "./PicaCompose/PicaComposePanel";
 export * from "./PicaItemPopCard/PicaItemPopCardPanel";
 export * from "./PicaMessageBox/PicaMessageBoxPanel";
 export * from "./PicaElementStorage/PicaElementStoragePanel";
-export * from "./CutInMenu";
+export * from "./CutInMenu/CutInMenuPanel";
 export * from "./PicaTreasure/PicaTreasureOpenPanel";
 export * from "./PicaTreasure/PicaTreasurePanel";
 export * from "./PicaTreasure/PicaTreasurePreviewPanel";
