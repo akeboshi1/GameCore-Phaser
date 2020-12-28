@@ -86,3 +86,5 @@ export * from "./ui/PicaEffectMgr/PicaEffectMgr";
 export * from "./ui/PicaEffectMgr/PicaEffectMgrMediator";
 export * from "./ui/PicaElevator/PicaElevator";
 export * from "./ui/PicaElevator/PicaElevatorMediator";
+export * from "./ui/PicaFurnitureCompose/PicaFurnitureCompose";
+export * from "./ui/PicaFurnitureCompose/PicaFurnitureComposeMediator";

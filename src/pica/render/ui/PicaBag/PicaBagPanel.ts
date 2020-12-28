@@ -269,7 +269,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.nameText.setFontStyle("bold");
     this.starImage = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_big_1" });
     this.starImage.x = nameBg.x;
-    this.starImage.y = nameBg.y + nameBg.height * 0.5 + 10 * this.dpr;
+    this.starImage.y = nameBg.y + nameBg.height * 0.5 + 15 * this.dpr;
     this.moreButton = new Button(this.scene, UIAtlasName.uicommon, "online_more");
     this.moreButton.x = width - this.moreButton.width * 0.5 - 20 * this.dpr;
     this.moreButton.y = nameBg.y;

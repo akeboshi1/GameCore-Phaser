@@ -82,7 +82,7 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
     }
 
     private onUpdateHandler() {
-        if (this.mView) this.mView.queryRefreshPackage();
+        if (this.mView) this.mView.queryRefreshPackage(true);
     }
 
     private onRetComposeHandler(reward: op_client.ICountablePackageItem) {
@@ -93,15 +93,19 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
         this.mModel.queryFuriCompose(ids);
     }
 
-    private queryFuriPackageByStar(star: number) {
+    private queryFuriPackageByStar(obj: { type: number, update: boolean }) {
         const furibag = this.bag.furniBag;
         const list = furibag.list;
         const tempArr = [];
         for (const data of list) {
-            if (data.grade === star) {
+            if (data.grade === obj.type) {
                 tempArr.push(data);
             }
         }
-        this.mView.setGridProp(tempArr);
+        if (!obj.update) {
+            this.mView.setGridProp(tempArr);
+        } else {
+            this.mView.updateGridProp(tempArr);
+        }
     }
 }
