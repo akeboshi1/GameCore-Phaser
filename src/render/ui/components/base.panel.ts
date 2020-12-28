@@ -61,8 +61,8 @@ export class BasePanel extends Panel {
     }
 
     protected init() {
-        super.init();
         (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_UI, this);
+        super.init();
         this.setLinear(this.key);
         Logger.getInstance().log("init========", this.key);
         this.__exportProperty();

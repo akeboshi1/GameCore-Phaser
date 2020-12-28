@@ -4,6 +4,7 @@ import { UIAtlasName } from "picaRes";
 import { Font, Handler, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaTaskItem } from "./PicaTaskItem";
+import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 
 export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private gameScroller: GameScroller;
@@ -189,10 +190,11 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         this.gameScroller.Sort(true);
     }
     private onMaterialItemHandler(gameobj: any) {
-        this.itemTips.setVisible(true);
-        const data = gameobj.itemData;
-        this.itemTips.setItemData(data);
-        this.itemTips.setTipsPosition(gameobj, this, 10 * this.dpr);
+        // this.itemTips.setVisible(true);
+        // const data = gameobj.itemData;
+        // this.itemTips.setItemData(data);
+        // this.itemTips.setTipsPosition(gameobj, this, 10 * this.dpr);
+        PicaItemTipsPanel.Inst.showTips(gameobj,gameobj.itemData);
 
     }
 }
