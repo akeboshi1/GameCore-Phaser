@@ -63,7 +63,7 @@ export class CutInMenuMediator extends BasicMediator {
         this.hide();
     }
     private get buttonType() {
-        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
+        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData;
         const button = data.button[0];
         return button.text;
     }
