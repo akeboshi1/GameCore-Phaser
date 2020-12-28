@@ -1,12 +1,11 @@
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
-import { BackgroundScaleButton, BasePanel, CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, TextButton, ThreeSlicePath, UiManager } from "gamecoreRender";
-import { DetailDisplay } from "picaRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { BackgroundScaleButton, CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, TextButton, ThreeSlicePath, UiManager } from "gamecoreRender";
+import { DetailDisplay, ItemButton } from "picaRender";
+import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
 import { Coin, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-import { EvalSourceMapDevToolPlugin } from "webpack";
 export class PicaBagPanel extends PicaBasePanel {
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
@@ -18,6 +17,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: any;// op_def.IStrPair
   private mPropGrid: GameGridTable;
+  private mPropGridBg: Phaser.GameObjects.Graphics;
   private mCategoryScroll: GameScroller;
   private useBtn: NineSliceButton;
   private topBtns: TabButton[] = [];
@@ -26,6 +26,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private diamondvalue: ImageValue;
   private moneyAddBtn: Button;
   private nameText: Phaser.GameObjects.Text;
+  private starImage: Phaser.GameObjects.Image;
   private moreButton: Button;
   private moreButtonPanel: MoreButtonPanel;
 
@@ -51,7 +52,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mBackground.x = width * 0.5;
     this.mBackground.y = height * 0.5;
     this.mCategoryCon.setSize(width, 79 * this.dpr);
-    this.mCategoryCon.y = height - this.mPropGrid.height - this.mCategoryCon.height * 0.5 - 50 * this.dpr;
+    this.mCategoryCon.y = height - this.mPropGrid.height - this.mCategoryCon.height * 0.5 - 47 * this.dpr;
     this.mCategoryCon.x = width * 0.5;
     this.mDetailBubble.y = this.mCategoryCon.y - 10 * this.dpr - this.mDetailBubble.height;
     this.mCategoriesBar.y = 40 * this.dpr;
@@ -69,8 +70,12 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mDetailDisplay.y = (height - 296 * this.dpr - 60 * this.dpr) * 0.5 + 60 * this.dpr;
     this.mIconBg.x = this.mDetailDisplay.x;
     this.mIconBg.y = this.mDetailDisplay.y;
+    this.mPropGridBg.clear();
+    this.mPropGridBg.fillStyle(0x7DE5FE);
+    this.mPropGridBg.fillRect(0, 0, this.mPropGrid.width, this.mPropGrid.height + 10 * this.dpr);
+    this.mPropGridBg.y = height - this.mPropGrid.height - 4 * this.dpr;
     this.mPropGrid.x = width / 2 + 3 * this.dpr;
-    this.mPropGrid.y = height - this.mPropGrid.height * 0.5 - 3 * this.dpr;
+    this.mPropGrid.y = height - this.mPropGrid.height * 0.5;
     this.mPropGrid.layout();
     this.mPropGrid.resetMask();
     this.mCategoryScroll.refreshMask();
@@ -262,6 +267,9 @@ export class PicaBagPanel extends PicaBasePanel {
     nameBg.y = this.mCloseBtn.y + 40 * this.dpr;
     this.nameText = this.scene.make.text({ x: nameBg.x, y: nameBg.y, text: "", style: UIHelper.whiteStyle(this.dpr, 14) }).setOrigin(0.5);
     this.nameText.setFontStyle("bold");
+    this.starImage = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_big_1" });
+    this.starImage.x = nameBg.x;
+    this.starImage.y = nameBg.y + nameBg.height * 0.5 + 10 * this.dpr;
     this.moreButton = new Button(this.scene, UIAtlasName.uicommon, "online_more");
     this.moreButton.x = width - this.moreButton.width * 0.5 - 20 * this.dpr;
     this.moreButton.y = nameBg.y;
@@ -295,19 +303,21 @@ export class PicaBagPanel extends PicaBasePanel {
         this.onSelectSubCategoryHandler(gameobject);
       }
     });
+    this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
-    this.add([this.mBackground, this.mIconBg, this.mCloseBtn, this.moneyCon, nameBg, this.nameText,
+    this.add([this.mBackground, this.mPropGridBg,this.mIconBg, this.mCloseBtn, this.moneyCon, nameBg, this.nameText, this.starImage,
     this.moreButton, this.mDetailDisplay, this.mDetailBubble, this.mCategoryCon, this.useBtn]);
-    const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "grid_choose");
-    const capW = (propFrame.width) + this.dpr;
-    const capH = (propFrame.height) + this.dpr;
+
+    const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
+    const capW = (propFrame.width) + 9 * this.dpr;
+    const capH = (propFrame.height) + 9 * this.dpr;
     const tableConfig = {
       x: 0,
       y: 0,
       table: {
         width,
-        height: 241 * this.dpr,
-        columns: 4,
+        height: 231 * this.dpr,
+        columns: 3,
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
@@ -320,10 +330,10 @@ export class PicaBagPanel extends PicaBasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new Item(scene, 0, 0, UIAtlasName.uicommon, this.dpr, this.scale);
+          cellContainer = new ItemButton(scene, this.dpr, this.scale, false);
         }
         cellContainer.setData({ item });
-        cellContainer.setProp(item);
+        cellContainer.setItemData(item);
         if (item && this.isSelectedItemData(item)) {
           cellContainer.isSelect = true;
           this.mSelectedItem = cellContainer;
@@ -423,6 +433,11 @@ export class PicaBagPanel extends PicaBasePanel {
       this.mSelectedItem.isSelect = false;
     }
     this.nameText.text = data.name || data.shortName;
+    if (data.grade > 0) {
+      this.starImage.visible = true;
+      const starFrame = "bag_star_big_" + data.grade;
+      this.starImage.setFrame(starFrame);
+    } else this.starImage.visible = false;
     this.mSelectedItemData = data;
     this.mSelectedItem = cell;
     cell.isSelect = true;

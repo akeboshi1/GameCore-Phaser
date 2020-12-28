@@ -1,7 +1,7 @@
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, Button, BBCodeText } from "apowophaserui";
 import { BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
-import { DetailDisplay } from "../PicaMarket/DetailDisplay";
+import { DetailDisplay } from "../Components/detail.display";
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";

@@ -1,4 +1,4 @@
-import { DetailDisplay } from "./DetailDisplay";
+import { DetailDisplay } from "../Components/detail.display";
 import { NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { Render } from "gamecoreRender";
 import { NumberCounter } from "./NumberCounter";

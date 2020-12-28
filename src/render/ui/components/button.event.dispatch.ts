@@ -145,7 +145,7 @@ export class ButtonEventDispatcher extends BaseUI {
             this.mTween = undefined;
         }
         this.mTween = this.scene.tweens.add({
-            targets: this.list,
+            targets: this,
             duration: this.mDuration,
             ease: "Linear",
             props: {

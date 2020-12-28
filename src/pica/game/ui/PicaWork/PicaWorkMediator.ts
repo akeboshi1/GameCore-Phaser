@@ -3,11 +3,11 @@ import { PicaWork } from "./PicaWork";
 import { BasicMediator, Game, PlayerProperty, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
 export class PicaWorkMediator extends BasicMediator {
-    private picaWork: PicaWork;
+    protected mModel: PicaWork;
     private mPlayerInfo: PlayerProperty;
     constructor(game: Game) {
         super(ModuleName.PICAWORK_NAME, game);
-        this.picaWork = new PicaWork(game);
+        this.mModel = new PicaWork(game);
         this.mUIType = UIType.Scene;
     }
 
@@ -17,7 +17,7 @@ export class PicaWorkMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
         this.game.emitter.on(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
 
-        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_questlist", this.on_Work_LIST, this);
+        this.game.emitter.on(ModuleName.PICAWORK_NAME + "_retquestlist", this.on_Work_LIST, this);
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         this.game.emitter.on(ModuleName.PICAWORK_NAME + "_initialized", this.onViewInitComplete, this);
     }
@@ -28,20 +28,12 @@ export class PicaWorkMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questwork", this.query_WORK_ON_JOB, this);
         this.game.emitter.off(ModuleName.PICAWORK_NAME + "_hide", this.onHideView, this);
 
-        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_questlist", this.on_Work_LIST, this);
+        this.game.emitter.off(ModuleName.PICAWORK_NAME + "_retquestlist", this.on_Work_LIST, this);
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         this.game.emitter.off(ModuleName.PICAWORK_NAME + "_initialized", this.onViewInitComplete, this);
     }
 
-    isSceneUI() {
-        return true;
-    }
-
     destroy() {
-        if (this.picaWork) {
-            this.picaWork.destroy();
-            this.picaWork = undefined;
-        }
         this.mPlayerInfo = undefined;
         super.destroy();
     }
@@ -51,15 +43,14 @@ export class PicaWorkMediator extends BasicMediator {
         return this.mPlayerInfo;
     }
     private query_WORK_LIST() {
-        this.picaWork.query_JOB_LIST();
+        this.mModel.query_JOB_LIST();
     }
 
     private query_WORK_ON_JOB(id: string) {
-        this.picaWork.query_WORK_ON_JOB(id);
+        this.mModel.query_WORK_ON_JOB(id);
     }
 
     private on_Work_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
-        // this.mView.setWorkDataList(content);
         const questData = this.checkCanDoJob(content);
         this.mView.setWorkData(questData);
         this.onUpdatePlayerInfo(this.playerInfo);
@@ -67,7 +58,7 @@ export class PicaWorkMediator extends BasicMediator {
     private onUpdatePlayerInfo(content: PlayerProperty) {
         this.mPlayerInfo = content;
         if (this.mView)
-            this.mView.setProgressData(content.energy, content.workChance);
+            this.mView.setWorkChance(content.workChance.value);
     }
     private checkCanDoJob(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
         const jobs: op_client.IPKT_Quest[] = [];
@@ -91,11 +82,11 @@ export class PicaWorkMediator extends BasicMediator {
     }
     private onHideView() {
         const uimanager = this.game.uiManager;
-        uimanager.showMed("PicaChat");
+        uimanager.showMed(ModuleName.BOTTOM);
         this.destroy();
     }
     private onViewInitComplete() {
         const uimanager = this.game.uiManager;
-        uimanager.hideMed("PicHandheld");
+        uimanager.hideMed(ModuleName.BOTTOM);
     }
 }

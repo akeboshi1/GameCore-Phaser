@@ -83,6 +83,9 @@ export class Render extends RPCPeer implements GameMain {
             Logger.getInstance().log("heartBeatworker onReady in Render");
         });
     }
+    setKeyBoardHeight(height: number) {
+        throw new Error("Method not implemented.");
+    }
 
     get config(): ILauncherConfig {
         return this.mConfig;

@@ -16,31 +16,6 @@ export class CutInMenuPanel extends BasePanel {
         this.setSize(width, height);
     }
 
-    show(param?: any) {
-        this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
-        this.addListen();
-    }
-
-    addListen() {
-        if (!this.mInitialized) return;
-    }
-
-    removeListen() {
-        if (!this.mInitialized) return;
-    }
-
     preload() {
         this.addAtlas(this.key, "cutInmenu/cutInmenu.png", "cutInmenu/cutInmenu.json");
         super.preload();
@@ -57,20 +32,16 @@ export class CutInMenuPanel extends BasePanel {
         } else
             this.rightPopButton = new RightPopContainer(this.scene, width, this.key, this.dpr);
         const posx = width + this.rightPopButton.width * 0.5 - 15 * this.dpr;
-        const bounds = this.getActivityBounds();
-        if (bounds) {
-            this.rightPopButton.setPosition(posx, bounds.bottom + this.rightPopButton.height);
-        } else {
-            this.rightPopButton.setPosition(posx, height * 0.5);
-        }
+        this.rightPopButton.setPosition(posx, height * 0.5 + 20 * this.dpr);
         this.rightPopButton.setClickHandler(new Handler(this, this.onRightClickHandler));
         this.add(this.rightPopButton);
         this.resize(width, height);
         super.init();
         this.opneButton();
+    }
+    onShow() {
         this.setPopData(this.popData);
     }
-
     setPopData(data: any) {
         this.popData = data;
         if (!this.mInitialized) return;
@@ -91,25 +62,17 @@ export class CutInMenuPanel extends BasePanel {
     private onRightClickHandler() {
         const type = this.buttonType;
         if (type === "work") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", "PicWork");
+            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAWORK_NAME);
         } else if (type === "minecar") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", "MineCar");
+            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAMINECAR_NAME);
         }
     }
 
     private get buttonType() {
-        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData[0];
+        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData;
         const button = data.button[0];
         return button.text;
     }
-
-    private getActivityBounds() {
-        const mPanel = this.render.uiManager.getPanel(ModuleName.CUTINMENU_NAME);
-        let bounds: Phaser.Geom.Rectangle;
-        if (mPanel) bounds = mPanel.getBounds();
-        return bounds;
-    }
-
 }
 class RightPopContainer extends Phaser.GameObjects.Container {
     public isPop: boolean = false;
