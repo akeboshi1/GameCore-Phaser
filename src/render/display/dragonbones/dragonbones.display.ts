@@ -72,6 +72,9 @@ export enum AvatarPartType {
     WeapBarm = "barm_weap_#_$",
 }
 
+// 龙骨资源版本控制
+const DRAGONBONES_RES_VERSION: string = "001";
+
 /**
  * 龙骨显示对象
  */
@@ -149,7 +152,7 @@ export class DragonbonesDisplay extends DisplayObject {
             this.mCollisionArea = [[1, 1], [1, 1]];
             this.mOriginPoint = new Phaser.Geom.Point(1, 1);
             if (!this.displayInfo) return;
-            this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
+            this.dragonBonesName = "bones_human01_v" + DRAGONBONES_RES_VERSION; // this.mDisplayInfo.avatar.id;
         } else {
         }
     }

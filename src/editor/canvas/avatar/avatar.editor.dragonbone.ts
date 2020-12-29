@@ -4,8 +4,8 @@ import * as url from "url";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
-    private readonly DRAGONBONENAME = "bones_human01";
-    private readonly DRAGONBONENAME_HEAD = "bones_model_head";
+    private readonly DRAGONBONENAME = "bones_human01_v001";
+    private readonly DRAGONBONENAME_HEAD = "bones_model_head_v001";
     private readonly DRAGONBONEARMATURENAME = "Armature";
     private readonly BACKMAP = {
         ["head_hair"]: ["head_hair", "head_hair_back"],
