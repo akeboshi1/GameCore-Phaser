@@ -230,6 +230,9 @@ export class MatterObject implements IMatterObject {
             // render todo setVelocity
             return;
         }
+        x *= this.peer.scaleRatio;
+        y *= this.peer.scaleRatio;
+
         Body.setVelocity(this.body, Vector.create(x, y));
     }
 

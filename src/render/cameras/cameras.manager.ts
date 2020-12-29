@@ -105,8 +105,6 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public startFollow(target: any) {
-        return;
-        Logger.getInstance().log("target ===== startFollow");
         this.mTarget = target;
         if (this.mMain && target) {
             for (const camera of this.mCameras) {

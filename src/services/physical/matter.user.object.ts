@@ -148,7 +148,8 @@ export class MatterUserObject extends MatterPlayerObject {
         const prePos = (<any>this.body).positionPrev;
         const pos = this.body.position;
         const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
-        this.onCheckDirection(angle * (180 / Math.PI));
+        const dir = this.onCheckDirection(angle * (180 / Math.PI));
+        this.peer.mainPeer.setDirection(this.id, dir);
     }
 
     private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
