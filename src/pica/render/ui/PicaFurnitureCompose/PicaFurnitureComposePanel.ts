@@ -24,7 +24,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
   private starvalue: ImageValue;
   private furiAnimation: FuriComposeAnimation;
   private starCount: number;
-  private mSelectedItemData: op_client.CountablePackageItem[];
+  private mSelectedItemData: op_client.CountablePackageItem[] = [];
   private subCategoryType: number = 1;
   constructor(uiManager: UiManager) {
     super(uiManager);
@@ -53,8 +53,8 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.mCategoriesBar.fillStyle(0x824CD4);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
 
-    this.composeBtn.x = width - this.composeBtn.width / 2 - 10 * this.dpr;
-    this.composeBtn.y = this.mCategoryCon.y - this.composeBtn.height / 2;
+    this.composeBtn.x = width - this.composeBtn.width / 2 - 20 * this.dpr;
+    this.composeBtn.y = this.mCategoryCon.y - this.composeBtn.height / 2 + 35 * this.dpr;
 
     this.mPropGridBg.clear();
     this.mPropGridBg.fillStyle(0xCE7AF3);
@@ -83,26 +83,35 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
       item.setData("item", subcategorys[i]);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);
+      item.setChangeColor("#FFE63C");
       items[i] = item;
-      item.setFontSize(18 * this.dpr);
+      item.setFontSize(17 * this.dpr);
       item.setFontStyle("bold");
     }
+    this.mCategoryScroll.setAlign(1);
     this.mCategoryScroll.Sort();
     this.mCategoryScroll.refreshMask();
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
   }
 
   public setGridProp(props: any[]) {// op_client.ICountablePackageItem
-    props = !props ? [] : props;
-    this.mPropGrid.setItems(props);
+    this.setProps(props);
     this.mPropGrid.setT(0);
     this.updateSelectItemDatas(props);
   }
 
   public updateGridProp(props: any[]) {
-    props = !props ? [] : props;
-    this.mPropGrid.setItems(props);
+    this.setProps(props);
     this.updateSelectItemDatas(props);
+  }
+
+  public setProps(props: any[]) {
+    props = !props ? [] : props;
+    const len = props.length;
+    if (len < 24) {
+      props = props.concat(new Array(24 - len));
+    }
+    this.mPropGrid.setItems(props);
   }
 
   public setStarData(value: number) {
@@ -171,7 +180,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
   protected init() {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
-    this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
+    this.mBackground = new CommonBackground(this.scene, 0, 0, width, height, UIAtlasName.effectcommon, "synthetic_bg", 0xc97af3);
     this.topBackground = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_bg_stripe" });
     this.mCategoryCon = this.scene.make.container(undefined, false);
     this.mCategoryCon.setSize(width, 295 * this.dpr);
@@ -186,7 +195,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.titleTex.x = this.mCloseBtn.x + this.mCloseBtn.width * 0.5 + 10 * this.dpr;
     this.titleTex.y = this.mCloseBtn.y;
     this.furiAnimation = new FuriComposeAnimation(this.scene, this.dpr, this.scale);
-    const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
+    const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
       left: 17 * this.dpr,
       top: 0 * this.dpr,
       right: 17 * this.dpr,
@@ -206,7 +215,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
 
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
-    this.composeBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.use"), "#996600");
+    this.composeBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("compose.title"), "#996600");
 
     this.mCategoryScroll = new GameScroller(this.scene, {
       x: 0,
@@ -216,7 +225,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
       zoom: this.scale,
       orientation: 1,
       dpr: this.dpr,
-      space: 10 * this.dpr,
+      space: 28 * this.dpr,
       selfevent: true,
       cellupCallBack: (gameobject) => {
         this.onSelectSubCategoryHandler(gameobject);
@@ -297,6 +306,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
       this.mPreCategoryBtn = gameobject;
     }
     this.mPropGrid.setT(0);
+    this.furiAnimation.clearItemDatas();
   }
 
   private onCloseHandler() {
@@ -311,7 +321,8 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: ItemButton) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if (item && this.mSelectedItemData === item || this.mSelectedItemData && !item) return;
+    if (!item) return;
+    this.furiAnimation.setItemData(item, this.subCategoryType);
 
   }
 
@@ -334,12 +345,14 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
   private bgring5: Phaser.GameObjects.Image;
   private bgring6: Phaser.GameObjects.Image;
   private bgringstar: Phaser.GameObjects.Image;
+  private bglightstar: Phaser.GameObjects.Image;
   private spendStarTex: BBCodeText;
-  private starList: any[] = [];
+  private starImgList: any[] = [];
   private itemList: any[] = [];
   private indexeds: number[] = [0, 0, 0, 0, 0];
   private canPlay: boolean = false;
   private starType: number;
+  private timerID: any;
   constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
     super(scene);
     this.dpr = dpr;
@@ -350,21 +363,36 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
 
   public setItemData(data: op_client.CountablePackageItem, starType: number) {
     this.starType = starType;
+    let indexed: number = -1;
+    let haveSameCount: number = 0;
+    let havedCount: number = 0;
     for (let i = 0; i < this.indexeds.length; i++) {
       const value = this.indexeds[i];
       if (value === 0) {
+        if (indexed === -1) indexed = i;
+      } else {
         const item = this.itemList[i];
-        item.setItemData(data);
-        this.starList[i] = true;
-        this.playAnimation();
+        if (item.itemData.indexId === data.indexId) {
+          haveSameCount++;
+        }
+        havedCount++;
       }
     }
-    this.spendStarTex.text = starType + "";
+    if (indexed !== -1 && data.count > haveSameCount) {
+      this.indexeds[indexed] = 1;
+      const item = this.itemList[indexed];
+      item.setItemData(data);
+      this.starImgList[indexed].visible = true;
+      this.playAnimation();
+      this.spendStarTex.text = i18n.t("furnicompose.spendstar", { name: starType });
+    }
+    this.displayStarImg();
   }
 
   public removeItemData(indexed: number) {
     this.indexeds[indexed] = 0;
-    this.starList[indexed] = false;
+    this.itemList[indexed].setItemData(undefined);
+    this.displayStarImg();
     let canPlay = false;
     for (const value of this.indexeds) {
       if (value === 1) canPlay = true;
@@ -376,14 +404,26 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
     }
   }
 
-  update() {
-    if (this.canPlay) {
-      this.bgring1.rotation += 0.01;
-      this.bgring2.rotation += 0.09;
-      this.bgring3.rotation += 0.08;
+  public clearItemDatas() {
+    for (let i = 0; i < this.indexeds.length; i++) {
+      this.indexeds[i] = 0;
+      this.itemList[i].setItemData(undefined);
     }
+    this.displayStarImg();
+    this.stopAnimation();
   }
 
+  update() {
+    if (this.canPlay) {
+      this.bgring1.rotation += 0.04;
+      this.bgring2.rotation -= 0.015;
+      this.bgring3.rotation += 0.02;
+    }
+  }
+  destroy() {
+    super.destroy();
+    this.stopAnimation();
+  }
   protected init() {
     this.bgring1 = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_ring_1" });
     this.bgring2 = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_ring_2" });
@@ -391,28 +431,34 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
     this.bgring4 = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_ring_4" });
     this.bgring5 = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_ring_5" });
     this.bgring6 = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_ring_6" });
-    this.bgringstar = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_star_illume_5" });
+    this.bgringstar = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_star_default" });
+    this.bglightstar = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_star_illume_5" });
+    this.bglightstar.y = 3 * this.dpr;
     this.spendStarTex = new BBCodeText(this.scene, 0, this.bgring1.height * 0.5 + 15 * this.dpr, "", UIHelper.whiteStyle(this.dpr, 11)).setOrigin(0.5);
-    this.add([this.bgring1, this.bgring2, this.bgring3, this.bgring4, this.bgring5, this.bgring6, this.spendStarTex]);
+    this.add([this.bgring1, this.bgring2, this.bgring3, this.bgring4, this.bgring5, this.bgring6, this.bgringstar, this.bglightstar, this.spendStarTex]);
     this.createStarImg();
     this.createItem();
+    this.bglightstar.visible = false;
   }
 
   protected createStarImg() {
-    const angle = Math.PI * 2 / 5;
+    const angle = Math.PI * 2 / 5 - 0.0096;
     for (let i = 0; i < 5; i++) {
       const star = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_star_illume_1" });
-      star.rotation -= angle * i;
-      this.starList.push(star);
+      star.rotation = - angle * i + 0.0005;
+      this.starImgList.push(star);
+      star.visible = false;
+      star.y = 3 * this.dpr;
+      star.x = -2 * this.dpr;
     }
-    this.add(this.starList);
+    this.add(this.starImgList);
   }
   protected createItem() {
-    const angle = -Math.PI / 2 - (Math.PI * 2 / 5);
-    const radiu = 100 * this.dpr;
+    const angle = 3 * Math.PI / 2 - (Math.PI * 2 / 5);
+    const radiu = 108 * this.dpr;
     for (let i = 0; i < 5; i++) {
       const item = new FuriComposeItem(this.scene, this.dpr, this.zoom);
-      const tempangle = angle + (Math.PI * 2 / 5) * i;
+      const tempangle = angle - (Math.PI * 2 / 5) * i;
       item.y = Math.sin(tempangle) * radiu;
       item.x = Math.cos(tempangle) * radiu;
       this.itemList.push(item);
@@ -421,8 +467,33 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
     this.add(this.itemList);
   }
 
+  protected displayStarImg() {
+    let havedCount: number = 0;
+    for (let i = 0; i < this.indexeds.length; i++) {
+      const value = this.indexeds[i];
+      this.starImgList[i].visible = value === 0 ? false : true;
+      if (value === 0) {
+        this.starImgList[i].visible = false;
+      } else {
+        this.starImgList[i].visible = true;
+        havedCount++;
+      }
+    }
+    if (havedCount === 5) {
+      this.bglightstar.visible = true;
+      for (const starimg of this.starImgList) {
+        starimg.visible = false;
+      }
+    } else {
+      this.bglightstar.visible = false;
+    }
+  }
+
   protected playAnimation() {
     this.canPlay = true;
+    if (!this.timerID) {
+      this.timerID = setInterval(this.update.bind(this), 20);
+    }
   }
 
   protected stopAnimation() {
@@ -430,6 +501,10 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
     this.bgring1.rotation = 0;
     this.bgring2.rotation = 0;
     this.bgring3.rotation = 0;
+    if (this.timerID) {
+      this.timerID = clearInterval(this.timerID);
+      this.timerID = undefined;
+    }
   }
 
   private onItemHandler(pointer, gameobject) {
@@ -448,19 +523,19 @@ class FuriComposeItem extends ButtonEventDispatcher {
     this.dpr = dpr;
     this.zoom = zoom;
     this.init();
+    this.setSize(this.bg.width, this.bg.height);
+    this.enable = true;
   }
   public setItemData(data: op_client.CountablePackageItem) {
     this.itemData = data;
+    this.lightbg.alpha = 0;
+    this.icon.alpha = 0;
     if (!data) {
-      this.bg.setFrame("synthetic_default");
       this.icon.visible = false;
     } else {
-      this.bg.setFrame("synthetic_Light");
       const url = Url.getOsdRes(data.display.texturePath);
       this.icon.load(url);
       this.icon.visible = true;
-      this.lightbg.alpha = 0;
-      this.icon.alpha = 0;
       this.playAlphaAni([this.icon, this.lightbg]);
     }
   }

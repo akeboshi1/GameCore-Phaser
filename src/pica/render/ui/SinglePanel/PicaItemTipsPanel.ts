@@ -1,5 +1,5 @@
 import { UIAtlasName } from "picaRes";
-import { ItemInfoTips, UiManager } from "gamecoreRender";
+import { ItemInfoTips, MainUIScene, UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaSingleManager } from "./PicaSingleManager";
 import { op_client, op_pkt_def } from "pixelpai_proto";
@@ -17,12 +17,17 @@ export class PicaItemTipsPanel extends PicaBasePanel {
         super(uimgr);
         this.atlasNames = [UIAtlasName.uicommon];
         this.key = ModuleName.PICAITEMTIPSPANEL_NAME;
+        this.uiLayer = MainUIScene.LAYER_TOOLTIPS;
     }
     public showTips(gameobj: any, data: op_client.ICountablePackageItem) {
         if (!this.mInitialized) this.show({ gameobj, data });
         else this.displayTips(gameobj, data);
     }
 
+    public destroy() {
+        super.destroy();
+        PicaItemTipsPanel.mInstance = undefined;
+    }
     protected onShow() {
         if (!this.mShowData) return;
         const obj = this.mShowData;

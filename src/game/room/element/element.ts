@@ -64,6 +64,8 @@ export interface IElement {
     removeMount(ele: IElement, targetPos?: IPos): this;
 
     getInteractivePositionList(): IPos[];
+
+    getProjectionSize(): IPos;
 }
 export interface MoveData {
     destPos?: LogicPos;

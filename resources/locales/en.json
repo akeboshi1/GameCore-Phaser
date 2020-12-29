@@ -358,6 +358,7 @@
     "onestar": " One Star",
     "twostar": "Two Star",
     "threestar": "Three Star",
-    "fourstar": "Four Star"
+    "fourstar": "Four Star",
+    "spendstar": "Need to consume [color=#FFDE29]{{name}}[/color] picard star"
   }
 }

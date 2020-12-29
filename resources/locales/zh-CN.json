@@ -361,6 +361,7 @@
     "onestar": "一星",
     "twostar": "二星",
     "threestar": "三星",
-    "fourstar": "四星"
+    "fourstar": "四星",
+    "spendstar": "需要消耗[color=#FFDE29]{{name}}[/color]个皮卡星"
   }
 }
