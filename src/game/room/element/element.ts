@@ -787,6 +787,9 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async createDisplay(): Promise<any> {
+        if (this.mCreatedDisplay) return;
+        super.createDisplay();
+
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }
@@ -840,7 +843,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async addDisplay(): Promise<any> {
-        await this.createDisplay();
+        await super.addDisplay();
         let depth = 0;
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;

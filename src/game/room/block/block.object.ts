@@ -12,6 +12,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     protected mBlockable: boolean = true;
     protected mModel: ISprite;
     protected mInputEnable: InputEnable;
+    protected mCreatedDisplay: boolean = false;
     constructor(room: IRoomService) {
         super(room);
         this.isUsed = true;
@@ -109,9 +110,15 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this.isUsed = false;
     }
 
-    protected addDisplay(): Promise<any> { return Promise.resolve(); }
+    protected addDisplay(): Promise<any> { return this.createDisplay(); }
+
+    protected createDisplay(): Promise<any> {
+        this.mCreatedDisplay = true;
+        return Promise.resolve();
+    }
 
     protected removeDisplay(): Promise<any> {
+        this.mCreatedDisplay = false;
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
