@@ -359,6 +359,7 @@
     "twostar": "Two Star",
     "threestar": "Three Star",
     "fourstar": "Four Star",
-    "spendstar": "Need to consume [color=#FFDE29][b]{{name}}[/b][/color] picard star"
+    "spendstar": "Need to consume [color=#FFDE29][b]{{name}}[/b][/color] picard star",
+    "starpicatips": "There are not enough starpicas"
   }
 }

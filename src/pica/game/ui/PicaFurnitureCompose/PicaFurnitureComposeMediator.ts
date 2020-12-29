@@ -54,7 +54,10 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
 
     protected panelInit() {
         if (this.panelInit) {
-            if (this.mView) this.mView.setCategories();
+            if (this.mView) {
+                this.mView.setCategories();
+                this.mView.setStarData(this.userData.playerProperty.picaStar);
+            }
         }
     }
 
@@ -69,12 +72,14 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
         if (!this.userData) return;
         this.game.emitter.on(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.on(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
+        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
     }
 
     private removeLisenter() {
         if (!this.userData) return;
         this.game.emitter.off(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.off(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
+        this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
     }
 
     private onSyncFinishHandler() {
@@ -83,6 +88,11 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
 
     private onUpdateHandler() {
         if (this.mView) this.mView.queryRefreshPackage(true);
+    }
+    private onUpdatePlayerInfoHandler() {
+        if (this.mView) {
+            this.mView.setStarData(this.userData.playerProperty.picaStar);
+        }
     }
 
     private onRetComposeHandler(reward: op_client.ICountablePackageItem) {
@@ -98,7 +108,7 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
         const list = furibag.list;
         const tempArr = [];
         for (const data of list) {
-            if (data.grade === obj.type) {
+            if (data.grade === obj.type && data.rarity === 1) {
                 tempArr.push(data);
             }
         }

@@ -7,8 +7,7 @@ import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 export class PicaFurnitureComposePanel extends PicaBasePanel {
-  private mCloseBtn: Button;
-  private titleTex: Phaser.GameObjects.Text;
+  private mCloseBtn: ButtonEventDispatcher;
   private mBackground: CommonBackground;
   private topBackground: Phaser.GameObjects.Image;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
@@ -39,10 +38,12 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.mBackground.y = height * 0.5;
     this.topBackground.x = width * 0.5;
     this.topBackground.y = this.topBackground.height * 0.5;
+    const categoryConHeight = 79 * this.dpr;
+    const topHeight = height - this.mPropGrid.height - categoryConHeight * 0.5 - 47 * this.dpr;
     this.furiAnimation.x = width * 0.5;
-    this.furiAnimation.y = this.furiAnimation.height * 0.5 + 40 * this.dpr;
+    this.furiAnimation.y = topHeight * 0.5 + 7 * this.dpr;
     this.mCategoryCon.setSize(width, 79 * this.dpr);
-    this.mCategoryCon.y = height - this.mPropGrid.height - this.mCategoryCon.height * 0.5 - 47 * this.dpr;
+    this.mCategoryCon.y = topHeight;
     this.mCategoryCon.x = width * 0.5;
     this.mCategoriesBar.y = 40 * this.dpr;
     this.mCategoriesBar.x = -width * 0.5;
@@ -178,13 +179,17 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.mCategoryCon.y = height - this.mCategoryCon.height;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 35 * this.dpr);
-    this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 100 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
-    this.titleTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
-    this.titleTex.text = i18n.t("compose.title");
-    this.titleTex.x = this.mCloseBtn.x + this.mCloseBtn.width * 0.5 + 10 * this.dpr;
-    this.titleTex.y = this.mCloseBtn.y;
+    this.mCloseBtn = new ButtonEventDispatcher(this.scene, 0, 0);
+    this.mCloseBtn.setSize(100 * this.dpr, 40 * this.dpr);
+    this.mCloseBtn.enable = true;
+    this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
+    this.mCloseBtn.y = 35 * this.dpr;
+    const closeimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
+    closeimg.x = -this.mCloseBtn.width * 0.5 + closeimg.width * 0.5 + 10 * this.dpr;
+    const titleTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
+    titleTex.text = i18n.t("compose.title");
+    titleTex.x = closeimg.x + closeimg.width * 0.5 + 10 * this.dpr;
+    this.mCloseBtn.add([closeimg, titleTex]);
     this.furiAnimation = new FuriComposeAnimation(this.scene, this.dpr, this.scale);
     this.furiAnimation.setHandler(new Handler(this, this.onFuriComposeAnimationHandler));
     const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
@@ -225,7 +230,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
-    this.add([this.mBackground, this.topBackground, this.mPropGridBg, this.mCloseBtn, this.titleTex, this.furiAnimation, this.starCountCon, this.mCategoryCon, this.composeBtn]);
+    this.add([this.mBackground, this.topBackground, this.mPropGridBg, this.mCloseBtn, this.furiAnimation, this.starCountCon, this.mCategoryCon, this.composeBtn]);
 
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
@@ -319,6 +324,14 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
 
   private onComposeBtnHandler() {
     if (this.mSelectedItemData && this.mSelectedItemData.length === 5) {
+      if (this.starCount < this.subCategoryType) {
+        const data = {
+          text: [{ text: i18n.t("furnicompose.starpicatips"), node: undefined }]
+        };
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+        return;
+      }
+
       const ids = [];
       for (const data of this.mSelectedItemData) {
         ids.push(data.id);

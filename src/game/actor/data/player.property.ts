@@ -4,6 +4,7 @@ export class PlayerProperty {
     public playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     public nickname: string;
     public cid: string;
+    public picaStar: number;
     public coin: op_pkt_def.IPKT_Property;
     public diamond: op_pkt_def.IPKT_Property;
     public level: op_pkt_def.IPKT_Property;
@@ -109,6 +110,7 @@ export class PlayerProperty {
         this.handheld = this.playerInfo.handheld;
         this.command = this.playerInfo.command;
         this.nickname = this.playerInfo.nickname;
+        this.picaStar = this.playerInfo.picaStar;
         this.propertiesMap = new Map<string, op_pkt_def.IPKT_Property>();
         for (const proper of this.properties) {
             if (!proper.hasOwnProperty("id")) {
