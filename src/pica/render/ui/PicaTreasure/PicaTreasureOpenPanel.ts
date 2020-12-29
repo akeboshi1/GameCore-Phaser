@@ -283,6 +283,7 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
     }
 
     setRewardDatas(datas: any[]) {
+        if (!datas) return;
         const len = datas.length;
         for (let i = 0; i < len; i++) {
             const prop = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.zoom, true);

@@ -61,6 +61,27 @@ export class BasePanel extends Panel {
         this.exportListeners.push(f);
     }
 
+    protected preload() {
+        this.mPreLoad = true;
+        if (!this.scene) {
+            return;
+        }
+        let index = 0;
+        if (this.mResources) {
+            this.mResources.forEach((resource, key) => {
+                if (!this.scene.textures.exists(key)) {
+                    index++;
+                    this.addResources(key, resource);
+                }
+            }, this);
+        }
+        if (index > 0) {
+            this.startLoad();
+        } else {
+            this.init();
+        }
+    }
+
     protected init() {
         (<MainUIScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
         super.init();
@@ -79,12 +100,12 @@ export class BasePanel extends Panel {
     }
 
     protected addResources(key: string, resource: any) {
-        super.addResources(key, resource);
         if (resource.type) {
             if (this.scene.load[resource.type]) {
                 this.scene.load[resource.type](key, Url.getUIRes(resource.dpr, resource.texture), Url.getUIRes(resource.dpr, resource.data));
             }
         }
+        super.addResources(key, resource);
     }
 
     protected get scaleWidth() {
