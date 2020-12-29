@@ -15,6 +15,7 @@ export class BasePanel extends Panel {
     protected mReloadTimes: number = 0;
     protected render: Render;
     protected key: string = "";
+    protected uiLayer: string = MainUIScene.LAYER_UI;
     private exported: boolean = false;
     private exportListeners: Function[] = [];
     constructor(scene: Phaser.Scene, render: Render) {
@@ -61,7 +62,7 @@ export class BasePanel extends Panel {
     }
 
     protected init() {
-        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_UI, this);
+        (<MainUIScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
         super.init();
         this.setLinear(this.key);
         Logger.getInstance().log("init========", this.key);

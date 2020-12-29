@@ -210,7 +210,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
   private setSixedSuitsData(gender: op_def.Gender) {
     const hairindexed = gender === op_def.Gender.Female ? 3 : 0;
     const eyeIndexed = gender === op_def.Gender.Female ? 2 : 0;
-    const mouthIndexed = gender === op_def.Gender.Female ? 3 : 0;
+    const mouthIndexed = gender === op_def.Gender.Female ? 3 : 1;
     this.suitItemMap.get("hair").setInexed(hairindexed);
     this.suitItemMap.get("eye").setInexed(eyeIndexed);
     this.suitItemMap.get("mouse").setInexed(mouthIndexed);
