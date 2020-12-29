@@ -2,7 +2,7 @@ import * as copy from "copy-text-to-clipboard";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { MessageType, ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n } from "utils";
-import { DetailDisplay } from "../PicaMarket/DetailDisplay";
+import { DetailDisplay } from "../Components/detail.display";
 
 export class PicaItemPopCardPanel extends BasePanel {
   private mCardContainer: Phaser.GameObjects.Container;

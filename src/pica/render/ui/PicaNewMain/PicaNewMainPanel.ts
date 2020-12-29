@@ -3,7 +3,7 @@ import { UIAtlasName } from "picaRes";
 import { op_pkt_def, op_def } from "pixelpai_proto";
 import { UiManager } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";
-import { Handler} from "utils";
+import { Handler } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";
@@ -156,7 +156,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         } else if (tag === "indent") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPARTYLIST_NAME);
         } else if (tag === "recharge") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICATASK_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAFURNITURECOMPOSE_NAME);
         } else if (tag === "email") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAEFFECTMGR_NAME);
         }

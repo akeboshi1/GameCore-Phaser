@@ -1,4 +1,4 @@
-import { Logger, ResUtils } from "utils";
+import { Logger, ResUtils, Url } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "../../render";
@@ -255,7 +255,7 @@ export class DragonbonesDisplay extends DisplayObject {
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.allComplete();
         } else {
-            const res = "./resources/dragonbones";
+            const res = `${Url.RES_PATH}/dragonbones`;
             const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
             const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
             const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;

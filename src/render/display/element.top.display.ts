@@ -1,5 +1,4 @@
 import { Font, Url } from "utils";
-import { DisplayObject } from "./display.object";
 import { PlayScene } from "../scenes/play.scene";
 import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig } from "structure";
