@@ -127,6 +127,7 @@ export class FramesDisplay extends DisplayObject {
             const stageContainer = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
             if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
+        super.play(animation, field, times);
     }
 
     public playEffect() {
