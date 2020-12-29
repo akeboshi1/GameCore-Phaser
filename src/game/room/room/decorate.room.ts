@@ -13,11 +13,12 @@ import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { IScenery, LoadState, ModuleName, SceneName } from "structure";
 import { IRoomService } from "./room";
-import { ISprite, Sprite } from "../display/sprite/sprite";
+import { ISprite } from "structure";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { DecorateTerrainManager } from "../terrain/decorate.terrain.manager";
 import { DecorateElementManager } from "../element/decorate.element.manager";
-import { SpawnPoint } from "../display/sprite/spawn.point";
+import { SpawnPoint } from "../display/spawn.point";
+import { Sprite } from "../display/sprite/sprite";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -330,9 +331,11 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         const value = map[x][y];
         if (value === 0) {
             this.mMap[x][y] = false;
+            this.game.physicalPeer.setWalkableAt(y, x, false);
             // this.mAstar.setWalkableAt(y, x, false);
         } else {
             this.mMap[x][y] = val;
+            this.game.physicalPeer.setWalkableAt(y, x, val);
             // this.mAstar.setWalkableAt(y, x, val);
         }
     }
@@ -348,7 +351,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return ele;
     }
 
-    public findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[] {
+    public async findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): Promise<IPos[]> {
         return [];
     }
 
@@ -491,6 +494,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             this.mSelectorElement.destroy();
             this.mSelectorElement = undefined;
             if (sprite) {
+                // this.game.physicalPeer.addToMap(sprite.id);
                 this.mElementManager.addToMap(sprite);
             }
         }

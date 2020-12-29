@@ -2,7 +2,7 @@ import { op_def } from "pixelpai_proto";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { IElementManager } from "../element/element.manager";
-import { ISprite } from "../display/sprite/sprite";
+import { ISprite } from "structure";
 import { IPos, LogicPos } from "../../../utils/logic.pos";
 import { Element, IElement, MovePath } from "../element/element";
 import { PlayerState } from "structure";
@@ -14,7 +14,7 @@ export class Player extends Element implements IElement {
         super(sprite, mElementManager);
     }
 
-    setModel(val: ISprite): Promise<any> {
+    async setModel(val: ISprite): Promise<any> {
         return super.setModel(val);
     }
 
@@ -133,31 +133,30 @@ export class Player extends Element implements IElement {
         }
 
     }
-    protected checkDirection() {
-        if (!this.body) {
-            return;
-        }
-        const prePos = (<any>this.body).positionPrev;
-        const pos = this.body.position;
-        const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
-        this.onCheckDirection(angle * (180 / Math.PI));
-    }
+    // protected async checkDirection() {
+    //     const prePos = await this.roomService.game.peer.physicalPeer.positionPrev(this.guid);
+    //     // (<any>this.body).positionPrev;
+    //     const pos = await this.roomService.game.peer.physicalPeer.position(this.guid);
+    //     // this.body.position;
+    //     const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
+    //     this.onCheckDirection(angle * (180 / Math.PI));
+    // }
 
-    protected onCheckDirection(params: any): number {
-        if (typeof params !== "number") {
-            return;
-        }
-        // 重叠
-        if (params > 90) {
-            this.setDirection(3);
-        } else if (params >= 0) {
-            this.setDirection(5);
-        } else if (params >= -90) {
-            this.setDirection(7);
-        } else {
-            this.setDirection(1);
-        }
-    }
+    // protected onCheckDirection(params: any): number {
+    //     if (typeof params !== "number") {
+    //         return;
+    //     }
+    //     // 重叠
+    //     if (params > 90) {
+    //         this.setDirection(3);
+    //     } else if (params >= 0) {
+    //         this.setDirection(5);
+    //     } else if (params >= -90) {
+    //         this.setDirection(7);
+    //     } else {
+    //         this.setDirection(1);
+    //     }
+    // }
 
     // protected onMoveStart() {
     //     this.changeState(PlayerState.WALK);
@@ -229,9 +228,10 @@ export class Player extends Element implements IElement {
     }
 
     protected addBody() {
-        this._sensor = true;
-        this._offsetOrigin.y = 0;
-        this.setBody();
+        // this._sensor = true;
+        // this._offsetOrigin.y = 0;
+        // super.addBody();
+        // this.setBody();
     }
 
     private mCheckStateHandle(val: string): boolean {

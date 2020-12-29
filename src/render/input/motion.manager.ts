@@ -1,7 +1,7 @@
 import { Render } from "gamecoreRender";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes";
-import { LogicPos } from "utils";
+import { Logger, LogicPos } from "utils";
 export class MotionManager {
     public enable: boolean;
     private scaleRatio: number;
@@ -47,7 +47,6 @@ export class MotionManager {
             return;
         }
         this.curtime = 0;
-        // this.dirty = false;
         const pointer = this.scene.input.activePointer;
         if (pointer.camera) {
             if (pointer.camera.scene && pointer.camera.scene.sys.settings.key === MainUIScene.name) {
@@ -63,6 +62,7 @@ export class MotionManager {
         const tmpY = pointer.worldY / this.scaleRatio - y;
         const position = this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
         this.start(position.x / this.scaleRatio, position.y / this.scaleRatio);
+        Logger.getInstance().log(position.x / this.scaleRatio, position.y / this.scaleRatio);
     }
 
     setScene(scene: Phaser.Scene) {
@@ -84,20 +84,22 @@ export class MotionManager {
         //     return;
         // }
         // this.render.user.moveMotion(worldX, worldY, id);
-        this.render.mainPeer.moveMotion(worldX, worldY, id);
+        // this.render.mainPeer.moveMotion(worldX, worldY, id);
+        this.render.physicalPeer.moveMotion(worldX, worldY, id);
     }
 
-    private movePath(x: number, y: number, targets: {}, id?: number) {
+    private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
         // const user = this.render.user;
         // if (!user) {
-        //     return;
+        //     return;'
         // }
         // this.render.user.findPath(worldX, worldY, id);
-        this.render.mainPeer.findPath(x, y, targets, id);
+        const startPos = this.render.displayManager.user.getPosition();
+        this.render.physicalPeer.findPath(startPos, targets, id);
     }
 
     private stop() {
-        this.render.mainPeer.stopMove();
+        this.render.physicalPeer.stopMove();
         // this.render.user.stopMove();
     }
 
@@ -105,11 +107,14 @@ export class MotionManager {
         this.dirty = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
+            Logger.getInstance().log("stop======");
             this.stop();
         } else {
+            Logger.getInstance().log("up=====", pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
             if (this.gameObject) {
                 const id = this.gameObject.getData("id");
                 if (id) {
+                    Logger.getInstance().log("up=====gameobject", pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
                     const ele = this.render.displayManager.getDisplay(id);
                     if (ele.nodeType === NodeType.CharacterNodeType) {
                         // TODO
@@ -123,10 +128,11 @@ export class MotionManager {
                         const { x, y } = ele;
                         targets = [{ x, y }];
                     }
-                    this.movePath(pointer.worldX, pointer.worldY, targets, id);
+                    this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
                 }
             } else {
-                this.movePath(pointer.worldX, pointer.worldY, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+                Logger.getInstance().log("up=====no gameobject", pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
+                this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
         this.clearGameObject();

@@ -80,7 +80,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
 
     startLoad(callBack?: Function): Promise<any> {
         this.mCallBack = callBack;
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             if (!this.mLoadQueue || this.mInitialized) {
                 resolve();
                 return;

@@ -321,6 +321,7 @@ export class DragonbonesDisplay extends DisplayObject {
         this.setData("id", this.displayInfo.id);
         this.emit("initialized");
         this.render.renderEmitter("dragonBones_initialized");
+        this.render.renderToPhysicalEmitter("dragonBones_initialized");
     }
 
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {

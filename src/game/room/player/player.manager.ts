@@ -6,13 +6,13 @@ import { IElementManager } from "../element/element.manager";
 import { User } from "../../actor/user";
 import { IRoomService, Room } from "../room/room";
 import { PlayerModel } from "./player.model";
-import { ISprite, Sprite } from "../display/sprite/sprite";
+import { ISprite } from "structure";
 import { AvatarSuitType, EventType, MessageType, PlayerState } from "structure";
 import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { PlayerElementAction } from "../elementaction/player.element.action";
-
+import { Sprite } from "../display/sprite/sprite";
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     private mActor: User;

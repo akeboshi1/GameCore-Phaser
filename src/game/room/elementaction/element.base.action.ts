@@ -1,7 +1,5 @@
-import { Element } from "../element/element";
-import { ISprite } from "../display/sprite/sprite";
-import { Handler } from "utils";
 import { Game } from "gamecore";
+import { ISprite } from "structure";
 export class ElementBaseAction {
 
     public data: ISprite;

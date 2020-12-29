@@ -1,5 +1,4 @@
 import { IDisplay } from "./display";
-
 export interface IFramesModel {
     readonly discriminator: string;
     gene: string | undefined;

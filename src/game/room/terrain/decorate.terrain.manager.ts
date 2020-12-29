@@ -1,10 +1,6 @@
 import { TerrainManager } from "./terrain.manager";
-import { Terrain } from "./terrain";
-import { IElement } from "../element/element";
-import { PBpacket } from "net-socket-packet";
-import { op_def, op_client } from "pixelpai_proto";
-import { IPos, LogicPoint, LogicPos } from "utils";
-import { ISprite, Sprite } from "../display/sprite/sprite";
+import { IPos, LogicPoint } from "utils";
+import { ISprite } from "structure";
 import { DecorateRoomService } from "../room/decorate.room";
 
 export class DecorateTerrainManager extends TerrainManager {
@@ -32,11 +28,11 @@ export class DecorateTerrainManager extends TerrainManager {
     return true;
   }
 
-  // public addToMap(sprite: ISprite) {
-  // }
+  public addToMap(sprite: ISprite) {
+  }
 
-  // public removeFromMap(sprite: ISprite) {
-  // }
+  public removeFromMap(sprite: ISprite) {
+  }
 
   public removeEmpty() {
   }
@@ -94,7 +90,7 @@ export class DecorateTerrainManager extends TerrainManager {
       cols = 2;
       hasCollisionArea = false;
     }
-    const {x, y} = sprite.pos;
+    const { x, y } = sprite.pos;
     const pos = new LogicPoint(x, y);
     // terrain pos为60*30大格子
     pos.x *= 2;

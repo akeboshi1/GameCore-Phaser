@@ -1,6 +1,6 @@
 import { BlockObject } from "../block/block.object";
-import { ISprite } from "../display/sprite/sprite";
-import { IElement } from "../element/element";
+import { ISprite } from "structure";
+import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
 import { IPos, Logger } from "utils";
@@ -11,17 +11,27 @@ export class Terrain extends BlockObject implements IElement {
     protected mDisplayInfo: IFramesModel;
     protected mModel: ISprite;
     protected mCreatedDisplay: boolean = false;
+    private mMoveData: MoveData;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(mElementManager.roomService);
+        super(sprite.id, mElementManager.roomService);
         this.mId = sprite.id;
         this.model = sprite;
     }
+    get moveData(): MoveData {
+        return this.mMoveData;
+    }
 
-    setModel(val: ISprite) {
+    public startMove() { }
+
+    public stopMove() { }
+
+    async setModel(val: ISprite) {
         this.mModel = val;
         if (!val) {
             return;
         }
+        await this.mElementManager.roomService.game.peer.render.setModel(val);
+        await this.mRoomService.game.peer.physicalPeer.setModel(val);
         this.mElementManager.removeFromMap(val);
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
@@ -109,7 +119,7 @@ export class Terrain extends BlockObject implements IElement {
         return this;
     }
 
-    public unmount() {
+    public async unmount(): Promise<this> {
         return this;
     }
 
@@ -121,14 +131,14 @@ export class Terrain extends BlockObject implements IElement {
         return this;
     }
 
-    public getInteractivePositionList() {
+    public async getInteractivePositionList() {
         return [];
     }
 
     public destroy() {
         this.mCreatedDisplay = false;
         this.removeDisplay();
-        this.mElementManager.removeFromMap(this.mModel);
+        // this.mElementManager.removeFromMap(this.mModel);
         super.destroy();
     }
 

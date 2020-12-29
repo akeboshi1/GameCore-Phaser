@@ -19,8 +19,6 @@ import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { IScenery, LoadState, SceneName } from "structure";
-import { MatterWorld } from "../physical/matter.world";
-import { AStar } from "../path.finding/astar";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -39,7 +37,8 @@ export interface IRoomService {
     readonly game: Game;
     readonly enableEdit: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
-    readonly matterWorld: MatterWorld;
+    // readonly matterWorld: MatterWorld;
+
     readonly isLoading: boolean;
 
     now(): number;
@@ -78,7 +77,7 @@ export interface IRoomService {
 
     initUI(): void;
 
-    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[];
+    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): Promise<IPos[]>;
 
     destroy();
 }
@@ -105,8 +104,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
-    protected mMatterWorld: MatterWorld;
-    protected mAstar: AStar;
+    // protected mMatterWorld: MatterWorld;
+    // protected mAstar: AStar;
     protected mIsLoading: boolean = false;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
@@ -273,7 +272,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public update(time: number, delta: number) {
-        if (this.matterWorld) this.matterWorld.update();
+        // if (this.matterWorld) this.matterWorld.update();
         this.updateClock(time, delta);
         if (this.mBlocks) this.mBlocks.update(time, delta);
         // this.mViewBlockManager.update(time, delta);
@@ -331,6 +330,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public async startPlay() {
         // if (this.mLayManager) {
+
         //     this.layerManager.destroy();
         // }
         Logger.getInstance().log("room startplay =====");
@@ -347,7 +347,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mGroupManager = new GroupManager(this);
         // this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
-        this.mMatterWorld = new MatterWorld(this);
+        // mainworker通知physicalWorker创建matterworld
+        this.mGame.peer.physicalPeer.createMatterWorld();
+        // 将场景尺寸传递给physical进程
+        this.mGame.physicalPeer.setRoomSize(this.mSize);
+        this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
+        // this.mMatterWorld = new MatterWorld(this);
         // this.mEffectManager = new EffectManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
@@ -389,7 +394,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.initSkyBox();
         this.mTerrainManager.init();
 
-        this.mAstar = new AStar(this);
+        // this.mAstar = new AStar(this);
         const map = [];
         for (let i = 0; i < this.miniSize.rows; i++) {
             map[i] = [];
@@ -397,7 +402,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 map[i][j] = 1;
             }
         }
-        this.mAstar.init(map);
+        this.game.physicalPeer.initAstar(map);
+        // this.mAstar.init(map);
 
         // const joystick = new JoystickManager(this.game);
     }
@@ -425,32 +431,30 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mIsLoading = false;
     }
 
-    public isWalkableAt(x: number, y: number) {
-        const reult = this.mAstar.isWalkableAt(x, y);
-        return reult;
-    }
+    // public isWalkableAt(x: number, y: number) {
+    //     const reult = this.mAstar.isWalkableAt(x, y);
+    //     return reult;
+    // }
 
     public setTerrainWalkable(x: number, y: number, val: boolean) {
         const map = this.mElementManager.map;
         const value = map[x][y];
         if (value === 0) {
-            this.mAstar.setWalkableAt(y, x, false);
+            this.game.physicalPeer.setTerrainWalkable(x, y, false);
+            // this.mAstar.setWalkableAt(y, x, false);
         } else {
-            this.mAstar.setWalkableAt(y, x, val);
+            this.game.physicalPeer.setTerrainWalkable(x, y, val);
+            // this.mAstar.setWalkableAt(y, x, val);
         }
     }
 
     public setElementWalkable(x: number, y: number, val: boolean) {
-        // const map = this.mTerrainManager.map;
-        // const value = map[y][x];
-        // if (value) {
-
-        // }
-        this.mAstar.setWalkableAt(y, x, val);
+        this.game.physicalPeer.setTerrainWalkable(x, y, val);
+        // this.mAstar.setWalkableAt(y, x, val);
     }
 
-    public findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
-        return this.mAstar.find(startPos, targetPosList, toReverse);
+    public async findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
+        return await this.game.physicalPeer.getPath(startPos, targetPosList, toReverse);
     }
 
     public clear() {
@@ -505,6 +509,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.connection.send(pkt);
 
         this.tryMove();
+
+        // this.game.physicalPeer.tryMove();
     }
 
     public destroy() {
@@ -546,7 +552,42 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public get isLoading(): boolean {
         return this.mIsLoading;
     }
-    //
+
+    public tryMove() {
+        const player = this.mPlayerManager.actor;
+        if (!player) {
+            return;
+        }
+        const moveData = player.moveData;
+        const pos = moveData.posPath;
+        if (!pos || pos.length < 0) {
+            return;
+        }
+
+        const step = moveData.step || 0;
+        if (step >= pos.length) {
+            return;
+        }
+
+        const playerPosition = player.getPosition();
+        const position = op_def.PBPoint3f.create();
+        position.x = playerPosition.x;
+        position.y = playerPosition.y;
+
+        if (pos[step] === undefined) {
+            // Logger.getInstance().log("move error", pos, step);
+        }
+        const nextPosition = op_def.PBPoint3f.create();
+        nextPosition.x = pos[step].x;
+        nextPosition.y = pos[step].y;
+
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
+        const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
+        conten.timestemp = this.now();
+        conten.position = position;
+        conten.nextPoint = nextPosition;
+        this.connection.send(packet);
+    }
 
     protected initSkyBox() {
         const scenerys = this.game.elementStorage.getScenerys();
@@ -657,46 +698,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get sceneType(): op_def.SceneTypeEnum {
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
-    }
-
-    get matterWorld() {
-        return this.mMatterWorld;
-    }
-
-    private tryMove() {
-        const player = this.mPlayerManager.actor;
-        if (!player) {
-            return;
-        }
-        const moveData = player.moveData;
-        const pos = moveData.posPath;
-        if (!pos || pos.length < 0) {
-            return;
-        }
-
-        const step = moveData.step || 0;
-        if (step >= pos.length) {
-            return;
-        }
-
-        const playerPosition = player.getPosition();
-        const position = op_def.PBPoint3f.create();
-        position.x = playerPosition.x;
-        position.y = playerPosition.y;
-
-        if (pos[step] === undefined) {
-            // Logger.getInstance().log("move error", pos, step);
-        }
-        const nextPosition = op_def.PBPoint3f.create();
-        nextPosition.x = pos[step].x;
-        nextPosition.y = pos[step].y;
-
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
-        const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
-        conten.timestemp = this.now();
-        conten.position = position;
-        conten.nextPoint = nextPosition;
-        this.connection.send(packet);
     }
 
     private onEnableEditModeHandler(packet: PBpacket) {

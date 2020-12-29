@@ -1,136 +1,74 @@
-import { Bodies, Body, Vector } from "matter-js";
 import { IPos } from "utils";
 import { IRoomService } from "../room/room";
-import { MatterWorld } from "./matter.world";
-
 export class MatterObject {
-    protected body: Body;
-    protected matterWorld: MatterWorld;
-    protected _tempVec2: Vector;
-    protected _offset: Vector;
+    protected guid: number;
+    protected hasBody: boolean = false;
+    protected _tempVec2: any;
     protected _sensor: boolean = false;
-    protected _offsetOrigin: Vector;
-    constructor(protected mRoomService: IRoomService) {
-        if (this.mRoomService) this.setMatterWorld(mRoomService.matterWorld);
-        this._tempVec2 = Vector.create(0, 0);
-        this._offset = Vector.create(0, 0);
-        this._offsetOrigin = Vector.create(0.5, 0.5);
+    protected _offsetOrigin: any;
+    constructor(id: number,protected mRoomService: IRoomService) {
+        this.guid = id;
+        this._tempVec2 = { x: 0, y: 0 };
+        this._offsetOrigin = { x: 0.5, y: 0.5 };
     }
 
-    public setMatterWorld(world: MatterWorld) {
-        this.matterWorld = world;
+    set _offset(val: any) {
+        this.mRoomService.game.peer.physicalPeer.setOffset(this.guid, val);
     }
 
-    public setStatic(value: boolean) {
-        if (this.body) {
-            // 重复设置会拿到错误的inertia导致position为NaN
-            if (value === this.body.isStatic) {
-                return this;
-            }
-            Body.setStatic(this.body, value);
-        }
+    public async setStatic(value: boolean) {
+        await this.mRoomService.game.peer.physicalPeer.setStatic(this.guid, value);
         return this;
     }
 
-    public isStatic(): boolean {
-        return this.body.isStatic;
-    }
-
-    public applyForce(force) {
-        // this._tempVec2.set(this.body.position.x, this.body.position.y);
-        this._tempVec2.x = this.body.position.x;
-        this._tempVec2.y = this.body.position.y;
-
-        Body.applyForce(this.body, this._tempVec2, force);
-
+    public async applyForce(force) {
+        await this.mRoomService.game.peer.physicalPeer.applyForce(this.guid, force);
         return this;
     }
 
     public setVelocityX(x: number) {
-        // this._tempVec2.x = this.body.velocity.x;
-        Body.setVelocity(this.body, this._tempVec2);
+        this.mRoomService.game.peer.physicalPeer.setVelocityX(this.guid);
     }
 
     public setVelocityY(y: number) {
-        // this._tempVec2.y = this.body.velocity.y;
-        Body.setVelocity(this.body, this._tempVec2);
+        this.mRoomService.game.peer.physicalPeer.setVelocityY(this.guid);
     }
 
     public setVelocity(x: number, y: number) {
-        // this._tempVec2.x = this.body.velocity.x;
-        // this._tempVec2.y = this.body.velocity.y;
         x *= this.mRoomService.game.scaleRatio;
         y *= this.mRoomService.game.scaleRatio;
-        if (!this.body) {
-            return;
-        }
-        Body.setVelocity(this.body, Vector.create(x, y));
-        Body.setInertia(this.body, Infinity);
+        this.mRoomService.game.peer.physicalPeer.setVelocity(this.guid, x, y);
     }
 
     public setPosition(pos: IPos) {
-        // if (x === undefined) { x = 0; }
-        // if (y === undefined) { y = x; }
-
-        this._tempVec2.x = pos.x * this.mRoomService.game.scaleRatio; // + this._offset.x;
-        this._tempVec2.y = pos.y * this.mRoomService.game.scaleRatio; // + this._offset.y;
-
-        if (!this.body) {
-            return;
-        }
-
-        Body.setPosition(this.body, Vector.create(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y));
+        // const scaleRatio = this.mRoomService.game.scaleRatio;
+        // this._tempVec2.x = pos.x * scaleRatio;
+        // this._tempVec2.y = pos.y * scaleRatio;
+        // this.mRoomService.game.peer.physicalPeer.setPosition(this.guid, pos.x, pos.y);
     }
 
     public destroy() {
-        this.removeBody();
-        this.body = undefined;
+        this.mRoomService.game.peer.physicalPeer.destroyMatterObject(this.guid);
+        this.hasBody = false;
     }
 
     protected setBody() {
-        const body = Bodies.circle(this._tempVec2.x * this.mRoomService.game.scaleRatio, this._tempVec2.y * this.mRoomService.game.scaleRatio, 10);
-        // this.body = this.setVertices(verteSets);
-        this.setExistingBody(body, true);
+        this.mRoomService.game.peer.physicalPeer.setBody(this.guid);
+        this.hasBody = true;
     }
 
     protected addBody() {
-        if (this.body) {
-            this.setExistingBody(this.body);
-            return;
-        }
-        this.setBody();
+        this.mRoomService.game.peer.physicalPeer.addBody(this.guid);
+        this.hasBody = true;
     }
 
     protected removeBody() {
-        if (!this.body) {
-            return;
-        }
-        this.matterWorld.remove(this.body, true);
+        this.mRoomService.game.peer.physicalPeer.removeBody(this.guid);
+        this.hasBody = false;
     }
 
-    protected setVertices(vertexSets) {
-        return Bodies.fromVertices(this._tempVec2.x, this._tempVec2.y, vertexSets, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
-        // return Bodies.fromVertices(0, 0, vertexSets, { isStatic: false });
-    }
-
-    protected setExistingBody(body: Body, addToWorld?: boolean) {
-        if (!this.matterWorld) {
-            return;
-        }
-        if (addToWorld === undefined) {
-            addToWorld = true;
-        }
-
-        if (this.body) {
-            this.matterWorld.remove(this.body, true);
-        }
-        const sensor = this.getSensor();
-        this.body = body;
-        body.isSensor = this._sensor;
-
-        if (addToWorld) {
-            this.matterWorld.add(body, this._sensor, this);
-        }
+    protected async setVertices(vertexSets) {
+        return await this.mRoomService.game.peer.physicalPeer.setVertices(this.guid, vertexSets);
     }
 
     protected getSensor() {

@@ -348,7 +348,7 @@ export class DisplayManager {
         // display.showEffect();
     }
 
-    public setDisplayData(sprite: any) {
+    public setModel(sprite: any) {
         const display = this.displays.get(sprite.id);
         if (!display) return;
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);

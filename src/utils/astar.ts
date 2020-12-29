@@ -1,17 +1,28 @@
 import { Grid, AStarFinder } from "pathfinding";
-import { IPos, Logger, LogicPos } from "utils";
-import { IRoomService } from "../room/room";
+import { ISizeChart } from "structure";
+import { Logger } from "./log";
+import { IPos, LogicPos } from "./logic.pos";
+import { Position45 } from "./position45";
 
 export class AStar {
     private grid: Grid;
     private finder: AStarFinder;
     private gridBackup: Grid;
-    constructor(private roomService: IRoomService) {
+    constructor(private sizeChart: ISizeChart) {
     }
 
     init(matrix: number[][]) {
+        if (this.finder) {
+            this.reset(matrix);
+        } else {
+            this.grid = new Grid(matrix);
+            this.finder = new AStarFinder({ allowDiagonal: true });
+        }
+    }
+
+    reset(matrix: number[][]) {
+        // grid destroy
         this.grid = new Grid(matrix);
-        this.finder = new AStarFinder({ allowDiagonal: true });
     }
 
     setWalkableAt(x: number, y: number, value: boolean) {
@@ -39,14 +50,15 @@ export class AStar {
         }
 
         const result = [];
-        const { rows, cols } = this.roomService.miniSize;
+        const miniSize = this.sizeChart.miniSize;
+        const { rows, cols } = miniSize;
 
-        const start45 = this.roomService.transformToMini45(startPos);
+        const start45 = Position45.transformTo45(startPos, miniSize);
         if (this._invalidPoint(start45, cols, rows)) return result;
 
         const end45List = [];
         targetList.forEach((p) => {
-            p = this.roomService.transformToMini45(p);
+            p = Position45.transformTo45(p, miniSize);
             if (!this._invalidPoint(p, cols, rows)) {
                 end45List.push(p);
             }
@@ -59,7 +71,7 @@ export class AStar {
         this.gridBackup = this.grid.clone();
         const paths = this.finder.findPathToMultipleEnds(start45.x, start45.y, end45List, this.gridBackup, toReverse);
         for (const path of paths) {
-            result.push(this.roomService.transformToMini90(new LogicPos(path[0], path[1])));
+            result.push(Position45.transformTo90(new LogicPos(path[0], path[1]), miniSize));
         }
         if (toReverse === false) {
             result.shift(); // 正向走的时候移除第一格是为了防止人物走的过程中忽然回头，反向的时候是人从家具上下来，如果移除掉第一格会造成人物从交互点的下一格开始走

@@ -19,11 +19,6 @@ import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
-import decomp from "poly-decomp";
-// The World act as the global Phaser.World instance;
-// @ts-ignore
-global.decomp = decomp;
-
 interface ISize {
     width: number;
     height: number;
@@ -245,10 +240,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.initWorld();
     }
 
-    public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        this.mainPeer.render.addFillEffect(pos.x, pos.y, status).then(() => {
-        });
-    }
+    // public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+    //     this.mainPeer.render.addFillEffect(pos.x, pos.y, status).then(() => {
+    //     });
+    // }
 
     public setSize(width, height) {
         this.mSize = {
@@ -381,6 +376,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             throw new Error("can't find render");
         }
         return render;
+    }
+
+    get physicalPeer() {
+        const physicalPeer = this.peer.physicalPeer;
+        if (!physicalPeer) {
+            throw new Error("can't find physicalPeer");
+        }
+        return physicalPeer;
     }
 
     get avatarType() {

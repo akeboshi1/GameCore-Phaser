@@ -13,13 +13,14 @@ import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, RunningAnimation, ElementStateType } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, ElementStateType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
 import { PicaRenderUiManager } from "picaRender";
 import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
+import { User } from "gamecore";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -65,6 +66,7 @@ export class Render extends RPCPeer implements GameMain {
 
     private mMainPeer: any;
     private mHeartPeer: any;
+    private mPhysicalPeer: any;
     private isPause: boolean = false;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
@@ -74,7 +76,13 @@ export class Render extends RPCPeer implements GameMain {
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
-            this.createGame();
+            this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+                this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+                this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
+                this.mPhysicalPeer.start();
+                this.createGame();
+                Logger.getInstance().log("Physcialworker onReady");
+            });
             Logger.getInstance().log("worker onReady");
         });
         this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
@@ -82,6 +90,11 @@ export class Render extends RPCPeer implements GameMain {
             this.mHeartPeer.updateFps();
             Logger.getInstance().log("heartBeatworker onReady in Render");
         });
+
+    }
+
+    get physicalPeer(): any {
+        return this.mPhysicalPeer;
     }
 
     get config(): ILauncherConfig {
@@ -470,6 +483,10 @@ export class Render extends RPCPeer implements GameMain {
 
     public renderEmitter(eventType: string, data?: any) {
         if (this.mMainPeer) this.mMainPeer.renderEmitter(eventType, data);
+    }
+
+    public renderToPhysicalEmitter(eventType: string, data?: any) {
+        if (this.physicalPeer) this.physicalPeer.renderEmitter(eventType, data);
     }
 
     public showMediator(name: string, isShow: boolean) {
@@ -884,7 +901,7 @@ export class Render extends RPCPeer implements GameMain {
         this.gameCreated(keyEvents);
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public addFillEffect(posX: number, posY: number, status: any) {
         this.displayManager.addFillEffect(posX, posY, status);
     }
@@ -1010,8 +1027,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public setDisplayData(sprite: any) {
-        if (this.mDisplayManager) this.mDisplayManager.setDisplayData(sprite);
+    public setModel(sprite: any) {
+        if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
     }
 
     @Export()
@@ -1154,6 +1171,11 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.str])
     public workerEmitter(eventType: string, data?: any) {
+        this.emitter.emit(eventType, data);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public physicalEmitter(eventType: string, data?: any) {
         this.emitter.emit(eventType, data);
     }
 

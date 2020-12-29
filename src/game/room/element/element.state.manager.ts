@@ -1,10 +1,10 @@
-import { BaseDataManager, DataMgrType, ISprite } from "gamecore";
+import { BaseDataManager, DataMgrType } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_virtual_world, op_pkt_def } from "pixelpai_proto";
-import { ElementStateType, EventType } from "structure";
+import { PacketHandler } from "net-socket-packet";
+import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
+import { ElementStateType, EventType, ISprite } from "structure";
 import { IRoomService } from "../room/room";
-import { Element, IElement, InputEnable } from "./element";
+import { Element, IElement } from "./element";
 export class ElementStateManager extends PacketHandler {
 
     protected mElements: Map<string, Map<number, Element>> = new Map();
