@@ -193,3 +193,64 @@ export class LayerManager {
         this.mDepthSurface = val;
     }
 }
+
+export class SortUtils {
+    private objs: DisplayObject[];
+    constructor() {
+        this.objs = [];
+    }
+
+    depthSort(list) {
+        const objs = [...list];
+        for (let pivot = 0; pivot < objs.length;) {
+            let new_pivot = false;
+            for (let i = pivot; i < objs.length;++i) {
+              const obj = objs[i];
+              let parent = true;
+              for (let j = pivot; j < objs.length;++j) {
+                if (j === i) continue;
+                if (this.isBehind(objs[j], obj)) {
+                  parent = false;
+                  break;
+                }
+              }
+              if (parent) {
+                objs[i] = objs[pivot];
+                objs[pivot] = obj;
+                ++pivot;
+                new_pivot = true;
+              }
+            }
+            if (!new_pivot)++pivot;
+          }
+    }
+
+    private isBehind(obj1: DisplayObject, obj2: DisplayObject): boolean {
+        // obj1.projectionSize
+        // return (this.x+this.xx<=obj.x||this.y+this.yy<=obj.y||this.z+this.zz<=obj.z)
+        const projection = obj1.projectionSize;
+        const result = (obj1.x + projection.x <= obj2.x || obj1.y + projection.y <= obj2.y);
+        return result;
+        // return (obj1.x + projection.width <= obj2.x || obj1.y + projection.height <= obj2.y);
+        // return obj2.y > obj1.y;
+        // Logger.getInstance().log(obj2.y, obj1.y);
+    }
+
+    private block_projection_overlap(obj1: DisplayObject, obj2: DisplayObject) {
+        function interval_overlap(a1,a2,b1,b2) {
+            return a1>=b1&&a1<b2 || b1>=a1&&b1<a2;
+        }
+
+        const projection = obj1.projectionSize;
+        const projection2 = obj2.projectionSize;
+        return interval_overlap(
+            obj1.x - obj1.y - projection.y, obj1.x + projection.x - obj1.y,
+            obj2.x - obj2.y- projection2.y, obj2.x+ projection2.x - obj2.y) &&
+        interval_overlap(
+            obj1.x,obj1.x + projection.x,
+            obj2.x, obj2.x + projection2.x) &&
+        interval_overlap(
+            -obj1.y - projection.y, -obj1.y,
+            -obj2.y - projection2.y, -obj2.y);
+        }
+}

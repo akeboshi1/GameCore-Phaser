@@ -179,6 +179,7 @@ export class DragonbonesDisplay extends DisplayObject {
             }
             this.mBoardPoint = new Phaser.Geom.Point();
         }
+        super.play(val);
     }
 
     public fadeIn(callback?: () => void) {

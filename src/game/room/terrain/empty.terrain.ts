@@ -16,11 +16,13 @@ export class EmptyTerrain extends BlockObject {
     }
 
     addDisplay(): Promise<any> {
+        super.addDisplay();
         this.addBody();
         return Promise.resolve();
     }
 
     removeDisplay(): Promise<any> {
+        super.removeDisplay();
         this.removeBody();
         return Promise.resolve();
     }

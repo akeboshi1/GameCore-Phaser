@@ -10,7 +10,6 @@ export class Terrain extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel;
     protected mModel: ISprite;
-    protected mCreatedDisplay: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
         this.mId = sprite.id;
@@ -126,13 +125,15 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public destroy() {
-        this.mCreatedDisplay = false;
         this.removeDisplay();
         this.mElementManager.removeFromMap(this.mModel);
         super.destroy();
     }
 
     protected async createDisplay(): Promise<any> {
+        if (this.mCreatedDisplay) return;
+        super.createDisplay();
+
         if (!this.mDisplayInfo) {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
@@ -153,10 +154,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     protected async addDisplay(): Promise<any> {
-        if (!this.mCreatedDisplay) {
-            this.mCreatedDisplay = true;
-            await this.createDisplay();
-        }
+        await super.addDisplay();
         const pos = this.mModel.pos;
         return this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
         // if (!this.mDisplay) {

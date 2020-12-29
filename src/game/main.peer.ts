@@ -441,6 +441,19 @@ export class MainPeer extends RPCPeer {
         return null;
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public fetchProjectionSize(id: number) {
+        const room = this.game.roomManager.currentRoom;
+        if (!room) {
+            return;
+        }
+        const ele = room.getElement(id);
+        if (!ele) {
+            return;
+        }
+        return ele.getProjectionSize();
+    }
+
     @Export()
     public getUserData_PlayerProperty(): any {
         if (this.game.user && this.game.user.userData) {
