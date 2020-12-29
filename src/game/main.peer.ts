@@ -5,7 +5,7 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import { Logger, LogicPoint, Pos } from "utils";
+import { IPos, Logger, LogicPoint, Pos } from "utils";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
 import { PicaGame } from "picaWorker";
 import { CacheDataManager } from "./data.manager/cache.dataManager";
@@ -450,13 +450,23 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public framesModel_getCollisionArea(id: number, aniName: string, flip: boolean): number[][] {
+    public framesModel_getCollisionArea(id: number): number[][] {
         return null;
     }
 
     @Export()
-    public framesModel_getOriginPoint(id: number, aniName: string, flip: boolean): LogicPoint {
+    public framesModel_getOriginPoint(id: number): LogicPoint {
         return null;
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public framesModel_getInteractive(id: number): IPos[] {
+        const room = this.game.roomManager.currentRoom;
+        const ele = room.getElement(id);
+        if (!ele) {
+            return;
+        }
+        return ele.model.getInteractive();
     }
 
     @Export()

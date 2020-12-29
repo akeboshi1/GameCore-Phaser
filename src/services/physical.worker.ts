@@ -33,7 +33,7 @@ export class PhysicalPeer extends RPCPeer {
         return this.mEmitter;
     }
 
-    getMatterObj(id): IMatterObject {
+    getMatterObj(id: number): IMatterObject {
         return this.matterObjectMap.get(id);
     }
 

@@ -82,8 +82,6 @@ export class WSWrapper extends EventEmitter {
             // console.info(`_connection.onmessage`);
             const now = new Date().getTime();
             this.onData(ev.data);
-            // tslint:disable-next-line:no-console
-            console.log("connection delay", new Date().getTime() - now, ev.data);
         };
 
         this._connection.onerror = (e: Error) => {

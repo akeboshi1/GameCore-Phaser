@@ -12,8 +12,40 @@ export class MatterUserObject extends MatterPlayerObject {
         super(peer, id);
     }
 
-    public findPath(startPos: IPos, targets: IPos[], targetId?: number, toReverse: boolean = false) {
-        const path = this.peer.world.getPath(startPos, targets, toReverse);
+    public async unmount(targetPos?: IPos) {
+        if (this.mRootMount) {
+            let landingPos: IPos;
+            const pos = await this.mRootMount.getInteractivePositionList();
+            if (pos.length === 0) {
+                return;
+            }
+            const mountID = this.mRootMount.id;
+            this.mRootMount = null;
+            if (targetPos != null) {
+                const path = this.peer.world.getPath(targetPos, pos, true);
+                if (path.length > 0) {
+                    landingPos = path[0];
+                } else {
+                    landingPos = pos[0];
+                }
+            } else {
+                landingPos = pos[0];
+            }
+            this.setPosition(landingPos);
+            // this.unmountSprite(mountID, landingPos);
+            // this.enableBlock();
+            this.mDirty = true;
+        }
+    }
+
+    public async findPath(startPos: IPos, targets: IPos[], targetId?: number, toReverse: boolean = false) {
+        if (!targets) {
+            return;
+        }
+        if (this.mRootMount) {
+            await this.mRootMount.removeMount(this, targets[0]);
+            return;
+        }
         // this.peer.mainPeer.removePartMount(this.id, targets[0], path);
         const pos = this.mModel.pos;
         for (const target of targets) {
@@ -23,6 +55,7 @@ export class MatterUserObject extends MatterPlayerObject {
                 return;
             }
         }
+        const path = this.peer.world.getPath(startPos, targets, toReverse);
         if (!path) {
             return;
         }
@@ -58,11 +91,7 @@ export class MatterUserObject extends MatterPlayerObject {
         this.setStatic(false);
 
         const pos = this.getPosition();
-        // tslint:disable-next-line:no-console
-        // console.log("matterUser startMove", pos.x, pos.y, "path", path[0].x, path[0].x);
-        // pos.y += this.offsetY;
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
-        // TODO
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
@@ -103,13 +132,11 @@ export class MatterUserObject extends MatterPlayerObject {
         this.peer.mainPeer.syncPosition(this.mTargetPoint);
     }
 
-    public async _doMove(time?: number, delta?: number) {
+    public _doMove(time?: number, delta?: number) {
         if (!this.mMoving || !this.mTargetPoint) return;
         const path = this.mTargetPoint.path;
         const _pos = this.body.position;
         const pos = new LogicPos(Math.round(_pos.x / this.peer.scaleRatio), Math.round(_pos.y / this.peer.scaleRatio));
-        // const posX = pos.x * this.peer.scaleRatio;
-        // const posY = pos.y * this.peer.scaleRatio;
         this.mModel.pos = pos;
         // 通知render主角移动
         this.peer.render.setPosition(this.id, pos.x, pos.y);
@@ -117,10 +144,7 @@ export class MatterUserObject extends MatterPlayerObject {
         this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
         const dist = this.mModel.speed * delta;
         this.peer.mainPeer.setSyncDirty(true);
-        Logger.getInstance().log(path);
         const distboo = Tool.twoPointDistance(pos, path[0]) <= dist;
-        // tslint:disable-next-line:no-console
-        console.log("body position", pos, path[0], Tool.twoPointDistance(pos, path[0]), dist);
         // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
         if (distboo) {
             if (path.length > 1) {

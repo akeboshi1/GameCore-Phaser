@@ -1,5 +1,5 @@
 import { Bodies, Body, Vector } from "matter-js";
-import { IPos, LogicPos, Tool } from "utils";
+import { IPos, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
 import { MoveData } from "./matter.player.object";
@@ -40,10 +40,6 @@ export interface IMatterObject {
 
     getPosition(): IPos;
 
-    // setDirection(val: number): void;
-
-    // getDirection(): number;
-
     startMove();
 
     stopMove();
@@ -62,10 +58,21 @@ export interface IMatterObject {
 
     // setQueue(queue: any);
 
-    moveMotion(x: number, y: number);
-
     _doMove(time?: number, delta?: number);
 
+    // setQueue(queue: any);
+
+    moveMotion(x: number, y: number);
+
+    mount(ele: IMatterObject): this;
+
+    unmount(targetPos?: IPos): Promise<void> | undefined;
+
+    addMount(ele: IMatterObject, index?: number): this;
+
+    removeMount(ele: IMatterObject, targetPos?: IPos): Promise<void>;
+
+    getInteractivePositionList(): Promise<IPos[]>;
 }
 export class MatterObject implements IMatterObject {
     public _tempVec2: Vector;
@@ -81,9 +88,9 @@ export class MatterObject implements IMatterObject {
     // protected mCurAnimationName: RunningAnimation;
     protected mOffsetY: number = undefined;
     // protected mQueueAnimations: AnimationQueue[];
-    // protected mMounts: IMatterObject[];
+    protected mMounts: IMatterObject[];
     protected mDirty: boolean = false;
-    // protected mRootMount: IMatterObject;
+    protected mRootMount: IMatterObject;
     protected hasPos: boolean = false;
     constructor(public peer: PhysicalPeer, public id: number) {
         this._tempVec2 = Vector.create(0, 0);
@@ -113,6 +120,9 @@ export class MatterObject implements IMatterObject {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
+        if (sprite.mountSprites && sprite.mountSprites.length > 0) {
+            this.updateMounth(sprite.mountSprites);
+        }
         // if (sprite.mountSprites && sprite.mountSprites.length > 0) {
         //     this.updateMounth(sprite.mountSprites);
         // }
@@ -120,7 +130,6 @@ export class MatterObject implements IMatterObject {
     }
 
     public updateModel(model: any) {
-        this.mModel = model;
         if (this.mModel.id !== model.id) {
             return;
         }
@@ -128,6 +137,11 @@ export class MatterObject implements IMatterObject {
         if (model.hasOwnProperty("point3f")) {
             const pos = model.point3f;
             this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
+        }
+        if (model.hasOwnProperty("mountSprites")) {
+            const mounts = model.mountSprites;
+            this.mergeMounth(mounts);
+            this.updateMounth(mounts);
         }
         this.update();
         // this.peer.world.addToMap(this.mModel);
@@ -166,18 +180,6 @@ export class MatterObject implements IMatterObject {
         this.setVelocity(0, 0);
         this.setStatic(true);
     }
-
-    // public mergeMounth(mounts: number[]) {
-    //     const oldMounts = this.mModel.mountSprites || [];
-    //     for (const id of oldMounts) {
-    //         if (mounts.indexOf(id) === -1) {
-    //             const ele = this.peer.getMatterObj(id);
-    //             if (ele) {
-    //                 this.removeMount(ele);
-    //             }
-    //         }
-    //     }
-    // }
 
     // public changeState(val?: string, times?: number) {
     //     if (this.mCurState === val) return;
@@ -242,9 +244,8 @@ export class MatterObject implements IMatterObject {
         }
         this._tempVec2.x = p.x;
         this._tempVec2.y = p.y;
-        // tslint:disable-next-line:no-console
-        console.log("matterObject setPosition", p.x, p.y);
         this.peer.mainPeer.setPosition(this.id, update, p.x, p.y);
+        this.peer.render.setPosition(this.id, p.x, p.y);
         if (!this.body) {
             this.hasPos = true;
             // ==== todo render setPositon
@@ -276,49 +277,51 @@ export class MatterObject implements IMatterObject {
         this.body = undefined;
     }
 
-    // public mount(root: IMatterObject, index: number) {
-    //     this.mRootMount = root;
-    //     if (this.mMoving) {
-    //         this.stopMove();
-    //     }
-    //     this.peer.mainPeer.disableBlock(this.id);
-    //     // this.disableBlock();
-    //     this.removeBody();
-    //     this.mDirty = true;
-    //     return this;
-    // }
+    public mount(root: IMatterObject) {
+        this.mRootMount = root;
+        if (this.mMoving) {
+            this.stopMove();
+        }
+        // this.peer.mainPeer.disableBlock(this.id);
+        // this.disableBlock();
+        this.removeBody();
+        this.mDirty = true;
+        return this;
+    }
 
-    // public unmount() {
-    //     if (this.mRootMount) {
-    //         // 先移除避免人物瞬移
-    //         // this.removeDisplay();
-    //         const pos = this.mRootMount.getPosition();
-    //         // pos.x += this.mDisplay.x;
-    //         // pos.y += this.mDisplay.y;
-    //         this.mRootMount = null;
-    //         this.setPosition(pos, true);
-    //         this.peer.mainPeer.enableBlock(this.id);
-    //         this.addBody(this.peer.scaleRatio);
-    //         this.mDirty = true;
-    //     }
-    //     return this;
-    // }
+    public unmount() {
+        if (this.mRootMount) {
+            // 先移除避免人物瞬移
+            // this.removeDisplay();
+            const pos = this.mRootMount.getPosition();
+            // pos.x += this.mDisplay.x;
+            // pos.y += this.mDisplay.y;
+            this.mRootMount = null;
+            this.setPosition(pos, true);
+            // this.peer.mainPeer.enableBlock(this.id);
+            this.addBody(this.peer.scaleRatio);
+            this.mDirty = true;
+        }
+        return Promise.resolve();
+    }
 
-    // public addMount(ele: IMatterObject, index?: number) {
-    //     if (!this.mMounts) this.mMounts = [];
-    //     if (this.mMounts.indexOf(ele) === -1) {
-    //         this.mMounts.push(ele);
-    //     }
-    //     return this;
-    // }
+    public addMount(ele: IMatterObject, index?: number) {
+        if (!this.mMounts) this.mMounts = [];
+        ele.mount(this);
+        if (this.mMounts.indexOf(ele) === -1) {
+            this.mMounts.push(ele);
+        }
+        return this;
+    }
 
-    // public removeMount(ele: IMatterObject) {
-    //     ele.unmount();
-    //     const index = this.mMounts.indexOf(ele);
-    //     if (index > -1) {
-    //         this.mMounts.splice(index, 1);
-    //     }
-    // }
+    public async removeMount(ele: IMatterObject, targetPos?: IPos) {
+        await ele.unmount(targetPos);
+        const index = this.mMounts.indexOf(ele);
+        if (index > -1) {
+            this.mMounts.splice(index, 1);
+        }
+        return Promise.resolve();
+    }
 
     public setExistingBody(body: Body, addToWorld?: boolean) {
         if (addToWorld === undefined) {
@@ -366,6 +369,23 @@ export class MatterObject implements IMatterObject {
     }
 
     public moveMotion(x: number, y: number) {
+    }
+
+    public async getInteractivePositionList(): Promise<IPos[]> {
+        const interactives = await this.peer.mainPeer.framesModel_getInteractive(this.id);
+        if (!interactives || interactives.length < 1) {
+            return;
+        }
+        const mini45 = this.matterWorld.miniSize;
+        // const pos45 = this.matterWorld.transformToMini45(this.getPosition());
+        const pos45 = Position45.transformTo45(this.getPosition(), mini45);
+        const result: IPos[] = [];
+        for (const interactive of interactives) {
+            if (this.peer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+                result.push(Position45.transformTo90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y), mini45));
+            }
+        }
+        return result;
     }
 
     // public setDirection(val: number) {
@@ -438,17 +458,29 @@ export class MatterObject implements IMatterObject {
     //     }
     // }
 
-    // public updateMounth(mounts: number[]) {
-    //     if (mounts.length > 0) {
-    //         for (let i = 0; i < mounts.length; i++) {
-    //             const ele = this.peer.getMatterObj(mounts[i]);
-    //             if (ele) {
-    //                 this.addMount(ele, i);
-    //             }
-    //         }
-    //     }
-    //     this.mModel.mountSprites = mounts;
-    // }
+    public mergeMounth(mounts: number[]) {
+        const oldMounts = this.mModel.mountSprites || [];
+        for (const id of oldMounts) {
+            if (mounts.indexOf(id) === -1) {
+                const ele = this.peer.getMatterObj(id);
+                if (ele) {
+                    this.removeMount(ele);
+                }
+            }
+        }
+    }
+
+    public updateMounth(mounts: number[]) {
+        if (mounts.length > 0) {
+            for (let i = 0; i < mounts.length; i++) {
+                const ele = this.peer.getMatterObj(mounts[i]);
+                if (ele) {
+                    this.addMount(ele, i);
+                }
+            }
+        }
+        this.mModel.mountSprites = mounts;
+    }
 
     public _doMove(time?: number, delta?: number) {
         if (!this.mMoving || !this.body) {
