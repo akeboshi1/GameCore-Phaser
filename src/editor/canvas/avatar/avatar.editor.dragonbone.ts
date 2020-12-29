@@ -253,8 +253,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private loadDragonbone() {
-        // const root = `./resources_v${version}/dragonbones`;// TODO:待添加resource版本号后更新
-        const root = `./resources/dragonbones`;
+        const root = `./resources_v${version}/dragonbones`;
         const dbName = this.DRAGONBONENAME;
         this.scene.load.dragonbone(
             dbName,
