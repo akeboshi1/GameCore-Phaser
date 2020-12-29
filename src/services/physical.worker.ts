@@ -104,7 +104,9 @@ export class PhysicalPeer extends RPCPeer {
 
     @Export()
     public createMatterWorld() {
-        this.matterWorld = new MatterWorld(this);
+        if (!this.matterWorld) {
+            this.matterWorld = new MatterWorld(this);
+        }
         this.exportProperty(this.matterWorld, this).onceReady(() => {
         });
     }
