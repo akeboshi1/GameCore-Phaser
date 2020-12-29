@@ -1,4 +1,4 @@
-import { Logger, ResUtils } from "utils";
+import { Logger, ResUtils, Url } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "../../render";
@@ -71,9 +71,6 @@ export enum AvatarPartType {
     ShldBarm = "barm_shld_#_$",
     WeapBarm = "barm_weap_#_$",
 }
-
-// 龙骨资源版本控制
-const DRAGONBONES_RES_VERSION: string = "001";
 
 /**
  * 龙骨显示对象
@@ -152,7 +149,7 @@ export class DragonbonesDisplay extends DisplayObject {
             this.mCollisionArea = [[1, 1], [1, 1]];
             this.mOriginPoint = new Phaser.Geom.Point(1, 1);
             if (!this.displayInfo) return;
-            this.dragonBonesName = "bones_human01_v" + DRAGONBONES_RES_VERSION; // this.mDisplayInfo.avatar.id;
+            this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
         } else {
         }
     }
@@ -257,7 +254,7 @@ export class DragonbonesDisplay extends DisplayObject {
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.allComplete();
         } else {
-            const res = "./resources/dragonbones";
+            const res = `${Url.RES_PATH}/dragonbones`;
             const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
             const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
             const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;

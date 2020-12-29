@@ -4,8 +4,8 @@ import * as url from "url";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
-    private readonly DRAGONBONENAME = "bones_human01_v001";
-    private readonly DRAGONBONENAME_HEAD = "bones_model_head_v001";
+    private readonly DRAGONBONENAME = "bones_human01";
+    private readonly DRAGONBONENAME_HEAD = "bones_model_head";
     private readonly DRAGONBONEARMATURENAME = "Armature";
     private readonly BACKMAP = {
         ["head_hair"]: ["head_hair", "head_hair_back"],
@@ -253,8 +253,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private loadDragonbone() {
-        // const root = `./resources_v${version}/dragonbones`;// TODO:待添加resource版本号后更新
-        const root = `./resources/dragonbones`;
+        const root = `./resources_v${version}/dragonbones`;
         const dbName = this.DRAGONBONENAME;
         this.scene.load.dragonbone(
             dbName,
