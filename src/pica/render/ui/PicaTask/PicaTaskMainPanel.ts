@@ -195,7 +195,6 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         // this.itemTips.setItemData(data);
         // this.itemTips.setTipsPosition(gameobj, this, 10 * this.dpr);
         PicaItemTipsPanel.Inst.showTips(gameobj,gameobj.itemData);
-
     }
 }
 

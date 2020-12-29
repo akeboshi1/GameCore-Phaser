@@ -359,6 +359,6 @@
     "twostar": "Two Star",
     "threestar": "Three Star",
     "fourstar": "Four Star",
-    "spendstar": "Need to consume [color=#FFDE29]{{name}}[/color] picard star"
+    "spendstar": "Need to consume [color=#FFDE29][b]{{name}}[/b][/color] picard star"
   }
 }

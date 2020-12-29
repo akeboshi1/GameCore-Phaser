@@ -31,6 +31,7 @@ export class PicaFurnitureCompose extends BasicModel {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_COMBINE);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_COMBINE = packet.content;
     content.materialId = ids;
+    this.connection.send(packet);
   }
 
   private onRetComposeResult(packet: PBpacket) {
