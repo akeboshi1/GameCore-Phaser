@@ -24,29 +24,29 @@ export class TAGElementAction extends ElementBaseAction {
         if (data) {
             switch (data.type) {
                 case "mine":
-                    this.executeMine();
+                    this.executeMine(data);
                     break;
                 case "crop":
-                    this.executeCrop();
+                    this.executeCrop(data);
                     break;
                 case "pick":
-                    this.executeCollect();
+                    this.executeCollect(data);
                     break;
             }
         }
     }
 
-    private executeMine() {
-        const data = { weaponID: "5f912f98c4486f3a23bd2eb4", animation: "mining" };
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, data);
+    private executeMine(data: any) {
+        const tempdata = { weaponID: "5f912f98c4486f3a23bd2eb4", animation: "mining", times: data.repeat };
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, tempdata);
     }
 
-    private executeCrop() {
-        const data = { weaponID: "5f912fc1f1d58a7199b745f0", animation: "crafting" };
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, data);
+    private executeCrop(data: any) {
+        const tempdata = { weaponID: "5f912fc1f1d58a7199b745f0", animation: "crafting", times: data.repeat };
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, tempdata);
     }
-    private executeCollect() {
-        const data = { animation: "collect", times: 1 };
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, data);
+    private executeCollect(data: any) {
+        const tempdata = { animation: "collect", times: data.repeat };
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, tempdata);
     }
 }

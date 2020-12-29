@@ -96,7 +96,11 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
     }
 
     private onRetComposeHandler(reward: op_client.ICountablePackageItem) {
-        if (this.mView) this.mView.setComposeResult(reward);
+        if (this.mView) {
+            this.mView.setComposeResult(reward);
+            const uimgr = this.game.uiManager;
+            uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: [reward], type: "open" });
+        }
     }
 
     private queryFuriCompose(ids: string[]) {

@@ -37,7 +37,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.on(ClickEvent.Tap, this.onTabClickHandler, this);
     }
 
-    public setItemData(itemData: op_client.ICountablePackageItem) {
+    public setItemData(itemData: op_client.ICountablePackageItem, alldisplay: boolean = false) {
         this.itemData = itemData;
         this.isSelect = false;
         this.itemIcon.visible = false;
@@ -55,11 +55,17 @@ export class ItemButton extends ButtonEventDispatcher {
         this.itemIcon.load(url, this, () => {
             this.itemIcon.visible = true;
         });
-        if (itemData.count > 1) {
+
+        if (!alldisplay) {
+            if (itemData.count > 1) {
+                this.countTex.visible = true;
+                this.countTex.setText(itemData.count.toString());
+            } else {
+                this.countTex.visible = false;
+            }
+        } else {
             this.countTex.visible = true;
             this.countTex.setText(itemData.count.toString());
-        } else {
-            this.countTex.visible = false;
         }
         if (itemData.grade > 0) {
             this.starImg.visible = true;

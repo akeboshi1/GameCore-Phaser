@@ -9,6 +9,7 @@ export class PicaTreasurePanel extends BasePanel {
     private previewPanel: PicaTreasurePreviewPanel;
     private treasureOpenPanel: PicTreasureOpenPanel;
     private content: Phaser.GameObjects.Container;
+    private trasureData: any;
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICATREASURE_NAME;
@@ -26,25 +27,10 @@ export class PicaTreasurePanel extends BasePanel {
         this.setSize(width * this.scale, height * this.scale);
     }
 
-    show(param?: any) {
-        this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
+    onShow() {
         this.setInteractive();
-        this.addListen();
-        this.updateData();
+        this.setTreasureData(this.showData);
     }
-
     preload() {
         this.addAtlas(this.key, "treasure/treasure.png", "treasure/treasure.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.textureUrl(UIAtlasName.commonUrl), UIAtlasName.jsonUrl(UIAtlasName.commonUrl));
@@ -62,19 +48,26 @@ export class PicaTreasurePanel extends BasePanel {
         this.add(this.content);
         this.resize(0, 0);
         super.init();
-        this.setPreviewData();
     }
 
-    updateData() {
+    setTreasureData(data: any) {
+        this.trasureData = data;
+        if (!this.mInitialized) return;
+        if (!data) return;
+        if (data.type === "preview") {
+            this.setPreviewData(data.data);
+        } else if (data.type === "open") {
+            this.setTreasureOpenData(data.data);
+        }
     }
 
-    setPreviewData() {
+    setPreviewData(data: any) {
         this.openPreviewPanel();
-        this.previewPanel.setTreasureData();
+        this.previewPanel.setTreasureData(data);
     }
-    setTreasureOpenData() {
+    setTreasureOpenData(datas: any[]) {
         this.openTreasureOpenPanel();
-        this.treasureOpenPanel.setTreasureData();
+        this.treasureOpenPanel.setTreasureData(datas);
     }
     openPreviewPanel() {
         const wid = 334 * this.dpr;
@@ -83,7 +76,7 @@ export class PicaTreasurePanel extends BasePanel {
             this.previewPanel = new PicaTreasurePreviewPanel(this.scene, this.render, wid, hei, this.key, this.dpr, this.scale);
             this.previewPanel.setHandler(new Handler(this, () => {
                 this.hidePreviewPanel();
-                this.setTreasureOpenData();
+                this.setTreasureOpenData(new Array(6));
             }), new Handler(this, this.OnCloseHandler));
         }
         this.content.add(this.previewPanel);
@@ -113,6 +106,6 @@ export class PicaTreasurePanel extends BasePanel {
         this.treasureOpenPanel.removeListen();
     }
     private OnCloseHandler() {
-        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
+        this.render.renderEmitter(this.key + "_close");
     }
 }

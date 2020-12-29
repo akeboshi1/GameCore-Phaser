@@ -257,7 +257,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
           cellContainer = new ItemButton(scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
         }
         cellContainer.setData({ item });
-        cellContainer.setItemData(item);
+        cellContainer.setItemData(item, true);
         return cellContainer;
       },
     };
@@ -303,7 +303,8 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
       this.mPreCategoryBtn = gameobject;
     }
     this.mPropGrid.setT(0);
-    this.furiAnimation.clearItemDatas();
+    this.furiAnimation.clearItemDatas(true);
+    this.furiAnimation.setStarType(this.subCategoryType);
   }
 
   private onCloseHandler() {
@@ -359,14 +360,21 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
       }
     }
     if (add) {
-      if (havedCount < data.count) {
+      // if (havedCount < data.count) {
+      if (data.count > 0) {
         this.mSelectedItemData.push(data);
         this.furiAnimation.setItemData(data, this.subCategoryType);
+        data.count--;
       }
     } else {
-      if (indexed !== -1)
-        this.mSelectedItemData.splice(indexed, 1);
+      if (indexed !== -1) {
+        const tempdata = this.mSelectedItemData.splice(indexed, 1)[0];
+        tempdata.count++;
+      }
+
     }
+
+    this.mPropGrid.refresh();
 
   }
 
@@ -394,6 +402,7 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
   private starImgList: any[] = [];
   private itemList: any[] = [];
   private indexeds: number[] = [0, 0, 0, 0, 0];
+  private tweens: any[] = [];
   private canPlay: boolean = false;
   private starType: number;
   private timerID: any;
@@ -408,6 +417,13 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
 
   public setHandler(send: Handler) {
     this.send = send;
+  }
+
+  public setStarType(starType: number) {
+    this.starType = starType;
+    this.bgstarLev.setFrame("synthetic_center_star" + (starType + 1));
+    this.spendStarTex.text = i18n.t("furnicompose.spendstar", { name: starType });
+    this.bgstarLev.visible = true;
   }
   public setItemData(data: op_client.CountablePackageItem, starType: number) {
     this.starType = starType;
@@ -424,14 +440,13 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
         }
       }
     }
-    if (indexed !== -1 && data.count > haveSameCount) {
+    if (indexed !== -1 && data.count > 0) {
       this.indexeds[indexed] = 1;
       const item = this.itemList[indexed];
       item.setItemData(data);
       this.starImgList[indexed].visible = true;
       this.playAnimation();
-      this.spendStarTex.text = i18n.t("furnicompose.spendstar", { name: starType });
-      this.bgstarLev.setFrame("synthetic_center_star" + (starType + 1));
+      // this.spendStarTex.text = i18n.t("furnicompose.spendstar", { name: starType });
     }
     this.displayStarImg();
   }
@@ -455,13 +470,19 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
     }
   }
 
-  public clearItemDatas() {
+  public clearItemDatas(send: boolean) {
     for (let i = 0; i < this.indexeds.length; i++) {
       this.indexeds[i] = 0;
-      this.itemList[i].setItemData(undefined);
+      const item = this.itemList[i];
+      if (item.itemData) {
+        if (send && this.send) this.send.runWith(["remove", item.itemData]);
+        item.setItemData(undefined);
+      }
     }
+    this.stopTweens();
     this.displayStarImg();
     this.stopAnimation();
+    this.layoutItemsPosition();
   }
 
   public playComposeAnimation() {
@@ -469,11 +490,6 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
     for (const item of this.itemList) {
       this.playMove(item, 0, 0, duration);
     }
-    setTimeout(() => {
-      if (!this.scene) return;
-      this.layoutItemsPosition();
-      this.clearItemDatas();
-    }, duration + 200);
   }
 
   update() {
@@ -486,6 +502,7 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
   destroy() {
     super.destroy();
     this.stopAnimation();
+    this.stopTweens();
   }
   protected init() {
     this.bgring1 = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_ring_1" });
@@ -558,9 +575,6 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
       }
     } else {
       this.bglightstar.visible = false;
-      if (havedCount === 0) this.bgstarLev.visible = false;
-      else this.bgstarLev.visible = true;
-
     }
   }
 
@@ -598,8 +612,18 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
       onComplete: () => {
         tween.stop();
         tween.remove();
+        this.clearItemDatas(false);
       },
     });
+    this.tweens.push(tween);
+  }
+
+  private stopTweens() {
+    for (const tween of this.tweens) {
+      tween.stop();
+      tween.remove();
+    }
+    this.tweens.length = 0;
   }
 }
 class FuriComposeItem extends ButtonEventDispatcher {
