@@ -53,7 +53,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         for (const cam of this.mCameras) {
             cam.pan(x, y, duration);
         }
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.mMain.once(Phaser.Cameras.Scene2D.Events.PAN_COMPLETE, () => {
                 resolve();
             });

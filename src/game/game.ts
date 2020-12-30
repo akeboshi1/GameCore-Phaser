@@ -19,6 +19,7 @@ import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
+
 interface ISize {
     width: number;
     height: number;
