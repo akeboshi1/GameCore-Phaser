@@ -2,9 +2,9 @@ import { Bodies, Body, Vector } from "matter-js";
 import { IPos, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
-import { MoveData } from "./matter.player.object";
+import { MoveData, MovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
-import { ISprite } from "structure";
+import { ISprite, PlayerState } from "structure";
 export interface IMatterObject {
     id: number;
 
@@ -25,6 +25,8 @@ export interface IMatterObject {
     setVelocityY();
 
     setVelocity(x: number, b: number);
+
+    changeState(state: string, times?: number);
 
     // setMatterWorld(world: MatterWorld);
 
@@ -62,6 +64,8 @@ export interface IMatterObject {
 
     // setQueue(queue: any);
 
+    move(moveData: MovePos[]);
+
     moveMotion(x: number, y: number);
 
     mount(ele: IMatterObject): this;
@@ -82,7 +86,7 @@ export class MatterObject implements IMatterObject {
     protected mModel: ISprite;
     // protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mMoveData: MoveData = {};
-    // protected mCurState: string = PlayerState.IDLE;
+    protected mCurState: string = PlayerState.IDLE;
     protected mMoving: boolean = false;
     // protected mAnimationName: string = "";
     // protected mCurAnimationName: RunningAnimation;
@@ -175,7 +179,7 @@ export class MatterObject implements IMatterObject {
                 this.mMoveData.tweenLineAnim.destroy();
             }
         }
-        // this.changeState(PlayerState.IDLE);
+        this.changeState(PlayerState.IDLE);
         if (!this.body) return;
         this.setVelocity(0, 0);
         this.setStatic(true);
@@ -371,7 +375,14 @@ export class MatterObject implements IMatterObject {
         return this._sensor;
     }
 
+    public changeState(state, number: number = 1) { }
+
     public moveMotion(x: number, y: number) {
+    }
+
+    public move(path: MovePos[]) {
+        this.mMoveData.path = path;
+        this.startMove();
     }
 
     public async getInteractivePositionList(): Promise<IPos[]> {

@@ -34,7 +34,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
@@ -403,17 +403,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onMovePath(packet: PBpacket) {
-        let content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
-        if (content.nodeType !== NodeType.CharacterNodeType) {
-            return;
-        }
-        const play = this.get(content.id);
-        if (play) {
-            play.movePath(content);
-        }
-        content = null;
-    }
+    // private onMovePath(packet: PBpacket) {
+    //     let content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
+    //     if (content.nodeType !== NodeType.CharacterNodeType) {
+    //         return;
+    //     }
+    //     const play = this.get(content.id);
+    //     if (play) {
+    //         play.movePath(content);
+    //     }
+    //     content = null;
+    // }
 
     private onQueryElementHandler(id: number) {
         const ele = this.get(id);

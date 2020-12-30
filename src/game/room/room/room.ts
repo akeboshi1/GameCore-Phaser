@@ -284,19 +284,19 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         for (const oneHandler of this.mUpdateHandlers) {
             oneHandler.runWith([time, delta]);
         }
-        const eles = this.mElementManager ? this.mElementManager.getElements() : null;
-        if (eles) {
-            for (const ele of eles) {
-                ele.update(time, delta);
-            }
-        }
-        const players = this.mPlayerManager ? this.mPlayerManager.getElements() : null;
-        if (players) {
-            for (const player of players) {
-                // if (player.id === this.mPlayerManager.actor.id) continue;
-                player.update(time, delta);
-            }
-        }
+        // const eles = this.mElementManager ? this.mElementManager.getElements() : null;
+        // if (eles) {
+        //     for (const ele of eles) {
+        //         ele.update(time, delta);
+        //     }
+        // }
+        // const players = this.mPlayerManager ? this.mPlayerManager.getElements() : null;
+        // if (players) {
+        //     for (const player of players) {
+        //         // if (player.id === this.mPlayerManager.actor.id) continue;
+        //         player.update(time, delta);
+        //     }
+        // }
     }
 
     public updateClock(time: number, delta: number) {

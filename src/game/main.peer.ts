@@ -289,12 +289,12 @@ export class MainPeer extends RPCPeer {
         this.game.exitUser();
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public displayStartMove(id: number) {
-        if (!this.game.roomManager.currentRoom) return;
-        const element = this.game.roomManager.currentRoom.playerManager.get(id);
-        if (element) element.startMove();
-    }
+    // @Export([webworker_rpc.ParamType.num])
+    // public displayStartMove(id: number) {
+    //     if (!this.game.roomManager.currentRoom) return;
+    //     const element = this.game.roomManager.currentRoom.playerManager.get(id);
+    //     if (element) element.startMove();
+    // }
 
     @Export([webworker_rpc.ParamType.num])
     public displayCompleteMove(id: number) {
@@ -303,12 +303,12 @@ export class MainPeer extends RPCPeer {
         if (element) element.completeMove();
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public displayStopMove(id: number) {
-        if (!this.game.roomManager.currentRoom) return;
-        const element = this.game.roomManager.currentRoom.playerManager.get(id);
-        if (element) element.stopMove();
-    }
+    // @Export([webworker_rpc.ParamType.num])
+    // public displayStopMove(id: number) {
+    //     if (!this.game.roomManager.currentRoom) return;
+    //     const element = this.game.roomManager.currentRoom.playerManager.get(id);
+    //     if (element) element.stopMove();
+    // }
 
     @Export()
     public syncPosition(targetPoint) {
@@ -548,14 +548,14 @@ export class MainPeer extends RPCPeer {
     //     this.game.roomManager.currentRoom.tryMove(px, py, npx, npy);
     // }
 
-    @Export([webworker_rpc.ParamType.num])
-    public getInteractivePosition(id: number) {
-        const ele = this.game.roomManager.currentRoom.getElement(id);
-        if (ele) {
-            return ele.getInteractivePositionList();
-        }
-        return null;
-    }
+    // @Export([webworker_rpc.ParamType.num])
+    // public getInteractivePosition(id: number) {
+    //     const ele = this.game.roomManager.currentRoom.getElement(id);
+    //     if (ele) {
+    //         return ele.getInteractivePositionList();
+    //     }
+    //     return null;
+    // }
 
     // @Export([webworker_rpc.ParamType.num])
     // public disableBlock(id: number) {

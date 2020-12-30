@@ -224,7 +224,7 @@ export class PicaChatPanel extends BasePanel {
         this.mHornBtn = this.scene.make.image({ x: 159 * this.dpr * zoom, key: this.key, frame: "horn_icon" }, false).setScale(zoom);
         this.mEmojiBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "emoji" }, false).setScale(zoom);
         this.mGiftBtn = this.scene.make.image({ x: 218 * this.dpr * zoom, key: this.key, frame: "party_gift_icon" }, false).setScale(zoom);
-       // this.mNavigateBtn = this.scene.make.image({ x: 281 * this.dpr, key: this.key, frame: "more_btn" }, false).setScale(zoom);
+        // this.mNavigateBtn = this.scene.make.image({ x: 281 * this.dpr, key: this.key, frame: "more_btn" }, false).setScale(zoom);
         const space = 20 * this.dpr;
         this.mTitleBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.mScrollBtn.x = this.mScrollBtn.width * 0.5 + 5 * this.dpr;
@@ -316,7 +316,8 @@ export class PicaChatPanel extends BasePanel {
         const id = this.render.displayManager.user.id;
 
         this.render.mainPeer.setDragonBonesQueue(id, [{ animationName: "idle", scale: false, times: 1 }]);
-        this.render.mainPeer.changePlayerState(id, "jump", 1);
+        this.render.physicalPeer.changePlayerState(id, "jump", 1);
+        // this.render.mainPeer.changePlayerState(id, "jump", 1);
     }
     private onGiftHandler() {
         if (!this.giftPanel || !this.giftPanel.visible) {

@@ -2,11 +2,9 @@ import { op_def } from "pixelpai_proto";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { IElementManager } from "../element/element.manager";
-import { ISprite } from "structure";
-import { IPos, LogicPos } from "../../../utils/logic.pos";
+import { ISprite, PlayerState } from "structure";
+import { IPos } from "../../../utils/logic.pos";
 import { Element, IElement, MovePath } from "../element/element";
-import { PlayerState } from "structure";
-
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
@@ -32,62 +30,62 @@ export class Player extends Element implements IElement {
     //     super.move(moveData);
     // }
 
-    public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        const tmpPath = movePath.path;
-        if (!tmpPath) {
-            return;
-        }
-        let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
-        const paths = [];
-        this.mMoveData.arrivalTime = movePath.timestemp;
-        let angle = null;
-        let point = null;
-        let now = this.mElementManager.roomService.now();
-        let duration = 0;
-        let index = 0;
-        for (const path of tmpPath) {
-            point = path.point3f;
-            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
-                angle = index === 0 ? Math.atan2(lastPos.y - point.y, lastPos.x - point.x) * (180 / Math.PI)
-                    : Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
-            }
-            const dir = this.onCheckDirection(angle);
-            now += duration;
-            duration = path.timestemp - now;
-            paths.push({
-                x: point.x,
-                y: point.y + this.offsetY,
-                direction: dir,
-                duration,
-                onStartParams: angle,
-                onCompleteParams: { duration, index },
-                // onStart: (tween, target, params) => {
-                //     this.onCheckDirection(params);
-                // },
-                // onComplete: (tween, targets, params) => {
-                //     this.onMovePathPointComplete(params);
-                // }
-            });
-            lastPos = new LogicPos(point.x, point.y);
-            index++;
-        }
-        this.mMoveData.posPath = paths;
-        this.mMoveData.onCompleteParams = point;
-        // this.mMoveData.onComplete = this.mMovePathPointFinished;
-        this._doMove();
-    }
+    // public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
+    //     const tmpPath = movePath.path;
+    //     if (!tmpPath) {
+    //         return;
+    //     }
+    //     let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
+    //     const paths = [];
+    //     this.mMoveData.arrivalTime = movePath.timestemp;
+    //     let angle = null;
+    //     let point = null;
+    //     let now = this.mElementManager.roomService.now();
+    //     let duration = 0;
+    //     let index = 0;
+    //     for (const path of tmpPath) {
+    //         point = path.point3f;
+    //         if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+    //             angle = index === 0 ? Math.atan2(lastPos.y - point.y, lastPos.x - point.x) * (180 / Math.PI)
+    //                 : Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+    //         }
+    //         const dir = this.onCheckDirection(angle);
+    //         now += duration;
+    //         duration = path.timestemp - now;
+    //         paths.push({
+    //             x: point.x,
+    //             y: point.y + this.offsetY,
+    //             direction: dir,
+    //             duration,
+    //             onStartParams: angle,
+    //             onCompleteParams: { duration, index },
+    //             // onStart: (tween, target, params) => {
+    //             //     this.onCheckDirection(params);
+    //             // },
+    //             // onComplete: (tween, targets, params) => {
+    //             //     this.onMovePathPointComplete(params);
+    //             // }
+    //         });
+    //         lastPos = new LogicPos(point.x, point.y);
+    //         index++;
+    //     }
+    //     this.mMoveData.posPath = paths;
+    //     this.mMoveData.onCompleteParams = point;
+    //     // this.mMoveData.onComplete = this.mMovePathPointFinished;
+    //     this._doMove();
+    // }
 
-    public setDirection(dir: number) {
-        if (dir !== this.mDisplayInfo.avatarDir) {
-            this.mDisplayInfo.avatarDir = dir;
-            const id = this.mModel.id;
-            if (!this.mModel.currentAnimationName) {
-                this.mModel.currentAnimationName = PlayerState.IDLE;
-            }
-            this.mModel.setDirection(dir);
-            this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation);
-        }
-    }
+    // public setDirection(dir: number) {
+    //     if (dir !== this.mDisplayInfo.avatarDir) {
+    //         this.mDisplayInfo.avatarDir = dir;
+    //         const id = this.mModel.id;
+    //         if (!this.mModel.currentAnimationName) {
+    //             this.mModel.currentAnimationName = PlayerState.IDLE;
+    //         }
+    //         this.mModel.setDirection(dir);
+    //         this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation);
+    //     }
+    // }
 
     public changeState(val?: string, times?: number) {
         if (this.mCurState === val) return;

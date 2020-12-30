@@ -123,7 +123,7 @@ export class MotionManager {
                         return;
                     }
                     // const position = ele.getPosition();
-                    let targets = await this.render.mainPeer.getInteractivePosition(id);
+                    let targets = await this.render.physicalPeer.getInteractivePosition(id);
                     if (!targets || targets.length === 0) {
                         const { x, y } = ele;
                         targets = [{ x, y }];

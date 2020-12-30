@@ -330,7 +330,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
                 this.moveData.tweenLineAnim.destroy();
             }
         }
-        this.render.mainPeer.displayStopMove(this.id);
+        // this.render.mainPeer.displayStopMove(this.id);
     }
 
     public setDirection(dir: number) {
@@ -383,7 +383,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     protected onMoveStart() {
-        this.render.mainPeer.displayStartMove(this.id);
+        // this.render.mainPeer.displayStartMove(this.id);
     }
 
     protected onMoveComplete() {

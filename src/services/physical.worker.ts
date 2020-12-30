@@ -227,6 +227,27 @@ export class PhysicalPeer extends RPCPeer {
         this.matterWorld.setUser(obj);
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public async getInteractivePosition(id: number) {
+        const ele = this.getMatterObj(id);
+        if (ele) {
+            return await ele.getInteractivePositionList();
+        }
+        return null;
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public changePlayerState(id: number, state: string, times?: number) {
+        const dragonbones = this.getMatterObj(id);
+        if (dragonbones) dragonbones.changeState(state, times);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public move(id: number, path?: any) {
+        const dragonbones = this.getMatterObj(id);
+        if (dragonbones) dragonbones.move(path);
+    }
+
     @Export()
     public setModel(sprite: any) {
         const id = sprite.id;

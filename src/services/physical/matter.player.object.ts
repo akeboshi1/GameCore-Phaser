@@ -1,4 +1,5 @@
 import { Bodies, Body, Vector } from "matter-js";
+import { PlayerState } from "structure";
 import { LogicPos } from "utils";
 import { PhysicalPeer } from "../physical.worker";
 import { MatterObject } from "./matter.object";
@@ -27,6 +28,20 @@ export class MatterPlayerObject extends MatterObject {
         if (addToWorld) {
             this.matterWorld.add(body, this._sensor, this);
         }
+    }
+
+    public changeState(val?: string, times?: number) {
+        if (this.mCurState === val) return;
+        // if (!val) val = PlayerState.IDLE;
+        if (!val) {
+            val = PlayerState.IDLE;
+        }
+        this.mCurState = val;
+        // this.mModel.currentAnimationName = this.mCurState;
+        this.mModel.setAnimationName(this.mCurState, times);
+        const id = this.mModel.id;
+        this.peer.render.playAnimation(id, this.mModel.currentAnimation, undefined, times);
+        // (this.mDisplay as DragonbonesDisplay).play(this.mModel.currentAnimation);
     }
 
     protected get offsetY(): number {

@@ -82,7 +82,8 @@ export class User extends Player {
     public async unmount(targetPos?: IPos): Promise<this> {
         if (this.mRootMount) {
             let landingPos: IPos;
-            const pos = await this.mRootMount.getInteractivePositionList();
+            const pos = await this.mRoomService.game.physicalPeer.getInteractivePositionList(this.mRootMount.id);
+            // this.mRootMount.getInteractivePositionList();
             if (pos.length === 0) {
                 return;
             }
@@ -101,7 +102,7 @@ export class User extends Player {
             this.setPosition(landingPos);
             this.unmountSprite(mountID, landingPos);
             this.enableBlock();
-            this.mDirty = true;
+            // this.mDirty = true;
         }
         return this;
     }
@@ -181,7 +182,7 @@ export class User extends Player {
     //     // TODO
     //     const speed = this.mModel.speed * delayTime;
     //     this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-    // }
+    // }s
 
     public startMove() {
         this.changeState(PlayerState.WALK);
@@ -189,7 +190,7 @@ export class User extends Player {
     }
 
     public stopMove() {
-        super.stopMove();
+        //  super.stopMove();
         // this.mRoomService.game.physicalPeer.stopMove();
         if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
