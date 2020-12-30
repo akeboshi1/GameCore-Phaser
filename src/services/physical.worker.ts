@@ -172,9 +172,11 @@ export class PhysicalPeer extends RPCPeer {
     // render通知physical移动
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public moveMotion(worldX: number, worldY: number, id?: number) {
-        const obj = this.matterObjectMap.get(id);
-        if (!obj) return;
-        obj.moveMotion(worldX, worldY);
+        const matterUser = this.matterWorld.matterUser;
+        if (!matterUser) {
+            return;
+        }
+        matterUser.moveMotion(worldX, worldY);
     }
 
     @Export()

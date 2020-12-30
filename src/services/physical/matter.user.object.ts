@@ -38,6 +38,16 @@ export class MatterUserObject extends MatterPlayerObject {
         }
     }
 
+    public moveMotion(x: number, y: number, targetId?: number) {
+        if (this.mRootMount) {
+            this.mRootMount.removeMount(this);
+        }
+        this.mTargetPoint = { path: [new LogicPos(x, y)], targetId };
+        this.mSyncDirty = true;
+        this.matterWorld.setSensor(this.body, false);
+        this.startMove();
+    }
+
     public async findPath(startPos: IPos, targets: IPos[], targetId?: number, toReverse: boolean = false) {
         if (!targets) {
             return;
@@ -67,15 +77,6 @@ export class MatterUserObject extends MatterPlayerObject {
         this.matterWorld.setSensor(this.body, true);
         this.mTargetPoint = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
-        this.startMove();
-    }
-
-    public moveMotion(x: number, y: number, targetId?: number) {
-        // this.peer.mainPeer.removePartMount(this.id);
-        // this.peer.render.removeMount(this.id);
-        this.mTargetPoint = { path: [new LogicPos(x, y)], targetId };
-        this.mSyncDirty = true;
-        this.matterWorld.setSensor(this.body, false);
         this.startMove();
     }
 
@@ -117,7 +118,7 @@ export class MatterUserObject extends MatterPlayerObject {
     public tryStopMove(pos?: IPos) {
         this.stopMove();
         if (this.mTargetPoint) {
-            this.peer.mainPeer.tryStopMove(this.id, this.mTargetPoint.targetId, pos);
+            this.peer.mainPeer.tryStopMove(this.id, pos, this.mTargetPoint.targetId);
         }
     }
 

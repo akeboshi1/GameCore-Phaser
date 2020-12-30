@@ -518,8 +518,8 @@ export class MainPeer extends RPCPeer {
     //     ele.removePartMount(targets, paths);
     // }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public tryStopMove(id: number, targetID: number, pos?: any) {
+    @Export([webworker_rpc.ParamType.num])
+    public tryStopMove(id: number, pos?: any, targetID?: number,) {
         if (this.game.user) {
             this.game.user.tryStopMove(targetID, pos);
         }
