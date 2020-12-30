@@ -22,8 +22,8 @@ export class ItemButton extends ButtonEventDispatcher {
         this.bgFrame = bg;
         this.key = key;
         this.bg = scene.make.image({ key, frame: bg });
-        this.selectbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_icon_common_bg" });
-        this.setSize(this.bg.width, this.bg.height);
+        this.selectbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_icon_select_bg" });
+        this.setSize(this.selectbg.width, this.selectbg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemIcon.scale = this.dpr / this.zoom;
         this.countTex = this.scene.make.text({ text: "", style: UIHelper.blackStyle(dpr) })
@@ -32,7 +32,8 @@ export class ItemButton extends ButtonEventDispatcher {
         this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(0);
         this.starImg.x = -this.width * 0.5 + 2 * dpr;
         this.starImg.y = -this.height * 0.5 + 2 * dpr;
-        this.add([this.bg, this.itemIcon, this.starImg, this.countTex]);
+        this.add([this.selectbg, this.bg, this.itemIcon, this.starImg, this.countTex]);
+        this.selectbg.visible = false;
         this.enable = enable;
         this.on(ClickEvent.Tap, this.onTabClickHandler, this);
     }

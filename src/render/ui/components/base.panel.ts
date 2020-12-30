@@ -18,6 +18,7 @@ export class BasePanel extends Panel {
     protected uiLayer: string = MainUIScene.LAYER_UI;
     private exported: boolean = false;
     private exportListeners: Function[] = [];
+    private mSynchronize: boolean = false;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
         if (!scene.sys) Logger.getInstance().error("no scene system");
@@ -36,9 +37,10 @@ export class BasePanel extends Panel {
     }
 
     show(param?: any) {
+        this.mSynchronize = false;
         super.show(param);
         if (!this.mInitialized) return;
-        this.onShow();
+        if (!this.mSynchronize) this.onShow();
     }
 
     public hide() {
@@ -78,7 +80,10 @@ export class BasePanel extends Panel {
         if (index > 0) {
             this.startLoad();
         } else {
+            if (this.mResources) this.mResources.clear();
+            this.mPreLoad = false;
             this.init();
+            this.mSynchronize = true;
         }
     }
 
