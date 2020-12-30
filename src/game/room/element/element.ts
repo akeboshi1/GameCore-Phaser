@@ -308,6 +308,12 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setDirection(val: number) {
+        if (!this.mModel) {
+            return;
+        }
+        if (this.mModel.direction === val) {
+            return;
+        }
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
         }
