@@ -471,6 +471,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     protected async fetchProjection() {
+        if (!this.id) return;
         this.mProjectionSize = await this.render.mainPeer.fetchProjectionSize(this.id);
     }
 
