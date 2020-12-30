@@ -251,7 +251,8 @@ export class MatterObject implements IMatterObject {
             // ==== todo render setPositon
             return;
         }
-        Body.setPosition(this.body, Vector.create(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y));
+        const scale = this.peer.scaleRatio;
+        Body.setPosition(this.body, Vector.create(this._tempVec2.x * scale + this._offset.x, this._tempVec2.y * scale + this._offset.y));
     }
 
     public getPosition(): IPos {
@@ -320,6 +321,7 @@ export class MatterObject implements IMatterObject {
         if (index > -1) {
             this.mMounts.splice(index, 1);
         }
+        await this.peer.render.unmount(this.id, ele.id);
         return Promise.resolve();
     }
 
@@ -337,7 +339,8 @@ export class MatterObject implements IMatterObject {
         body.isSensor = this._sensor;
         if (this.hasPos) {
             this.hasPos = false;
-            Body.setPosition(this.body, Vector.create(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y));
+            const scale = this.peer.scaleRatio;
+            Body.setPosition(this.body, Vector.create(this._tempVec2.x * scale + this._offset.x, this._tempVec2.y * scale + this._offset.y));
         }
         if (addToWorld) {
             this.matterWorld.add(body, this._sensor, this);

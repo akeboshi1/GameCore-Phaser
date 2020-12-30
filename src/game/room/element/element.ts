@@ -353,7 +353,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mDirty === false && this.mMoving === false) {
             return;
         }
-        this._doMove(time, delta);
+        // this._doMove(time, delta);
         this.mDirty = false;
     }
 
@@ -600,7 +600,6 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         this.disableBlock();
-        this.mRoomService.game.physicalPeer.removeBody(this.id);
         this.mDirty = true;
         return this;
     }
@@ -615,7 +614,6 @@ export class Element extends BlockObject implements IElement {
             this.mRootMount = null;
             this.setPosition(pos, true);
             this.enableBlock();
-            this.mRoomService.game.physicalPeer.addBody(this.id);
             this.mDirty = true;
         }
         return this;

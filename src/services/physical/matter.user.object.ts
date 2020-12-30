@@ -33,6 +33,7 @@ export class MatterUserObject extends MatterPlayerObject {
             }
             this.setPosition(landingPos);
             // this.unmountSprite(mountID, landingPos);
+            this.addBody(this.peer.scaleRatio);
             // this.enableBlock();
             this.mDirty = true;
         }
@@ -54,7 +55,6 @@ export class MatterUserObject extends MatterPlayerObject {
         }
         if (this.mRootMount) {
             await this.mRootMount.removeMount(this, targets[0]);
-            return;
         }
         // this.peer.mainPeer.removePartMount(this.id, targets[0], path);
         const pos = this.mModel.pos;
