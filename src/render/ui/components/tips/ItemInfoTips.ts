@@ -119,10 +119,10 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
     private getDesText(data: any) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
         let text: string = `[stroke=#2640CA][color=#2640CA][b]${data.name}[/b][/color][/stroke]` + "\n";
-        let source = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.source")}[/color][/stroke]：`;
+        let source = `[stroke=#2640CA][color=#2640CA]${i18n.t("item.source")}[/color][/stroke]`;
         source += data.source;
         text += source + "\n";
-        let description = `[stroke=#2640CA][color=#2640CA]${i18n.t("common.description")}[/color][/stroke]：`;
+        let description = `[stroke=#2640CA][color=#2640CA]${i18n.t("item.des")}[/color][/stroke]：`;
         description += data.des;
         text += description;
         return text;

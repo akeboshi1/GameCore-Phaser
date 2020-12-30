@@ -3,6 +3,7 @@ import { ButtonEventDispatcher, DynamicImage, ThreeSliceButton } from "gamecoreR
 import { UIAtlasName } from "picaRes";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, UIHelper, Url } from "utils";
+import { ItemButton } from "../Components";
 export class PicaTaskItem extends Phaser.GameObjects.Container {
     public questData: op_client.IPKT_Quest;
     private content: Phaser.GameObjects.Container;
@@ -155,9 +156,9 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
     private taskLabel: Phaser.GameObjects.Text;
     private taskTex: Phaser.GameObjects.Text;
-    private needArr: TaskCell[] = [];
+    private needArr: ItemButton[] = [];
     private rewardLabel: Phaser.GameObjects.Text;
-    private rewardArr: TaskCell[] = [];
+    private rewardArr: ItemButton[] = [];
     private line: Phaser.GameObjects.Image;
     private dpr: number = 0;
     private zoom: number = 1;
@@ -176,9 +177,11 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         const posx = -width * 0.5 + 10 * dpr;
         const posy = -height * 0.5 + 8 * dpr;
         this.taskLabel = scene.make.text({ x: posx, y: posy, text: i18n.t("task.objective"), style: UIHelper.colorStyle("#625AC6", 12 * dpr) });
+        this.taskLabel.setFontStyle("bold");
         this.taskTex = scene.make.text({ x: posx, y: posy + 18 * dpr, text: i18n.t("task.collect_materials"), style: UIHelper.colorStyle("#625AC6", 12 * dpr) });
         this.taskTex.setWordWrapWidth(width - 10 * dpr, true);
         this.rewardLabel = scene.make.text({ x: posx, y: posy + 90 * dpr, text: i18n.t("task.rewards"), style: UIHelper.colorStyle("#625AC6", 12 * dpr) });
+        this.rewardLabel.setFontStyle("bold");
         const line = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_reward_divider" });
         line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         line.setPosition(-10 * dpr, posy + 110 * dpr);
@@ -189,14 +192,14 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
 
     public setItemData(questData: op_client.IPKT_Quest) {
         let taskPosy = 0;
-        const cellHeight = 56 * this.dpr;
+        const cellHeight = 67 * this.dpr;
         this.taskTex.text = this.getTaskTargetText(questData);
         this.createTaskCells(this.needArr, questData.targets, true);
         taskPosy = this.taskTex.y + this.taskTex.height + 8 * this.dpr;
         if (questData.targets.length > 0) {
             taskPosy += cellHeight * 0.5;
             this.sortItem(this.needArr, taskPosy);
-            taskPosy += cellHeight * 0.5 + 23 * this.dpr;
+            taskPosy += cellHeight * 0.5 +15 * this.dpr;
         }
         this.rewardLabel.y = taskPosy;
         taskPosy += this.rewardLabel.height + 5 * this.dpr;
@@ -210,7 +213,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.bg.y = this.height * 0.5;
     }
 
-    public sortItem(taskcells: TaskCell[], posY: number = 0) {
+    public sortItem(taskcells: ItemButton[], posY: number = 0) {
         const posx = -this.width * 0.5 + 10 * this.dpr;
         const list = taskcells;
         let value = 0;
@@ -226,22 +229,22 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.send = send;
     }
 
-    private createTaskCells(arr: TaskCell[], dataArr: op_client.ICountablePackageItem[], isTask: boolean = true) {
+    private createTaskCells(arr: ItemButton[], dataArr: op_client.ICountablePackageItem[], isTask: boolean = true) {
         for (const item of arr) {
             item.visible = false;
         }
         for (let i = 0; i < dataArr.length; i++) {
-            let item: TaskCell;
+            let item: ItemButton;
             if (i < arr.length) {
                 item = arr[i];
             } else {
-                item = new TaskCell(this.scene, this.dpr, this.zoom);
+                item = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.zoom, true);
                 item.on(ClickEvent.Tap, this.onTaskCellHandler, this);
                 arr.push(item);
                 this.add(item);
             }
             item.visible = true;
-            item.setCellData(dataArr[i], isTask);
+            item.setItemData(dataArr[i]);
         }
         return arr;
     }

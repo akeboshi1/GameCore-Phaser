@@ -27,8 +27,8 @@ export class ItemButton extends ButtonEventDispatcher {
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemIcon.scale = this.dpr / this.zoom;
         this.countTex = this.scene.make.text({ text: "", style: UIHelper.blackStyle(dpr) })
-            .setOrigin(1).setPadding(2 * dpr, 2 * dpr, 2 * dpr, 2 * dpr)
-            .setPosition(this.width * 0.5 - dpr, this.height * 0.5);
+            .setOrigin(1)
+            .setPosition(this.width * 0.5 - 5 * dpr, this.height * 0.5 - 4 * dpr);
         this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(0);
         this.starImg.x = -this.width * 0.5 + 2 * dpr;
         this.starImg.y = -this.height * 0.5 + 2 * dpr;
