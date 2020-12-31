@@ -30,8 +30,8 @@ export class ItemButton extends ButtonEventDispatcher {
             .setOrigin(1)
             .setPosition(this.width * 0.5 - 5 * dpr, this.height * 0.5 - 4 * dpr);
         this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(0);
-        this.starImg.x = -this.width * 0.5 + 2 * dpr;
-        this.starImg.y = -this.height * 0.5 + 2 * dpr;
+        this.starImg.x = -this.width * 0.5 + 6 * dpr;
+        this.starImg.y = -this.height * 0.5 + 6 * dpr;
         this.add([this.selectbg, this.bg, this.itemIcon, this.starImg, this.countTex]);
         this.selectbg.visible = false;
         this.enable = enable;
@@ -45,6 +45,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.starImg.visible = false;
         if (!itemData) {
             this.countTex.visible = false;
+            this.bg.setTexture(this.key, this.bgFrame);
             return;
         }
         if (itemData.rarity === 5) {

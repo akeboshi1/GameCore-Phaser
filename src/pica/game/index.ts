@@ -88,3 +88,5 @@ export * from "./ui/PicaElevator/PicaElevator";
 export * from "./ui/PicaElevator/PicaElevatorMediator";
 export * from "./ui/PicaFurnitureCompose/PicaFurnitureCompose";
 export * from "./ui/PicaFurnitureCompose/PicaFurnitureComposeMediator";
+export * from "./ui/PicaRecaste/PicaRecaste";
+export * from "./ui/PicaRecaste/PicaRecasteMediator";

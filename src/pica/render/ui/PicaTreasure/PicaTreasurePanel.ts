@@ -33,6 +33,8 @@ export class PicaTreasurePanel extends BasePanel {
     }
     preload() {
         this.addAtlas(this.key, "treasure/treasure.png", "treasure/treasure.json");
+        this.addAtlas(UIAtlasName.circleeffect, "circleeffect/circleeffect.png", "circleeffect/circleeffect.json");
+        this.addAtlas(UIAtlasName.stareffect, "stareffect/stareffect.png", "stareffect/stareffect.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.textureUrl(UIAtlasName.commonUrl), UIAtlasName.jsonUrl(UIAtlasName.commonUrl));
         this.addAtlas(UIAtlasKey.common3Key, UIAtlasName.textureUrl(UIAtlasName.common3Url), UIAtlasName.jsonUrl(UIAtlasName.common3Url));
         super.preload();

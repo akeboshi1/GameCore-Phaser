@@ -38,7 +38,8 @@
     "timelimit": "限时",
     "properties": "道具属性",
     "needproper": "需求属性",
-    "placetips": "布置自己的小屋的时候才能放置"
+    "placetips": "布置自己的小屋的时候才能放置",
+    "recaste":"重铸"
   },
   "common": {
     "cancel": "取消",

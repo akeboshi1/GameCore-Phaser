@@ -74,10 +74,10 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         // this.itemtips.setHandler(new Handler(this, this.onItemTipsHideHandler));
         // this.add(this.itemtips);
 
-        this.lightSprite = this.createSprite(this.key, this.lightAniKey, "", [1, 16]);
+        this.lightSprite = this.createSprite(UIAtlasName.circleeffect, this.lightAniKey, "", [1, 16]);
         this.lightSprite.x = 5 * this.dpr;
         this.add(this.lightSprite);
-        this.starSprite = this.createSprite(this.key, this.starAniKey, "star", [1, 18], 10, -1);
+        this.starSprite = this.createSprite(UIAtlasName.stareffect, this.starAniKey, "star", [1, 18], 10, -1);
         this.add(this.starSprite);
         this.starSprite.x = this.lightSprite.y;
         const maskW = 180 * this.dpr, maskH = 150 * this.dpr;

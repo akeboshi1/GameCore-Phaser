@@ -10,6 +10,8 @@ export class UIAtlasName {
     public static uicommon = "ui_common";
     public static iconcommon = "icon_common";
     public static effectcommon = "effect_common";
+    public static stareffect = "stareffect";
+    public static circleeffect = "circleeffect";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

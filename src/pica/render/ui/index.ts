@@ -98,3 +98,4 @@ export * from "./PicaCreateRole/PicaCreateRolePanel";
 export * from "./SinglePanel/PicaItemTipsPanel";
 export * from "./SinglePanel/PicaSingleManager";
 export * from "./PicaFurnitureCompose/PicaFurnitureComposePanel";
+export * from "./PicaRecaste/PicaRecastePanel";

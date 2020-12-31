@@ -56,7 +56,7 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
         if (this.panelInit) {
             if (this.mView) {
                 this.mView.setCategories();
-                this.mView.setStarData(this.userData.playerProperty.picaStar);
+                this.onUpdatePlayerInfoHandler();
             }
         }
     }
@@ -91,7 +91,8 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
     }
     private onUpdatePlayerInfoHandler() {
         if (this.mView) {
-            this.mView.setStarData(this.userData.playerProperty.picaStar);
+            const value = this.userData.playerProperty.picaStar ? this.userData.playerProperty.picaStar.value : 0;
+            this.mView.setStarData(value);
         }
     }
 

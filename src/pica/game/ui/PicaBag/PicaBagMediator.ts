@@ -1,6 +1,6 @@
 import { PicaBag } from "./PicaBag";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
 
 export class PicaBagMediator extends BasicMediator {
@@ -107,11 +107,12 @@ export class PicaBagMediator extends BasicMediator {
         if (this.mView) this.mView.queryRefreshPackage(true);
     }
 
-    private onPackageCategoryHandler(subcategory: op_def.IStrPair[]) {
+    private onPackageCategoryHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES) {
         if (!this.mView) {
             return;
         }
-        this.mView.setCategories(subcategory);
+        this.mView.setCategories(content.subcategory);
+        this.cacheMgr.setBagCategory(content);
     }
 
     private onQueryCommodityResourceHandler(
@@ -122,7 +123,12 @@ export class PicaBagMediator extends BasicMediator {
 
     private onGetCategoriesHandler(categoryType: number) {
         if (this.model) {
-            this.model.getCategories(categoryType);
+            const data = this.cacheMgr.getBagCategory(categoryType);
+            if (!data) {
+                this.model.getCategories(categoryType);
+            } else {
+                this.mView.setCategories(data.subcategory);
+            }
         }
     }
 
@@ -165,5 +171,10 @@ export class PicaBagMediator extends BasicMediator {
 
     private get model(): PicaBag {
         return (<PicaBag>this.mModel);
+    }
+
+    private get cacheMgr(): CacheDataManager {
+        const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        return mgr;
     }
 }

@@ -1,9 +1,9 @@
-import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, Text, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
-import { BackgroundScaleButton, CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, TextButton, ThreeSlicePath, UiManager } from "gamecoreRender";
+import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
+import { CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, MoreButtonPanel, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay, ItemButton } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
-import { Coin, Font, Handler, i18n, UIHelper, Url } from "utils";
+import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 export class PicaBagPanel extends PicaBasePanel {
@@ -20,6 +20,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private mPropGridBg: Phaser.GameObjects.Graphics;
   private mCategoryScroll: GameScroller;
   private useBtn: NineSliceButton;
+  private recasteBtn: NineSliceButton;
   private topBtns: TabButton[] = [];
   private moneyCon: Phaser.GameObjects.Container;
   private moneyvalue: ImageValue;
@@ -28,7 +29,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private nameText: Phaser.GameObjects.Text;
   private starImage: Phaser.GameObjects.Image;
   private moreButton: Button;
-  private moreButtonPanel: MoreButtonPanel;
+  // private moreButtonPanel: MoreButtonPanel;
 
   private mDetailBubble: DetailBubble;
   private mSceneType: any;
@@ -65,6 +66,8 @@ export class PicaBagPanel extends PicaBasePanel {
 
     this.useBtn.x = width - this.useBtn.width / 2 - 10 * this.dpr;
     this.useBtn.y = this.mCategoryCon.y - this.useBtn.height / 2;
+    this.recasteBtn.x = this.useBtn.x;
+    this.recasteBtn.y = this.useBtn.y - this.recasteBtn.height - 15 * this.dpr;
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = (height - 296 * this.dpr - 60 * this.dpr) * 0.5 + 60 * this.dpr;
@@ -79,8 +82,8 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mPropGrid.layout();
     this.mPropGrid.resetMask();
     this.mCategoryScroll.refreshMask();
-    this.moreButtonPanel.x = width * 0.5;
-    this.moreButtonPanel.y = height * 0.5;
+    // this.moreButtonPanel.x = width * 0.5;
+    // this.moreButtonPanel.y = height * 0.5;
     this.setSize(width, height);
     this.setInteractive();
   }
@@ -130,8 +133,8 @@ export class PicaBagPanel extends PicaBasePanel {
     }
 
     const len = subProps.length;
-    if (len < 24) {
-      subProps = subProps.concat(new Array(24 - len));
+    if (len < 18) {
+      subProps = subProps.concat(new Array(18 - len));
     }
     this.mPropGrid.setItems(subProps);
     if (!isupdate) {
@@ -168,12 +171,14 @@ export class PicaBagPanel extends PicaBasePanel {
     if (!this.mInitialized) return;
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
     this.useBtn.on(ClickEvent.Tap, this.onUseBtnHandler, this);
+    this.recasteBtn.on(ClickEvent.Tap, this.onRecasteHandler, this);
   }
 
   public removeListen() {
     if (!this.mInitialized) return;
     this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
     this.useBtn.off(ClickEvent.Tap, this.onUseBtnHandler, this);
+    this.recasteBtn.off(ClickEvent.Tap, this.onRecasteHandler, this);
   }
 
   destroy() {
@@ -278,6 +283,8 @@ export class PicaBagPanel extends PicaBasePanel {
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.use"), "#996600");
+    this.recasteBtn = this.createNineButton(this.useBtn.x, this.useBtn.y, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("furni_bag.recaste"), "#996600");
+    this.recasteBtn.visible = false;
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
     this.mDetailDisplay.setFixedScale(2 * this.dpr / this.scale);
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
@@ -306,8 +313,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
     this.add([this.mBackground, this.mPropGridBg, this.mIconBg, this.mCloseBtn, this.moneyCon, this.mDetailDisplay, nameBg, this.nameText, this.starImage,
-    this.moreButton, this.mDetailBubble, this.mCategoryCon, this.useBtn]);
-
+    this.moreButton, this.mDetailBubble, this.mCategoryCon, this.useBtn, this.recasteBtn]);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
     const capH = (propFrame.height) + 9 * this.dpr;
@@ -350,10 +356,10 @@ export class PicaBagPanel extends PicaBasePanel {
       }
     });
     this.add(this.mPropGrid);
-    this.moreButtonPanel = new MoreButtonPanel(this.scene, width, height, this.dpr);
-    this.moreButtonPanel.setHandler(new Handler(this, this.onMoreButtonHandler));
-    this.add(this.moreButtonPanel);
-    this.moreButtonPanel.hide();
+    // this.moreButtonPanel = new MoreButtonPanel(this.scene, width, height, this.dpr);
+    // this.moreButtonPanel.setHandler(new Handler(this, this.onMoreButtonHandler));
+    // this.add(this.moreButtonPanel);
+    // this.moreButtonPanel.hide();
     this.resize(0, 0);
     super.init();
   }
@@ -605,12 +611,15 @@ export class PicaBagPanel extends PicaBasePanel {
   private onTopCategoryHandler(item: NinePatchTabButton) {
     const categoryType = item.getData("data");
     this.clearCategoryData();
+    this.recasteBtn.visible = false;
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
         this.useBtn.setText(i18n.t("furni_bag.add"));
+        if (categoryType === 1) this.moreButton.visible = true;
       } else {
         this.useBtn.setText(i18n.t("common.use"));
+        this.moreButton.visible = false;
       }
     }
   }
@@ -686,10 +695,16 @@ export class PicaBagPanel extends PicaBasePanel {
   }
   private onRechargeHandler() {
   }
+  private onRecasteHandler() {
+    const data = this.mSelectedItemData;
+    this.render.mainPeer.showMediator(ModuleName.PICARECASTE_NAME, true, data);
+  }
   private onMoreHandler() {
     // if (!this.mSelectedItemData) return;
     // this.moreButtonPanel.show();
     // this.moreButtonPanel.setItemData(this.mSelectedItemData, this.categoryType);
+    this.recasteBtn.visible = true;
+    this.moreButton.visible = false;
   }
   private updateCategeoriesLoc(inputBoo: boolean) {
     const list = this.mCategoryScroll.getItemList();
@@ -1033,98 +1048,4 @@ class Item extends Phaser.GameObjects.Container {
   public set isEquip(value) {
     this.selectIcon.visible = value;
   }
-}
-
-class MoreButtonPanel extends Phaser.GameObjects.Container {
-  private blackGraphic: Phaser.GameObjects.Graphics;
-  private topbg: ThreeSlicePath;
-  private place: BackgroundScaleButton;
-  private sell: BackgroundScaleButton;
-  private dpr: number;
-  private send: Handler;
-  private itemdata: op_client.CountablePackageItem;
-  constructor(scene: Phaser.Scene, width: number, height: number, dpr) {
-    super(scene);
-    this.dpr = dpr;
-    this.setSize(width, height);
-    this.init();
-  }
-
-  public setItemData(data: op_client.CountablePackageItem, category: number) {
-    this.itemdata = data;
-    this.setLayoutType(category);
-  }
-  /**
-   *
-   * @param type 1 || 5 - 家具 3 - 道具
-   */
-  public setLayoutType(type: number) {
-    this.place.visible = false;
-    this.sell.visible = false;
-    this.removeListen();
-    if (type === 1 || type === 5) {
-      this.place.visible = true;
-      this.place.y = this.height * 0.5 - this.place.height * 0.5;
-      this.topbg.y = this.place.y - this.place.height * 0.5 - this.topbg.height * 0.5;
-      this.place.on(ClickEvent.Tap, this.onPlaceHandler, this);
-    } else if (type === 3) {
-      this.sell.visible = true;
-      this.sell.y = this.height * 0.5 - this.sell.height * 0.5;
-      this.topbg.y = this.sell.y - this.sell.height * 0.5 - this.topbg.height * 0.5;
-      this.sell.on(ClickEvent.Tap, this.onSellHandler, this);
-    }
-    this.on("pointerdown", this.hide, this);
-  }
-
-  public setHandler(send: Handler) {
-    this.send = send;
-  }
-
-  public show() {
-    this.addListen();
-    this.visible = true;
-  }
-
-  public hide() {
-    this.removeListen();
-    this.visible = false;
-  }
-
-  protected addListen() {
-    // this.place.on(ClickEvent.Tap, this.onPlaceHandler, this);
-    // this.sell.on(ClickEvent.Tap, this.onSellHandler, this);
-    // this.on("pointerdown", this.hide, this);
-  }
-
-  protected removeListen() {
-    this.place.off(ClickEvent.Tap, this.onPlaceHandler, this);
-    this.sell.off(ClickEvent.Tap, this.onSellHandler, this);
-    this.off("pointerdown", this.hide, this);
-  }
-  protected init() {
-    this.blackGraphic = this.scene.make.graphics(undefined, false);
-    this.blackGraphic.clear();
-    this.blackGraphic.fillStyle(0x000000, 0.66);
-    this.blackGraphic.fillRect(0, 0, this.width, this.height);
-    this.blackGraphic.x = -this.width * 0.5;
-    this.blackGraphic.y = -this.height * 0.5;
-    this.topbg = new ThreeSlicePath(this.scene, 0, 0, 327 * this.dpr, 10 * this.dpr, UIAtlasName.uicommon, ["bag_more_left", "bag_more_middle", "bag_more_right"]);
-    this.place = new BackgroundScaleButton(this.scene, 327 * this.dpr, 53 * this.dpr, UIAtlasName.uicommon, "bag_more_uncheck", "bag_more_select", i18n.t("furni_bag.add"), this.dpr, 1, false);
-    this.place.setTextStyle(UIHelper.blackStyle(this.dpr, 20));
-    this.sell = new BackgroundScaleButton(this.scene, 327 * this.dpr, 53 * this.dpr, UIAtlasName.uicommon, "bag_more_uncheck", "bag_more_select", i18n.t("common.sold"), this.dpr, 1, false);
-    this.sell.setTextStyle(UIHelper.blackStyle(this.dpr, 20));
-    this.add([this.blackGraphic, this.topbg, this.place, this.sell]);
-    this.setInteractive();
-  }
-
-  private onPlaceHandler() {
-    if (this.send) this.send.runWith(["place", this.itemdata]);
-    this.hide();
-  }
-
-  private onSellHandler() {
-    if (this.send) this.send.runWith(["sell", this.itemdata]);
-    this.hide();
-  }
-
 }

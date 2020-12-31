@@ -4,7 +4,7 @@ export class PlayerProperty {
     public playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     public nickname: string;
     public cid: string;
-    public picaStar: number;
+    public picaStar: op_pkt_def.IPKT_Property;
     public coin: op_pkt_def.IPKT_Property;
     public diamond: op_pkt_def.IPKT_Property;
     public level: op_pkt_def.IPKT_Property;
@@ -20,6 +20,7 @@ export class PlayerProperty {
         if (!this.playerInfo) {
             this.playerInfo = info;
         } else {
+            this.updateBaseValue(info);
             this.updateRooms(info.rooms);
             this.updateHandhelds(info.handheld);
             this.updateProperties(info.properties);
@@ -103,6 +104,10 @@ export class PlayerProperty {
         }
     }
 
+    protected updateBaseValue(info: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO) {
+        if (info.hasOwnProperty("cid")) this.cid = info.cid;
+        if (info.hasOwnProperty("nickname")) this.nickname = info.nickname;
+    }
     protected updateBaseProperties() {
         this.cid = this.playerInfo.cid;
         this.rooms = this.playerInfo.rooms;
@@ -110,7 +115,6 @@ export class PlayerProperty {
         this.handheld = this.playerInfo.handheld;
         this.command = this.playerInfo.command;
         this.nickname = this.playerInfo.nickname;
-        this.picaStar = this.playerInfo.picaStar;
         this.propertiesMap = new Map<string, op_pkt_def.IPKT_Property>();
         for (const proper of this.properties) {
             if (!proper.hasOwnProperty("id")) {
@@ -130,6 +134,8 @@ export class PlayerProperty {
                 this.workChance = proper;
             } else if (proper.id === "IV0000005") {
                 this.experience = proper;
+            } else if (proper.id === "IV0000019") {
+                this.picaStar = proper;
             }
         }
     }

@@ -199,7 +199,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
       bottom: 0 * this.dpr
     });
     starbg.x = -starbg.width * 0.5;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_silver", this.dpr, {
+    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_big", this.dpr, {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
     this.starvalue.setLayout(1);

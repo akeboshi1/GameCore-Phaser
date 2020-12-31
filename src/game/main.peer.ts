@@ -10,6 +10,7 @@ import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, R
 import { PicaGame } from "picaWorker";
 import { CacheDataManager } from "./data.manager/cache.dataManager";
 import { DataMgrType } from "./data.manager/dataManager";
+import { SceneDataManager } from "./data.manager";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -474,7 +475,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public getCurRoom() {
-        const mgr = this.game.dataManager.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        const mgr = this.game.dataManager.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
         return mgr ? mgr.curRoom : null;
     }
 
