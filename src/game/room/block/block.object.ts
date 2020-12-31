@@ -1,5 +1,5 @@
-import { Bodies } from "matter-js";
-import { IPos, Logger, LogicPos, Position45 } from "utils";
+import { Bodies, Body, Vertices } from "matter-js";
+import { IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
 import { ISprite } from "../display/sprite/sprite";
 import { InputEnable } from "../element/element";
 import { MatterObject } from "../physical/matter.object";
@@ -203,16 +203,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         let paths = [];
         const miniSize = this.mRoomService.miniSize;
         if (resule) {
-            paths[0] = [];
-            for (let i = 0; i < cols; i++) {
-                if (i !== 0 && i !== cols - 1) continue;
-                for (let j = 0; j < rows; j++) {
-                    if (collisionArea[i][j] === 1) {
-                        const pos = Position45.transformTo90(new LogicPos(i, j), miniSize);
-                        paths[0].push({ x: pos.x, y: -miniSize.tileHeight * 0.5 + pos.y }, { x: pos.x + miniSize.tileWidth * 0.5, y: pos.y }, { x: pos.x, y: pos.y + miniSize.tileHeight * 0.5 }, { x: pos.x - miniSize.tileWidth * 0.5, y: pos.y });
-                    }
-                }
-            }
+            paths[0] = this.calcBodyPath(collisionArea, miniSize);
         } else {
             paths = [[transformToMini90(new LogicPos(0, 0)), transformToMini90(new LogicPos(rows, 0)), transformToMini90(new LogicPos(rows, cols)), transformToMini90(new LogicPos(0, cols))]];
         }
@@ -241,6 +232,34 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
         const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 0 });
         this.setExistingBody(body, true);
+    }
+
+    private calcBodyPath(collisionArea: number[][], miniSize: IPosition45Obj) {
+        let allpoints = [];
+        for (let i = 0 ; i < collisionArea.length; i++) {
+            for (let j = 0 ; j < collisionArea[i].length; j++) {
+                if (collisionArea[i][j] === 1) {
+                    allpoints = allpoints.concat(this.transformBodyPath2(j, i, miniSize));
+                }
+            }
+        }
+
+        const convexHull = require("monotone-convex-hull-2d");
+        const resultIndices = convexHull(allpoints);
+
+        return resultIndices.map((i) => ({ x: allpoints[i][0], y: allpoints[i][1]}));
+    //    return paths;
+    }
+
+    private transformBodyPath(x: number, y: number, miniSize: IPosition45Obj) {
+        const pos = Position45.transformTo90(new LogicPos(x, y), miniSize);
+        return [{ x: pos.x, y: -miniSize.tileHeight * 0.5 + pos.y }, { x: pos.x + miniSize.tileWidth * 0.5, y: pos.y }, { x: pos.x, y: pos.y + miniSize.tileHeight * 0.5 }, { x: pos.x - miniSize.tileWidth * 0.5, y: pos.y }];
+    }
+
+    private transformBodyPath2(x: number, y: number, miniSize: IPosition45Obj) {
+        const pos = Position45.transformTo90(new LogicPos(x, y), miniSize);
+        const result = [[pos.x, -miniSize.tileHeight * 0.5 + pos.y ], [pos.x + miniSize.tileWidth * 0.5, pos.y ], [pos.x, pos.y + miniSize.tileHeight * 0.5 ], [pos.x - miniSize.tileWidth * 0.5, pos.y]];
+        return result;
     }
 
     get id(): number {
