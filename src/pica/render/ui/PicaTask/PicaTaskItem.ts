@@ -197,9 +197,11 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.createTaskCells(this.needArr, questData.targets, true);
         taskPosy = this.taskTex.y + this.taskTex.height + 8 * this.dpr;
         if (questData.targets.length > 0) {
-            taskPosy += cellHeight * 0.5;
-            this.sortItem(this.needArr, taskPosy);
-            taskPosy += cellHeight * 0.5 +15 * this.dpr;
+            if (this.hasTargetWithDisplay(questData)) {
+                taskPosy += cellHeight * 0.5;
+                this.sortItem(this.needArr, taskPosy);
+                taskPosy += cellHeight * 0.5 +15 * this.dpr;
+            }
         }
         this.rewardLabel.y = taskPosy;
         taskPosy += this.rewardLabel.height + 5 * this.dpr;
@@ -238,15 +240,25 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
             if (i < arr.length) {
                 item = arr[i];
             } else {
-                item = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.zoom, true);
-                item.on(ClickEvent.Tap, this.onTaskCellHandler, this);
-                arr.push(item);
-                this.add(item);
+                if (dataArr[i].display && dataArr[i].display.texturePath) {
+                    item = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.zoom, true);
+                    item.on(ClickEvent.Tap, this.onTaskCellHandler, this);
+                    arr.push(item);
+                    this.add(item);
+                }
             }
-            item.visible = true;
-            item.setItemData(dataArr[i]);
+            if (item) {
+                item.visible = true;
+                item.setItemData(dataArr[i]);
+            }
         }
         return arr;
+    }
+
+    private hasTargetWithDisplay(questData: op_client.IPKT_Quest) {
+        for (const target of questData.targets) {
+            if (target.display && target.display.texturePath) return true;
+        }
     }
 
     private getTaskTargetText(questData: op_client.IPKT_Quest) {
