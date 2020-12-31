@@ -6,10 +6,8 @@
     "refresh": "Refresh"
   },
   "item": {
-    "source": "source: ",
     "copy_suc": "{{name}} copied",
-    "name": "name",
-    "des": "description"
+    "name": "name"
   },
   "reconnect": {
     "des": "Click to re-login"

@@ -5,10 +5,8 @@
     "refreshtime": "下一次刷新时间："
   },
   "item": {
-    "source": "来源：",
     "copy_suc": "复制{{name}}成功",
-    "name": "名字",
-    "des": "描述"
+    "name": "名字"
   },
   "reconnect": {
     "des": "点击重新登陆"
