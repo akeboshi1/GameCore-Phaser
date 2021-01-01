@@ -235,20 +235,34 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     }
 
     private calcBodyPath(collisionArea: number[][], miniSize: IPosition45Obj) {
-        let allpoints = [];
-        for (let i = 0 ; i < collisionArea.length; i++) {
-            for (let j = 0 ; j < collisionArea[i].length; j++) {
-                if (collisionArea[i][j] === 1) {
-                    allpoints = allpoints.concat(this.transformBodyPath2(j, i, miniSize));
-                }
-            }
-        }
-
+        const allpoints = this.prepareVertices(collisionArea).reduce((acc, p) => acc.concat(this.transformBodyPath2(p[1], p[0], miniSize)), []);
+        // console.log(allpoints);
         const convexHull = require("monotone-convex-hull-2d");
         const resultIndices = convexHull(allpoints);
 
         return resultIndices.map((i) => ({ x: allpoints[i][0], y: allpoints[i][1]}));
     //    return paths;
+    }
+
+    private prepareVertices(collisionArea: number[][]): any[] {
+        const allpoints = [];
+        for (let i = 0 ; i < collisionArea.length; i++) {
+            let leftMost, rightMost;
+            for (let j = 0 ; j < collisionArea[i].length; j++) {
+                if (collisionArea[i][j] === 1) {
+                    if (!leftMost) {
+                        leftMost = [i, j];
+                        allpoints.push(leftMost);
+                    } else {
+                        rightMost = [i, j];
+                    }
+                }
+            }
+            if (rightMost) {
+                allpoints.push(rightMost);
+            }
+        }
+        return allpoints;
     }
 
     private transformBodyPath(x: number, y: number, miniSize: IPosition45Obj) {
