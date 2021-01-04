@@ -4,11 +4,12 @@ import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
 import { MoveData, MovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
-import { ISprite, PlayerState } from "structure";
+import { PlayerState } from "structure";
+import { MatterSprite } from "./matter.sprite";
 export interface IMatterObject {
     id: number;
 
-    model: ISprite;
+    model: MatterSprite;
 
     body: Body;
 
@@ -83,7 +84,7 @@ export class MatterObject implements IMatterObject {
     public _offset: Vector;
     public _sensor: boolean = false;
     public body: Body;
-    protected mModel: ISprite;
+    protected mModel: MatterSprite;
     // protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
@@ -134,7 +135,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public updateModel(model: any) {
-        if (this.mModel.id !== model.id) {
+        if (!this.mModel || this.mModel.id !== model.id) {
             return;
         }
         //  this.peer.world.removeFromMap(this.mModel);

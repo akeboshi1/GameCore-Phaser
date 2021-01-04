@@ -100,10 +100,6 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.currentWalkableArea = this.getWalkableArea();
         }
 
-        if (!this.currentWalkableArea) {
-            this.currentWalkableArea = this.getWalkableArea();
-        }
-
         if (!this.currentCollisionPoint) {
             this.currentCollisionPoint = this.getOriginPoint();
         }
