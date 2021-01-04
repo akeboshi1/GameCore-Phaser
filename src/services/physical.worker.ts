@@ -212,6 +212,17 @@ export class PhysicalPeer extends RPCPeer {
         obj.updateModel(model);
     }
 
+    @Export()
+    public updateAnimations(displayInfo: any) {
+        const id = displayInfo.id;
+        let obj = this.matterObjectMap.get(id);
+        if (!obj) {
+            obj = new MatterObject(this, id);
+            this.matterObjectMap.set(id, obj);
+        }
+        obj.updateAnimations(displayInfo);
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public createMatterObject(id) {
         if (this.matterObjectMap.get(id)) return;

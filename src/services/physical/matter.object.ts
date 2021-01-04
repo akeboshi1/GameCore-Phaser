@@ -37,7 +37,9 @@ export interface IMatterObject {
 
     setModel(sprite: op_client.ISprite);
 
-    updateModel(sprite: op_client.ISprite);
+    updateModel(sprite: any);
+
+    updateAnimations(displayInfo: any);
 
     setPosition(p: IPos, update: boolean): void;
 
@@ -117,7 +119,7 @@ export class MatterObject implements IMatterObject {
     // }
 
     public setModel(sprite: any) {
-        this.mModel = sprite;
+        this.mModel = new MatterSprite(sprite);
         if (!sprite) {
             return;
         }
@@ -139,8 +141,15 @@ export class MatterObject implements IMatterObject {
             return;
         }
         //  this.peer.world.removeFromMap(this.mModel);
+        if (model.hasOwnProperty("animations")) {
+            this.mModel.updateAnimations(model.animations);
+        }
         if (model.hasOwnProperty("point3f")) {
             const pos = model.point3f;
+            this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
+        }
+        if (model.hasOwnProperty("pos")) {
+            const pos = model.pos;
             this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
         if (model.hasOwnProperty("mountSprites")) {
@@ -150,6 +159,19 @@ export class MatterObject implements IMatterObject {
         }
         this.update();
         // this.peer.world.addToMap(this.mModel);
+    }
+
+    public updateAnimations(displayInfo: any) {
+        if (!this.mModel || this.mModel.id !== displayInfo.id) {
+            return;
+        }
+        if (displayInfo.hasOwnProperty("animations")) {
+            this.mModel.updateAnimations(displayInfo.animations);
+        }
+        if (displayInfo.hasOwnProperty("pos")) {
+            const pos = displayInfo.pos;
+            this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
+        }
     }
 
     public startMove() {

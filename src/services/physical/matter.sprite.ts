@@ -21,12 +21,16 @@ export class MatterSprite {
     protected currentCollisionPoint: LogicPoint;
     protected originWalkPoint: LogicPoint;
     protected interactive: op_def.IPBPoint2f[];
-    constructor(obj: op_client.ISprite) {
+    constructor(obj: any) {
         this.id = obj.id;
         this.sprite = obj;
         if (obj.point3f) {
             const point = obj.point3f;
             this.pos = new LogicPos(point.x, point.y, point.z);
+        } else if (obj.displayInfo && obj.displayInfo.pos) {
+            this.pos = new LogicPos(obj.displayInfo.pos.x, obj.displayInfo.pos.y);
+        } else if (obj.pos) {
+            this.pos = new LogicPos(obj.pos.x, obj.pos.y);
         } else {
             this.pos = new LogicPos(0, 0);
         }
@@ -34,27 +38,24 @@ export class MatterSprite {
         this.setDirection(obj.direction || 3);
         const anis = obj.animations;
         if (anis) {
-            if (!this.animations) this.animations = new Map();
-            const tmpList = [];
-            const objAnis = anis;
-            for (const ani of objAnis) {
-                const model = new AnimationModel(ani);
-                tmpList.push(model);
-            }
-            // this.displayInfo = new FramesModel({
-            //     animations: {
-            //         defaultAnimationName: this.currentAnimationName,
-            //         display,
-            //         animationData: tmpList,
-            //     },
-            //     id: this.id
-            // });
-            // if (defAnimation) {
-            //     this.currentAnimationName = defAnimation;
-            // }
-
-            this.setAnimationModelData(tmpList);
+            this.initAnimations(anis);
         }
+
+        if (!this.interactive) {
+            // this.interactive = this.
+        }
+        this.speed = obj.speed;
+    }
+
+    public initAnimations(anis: any) {
+        if (!this.animations) this.animations = new Map();
+        const tmpList = [];
+        const objAnis = anis;
+        for (const ani of objAnis) {
+            const model = new AnimationModel(ani);
+            tmpList.push(model);
+        }
+        this.setAnimationModelData(tmpList);
         if (!this.currentCollisionArea) {
             this.currentCollisionArea = this.getCollisionArea();
         }
@@ -67,11 +68,6 @@ export class MatterSprite {
             this.currentCollisionPoint = this.getOriginPoint();
         }
 
-        if (!this.interactive) {
-            // this.interactive = this.
-        }
-
-        this.speed = obj.speed;
     }
 
     public setPosition(x: number, y: number) {
@@ -82,18 +78,11 @@ export class MatterSprite {
         this.pos.y = y;
     }
 
-    public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
-        if (!display || !animations) {
+    public updateAnimations(anis: op_gameconfig_01.IAnimationData[]) {
+        if (!anis) {
             return;
         }
-        if (display) {
-            const anis = [];
-            const objAnis = animations;
-            for (const ani of objAnis) {
-                anis.push(new AnimationModel(ani));
-            }
-            defAnimation = defAnimation || this.currentAnimationName || "";
-        }
+        this.initAnimations(anis);
     }
 
     setDirection(val: number) {
@@ -119,7 +108,7 @@ export class MatterSprite {
     }
 
     public getInteractiveArea(aniName: string, flip: boolean = false): op_def.IPBPoint2i[] | undefined {
-        if (!this.sprite.animations) return;
+        if (!this.sprite.animations) return undefined;
         const ani = this.animations.get(aniName);
         if (ani) {
             if (flip) {
@@ -164,11 +153,13 @@ export class MatterSprite {
     }
 
     public getCollisionArea() {
+        if (!this.sprite.animations) return [[1]];
         if (!this.currentAnimation) {
             return;
         }
         const animationName = this.currentAnimation.name;
         const ani = this.getAnimations(animationName);
+        if (!ani) return [[1]];
         const flip = this.currentAnimation.flip;
         if (flip) {
             return Helpers.flipArray(ani.collisionArea);
@@ -184,11 +175,13 @@ export class MatterSprite {
     }
 
     public getWalkableArea() {
+        if (!this.sprite.animations) return [[0]];
         if (!this.currentAnimation) {
             return;
         }
         const animationName = this.currentAnimation.name;
         const ani = this.getAnimations(animationName);
+        if (!ani) return [[0]];
         const flip = this.currentAnimation.flip;
         if (flip) {
             return Helpers.flipArray(ani.walkableArea);
@@ -199,11 +192,13 @@ export class MatterSprite {
     }
 
     public getOriginPoint() {
+        if (!this.sprite.animations) return new LogicPoint(0, 0);
         if (!this.currentAnimation) {
             return;
         }
         const animationName = this.currentAnimation.name;
         const ani = this.getAnimations(animationName);
+        if (!ani) return new LogicPoint(0, 0);
         const flip = this.currentAnimation.flip;
         const originPoint = ani.originPoint;
         if (flip) {
