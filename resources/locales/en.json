@@ -360,5 +360,8 @@
     "fourstar": "Four Star",
     "spendstar": "Need to consume [color=#FFDE29][b]{{name}}[/b][/color] picard star",
     "starpicatips": "There are not enough starpicas"
+  },
+  "recaste": {
+    "tip": "Please select the furniture that you want to recast"
   }
 }

@@ -1,13 +1,13 @@
-import { NineSliceButton, GameGridTable, GameScroller, Button, BBCodeText, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { CommonBackground, DynamicImage, DynamicImageValue, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
+import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, ClickEvent } from "apowophaserui";
+import { ButtonEventDispatcher, CommonBackground, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay, ItemButton } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { op_client, op_def } from "pixelpai_proto";
+import { Font, Handler, i18n, UIHelper } from "utils";
+import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 export class PicaRecastePanel extends PicaBasePanel {
-  private mCloseBtn: Button;
+  private mCloseBtn: ButtonEventDispatcher;
   private mBackground: CommonBackground;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mCategoryCon: Phaser.GameObjects.Container;
@@ -26,6 +26,8 @@ export class PicaRecastePanel extends PicaBasePanel {
   private categoryType: any;
   private mSelectedItemData: op_client.ICountablePackageItem;
   private mRecasteItemData: op_client.ICountablePackageItem;
+  private labelTipTex: Phaser.GameObjects.Text;
+  private tempData: any = {};
   constructor(uiManager: UiManager) {
     super(uiManager);
     this.atlasNames = [UIAtlasName.uicommon];
@@ -38,8 +40,12 @@ export class PicaRecastePanel extends PicaBasePanel {
     super.resize(width, height);
     this.mBackground.x = width * 0.5;
     this.mBackground.y = height * 0.5;
+    this.mTopBg.x = width * 0.5;
+    this.mTopBg.y = this.mTopBg.height * 0.5;
+    const categoryConHeight = 79 * this.dpr;
+    const topHeight = height - this.mPropGrid.height - categoryConHeight * 0.5 - 47 * this.dpr;
     this.mCategoryCon.setSize(width, 79 * this.dpr);
-    this.mCategoryCon.y = height - this.mPropGrid.height - this.mCategoryCon.height * 0.5 - 47 * this.dpr;
+    this.mCategoryCon.y = topHeight;
     this.mCategoryCon.x = width * 0.5;
     this.mCategoriesBar.y = 40 * this.dpr;
     this.mCategoriesBar.x = -width * 0.5;
@@ -47,9 +53,11 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.mCategoriesBar.fillStyle(0x3EE1FF);
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.confirmBtn.x = width - this.confirmBtn.width / 2 - 10 * this.dpr;
-    this.confirmBtn.y = this.mCategoryCon.y - this.confirmBtn.height / 2;
-    this.mTopBg.x = width * 0.5;
-    this.mTopBg.y = this.mTopBg.height * 0.5;
+    this.confirmBtn.y = this.mCategoryCon.y - this.confirmBtn.height / 2 + 25 * this.dpr;
+    this.labelTipTex.x = 15 * this.dpr;
+    this.labelTipTex.y = this.confirmBtn.y;
+    this.displayPanel.x = width * 0.5;
+    this.displayPanel.y = topHeight * 0.5 + 7 * this.dpr;
     this.mPropGridBg.clear();
     this.mPropGridBg.fillStyle(0x7DE5FE);
     this.mPropGridBg.fillRect(0, 0, this.mPropGrid.width, this.mPropGrid.height + 10 * this.dpr);
@@ -64,6 +72,8 @@ export class PicaRecastePanel extends PicaBasePanel {
   }
 
   setCategories(subcategorys: any[]) {// op_def.IStrPair
+    this.tempData.subcategory = subcategorys;
+    if (!this.mInitialized || !subcategorys) return;
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
     const capW = 60 * this.dpr;
@@ -86,6 +96,11 @@ export class PicaRecastePanel extends PicaBasePanel {
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
   }
 
+  onShow() {
+    this.setStarData(this.starCount);
+    this.setRecasteItemData(this.mShowData);
+    this.setCategories(this.tempData.subcategory);
+  }
   public setProp(props: any[]) {// op_client.ICountablePackageItem
     props = !props ? [] : props;
     const len = props.length;
@@ -127,7 +142,12 @@ export class PicaRecastePanel extends PicaBasePanel {
     }
     super.destroy();
   }
-
+  queryRecasteList() {
+    if (this.mSelectedCategeories) {
+      const subCate = this.mSelectedCategeories;
+      this.render.renderEmitter(this.key + "_queryrecastelist", { type: subCate.key, star: this.mRecasteItemData.grade });
+    }
+  }
   protected onInitialized() {
     if (this.starCount) {
       this.starvalue.setText(this.starCount + "");
@@ -154,9 +174,17 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.mCategoryCon.add([navbgline, this.mSelectLineImg]);
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 35 * this.dpr);
-    this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
+    this.mCloseBtn = new ButtonEventDispatcher(this.scene, 0, 0);
+    this.mCloseBtn.setSize(100 * this.dpr, 40 * this.dpr);
+    this.mCloseBtn.enable = true;
+    this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
+    this.mCloseBtn.y = 35 * this.dpr;
+    const closeimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
+    closeimg.x = -this.mCloseBtn.width * 0.5 + closeimg.width * 0.5 + 10 * this.dpr;
+    const titleTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
+    titleTex.text = i18n.t("compose.title");
+    titleTex.x = closeimg.x + closeimg.width * 0.5 + 10 * this.dpr;
+    this.mCloseBtn.add([closeimg, titleTex]);
 
     const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
       left: 17 * this.dpr,
@@ -169,7 +197,7 @@ export class PicaRecastePanel extends PicaBasePanel {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
     this.starvalue.setLayout(1);
-    this.starvalue.x = starbg.x - starbg.width * 0.5 + 22 * this.dpr;
+    this.starvalue.x = starbg.x - starbg.width * 0.5 + 16 * this.dpr;
     this.starCountCon = this.scene.make.container(undefined, false);
     this.starCountCon.setSize(starbg.width, starbg.height);
     this.starCountCon.add([starbg, this.starvalue]);
@@ -178,8 +206,8 @@ export class PicaRecastePanel extends PicaBasePanel {
 
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
-    this.confirmBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.use"), "#996600");
-
+    this.confirmBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.confirm"), "#996600");
+    this.labelTipTex = this.scene.make.text({ text: i18n.t("recaste.tip"), style: UIHelper.yellowStyle(this.dpr, 14) }).setOrigin(0, 0.5);
     this.mCategoryScroll = new GameScroller(this.scene, {
       x: 0,
       y: 60 * this.dpr,
@@ -196,7 +224,7 @@ export class PicaRecastePanel extends PicaBasePanel {
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
-    this.add([this.mBackground, this.mPropGridBg, this.mTopBg, this.displayPanel, this.mCloseBtn, this.starCountCon, this.mCategoryCon, this.confirmBtn]);
+    this.add([this.mBackground, this.mPropGridBg, this.mTopBg, this.displayPanel, this.mCloseBtn, this.starCountCon, this.mCategoryCon, this.confirmBtn, this.labelTipTex]);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
     const capH = (propFrame.height) + 9 * this.dpr;
@@ -265,7 +293,7 @@ export class PicaRecastePanel extends PicaBasePanel {
       gameobject.changeDown();
       this.mSelectedCategeories = category;
       this.mPropGrid.setT(0);
-      this.queryPackege();
+      this.queryRecasteList();
       this.mPreCategoryBtn = gameobject;
       this.mSelectLineImg.x = gameobject.x;
     }
@@ -276,12 +304,6 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.render.renderEmitter(this.key + "_close");
   }
 
-  private queryPackege() {
-    if (this.mSelectedCategeories) {
-      this.render.renderEmitter(this.key + "_queryPackage", { packType: this.categoryType, key: this.mSelectedCategeories.key });
-    }
-  }
-
   private onSelectItemHandler(cell: ItemButton) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
     if (item && this.mSelectedItemData === item || this.mSelectedItemData && !item) return;
@@ -289,24 +311,8 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.displayPanel.setRecasteTargetData(item);
   }
 
-  private getPropResource(data: op_client.ICountablePackageItem) {
-    const resource: any = {};
-    if (data.suitType) {
-      resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
-    } else {
-      resource.display = data.display;
-    }
-    resource.suit = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
-    resource.animations = data.animations;
-    return resource;
-  }
-
   private onConfirmBtnHandler() {
 
-  }
-
-  private showPropFun(config: any) {// PicPropFunConfig
-    this.render.mainPeer.showMediator(ModuleName.PICAPROPFUN_NAME, true, config);
   }
 }
 
@@ -337,6 +343,8 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     content.display = data.animationDisplay;
     content.animations = data.animations;
     this.recasteTarget.loadDisplay(data);
+    this.starLevelImg.setFrame("Recast_star_big_" + data.grade);
+    this.nameTex.text = data.name || data.shortName;
   }
 
   protected init() {
@@ -352,14 +360,15 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_small", this.dpr, {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
-    this.starvalue.x = arrowbg.x;
-    this.starvalue.y = arrowbg.y - 20 * this.dpr;
+    this.starvalue.x = arrowbg.x - 10 * this.dpr;
+    this.starvalue.y = arrowbg.y - 10 * this.dpr;
     this.nameTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#FFFF00", 14 * this.dpr) }).setOrigin(0, 0.5);
     this.nameTex.setFontStyle("bold");
     this.nameTex.x = rightbg.x - rightbg.width * 0.5;
     this.nameTex.y = rightbg.y - rightbg.height * 0.5 - 20 * this.dpr;
     this.starLevelImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_star_big_1" });
-    this.starLevelImg.x = rightbg.x + rightbg.width * 0.5 - this.starLevelImg.width * 0.5 - 5 * this.dpr;
+    this.starLevelImg.x = rightbg.x + rightbg.width * 0.5 - this.starLevelImg.width * 0.5 - 8 * this.dpr;
+    this.starLevelImg.y = rightbg.y - rightbg.height * 0.5 + this.starLevelImg.height * 0.5 + 8 * this.dpr;
     this.recasteTarget = new DetailDisplay(this.scene, this.render);
     this.recasteTarget.setFixedScale(2 * this.dpr / this.scale);
     this.recasteTarget.setComplHandler(new Handler(this, () => {

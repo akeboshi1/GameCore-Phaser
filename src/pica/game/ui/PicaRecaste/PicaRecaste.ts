@@ -16,10 +16,8 @@ export class PicaRecaste extends BasicModel {
     const connection = this.connection;
     if (connection) {
       this.connection.addPacketListener(this);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES, this.onPackageCategoriesHandler);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE, this.onQueryMarketPackage);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE, this.onQueryCommodityResultHandler);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_QUERY_EDIT_PACKAGE, this.onQueryEditPackage);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMBINE_RESULT, this.onRetRescasteResult);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_LIST_RESULT, this.onRetRecasteListResult);
     }
   }
 
@@ -30,121 +28,27 @@ export class PicaRecaste extends BasicModel {
     }
   }
 
-  getCategories(categoryType: number) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_PACKAGE_CATEGORIES);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
-    content.category = categoryType;
-    this.connection.send(packet);
-    this.categoryType = categoryType;
-  }
-
-  queryPackage(key: string, queryString?: string) {
-    if (this.mSceneType === op_def.SceneTypeEnum.NORMAL_SCENE_TYPE) {
-      this.queryMarketPackage(key, queryString);
-    } else {
-      this.queryEditPackage(key, queryString);
-    }
-  }
-
-  queryCommodityResource(id: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE_ITEM_RESOURCE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE_ITEM_RESOURCE = packet.content;
-    content.id = id;
+  queryRecaste(id: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FORGE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FORGE = packet.content;
+    content.consumedId = id;
     this.connection.send(packet);
   }
 
-  addFurniToScene(id: string) {
-    if (this.mSceneType !== op_def.SceneTypeEnum.EDIT_SCENE_TYPE) {
-      return;
-    }
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_SELECTED_SPRITE = packet.content;
-    content.id = id;
+  queryRecasteList() {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FORGE_LIST);
     this.connection.send(packet);
   }
 
-  enterEditAndSelectedSprite(id: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENABLE_AND_SELECTED_SPRITE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENABLE_AND_SELECTED_SPRITE = packet.content;
-    content.id = id;
-    this.connection.send(packet);
+  private onRetRescasteResult(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_RESULT = packet.content;
+    this.game.emitter.emit(ModuleName.PICARECASTE_NAME + "_retrecasteresult", content.reward);
   }
 
-  seachPackage(seach: string, category: string) {
-    this.queryPackage(category, seach);
+  private onRetRecasteListResult(packet: PBpacket) {
+    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_LIST_RESULT = packet.content;
+    this.game.emitter.emit(ModuleName.PICARECASTE_NAME + "_retrecastelistresult", content.list);
   }
-
-  sellProps(prop: op_client.CountablePackageItem, count: number, category: number) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_SELL_PACKAGE_ITEM = packet.content;
-    content.category = category;
-    const item = op_client.CountablePackageItem.create(prop);
-    item.count = count;
-    content.items = [item];
-    content.totalPrice = item.sellingPrice;
-    content.totalPrice.price *= count;
-    this.connection.send(packet);
-  }
-  useProps(itemid: string, count: number) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_USE_ITEM);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_USE_ITEM = packet.content;
-    content.itemId = itemid;
-    content.count = count;
-    this.connection.send(packet);
-  }
-
-  destroy() {
-    this.unregister();
-  }
-
-  private onPackageCategoriesHandler(packet: PBpacket) {
-    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
-    if (content.category === this.categoryType) {
-      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retpackageCategory", content);
-    }
-  }
-
-  private onQueryMarketPackage(packge: PBpacket) {
-    // OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE
-    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE = packge.content;
-    if (content.category === this.categoryType) {
-      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retPackage", content);
-    }
-  }
-
-  private onQueryEditPackage(packet: PBpacket) {
-    const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE = packet.content;
-    if (content.category === this.categoryType) {
-      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retPackage", content);
-    }
-  }
-
-  private onQueryCommodityResultHandler(packet: PBpacket) {
-    this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retCommodityResource", packet.content);
-  }
-
-  private queryMarketPackage(key: string, queryString?: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_PACKAGE = packet.content;
-    content.category = this.categoryType;
-    content.page = 1;
-    content.perPage = 1000000;
-    content.subcategory = key;
-    content.queryString = queryString;
-    this.connection.send(packet);
-  }
-
-  private queryEditPackage(key: string, queryString?: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_QUERY_EDIT_PACKAGE = packet.content;
-    content.category = this.categoryType;
-    content.page = 1;
-    content.perPage = 1000000;
-    content.subcategory = key;
-    content.queryString = queryString;
-    this.connection.send(packet);
-  }
-
   get connection(): ConnectionService {
     if (this.game) {
       return this.game.connection;

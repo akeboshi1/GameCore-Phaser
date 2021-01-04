@@ -37,7 +37,7 @@
     "properties": "道具属性",
     "needproper": "需求属性",
     "placetips": "布置自己的小屋的时候才能放置",
-    "recaste":"重铸"
+    "recaste": "重铸"
   },
   "common": {
     "cancel": "取消",
@@ -363,5 +363,8 @@
     "fourstar": "四星",
     "spendstar": "需要消耗[color=#FFDE29][b]{{name}}[/b][/color]个皮卡星",
     "starpicatips": "皮卡星数量不足"
+  },
+  "recaste": {
+    "tip": "请选择你要重铸的家具"
   }
 }
