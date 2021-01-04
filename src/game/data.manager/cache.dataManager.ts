@@ -40,21 +40,21 @@ export class CacheDataManager extends BaseHandler {
     }
 
     getRecasteList(subcategory: string, star: number) {
+        if (this.furiRecasteMap.size === 0) return null;
+        const tempArr = [];
         if (this.furiRecasteMap.has(subcategory)) {
             const list = this.furiRecasteMap.get(subcategory);
-            const tempArr = [];
             for (const data of list) {
-                if (data.star === star) {
+                if (data.grade === star) {
                     tempArr.push(data);
                 }
             }
             return tempArr;
         } else {
             if (subcategory === "alltype") {
-                const tempArr = [];
                 this.furiRecasteMap.forEach((value) => {
                     for (const data of value) {
-                        if (data.star === star) {
+                        if (data.grade === star) {
                             tempArr.push(data);
                         }
                     }
@@ -62,6 +62,6 @@ export class CacheDataManager extends BaseHandler {
                 return tempArr;
             }
         }
-        return null;
+        return tempArr;
     }
 }

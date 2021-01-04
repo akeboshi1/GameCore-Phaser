@@ -99,12 +99,11 @@ export class PicaRecasteMediator extends BasicMediator {
 
     private queryFuriListByStar(data: { type: string, star: number }) {
         const tempArr = this.cacheMgr.getRecasteList(data.type, data.star);
-        if (tempArr && tempArr.length > 0) {
+        if (tempArr) {
             this.mView.setProp(tempArr);
         } else {
             this.mModel.queryRecasteList();
         }
-
     }
     private setCategories(categoryType: number) {
         if (this.mView) {

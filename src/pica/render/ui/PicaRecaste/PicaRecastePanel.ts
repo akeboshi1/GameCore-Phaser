@@ -3,7 +3,7 @@ import { ButtonEventDispatcher, CommonBackground, ImageValue, Render, TextButton
 import { DetailDisplay, ItemButton } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
-import { Font, Handler, i18n, UIHelper } from "utils";
+import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 export class PicaRecastePanel extends PicaBasePanel {
@@ -14,7 +14,6 @@ export class PicaRecastePanel extends PicaBasePanel {
   private mTopBg: Phaser.GameObjects.Image;
   private mPreCategoryBtn: TextButton;
   private mSelectedCategeories: any;// op_def.IStrPair
-  private mSelectLineImg: Phaser.GameObjects.Image;
   private mPropGrid: GameGridTable;
   private mPropGridBg: Phaser.GameObjects.Graphics;
   private mCategoryScroll: GameScroller;
@@ -25,6 +24,7 @@ export class PicaRecastePanel extends PicaBasePanel {
   private starCount: number;
   private categoryType: any;
   private mSelectedItemData: op_client.ICountablePackageItem;
+  private mSelectedItem: ItemButton;
   private mRecasteItemData: op_client.ICountablePackageItem;
   private labelTipTex: Phaser.GameObjects.Text;
   private tempData: any = {};
@@ -57,7 +57,7 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.labelTipTex.x = 15 * this.dpr;
     this.labelTipTex.y = this.confirmBtn.y;
     this.displayPanel.x = width * 0.5;
-    this.displayPanel.y = topHeight * 0.5 + 7 * this.dpr;
+    this.displayPanel.y = topHeight * 0.5 + 17 * this.dpr;
     this.mPropGridBg.clear();
     this.mPropGridBg.fillStyle(0x7DE5FE);
     this.mPropGridBg.fillRect(0, 0, this.mPropGrid.width, this.mPropGrid.height + 10 * this.dpr);
@@ -90,6 +90,11 @@ export class PicaRecastePanel extends PicaBasePanel {
       items[i] = item;
       item.setFontSize(18 * this.dpr);
       item.setFontStyle("bold");
+      const lineImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_nav_Select" });
+      lineImg.y = 21 * this.dpr;
+      item.add(lineImg);
+      lineImg.visible = false;
+      item.setData("lineImg", lineImg);
     }
     this.mCategoryScroll.Sort();
     this.mCategoryScroll.refreshMask();
@@ -167,12 +172,10 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.mCategoryCon = this.scene.make.container(undefined, false);
     this.mCategoryCon.setSize(width, 295 * this.dpr);
     this.mCategoryCon.y = height - this.mCategoryCon.height;
-    const navbgline = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_nav_line" });
-    navbgline.y = 20 * this.dpr;
-    this.mSelectLineImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_nav_Select" });
-    this.mSelectLineImg.y = navbgline.y;
-    this.mCategoryCon.add([navbgline, this.mSelectLineImg]);
+    // const navbgline = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_nav_line" });
+    // navbgline.y = 20 * this.dpr;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
+    this.mCategoryCon.add(this.mCategoriesBar);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn = new ButtonEventDispatcher(this.scene, 0, 0);
     this.mCloseBtn.setSize(100 * this.dpr, 40 * this.dpr);
@@ -182,7 +185,8 @@ export class PicaRecastePanel extends PicaBasePanel {
     const closeimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
     closeimg.x = -this.mCloseBtn.width * 0.5 + closeimg.width * 0.5 + 10 * this.dpr;
     const titleTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
-    titleTex.text = i18n.t("compose.title");
+    titleTex.setFontStyle("bold");
+    titleTex.text = i18n.t("furni_bag.recaste");
     titleTex.x = closeimg.x + closeimg.width * 0.5 + 10 * this.dpr;
     this.mCloseBtn.add([closeimg, titleTex]);
 
@@ -197,7 +201,7 @@ export class PicaRecastePanel extends PicaBasePanel {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
     this.starvalue.setLayout(1);
-    this.starvalue.x = starbg.x - starbg.width * 0.5 + 16 * this.dpr;
+    this.starvalue.x = starbg.x - starbg.width * 0.5 + 22 * this.dpr;
     this.starCountCon = this.scene.make.container(undefined, false);
     this.starCountCon.setSize(starbg.width, starbg.height);
     this.starCountCon.add([starbg, this.starvalue]);
@@ -207,12 +211,12 @@ export class PicaRecastePanel extends PicaBasePanel {
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.confirmBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.confirm"), "#996600");
-    this.labelTipTex = this.scene.make.text({ text: i18n.t("recaste.tip"), style: UIHelper.yellowStyle(this.dpr, 14) }).setOrigin(0, 0.5);
+    this.labelTipTex = this.scene.make.text({ text: i18n.t("recaste.tip"), style: UIHelper.colorStyle("#FAF916", this.dpr * 14) }).setOrigin(0, 0.5);
     this.mCategoryScroll = new GameScroller(this.scene, {
       x: 0,
       y: 60 * this.dpr,
       width,
-      height: 41 * this.dpr,
+      height: 44 * this.dpr,
       zoom: this.scale,
       orientation: 1,
       dpr: this.dpr,
@@ -223,7 +227,7 @@ export class PicaRecastePanel extends PicaBasePanel {
       }
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
-    this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
+    this.mCategoryCon.add(this.mCategoryScroll);
     this.add([this.mBackground, this.mPropGridBg, this.mTopBg, this.displayPanel, this.mCloseBtn, this.starCountCon, this.mCategoryCon, this.confirmBtn, this.labelTipTex]);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
@@ -289,13 +293,16 @@ export class PicaRecastePanel extends PicaBasePanel {
     if (category) {
       if (this.mPreCategoryBtn) {
         this.mPreCategoryBtn.changeNormal();
+        const preline: any = this.mPreCategoryBtn.getData("lineImg");
+        preline.visible = false;
       }
       gameobject.changeDown();
       this.mSelectedCategeories = category;
       this.mPropGrid.setT(0);
       this.queryRecasteList();
       this.mPreCategoryBtn = gameobject;
-      this.mSelectLineImg.x = gameobject.x;
+      const selectlin: any = gameobject.getData("lineImg");
+      selectlin.visible = true;
     }
     this.mPropGrid.setT(0);
   }
@@ -309,10 +316,27 @@ export class PicaRecastePanel extends PicaBasePanel {
     if (item && this.mSelectedItemData === item || this.mSelectedItemData && !item) return;
     this.mSelectedItemData = item;
     this.displayPanel.setRecasteTargetData(item);
+    if (this.mSelectedItem) this.mSelectedItem.isSelect = false;
+    cell.isSelect = true;
+    this.mSelectedItem = cell;
   }
 
   private onConfirmBtnHandler() {
-
+    if (this.mSelectedItemData) {
+      if (this.starCount < this.mSelectedItemData.grade) {
+        const data = {
+          text: [{ text: i18n.t("furnicompose.starpicatips"), node: undefined }]
+        };
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+        return;
+      }
+      this.render.renderEmitter(this.key + "_queryrecaste", this.mSelectedItemData.id);
+    } else {
+      const data = {
+        text: [{ text: i18n.t("recaste.selecttips"), node: undefined }]
+      };
+      this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+    }
   }
 }
 
@@ -336,15 +360,18 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
 
   public setRecasteItemData(data: op_client.ICountablePackageItem) {
     this.recasteItem.setItemData(data);
+    this.starvalue.setText(data.grade + "");
   }
 
   public setRecasteTargetData(data: op_client.ICountablePackageItem) {
+    this.recasteTarget.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"), this.dpr / this.zoom);
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     content.display = data.animationDisplay;
     content.animations = data.animations;
-    this.recasteTarget.loadDisplay(data);
+    this.recasteTarget.loadDisplay(content);
     this.starLevelImg.setFrame("Recast_star_big_" + data.grade);
     this.nameTex.text = data.name || data.shortName;
+    this.starLevelImg.visible = true;
   }
 
   protected init() {
@@ -355,22 +382,21 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.recasteItem.x = -this.width * 0.5 + this.recasteItem.width * 0.5 + 20 * this.dpr;
     this.recasteItem.y = 0;
     const arrowbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_arrow" });
-    arrowbg.x = this.recasteItem.x + this.recasteItem.width * 0.5 + arrowbg.width * 0.5 + 10 * this.dpr;
+    arrowbg.x = this.recasteItem.x + this.recasteItem.width * 0.5 + arrowbg.width * 0.5 + 6 * this.dpr;
     arrowbg.y = this.recasteItem.y;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_small", this.dpr, {
-      color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
-    });
-    this.starvalue.x = arrowbg.x - 10 * this.dpr;
+    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_small", this.dpr, UIHelper.colorNumberStyle("#ffffff", 20 * this.dpr));
+    this.starvalue.x = arrowbg.x - 11 * this.dpr;
     this.starvalue.y = arrowbg.y - 10 * this.dpr;
     this.nameTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#FFFF00", 14 * this.dpr) }).setOrigin(0, 0.5);
     this.nameTex.setFontStyle("bold");
     this.nameTex.x = rightbg.x - rightbg.width * 0.5;
-    this.nameTex.y = rightbg.y - rightbg.height * 0.5 - 20 * this.dpr;
+    this.nameTex.y = rightbg.y - rightbg.height * 0.5 - 18 * this.dpr;
     this.starLevelImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_star_big_1" });
-    this.starLevelImg.x = rightbg.x + rightbg.width * 0.5 - this.starLevelImg.width * 0.5 - 8 * this.dpr;
+    this.starLevelImg.x = rightbg.x + rightbg.width * 0.5 - this.starLevelImg.width * 0.5 - 12 * this.dpr;
     this.starLevelImg.y = rightbg.y - rightbg.height * 0.5 + this.starLevelImg.height * 0.5 + 8 * this.dpr;
+    this.starLevelImg.visible = false;
     this.recasteTarget = new DetailDisplay(this.scene, this.render);
-    this.recasteTarget.setFixedScale(2 * this.dpr / this.scale);
+    this.recasteTarget.setFixedScale(2 * this.dpr / this.zoom);
     this.recasteTarget.setComplHandler(new Handler(this, () => {
       this.recasteTarget.visible = true;
     }));
@@ -378,7 +404,7 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.recasteTarget.setNearest();
     this.recasteTarget.x = rightbg.x;
     this.recasteTarget.y = rightbg.y;
-    this.add([rightbg, this.recasteItem, arrowbg, this.starvalue, this.nameTex, this.starLevelImg, this.recasteTarget]);
+    this.add([rightbg, this.recasteItem, this.recasteTarget, arrowbg, this.starvalue, this.nameTex, this.starLevelImg]);
   }
 
 }

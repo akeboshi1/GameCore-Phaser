@@ -1,6 +1,6 @@
 import { ElementDetail } from "./ElementDetail";
 import { MarketItem } from "./item";
-import { NinePatchTabButton, GameGridTable, NineSliceButton } from "apowophaserui";
+import { NinePatchTabButton, GameGridTable, NineSliceButton, Button, ClickEvent } from "apowophaserui";
 import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
 import { AvatarSuitType, ModuleName } from "structure";
 import { Font, i18n } from "utils";
@@ -8,7 +8,7 @@ import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
 export class PicaMarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
-  private mCloseBtn: Phaser.GameObjects.Image;
+  private mCloseBtn: Button;
   private mTIle: Phaser.GameObjects.Text;
   private mTabs: NinePatchTabButton[];
   private mSubTabs: TextButton[];
@@ -42,14 +42,13 @@ export class PicaMarketPanel extends BasePanel {
     if (!this.mInitialized) return;
     this.mSelectItem.on("buyItem", this.onBuyItemHandler, this);
     this.mSelectItem.on("popItemCard", this.onPopItemCardHandler, this);
-    this.mCloseBtn.on("pointerup", this.onCloseHandler, this);
   }
 
   public removeListen() {
     if (!this.mInitialized) return;
     this.mSelectItem.off("buyItem", this.onBuyItemHandler, this);
     this.mSelectItem.off("popItemCard", this.onPopItemCardHandler, this);
-    this.mCloseBtn.off("pointerup", this.onCloseHandler, this);
+  //  this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
   }
 
   public resize(w: number, h: number) {
@@ -206,15 +205,11 @@ export class PicaMarketPanel extends BasePanel {
     }
 
     this.mShelfBackground = this.scene.make.graphics(undefined, false);
-
-    this.mCloseBtn = this.scene.make.image({
-      key: this.key,
-      frame: "back_arrow",
-      x: 21 * this.dpr,
-      y: 30 * this.dpr
-    });
-    this.mCloseBtn.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+    this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
+    this.mCloseBtn.setPosition(21 * this.dpr, 35 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
+    this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
+
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);

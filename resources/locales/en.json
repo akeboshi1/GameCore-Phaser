@@ -362,6 +362,7 @@
     "starpicatips": "There are not enough starpicas"
   },
   "recaste": {
-    "tip": "Please select the furniture that you want to recast"
+    "tip": "Please select the furniture that you want to recast",
+    "selecttips": "Please select the furniture that you want to recast"
   }
 }
