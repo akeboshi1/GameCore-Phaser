@@ -70,7 +70,12 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.setSize(width, height);
     this.setInteractive();
   }
-
+  setRecasteResult(data: op_client.CountablePackageItem) {
+    if (data) {
+      this.mRecasteItemData.count--;
+      this.displayPanel.setRecasteItemData(this.mRecasteItemData);
+    }
+  }
   setCategories(subcategorys: any[]) {// op_def.IStrPair
     this.tempData.subcategory = subcategorys;
     if (!this.mInitialized || !subcategorys) return;
@@ -322,21 +327,24 @@ export class PicaRecastePanel extends PicaBasePanel {
   }
 
   private onConfirmBtnHandler() {
+    let notice;
     if (this.mSelectedItemData) {
       if (this.starCount < this.mSelectedItemData.grade) {
-        const data = {
-          text: [{ text: i18n.t("furnicompose.starpicatips"), node: undefined }]
-        };
-        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
-        return;
+        notice = i18n.t("furnicompose.starpicatips");
+      } else if (this.mRecasteItemData.count === 0) {
+        notice = i18n.t("furnicompose.counttips");
       }
-      this.render.renderEmitter(this.key + "_queryrecaste", this.mSelectedItemData.id);
     } else {
+      notice = i18n.t("recaste.selecttips");
+    }
+    if (notice) {
       const data = {
-        text: [{ text: i18n.t("recaste.selecttips"), node: undefined }]
+        text: [{ text: notice, node: undefined }]
       };
       this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+      return;
     }
+    this.render.renderEmitter(this.key + "_queryrecaste", { consumedId: this.mRecasteItemData.id, targetId: this.mSelectedItemData.id });
   }
 }
 

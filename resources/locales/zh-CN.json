@@ -366,6 +366,7 @@
   },
   "recaste": {
     "tip": "请选择你要重铸的家具",
-    "selecttips": "请选择要重铸成的家具"
+    "selecttips": "请选择要重铸成的家具",
+    "counttips": "要转换的家具数量不足"
   }
 }

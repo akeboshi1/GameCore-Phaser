@@ -363,6 +363,7 @@
   },
   "recaste": {
     "tip": "Please select the furniture that you want to recast",
-    "selecttips": "Please select the furniture that you want to recast"
+    "selecttips": "Please select the furniture that you want to recast",
+    "counttips": "There is not enough furniture to be converted"
   }
 }

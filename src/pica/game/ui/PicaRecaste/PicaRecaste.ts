@@ -16,7 +16,7 @@ export class PicaRecaste extends BasicModel {
     const connection = this.connection;
     if (connection) {
       this.connection.addPacketListener(this);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMBINE_RESULT, this.onRetRescasteResult);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_RESULT, this.onRetRescasteResult);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_LIST_RESULT, this.onRetRecasteListResult);
     }
   }
@@ -28,10 +28,11 @@ export class PicaRecaste extends BasicModel {
     }
   }
 
-  queryRecaste(id: string) {
+  queryRecaste(consumedId: string, targetId: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FORGE);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FORGE = packet.content;
-    content.consumedId = id;
+    content.consumedId = consumedId;
+    content.targetId = targetId;
     this.connection.send(packet);
   }
 

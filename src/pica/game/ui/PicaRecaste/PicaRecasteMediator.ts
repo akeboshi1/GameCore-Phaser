@@ -83,7 +83,7 @@ export class PicaRecasteMediator extends BasicMediator {
 
     private onRetRescateHandler(reward: op_client.ICountablePackageItem) {
         if (this.mView) {
-            this.mView.setComposeResult(reward);
+            this.mView.setRecasteResult(reward);
             const uimgr = this.game.uiManager;
             uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: [reward], type: "open" });
         }
@@ -93,8 +93,8 @@ export class PicaRecasteMediator extends BasicMediator {
         if (this.mView) this.mView.queryRecasteList();
     }
 
-    private queryRecaste(id: string) {
-        this.mModel.queryRecaste(id);
+    private queryRecaste(data: { consumedId: string, targetId: string }) {
+        this.mModel.queryRecaste(data.consumedId, data.targetId);
     }
 
     private queryFuriListByStar(data: { type: string, star: number }) {
