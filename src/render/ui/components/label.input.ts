@@ -159,7 +159,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
         // document.body.classList.add("fixiOS");
         // setTimeout(() => {
         //     window.scrollTo(0,0);
-        //     this.emit("focus");
+        this.emit("focus");
         // }, 300);
     }
     get object(): Phaser.GameObjects.Text | InputText {
