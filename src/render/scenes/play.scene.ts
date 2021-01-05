@@ -16,9 +16,9 @@ export class PlayScene extends RoomScene {
     public readonly LAYER_SURFACE = "surfaceLayer";
     public readonly LAYER_ATMOSPHERE = "atmosphere";
     public readonly LAYER_SCENEUI = "sceneUILayer";
-
+    public readonly LOAD_TIME: number = 5000;
     protected motionManager: MotionManager;
-
+    private timeID: any;
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: SceneName.PLAY_SCENE });
     }
@@ -104,6 +104,9 @@ export class PlayScene extends RoomScene {
         this.input.on("pointerdown", this.onPointerDownHandler, this);
         this.input.on("pointerup", this.onPointerUpHandler, this);
         this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        this.timeID = setTimeout(() => {
+            this.onLoadCompleteHandler();
+        }, this.LOAD_TIME);
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -142,6 +145,7 @@ export class PlayScene extends RoomScene {
     }
 
     protected onLoadCompleteHandler() {
+        if (this.timeID) clearTimeout(this.timeID);
         Logger.getInstance().log("playload complete");
         // const scene = this.game.scene.getScene(MainUIScene.name);
         // if (!scene.scene.isActive()) {

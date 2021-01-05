@@ -244,6 +244,10 @@ export class Element extends BlockObject implements IElement {
         // this.update();
     }
 
+    public getProjectionSize() {
+        return this.mModel.getInteractive();
+    }
+
     public play(animationName: string, times?: number): void {
         if (!this.mModel) {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);

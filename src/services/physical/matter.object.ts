@@ -256,7 +256,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public startMove() {
-        if (!this.mMoveData) {
+        if (!this.mMoveData || !this.mModel) {
             return;
         }
         const path = this.mMoveData.path;
@@ -490,7 +490,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public async getInteractivePositionList(): Promise<IPos[]> {
-        const interactives = await this.peer.mainPeer.framesModel_getInteractive(this.id);
+        const interactives = await this.peer.mainPeer.fetchProjectionSize(this.id);
         if (!interactives || interactives.length < 1) {
             return;
         }

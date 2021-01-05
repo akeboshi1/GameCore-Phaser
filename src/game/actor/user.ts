@@ -187,7 +187,7 @@ export class User extends Player {
     //     // TODO
     //     const speed = this.mModel.speed * delayTime;
     //     this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-    // }s
+    // }
 
     public startMove() {
         // this.changeState(PlayerState.WALK);
