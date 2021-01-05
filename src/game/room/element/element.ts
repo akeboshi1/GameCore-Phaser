@@ -1,5 +1,4 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { delayTime } from "../../../services/physical.worker";
 import { AnimationQueue, AvatarSuitType, ElementStateType, ISprite, PlayerState } from "structure";
 import { IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
@@ -154,6 +153,9 @@ export class Element extends BlockObject implements IElement {
     protected mCreatedDisplay: boolean = false;
     protected isUser: boolean = false;
     protected moveControll: MoveControll;
+
+    private delayTime = 1000 / 45;
+
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite ? sprite.id : -1, mElementManager ? mElementManager.roomService : undefined);
         if (!sprite) {
@@ -473,7 +475,7 @@ export class Element extends BlockObject implements IElement {
         const pos = this.getPosition();
         // pos.y += this.offsetY;
         const angle = Math.atan2(path[0].y - pos.y, path[0].x - pos.x);
-        const speed = this.mModel.speed * delayTime;
+        const speed = this.mModel.speed * this.delayTime;
         this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
         // this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
@@ -695,12 +697,12 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected _doMove(time?: number, delta?: number) {
-    //     if (!this.mMoving) {
-    //         return;
-    //     }
-    //     const _pos = this.getPosition();
-    //     const pos = new LogicPos(_pos.x / this.mRoomService.game.scaleRatio, _pos.y / this.mRoomService.game.scaleRatio);
-    //     this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+        //     if (!this.mMoving) {
+        //         return;
+        //     }
+        //     const _pos = this.getPosition();
+        //     const pos = new LogicPos(_pos.x / this.mRoomService.game.scaleRatio, _pos.y / this.mRoomService.game.scaleRatio);
+        //     this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
         this.moveControll.update(time, delta);
         const pos = this.moveControll.position;
         this.mModel.setPosition(pos.x, pos.y);

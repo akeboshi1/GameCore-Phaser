@@ -1,5 +1,5 @@
 import { Bodies, Body, Composite, Engine, World } from "matter-js";
-import { PhysicalPeer } from "src/services/physical.worker";
+import { PhysicalPeer } from "../../services/physical.worker";
 import { ISizeChart } from "structure";
 import { AStar, ChatCommandInterface, IPos, IPosition45Obj, LogicPos, Pos, Position45 } from "utils";
 import { MatterObject } from "./matter.object";
