@@ -219,7 +219,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mActionMgr.destroy();
     }
 
-    public update(time: number, delta: number) { }
+    public update(time: number, delta: number) {
+        this.mElements.forEach((ele) => ele.update(time, delta));
+    }
 
     protected addMap(sprite: ISprite) { }
 

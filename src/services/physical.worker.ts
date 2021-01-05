@@ -156,7 +156,7 @@ export class PhysicalPeer extends RPCPeer {
 
     @Export()
     public stopMove() {
-        this.matterWorld.matterUser.stopMove();
+        this.matterWorld.matterUser.tryStopMove();
     }
 
     @Export()

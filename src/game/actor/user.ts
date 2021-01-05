@@ -56,7 +56,7 @@ export class User extends Player {
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
     }
 
-    // update() {
+    update() {
     //     if (this.mMoving) {
     //         const pos = this.getPosition();
     //         pos.y += this.offsetY;
@@ -77,7 +77,7 @@ export class User extends Player {
     //         }
     //         this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
     //     }
-    // }
+    }
 
     public unmount(targetPos?: IPos): Promise<this> {
         const mountID = this.mRootMount.id;
@@ -216,7 +216,6 @@ export class User extends Player {
     }
 
     public move(moveData: any) {
-        // this.drawMovePath(moveData[0].x, moveData[0].y);
         this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
     }
 
@@ -281,6 +280,8 @@ export class User extends Player {
         content.position = position;
         this.game.connection.send(packet);
 
+        Logger.getInstance().log("send stop move==========>>>", pos);
+
         this.activeSprite(targetId);
     }
 
@@ -293,7 +294,6 @@ export class User extends Player {
     }
 
     public setPosition(pos: IPos) {
-        Logger.getInstance().log("user set postion===", pos);
         super.setPosition(pos);
         this.syncCameraPosition();
     }
