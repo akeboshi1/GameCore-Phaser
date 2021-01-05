@@ -125,9 +125,9 @@ export class MatterObject implements IMatterObject {
         }
         const scaleRatio: number = this.peer.scaleRatio;
         const _pos = this.body.position;
+        this.peer.render.setPosition(this.id, true, _pos.x, _pos.y);
         const pos = new LogicPos(_pos.x / scaleRatio, _pos.y / scaleRatio);
-        this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
-        this.peer.render.setPosition(this.id, pos.x, pos.y);
+        this.peer.mainPeer.setPosition(this.id, pos.x, pos.y);
 
         this.checkDirection();
         const path = this.mMoveData.path;
@@ -268,7 +268,7 @@ export class MatterObject implements IMatterObject {
         this.setStatic(false);
         const pos = this.getPosition();
         // pos.y += this.offsetY;
-        const angle = Math.atan2(path[0].y - pos.y, path[0].x - pos.x);
+        const angle = Math.atan2(path[0].y * this.peer.scaleRatio - pos.y, path[0].x * this.peer.scaleRatio - pos.x);
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
