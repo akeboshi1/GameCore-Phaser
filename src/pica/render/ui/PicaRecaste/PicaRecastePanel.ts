@@ -260,6 +260,10 @@ export class PicaRecastePanel extends PicaBasePanel {
         }
         cellContainer.setData({ item });
         cellContainer.setItemData(item);
+        if (this.mSelectedItemData && item && this.mSelectedItemData.id === item.id) {
+          cellContainer.isSelect = true;
+          this.mSelectedItem = cellContainer;
+        }
         return cellContainer;
       },
     };
