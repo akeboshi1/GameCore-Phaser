@@ -1,5 +1,5 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { delayTime } from "src/services/physical.worker";
+import { delayTime } from "../../../services/physical.worker";
 import { AnimationQueue, AvatarSuitType, ElementStateType, ISprite, PlayerState } from "structure";
 import { IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
