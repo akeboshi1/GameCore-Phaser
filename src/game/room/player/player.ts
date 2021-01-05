@@ -133,14 +133,18 @@ export class Player extends Element implements IElement {
         }
 
     }
-    // protected async checkDirection() {
+
+    protected async checkDirection() {
     //     const prePos = await this.roomService.game.peer.physicalPeer.positionPrev(this.guid);
     //     // (<any>this.body).positionPrev;
     //     const pos = await this.roomService.game.peer.physicalPeer.position(this.guid);
     //     // this.body.position;
-    //     const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
-    //     this.onCheckDirection(angle * (180 / Math.PI));
-    // }
+        const pos = this.moveControll.position;
+        const prePos = this.moveControll.prePosition;
+        const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
+        const dir = this.onCheckDirection(angle * (180 / Math.PI));
+        this.setDirection(dir);
+    }
 
     // protected onCheckDirection(params: any): number {
     //     if (typeof params !== "number") {
