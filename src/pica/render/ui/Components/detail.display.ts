@@ -72,8 +72,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         }
         anis.push(new AnimationModel(ani));
       }
-      this.mFramesDisplay.once("initialized", () => {
-        this.mFramesDisplay.play({ name: aniName, flip: false });
+      const addDisplay = () => {
         const { spriteWidth, spriteHeight } = this.mFramesDisplay;
         if (this.mFixedSize !== 0) {
           this.scale = 1;
@@ -89,6 +88,10 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         this.mFramesDisplay.x = -spriteWidth * 0.5 * scale;
         this.mFramesDisplay.y = -spriteHeight * 0.5 * scale;
         this.addDisplay();
+      };
+      this.mFramesDisplay.once("initialized", () => {
+        this.mFramesDisplay.play({ name: aniName, flip: false });
+        addDisplay();
       });
       const animations = new Map();
       for (const aniData of anis) {
@@ -103,7 +106,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         display
       };
       if (!this.mFramesDisplay.load(animode)) {
-        this.addDisplay();
+        addDisplay();
       }
     }
   }

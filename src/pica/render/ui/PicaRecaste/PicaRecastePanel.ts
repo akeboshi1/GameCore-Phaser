@@ -337,6 +337,8 @@ export class PicaRecastePanel extends PicaBasePanel {
         notice = i18n.t("furnicompose.starpicatips");
       } else if (this.mRecasteItemData.count === 0) {
         notice = i18n.t("furnicompose.counttips");
+      } else if (this.mRecasteItemData.id === this.mSelectedItemData.id) {
+        notice = i18n.t("furnicompose.sametips");
       }
     } else {
       notice = i18n.t("recaste.selecttips");
@@ -403,7 +405,7 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.nameTex.setFontStyle("bold");
     this.nameTex.x = rightbg.x - rightbg.width * 0.5;
     this.nameTex.y = rightbg.y - rightbg.height * 0.5 - 18 * this.dpr;
-    this.starLevelImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_star_big_1" });
+    this.starLevelImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_star_big_1" }).setOrigin(1, 0.5);
     this.starLevelImg.x = rightbg.x + rightbg.width * 0.5 - this.starLevelImg.width * 0.5 - 12 * this.dpr;
     this.starLevelImg.y = rightbg.y - rightbg.height * 0.5 + this.starLevelImg.height * 0.5 + 8 * this.dpr;
     this.starLevelImg.visible = false;
