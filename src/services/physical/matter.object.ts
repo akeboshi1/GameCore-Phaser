@@ -1,5 +1,5 @@
 import { Bodies, Body, Vector } from "matter-js";
-import { IPos, LogicPos, Position45, Tool } from "utils";
+import { IPos, IPosition45Obj, Logger, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
 import { MoveData, MovePos } from "./matter.player.object";
@@ -53,6 +53,8 @@ export interface IMatterObject {
 
     destroy();
 
+    drawBody();
+
     setBody(scaleRatio: number);
 
     addBody(scaleRatio: number);
@@ -99,9 +101,12 @@ export class MatterObject implements IMatterObject {
     protected mDirty: boolean = false;
     protected mRootMount: IMatterObject;
     protected hasPos: boolean = false;
+    protected curSprite: any;
+    protected _offsetOrigin: Vector;
     constructor(public peer: PhysicalPeer, public id: number) {
         this._tempVec2 = Vector.create(0, 0);
         this._offset = Vector.create(0, 0);
+        this._offsetOrigin = Vector.create(0.5, 0.5);
     }
 
     get matterWorld(): MatterWorld {
@@ -114,11 +119,38 @@ export class MatterObject implements IMatterObject {
         this.mDirty = false;
     }
 
+    public _doMove(time?: number, delta?: number) {
+        if (!this.mMoving || !this.body) {
+            return;
+        }
+        const scaleRatio: number = this.peer.scaleRatio;
+        const _pos = this.body.position;
+        const pos = new LogicPos(_pos.x / scaleRatio, _pos.y / scaleRatio);
+        this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
+        this.peer.render.setPosition(this.id, pos.x, pos.y);
+
+        this.checkDirection();
+        const path = this.mMoveData.path;
+        const speed = this.mModel.speed * delta;
+        if (Tool.twoPointDistance(pos, path[0]) <= speed) {
+            if (path.length > 1) {
+                path.shift();
+                this.startMove();
+            } else {
+                if (path[0].stopDir) {
+                    this.stopMove();
+                    this.peer.mainPeer.setDirection(this.id, path[0].stopDir);
+                }
+            }
+        }
+    }
+
     // public setMatterWorld(world: MatterWorld) {
     //     this.matterWorld = world;
     // }
 
     public setModel(sprite: any) {
+        this.curSprite = sprite;
         this.mModel = new MatterSprite(sprite);
         if (!sprite) {
             return;
@@ -140,6 +172,8 @@ export class MatterObject implements IMatterObject {
         if (!this.mModel || this.mModel.id !== model.id) {
             return;
         }
+        if (!this.curSprite) this.curSprite = {};
+        Object.assign(this.curSprite, model);
         //  this.peer.world.removeFromMap(this.mModel);
         if (model.hasOwnProperty("animations")) {
             this.mModel.updateAnimations(model.animations);
@@ -159,6 +193,53 @@ export class MatterObject implements IMatterObject {
         }
         this.update();
         // this.peer.world.addToMap(this.mModel);
+    }
+
+    public mergeMounth(mounts: number[]) {
+        const oldMounts = this.mModel.mountSprites || [];
+        for (const id of oldMounts) {
+            if (mounts.indexOf(id) === -1) {
+                const ele = this.peer.getMatterObj(id);
+                if (ele) {
+                    this.removeMount(ele);
+                }
+            }
+        }
+    }
+
+    public updateMounth(mounts: number[]) {
+        if (mounts.length > 0) {
+            for (let i = 0; i < mounts.length; i++) {
+                const ele = this.peer.getMatterObj(mounts[i]);
+                if (ele) {
+                    this.addMount(ele, i);
+                }
+            }
+        }
+        this.mModel.mountSprites = mounts;
+    }
+
+    public checkDirection() {
+    }
+
+    public onCheckDirection(params: any): number {
+        if (typeof params !== "number") {
+            return;
+        }
+        // 重叠
+        if (params > 90) {
+            // this.setDirection(3);
+            return 3;
+        } else if (params >= 0) {
+            // this.setDirection(5);
+            return 5;
+        } else if (params >= -90) {
+            // this.setDirection(7);
+            return 7;
+        } else {
+            // this.setDirection(1);
+            return 1;
+        }
     }
 
     public updateAnimations(displayInfo: any) {
@@ -376,8 +457,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public setBody(scaleRatio: number) {
-        const body = Bodies.circle(this._tempVec2.x * scaleRatio, this._tempVec2.y * scaleRatio, 10);
-        this.setExistingBody(body, true);
+        this.drawBody();
     }
 
     public addBody(scaleRatio: number) {
@@ -426,151 +506,111 @@ export class MatterObject implements IMatterObject {
         return result;
     }
 
-    // public setDirection(val: number) {
-    //     if (this.model && !this.model.currentAnimationName) {
-    //         this.model.currentAnimationName = PlayerState.IDLE;
-    //     }
-    //     if (this.model) {
-    //         this.model.setDirection(val);
-    //         // this.mDisplay.play(this.model.currentAnimation);
-    //     }
-    //     this.play(this.model.currentAnimationName);
-    // }
-
-    // public getDirection(): number {
-    //     return this.mDisplayInfo && this.mDisplayInfo.avatarDir ? this.mDisplayInfo.avatarDir : 3;
-    // }
-
-    // public turn(): void {
-    //     if (!this.mModel) {
-    //         return;
-    //     }
-    //     this.mModel.turn();
-    //     this.play(this.model.currentAnimationName);
-    //     // if (this.mDisplay) this.mDisplay.play(this.mModel.currentAnimation);
-    // }
-
-    // public play(animationName: string, times?: number): void {
-    //     if (!this.mModel) {
-    //         Logger.getInstance().error(`${Element.name}: sprite is empty`);
-    //         return;
-    //     }
-    //     //  this.mCurAnimationName = animationName;
-    //     this.mModel.setAnimationName(animationName);
-
-    //     if (times !== undefined) {
-    //         times = times > 0 ? times - 1 : -1;
-    //     }
-    //     this.peer.render.playAnimation(this.id, this.mCurAnimationName, undefined, times);
-    // }
-
-    // public setQueue(animations: any) {
-    //     if (!this.mModel) {
-    //         return;
-    //     }
-    //     const queue = [];
-    //     for (const animation of animations) {
-    //         const aq: AnimationQueue = {
-    //             name: animation.animationName,
-    //             playTimes: animation.times,
-    //         };
-    //         // if (animation.times > 0) {
-    //         //     aq.complete = () => {
-    //         //         const anis = this.model.animationQueue;
-    //         //         anis.shift();
-    //         //         let aniName: string = PlayerState.IDLE;
-    //         //         let playTiems;
-    //         //         if (anis.length > 0) {
-    //         //             aniName = anis[0].name;
-    //         //             playTiems = anis[0].playTimes;
-    //         //         }
-    //         //         this.play(aniName, playTiems);
-    //         //         // const aniName = anis.length > 0 ? anis[0].name : PlayerState.IDLE;
-    //         //     };
-    //         // }
-    //         queue.push(aq);
-    //     }
-    //     this.mModel.setAnimationQueue(queue);
-    //     if (queue.length > 0) {
-    //         this.play(animations[0].animationName, animations[0].times);
-    //     }
-    // }
-
-    public mergeMounth(mounts: number[]) {
-        const oldMounts = this.mModel.mountSprites || [];
-        for (const id of oldMounts) {
-            if (mounts.indexOf(id) === -1) {
-                const ele = this.peer.getMatterObj(id);
-                if (ele) {
-                    this.removeMount(ele);
-                }
-            }
-        }
-    }
-
-    public updateMounth(mounts: number[]) {
-        if (mounts.length > 0) {
-            for (let i = 0; i < mounts.length; i++) {
-                const ele = this.peer.getMatterObj(mounts[i]);
-                if (ele) {
-                    this.addMount(ele, i);
-                }
-            }
-        }
-        this.mModel.mountSprites = mounts;
-    }
-
-    public _doMove(time?: number, delta?: number) {
-        if (!this.mMoving || !this.body) {
+    public async drawBody() {
+        if (!this.mModel) return;
+        const collision = this.mModel.getCollisionArea();
+        const dpr = this.peer.scaleRatio;
+        let body;
+        if (!collision) {
+            body = Bodies.circle(this._tempVec2.x * dpr, this._tempVec2.y * dpr, 10);
+            this.setExistingBody(body, true);
             return;
         }
-        const scaleRatio: number = this.peer.scaleRatio;
-        const _pos = this.body.position;
-        const pos = new LogicPos(_pos.x / scaleRatio, _pos.y / scaleRatio);
-        this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
-        this.peer.render.setPosition(this.id, pos.x, pos.y);
+        const collisionArea = [...collision];
+        let walkableArea = this.mModel.getWalkableArea();
+        if (!walkableArea) {
+            walkableArea = [];
+        }
 
-        this.checkDirection();
-        const path = this.mMoveData.path;
-        const speed = this.mModel.speed * delta;
-        if (Tool.twoPointDistance(pos, path[0]) <= speed) {
-            if (path.length > 1) {
-                path.shift();
-                this.startMove();
-            } else {
-                if (path[0].stopDir) {
-                    this.stopMove();
-                    this.peer.mainPeer.setDirection(this.id, path[0].stopDir);
+        const cols = collisionArea.length;
+        const rows = collisionArea[0].length;
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                if (walkableArea[i] && walkableArea[i][j] === 1) {
+                    collisionArea[i][j] = 0;
                 }
             }
         }
-    }
 
-    public checkDirection() {
-    }
+        const walkable = (val: number) => val === 0;
 
-    public onCheckDirection(params: any): number {
-        if (typeof params !== "number") {
-            return;
-        }
-        // 重叠
-        if (params > 90) {
-            // this.setDirection(3);
-            return 3;
-        } else if (params >= 0) {
-            // this.setDirection(5);
-            return 5;
-        } else if (params >= -90) {
-            // this.setDirection(7);
-            return 7;
+        const resule = collisionArea.some((val: number[]) => val.some(walkable));
+        // const transformToMini90 = this.mRoomService.transformToMini90.bind(this.mRoomService);
+        let paths = [];
+        const size = this.matterWorld.size;
+        const miniSize = this.matterWorld.miniSize;
+        if (resule) {
+            paths[0] = this.calcBodyPath(collisionArea, miniSize);
         } else {
-            // this.setDirection(1);
-            return 1;
+            paths = [[Position45.transformTo90(new LogicPos(0, 0), size), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), size), Position45.transformTo90(new LogicPos(0, cols), miniSize)]];
         }
+
+        const mapHeight = (rows + cols) * (miniSize.tileHeight / 2) * dpr;
+        const mapWidth = (rows + cols) * (miniSize.tileWidth / 2) * dpr;
+        const scaleDpr = (pos) => {
+            pos.x *= dpr;
+            pos.y *= dpr;
+        };
+        paths.map((path) => path.map(scaleDpr));
+        if (paths.length < 1 || paths[0].length < 3) {
+            Logger.getInstance().log("can't draw paths: ", this.curSprite.nickname, this.mModel.id);
+            return;
+        }
+        // const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];
+        const curOrigin = this.mModel.getOriginPoint();
+        const originPos = new LogicPos(curOrigin.x, curOrigin.y);
+        const origin = Position45.transformTo90(originPos, miniSize);
+        origin.x *= dpr;
+        origin.y *= dpr;
+
+        // this._offset.x = origin.x;
+        // this._offset.y = mapHeight * 0.5 - origin.y;
+        this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
+        this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
+        body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 0 });
+        this.setExistingBody(body, true);
     }
 
-    public loadDisplayInfo() {
-        this.peer.emitter.once("dragonBones_initialized", this.onDisplayReady, this);
+    private calcBodyPath(collisionArea: number[][], miniSize: IPosition45Obj) {
+        const allpoints = this.prepareVertices(collisionArea).reduce((acc, p) => acc.concat(this.transformBodyPath2(p[1], p[0], miniSize)), []);
+        // console.log(allpoints);
+        const convexHull = require("monotone-convex-hull-2d");
+        const resultIndices = convexHull(allpoints);
+
+        return resultIndices.map((i) => ({ x: allpoints[i][0], y: allpoints[i][1] }));
+        //    return paths;
+    }
+
+    private prepareVertices(collisionArea: number[][]): any[] {
+        const allpoints = [];
+        for (let i = 0; i < collisionArea.length; i++) {
+            let leftMost, rightMost;
+            for (let j = 0; j < collisionArea[i].length; j++) {
+                if (collisionArea[i][j] === 1) {
+                    if (!leftMost) {
+                        leftMost = [i, j];
+                        allpoints.push(leftMost);
+                    } else {
+                        rightMost = [i, j];
+                    }
+                }
+            }
+            if (rightMost) {
+                allpoints.push(rightMost);
+            }
+        }
+        return allpoints;
+    }
+
+    private transformBodyPath(x: number, y: number, miniSize: IPosition45Obj) {
+        const pos = Position45.transformTo90(new LogicPos(x, y), miniSize);
+        return [{ x: pos.x, y: -miniSize.tileHeight * 0.5 + pos.y }, { x: pos.x + miniSize.tileWidth * 0.5, y: pos.y }, { x: pos.x, y: pos.y + miniSize.tileHeight * 0.5 }, { x: pos.x - miniSize.tileWidth * 0.5, y: pos.y }];
+    }
+
+    private transformBodyPath2(x: number, y: number, miniSize: IPosition45Obj) {
+        const pos = Position45.transformTo90(new LogicPos(x, y), miniSize);
+        const result = [[pos.x, -miniSize.tileHeight * 0.5 + pos.y], [pos.x + miniSize.tileWidth * 0.5, pos.y], [pos.x, pos.y + miniSize.tileHeight * 0.5], [pos.x - miniSize.tileWidth * 0.5, pos.y]];
+        return result;
     }
 
     get model(): any {

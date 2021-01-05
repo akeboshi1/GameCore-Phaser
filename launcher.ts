@@ -39,25 +39,6 @@ import version from "./version";
 //     readonly parent?: string;
 // }
 
-export interface GameMain {
-    resize(newWidth, newHeight);
-    onOrientationChange(oriation: number, newWidth: number, newHeight: number);
-    scaleChange(scale: number);
-    enableClick();
-    disableClick();
-    setKeyBoardHeight(height: number);
-    startFullscreen(): void;
-    stopFullscreen(): void;
-    createGame(): void;
-    setGameConfig(config): void;
-    updatePalette(palett): void;
-    onFocus();
-    onBlur();
-    updateMoss(moss): void;
-    restart(config?: ILauncherConfig, callBack?: Function);
-    destroy(): Promise<void>;
-}
-
 export class Launcher {
     get config(): ILauncherConfig {
         return this.mConfig;
@@ -97,7 +78,7 @@ export class Launcher {
     readonly maxWidth = 1920;
     readonly maxHeight = 1080;
     readonly keyboardHeight = 256;
-    private world: GameMain;
+    private world: any;
     private intervalId: any;
     private mReload: Function;
     private mCompleteFunc: Function;
@@ -176,8 +157,12 @@ export class Launcher {
         if (this.world) this.world.onFocus();
     }
 
-    public keyBoardHeight(height: number) {
-        if (this.world) this.world.setKeyBoardHeight(height);
+    public keyboardDidShow(height: number) {
+        if (this.world) this.world.keyboardDidShow(height);
+    }
+
+    public keyboardDidHide(height: number) {
+        if (this.world) this.world.keyboardDidHide();
     }
 
     public enableClick() {

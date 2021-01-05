@@ -151,8 +151,9 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        const protobuf_packet: PBpacket = new PBpacket();
-        protobuf_packet.Deserialization(new Buffer(data));
+        // const protobuf_packet: PBpacket = new PBpacket();
+        // protobuf_packet.Deserialization(new Buffer(data));
+        const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
         const handlers = this.mPacketHandlers;

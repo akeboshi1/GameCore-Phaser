@@ -48,7 +48,7 @@ export class ModuleName {
     public static PICAMESSAGEBOX_NAME: string = "PicaMessageBox";
     public static PICAELEMENTSTORAGE_NAME: string = "PicaElementStorage";
     public static RANK_NAME: string = "rank";
-    public static CUTINMENU_NAME: string = "CutinMenu";
+    public static CUTINMENU_NAME: string = "CutInMenu";
     public static USERMENU_NAME: string = "UserMenu";
     public static GM_TOOLS_NAME: string = "GMTools";
     public static PICATREASURE_NAME: string = "PicaTreasure";
@@ -59,4 +59,8 @@ export class ModuleName {
     public static PICAONLINE_NAME: string = "PicaOnline";
     public static PICAEFFECTMGR_NAME: string = "PicaEffectMgr";
     public static PICAELEVATOR_NAME: string = "PicaElevator";
+    public static PICACREATEROLE_NAME: string = "PicaCreateRole";
+    public static PICAITEMTIPSPANEL_NAME: string = "PicaItemTipsPanel";
+    public static PICAFURNITURECOMPOSE_NAME = "PicaFurnitureCompose";
+    public static PICARECASTE_NAME: string = "PicaRecaste";
 }

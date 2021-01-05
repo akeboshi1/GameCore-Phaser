@@ -16,7 +16,8 @@ export class AvatarSuitType {
         "tail": ["body_tail"],
         "wing": ["body_wing"],
         "helmet": ["head_spec"],
-        "shell": ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"]
+        "shell": ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"],
+        "base": ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"]
     };
     static slotBitMap: Map<string, number>;
     static createAvatar(suits: AvatarSuit[], avatar?: any) {
@@ -121,7 +122,7 @@ export class AvatarSuitType {
         const suitPart = this.avatarSuit;
         const slots = suitPart[suitType];
         if (!slots) return;
-        const slotbits = slotbit === undefined ? [] : slotbit.split("#");
+        const slotbits = slotbit === undefined || slotbit === "" ? [] : slotbit.split("#");
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < slots.length; i++) {
             const slot = slots[i];
@@ -171,6 +172,7 @@ export class AvatarSuitType {
     public helmet = ["headSpecId"];
     public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
+    public base = ["headBaseId", "bodyBaseId", "farmBaseId", "barmBaseId", "flegBaseId", "blegBaseId"];
 }
 export class SuitAlternativeType {
     public static suitAlternative: SuitAlternativeType;

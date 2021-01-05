@@ -8,10 +8,8 @@ import { Game } from "./game";
 import { IPos, Logger, LogicPoint, Pos } from "utils";
 import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
 import { PicaGame } from "picaWorker";
-import { CacheDataManager } from "./data.manager/cache.dataManager";
 import { DataMgrType } from "./data.manager/dataManager";
-import { IElement, Player } from "./room";
-import { PostLayout } from "apowophaserui";
+import { SceneDataManager } from "./data.manager";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -460,13 +458,16 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public framesModel_getInteractive(id: number): IPos[] {
+    public fetchProjectionSize(id: number) {
         const room = this.game.roomManager.currentRoom;
+        if (!room) {
+            return;
+        }
         const ele = room.getElement(id);
         if (!ele) {
             return;
         }
-        return ele.model.getInteractive();
+        return ele.getProjectionSize();
     }
 
     @Export()
@@ -489,7 +490,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public getCurRoom() {
-        const mgr = this.game.dataManager.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        const mgr = this.game.dataManager.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
         return mgr ? mgr.curRoom : null;
     }
 

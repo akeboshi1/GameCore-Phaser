@@ -6,7 +6,8 @@ export interface GameMain {
     scaleChange(scale: number);
     enableClick();
     disableClick();
-    setKeyBoardHeight(height: number);
+    keyboardDidShow(height: number);
+    keyboardDidHide(): void;
     startFullscreen(): void;
     stopFullscreen(): void;
     createGame(content?): void;

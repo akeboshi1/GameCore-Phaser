@@ -300,8 +300,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public updateClock(time: number, delta: number) {
-        // 客户端自己通过delta来更新游戏时间戳
-        if (this.mGame.clock) this.mGame.clock.update(time, delta);
+        // 客户端自己通过delta来更新游戏时间戳 *现改为使用sysTime+deltaTime的形式，就不需要update了*
+        // if (this.mGame.clock) this.mGame.clock.update(time, delta);
     }
 
     public now(): number {

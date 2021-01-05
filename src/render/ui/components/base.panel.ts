@@ -15,8 +15,10 @@ export class BasePanel extends Panel {
     protected mReloadTimes: number = 0;
     protected render: Render;
     protected key: string = "";
+    protected uiLayer: string = MainUIScene.LAYER_UI;
     private exported: boolean = false;
     private exportListeners: Function[] = [];
+    private mSynchronize: boolean = false;
     constructor(scene: Phaser.Scene, render: Render) {
         super(scene, render);
         if (!scene.sys) Logger.getInstance().error("no scene system");
@@ -35,9 +37,10 @@ export class BasePanel extends Panel {
     }
 
     show(param?: any) {
+        this.mSynchronize = false;
         super.show(param);
         if (!this.mInitialized) return;
-        this.onShow();
+        if (!this.mSynchronize) this.onShow();
     }
 
     public hide() {
@@ -60,9 +63,33 @@ export class BasePanel extends Panel {
         this.exportListeners.push(f);
     }
 
+    protected preload() {
+        this.mPreLoad = true;
+        if (!this.scene) {
+            return;
+        }
+        let index = 0;
+        if (this.mResources) {
+            this.mResources.forEach((resource, key) => {
+                if (!this.scene.textures.exists(key)) {
+                    index++;
+                    this.addResources(key, resource);
+                }
+            }, this);
+        }
+        if (index > 0) {
+            this.startLoad();
+        } else {
+            if (this.mResources) this.mResources.clear();
+            this.mPreLoad = false;
+            this.init();
+            this.mSynchronize = true;
+        }
+    }
+
     protected init() {
+        (<MainUIScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
         super.init();
-        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_UI, this);
         this.setLinear(this.key);
         Logger.getInstance().log("init========", this.key);
         this.__exportProperty();
@@ -78,12 +105,12 @@ export class BasePanel extends Panel {
     }
 
     protected addResources(key: string, resource: any) {
-        super.addResources(key, resource);
         if (resource.type) {
             if (this.scene.load[resource.type]) {
                 this.scene.load[resource.type](key, Url.getUIRes(resource.dpr, resource.texture), Url.getUIRes(resource.dpr, resource.data));
             }
         }
+        super.addResources(key, resource);
     }
 
     protected get scaleWidth() {

@@ -11,6 +11,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     protected mBlockable: boolean = true;
     protected mModel: ISprite;
     protected mInputEnable: InputEnable;
+    protected mCreatedDisplay: boolean;
     constructor(id: number, protected mRoomService: IRoomService) {
         super(id, mRoomService);
         this.isUsed = true;
@@ -118,9 +119,29 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this.addToBlock();
     }
 
-    protected addDisplay() { }
+    public getProjectionSize(): IPos {
+        const miniSize = this.mRoomService.miniSize;
+        const collision = this.mModel.getCollisionArea();
+        const origin = this.mModel.getOriginPoint();
+        const rows = collision.length - origin.y;
+        const cols = collision[0].length - origin.x;
+        const width = this.mRoomService.transformToMini90(new LogicPos(0, cols));
+        const height = this.mRoomService.transformToMini90(new LogicPos(rows, 0));
+        const ow = this.mRoomService.transformToMini90(new LogicPos(origin.y));
+        const oh = this.mRoomService.transformToMini90(new LogicPos(origin.x));
+
+        return new LogicPos(width.x - ow.x, height.y - oh.y);
+    }
+
+    protected addDisplay(): Promise<any> { return this.createDisplay(); }
+
+    protected createDisplay(): Promise<any> {
+        this.mCreatedDisplay = true;
+        return Promise.resolve();
+    }
 
     protected removeDisplay(): Promise<any> {
+        this.mCreatedDisplay = false;
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 

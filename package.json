@@ -1,6 +1,6 @@
 {
     "name": "game-core",
-    "version": "1.0.421",
+    "version": "1.0.428",
     "main": "release/js/tooqing.js",
     "scripts": {
         "dev": "webpack-dev-server --mode development",
@@ -45,6 +45,7 @@
         "i18next-xhr-backend": "^3.2.2",
         "matter-js": "^0.14.2",
         "maxrects-packer": "^2.6.0",
+        "monotone-convex-hull-2d": "^1.0.1",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "pathfinding": "https://github.com/raymanyoung/PathFinding.js",
         "poly-decomp": "^0.3.0",

@@ -1,14 +1,15 @@
 
 import { op_client } from "pixelpai_proto";
-import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText, ClickEvent, Button } from "apowophaserui";
-import { ItemInfoTips, MaterialItem, PropItem } from "gamecoreRender";
+import { ClickEvent, Button } from "apowophaserui";
+import { ItemInfoTips, MaterialItem } from "gamecoreRender";
 import { Font, Handler, i18n, UIHelper } from "utils";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { ItemButton } from "../Components";
 export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
     private confirmBtn: Button;
     private titleimage: Phaser.GameObjects.Image;
     private pageCount: Phaser.GameObjects.Text;
-    private itemtips: ItemInfoTips;
+    //  private itemtips: ItemInfoTips;
     private pagedown: Phaser.GameObjects.Text;
     private content: Phaser.GameObjects.Container;
     private maskGraphic: Phaser.GameObjects.Graphics;
@@ -59,24 +60,24 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         this.pageCount.visible = false;
         this.add([titlebgline, this.titleimage, this.pageCount]);
 
-        const tipsWidth = 145 * this.dpr;
-        const tipsHeight = 55 * this.dpr;
-        this.itemtips = new ItemInfoTips(this.scene, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", this.dpr, {
-            left: 10 * this.dpr,
-            top: 10 * this.dpr,
-            right: 10 * this.dpr,
-            bottom: 10 * this.dpr
-        });
-        this.itemtips.x = -this.width * 0.5 + tipsWidth * 0.5 + 10 * this.dpr;
-        this.itemtips.y = -this.height * 0.5 + 70 * this.dpr;
-        this.itemtips.setVisible(false);
-        this.itemtips.setHandler(new Handler(this, this.onItemTipsHideHandler));
-        this.add(this.itemtips);
+        // const tipsWidth = 145 * this.dpr;
+        // const tipsHeight = 55 * this.dpr;
+        // this.itemtips = new ItemInfoTips(this.scene, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", this.dpr, {
+        //     left: 10 * this.dpr,
+        //     top: 10 * this.dpr,
+        //     right: 10 * this.dpr,
+        //     bottom: 10 * this.dpr
+        // });
+        // this.itemtips.x = -this.width * 0.5 + tipsWidth * 0.5 + 10 * this.dpr;
+        // this.itemtips.y = -this.height * 0.5 + 70 * this.dpr;
+        // this.itemtips.setVisible(false);
+        // this.itemtips.setHandler(new Handler(this, this.onItemTipsHideHandler));
+        // this.add(this.itemtips);
 
-        this.lightSprite = this.createSprite(this.key, this.lightAniKey, "", [1, 16]);
+        this.lightSprite = this.createSprite(UIAtlasName.circleeffect, this.lightAniKey, "", [1, 16]);
         this.lightSprite.x = 5 * this.dpr;
         this.add(this.lightSprite);
-        this.starSprite = this.createSprite(this.key, this.starAniKey, "star", [1, 18], 10, -1);
+        this.starSprite = this.createSprite(UIAtlasName.stareffect, this.starAniKey, "star", [1, 18], 10, -1);
         this.add(this.starSprite);
         this.starSprite.x = this.lightSprite.y;
         const maskW = 180 * this.dpr, maskH = 150 * this.dpr;
@@ -118,10 +119,11 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         this.tweens.length = 0;
     }
 
-    setTreasureData() {
-        this.treasureData = new Array(16);
-        const datas = this.getNextDatas();
-        const group = this.createLayoutGroup(datas);
+    setTreasureData(datas: any[]) {
+        if (!datas) return;
+        this.treasureData = datas;
+        const tempdatas = this.getNextDatas();
+        const group = this.createLayoutGroup(tempdatas);
         this.playAnimation();
         this.playItemTween(group, 620);
         this.curLayoutGroup = group;
@@ -219,7 +221,7 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
     }
 
     private createLayoutGroup(arr: any[]) {
-        const group = new RewardLayoutGroup(this.scene, 0, 150 * this.dpr, 152 * this.dpr, 90 * this.dpr, this.dpr);
+        const group = new RewardLayoutGroup(this.scene, 0, 150 * this.dpr, 152 * this.dpr, 90 * this.dpr, this.dpr, this.zoom);
         this.content.add(group);
         group.setRewardDatas(arr);
         return group;
@@ -242,8 +244,8 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         }
     }
     private onRewardItemHandler(gameobject: MaterialItem) {
-        this.itemtips.setVisible(false);
-        this.setTipsPosition(gameobject);
+        // this.itemtips.setVisible(false);
+        // this.setTipsPosition(gameobject);
     }
 
     private onItemTipsHideHandler() {
@@ -251,38 +253,41 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
     }
 
     private setTipsPosition(gameobject: MaterialItem) {
-        let posx: number = gameobject.x;
-        let posy: number = gameobject.y;
-        let tempobject = <Phaser.GameObjects.Container>gameobject;
-        while (tempobject.parentContainer !== this) {
-            posx += tempobject.parentContainer.x;
-            posy += tempobject.parentContainer.y;
-            tempobject = tempobject.parentContainer;
-        }
-        if (posx - this.itemtips.width * 0.5 < -this.width * 0.5) {
-            this.itemtips.x = this.itemtips.width * 0.5 - this.width * 0.5 + 20 * this.dpr;
-        } else if (posx + this.itemtips.width * 0.5 > this.width * 0.5) {
-            this.itemtips.x = this.width * 0.5 - this.itemtips.width * 0.5 - 20 * this.dpr;
-        } else {
-            this.itemtips.x = posx;
-        }
-        this.itemtips.y = posy - this.itemtips.height * 0.5 + 5 * this.dpr;
+        // let posx: number = gameobject.x;
+        // let posy: number = gameobject.y;
+        // let tempobject = <Phaser.GameObjects.Container>gameobject;
+        // while (tempobject.parentContainer !== this) {
+        //     posx += tempobject.parentContainer.x;
+        //     posy += tempobject.parentContainer.y;
+        //     tempobject = tempobject.parentContainer;
+        // }
+        // if (posx - this.itemtips.width * 0.5 < -this.width * 0.5) {
+        //     this.itemtips.x = this.itemtips.width * 0.5 - this.width * 0.5 + 20 * this.dpr;
+        // } else if (posx + this.itemtips.width * 0.5 > this.width * 0.5) {
+        //     this.itemtips.x = this.width * 0.5 - this.itemtips.width * 0.5 - 20 * this.dpr;
+        // } else {
+        //     this.itemtips.x = posx;
+        // }
+        // this.itemtips.y = posy - this.itemtips.height * 0.5 + 5 * this.dpr;
     }
 }
 
 class RewardLayoutGroup extends Phaser.GameObjects.Container {
     private dpr: number;
-
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number) {
+    private zoom: number;
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
+        this.zoom = zoom;
         this.setSize(width, height);
     }
 
     setRewardDatas(datas: any[]) {
+        if (!datas) return;
         const len = datas.length;
         for (let i = 0; i < len; i++) {
-            const prop = new PropItem(this.scene, UIAtlasKey.common3Key, "material_unchecked", this.dpr);
+            const prop = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.zoom, true);
+            prop.setItemData(datas[i]);
             this.add(prop);
         }
         this.setLayout();
@@ -291,21 +296,21 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
     setLayout() {
         const list = this.list;
         if (list.length === 0) return;
-        const cell = <PropItem>list[0];
+        const cell = <ItemButton>list[0];
         const len = list.length;
         const cellwidth = cell.width, cellHeight = cell.height;
         if (len <= 3) {
             const space = len === 2 ? 20 * this.dpr : 10 * this.dpr;
             const width = len * cellwidth + space * (len - 1);
             for (let i = 0; i < len; i++) {
-                const item = <PropItem>list[i];
+                const item = <ItemButton>list[i];
                 item.x = -width * 0.5 + (cellwidth + space) * i + cellwidth * 0.5;
             }
         } else if (len === 4) {
             const spaceW = 20 * this.dpr, spaceH = 15 * this.dpr;
             for (let i = 0; i < 2; i++) {
                 for (let j = 0; j < 2; j++) {
-                    const item = <PropItem>(list[i * 2 + j]);
+                    const item = <ItemButton>(list[i * 2 + j]);
                     item.x = -(cellwidth + spaceW) * 0.5 + (cellwidth + spaceW) * j;
                     item.y = -(cellHeight + spaceH) * 0.5 + (cellHeight + spaceH) * i;
                 }
@@ -315,12 +320,12 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
             const width = 3 * cellwidth + spaceW * 2;
             const height = 2 * cellHeight + spaceH;
             for (let i = 0; i < 3; i++) {
-                const item = <PropItem>(list[i]);
+                const item = <ItemButton>(list[i]);
                 item.x = -width * 0.5 + (cellwidth + spaceW) * i + cellwidth * 0.5;
                 item.y = -height * 0.5 + cellHeight * 0.5;
             }
             for (let j = 0; j < 2; j++) {
-                const item = <PropItem>(list[j + 3]);
+                const item = <ItemButton>(list[j + 3]);
                 item.x = -(2 * cellwidth + spaceW) * 0.5 + cellwidth * 0.5 + (cellwidth + spaceW) * j;
                 item.y = height * 0.5 - cellHeight * 0.5;
             }
@@ -330,7 +335,7 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
             const height = 2 * cellHeight + spaceH;
             for (let i = 0; i < 2; i++) {
                 for (let j = 0; j < 3; j++) {
-                    const item = <PropItem>(list[i * 3 + j]);
+                    const item = <ItemButton>(list[i * 3 + j]);
                     item.x = -width * 0.5 + (cellwidth + spaceW) * j + cellwidth * 0.5;
                     item.y = -height * 0.5 + (cellHeight + spaceH) * i + cellHeight * 0.5;
                 }

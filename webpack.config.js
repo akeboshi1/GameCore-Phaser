@@ -81,7 +81,10 @@ const config = {
             // default: true
             cleanStaleWebpackAssets: false,
         }),
-        new CopyWebpackPlugin([{ from: "**/*", to: "resources", force: true, context: "resources" }]),
+        new CopyWebpackPlugin([{
+            from: "**/*", to: `resources_v${appVer}`, toType: "dir"
+            , force: true, context: "resources"
+        }]),
         new HtmlWebpackPlugin({
             inject: "head",
             title: "图轻播放器",

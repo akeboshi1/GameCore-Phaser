@@ -4,7 +4,6 @@ import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "../scenes/basic.scene";
 import { SceneName } from "structure";
 import { AlertView, Buttons } from "./components";
-
 export class UiManager {
     protected mScene: BasicScene;
     protected mPanelMap: Map<string, BasePanel>;// key: "<ModelName>Panel"

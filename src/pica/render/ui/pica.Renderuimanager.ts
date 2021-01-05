@@ -1,11 +1,13 @@
 import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
 import { AtlasManager } from "picaRes";
+import { PicaSingleManager } from "./SinglePanel/PicaSingleManager";
 export class PicaRenderUiManager extends UiManager {
-
     protected mAtalsManager: AtlasManager;
+    protected singleManager: PicaSingleManager;
     constructor(mRender: Render) {
         super(mRender);
         this.mAtalsManager = new AtlasManager();
+        this.singleManager = new PicaSingleManager(this);
         this.mAtalsManager.init(mRender);
     }
 
@@ -17,6 +19,10 @@ export class PicaRenderUiManager extends UiManager {
         super.showAlertView(text, ok, cancel, callBack);
     }
 
+    public destroy() {
+        super.destroy();
+        this.singleManager.destroy();
+    }
     protected _showPanel(type: string, param?: any): BasePanel {
         if (!this.mPanelMap) {
             this.mPanelMap = new Map();
@@ -33,4 +39,5 @@ export class PicaRenderUiManager extends UiManager {
         panel.show(param);
         return panel;
     }
+
 }

@@ -1,11 +1,11 @@
-import { ResUtils } from "utils";
+import { Logger, ResUtils, Url } from "utils";
 import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { DisplayObject, DisplayField } from "../display.object";
 import { Render } from "../../render";
 import { LoadType } from "../../loadqueue";
 
 export enum AvatarSlotType {
-    BodyCostDres = "body_cost_$_dres",
+    BodyCostDres = "body_cost_dres_$",
     BodyCost = "body_cost_$",
     BodyTail = "body_tail_$",
     BodyWing = "body_wing_$",
@@ -31,7 +31,7 @@ export enum AvatarSlotType {
     HeadMask = "head_mask_$",
     HeadEyes = "head_eyes_$",
     HeadBase = "head_base_$",
-    HeadHairBack = "head_hair_$_back",
+    HeadHairBack = "head_hair_back_$",
     HeadMous = "head_mous_$",
     HeadHair = "head_hair_$",
     HeadHats = "head_hats_$",
@@ -47,7 +47,7 @@ export enum AvatarPartType {
     BlegSpec = "bleg_spec_#_$",
     BodyBase = "body_base_#_$",
     BodyCost = "body_cost_#_$",
-    BodyCostDres = "body_cost_#_$_dres",
+    BodyCostDres = "body_cost_dres_#_$",
     BodySpec = "body_spec_#_$",
     BodyTail = "body_tail_#_$",
     BodyWing = "body_wing_#_$",
@@ -60,7 +60,7 @@ export enum AvatarPartType {
     HeadBase = "head_base_#_$",
     HeadEyes = "head_eyes_#_$",
     HeadHair = "head_hair_#_$",
-    HeadHairBack = "head_hair_#_$_back",
+    HeadHairBack = "head_hair_back_#_$",
     HeadHats = "head_hats_#_$",
     HeadFace = "head_face_#_$",
     HeadMask = "head_mask_#_$",
@@ -179,6 +179,7 @@ export class DragonbonesDisplay extends DisplayObject {
             }
             this.mBoardPoint = new Phaser.Geom.Point();
         }
+        super.play(val);
     }
 
     public fadeIn(callback?: () => void) {
@@ -254,7 +255,7 @@ export class DragonbonesDisplay extends DisplayObject {
         if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
             this.allComplete();
         } else {
-            const res = "./resources/dragonbones";
+            const res = `${Url.RES_PATH}/dragonbones`;
             const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
             const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
             const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
@@ -974,7 +975,7 @@ export class DragonbonesDisplay extends DisplayObject {
             // if (this.mLoadMap.size > 0) {
             // }
             this.tmpIndex++;
-            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex + this.uuid;
+            this.renderTextureKey = "bones_" + this.displayInfo.id + this.tmpIndex + (this.uuid || 0);
             // if (this.scene.textures.exists(this.renderTextureKey)) {
             //     this.scene.textures.remove(this.renderTextureKey);\
             // }
@@ -986,8 +987,9 @@ export class DragonbonesDisplay extends DisplayObject {
                 // =============龙骨part资源key 带图片资源名及方向
                 const key = name.split("/")[1].split("_");
                 // =============front || back单独也有格位
-                const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[3] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
-                // const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
+                const slotKey = key[4] ? key[0] + "_" + key[1] + "_" + key[2] + "_" + key[4] : key[0] + "_" + key[1] + "_" + key[3];
+                const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotKey);
+                if (!slot) Logger.getInstance().warn("dragonbonesDisplay, get slot error: ", slotKey, slot);
                 const dat = dragonBonesTexture.get(name);
                 const loadArr = this.mLoadMap.get(slotKey);
                 // 原始资源
@@ -1005,7 +1007,7 @@ export class DragonbonesDisplay extends DisplayObject {
                             //     texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                             // }
                             if (dragonBonesTexture.frames[frameName]) {
-                                canvas.drawFrame(this.mDragonbonesName, name, dat.cutX, dat.cutY);
+                                canvas.drawFrame(this.mDragonbonesName, frameName, dat.cutX, dat.cutY);
                                 break;
                             } else {
                                 canvas.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);

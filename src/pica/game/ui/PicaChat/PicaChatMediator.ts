@@ -1,6 +1,6 @@
 import { PicaChat } from "./PicaChat";
 import { op_client, op_def } from "pixelpai_proto";
-import { BasicMediator, CacheDataManager, DataMgrType, Game, IElement, UIType } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game, IElement, SceneDataManager, UIType } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
 import { ChatCommandInterface, i18n, Logger } from "utils";
 
@@ -53,7 +53,7 @@ export class PicaChatMediator extends BasicMediator {
         if (!this.game) {
             return;
         }
-        const mgr = this.game.dataManager.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        const mgr = this.game.dataManager.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
         const uiManager = this.game.uiManager;
         if (mgr && mgr.curRoom)
             this.onGiftStateHandler(mgr.curRoom.openingParty);

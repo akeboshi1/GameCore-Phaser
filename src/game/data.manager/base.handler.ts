@@ -3,7 +3,7 @@ import { Game } from "../game";
 
 export class BaseHandler {
     protected mEvent: EventDispatcher;
-    constructor(protected game: Game, event?: EventDispatcher) {
+    constructor(protected game: Game, event: EventDispatcher) {
         this.mEvent = event;
     }
 
