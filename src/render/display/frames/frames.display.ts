@@ -213,7 +213,8 @@ export class FramesDisplay extends DisplayObject {
         if (!this.mMountContainer) {
             return;
         }
-        this.mMountContainer.remove(display);
+        // this.mMountContainer.remove(display);
+        this.render.displayManager.addToSurfaceLayer(display);
         display.setRootMount(undefined);
         const index = this.mMountList.indexOf(display);
         display.visible = true;

@@ -79,32 +79,37 @@ export class User extends Player {
     //     }
     // }
 
-    public async unmount(targetPos?: IPos): Promise<this> {
-        if (this.mRootMount) {
-            let landingPos: IPos;
-            const pos = await this.mRoomService.game.physicalPeer.getInteractivePositionList(this.mRootMount.id);
-            // this.mRootMount.getInteractivePositionList();
-            if (pos.length === 0) {
-                return;
-            }
-            const mountID = this.mRootMount.id;
-            this.mRootMount = null;
-            if (targetPos != null) {
-                const path = await this.roomService.findPath(targetPos, pos, true);
-                if (path.length > 0) {
-                    landingPos = path[0];
-                } else {
-                    landingPos = pos[0];
-                }
-            } else {
-                landingPos = pos[0];
-            }
-            this.setPosition(landingPos);
-            this.unmountSprite(mountID, landingPos);
-            this.enableBlock();
-            // this.mDirty = true;
-        }
-        return this;
+    public unmount(targetPos?: IPos): Promise<this> {
+        const mountID = this.mRootMount.id;
+        // super.unmount();
+        this.mRootMount = null;
+        this.unmountSprite(mountID, targetPos);
+        return Promise.resolve(this);
+    //     if (this.mRootMount) {
+    //         let landingPos: IPos;
+    //         const pos = await this.mRoomService.game.physicalPeer.getInteractivePosition(this.mRootMount.id);
+    //         // this.mRootMount.getInteractivePositionList();
+    //         if (pos.length === 0) {
+    //             return;
+    //         }
+    //         const mountID = this.mRootMount.id;
+    //         this.mRootMount = null;
+    //         if (targetPos != null) {
+    //             const path = await this.roomService.findPath(targetPos, pos, true);
+    //             if (path.length > 0) {
+    //                 landingPos = path[0];
+    //             } else {
+    //                 landingPos = pos[0];
+    //             }
+    //         } else {
+    //             landingPos = pos[0];
+    //         }
+    //         this.setPosition(landingPos);
+    //         this.unmountSprite(mountID, landingPos);
+    //         this.enableBlock();
+    //         // this.mDirty = true;
+    //     }
+    //     return this;
     }
 
     // public moveMotion(x: number, y: number, targetId?: number) {
@@ -185,8 +190,8 @@ export class User extends Player {
     // }s
 
     public startMove() {
-        this.changeState(PlayerState.WALK);
-        this.mRoomService.game.physicalPeer.startMove();
+        // this.changeState(PlayerState.WALK);
+        // this.mRoomService.game.physicalPeer.startMove();
     }
 
     public stopMove() {

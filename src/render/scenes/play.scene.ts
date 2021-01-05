@@ -9,13 +9,13 @@ import { MotionManager } from "../input/motion.manager";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
-    protected readonly LAYER_GROUNDCLICK = "groundClickLayer";
-    protected readonly LAYER_GROUND2 = "groundLayer2";
-    protected readonly LAYER_GROUND = "groundLayer";
-    protected readonly LAYER_MIDDLE = "middleLayer";
-    protected readonly LAYER_SURFACE = "surfaceLayer";
-    protected readonly LAYER_ATMOSPHERE = "atmosphere";
-    protected readonly LAYER_SCENEUI = "sceneUILayer";
+    public readonly LAYER_GROUNDCLICK = "groundClickLayer";
+    public readonly LAYER_GROUND2 = "groundLayer2";
+    public readonly LAYER_GROUND = "groundLayer";
+    public readonly LAYER_MIDDLE = "middleLayer";
+    public readonly LAYER_SURFACE = "surfaceLayer";
+    public readonly LAYER_ATMOSPHERE = "atmosphere";
+    public readonly LAYER_SCENEUI = "sceneUILayer";
 
     protected motionManager: MotionManager;
 

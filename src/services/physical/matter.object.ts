@@ -325,7 +325,8 @@ export class MatterObject implements IMatterObject {
         if (index > -1) {
             this.mMounts.splice(index, 1);
         }
-        await this.peer.render.unmount(this.id, ele.id);
+        // await this.peer.render.unmount(this.id, ele.id);
+        await this.peer.mainPeer.removeMount(this.id, ele.id, targetPos);
         return Promise.resolve();
     }
 

@@ -121,7 +121,7 @@ export class DisplayManager {
             display = this.displays.get(id);
         }
         display.load(data);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        this.addToSurfaceLayer(display);
     }
 
     public addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false) {
@@ -143,7 +143,7 @@ export class DisplayManager {
         // 主角龙骨无视其余资源优先加载
         display.load(data);
         display.startLoad();
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        this.addToSurfaceLayer(display);
         if (isUser) this.mUser = display;
     }
 
@@ -164,7 +164,7 @@ export class DisplayManager {
             display = this.displays.get(id);
         }
         display.load(data);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        this.addToSurfaceLayer(display);
     }
 
     public addFramesDisplay(id: number, data: IFramesModel) {
@@ -184,7 +184,16 @@ export class DisplayManager {
             display = this.displays.get(id);
         }
         display.load(data);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        this.addToSurfaceLayer(display);
+    }
+
+    public addToSurfaceLayer(display: DisplayObject) {
+        const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+        scene.layerManager.addToLayer(scene.LAYER_SURFACE, display);
     }
 
     public addWallDisplay(data: IFramesModel | IDragonbonesModel) {

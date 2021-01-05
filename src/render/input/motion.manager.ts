@@ -62,7 +62,6 @@ export class MotionManager {
         const tmpY = pointer.worldY / this.scaleRatio - y;
         const position = this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
         this.start(position.x / this.scaleRatio, position.y / this.scaleRatio);
-        Logger.getInstance().log(position.x / this.scaleRatio, position.y / this.scaleRatio);
     }
 
     setScene(scene: Phaser.Scene) {
@@ -107,14 +106,11 @@ export class MotionManager {
         this.dirty = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
-            Logger.getInstance().log("stop======");
             this.stop();
         } else {
-            Logger.getInstance().log("up=====", pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
             if (this.gameObject) {
                 const id = this.gameObject.getData("id");
                 if (id) {
-                    Logger.getInstance().log("up=====gameobject", pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
                     const ele = this.render.displayManager.getDisplay(id);
                     if (ele.nodeType === NodeType.CharacterNodeType) {
                         // TODO
@@ -131,7 +127,6 @@ export class MotionManager {
                     this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
                 }
             } else {
-                Logger.getInstance().log("up=====no gameobject", pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
                 this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }

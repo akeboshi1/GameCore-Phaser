@@ -128,7 +128,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public removeMount() {
-        return this;
+        return Promise.resolve();
     }
 
     public async getInteractivePositionList() {

@@ -525,6 +525,20 @@ export class MainPeer extends RPCPeer {
         }
     }
 
+    @Export()
+    public async removeMount(id: number, mountID: number, stopPos: IPos) {
+        const room = this.game.roomManager.currentRoom;
+        if (!room) {
+            return Logger.getInstance().error(`room not exist`);
+        }
+        const ele = room.getElement(id);
+        const target = room.getElement(mountID);
+        if (!ele || !target) {
+            return Logger.getInstance().error(`target not exist`);
+        }
+        return ele.removeMount(target, stopPos);
+    }
+
     // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     // public findPath(x: number, y: number, targets: [], targetId?: number, toReverse: boolean = false) {
     //     this.game.user.findPath(x, y, targets, targetId, toReverse);

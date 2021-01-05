@@ -5,6 +5,7 @@ import { IElementManager } from "../element/element.manager";
 import { ISprite, PlayerState } from "structure";
 import { IPos } from "../../../utils/logic.pos";
 import { Element, IElement, MovePath } from "../element/element";
+import { Logger } from "utils";
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
@@ -88,6 +89,7 @@ export class Player extends Element implements IElement {
     // }
 
     public changeState(val?: string, times?: number) {
+        Logger.getInstance().log("change state: ", val);
         if (this.mCurState === val) return;
         // if (!val) val = PlayerState.IDLE;
         if (!val) {

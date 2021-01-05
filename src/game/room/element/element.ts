@@ -63,7 +63,7 @@ export interface IElement {
 
     addMount(ele: IElement, index?: number): this;
 
-    removeMount(ele: IElement, targetPos?: IPos): this;
+    removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
 
     // getInteractivePositionList(): Promise<IPos[]>;
 }
@@ -392,7 +392,7 @@ export class Element extends BlockObject implements IElement {
             path = [];
         }
         path.push(pos);
-        this.mRoomService.game.physicalPeer.move(this.id, this.mMoveData);
+        this.mRoomService.game.physicalPeer.move(this.id, path);
     }
 
     // public movePosition(pos: LogicPos, angel: number) {
@@ -614,7 +614,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mRootMount) {
             // 先移除避免人物瞬移
             // this.removeDisplay();
-            const pos = await this.mRootMount.getPosition();
+            const pos = this.mRootMount.getPosition();
             // pos.x += this.mDisplay.x;
             // pos.y += this.mDisplay.y;
             this.mRootMount = null;
@@ -635,15 +635,16 @@ export class Element extends BlockObject implements IElement {
         return this;
     }
 
-    public removeMount(ele: IElement, targetPos?: IPos) {
-        ele.unmount(targetPos);
-        if (!this.mMounts) return this;
-        this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
+    public async removeMount(ele: IElement, targetPos?: IPos) {
         const index = this.mMounts.indexOf(ele);
-        if (index > -1) {
-            this.mMounts.splice(index, 1);
+        if (index === -1) {
+            return Promise.resolve();
         }
-        return this;
+        this.mMounts.splice(index, 1);
+        ele.unmount(targetPos);
+        if (!this.mMounts) return Promise.resolve();
+        await this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
+        return Promise.resolve();
     }
 
     public setState(states: op_def.IState[]) {
