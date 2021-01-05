@@ -9,16 +9,16 @@ import { MotionManager } from "../input/motion.manager";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
-    protected readonly LAYER_GROUNDCLICK = "groundClickLayer";
-    protected readonly LAYER_GROUND2 = "groundLayer2";
-    protected readonly LAYER_GROUND = "groundLayer";
-    protected readonly LAYER_MIDDLE = "middleLayer";
-    protected readonly LAYER_SURFACE = "surfaceLayer";
-    protected readonly LAYER_ATMOSPHERE = "atmosphere";
-    protected readonly LAYER_SCENEUI = "sceneUILayer";
-
+    public readonly LAYER_GROUNDCLICK = "groundClickLayer";
+    public readonly LAYER_GROUND2 = "groundLayer2";
+    public readonly LAYER_GROUND = "groundLayer";
+    public readonly LAYER_MIDDLE = "middleLayer";
+    public readonly LAYER_SURFACE = "surfaceLayer";
+    public readonly LAYER_ATMOSPHERE = "atmosphere";
+    public readonly LAYER_SCENEUI = "sceneUILayer";
+    public readonly LOAD_TIME: number = 5000;
     protected motionManager: MotionManager;
-
+    private timeID: any;
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: SceneName.PLAY_SCENE });
     }
@@ -104,6 +104,9 @@ export class PlayScene extends RoomScene {
         this.input.on("pointerdown", this.onPointerDownHandler, this);
         this.input.on("pointerup", this.onPointerUpHandler, this);
         this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+        this.timeID = setTimeout(() => {
+            this.onLoadCompleteHandler();
+        }, this.LOAD_TIME);
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -142,6 +145,7 @@ export class PlayScene extends RoomScene {
     }
 
     protected onLoadCompleteHandler() {
+        if (this.timeID) clearTimeout(this.timeID);
         Logger.getInstance().log("playload complete");
         // const scene = this.game.scene.getScene(MainUIScene.name);
         // if (!scene.scene.isActive()) {
