@@ -328,7 +328,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
                 // graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
             }
         }
-        this.peer.mainPeer.game.renderPeer.showMatterDebug(result);
+        this.peer.render.showMatterDebug(result);
         // Logger.getInstance().log("=====>>", result);
     }
 }

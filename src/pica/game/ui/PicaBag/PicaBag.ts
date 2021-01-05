@@ -100,7 +100,7 @@ export class PicaBag extends BasicModel {
   private onPackageCategoriesHandler(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
     if (content.category === this.categoryType) {
-      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retpackageCategory", content.subcategory);
+      this.game.emitter.emit(ModuleName.PICABAG_NAME + "_retpackageCategory", content);
     }
   }
 

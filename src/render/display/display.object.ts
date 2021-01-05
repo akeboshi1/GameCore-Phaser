@@ -1,6 +1,6 @@
 import { ReferenceArea } from "../editor/reference.area";
 import { DynamicSprite, DynamicImage } from "../ui/components";
-import { Url, LogicPoint, LogicPos, Logger, IPos } from "utils";
+import { Url, LogicPoint, LogicPos, Logger, IPos, Size } from "utils";
 import { Render } from "../render";
 import { RunningAnimation, IDragonbonesModel, IFramesModel, ElementStateType } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
@@ -51,6 +51,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mProgress: number;
     protected mInitialized: boolean = false;
     protected mCallBack: Function;
+    protected mProjectionSize: IPos;
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
@@ -82,12 +83,12 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         this.mCallBack = callBack;
         return new Promise<void>((resolve, reject) => {
             if (!this.mLoadQueue || this.mInitialized) {
-                resolve();
+                resolve(null);
                 return;
             }
             this.mLoadQueue.once("QueueComplete", () => {
                 this.mInitialized = true;
-                resolve();
+                resolve(null);
             }, this);
             this.mLoadQueue.startLoad();
         });
@@ -133,6 +134,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     }
 
     play(animation: RunningAnimation, field?: DisplayField, times?: number) {
+        this.fetchProjection();
     }
 
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number) { }
@@ -468,6 +470,11 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         this.renderSetDirection(param);
     }
 
+    protected async fetchProjection() {
+        if (!this.id) return;
+        this.mProjectionSize = await this.render.mainPeer.fetchProjectionSize(this.id);
+    }
+
     get id(): number {
         return this.mID;
     }
@@ -494,5 +501,12 @@ export class DisplayObject extends Phaser.GameObjects.Container {
 
     get originPoint() {
         return this.mOriginPoint;
+    }
+
+    get projectionSize(): IPos {
+        if (!this.mProjectionSize) {
+            this.mProjectionSize = { x: 0, y: 0 };
+        }
+        return this.mProjectionSize;
     }
 }

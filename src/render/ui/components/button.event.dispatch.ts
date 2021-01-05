@@ -53,8 +53,8 @@ export class ButtonEventDispatcher extends BaseUI {
         if (!this.interactiveBoo)
             return;
         this.mIsMove = true;
-        this.emit(ClickEvent.Move);
         this.EventStateChange(ClickEvent.Move);
+        this.emit(ClickEvent.Move);
     }
 
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
@@ -72,13 +72,13 @@ export class ButtonEventDispatcher extends BaseUI {
 
     protected pointerUp(pointer) {
         const isdown = this.checkPointerInBounds(this, pointer.worldX, pointer.worldY);
-        this.emit(ClickEvent.Up, this);
         this.EventStateChange(ClickEvent.Up);
+        this.emit(ClickEvent.Up, this);
         if (isdown && this.mIsDown) {
             if (this.soundGroup && this.soundGroup.up)
                 this.playSound(this.soundGroup.up);
-            this.emit(ClickEvent.Tap, pointer, this);
             this.EventStateChange(ClickEvent.Tap);
+            this.emit(ClickEvent.Tap, pointer, this);
         }
         clearTimeout(this.mPressTime);
         this.mIsMove = false;
@@ -90,7 +90,9 @@ export class ButtonEventDispatcher extends BaseUI {
         if (this.mTweenBoo && pointer.isDown) {
             this.tween(false);
         }
-        this.EventStateChange(ClickEvent.Out);
+        const isint = this.checkPointerInBounds(this, pointer.worldX, pointer.worldY);
+        if (!isint)
+            this.EventStateChange(ClickEvent.Out);
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -104,13 +106,13 @@ export class ButtonEventDispatcher extends BaseUI {
             this.playSound(this.soundGroup.down);
         this.mDownTime = Date.now();
         this.mPressTime = setTimeout(() => {
-            this.emit(ClickEvent.Hold, this);
             this.EventStateChange(ClickEvent.Hold);
+            this.emit(ClickEvent.Hold, this);
         }, this.mPressDelay);
         if (this.mTweenBoo) this.tween(true);
+        this.EventStateChange(ClickEvent.Down);
         this.emit(ClickEvent.Down, this);
         this.mIsDown = true;
-        this.EventStateChange(ClickEvent.Down);
     }
 
     protected checkPointerInBounds(gameObject: any, pointerx: number, pointery: number): boolean {

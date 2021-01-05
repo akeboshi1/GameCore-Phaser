@@ -6,10 +6,8 @@
     "refresh": "Refresh"
   },
   "item": {
-    "source": "source: ",
     "copy_suc": "{{name}} copied",
-    "name": "name",
-    "des": "description"
+    "name": "name"
   },
   "reconnect": {
     "des": "Click to re-login"
@@ -37,7 +35,8 @@
     "timelimit": "Expires",
     "properties": "Prop Properties",
     "needproper": "Requirement",
-    "placetips": "Put down when editing room"
+    "placetips": "Put down when editing room",
+    "recaste":"Recaste"
   },
   "common": {
     "cancel": "Cancel",
@@ -345,5 +344,26 @@
   },
   "online": {
     "title": "Online Personnel"
+  },
+  "creatrole": {
+    "next": "Next",
+    "gointo": "Enter Game",
+    "hair": "Hair",
+    "eye": "Eye",
+    "mouth": "Mouth"
+  },
+  "furnicompose": {
+    "selecttips": "Must choose 5 furniture of same star class",
+    "onestar": " One Star",
+    "twostar": "Two Star",
+    "threestar": "Three Star",
+    "fourstar": "Four Star",
+    "spendstar": "Need to consume [color=#FFDE29][b]{{name}}[/b][/color] picard star",
+    "starpicatips": "There are not enough starpicas"
+  },
+  "recaste": {
+    "tip": "Please select the furniture that you want to recast",
+    "selecttips": "Please select the furniture that you want to recast",
+    "counttips": "There is not enough furniture to be converted"
   }
 }

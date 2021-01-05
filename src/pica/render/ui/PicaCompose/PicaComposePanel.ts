@@ -1,7 +1,7 @@
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, Button, BBCodeText } from "apowophaserui";
 import { BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
-import { DetailDisplay } from "../PicaMarket/DetailDisplay";
+import { DetailDisplay } from "../Components/detail.display";
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
@@ -93,7 +93,7 @@ export class PicaComposePanel extends BasePanel {
 
         this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
         this.mDetailDisplay.y = -140 * this.dpr;
-        this.mDetailDisplay.setFixedScale(2 * this.dpr/this.scale);
+        this.mDetailDisplay.setFixedScale(2 * this.dpr / this.scale);
         this.content.add(this.mDetailDisplay);
         this.mDetailBubble = new DetailBubble(this.scene, this.dpr);
         this.mDetailBubble.x = -width * 0.5;
@@ -182,7 +182,7 @@ export class PicaComposePanel extends BasePanel {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new ComposeItem(scene, this.key, this.dpr);
+                    cellContainer = new ComposeItem(scene, this.key, this.dpr, this.scale);
                 }
                 cellContainer.setItemData(item);
                 if (item && this.mSelectItemData && item.skill.id === this.mSelectItemData.skill.id) {
@@ -392,14 +392,17 @@ class ComposeItem extends Phaser.GameObjects.Container {
     private qualifiedIcon: Phaser.GameObjects.Image;
     private lockbg: Phaser.GameObjects.Image;
     private lockIcon: Phaser.GameObjects.Image;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
+    private zoom: number = 1;
+    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
+        this.zoom = zoom;
         this.bg = this.scene.make.image({ key: this.key, frame: "bprint_bg_1" });
         this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.setSize(this.bg.width, this.bg.height);
         this.itemIcon = new DynamicImage(this.scene, 0, 0);
+        this.itemIcon.scale = this.dpr / this.zoom;
         const width = this.width;
         const height = this.height;
         this.newIcon = this.scene.make.image({ key: this.key, frame: "tag_new" });
@@ -465,7 +468,6 @@ class ComposeItem extends Phaser.GameObjects.Container {
     private setItemIcon(display: op_gameconfig.IDisplay) {
         const url = Url.getOsdRes(display.texturePath);
         this.itemIcon.load(url, this, () => {
-            this.itemIcon.scale = this.dpr;
             this.itemIcon.setPosition(0, 0);
         });
     }

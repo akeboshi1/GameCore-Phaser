@@ -106,6 +106,7 @@ class PicaUnlockEffectItem extends Phaser.GameObjects.Container {
             tweens: paths,
             totalDuration: 700,
             onComplete: () => {
+                if (!this.scene) return;
                 this.playAlphaAni(this.sprite1);
                 setTimeout(() => {
                     this.playAlphaAni(this.sprite2);

@@ -51,7 +51,7 @@ export interface ISprite {
     getCollisionArea(): number[][];
     getWalkableArea(): number[][];
     getOriginPoint(): IPos;
-    getInteractive(): op_def.IPBPoint2f[];
+    getInteractive(): any;
     turn(): ISprite;
     toSprite(): op_client.ISprite;
 }

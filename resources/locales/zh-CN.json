@@ -5,10 +5,8 @@
     "refreshtime": "下一次刷新时间："
   },
   "item": {
-    "source": "来源：",
     "copy_suc": "复制{{name}}成功",
-    "name": "名字",
-    "des": "描述"
+    "name": "名字"
   },
   "reconnect": {
     "des": "点击重新登陆"
@@ -38,7 +36,8 @@
     "timelimit": "限时",
     "properties": "道具属性",
     "needproper": "需求属性",
-    "placetips": "布置自己的小屋的时候才能放置"
+    "placetips": "布置自己的小屋的时候才能放置",
+    "recaste": "重铸"
   },
   "common": {
     "cancel": "取消",
@@ -348,5 +347,26 @@
   },
   "online": {
     "title": "在线人员"
+  },
+  "creatrole": {
+    "next": "下一步",
+    "gointo": "进入游戏",
+    "hair": "头发",
+    "eye": "眼睛",
+    "mouth": "嘴巴"
+  },
+  "furnicompose": {
+    "selecttips": "必须选择同星级的5个家具",
+    "onestar": "一星",
+    "twostar": "二星",
+    "threestar": "三星",
+    "fourstar": "四星",
+    "spendstar": "需要消耗[color=#FFDE29][b]{{name}}[/b][/color]个皮卡星",
+    "starpicatips": "皮卡星数量不足"
+  },
+  "recaste": {
+    "tip": "请选择你要重铸的家具",
+    "selecttips": "请选择要重铸成的家具",
+    "counttips": "要转换的家具数量不足"
   }
 }

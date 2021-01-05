@@ -5,7 +5,7 @@ import { Game } from "../game";
 
 export class BasePacketHandler extends PacketHandler {
     protected mEvent: EventDispatcher;
-    constructor(protected game: Game,event?: EventDispatcher) {
+    constructor(protected game: Game, event: EventDispatcher) {
         super();
         this.mEvent = event;
     }

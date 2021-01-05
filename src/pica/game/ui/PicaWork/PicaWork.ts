@@ -26,12 +26,6 @@ export class PicaWork extends BasicModel {
         }
     }
 
-    destroy() {
-        super.destroy();
-        this.unregister();
-        this.event.destroy();
-    }
-
     get connection(): ConnectionService {
         if (this.game) {
             return this.game.connection;
@@ -50,6 +44,6 @@ export class PicaWork extends BasicModel {
     }
     private on_JOB_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST = packet.content;
-        this.event.emit(ModuleName.PICAWORK_NAME + "_questlist", content);
+        this.event.emit(ModuleName.PICAWORK_NAME + "_retquestlist", content);
     }
 }

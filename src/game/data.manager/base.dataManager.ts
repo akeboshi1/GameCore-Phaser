@@ -7,7 +7,7 @@ import { BasePacketHandler } from "./base.packet.handler";
 export class BaseDataManager extends BasePacketHandler {
     private mSNRequirements: Map<string, op_client.ICountablePackageItem[]>;
     private mSNIDConfig: Map<string, any>;
-    constructor(game: Game, event?: EventDispatcher) {
+    constructor(game: Game, event: EventDispatcher) {
         super(game, event);
         this.mSNRequirements = new Map();
         this.mSNIDConfig = new Map();

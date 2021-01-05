@@ -105,9 +105,9 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.peoplevalue = new ImageValue(this.scene, 45 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_persons", this.dpr, {
             color: "#ffffff", fontSize: 12 * this.dpr, fontFamily: Font.DEFULT_FONT
         });
-        this.peoplevalue.setLayout(1);
+        this.peoplevalue.setLayout(2);
         this.peoplevalue.setText("0");
-        this.peoplevalue.x = peoplebg.x;
+        this.peoplevalue.x = peoplebg.x - 2 * this.dpr;
         const peopeclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         peopeclickCon.setSize(40 * this.dpr, 40 * this.dpr);
         peopeclickCon.enable = true;

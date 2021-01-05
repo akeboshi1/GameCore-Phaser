@@ -63,9 +63,17 @@ export class ThreeSlicePath extends BaseUI {
 
     public setSize(width: number, height: number): this {
         super.setSize(width, height);
+        this.imgs[0].scale = 1;
+        this.imgs[2].scale = 1;
+        let midWidth = width - (this.imgs[0].displayWidth + this.imgs[2].displayWidth) + this.mCorrection;
+        if (midWidth < 0) {
+            midWidth = 0;
+            this.imgs[0].displayWidth = width * 0.5;
+            this.imgs[2].displayWidth = width * 0.5;
+        }
         this.imgs[0].x = -width * 0.5 + this.imgs[0].displayWidth * 0.5;
         this.imgs[2].x = width * 0.5 - this.imgs[2].displayWidth * 0.5;
-        this.imgs[1].displayWidth = width - (this.imgs[0].displayWidth + this.imgs[2].displayWidth) + this.mCorrection;
+        this.imgs[1].displayWidth = midWidth;
         return this;
     }
 
@@ -104,11 +112,9 @@ export class ThreeSlicePath extends BaseUI {
     }
 
     public destroy() {
-        this.imgs.forEach((value) => {
-            value.destroy();
-        });
         super.destroy();
-        this.imgs.length = 0;
+        if (this.imgs)
+            this.imgs.length = 0;
         this.imgs = undefined;
     }
 }

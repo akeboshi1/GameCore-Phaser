@@ -282,7 +282,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "ghost");
+    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "bag_nothing",1);
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.on("pointerup", this.onAvatarClickHandler, this);
     //  this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
@@ -330,7 +330,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new Item(scene, 0, 0, UIAtlasName.uicommon, this.dpr);
+          cellContainer = new Item(scene, 0, 0, UIAtlasName.uicommon, this.dpr, this.scale);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item);
@@ -457,8 +457,11 @@ export class PicaAvatarPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    cell.isSelect = true;
-    if (this.isSelectedItemData(item)) return;
+    if (!item) return;
+    if (this.isSelectedItemData(item)) {
+      cell.isSelect = true;
+      return;
+    }
     this.mDetailBubble.visible = true;
     let property = null;
     this.render.mainPeer.getUserData_PlayerProperty()
@@ -807,9 +810,9 @@ class Item extends Phaser.GameObjects.Container {
   private selectbg: Phaser.GameObjects.Image;
   private selectIcon: Phaser.GameObjects.Image;
   private dpr: number;
-  private zoom: number;
+  private zoom: number = 1;
   private key: string;
-  constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number = 1) {
+  constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number, zoom: number) {
     super(scene, x, y);
     this.dpr = dpr;
     this.zoom = zoom;
@@ -831,7 +834,7 @@ class Item extends Phaser.GameObjects.Container {
     }, false).setOrigin(1).setPosition(this.width * 0.5, this.height * 0.5);
     this.selectIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mPropImage = new DynamicImage(this.scene, 0, 0);
-    this.mPropImage.scale = dpr;
+    this.mPropImage.scale = dpr / this.zoom;
     this.mCounter = scene.make.text({
       x: this.width * 0.5 - 2 * dpr,
       y: this.height * 0.5,
@@ -856,7 +859,7 @@ class Item extends Phaser.GameObjects.Container {
       return;
     }
     if (!prop.tag || JSON.parse(prop.tag).type !== "remove") {
-      this.mPropImage.scale = this.dpr;
+      this.mPropImage.scale = this.dpr / this.zoom;
       this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
     } else {
       this.mPropImage.setTexture(UIAtlasName.uicommon, "backpack_close");

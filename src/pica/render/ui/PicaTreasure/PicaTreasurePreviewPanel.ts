@@ -132,11 +132,11 @@ export class PicaTreasurePreviewPanel extends Phaser.GameObjects.Container {
         this.sendHandler = send;
         this.closeHandler = close;
     }
-    setTreasureData() {
+    setTreasureData(datas: any) {
         // const display = this.getDisplayInfo(undefined);
         // this.mDetailDisplay.loadDisplay(display);
         this.titleName.text = "某某某宝箱";
-        this.setTreasureItems(null);
+        this.setTreasureItems(datas);
     }
 
     // private getDisplayInfo(isprite: any) {

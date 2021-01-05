@@ -20,8 +20,7 @@ import * as protos from "pixelpai_proto";
 import { PicaRenderUiManager } from "picaRender";
 import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
-import { User } from "gamecore";
-
+import version from "../../version";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -95,6 +94,9 @@ export class Render extends RPCPeer implements GameMain {
 
     get physicalPeer(): any {
         return this.mPhysicalPeer;
+    }
+    setKeyBoardHeight(height: number) {
+        throw new Error("Method not implemented.");
     }
 
     get config(): ILauncherConfig {
@@ -302,8 +304,20 @@ export class Render extends RPCPeer implements GameMain {
 
     }
 
-    setKeyBoardHeight(height: number) {
+    keyboardDidShow(keyboardHeight: number) {
+        const bottom: any = this.uiManager.getPanel(ModuleName.BOTTOM);
+        const width = this.mConfig.width;
+        const height = this.mConfig.height - keyboardHeight;
+        if (bottom) {
+            bottom.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
+        }
+    }
 
+    keyboardDidHide() {
+        const bottom: any = this.uiManager.getPanel(ModuleName.BOTTOM);
+        if (bottom) {
+            bottom.hideKeyboard();
+        }
     }
 
     startFullscreen(): void {
@@ -522,7 +536,7 @@ export class Render extends RPCPeer implements GameMain {
     public showCreateRolePanel(data?: any): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const createPanel = () => {
-                this.mUiManager.showPanel(ModuleName.CREATEROLE_NAME, data).then((panel) => {
+                this.mUiManager.showPanel(ModuleName.PICACREATEROLE_NAME, data).then((panel) => {
                     if (!panel) {
                         reject(false);
                         return;
@@ -1242,9 +1256,9 @@ export class Render extends RPCPeer implements GameMain {
         this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 1);
         this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
         Url.OSD_PATH = this.mConfig.osd;
-        Url.RES_PATH = "./resources/";
-        Url.RESUI_PATH = "./resources/ui/";
-        initLocales(path.relative(__dirname, "../resources/locales/{{lng}}.json"));
+        Url.RES_PATH = `./resources_v${version}/`;
+        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
+        initLocales(path.relative(__dirname, `../${Url.RES_PATH}/locales/{{lng}}.json`));
     }
 
     private resumeScene() {

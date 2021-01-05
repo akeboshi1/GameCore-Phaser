@@ -4,35 +4,64 @@ import { EventDispatcher } from "utils";
 import { Game } from "../game";
 import { BaseHandler } from "./base.handler";
 export class CacheDataManager extends BaseHandler {
-    private mCurRoomID: string;
-    private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
-    constructor(game: Game,event?: EventDispatcher) {
-        super(game,event);
+
+    private mBagCategory: Map<number, any> = new Map();
+    private furiRecasteMap: Map<string, any> = new Map();
+    constructor(game: Game, event?: EventDispatcher) {
+        super(game, event);
     }
     clear() {
         super.clear();
-        this.mCurRoom = undefined;
-        this.mCurRoomID = undefined;
+        this.mBagCategory.clear();
     }
 
     destroy() {
         super.destroy();
-        this.mCurRoom = undefined;
-        this.mCurRoomID = undefined;
     }
 
-    get curRoomID() {
-        return this.mCurRoomID;
-    }
-    set curRoom(room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
-        if (!this.mCurRoom) this.mCurRoom = room;
-        else Object.assign(this.mCurRoom, room);
-        this.mCurRoomID = this.mCurRoom.roomId;
-        this.mEvent.emit(EventType.UPDATE_ROOM_INFO, room);
-        this.mEvent.emit(EventType.UPDATE_PARTY_STATE, room.openingParty);
+    setBagCategory(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES) {
+        this.mBagCategory.set(content.category, content);
     }
 
-    get curRoom() {
-        return this.mCurRoom;
+    getBagCategory(category: number) {
+        return this.mBagCategory.get(category);
+    }
+
+    setRecasteList(list: op_client.ICountablePackageItem[]) {
+        for (const data of list) {
+            if (this.furiRecasteMap.has(data.subcategory)) {
+                const templist = this.furiRecasteMap.get(data.subcategory);
+                templist.push(data);
+            } else {
+                const templist = [data];
+                this.furiRecasteMap.set(data.subcategory, templist);
+            }
+        }
+    }
+
+    getRecasteList(subcategory: string, star: number) {
+        if (this.furiRecasteMap.size === 0) return null;
+        const tempArr = [];
+        if (this.furiRecasteMap.has(subcategory)) {
+            const list = this.furiRecasteMap.get(subcategory);
+            for (const data of list) {
+                if (data.grade === star) {
+                    tempArr.push(data);
+                }
+            }
+            return tempArr;
+        } else {
+            if (subcategory === "alltype") {
+                this.furiRecasteMap.forEach((value) => {
+                    for (const data of value) {
+                        if (data.grade === star) {
+                            tempArr.push(data);
+                        }
+                    }
+                });
+                return tempArr;
+            }
+        }
+        return tempArr;
     }
 }

@@ -6,7 +6,7 @@ import { IPos, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { IElementManager } from "./element.manager";
-import { delayTime } from "../../game";
+
 export interface IElement {
     readonly id: number;
     readonly dir: number;
@@ -65,7 +65,9 @@ export interface IElement {
 
     removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
 
-    // getInteractivePositionList(): Promise<IPos[]>;
+    getInteractivePositionList(): Promise<IPos[]>;
+
+    getProjectionSize(): IPos;
 }
 export interface MoveData {
     destPos?: LogicPos;
@@ -242,6 +244,10 @@ export class Element extends BlockObject implements IElement {
         //     this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         // }
         // this.update();
+    }
+
+    public getProjectionSize() {
+        return this.mModel.getInteractive();
     }
 
     public play(animationName: string, times?: number): void {
@@ -574,21 +580,21 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
-    // public getInteractivePositionList(): Promise<IPos[]> {
-    //     const interactives = this.mModel.getInteractive();
-    //     if (!interactives || interactives.length < 1) {
-    //         return;
-    //     }
-    //     const pos45 = this.mRoomService.transformToMini45(this.getPosition());
-    //     const result: IPos[] = [];
-    //     for (const interactive of interactives) {
-    //         if (await this.mRoomService.game.physicalPeer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
-    //             // if ((<Room>this.mRoomService).isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
-    //             result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
-    //         }
-    //     }
-    //     return result;
-    // }
+    public async getInteractivePositionList(): Promise<IPos[]> {
+        const interactives = this.mModel.getInteractive();
+        if (!interactives || interactives.length < 1) {
+            return;
+        }
+        const pos45 = this.mRoomService.transformToMini45(this.getPosition());
+        const result: IPos[] = [];
+        for (const interactive of interactives) {
+            if (await this.mRoomService.game.physicalPeer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+                // if ((<Room>this.mRoomService).isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+                result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
+            }
+        }
+        return result;
+    }
 
     get nickname(): string {
         return this.mModel.nickname;
@@ -715,6 +721,9 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async createDisplay(): Promise<any> {
+        if (this.mCreatedDisplay) return;
+        super.createDisplay();
+
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }
@@ -769,7 +778,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async addDisplay(): Promise<any> {
-        await this.createDisplay();
+        await super.addDisplay();
         let depth = 0;
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
