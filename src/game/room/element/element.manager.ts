@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import {  Logger, LogicPos } from "utils";
+import { Logger, LogicPos } from "utils";
 import { ISprite } from "structure";
 import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService } from "../room/room";
@@ -314,6 +314,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.setDisplayInfo(displayInfo);
+                // 更新物理进程的物件/人物element
+                this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
         }

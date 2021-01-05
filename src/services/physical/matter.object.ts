@@ -4,11 +4,12 @@ import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
 import { MoveData, MovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
-import { ISprite, PlayerState } from "structure";
+import { PlayerState } from "structure";
+import { MatterSprite } from "./matter.sprite";
 export interface IMatterObject {
     id: number;
 
-    model: ISprite;
+    model: MatterSprite;
 
     body: Body;
 
@@ -36,7 +37,9 @@ export interface IMatterObject {
 
     setModel(sprite: op_client.ISprite);
 
-    updateModel(sprite: op_client.ISprite);
+    updateModel(sprite: any);
+
+    updateAnimations(displayInfo: any);
 
     setPosition(p: IPos, update: boolean): void;
 
@@ -83,7 +86,7 @@ export class MatterObject implements IMatterObject {
     public _offset: Vector;
     public _sensor: boolean = false;
     public body: Body;
-    protected mModel: ISprite;
+    protected mModel: MatterSprite;
     // protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
@@ -116,7 +119,7 @@ export class MatterObject implements IMatterObject {
     // }
 
     public setModel(sprite: any) {
-        this.mModel = sprite;
+        this.mModel = new MatterSprite(sprite);
         if (!sprite) {
             return;
         }
@@ -134,12 +137,19 @@ export class MatterObject implements IMatterObject {
     }
 
     public updateModel(model: any) {
-        if (this.mModel.id !== model.id) {
+        if (!this.mModel || this.mModel.id !== model.id) {
             return;
         }
         //  this.peer.world.removeFromMap(this.mModel);
+        if (model.hasOwnProperty("animations")) {
+            this.mModel.updateAnimations(model.animations);
+        }
         if (model.hasOwnProperty("point3f")) {
             const pos = model.point3f;
+            this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
+        }
+        if (model.hasOwnProperty("pos")) {
+            const pos = model.pos;
             this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
         if (model.hasOwnProperty("mountSprites")) {
@@ -149,6 +159,19 @@ export class MatterObject implements IMatterObject {
         }
         this.update();
         // this.peer.world.addToMap(this.mModel);
+    }
+
+    public updateAnimations(displayInfo: any) {
+        if (!this.mModel || this.mModel.id !== displayInfo.id) {
+            return;
+        }
+        if (displayInfo.hasOwnProperty("animations")) {
+            this.mModel.updateAnimations(displayInfo.animations);
+        }
+        if (displayInfo.hasOwnProperty("pos")) {
+            const pos = displayInfo.pos;
+            this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
+        }
     }
 
     public startMove() {
