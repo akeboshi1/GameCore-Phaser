@@ -52,7 +52,7 @@ export class CutInPanel extends BasePanel {
   }
 
   preload() {
-    this.scene.load.image(this.key, Url.getUIRes(this.dpr, "cut_in/cut_in_bg.png"));
+    this.addImage(this.key, "cut_in/cut_in_bg.png");
     super.preload();
   }
 
