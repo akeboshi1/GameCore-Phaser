@@ -39,6 +39,12 @@ export class MatterUserObject extends MatterPlayerObject {
         }
     }
 
+    public addBody(radio: number) {
+        this._sensor = false;
+        this._offsetOrigin.y = 0;
+        super.addBody(radio);
+    }
+
     public moveMotion(x: number, y: number, targetId?: number) {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this);

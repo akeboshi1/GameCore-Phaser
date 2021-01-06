@@ -9,25 +9,31 @@ export class MatterPlayerObject extends MatterObject {
         super(peer, id);
     }
 
-    public setExistingBody(body: Body, addToWorld?: boolean) {
-        if (addToWorld === undefined) {
-            addToWorld = true;
-        }
+    // public setExistingBody(body: Body, addToWorld?: boolean) {
+    //     if (addToWorld === undefined) {
+    //         addToWorld = true;
+    //     }
 
-        if (this.body) {
-            // ====todo no remove
-            this.matterWorld.remove(this.body, true);
-        }
-        const sensor = this.getSensor();
-        this.body = body;
-        body.isSensor = this._sensor;
-        if (this.hasPos) {
-            this.hasPos = false;
-            Body.setPosition(this.body, Vector.create(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y));
-        }
-        if (addToWorld) {
-            this.matterWorld.add(body, this._sensor, this);
-        }
+    //     if (this.body) {
+    //         // ====todo no remove
+    //         this.matterWorld.remove(this.body, true);
+    //     }
+    //     const sensor = this.getSensor();
+    //     this.body = body;
+    //     body.isSensor = this._sensor;
+    //     if (this.hasPos) {
+    //         this.hasPos = false;
+    //         Body.setPosition(this.body, Vector.create(this._tempVec.x + this._offset.x, this._tempVec.y + this._offset.y));
+    //     }
+    //     if (addToWorld) {
+    //         this.matterWorld.add(body, this._sensor, this);
+    //     }
+    // }
+
+    public addBody(radio: number) {
+        this._sensor = true;
+        this._offsetOrigin.y = 0;
+        super.addBody(radio);
     }
 
     public changeState(val?: string, times?: number) {

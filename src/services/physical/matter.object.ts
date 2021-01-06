@@ -84,7 +84,7 @@ export interface IMatterObject {
     getInteractivePositionList(): Promise<IPos[]>;
 }
 export class MatterObject implements IMatterObject {
-    public _tempVec2: Vector;
+    public _tempVec: Vector;
     public _offset: Vector;
     public _sensor: boolean = false;
     public body: Body;
@@ -103,10 +103,12 @@ export class MatterObject implements IMatterObject {
     protected hasPos: boolean = false;
     protected curSprite: any;
     protected _offsetOrigin: Vector;
+    protected _scale: number = 0;
     constructor(public peer: PhysicalPeer, public id: number) {
-        this._tempVec2 = Vector.create(0, 0);
+        this._tempVec = Vector.create(0, 0);
         this._offset = Vector.create(0, 0);
         this._offsetOrigin = Vector.create(0.5, 0.5);
+        this._scale = this.peer.scaleRatio;
     }
 
     get matterWorld(): MatterWorld {
@@ -123,10 +125,9 @@ export class MatterObject implements IMatterObject {
         if (!this.mMoving || !this.body) {
             return;
         }
-        const scaleRatio: number = this.peer.scaleRatio;
         const _pos = this.body.position;
         this.peer.render.setPosition(this.id, true, _pos.x, _pos.y);
-        const pos = new LogicPos(_pos.x / scaleRatio, _pos.y / scaleRatio);
+        const pos = new LogicPos(_pos.x / this._scale, _pos.y / this._scale);
         this.peer.mainPeer.setPosition(this.id, pos.x, pos.y);
 
         this.checkDirection();
@@ -268,7 +269,7 @@ export class MatterObject implements IMatterObject {
         this.setStatic(false);
         const pos = this.getPosition();
         // pos.y += this.offsetY;
-        const angle = Math.atan2(path[0].y * this.peer.scaleRatio - pos.y, path[0].x * this.peer.scaleRatio - pos.x);
+        const angle = Math.atan2(path[0].y * this._scale - pos.y, path[0].x * this._scale - pos.x);
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
@@ -319,20 +320,20 @@ export class MatterObject implements IMatterObject {
 
     public applyForce(force) {
         if (!this.body) return;
-        this._tempVec2.x = this.body.position.x;
-        this._tempVec2.y = this.body.position.y;
-        Body.applyForce(this.body, this._tempVec2, force);
+        this._tempVec.x = this.body.position.x;
+        this._tempVec.y = this.body.position.y;
+        Body.applyForce(this.body, this._tempVec, force);
         return this;
     }
 
     public setVelocityX() {
         if (!this.body) return;
-        Body.setVelocity(this.body, this._tempVec2);
+        Body.setVelocity(this.body, this._tempVec);
     }
 
     public setVelocityY() {
         if (!this.body) return;
-        Body.setVelocity(this.body, this._tempVec2);
+        Body.setVelocity(this.body, this._tempVec);
     }
 
     public setVelocity(x: number, y: number) {
@@ -340,8 +341,8 @@ export class MatterObject implements IMatterObject {
             // render todo setVelocity
             return;
         }
-        x *= this.peer.scaleRatio;
-        y *= this.peer.scaleRatio;
+        x *= this._scale;
+        y *= this._scale;
 
         Body.setVelocity(this.body, Vector.create(x, y));
     }
@@ -350,8 +351,8 @@ export class MatterObject implements IMatterObject {
         if (this.mMoving) {
             this.stopMove();
         }
-        this._tempVec2.x = p.x;
-        this._tempVec2.y = p.y;
+        this._tempVec.x = p.x;
+        this._tempVec.y = p.y;
         this.peer.mainPeer.setPosition(this.id, update, p.x, p.y);
         this.peer.render.setPosition(this.id, p.x, p.y);
         if (!this.body) {
@@ -359,8 +360,8 @@ export class MatterObject implements IMatterObject {
             // ==== todo render setPositon
             return;
         }
-        const scale = this.peer.scaleRatio;
-        Body.setPosition(this.body, Vector.create(this._tempVec2.x * scale + this._offset.x, this._tempVec2.y * scale + this._offset.y));
+
+        Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
     }
 
     public getPosition(): IPos {
@@ -408,7 +409,7 @@ export class MatterObject implements IMatterObject {
             this.mRootMount = null;
             this.setPosition(pos, true);
             // this.peer.mainPeer.enableBlock(this.id);
-            this.addBody(this.peer.scaleRatio);
+            this.addBody(this._scale);
             this.mDirty = true;
         }
         return Promise.resolve();
@@ -448,8 +449,7 @@ export class MatterObject implements IMatterObject {
         body.isSensor = this._sensor;
         if (this.hasPos) {
             this.hasPos = false;
-            const scale = this.peer.scaleRatio;
-            Body.setPosition(this.body, Vector.create(this._tempVec2.x * scale + this._offset.x, this._tempVec2.y * scale + this._offset.y));
+            Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
         }
         if (addToWorld) {
             this.matterWorld.add(body, this._sensor, this);
@@ -472,7 +472,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public setVertices(vertexSets) {
-        return Bodies.fromVertices(this._tempVec2.x, this._tempVec2.y, vertexSets, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
+        return Bodies.fromVertices(this._tempVec.x, this._tempVec.y, vertexSets, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
     }
 
     public getSensor() {
@@ -509,10 +509,9 @@ export class MatterObject implements IMatterObject {
     public async drawBody() {
         if (!this.mModel) return;
         const collision = this.mModel.getCollisionArea();
-        const dpr = this.peer.scaleRatio;
         let body;
         if (!collision) {
-            body = Bodies.circle(this._tempVec2.x * dpr, this._tempVec2.y * dpr, 10);
+            body = Bodies.circle(this._tempVec.x * this._scale, this._tempVec.y * this._scale, 10);
             this.setExistingBody(body, true);
             return;
         }
@@ -545,11 +544,11 @@ export class MatterObject implements IMatterObject {
             paths = [[Position45.transformTo90(new LogicPos(0, 0), size), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), size), Position45.transformTo90(new LogicPos(0, cols), miniSize)]];
         }
 
-        const mapHeight = (rows + cols) * (miniSize.tileHeight / 2) * dpr;
-        const mapWidth = (rows + cols) * (miniSize.tileWidth / 2) * dpr;
+        const mapHeight = (rows + cols) * (miniSize.tileHeight / 2) * this._scale;
+        const mapWidth = (rows + cols) * (miniSize.tileWidth / 2) * this._scale;
         const scaleDpr = (pos) => {
-            pos.x *= dpr;
-            pos.y *= dpr;
+            pos.x *= this._scale;
+            pos.y *= this._scale;
         };
         paths.map((path) => path.map(scaleDpr));
         if (paths.length < 1 || paths[0].length < 3) {
@@ -560,14 +559,14 @@ export class MatterObject implements IMatterObject {
         const curOrigin = this.mModel.getOriginPoint();
         const originPos = new LogicPos(curOrigin.x, curOrigin.y);
         const origin = Position45.transformTo90(originPos, miniSize);
-        origin.x *= dpr;
-        origin.y *= dpr;
+        origin.x *= this._scale;
+        origin.y *= this._scale;
 
         // this._offset.x = origin.x;
         // this._offset.y = mapHeight * 0.5 - origin.y;
-        this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
+        this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * this._scale) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
-        body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 0 });
+        body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0 });
         this.setExistingBody(body, true);
     }
 

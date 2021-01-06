@@ -1,7 +1,8 @@
-import { AnimationModel, IDragonbonesModel, IFramesModel, RunningAnimation, IAnimationData, AnimationQueue, Animator } from "structure";
+import { IDragonbonesModel, IFramesModel, RunningAnimation, AnimationQueue, Animator } from "structure";
 import { Direction, IPos, Logger, LogicPoint, LogicPos } from "utils";
-import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
+import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
+import { IPoint } from "game-capsule";
 export class MatterSprite {
     public id: number;
     public pos: IPos;
@@ -9,13 +10,13 @@ export class MatterSprite {
     public direction: number;
     public currentAnimationName: string;
     public currentAnimation: RunningAnimation;
-    public animations: Map<string, AnimationModel>;
+    public animations: Map<string, MatterAnimationModel>;
     public registerAnimation: Map<string, string>;
     public animationQueue: AnimationQueue[];
     public originCollisionPoint: LogicPoint;
     public mountSprites: number[];
     public animator: Animator;
-    protected sprite: op_client.ISprite;
+    protected sprite: any;
     protected currentCollisionArea: number[][];
     protected currentWalkableArea: number[][];
     protected currentCollisionPoint: LogicPoint;
@@ -36,7 +37,7 @@ export class MatterSprite {
         }
         this.currentAnimationName = obj.currentAnimationName || "";
         this.setDirection(obj.direction || 3);
-        const anis = obj.animations;
+        const anis = obj.displayInfo ? obj.displayInfo.animations : obj.animations;
         if (anis) {
             this.initAnimations(anis);
         }
@@ -50,11 +51,10 @@ export class MatterSprite {
     public initAnimations(anis: any) {
         if (!this.animations) this.animations = new Map();
         const tmpList = [];
-        const objAnis = anis;
-        for (const ani of objAnis) {
-            const model = new AnimationModel(ani);
+        anis.forEach((ani: any) => {
+            const model = new MatterAnimationModel(ani);
             tmpList.push(model);
-        }
+        });
         this.setAnimationModelData(tmpList);
         if (!this.currentCollisionArea) {
             this.currentCollisionArea = this.getCollisionArea();
@@ -96,7 +96,7 @@ export class MatterSprite {
     }
 
     get hasInteractive(): boolean {
-        if (!this.currentAnimation || !this.sprite.animations) {
+        if (!this.currentAnimation || !this.sprite.displayInfo.animations) {
             return false;
         }
         const { name: animationName } = this.currentAnimation;
@@ -108,7 +108,7 @@ export class MatterSprite {
     }
 
     public getInteractiveArea(aniName: string, flip: boolean = false): op_def.IPBPoint2i[] | undefined {
-        if (!this.sprite.animations) return undefined;
+        if (!this.sprite.displayInfo || !this.sprite.displayInfo.animations) return undefined;
         const ani = this.animations.get(aniName);
         if (ani) {
             if (flip) {
@@ -153,7 +153,7 @@ export class MatterSprite {
     }
 
     public getCollisionArea() {
-        if (!this.sprite.animations) return [[1]];
+        if (!this.sprite.displayInfo || !this.sprite.displayInfo.animations) return [[1]];
         if (!this.currentAnimation) {
             return;
         }
@@ -169,13 +169,13 @@ export class MatterSprite {
         // return (<any>this.displayInfo).getCollisionArea(animationName, flip);
     }
 
-    public getAnimations(name: string): IAnimationData {
+    public getAnimations(name: string): IMatterAnimationData {
         if (!this.animations) return;
         return this.animations.get(name);
     }
 
     public getWalkableArea() {
-        if (!this.sprite.animations) return [[0]];
+        if (!this.sprite.displayInfo || !this.sprite.displayInfo.animations) return [[0]];
         if (!this.currentAnimation) {
             return;
         }
@@ -192,7 +192,7 @@ export class MatterSprite {
     }
 
     public getOriginPoint() {
-        if (!this.sprite.animations) return new LogicPoint(0, 0);
+        if (!this.sprite.displayInfo || !this.sprite.displayInfo.animations) return new LogicPoint(0, 0);
         if (!this.currentAnimation) {
             return;
         }
@@ -255,7 +255,7 @@ export class MatterSprite {
         return this.currentAnimation;
     }
 
-    private setAnimationModelData(aniDatas: AnimationModel[]) {
+    private setAnimationModelData(aniDatas: MatterAnimationModel[]) {
         if (!aniDatas) {
             Logger.getInstance().error(`${this.id} animationData does not exist`);
             return;
@@ -270,5 +270,132 @@ export class MatterSprite {
         this.currentCollisionArea = this.getCollisionArea();
         this.currentWalkableArea = this.getWalkableArea();
         this.currentCollisionPoint = this.getOriginPoint();
+    }
+}
+
+export interface IMatterAnimationData {
+    name: string;
+    frameName: string[];
+    frameRate: number;
+    loop: boolean;
+    baseLoc: LogicPoint;
+    collisionArea?: number[][];
+    walkableArea?: number[][];
+    originPoint: LogicPoint;
+    layer: op_gameconfig_01.IAnimationLayer[];
+    interactiveArea?: op_def.IPBPoint2i[];
+    mountLayer: op_gameconfig_01.IAnimationMountLayer;
+}
+
+export class MatterAnimationModel implements IMatterAnimationData {
+    id: number;
+    name: string;
+    frameName: string[];
+    frameRate: number;
+    loop: boolean;
+    baseLoc: LogicPoint;
+    collisionArea?: number[][];
+    walkableArea?: number[][];
+    originPoint: LogicPoint;
+    layer: op_gameconfig_01.IAnimationLayer[];
+    interactiveArea: IPoint[];
+    mountLayer: op_gameconfig_01.IAnimationMountLayer;
+    protected mNode: op_gameconfig_01.INode;
+    constructor(ani: any) {
+        const tmpBaseLoc = ani.baseLoc;
+        this.mNode = ani.mNode;
+        this.id = ani.mNode.id;
+        this.name = ani.mNode.name;
+        this.frameName = ani.frameName;
+        if (!ani.frameName || this.frameName.length < 1) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} frames is invalid`);
+        }
+        this.loop = ani.loop;
+        if (!ani.loop) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} loop is invalid`);
+        }
+        if (!ani.frameRate) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} frameRate is invalid`);
+        }
+        if (ani.originPoint) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} originPoint is invalid`);
+        }
+        if (!ani.baseLoc) {
+            // Logger.getInstance().fatal(`Animation: ${ani.id} baseLoc is invalid`);
+        }
+        this.frameRate = ani.frameRate;
+        this.baseLoc = new LogicPoint(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
+        const origin = ani.originPoint;
+        this.originPoint = new LogicPoint(origin[0], origin[1]);
+        if (typeof ani.collisionArea === "string") {
+            this.collisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
+        } else {
+            this.collisionArea = ani.collisionArea || [[0]];
+        }
+
+        if (typeof ani.walkableArea === "string") {
+            this.walkableArea = this.stringToArray(ani.walkableArea, ",", "&") || [[0]];
+        } else {
+            this.walkableArea = ani.walkableArea || [[0]];
+        }
+        // this.mInteractiveArea = [{x: 0, y: 0}];
+        this.interactiveArea = ani.interactiveArea;
+        this.changeLayer(ani.layer);
+        this.mountLayer = ani.mountLayer;
+    }
+
+    changeLayer(layer: any[]) {
+        this.layer = layer;
+        if (this.layer.length < 1) {
+            this.layer = [{
+                frameName: this.frameName,
+                offsetLoc: this.baseLoc
+            }];
+        }
+    }
+
+    createProtocolObject(): op_gameconfig_01.IAnimationData {
+        const ani = op_gameconfig_01.AnimationData.create();
+        ani.node = this.mNode;
+        ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
+        ani.node.name = this.name;
+        ani.loop = this.loop;
+        ani.frameRate = this.frameRate;
+        ani.frameName = this.frameName;
+        ani.originPoint = [this.originPoint.x, this.originPoint.y];
+        ani.walkOriginPoint = [this.originPoint.x, this.originPoint.y];
+        ani.walkableArea = this.arrayToString(this.walkableArea, ",", "&");
+        ani.collisionArea = this.arrayToString(this.collisionArea, ",", "&");
+        ani.interactiveArea = this.interactiveArea;
+        const layers = [];
+        for (const layer of this.layer) {
+            layers.push(op_gameconfig_01.AnimationLayer.create(layer));
+        }
+        ani.layer = layers;
+        this.changeLayer(ani.layer);
+        ani.mountLayer = this.mountLayer;
+        return ani;
+    }
+
+    private stringToArray(string: string, fristJoin: string, lastJoin: string) {
+        if (!string) {
+            return;
+        }
+        const tmp = string.split(lastJoin);
+        const result = [];
+        for (const ary of tmp) {
+            const tmpAry = ary.split(fristJoin);
+            result.push(tmpAry.map((value) => parseInt(value, 10)));
+        }
+        return result;
+    }
+
+    private arrayToString<T>(array: T[][], fristJoin: string, lastJoin: string): string {
+        if (!array) return "";
+        const tmp = [];
+        for (const ary of array) {
+            tmp.push(ary.join(fristJoin));
+        }
+        return tmp.join(lastJoin);
     }
 }
