@@ -12,6 +12,7 @@ export class Terrain extends BlockObject implements IElement {
     protected mModel: ISprite;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(mElementManager.roomService);
+        this.mBlockable = false;
         this.mId = sprite.id;
         this.model = sprite;
     }
@@ -26,6 +27,7 @@ export class Terrain extends BlockObject implements IElement {
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
         this.setPosition(this.mModel.pos);
+        this.setRenderable(true);
         this.mElementManager.addToMap(val);
         // this.addDisplay();
     }

@@ -166,6 +166,7 @@ export class Element extends BlockObject implements IElement {
         if (!sprite) {
             return;
         }
+        this.mBlockable = false;
         this.mId = sprite.id;
         this.model = sprite;
     }
@@ -213,6 +214,7 @@ export class Element extends BlockObject implements IElement {
         }
         // this.update();
         this.mElementManager.addToMap(model);
+        this.setRenderable(true);
         if (this.mRenderable) {
             this.addBody();
         }
