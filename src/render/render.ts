@@ -1208,6 +1208,15 @@ export class Render extends RPCPeer implements GameMain {
         this.sceneManager.updateInput(val);
     }
 
+    @Export()
+    public addEffect(target: number, effectID: number, display: IFramesModel) {
+        this.mDisplayManager.addEffect(target, effectID, display);
+    }
+
+    public removeEffect(effectID: number) {
+        this.mDisplayManager.removeEffect(effectID);
+    }
+
     // private connectReconnect() {
     //     if (!this.game) return;
     //     this.createGame();

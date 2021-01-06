@@ -6,7 +6,7 @@ import { FramesModel } from "../display/frame/frames.model";
 export class Effect {
     private mID: number;
     private mDisplayInfo: FramesModel | DragonbonesModel;
-    constructor(private game: Game, id: number) {
+    constructor(private game: Game, private mOwnerID: number, id: number) {
         this.mID = id;
     }
 
@@ -31,6 +31,10 @@ export class Effect {
     }
 
     destroy() {
+        if (this.mDisplayInfo) {
+            this.mDisplayInfo.destroy();
+        }
+        this.game.renderPeer.removeEffect(this.mID);
     }
 
     get id(): number {
@@ -39,6 +43,9 @@ export class Effect {
 
     set displayInfo(display: FramesModel | DragonbonesModel) {
         this.mDisplayInfo = display;
+        if (display instanceof FramesModel) {
+            this.game.renderPeer.addEffect(this.mOwnerID, this.mID, display);
+        }
         this.game.emitter.emit("updateDisplayInfo", display);
     }
 

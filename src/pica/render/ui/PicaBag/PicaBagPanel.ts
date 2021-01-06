@@ -696,6 +696,13 @@ export class PicaBagPanel extends PicaBasePanel {
   private onRechargeHandler() {
   }
   private onRecasteHandler() {
+    if (this.mSelectedItemData.rarity===5) {
+      const noticedata = {
+        text: [{ text: i18n.t("recaste.raritytips"), node: undefined }]
+      };
+      this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, noticedata);
+      return;
+    }
     const data = this.mSelectedItemData;
     this.render.mainPeer.showMediator(ModuleName.PICARECASTE_NAME, true, data);
   }
