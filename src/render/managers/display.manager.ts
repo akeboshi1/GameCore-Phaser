@@ -145,6 +145,7 @@ export class DisplayManager {
         display.startLoad();
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
         if (isUser) this.mUser = display;
+        return display;
     }
 
     public addTerrainDisplay(id: number, data: IFramesModel) {
@@ -165,9 +166,10 @@ export class DisplayManager {
         }
         display.load(data);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        return display;
     }
 
-    public addFramesDisplay(id: number, data: IFramesModel) {
+    public addFramesDisplay(id: number, data: IFramesModel, field?: DisplayField) {
         if (!data) {
             return;
         }
@@ -183,8 +185,20 @@ export class DisplayManager {
         } else {
             display = this.displays.get(id);
         }
-        display.load(data);
+        display.load(data, field);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        return display;
+    }
+
+    public addEffect(targetID: number, effectID: number, display: IFramesModel) {
+        const target = this.getDisplay(targetID);
+        const effect = this.addFramesDisplay(effectID, display, DisplayField.Effect);
+        if (!target || !effect) {
+            return;
+        }
+        effect.once("initialized", () => {
+            target.addEffect(effect);
+        });
     }
 
     public addWallDisplay(data: IFramesModel | IDragonbonesModel) {
@@ -285,13 +299,14 @@ export class DisplayManager {
         display.unmount(target);
     }
 
-    public removeEffect(displayID: number, field: DisplayField) {
+    public removeEffect(displayID: number) {
         const display = this.displays.get(displayID);
         if (!display) {
             Logger.getInstance().error("DisplayObject not found: ", displayID);
             return;
         }
-        display.removeEffect(field);
+        display.removeEffect();
+        display.destroy();
     }
 
     public removeDisplayField(displayID: number, field: DisplayField) {

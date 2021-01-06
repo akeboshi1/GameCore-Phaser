@@ -350,7 +350,7 @@ export class User extends Player {
         const pos = new LogicPos(Math.round(_pos.x / this.roomService.game.scaleRatio), Math.round(_pos.y / this.mElementManager.roomService.game.scaleRatio));
         this.mModel.setPosition(pos.x, pos.y);
         this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-        const speed = this.mModel.speed * delta;
+        const speed = this.mModel.speed * interval;
         this.checkDirection();
         this.roomService.cameraService.syncDirty = true;
 

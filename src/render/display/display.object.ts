@@ -84,6 +84,10 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
     protected mInitialized: boolean = false;
     protected mCallBack: Function;
     protected mProjectionSize: IPos;
+    protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<
+        DisplayField,
+        Phaser.GameObjects.Sprite | Phaser.GameObjects.Image
+    >();
     constructor(scene: Phaser.Scene, render: Render, id?: any, type?: number) {
         super(scene);
         this.render = render;
@@ -178,7 +182,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
 
     unmount(ele: Phaser.GameObjects.Container) { }
 
-    removeEffect(field: DisplayField) {
+    removeEffect() {
     }
 
     removeDisplay(field: DisplayField) {
@@ -229,15 +233,15 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
     }
 
     public setDisplayBadges(cards) {
-        if (!this.isShowBadge()) return;
-        if (!this.mBadges) this.mBadges = [];
-        else this.clearBadges();
-        for (const card of cards) {
-            const badge = new DynamicImage(this.scene, 0, 0);
-            badge.load(Url.getOsdRes(card.thumbnail), this, this.layouFlag);
-            this.flagContainer.add(badge);
-            this.mBadges.push(badge);
-        }
+        // if (!this.isShowBadge()) return;
+        // if (!this.mBadges) this.mBadges = [];
+        // else this.clearBadges();
+        // for (const card of cards) {
+        //     const badge = new DynamicImage(this.scene, 0, 0);
+        //     badge.load(Url.getOsdRes(card.thumbnail), this, this.layouFlag);
+        //     this.flagContainer.add(badge);
+        //     this.mBadges.push(badge);
+        // }
     }
 
     public showRefernceArea(area: number[][], origin: IPos) {
@@ -403,6 +407,24 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
         }
     }
 
+    public addEffect(display: DisplayObject) {
+        if (!display) {
+            return Logger.getInstance().error("Failed to add effect, display does not exist");
+        }
+        const backend = display.getSprite(DisplayField.BACKEND);
+        if (backend) {
+            this.addAt(backend, DisplayField.BACKEND);
+        }
+        const frontend = display.getSprite(DisplayField.FRONTEND);
+        if (frontend) {
+            this.addAt(frontend, DisplayField.FRONTEND);
+        }
+    }
+
+    protected getSprite(key: DisplayField) {
+        return this.mSprites.get(key);
+    }
+
     protected allComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
         this.mInitialized = true;
     }
@@ -441,22 +463,22 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
         // this.mDirty = true;
     }
 
-    protected addEffect(target: DynamicSprite, textureURL: string, atlasURL?: string, isBack?: boolean, framerate?: number, loop?: boolean, killComplete?: boolean) {
-        if (!target) {
-            target = new DynamicSprite(this.scene, 0, 0);
-        }
-        target.load(textureURL, atlasURL);
-        target.y = -20;
-        if (isBack) {
-            this.addAt(target, DisplayField.BACKEND);
-        } else {
-            this.addAt(target, DisplayField.FRONTEND);
-        }
-        // target.play(textureURL + atlasURL);
-        target.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
-            target.destroy();
-        });
-    }
+    // protected addEffect(target: DynamicSprite, textureURL: string, atlasURL?: string, isBack?: boolean, framerate?: number, loop?: boolean, killComplete?: boolean) {
+    //     if (!target) {
+    //         target = new DynamicSprite(this.scene, 0, 0);
+    //     }
+    //     target.load(textureURL, atlasURL);
+    //     target.y = -20;
+    //     if (isBack) {
+    //         this.addAt(target, DisplayField.BACKEND);
+    //     } else {
+    //         this.addAt(target, DisplayField.FRONTEND);
+    //     }
+    //     // target.play(textureURL + atlasURL);
+    //     target.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
+    //         target.destroy();
+    //     });
+    // }
 
     protected layouFlag(offset: number = 4) {
         if (!this.mFlagContainer) return;
@@ -478,12 +500,12 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
         this.mBadges.length = 0;
     }
 
-    protected get flagContainer(): Phaser.GameObjects.Container {
-        if (this.mFlagContainer) return this.mFlagContainer;
-        this.mFlagContainer = this.scene.make.container(undefined, false);
-        this.addAt(this.mFlagContainer, DisplayField.FLAG);
-        return this.mFlagContainer;
-    }
+    // protected get flagContainer(): Phaser.GameObjects.Container {
+    //     if (this.mFlagContainer) return this.mFlagContainer;
+    //     this.mFlagContainer = this.scene.make.container(undefined, false);
+    //     this.addAt(this.mFlagContainer, DisplayField.FLAG);
+    //     return this.mFlagContainer;
+    // }
 
     protected addChildMap(key: string, display: Phaser.GameObjects.GameObject) {
         if (!this.mChildMap) {
