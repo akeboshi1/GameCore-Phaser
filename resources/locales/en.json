@@ -36,7 +36,7 @@
     "properties": "Prop Properties",
     "needproper": "Requirement",
     "placetips": "Put down when editing room",
-    "recaste":"Recaste"
+    "recaste": "Recaste"
   },
   "common": {
     "cancel": "Cancel",
@@ -364,6 +364,8 @@
   "recaste": {
     "tip": "Please select the furniture that you want to recast",
     "selecttips": "Please select the furniture that you want to recast",
-    "counttips": "There is not enough furniture to be converted"
+    "counttips": "There is not enough furniture to be converted",
+    "raritytips": "Rare furniture cannot be recast",
+    "sametips": "Cannot be recast as identical furniture"
   }
 }
