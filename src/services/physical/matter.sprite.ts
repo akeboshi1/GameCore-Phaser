@@ -262,7 +262,18 @@ export class MatterSprite {
         }
         if (!this.animations) this.animations = new Map();
         for (const aniData of aniDatas) {
-            this.animations.set(aniData.name, aniData);
+            const dirList = aniData.name.split("_");
+            let aniName: string;
+            let dir: number;
+            if (dirList && dirList.length > 1) {
+                dir = Number(dirList[1]);
+                let addName: string = "";
+                if ((dir >= Direction.north && dir < Direction.west) || dir > Direction.east && dir <= Direction.east_north) addName = "_back";
+                aniName = dirList[0] + `${addName}`;
+            } else {
+                aniName = aniData.name;
+            }
+            this.animations.set(aniName, aniData);
         }
     }
 

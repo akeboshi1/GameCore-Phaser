@@ -343,7 +343,6 @@ export class MatterObject implements IMatterObject {
         }
         x *= this._scale;
         y *= this._scale;
-
         Body.setVelocity(this.body, Vector.create(x, y));
     }
 
@@ -444,13 +443,12 @@ export class MatterObject implements IMatterObject {
             // ====todo no remove
             this.matterWorld.remove(this.body, true);
         }
-        const sensor = this.getSensor();
         this.body = body;
         body.isSensor = this._sensor;
-        if (this.hasPos) {
-            this.hasPos = false;
-            Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
-        }
+        // if (this.hasPos) {
+        //     this.hasPos = false;
+        //     Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+        // }
         if (addToWorld) {
             this.matterWorld.add(body, this._sensor, this);
         }
