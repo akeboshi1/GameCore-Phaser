@@ -9,10 +9,6 @@ import { RunningAnimation } from "structure";
 export class FramesDisplay extends DisplayObject {
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
-    protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<
-        DisplayField,
-        Phaser.GameObjects.Sprite | Phaser.GameObjects.Image
-    >();
     protected mScaleTween: Phaser.Tweens.Tween;
     protected mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = [];
     protected mMountContainer: Phaser.GameObjects.Container;
@@ -136,11 +132,12 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         const anis = data.animations;
+        const aniName = data.animationName;
         if (!anis) {
             return;
         }
         // TODO
-        const ani = anis.get("idle");
+        const ani = anis.get(aniName);
         if (!ani) {
             return;
         }
@@ -150,7 +147,7 @@ export class FramesDisplay extends DisplayObject {
             let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
             const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
-                const key = `${data.gene}_idle_${i}`;
+                const key = `${data.gene}_${aniName}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, ani);
                 display = this.scene.make.sprite(undefined, false).play(key);
             } else {
@@ -389,10 +386,10 @@ export class FramesDisplay extends DisplayObject {
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
                 if (this.mAnimation) this.play(this.mAnimation);
-                this.emit("initialized", this);
             } else {
                 this.playEffect();
             }
+            this.emit("initialized", this);
         }
     }
 
