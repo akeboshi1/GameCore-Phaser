@@ -392,7 +392,6 @@ export class FramesDisplay extends DisplayObject {
                 this.playEffect();
             }
             super.created();
-            this.emit("initialized", this);
         }
     }
 

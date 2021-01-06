@@ -133,6 +133,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
     created() {
         // 创建状态管理
         this.render.mainPeer.elementDisplayReady(this.id);
+        this.emit("initialized", this);
     }
 
     isShowName(): boolean {
