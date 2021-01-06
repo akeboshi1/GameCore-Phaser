@@ -80,7 +80,8 @@ export class FramesDisplay extends DisplayObject {
             const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_${animation.name}_${i}`;
-                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
+                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible,
+                    this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
                 display = this.scene.make.sprite(undefined, false);
                 const anis = (<Phaser.GameObjects.Sprite>display).anims;
                 anis.play(key);
@@ -148,7 +149,7 @@ export class FramesDisplay extends DisplayObject {
             const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_${aniName}_${i}`;
-                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, ani);
+                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, ani.frameRate, ani.loop, ani.frameDuration);
                 display = this.scene.make.sprite(undefined, false).play(key);
             } else {
                 display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
@@ -338,7 +339,8 @@ export class FramesDisplay extends DisplayObject {
             if (layer[i].frameName.length > 1) {
                 display = this.scene.make.sprite(undefined, false);
                 const aniName = `${key}_${ani.name}_${i}`;
-                this.makeAnimation(key, key, layer[i].frameName, layer[i].frameVisible, this.mCurAnimation);
+                this.makeAnimation(key, key, layer[i].frameName, layer[i].frameVisible,
+                    this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
                 display = this.scene.make.sprite(undefined, false);
             } else {
                 display = this.scene.make.image(undefined, false);
@@ -393,28 +395,33 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    private makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], animation: any) {
-        const { loop } = animation;
+    private makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], frameRate: number, loop: boolean, frameDuration?: number[]) {
         if (frameVisible && frameName.length !== frameVisible.length) {
+            Logger.getInstance().error("wrong data: frameName.length: " + frameName.length + "; frameVisible.length: " + frameVisible.length);
+            return;
+        }
+        if (frameDuration && frameName.length !== frameDuration.length) {
+            Logger.getInstance().error("wrong data: frameName.length: " + frameName.length + "; frameDuration.length: " + frameDuration.length);
             return;
         }
         if (this.scene.anims.exists(key)) {
             return;
         }
         const frames = [];
-        // frameName.forEach((frame) => {
-        //     frames.push({ key: gen, frame, visible: frame });
-        // });
         for (let i = 0; i < frameName.length; i++) {
             const frame = frameName[i];
             const visible = frameVisible ? frameVisible[i] : true;
-            frames.push({ key: gen, frame, visible });
+            if (frameDuration) {
+                frames.push({ key: gen, frame, duration: frameDuration[i] * 1000, visible });
+            } else {
+                frames.push({ key: gen, frame, visible });
+            }
         }
-        const repeat = loop ? -1 : 0;
+        const repeat = loop ? -1 : 1;
         const config: Phaser.Types.Animations.Animation = {
             key,
             frames,
-            frameRate: animation.frameRate,
+            frameRate,
             repeat,
         };
         this.scene.anims.create(config);
