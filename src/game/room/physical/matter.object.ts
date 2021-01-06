@@ -6,13 +6,15 @@ import { MatterWorld } from "./matter.world";
 export class MatterObject {
     protected body: Body;
     protected matterWorld: MatterWorld;
-    protected _tempVec2: Vector;
+    protected _tempVec: Vector;
     protected _offset: Vector;
     protected _sensor: boolean = false;
     protected _offsetOrigin: Vector;
+    protected _radio: number = 1;
     constructor(protected mRoomService: IRoomService) {
         if (this.mRoomService) this.setMatterWorld(mRoomService.matterWorld);
-        this._tempVec2 = Vector.create(0, 0);
+        this._radio = this.mRoomService.game.scaleRatio;
+        this._tempVec = Vector.create(0, 0);
         this._offset = Vector.create(0, 0);
         this._offsetOrigin = Vector.create(0.5, 0.5);
     }
@@ -38,29 +40,29 @@ export class MatterObject {
 
     public applyForce(force) {
         // this._tempVec2.set(this.body.position.x, this.body.position.y);
-        this._tempVec2.x = this.body.position.x;
-        this._tempVec2.y = this.body.position.y;
+        this._tempVec.x = this.body.position.x;
+        this._tempVec.y = this.body.position.y;
 
-        Body.applyForce(this.body, this._tempVec2, force);
+        Body.applyForce(this.body, this._tempVec, force);
 
         return this;
     }
 
     public setVelocityX(x: number) {
         // this._tempVec2.x = this.body.velocity.x;
-        Body.setVelocity(this.body, this._tempVec2);
+        Body.setVelocity(this.body, this._tempVec);
     }
 
     public setVelocityY(y: number) {
         // this._tempVec2.y = this.body.velocity.y;
-        Body.setVelocity(this.body, this._tempVec2);
+        Body.setVelocity(this.body, this._tempVec);
     }
 
     public setVelocity(x: number, y: number) {
         // this._tempVec2.x = this.body.velocity.x;
         // this._tempVec2.y = this.body.velocity.y;
-        x *= this.mRoomService.game.scaleRatio;
-        y *= this.mRoomService.game.scaleRatio;
+        x *= this._radio;
+        y *= this._radio;
         if (!this.body) {
             return;
         }
@@ -72,14 +74,14 @@ export class MatterObject {
         // if (x === undefined) { x = 0; }
         // if (y === undefined) { y = x; }
 
-        this._tempVec2.x = pos.x * this.mRoomService.game.scaleRatio; // + this._offset.x;
-        this._tempVec2.y = pos.y * this.mRoomService.game.scaleRatio; // + this._offset.y;
+        this._tempVec.x = pos.x; // + this._offset.x;
+        this._tempVec.y = pos.y; // + this._offset.y;
 
         if (!this.body) {
             return;
         }
 
-        Body.setPosition(this.body, Vector.create(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y));
+        Body.setPosition(this.body, Vector.create(this._tempVec.x * this._radio + this._offset.x, this._tempVec.y * this._radio + this._offset.y));
     }
 
     public destroy() {
@@ -88,7 +90,7 @@ export class MatterObject {
     }
 
     protected setBody() {
-        const body = Bodies.circle(this._tempVec2.x * this.mRoomService.game.scaleRatio, this._tempVec2.y * this.mRoomService.game.scaleRatio, 10);
+        const body = Bodies.circle(this._tempVec.x * this._radio, this._tempVec.y * this._radio, 10);
         // this.body = this.setVertices(verteSets);
         this.setExistingBody(body, true);
     }
@@ -109,7 +111,7 @@ export class MatterObject {
     }
 
     protected setVertices(vertexSets) {
-        return Bodies.fromVertices(this._tempVec2.x, this._tempVec2.y, vertexSets, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
+        return Bodies.fromVertices(this._tempVec.x * this._radio, this._tempVec.y * this._radio, vertexSets, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
         // return Bodies.fromVertices(0, 0, vertexSets, { isStatic: false });
     }
 
