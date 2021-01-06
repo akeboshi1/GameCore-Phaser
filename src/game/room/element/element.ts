@@ -792,6 +792,8 @@ export class Element extends BlockObject implements IElement {
         if (this.mCreatedDisplay) return;
         super.createDisplay();
 
+        this.mElementManager.onDisplayCreated(this.id);
+
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }

@@ -24,6 +24,7 @@ export interface IElementManager {
     getElements(): IElement[];
     addToMap(sprite: ISprite);
     removeFromMap(sprite: ISprite);
+    onDisplayCreated(id: number);
     destroy();
 }
 
@@ -39,6 +40,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
     private mActionMgr: ElementActionManager;
+    private mElementsDisplayReady: Map<number, boolean> = new Map();
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -68,6 +70,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mActionMgr = new ElementActionManager(mRoom.game);
         this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
+
+        this.mRoom.onManagerCreated(this.constructor.name);
     }
 
     public init() {
@@ -211,11 +215,36 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!this.mElements) return;
         this.mElements.forEach((element) => this.remove(element.id));
         this.mElements.clear();
+        this.mElementsDisplayReady.clear();
         this.mStateMgr.destroy();
         this.mActionMgr.destroy();
     }
 
     public update(time: number, delta: number) { }
+
+    public onDisplayCreated(id: number) {
+        if (!this.mElements.has(id)) return;
+
+        this.mElementsDisplayReady.set(id, false);
+    }
+
+    public onDisplayReady(id: number) {
+        if (!this.mElementsDisplayReady.has(id)) return;
+
+        this.mElementsDisplayReady.set(id, true);
+        if (!this.hasAddComplete) return;
+
+        let allReady = true;
+        this.mElementsDisplayReady.forEach((val) => {
+            if (val === false) {
+                allReady = false;
+            }
+        });
+
+        if (allReady) {
+            this.mRoom.onManagerReady(this.constructor.name);
+        }
+    }
 
     protected addMap(sprite: ISprite) { }
 

@@ -4,7 +4,7 @@ import { BasicLayer } from "../managers/layer.manager";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
-import { SceneName } from "structure";
+import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
 
 // 游戏正式运行用 Phaser.Scene
@@ -16,11 +16,11 @@ export class PlayScene extends RoomScene {
     public readonly LAYER_SURFACE = "surfaceLayer";
     public readonly LAYER_ATMOSPHERE = "atmosphere";
     public readonly LAYER_SCENEUI = "sceneUILayer";
-    public readonly LOAD_TIME: number = 5000;
     protected motionManager: MotionManager;
-    private timeID: any;
+    protected mLoadState: PlaySceneLoadState;
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: SceneName.PLAY_SCENE });
+        this.loadState = PlaySceneLoadState.CREATING_SCENE;
     }
 
     get motionMgr(): MotionManager {
@@ -28,6 +28,7 @@ export class PlayScene extends RoomScene {
     }
 
     public create() {
+        this.loadState = PlaySceneLoadState.CREATING_ROOM;
         Logger.getInstance().log("create playscene");
         const oldCamera = this.cameras.main;
         const { width, height } = this.sys.scale;
@@ -95,6 +96,24 @@ export class PlayScene extends RoomScene {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
     }
 
+    get loadState(): PlaySceneLoadState {
+        return this.mLoadState;
+    }
+    set loadState(val: PlaySceneLoadState) {
+        if (val === this.mLoadState) return;
+
+        Logger.getInstance().log("PlayScene change loadState: ", val);
+        this.mLoadState = val;
+
+        if (val === PlaySceneLoadState.LOAD_COMPOLETE) {
+            this.render.hideLoading();
+        }
+    }
+
+    onRoomCreated() {
+        this.loadState = PlaySceneLoadState.LOAD_COMPOLETE;
+    }
+
     protected initInput() {
         this.motionManager = new MotionManager(this.render);
         this.motionManager.setScene(this);
@@ -103,10 +122,7 @@ export class PlayScene extends RoomScene {
     protected initListener() {
         this.input.on("pointerdown", this.onPointerDownHandler, this);
         this.input.on("pointerup", this.onPointerUpHandler, this);
-        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-        this.timeID = setTimeout(() => {
-            this.onLoadCompleteHandler();
-        }, this.LOAD_TIME);
+        // this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
@@ -144,21 +160,11 @@ export class PlayScene extends RoomScene {
         this.removePointerMoveHandler();
     }
 
-    protected onLoadCompleteHandler() {
-        if (this.timeID) clearTimeout(this.timeID);
-        Logger.getInstance().log("playload complete");
-        // const scene = this.game.scene.getScene(MainUIScene.name);
-        // if (!scene.scene.isActive()) {
-        //     this.scene.launch(MainUIScene.name, {
-        //         "render": this.render,
-        //     });
-        // } else {
-        //     this.render.initUI();
-        //     // this.mRoom.initUI();
-        // }
-        this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-        this.render.hideLoading();
-    }
+    // protected onLoadCompleteHandler() {
+    //     Logger.getInstance().log("playload complete");
+    //     this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+    //     this.render.hideLoading();
+    // }
 
     protected checkOriention(orientation) {
         if (orientation === Phaser.Scale.PORTRAIT) {

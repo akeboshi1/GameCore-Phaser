@@ -395,6 +395,7 @@ export class FramesDisplay extends DisplayObject {
             } else {
                 this.playEffect();
             }
+            super.created();
         }
     }
 

@@ -40,7 +40,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             this.mGame.peer.render.getWorldView().then((obj) => {
                 const worldView = obj;
                 if (!worldView) return;
-                const width = worldView.width  / this.zoom;
+                const width = worldView.width / this.zoom;
                 const height = worldView.height / this.zoom;
                 this.viewPort.x = worldView.x / this.zoom - width * 0.5;
                 this.viewPort.y = worldView.y / this.zoom - height * 0.5;

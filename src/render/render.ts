@@ -11,9 +11,10 @@ import { SceneManager } from "./scenes/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
+import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, RunningAnimation, ElementStateType } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, RunningAnimation, ElementStateType, PlaySceneLoadState } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
@@ -982,6 +983,18 @@ export class Render extends RPCPeer implements GameMain {
             return;
         }
         this.mCameraManager.camera = scene.cameras.main;
+    }
+
+    @Export()
+    public roomReady() {
+        if (!this.mSceneManager || !this.mCameraManager) return;
+        const scene = this.mSceneManager.getMainScene();
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+        if (scene instanceof PlayScene)
+            scene.onRoomCreated();
     }
 
     @Export([webworker_rpc.ParamType.num])

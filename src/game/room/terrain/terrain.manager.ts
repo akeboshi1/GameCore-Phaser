@@ -174,6 +174,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         return Array.from(this.mTerrains.values());
     }
 
+    public onDisplayCreated(id: number) {
+
+    }
+
     protected onAdd(packet: PBpacket) {
         this.mPacketFrameCount++;
         if (!this.mGameConfig) {

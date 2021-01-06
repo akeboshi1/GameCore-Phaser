@@ -9,3 +9,9 @@ export enum LoadState {
     LOGINGAME,
     CREATESCENE,
 }
+
+export enum PlaySceneLoadState {
+    CREATING_SCENE,
+    CREATING_ROOM,
+    LOAD_COMPOLETE,
+}

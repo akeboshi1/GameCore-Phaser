@@ -112,7 +112,7 @@ export class DragonbonesDisplay extends DisplayObject {
         this.mDisplayInfo = val;
     }
 
-    public get displayInfo() {
+    public get displayInfo(): IDragonbonesModel | undefined {
         return this.mDisplayInfo;
     }
 
@@ -130,7 +130,7 @@ export class DragonbonesDisplay extends DisplayObject {
         return 0;
     }
 
-    get topPoint() {
+    get topPoint(): Phaser.Geom.Point {
         return this.mBoardPoint;
     }
 
@@ -322,6 +322,7 @@ export class DragonbonesDisplay extends DisplayObject {
         this.setData("id", this.displayInfo.id);
         this.emit("initialized");
         this.render.renderEmitter("dragonBones_initialized");
+        super.created();
     }
 
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {
