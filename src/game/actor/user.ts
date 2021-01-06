@@ -190,13 +190,17 @@ export class User extends Player {
     // }
 
     public startMove() {
-        // this.changeState(PlayerState.WALK);
+        this.changeState(PlayerState.WALK);
+        this.mMoving = true;
         // this.mRoomService.game.physicalPeer.startMove();
     }
 
     public stopMove() {
         //  super.stopMove();
         // this.mRoomService.game.physicalPeer.stopMove();
+        this.changeState(PlayerState.IDLE);
+        this.mMoving = false;
+
         if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -217,6 +221,13 @@ export class User extends Player {
 
     public move(moveData: any) {
         this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
+    }
+
+    public setQueue(animations: op_client.IChangeAnimation[]) {
+        if (this.mMoving) {
+            return;
+        }
+        super.setQueue(animations);
     }
 
     // public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {

@@ -93,7 +93,8 @@ export class MatterUserObject extends MatterPlayerObject {
             return;
         }
 
-        this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
+        // this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
+        this.peer.mainPeer.selfStartMove();
         this.mMoving = true;
         this.setStatic(false);
 
@@ -115,7 +116,7 @@ export class MatterUserObject extends MatterPlayerObject {
                 this.mMoveData.tweenLineAnim.destroy();
             }
         }
-        this.peer.mainPeer.changePlayerState(this.id, PlayerState.IDLE);
+        // this.peer.mainPeer.changePlayerState(this.id, PlayerState.IDLE);
         if (!this.body) return;
         this.setVelocity(0, 0);
         this.setStatic(true);
