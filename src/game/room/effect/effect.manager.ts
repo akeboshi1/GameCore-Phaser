@@ -12,23 +12,36 @@ export class EffectManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
     }
 
-    public add(id: number) {
-        const effect = new Effect(this.room.game, id);
-        this.mEffects.set(id, effect);
+    public add(ownerID: number, id?: number) {
+        let effect = this.mEffects.get(ownerID);
+        if (!effect) {
+            effect = new Effect(this.room.game, ownerID, id);
+        }
+        this.mEffects.set(ownerID, effect);
         this.updateDisplay(effect);
         return effect;
     }
 
-    public remove(id: number) {
-        this.mEffects.delete(id);
+    public remove(ownerID: number) {
+        const effect = this.mEffects.get(ownerID);
+        if (!effect) {
+            return;
+        }
+        this.mEffects.delete(ownerID);
+        effect.destroy();
     }
 
-    public get(id: number) {
-        let effect = this.mEffects.get(id);
+    public getByOwner(ownerID: number) {
+        let effect = this.mEffects.get(ownerID);
         if (!effect) {
-            effect = this.add(id);
+            effect = this.add(ownerID);
         }
         return effect;
+    }
+
+    public getByID(id: number) {
+        const effects = Array.from(this.mEffects.values());
+        return effects.filter((effect) => id === effect.id);
     }
 
     public destroy() {
@@ -40,13 +53,13 @@ export class EffectManager extends PacketHandler {
     }
 
     protected updateDisplay(effect: Effect) {
-        // const id = effect.id;
-        // const display = this.room.game.elementStorage.getDisplayModel(id);
-        // if (display) {
-        //     effect.displayInfo = display;
-        // } else {
-        //     this.fetchDisplay([id]);
-        // }
+        const id = effect.id;
+        const display = this.room.game.elementStorage.getDisplayModel(id);
+        if (display) {
+            effect.displayInfo = display;
+        } else {
+            this.fetchDisplay([id]);
+        }
     }
 
     protected fetchDisplay(ids: number[]) {
@@ -62,12 +75,12 @@ export class EffectManager extends PacketHandler {
             return;
         }
         const sprites = content.sprites;
-        let effect: Effect = null;
         for (const sprite of sprites) {
-            effect = this.mEffects.get(sprite.id);
-            if (effect) {
-                effect.syncSprite(sprite);
-            }
+            this.mEffects.forEach((effect) => {
+                if (effect.id === sprite.id) {
+                    effect.syncSprite(sprite);
+                }
+            });
         }
     }
 
