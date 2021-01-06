@@ -10,16 +10,16 @@ export class MatterObject {
     protected _offset: Vector;
     protected _sensor: boolean = false;
     protected _offsetOrigin: Vector;
-    protected _radio: number = 1;
+    protected _radio: number = 0;
     constructor(protected mRoomService: IRoomService) {
         if (this.mRoomService) this.setMatterWorld(mRoomService.matterWorld);
-        this._radio = this.mRoomService.game.scaleRatio;
         this._tempVec = Vector.create(0, 0);
         this._offset = Vector.create(0, 0);
         this._offsetOrigin = Vector.create(0.5, 0.5);
     }
 
     public setMatterWorld(world: MatterWorld) {
+        if (!this._radio) this._radio = this.mRoomService.game.scaleRatio;
         this.matterWorld = world;
     }
 
