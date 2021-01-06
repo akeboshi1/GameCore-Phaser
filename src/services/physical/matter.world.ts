@@ -149,11 +149,11 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
         this.matterUser = user;
     }
 
-    public findPath(startPos: IPos, targets: IPos[], targetId?: number, toReverse: boolean = false) {
+    public findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
         if (!targets || !this.matterUser) {
             return;
         }
-        this.matterUser.findPath(startPos, targets, targetId, toReverse);
+        this.matterUser.findPath(targets, targetId, toReverse);
     }
 
     public getPath(startPos: IPos, targets: IPos[], toReverse: boolean = false): IPos[] {

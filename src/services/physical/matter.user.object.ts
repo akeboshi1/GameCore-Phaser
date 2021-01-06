@@ -55,7 +55,7 @@ export class MatterUserObject extends MatterPlayerObject {
         this.startMove();
     }
 
-    public async findPath(startPos: IPos, targets: IPos[], targetId?: number, toReverse: boolean = false) {
+    public async findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
         if (!targets) {
             return;
         }
@@ -71,7 +71,7 @@ export class MatterUserObject extends MatterPlayerObject {
                 return;
             }
         }
-        const path = this.peer.world.getPath(startPos, targets, toReverse);
+        const path = this.peer.world.getPath(pos, targets, toReverse);
         if (!path) {
             return;
         }
@@ -145,6 +145,7 @@ export class MatterUserObject extends MatterPlayerObject {
         const _pos = this.body.position;
         const pos = new LogicPos(Math.round(_pos.x / this.peer.scaleRatio), Math.round(_pos.y / this.peer.scaleRatio));
         this.mModel.pos = pos;
+
         // 通知render主角移动
         this.peer.render.setPosition(this.id, pos.x, pos.y);
         // 通知mainworker同步主角位置

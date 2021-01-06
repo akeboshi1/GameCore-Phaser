@@ -180,8 +180,8 @@ export class PhysicalPeer extends RPCPeer {
     }
 
     @Export()
-    public findPath(startPos: IPos, targets: [], targetId?: number, toReverse: boolean = false) {
-        this.matterWorld.findPath(startPos, targets, targetId, toReverse);
+    public findPath(targets: [], targetId?: number, toReverse: boolean = false) {
+        this.matterWorld.findPath(targets, targetId, toReverse);
     }
 
     @Export()

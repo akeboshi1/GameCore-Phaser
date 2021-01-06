@@ -343,7 +343,6 @@ export class MatterObject implements IMatterObject {
         }
         x *= this._scale;
         y *= this._scale;
-
         Body.setVelocity(this.body, Vector.create(x, y));
     }
 

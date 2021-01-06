@@ -93,8 +93,8 @@ export class MotionManager {
         //     return;'
         // }
         // this.render.user.findPath(worldX, worldY, id);
-        const startPos = this.render.displayManager.user.getPosition();
-        this.render.physicalPeer.findPath(startPos, targets, id);
+        // const startPos = this.render.displayManager.user.getPosition();
+        this.render.physicalPeer.findPath(targets, id);
     }
 
     private stop() {
