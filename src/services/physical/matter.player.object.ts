@@ -30,10 +30,10 @@ export class MatterPlayerObject extends MatterObject {
     //     }
     // }
 
-    public addBody(radio: number) {
+    public addBody() {
         this._sensor = true;
         this._offsetOrigin.y = 0;
-        super.addBody(radio);
+        super.addBody();
     }
 
     public changeState(val?: string, times?: number) {

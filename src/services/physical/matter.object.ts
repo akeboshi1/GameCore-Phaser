@@ -409,7 +409,7 @@ export class MatterObject implements IMatterObject {
             this.mRootMount = null;
             this.setPosition(pos, true);
             // this.peer.mainPeer.enableBlock(this.id);
-            this.addBody(this._scale);
+            this.addBody();
             this.mDirty = true;
         }
         return Promise.resolve();
@@ -456,12 +456,12 @@ export class MatterObject implements IMatterObject {
         }
     }
 
-    public setBody(scaleRatio: number) {
+    public setBody() {
         this.drawBody();
     }
 
-    public addBody(scaleRatio: number) {
-        this.setBody(scaleRatio);
+    public addBody() {
+        this.setBody();
     }
 
     public removeBody() {
@@ -536,12 +536,11 @@ export class MatterObject implements IMatterObject {
         const resule = collisionArea.some((val: number[]) => val.some(walkable));
         // const transformToMini90 = this.mRoomService.transformToMini90.bind(this.mRoomService);
         let paths = [];
-        const size = this.matterWorld.size;
         const miniSize = this.matterWorld.miniSize;
         if (resule) {
             paths[0] = this.calcBodyPath(collisionArea, miniSize);
         } else {
-            paths = [[Position45.transformTo90(new LogicPos(0, 0), size), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), size), Position45.transformTo90(new LogicPos(0, cols), miniSize)]];
+            paths = [[Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)]];
         }
 
         const mapHeight = (rows + cols) * (miniSize.tileHeight / 2) * this._scale;

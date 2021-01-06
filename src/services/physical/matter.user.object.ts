@@ -33,16 +33,16 @@ export class MatterUserObject extends MatterPlayerObject {
             }
             this.setPosition(landingPos);
             // this.unmountSprite(mountID, landingPos);
-            this.addBody(this.peer.scaleRatio);
+            this.addBody();
             // this.enableBlock();
             this.mDirty = true;
         }
     }
 
-    public addBody(radio: number) {
+    public addBody() {
         this._sensor = false;
         this._offsetOrigin.y = 0;
-        super.addBody(radio);
+        this.setBody();
     }
 
     public moveMotion(x: number, y: number, targetId?: number) {
