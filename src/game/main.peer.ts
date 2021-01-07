@@ -104,6 +104,11 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public getScaleRatio() {
+        return this.game.scaleRatio;
+    }
+
+    @Export()
     public updateMoss(moss) {
         this.game.elementStorage.updateMoss(moss);
     }

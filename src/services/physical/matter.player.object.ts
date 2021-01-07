@@ -31,7 +31,7 @@ export class MatterPlayerObject extends MatterObject {
     // }
 
     public addBody() {
-        this._sensor = true;
+        this._sensor = false;
         this._offsetOrigin.y = 0;
         super.addBody();
     }

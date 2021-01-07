@@ -258,7 +258,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
             return;
         }
         const { rows, cols } = size;
-        const dpr = await this.peer.mainPeer.game.scaleRatio;
+        const dpr = await this.peer.mainPeer.getScaleRatio();
         const vertexSets = [Position45.transformTo90(new Pos(0, 0), size), Position45.transformTo90(new Pos(cols, 0), size), Position45.transformTo90(new Pos(cols, rows), size), Position45.transformTo90(new Pos(0, rows), size)];
         vertexSets.map((pos) => {
             pos.x *= dpr;

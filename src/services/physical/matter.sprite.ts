@@ -1,6 +1,6 @@
 import { IDragonbonesModel, IFramesModel, RunningAnimation, AnimationQueue, Animator } from "structure";
 import { Direction, IPos, Logger, LogicPoint, LogicPos } from "utils";
-import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
+import { op_def, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
 import { IPoint } from "game-capsule";
 export class MatterSprite {
@@ -209,7 +209,7 @@ export class MatterSprite {
         // return (<any>this.displayInfo).getOriginPoint(animationName, flip);
     }
 
-    public findAnimation(baseName: string, dir: Direction): RunningAnimation {
+    public findDragonBonesAnimation(baseName: string, dir: Direction): RunningAnimation {
         let flip = false;
         switch (dir) {
             case Direction.south_east:
@@ -219,6 +219,24 @@ export class MatterSprite {
             case Direction.east_north:
                 flip = true;
                 dir = Direction.north_west;
+                break;
+        }
+        let addName: string = "";
+        if ((dir >= Direction.north && dir < Direction.west) || dir > Direction.east && dir <= Direction.east_north) addName = "_back";
+        return { name: `${baseName}${addName}`, flip };
+    }
+
+    public findFramesAnimation(baseName: string, dir: number): RunningAnimation {
+        let flip = false;
+        switch (dir) {
+            case Direction.west_south:
+            case Direction.east_north:
+                break;
+            case Direction.south_east:
+                flip = true;
+                break;
+            case Direction.north_west:
+                flip = true;
                 break;
         }
         let addName: string = "";
@@ -246,7 +264,15 @@ export class MatterSprite {
                 baseAniName = this.registerAnimation.get(baseAniName);
             }
         }
-        this.currentAnimation = this.findAnimation(baseAniName, direction);
+        if (this.sprite.displayInfo) {
+            if (this.sprite.displayInfo.discriminator === "FramesModel") {
+                this.currentAnimation = this.findFramesAnimation(baseAniName, direction);
+            } else {
+                this.currentAnimation = this.findDragonBonesAnimation(baseAniName, direction);
+            }
+        } else {
+            this.currentAnimation = this.findFramesAnimation(baseAniName, direction);
+        }
         this.currentAnimation.times = times;
         if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
         if (this.currentCollisionArea) {
