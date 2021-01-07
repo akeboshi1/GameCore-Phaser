@@ -15,6 +15,7 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_queryroamdraw", this.query_ROAM_DRAW, this);
         this.game.emitter.on(this.key + "_retquestlist", this.onRetRoamListResult, this);
         this.game.emitter.on(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
+        this.game.emitter.on(this.key + "_updatetoken", this.updateTokenData, this);
         this.game.emitter.on(this.key + "_hide", this.hide, this);
     }
 
@@ -23,6 +24,7 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_queryroamdraw", this.query_ROAM_DRAW, this);
         this.game.emitter.off(this.key + "_retquestlist", this.onRetRoamListResult, this);
         this.game.emitter.off(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
+        this.game.emitter.off(this.key + "_updatetoken", this.updateTokenData, this);
         this.game.emitter.off(this.key + "_hide", this.hide, this);
         super.hide();
     }
@@ -46,5 +48,21 @@ export class PicaRoamMediator extends BasicMediator {
 
     private onRetRoamDrawResult(poolUpdate: op_client.IDRAW_POOL_STATUS) {
 
+    }
+
+    private updateTokenData(data: { tokenId: string, alterId: string }) {
+        if (this.userData && this.userData.playerProperty) {
+            const property = this.userData.playerProperty;
+            const money = property.getProperty(data.tokenId);
+            const alter = property.getProperty(data.alterId);
+            const altervalue = alter ? alter.value : 0;
+            if (this.mView) this.mView.setRoamTokenData(money.value, altervalue, data.tokenId);
+        }
+    }
+    get userData() {
+        if (!this.game.user || !this.game.user.userData) {
+            return;
+        }
+        return this.game.user.userData;
     }
 }

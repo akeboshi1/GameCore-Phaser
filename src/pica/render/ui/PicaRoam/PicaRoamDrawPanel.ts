@@ -36,13 +36,15 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     }
 
     init() {
-        this.bg = new CommonBackground(this.scene, 0, 0, this.width, this.height, UIAtlasName.roam, "roam_bg");
+        this.bg = new CommonBackground(this.scene, 0, 0, this.width, this.height, UIAtlasName.roam, "roam_bg", 0x72e7fb);
         const topbg = this.scene.make.image({ key: "roam_topic", frame: "roam_topic" });
+        topbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         const topbg1 = this.scene.make.image({ key: "roam_stripe", frame: "roam_stripe" });
+        topbg1.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         topbg.y = -this.height * 0.5 + topbg.height * 0.5;
-        topbg1.y = topbg.y;
+        topbg1.y = -this.height * 0.5 + topbg1.height * 0.5;
         this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-        this.closeBtn.setPosition(21 * this.dpr, 35 * this.dpr);
+        this.closeBtn.setPosition(-this.width * 0.5 + 21 * this.dpr, -this.height * 0.5 + 35 * this.dpr);
         this.closeBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
         const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
             left: 17 * this.dpr,
@@ -70,16 +72,17 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.moneyCon = this.scene.make.container(undefined, false);
         this.moneyCon.setSize(moneybg.width, moneybg.height);
         this.moneyCon.add([moneybg, moneyline, this.moneyvalue, this.tokenvalue, this.moneyAddBtn]);
-        this.moneyCon.x = this.width - 20 * this.dpr;
+        this.moneyCon.x = this.width * 0.5 - 20 * this.dpr;
         this.moneyCon.y = this.closeBtn.y;
 
         const previewBtn = new NinePatchButton(this.scene, 0, 0, 76 * this.dpr, 30 * this.dpr, UIAtlasName.uicommon, "home_persons_bg", i18n.t("roam.previewtex"), {
             left: 30 * this.dpr, right: 30 * this.dpr, top: 0, bottom: 0
         });
         this.drawProgress = new RoamDrawProgress(this.scene, this.dpr);
+        this.drawProgress.y = topbg.y + topbg.height * 0.5 - 70 * this.dpr;
         this.oneRoamItem = new RoamDrawItem(this.scene, this.dpr, this.zoom);
         this.oneRoamItem.x = -this.oneRoamItem.width * 0.5 - 10 * this.dpr;
-        this.tenRoamItem.y = this.height * 0.5 - 60 * this.dpr;
+        this.oneRoamItem.y = this.height * 0.5 - 60 * this.dpr;
         this.oneRoamItem.setHandler(new Handler(this, this.onRoamDrawHandler, ["one"]));
         this.tenRoamItem = new RoamDrawItem(this.scene, this.dpr, this.zoom);
         this.tenRoamItem.x = -this.oneRoamItem.x;
@@ -87,13 +90,25 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.tenRoamItem.setHandler(new Handler(this, this.onRoamDrawHandler, ["ten"]));
         this.bottomtips = this.scene.make.text({ text: "", style: UIHelper.blackStyle(this.dpr, 14) });
         this.bottomtips.y = this.height * 0.5 - 20 * this.dpr;
-        this.add([this.bg, topbg, topbg1, this.closeBtn, this.moneyCon, previewBtn, this.drawProgress, this.oneRoamItem, this.tenRoamItem, this.bottomtips]);
+        this.add([this.bg, topbg1, topbg, this.closeBtn, this.moneyCon, previewBtn, this.drawProgress, this.oneRoamItem, this.tenRoamItem, this.bottomtips]);
         this.resize();
     }
 
     public setRoamDatas(datas: op_client.IDRAW_POOL_STATUS[]) {
         this.oneRoamItem.setRoamData(datas[0]);
         this.tenRoamItem.setRoamData(datas[1]);
+        const data = datas[0];
+    }
+
+    public setMoneyData(money: number, token: number, tokenId: string) {
+        let moneyframe = "home_silver";
+        let tokenframe = "roam_ordinary_icon";
+        if (tokenId === "IV0000002") {
+            moneyframe = "home_diamond";
+            tokenframe = "roam_advanced_icon";
+        }
+        this.moneyvalue.setFrameValue(money + "", UIAtlasName.uicommon, moneyframe);
+        this.tokenvalue.setFrameValue(token + "", UIAtlasName.uicommon, tokenframe);
     }
 
     private onRoamDrawHandler(tag: string, roamData: op_client.IDRAW_POOL_STATUS) {
@@ -118,6 +133,7 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
     private roamLevTex: BBCodeText;
     private roamLevTips: Phaser.GameObjects.Text;
     private roamLevHelp: Button;
+    private resetTimeTex: Phaser.GameObjects.Text;
     private dpr: number;
     private send: Handler;
     constructor(scene: Phaser.Scene, dpr: number) {
@@ -141,7 +157,9 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
         this.roamLevHelp.x = this.roamLevTex.x + this.roamLevTex.width * 0.5 + 10 * this.dpr;
         this.roamLevTips = this.scene.make.text({ text: "", style: UIHelper.blackStyle(this.dpr) }).setOrigin(0.5);
         this.roamLevTips.y = this.roamLevTex.y + 20 * this.dpr;
-        this.add([progressBg, this.progreItem, this.progreTex, this.roamLevTex, this.roamLevHelp, this.roamLevTips]);
+        this.resetTimeTex = this.scene.make.text({ text: "", style: UIHelper.redStyle(this.dpr, 8) }).setOrigin(0.5);
+        this.resetTimeTex.y = 20 * this.dpr;
+        this.add([progressBg, this.progreItem, this.progreTex, this.roamLevTex, this.roamLevHelp, this.roamLevTips, this.resetTimeTex]);
     }
 
     public setRoadLvData(progress: number, expireTime: number, index: number, data: op_client.PKT_Progress) {
@@ -183,8 +201,8 @@ class ProgressItem extends Phaser.GameObjects.Container {
     init() {
         this.progreimg = this.scene.make.image({ key: UIAtlasName.roam, frame: "roam_lv" });
         this.setSize(this.progreimg.width, this.progreimg.height);
-        this.sprite = this.createSprite(UIAtlasName.roam, this.animkey, "roam_lv_1", [1, 6]);
-        this.sprite2 = this.createSprite(UIAtlasName.roam, this.animkey2, "roam_lv_2", [1, 6]);
+        this.sprite = this.createSprite(UIAtlasName.roam, this.animkey, "roam_lv_1_", [1, 6]);
+        this.sprite2 = this.createSprite(UIAtlasName.roam, this.animkey2, "roam_lv_2_", [1, 6]);
         this.graphic = this.scene.make.graphics(undefined, false);
         this.graphic.clear();
         this.graphic.fillStyle(0xfebf17, 1);

@@ -66,6 +66,10 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.roamListPanel.setRoamDataList(pools);
     }
 
+    public setRoamTokenData(money: number, token: number, tokenId: string) {
+        if (this.roamDrawPanel) this.roamDrawPanel.setMoneyData(money, token, tokenId);
+    }
+
     private openRoamList() {
         this.showRoamListPanel();
     }
@@ -87,6 +91,9 @@ export class PicaRoamPanel extends PicaBasePanel {
     private openRoamDrawPanel(data: op_client.IDRAW_POOL_STATUS[]) {
         this.showRoamDrawPanel();
         this.roamDrawPanel.setRoamDatas(data);
+        const temp = data[0];
+        const obj = { tokenId: temp.tokenId, alterId: temp.alterTokenId };
+        this.render.renderEmitter(this.key + "_updatetoken", obj);
     }
 
     private showRoamDrawPanel() {

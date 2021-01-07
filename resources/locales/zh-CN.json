@@ -377,6 +377,7 @@
     "timeend": "活动已结束",
     "previewtex": "奖池预览",
     "endtips": "{{name}}后免费",
-    "roamlv": "当前漫游等级{{name}}"
+    "roamlv": "当前漫游等级{{name}}",
+    "resettips": "{{name}}后重置"
   }
 }

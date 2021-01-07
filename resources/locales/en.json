@@ -374,6 +374,7 @@
     "timeend": "The activity is over",
     "previewtex": "Preview",
     "endtips": "Free after {{name}}",
-    "roamlv": "Current roaming level{{name}}"
+    "roamlv": "Current roaming level{{name}}",
+    "resettips": "Reset after {{name}}"
   }
 }

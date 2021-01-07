@@ -108,7 +108,7 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
     }
 
     private onSelectItemHandler(roamData: op_client.IDRAW_POOL_STATUS) {
-        if (this.send) this.send.runWith(this.poolsStatus.get(roamData.tokenId));
+        if (this.send) this.send.runWith(["roam", this.poolsStatus.get(roamData.tokenId)]);
     }
     private onCloseHandler() {
         if (this.send) this.send.runWith("close");
@@ -167,19 +167,47 @@ class RoamItem extends Phaser.GameObjects.Container {
         this.timeTex.x = this.timebg.x;
         this.timeTex.y = this.timebg.y + 10 * dpr;
         this.add([this.bg, this.dybg, this.nameTex, this.desTex, this.timebg, this.timetips, this.timeTex]);
+        this.desTex.visible = false;
+        this.nameTex.visible = false;
     }
-    public setRoamData(data: any) {// op_gameconfig_01.IButton
+    public setRoamData(data: op_client.IDRAW_POOL_STATUS) {
         this.roamData = data;
-        this.desTex.text = "欢乐大礼包等你拿";
-        this.nameTex.text = "皮卡速递";
-        this.timeTex.text = this.getTimeTex(1000000000);
-        this.dybg.setTexture(UIAtlasName.roam, "roan_banner_silver");
+        // this.desTex.text = "欢乐大礼包等你拿";
+        // this.nameTex.text = "皮卡速递";
+
+        if (data.tokenId === "IV0000002") {
+            this.dybg.setTexture(UIAtlasName.roam, "roan_banner_diamond");
+            const time = 604800000;
+            this.timeTex.text = this.getTimeTex(time);
+            this.loopTimeOut(time);
+            this.timeTex["visible"] = true;
+            this.timebg.visible = true;
+        } else {
+            this.dybg.setTexture(UIAtlasName.roam, "roan_banner_silver");
+            this.timeTex["visible"] = false;
+            this.timebg.visible = false;
+        }
     }
+
+    private loopTimeOut(time: number) {
+        const excute = () => {
+            setTimeout(() => {
+                if (!this.scene) return;
+                time -= 60000;
+                if (time < 0) time = 0;
+                this.timeTex.text = this.getTimeTex(time);
+                if (time > 0) {
+                    excute();
+                }
+            }, 60000);
+        };
+        excute();
+    }
+
     private getTimeTex(time: number) {
-        const date = new Date(time);
-        const day = date.getDay();
-        const hour = date.getHours();
-        const minutes = date.getMinutes();
+        const day = Math.floor(time / 86400000);
+        const hour = Math.floor(time / 3600000) % 24;
+        const minutes = Math.floor(time / 60000) % 60;
         let text: string = "";
         if (day !== 0 || hour !== 0 || minutes !== 0) {
             text = this.timeFormat(day) + i18n.t("timeuint.day") + this.timeFormat(hour) + i18n.t("timeuint.hour") + this.timeFormat(minutes) + i18n.t("timeuint.minutes");
