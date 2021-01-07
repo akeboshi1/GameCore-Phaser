@@ -363,7 +363,7 @@ export class MatterAnimationModel implements IMatterAnimationData {
         this.frameRate = ani.frameRate;
         this.baseLoc = new LogicPoint(parseInt(tmpBaseLoc[0], 10), parseInt(tmpBaseLoc[1], 10));
         const origin = ani.originPoint;
-        this.originPoint = new LogicPoint(origin[0], origin[1]);
+        this.originPoint = new LogicPoint(origin.x, origin.y);
         if (typeof ani.collisionArea === "string") {
             this.collisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
         } else {

@@ -30,11 +30,6 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     protected mBaseLoc: Phaser.Geom.Point;
     protected mCollisionArea: number[][];
     protected mOriginPoint: LogicPoint;
-    protected mFlagContainer: Phaser.GameObjects.Container;
-    protected mNickname: Phaser.GameObjects.Text;
-    protected mBadges: DynamicImage[];
-    protected mBackEffect: DynamicSprite;
-    protected mFrontEffect: DynamicSprite;
     protected mReferenceArea: ReferenceArea;
     protected mChildMap: Map<string, any>;
     protected mDirection: number = 3;
@@ -154,27 +149,6 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     public displayReady(animation) { }
 
     public destroy(fromScene?: boolean): void {
-        if (this.mFlagContainer) {
-            if (this.mNickname) {
-                this.mNickname.destroy();
-                this.mNickname = undefined;
-            }
-
-            if (this.mBackEffect) {
-                this.mBackEffect.destroy();
-                this.mBackEffect = undefined;
-            }
-
-            if (this.mFrontEffect) {
-                this.mFrontEffect.destroy();
-                this.mFrontEffect = undefined;
-            }
-
-            this.clearBadges();
-
-            this.mFlagContainer.destroy();
-            this.mFlagContainer = undefined;
-        }
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();
             this.mReferenceArea = undefined;
@@ -444,23 +418,23 @@ export class DisplayObject extends Phaser.GameObjects.Container {
     // }
 
     protected layouFlag(offset: number = 4) {
-        if (!this.mFlagContainer) return;
-        this.mFlagContainer.y = -96;
-        this.bringToTop(this.mNickname);
-        const children = this.mFlagContainer.list;
-        let _x = 0;
-        for (const child of children) {
-            child["x"] = _x;
-            if (child["width"]) _x = child["width"];
-        }
+        // if (!this.mFlagContainer) return;
+        // this.mFlagContainer.y = -96;
+        // this.bringToTop(this.mNickname);
+        // const children = this.mFlagContainer.list;
+        // let _x = 0;
+        // for (const child of children) {
+        //     child["x"] = _x;
+        //     if (child["width"]) _x = child["width"];
+        // }
     }
 
     protected clearBadges() {
-        if (!this.mBadges) return;
-        for (const badge of this.mBadges) {
-            badge.destroy();
-        }
-        this.mBadges.length = 0;
+        // if (!this.mBadges) return;
+        // for (const badge of this.mBadges) {
+        //     badge.destroy();
+        // }
+        // this.mBadges.length = 0;
     }
 
     // protected get flagContainer(): Phaser.GameObjects.Container {
