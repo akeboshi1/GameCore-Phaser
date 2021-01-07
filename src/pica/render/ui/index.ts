@@ -99,3 +99,5 @@ export * from "./SinglePanel/PicaItemTipsPanel";
 export * from "./SinglePanel/PicaSingleManager";
 export * from "./PicaFurnitureCompose/PicaFurnitureComposePanel";
 export * from "./PicaRecaste/PicaRecastePanel";
+export * from "./PicaRoam/PicaRoamListPanel";
+export * from "./PicaRoam/PicaRoamPanel";
