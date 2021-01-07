@@ -200,6 +200,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mRenderable) {
             this.mRoomService.game.physicalPeer.addBody(this.id);
         }
+        this.mElementManager.addToMap(model);
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
@@ -242,6 +243,7 @@ export class Element extends BlockObject implements IElement {
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
         }
+        this.mElementManager.addToMap(this.mModel);
         // if (model.hasOwnProperty("point3f")) {
         //     const pos = model.point3f;
         //     this.setPosition(new LogicPos(pos.x, pos.y, pos.z));

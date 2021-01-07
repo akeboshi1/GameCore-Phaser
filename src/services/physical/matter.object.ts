@@ -163,6 +163,7 @@ export class MatterObject implements IMatterObject {
         if (sprite.mountSprites && sprite.mountSprites.length > 0) {
             this.updateMounth(sprite.mountSprites);
         }
+        // this.matterWorld.addToMap(sprite);
         // if (sprite.mountSprites && sprite.mountSprites.length > 0) {
         //     this.updateMounth(sprite.mountSprites);
         // }
@@ -192,6 +193,7 @@ export class MatterObject implements IMatterObject {
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
         }
+        // this.matterWorld.addToMap(this.mModel);
         this.update();
         // this.peer.world.addToMap(this.mModel);
     }
@@ -352,6 +354,7 @@ export class MatterObject implements IMatterObject {
         }
         this._tempVec.x = p.x;
         this._tempVec.y = p.y;
+        this.mModel.setPosition(p.x, p.y);
         this.peer.mainPeer.setPosition(this.id, update, p.x, p.y);
         this.peer.render.setPosition(this.id, p.x, p.y);
         if (!this.body) {
