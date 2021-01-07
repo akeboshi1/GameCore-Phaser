@@ -2,6 +2,11 @@ import { Render } from "gamecoreRender";
 import { Handler, Logger } from "utils";
 import { UIAtlasName } from "./ui.atlas.name";
 
+export interface AtlasData {
+    atlasName: string;
+    folder: string;
+}
+
 export enum UILoadType {
     none = 1,
     atlas = 2,
@@ -33,30 +38,41 @@ export class AtlasManager {
 
     public add(atlasName: string, loadType = UILoadType.none, folder?: string) {
         let data: AtlasUrlData;
+        folder = folder || atlasName;
         if (loadType === UILoadType.atlas) {
-            const url = `${atlasName}/${atlasName}`;
+            const url = `${folder}/${atlasName}`;
             data = new AtlasUrlData(atlasName, `${url}.png`, `${url}.json`, UILoadType.atlas);
         } else if (loadType === UILoadType.font) {
-            const url = `${atlasName}/${atlasName}`;
+            const url = `${folder}/${atlasName}`;
             data = new AtlasUrlData(atlasName, `${url}.png`, `${url}.json`, UILoadType.font);
         } else if (loadType === UILoadType.texture) {
-            const url = `${atlasName}/${atlasName}`;
+            const url = `${folder}/${atlasName}`;
             data = new AtlasUrlData(atlasName, `${url}.png`, undefined, UILoadType.texture);
         }
         this.atlasMap.set(atlasName, data);
+        return data;
     }
-    public getAtalsArr(atalsNames: string[]) {
+    public getUrlDatas(atlas: Array<string | AtlasData>, loadType: UILoadType = UILoadType.atlas) {
         const tempUrls: AtlasUrlData[] = [];
-        for (const name of atalsNames) {
-            try {
+        for (const obj of atlas) {
+            let name, folder;
+            if (typeof obj === "object") {
+                name = obj.atlasName;
+                folder = obj.folder;
+            } else {
+                name = obj;
+            }
+            if (this.atlasMap.has(name)) {
                 const urlData = this.atlasMap.get(name);
                 tempUrls.push(urlData);
-            } catch (error) {
-                Logger.getInstance().error("图集${name}不存在");
+            } else {
+                const data = this.add(name, loadType, folder);
+                tempUrls.push(data);
             }
         }
         return tempUrls;
     }
+
     public loadAtlas(urls: string[], arr: string[], comp: Handler, progress?: Handler) {
 
     }
