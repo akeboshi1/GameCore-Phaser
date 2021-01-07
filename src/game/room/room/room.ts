@@ -79,6 +79,10 @@ export interface IRoomService {
 
     findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): Promise<IPos[]>;
 
+    onManagerCreated(key: string);
+
+    onManagerReady(key: string);
+
     destroy();
 }
 
@@ -107,6 +111,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // protected mMatterWorld: MatterWorld;
     // protected mAstar: AStar;
     protected mIsLoading: boolean = false;
+    protected mManagersReadyStates: Map<string, boolean> = new Map();
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
@@ -274,7 +279,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public update(time: number, delta: number) {
         // if (this.matterWorld) this.matterWorld.update();
         this.updateClock(time, delta);
-        if (this.mBlocks) this.mBlocks.update(time, delta);
+        // if (this.mBlocks) this.mBlocks.update(time, delta);
         // this.mViewBlockManager.update(time, delta);
         // if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mElementManager) this.mElementManager.update(time, delta);
@@ -576,6 +581,31 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         conten.nextPoint = nextPosition;
         this.connection.send(packet);
     }
+    // room创建状态管理
+    public onManagerCreated(key: string) {
+        if (this.mManagersReadyStates.has(key)) return;
+
+        this.mManagersReadyStates.set(key, false);
+    }
+
+    public onManagerReady(key: string) {
+        if (!this.mManagersReadyStates.has(key)) return;
+
+        Logger.getInstance().log("room.onManagerReady ", key);
+
+        this.mManagersReadyStates.set(key, true);
+        let allReady = true;
+        this.mManagersReadyStates.forEach((val) => {
+            if (val === false) {
+                allReady = false;
+            }
+        });
+
+        if (allReady) {
+            this.game.renderPeer.roomReady();
+        }
+    }
+    //
 
     protected initSkyBox() {
         const scenerys = this.game.elementStorage.getScenerys();

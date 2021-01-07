@@ -8,6 +8,8 @@ export class UIAtlasName {
     public static uibase3 = "ui_base3";
 
     public static uicommon = "ui_common";
+    public static uicommon1 = "ui_common1";
+    public static roam = "roam";
     public static iconcommon = "icon_common";
     public static effectcommon = "effect_common";
     public static stareffect = "stareffect";

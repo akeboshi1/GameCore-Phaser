@@ -24,3 +24,4 @@ export * from "./copy.prototype";
 export * from "./promise";
 export * from "./chat.command";
 export * from "./astar";
+export * from "./time.utils";

@@ -11,6 +11,7 @@ import { SceneManager } from "./scenes/scene.manager";
 import { LoginScene } from "./scenes/login.scene";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { BasicScene } from "./scenes/basic.scene";
+import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
 import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, ElementStateType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
@@ -999,6 +1000,18 @@ export class Render extends RPCPeer implements GameMain {
         this.mCameraManager.camera = scene.cameras.main;
     }
 
+    @Export()
+    public roomReady() {
+        if (!this.mSceneManager || !this.mCameraManager) return;
+        const scene = this.mSceneManager.getMainScene();
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+        if (scene instanceof PlayScene)
+            scene.onRoomCreated();
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public playAnimation(id: number, animation: any, field?: any, times?: number) {
         if (!this.mDisplayManager) return;
@@ -1213,6 +1226,7 @@ export class Render extends RPCPeer implements GameMain {
         this.mDisplayManager.addEffect(target, effectID, display);
     }
 
+    @Export()
     public removeEffect(effectID: number) {
         this.mDisplayManager.removeEffect(effectID);
     }

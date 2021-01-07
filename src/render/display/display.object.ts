@@ -20,7 +20,39 @@ enum TitleMask {
     // TQ_   = 0x0004;
 }
 
-export class DisplayObject extends Phaser.GameObjects.Container {
+export interface IDisplayObject {
+    titleMask: number;
+    direction: number;
+    nodeType: number;
+    startLoad(callBack?: Function): Promise<any>;
+    created();
+    changeAlpha(val?: number);
+    removeFromParent();
+    fadeIn(callback?: () => void);
+    fadeOut(callback?: () => void);
+    load(data: IDragonbonesModel | IFramesModel, field?: DisplayField);
+    play(animation: RunningAnimation, field?: DisplayField, times?: number);
+    mount(ele: Phaser.GameObjects.Container, targetIndex?: number);
+    unmount(ele: Phaser.GameObjects.Container);
+    removeEffect(field: DisplayField);
+    removeDisplay(field: DisplayField);
+    displayReady(animation);
+    destroy(fromScene?: boolean);
+    setDisplayBadges(cards);
+    showRefernceArea(area: number[][], origin: IPos);
+    hideRefernceArea();
+    scaleTween();
+    showNickname(name: string);
+    showTopDisplay(data?: ElementStateType);
+    updatePos(x: number, y: number, z: number);
+    showBubble(text: string, setting: any);
+    clearBubble();
+    doMove(moveData: any);
+    getPosition(): LogicPos;
+    setRootMount(gameObject: Phaser.GameObjects.Container);
+}
+
+export class DisplayObject extends Phaser.GameObjects.Container implements IDisplayObject {
     /**
      * 实际透明度，避免和tween混淆
      */
@@ -91,6 +123,12 @@ export class DisplayObject extends Phaser.GameObjects.Container {
             }, this);
             this.mLoadQueue.startLoad();
         });
+    }
+
+    created() {
+        // 创建状态管理
+        this.render.mainPeer.elementDisplayReady(this.id);
+        this.emit("initialized", this);
     }
 
     isShowName(): boolean {
@@ -321,7 +359,7 @@ export class DisplayObject extends Phaser.GameObjects.Container {
         }
     }
 
-    public getPosition() {
+    public getPosition(): LogicPos {
         const pos = new LogicPos(this.x, this.y);
         if (this.mRootMount) {
             pos.x += this.mRootMount.x;

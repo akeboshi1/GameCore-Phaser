@@ -90,3 +90,5 @@ export * from "./ui/PicaFurnitureCompose/PicaFurnitureCompose";
 export * from "./ui/PicaFurnitureCompose/PicaFurnitureComposeMediator";
 export * from "./ui/PicaRecaste/PicaRecaste";
 export * from "./ui/PicaRecaste/PicaRecasteMediator";
+export * from "./ui/PicaRoam/PicaRoam";
+export * from "./ui/PicaRoam/PicaRoamMediator";

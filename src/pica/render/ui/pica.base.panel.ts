@@ -1,16 +1,27 @@
 import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
-import { UILoadType } from "picaRes";
+import { AtlasData, UILoadType } from "picaRes";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
-    protected atlasNames: string[];
+    protected atlasNames: Array<string | AtlasData>;
+    protected textures: Array<string | AtlasData>;
+    protected tempDatas: any;
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
     }
 
     protected initResource() {
+        let datas;
         if (this.atlasNames) {
             const uimanager: PicaRenderUiManager = <PicaRenderUiManager>(this.uiManager);
-            const datas = uimanager.getAtlas(this.atlasNames);
+            datas = uimanager.getUrlDatas(this.atlasNames);
+
+        }
+        if (this.textures) {
+            const uimanager: PicaRenderUiManager = <PicaRenderUiManager>(this.uiManager);
+            const tempdatas = uimanager.getUrlDatas(this.textures, UILoadType.texture);
+            datas = datas ? datas.concat(tempdatas) : tempdatas;
+        }
+        if (datas) {
             for (const data of datas) {
                 if (data.uiType === UILoadType.atlas) {
                     this.addAtlas(data.atlasName, data.atlasUrl, data.jsonUrl);
@@ -29,7 +40,11 @@ export class PicaBasePanel extends BasePanel {
         super.setLinear(key);
         if (this.atlasNames) {
             for (const atlas of this.atlasNames) {
-                super.setLinear(atlas);
+                if (typeof atlas === "string") {
+                    super.setLinear(atlas);
+                } else {
+                    super.setLinear(atlas.atlasName);
+                }
             }
         }
     }

@@ -162,6 +162,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.moveControll = new MoveControll(this);
+        this.mBlockable = false;
         this.mId = sprite.id;
         this.model = sprite;
     }
@@ -197,6 +198,9 @@ export class Element extends BlockObject implements IElement {
         if (model.mountSprites && model.mountSprites.length > 0) {
             this.updateMounth(model.mountSprites);
         }
+        // this.update();
+        this.mElementManager.addToMap(model);
+        this.setRenderable(true);
         if (this.mRenderable) {
             this.mRoomService.game.physicalPeer.addBody(this.id);
         }
@@ -728,6 +732,8 @@ export class Element extends BlockObject implements IElement {
     protected async createDisplay(): Promise<any> {
         if (this.mCreatedDisplay) return;
         super.createDisplay();
+
+        this.mElementManager.onDisplayCreated(this.id);
 
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;

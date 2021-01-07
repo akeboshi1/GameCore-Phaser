@@ -23,8 +23,7 @@ export class DecorateScene extends PlayScene {
         this.input.on("pointerup", this.onPointerUpHandler, this);
         this.input.on("pointerdown", this.onPointerDownHandler, this);
         this.input.on("gameobjectdown", this.onGameobjectDownHandler, this);
-        this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-        // this.input.on("gameobjectup", this.onGameobjectUpHandler, this);
+        // this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
 
     }
 
