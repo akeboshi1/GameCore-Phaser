@@ -230,7 +230,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         // this._offset.y = mapHeight * 0.5 - origin.y;
         this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * dpr) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
-        const body = Bodies.fromVertices(this._tempVec2.x + this._offset.x, this._tempVec2.y + this._offset.y, paths, { isStatic: true, friction: 0 });
+        const body = Bodies.fromVertices(this._tempVec.x * this._radio + this._offset.x, this._tempVec.y * this._radio + this._offset.y, paths, { isStatic: true, friction: 0 });
         this.setExistingBody(body, true);
     }
 
@@ -240,15 +240,15 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         const convexHull = require("monotone-convex-hull-2d");
         const resultIndices = convexHull(allpoints);
 
-        return resultIndices.map((i) => ({ x: allpoints[i][0], y: allpoints[i][1]}));
-    //    return paths;
+        return resultIndices.map((i) => ({ x: allpoints[i][0], y: allpoints[i][1] }));
+        //    return paths;
     }
 
     private prepareVertices(collisionArea: number[][]): any[] {
         const allpoints = [];
-        for (let i = 0 ; i < collisionArea.length; i++) {
+        for (let i = 0; i < collisionArea.length; i++) {
             let leftMost, rightMost;
-            for (let j = 0 ; j < collisionArea[i].length; j++) {
+            for (let j = 0; j < collisionArea[i].length; j++) {
                 if (collisionArea[i][j] === 1) {
                     if (!leftMost) {
                         leftMost = [i, j];
@@ -272,7 +272,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
 
     private transformBodyPath2(x: number, y: number, miniSize: IPosition45Obj) {
         const pos = Position45.transformTo90(new LogicPos(x, y), miniSize);
-        const result = [[pos.x, -miniSize.tileHeight * 0.5 + pos.y ], [pos.x + miniSize.tileWidth * 0.5, pos.y ], [pos.x, pos.y + miniSize.tileHeight * 0.5 ], [pos.x - miniSize.tileWidth * 0.5, pos.y]];
+        const result = [[pos.x, -miniSize.tileHeight * 0.5 + pos.y], [pos.x + miniSize.tileWidth * 0.5, pos.y], [pos.x, pos.y + miniSize.tileHeight * 0.5], [pos.x - miniSize.tileWidth * 0.5, pos.y]];
         return result;
     }
 

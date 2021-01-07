@@ -166,6 +166,7 @@ export class Element extends BlockObject implements IElement {
         if (!sprite) {
             return;
         }
+        this.mBlockable = false;
         this.mId = sprite.id;
         this.model = sprite;
     }
@@ -213,6 +214,7 @@ export class Element extends BlockObject implements IElement {
         }
         // this.update();
         this.mElementManager.addToMap(model);
+        this.setRenderable(true);
         if (this.mRenderable) {
             this.addBody();
         }
@@ -792,6 +794,8 @@ export class Element extends BlockObject implements IElement {
         if (this.mCreatedDisplay) return;
         super.createDisplay();
 
+        this.mElementManager.onDisplayCreated(this.id);
+
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }
@@ -991,48 +995,40 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected updateStateHandler(state: op_def.IState) {
-        // let buf = null;
-        // let id = null;
-        // switch (state.name) {
-        //     case "effect":
-        //         buf = Buffer.from(state.packet);
-        //         id = buf.readDoubleBE(0);
-        //         const effect = this.roomService.effectManager.add(this.id, id);
-        //         if (effect.displayInfo) {
-        //             this.showEffected(effect.display);
-        //         } else {
-        //             effect.once("updateDisplayInfo", this.showEffected, this);
-        //         }
-        //         break;
-        //     case "Task":
-        //         buf = Buffer.from(state.packet);
-        //         const type = buf.readDoubleBE(0);
-        //         id = buf.readDoubleBE(8);
-        //         const ele = this.roomService.getElement(id);
-        //         if (ele) {
-        //             if (type === 0) {
-        //                 (<Element>ele).removeTopDisplay();
-        //             } else {
-        //                 (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
-        //             }
-        //         }
-        //         break;
-        // }
+        let buf = null;
+        let id = null;
+        switch (state.name) {
+            case "effect":
+                buf = Buffer.from(state.packet);
+                id = buf.readDoubleBE(0);
+                this.roomService.effectManager.add(this.id, id);
+                break;
+            case "Task":
+                buf = Buffer.from(state.packet);
+                const type = buf.readDoubleBE(0);
+                id = buf.readDoubleBE(8);
+                const ele = this.roomService.getElement(id);
+                if (ele) {
+                    if (type === 0) {
+                        (<Element>ele).removeTopDisplay();
+                    } else {
+                        (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
+                    }
+                }
+                break;
+        }
     }
 
     protected removeStateHandler(state: op_def.IState) {
-        // switch (state.name) {
-        //     case "effect":
-        //         // remove
-        //         if (this.mDisplay) {
-        //             this.mDisplay.removeEffect(DisplayField.Effect);
-        //         }
-        //         // const buf = Buffer.from(state.packet);
-        //         // const id = buf.readDoubleBE(0);
-        //         this.roomService.effectManager.remove(this.id);
-        //         break;
-        //     case "Task":
-        //         break;
-        // }
+        switch (state.name) {
+            case "effect":
+                // remove
+                // const buf = Buffer.from(state.packet);
+                // const id = buf.readDoubleBE(0);
+                this.roomService.effectManager.remove(this.id);
+                break;
+            case "Task":
+                break;
+        }
     }
 }

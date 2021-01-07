@@ -34,7 +34,7 @@ export class EmptyTerrain extends BlockObject {
         const width = roomSize.tileWidth * dpr;
         const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];
         // const body = this.setVertices(paths);
-        const body = Bodies.fromVertices(this._tempVec2.x, this._tempVec2.y + height * 0.5, [paths], { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
+        const body = Bodies.fromVertices(this._tempVec.x, this._tempVec.y + height * 0.5, [paths], { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
         body.inertia = Infinity;
         body.inverseInertia = Infinity;
         body.friction = 0;

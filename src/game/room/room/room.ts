@@ -1,7 +1,6 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
-import { IPoint } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { IPosition45Obj, Position45, IPos, LogicPos, Handler, Logger } from "utils";
 import { Game } from "../../game";
@@ -21,6 +20,7 @@ import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { IScenery, LoadState, SceneName } from "structure";
 import { MatterWorld } from "../physical/matter.world";
 import { AStar } from "../path.finding/astar";
+import { EffectManager } from "../effect/effect.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -32,7 +32,7 @@ export interface IRoomService {
     readonly playerManager: PlayerManager;
     readonly cameraService: ICameraService;
     // readonly layerManager: LayerManager;
-    // readonly effectManager: EffectManager;
+    readonly effectManager: EffectManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
@@ -80,6 +80,10 @@ export interface IRoomService {
 
     findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): IPos[];
 
+    onManagerCreated(key: string);
+
+    onManagerReady(key: string);
+
     destroy();
 }
 
@@ -97,7 +101,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // protected mGroupManager: GroupManager;
     // protected mHandlerManager: HandlerManager;
     protected mSkyboxManager: SkyBoxManager;
-    // protected mEffectManager: EffectManager;
+    protected mEffectManager: EffectManager;
     protected mSize: IPosition45Obj;
     protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
@@ -108,6 +112,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mMatterWorld: MatterWorld;
     protected mAstar: AStar;
     protected mIsLoading: boolean = false;
+    protected mManagersReadyStates: Map<string, boolean> = new Map();
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
@@ -275,7 +280,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public update(time: number, delta: number) {
         if (this.matterWorld) this.matterWorld.update();
         this.updateClock(time, delta);
-        if (this.mBlocks) this.mBlocks.update(time, delta);
+        // if (this.mBlocks) this.mBlocks.update(time, delta);
         // this.mViewBlockManager.update(time, delta);
         // if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mElementManager) this.mElementManager.update(time, delta);
@@ -348,7 +353,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
         this.mMatterWorld = new MatterWorld(this);
-        // this.mEffectManager = new EffectManager(this);
+        this.mEffectManager = new EffectManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
@@ -467,14 +472,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mBlocks) {
             this.mBlocks.destroy();
         }
-        // if (this.mSkyboxManager) this.mSkyboxManager.destroy();
+        if (this.mEffectManager) this.mEffectManager.destroy();
+        if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         // if (this.mWallManager) this.mWallManager.destroy();
         if (this.mActorData) this.mActorData = null;
         if (this.mStateMap) this.mStateMap = null;
         Logger.getInstance().log("room clear");
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
-        // if (this.mEffectManager) this.mEffectManager.destroy();
     }
 
     public move(id: number, x: number, y: number, nodeType: NodeType) {
@@ -545,6 +550,31 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public get isLoading(): boolean {
         return this.mIsLoading;
+    }
+
+    // room创建状态管理
+    public onManagerCreated(key: string) {
+        if (this.mManagersReadyStates.has(key)) return;
+
+        this.mManagersReadyStates.set(key, false);
+    }
+
+    public onManagerReady(key: string) {
+        if (!this.mManagersReadyStates.has(key)) return;
+
+        Logger.getInstance().log("room.onManagerReady ", key);
+
+        this.mManagersReadyStates.set(key, true);
+        let allReady = true;
+        this.mManagersReadyStates.forEach((val) => {
+            if (val === false) {
+                allReady = false;
+            }
+        });
+
+        if (allReady) {
+            this.game.renderPeer.roomReady();
+        }
     }
     //
 
@@ -621,9 +651,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mCameraService || undefined;
     }
 
-    // get effectManager(): EffectManager {
-    //     return this.mEffectManager;
-    // }
+    get effectManager(): EffectManager {
+        return this.mEffectManager;
+    }
 
     get id(): number {
         return this.mID;

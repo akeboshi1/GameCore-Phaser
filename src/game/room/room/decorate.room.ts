@@ -62,6 +62,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.onSpriteEndHandler);
         }
     }
+    onManagerCreated(key: string) {
+
+    }
+    onManagerReady(key: string) {
+
+    }
 
     enter(room: op_client.IScene): void {
         // this.mID = room.id;
