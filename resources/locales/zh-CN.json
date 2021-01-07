@@ -71,8 +71,8 @@
   },
   "timeuint": {
     "day": "天",
-    "hour": "小时",
-    "minutes": "分钟",
+    "hour": "时",
+    "minutes": "分",
     "second": "秒"
   },
   "player_info": {
@@ -370,5 +370,14 @@
     "counttips": "要转换的家具数量不足",
     "raritytips": "稀有家具不能重铸",
     "sametips": "不能重铸为相同的家具"
+  },
+  "roam": {
+    "title": "时空漫游",
+    "timeendtips": "结束倒计时",
+    "timeend": "活动已结束",
+    "previewtex": "奖池预览",
+    "endtips": "{{name}}后免费",
+    "roamlv": "当前漫游等级{{name}}",
+    "resettips": "{{name}}后重置"
   }
 }

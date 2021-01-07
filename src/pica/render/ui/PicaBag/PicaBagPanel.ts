@@ -140,7 +140,8 @@ export class PicaBagPanel extends PicaBasePanel {
     if (!isupdate) {
       this.mSelectedItemData = undefined;
       const cell = this.mPropGrid.getCell(0);
-      this.onSelectItemHandler(cell.container);
+      if (cell.container)
+        this.onSelectItemHandler(cell.container);
     }
   }
 
@@ -696,7 +697,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private onRechargeHandler() {
   }
   private onRecasteHandler() {
-    if (this.mSelectedItemData.rarity===5) {
+    if (this.mSelectedItemData.rarity === 5) {
       const noticedata = {
         text: [{ text: i18n.t("recaste.raritytips"), node: undefined }]
       };

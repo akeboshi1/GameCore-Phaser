@@ -367,5 +367,14 @@
     "counttips": "There is not enough furniture to be converted",
     "raritytips": "Rare furniture cannot be recast",
     "sametips": "Cannot be recast as identical furniture"
+  },
+  "roam": {
+    "title": "ROAM",
+    "timeendtips": "End countdown",
+    "timeend": "The activity is over",
+    "previewtex": "Preview",
+    "endtips": "Free after {{name}}",
+    "roamlv": "Current roaming level{{name}}",
+    "resettips": "Reset after {{name}}"
   }
 }
