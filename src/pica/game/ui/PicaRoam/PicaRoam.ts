@@ -47,6 +47,14 @@ export class PicaRoam extends BasicModel {
         this.connection.send(pkt);
     }
 
+    public query_PROGRESS_REWARD(name: string, index: number) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_PLAYER_PROGRESS_REWARD);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_PLAYER_PROGRESS_REWARD = pkt.content;
+        content.name = name;
+        content.index = index;
+        this.connection.send(pkt);
+    }
+
     private onRetRoamListResult(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_STATUS_RESULT = packet.content;
         this.event.emit(ModuleName.PICAROAM_NAME + "_retquestlist", content.pools);
@@ -54,6 +62,6 @@ export class PicaRoam extends BasicModel {
 
     private onRetRoamDrawResult(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT = packet.content;
-        this.event.emit(ModuleName.PICAROAM_NAME + "_retquestdraw", content.poolUpdate);
+        this.event.emit(ModuleName.PICAROAM_NAME + "_retquestdraw", content);
     }
 }

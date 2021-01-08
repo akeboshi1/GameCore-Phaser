@@ -1,16 +1,18 @@
 import { UiManager } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
-import { Font, Handler, i18n, Url } from "utils";
+import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaRoamListPanel } from "./PicaRoamListPanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaRoamDrawPanel } from "./PicaRoamDrawPanel";
+import { PicaRoamPreviewPanel } from "./PicaRoamPreviewPanel";
 export class PicaRoamPanel extends PicaBasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private content: Phaser.GameObjects.Container;
     private roamListPanel: PicaRoamListPanel;
     private roamDrawPanel: PicaRoamDrawPanel;
+    private roamPreviewPanel: PicaRoamPreviewPanel;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
@@ -66,8 +68,16 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.roamListPanel.setRoamDataList(pools);
     }
 
+    public payDrawHandler(id: string) {
+        this.render.renderEmitter(this.key + "_queryroamdraw", id);
+    }
+
     public setRoamTokenData(money: number, token: number, tokenId: string) {
         if (this.roamDrawPanel) this.roamDrawPanel.setMoneyData(money, token, tokenId);
+    }
+
+    public setRoamDrawResult(poolUpdate: op_client.IDRAW_POOL_STATUS) {
+        if (this.roamDrawPanel) this.roamDrawPanel.setRoamDrawResult(poolUpdate);
     }
 
     private openRoamList() {
@@ -111,6 +121,21 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.roamDrawPanel.visible = false;
     }
 
+    private showRoamPreviewPanel() {
+        if (!this.roamPreviewPanel) {
+            this.roamPreviewPanel = new PicaRoamPreviewPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
+            this.roamPreviewPanel.setHandler(new Handler(this, this.onRoamPreviewHandler));
+        }
+        this.content.add(this.roamPreviewPanel);
+        this.roamPreviewPanel.visible = true;
+        this.roamPreviewPanel.resize(this.scaleWidth, this.scaleHeight);
+    }
+
+    private hideRoamPreviewPanel() {
+        this.content.remove(this.roamPreviewPanel);
+        this.roamPreviewPanel.visible = false;
+    }
+
     private onRoamListHandler(tag: string, data?: any) {
         if (tag === "close") {
             this.onCloseHandler();
@@ -119,12 +144,31 @@ export class PicaRoamPanel extends PicaBasePanel {
         }
     }
 
-    private onRoamDrawHandler(tag: string, data: op_client.IDRAW_POOL_STATUS) {
+    private onRoamDrawHandler(tag: string, data: any) {
         if (tag === "close") {
             this.hideRoamDrawPanel();
             this.showRoamListPanel();
-        } else if (tag === "roam") {
+        } else if (tag === "draw") {
+            this.render.renderEmitter(this.key + "_queryroamdraw", data.id);
+        } else if (tag === "notice") {
+            const tempdata = {
+                text: [{ text: data, node: undefined }]
+            };
+            this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+            return;
+        } else if (tag === "pay") {
+            const content = UIHelper.createMessageBoxConfig(data.text, i18n.t("roam.title"), this.key, "payDrawHandler", [data.id]);
+            this.render.mainPeer.showMediator(ModuleName.PICAMESSAGEBOX_NAME, true, content);
+        } else if (tag === "preview") {
+            this.showRoamPreviewPanel();
+        } else if (tag === "progressrewards") {
+            this.render.renderEmitter(this.key + "_queryprogressrewards",data);
+        }
+    }
 
+    private onRoamPreviewHandler(tag: string, data: any) {
+        if (tag === "close") {
+            this.hideRoamPreviewPanel();
         }
     }
 
