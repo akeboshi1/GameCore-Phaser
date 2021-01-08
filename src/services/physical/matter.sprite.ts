@@ -52,8 +52,10 @@ export class MatterSprite {
         if (!this.animations) this.animations = new Map();
         const tmpList = [];
         anis.forEach((ani: any) => {
-            const model = new MatterAnimationModel(ani);
-            tmpList.push(model);
+            if (ani && ani.mNode) {
+                const model = new MatterAnimationModel(ani);
+                tmpList.push(model);
+            }
         });
         this.setAnimationModelData(tmpList);
         if (!this.currentCollisionArea) {
