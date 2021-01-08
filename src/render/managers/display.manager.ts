@@ -434,6 +434,13 @@ export class DisplayManager {
         this.matterBodies.renderWireframes(bodies);
     }
 
+    public hideMatterDebug() {
+        if (this.matterBodies) {
+            this.matterBodies.destroy();
+            this.matterBodies = undefined;
+        }
+    }
+
     public drawServerPosition(x: number, y: number) {
         if (!this.serverPosition) {
             this.serverPosition = new ServerPosition(this.render);

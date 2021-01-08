@@ -1,4 +1,4 @@
-import { Bodies, Body, Composite, Engine, World } from "matter-js";
+import { Bodies, Body, Composite, Engine, Render, World } from "matter-js";
 import { PhysicalPeer } from "../../services/physical.worker";
 import { ISizeChart } from "structure";
 import { AStar, ChatCommandInterface, IPos, IPosition45Obj, LogicPos, Pos, Position45 } from "utils";
@@ -29,90 +29,14 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
         this.drawWall();
     }
 
+    public clear() {
+        World.clear(this.engine.world, false);
+        Engine.clear(this.engine);
+    }
+
     public initAstar(map: any) {
         this.mAstar.init(map);
     }
-
-    // public createMap(map: any) {
-    //     const size = this.mSize;
-    //     this.map = new Array(size.rows);
-    //     for (let i = 0; i < this.map.length; i++) {
-    //         this.map[i] = new Array(size.cols).fill(-1);
-    //     }
-    // }
-
-    // public addToMap(sprite: any) {
-    //     if (!sprite) {
-    //         return;
-    //     }
-    //     const collision = sprite.getCollisionArea(sprite.currentAnimation.name, sprite.currentAnimation.flip);
-    //     let walkable = sprite.getWalkableArea(sprite.currentAnimation.name, sprite.currentAnimation.flip);
-    //     const origin = sprite.getOriginPoint(sprite.currentAnimation.name, sprite.currentAnimation.flip);
-    //     if (!collision || !walkable) {
-    //         return;
-    //     }
-    //     const rows = collision.length;
-    //     const cols = collision[0].length;
-    //     const pos = Position45.transformTo45(sprite.pos, this.mMiniSize);
-    //     if (!walkable) {
-    //         walkable = new Array(rows);
-    //         for (let i = 0; i < rows; i++) {
-    //             walkable[i] = new Array(cols).fill(0);
-    //         }
-    //     }
-    //     let row = 0;
-    //     let col = 0;
-    //     for (let i = 0; i < rows; i++) {
-    //         row = pos.y + i - origin.y;
-    //         for (let j = 0; j < cols; j++) {
-    //             if (collision[i][j] === 1) {
-    //                 col = pos.x + j - origin.x;
-    //                 if (row >= 0 && row < this.map.length && col >= 0 && col < this.map[row].length) {
-    //                     if (walkable[i] === undefined || walkable[i][j] === undefined) {
-    //                         this.map[row][col] = 0;
-    //                     } else {
-    //                         this.map[row][col] = walkable[i][j];
-    //                     }
-    //                     this.setElementWalkable(row, col, this.map[row][col] === 1);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // public removeFromMap(sprite: any) {
-    //     if (!sprite) return;
-    //     const collision = sprite.getCollisionArea(sprite.currentAnimation.name, sprite.currentAnimation.flip);
-    //     if (!collision) return;
-    //     let walkable = sprite.getWalkableArea(sprite.currentAnimation.name, sprite.currentAnimation.flip);
-    //     if (!walkable) {
-    //         return;
-    //     }
-    //     const origin = sprite.getOriginPoint(sprite.currentAnimation.name, sprite.currentAnimation.flip);
-    //     const rows = collision.length;
-    //     const cols = collision[0].length;
-    //     const pos = Position45.transformTo45(sprite.pos, this.mMiniSize);
-    //     if (!walkable) {
-    //         walkable = new Array(rows);
-    //         for (let i = 0; i < rows; i++) {
-    //             walkable[i] = new Array(cols).fill(0);
-    //         }
-    //     }
-    //     let row = 0;
-    //     let col = 0;
-    //     for (let i = 0; i < rows; i++) {
-    //         row = pos.y + i - origin.y;
-    //         for (let j = 0; j < cols; j++) {
-    //             if (collision[i][j] === 1) {
-    //                 col = pos.x + j - origin.x;
-    //                 if (row >= 0 && row < this.map.length && col >= 0 && col < this.map[row].length) {
-    //                     this.map[row][col] = 0;
-    //                     this.setElementWalkable(row, col, true);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     public setElementWalkable(x: number, y: number, val: boolean) {
         this.mAstar.setWalkableAt(y, x, val);
@@ -218,7 +142,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
 
     public debugDisable() {
         this.drawBodies = false;
-        this.peer.mainPeer.showMatterDebug();
+        this.peer.render.hideMatterDebug();
     }
 
     public add(body: Body | Body[], ignoreSensor: boolean = false, ele?: MatterObject) {

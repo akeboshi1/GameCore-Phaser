@@ -104,11 +104,27 @@ export class PhysicalPeer extends RPCPeer {
 
     @Export()
     public createMatterWorld() {
-        if (!this.matterWorld) {
-            this.matterWorld = new MatterWorld(this);
-        }
+        // if (this.matterWorld) {
+        //     this.matterWorld.debugDisable();
+        //     this.matterWorld.clear();
+        //     this.matterWorld = undefined;
+        // }
+        if (!this.matterWorld) this.matterWorld = new MatterWorld(this);
         this.exportProperty(this.matterWorld, this).onceReady(() => {
         });
+    }
+
+    @Export()
+    public destroyMatterWorld() {
+        if (this.matterWorld) {
+            if (this.matterWorld.matterUser) {
+                const id = this.matterWorld.matterUser.id;
+                this.matterObjectMap.delete(id);
+            }
+            this.matterWorld.debugDisable();
+            this.matterWorld.clear();
+            this.matterWorld = undefined;
+        }
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
@@ -151,12 +167,12 @@ export class PhysicalPeer extends RPCPeer {
 
     @Export()
     public startMove() {
-        this.matterWorld.matterUser.startMove();
+        if (this.matterWorld.matterUser) this.matterWorld.matterUser.startMove();
     }
 
     @Export()
     public stopMove() {
-        this.matterWorld.matterUser.tryStopMove();
+        if (this.matterWorld.matterUser) this.matterWorld.matterUser.tryStopMove();
     }
 
     @Export()

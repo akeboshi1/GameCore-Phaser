@@ -1073,6 +1073,11 @@ export class Render extends RPCPeer implements GameMain {
         if (this.mDisplayManager) this.mDisplayManager.showMatterDebug(vertices);
     }
 
+    @Export()
+    public hideMatterDebug() {
+        if (this.mDisplayManager) this.mDisplayManager.hideMatterDebug();
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public drawServerPosition(x: number, y: number) {
         if (this.mDisplayManager) this.mDisplayManager.drawServerPosition(x, y);

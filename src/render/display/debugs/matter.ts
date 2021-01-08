@@ -5,12 +5,13 @@ export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
     constructor(private render: Render) {
         const scene = this.render.sceneManager.getSceneByName(PlayScene.name);
-        this.mGraphics =  scene.make.graphics(undefined, false);
+        if (!scene) return;
+        this.mGraphics = scene.make.graphics(undefined, false);
         (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.mGraphics);
     }
 
     update() {
-        this.mGraphics.clear();
+        if (this.mGraphics) this.mGraphics.clear();
     }
 
     renderWireframes(bodies) {
