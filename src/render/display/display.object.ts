@@ -5,6 +5,7 @@ import { Render } from "../render";
 import { RunningAnimation, IDragonbonesModel, IFramesModel, ElementStateType } from "structure";
 import { ElementTopDisplay } from "./element.top.display";
 import { LoadQueue } from "../loadqueue";
+import { IProjection } from "src/utils/projection";
 
 export enum DisplayField {
     BACKEND = 0,
@@ -83,7 +84,7 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
     protected mProgress: number;
     protected mInitialized: boolean = false;
     protected mCallBack: Function;
-    protected mProjectionSize: IPos;
+    protected mProjectionSize: IProjection;
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<
         DisplayField,
         Phaser.GameObjects.Sprite | Phaser.GameObjects.Image
@@ -526,7 +527,6 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
         if (typeof param !== "number") {
             return this.mDirection;
         }
-        Logger.getInstance().log("dir:====", param);
         this.renderSetDirection(param);
     }
 
@@ -544,11 +544,11 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
     }
 
     get sortX(): number {
-        return this.x;
+        return (this.x - this.projectionSize.offset.x) / (2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / Math.sin(45 * Math.PI / 180) + this.z;
     }
 
     get sortY(): number {
-        return this.y;
+        return -((this.x - this.projectionSize.offset.x) / 2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / (2 * Math.sin(45 * Math.PI / 180));
     }
 
     get sortZ(): number {
@@ -563,9 +563,9 @@ export class DisplayObject extends Phaser.GameObjects.Container implements IDisp
         return this.mOriginPoint;
     }
 
-    get projectionSize(): IPos {
+    get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = { x: 0, y: 0 };
+            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
         }
         return this.mProjectionSize;
     }
