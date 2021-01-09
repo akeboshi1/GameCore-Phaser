@@ -107,6 +107,7 @@ export class PicaTreasurePanel extends BasePanel {
         if (!this.treasureOpenPanel) {
             this.treasureOpenPanel = new PicaTreasureOpenPanel(this.scene, wid, hei, this.key, this.dpr, this.scale);
             this.treasureOpenPanel.setHandler(new Handler(this, this.OnCloseHandler));
+            this.treasureOpenPanel.y = -20 * this.dpr;
         }
         this.content.add(this.treasureOpenPanel);
         this.treasureOpenPanel.resize(wid, hei);
@@ -124,6 +125,7 @@ export class PicaTreasurePanel extends BasePanel {
         if (!this.treasureAllOpenPanel) {
             this.treasureAllOpenPanel = new PicaTreasureAllOpenPanel(this.scene, wid, hei, this.key, this.dpr, this.scale);
             this.treasureAllOpenPanel.setHandler(new Handler(this, this.OnCloseHandler));
+            this.treasureAllOpenPanel.y = -20 * this.dpr;
         }
         this.content.add(this.treasureAllOpenPanel);
         this.treasureAllOpenPanel.resize(wid, hei);

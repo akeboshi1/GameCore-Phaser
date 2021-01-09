@@ -5,6 +5,7 @@ import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 export class PicaRoamMediator extends BasicMediator {
     protected mModel: PicaRoam;
     protected curMoneyData: any;
+    protected poolsData: op_client.IDRAW_POOL_STATUS[];
     constructor(game: Game) {
         super(ModuleName.PICAROAM_NAME, game);
         this.mModel = new PicaRoam(game);
@@ -19,6 +20,7 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_retquestlist", this.onRetRoamListResult, this);
         this.game.emitter.on(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
         this.game.emitter.on(this.key + "_updatetoken", this.updateTokenData, this);
+        this.game.emitter.on(this.key + "_updatepools", this.updatePoolsData, this);
         this.game.emitter.on(this.key + "_hide", this.hide, this);
     }
 
@@ -29,6 +31,7 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_retquestlist", this.onRetRoamListResult, this);
         this.game.emitter.off(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
         this.game.emitter.off(this.key + "_updatetoken", this.updateTokenData, this);
+        this.game.emitter.off(this.key + "_updatepools", this.updatePoolsData, this);
         this.game.emitter.off(this.key + "_hide", this.hide, this);
         super.hide();
     }
@@ -70,14 +73,24 @@ export class PicaRoamMediator extends BasicMediator {
     }
 
     private onRetRoamListResult(pools: op_client.IDRAW_POOL_STATUS[]) {
+        this.poolsData = pools;
         this.updateServiceTime(pools);
         if (this.mView) this.mView.setRoamDataList(pools);
     }
 
     private onRetRoamDrawResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT) {
+        for (const data of this.poolsData) {
+            if (data.id === content.poolUpdate.id) {
+                Object.assign(data, content.poolUpdate);
+            }
+        }
         this.updateServiceTime([content.poolUpdate]);
         if (this.mView) this.mView.setRoamDrawResult(content.poolUpdate);
         this.onRetDrawHandler(content.rewards);
+    }
+
+    private updatePoolsData() {
+        if (this.poolsData) this.onRetRoamListResult(this.poolsData);
     }
 
     private updateTokenData(data: { tokenId: string, alterId: string }) {
@@ -95,11 +108,27 @@ export class PicaRoamMediator extends BasicMediator {
         const tag = reward.length === 1 ? "open" : "roamdraw";
         uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: reward, type: tag });
     }
-
     private updateServiceTime(pools: op_client.IDRAW_POOL_STATUS[]) {
+
         const unixTime = this.game.clock.unixTime;
         for (const data of pools) {
             data["unixTime"] = unixTime;
+            if (data.nextFreeTime !== undefined) {
+                if (data.nextFreeTime * 1000 < unixTime) {
+                    data["free"] = true;
+                } else {
+                    data["free"] = false;
+                }
+            } else {
+                data["free"] = false;
+            }
+            if (data.tokenId === "IV0000002") {
+                data["diamond"] = true;
+                data["free"] = false;
+            } else {
+                data["diamond"] = false;
+            }
+
         }
     }
     get userData() {

@@ -75,7 +75,7 @@ export class ImageValue extends Phaser.GameObjects.Container {
             fontSize: 11 * this.dpr,
             color: "#ffffff",
         };
-        this.value = this.scene.make.text({ x: 0, y: 0, text: "10", style });
+        this.value = this.scene.make.text({ x: 0, y: 0, text: "0", style });
         this.value.setOrigin(0, 0.5);
         const width = this.icon.displayWidth + this.value.width;
         this.setSize(width, this.height);

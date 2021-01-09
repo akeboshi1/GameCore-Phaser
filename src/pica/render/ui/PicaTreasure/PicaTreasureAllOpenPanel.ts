@@ -110,15 +110,17 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
         this.treasureData = datas;
         const tempdatas = this.getNextDatas();
         const group = this.createLayoutGroup(tempdatas);
+        const offsety = (group.height - this.maskHeight) * 0.5;
         this.setLayoutPanel(group.width, group.height);
         this.playAnimation();
-        const offsety = 160 * this.dpr+(group.height - this.maskHeight) * 0.5;
-        this.playItemTween(group,  offsety, 620);
+        const from = 280 * this.dpr + offsety;
+        group.y = from;
+        this.playItemTween(group, from, offsety, 620);
         this.curLayoutGroup = group;
     }
 
     private setLayoutPanel(width: number, height: number) {
-        const maskW = this.width, maskH = height;
+        const maskW = this.width, maskH = height + 40 * this.dpr;
         this.maskGraphic.clear();
         this.maskGraphic.fillStyle(0);
         this.maskGraphic.fillRect(-maskW * 0.5 * this.zoom, -maskH * 0.5 * this.zoom, maskW * this.zoom, maskH * this.zoom);
@@ -162,12 +164,12 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
         });
         this.tweens.push(buttonTween);
     }
-    private playItemTween(gameobjet: RewardLayoutGroup, from: number, delay: number) {
+    private playItemTween(gameobjet: RewardLayoutGroup, from: number, to: number, delay: number) {
         const tweenIn = this.scene.tweens.add({
             targets: gameobjet,
             y: {
                 from,
-                to: 0
+                to
             },
             ease: "Back.easeOut",
             duration: 300,
@@ -235,8 +237,10 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
         const datas = this.getNextDatas();
         if (datas) {
             const group = this.createLayoutGroup(datas);
-            const offsety = 160 * this.dpr + (group.height - this.height) * 0.5;
-            this.playItemTween(group, offsety, 200);
+            const offsety = (group.height - this.maskHeight) * 0.5;
+            const from = 280 * this.dpr + offsety;
+            group.y = from;
+            this.playItemTween(group, from, offsety, 200);
             this.curLayoutGroup = group;
         } else {
             if (this.closeHandler) this.closeHandler.run();

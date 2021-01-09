@@ -92,6 +92,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.content.add(this.roamListPanel);
         this.roamListPanel.visible = true;
         this.roamListPanel.resize(this.scaleWidth, this.scaleHeight);
+        this.render.renderEmitter(this.key + "_updatepools");
     }
     private hideRoamListPanel() {
         this.content.remove(this.roamListPanel);
@@ -162,7 +163,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         } else if (tag === "preview") {
             this.showRoamPreviewPanel();
         } else if (tag === "progressrewards") {
-            this.render.renderEmitter(this.key + "_queryprogressrewards",data);
+            this.render.renderEmitter(this.key + "_queryprogressrewards", data);
         }
     }
 
