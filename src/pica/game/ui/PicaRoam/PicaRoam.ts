@@ -15,7 +15,7 @@ export class PicaRoam extends BasicModel {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_STATUS_RESULT, this.onRetRoamListResult);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT, this.onRetRoamDrawResult);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS, this.on_Draw_PROGRESS);
+           // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS, this.on_Draw_PROGRESS);
         }
     }
 
