@@ -229,7 +229,9 @@
   "coin": {
     "coin": "coin",
     "diamond": "diamond",
-    "gold_coin": "gold"
+    "gold_coin": "gold",
+    "silver": "silver",
+    "gold": "gold"
   },
   "create_role": {
     "enter_nick": "Please input your nickname",
@@ -375,6 +377,10 @@
     "previewtex": "Preview",
     "endtips": "Free after {{name}}",
     "roamlv": "Current roaming level{{name}}",
-    "resettips": "Reset after {{name}}"
+    "resettips": "Reset after {{name}}",
+    "bottomtips": "Earn Picarstar X1 per roam, plus a random bonus.",
+    "moneytips": "You don't have enough {{name}} roaming!",
+    "paytips": "Do you want to spend {{name}} to buy {{count}} for {{tag}} tickets?",
+    "drawfreetips": "This draw is free of charge"
   }
 }

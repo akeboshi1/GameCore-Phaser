@@ -1,11 +1,10 @@
 
 import { op_client } from "pixelpai_proto";
 import { ClickEvent, Button } from "apowophaserui";
-import { MaterialItem } from "gamecoreRender";
 import { Font, Handler, i18n, UIHelper } from "utils";
 import { UIAtlasName } from "picaRes";
 import { ItemButton } from "../Components";
-export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
+export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
     private confirmBtn: Button;
     private titleimage: Phaser.GameObjects.Image;
     private pageCount: Phaser.GameObjects.Text;
@@ -59,14 +58,15 @@ export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
             style: { color: "#FFE400", fontFamily: Font.DEFULT_FONT, fontSize: 16 * this.dpr }
         }).setOrigin(0.5).setFontStyle("bold");
         this.pageCount.visible = false;
-        this.add([titlebgline, this.titleimage, this.pageCount]);
+        this.add([titlebgline, this.titleimage]);
+
         this.lightSprite = this.createSprite(UIAtlasName.circleeffect, this.lightAniKey, "", [1, 16]);
         this.lightSprite.x = 5 * this.dpr;
         this.add(this.lightSprite);
         this.starSprite = this.createSprite(UIAtlasName.stareffect, this.starAniKey, "star", [1, 18], 10, -1);
         this.add(this.starSprite);
         this.starSprite.x = this.lightSprite.y;
-        const maskW = this.maskWidth = this.width, maskH = this.maskHeight = 180 * this.dpr;
+        const maskW = this.maskWidth = this.width, maskH = this.maskHeight = 200 * this.dpr;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(maskW, maskH);
         this.add(this.content);
@@ -81,7 +81,7 @@ export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
             x: 0, y: -posY - 45 * this.dpr, text: i18n.t("treasure.pagedown"),
             style: { color: "#96F7FF", fontFamily: Font.DEFULT_FONT, fontSize: 12 * this.dpr }
         }).setOrigin(0.5);
-        this.add(this.pagedown);
+        // this.add(this.pagedown);
         this.pagedown.visible = false;
         this.confirmBtn = new Button(this.scene, this.key, "butt", "butt", i18n.t("common.confirm"));
         this.confirmBtn.y = -posY - 8 * this.dpr;
@@ -110,10 +110,24 @@ export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
         this.treasureData = datas;
         const tempdatas = this.getNextDatas();
         const group = this.createLayoutGroup(tempdatas);
+        const offsety = (group.height - this.maskHeight) * 0.5;
+        this.setLayoutPanel(group.width, group.height);
         this.playAnimation();
-        const offsety = 160 * this.dpr + (group.height - this.maskHeight) * 0.5;
-        this.playItemTween(group, offsety, 620);
+        const from = 280 * this.dpr + offsety;
+        group.y = from;
+        this.playItemTween(group, from, offsety, 620);
         this.curLayoutGroup = group;
+    }
+
+    private setLayoutPanel(width: number, height: number) {
+        const maskW = this.width, maskH = height + 40 * this.dpr;
+        this.maskGraphic.clear();
+        this.maskGraphic.fillStyle(0);
+        this.maskGraphic.fillRect(-maskW * 0.5 * this.zoom, -maskH * 0.5 * this.zoom, maskW * this.zoom, maskH * this.zoom);
+        const worldpos = this.getWorldTransformMatrix();
+        const offsety = (height - this.maskHeight) * 0.5;
+        this.maskGraphic.setPosition(worldpos.tx, worldpos.ty + offsety);
+        this.confirmBtn.y = this.height * 0.5 + 38 * this.dpr + offsety;
     }
 
     private playAnimation() {
@@ -150,12 +164,12 @@ export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
         });
         this.tweens.push(buttonTween);
     }
-    private playItemTween(gameobjet: RewardLayoutGroup, from: number, delay: number) {
+    private playItemTween(gameobjet: RewardLayoutGroup, from: number, to: number, delay: number) {
         const tweenIn = this.scene.tweens.add({
             targets: gameobjet,
             y: {
                 from,
-                to: 0
+                to
             },
             ease: "Back.easeOut",
             duration: 300,
@@ -200,7 +214,7 @@ export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
         const datas: any[] = this.treasureData;
         if (this.indexed >= datas.length) return undefined;
         const start = this.indexed;
-        const end = datas.length >= start + 6 ? start + 6 : datas.length;
+        const end = datas.length;
         this.indexed = end;
         return datas.slice(start, end);
 
@@ -223,8 +237,10 @@ export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
         const datas = this.getNextDatas();
         if (datas) {
             const group = this.createLayoutGroup(datas);
-            const offsety = 160 * this.dpr + (group.height - this.height) * 0.5;
-            this.playItemTween(group, offsety, 200);
+            const offsety = (group.height - this.maskHeight) * 0.5;
+            const from = 280 * this.dpr + offsety;
+            group.y = from;
+            this.playItemTween(group, from, offsety, 200);
             this.curLayoutGroup = group;
         } else {
             if (this.closeHandler) this.closeHandler.run();
@@ -259,6 +275,7 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
         const cell = <ItemButton>list[0];
         const len = list.length;
         const cellwidth = cell.width, cellHeight = cell.height;
+        let tempWidth: number = 0, tempHeight: number = 0;
         if (len <= 3) {
             const space = len === 2 ? 20 * this.dpr : 10 * this.dpr;
             const width = len * cellwidth + space * (len - 1);
@@ -300,6 +317,31 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
                     item.y = -height * 0.5 + (cellHeight + spaceH) * i + cellHeight * 0.5;
                 }
             }
+        } else {
+            const spaceW = 10 * this.dpr, spaceH = 10 * this.dpr;
+            const hcount = 4;
+            const roundlen = Math.floor(list.length / hcount);
+            const remainder = list.length % hcount;
+            const width = hcount * cellwidth + spaceW * (hcount - 1);
+            const heightLen = roundlen + (remainder === 0 ? 0 : 1);
+            const height = heightLen * cellHeight + spaceH * (heightLen - 1);
+            for (let i = 0; i < roundlen; i++) {
+                for (let j = 0; j < hcount; j++) {
+                    const item = <ItemButton>(list[i * hcount + j]);
+                    item.x = -width * 0.5 + (cellwidth + spaceW) * j + cellwidth * 0.5;
+                    item.y = -height * 0.5 + (cellHeight + spaceH) * i + cellHeight * 0.5;
+                }
+            }
+            const remaWdith = remainder * cellwidth + spaceW * (remainder - 1);
+            for (let j = 0; j < remainder; j++) {
+                const item = <ItemButton>(list[j + roundlen * hcount]);
+                item.x = -remaWdith * 0.5 + cellwidth * 0.5 + (cellwidth + spaceW) * j;
+                item.y = height * 0.5 - cellHeight * 0.5;
+            }
+            tempWidth = width;
+            tempHeight = height;
+            if (this.width < tempWidth) this.width = tempWidth;
+            if (this.height < tempHeight) this.height = tempHeight;
         }
     }
 }
