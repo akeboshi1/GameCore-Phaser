@@ -41,7 +41,12 @@ export class PicaTreasurePanel extends BasePanel {
         this.addAtlas(UIAtlasKey.common3Key, UIAtlasName.textureUrl(UIAtlasName.common3Url), UIAtlasName.jsonUrl(UIAtlasName.common3Url));
         super.preload();
     }
-
+    public destroy() {
+        super.destroy();
+        if (this.previewPanel) this.previewPanel.destroy();
+        if (this.treasureOpenPanel) this.treasureOpenPanel.destroy();
+        if (this.treasureAllOpenPanel) this.treasureAllOpenPanel.destroy();
+    }
     init() {
         const width = this.cameraWidth;
         const height = this.cameraHeight;

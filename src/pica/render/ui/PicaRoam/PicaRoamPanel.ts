@@ -42,6 +42,13 @@ export class PicaRoamPanel extends PicaBasePanel {
 
     }
 
+    public destroy() {
+        super.destroy();
+        if (this.roamListPanel) this.roamListPanel.destroy();
+        if (this.roamDrawPanel) this.roamDrawPanel.destroy();
+        if (this.roamPreviewPanel) this.roamPreviewPanel.destroy();
+    }
+
     init() {
         this.mBackground = this.scene.make.graphics(undefined, false);
         //   this.mBackground.on("pointerup", this.OnClosePanel, this);

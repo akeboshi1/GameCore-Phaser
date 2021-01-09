@@ -336,7 +336,7 @@ class ProgressItem extends Phaser.GameObjects.Container {
 
     public destroy() {
         super.destroy();
-        this.imgMask.destroy();
+        this.imgMask.destroy(true);
     }
     refreshMask() {
         const world = this.getWorldTransformMatrix();

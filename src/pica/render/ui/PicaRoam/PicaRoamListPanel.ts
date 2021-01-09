@@ -127,6 +127,7 @@ class RoamItem extends Phaser.GameObjects.Container {
     private timebg: NineSlicePatch;
     private timetips: Phaser.GameObjects.Text;
     private timeTex: BBCodeText;
+    private timer: any;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -190,8 +191,12 @@ class RoamItem extends Phaser.GameObjects.Container {
     }
 
     private loopTimeOut(time: number) {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = undefined;
+        }
         const excute = () => {
-            setTimeout(() => {
+            this.timer = setTimeout(() => {
                 if (!this.scene) return;
                 time -= 60000;
                 if (time < 0) time = 0;
