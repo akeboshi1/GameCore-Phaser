@@ -7,6 +7,7 @@ import {LoadQueue, LoadType} from "../../loadqueue";
 import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
+import { IProjection } from "src/utils/projection";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
@@ -18,7 +19,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     private mLoadQueue: LoadQueue;
     private mLoadPromise: ValueResolver<boolean> = null;
-    private mProjectionSize: IPos;
+    private mProjectionSize: IProjection;
     private mName: string = undefined;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
@@ -147,9 +148,9 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.render.renderEmitter("dragonBones_initialized");
     }
 
-    public get projectionSize(): IPos {
+    public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = {x: 0, y: 0};
+            this.mProjectionSize = {offset: { x: 0, y: 0 }, width: 0, height: 0};
         }
         return this.mProjectionSize;
     }
@@ -238,5 +239,13 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected checkShowNickname(): boolean {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
+    }
+
+    get sortX() {
+        return (this.x - this.projectionSize.offset.x) / (2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / Math.sin(45 * Math.PI / 180) + this.z;
+    }
+
+    get sortY() {
+        return -((this.x - this.projectionSize.offset.x) / 2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / (2 * Math.sin(45 * Math.PI / 180));
     }
 }

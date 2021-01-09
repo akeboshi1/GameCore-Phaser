@@ -6,7 +6,7 @@ import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
-import { DisplayObject } from "../display";
+import { IDisplayObject } from "../display";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
@@ -198,7 +198,7 @@ class SurfaceLayer extends BasicLayer {
 }
 
 class SortUtils {
-    private objs: DisplayObject[];
+    private objs: IDisplayObject[];
     constructor() {
         this.objs = [];
     }
@@ -229,16 +229,15 @@ class SortUtils {
           }
     }
 
-    private isBehind(obj1: DisplayObject, obj2: DisplayObject): boolean {
+    private isBehind(obj1: IDisplayObject, obj2: IDisplayObject): boolean {
         const projection = obj1.projectionSize;
         const result = (obj1.sortX + projection.width <= obj2.sortX || obj1.sortY + projection.height <= obj2.sortY);
         return this.block_projection_overlap(obj1, obj2) && result;
     }
 
-    private block_projection_overlap(obj1: DisplayObject, obj2: DisplayObject) {
+    private block_projection_overlap(obj1: IDisplayObject, obj2: IDisplayObject) {
         function interval_overlap(a1,a2,b1,b2) {
             const result = a1>=b1&&a1<b2 || b1>=a1&&b1<a2;
-            Logger.getInstance().log("result: ", result);
             return result;
         }
 

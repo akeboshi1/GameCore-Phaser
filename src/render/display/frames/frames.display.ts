@@ -7,6 +7,7 @@ import {IPos, Logger} from "utils";
 import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
+import { IProjection } from "src/utils/projection";
 
 /**
  * 序列帧显示对象
@@ -21,7 +22,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mMovement: DisplayMovement;
     protected mMountContainer: Phaser.GameObjects.Container;
 
-    private mProjectionSize: IPos;
+    private mProjectionSize: IProjection;
     private mName: string = undefined;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
@@ -133,9 +134,9 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.render.mainPeer.elementDisplayReady(this.id);
     }
 
-    public get projectionSize(): IPos {
+    public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = {x: 0, y: 0};
+            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
         }
         return this.mProjectionSize;
     }
@@ -312,5 +313,13 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     private getMaskValue(mask: number, idx: number): boolean {
         return ((mask >> idx) % 2) === 1;
+    }
+
+    get sortX() {
+        return (this.x - this.projectionSize.offset.x) / (2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / Math.sin(45 * Math.PI / 180) + this.z;
+    }
+
+    get sortY() {
+        return -((this.x - this.projectionSize.offset.x) / 2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / (2 * Math.sin(45 * Math.PI / 180));
     }
 }

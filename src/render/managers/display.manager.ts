@@ -380,10 +380,10 @@ export class DisplayManager {
     }
 
     public drawServerPosition(x: number, y: number) {
-        if (!this.serverPosition) {
-            this.serverPosition = new ServerPosition(this.render);
-        }
-        this.serverPosition.draw(x, y);
+        // if (!this.serverPosition) {
+        //     this.serverPosition = new ServerPosition(this.render);
+        // }
+        // this.serverPosition.draw(x, y);
     }
 
     public destroy() {
