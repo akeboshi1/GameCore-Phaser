@@ -21,6 +21,7 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
         this.game.emitter.on(this.key + "_updatetoken", this.updateTokenData, this);
         this.game.emitter.on(this.key + "_updatepools", this.updatePoolsData, this);
+        this.game.emitter.on(this.key + "_retprogresslist", this.onRetDrawProgress, this);
         this.game.emitter.on(this.key + "_hide", this.hide, this);
     }
 
@@ -32,6 +33,7 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
         this.game.emitter.off(this.key + "_updatetoken", this.updateTokenData, this);
         this.game.emitter.off(this.key + "_updatepools", this.updatePoolsData, this);
+        this.game.emitter.off(this.key + "_retprogresslist", this.onRetDrawProgress, this);
         this.game.emitter.off(this.key + "_hide", this.hide, this);
         super.hide();
     }
@@ -69,7 +71,7 @@ export class PicaRoamMediator extends BasicMediator {
     }
 
     private query_PROGRESS_REWARD(index: number) {
-        this.mModel.query_PROGRESS_REWARD("draw_SETTING0160001_CP0000002", index);
+        this.mModel.query_PROGRESS_REWARD("draw_SETTING0160001_CP0000002", index - 1);
     }
 
     private onRetRoamListResult(pools: op_client.IDRAW_POOL_STATUS[]) {
@@ -107,6 +109,24 @@ export class PicaRoamMediator extends BasicMediator {
         const uimgr = this.game.uiManager;
         const tag = reward.length === 1 ? "open" : "roamdraw";
         uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: reward, type: tag });
+    }
+
+    private onRetDrawProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
+        const tokenId = this.curMoneyData.tokenId;
+        let tempData;
+        for (const data of this.poolsData) {
+            if (data.tokenId === tokenId && data.drawTime !== 1) {
+                data.progressAward = content.steps;
+                data.progress = content.currentProgressValue;
+                tempData = data;
+            }
+        }
+        if (tempData) {
+            this.updateServiceTime([tempData]);
+            if (this.mView) this.mView.setRoamDrawResult(tempData);
+            this.onRetDrawHandler(tempData);
+        }
+
     }
     private updateServiceTime(pools: op_client.IDRAW_POOL_STATUS[]) {
 
