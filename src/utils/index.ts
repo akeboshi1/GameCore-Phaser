@@ -23,3 +23,4 @@ export { Color } from "./Color";
 export * from "./copy.prototype";
 export * from "./promise";
 export * from "./chat.command";
+export * from "./time.utils";

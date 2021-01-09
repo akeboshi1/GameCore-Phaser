@@ -1,5 +1,5 @@
 import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
-import { AtlasManager } from "picaRes";
+import { AtlasData, AtlasManager, UILoadType } from "picaRes";
 import { PicaSingleManager } from "./SinglePanel/PicaSingleManager";
 export class PicaRenderUiManager extends UiManager {
     protected mAtalsManager: AtlasManager;
@@ -11,8 +11,8 @@ export class PicaRenderUiManager extends UiManager {
         this.mAtalsManager.init(mRender);
     }
 
-    public getAtlas(atlas: string[]) {
-        return this.mAtalsManager.getAtalsArr(atlas);
+    public getUrlDatas(atlas: Array<string | AtlasData>, loadType: UILoadType = UILoadType.atlas) {
+        return this.mAtalsManager.getUrlDatas(atlas, loadType);
     }
 
     public showAlertView(text: string, ok: boolean, cancel: boolean = false, callBack?: Function) {

@@ -2,12 +2,14 @@ import { BasePanel, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Handler } from "utils";
-import { PicTreasureOpenPanel } from "./PicaTreasureOpenPanel";
+import { PicaTreasureAllOpenPanel } from "./PicaTreasureAllOpenPanel";
+import { PicaTreasureOpenPanel } from "./PicaTreasureOpenPanel";
 import { PicaTreasurePreviewPanel } from "./PicaTreasurePreviewPanel";
 export class PicaTreasurePanel extends BasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private previewPanel: PicaTreasurePreviewPanel;
-    private treasureOpenPanel: PicTreasureOpenPanel;
+    private treasureOpenPanel: PicaTreasureOpenPanel;
+    private treasureAllOpenPanel: PicaTreasureAllOpenPanel;
     private content: Phaser.GameObjects.Container;
     private trasureData: any;
     constructor(private uiManager: UiManager) {
@@ -39,7 +41,12 @@ export class PicaTreasurePanel extends BasePanel {
         this.addAtlas(UIAtlasKey.common3Key, UIAtlasName.textureUrl(UIAtlasName.common3Url), UIAtlasName.jsonUrl(UIAtlasName.common3Url));
         super.preload();
     }
-
+    public destroy() {
+        super.destroy();
+        if (this.previewPanel) this.previewPanel.destroy();
+        if (this.treasureOpenPanel) this.treasureOpenPanel.destroy();
+        if (this.treasureAllOpenPanel) this.treasureAllOpenPanel.destroy();
+    }
     init() {
         const width = this.cameraWidth;
         const height = this.cameraHeight;
@@ -60,6 +67,10 @@ export class PicaTreasurePanel extends BasePanel {
             this.setPreviewData(data.data);
         } else if (data.type === "open") {
             this.setTreasureOpenData(data.data);
+        } else if (data.type === "roamdraw") {
+            this.setTreasureAllOpenData(data.data);
+        } else {
+            this.setPreviewData(data.data);
         }
     }
 
@@ -70,6 +81,10 @@ export class PicaTreasurePanel extends BasePanel {
     setTreasureOpenData(datas: any[]) {
         this.openTreasureOpenPanel();
         this.treasureOpenPanel.setTreasureData(datas);
+    }
+    setTreasureAllOpenData(datas: any[]) {
+        this.openTreasureAllOpenPanel();
+        this.treasureAllOpenPanel.setTreasureData(datas);
     }
     openPreviewPanel() {
         const wid = 334 * this.dpr;
@@ -92,11 +107,12 @@ export class PicaTreasurePanel extends BasePanel {
     }
 
     openTreasureOpenPanel() {
-        const wid = 295 * this.dpr;
-        const hei = 301 * this.dpr;
+        const wid = this.width;
+        const hei = 310 * this.dpr;
         if (!this.treasureOpenPanel) {
-            this.treasureOpenPanel = new PicTreasureOpenPanel(this.scene, wid, hei, this.key, this.dpr, this.scale);
+            this.treasureOpenPanel = new PicaTreasureOpenPanel(this.scene, wid, hei, this.key, this.dpr, this.scale);
             this.treasureOpenPanel.setHandler(new Handler(this, this.OnCloseHandler));
+            this.treasureOpenPanel.y = -20 * this.dpr;
         }
         this.content.add(this.treasureOpenPanel);
         this.treasureOpenPanel.resize(wid, hei);
@@ -106,6 +122,24 @@ export class PicaTreasurePanel extends BasePanel {
     hideOpenPanel() {
         this.content.remove(this.treasureOpenPanel);
         this.treasureOpenPanel.removeListen();
+    }
+
+    openTreasureAllOpenPanel() {
+        const wid = this.width;
+        const hei = 320 * this.dpr;
+        if (!this.treasureAllOpenPanel) {
+            this.treasureAllOpenPanel = new PicaTreasureAllOpenPanel(this.scene, wid, hei, this.key, this.dpr, this.scale);
+            this.treasureAllOpenPanel.setHandler(new Handler(this, this.OnCloseHandler));
+            this.treasureAllOpenPanel.y = -20 * this.dpr;
+        }
+        this.content.add(this.treasureAllOpenPanel);
+        this.treasureAllOpenPanel.resize(wid, hei);
+        this.treasureAllOpenPanel.addListen();
+    }
+
+    hideAllOpenPanel() {
+        this.content.remove(this.treasureAllOpenPanel);
+        this.treasureAllOpenPanel.removeListen();
     }
     private OnCloseHandler() {
         this.render.renderEmitter(this.key + "_close");

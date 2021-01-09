@@ -431,5 +431,34 @@ export class UIHelper {
         }, this);
         return sprite;
     }
+
+    public static createMessageBoxConfig(context: string, titleStr: string, key: string, funName: string, data: any) {
+        const content = {
+            text: [{
+                text: context
+            }],
+            title: [{
+                text: titleStr
+            }],
+            button: [
+                {
+                    text: i18n.t("common.cancel"),
+                    local: true,
+                    param: 0
+                },
+                {
+                    text: i18n.t("common.confirm"),
+                    local: true,
+                    clickhandler: {
+                        key,
+                        clickfun: funName,
+                    },
+                    param: 1,
+                    data
+                }
+            ]
+        };
+        return content;
+    }
     private static mText: Phaser.GameObjects.Text;
 }

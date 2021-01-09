@@ -1,12 +1,13 @@
-import { Bubble } from "./bubble";
-import { DynamicImage } from "../../ui/components/dynamic.image";
-import { Url } from "utils";
-import { DisplayObject } from "../display.object";
+import {Bubble} from "./bubble";
+import {DynamicImage} from "../../ui/components/dynamic.image";
+import {Url} from "utils";
+import {IDisplayObject} from "../display.object";
 
 export class BubbleContainer extends Phaser.GameObjects.Container {
     private mBubbles: Bubble[] = [];
     private mArrow: DynamicImage;
     private mScale: number;
+
     constructor(scene: Phaser.Scene, scale: number) {
         super(scene);
         this.mScale = scale;
@@ -31,7 +32,7 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
         this.mArrow.y = 4 * this.mScale;
     }
 
-    public follow(target: DisplayObject) {
+    public follow(target: IDisplayObject) {
         if (this.mBubbles.length === 0) {
             return;
         }

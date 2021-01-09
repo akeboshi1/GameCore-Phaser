@@ -146,7 +146,7 @@ export class Element extends BlockObject implements IElement {
 
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-    // protected mDisplay: DisplayObject | undefined;
+    // protected mDisplay: BaseDisplay | undefined;
     // protected mBubble: BubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};

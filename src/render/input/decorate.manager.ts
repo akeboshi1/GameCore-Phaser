@@ -1,15 +1,14 @@
-
-import { Render } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Logger } from "utils";
-import { DisplayObject } from "../display";
 import { DisplayManager } from "../managers";
+import { IDisplayObject } from "../display";
+import { Render } from "../render";
 
 export class DecorateManager extends Phaser.Events.EventEmitter {
     private mSelecting: boolean = false;
     private mDpr: number;
     private mDisplayManager: DisplayManager;
-    private mSelectorElement: DisplayObject;
+    private mSelectorElement: IDisplayObject;
 
     constructor(scene: Phaser.Scene, private render: Render) {
         super();

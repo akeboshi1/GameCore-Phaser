@@ -80,7 +80,7 @@ export class Terrain extends BlockObject implements IElement {
         this.setDepth();
     }
 
-    // public getDisplay(): DisplayObject {
+    // public getDisplay(): BaseDisplay {
     //     return this.mDisplay;
     // }
 

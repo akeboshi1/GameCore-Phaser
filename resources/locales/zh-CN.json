@@ -71,8 +71,8 @@
   },
   "timeuint": {
     "day": "天",
-    "hour": "小时",
-    "minutes": "分钟",
+    "hour": "时",
+    "minutes": "分",
     "second": "秒"
   },
   "player_info": {
@@ -231,7 +231,9 @@
   "coin": {
     "coin": "银币",
     "diamond": "钻石",
-    "gold_coin": "金币"
+    "gold_coin": "金币",
+    "silver": "银",
+    "gold": "金"
   },
   "create_role": {
     "enter_nick": "请输入昵称",
@@ -370,5 +372,18 @@
     "counttips": "要转换的家具数量不足",
     "raritytips": "稀有家具不能重铸",
     "sametips": "不能重铸为相同的家具"
+  },
+  "roam": {
+    "title": "时空漫游",
+    "timeendtips": "结束倒计时",
+    "timeend": "活动已结束",
+    "previewtex": "奖池预览",
+    "endtips": "{{name}}后免费",
+    "roamlv": "当前漫游等级{{name}}",
+    "resettips": "{{name}}后重置",
+    "bottomtips": "每次漫游可获得皮卡星x1，并附赠随机的奖励。",
+    "moneytips": "你没有足够的{{name}}漫游!",
+    "paytips": "是否要花费{{name}}购买{{count}}张时空漫游{{tag}}票",
+    "drawfreetips": "本次抽奖免费"
   }
 }

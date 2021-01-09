@@ -1,15 +1,14 @@
 
 import { op_client } from "pixelpai_proto";
 import { ClickEvent, Button } from "apowophaserui";
-import { ItemInfoTips, MaterialItem } from "gamecoreRender";
+import { MaterialItem } from "gamecoreRender";
 import { Font, Handler, i18n, UIHelper } from "utils";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasName } from "picaRes";
 import { ItemButton } from "../Components";
-export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
+export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
     private confirmBtn: Button;
     private titleimage: Phaser.GameObjects.Image;
     private pageCount: Phaser.GameObjects.Text;
-    //  private itemtips: ItemInfoTips;
     private pagedown: Phaser.GameObjects.Text;
     private content: Phaser.GameObjects.Container;
     private maskGraphic: Phaser.GameObjects.Graphics;
@@ -26,6 +25,8 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
     private indexed: number = 0;
     private isDispose: boolean = false;
     private tweens: Phaser.Tweens.Tween[] = [];
+    private maskWidth: number = 0;
+    private maskHeight: number = 0;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -59,28 +60,13 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         }).setOrigin(0.5).setFontStyle("bold");
         this.pageCount.visible = false;
         this.add([titlebgline, this.titleimage, this.pageCount]);
-
-        // const tipsWidth = 145 * this.dpr;
-        // const tipsHeight = 55 * this.dpr;
-        // this.itemtips = new ItemInfoTips(this.scene, tipsWidth, tipsHeight, UIAtlasKey.common2Key, "tips_bg", this.dpr, {
-        //     left: 10 * this.dpr,
-        //     top: 10 * this.dpr,
-        //     right: 10 * this.dpr,
-        //     bottom: 10 * this.dpr
-        // });
-        // this.itemtips.x = -this.width * 0.5 + tipsWidth * 0.5 + 10 * this.dpr;
-        // this.itemtips.y = -this.height * 0.5 + 70 * this.dpr;
-        // this.itemtips.setVisible(false);
-        // this.itemtips.setHandler(new Handler(this, this.onItemTipsHideHandler));
-        // this.add(this.itemtips);
-
         this.lightSprite = this.createSprite(UIAtlasName.circleeffect, this.lightAniKey, "", [1, 16]);
         this.lightSprite.x = 5 * this.dpr;
         this.add(this.lightSprite);
         this.starSprite = this.createSprite(UIAtlasName.stareffect, this.starAniKey, "star", [1, 18], 10, -1);
         this.add(this.starSprite);
         this.starSprite.x = this.lightSprite.y;
-        const maskW = 180 * this.dpr, maskH = 150 * this.dpr;
+        const maskW = this.maskWidth = this.width, maskH = this.maskHeight = 180 * this.dpr;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(maskW, maskH);
         this.add(this.content);
@@ -125,9 +111,9 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         const tempdatas = this.getNextDatas();
         const group = this.createLayoutGroup(tempdatas);
         this.playAnimation();
-        this.playItemTween(group, 620);
+        const offsety = 160 * this.dpr + (group.height - this.maskHeight) * 0.5;
+        this.playItemTween(group, offsety, 620);
         this.curLayoutGroup = group;
-        this.indexed = 6;
     }
 
     private playAnimation() {
@@ -164,11 +150,11 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         });
         this.tweens.push(buttonTween);
     }
-    private playItemTween(gameobjet: RewardLayoutGroup, delay: number) {
+    private playItemTween(gameobjet: RewardLayoutGroup, from: number, delay: number) {
         const tweenIn = this.scene.tweens.add({
             targets: gameobjet,
             y: {
-                from: 130 * this.dpr,
+                from,
                 to: 0
             },
             ease: "Back.easeOut",
@@ -221,7 +207,7 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
     }
 
     private createLayoutGroup(arr: any[]) {
-        const group = new RewardLayoutGroup(this.scene, 0, 150 * this.dpr, 152 * this.dpr, 90 * this.dpr, this.dpr, this.zoom);
+        const group = new RewardLayoutGroup(this.scene, 0, this.maskHeight, 235 * this.dpr, this.maskHeight, this.dpr, this.zoom);
         this.content.add(group);
         group.setRewardDatas(arr);
         return group;
@@ -237,38 +223,12 @@ export class PicTreasureOpenPanel extends Phaser.GameObjects.Container {
         const datas = this.getNextDatas();
         if (datas) {
             const group = this.createLayoutGroup(datas);
-            this.playItemTween(group, 200);
+            const offsety = 160 * this.dpr + (group.height - this.height) * 0.5;
+            this.playItemTween(group, offsety, 200);
             this.curLayoutGroup = group;
         } else {
             if (this.closeHandler) this.closeHandler.run();
         }
-    }
-    private onRewardItemHandler(gameobject: MaterialItem) {
-        // this.itemtips.setVisible(false);
-        // this.setTipsPosition(gameobject);
-    }
-
-    private onItemTipsHideHandler() {
-
-    }
-
-    private setTipsPosition(gameobject: MaterialItem) {
-        // let posx: number = gameobject.x;
-        // let posy: number = gameobject.y;
-        // let tempobject = <Phaser.GameObjects.Container>gameobject;
-        // while (tempobject.parentContainer !== this) {
-        //     posx += tempobject.parentContainer.x;
-        //     posy += tempobject.parentContainer.y;
-        //     tempobject = tempobject.parentContainer;
-        // }
-        // if (posx - this.itemtips.width * 0.5 < -this.width * 0.5) {
-        //     this.itemtips.x = this.itemtips.width * 0.5 - this.width * 0.5 + 20 * this.dpr;
-        // } else if (posx + this.itemtips.width * 0.5 > this.width * 0.5) {
-        //     this.itemtips.x = this.width * 0.5 - this.itemtips.width * 0.5 - 20 * this.dpr;
-        // } else {
-        //     this.itemtips.x = posx;
-        // }
-        // this.itemtips.y = posy - this.itemtips.height * 0.5 + 5 * this.dpr;
     }
 }
 

@@ -322,7 +322,7 @@ export class PicaRecastePanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: ItemButton) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
-    if (item && this.mSelectedItemData === item || this.mSelectedItemData && !item) return;
+    if (item && this.mSelectedItemData === item || !item) return;
     this.mSelectedItemData = item;
     this.displayPanel.setRecasteTargetData(item);
     if (this.mSelectedItem) this.mSelectedItem.isSelect = false;
@@ -336,9 +336,9 @@ export class PicaRecastePanel extends PicaBasePanel {
       if (this.starCount < this.mSelectedItemData.grade) {
         notice = i18n.t("furnicompose.starpicatips");
       } else if (this.mRecasteItemData.count === 0) {
-        notice = i18n.t("furnicompose.counttips");
+        notice = i18n.t("recaste.counttips");
       } else if (this.mRecasteItemData.id === this.mSelectedItemData.id) {
-        notice = i18n.t("furnicompose.sametips");
+        notice = i18n.t("recaste.sametips");
       }
     } else {
       notice = i18n.t("recaste.selecttips");
@@ -373,7 +373,7 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
   }
 
   public setRecasteItemData(data: op_client.ICountablePackageItem) {
-    this.recasteItem.setItemData(data);
+    this.recasteItem.setItemData(data, true);
     this.starvalue.setText(data.grade + "");
   }
 

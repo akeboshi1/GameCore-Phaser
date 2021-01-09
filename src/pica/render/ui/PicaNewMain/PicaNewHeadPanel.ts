@@ -3,6 +3,7 @@ import { ButtonEventDispatcher, ImageValue, ProgressMaskBar } from "gamecoreRend
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, UIHelper } from "utils";
 import { op_pkt_def, op_def } from "pixelpai_proto";
+import { Tweens } from "tooqinggamephaser";
 export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
@@ -27,6 +28,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private praise: boolean = false;
     private isself: boolean = false;
     private sendHandler: Handler;
+    private moneyTween: any;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
         this.setSize(width, height);
@@ -224,7 +226,8 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.moneyCon.x = from;
         this.moneyCon.alpha = 1;
         this.add(this.moneyCon);
-        const tween = this.scene.tweens.add({
+        this.clearTween();
+        this.moneyTween = this.scene.tweens.add({
             targets: this.moneyCon,
             x: {
                 from,
@@ -233,17 +236,14 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             ease: "Linear",
             duration: 600,
             onComplete: () => {
-                tween.stop();
-                tween.remove();
-                setTimeout(() => {
-                    this.fadeOutHeadCon();
-                }, 3000);
+                this.clearTween();
+                this.fadeOutHeadCon();
             },
         });
     }
     private fadeOutHeadCon() {
         if (!this.scene) return;
-        const tween = this.scene.tweens.add({
+        this.moneyTween = this.scene.tweens.add({
             targets: this.moneyCon,
             alpha: {
                 from: 1,
@@ -251,9 +251,9 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             },
             ease: "Linear",
             duration: 150,
+            delay: 3000,
             onComplete: () => {
-                tween.stop();
-                tween.remove();
+                this.clearTween();
                 this.remove(this.moneyCon);
             },
         });
@@ -264,4 +264,11 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         return true;
     }
 
+    private clearTween() {
+        if (this.moneyTween) {
+            this.moneyTween.stop();
+            this.moneyTween.remove();
+            this.moneyTween = undefined;
+        }
+    }
 }

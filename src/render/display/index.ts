@@ -1,4 +1,3 @@
-export * from "./display.object";
 export * from "./element.top.display";
 export * from "./dragonbones/dragonbones.display";
 export * from "./frames/frames.display";
@@ -11,3 +10,4 @@ export * from "./animation/animation.model";
 export * from "./bubble/bubble";
 export * from "./bubble/bubble.container";
 export * from "./dragonbones/uidragonbones.display";
+export * from "./display.object";
