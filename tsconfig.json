@@ -43,6 +43,9 @@
       "editorCanvas": [
         "./src/editor/index"
       ],
+      "display": [
+        "./src/display/index"
+      ]
     },
   },
   "exclude": [

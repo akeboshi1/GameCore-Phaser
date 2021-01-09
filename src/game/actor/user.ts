@@ -10,7 +10,6 @@ import { IPos, Logger, LogicPos, Tool } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
 import { IPoint } from "game-capsule";
-import { AvatarSlotType } from "gamecoreRender";
 
 export class User extends Player {
     private mUserData: UserDataManager;

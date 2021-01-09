@@ -3,8 +3,8 @@
 //     readonly scene: Phaser.Scene;
 //     setScene(scene: Phaser.Scene): void;
 
-import { Logger } from "utils";
-import { DisplayObject } from "../display/display.object";
+import {Logger} from "utils";
+import {IDisplayObject} from "../display";
 
 //     addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
 //     addToDialogLayer(obj: Phaser.GameObjects.GameObject);
@@ -104,7 +104,7 @@ export class LayerManager {
         if (this.mDepthSurface) {
             this.mDepthSurface = false;
             const surfaceLayer = this.getLayer("surfaceLayer");
-            surfaceLayer.sort("depth", (displayA: DisplayObject, displayB: DisplayObject) => {
+            surfaceLayer.sort("depth", (displayA: IDisplayObject, displayB: IDisplayObject) => {
                 // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
                 return displayA.sortY + displayA.sortZ > displayB.sortY + displayB.sortZ;
             });
@@ -195,7 +195,8 @@ export class LayerManager {
 }
 
 export class SortUtils {
-    private objs: DisplayObject[];
+    private objs: IDisplayObject[];
+
     constructor() {
         this.objs = [];
     }
@@ -204,28 +205,28 @@ export class SortUtils {
         const objs = [...list];
         for (let pivot = 0; pivot < objs.length;) {
             let new_pivot = false;
-            for (let i = pivot; i < objs.length;++i) {
-              const obj = objs[i];
-              let parent = true;
-              for (let j = pivot; j < objs.length;++j) {
-                if (j === i) continue;
-                if (this.isBehind(objs[j], obj)) {
-                  parent = false;
-                  break;
+            for (let i = pivot; i < objs.length; ++i) {
+                const obj = objs[i];
+                let parent = true;
+                for (let j = pivot; j < objs.length; ++j) {
+                    if (j === i) continue;
+                    if (this.isBehind(objs[j], obj)) {
+                        parent = false;
+                        break;
+                    }
                 }
-              }
-              if (parent) {
-                objs[i] = objs[pivot];
-                objs[pivot] = obj;
-                ++pivot;
-                new_pivot = true;
-              }
+                if (parent) {
+                    objs[i] = objs[pivot];
+                    objs[pivot] = obj;
+                    ++pivot;
+                    new_pivot = true;
+                }
             }
-            if (!new_pivot)++pivot;
-          }
+            if (!new_pivot) ++pivot;
+        }
     }
 
-    private isBehind(obj1: DisplayObject, obj2: DisplayObject): boolean {
+    private isBehind(obj1: IDisplayObject, obj2: IDisplayObject): boolean {
         // obj1.projectionSize
         // return (this.x+this.xx<=obj.x||this.y+this.yy<=obj.y||this.z+this.zz<=obj.z)
         const projection = obj1.projectionSize;
@@ -236,21 +237,21 @@ export class SortUtils {
         // Logger.getInstance().log(obj2.y, obj1.y);
     }
 
-    private block_projection_overlap(obj1: DisplayObject, obj2: DisplayObject) {
-        function interval_overlap(a1,a2,b1,b2) {
-            return a1>=b1&&a1<b2 || b1>=a1&&b1<a2;
+    private block_projection_overlap(obj1: IDisplayObject, obj2: IDisplayObject) {
+        function interval_overlap(a1, a2, b1, b2) {
+            return a1 >= b1 && a1 < b2 || b1 >= a1 && b1 < a2;
         }
 
         const projection = obj1.projectionSize;
         const projection2 = obj2.projectionSize;
         return interval_overlap(
             obj1.x - obj1.y - projection.y, obj1.x + projection.x - obj1.y,
-            obj2.x - obj2.y- projection2.y, obj2.x+ projection2.x - obj2.y) &&
-        interval_overlap(
-            obj1.x,obj1.x + projection.x,
-            obj2.x, obj2.x + projection2.x) &&
-        interval_overlap(
-            -obj1.y - projection.y, -obj1.y,
-            -obj2.y - projection2.y, -obj2.y);
-        }
+            obj2.x - obj2.y - projection2.y, obj2.x + projection2.x - obj2.y) &&
+            interval_overlap(
+                obj1.x, obj1.x + projection.x,
+                obj2.x, obj2.x + projection2.x) &&
+            interval_overlap(
+                -obj1.y - projection.y, -obj1.y,
+                -obj2.y - projection2.y, -obj2.y);
+    }
 }

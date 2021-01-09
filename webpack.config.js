@@ -48,6 +48,7 @@ const config = {
             picaRender: path.join(__dirname, "./src/pica/render"),
             picaRes: path.join(__dirname, "./src/pica/res"),
             editorCanvas: path.join(__dirname, "./src/editor"),
+            display: path.join(__dirname, "./src/display"),
         },
     },
     optimization: {

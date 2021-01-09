@@ -410,7 +410,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         // if (!com) {
         //     return;
         // }
-        // if (!(com instanceof DisplayObject)) {
+        // if (!(com instanceof BaseDisplay)) {
         //     return;
         // }
         // if (com instanceof TerrainDisplay) {
