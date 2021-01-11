@@ -128,7 +128,6 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     }
     this.mLabelInput.setText(num.toString());
     this.emit("change", num);
-    this.scene.input.off("pointerdown", this.pointerDownHandler, this);
   }
 
   private onReduceDownHandler() {
@@ -167,6 +166,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   private pointerDownHandler(pointer: Phaser.Input.Pointer) {
     if (!this.checkPointerInBounds(this, pointer)) {
       this.mLabelInput.setBlur();
+      this.scene.input.off("pointerdown", this.pointerDownHandler, this);
     }
   }
 
