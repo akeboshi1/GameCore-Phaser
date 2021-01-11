@@ -1,12 +1,14 @@
-import {BaseDisplay, BaseFramesDisplay} from "display";
+import {BaseFramesDisplay} from "display";
 import {Render} from "../../render";
-import {DisplayField, ElementStateType, IFramesModel, RunningAnimation, TitleMask} from "structure";
+import {DisplayField, ElementStateType, RunningAnimation, TitleMask} from "structure";
 import {IDisplayObject} from "../display.object";
 import {IPos, Logger} from "utils";
 import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
-import { IProjection } from "src/utils/projection";
+import {IProjection} from "src/utils/projection";
+import {projectionAngle} from "gamecoreRender";
+import {DragonbonesDisplay} from "../dragonbones/dragonbones.display";
 
 /**
  * 序列帧显示对象
@@ -20,6 +22,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mTopDisplay: ElementTopDisplay;
     protected mMovement: DisplayMovement;
     protected mMountContainer: Phaser.GameObjects.Container;
+    protected mSortX: number = 0;
+    protected mSortY: number = 0;
 
     private mProjectionSize: IProjection;
     private mName: string = undefined;
@@ -135,7 +139,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
+            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
         }
         return this.mProjectionSize;
     }
@@ -155,7 +159,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {
         super.setPosition(x, y, z, w);
-
+        this.updateSort();
         this.updateTopDisplay();
         return this;
     }
@@ -183,7 +187,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
     }
 
-    public mount(display: BaseDisplay, targetIndex?: number) {
+    public mount(display: FramesDisplay | DragonbonesDisplay, targetIndex?: number) {
         if (!display) return;
         if (this.mDisplays.length <= 0) {
             return;
@@ -225,12 +229,11 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
     }
 
-    public unmount(display: BaseDisplay) {
+    public unmount(display: FramesDisplay | DragonbonesDisplay) {
         if (!this.mMountContainer) {
             return;
         }
-        this.mMountContainer.remove(display);
-        // this.render.displayManager.addToSurfaceLayer(display);
+        this.render.displayManager.addToSurfaceLayer(display);
         display.setRootMount(undefined);
         const index = this.mMountList.indexOf(display);
         display.visible = true;
@@ -288,6 +291,12 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
     }
 
+    protected updateSort() {
+        const _projectionAngle = projectionAngle;
+        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
+        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
+    }
+
     protected clear() {
         super.clear();
 
@@ -316,10 +325,10 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     }
 
     get sortX() {
-        return (this.x - this.projectionSize.offset.x) / (2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / Math.sin(45 * Math.PI / 180) + this.z;
+        return this.mSortX;
     }
 
     get sortY() {
-        return -((this.x - this.projectionSize.offset.x) / 2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / (2 * Math.sin(45 * Math.PI / 180));
+        return this.mSortY;
     }
 }
