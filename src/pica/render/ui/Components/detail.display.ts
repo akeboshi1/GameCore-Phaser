@@ -89,7 +89,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
         this.mFramesDisplay.y = -spriteHeight * 0.5 * scale;
         this.addDisplay();
       };
-      this.mFramesDisplay.once("initialized", () => {
+      this.mFramesDisplay.createdHandler = new Handler(this, () => {
         this.mFramesDisplay.play({ name: aniName, flip: false });
         addDisplay();
       });
