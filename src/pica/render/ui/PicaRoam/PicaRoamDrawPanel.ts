@@ -145,12 +145,8 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.token = token;
         this.tokenid = tokenId;
     }
-    public setRoamDrawResult(poolUpdate: op_client.IDRAW_POOL_STATUS) {
-        for (const data of this.poolDatas) {
-            if (data.id === poolUpdate.id) {
-                Object.assign(data, poolUpdate);
-            }
-        }
+    public setRoamDrawResult(poolDatas: op_client.IDRAW_POOL_STATUS[]) {
+        this.poolDatas = poolDatas;
         this.setRoamDatas(this.poolDatas);
     }
     private onRoamDrawHandler(tag: string, roamData: op_client.IDRAW_POOL_STATUS) {

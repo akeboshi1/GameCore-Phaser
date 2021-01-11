@@ -86,8 +86,8 @@ export class PicaRoamMediator extends BasicMediator {
                 Object.assign(data, content.poolUpdate);
             }
         }
-        this.updateServiceTime([content.poolUpdate]);
-        if (this.mView) this.mView.setRoamDrawResult(content.poolUpdate);
+        this.updateServiceTime(this.poolsData);
+        if (this.mView) this.mView.setRoamDrawResult(this.poolsData);
         this.onRetDrawHandler(content.rewards);
     }
 
