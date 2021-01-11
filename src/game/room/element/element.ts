@@ -1,11 +1,18 @@
-import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue, AvatarSuitType, ElementStateType, ISprite, PlayerState } from "structure";
-import { IDragonbonesModel } from "structure";
-import { IFramesModel } from "structure";
-import { IPos, Logger, LogicPoint, LogicPos, Tool, IProjection } from "utils";
-import { BlockObject } from "../block/block.object";
-import { IRoomService } from "../room/room";
-import { IElementManager } from "./element.manager";
+import {op_client, op_def} from "pixelpai_proto";
+import {
+    AnimationQueue,
+    AvatarSuitType,
+    ElementStateType,
+    IDragonbonesModel,
+    IFramesModel,
+    ISprite,
+    PlayerState
+} from "structure";
+import {IPos, IProjection, Logger, LogicPoint, LogicPos, Tool} from "utils";
+import {BlockObject} from "../block/block.object";
+import {IRoomService} from "../room/room";
+import {IElementManager} from "./element.manager";
+
 export interface IElement {
     readonly id: number;
     readonly dir: number;
@@ -68,6 +75,7 @@ export interface IElement {
 
     getProjectionSize(): IProjection;
 }
+
 export interface MoveData {
     destPos?: LogicPos;
     posPath?: MovePath[];
@@ -167,6 +175,7 @@ export class Element extends BlockObject implements IElement {
         this.mId = sprite.id;
         this.model = sprite;
     }
+
     showEffected(displayInfo: any) {
         throw new Error("Method not implemented.");
     }
@@ -184,28 +193,31 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mQueueAnimations = undefined;
-        await this.load(this.mModel.displayInfo);
+        this.mElementManager.addToMap(model);
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
-        await this.mElementManager.roomService.game.peer.render.setModel(model);
-        await this.mRoomService.game.peer.physicalPeer.setModel(model);
-        this.showNickname();
-        this.setDirection(this.mModel.direction);
-        const frameModel = <IFramesModel>this.mDisplayInfo;
-        if (this.mInputEnable === InputEnable.Interactive) {
-            this.setInputEnable(this.mInputEnable);
-        }
-        if (model.mountSprites && model.mountSprites.length > 0) {
-            this.updateMounth(model.mountSprites);
-        }
-        // this.update();
-        this.mElementManager.addToMap(model);
-        this.setRenderable(true);
-        if (this.mRenderable) {
-            this.mRoomService.game.physicalPeer.addBody(this.id);
-        }
-        this.mElementManager.addToMap(model);
+        // render action
+        this.load(this.mModel.displayInfo)
+            .then(() => this.mElementManager.roomService.game.peer.render.setModel(model))
+            .then(() => {
+                this.showNickname();
+                this.setDirection(this.mModel.direction);
+                if (this.mInputEnable === InputEnable.Interactive) {
+                    this.setInputEnable(this.mInputEnable);
+                }
+                if (model.mountSprites && model.mountSprites.length > 0) {
+                    this.updateMounth(model.mountSprites);
+                }
+                return this.setRenderable(true);
+            });
+        // physic action
+        this.mRoomService.game.peer.physicalPeer.setModel(model)
+            .then(() => {
+                if (this.mRenderable) {
+                    this.mRoomService.game.physicalPeer.addBody(this.id);
+                }
+            });
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
@@ -557,6 +569,7 @@ export class Element extends BlockObject implements IElement {
     public showBubble(text: string, setting: op_client.IChat_Setting) {
         this.mRoomService.game.renderPeer.showBubble(this.id, text, setting);
     }
+
     public clearBubble() {
         this.mRoomService.game.renderPeer.clearBubble(this.id);
     }
@@ -665,7 +678,7 @@ export class Element extends BlockObject implements IElement {
         this.mMounts.splice(index, 1);
         ele.unmount(targetPos);
         if (!this.mMounts) return Promise.resolve();
-        await this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
+        this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
         return Promise.resolve();
     }
 
@@ -739,20 +752,24 @@ export class Element extends BlockObject implements IElement {
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }
+        let createPromise = null;
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
-                await this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
+                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
             } else {
-                await this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
+                createPromise = this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
             }
         } else {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
-            await this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
+            createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
         }
-        const pos = this.mModel.pos;
-        await this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+        createPromise.then(() => {
+            const pos = this.mModel.pos;
+            this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+
+            if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        });
         const currentAnimation = this.mModel.currentAnimation;
-        if (currentAnimation) await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         this.setInputEnable(this.mInputEnable);
         this.mCreatedDisplay = true;
         this.mRoomService.game.physicalPeer.addBody(this.id);
@@ -790,7 +807,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async addDisplay(): Promise<any> {
-        await super.addDisplay();
+        super.addDisplay();
         let depth = 0;
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
@@ -800,7 +817,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async removeDisplay(): Promise<any> {
-        await super.removeDisplay();
+        super.removeDisplay();
         return Promise.resolve();
     }
 
@@ -910,9 +927,9 @@ export class Element extends BlockObject implements IElement {
                 const ele = this.roomService.getElement(id);
                 if (ele) {
                     if (type === 0) {
-                        (<Element>ele).removeTopDisplay();
+                        (<Element> ele).removeTopDisplay();
                     } else {
-                        (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
+                        (<Element> ele).showTopDisplay(ElementStateType.REPAIR);
                     }
                 }
                 break;
@@ -937,6 +954,7 @@ class MoveControll {
     private velocity: IPos;
     private mPosition: IPos;
     private mPrePosition: IPos;
+
     constructor(private target: BlockObject) {
         this.mPosition = new LogicPos();
         this.mPrePosition = new LogicPos();
