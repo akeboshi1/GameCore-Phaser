@@ -80,7 +80,7 @@ export class PicaRoamMediator extends BasicMediator {
         } else {
             pools.forEach((pool) => {
                 let found = false;
-                for (let i = 0 ; i < this.poolsData.length ; i++) {
+                for (let i = 0; i < this.poolsData.length; i++) {
                     if (this.poolsData[i].id === pool.id) {
                         this.poolsData[i] = pool;
                         found = true;
@@ -104,7 +104,7 @@ export class PicaRoamMediator extends BasicMediator {
             }
         }
         this.updateServiceTime(this.poolsData);
-        if (this.mView) this.mView.setRoamDrawResult(this.poolsData);
+        if (this.mView) this.mView.setRoamDataList(this.poolsData);
         this.onRetDrawHandler(content.rewards);
     }
 
