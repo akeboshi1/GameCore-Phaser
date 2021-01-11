@@ -13,6 +13,7 @@ export class PicaRoamPanel extends PicaBasePanel {
     private roamListPanel: PicaRoamListPanel;
     private roamDrawPanel: PicaRoamDrawPanel;
     private roamPreviewPanel: PicaRoamPreviewPanel;
+    private tokenId: string;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
@@ -42,6 +43,13 @@ export class PicaRoamPanel extends PicaBasePanel {
 
     }
 
+    public destroy() {
+        super.destroy();
+        if (this.roamListPanel) this.roamListPanel.destroy();
+        if (this.roamDrawPanel) this.roamDrawPanel.destroy();
+        if (this.roamPreviewPanel) this.roamPreviewPanel.destroy();
+    }
+
     init() {
         this.mBackground = this.scene.make.graphics(undefined, false);
         //   this.mBackground.on("pointerup", this.OnClosePanel, this);
@@ -66,6 +74,10 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.tempDatas = pools;
         if (!this.mInitialized) return;
         this.roamListPanel.setRoamDataList(pools);
+        if (this.roamDrawPanel) {
+            const datas = this.roamListPanel.getRoamTokenDatas();
+            this.roamDrawPanel.setRoamDatas(datas);
+        }
     }
 
     public payDrawHandler(id: string) {
@@ -75,11 +87,6 @@ export class PicaRoamPanel extends PicaBasePanel {
     public setRoamTokenData(money: number, token: number, tokenId: string) {
         if (this.roamDrawPanel) this.roamDrawPanel.setMoneyData(money, token, tokenId);
     }
-
-    public setRoamDrawResult(poolUpdate: op_client.IDRAW_POOL_STATUS) {
-        if (this.roamDrawPanel) this.roamDrawPanel.setRoamDrawResult(poolUpdate);
-    }
-
     private openRoamList() {
         this.showRoamListPanel();
     }
@@ -92,6 +99,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.content.add(this.roamListPanel);
         this.roamListPanel.visible = true;
         this.roamListPanel.resize(this.scaleWidth, this.scaleHeight);
+        this.render.renderEmitter(this.key + "_updatepools");
     }
     private hideRoamListPanel() {
         this.content.remove(this.roamListPanel);
@@ -104,6 +112,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         const temp = data[0];
         const obj = { tokenId: temp.tokenId, alterId: temp.alterTokenId };
         this.render.renderEmitter(this.key + "_updatetoken", obj);
+        this.tokenId = temp.tokenId;
     }
 
     private showRoamDrawPanel() {
@@ -162,7 +171,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         } else if (tag === "preview") {
             this.showRoamPreviewPanel();
         } else if (tag === "progressrewards") {
-            this.render.renderEmitter(this.key + "_queryprogressrewards",data);
+            this.render.renderEmitter(this.key + "_queryprogressrewards", data);
         }
     }
 

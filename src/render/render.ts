@@ -23,6 +23,7 @@ import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
 import Stats from "../../Stat";
+
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -681,7 +682,8 @@ export class Render extends RPCPeer implements GameMain {
     public displayReady(id: number, animation: any) {
         const display = this.mDisplayManager.getDisplay(id);
         if (!display) return;
-        display.displayReady(animation);
+        display.play(animation);
+        display.showNickname();
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1037,7 +1039,7 @@ export class Render extends RPCPeer implements GameMain {
     public playAnimation(id: number, animation: any, field?: any, times?: number) {
         if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.play(animation, field, times);
+        if (display) display.play(animation);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1118,7 +1120,7 @@ export class Render extends RPCPeer implements GameMain {
     public setPosition(id: number, x: number, y: number, z?: number) {
         if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.updatePos(x, y, z);
+        if (display) display.setPosition(x, y, z);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])

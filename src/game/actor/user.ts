@@ -1,13 +1,12 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Game, interval } from "../game";
+import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
 import { IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
-import { ISprite } from "src/structure/isprite";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite } from "structure";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -57,26 +56,26 @@ export class User extends Player {
     }
 
     update() {
-    //     if (this.mMoving) {
-    //         const pos = this.getPosition();
-    //         pos.y += this.offsetY;
-    //         if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
-    //             this.stopMove();
-    //             return;
-    //         }
-    //         // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
-    //         const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
-    //         const dir = Tool.calculateDirectionByRadin(angle);
-    //         this.setDirection(dir);
+        //     if (this.mMoving) {
+        //         const pos = this.getPosition();
+        //         pos.y += this.offsetY;
+        //         if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
+        //             this.stopMove();
+        //             return;
+        //         }
+        //         // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
+        //         const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
+        //         const dir = Tool.calculateDirectionByRadin(angle);
+        //         this.setDirection(dir);
 
-    //         pos.x += Math.cos(angle) * this.mSpeed;
-    //         pos.y += Math.sin(angle) * this.mSpeed;
-    //         this.model.setPosition(pos.x, pos.y);
-    //         if (this.mRootMount) {
-    //             return;
-    //         }
-    //         this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
-    //     }
+        //         pos.x += Math.cos(angle) * this.mSpeed;
+        //         pos.y += Math.sin(angle) * this.mSpeed;
+        //         this.model.setPosition(pos.x, pos.y);
+        //         if (this.mRootMount) {
+        //             return;
+        //         }
+        //         this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+        //     }
     }
 
     public unmount(targetPos?: IPos): Promise<this> {
@@ -85,31 +84,31 @@ export class User extends Player {
         this.mRootMount = null;
         this.unmountSprite(mountID, targetPos);
         return Promise.resolve(this);
-    //     if (this.mRootMount) {
-    //         let landingPos: IPos;
-    //         const pos = await this.mRoomService.game.physicalPeer.getInteractivePosition(this.mRootMount.id);
-    //         // this.mRootMount.getInteractivePositionList();
-    //         if (pos.length === 0) {
-    //             return;
-    //         }
-    //         const mountID = this.mRootMount.id;
-    //         this.mRootMount = null;
-    //         if (targetPos != null) {
-    //             const path = await this.roomService.findPath(targetPos, pos, true);
-    //             if (path.length > 0) {
-    //                 landingPos = path[0];
-    //             } else {
-    //                 landingPos = pos[0];
-    //             }
-    //         } else {
-    //             landingPos = pos[0];
-    //         }
-    //         this.setPosition(landingPos);
-    //         this.unmountSprite(mountID, landingPos);
-    //         this.enableBlock();
-    //         // this.mDirty = true;
-    //     }
-    //     return this;
+        //     if (this.mRootMount) {
+        //         let landingPos: IPos;
+        //         const pos = await this.mRoomService.game.physicalPeer.getInteractivePosition(this.mRootMount.id);
+        //         // this.mRootMount.getInteractivePositionList();
+        //         if (pos.length === 0) {
+        //             return;
+        //         }
+        //         const mountID = this.mRootMount.id;
+        //         this.mRootMount = null;
+        //         if (targetPos != null) {
+        //             const path = await this.roomService.findPath(targetPos, pos, true);
+        //             if (path.length > 0) {
+        //                 landingPos = path[0];
+        //             } else {
+        //                 landingPos = pos[0];
+        //             }
+        //         } else {
+        //             landingPos = pos[0];
+        //         }
+        //         this.setPosition(landingPos);
+        //         this.unmountSprite(mountID, landingPos);
+        //         this.enableBlock();
+        //         // this.mDirty = true;
+        //     }
+        //     return this;
     }
 
     // public moveMotion(x: number, y: number, targetId?: number) {

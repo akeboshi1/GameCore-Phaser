@@ -614,6 +614,18 @@ export class MainPeer extends RPCPeer {
         });
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public completeDragonBonesAnimationQueue(id: number) {
+        const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
+        if (dragonbones) dragonbones.completeAnimationQueue();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public completeFrameAnimationQueue(id: number) {
+        const frames = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (frames) frames.completeAnimationQueue();
+    }
+
     // ==== todo
     public terminate() {
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();

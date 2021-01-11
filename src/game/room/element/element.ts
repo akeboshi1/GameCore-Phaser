@@ -2,11 +2,10 @@ import { op_client, op_def } from "pixelpai_proto";
 import { AnimationQueue, AvatarSuitType, ElementStateType, ISprite, PlayerState } from "structure";
 import { IDragonbonesModel } from "structure";
 import { IFramesModel } from "structure";
-import { IPos, Logger, LogicPoint, LogicPos, Tool } from "utils";
+import { IPos, Logger, LogicPoint, LogicPos, Tool, IProjection } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { IElementManager } from "./element.manager";
-
 export interface IElement {
     readonly id: number;
     readonly dir: number;
@@ -67,7 +66,7 @@ export interface IElement {
 
     getInteractivePositionList(): Promise<IPos[]>;
 
-    getProjectionSize(): IPos;
+    getProjectionSize(): IProjection;
 }
 export interface MoveData {
     destPos?: LogicPos;
@@ -141,6 +140,8 @@ export class Element extends BlockObject implements IElement {
 
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
+    // protected mDisplay: BaseDisplay | undefined;
+    // protected mBubble: BubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
@@ -255,9 +256,9 @@ export class Element extends BlockObject implements IElement {
         // this.update();
     }
 
-    public getProjectionSize() {
-        return this.mModel.getInteractive();
-    }
+    // public getProjectionSize() {
+    //     return this.mModel.getInteractive();
+    // }
 
     public play(animationName: string, times?: number): void {
         if (!this.mModel) {

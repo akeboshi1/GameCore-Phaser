@@ -6,6 +6,7 @@ import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
+import { IDisplayObject } from "../display";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
@@ -179,17 +180,93 @@ export class PlayScene extends RoomScene {
 }
 
 class GroundLayer extends BasicLayer {
+    private mSortDirty: boolean = false;
+
+    public add(child: Phaser.GameObjects.GameObject) {
+        super.add(child);
+        this.mSortDirty = true;
+        return this;
+    }
     public sortLayer() {
-        this.sort("depth");
+        if (!this.mSortDirty) {
+            return;
+        }
+        this.mSortDirty = false;
+        this.sort("depth", (displayA: any, displayB: any) => {
+            // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
+            return displayA.y + displayA.z > displayB.y + displayB.z;
+        });
     }
 }
 
 class SurfaceLayer extends BasicLayer {
+    private sortUtil: SortUtils = new SortUtils();
     public sortLayer() {
+        this.sortUtil.depthSort(this.list);
         // TODO: import ElementDisplay
-        this.sort("depth", (displayA: any, displayB: any) => {
-            // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
-            return displayA.sortY + displayA.sortZ > displayB.sortY + displayB.sortZ;
-        });
+        // this.sort("depth", (displayA: any, displayB: any) => {
+        //     // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
+        //     return displayA.y + displayA.z > displayB.y + displayB.z;
+        // });
+    }
+}
+
+class SortUtils {
+    private objs: IDisplayObject[];
+    constructor() {
+        this.objs = [];
+    }
+
+    depthSort(objs) {
+        for (let pivot = 0; pivot < objs.length;) {
+            let new_pivot = false;
+            for (let i = pivot; i < objs.length; ++i) {
+                const obj = objs[i];
+                let parent = true;
+                for (let j = pivot; j < objs.length; ++j) {
+                    if (j === i) continue;
+                    if (this.isBehind(objs[j], obj)) {
+                        parent = false;
+                        break;
+                    }
+                }
+                if (parent) {
+                    objs[i] = objs[pivot];
+                    objs[pivot] = obj;
+                    ++pivot;
+                    new_pivot = true;
+                }
+            }
+            if (!new_pivot) ++pivot;
+        }
+    }
+
+    private isBehind(obj1: IDisplayObject, obj2: IDisplayObject): boolean {
+        const projection = obj1.projectionSize;
+        const result = (obj1.sortX + projection.width <= obj2.sortX || obj1.sortY + projection.height <= obj2.sortY);
+        return this.block_projection_overlap(obj1, obj2) && result;
+    }
+
+    private block_projection_overlap(obj1: IDisplayObject, obj2: IDisplayObject) {
+        function interval_overlap(a1, a2, b1, b2) {
+            const result = a1 >= b1 && a1 < b2 || b1 >= a1 && b1 < a2;
+            return result;
+        }
+
+        const projection = obj1.projectionSize;
+        const projection2 = obj2.projectionSize;
+        const obj1X = obj1.sortX;
+        const obj1Y = obj1.sortY;
+        const obj2X = obj2.sortX;
+        const obj2Y = obj2.sortY;
+        return interval_overlap(
+            obj1X - obj1Y - projection.height, obj1X + projection.width - obj1Y,
+            obj2X - obj2Y - projection2.height, obj2X + projection2.width - obj2Y);
+            // interval_overlap(
+            //     obj1Y - obj1X + projection.width, obj1Y + projection.height - obj1X,
+            //     obj2Y - obj2X + projection2.width, obj2Y + projection2.height - obj2X); // &&
+        // interval_overlap(
+        //     -obj1Y - projection.height, -obj1Y,
+        //     -obj2Y - projection2.height, -obj2Y );
     }
 }

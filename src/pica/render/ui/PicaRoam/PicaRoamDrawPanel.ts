@@ -3,7 +3,6 @@ import { BackgroundScaleButton, CommonBackground, DynamicImage, ImageValue } fro
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { DllPlugin } from "webpack";
 export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;
     private closeBtn: Button;
@@ -115,14 +114,20 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
             if (data.drawTime === 1) this.oneRoamItem.setRoamData(data);
             else {
                 this.tenRoamItem.setRoamData(data);
-                for (let i = 0; i < data.progressAward.length; i++) {
-                    const reward = data.progressAward[i];
-                    if (!reward.received) {
-                        const intervalTime = data.progressExpireTime * 1000 - data["unixTime"];
-                        this.drawProgress.setRoadLvData(data.progress, intervalTime, i + 1, reward);
-                        break;
+                if (!data["diamond"]) {
+                    this.drawProgress.visible = true;
+                    for (let i = 0; i < data.progressAward.length; i++) {
+                        const reward = data.progressAward[i];
+                        if (!reward.received) {
+                            const intervalTime = data.progressExpireTime * 1000 - data["unixTime"];
+                            this.drawProgress.setRoadLvData(data.progress, intervalTime, i + 1, reward);
+                            break;
+                        }
                     }
+                } else {
+                    this.drawProgress.visible = false;
                 }
+
             }
         }
     }
@@ -140,24 +145,17 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.token = token;
         this.tokenid = tokenId;
     }
-    public setRoamDrawResult(poolUpdate: op_client.IDRAW_POOL_STATUS) {
-        for (const data of this.poolDatas) {
-            if (data.id === poolUpdate.id) {
-                Object.assign(data, poolUpdate);
-            }
-        }
-        this.setRoamDatas(this.poolDatas);
-    }
+
     private onRoamDrawHandler(tag: string, roamData: op_client.IDRAW_POOL_STATUS) {
         if (tag === "one") {
-            if (this.token < roamData.drawTime && this.money < roamData.unitPrice * roamData.drawTime) {
+            if (!roamData["free"] && this.token < roamData.drawTime && this.money < roamData.unitPrice * roamData.drawTime) {
                 const moneyName = this.tokenid === "IV0000002" ? i18n.t("coin.diamond") : i18n.t("coin.coin");
                 const text = i18n.t("roam.moneytips", { name: moneyName });
                 if (this.send) this.send.runWith(["notice", text]);
                 return;
             }
         } else if (tag === "ten") {
-            if (this.token < roamData.drawTime) {
+            if (!roamData["free"] && this.token < roamData.drawTime) {
                 const moneyName = this.tokenid === "IV0000002" ? i18n.t("coin.diamond") : i18n.t("coin.coin");
                 const moneytag = this.tokenid === "IV0000002" ? i18n.t("coin.gold") : i18n.t("coin.silver");
                 const tokenvalue = roamData.drawTime - this.token;
@@ -245,9 +243,10 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
         this.indexed = index;
         this.expireTime = expireTime;
         this.roamLevTex.text = i18n.t("roam.roamlv", { name: "" }) + ` [color=#FF693A][size=${14 * this.dpr}][b]LV${index}[/b][/size][/color]`;
+        progress = progress > data.targetValue ? progress = data.targetValue : progress;
         this.progreTex.text = `${progress}/${data.targetValue}`;
         this.progreItem.setProgress(progress, data.targetValue);
-        if (progress > data.targetValue) {
+        if (progress >= data.targetValue) {
             this.setInteractive();
         } else {
             this.disableInteractive();
@@ -268,9 +267,11 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
     }
 
     private onHelpHandler() {
+        if (!this.visible) return;
         if (this.send) this.send.runWith("help");
     }
     private onRecivedRewardHandler() {
+        if (!this.visible) return;
         if (this.send) this.send.runWith(["reward", this.indexed]);
     }
     private loopTimeOut(time: number) {
@@ -282,10 +283,11 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
             this.timer = setTimeout(() => {
                 if (!this.scene) return;
                 time -= 1000;
-                if (time < 0) time = 0;
-                this.resetTimeTex.text = i18n.t("roam.resettips", { name: TimeUtils.getDataFormat(time, false) });
                 if (time > 0) {
                     excute();
+                    this.resetTimeTex.text = i18n.t("roam.resettips", { name: TimeUtils.getDataFormat(time, false) });
+                } else {
+                    this.resetTimeTex.visible = false;
                 }
             }, 1000);
         };
@@ -325,6 +327,10 @@ class ProgressItem extends Phaser.GameObjects.Container {
         this.add([this.progreimg, this.graphic, this.sprite, this.sprite2]);
     }
 
+    public destroy() {
+        super.destroy();
+        this.imgMask.destroy(true);
+    }
     refreshMask() {
         const world = this.getWorldTransformMatrix();
         this.imgMask.x = world.tx;
@@ -397,15 +403,24 @@ class RoamDrawItem extends Phaser.GameObjects.Container {
             down = data.drawTime === 1 ? "roam_diamond_butt_one_1" : "roam_diamond_butt_ten_1";
         }
         this.drawButton.setFrameNormal(normal, down);
-        const interval = data.nextFreeTime * 1000 - data["unixTime"];
-        if (interval > 0) {
+        if (data["free"]) {
+            this.drawTips.text = i18n.t("roam.drawfreetips");
             this.drawTips.visible = true;
-            this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDataFormat(interval, false) });
-            this.loopTimeOut(interval);
         } else {
-            this.drawTips.visible = false;
+            if (data.nextFreeTime !== undefined) {
+                const interval = data.nextFreeTime * 1000 - data["unixTime"];
+                if (interval > 0) {
+                    this.drawTips.visible = true;
+                    this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDataFormat(interval, false) });
+                    this.loopTimeOut(interval);
+                } else {
+                    this.drawTips.visible = true;
+                    this.drawTips.text = i18n.t("roam.drawfreetips");
+                }
+            } else {
+                this.drawTips.visible = false;
+            }
         }
-
     }
 
     private onButtonHandler() {
@@ -417,13 +432,15 @@ class RoamDrawItem extends Phaser.GameObjects.Container {
             this.timer = undefined;
         }
         const excute = () => {
-            this.timer= setTimeout(() => {
+            this.timer = setTimeout(() => {
                 if (!this.scene) return;
                 time -= 1000;
-                if (time < 0) time = 0;
-                this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDataFormat(time, false) });
                 if (time > 0) {
+                    this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDataFormat(time, false) });
                     excute();
+                } else {
+                    this.drawTips.text = i18n.t("roam.drawfreetips");
+                    this.roamData["free"] = true;
                 }
             }, 1000);
         };

@@ -13,6 +13,7 @@ export { Algorithm } from "./algorithm";
 export { LogicRectangle } from "./logic.rectangle";
 export { LogicRectangle45 } from "./logic.rectangle45";
 export { IPosition45Obj, Position45 } from "./position45";
+export * from "./projection";
 export { Intersects } from "./intersects";
 export { initLocales } from "./i18n";
 export { Pos } from "./pos";

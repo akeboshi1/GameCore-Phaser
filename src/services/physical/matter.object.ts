@@ -81,7 +81,7 @@ export interface IMatterObject {
 
     removeMount(ele: IMatterObject, targetPos?: IPos): Promise<void>;
 
-    getInteractivePositionList(): Promise<IPos[]>;
+    getInteractivePositionList(): IPos[];
 }
 export class MatterObject implements IMatterObject {
     public _tempVec: Vector;
@@ -490,8 +490,8 @@ export class MatterObject implements IMatterObject {
         this.startMove();
     }
 
-    public async getInteractivePositionList(): Promise<IPos[]> {
-        const interactives = await this.peer.mainPeer.fetchProjectionSize(this.id);
+    public getInteractivePositionList(): IPos[] {
+        const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
             return;
         }

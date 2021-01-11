@@ -41,7 +41,12 @@ export class PicaTreasurePanel extends BasePanel {
         this.addAtlas(UIAtlasKey.common3Key, UIAtlasName.textureUrl(UIAtlasName.common3Url), UIAtlasName.jsonUrl(UIAtlasName.common3Url));
         super.preload();
     }
-
+    public destroy() {
+        super.destroy();
+        if (this.previewPanel) this.previewPanel.destroy();
+        if (this.treasureOpenPanel) this.treasureOpenPanel.destroy();
+        if (this.treasureAllOpenPanel) this.treasureAllOpenPanel.destroy();
+    }
     init() {
         const width = this.cameraWidth;
         const height = this.cameraHeight;
@@ -107,6 +112,7 @@ export class PicaTreasurePanel extends BasePanel {
         if (!this.treasureOpenPanel) {
             this.treasureOpenPanel = new PicaTreasureOpenPanel(this.scene, wid, hei, this.key, this.dpr, this.scale);
             this.treasureOpenPanel.setHandler(new Handler(this, this.OnCloseHandler));
+            this.treasureOpenPanel.y = -20 * this.dpr;
         }
         this.content.add(this.treasureOpenPanel);
         this.treasureOpenPanel.resize(wid, hei);
@@ -124,6 +130,7 @@ export class PicaTreasurePanel extends BasePanel {
         if (!this.treasureAllOpenPanel) {
             this.treasureAllOpenPanel = new PicaTreasureAllOpenPanel(this.scene, wid, hei, this.key, this.dpr, this.scale);
             this.treasureAllOpenPanel.setHandler(new Handler(this, this.OnCloseHandler));
+            this.treasureAllOpenPanel.y = -20 * this.dpr;
         }
         this.content.add(this.treasureAllOpenPanel);
         this.treasureAllOpenPanel.resize(wid, hei);

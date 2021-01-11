@@ -15,6 +15,7 @@ export class PicaRoam extends BasicModel {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_STATUS_RESULT, this.onRetRoamListResult);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT, this.onRetRoamDrawResult);
+           // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS, this.on_Draw_PROGRESS);
         }
     }
 
@@ -63,5 +64,9 @@ export class PicaRoam extends BasicModel {
     private onRetRoamDrawResult(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT = packet.content;
         this.event.emit(ModuleName.PICAROAM_NAME + "_retquestdraw", content);
+    }
+    private on_Draw_PROGRESS(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
+        this.event.emit(ModuleName.PICAROAM_NAME + "_retprogresslist", content);
     }
 }

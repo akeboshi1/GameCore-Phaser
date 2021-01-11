@@ -1,4 +1,4 @@
-import { IPos, LogicPos } from "utils";
+import { IPos, LogicPos, IProjection } from "utils";
 import { InputEnable } from "../element/element";
 import { MatterObject } from "../physical/matter.object";
 import { IRoomService } from "../room/room";
@@ -119,18 +119,17 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         this.addToBlock();
     }
 
-    public getProjectionSize(): IPos {
+    public getProjectionSize(): IProjection {
         const miniSize = this.mRoomService.miniSize;
         const collision = this.mModel.getCollisionArea();
         const origin = this.mModel.getOriginPoint();
-        const rows = collision.length - origin.y;
-        const cols = collision[0].length - origin.x;
-        const width = this.mRoomService.transformToMini90(new LogicPos(0, cols));
-        const height = this.mRoomService.transformToMini90(new LogicPos(rows, 0));
-        const ow = this.mRoomService.transformToMini90(new LogicPos(origin.y));
-        const oh = this.mRoomService.transformToMini90(new LogicPos(origin.x));
-
-        return new LogicPos(width.x - ow.x, height.y - oh.y);
+        const rows = collision.length;
+        const cols = collision[0].length;
+        const width = cols * (miniSize.tileWidth / 2);
+        const height = rows * (miniSize.tileHeight / 2);
+        const offset = this.mRoomService.transformToMini90(new LogicPos(origin.x, origin.y));
+        offset.x += rows * (miniSize.tileWidth / 2);
+        return { offset, width, height };
     }
 
     protected addDisplay(): Promise<any> { return this.createDisplay(); }

@@ -383,6 +383,7 @@
     "resettips": "{{name}}后重置",
     "bottomtips": "每次漫游可获得皮卡星x1，并附赠随机的奖励。",
     "moneytips": "你没有足够的{{name}}漫游!",
-    "paytips": "是否要花费{{name}}购买{{count}}张时空漫游{{tag}}票"
+    "paytips": "是否要花费{{name}}购买{{count}}张时空漫游{{tag}}票",
+    "drawfreetips": "本次抽奖免费"
   }
 }

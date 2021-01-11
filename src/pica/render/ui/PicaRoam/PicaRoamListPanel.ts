@@ -14,6 +14,7 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private send: Handler;
+    private tokenId: string;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -107,7 +108,12 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.setT(0);
     }
 
+    public getRoamTokenDatas() {
+        return this.poolsStatus.get(this.tokenId);
+    }
+
     private onSelectItemHandler(roamData: op_client.IDRAW_POOL_STATUS) {
+        this.tokenId = roamData.tokenId;
         if (this.send) this.send.runWith(["roam", this.poolsStatus.get(roamData.tokenId)]);
     }
     private onCloseHandler() {
@@ -127,6 +133,7 @@ class RoamItem extends Phaser.GameObjects.Container {
     private timebg: NineSlicePatch;
     private timetips: Phaser.GameObjects.Text;
     private timeTex: BBCodeText;
+    private timer: any;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -190,8 +197,12 @@ class RoamItem extends Phaser.GameObjects.Container {
     }
 
     private loopTimeOut(time: number) {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = undefined;
+        }
         const excute = () => {
-            setTimeout(() => {
+            this.timer = setTimeout(() => {
                 if (!this.scene) return;
                 time -= 60000;
                 if (time < 0) time = 0;

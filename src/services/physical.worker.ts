@@ -472,17 +472,5 @@ export class PhysicalPeer extends RPCPeer {
         const body = Bodies.fromVertices(x, y, paths, param);
         obj.setExistingBody(body, addToWorld);
     }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public completeDragonBonesAnimationQueue(id: number) {
-    //     const dragonbones = this.matterObjectMap.get(id);
-    //     if (dragonbones) dragonbones.completeAnimationQueue();
-    // }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public completeFrameAnimationQueue(id: number) {
-    //     const frames = this.matterObjectMap.get(id);
-    //     if (frames) frames.completeAnimationQueue();
-    // }
 }
 const context: PhysicalPeer = new PhysicalPeer();

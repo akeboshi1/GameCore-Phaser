@@ -121,7 +121,7 @@ export class PicaRoamPreviewPanel extends Phaser.GameObjects.Container {
         }
     }
     private onSelectItemHandler(roamData: op_client.IDRAW_POOL_STATUS) {
-        if (this.send) this.send.runWith(["roam", this.poolsStatus.get(roamData.tokenId)]);
+
     }
     private onCloseHandler() {
         if (this.send) this.send.runWith("close");
