@@ -1,7 +1,6 @@
 import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
-import { DisplayObject } from "../display/display.object";
 import { NodeType } from "../managers/display.manager";
 import { Logger } from "utils";
 
@@ -93,11 +92,11 @@ export class MouseManager {
                 // events.push(MouseEvent.Tap);
                 // this.render.emitter.emit(ClickEvent.Tap, pointer, gameobject);
                 if (gameobject && gameobject.parentContainer) {
-                    const displsy = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
-                    let nodeType = -1;
-                    if (displsy && displsy instanceof DisplayObject) {
-                        nodeType = displsy.nodeType;
-                    }
+                    // const displsy = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
+                    // let nodeType = -1;
+                    // if (displsy && displsy instanceof IDisplayObject) {
+                    //     nodeType = displsy.nodeType;
+                    // }
                     if (com && com instanceof FramesDisplay) {
                         if (com.nodeType === NodeType.ElementNodeType) {
                             com.scaleTween();

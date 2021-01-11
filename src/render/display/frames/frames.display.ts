@@ -1,172 +1,190 @@
-import { Logger, Url } from "utils";
-import { DisplayField, DisplayObject } from "../display.object";
-import { IFramesModel } from "structure";
-import { RunningAnimation } from "structure";
+import {BaseDisplay, BaseFramesDisplay} from "display";
+import {Render} from "../../render";
+import {LoadQueue} from "../../loadqueue";
+import {DisplayField, ElementStateType, IFramesModel, RunningAnimation, TitleMask} from "structure";
+import {IDisplayObject} from "../display.object";
+import {IPos, Logger} from "utils";
+import {ReferenceArea} from "../../editor";
+import {ElementTopDisplay} from "../element.top.display";
+import {DisplayMovement} from "../display.movement";
+import { IProjection } from "src/utils/projection";
 
 /**
  * 序列帧显示对象
  */
-export class FramesDisplay extends DisplayObject {
-    protected mFadeTween: Phaser.Tweens.Tween;
-    protected mDisplayDatas: Map<DisplayField, IFramesModel> = new Map<DisplayField, IFramesModel>();
-    protected mScaleTween: Phaser.Tweens.Tween;
-    protected mDisplays: Array<Phaser.GameObjects.Sprite | Phaser.GameObjects.Image> = [];
+export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
+    protected mID: number = undefined;
+    protected mTitleMask: number;
+    protected mNodeType: number = undefined;
+    protected mReferenceArea: ReferenceArea;
+    protected mChildMap: Map<string, any>;
+    protected mTopDisplay: ElementTopDisplay;
+    protected mMovement: DisplayMovement;
     protected mMountContainer: Phaser.GameObjects.Container;
-    protected mMainSprite: Phaser.GameObjects.Sprite;
-    protected mCurAnimation: any;
-    protected mMountList: Phaser.GameObjects.Container[];
-    protected isSetInteractive: boolean = false;
-    protected isInteracitve: boolean = false;
-    private mModel: IFramesModel;
 
-    public load(displayInfo: IFramesModel, field?: DisplayField) {
-        field = !field ? DisplayField.STAGE : field;
-        this.mModel = displayInfo;
-        const data = displayInfo;
-        if (!data || !data.gene) return false;
-        const currentDisplay = this.mDisplayDatas.get(field);
-        if (currentDisplay && currentDisplay.gene === displayInfo.gene) {
-            return false;
-        }
-        this.mDisplayDatas.set(field, data);
-        this.setData("id", this.id);
-        if (this.scene.textures.exists(data.gene)) {
-            this.onLoadCompleted(field);
-        } else {
-            const display = data.display;
-            if (!display) {
-                Logger.getInstance().error("display is undefined");
-            }
-            if (display.texturePath === "" || display.dataPath === "") {
-                Logger.getInstance().error("动画资源报错：", data);
-            } else {
-                this.scene.load.atlas(data.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
-                // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
-                //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
-                // }, this);
-                const cb = (key: string) => {
-                    this.onAddTextureHandler(key, field, cb);
-                };
-                this.scene.textures.on(Phaser.Textures.Events.ADD, cb, this);
-                this.scene.load.start();
-            }
+    private mProjectionSize: IProjection;
+    private mName: string = undefined;
 
-        }
-        return true;
+    constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
+        super(scene);
+        this.mID = id;
+        this.mNodeType = type;
+
+        this.mMovement = new DisplayMovement(scene, this, render);
     }
 
-    public play(animation: RunningAnimation, field?: DisplayField, times?: number) {
-        this.mAnimation = animation;
-        if (!animation) return;
-        field = !field ? DisplayField.STAGE : field;
-        const data = this.mDisplayDatas.get(field);
-        if (this.scene.textures.exists(data.gene) === false) {
+    public destroy() {
+        if (this.mReferenceArea) {
+            this.mReferenceArea.destroy();
+            this.mReferenceArea = undefined;
+        }
+        if (this.mChildMap) {
+            this.mChildMap.clear();
+            this.mChildMap = null;
+        }
+        if (this.mTopDisplay) {
+            this.mTopDisplay.destroy();
+        }
+        if (this.mMovement) {
+            this.mMovement.destroy();
+        }
+        super.destroy();
+    }
+
+    public get id() {
+        return this.mID;
+    }
+
+    public get nodeType() {
+        return this.mNodeType;
+    }
+
+    public set titleMask(val: number) {
+        this.mTitleMask = val;
+    }
+
+    public get titleMask(): number {
+        return this.mTitleMask;
+    }
+
+    public setRootMount(gameObject: Phaser.GameObjects.Container) {
+        super.setRootMount(gameObject);
+
+        this.updateTopDisplay();
+    }
+
+    public showRefernceArea(area: number[][], origin: IPos) {
+        if (!area || area.length <= 0 || !origin) return;
+        if (!this.mReferenceArea) {
+            this.mReferenceArea = new ReferenceArea(this.scene, this.render);
+            this.addChildMap("reference", this.mReferenceArea);
+        }
+        this.mReferenceArea.draw(area, origin);
+        this.addAt(this.mReferenceArea, 0);
+    }
+
+    public hideRefernceArea() {
+        if (this.mReferenceArea) {
+            this.mReferenceArea.destroy();
+            this.mReferenceArea = undefined;
+        }
+    }
+
+    public updateTopDisplay() {
+        if (this.mTopDisplay) this.mTopDisplay.update();
+    }
+
+    public showNickname(name?: string) {
+        if (name === undefined) {
+            name = this.mName;
+        }
+        this.mName = name;
+        if (!this.mTopDisplay) {
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+        }
+        if (!this.checkShowNickname()) return;
+        this.mTopDisplay.showNickname(name);
+    }
+
+    public showTopDisplay(data?: ElementStateType) {
+        if (!data) {
+            if (this.mTopDisplay)
+                this.mTopDisplay.destroy();
+            this.mTopDisplay = undefined;
             return;
         }
-        const aniDatas = data.animations;
-        this.mCurAnimation = aniDatas.get(animation.name);
-        if (!this.mCurAnimation) return;
-        this.clear();
-        const layer = this.mCurAnimation.layer;
-        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
-        if (!container) {
-            container = this.scene.make.container(undefined, false);
-            container.setData("id", this.id);
-            this.addAt(container, DisplayField.STAGE);
-            this.mSprites.set(DisplayField.STAGE, container);
-        }
-        for (let i = 0; i < layer.length; i++) {
-            let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
-            const { frameName, offsetLoc } = layer[i];
-            if (frameName.length > 1) {
-                const key = `${data.gene}_${animation.name}_${i}`;
-                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible,
-                    this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
-                display = this.scene.make.sprite(undefined, false);
-                const anis = (<Phaser.GameObjects.Sprite>display).anims;
-                anis.play(key);
-                if (typeof times === "number") anis.setRepeat(times);
-                if (!this.mMainSprite) {
-                    this.mMainSprite = <Phaser.GameObjects.Sprite>display;
-                }
-            } else {
-                display = this.scene.make.image({ key: data.gene, frame: frameName[0] });
-            }
-            display.setData("id", this.id);
-            this.mDisplays.push(display);
-            display.scaleX = animation.flip ? -1 : 1;
-            let x = offsetLoc.x;
-            const y = offsetLoc.y;
-            if (animation.flip) {
-                x = (0 - (display.width + x));
-            }
-            display.x = x + display.width * 0.5;
-            display.y = y + display.height * 0.5;
-            container.add(display);
+        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+        this.mTopDisplay.loadState(data);
+    }
 
-            // const graphics = this.scene.make.graphics(undefined, false);
-            // graphics.fillStyle(0xFF0000);
-            // graphics.fillCircle(0, 0, 10);
-            // this.add(graphics);
+    public showBubble(text: string, setting: any) {// op_client.IChat_Setting
+        if (!this.mTopDisplay) {
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
         }
-        // if (!this.isSetInteractive) {
-        this.isInteracitve ? this.setInteractive() : this.disableInteractive();
-        this.isSetInteractive = true;
-        // }
-        // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
-        this.initBaseLoc(DisplayField.STAGE, animation);
-        // }
-        this.emit("updateAnimation");
-        if (this.mMainSprite) {
-            this.mMainSprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+        this.mTopDisplay.showBubble(text, setting);
+    }
+
+    public clearBubble() {
+        if (!this.mTopDisplay) return;
+        this.mTopDisplay.clearBubble();
+    }
+
+    public created() {
+        super.created();
+        this.render.mainPeer.elementDisplayReady(this.id);
+    }
+
+    public get projectionSize(): IProjection {
+        if (!this.mProjectionSize) {
+            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
         }
+        return this.mProjectionSize;
+    }
+
+    public play(val: RunningAnimation) {
+        super.play(val);
+        this.fetchProjection();
         if (this.mMountContainer && this.mCurAnimation.mountLayer) {
-            const stageContainer = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
+            const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
             if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
-        super.play(animation, field, times);
     }
 
-    public playEffect() {
+    public doMove(moveData: any) {
+        this.mMovement.doMove(moveData);
+    }
+
+    public setPosition(x?: number, y?: number, z?: number, w?: number): this {
+        super.setPosition(x, y, z, w);
+
+        this.updateTopDisplay();
+        return this;
+    }
+
+    public addEffect(display: IDisplayObject) {
+        if (!display) {
+            return Logger.getInstance().error("Failed to add effect, display does not exist");
+        }
+        const backend = display.getSprite(DisplayField.BACKEND);
+        if (backend) {
+            this.addAt(backend, DisplayField.BACKEND);
+        }
+        const frontend = display.getSprite(DisplayField.FRONTEND);
+        if (frontend) {
+            this.addAt(frontend, DisplayField.FRONTEND);
+        }
+    }
+
+    public removeEffect() {
         const data = this.mDisplayDatas.get(DisplayField.Effect);
-        if (!data) {
-            return;
+        if (data) {
+            this.mDisplayDatas.delete(DisplayField.Effect);
+            this.removeDisplay(DisplayField.BACKEND);
+            this.removeDisplay(DisplayField.FRONTEND);
         }
-        const anis = data.animations;
-        const aniName = data.animationName;
-        if (!anis) {
-            return;
-        }
-        // TODO
-        const ani = anis.get(aniName);
-        if (!ani) {
-            return;
-        }
-        const layer = ani.layer;
-        const effects = [];
-        for (let i = 0; i < layer.length; i++) {
-            let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
-            const { frameName, offsetLoc } = layer[i];
-            if (frameName.length > 1) {
-                const key = `${data.gene}_${aniName}_${i}`;
-                this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, ani.frameRate, ani.loop, ani.frameDuration);
-                display = this.scene.make.sprite(undefined, false).play(key);
-            } else {
-                display = this.scene.make.image(undefined, false).setTexture(data.gene, frameName[0]);
-            }
-            display.x = offsetLoc.x + display.width * 0.5;
-            display.y = offsetLoc.y + display.height * 0.5;
-            effects.push(display);
-        }
-        if (effects.length > 1) {
-            this.addAt(effects[1], DisplayField.BACKEND);
-            this.mSprites.set(DisplayField.BACKEND, effects[1]);
-        }
-        this.addAt(effects[0], DisplayField.FRONTEND);
-        this.mSprites.set(DisplayField.FRONTEND, effects[0]);
     }
 
-    public mount(display: DisplayObject, targetIndex?: number) {
+    public mount(display: BaseDisplay, targetIndex?: number) {
         if (!display) return;
         if (this.mDisplays.length <= 0) {
             return;
@@ -175,16 +193,16 @@ export class FramesDisplay extends DisplayObject {
             return;
         }
         if (!this.mCurAnimation.mountLayer) {
-            Logger.getInstance().error(`mountLyaer does not exist ${this.id}`);
+            Logger.getInstance().error(`mountLyaer does not exist ${this.mAnimation}`);
             return;
         }
-        const { index, mountPoint } = this.mCurAnimation.mountLayer;
+        const {index, mountPoint} = this.mCurAnimation.mountLayer;
         if (targetIndex === undefined) targetIndex = 0;
         if (targetIndex >= mountPoint.length) {
             Logger.getInstance().error("mount index does not exist");
             return;
         }
-        let { x } = mountPoint[targetIndex];
+        let {x} = mountPoint[targetIndex];
         if (this.mAnimation.flip) {
             x = 0 - x;
         }
@@ -195,7 +213,7 @@ export class FramesDisplay extends DisplayObject {
             this.mMountContainer = this.scene.make.container(undefined, false);
         }
         if (!this.mMountContainer.parentContainer) {
-            const container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
+            const container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
             if (container) container.addAt(this.mMountContainer, index);
         }
         this.mMountContainer.addAt(display, targetIndex);
@@ -208,7 +226,7 @@ export class FramesDisplay extends DisplayObject {
         }
     }
 
-    public unmount(display: DisplayObject) {
+    public unmount(display: BaseDisplay) {
         if (!this.mMountContainer) {
             return;
         }
@@ -223,34 +241,6 @@ export class FramesDisplay extends DisplayObject {
         if (list.length <= 0 && this.mDisplays.length > 0) {
             this.mDisplays[0].off("animationupdate", this.onAnimationUpdateHandler, this);
         }
-    }
-
-    public fadeIn(callback?: () => void) {
-        if (this.mAlpha === 0) {
-            return;
-        }
-        this.alpha = 0;
-        this.clearFadeTween();
-        this.mFadeTween = this.scene.tweens.add({
-            targets: this,
-            alpha: this.mAlpha,
-            duration: 1200,
-            onComplete: () => {
-                if (callback) callback();
-            },
-        });
-    }
-
-    public fadeOut(callback?: () => void) {
-        this.clearFadeTween();
-        this.mFadeTween = this.scene.tweens.add({
-            targets: this,
-            alpha: 0,
-            duration: 1200,
-            onComplete: () => {
-                if (callback) callback();
-            },
-        });
     }
 
     public scaleTween() {
@@ -277,185 +267,32 @@ export class FramesDisplay extends DisplayObject {
         });
     }
 
-    public setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this {
-        // super.setInteractive(shape, callback, dropZone);
-        this.isInteracitve = true;
-        this.mDisplays.forEach((display) => {
-            display.setInteractive({ pixelPerfect: true });
-        });
-        return this;
+    protected addChildMap(key: string, display: Phaser.GameObjects.GameObject) {
+        if (!this.mChildMap) {
+            this.mChildMap = new Map();
+        }
+        this.mChildMap.set(key, display);
     }
 
-    public disableInteractive(): this {
-        // super.disableInteractive();
-        this.isInteracitve = false;
-        this.mDisplays.forEach((display) => {
-            display.disableInteractive();
-        });
-        return this;
+    protected async fetchProjection() {
+        if (!this.id) return;
+        this.mProjectionSize = await this.render.mainPeer.fetchProjectionSize(this.id);
     }
 
-    public removeEffect() {
-        const data = this.mDisplayDatas.get(DisplayField.Effect);
-        if (data) {
-            this.mDisplayDatas.delete(DisplayField.Effect);
-            this.removeDisplay(DisplayField.BACKEND);
-            this.removeDisplay(DisplayField.FRONTEND);
-        }
+    protected completeFrameAnimationQueue() {
+        super.completeFrameAnimationQueue();
+        this.render.mainPeer.completeFrameAnimationQueue(this.id);
     }
 
-    public removeDisplay(field: DisplayField) {
-        const display = this.mSprites.get(field);
-        if (display) {
-            this.mDisplayDatas.delete(field);
-            display.destroy();
-        }
-    }
-
-    public destroy() {
-        this.mSprites.forEach((sprite) => sprite.destroy());
-        this.mSprites.clear();
-
-        this.clear();
-
-        if (this.mFadeTween) {
-            this.clearFadeTween();
-            this.mFadeTween = undefined;
-        }
-        if (this.mScaleTween) {
-            this.mScaleTween.stop();
-            this.mScaleTween = undefined;
-        }
-
-        this.mDisplayDatas.clear();
-        super.destroy();
-    }
-
-    protected createDisplay(key: string, ani: any) {
-        // const ani = data.getAnimations(animationName);
-        const layer = ani.layer;
-        let display: any;
-        for (let i = 0; i < layer.length; i++) {
-            if (layer[i].frameName.length > 1) {
-                display = this.scene.make.sprite(undefined, false);
-                const aniName = `${key}_${ani.name}_${i}`;
-                this.makeAnimation(key, key, layer[i].frameName, layer[i].frameVisible,
-                    this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
-                display = this.scene.make.sprite(undefined, false);
-            } else {
-                display = this.scene.make.image(undefined, false);
-            }
-            this.mDisplays.push(display);
-        }
-    }
-
-    protected clearFadeTween() {
-        if (this.mFadeTween) {
-            this.mFadeTween.stop();
-            this.mFadeTween.remove();
-        }
+    protected checkShowNickname(): boolean {
+        return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
     }
 
     protected clear() {
-        for (const display of this.mDisplays) {
-            display.destroy();
-        }
+        super.clear();
+
         if (this.mMountContainer && this.mMountContainer.parentContainer) {
             this.mMountContainer.parentContainer.remove(this.mMountContainer);
-        }
-        this.mMountList = [];
-        this.mDisplays = [];
-        this.mMainSprite = null;
-
-    }
-
-    private onAddTextureHandler(key: string, field?: DisplayField, cb?: (key: string) => void) {
-        if (field === undefined) {
-            field = DisplayField.STAGE;
-        }
-        const data = this.mDisplayDatas.get(field);
-        if (data && data.gene === key) {
-            this.scene.textures.off(Phaser.Textures.Events.ADD, cb, this);
-            this.onLoadCompleted(field);
-        }
-    }
-
-    private onLoadCompleted(field: DisplayField) {
-        const data = this.mDisplayDatas.get(field);
-        if (!data) {
-            return;
-        }
-        if (this.scene.textures.exists(data.gene)) {
-            if (field === DisplayField.STAGE) {
-                if (this.mAnimation) this.play(this.mAnimation);
-            } else {
-                this.playEffect();
-            }
-            super.created();
-        }
-    }
-
-    private makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], frameRate: number, loop: boolean, frameDuration?: number[]) {
-        if (frameVisible && frameName.length !== frameVisible.length) {
-            Logger.getInstance().error("wrong data: frameName.length: " + frameName.length + "; frameVisible.length: " + frameVisible.length);
-            return;
-        }
-        if (frameDuration && frameName.length !== frameDuration.length) {
-            Logger.getInstance().error("wrong data: frameName.length: " + frameName.length + "; frameDuration.length: " + frameDuration.length);
-            return;
-        }
-        if (this.scene.anims.exists(key)) {
-            return;
-        }
-        const frames = [];
-        for (let i = 0; i < frameName.length; i++) {
-            const frame = frameName[i];
-            const visible = frameVisible ? frameVisible[i] : true;
-            if (frameDuration) {
-                frames.push({ key: gen, frame, duration: frameDuration[i] * 1000, visible });
-            } else {
-                frames.push({ key: gen, frame, visible });
-            }
-        }
-        const repeat = loop ? -1 : 1;
-        const config: Phaser.Types.Animations.Animation = {
-            key,
-            frames,
-            frameRate,
-            repeat,
-        };
-        this.scene.anims.create(config);
-    }
-
-    private initBaseLoc(field: DisplayField, playAnimation: RunningAnimation) {
-        const data: IFramesModel = this.mDisplayDatas.get(field);
-        // const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
-        if (this.mDisplays.length < 1 || !data || !data.animations) return;
-        // const animations = data.getAnimations(aniName);
-        // if (!animations) return;
-        const { name, flip } = playAnimation;
-        // TODO
-        // this.mCollisionArea = data.getCollisionArea(name, flip);
-        // this.mOriginPoint = data.getOriginPoint(name, flip);
-
-        // if (this.mReferenceArea) {
-        //     this.showRefernceArea();
-        // }
-    }
-
-    private onAnimationRepeatHander() {
-        const queue = this.mAnimation.playingQueue;
-        if (queue.playedTimes === undefined) {
-            queue.playedTimes = 1;
-        } else {
-            queue.playedTimes++;
-        }
-        if (queue.playedTimes >= queue.playTimes) {
-            if (this.mMainSprite) {
-                this.mMainSprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
-            }
-            // this.emit("animationComplete");
-            this.render.mainPeer.completeFrameAnimationQueue(this.id);
         }
     }
 
@@ -478,27 +315,11 @@ export class FramesDisplay extends DisplayObject {
         return ((mask >> idx) % 2) === 1;
     }
 
-    get spriteWidth(): number {
-        let width = 0;
-        if (this.mDisplays) {
-            for (const display of this.mDisplays) {
-                if (display.width > width) width = display.width;
-            }
-        }
-        return width;
+    get sortX() {
+        return (this.x - this.projectionSize.offset.x) / (2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / Math.sin(45 * Math.PI / 180) + this.z;
     }
 
-    get spriteHeight(): number {
-        let height = 0;
-        if (this.mDisplays) {
-            for (const display of this.mDisplays) {
-                if (display.height > height) height = display.height;
-            }
-        }
-        return height;
-    }
-
-    get topPoint() {
-        return new Phaser.Geom.Point(0, -this.spriteHeight);
+    get sortY() {
+        return -((this.x - this.projectionSize.offset.x) / 2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / (2 * Math.sin(45 * Math.PI / 180));
     }
 }

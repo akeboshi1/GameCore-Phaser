@@ -75,7 +75,24 @@ export class PicaRoamMediator extends BasicMediator {
     }
 
     private onRetRoamListResult(pools: op_client.IDRAW_POOL_STATUS[]) {
-        this.poolsData = pools;
+        if (this.poolsData === undefined) {
+            this.poolsData = pools;
+        } else {
+            pools.forEach((pool) => {
+                let found = false;
+                for (let i = 0 ; i < this.poolsData.length ; i++) {
+                    if (this.poolsData[i].id === pool.id) {
+                        this.poolsData[i] = pool;
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    this.poolsData[pool.id] = pool;
+                }
+            });
+        }
+
+        // this.poolsData = pools;
         this.updateServiceTime(pools);
         if (this.mView) this.mView.setRoamDataList(pools);
     }

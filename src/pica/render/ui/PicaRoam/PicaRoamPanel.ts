@@ -73,6 +73,9 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.tempDatas = pools;
         if (!this.mInitialized) return;
         this.roamListPanel.setRoamDataList(pools);
+        if (this.roamDrawPanel) {
+            this.roamDrawPanel.setRoamDatas(pools);
+        }
     }
 
     public payDrawHandler(id: string) {

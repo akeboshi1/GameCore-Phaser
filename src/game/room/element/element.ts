@@ -8,6 +8,7 @@ import { ISprite } from "../display/sprite/sprite";
 import { IRoomService, Room } from "../room/room";
 import { IElementManager } from "./element.manager";
 import { interval } from "../../game";
+import { IProjection } from "src/utils/projection";
 
 export interface IElement {
     readonly id: number;
@@ -65,7 +66,7 @@ export interface IElement {
 
     getInteractivePositionList(): IPos[];
 
-    getProjectionSize(): IPos;
+    getProjectionSize(): IProjection;
 }
 export interface MoveData {
     destPos?: LogicPos;
@@ -145,7 +146,7 @@ export class Element extends BlockObject implements IElement {
 
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
-    // protected mDisplay: DisplayObject | undefined;
+    // protected mDisplay: BaseDisplay | undefined;
     // protected mBubble: BubbleContainer;
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
