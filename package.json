@@ -50,7 +50,6 @@
         "pathfinding": "https://github.com/raymanyoung/PathFinding.js",
         "poly-decomp": "^0.3.0",
         "simple-sha1": "^3.0.1",
-        "stats.js": "^0.17.0",
         "tooqinggamephaser": "^0.2.8",
         "webworker-rpc": "git://github.com/ApowoGames/webworker-rpc",
         "worker-loader": "^3.0.2"
