@@ -145,14 +145,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.token = token;
         this.tokenid = tokenId;
     }
-    public setRoamDrawResult(poolUpdate: op_client.IDRAW_POOL_STATUS) {
-        for (const data of this.poolDatas) {
-            if (data.id === poolUpdate.id) {
-                Object.assign(data, poolUpdate);
-            }
-        }
-        this.setRoamDatas(this.poolDatas);
-    }
+
     private onRoamDrawHandler(tag: string, roamData: op_client.IDRAW_POOL_STATUS) {
         if (tag === "one") {
             if (!roamData["free"] && this.token < roamData.drawTime && this.money < roamData.unitPrice * roamData.drawTime) {
@@ -421,7 +414,8 @@ class RoamDrawItem extends Phaser.GameObjects.Container {
                     this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDataFormat(interval, false) });
                     this.loopTimeOut(interval);
                 } else {
-                    this.drawTips.visible = false;
+                    this.drawTips.visible = true;
+                    this.drawTips.text = i18n.t("roam.drawfreetips");
                 }
             } else {
                 this.drawTips.visible = false;

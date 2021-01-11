@@ -176,7 +176,7 @@ export class BottomPanel extends PicaBasePanel {
             this.mOutput.expand();
         } else {
             this.mOutput.x = this.resizeColtroll.width - 1 * this.dpr;
-            this.mOutput.y = this.mInput.y - 1 * this.dpr  - this.mOutput.height;
+            this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
             this.resizeColtroll.y = this.mInput.y - 1 * this.dpr - this.resizeColtroll.height * 0.5;
             this.mOutput.collapse();
         }
@@ -341,6 +341,7 @@ class InputContainer extends Phaser.GameObjects.Container {
     private onInputBlurHandler() {
         this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
         // this.emit("blur");
+        this.inputText.setBlur();
     }
 
     private onInputFocusHandler() {
@@ -350,7 +351,7 @@ class InputContainer extends Phaser.GameObjects.Container {
 
     private onPointerSceneHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
         this.emit("pointerScene", currentlyOver);
-        // this.inputText.setBlur();
+        this.inputText.setBlur();
     }
 }
 
