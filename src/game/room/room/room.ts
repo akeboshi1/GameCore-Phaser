@@ -420,7 +420,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public initUI() {
-        if (this.game.uiManager) this.game.uiManager.showMainUI();
+        // if (this.game.uiManager) this.game.uiManager.showMainUI();
         this.mIsLoading = false;
     }
 
