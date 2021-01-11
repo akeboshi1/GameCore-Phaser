@@ -193,14 +193,14 @@ export class DisplayManager {
         return display;
     }
 
-    // public addToSurfaceLayer(display: DisplayObject) {
-    //     const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
-    //     if (!scene) {
-    //         Logger.getInstance().fatal(`scene does not exist`);
-    //         return;
-    //     }
-    //     scene.layerManager.addToLayer(scene.LAYER_SURFACE, display);
-    // }
+    public addToSurfaceLayer(display: FramesDisplay | DragonbonesDisplay) {
+        const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+        scene.layerManager.addToLayer(scene.LAYER_SURFACE, display);
+    }
 
     public removeDisplay(displayID: number): void {
         if (!this.displays.has(displayID)) {
@@ -367,7 +367,7 @@ export class DisplayManager {
     public showNickname(id: number, name: string) {
         const display = this.getDisplay(id);
         if (!display) {
-            return;
+            return Logger.getInstance().log(`can't show nickname ${name}`);
         }
         display.showNickname(name);
         // if (display) display.showNickname(name);
