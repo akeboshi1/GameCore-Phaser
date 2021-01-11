@@ -1,5 +1,5 @@
-import {Url, LogicPoint, LogicPos, Logger, IPos, Size} from "utils";
-import {RunningAnimation, IDragonbonesModel, IFramesModel, ElementStateType, DisplayField} from "structure";
+import {Handler, LogicPos} from "utils";
+import {DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation} from "structure";
 
 export interface IBaseDisplay {
     displayInfo: IDragonbonesModel | IFramesModel | undefined;
@@ -46,6 +46,8 @@ export interface IBaseDisplay {
 }
 
 export abstract class BaseDisplay extends Phaser.GameObjects.Container implements IBaseDisplay {
+    public createdHandler: Handler;
+
     protected mAlpha: number = 1;
     protected mDirection: number = 3;
     protected mDisplayInfo: IDragonbonesModel | IFramesModel | undefined;
@@ -73,6 +75,9 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
     public created() {
         this.mCreated = true;
+        if (this.createdHandler){
+            this.createdHandler.runWith(this.displayInfo);
+        }
     }
 
     public set direction(dir: number) {

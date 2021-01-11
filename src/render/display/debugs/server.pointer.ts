@@ -9,7 +9,7 @@ export class ServerPosition {
         this.dpr = render.scaleRatio;
 
         this.mGridhics = scene.make.graphics(undefined, false);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.mGridhics);
+        (<PlayScene>scene).layerManager.addToLayer("middleLayer", this.mGridhics);
     }
 
     public draw(x: number, y: number) {
