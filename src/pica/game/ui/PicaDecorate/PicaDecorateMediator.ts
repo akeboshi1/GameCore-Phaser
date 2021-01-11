@@ -1,9 +1,9 @@
-import { BasicMediator, Game, IElement, IRoomService, ISprite } from "gamecore";
-import { ModuleName } from "structure";
+import { BasicMediator, Game, IElement } from "gamecore";
+import { ISprite, ModuleName } from "structure";
 import { Direction, IPos, LogicPos, Position45 } from "utils";
 import { op_def, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { DecorateRoom, DecorateRoomService } from "src/game/room/room/decorate.room";
+import { DecorateRoom, DecorateRoomService } from "../../../../game/room/room/decorate.room";
 
 export class PicaDecorateMediator extends BasicMediator {
     private room: DecorateRoomService;
@@ -49,6 +49,7 @@ export class PicaDecorateMediator extends BasicMediator {
             return;
         }
         this.selectedElemetn = element;
+        // this.game.physicalPeer.removeFromMap(this.selectedElemetn.model.id);
         this.room.elementManager.removeFromMap(this.selectedElemetn.model);
         this.selectedElemetn.showRefernceArea();
         if (root) this.clone();
@@ -292,6 +293,7 @@ export class PicaDecorateMediator extends BasicMediator {
         if (this.mSourceData) {
             this.selectedElemetn.setPosition(new LogicPos(this.mSourceData.x, this.mSourceData.y, this.mSourceData.z), false);
             this.selectedElemetn.setDirection(this.mSourceData.direction);
+            // this.game.physicalPeer.addToMap(this.selectedElemetn.model.id);
             this.room.elementManager.addToMap(this.selectedElemetn.model);
         } else {
             this.room.elementManager.remove(this.selectedElemetn.id);

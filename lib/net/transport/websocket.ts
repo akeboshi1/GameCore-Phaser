@@ -80,6 +80,7 @@ export class WSWrapper extends EventEmitter {
 
         this._connection.onmessage = (ev: any) => {
             // console.info(`_connection.onmessage`);
+            const now = new Date().getTime();
             this.onData(ev.data);
         };
 
@@ -160,7 +161,7 @@ export class WSWrapper extends EventEmitter {
             new Promise((resolve, reject) => {
                 try {
                     this._connection.send(packet);
-                    resolve();
+                    resolve(null);
                 } catch (e) {
                     reject(e);
                 }

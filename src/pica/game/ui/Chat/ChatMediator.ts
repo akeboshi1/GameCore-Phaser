@@ -36,11 +36,11 @@ export class ChatMediator extends BasicMediator {
         }
 
         if (val === "##show matter") {
-            return this.game.roomManager.currentRoom.matterWorld.debugEnable();
+            return this.game.peer.physicalPeer.debugEnable();
         }
 
         if (val === "##hide matter") {
-            return this.game.roomManager.currentRoom.matterWorld.debugDisable();
+            return this.game.peer.physicalPeer.debugDisable();
         }
         model.sendMessage(val);
     }

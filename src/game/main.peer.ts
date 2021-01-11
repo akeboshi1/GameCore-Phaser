@@ -5,10 +5,9 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import { Logger, LogicPoint } from "utils";
-import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType } from "structure";
+import { IPos, Logger, LogicPoint, Pos } from "utils";
+import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
 import { PicaGame } from "picaWorker";
-import { CacheDataManager } from "./data.manager/cache.dataManager";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
 for (const key in protos) {
@@ -23,6 +22,7 @@ export class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady: boolean = false;
+    private mPhysicalPeer: any;
     // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
@@ -32,6 +32,10 @@ export class MainPeer extends RPCPeer {
 
     get render() {
         return this.remote[RENDER_PEER].Render;
+    }
+
+    get physicalPeer() {
+        return this.remote[PHYSICAL_WORKER].PhysicalPeer;
     }
 
     get heartBeatPeer() {
@@ -89,10 +93,19 @@ export class MainPeer extends RPCPeer {
         Logger.getInstance().log("createGame");
         // const url: string = "/js/game" + "_v1.0.398";
         Logger.getInstance().log("render link onReady");
-        this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            this.game.createGame(this.mConfig);
-            Logger.getInstance().log("heartBeatworker onReady in mainworker");
+        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+            Logger.getInstance().log("Physcialworker onReady");
+            this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
+                this.game.createGame(this.mConfig);
+                Logger.getInstance().log("heartBeatworker onReady in mainworker");
+            });
         });
+    }
+
+    @Export()
+    public getScaleRatio() {
+        return this.game.scaleRatio;
     }
 
     @Export()
@@ -110,20 +123,8 @@ export class MainPeer extends RPCPeer {
         this.game.refreshToken();
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public completeDragonBonesAnimationQueue(id: number) {
-        const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
-        if (dragonbones) dragonbones.completeAnimationQueue();
-    }
-
-    @Export([webworker_rpc.ParamType.num])
-    public completeFrameAnimationQueue(id: number) {
-        const frames = this.game.roomManager.currentRoom.elementManager.get(id);
-        if (frames) frames.completeAnimationQueue();
-    }
-
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num])
-    public changePlayerState(id: number, state: string, times: number) {
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public changePlayerState(id: number, state: string, times?: number) {
         const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
         if (dragonbones) dragonbones.changeState(state, times);
     }
@@ -234,6 +235,11 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public getRoomTransformTo90(p: any) {
+        return this.game.roomManager.currentRoom.transformTo90(p);
+    }
+
+    @Export()
     public getCurrentRoomSize(): any {
         return this.game.roomManager.currentRoom.roomSize;
     }
@@ -286,22 +292,36 @@ export class MainPeer extends RPCPeer {
         this.game.exitUser();
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public displayStartMove(id: number) {
-        const element = this.game.roomManager.currentRoom.playerManager.get(id);
-        if (element) element.startMove();
-    }
+    // @Export([webworker_rpc.ParamType.num])
+    // public displayStartMove(id: number) {
+    //     if (!this.game.roomManager.currentRoom) return;
+    //     const element = this.game.roomManager.currentRoom.playerManager.get(id);
+    //     if (element) element.startMove();
+    // }
 
     @Export([webworker_rpc.ParamType.num])
     public displayCompleteMove(id: number) {
+        if (!this.game.roomManager.currentRoom) return;
         const element = this.game.roomManager.currentRoom.playerManager.get(id);
         if (element) element.completeMove();
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public displayStopMove(id: number) {
-        const element = this.game.roomManager.currentRoom.playerManager.get(id);
-        if (element) element.stopMove();
+    // @Export([webworker_rpc.ParamType.num])
+    // public displayStopMove(id: number) {
+    //     if (!this.game.roomManager.currentRoom) return;
+    //     const element = this.game.roomManager.currentRoom.playerManager.get(id);
+    //     if (element) element.stopMove();
+    // }
+
+    @Export()
+    public syncPosition(targetPoint) {
+        this.game.user.syncPosition(targetPoint);
+    }
+
+    @Export([webworker_rpc.ParamType.boolean])
+    public setSyncDirty(boo: boolean) {
+        if (!this.game.roomManager.currentRoom) return;
+        this.game.roomManager.currentRoom.cameraService.syncDirty = boo;
     }
 
     @Export()
@@ -439,12 +459,12 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public framesModel_getCollisionArea(id: number, aniName: string, flip: boolean): number[][] {
+    public framesModel_getCollisionArea(id: number): number[][] {
         return null;
     }
 
     @Export()
-    public framesModel_getOriginPoint(id: number, aniName: string, flip: boolean): LogicPoint {
+    public framesModel_getOriginPoint(id: number): LogicPoint {
         return null;
     }
 
@@ -495,35 +515,115 @@ export class MainPeer extends RPCPeer {
         return this.game.clock.unixTime;
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public findPath(x: number, y: number, targets: [], targetId?: number, toReverse: boolean = false) {
-        this.game.user.findPath(x, y, targets, targetId, toReverse);
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public setPosition(id: number, updateBoo: boolean, x: number, y: number, z?: number) {
+        const ele = this.game.roomManager.currentRoom.getElement(id);
+        if (ele) {
+            ele.setPosition({ x, y, z }, updateBoo);
+        }
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public moveMotion(x: number, y: number, targetId?: number) {
-        this.game.user.moveMotion(x, y, targetId);
-    }
+    // @Export([webworker_rpc.ParamType.num])
+    // public removePartMount(id: number, targets?: any, paths?: any) {
+    //     const ele: IElement = this.game.roomManager.currentRoom.elementManager.get(id);
+    //     if (!ele) return;
+    //     ele.removePartMount(targets, paths);
+    // }
 
     @Export()
-    public stopMove() {
-        this.game.user.tryStopMove();
+    public selfStartMove() {
+        const user = this.game.user;
+        if (user) {
+            user.startMove();
+        }
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public getInteractivePosition(id: number) {
+    public tryStopMove(id: number, pos?: any, targetID?: number,) {
+        if (this.game.user) {
+            this.game.user.tryStopMove(targetID, pos);
+        }
+    }
+
+    @Export()
+    public async removeMount(id: number, mountID: number, stopPos: IPos) {
+        const room = this.game.roomManager.currentRoom;
+        if (!room) {
+            return Logger.getInstance().error(`room not exist`);
+        }
+        const ele = room.getElement(id);
+        const target = room.getElement(mountID);
+        if (!ele || !target) {
+            return Logger.getInstance().error(`target not exist`);
+        }
+        return ele.removeMount(target, stopPos);
+    }
+
+    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    // public findPath(x: number, y: number, targets: [], targetId?: number, toReverse: boolean = false) {
+    //     this.game.user.findPath(x, y, targets, targetId, toReverse);
+    // }
+
+    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    // public moveMotion(x: number, y: number, targetId?: number) {
+    //     this.game.user.moveMotion(x, y, targetId);
+    // }
+
+    @Export([webworker_rpc.ParamType.num])
+    public stopMove(id: number) {
         const ele = this.game.roomManager.currentRoom.getElement(id);
         if (ele) {
-            return ele.getInteractivePositionList();
+            ele.stopMove();
         }
-        return null;
     }
+
+    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    // public tryMove(px, py, npx, npy) {
+    //     this.game.roomManager.currentRoom.tryMove(px, py, npx, npy);
+    // }
+
+    // @Export([webworker_rpc.ParamType.num])
+    // public getInteractivePosition(id: number) {
+    //     const ele = this.game.roomManager.currentRoom.getElement(id);
+    //     if (ele) {
+    //         return ele.getInteractivePositionList();
+    //     }
+    //     return null;
+    // }
+
+    // @Export([webworker_rpc.ParamType.num])
+    // public disableBlock(id: number) {
+    //     const ele = this.game.roomManager.currentRoom.getElement(id);
+    //     if (ele) {
+    //         ele.disableBlock();
+    //     }
+    // }
+
+    // @Export([webworker_rpc.ParamType.num])
+    // public enableBlock(id: number) {
+    //     const ele = this.game.roomManager.currentRoom.getElement(id);
+    //     if (ele) {
+    //         ele.enableBlock();
+    //     }
+    // }
 
     @Export([webworker_rpc.ParamType.str])
     public uploadHeadImage(url: string) {
         this.game.httpService.uploadHeadImage(url).then(() => {
             this.game.emitter.emit("updateDetail");
         });
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public completeDragonBonesAnimationQueue(id: number) {
+        const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
+        if (dragonbones) dragonbones.completeAnimationQueue();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public completeFrameAnimationQueue(id: number) {
+        const frames = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (frames) frames.completeAnimationQueue();
     }
 
     // ==== todo

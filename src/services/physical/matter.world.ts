@@ -1,44 +1,61 @@
-import { Bodies, Body, Composite, Engine, World, Events } from "matter-js";
-import { ChatCommandInterface, Logger, Pos } from "utils";
-import { IRoomService } from "../room/room";
+import { Bodies, Body, Composite, Engine, Render, World } from "matter-js";
+import { PhysicalPeer } from "../../services/physical.worker";
+import { ISizeChart } from "structure";
+import { AStar, ChatCommandInterface, IPos, IPosition45Obj, LogicPos, Pos, Position45 } from "utils";
 import { MatterObject } from "./matter.object";
+import { MatterUserObject } from "./matter.user.object";
 
-export class MatterWorld implements ChatCommandInterface {
+export class MatterWorld implements ChatCommandInterface, ISizeChart {
     public readonly engine: Engine;
     public readonly localWorld: World;
     public enabled = true;
     public autoUpdate = true;
-    private room: IRoomService;
+    // public map: number[][];
+    public matterUser: MatterUserObject;
+    private mAstar: AStar;
     private drawBodies: boolean = false;
     private ignoreSensors?: Map<number, MatterObject>;
+    private mSize: IPosition45Obj;
+    private mMiniSize: IPosition45Obj;
     // private elements: Map<number, MatterObject>;
 
-    constructor(room: IRoomService) {
-        this.room = room;
+    constructor(private peer: PhysicalPeer) {
         this.engine = Engine.create(undefined, { positionIterations: 8, velocityIterations: 10 });
         this.localWorld = this.engine.world;
         this.localWorld.gravity.x = 0;
         this.localWorld.gravity.y = 0;
-
         this.ignoreSensors = new Map();
-
-        // this.debugGraphics = room.scene.make.graphics(undefined);
-        // room.addToSceneUI(this.debugGraphics);
-
-        // this.elements = new Map();
-
-        // Events.on(this.engine, "collisionStart", (event) => {
-        // const pairs = event.pairs;
-        // for (const pair of pairs) {
-        //     const bodyA = pair.bodyA,
-        //           bodyB = pair.bodyB;
-        //     if (bodyA.label === "User" && bodyB.label === "Element" || bodyB.label === "User" && bodyA.label === "Element") {
-        //         // TODO
-        //     }
-        // }
-        // });
-
+        this.mAstar = new AStar(this);
         this.drawWall();
+    }
+
+    public clear() {
+        World.clear(this.engine.world, false);
+        Engine.clear(this.engine);
+    }
+
+    public initAstar(map: any) {
+        this.mAstar.init(map);
+    }
+
+    public setElementWalkable(x: number, y: number, val: boolean) {
+        this.mAstar.setWalkableAt(y, x, val);
+    }
+
+    set size(size: IPosition45Obj) {
+        this.mSize = size;
+    }
+
+    get size(): IPosition45Obj {
+        return this.mSize;
+    }
+
+    set miniSize(size: IPosition45Obj) {
+        this.mMiniSize = size;
+    }
+
+    get miniSize(): IPosition45Obj {
+        return this.mMiniSize;
     }
 
     public update() {
@@ -51,6 +68,53 @@ export class MatterWorld implements ChatCommandInterface {
             this.renderWireframes(bodies);
         }
     }
+
+    public setUser(user: MatterUserObject) {
+        this.matterUser = user;
+    }
+
+    public findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
+        if (!targets || !this.matterUser) {
+            return;
+        }
+        this.matterUser.findPath(targets, targetId, toReverse);
+    }
+
+    public getPath(startPos: IPos, targets: IPos[], toReverse: boolean = false): IPos[] {
+        return this.mAstar.find(startPos, targets, toReverse);
+    }
+
+    // public tryMove() {
+    //     const player = this.matterUser;
+    //     if (!player) {
+    //         return;
+    //     }
+    //     const moveData = player.moveData;
+    //     const pos = moveData.posPath;
+    //     if (!pos || pos.length < 0) {
+    //         return;
+    //     }
+
+    //     const step = moveData.step || 0;
+    //     if (step >= pos.length) {
+    //         return;
+    //     }
+
+    //     const playerPosition = player.getPosition();
+    //     // const position = op_def.PBPoint3f.create();
+    //     // position.x = playerPosition.x;
+    //     // position.y = playerPosition.y;
+
+    //     if (pos[step] === undefined) {
+    //         // Logger.getInstance().log("move error", pos, step);
+    //         return;
+    //     }
+    //     // const nextPosition = op_def.PBPoint3f.create();
+    //     // nextPosition.x = pos[step].x;
+    //     // nextPosition.y = pos[step].y;
+
+    //     this.peer.mainPeer.tryMove(playerPosition.x, playerPosition.y, pos[step].x, pos[step].y);
+    // }
 
     public setSensor(body: Body, val: boolean) {
         if (!body) {
@@ -78,7 +142,7 @@ export class MatterWorld implements ChatCommandInterface {
 
     public debugDisable() {
         this.drawBodies = false;
-        this.room.game.renderPeer.showMatterDebug();
+        this.peer.render.hideMatterDebug();
     }
 
     public add(body: Body | Body[], ignoreSensor: boolean = false, ele?: MatterObject) {
@@ -112,19 +176,14 @@ export class MatterWorld implements ChatCommandInterface {
         Composite.remove(this.localWorld, body, deep);
     }
 
-    public drawWall() {
-        if (!this.room) {
-            return;
-        }
-        const size = this.room.roomSize;
+    public async drawWall() {
+        const size = await this.peer.mainPeer.getCurrentRoomSize();
         if (!size) {
             return;
         }
         const { rows, cols } = size;
-        const dpr = this.room.game.scaleRatio;
-        // const point1 = this.room.transformTo90(new Pos(0, 0));
-        const transformTo90 = this.room.transformTo90.bind(this.room);
-        const vertexSets = [transformTo90(new Pos(0, 0)), transformTo90(new Pos(cols, 0)), transformTo90(new Pos(cols, rows)), transformTo90(new Pos(0, rows))];
+        const dpr = await this.peer.mainPeer.getScaleRatio();
+        const vertexSets = [Position45.transformTo90(new Pos(0, 0), size), Position45.transformTo90(new Pos(cols, 0), size), Position45.transformTo90(new Pos(cols, rows), size), Position45.transformTo90(new Pos(0, rows), size)];
         vertexSets.map((pos) => {
             pos.x *= dpr;
             pos.y *= dpr;
@@ -137,7 +196,7 @@ export class MatterWorld implements ChatCommandInterface {
             curVertex = vertexSets[i];
             nextBody = vertexSets[i + 1];
             if (!nextBody) nextBody = vertexSets[0];
-            walls[i] = Bodies.fromVertices(curVertex.x - (curVertex.x - nextBody.x >> 1), curVertex.y - (curVertex.y - nextBody.y >> 1), [[{ x: curVertex.x, y: curVertex.y }, { x: nextBody.x, y: nextBody.y }, { x: nextBody.x, y: nextBody.y - 5 * this.room.game.scaleRatio }, { x: curVertex.x, y: curVertex.y - 5 * this.room.game.scaleRatio }]], { isStatic: true });
+            walls[i] = Bodies.fromVertices(curVertex.x - (curVertex.x - nextBody.x >> 1), curVertex.y - (curVertex.y - nextBody.y >> 1), [[{ x: curVertex.x, y: curVertex.y }, { x: nextBody.x, y: nextBody.y }, { x: nextBody.x, y: nextBody.y - 5 * dpr }, { x: curVertex.x, y: curVertex.y - 5 * dpr }]], { isStatic: true });
         }
 
         walls.map((body) => {
@@ -145,6 +204,21 @@ export class MatterWorld implements ChatCommandInterface {
             body.inverseInertia = Infinity;
         });
         this.add(walls);
+    }
+
+    public isWalkableAt(x: number, y: number) {
+        return this.mAstar.isWalkableAt(x, y);
+    }
+
+    public setWalkableAt(x: number, y: number, val: boolean) {
+        this.mAstar.setWalkableAt(y, x, val);
+        // const map = this.map;
+        // const value = map[x][y];
+        // if (value === 0) {
+        //     this.mAstar.setWalkableAt(y, x, false);
+        // } else {
+        //     this.mAstar.setWalkableAt(y, x, val);
+        // }
     }
 
     public v() {
@@ -178,7 +252,7 @@ export class MatterWorld implements ChatCommandInterface {
                 // graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
             }
         }
-        this.room.game.renderPeer.showMatterDebug(result);
+        this.peer.render.showMatterDebug(result);
         // Logger.getInstance().log("=====>>", result);
     }
 }

@@ -10,7 +10,7 @@ export class MatterBodies {
     }
 
     update() {
-        this.mGraphics.clear();
+        if (this.mGraphics) this.mGraphics.clear();
     }
 
     renderWireframes(bodies) {

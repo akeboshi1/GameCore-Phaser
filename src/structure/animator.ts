@@ -1,4 +1,6 @@
-import { AvatarSuit, PlayerState } from "structure";
+import { AvatarSuit } from "./avatar.suit.type";
+import { PlayerState } from "./game.state";
+
 export class Animator {
     public AniAction: any;
     constructor(suits?: AvatarSuit[]) {

@@ -1,4 +1,4 @@
-import { BasicMediator, BasicModel, Game, IElement, UIType } from "gamecore";
+import { BasicMediator, Game, IElement, UIType } from "gamecore";
 import { ModuleName } from "structure";
 import { op_def, op_client } from "pixelpai_proto";
 import { PicaChat } from "picaWorker";
@@ -49,7 +49,7 @@ export class BottomMediator extends BasicMediator {
 
         const contextStr = params[1];
         const contextMap = {
-            "box": this.game.roomManager.currentRoom.matterWorld,
+            "box": this.game.peer.physicalPeer.matterWorld,
             "log": Logger.getInstance()
         };
         const context: ChatCommandInterface = contextMap[contextStr];

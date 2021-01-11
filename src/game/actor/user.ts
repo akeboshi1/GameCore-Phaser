@@ -1,20 +1,17 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { Game, interval } from "../game";
+import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { MoveData, MovePos } from "../room/element/element";
-import { ISprite } from "../room/display/sprite/sprite";
-import { IPos, Logger, LogicPos, Tool } from "utils";
+import { IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState } from "structure";
-import { IPoint } from "game-capsule";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite } from "structure";
 
 export class User extends Player {
     private mUserData: UserDataManager;
     private mMoveStyle: number;
-    private mTargetPoint: IMoveTarget;
+    // private mTargetPoint: IMoveTarget;
     private mSyncTime: number = 0;
     private mSyncDirty: boolean = false;
     private mInputMask: number;
@@ -44,7 +41,8 @@ export class User extends Player {
         this.mId = actor.id;
         this.mRoomService = room;
         this.mElementManager = room.playerManager;
-        this.setMatterWorld(room.matterWorld);
+        this.game.peer.physicalPeer.createMatterUserObject(this.id);
+        // this.setMatterWorld(room.matterWorld);
         if (this.game.avatarType === op_def.AvatarStyle.SuitType) {
             if (!AvatarSuitType.hasAvatarSuit(actor["attrs"])) {
                 if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
@@ -57,103 +55,108 @@ export class User extends Player {
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
     }
 
-    // update() {
-    //     if (this.mMoving) {
-    //         const pos = this.getPosition();
-    //         pos.y += this.offsetY;
-    //         if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
-    //             this.stopMove();
-    //             return;
-    //         }
-    //         // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
-    //         const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
-    //         const dir = Tool.calculateDirectionByRadin(angle);
-    //         this.setDirection(dir);
+    update() {
+        //     if (this.mMoving) {
+        //         const pos = this.getPosition();
+        //         pos.y += this.offsetY;
+        //         if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
+        //             this.stopMove();
+        //             return;
+        //         }
+        //         // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
+        //         const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
+        //         const dir = Tool.calculateDirectionByRadin(angle);
+        //         this.setDirection(dir);
 
-    //         pos.x += Math.cos(angle) * this.mSpeed;
-    //         pos.y += Math.sin(angle) * this.mSpeed;
-    //         this.model.setPosition(pos.x, pos.y);
-    //         if (this.mRootMount) {
-    //             return;
-    //         }
-    //         this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+        //         pos.x += Math.cos(angle) * this.mSpeed;
+        //         pos.y += Math.sin(angle) * this.mSpeed;
+        //         this.model.setPosition(pos.x, pos.y);
+        //         if (this.mRootMount) {
+        //             return;
+        //         }
+        //         this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+        //     }
+    }
+
+    public unmount(targetPos?: IPos): Promise<this> {
+        const mountID = this.mRootMount.id;
+        // super.unmount();
+        this.mRootMount = null;
+        this.unmountSprite(mountID, targetPos);
+        return Promise.resolve(this);
+        //     if (this.mRootMount) {
+        //         let landingPos: IPos;
+        //         const pos = await this.mRoomService.game.physicalPeer.getInteractivePosition(this.mRootMount.id);
+        //         // this.mRootMount.getInteractivePositionList();
+        //         if (pos.length === 0) {
+        //             return;
+        //         }
+        //         const mountID = this.mRootMount.id;
+        //         this.mRootMount = null;
+        //         if (targetPos != null) {
+        //             const path = await this.roomService.findPath(targetPos, pos, true);
+        //             if (path.length > 0) {
+        //                 landingPos = path[0];
+        //             } else {
+        //                 landingPos = pos[0];
+        //             }
+        //         } else {
+        //             landingPos = pos[0];
+        //         }
+        //         this.setPosition(landingPos);
+        //         this.unmountSprite(mountID, landingPos);
+        //         this.enableBlock();
+        //         // this.mDirty = true;
+        //     }
+        //     return this;
+    }
+
+    // public moveMotion(x: number, y: number, targetId?: number) {
+    //     if (this.mRootMount) {
+    //         this.mRootMount.removeMount(this);
     //     }
+    //     this.mTargetPoint = { path: [new LogicPos(x, y)], targetId };
+    //     this.mSyncDirty = true;
+    //     this.game.peer.physicalPeer.setSensor(this.id, false);
+    //     // this.matterWorld.setSensor(this.body, false);
+    //     this.startMove();
     // }
 
-    public unmount(targetPos?: IPos) {
-        if (this.mRootMount) {
-            let landingPos: IPos;
-            const pos = this.mRootMount.getInteractivePositionList();
-            if (pos.length === 0) {
-                return;
-            }
-            const mountID = this.mRootMount.id;
-            this.mRootMount = null;
-            if (targetPos != null) {
-                const path = this.roomService.findPath(targetPos, pos, true);
-                if (path.length > 0) {
-                    landingPos = path[0];
-                } else {
-                    landingPos = pos[0];
-                }
-            } else {
-                landingPos = pos[0];
-            }
-            this.setPosition(landingPos);
-            this.unmountSprite(mountID, landingPos);
-            this.enableBlock();
-            this.mDirty = true;
-        }
-        return this;
-    }
+    // public findPath(x: number, y: number, targets: IPos[], targetId?: number, toReverse: boolean = false) {
+    //     if (!targets) {
+    //         return;
+    //     }
+    //     if (this.mRootMount) {
+    //         this.mRootMount.removeMount(this, targets[0]);
+    //     }
+    //     const pos = this.mModel.pos;
+    //     for (const target of targets) {
+    //         if (target.x === pos.x && target.y === pos.y) {
+    //             this.mTargetPoint = { targetId };
+    //             this.tryStopMove();
+    //             return;
+    //         }
+    //     }
+    //     const path = this.roomService.findPath(this.getPosition(), targets, toReverse);
+    //     if (!path) {
+    //         return;
+    //     }
+    //     if (path.length < 1) {
+    //         this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
+    //         return;
+    //     }
+    //     // path.map((pos: IPos) => pos.y += this.offsetY);
+    //     this.game.peer.physicalPeer.setSensor(this.id, true);
+    //     // this.matterWorld.setSensor(this.body, true);
+    //     this.mTargetPoint = { path, targetId };
+    //     this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
+    //     this.startMove();
+    // }
 
-    public moveMotion(x: number, y: number, targetId?: number) {
-        if (this.mRootMount) {
-            this.mRootMount.removeMount(this);
-        }
-        this.mTargetPoint = { path: [new LogicPos(x, y)], targetId };
-        this.mSyncDirty = true;
-        this.matterWorld.setSensor(this.body, false);
-        this.startMove();
-    }
-
-    public findPath(x: number, y: number, targets: IPos[], targetId?: number, toReverse: boolean = false) {
-        if (!targets) {
-            return;
-        }
-        if (this.mRootMount) {
-            this.mRootMount.removeMount(this, targets[0]);
-        }
-        const pos = this.mModel.pos;
-        for (const target of targets) {
-            if (target.x === pos.x && target.y === pos.y) {
-                this.mTargetPoint = { targetId };
-                this.tryStopMove();
-                return;
-            }
-        }
-        const path = this.roomService.findPath(this.getPosition(), targets, toReverse);
-        if (!path) {
-            return;
-        }
-        if (path.length < 1) {
-            this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
-            return;
-        }
-        // path.map((pos: IPos) => pos.y += this.offsetY);
-        this.matterWorld.setSensor(this.body, true);
-        this.mTargetPoint = { path, targetId };
-        this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
-        this.startMove();
-    }
-
-    public syncPosition() {
-        if (!this.mTargetPoint) {
-            return;
-        }
+    public syncPosition(targetPoint: any) {
         const target = op_def.PBPoint3f.create();
-        target.x = this.mTargetPoint.path[0].x;
-        target.y = this.mTargetPoint.path[0].y;
+        target.x = targetPoint.path[0].x / this.game.scaleRatio;
+        target.y = targetPoint.path[0].y / this.game.scaleRatio;
 
         const userPos = this.getPosition();
         const pos = op_def.PBPoint3f.create();
@@ -164,29 +167,39 @@ export class User extends Player {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SELF = packet.content;
         content.goal = target;
         content.position = pos;
-        content.targetId = this.mTargetPoint.targetId;
+        content.targetId = targetPoint.targetId;
         this.game.connection.send(packet);
     }
 
+    // public startMove() {
+    //     const path = this.mTargetPoint.path;
+    //     if (path.length < 1) {
+    //         return;
+    //     }
+    //     this.changeState(PlayerState.WALK);
+    //     this.mMoving = true;
+    //     this.setStatic(false);
+
+    //     const pos = this.getPosition();
+    //     // pos.y += this.offsetY;
+    //     const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
+    //     // TODO
+    //     const speed = this.mModel.speed * delayTime;
+    //     this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+    // }
+
     public startMove() {
-        const path = this.mTargetPoint.path;
-        if (path.length < 1) {
-            return;
-        }
         this.changeState(PlayerState.WALK);
         this.mMoving = true;
-        this.setStatic(false);
-
-        const pos = this.getPosition();
-        // pos.y += this.offsetY;
-        const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
-        // TODO 待优化 使用update中的delta
-        const speed = this.mModel.speed * interval;
-        this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        // this.mRoomService.game.physicalPeer.startMove();
     }
 
     public stopMove() {
-        super.stopMove();
+        //  super.stopMove();
+        // this.mRoomService.game.physicalPeer.stopMove();
+        this.changeState(PlayerState.IDLE);
+        this.mMoving = false;
+
         if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -203,60 +216,50 @@ export class User extends Player {
             };
             this.mElementManager.connection.send(pkt);
         }
-        // this.mTargetPoint = null;
     }
 
-    // public tryMove(targetPoint: ILogicPoint) {
-    //     this.mTargetPoint = targetPoint;
-    // }
+    public move(moveData: any) {
+        this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
+    }
 
-    // public move(moveData: op_client.IMoveData) {
-    //     // TODO 不能仅判断walk, 移动状态可能还有run
+    public setQueue(animations: op_client.IChangeAnimation[]) {
+        if (this.mMoving) {
+            return;
+        }
+        super.setQueue(animations);
+    }
+
+    // public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
     //     if (this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
     //         if (this.mCurState !== PlayerState.WALK) {
     //             return;
     //         }
-    //     } else {
-    //         this.startMove();
     //     }
-    //     super.move(moveData);
+    //     // movePath.path = [{ x: 885.000000, y: 637.50000}, { x: 915.000000, y: 637.50000}, { x: 945.000000, y: 637.50000}, { x: 975.000000, y: 637.50000}, { x: 1005.00000, y: 637.50000}, { x: 1035.00000, y: 637.50000}, { x: 1065.00000, y: 637.50000}, { x: 1080.00000, y: 645.00000}, { x: 1095.00000, y: 652.50000}, { x: 1110.00000, y: 660.00000}, { x: 1125.00000, y: 667.50000}, { x: 1140.00000, y: 675.00000}, { x: 1155.00000, y: 682.50000}, { x: 1170.00000, y: 690.00000}];
+    //     // movePath.path = [{x: 1140.00000, y: 495.000000}, {x: 1125.00000, y: 502.500000}, {x: 1110.00000, y: 510.000000}, {x: 1095.00000, y: 517.500000}, {x: 1080.00000, y: 525.000000}, {x: 1065.00000, y: 532.500000}, {x: 1050.00000, y: 540.000000}, {x: 1035.00000, y: 547.500000}];
+    //     // movePath.timestemp = 3965;
+    //     let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
+    //     const path = movePath.path;
+    //     let point = null;
+    //     let now = this.mElementManager.roomService.now();
+    //     let duration = 0;
+    //     let angle = 0;
+    //     const pathAry = path.map((value) => {
+    //         point = value.point3f;
+    //         if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+    //             angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+    //         }
+    //         const direction = this.onCheckDirection(angle);
+    //         now += duration;
+    //         duration = value.timestemp - now;
+    //         return {
+    //             x: value.point3f.x, y: value.point3f.y, duration, timestemp: value.timestemp, direction
+    //         };
+    //         lastPos = new LogicPos(point.x, point.y);
+    //     });
+    //     // this.drawPath(movePath.path);
+    //     super.movePath(movePath);
     // }
-    public move(moveData: MovePos[]) {
-        // this.drawMovePath(moveData[0].x, moveData[0].y);
-        this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
-    }
-
-    public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        if (this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-            if (this.mCurState !== PlayerState.WALK) {
-                return;
-            }
-        }
-        // movePath.path = [{ x: 885.000000, y: 637.50000}, { x: 915.000000, y: 637.50000}, { x: 945.000000, y: 637.50000}, { x: 975.000000, y: 637.50000}, { x: 1005.00000, y: 637.50000}, { x: 1035.00000, y: 637.50000}, { x: 1065.00000, y: 637.50000}, { x: 1080.00000, y: 645.00000}, { x: 1095.00000, y: 652.50000}, { x: 1110.00000, y: 660.00000}, { x: 1125.00000, y: 667.50000}, { x: 1140.00000, y: 675.00000}, { x: 1155.00000, y: 682.50000}, { x: 1170.00000, y: 690.00000}];
-        // movePath.path = [{x: 1140.00000, y: 495.000000}, {x: 1125.00000, y: 502.500000}, {x: 1110.00000, y: 510.000000}, {x: 1095.00000, y: 517.500000}, {x: 1080.00000, y: 525.000000}, {x: 1065.00000, y: 532.500000}, {x: 1050.00000, y: 540.000000}, {x: 1035.00000, y: 547.500000}];
-        // movePath.timestemp = 3965;
-        let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
-        const path = movePath.path;
-        let point = null;
-        let now = this.mElementManager.roomService.now();
-        let duration = 0;
-        let angle = 0;
-        const pathAry = path.map((value) => {
-            point = value.point3f;
-            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
-                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
-            }
-            const direction = this.onCheckDirection(angle);
-            now += duration;
-            duration = value.timestemp - now;
-            return {
-                x: value.point3f.x, y: value.point3f.y, duration, timestemp: value.timestemp, direction
-            };
-            lastPos = new LogicPos(point.x, point.y);
-        });
-        // this.drawPath(movePath.path);
-        super.movePath(movePath);
-    }
 
     // override super's method.
     public setRenderable(isRenderable: boolean): Promise<any> {
@@ -272,9 +275,8 @@ export class User extends Player {
         this.destroy();
     }
 
-    public tryStopMove(stopPos?: IPos) {
+    public tryStopMove(targetId: number, stopPos?: IPos) {
         this.stopMove();
-
         if (stopPos) {
             this.setPosition(stopPos);
         }
@@ -288,14 +290,15 @@ export class User extends Player {
         content.position = position;
         this.game.connection.send(packet);
 
-        this.activeSprite();
+        Logger.getInstance().log("send stop move==========>>>", pos);
+
+        this.activeSprite(targetId);
     }
 
     public updateModel(model: op_client.IActor) {
         if (model.hasOwnProperty("inputMask")) {
             this.mInputMask = model.inputMask;
             this.game.renderPeer.updateInput(this.mInputMask);
-            // this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
         }
         super.updateModel(model, this.game.avatarType);
     }
@@ -305,13 +308,9 @@ export class User extends Player {
         this.syncCameraPosition();
     }
 
-    protected activeSprite() {
-        if (!this.mTargetPoint || !this.mTargetPoint.targetId) {
-            return;
-        }
+    protected activeSprite(targetId: number) {
         const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE = packet.content;
-        const targetId = this.mTargetPoint.targetId;
         content.spriteId = targetId;
         this.game.connection.send(packet);
         this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
@@ -329,51 +328,51 @@ export class User extends Player {
         this.game.connection.send(packet);
     }
 
-    protected onMoveComplete() {
-        this.preMoveComplete();
-        if (this.mCurState !== PlayerState.WALK) {
-            this.mMoveData.tweenAnim.stop();
-            return;
-        }
-        if (this.mRoomService.game.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-            this.changeState(PlayerState.IDLE);
-            this.stopMove();
-        }
-        // this._doMove();
-    }
+    // protected onMoveComplete() {
+    //     this.preMoveComplete();
+    //     if (this.mCurState !== PlayerState.WALK) {
+    //         this.mMoveData.tweenAnim.stop();
+    //         return;
+    //     }
+    //     if (this.mRoomService.game.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
+    //         this.changeState(PlayerState.IDLE);
+    //         this.stopMove();
+    //     }
+    //     // this._doMove();
+    // }
 
-    protected _doMove(time?: number, delta?: number) {
-        if (!this.mMoving || !this.mTargetPoint || !this.body) return;
-        const path = this.mTargetPoint.path;
-        const _pos = this.body.position;
-        const pos = new LogicPos(Math.round(_pos.x / this.roomService.game.scaleRatio), Math.round(_pos.y / this.mElementManager.roomService.game.scaleRatio));
-        this.mModel.setPosition(pos.x, pos.y);
-        this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-        const speed = this.mModel.speed * interval;
-        this.checkDirection();
-        this.roomService.cameraService.syncDirty = true;
+    // protected async _doMove(time?: number, delta?: number) {
+    //     if (!this.mMoving || !this.mTargetPoint) return;
+    //     const path = this.mTargetPoint.path;
+    //     const _pos = await this.roomService.game.peer.physicalPeer.position(this.id);
+    //     const pos = new LogicPos(Math.round(_pos.x / this.roomService.game.scaleRatio), Math.round(_pos.y / this.mElementManager.roomService.game.scaleRatio));
+    //     this.mModel.setPosition(pos.x, pos.y);
+    //     this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+    //     const speed = this.mModel.speed * delta;
+    //     this.checkDirection();
+    //     this.roomService.cameraService.syncDirty = true;
 
-        // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
-        if (Tool.twoPointDistance(pos, path[0]) <= speed) {
-            if (path.length > 1) {
-                path.shift();
-                this.startMove();
-            } else {
-                this.tryStopMove(path[0]);
-                return;
-            }
-        }
-        if (delta === undefined) delta = 0;
-        this.mSyncTime += delta;
-        if (this.mSyncTime > 50) {
-            this.mSyncTime = 0;
-            this.mSyncDirty = true;
-        }
-        if (this.mSyncDirty) {
-            this.mSyncDirty = false;
-            this.syncPosition();
-        }
-    }
+    //     // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
+    //     if (Tool.twoPointDistance(pos, path[0]) <= speed) {
+    //         if (path.length > 1) {
+    //             path.shift();
+    //             this.startMove();
+    //         } else {
+    //             this.tryStopMove(path[0]);
+    //             return;
+    //         }
+    //     }
+    //     if (delta === undefined) delta = 0;
+    //     this.mSyncTime += delta;
+    //     if (this.mSyncTime > 50) {
+    //         this.mSyncTime = 0;
+    //         this.mSyncDirty = true;
+    //     }
+    //     if (this.mSyncDirty) {
+    //         this.mSyncDirty = false;
+    //         this.syncPosition();
+    //     }
+    // }
 
     // protected onMoving() {
     //     if (this.mCurState !== PlayerState.WALK) {
@@ -388,18 +387,19 @@ export class User extends Player {
     }
 
     protected addBody() {
-        this._sensor = false;
-        this._offsetOrigin.y = 0;
-        this.setBody();
+        this.game.peer.physicalPeer.addBody(this.id, false);
+        // this._sensor = false;
+        // this._offsetOrigin.y = 0;
+        // this.setBody();
     }
 
     protected syncCameraPosition() {
         this.roomService.cameraService.syncCameraScroll();
     }
 
-    private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        this.game.addFillEffect(pos, status);
-    }
+    // private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+    //     this.game.addFillEffect(pos, status);
+    // }
 
     private drawPath(pos: op_client.IMovePoint[]) {
         // if (!pos && pos.length > 0) {
@@ -445,7 +445,8 @@ export class User extends Player {
         this.load(this.mModel.displayInfo, this.isUser);
         if (this.mModel.pos) {
             const obj = { id: val.id, pos: val.pos, alpha: val.alpha, titleMask: val.titleMask | 0x00010000 };
-            this.game.renderPeer.setDisplayData(obj);
+            this.game.renderPeer.setModel(obj);
+            this.game.physicalPeer.setModel(val);
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
@@ -467,10 +468,6 @@ export class User extends Player {
         // this.mPackage = value;
     }
 
-    get moveData() {
-        return this.mMoveData;
-    }
-
     get userData() {
         return this.mUserData;
     }
@@ -482,8 +479,4 @@ export class User extends Player {
     get moveStyle() {
         return this.mMoveStyle;
     }
-}
-
-interface IMoveTarget extends MoveData {
-    targetId?: number;
 }

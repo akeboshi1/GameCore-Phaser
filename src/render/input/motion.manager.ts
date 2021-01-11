@@ -1,7 +1,7 @@
 import { Render } from "gamecoreRender";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes";
-import { LogicPos } from "utils";
+import { Logger, LogicPos } from "utils";
 export class MotionManager {
     public enable: boolean;
     private scaleRatio: number;
@@ -47,7 +47,6 @@ export class MotionManager {
             return;
         }
         this.curtime = 0;
-        // this.dirty = false;
         const pointer = this.scene.input.activePointer;
         if (pointer.camera) {
             if (pointer.camera.scene && pointer.camera.scene.sys.settings.key === MainUIScene.name) {
@@ -84,20 +83,22 @@ export class MotionManager {
         //     return;
         // }
         // this.render.user.moveMotion(worldX, worldY, id);
-        this.render.mainPeer.moveMotion(worldX, worldY, id);
+        // this.render.mainPeer.moveMotion(worldX, worldY, id);
+        this.render.physicalPeer.moveMotion(worldX, worldY, id);
     }
 
-    private movePath(x: number, y: number, targets: {}, id?: number) {
+    private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
         // const user = this.render.user;
         // if (!user) {
-        //     return;
+        //     return;'
         // }
         // this.render.user.findPath(worldX, worldY, id);
-        this.render.mainPeer.findPath(x, y, targets, id);
+        // const startPos = this.render.displayManager.user.getPosition();
+        this.render.physicalPeer.findPath(targets, id);
     }
 
     private stop() {
-        this.render.mainPeer.stopMove();
+        this.render.physicalPeer.stopMove();
         // this.render.user.stopMove();
     }
 
@@ -118,15 +119,15 @@ export class MotionManager {
                         return;
                     }
                     // const position = ele.getPosition();
-                    let targets = await this.render.mainPeer.getInteractivePosition(id);
+                    let targets = await this.render.physicalPeer.getInteractivePosition(id);
                     if (!targets || targets.length === 0) {
                         const { x, y } = ele;
                         targets = [{ x, y }];
                     }
-                    this.movePath(pointer.worldX, pointer.worldY, targets, id);
+                    this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
                 }
             } else {
-                this.movePath(pointer.worldX, pointer.worldY, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+                this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
         this.clearGameObject();

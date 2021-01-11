@@ -1,9 +1,8 @@
 import { op_client } from "pixelpai_proto";
 import { Game } from "src/game/game";
-import { AnimationModel } from "../display/animation/animation.model";
-import { DragonbonesModel } from "../display/dragones/dragonbones.model";
-import { FramesModel } from "../display/frames/frames.model";
-
+import { AnimationModel } from "structure";
+import { DragonbonesModel } from "../display/dragonbones/dragonbones.model";
+import { FramesModel } from "../display/frame/frames.model";
 export class Effect {
     private mID: number;
     private mDisplayInfo: FramesModel | DragonbonesModel;

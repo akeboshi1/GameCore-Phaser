@@ -5,15 +5,13 @@ import {
     ElementStateType,
     IDragonbonesModel,
     IFramesModel,
+    ISprite,
     PlayerState
 } from "structure";
-import {IPos, Logger, LogicPos, Tool} from "utils";
+import {IPos, IProjection, Logger, LogicPoint, LogicPos, Tool} from "utils";
 import {BlockObject} from "../block/block.object";
-import {ISprite} from "../display/sprite/sprite";
-import {IRoomService, Room} from "../room/room";
+import {IRoomService} from "../room/room";
 import {IElementManager} from "./element.manager";
-import {interval} from "../../game";
-import {IProjection} from "src/utils/projection";
 
 export interface IElement {
     readonly id: number;
@@ -21,9 +19,15 @@ export interface IElement {
     readonly roomService: IRoomService;
     readonly created: boolean;
 
+    readonly moveData: MoveData;
+
     model: ISprite;
 
     update(time?: number, delta?: number);
+
+    // startMove();
+
+    stopMove();
 
     setModel(model: ISprite);
 
@@ -51,8 +55,6 @@ export interface IElement {
 
     hideRefernceArea();
 
-    // scaleTween();
-
     turn();
 
     setAlpha(val: number);
@@ -63,16 +65,17 @@ export interface IElement {
 
     mount(ele: IElement): this;
 
-    unmount(targetPos?: IPos): this;
+    unmount(targetPos?: IPos): Promise<this>;
 
     addMount(ele: IElement, index?: number): this;
 
-    removeMount(ele: IElement, targetPos?: IPos): this;
+    removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
 
-    getInteractivePositionList(): IPos[];
+    getInteractivePositionList(): Promise<IPos[]>;
 
     getProjectionSize(): IProjection;
 }
+
 export interface MoveData {
     destPos?: LogicPos;
     posPath?: MovePath[];
@@ -129,19 +132,13 @@ export class Element extends BlockObject implements IElement {
         this.setModel(val);
     }
 
+    get moveData(): MoveData {
+        return this.mMoveData;
+    }
+
     get created() {
         return this.mCreatedDisplay;
     }
-
-    // get scene(): Phaser.Scene {
-    //     if (this.mElementManager) {
-    //         return this.mElementManager.scene;
-    //     }
-    // }
-
-    // get ai(): AI {
-    //     return this.mAi;
-    // }
 
     get eleMgr(): IElementManager {
         if (this.mElementManager) {
@@ -156,9 +153,6 @@ export class Element extends BlockObject implements IElement {
     protected mAnimationName: string = "";
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
-    // protected mShopEntity: ShopEntity;
-    //  protected concomitants: Element[];
-    // protected mAi: AI;
     protected mOffsetY: number = undefined;
     protected mQueueAnimations: AnimationQueue[];
     protected mMoving: boolean = false;
@@ -167,15 +161,21 @@ export class Element extends BlockObject implements IElement {
     protected mDirty: boolean = false;
     protected mCreatedDisplay: boolean = false;
     protected isUser: boolean = false;
+    protected moveControll: MoveControll;
+
+    private delayTime = 1000 / 45;
+
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(mElementManager ? mElementManager.roomService : undefined);
+        super(sprite ? sprite.id : -1, mElementManager ? mElementManager.roomService : undefined);
         if (!sprite) {
             return;
         }
+        this.moveControll = new MoveControll(this);
         this.mBlockable = false;
         this.mId = sprite.id;
         this.model = sprite;
     }
+
     showEffected(displayInfo: any) {
         throw new Error("Method not implemented.");
     }
@@ -192,45 +192,40 @@ export class Element extends BlockObject implements IElement {
         if (!model) {
             return;
         }
-        this.mElementManager.removeFromMap(model);
-        // this.mDisplayInfo = this.mModel.displayInfo;
         this.mQueueAnimations = undefined;
-        await this.load(this.mModel.displayInfo);
-        // if (!this.mDisplay) {
-        //     return;
-        // }
+        this.mElementManager.addToMap(model);
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
-        await this.mElementManager.roomService.game.peer.render.setDisplayData(model);
-        // this.mDisplay.changeAlpha(this.mModel.alpha);
-        this.showNickname();
-        this.setDirection(this.mModel.direction);
-        // this.setRenderable(true);
-        const frameModel = <IFramesModel>this.mDisplayInfo;
-        if (this.mInputEnable === InputEnable.Interactive) {
-            this.setInputEnable(this.mInputEnable);
-        }
-        // if (frameModel && frameModel.shops) {
-        //     this.mShopEntity = new ShopEntity(this.mElementManager.roomService.world);
-        //     this.mShopEntity.register();
-        // }
-        if (model.mountSprites && model.mountSprites.length > 0) {
-            this.updateMounth(model.mountSprites);
-        }
-        // this.update();
-        this.mElementManager.addToMap(model);
-        this.setRenderable(true);
-        if (this.mRenderable) {
-            this.addBody();
-        }
+        // render action
+        this.load(this.mModel.displayInfo)
+            .then(() => this.mElementManager.roomService.game.peer.render.setModel(model))
+            .then(() => {
+                this.showNickname();
+                this.setDirection(this.mModel.direction);
+                if (this.mInputEnable === InputEnable.Interactive) {
+                    this.setInputEnable(this.mInputEnable);
+                }
+                if (model.mountSprites && model.mountSprites.length > 0) {
+                    this.updateMounth(model.mountSprites);
+                }
+                return this.setRenderable(true);
+            });
+        // physic action
+        this.mRoomService.game.peer.physicalPeer.setModel(model)
+            .then(() => {
+                if (this.mRenderable) {
+                    this.mRoomService.game.physicalPeer.addBody(this.id);
+                }
+            });
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
         if (this.mModel.id !== model.id) {
             return;
         }
-        this.mElementManager.removeFromMap(this.mModel);
+        // 更新物理进程的物件/人物element
+        this.mRoomService.game.physicalPeer.updateModel(model);
         if (model.hasOwnProperty("attrs")) {
             this.model.updateAttr(model.attrs);
         }
@@ -265,13 +260,17 @@ export class Element extends BlockObject implements IElement {
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
         }
-        if (model.hasOwnProperty("point3f")) {
-            const pos = model.point3f;
-            this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
-        }
-        this.update();
         this.mElementManager.addToMap(this.mModel);
+        // if (model.hasOwnProperty("point3f")) {
+        //     const pos = model.point3f;
+        //     this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
+        // }
+        // this.update();
     }
+
+    // public getProjectionSize() {
+    //     return this.mModel.getInteractive();
+    // }
 
     public play(animationName: string, times?: number): void {
         if (!this.mModel) {
@@ -339,6 +338,12 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setDirection(val: number) {
+        if (!this.mModel) {
+            return;
+        }
+        if (this.mModel.direction === val) {
+            return;
+        }
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
         }
@@ -381,7 +386,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public update(time?: number, delta?: number) {
-        if (this.mDirty === false && this.mMoving === false) {
+        if (this.mMoving === false) {
             return;
         }
         this._doMove(time, delta);
@@ -407,12 +412,9 @@ export class Element extends BlockObject implements IElement {
         if (!this.mElementManager) {
             return; // Logger.getInstance().error(`Element::move - Empty element-manager.`);
         }
-        // TODO display未创建的情况
-        // if (!this.mDisplay) {
-        //     return;
-        // }
         this.mMoveData.path = path;
         this.startMove();
+        // this.mRoomService.game.physicalPeer.move(this.id, path);
     }
 
     public stopAt(pos: MovePos) {
@@ -421,61 +423,62 @@ export class Element extends BlockObject implements IElement {
             path = [];
         }
         path.push(pos);
-        this.startMove();
+        this.move(path);
+        // this.mRoomService.game.physicalPeer.move(this.id, path);
     }
 
-    public movePosition(pos: LogicPos, angel: number) {
-        if (!this.mElementManager) {
-            return;
-        }
-        this.startMove();
-        if (!pos.depth) pos.depth = this.getDepth();
-        this.setPosition(pos, true);
-        const direction = this.calculateDirectionByAngle(angel);
-        if (direction !== -1 && direction !== this.model.direction) {
-            this.setDirection(direction);
-        }
-    }
+    // public movePosition(pos: LogicPos, angel: number) {
+    //     if (!this.mElementManager) {
+    //         return;
+    //     }
+    //     this.startMove();
+    //     if (!pos.depth) pos.depth = this.getDepth();
+    //     this.setPosition(pos, true);
+    //     const direction = this.calculateDirectionByAngle(angel);
+    //     if (direction !== -1 && direction !== this.model.direction) {
+    //         this.setDirection(direction);
+    //     }
+    // }
 
-    public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-        if (!this.mElementManager) {
-            return;
-        }
-        const tmpPath = movePath.path;
-        if (!tmpPath) {
-            return;
-        }
-        this.mMoveData.arrivalTime = movePath.timestemp;
-        const pos = this.mModel.pos;
-        let lastPos = new LogicPos(pos.x, pos.y - this.offsetY);
-        const paths = [];
-        let angle = null;
-        let point = null;
-        let now = this.mElementManager.roomService.now();
-        let duration = 0;
-        let index = 0;
-        for (const path of movePath.path) {
-            point = path.point3f;
-            if (!(point.y === lastPos.y && point.x === lastPos.x)) {
-                angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
-            }
-            now += duration;
-            duration = path.timestemp - now;
-            paths.push({
-                x: point.x,
-                y: point.y,
-                duration,
-                onStartParams: angle,
-                // onStart: (tween, target, params) => {
-                //     this.onCheckDirection(params);
-                // },
-            });
-            lastPos = new LogicPos(point.x, point.y);
-            index++;
-        }
-        this.mMoveData.posPath = paths;
-        this._doMove();
-    }
+    // public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
+    //     if (!this.mElementManager) {
+    //         return;
+    //     }
+    //     const tmpPath = movePath.path;
+    //     if (!tmpPath) {
+    //         return;
+    //     }
+    //     this.mMoveData.arrivalTime = movePath.timestemp;
+    //     const pos = this.mModel.pos;
+    //     let lastPos = new LogicPos(pos.x, pos.y - this.offsetY);
+    //     const paths = [];
+    //     let angle = null;
+    //     let point = null;
+    //     let now = this.mElementManager.roomService.now();
+    //     let duration = 0;
+    //     let index = 0;
+    //     for (const path of movePath.path) {
+    //         point = path.point3f;
+    //         if (!(point.y === lastPos.y && point.x === lastPos.x)) {
+    //             angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
+    //         }
+    //         now += duration;
+    //         duration = path.timestemp - now;
+    //         paths.push({
+    //             x: point.x,
+    //             y: point.y,
+    //             duration,
+    //             onStartParams: angle,
+    //             // onStart: (tween, target, params) => {
+    //             //     this.onCheckDirection(params);
+    //             // },
+    //         });
+    //         lastPos = new LogicPos(point.x, point.y);
+    //         index++;
+    //     }
+    //     this.mMoveData.posPath = paths;
+    //     this._doMove();
+    // }
 
     public startMove() {
         if (!this.mMoveData) {
@@ -487,40 +490,40 @@ export class Element extends BlockObject implements IElement {
         }
         this.changeState(PlayerState.WALK);
         this.mMoving = true;
-        this.setStatic(false);
 
         const pos = this.getPosition();
         // pos.y += this.offsetY;
         const angle = Math.atan2(path[0].y - pos.y, path[0].x - pos.x);
-        // TODO 待优化 使用update中的delta
-        const speed = this.mModel.speed * interval;
-        this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        const speed = this.mModel.speed * this.delayTime;
+        this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        // this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
-    public completeMove() {
-        Logger.getInstance().log("complete_walk");
-    }
+    // public completeMove() {
+    //     Logger.getInstance().log("complete_walk");
+    // }
 
     public stopMove() {
         this.mMoving = false;
+        this.moveControll.setVelocity(0, 0);
         // TODO display未创建的情况下处理
         // if (!this.mDisplay) {
         //     // Logger.getInstance().error(`can't stopMove, display does not exist`);
         //     return;
         // }
-        if (this.mMoveData && this.mMoveData.posPath) {
-            // this.mModel.setPosition(this.mDisplay.x, this.mDisplay.y);
-            // delete this.mMoveData.destPos;
-            delete this.mMoveData.posPath;
-            if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
-            if (this.mMoveData.tweenLineAnim) {
-                this.mMoveData.tweenLineAnim.stop();
-                this.mMoveData.tweenLineAnim.destroy();
-            }
-        }
+        // if (this.mMoveData && this.mMoveData.posPath) {
+        //     // this.mModel.setPosition(this.mDisplay.x, this.mDisplay.y);
+        //     // delete this.mMoveData.destPos;
+        //     delete this.mMoveData.posPath;
+        //     if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
+        //     if (this.mMoveData.tweenLineAnim) {
+        //         this.mMoveData.tweenLineAnim.stop();
+        //         this.mMoveData.tweenLineAnim.destroy();
+        //     }
+        // }
         this.changeState(PlayerState.IDLE);
-        this.setVelocity(0, 0);
-        this.setStatic(true);
+        // this.setVelocity(0, 0);
+        // this.setStatic(true);
     }
 
     public getPosition(): IPos {
@@ -538,26 +541,25 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setPosition(p: IPos, update: boolean = false) {
-        super.setPosition(p);
         if (!this.mElementManager) {
             return;
         }
-        if (this.mMoving) {
-            this.stopMove();
-        }
+        // if (this.mMoving) {
+        //     this.stopMove();
+        // }
         if (p) {
             this.mModel.setPosition(p.x, p.y);
-            if (this.mRootMount) {
-                return;
-            }
-            this.mElementManager.roomService.game.peer.render.setPosition(this.id, p.x, p.y);
-            // this.mDisplay.setPosition(p.x, p.y, p.z);
-            const depth = p.depth ? p.depth : 0;
-            this.setDepth(depth);
+            if (this.moveControll) this.moveControll.setPosition(p.x, p.y);
+            // if (this.mRootMount) {
+            //     return;
+            // }
+            // this.mElementManager.roomService.game.peer.render.setPosition(this.id, p.x, p.y);
+            // const depth = p.depth ? p.depth : 0;
+            // this.setDepth(depth);
         }
-        if (!update) return;
-        this.updateBlock();
-        this.update();
+        // if (!update) return;
+        // this.updateBlock();
+        // this.update();
     }
 
     public getRootPosition(): IPos {
@@ -565,10 +567,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showBubble(text: string, setting: op_client.IChat_Setting) {
-        this.mRoomService.game.peer.render.showBubble(this.id, text, setting);
+        this.mRoomService.game.renderPeer.showBubble(this.id, text, setting);
     }
+
     public clearBubble() {
-        this.mRoomService.game.peer.render.clearBubble(this.id);
+        this.mRoomService.game.renderPeer.clearBubble(this.id);
     }
 
     public showNickname() {
@@ -600,7 +603,7 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
-    public getInteractivePositionList(): IPos[] {
+    public async getInteractivePositionList(): Promise<IPos[]> {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
             return;
@@ -608,7 +611,8 @@ export class Element extends BlockObject implements IElement {
         const pos45 = this.mRoomService.transformToMini45(this.getPosition());
         const result: IPos[] = [];
         for (const interactive of interactives) {
-            if ((<Room>this.mRoomService).isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+            if (await this.mRoomService.game.physicalPeer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+                // if ((<Room>this.mRoomService).isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
                 result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
             }
         }
@@ -637,12 +641,11 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         this.disableBlock();
-        this.removeBody();
         this.mDirty = true;
         return this;
     }
 
-    public unmount() {
+    public async unmount(): Promise<this> {
         if (this.mRootMount) {
             // 先移除避免人物瞬移
             // this.removeDisplay();
@@ -652,7 +655,6 @@ export class Element extends BlockObject implements IElement {
             this.mRootMount = null;
             this.setPosition(pos, true);
             this.enableBlock();
-            this.addBody();
             this.mDirty = true;
         }
         return this;
@@ -662,27 +664,22 @@ export class Element extends BlockObject implements IElement {
         if (!this.mMounts) this.mMounts = [];
         ele.mount(this);
         this.mRoomService.game.renderPeer.mount(this.id, ele.id, index);
-        // if (this.mDisplay) {
-        //     this.mDisplay.mount(ele.getDisplay(), index);
-        // }
         if (this.mMounts.indexOf(ele) === -1) {
             this.mMounts.push(ele);
         }
         return this;
     }
 
-    public removeMount(ele: IElement, targetPos?: IPos) {
-        ele.unmount(targetPos);
-        if (!this.mMounts) return this;
-        // if (this.mDisplay) {
-        //     this.mDisplay.unmount(ele.getDisplay());
-        // }
-        this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
+    public async removeMount(ele: IElement, targetPos?: IPos) {
         const index = this.mMounts.indexOf(ele);
-        if (index > -1) {
-            this.mMounts.splice(index, 1);
+        if (index === -1) {
+            return Promise.resolve();
         }
-        return this;
+        this.mMounts.splice(index, 1);
+        ele.unmount(targetPos);
+        if (!this.mMounts) return Promise.resolve();
+        this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
+        return Promise.resolve();
     }
 
     public setState(states: op_def.IState[]) {
@@ -716,70 +713,20 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData = null;
         }
         this.removeDisplay();
-        this.mElementManager.removeFromMap(this.mModel);
-        // if (this.mDisplay) {
-        //     if (this.mBlockable) {
-        //         this.roomService.removeBlockObject(this);
-        //     }
-        //     this.mDisplay.destroy();
-        //     this.mDisplay = null;
-        // }
-        // if (this.mBubble) {
-        //     this.mBubble.destroy();
-        //     this.mBubble = undefined;
-        // }
-        // if (this.mAi) {
-        //     this.mAi.destroy();
-        //     this.mAi = null;
-        // }
-        // if (this.concomitants) {
-        //     for (const ele of this.concomitants) {
-        //         ele.destroy();
-        //     }
-        //     this.concomitants.length = 0;
-        //     this.concomitants = null;
-        // }
         super.destroy();
     }
 
-    // protected _doMove() {
-    // if (!this.mMoveData.posPath || !this.mElementManager) {
-    //     return;
-    // }
-    // const line = this.mMoveData.tweenLineAnim;
-    // if (line) {
-    //     line.stop();
-    //     line.destroy();
-    // }
-    // const posPath = this.mMoveData.posPath;
-    // this.mElementManager.roomService.game.renderPeer.doMove(this.id, this.mMoveData);
-    // this.mMoveData.tweenLineAnim = this.mElementManager.scene.tweens.timeline({
-    //     targets: this.mDisplay,
-    //     ease: "Linear",
-    //     tweens: posPath,
-    //     onStart: () => {
-    //         this.onMoveStart();
-    //     },
-    //     onComplete: () => {
-    //         this.onMoveComplete();
-    //     },
-    //     onUpdate: () => {
-    //         this.onMoving();
-    //     },
-    //     onCompleteParams: [this],
-    // });
-    // }
-
     protected _doMove(time?: number, delta?: number) {
-        if (!this.mMoving || !this.body) {
-            return;
-        }
-        const _pos = this.body.position;
-        const pos = new LogicPos(_pos.x / this.mRoomService.game.scaleRatio, _pos.y / this.mRoomService.game.scaleRatio);
+        //     if (!this.mMoving) {
+        //         return;
+        //     }
+        //     const _pos = this.getPosition();
+        //     const pos = new LogicPos(_pos.x / this.mRoomService.game.scaleRatio, _pos.y / this.mRoomService.game.scaleRatio);
+        //     this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+        this.moveControll.update(time, delta);
+        const pos = this.moveControll.position;
         this.mModel.setPosition(pos.x, pos.y);
-        this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-        // this.mDisplay.setPosition(pos.x, pos.y);
-
+        this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
         this.checkDirection();
         const path = this.mMoveData.path;
         const speed = this.mModel.speed * delta;
@@ -805,22 +752,27 @@ export class Element extends BlockObject implements IElement {
         if (!this.mDisplayInfo || !this.mElementManager) {
             return;
         }
+        let createPromise = null;
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
-                await this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
+                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
             } else {
-                await this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
+                createPromise = this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
             }
         } else {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
-            await this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
+            createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
         }
-        const pos = this.mModel.pos;
-        await this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+        createPromise.then(() => {
+            const pos = this.mModel.pos;
+            this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+
+            if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        });
         const currentAnimation = this.mModel.currentAnimation;
-        if (currentAnimation) await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         this.setInputEnable(this.mInputEnable);
         this.mCreatedDisplay = true;
+        this.mRoomService.game.physicalPeer.addBody(this.id);
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();
     }
@@ -849,71 +801,30 @@ export class Element extends BlockObject implements IElement {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
         this.setDepth(depth);
-        this.update();
+        // this.update();
         // this.mDisplay.showRefernceArea();
         // }
     }
 
     protected async addDisplay(): Promise<any> {
-        await super.addDisplay();
+        super.addDisplay();
         let depth = 0;
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
         this.setDepth(depth);
-        this.addBody();
         return Promise.resolve();
     }
 
     protected async removeDisplay(): Promise<any> {
-        await super.removeDisplay();
-        this.removeBody();
+        super.removeDisplay();
         return Promise.resolve();
     }
 
     protected setDepth(depth: number) {
         if (!this.mElementManager) return;
         this.mElementManager.roomService.game.peer.render.setLayerDepth(true);
-        // if (this.mDisplay) {
-        //     // this.mDisplay.setDepth(depth);
-        //     if (!this.roomService) {
-        //         throw new Error("roomService is undefined");
-        //     }
-        //     const layerManager = this.roomService.layerManager;
-        //     if (!layerManager) {
-        //         throw new Error("layerManager is undefined");
-        //     }
-        //     layerManager.depthSurfaceDirty = true;
-        // }
     }
-
-    // protected onUpdateAnimationHandler() {
-    // if (this.mDisplay) {
-    //     this.setInputEnable(this.mInputEnable);
-    // }
-    // }
-
-    // protected onMoveStart() {
-    //     this.mMoving = true;
-    // }
-
-    // protected onMoveComplete() {
-    //     // if (this.mMoveData.tweenLineAnim) this.mMoveData.tweenLineAnim.stop();
-    //     this.stopMove();
-    // }
-
-    // protected onMoving() {
-    //     const now = this.roomService.now();
-    //     if (now - (this.mMoveData.tweenLastUpdate || 0) >= 50) {
-    //         // let depth = 0;
-    //         // if (this.model && this.model.pos) {
-    //         //     depth = this.model.pos.depth ? this.model.pos.depth : 0;
-    //         // }
-    //         this.setDepth(0);
-    //         this.mMoveData.tweenLastUpdate = now;
-    //     }
-    //     this.mDirty = true;
-    // }
 
     protected get offsetY(): number {
         if (this.mOffsetY === undefined) {
@@ -1016,9 +927,9 @@ export class Element extends BlockObject implements IElement {
                 const ele = this.roomService.getElement(id);
                 if (ele) {
                     if (type === 0) {
-                        (<Element>ele).removeTopDisplay();
+                        (<Element> ele).removeTopDisplay();
                     } else {
-                        (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
+                        (<Element> ele).showTopDisplay(ElementStateType.REPAIR);
                     }
                 }
                 break;
@@ -1036,5 +947,46 @@ export class Element extends BlockObject implements IElement {
             case "Task":
                 break;
         }
+    }
+}
+
+class MoveControll {
+    private velocity: IPos;
+    private mPosition: IPos;
+    private mPrePosition: IPos;
+
+    constructor(private target: BlockObject) {
+        this.mPosition = new LogicPos();
+        this.mPrePosition = new LogicPos();
+        this.velocity = new LogicPoint();
+    }
+
+    setVelocity(x: number, y: number) {
+        // this.velocity = val;
+        this.velocity.x = x;
+        this.velocity.y = y;
+    }
+
+    update(time: number, delta: number) {
+        if (this.velocity.x !== 0 && this.velocity.y !== 0) {
+            this.mPrePosition.x = this.mPosition.x;
+            this.mPrePosition.y = this.mPosition.y;
+
+            this.mPosition.x += this.velocity.x;
+            this.mPosition.y += this.velocity.y;
+        }
+    }
+
+    setPosition(x: number, y: number) {
+        this.mPosition.x = x;
+        this.mPosition.y = y;
+    }
+
+    get position(): IPos {
+        return this.mPosition;
+    }
+
+    get prePosition(): IPos {
+        return this.mPrePosition;
     }
 }

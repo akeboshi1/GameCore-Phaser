@@ -1,5 +1,6 @@
-import { IAvatar } from "./dragonbones";
 import { op_def, op_client } from "pixelpai_proto";
+import { IAvatar } from "./dragonbones";
+
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
     static suitPart = {
@@ -59,6 +60,7 @@ export class AvatarSuitType {
         for (const suit of suits) {
             const suitType = this.avatarSuit;
             const allslots = suitType[suit.suit_type];
+            if (!allslots) continue;
             const slots = this.checkSlotValue(suit.suit_type, suit.slot);
             for (const tslot of allslots) {
                 if (slots.indexOf(tslot) !== -1) {
@@ -119,6 +121,7 @@ export class AvatarSuitType {
         const slotArr = [];
         const suitPart = this.avatarSuit;
         const slots = suitPart[suitType];
+        if (!slots) return;
         const slotbits = slotbit === undefined || slotbit === "" ? [] : slotbit.split("#");
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < slots.length; i++) {

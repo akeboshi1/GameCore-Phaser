@@ -1,70 +1,14 @@
+import { AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation } from "structure";
+import { Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos } from "utils";
+import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
-import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { AnimationQueue, AvatarSuit, AvatarSuitType, RunningAnimation } from "structure";
-import { IAvatar, IDragonbonesModel } from "structure";
-import { IFramesModel } from "structure";
-import { IPos, LogicPos, LogicPoint, Logger, Direction, EventDispatcher } from "utils";
-import { AnimationModel } from "../animation/animation.model";
-import { DragonbonesModel } from "../dragones/dragonbones.model";
-import { FramesModel } from "../frames/frames.model";
-import { Animator } from "./animator";
-import NodeType = op_def.NodeType;
-
+import { DragonbonesModel } from "../dragonbones/dragonbones.model";
+import { FramesModel } from "../frame/frames.model";
 enum TitleMask {
     TQ_NickName = 0x00010000,
     TQ_Badge = 0x00020000,
     // TQ_   = 0x0004;
 }
-export interface ISprite {
-    id: number;
-    avatar: IAvatar;
-    titleMask: number;
-    nickname: string;
-    alpha: number;
-    displayBadgeCards: op_def.IBadgeCard[];
-
-    platformId: string;
-    sceneId: number;
-    nodeType: op_def.NodeType;
-    currentAnimation: RunningAnimation;
-    currentCollisionArea: number[][];
-    currentWalkableArea: number[][];
-    currentCollisionPoint: LogicPoint;
-    hasInteractive: boolean;
-    interactive: op_def.IPBPoint2f[];
-    attrs: op_def.IStrPair[];
-    suits: AvatarSuit[];
-    animationQueue: AnimationQueue[];
-    currentAnimationName: string;
-    displayInfo: IFramesModel | IDragonbonesModel;
-    direction: number;
-    pos: IPos;
-    bindID: number;
-    sn: string;
-    isMoss?: boolean;
-    mountSprites?: number[];
-    speed: number;
-    animator?: Animator;
-    updateSuits?: boolean;
-    newID();
-    updateAvatar(avatar: IAvatar);
-    setTempAvatar(avatar: IAvatar);
-    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string);
-    setPosition(x: number, y: number);
-    setAnimationName(name: string, playTimes?: number): RunningAnimation;
-    setAnimationQueue(queue: AnimationQueue[]);
-    setDirection(val);
-    setDisplayInfo(val);
-    updateAttr(attrs: op_def.IStrPair[]);
-    updateAvatarSuits(suits: AvatarSuit[]): boolean;
-    getCollisionArea(): number[][];
-    getWalkableArea(): number[][];
-    getOriginPoint(): IPos;
-    getInteractive(): op_def.IPBPoint2f[];
-    turn(): ISprite;
-    toSprite(): op_client.ISprite;
-}
-
 export class Sprite extends EventDispatcher implements ISprite {
     public id: number;
     public pos: IPos;
@@ -83,7 +27,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public uuid: number;
     public platformId: string;
     public displayInfo: FramesModel | DragonbonesModel;
-    public nodeType: NodeType;
+    public nodeType: op_def.NodeType;
     public currentAnimation: RunningAnimation;
     public currentCollisionArea: number[][];
     public currentWalkableArea: number[][];
@@ -107,7 +51,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public animator?: Animator;
     public updateSuits: boolean = false;
 
-    constructor(obj: op_client.ISprite, nodeType?: NodeType) {
+    constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
         super();
         this.id = obj.id;
         if (obj.point3f) {
@@ -156,10 +100,6 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.currentWalkableArea = this.getWalkableArea();
         }
 
-        if (!this.currentWalkableArea) {
-            this.currentWalkableArea = this.getWalkableArea();
-        }
-
         if (!this.currentCollisionPoint) {
             this.currentCollisionPoint = this.getOriginPoint();
         }
@@ -187,7 +127,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<FramesModel>this.displayInfo).createProtocolObject();
+            sprite.animations = (<any>this.displayInfo).createProtocolObject();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;

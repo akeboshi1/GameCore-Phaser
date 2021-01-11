@@ -1,7 +1,7 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaFurniFun } from "./PicaFurniFun";
-import { EventType, ModuleName } from "structure";
-import { BaseDataManager, BasicMediator, DataMgrType, Game, ISprite } from "gamecore";
+import { EventType, ISprite, ModuleName } from "structure";
+import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
 
 export class PicaFurniFunMediator extends BasicMediator {
     private picFurni: PicaFurniFun;

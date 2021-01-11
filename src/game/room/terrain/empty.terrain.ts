@@ -1,13 +1,11 @@
-import { Bodies } from "matter-js";
 import { IPos } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 
 export class EmptyTerrain extends BlockObject {
     constructor(room: IRoomService, public pos: IPos) {
-        super(room);
+        super(Number(pos.x + "" + pos.y), room);
         this.setPosition(pos);
-        // this.addToBlock();
         this.addDisplay();
     }
 
@@ -16,14 +14,12 @@ export class EmptyTerrain extends BlockObject {
     }
 
     addDisplay(): Promise<any> {
-        super.addDisplay();
-        this.addBody();
+        this.mRoomService.game.physicalPeer.addBody(this.id);
         return Promise.resolve();
     }
 
     removeDisplay(): Promise<any> {
-        super.removeDisplay();
-        this.removeBody();
+        this.mRoomService.game.physicalPeer.removeBody(this.id);
         return Promise.resolve();
     }
 
@@ -33,16 +29,11 @@ export class EmptyTerrain extends BlockObject {
         const height = roomSize.tileHeight * dpr;
         const width = roomSize.tileWidth * dpr;
         const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];
-        // const body = this.setVertices(paths);
-        const body = Bodies.fromVertices(this._tempVec.x, this._tempVec.y + height * 0.5, [paths], { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
-        body.inertia = Infinity;
-        body.inverseInertia = Infinity;
-        body.friction = 0;
-        this.setExistingBody(body, true);
+        this.mRoomService.game.peer.physicalPeer.createBodyFromVertices(this.guid, this._tempVec2.x, this._tempVec2.y + height * 0.5,
+            [paths], true, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
     }
 
     public destroy() {
-        this.removeBody();
-        this.body = undefined;
+        this.mRoomService.game.physicalPeer.removeBody(this.id);
     }
 }

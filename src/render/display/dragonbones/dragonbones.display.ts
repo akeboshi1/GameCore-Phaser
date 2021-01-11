@@ -1,14 +1,13 @@
-import {BaseDragonbonesDisplay, BaseFramesDisplay} from "display";
-import {Render} from "../../render";
-import {IPos, Logger, LogicPoint, ValueResolver} from "utils";
-import {DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask} from "structure";
-import {IDisplayObject} from "../display.object";
-import {LoadQueue, LoadType} from "../../loadqueue";
-import {ReferenceArea} from "../../editor";
-import {ElementTopDisplay} from "../element.top.display";
-import {DisplayMovement} from "../display.movement";
-import { IProjection } from "src/utils/projection";
-
+import { BaseDragonbonesDisplay } from "display";
+import { Render } from "../../render";
+import { IPos, Logger, ValueResolver, IProjection } from "utils";
+import { DisplayField, ElementStateType, RunningAnimation, TitleMask } from "structure";
+import { IDisplayObject } from "../display.object";
+import { LoadQueue, LoadType } from "../../loadqueue";
+import { ReferenceArea } from "../../editor";
+import { ElementTopDisplay } from "../element.top.display";
+import { DisplayMovement } from "../display.movement";
+import { projectionAngle } from "gamecoreRender";
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
@@ -16,6 +15,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: ElementTopDisplay;
     protected mMovement: DisplayMovement;
+    protected mSortX: number = 0;
+    protected mSortY: number = 0;
 
     private mLoadQueue: LoadQueue;
     private mLoadPromise: ValueResolver<boolean> = null;
@@ -150,7 +151,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = {offset: { x: 0, y: 0 }, width: 0, height: 0};
+            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
         }
         return this.mProjectionSize;
     }
@@ -166,7 +167,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {
         super.setPosition(x, y, z, w);
-
+        this.updateSort();
         this.updateTopDisplay();
         return this;
     }
@@ -241,11 +242,17 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
     }
 
+    protected updateSort() {
+        const _projectionAngle = projectionAngle;
+        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
+        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
+    }
+
     get sortX() {
-        return (this.x - this.projectionSize.offset.x) / (2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / Math.sin(45 * Math.PI / 180) + this.z;
+        return this.mSortX;
     }
 
     get sortY() {
-        return -((this.x - this.projectionSize.offset.x) / 2 * Math.cos(45 * Math.PI / 180)) + (this.y - this.projectionSize.offset.y) / (2 * Math.sin(45 * Math.PI / 180));
+        return this.mSortY;
     }
 }

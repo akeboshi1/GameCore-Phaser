@@ -1,13 +1,7 @@
-import { Helpers } from "game-capsule";
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { AnimationQueue, AvatarSuit, AvatarSuitType, RunningAnimation } from "structure";
-import { IAvatar, IDragonbonesModel } from "structure";
-import { IFramesModel } from "structure";
-import { IPos, LogicPos, LogicPoint, Logger, Direction, EventDispatcher } from "utils";
-import { AnimationModel } from "../animation/animation.model";
-import { DragonbonesModel } from "../dragones/dragonbones.model";
-import { FramesModel } from "../frames/frames.model";
-import { ISprite } from "./sprite";
+import { AnimationModel, AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
+import { LogicPos } from "utils";
+import { FramesModel } from "./frame/frames.model";
 
 export class SpawnPoint implements ISprite {
     id: number;

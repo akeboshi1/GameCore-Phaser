@@ -1,6 +1,7 @@
 import { IPos } from "utils";
 
 export interface IBlockObject {
+
     readonly id: number;
 
     readonly type: number;

@@ -1,10 +1,10 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Handler, Logger, LogicPos } from "utils";
-import { ISprite, Sprite } from "../display/sprite/sprite";
+import { Logger, LogicPos } from "utils";
+import { ISprite } from "structure";
 import { IElementStorage } from "../elementstorage/element.storage";
-import { IRoomService, Room } from "../room/room";
+import { IRoomService } from "../room/room";
 
 import { IElement, Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
@@ -14,6 +14,7 @@ import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
+import { Sprite } from "../display/sprite/sprite";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -66,6 +67,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (let i = 0; i < this.mMap.length; i++) {
             this.mMap[i] = new Array(size.cols).fill(-1);
         }
+        // 进入房间创建地图后将其拷贝给物理进程
+        // this.roomService.game.physicalPeer.createMap(this.mMap);
         this.mStateMgr = new ElementStateManager(mRoom);
         this.mActionMgr = new ElementActionManager(mRoom.game);
         this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
@@ -142,7 +145,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                         } else {
                             this.mMap[row][col] = walkable[i][j];
                         }
-                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
+                        this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 1);
+                        // (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
                     }
                 }
             }
@@ -176,7 +180,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                         this.mMap[row][col] = 0;
-                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
+                        this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 0);
                     }
                 }
             }
@@ -220,7 +224,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mActionMgr.destroy();
     }
 
-    public update(time: number, delta: number) { }
+    public update(time: number, delta: number) {
+        this.mElements.forEach((ele) => ele.update(time, delta));
+    }
 
     public onDisplayCreated(id: number) {
         if (!this.mElements.has(id)) return;
@@ -341,6 +347,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
             if (displayInfo) {
                 sprite.setDisplayInfo(displayInfo);
+                // 更新物理进程的物件/人物element
+                this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
         }

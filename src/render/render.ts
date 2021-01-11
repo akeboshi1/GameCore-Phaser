@@ -14,7 +14,7 @@ import { BasicScene } from "./scenes/basic.scene";
 import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, RunningAnimation, ElementStateType, PlaySceneLoadState } from "structure";
+import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, ElementStateType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
@@ -22,7 +22,7 @@ import { PicaRenderUiManager } from "picaRender";
 import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
-import {DragonbonesDisplay} from "./display";
+import Stats from "../../Stat";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -32,6 +32,8 @@ enum MoveStyle {
     FOLLOW_MOUSE_MOVE_STYLE = 2,
     PATH_MOVE_STYLE = 3
 }
+
+export const projectionAngle = [Math.cos(45 * Math.PI / 180), Math.sin(45 * Math.PI / 180)];
 export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
@@ -68,6 +70,7 @@ export class Render extends RPCPeer implements GameMain {
 
     private mMainPeer: any;
     private mHeartPeer: any;
+    private mPhysicalPeer: any;
     private isPause: boolean = false;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
@@ -77,7 +80,13 @@ export class Render extends RPCPeer implements GameMain {
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
-            this.createGame();
+            this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+                this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+                this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
+                this.mPhysicalPeer.start();
+                this.createGame();
+                Logger.getInstance().log("Physcialworker onReady");
+            });
             Logger.getInstance().log("worker onReady");
         });
         this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
@@ -85,6 +94,31 @@ export class Render extends RPCPeer implements GameMain {
             this.mHeartPeer.updateFps();
             Logger.getInstance().log("heartBeatworker onReady in Render");
         });
+        const len = 3;
+        const statList = [];
+        for (let i = 0; i < len; i++) {
+            const stats = new Stats();
+            // stats.dom.style.position = 'relative';
+            stats.dom.style.left = 80 * i + "px";
+            stats.showPanel(i); // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.body.appendChild(stats.dom);
+            statList.push(stats);
+        }
+
+        function animate() {
+            for (let i = 0, tmpLen = statList.length; i < tmpLen; i++) {
+                const stats = statList[i];
+                stats.begin();
+                stats.end();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    get physicalPeer(): any {
+        return this.mPhysicalPeer;
     }
     setKeyBoardHeight(height: number) {
         throw new Error("Method not implemented.");
@@ -488,6 +522,10 @@ export class Render extends RPCPeer implements GameMain {
 
     public renderEmitter(eventType: string, data?: any) {
         if (this.mMainPeer) this.mMainPeer.renderEmitter(eventType, data);
+    }
+
+    public renderToPhysicalEmitter(eventType: string, data?: any) {
+        if (this.physicalPeer) this.physicalPeer.renderEmitter(eventType, data);
     }
 
     public showMediator(name: string, isShow: boolean) {
@@ -903,7 +941,7 @@ export class Render extends RPCPeer implements GameMain {
         this.gameCreated(keyEvents);
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public addFillEffect(posX: number, posY: number, status: any) {
         this.displayManager.addFillEffect(posX, posY, status);
     }
@@ -1041,8 +1079,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
-    public setDisplayData(sprite: any) {
-        if (this.mDisplayManager) this.mDisplayManager.setDisplayData(sprite);
+    public setModel(sprite: any) {
+        if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
     }
 
     @Export()
@@ -1058,6 +1096,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public showMatterDebug(vertices) {
         if (this.mDisplayManager) this.mDisplayManager.showMatterDebug(vertices);
+    }
+
+    @Export()
+    public hideMatterDebug() {
+        if (this.mDisplayManager) this.mDisplayManager.hideMatterDebug();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1185,6 +1228,11 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.str])
     public workerEmitter(eventType: string, data?: any) {
+        this.emitter.emit(eventType, data);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public physicalEmitter(eventType: string, data?: any) {
         this.emitter.emit(eventType, data);
     }
 

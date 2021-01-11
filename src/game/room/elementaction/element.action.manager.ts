@@ -1,4 +1,5 @@
-import { Game, ISprite } from "gamecore";
+import { Game } from "gamecore";
+import { ISprite } from "structure";
 import { ElementBaseAction } from "./element.base.action";
 import { FuritElementAction } from "./furit.element.action";
 import { PKTElementAction } from "./pkt.element.action";

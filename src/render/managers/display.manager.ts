@@ -193,15 +193,13 @@ export class DisplayManager {
         return display;
     }
 
-    public addEffect(targetID: number, effectID: number, display: IFramesModel) {
-        const target = this.getDisplay(targetID);
-        const effect = this.addFramesDisplay(effectID, display, DisplayField.Effect);
-        if (!target || !effect) {
+    public addToSurfaceLayer(display: FramesDisplay | DragonbonesDisplay) {
+        const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        effect.once("initialized", () => {
-            target.addEffect(effect);
-        });
+        scene.layerManager.addToLayer(scene.LAYER_SURFACE, display);
     }
 
     public removeDisplay(displayID: number): void {
@@ -298,6 +296,17 @@ export class DisplayManager {
         display.unmount(target);
     }
 
+    public addEffect(targetID: number, effectID: number, display: IFramesModel) {
+        const target = this.getDisplay(targetID);
+        const effect = this.addFramesDisplay(effectID, display, DisplayField.Effect);
+        if (!target || !effect) {
+            return;
+        }
+        effect.once("initialized", () => {
+            target.addEffect(effect);
+        });
+    }
+
     public removeEffect(displayID: number) {
         const display = this.displays.get(displayID);
         if (!display) {
@@ -317,7 +326,7 @@ export class DisplayManager {
         // display.showEffect();
     }
 
-    public setDisplayData(sprite: any) {
+    public setModel(sprite: any) {
         const display = this.displays.get(sprite.id);
         if (!display) return;
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
@@ -358,7 +367,7 @@ export class DisplayManager {
     public showNickname(id: number, name: string) {
         const display = this.getDisplay(id);
         if (!display) {
-            return;
+            return Logger.getInstance().log(`can't show nickname ${name}`);
         }
         display.showNickname(name);
         // if (display) display.showNickname(name);
@@ -377,6 +386,13 @@ export class DisplayManager {
             this.matterBodies = new MatterBodies(this.render);
         }
         this.matterBodies.renderWireframes(bodies);
+    }
+
+    public hideMatterDebug() {
+        if (this.matterBodies) {
+            this.matterBodies.destroy();
+            this.matterBodies = undefined;
+        }
     }
 
     public drawServerPosition(x: number, y: number) {

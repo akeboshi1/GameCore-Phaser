@@ -6,13 +6,13 @@ import { IElementManager } from "../element/element.manager";
 import { User } from "../../actor/user";
 import { IRoomService, Room } from "../room/room";
 import { PlayerModel } from "./player.model";
-import { ISprite, Sprite } from "../display/sprite/sprite";
+import { ISprite } from "structure";
 import { AvatarSuitType, EventType, MessageType, PlayerState } from "structure";
 import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { PlayerElementAction } from "../elementaction/player.element.action";
-
+import { Sprite } from "../display/sprite/sprite";
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     private mActor: User;
@@ -34,7 +34,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
@@ -78,6 +78,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (!this.mPlayerMap) return;
         this.mPlayerMap.forEach((player) => this.remove(player.id));
         this.mPlayerMap.clear();
+    }
+
+    update(time: number, delta: number) {
+        this.mPlayerMap.forEach((player) => player.update(time, delta));
     }
 
     public get(id: number): Player {
@@ -407,17 +411,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    private onMovePath(packet: PBpacket) {
-        let content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
-        if (content.nodeType !== NodeType.CharacterNodeType) {
-            return;
-        }
-        const play = this.get(content.id);
-        if (play) {
-            play.movePath(content);
-        }
-        content = null;
-    }
+    // private onMovePath(packet: PBpacket) {
+    //     let content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
+    //     if (content.nodeType !== NodeType.CharacterNodeType) {
+    //         return;
+    //     }
+    //     const play = this.get(content.id);
+    //     if (play) {
+    //         play.movePath(content);
+    //     }
+    //     content = null;
+    // }
 
     private onQueryElementHandler(id: number) {
         const ele = this.get(id);

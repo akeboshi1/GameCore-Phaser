@@ -1,10 +1,15 @@
+/*
+ * @Author: your name
+ * @Date: 2020-12-10 11:08:37
+ * @LastEditTime: 2020-12-26 02:50:29
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /game-core/src/game/room/element/decorate.element.manager.ts
+ */
 import { ElementManager } from "./element.manager";
 import { Element, InputEnable } from "./element";
-import { PBpacket } from "net-socket-packet";
-import { op_client, op_def } from "pixelpai_proto";
-import NodeType = op_def.NodeType;
-import { IPos, LogicPos } from "utils";
-import { ISprite, Sprite } from "../display/sprite/sprite";
+import { IPos } from "utils";
+import { ISprite, } from "structure";
 import { DecorateRoomService } from "../room/decorate.room";
 
 export class DecorateElementManager extends ElementManager {

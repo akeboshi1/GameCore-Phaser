@@ -1,8 +1,6 @@
-import {IBaseDisplay} from "display";
-import {IPos} from "utils";
-import { ElementStateType, IDragonbonesModel, IFramesModel} from "structure";
-import { IProjection } from "src/utils/projection";
-
+import { IBaseDisplay } from "display";
+import { IPos, IProjection } from "utils";
+import { ElementStateType } from "structure";
 export interface IDisplayObject extends IBaseDisplay {
     id: number;
     titleMask: number;

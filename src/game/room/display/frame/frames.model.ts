@@ -1,10 +1,7 @@
-import { Helpers } from "game-capsule";
-import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
-import { RunningAnimation } from "structure";
-import { IDisplay } from "structure";
-import { IFramesModel } from "structure";
+import { AnimationModel, IAnimationData, IDisplay, IFramesModel, RunningAnimation } from "structure";
 import { Direction, Logger, LogicPoint } from "utils";
-import { AnimationModel, IAnimationData } from "../animation/animation.model";
+import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
+import { Helpers } from "game-capsule";
 import { Sprite } from "../sprite/sprite";
 import * as sha1 from "simple-sha1";
 
@@ -94,7 +91,7 @@ export class FramesModel implements IFramesModel {
                 const area = [];
                 const interactiveArea = ani.interactiveArea;
                 for (const interactive of interactiveArea) {
-                    area.push( {x: interactive.y, y: interactive.x });
+                    area.push({ x: interactive.y, y: interactive.x });
                 }
                 return area;
             }

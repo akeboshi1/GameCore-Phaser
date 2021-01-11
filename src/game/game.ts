@@ -2,12 +2,12 @@ import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
-import { IPoint, Lite } from "game-capsule";
+import { Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
-import { IConnectListener, SocketConnection } from "../../lib/net/socket";
+import { IConnectListener } from "../../lib/net/socket";
 import { Logger, ResUtils, Tool, load, EventDispatcher } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import { Connection, ConnListener, GameSocket } from "./net/connection";
+import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
@@ -19,10 +19,6 @@ import { ElementStorage } from "./room/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
-import decomp from "poly-decomp";
-// The World act as the global Phaser.World instance;
-// @ts-ignore
-global.decomp = decomp;
 
 interface ISize {
     width: number;
@@ -197,10 +193,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.initWorld();
     }
 
-    public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-        this.mainPeer.render.addFillEffect(pos.x, pos.y, status).then(() => {
-        });
-    }
+    // public addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
+    //     this.mainPeer.render.addFillEffect(pos.x, pos.y, status).then(() => {
+    //     });
+    // }
 
     public setSize(width, height) {
         this.mSize = {
@@ -333,6 +329,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             throw new Error("can't find render");
         }
         return render;
+    }
+
+    get physicalPeer() {
+        const physicalPeer = this.peer.physicalPeer;
+        if (!physicalPeer) {
+            throw new Error("can't find physicalPeer");
+        }
+        return physicalPeer;
     }
 
     get avatarType() {
