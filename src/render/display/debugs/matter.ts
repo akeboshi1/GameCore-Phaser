@@ -5,9 +5,8 @@ export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
     constructor(private render: Render) {
         const scene = this.render.sceneManager.getSceneByName(PlayScene.name);
-        if (!scene) return;
-        this.mGraphics = scene.make.graphics(undefined, false);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.mGraphics);
+        this.mGraphics =  scene.make.graphics(undefined, false);
+        (<PlayScene>scene).layerManager.addToLayer("middleLayer", this.mGraphics);
     }
 
     update() {

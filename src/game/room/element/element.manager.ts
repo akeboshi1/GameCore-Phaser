@@ -240,10 +240,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElementsDisplayReady.set(id, true);
         if (!this.hasAddComplete) return;
 
+        Logger.getInstance().log("onDisplayReady ", id);
         let allReady = true;
-        this.mElementsDisplayReady.forEach((val) => {
+        this.mElementsDisplayReady.forEach((val, key) => {
             if (val === false) {
                 allReady = false;
+                Logger.getInstance().log("left not ready display: ", this.mElements.get(key));
             }
         });
 

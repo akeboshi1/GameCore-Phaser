@@ -1,6 +1,5 @@
 import {BaseDisplay, BaseFramesDisplay} from "display";
 import {Render} from "../../render";
-import {LoadQueue} from "../../loadqueue";
 import {DisplayField, ElementStateType, IFramesModel, RunningAnimation, TitleMask} from "structure";
 import {IDisplayObject} from "../display.object";
 import {IPos, Logger} from "utils";

@@ -14,6 +14,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS, this.onReAwardTipsHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_BLING_PANEL, this.onShowBlingPanel);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_HIGH_QUALITY_REWARD_TIPS, this.onHIGH_QUALITY_REWARD_TIPS);
         this.addPackListener();
     }
     clear() {
@@ -60,6 +61,11 @@ export class SceneDataManager extends BasePacketHandler {
     private onShowBlingPanel(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_BLING_PANEL = packet.content;
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEFFECTMGR_NAME, content);
+    }
+
+    private onHIGH_QUALITY_REWARD_TIPS(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_HIGH_QUALITY_REWARD_TIPS = packet.content;
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICATREASURE_NAME, { data: content.list, type: "open" });
     }
 
     get curRoomID() {

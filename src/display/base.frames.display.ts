@@ -139,7 +139,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         const effects = [];
         for (let i = 0; i < layer.length; i++) {
             let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
-            const { frameName, offsetLoc } = layer[i];
+            const {frameName, offsetLoc} = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_${aniName}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, ani.frameRate, ani.loop, ani.frameDuration);
@@ -360,7 +360,7 @@ export class BaseFramesDisplay extends BaseDisplay {
     }
 
     private get framesInfo(): IFramesModel {
-        return <IFramesModel>this.mDisplayInfo;
+        return <IFramesModel> this.mDisplayInfo;
     }
 
     get spriteWidth(): number {
