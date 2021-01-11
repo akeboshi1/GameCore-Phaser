@@ -6,7 +6,7 @@ export class MatterBodies {
     constructor(private render: Render) {
         const scene = this.render.sceneManager.getSceneByName(PlayScene.name);
         this.mGraphics =  scene.make.graphics(undefined, false);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", this.mGraphics);
+        (<PlayScene>scene).layerManager.addToLayer("middleLayer", this.mGraphics);
     }
 
     update() {
