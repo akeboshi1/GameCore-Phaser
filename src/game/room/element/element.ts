@@ -1,14 +1,19 @@
-import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue, AvatarSuitType, ElementStateType, PlayerState } from "structure";
-import { IDragonbonesModel } from "structure";
-import { IFramesModel } from "structure";
-import { IPos, Logger, LogicPos, Tool } from "utils";
-import { BlockObject } from "../block/block.object";
-import { ISprite } from "../display/sprite/sprite";
-import { IRoomService, Room } from "../room/room";
-import { IElementManager } from "./element.manager";
-import { interval } from "../../game";
-import { IProjection } from "src/utils/projection";
+import {op_client, op_def} from "pixelpai_proto";
+import {
+    AnimationQueue,
+    AvatarSuitType,
+    ElementStateType,
+    IDragonbonesModel,
+    IFramesModel,
+    PlayerState
+} from "structure";
+import {IPos, Logger, LogicPos, Tool} from "utils";
+import {BlockObject} from "../block/block.object";
+import {ISprite} from "../display/sprite/sprite";
+import {IRoomService, Room} from "../room/room";
+import {IElementManager} from "./element.manager";
+import {interval} from "../../game";
+import {IProjection} from "src/utils/projection";
 
 export interface IElement {
     readonly id: number;

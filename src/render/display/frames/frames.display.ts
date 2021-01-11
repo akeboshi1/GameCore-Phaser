@@ -1,13 +1,12 @@
 import {BaseDisplay, BaseFramesDisplay} from "display";
 import {Render} from "../../render";
-import {LoadQueue} from "../../loadqueue";
-import {DisplayField, ElementStateType, IFramesModel, RunningAnimation, TitleMask} from "structure";
+import {DisplayField, ElementStateType, RunningAnimation, TitleMask} from "structure";
 import {IDisplayObject} from "../display.object";
-import {IPos, Logger} from "utils";
+import {Handler, IPos, Logger} from "utils";
 import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
-import { IProjection } from "src/utils/projection";
+import {IProjection} from "src/utils/projection";
 
 /**
  * 序列帧显示对象
