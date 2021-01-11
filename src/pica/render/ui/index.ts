@@ -104,3 +104,4 @@ export * from "./PicaRoam/PicaRoamListPanel";
 export * from "./PicaRoam/PicaRoamPanel";
 export * from "./PicaRoam/PicaRoamDrawPanel";
 export * from "./PicaRoam/PicaRoamPreviewPanel";
+export * from "./PicaExploreLog/PicaExploreLogPanel";

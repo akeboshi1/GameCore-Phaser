@@ -4,10 +4,10 @@ import { ModuleName } from "structure";
 import { PicaEquipUpgrade } from "./PicaEquipUpgrade";
 
 export class PicaEquipUpgradeMediator extends BasicMediator {
-    private equipUpgrade: PicaEquipUpgrade;
+    protected mModel: PicaEquipUpgrade;
     constructor(game: Game) {
         super(ModuleName.PICAEQUIPUPGRADE_NAME, game);
-        this.equipUpgrade = new PicaEquipUpgrade(game);
+        this.mModel = new PicaEquipUpgrade(game);
     }
 
     show(param?: any) {
@@ -29,8 +29,6 @@ export class PicaEquipUpgradeMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.equipUpgrade) this.equipUpgrade.destroy();
-        this.equipUpgrade = undefined;
         super.destroy();
     }
 
@@ -41,7 +39,7 @@ export class PicaEquipUpgradeMediator extends BasicMediator {
     }
 
     private onHidePanel() {
-        super.destroy();
+        this.hide();
     }
 
     private onEquipUpgradePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
@@ -55,11 +53,11 @@ export class PicaEquipUpgradeMediator extends BasicMediator {
     }
 
     private onReqEquipedEquipment(id: string) {
-        if (this.equipUpgrade) this.equipUpgrade.reqEquipedEquipment(id);
+        if (this.mModel) this.mModel.reqEquipedEquipment(id);
     }
 
     private onReqActiveEquipment(id: string) {
-        if (this.equipUpgrade) this.equipUpgrade.reqActiveEquipment(id);
+        if (this.mModel) this.mModel.reqActiveEquipment(id);
     }
 
     private onShowEquipPanel(content: any) {

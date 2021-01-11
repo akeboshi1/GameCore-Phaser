@@ -1,0 +1,188 @@
+{
+	"textures": [
+		{
+			"image": "explorelog.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 254,
+				"h": 495
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "checkpoint_Countdown_bg.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 252,
+						"h": 75
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 252,
+						"h": 75
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 252,
+						"h": 75
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_bottom.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 1,
+						"y": 78,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_schedule.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 122,
+						"h": 122
+					},
+					"frame": {
+						"x": 131,
+						"y": 78,
+						"w": 122,
+						"h": 122
+					}
+				},
+				{
+					"filename": "checkpoint_abort.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 121,
+						"h": 121
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 121,
+						"h": 121
+					},
+					"frame": {
+						"x": 131,
+						"y": 202,
+						"w": 121,
+						"h": 121
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_top.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 13,
+						"w": 102,
+						"h": 102
+					},
+					"frame": {
+						"x": 1,
+						"y": 208,
+						"w": 102,
+						"h": 102
+					}
+				},
+				{
+					"filename": "checkpoint_aims_bg.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 102,
+						"h": 76
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 102,
+						"h": 76
+					},
+					"frame": {
+						"x": 1,
+						"y": 312,
+						"w": 102,
+						"h": 76
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_icon_gray.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 11,
+						"w": 93,
+						"h": 104
+					},
+					"frame": {
+						"x": 1,
+						"y": 390,
+						"w": 93,
+						"h": 104
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_icon_light.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 11,
+						"w": 93,
+						"h": 104
+					},
+					"frame": {
+						"x": 96,
+						"y": 390,
+						"w": 93,
+						"h": 104
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:2eff50b8ba2b7ca2695863aa10131219:3b4c8e864a576118e1f906c4f5b95cea:6993824701fd330548707f25a25546b8$"
+	}
+}
