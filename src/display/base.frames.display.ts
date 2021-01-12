@@ -45,7 +45,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                     this.onAddTextureHandler(key, field, cb);
                 };
                 this.scene.textures.on(Phaser.Textures.Events.ADD, cb, this);
-                this.scene.load.start();
+                this.startLoad();
             }
 
         }
