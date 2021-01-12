@@ -13,7 +13,9 @@ export class ItemButton extends ButtonEventDispatcher {
     private itemIcon: DynamicImage;
     private countTex: Phaser.GameObjects.Text;
     private starImg: Phaser.GameObjects.Image;
-    private bgFrame: string;
+    private bgFrame: string = "bag_icon_common_bg";
+    private selectFrame: string = "bag_icon_select_bg";
+    private rarityFrame: string = "bag_icon_rare_bg";
     private key: string;
     constructor(scene: Phaser.Scene, key: string, bg: string, dpr: number, zoom: number, enable: boolean) {
         super(scene, 0, 0);
@@ -22,7 +24,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.bgFrame = bg;
         this.key = key;
         this.bg = scene.make.image({ key, frame: bg });
-        this.selectbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_icon_select_bg" });
+        this.selectbg = scene.make.image({ key: UIAtlasName.uicommon, frame: this.selectFrame });
         this.setSize(this.selectbg.width, this.selectbg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemIcon.scale = this.dpr / this.zoom;
@@ -38,9 +40,14 @@ export class ItemButton extends ButtonEventDispatcher {
         this.on(ClickEvent.Tap, this.onTabClickHandler, this);
     }
 
+    public setStateFrames(bg: string, rarity: string) {
+        this.bgFrame = bg;
+        this.rarityFrame = rarity;
+    }
+
     public setItemData(itemData: op_client.ICountablePackageItem, alldisplay: boolean = false) {
         this.itemData = itemData;
-        this.isSelect = false;
+        this.select = false;
         this.itemIcon.visible = false;
         this.starImg.visible = false;
         if (!itemData) {
@@ -49,7 +56,7 @@ export class ItemButton extends ButtonEventDispatcher {
             return;
         }
         if (itemData.rarity === 5) {
-            this.bg.setTexture(UIAtlasName.uicommon, "bag_icon_rare_bg");
+            this.bg.setTexture(this.key, this.rarityFrame);
         } else {
             this.bg.setTexture(this.key, this.bgFrame);
         }
@@ -75,7 +82,7 @@ export class ItemButton extends ButtonEventDispatcher {
             this.starImg.setFrame(starFrame);
         } else this.starImg.visible = false;
     }
-    public set isSelect(value) {
+    public set select(value) {
         this.selectbg.visible = value;
     }
     protected onTabClickHandler() {

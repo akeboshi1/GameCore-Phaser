@@ -4,11 +4,32 @@
 			"image": "ui_common1",
 			"format": "RGBA8888",
 			"size": {
-				"w": 878,
-				"h": 1178
+				"w": 1880,
+				"h": 1728
 			},
 			"scale": 1,
 			"frames": [
+				{
+					"filename": "bg1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1000,
+						"h": 1364
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1000,
+						"h": 1364
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 1000,
+						"h": 1364
+					}
+				},
 				{
 					"filename": "bg",
 					"rotated": false,
@@ -24,10 +45,31 @@
 						"h": 1030
 					},
 					"frame": {
-						"x": 1,
+						"x": 1003,
 						"y": 1,
 						"w": 876,
 						"h": 1030
+					}
+				},
+				{
+					"filename": "bg_universal_box",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 834,
+						"h": 592
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 834,
+						"h": 592
+					},
+					"frame": {
+						"x": 1003,
+						"y": 1033,
+						"w": 834,
+						"h": 592
 					}
 				},
 				{
@@ -46,9 +88,51 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 1033,
+						"y": 1367,
 						"w": 641,
 						"h": 144
+					}
+				},
+				{
+					"filename": "roam_reward_ordinary_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 214,
+						"h": 214
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 214,
+						"h": 214
+					},
+					"frame": {
+						"x": 644,
+						"y": 1367,
+						"w": 214,
+						"h": 214
+					}
+				},
+				{
+					"filename": "roam_reward_rare_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 214,
+						"h": 214
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 214,
+						"h": 214
+					},
+					"frame": {
+						"x": 1,
+						"y": 1513,
+						"w": 214,
+						"h": 214
 					}
 				},
 				{
@@ -66,8 +150,8 @@
 						"h": 48
 					},
 					"frame": {
-						"x": 644,
-						"y": 1033,
+						"x": 217,
+						"y": 1513,
 						"w": 45,
 						"h": 48
 					}
@@ -78,6 +162,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:562bbfb9ede0dc4d406052d68dacdf6d:e92a009d8c376380715cc51e971c700c:595aabd3b33d5bed75c5895bfe961423$"
+		"smartupdate": "$TexturePacker:SmartUpdate:193911dcaf7b860e3c18d302c39ea2c9:512f771adeac57cfa1dbdf7858913cbc:595aabd3b33d5bed75c5895bfe961423$"
 	}
 }

@@ -15,6 +15,7 @@ export class UIAtlasName {
     public static stareffect = "stareffect";
     public static circleeffect = "circleeffect";
     public static explorelog = "explorelog";
+    public static treasure = "treasure";
     public static jsonUrl(name: string) {
         return name + ".json";
     }
