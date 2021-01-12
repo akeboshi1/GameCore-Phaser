@@ -41,7 +41,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 this.scene.load.atlas(this.framesInfo.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
                 const onAdd = (key: string) => {
                     this.onAddTextureHandler(key, field, onAdd);
-                    this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                    if (this.scene) this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                 };
                 const onLoadError = (imageFile: ImageFile) => {
                     // Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
