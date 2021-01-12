@@ -1,6 +1,7 @@
-import { Logger, Url } from "utils";
-import { BaseDisplay } from "./base.display";
-import { DisplayField, IFramesModel, RunningAnimation } from "structure";
+import {Logger, Url} from "utils";
+import {BaseDisplay} from "./base.display";
+import {DisplayField, IFramesModel, RunningAnimation} from "structure";
+import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 
 /**
  * 序列帧显示对象
@@ -38,13 +39,16 @@ export class BaseFramesDisplay extends BaseDisplay {
                 this.created();
             } else {
                 this.scene.load.atlas(this.framesInfo.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
-                // this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (imageFile: ImageFile) => {
-                //     Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
-                // }, this);
-                const cb = (key: string) => {
-                    this.onAddTextureHandler(key, field, cb);
+                const onAdd = (key: string) => {
+                    this.onAddTextureHandler(key, field, onAdd);
+                    this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                 };
-                this.scene.textures.on(Phaser.Textures.Events.ADD, cb, this);
+                const onLoadError = (imageFile: ImageFile) => {
+                    // Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
+                    this.created();
+                };
+                this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
                 this.startLoad();
             }
 
@@ -66,7 +70,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (!this.mCurAnimation) return;
         this.clear();
         const layer = this.mCurAnimation.layer;
-        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
+        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
         if (!container) {
             container = this.scene.make.container(undefined, false);
             container.setData("id", this.displayInfo ? this.displayInfo.id : undefined);
@@ -75,20 +79,20 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
         for (let i = 0; i < layer.length; i++) {
             let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
-            const { frameName, offsetLoc } = layer[i];
+            const {frameName, offsetLoc} = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_${animation.name}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible,
                     this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
                 display = this.scene.make.sprite(undefined, false);
-                const anis = (<Phaser.GameObjects.Sprite>display).anims;
+                const anis = (<Phaser.GameObjects.Sprite> display).anims;
                 anis.play(key);
                 if (typeof times === "number") anis.setRepeat(times);
                 if (!this.mMainSprite) {
-                    this.mMainSprite = <Phaser.GameObjects.Sprite>display;
+                    this.mMainSprite = <Phaser.GameObjects.Sprite> display;
                 }
             } else {
-                display = this.scene.make.image({ key: data.gene, frame: frameName[0] });
+                display = this.scene.make.image({key: data.gene, frame: frameName[0]});
             }
             display.setData("id", this.displayInfo ? this.displayInfo.id : undefined);
             this.mDisplays.push(display);
@@ -191,7 +195,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         // super.setInteractive(shape, callback, dropZone);
         this.isInteracitve = true;
         this.mDisplays.forEach((display) => {
-            display.setInteractive({ pixelPerfect: true });
+            display.setInteractive({pixelPerfect: true});
         });
         return this;
     }
@@ -312,9 +316,9 @@ export class BaseFramesDisplay extends BaseDisplay {
             const frame = frameName[i];
             const visible = frameVisible ? frameVisible[i] : true;
             if (frameDuration) {
-                frames.push({ key: gen, frame, duration: frameDuration[i] * 1000, visible });
+                frames.push({key: gen, frame, duration: frameDuration[i] * 1000, visible});
             } else {
-                frames.push({ key: gen, frame, visible });
+                frames.push({key: gen, frame, visible});
             }
         }
         const repeat = loop ? -1 : 1;
@@ -333,7 +337,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (this.mDisplays.length < 1 || !data || !data.animations) return;
         // const animations = data.getAnimations(aniName);
         // if (!animations) return;
-        const { name, flip } = playAnimation;
+        const {name, flip} = playAnimation;
         // TODO
         // this.mCollisionArea = data.getCollisionArea(name, flip);
         // this.mOriginPoint = data.getOriginPoint(name, flip);
