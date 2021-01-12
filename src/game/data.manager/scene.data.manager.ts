@@ -56,7 +56,8 @@ export class SceneDataManager extends BasePacketHandler {
         else Object.assign(this.mCurRoom, room);
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
-        if (this.game.uiManager) this.game.uiManager.showMainUI();
+        this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI);
+        // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
     }
 
     private onShowBlingPanel(packet: PBpacket) {

@@ -21,11 +21,13 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         const h: number = this.scaleHeight;
         super.resize(width, height);
         this.setSize(w, h);
-        this.goOutBtn.x = w - 10 * this.dpr;
-        this.goOutBtn.y = 10 * this.dpr;
+        this.goOutBtn.x = w - this.goOutBtn.width * 0.5 - 10 * this.dpr;
+        this.goOutBtn.y = this.goOutBtn.height * 0.5 + 10 * this.dpr;
         this.expProgress.x = w - this.expProgress.width * 0.5 - 20 * this.dpr;
-        this.expProgress.y = h - 100 * this.dpr;
-        this.textCon.y = this.expProgress.y + 40 * this.dpr;
+        this.expProgress.y = h - 240 * this.dpr;
+        this.textCon.y = this.expProgress.y + 50 * this.dpr;
+        this.textCon.x = w * 0.5;
+        this.expProgress.refreshMask();
     }
 
     public addListen() {
@@ -57,13 +59,14 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         }
         list.length = 0;
         const bwidth = 107 * this.dpr, bheight = 25 * this.dpr;
-        let posX = -this.width * 0.5 + bwidth * 0.5 + 10 * this.dpr;
+        let posX = -this.width * 0.5 + bwidth * 0.5 + 7 * this.dpr;
         for (const text of texts) {
-            const button = new NineSliceButton(this.scene, 0, 0, bwidth, bheight, UIAtlasName.explorelog, "checkpoint_aims_bg", "", this.dpr, this.scale);
+            const button = new NineSliceButton(this.scene, 0, 0, bwidth, bheight, UIAtlasName.explorelog, "checkpoint_aims_bg", text, this.dpr, this.scale, {
+                left: 10 * this.dpr, right: 10 * this.dpr, top: 0 * this.dpr, bottom: 0 * this.dpr
+            });
             button.setTextStyle(UIHelper.colorStyle("#FFEE5D", 11 * this.dpr));
-            button.setText(text);
             button.x = posX;
-            posX += bwidth + 15 * this.dpr;
+            posX += bwidth + 12 * this.dpr;
             this.textCon.add(button);
         }
         this.setTimeProgress(30000);
@@ -76,7 +79,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
             const value = temp / time;
             temp += 20;
             this.expProgress.setProgress(value);
-            if (this.timer >= 1) this.clearTimer();
+            if (value >= 1) this.clearTimer();
         }, 20);
     }
 
@@ -113,12 +116,17 @@ class ExploreTimeProgress extends Phaser.GameObjects.Container {
     }
 
     public setProgress(value: number) {
-        const startAngle = 90;
-        const endAngle = 90 - 360 * value;
+        const startAngle = -90;
+        const endAngle = 360 * value - 90;
         this.barmask.clear();
         this.barmask.fillStyle(0xffffff);
-        this.barmask.slice(0, 0, 43 * this.dpr, Phaser.Math.DegToRad(startAngle), Phaser.Math.DegToRad(endAngle), true);
+        this.barmask.slice(0, 0, 43 * this.dpr / this.zoom, Phaser.Math.DegToRad(startAngle), Phaser.Math.DegToRad(endAngle), false);
         this.barmask.fillPath();
+    }
+
+    refreshMask() {
+        const world = this.getWorldTransformMatrix();
+        this.barmask.setPosition(world.tx, world.ty);
     }
 
     destroy() {

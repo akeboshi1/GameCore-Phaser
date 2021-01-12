@@ -22,27 +22,17 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
     }
 
-    destroy() {
-        super.destroy();
-    }
-
     protected panelInit() {
         super.panelInit();
-        if (this.mParam && this.mParam.length > 0)
-            this.onEquipUpgradePacket(this.mParam[0]);
+        if (this.mShowData) this.onEXPLORE_REQUIRE_LIST(this.mShowData);
     }
 
     private onHidePanel() {
         this.hide();
     }
 
-    private onEquipUpgradePacket(content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL) {
-        if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAEQUIPUPGRADE_NAME];
-        this.mView.setData("upgradeData", content);
-        this.mView.setEquipDatas(content);
-    }
-
     private onEXPLORE_REQUIRE_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_REQUIRE_LIST) {
-
+        this.mShowData = content;
+        if (this.mView) this.mView.setExploreDatas(content.list);
     }
 }
