@@ -1,0 +1,74 @@
+stages:
+    - build
+    - deploy
+variables:
+    CI_DEBUG_TRACE: "false"
+    DOCKER_DRIVER: overlay2
+    GIT_SUBMODULE_STRATEGY: normal #recursive
+cache:
+    paths:
+        - node_modules/
+        - .yarn
+
+Build:
+    stage: build
+    only:
+        - /^beta/
+    tags:
+        - prod-platform-delivery
+    before_script:
+        ##
+        ## Install ssh-agent if not already installed, it is required by Docker.
+        ## (change apt-get to yum if you use an RPM-based image)
+        ##
+        - "command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )"
+        ##
+        ## Run ssh-agent (inside the build environment)
+        ##
+        - eval $(ssh-agent -s)
+        ##
+        ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+        ## We're using tr to fix line endings which makes ed25519 keys work
+        ## without extra base64 encoding.
+        ## https://gitlab.com/gitlab-examples/ssh-private-key/issues/1#note_48526556
+        ##
+        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+        ##
+        ## Create the SSH directory and give it the right permissions
+        ##
+        - mkdir -p ~/.ssh
+        - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - chmod 700 ~/.ssh
+        ##
+        ## Optionally, if you will be using any Git commands, set the user name and
+        ## and email.
+        ##
+        - git config --global user.email "ci@apowo.com"
+        - git config --global user.name "gitlab-runner"
+
+    script:
+        - yarn
+        - yarn build
+    cache:
+        key: "${CI_COMMIT_REF_SLUG}"
+        paths: 
+            - release/
+        policy: pull-push
+
+Deploy:
+    stage: deploy
+    only:
+        - /^beta/
+        - /^deploy/
+    tags:
+        - prod-platform-delivery
+    script:
+        - npm config set @PixelPai:registry https://code.apowo.com/api/v4/packages/npm/
+        - npm config set '//code.apowo.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken' "${NPM_TOKEN}"
+        - npm config set '//code.apowo.com/api/v4/packages/npm/:_authToken' "${NPM_TOKEN}"
+        - npm publish
+    cache:
+        key: "${CI_COMMIT_REF_SLUG}"
+        paths: 
+            - release/
+        policy: pull
