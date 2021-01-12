@@ -1,4 +1,4 @@
-import { Bodies, Body, Vector } from "matter-js";
+import { Bodies, Body, Vector } from "tooqingmatter-js";
 import { IPos, IPosition45Obj, Logger, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
@@ -364,7 +364,7 @@ export class MatterObject implements IMatterObject {
             return;
         }
         // tslint:disable-next-line:no-console
-        console.log("position ======>", p, this._scale, this._offset);
+        // console.log("matter.object position ======>", this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y);
         Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
     }
 
@@ -475,7 +475,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public setVertices(vertexSets) {
-        return Bodies.fromVertices(this._tempVec.x, this._tempVec.y, vertexSets, { isStatic: true, inertia: Infinity,frictionAir: 0, inverseInertia: Infinity });
+        return Bodies.fromVertices(this._tempVec.x, this._tempVec.y, vertexSets, { isStatic: true, inertia: Infinity, frictionAir: 0, inverseInertia: Infinity });
     }
 
     public getSensor() {

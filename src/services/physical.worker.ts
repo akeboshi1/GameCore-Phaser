@@ -1,4 +1,4 @@
-import { Bodies } from "matter-js";
+import { Bodies } from "tooqingmatter-js";
 import { MAIN_WORKER, PHYSICAL_WORKER, RENDER_PEER } from "structure";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { IMatterObject, MatterObject } from "./physical/matter.object";
