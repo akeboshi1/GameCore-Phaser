@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
-import { Size } from "utils";
+import { ResUtils, Size } from "utils";
 import { Game } from "../game";
 import { BasicMediator, UIType } from "./basic/basic.mediator";
 import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
@@ -9,6 +9,7 @@ import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
 export class UIManager extends PacketHandler {
     protected mMedMap: Map<UIMediatorType, BasicMediator>;
     protected mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
+    protected isshowMainui: boolean = false;
 
     // ==== about checkUIState
     private mNoneUIMap: Map<string, any> = new Map();
@@ -59,6 +60,7 @@ export class UIManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_FORCE_OFFLINE, this.onForceOfflineHandler);
         this.game.emitter.on(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
+        this.game.emitter.on(EventType.SCENE_SHOW_MAIN_UI, this.showMainUI, this);
     }
 
     public removePackListener() {
@@ -70,19 +72,24 @@ export class UIManager extends PacketHandler {
         this.game.emitter.off(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
     }
 
-    public showMainUI() {
+    public showMainUI(hideNames?: string[], force?: boolean) {
+        if (!force && this.isshowMainui) {
+            return;
+        }
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }
         this.mMedMap.forEach((mediator: any) => {
             if (mediator.isSceneUI() && !mediator.isShow()) {
-                mediator.show();
+                if (!hideNames || hideNames.indexOf(mediator.key) === -1)
+                    mediator.show();
             }
         });
         for (const oneCache of this.mLoadingCache) {
             this.showMed(oneCache.name, oneCache);
         }
         this.mLoadingCache.length = 0;
+        this.isshowMainui = true;
     }
 
     public showDecorateUI() {
@@ -224,6 +231,7 @@ export class UIManager extends PacketHandler {
             this.mMedMap = null;
         }
         if (this.mAtiveUIData) this.mAtiveUIData = undefined;
+        this.isshowMainui = false;
     }
 
     protected onForceOfflineHandler(packet: PBpacket) {

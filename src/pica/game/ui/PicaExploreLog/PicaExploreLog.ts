@@ -44,6 +44,6 @@ export class PicaExploreLog extends BasicModel {
 
     private onEXPLORE_REQUIRE_LIST(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_REQUIRE_LIST = packge.content;
-        this.event.emit(ModuleName.PICAEQUIPUPGRADE_NAME + "_retexplorelist", content.list);
+        this.event.emit(ModuleName.PICAEQUIPUPGRADE_NAME + "_retexplorelist", content);
     }
 }
