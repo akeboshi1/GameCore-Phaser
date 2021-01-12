@@ -43,7 +43,6 @@
         "i18next": "^19.0.3",
         "i18next-browser-languagedetector": "^4.0.1",
         "i18next-xhr-backend": "^3.2.2",
-        "matter-js": "^0.14.2",
         "maxrects-packer": "^2.6.0",
         "monotone-convex-hull-2d": "^1.0.1",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
@@ -51,6 +50,7 @@
         "poly-decomp": "^0.3.0",
         "simple-sha1": "^3.0.1",
         "tooqinggamephaser": "^0.2.8",
+        "tooqingmatter-js": "^0.0.8",
         "webworker-rpc": "git://github.com/ApowoGames/webworker-rpc",
         "worker-loader": "^3.0.2"
     }

@@ -1,13 +1,14 @@
-import { BaseDragonbonesDisplay } from "display";
-import { Render } from "../../render";
-import { IPos, Logger, ValueResolver, IProjection } from "utils";
-import { DisplayField, ElementStateType, RunningAnimation, TitleMask } from "structure";
-import { IDisplayObject } from "../display.object";
-import { LoadQueue, LoadType } from "../../loadqueue";
-import { ReferenceArea } from "../../editor";
-import { ElementTopDisplay } from "../element.top.display";
-import { DisplayMovement } from "../display.movement";
-import { projectionAngle } from "gamecoreRender";
+import {BaseDragonbonesDisplay} from "display";
+import {Render} from "../../render";
+import {IPos, Logger, ValueResolver, IProjection} from "utils";
+import {DisplayField, ElementStateType, RunningAnimation, TitleMask} from "structure";
+import {IDisplayObject} from "../display.object";
+import {LoadQueue, LoadType} from "../../loadqueue";
+import {ReferenceArea} from "../../editor";
+import {ElementTopDisplay} from "../element.top.display";
+import {DisplayMovement} from "../display.movement";
+import {projectionAngle} from "gamecoreRender";
+
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
@@ -22,6 +23,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     private mLoadPromise: ValueResolver<boolean> = null;
     private mProjectionSize: IProjection;
     private mName: string = undefined;
+    private mPlaceholder: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
         super(scene);
@@ -133,6 +135,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     }
 
     public startLoad(callBack?: Function): Promise<any> {
+        if (callBack !== undefined) this.mLoadCompoleteCallback = callBack;
+
         if (!this.mLoadQueue || this.mCreated) {
             return Promise.resolve(null);
         }
@@ -151,7 +155,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
+            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
         }
         return this.mProjectionSize;
     }
@@ -193,6 +197,27 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     }
 
     public unmount(ele: Phaser.GameObjects.Container) {
+    }
+
+    public get sortX() {
+        return this.mSortX;
+    }
+
+    public get sortY() {
+        return this.mSortY;
+    }
+
+    protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
+        if (!this.scene) return;
+        if (!this.mArmatureDisplay) {
+            this.showPlaceholder();
+        }
+        super.createArmatureDisplay(loader, totalComplete, totalFailed);
+    }
+
+    protected refreshAvatar() {
+        super.refreshAvatar();
+        this.closePlaceholder();
     }
 
     protected async fetchProjection() {
@@ -248,11 +273,18 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
     }
 
-    get sortX() {
-        return this.mSortX;
+    protected showPlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = this.scene.make.image({key: "avatar_placeholder", x: -22, y: -68}).setOrigin(0);
+        this.add(this.mPlaceholder);
     }
 
-    get sortY() {
-        return this.mSortY;
+    protected closePlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = undefined;
     }
 }
