@@ -5,11 +5,9 @@
     "scripts": {
         "dev": "webpack-dev-server --mode development",
         "up": "yarn upgrade game-capsule && yarn upgrade webworker-rpc && yarn upgrade tooqinggamephaser",
-        "build": "yarn up && yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress && yarn mv",
+        "build": "yarn up && yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
         "build:dev": "webpack --mode=development --output-path=./release --progress",
-        "ver": "genversion version.js",
-        "mv-dev": "move-cli dist/heartBeatWorker.js dist/js/heartBeatWorker.js",
-        "mv": "move-cli release/heartBeatWorker.js release/js/heartBeatWorker.js"
+        "ver": "genversion version.js"
     },
     "repository": "git@code.apowo.com:PixelPai/game-core.git",
     "author": "Seven <seven@apowo.com>",
