@@ -1,4 +1,4 @@
-import { Bodies, Body, Composite, Engine, Render, World } from "matter-js";
+import { Bodies, Body, Composite, Engine, Render, World } from "tooqingmatter-js";
 import { PhysicalPeer } from "../../services/physical.worker";
 import { ISizeChart } from "structure";
 import { AStar, ChatCommandInterface, IPos, IPosition45Obj, LogicPos, Pos, Position45 } from "utils";

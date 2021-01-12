@@ -1,7 +1,7 @@
 {
 	"textures": [
 		{
-			"image": "explorelog.png",
+			"image": "explorelog",
 			"format": "RGBA8888",
 			"size": {
 				"w": 254,
@@ -10,7 +10,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "checkpoint_Countdown_bg.png",
+					"filename": "checkpoint_Countdown_bg",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "checkpoint_prompt_bottom.png",
+					"filename": "checkpoint_prompt_bottom",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -52,7 +52,7 @@
 					}
 				},
 				{
-					"filename": "checkpoint_prompt_schedule.png",
+					"filename": "checkpoint_prompt_schedule",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -73,7 +73,7 @@
 					}
 				},
 				{
-					"filename": "checkpoint_abort.png",
+					"filename": "checkpoint_abort",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -94,7 +94,7 @@
 					}
 				},
 				{
-					"filename": "checkpoint_prompt_top.png",
+					"filename": "checkpoint_prompt_top",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -115,7 +115,7 @@
 					}
 				},
 				{
-					"filename": "checkpoint_aims_bg.png",
+					"filename": "checkpoint_aims_bg",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -136,7 +136,7 @@
 					}
 				},
 				{
-					"filename": "checkpoint_prompt_icon_gray.png",
+					"filename": "checkpoint_prompt_icon_gray",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -157,7 +157,7 @@
 					}
 				},
 				{
-					"filename": "checkpoint_prompt_icon_light.png",
+					"filename": "checkpoint_prompt_icon_light",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {

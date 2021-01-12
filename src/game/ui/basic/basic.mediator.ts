@@ -40,7 +40,7 @@ export class BasicMediator implements IMediator {
     protected mModel: BasicModel;
     protected mShowData: any;
     protected mView: any;
-    constructor(protected key: string, protected game: Game) {
+    constructor(public key: string, protected game: Game) {
         if (!key || key.length === 0) {
             Logger.getInstance().error("invalid key");
             return;
@@ -126,7 +126,6 @@ export class BasicMediator implements IMediator {
 
     protected mediatorExport() {
     }
-
     protected __exportProperty(callback?: () => any) {
         if (!this.game || !this.game.peer) {
             return;
