@@ -341,6 +341,7 @@ export class UIManager extends PacketHandler {
     protected clearMediator() {
         this.mMedMap.forEach((mediator) => mediator.destroy());
         this.mMedMap.clear();
+        this.isshowMainui = false;
     }
 
     private onOpenUIMediator() {

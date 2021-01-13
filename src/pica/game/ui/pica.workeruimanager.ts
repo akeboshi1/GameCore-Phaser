@@ -1,6 +1,5 @@
 import { UIManager, Game, BasicMediator } from "gamecore";
 import { ModuleName } from "structure";
-import { ChatMediator } from "./Chat/ChatMediator";
 import { CutInMediator } from "./CutIn";
 import { DialogMediator } from "./Dialog";
 import { LoginMediator } from "./Login";
@@ -16,10 +15,10 @@ export class PicaWorkerUiManager extends UIManager {
     }
 
     public showMainUI(hideNames?: string[], force?: boolean) {
+        this.clearMediator();
         if (!force && this.isshowMainui) {
             return;
         }
-        this.clearMediator();
         this.mMedMap.set(ModuleName.LOGIN_NAME, new LoginMediator(this.game));
         this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
         this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
