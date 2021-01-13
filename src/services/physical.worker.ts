@@ -278,10 +278,12 @@ export class PhysicalPeer extends RPCPeer {
     @Export()
     public setModel(sprite: any) {
         const id = sprite.id;
-        const obj = this.matterObjectMap.get(id);
-        if (obj) {
-            obj.setModel(sprite);
+        let obj = this.matterObjectMap.get(id);
+        if (!obj) {
+            obj = new MatterObject(this, id);
+            this.matterObjectMap.set(id, obj);
         }
+        obj.setModel(sprite);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
