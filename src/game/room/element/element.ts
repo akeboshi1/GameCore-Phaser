@@ -640,7 +640,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mMoving) {
             this.stopMove();
         }
-        this.disableBlock();
+        // this.disableBlock();
         this.mDirty = true;
         return this;
     }
@@ -654,7 +654,7 @@ export class Element extends BlockObject implements IElement {
             // pos.y += this.mDisplay.y;
             this.mRootMount = null;
             this.setPosition(pos, true);
-            this.enableBlock();
+            // this.enableBlock();
             this.mDirty = true;
         }
         return this;
