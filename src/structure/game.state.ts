@@ -49,3 +49,8 @@ export enum PlayerState {
     LIE = "lit",
     EMOTION01 = "emotion01",
 }
+
+export enum PhysicalPeerState {
+   CREATEWORLD,
+   DESTROYWORLD,
+}
