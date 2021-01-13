@@ -1,4 +1,3 @@
-import { Bodies, Body, Vector } from "matter-js";
 import { PlayerState } from "structure";
 import { LogicPos } from "utils";
 import { PhysicalPeer } from "../physical.worker";

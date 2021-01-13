@@ -1,4 +1,4 @@
-import { Logger } from "utils";
+import {Logger} from "utils";
 import version from "../../../../version";
 import * as url from "url";
 
@@ -12,8 +12,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         ["body_cost"]: ["body_cost", "body_cost_dres"]
     };
     private readonly DEFAULTSETS = [
-        { id: "0001", parts: ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"] },
-        { id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"] },
+        {id: "0001", parts: ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"]},
+        {id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
     ];
     private readonly SPECIALSETS = {
         ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_mask", "head_face", "head_base"],
@@ -24,7 +24,10 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         ["bleg_spec"]: ["bleg_cost", "bleg_base"],
     };
     private readonly MODELSETS = [
-        { id: "5fbf562e72c7db2dbdcdb4ea", parts: ["body_base", "barm_base", "farm_base", "bleg_base", "fleg_base", "head_base"] }
+        {
+            id: "5fbf562e72c7db2dbdcdb4ea",
+            parts: ["body_base", "barm_base", "farm_base", "bleg_base", "fleg_base", "head_base"]
+        }
     ];
     private readonly ALLPARTS = [
         "barm_cost",
@@ -48,10 +51,10 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "head_mask",
         "head_spec",
         "head_face",
-        "barm_shld",// shld_barm
-        "farm_shld",// shld_farm
-        "barm_weap",// weap_barm
-        "farm_weap",// weap_farm
+        "barm_shld",
+        "farm_shld",
+        "barm_weap",
+        "farm_weap",
     ];
     // 下半身插槽名
     private readonly BOTTOMBODYPARTS = [
@@ -122,7 +125,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
-        super.destroy();
         this.removeAll(true);
         if (this.mArmatureDisplay) {
             this.mArmatureDisplay.dbClear();
@@ -144,6 +146,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.mSets = null;
         this.mParts = {};
         this.mParts = null;
+        super.destroy();
     }
 
     // 每次调用强制重新加载资源（因为可能出现不同图片，但是key相同的情况）
@@ -211,7 +214,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 return;
             }
 
-            this.snapshot({ x: 0, y: 0, width, height }, modelData)
+            this.snapshot({x: 0, y: 0, width, height}, modelData)
                 .then((result) => {
                     resolve(result);
                 })
@@ -232,8 +235,18 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 return;
             }
 
-            const modelData = { armature: this.mArmatureDisplay, x: this.HEAD_ICON_WIDTH / 2, y: this.HEAD_ICON_DEFAULT_BOTTOM_PIX, baseSets: this.DEFAULTSETS };
-            this.snapshot({ x: 0, y: this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - this.HEAD_ICON_HEIGHT, width: this.HEAD_ICON_WIDTH, height: this.HEAD_ICON_HEIGHT }, modelData)
+            const modelData = {
+                armature: this.mArmatureDisplay,
+                x: this.HEAD_ICON_WIDTH / 2,
+                y: this.HEAD_ICON_DEFAULT_BOTTOM_PIX,
+                baseSets: this.DEFAULTSETS
+            };
+            this.snapshot({
+                x: 0,
+                y: this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - this.HEAD_ICON_HEIGHT,
+                width: this.HEAD_ICON_WIDTH,
+                height: this.HEAD_ICON_HEIGHT
+            }, modelData)
                 .then((result) => {
                     resolve(result);
                 })
@@ -262,7 +275,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             `${root}/${dbName}_ske.dbbin`,
             null,
             null,
-            { responseType: "arraybuffer" }
+            {responseType: "arraybuffer"}
         );
         const dbName_head = this.DRAGONBONENAME_HEAD;
         this.scene.load.dragonbone(
@@ -272,7 +285,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             `${root}/${dbName_head}_ske.dbbin`,
             null,
             null,
-            { responseType: "arraybuffer" }
+            {responseType: "arraybuffer"}
         );
 
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.buildBones, this);
@@ -553,6 +566,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
         return res;
     }
+
     // 从部件ID转换为资源相对路径 同时也是TextureManager中的key
     // tslint:disable-next-line:no-shadowed-variable
     private relativeUri(part: string, id: string, dir: string, version?: string) {
@@ -564,6 +578,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         result = `${result}.png`;
         return result;
     }
+
     // 部件名转换为插槽名
     private slotName(part: string, dir: string) {
         return `${part}_${dir}`;
@@ -629,18 +644,29 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private getSnapshotModelData(): { armature: dragonBones.phaser.display.ArmatureDisplay, x: number, y: number, baseSets: any[] } {
         for (const set of this.mSets) {
             for (const part of set.parts) {
-                if (this.BOTTOMBODYPARTS.includes(part)) {
+                if (this.BOTTOMBODYPARTS.indexOf(part) >= 0) {
                     // Logger.getInstance().log("ZW-- snapshotArmature: body");
-                    return { armature: this.mArmatureDisplay, x: this.mArmatureDisplay.x, y: this.mArmatureBottomArea, baseSets: this.MODELSETS };
+                    return {
+                        armature: this.mArmatureDisplay,
+                        x: this.mArmatureDisplay.x,
+                        y: this.mArmatureBottomArea,
+                        baseSets: this.MODELSETS
+                    };
                 }
             }
         }
 
         // Logger.getInstance().log("ZW-- snapshotArmature: head");
-        return { armature: this.mArmatureDisplay_head, x: this.mArmatureDisplay.x, y: this.mArmatureBottomArea_head, baseSets: this.MODELSETS };
+        return {
+            armature: this.mArmatureDisplay_head,
+            x: this.mArmatureDisplay.x,
+            y: this.mArmatureBottomArea_head,
+            baseSets: this.MODELSETS
+        };
     }
 
-    private snapshot(area: { x: number, y: number, width: number, height: number }, modelData: { armature: dragonBones.phaser.display.ArmatureDisplay, x: number, y: number, baseSets: any[] }): Promise<string> {
+    private snapshot(area: { x: number, y: number, width: number, height: number },
+                     modelData: { armature: dragonBones.phaser.display.ArmatureDisplay, x: number, y: number, baseSets: any[] }): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.setBaseSets(modelData.baseSets);
             this.replaceDisplay()
@@ -648,7 +674,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     const gameWidth = this.scene.scale.width;
                     const gameHeight = this.scene.scale.height;
                     Logger.getInstance().log(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
-                    const rt = this.scene.make.renderTexture({ x: 0, y: 0, width: gameWidth, height: gameHeight }, false);
+                    const rt = this.scene.make.renderTexture({x: 0, y: 0, width: gameWidth, height: gameHeight}, false);
                     modelData.armature.scaleY *= -1;
                     rt.draw(modelData.armature, modelData.x, modelData.y);
                     rt.snapshotArea(area.x, area.y, area.width, area.height, (img: HTMLImageElement) => {

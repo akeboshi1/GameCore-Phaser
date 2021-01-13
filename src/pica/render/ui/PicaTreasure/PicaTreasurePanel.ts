@@ -2,18 +2,21 @@ import { BasePanel, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Handler } from "utils";
+import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTreasureAllOpenPanel } from "./PicaTreasureAllOpenPanel";
 import { PicaTreasureOpenPanel } from "./PicaTreasureOpenPanel";
 import { PicaTreasurePreviewPanel } from "./PicaTreasurePreviewPanel";
-export class PicaTreasurePanel extends BasePanel {
+export class PicaTreasurePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private previewPanel: PicaTreasurePreviewPanel;
     private treasureOpenPanel: PicaTreasureOpenPanel;
     private treasureAllOpenPanel: PicaTreasureAllOpenPanel;
     private content: Phaser.GameObjects.Container;
     private trasureData: any;
-    constructor(private uiManager: UiManager) {
-        super(uiManager.scene, uiManager.render);
+    constructor(uiManager: UiManager) {
+        super(uiManager);
+        this.atlasNames = [UIAtlasName.treasure, UIAtlasName.uicommon1, UIAtlasName.uicommon,
+        UIAtlasName.circleeffect, UIAtlasName.stareffect];
         this.key = ModuleName.PICATREASURE_NAME;
     }
 
@@ -33,14 +36,7 @@ export class PicaTreasurePanel extends BasePanel {
         this.setInteractive();
         this.setTreasureData(this.showData);
     }
-    preload() {
-        this.addAtlas(this.key, "treasure/treasure.png", "treasure/treasure.json");
-        this.addAtlas(UIAtlasName.circleeffect, "circleeffect/circleeffect.png", "circleeffect/circleeffect.json");
-        this.addAtlas(UIAtlasName.stareffect, "stareffect/stareffect.png", "stareffect/stareffect.json");
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.textureUrl(UIAtlasName.commonUrl), UIAtlasName.jsonUrl(UIAtlasName.commonUrl));
-        this.addAtlas(UIAtlasKey.common3Key, UIAtlasName.textureUrl(UIAtlasName.common3Url), UIAtlasName.jsonUrl(UIAtlasName.common3Url));
-        super.preload();
-    }
+
     public destroy() {
         super.destroy();
         if (this.previewPanel) this.previewPanel.destroy();

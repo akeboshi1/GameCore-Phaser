@@ -15,12 +15,15 @@ export class PicaWorkerUiManager extends UIManager {
         super(game);
     }
 
-    public showMainUI() {
+    public showMainUI(hideNames?: string[], force?: boolean) {
+        if (!force && this.isshowMainui) {
+            return;
+        }
         this.clearMediator();
         this.mMedMap.set(ModuleName.LOGIN_NAME, new LoginMediator(this.game));
         this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
         this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
-       // this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
+        // this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
         // this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
         this.mMedMap.set(ModuleName.CHAT_NAME, new BottomMediator(this.game));
         // this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
@@ -28,7 +31,7 @@ export class PicaWorkerUiManager extends UIManager {
 
         this.mMedMap.set(ModuleName.PICAFURNIFUN_NAME, new PicaFurniFunMediator(this.game)); // 这个的确要弄成全局的..
 
-        super.showMainUI();
+        super.showMainUI(hideNames, force);
     }
 
     public showDecorateUI() {

@@ -325,8 +325,8 @@ export class PicaRecastePanel extends PicaBasePanel {
     if (item && this.mSelectedItemData === item || !item) return;
     this.mSelectedItemData = item;
     this.displayPanel.setRecasteTargetData(item);
-    if (this.mSelectedItem) this.mSelectedItem.isSelect = false;
-    cell.isSelect = true;
+    if (this.mSelectedItem) this.mSelectedItem.select = false;
+    cell.select = true;
     this.mSelectedItem = cell;
   }
 

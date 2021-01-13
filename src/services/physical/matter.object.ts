@@ -1,4 +1,4 @@
-import { Bodies, Body, Vector } from "matter-js";
+import { Bodies, Body, Vector } from "tooqingmatter-js";
 import { IPos, IPosition45Obj, Logger, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
@@ -125,12 +125,12 @@ export class MatterObject implements IMatterObject {
         if (!this.mMoving || !this.body) {
             return;
         }
+        this.checkDirection();
         const _pos = this.body.position;
         this.peer.render.setPosition(this.id, true, _pos.x, _pos.y);
         const pos = new LogicPos(_pos.x / this._scale, _pos.y / this._scale);
         this.peer.mainPeer.setPosition(this.id, pos.x, pos.y);
 
-        this.checkDirection();
         const path = this.mMoveData.path;
         const speed = this.mModel.speed * delta;
         if (Tool.twoPointDistance(pos, path[0]) <= speed) {
@@ -346,6 +346,7 @@ export class MatterObject implements IMatterObject {
         x *= this._scale;
         y *= this._scale;
         Body.setVelocity(this.body, Vector.create(x, y));
+        Body.setInertia(this.body, Infinity);
     }
 
     public setPosition(p: IPos, update: boolean = false) {
@@ -362,7 +363,8 @@ export class MatterObject implements IMatterObject {
             // ==== todo render setPositon
             return;
         }
-
+        // tslint:disable-next-line:no-console
+        // console.log("matter.object position ======>", this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y);
         Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
     }
 
@@ -473,7 +475,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public setVertices(vertexSets) {
-        return Bodies.fromVertices(this._tempVec.x, this._tempVec.y, vertexSets, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
+        return Bodies.fromVertices(this._tempVec.x, this._tempVec.y, vertexSets, { isStatic: true, inertia: Infinity, frictionAir: 0, inverseInertia: Infinity });
     }
 
     public getSensor() {
@@ -566,7 +568,7 @@ export class MatterObject implements IMatterObject {
         // this._offset.y = mapHeight * 0.5 - origin.y;
         this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * this._scale) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
-        body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0 });
+        body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0, frictionAir: 0 });
         this.setExistingBody(body, true);
     }
 

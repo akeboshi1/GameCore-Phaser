@@ -1,14 +1,14 @@
-import {BaseDisplay, BaseFramesDisplay} from "display";
+import {BaseFramesDisplay} from "display";
 import {Render} from "../../render";
-import {DisplayField, ElementStateType, IFramesModel, RunningAnimation, TitleMask} from "structure";
+import {DisplayField, ElementStateType, RunningAnimation, TitleMask} from "structure";
 import {IDisplayObject} from "../display.object";
 import {IPos, Logger} from "utils";
 import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
-import { IProjection } from "src/utils/projection";
-import { projectionAngle } from "gamecoreRender";
-import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
+import {IProjection} from "src/utils/projection";
+import {projectionAngle} from "gamecoreRender";
+import {DragonbonesDisplay} from "../dragonbones/dragonbones.display";
 
 /**
  * 序列帧显示对象
@@ -139,7 +139,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
+            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
         }
         return this.mProjectionSize;
     }
@@ -187,7 +187,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
     }
 
-    public mount(display: BaseDisplay, targetIndex?: number) {
+    public mount(display: FramesDisplay | DragonbonesDisplay, targetIndex?: number) {
         if (!display) return;
         if (this.mDisplays.length <= 0) {
             return;

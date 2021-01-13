@@ -56,6 +56,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     protected mCreated: boolean = false;
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<DisplayField,
         Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
+    protected mLoadCompoleteCallback: Function;
 
     public destroy(fromScene?: boolean) {
         this.mSprites.forEach((sprite) => sprite.destroy());
@@ -100,6 +101,8 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     }
 
     public startLoad(callBack?: Function): Promise<any> {
+        if (callBack !== undefined) this.mLoadCompoleteCallback = callBack;
+        this.scene.load.start();
         return Promise.resolve(undefined);
     }
 
