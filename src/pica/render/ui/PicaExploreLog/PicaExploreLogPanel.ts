@@ -1,9 +1,9 @@
 import { op_client } from "pixelpai_proto";
-import { UiManager } from "gamecoreRender";
+import { ButtonEventDispatcher, UiManager } from "gamecoreRender";
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
-import { Font, i18n, UIHelper } from "utils";
+import { Font, Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 
 export class PicaExploreLogPanel extends PicaBasePanel {
@@ -46,6 +46,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.setSize(w, h);
         this.goOutBtn = new Button(this.scene, UIAtlasName.explorelog, "checkpoint_abort");
         this.expProgress = new ExploreTimeProgress(this.scene, this.dpr, this.scale);
+        this.expProgress.setHandler(new Handler(this, this.onProClickHandler));
         this.textCon = this.scene.make.container(undefined, false);
         this.add([this.goOutBtn, this.expProgress, this.textCon]);
         this.resize(w, h);
@@ -88,6 +89,9 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.clearTimer();
     }
 
+    private onProClickHandler() {
+
+    }
     private onGoOutHandler() {
         this.render.renderEmitter(ModuleName.PICAEQUIPUPGRADE_NAME + "_hide");
     }
@@ -97,22 +101,24 @@ export class PicaExploreLogPanel extends PicaBasePanel {
             clearInterval(this.timer);
             this.timer = undefined;
         }
-
     }
 }
-class ExploreTimeProgress extends Phaser.GameObjects.Container {
-    private dpr: number;
+class ExploreTimeProgress extends ButtonEventDispatcher {
+    public dpr: number;
     private zoom: number;
     private bg: Phaser.GameObjects.Image;
     private lightbg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
     private lightIcon: Phaser.GameObjects.Image;
     private barmask: Phaser.GameObjects.Graphics;
+    private send: Handler;
+    private proValue: number = 0;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
-        super(scene);
+        super(scene, 0, 0, false);
         this.dpr = dpr;
         this.zoom = zoom;
         this.init();
+        this.enable = true;
     }
 
     public setProgress(value: number) {
@@ -122,6 +128,12 @@ class ExploreTimeProgress extends Phaser.GameObjects.Container {
         this.barmask.fillStyle(0xffffff);
         this.barmask.slice(0, 0, 43 * this.dpr / this.zoom, Phaser.Math.DegToRad(startAngle), Phaser.Math.DegToRad(endAngle), false);
         this.barmask.fillPath();
+        if (value >= 1) {
+            this.lightIcon.setFrame("checkpoint_prompt_icon_light");
+        } else {
+            this.lightIcon.setFrame("checkpoint_prompt_icon_gray");
+        }
+        this.proValue = value;
     }
 
     refreshMask() {
@@ -134,6 +146,9 @@ class ExploreTimeProgress extends Phaser.GameObjects.Container {
         this.barmask.destroy();
     }
 
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
     protected init() {
         this.bg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "checkpoint_prompt_bottom" });
         this.lightbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "checkpoint_prompt_schedule" });
@@ -143,5 +158,10 @@ class ExploreTimeProgress extends Phaser.GameObjects.Container {
         this.lightbg.mask = this.barmask.createGeometryMask();
         this.add([this.bg, this.lightbg, this.topbg, this.lightIcon]);
         this.setSize(this.bg.width, this.bg.height);
+        this.on(ClickEvent.Tap, this.onClickHandler, this);
+    }
+
+    private onClickHandler() {
+        if (this.send && this.proValue >= 1) this.send.run();
     }
 }

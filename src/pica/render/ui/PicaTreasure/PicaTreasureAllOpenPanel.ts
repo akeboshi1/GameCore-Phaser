@@ -50,8 +50,8 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
     }
     init() {
         const posY = -this.height * 0.5;
-        const titlebgline = this.scene.make.image({ x: 0, y: posY + 5 * this.dpr, key: this.key, frame: "treasure_title_bg" }, false);
-        this.titleimage = this.scene.make.image({ x: 0, y: titlebgline.y, key: this.key, frame: i18n.t("treasure.titleimg") }, false);
+        const titlebgline = this.scene.make.image({ x: 0, y: posY + 5 * this.dpr, key:  UIAtlasName.treasure, frame: "treasure_title_bg" }, false);
+        this.titleimage = this.scene.make.image({ x: 0, y: titlebgline.y, key:  UIAtlasName.treasure, frame: i18n.t("treasure.titleimg") }, false);
         this.titleimage.alpha = 0;
         this.pageCount = this.scene.make.text({
             x: 0, y: this.titleimage.y + 40 * this.dpr, text: "1/6",
@@ -83,7 +83,7 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
         }).setOrigin(0.5);
         // this.add(this.pagedown);
         this.pagedown.visible = false;
-        this.confirmBtn = new Button(this.scene, this.key, "butt", "butt", i18n.t("common.confirm"));
+        this.confirmBtn = new Button(this.scene,  UIAtlasName.treasure, "butt", "butt", i18n.t("common.confirm"));
         this.confirmBtn.y = -posY - 8 * this.dpr;
         this.confirmBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 20));
         this.confirmBtn.setFontStyle("bold");
@@ -262,7 +262,8 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
         if (!datas) return;
         const len = datas.length;
         for (let i = 0; i < len; i++) {
-            const prop = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.zoom, true);
+            const prop = new ItemButton(this.scene, UIAtlasName.uicommon1, "roam_reward_ordinary_bg", this.dpr, this.zoom, true);
+            prop.setStateFrames("roam_reward_ordinary_bg", "roam_reward_rare_bg");
             prop.setItemData(datas[i]);
             this.add(prop);
         }
