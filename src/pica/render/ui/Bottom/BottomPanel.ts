@@ -232,7 +232,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
             textWidth: width - 4 * this.dpr * zoom,
             textHeight: 126 * this.dpr * zoom,
             text: this.mOutputText,
-            textMask: false
+            // textMask: false
         })
             .layout();
         this.updateLayout();
@@ -248,8 +248,9 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0, 0.6);
         this.background.fillRect(0, 0, width + 1 * this.dpr, height);
-        this.mTextArea.childrenMap.child.setMinSize(width * this.scaleRatio, (height - 8 * this.dpr) * this.scaleRatio);
+        this.mTextArea.childrenMap.child.setMinSize(width * this.scaleRatio, height * this.scaleRatio);
         this.mTextArea.layout();
+        (<any>this.mTextArea).setChildOY(4 * this.dpr * this.scaleRatio);
         this.updateLayout();
         const textMask = this.mTextArea.childrenMap.text;
         textMask.y = 4 * this.dpr;
@@ -268,7 +269,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
 
     public updateLayout() {
         const matrix = this.getWorldTransformMatrix(this.getLocalTransformMatrix());
-        this.mTextArea.setPosition(this.width * this.scaleRatio * 0.5 + 8 * this.dpr, matrix.ty + this.mTextArea.height * 0.5 + 4 * this.dpr);
+        this.mTextArea.setPosition(this.width * this.scaleRatio * 0.5 + 8 * this.dpr, matrix.ty + this.mTextArea.height * 0.5);
         this.mTextArea.scrollToBottom();
     }
 
