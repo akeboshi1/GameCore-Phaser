@@ -7,7 +7,7 @@ import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
 import { IDisplayObject } from "../display";
-import { addDisplayObject, destroy, sort } from "sort-display-object";
+import { addFixedDisplayObject, destroy, sort } from "sort-display-object";
 import { BaseDragonbonesDisplay, BaseFramesDisplay } from "display";
 
 // 游戏正式运行用 Phaser.Scene
@@ -80,7 +80,7 @@ export class PlayScene extends RoomScene {
         this.render.startRoomPlay();
         this.render.changeScene(this);
 
-        Logger.getInstance().log("sort-display: ", addDisplayObject);
+        Logger.getInstance().log("sort-display: ", addFixedDisplayObject);
 
         this.initListener();
         super.create();
@@ -204,7 +204,6 @@ class GroundLayer extends BasicLayer {
 }
 
 class SurfaceLayer extends BasicLayer {
-    private sortUtil: SortUtils = new SortUtils();
     public add(child: BaseFramesDisplay | BaseDragonbonesDisplay) {
         super.add(child);
         return this;
@@ -222,74 +221,8 @@ class SurfaceLayer extends BasicLayer {
         for (const display of displays) {
             const dis = <any> display;
             const projection = dis.projectionSize;
-            addDisplayObject(dis.nickname, dis.sortX, dis.sortY, projection.width, projection.height, dis);
+            addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, dis.nickname, dis);
         }
-        const result = sort();
-        result.pop();
-        const objs = [];
-        for (const obj of result) {
-            objs.push(obj.data);
-        }
-        this.list = objs;
-    }
-}
-
-class SortUtils {
-    private objs: IDisplayObject[];
-    constructor() {
-        this.objs = [];
-    }
-
-    depthSort(objs) {
-        for (let pivot = 0; pivot < objs.length;) {
-            let new_pivot = false;
-            for (let i = pivot; i < objs.length; ++i) {
-                const obj = objs[i];
-                let parent = true;
-                for (let j = pivot; j < objs.length; ++j) {
-                    if (j === i) continue;
-                    if (this.isBehind(objs[j], obj)) {
-                        parent = false;
-                        break;
-                    }
-                }
-                if (parent) {
-                    objs[i] = objs[pivot];
-                    objs[pivot] = obj;
-                    ++pivot;
-                    new_pivot = true;
-                }
-            }
-            if (!new_pivot) ++pivot;
-        }
-    }
-
-    private isBehind(obj1: IDisplayObject, obj2: IDisplayObject): boolean {
-        const projection = obj1.projectionSize;
-        const result = (obj1.sortX + projection.width <= obj2.sortX || obj1.sortY + projection.height <= obj2.sortY);
-        return this.block_projection_overlap(obj1, obj2) && result;
-    }
-
-    private block_projection_overlap(obj1: IDisplayObject, obj2: IDisplayObject) {
-        function interval_overlap(a1, a2, b1, b2) {
-            const result = a1 >= b1 && a1 < b2 || b1 >= a1 && b1 < a2;
-            return result;
-        }
-
-        const projection = obj1.projectionSize;
-        const projection2 = obj2.projectionSize;
-        const obj1X = obj1.sortX;
-        const obj1Y = obj1.sortY;
-        const obj2X = obj2.sortX;
-        const obj2Y = obj2.sortY;
-        return interval_overlap(
-            obj1X - obj1Y - projection.height, obj1X + projection.width - obj1Y,
-            obj2X - obj2Y - projection2.height, obj2X + projection2.width - obj2Y);
-            // interval_overlap(
-            //     obj1Y - obj1X + projection.width, obj1Y + projection.height - obj1X,
-            //     obj2Y - obj2X + projection2.width, obj2Y + projection2.height - obj2X); // &&
-        // interval_overlap(
-        //     -obj1Y - projection.height, -obj1Y,
-        //     -obj2Y - projection2.height, -obj2Y );
+        this.list = sort();
     }
 }
