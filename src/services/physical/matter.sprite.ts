@@ -52,7 +52,7 @@ export class MatterSprite {
         if (!this.animations) this.animations = new Map();
         const tmpList = [];
         anis.forEach((ani: any) => {
-            if (ani && ani.mNode) {
+            if (ani && (ani.mNode || ani.node)) {
                 const model = new MatterAnimationModel(ani);
                 tmpList.push(model);
             }
@@ -110,7 +110,6 @@ export class MatterSprite {
     }
 
     public getInteractiveArea(aniName: string, flip: boolean = false): op_def.IPBPoint2i[] | undefined {
-        if (!this.sprite.displayInfo || !this.sprite.displayInfo.animations) return undefined;
         const ani = this.animations.get(aniName);
         if (ani) {
             if (flip) {
@@ -342,9 +341,9 @@ export class MatterAnimationModel implements IMatterAnimationData {
     protected mNode: op_gameconfig_01.INode;
     constructor(ani: any) {
         const tmpBaseLoc = ani.baseLoc;
-        this.mNode = ani.mNode;
-        this.id = ani.mNode.id;
-        this.name = ani.mNode.name;
+        this.mNode = ani.mNode || ani.node;
+        this.id = this.mNode.id;
+        this.name = this.mNode.name;
         this.frameName = ani.frameName;
         if (!ani.frameName || this.frameName.length < 1) {
             // Logger.getInstance().fatal(`Animation: ${ani.id} frames is invalid`);

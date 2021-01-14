@@ -1,4 +1,3 @@
-import { PlayerState } from "structure";
 import { IPos, Logger, LogicPos, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
