@@ -4,7 +4,7 @@ import { EventType, ModuleName } from "structure";
 import { PicaNewMain } from "./PicaNewMain";
 
 export class PicaNewMainMediator extends BasicMediator {
-
+    protected mModel: PicaNewMain;
     constructor(protected game: Game) {
         super(ModuleName.PICANEWMAIN_NAME, game);
         this.mModel = new PicaNewMain(this.game);
@@ -15,6 +15,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.on(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
         this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_showpanel", this.onShowPanelHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_explorechapter", this.onExploreChapterHandler, this);
         this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
@@ -24,6 +25,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.off(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
         this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_showpanel", this.onShowPanelHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_explorechapter", this.onExploreChapterHandler, this);
         this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
@@ -73,7 +75,7 @@ export class PicaNewMainMediator extends BasicMediator {
     private onQuery_PRAISE_ROOM(praise: boolean) {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const roomid = this.roomInfo.roomId;
-        (<PicaNewMain>this.mModel).query_PRAISE_ROOM(roomid, praise);
+        this.mModel.query_PRAISE_ROOM(roomid, praise);
     }
     private onShowPanelHandler(panel: string, data?: any) {
         if (!this.mModel || !this.game) {
@@ -82,10 +84,13 @@ export class PicaNewMainMediator extends BasicMediator {
         const uiManager = this.game.uiManager;
         uiManager.showMed(panel);
         if (panel === ModuleName.CHARACTERINFO_NAME) {
-            (<PicaNewMain>this.mModel).fetchPlayerInfo();
+            this.mModel.fetchPlayerInfo();
         } else if (panel === ModuleName.PICAOPENPARTY_NAME) {
 
         }
+    }
+    private onExploreChapterHandler() {
+        this.mModel.queryExploreChapter(this.playerInfo.playerInfo.nextChapterId);
     }
     get playerInfo() {
         const info = this.game.user.userData.playerProperty;

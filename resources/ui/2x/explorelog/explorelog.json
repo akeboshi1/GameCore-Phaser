@@ -4,72 +4,30 @@
 			"image": "explorelog",
 			"format": "RGBA8888",
 			"size": {
-				"w": 238,
-				"h": 223
+				"w": 1716,
+				"h": 505
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "checkpoint_prompt_bottom",
+					"filename": "Settlement_reward_bg",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 86,
-						"h": 86
+						"w": 671,
+						"h": 430
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 86,
-						"h": 86
+						"w": 671,
+						"h": 430
 					},
 					"frame": {
 						"x": 1,
 						"y": 1,
-						"w": 86,
-						"h": 86
-					}
-				},
-				{
-					"filename": "checkpoint_Countdown_bg",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 168,
-						"h": 50
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 168,
-						"h": 50
-					},
-					"frame": {
-						"x": 1,
-						"y": 89,
-						"w": 168,
-						"h": 50
-					}
-				},
-				{
-					"filename": "checkpoint_prompt_schedule",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 86,
-						"h": 86
-					},
-					"spriteSourceSize": {
-						"x": 1,
-						"y": 1,
-						"w": 84,
-						"h": 84
-					},
-					"frame": {
-						"x": 89,
-						"y": 1,
-						"w": 84,
-						"h": 84
+						"w": 671,
+						"h": 430
 					}
 				},
 				{
@@ -87,52 +45,10 @@
 						"h": 71
 					},
 					"frame": {
-						"x": 171,
-						"y": 87,
+						"x": 1,
+						"y": 433,
 						"w": 62,
 						"h": 71
-					}
-				},
-				{
-					"filename": "checkpoint_prompt_icon_light",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 86,
-						"h": 86
-					},
-					"spriteSourceSize": {
-						"x": 9,
-						"y": 7,
-						"w": 62,
-						"h": 70
-					},
-					"frame": {
-						"x": 175,
-						"y": 1,
-						"w": 62,
-						"h": 70
-					}
-				},
-				{
-					"filename": "checkpoint_abort",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 81,
-						"h": 81
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 81,
-						"h": 81
-					},
-					"frame": {
-						"x": 1,
-						"y": 141,
-						"w": 81,
-						"h": 81
 					}
 				},
 				{
@@ -150,10 +66,199 @@
 						"h": 70
 					},
 					"frame": {
-						"x": 84,
-						"y": 141,
+						"x": 65,
+						"y": 433,
 						"w": 70,
 						"h": 70
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_icon_light",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 86,
+						"h": 86
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 7,
+						"w": 62,
+						"h": 70
+					},
+					"frame": {
+						"x": 137,
+						"y": 433,
+						"w": 62,
+						"h": 70
+					}
+				},
+				{
+					"filename": "Settlement_star_default",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 396,
+						"h": 62
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1,
+						"w": 396,
+						"h": 61
+					},
+					"frame": {
+						"x": 201,
+						"y": 433,
+						"w": 396,
+						"h": 61
+					}
+				},
+				{
+					"filename": "Settlement_star_Light",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 396,
+						"h": 62
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 2,
+						"w": 394,
+						"h": 59
+					},
+					"frame": {
+						"x": 599,
+						"y": 433,
+						"w": 394,
+						"h": 59
+					}
+				},
+				{
+					"filename": "Settlement_light",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 468,
+						"h": 389
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 468,
+						"h": 389
+					},
+					"frame": {
+						"x": 674,
+						"y": 1,
+						"w": 468,
+						"h": 389
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 86,
+						"h": 86
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 86,
+						"h": 86
+					},
+					"frame": {
+						"x": 995,
+						"y": 392,
+						"w": 86,
+						"h": 86
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_schedule",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 86,
+						"h": 86
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 84,
+						"h": 84
+					},
+					"frame": {
+						"x": 1083,
+						"y": 392,
+						"w": 84,
+						"h": 84
+					}
+				},
+				{
+					"filename": "Settlement_title",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 540,
+						"h": 297
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 0,
+						"w": 530,
+						"h": 297
+					},
+					"frame": {
+						"x": 1144,
+						"y": 1,
+						"w": 530,
+						"h": 297
+					}
+				},
+				{
+					"filename": "checkpoint_abort",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 81,
+						"h": 81
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 81,
+						"h": 81
+					},
+					"frame": {
+						"x": 1144,
+						"y": 300,
+						"w": 81,
+						"h": 81
+					}
+				},
+				{
+					"filename": "Settlement_score_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 488,
+						"h": 137
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 488,
+						"h": 137
+					},
+					"frame": {
+						"x": 1227,
+						"y": 300,
+						"w": 488,
+						"h": 137
 					}
 				},
 				{
@@ -171,10 +276,31 @@
 						"h": 51
 					},
 					"frame": {
-						"x": 156,
-						"y": 160,
+						"x": 1169,
+						"y": 439,
 						"w": 68,
 						"h": 51
+					}
+				},
+				{
+					"filename": "checkpoint_Countdown_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 168,
+						"h": 50
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 168,
+						"h": 50
+					},
+					"frame": {
+						"x": 1239,
+						"y": 439,
+						"w": 168,
+						"h": 50
 					}
 				}
 			]
@@ -183,6 +309,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:fb413d98e23e9aa38b30672888e50987:a4672e6327109358639b98ae1fecaf7b:6993824701fd330548707f25a25546b8$"
+		"smartupdate": "$TexturePacker:SmartUpdate:2b6554c8ff78c03bce1c2752e71c9a4a:f0fed98f81de22c93879659d3b4f12e4:6993824701fd330548707f25a25546b8$"
 	}
 }

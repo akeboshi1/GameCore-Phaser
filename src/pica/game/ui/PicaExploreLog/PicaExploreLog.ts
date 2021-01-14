@@ -14,6 +14,8 @@ export class PicaExploreLog extends BasicModel {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_REQUIRE_LIST, this.onEXPLORE_REQUIRE_LIST);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT, this.onQUERY_CHAPTER_RESULT);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY, this.onEXPLORE_SUMMARY);
         }
     }
 
@@ -35,15 +37,32 @@ export class PicaExploreLog extends BasicModel {
         }
     }
 
-    // reqEquipedEquipment(id: string) {
-    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_MINING_MODE_EQUIP_EQUIPMENT);
-    //     const content: op_virtual_world.OP_CLIENT_RES_VIRTUAL_WORLD_MINING_MODE_EQUIP_EQUIPMENT = packet.content;
-    //     content.equipmentId = id;
-    //     this.connection.send(packet);
-    // }
+    queryExploreChapter(chapterId: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_CHAPTER);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_CHAPTER = packet.content;
+        content.chapterId = chapterId;
+        this.connection.send(packet);
+    }
+
+    queryExploreUseHint() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_USE_HINT);
+        this.connection.send(packet);
+    }
+    queryGOHome() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GO_HOME);
+        this.connection.send(packet);
+    }
 
     private onEXPLORE_REQUIRE_LIST(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_REQUIRE_LIST = packge.content;
-        this.event.emit(ModuleName.PICAEQUIPUPGRADE_NAME + "_retexplorelist", content);
+        this.event.emit(ModuleName.PICAEXPLORELOG_NAME + "_retexplorelist", content);
+    }
+    private onQUERY_CHAPTER_RESULT(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT = packge.content;
+        this.event.emit(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", content);
+    }
+    private onEXPLORE_SUMMARY(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY = packge.content;
+        this.event.emit(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", content);
     }
 }

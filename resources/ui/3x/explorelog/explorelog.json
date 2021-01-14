@@ -4,11 +4,137 @@
 			"image": "explorelog",
 			"format": "RGBA8888",
 			"size": {
-				"w": 254,
-				"h": 495
+				"w": 1807,
+				"h": 1034
 			},
 			"scale": 1,
 			"frames": [
+				{
+					"filename": "Settlement_reward_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1006,
+						"h": 645
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1006,
+						"h": 645
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 1006,
+						"h": 645
+					}
+				},
+				{
+					"filename": "Settlement_title",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 810,
+						"h": 445
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 0,
+						"w": 793,
+						"h": 445
+					},
+					"frame": {
+						"x": 1009,
+						"y": 1,
+						"w": 793,
+						"h": 445
+					}
+				},
+				{
+					"filename": "Settlement_light",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 702,
+						"h": 584
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 702,
+						"h": 584
+					},
+					"frame": {
+						"x": 1009,
+						"y": 448,
+						"w": 702,
+						"h": 584
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_icon_gray",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 11,
+						"w": 93,
+						"h": 104
+					},
+					"frame": {
+						"x": 1713,
+						"y": 448,
+						"w": 93,
+						"h": 104
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_icon_light",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 11,
+						"w": 93,
+						"h": 104
+					},
+					"frame": {
+						"x": 1713,
+						"y": 554,
+						"w": 93,
+						"h": 104
+					}
+				},
+				{
+					"filename": "Settlement_score_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 732,
+						"h": 205
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 732,
+						"h": 205
+					},
+					"frame": {
+						"x": 1,
+						"y": 648,
+						"w": 732,
+						"h": 205
+					}
+				},
 				{
 					"filename": "checkpoint_Countdown_bg",
 					"rotated": false,
@@ -24,8 +150,8 @@
 						"h": 75
 					},
 					"frame": {
-						"x": 1,
-						"y": 1,
+						"x": 735,
+						"y": 648,
 						"w": 252,
 						"h": 75
 					}
@@ -46,7 +172,7 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 78,
+						"y": 855,
 						"w": 128,
 						"h": 128
 					}
@@ -67,7 +193,7 @@
 					},
 					"frame": {
 						"x": 131,
-						"y": 78,
+						"y": 855,
 						"w": 122,
 						"h": 122
 					}
@@ -87,10 +213,52 @@
 						"h": 121
 					},
 					"frame": {
-						"x": 131,
-						"y": 202,
+						"x": 255,
+						"y": 855,
 						"w": 121,
 						"h": 121
+					}
+				},
+				{
+					"filename": "Settlement_star_default",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 594,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 592,
+						"h": 90
+					},
+					"frame": {
+						"x": 378,
+						"y": 855,
+						"w": 592,
+						"h": 90
+					}
+				},
+				{
+					"filename": "Settlement_star_Light",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 594,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 588,
+						"h": 86
+					},
+					"frame": {
+						"x": 378,
+						"y": 947,
+						"w": 588,
+						"h": 86
 					}
 				},
 				{
@@ -108,8 +276,8 @@
 						"h": 102
 					},
 					"frame": {
-						"x": 1,
-						"y": 208,
+						"x": 735,
+						"y": 725,
 						"w": 102,
 						"h": 102
 					}
@@ -129,52 +297,10 @@
 						"h": 76
 					},
 					"frame": {
-						"x": 1,
-						"y": 312,
+						"x": 839,
+						"y": 725,
 						"w": 102,
 						"h": 76
-					}
-				},
-				{
-					"filename": "checkpoint_prompt_icon_gray",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 128,
-						"h": 128
-					},
-					"spriteSourceSize": {
-						"x": 13,
-						"y": 11,
-						"w": 93,
-						"h": 104
-					},
-					"frame": {
-						"x": 1,
-						"y": 390,
-						"w": 93,
-						"h": 104
-					}
-				},
-				{
-					"filename": "checkpoint_prompt_icon_light",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 128,
-						"h": 128
-					},
-					"spriteSourceSize": {
-						"x": 13,
-						"y": 11,
-						"w": 93,
-						"h": 104
-					},
-					"frame": {
-						"x": 96,
-						"y": 390,
-						"w": 93,
-						"h": 104
 					}
 				}
 			]
@@ -183,6 +309,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:2eff50b8ba2b7ca2695863aa10131219:3b4c8e864a576118e1f906c4f5b95cea:6993824701fd330548707f25a25546b8$"
+		"smartupdate": "$TexturePacker:SmartUpdate:89dd548025d85dc5264dbd346fa4403c:46ea7f5b02b81f73fb1a1986046239aa:6993824701fd330548707f25a25546b8$"
 	}
 }

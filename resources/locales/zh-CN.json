@@ -385,5 +385,12 @@
     "moneytips": "你没有足够的{{name}}漫游!",
     "paytips": "是否要花费{{name}}购买{{count}}张时空漫游{{tag}}票",
     "drawfreetips": "本次抽奖免费"
+  },
+  "explore": {
+    "basetips": "基础得分",
+    "combotips": "连击得分",
+    "timetips": "时间得分",
+    "accuracytips": "准确得分",
+    "hinttips": "提示得分"
   }
 }

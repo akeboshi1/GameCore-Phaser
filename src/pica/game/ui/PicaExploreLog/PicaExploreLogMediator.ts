@@ -1,6 +1,6 @@
 import { op_client } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { PicaExploreLog } from "./PicaExploreLog";
 
 export class PicaExploreLogMediator extends BasicMediator {
@@ -12,14 +12,24 @@ export class PicaExploreLogMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAEQUIPUPGRADE_NAME + "_hide", this.onHidePanel, this);
-        this.game.emitter.on(ModuleName.PICAEQUIPUPGRADE_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_hide", this.onHidePanel, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_querygohome", this.onGoHomeHandler, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_queryexplorehint", this.onQueryExploreHint, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
+        this.game.emitter.on(EventType.CHAT_PANEL_EXTPAND, this.onTipsLayoutHandler, this);
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_hide", this.onHidePanel, this);
-        this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_hide", this.onHidePanel, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_querygohome", this.onGoHomeHandler, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_queryexplorehint", this.onQueryExploreHint, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
+        this.game.emitter.off(EventType.CHAT_PANEL_EXTPAND, this.onTipsLayoutHandler, this);
     }
 
     protected panelInit() {
@@ -31,8 +41,23 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.hide();
     }
 
+    private onQueryExploreHint() {
+        this.mModel.queryExploreUseHint();
+    }
     private onEXPLORE_REQUIRE_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_REQUIRE_LIST) {
         this.mShowData = content;
         if (this.mView) this.mView.setExploreDatas(content.list);
+    }
+    private onQUERY_CHAPTER_RESULT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
+
+    }
+    private onEXPLORE_SUMMARY(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY) {
+        if (this.mView) this.mView.setExploreSettleDatas(content);
+    }
+    private onGoHomeHandler() {
+        this.mModel.queryGOHome();
+    }
+    private onTipsLayoutHandler(extpand: boolean) {
+        if(this.mView)this.mView.setTipsLayout(extpand);
     }
 }

@@ -56,8 +56,13 @@ export class SceneDataManager extends BasePacketHandler {
         else Object.assign(this.mCurRoom, room);
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
-        this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI);
-        // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
+        const hideArr = [];
+        if (this.mCurRoom.roomType === "episode") {
+            hideArr.push(ModuleName.PICANEWMAIN_NAME);
+        }
+        this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
+        if (this.mCurRoom.roomType === "episode")
+            this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
     }
 
     private onShowBlingPanel(packet: PBpacket) {

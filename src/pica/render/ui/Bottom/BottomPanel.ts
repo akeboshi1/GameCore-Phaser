@@ -1,6 +1,6 @@
 import { UiManager, LabelInput } from "gamecoreRender";
 import { BBCodeText, Button, ClickEvent, TextArea } from "apowophaserui";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
 import { UIAtlasName } from "picaRes";
 import { PicaNewNavigatePanel } from "../PicaNewMain/PicaNewNavigatePanel";
@@ -142,7 +142,7 @@ export class BottomPanel extends PicaBasePanel {
         } else if (tag === "shop") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMARKET_NAME);
         } else if (tag === "vip") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICARECHARGE_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_explorechapter");
         }
     }
 
@@ -155,6 +155,7 @@ export class BottomPanel extends PicaBasePanel {
             this.mOutput.collapse();
             this.resizeColtroll.collapse();
         }
+        this.render.renderEmitter(EventType.CHAT_PANEL_EXTPAND,expand);
         this.updateOutputLayout();
     }
 
