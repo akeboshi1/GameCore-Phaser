@@ -340,6 +340,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
+
+        if (this.mElements.size === 0) {
+            this.mRoom.onManagerReady(this.constructor.name);
+        }
     }
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
