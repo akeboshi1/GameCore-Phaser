@@ -817,6 +817,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async removeDisplay(): Promise<any> {
+        this.mElementManager.onDisplayRemoved(this.id);
         super.removeDisplay();
         return Promise.resolve();
     }

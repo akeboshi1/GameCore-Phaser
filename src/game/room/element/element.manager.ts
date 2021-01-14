@@ -1,31 +1,41 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger, LogicPos } from "utils";
-import { ISprite } from "structure";
-import { IElementStorage } from "../elementstorage/element.storage";
-import { IRoomService } from "../room/room";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {Logger, LogicPos} from "utils";
+import {ISprite} from "structure";
+import {IElementStorage} from "../elementstorage/element.storage";
+import {IRoomService} from "../room/room";
 
-import { IElement, Element, InputEnable } from "./element";
+import {IElement, Element, InputEnable} from "./element";
 import NodeType = op_def.NodeType;
-import { EventType, IFramesModel } from "structure";
-import { IDragonbonesModel } from "structure";
-import { ElementStateManager } from "./element.state.manager";
-import { ElementDataManager } from "../../data.manager/element.dataManager";
-import { DataMgrType } from "../../data.manager";
-import { ElementActionManager } from "../elementaction/element.action.manager";
-import { Sprite } from "../display/sprite/sprite";
+import {EventType, IFramesModel} from "structure";
+import {IDragonbonesModel} from "structure";
+import {ElementStateManager} from "./element.state.manager";
+import {ElementDataManager} from "../../data.manager/element.dataManager";
+import {DataMgrType} from "../../data.manager";
+import {ElementActionManager} from "../elementaction/element.action.manager";
+import {Sprite} from "../display/sprite/sprite";
+
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
     readonly roomService: IRoomService;
     readonly map: number[][];
+
     add(sprite: ISprite[]);
+
     remove(id: number): IElement;
+
     getElements(): IElement[];
+
     addToMap(sprite: ISprite);
+
     removeFromMap(sprite: ISprite);
+
     onDisplayCreated(id: number);
+
+    onDisplayRemoved(id: number);
+
     destroy();
 }
 
@@ -42,6 +52,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     private mStateMgr: ElementStateManager;
     private mActionMgr: ElementActionManager;
     private mElementsDisplayReady: Map<number, boolean> = new Map();
+
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -84,6 +95,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public has(id: number) {
         return this.mElements.has(id);
     }
+
     public get(id: number): Element {
         const element: Element = this.mElements.get(id);
         if (!element) {
@@ -201,6 +213,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         element.setState(state.state);
     }
+
     public checkElementAction(id: number, userid?: number): boolean {
         const ele = this.get(id);
         if (!ele) return;
@@ -209,6 +222,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mActionMgr.executeElementActions(ele.model, userid);
         }
     }
+
     public destroy() {
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
@@ -234,6 +248,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElementsDisplayReady.set(id, false);
     }
 
+    public onDisplayRemoved(id: number) {
+        if (!this.mElements.has(id)) return;
+
+        if (this.mElementsDisplayReady.has(id)) {
+            this.mElementsDisplayReady.delete(id);
+        }
+    }
+
     public onDisplayReady(id: number) {
         if (!this.mElementsDisplayReady.has(id)) return;
 
@@ -254,9 +276,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected addMap(sprite: ISprite) { }
+    protected addMap(sprite: ISprite) {
+    }
 
-    protected removeMap(sprite: ISprite) { }
+    protected removeMap(sprite: ISprite) {
+    }
 
     get connection(): ConnectionService {
         if (this.mRoom) {
@@ -372,6 +396,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     get map(): number[][] {
         return this.mMap;
     }
+
     get eleDataMgr() {
         if (this.mRoom) {
             const game = this.mRoom.game;
@@ -379,6 +404,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         return undefined;
     }
+
     protected onSetPosition(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
         const type: number = content.nodeType;
@@ -445,8 +471,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!element) {
                     continue;
                 }
-                const { x, y } = moveData.destinationPoint3f;
-                element.move([{ x, y }]);
+                const {x, y} = moveData.destinationPoint3f;
+                element.move([{x, y}]);
                 // element.move(moveData);
             }
         }
@@ -459,6 +485,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             element.showBubble(content.context, content.chatsetting);
         }
     }
+
     private onClearBubbleHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN = packet.content;
         const element = this.get(content.receiverid);
@@ -481,6 +508,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
         }
     }
+
     private checkElementDataAction(eles: Element[]) {
         const eleDataMgr = this.eleDataMgr;
         if (!eleDataMgr) return;
@@ -495,6 +523,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const ele = this.get(id);
         this.eleDataMgr.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
     }
+
     private onActiveSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
         this.checkElementAction(content.targetId, content.spriteId);

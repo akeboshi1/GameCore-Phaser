@@ -68,7 +68,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         super.destroy(fromScene);
     }
 
-    public load(data: IDragonbonesModel | IFramesModel, field?: DisplayField) {
+    public load(data: IDragonbonesModel | IFramesModel) {
         this.displayInfo = data;
         this.startLoad();
     }
