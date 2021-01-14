@@ -280,6 +280,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected async fetchProjection() {
         if (!this.id) return;
         this.mProjectionSize = await this.render.mainPeer.fetchProjectionSize(this.id);
+        this.updateSort();
     }
 
     protected completeFrameAnimationQueue() {
@@ -295,7 +296,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         const _projectionAngle = projectionAngle;
         this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
         this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
-        this.depth = this.mSortX + this.mSortY;
     }
 
     protected clear() {

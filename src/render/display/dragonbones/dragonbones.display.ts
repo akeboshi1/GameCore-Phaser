@@ -278,8 +278,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected updateSort() {
         const _projectionAngle = projectionAngle;
-        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
-        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
+        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
+        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
     }
 
     protected showPlaceholder() {

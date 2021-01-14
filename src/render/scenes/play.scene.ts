@@ -223,6 +223,10 @@ class SurfaceLayer extends BasicLayer {
             const projection = dis.projectionSize;
             addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, dis.nickname, dis);
         }
-        this.list = sort();
+        try {
+            this.list = sort();
+        } catch {
+            Logger.getInstance().error("Cyclic dependency");
+        }
     }
 }

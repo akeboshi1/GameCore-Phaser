@@ -125,10 +125,9 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         const origin = this.mModel.getOriginPoint();
         const rows = collision.length;
         const cols = collision[0].length;
-        const width = cols * (miniSize.tileWidth / 2);
-        const height = rows * (miniSize.tileHeight / 2);
+        const width = cols * miniSize.tileWidth / Math.sqrt(2);
+        const height = rows * miniSize.tileHeight / Math.sqrt(2);
         const offset = this.mRoomService.transformToMini90(new LogicPos(origin.x, origin.y));
-        offset.x += rows * (miniSize.tileWidth / 2);
         return { offset, width, height };
     }
 
