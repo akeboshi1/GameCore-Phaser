@@ -433,16 +433,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const map = this.mElementManager.map;
         const value = map[x][y];
         if (value === 0) {
-            this.game.physicalPeer.setTerrainWalkable(x, y, false);
+            this.game.physicalPeer.setWalkableAt(x, y, false);
             // this.mAstar.setWalkableAt(y, x, false);
         } else {
-            this.game.physicalPeer.setTerrainWalkable(x, y, val);
+            this.game.physicalPeer.setWalkableAt(x, y, val);
             // this.mAstar.setWalkableAt(y, x, val);
         }
     }
 
     public setElementWalkable(x: number, y: number, val: boolean) {
-        this.game.physicalPeer.setTerrainWalkable(x, y, val);
+        this.game.physicalPeer.setWalkableAt(x, y, val);
         // this.mAstar.setWalkableAt(y, x, val);
     }
 

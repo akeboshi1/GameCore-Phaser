@@ -38,10 +38,6 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
         this.mAstar.init(map);
     }
 
-    public setElementWalkable(x: number, y: number, val: boolean) {
-        this.mAstar.setWalkableAt(y, x, val);
-    }
-
     set size(size: IPosition45Obj) {
         this.mSize = size;
     }
