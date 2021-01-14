@@ -345,6 +345,8 @@ export class MatterObject implements IMatterObject {
         }
         x *= this._scale;
         y *= this._scale;
+        // tslint:disable-next-line:no-console
+        console.log("body.setVelocity ====>", x, y);
         Body.setVelocity(this.body, Vector.create(x, y));
         Body.setInertia(this.body, Infinity);
     }
@@ -365,7 +367,8 @@ export class MatterObject implements IMatterObject {
         }
         // tslint:disable-next-line:no-console
         // console.log("matter.object position ======>", this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y);
-        Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+        // todo
+        // Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
     }
 
     public getPosition(): IPos {
