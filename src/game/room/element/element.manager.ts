@@ -4,7 +4,7 @@ import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos } from "utils";
 import { ISprite } from "structure";
 import { IElementStorage } from "../elementstorage/element.storage";
-import { IRoomService } from "../room/room";
+import { IRoomService, Room } from "../room/room";
 
 import { IElement, Element, InputEnable } from "./element";
 import NodeType = op_def.NodeType;
@@ -148,13 +148,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (collision[i][j] === 1) {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                        if (walkable[i] === undefined || walkable[i][j] === undefined) {
+                        if (walkable[i] === undefined || walkable[i][j] === undefined ) {
                             this.mMap[row][col] = 0;
                         } else {
                             this.mMap[row][col] = walkable[i][j];
                         }
-                        this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 1);
-                        // (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
+                        // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 1);
+                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
                     }
                 }
             }
@@ -188,7 +188,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                         this.mMap[row][col] = 0;
-                        this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 0);
+                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
+                        // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 0);
                     }
                 }
             }

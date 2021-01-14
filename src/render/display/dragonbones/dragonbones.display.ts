@@ -287,4 +287,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
         this.mPlaceholder = undefined;
     }
+
+    get nickname() {
+        return this.mName;
+    }
 }

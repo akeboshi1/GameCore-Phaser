@@ -171,7 +171,6 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.moveControll = new MoveControll(this);
-        this.mBlockable = false;
         this.mId = sprite.id;
         this.model = sprite;
     }
