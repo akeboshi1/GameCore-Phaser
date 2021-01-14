@@ -1,20 +1,20 @@
-import {IPos, Logger, LogicPos} from "utils";
-import {SceneManager} from "../scenes/scene.manager";
-import {FramesDisplay} from "../display/frames/frames.display";
-import {PlayScene} from "../scenes/play.scene";
-import {DragonbonesDisplay} from "../display/dragonbones/dragonbones.display";
-import {DisplayField, ElementStateType, IScenery} from "structure";
-import {BlockManager} from "../display/scenery/block.manager";
-import {Render} from "../render";
-import {IFramesModel} from "structure";
-import {IDragonbonesModel} from "structure";
-import {RunningAnimation} from "structure";
-import {op_def} from "pixelpai_proto";
-import {MatterBodies} from "../display/debugs/matter";
-import {ServerPosition} from "../display/debugs/server.pointer";
-import {BasicScene} from "../scenes";
-import {FallEffect} from "picaRender";
-import {IDisplayObject} from "../display";
+import { IPos, Logger, LogicPos } from "utils";
+import { SceneManager } from "../scenes/scene.manager";
+import { FramesDisplay } from "../display/frames/frames.display";
+import { PlayScene } from "../scenes/play.scene";
+import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
+import { DisplayField, ElementStateType, IScenery } from "structure";
+import { BlockManager } from "../display/scenery/block.manager";
+import { Render } from "../render";
+import { IFramesModel } from "structure";
+import { IDragonbonesModel } from "structure";
+import { RunningAnimation } from "structure";
+import { op_def } from "pixelpai_proto";
+import { MatterBodies } from "../display/debugs/matter";
+import { ServerPosition } from "../display/debugs/server.pointer";
+import { BasicScene } from "../scenes";
+import { FallEffect } from "picaRender";
+import { IDisplayObject } from "../display";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -115,16 +115,16 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        let display;
+        let display: DragonbonesDisplay;
         if (!this.displays.has(id)) {
             display = new DragonbonesDisplay(scene, this.render, id, this.uuid++, NodeType.CharacterNodeType);
             this.displays.set(id, display);
             this.preLoadList.push(display);
         } else {
-            display = this.displays.get(id);
+            display = this.displays.get(id) as DragonbonesDisplay;
         }
         display.load(data);
-        (<PlayScene> scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
     public addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false) {
@@ -136,17 +136,17 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        let display;
+        let display: DragonbonesDisplay;
         if (!this.displays.has(data.id)) {
             display = new DragonbonesDisplay(scene, this.render, data.id, this.uuid++, NodeType.CharacterNodeType);
             this.displays.set(data.id, display);
         } else {
-            display = this.displays.get(data.id);
+            display = this.displays.get(data.id) as DragonbonesDisplay;
         }
         // 主角龙骨无视其余资源优先加载
         display.load(data);
         display.startLoad();
-        (<PlayScene> scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
         if (isUser) this.mUser = display;
         return display;
     }
@@ -160,20 +160,21 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        let display;
+        let display: FramesDisplay;
         if (!this.displays.has(id)) {
             display = new FramesDisplay(scene, this.render, id, NodeType.TerrainNodeType);
             this.displays.set(id, display);
         } else {
-            display = this.displays.get(id);
+            display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data);
-        (<PlayScene> scene).layerManager.addToLayer("groundLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("groundLayer", display);
         return display;
     }
 
     public addFramesDisplay(id: number, data: IFramesModel, field?: DisplayField) {
         if (!data) {
+            Logger.getInstance().log("addFramesDisplay ====>", id);
             return;
         }
         const scene = this.sceneManager.getMainScene();
@@ -181,15 +182,15 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        let display;
+        let display: FramesDisplay;
         if (!this.displays.has(id)) {
             display = new FramesDisplay(scene, this.render, id, NodeType.ElementNodeType);
             this.displays.set(id, display);
         } else {
-            display = this.displays.get(id);
+            display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data, field);
-        (<PlayScene> scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
         return display;
     }
 

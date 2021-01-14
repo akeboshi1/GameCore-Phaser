@@ -1,4 +1,4 @@
-import {op_client, op_def} from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import {
     AnimationQueue,
     AvatarSuitType,
@@ -8,10 +8,10 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import {IPos, IProjection, Logger, LogicPoint, LogicPos, Tool} from "utils";
-import {BlockObject} from "../block/block.object";
-import {IRoomService} from "../room/room";
-import {IElementManager} from "./element.manager";
+import { IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
+import { BlockObject } from "../block/block.object";
+import { IRoomService } from "../room/room";
+import { IElementManager } from "./element.manager";
 
 export interface IElement {
     readonly id: number;
@@ -744,15 +744,20 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async createDisplay(): Promise<any> {
-        if (this.mCreatedDisplay) return;
+        if (this.mCreatedDisplay) {
+            Logger.getInstance().log("mCreatedDisplay", this.id);
+            return;
+        }
         super.createDisplay();
 
+        // 注册displayReadyMap
         this.mElementManager.onDisplayCreated(this.id);
 
         if (!this.mDisplayInfo || !this.mElementManager) {
+            Logger.getInstance().log("no displayInfo");
             return;
         }
-        let createPromise = null;
+        let createPromise: Promise<any> = null;
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
                 createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
@@ -768,10 +773,11 @@ export class Element extends BlockObject implements IElement {
             this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
 
             if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        }).catch((error) => {
+            Logger.getInstance().log("promise error ====>", error);
         });
         const currentAnimation = this.mModel.currentAnimation;
         this.setInputEnable(this.mInputEnable);
-        this.mCreatedDisplay = true;
         this.mRoomService.game.physicalPeer.addBody(this.id);
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();
@@ -927,9 +933,9 @@ export class Element extends BlockObject implements IElement {
                 const ele = this.roomService.getElement(id);
                 if (ele) {
                     if (type === 0) {
-                        (<Element> ele).removeTopDisplay();
+                        (<Element>ele).removeTopDisplay();
                     } else {
-                        (<Element> ele).showTopDisplay(ElementStateType.REPAIR);
+                        (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
                     }
                 }
                 break;

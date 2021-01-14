@@ -133,7 +133,10 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         return { offset, width, height };
     }
 
-    protected addDisplay(): Promise<any> { return this.createDisplay(); }
+    protected addDisplay(): Promise<any> {
+        if (this.mCreatedDisplay) return;
+        return this.createDisplay();
+    }
 
     protected createDisplay(): Promise<any> {
         this.mCreatedDisplay = true;

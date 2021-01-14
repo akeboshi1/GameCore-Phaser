@@ -49,7 +49,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                     if (key !== this.framesInfo.gene) return;
                     this.onAddTextureHandler(key, field, onAdd);
                     if (this.scene) {
-                        this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
+                        // this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
                         this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                     }
                 };
@@ -57,7 +57,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                     // Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
                     this.created();
                 };
-                this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
+                // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
                 this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                 this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
                 this.startLoad();

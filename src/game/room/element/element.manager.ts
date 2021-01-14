@@ -315,6 +315,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
         this.mElementsDisplayReady.set(id, true);
         if (!this.hasAddComplete) return;
+        // 当物件添加队列缓存存在，则不做创建状态检测
+        if (this.mCacheAddList && this.mCacheAddList.length > 0) return;
 
         // tslint:disable-next-line:no-console
         console.log("onDisplayReady ", id);
@@ -397,6 +399,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
+
+        if (this.mElements.size === 0 && (!this.mCacheAddList || this.mCacheAddList.length === 0)) {
+            this.mRoom.onManagerReady(this.constructor.name);
+        }
     }
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
