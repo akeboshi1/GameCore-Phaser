@@ -7,7 +7,7 @@ import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
 import { IDisplayObject } from "../display";
-import { addFixedDisplayObject, destroy, sort } from "sort-display-object";
+import sort from "sort-display-object";
 import { BaseDragonbonesDisplay, BaseFramesDisplay } from "display";
 
 // 游戏正式运行用 Phaser.Scene
@@ -80,7 +80,7 @@ export class PlayScene extends RoomScene {
         this.render.startRoomPlay();
         this.render.changeScene(this);
 
-        Logger.getInstance().log("sort-display: ", addFixedDisplayObject);
+        Logger.getInstance().log("sort-display: ", sort.addFixedDisplayObject);
 
         this.initListener();
         super.create();
@@ -216,15 +216,16 @@ class SurfaceLayer extends BasicLayer {
         //     // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
         //     return displayA.y + displayA.z > displayB.y + displayB.z;
         // });
-        destroy();
+        sort.reset();
+        sort.setTolerance(0.8);
         const displays = this.list;
         for (const display of displays) {
             const dis = <any> display;
             const projection = dis.projectionSize;
-            addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, dis.nickname, dis);
+            sort.addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, dis.nickname, dis);
         }
         try {
-            this.list = sort();
+            this.list = sort.sort();
         } catch {
             Logger.getInstance().error("Cyclic dependency");
         }
