@@ -165,6 +165,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 col = pos.x + j - origin.x;
                 if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                     this.mMap[row][col] = 0;
+                    (<Room>this.roomService).setTerrainWalkable(row, col, false);
                 }
             }
         }

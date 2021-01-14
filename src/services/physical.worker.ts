@@ -127,10 +127,10 @@ export class PhysicalPeer extends RPCPeer {
         }
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
-    public setElementWalkable(x: number, y: number, boo: boolean) {
-        this.matterWorld.setElementWalkable(x, y, boo);
-    }
+    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
+    // public setElementWalkable(x: number, y: number, boo: boolean) {
+    //     this.matterWorld.setElementWalkable(x, y, boo);
+    // }
 
     // @Export()
     // public createMap(map: any) {
@@ -216,7 +216,7 @@ export class PhysicalPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
-    public setTerrainWalkable(x: number, y: number, val: boolean) {
+    public setWalkableAt(x: number, y: number, val: boolean) {
         this.matterWorld.setWalkableAt(x, y, val);
     }
 

@@ -7,6 +7,8 @@ import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
 import { IDisplayObject } from "../display";
+import { addDisplayObject, destroy, sort } from "sort-display-object";
+import { BaseDragonbonesDisplay, BaseFramesDisplay } from "display";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
@@ -77,6 +79,8 @@ export class PlayScene extends RoomScene {
         // ======= mainworker startPlay
         this.render.startRoomPlay();
         this.render.changeScene(this);
+
+        Logger.getInstance().log("sort-display: ", addDisplayObject);
 
         this.initListener();
         super.create();
@@ -201,13 +205,32 @@ class GroundLayer extends BasicLayer {
 
 class SurfaceLayer extends BasicLayer {
     private sortUtil: SortUtils = new SortUtils();
+    public add(child: BaseFramesDisplay | BaseDragonbonesDisplay) {
+        super.add(child);
+        return this;
+    }
+
     public sortLayer() {
-        this.sortUtil.depthSort(this.list);
+        // this.sortUtil.depthSort(this.list);
         // TODO: import ElementDisplay
         // this.sort("depth", (displayA: any, displayB: any) => {
         //     // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
         //     return displayA.y + displayA.z > displayB.y + displayB.z;
         // });
+        destroy();
+        const displays = this.list;
+        for (const display of displays) {
+            const dis = <any> display;
+            const projection = dis.projectionSize;
+            addDisplayObject(dis.nickname, dis.sortX, dis.sortY, projection.width, projection.height, dis);
+        }
+        const result = sort();
+        result.pop();
+        const objs = [];
+        for (const obj of result) {
+            objs.push(obj.data);
+        }
+        this.list = objs;
     }
 }
 

@@ -48,6 +48,7 @@
         "monotone-convex-hull-2d": "^1.0.1",
         "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
         "pathfinding": "https://github.com/raymanyoung/PathFinding.js",
+        "sort-display-object": "git+ssh://git@code.apowo.com:PixelPai/sort-display-object.git",
         "poly-decomp": "^0.3.0",
         "simple-sha1": "^3.0.1",
         "tooqinggamephaser": "^0.2.8",
