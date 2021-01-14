@@ -37,6 +37,14 @@ export interface Task {
 export class ElementManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mElements: Map<number, Element> = new Map();
+    /**
+     * 添加element缓存list
+     */
+    protected mCacheAddList: any[] = [];
+    /**
+     * 更新element缓存list
+     */
+    protected mCacheSyncList: any[] = [];
     protected mMap: number[][];
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
@@ -210,22 +218,90 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
     public destroy() {
+        this.hasAddComplete = false;
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {
             Logger.getInstance().log("elementmanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
-        if (!this.mElements) return;
-        this.mElements.forEach((element) => this.remove(element.id));
-        this.mElements.clear();
-        this.mElementsDisplayReady.clear();
-        this.mStateMgr.destroy();
-        this.mActionMgr.destroy();
+        if (this.mElements) {
+            this.mElements.forEach((element) => this.remove(element.id));
+            this.mElements.clear();
+            this.mElementsDisplayReady.clear();
+            this.mStateMgr.destroy();
+            this.mActionMgr.destroy();
+        }
+        if (this.mCacheAddList) {
+            this.mCacheAddList.length = 0;
+            this.mCacheAddList = [];
+        }
+
+        if (this.mCacheSyncList) {
+            this.mCacheSyncList.length = 0;
+            this.mCacheSyncList = [];
+        }
     }
 
     public update(time: number, delta: number) {
         this.mElements.forEach((ele) => ele.update(time, delta));
+        if (!this.hasAddComplete) return;
+        const len = 5;
+        if (this.mCacheAddList && this.mCacheAddList.length > 0) {
+            // tslint:disable-next-line:no-console
+            console.log("update cacheAddlength", this.mCacheAddList.length);
+            let point: op_def.IPBPoint3f;
+            let sprite: ISprite = null;
+            const ids = [];
+            const eles = [];
+            const tmpLen = this.mCacheAddList.length > len ? len : this.mCacheAddList.length;
+            const tmpList = this.mCacheAddList.splice(0, tmpLen);
+            for (let i: number = 0; i < tmpLen; i++) {
+                const obj = tmpList[i];
+                if (!obj) continue;
+                point = obj.point3f;
+                if (point) {
+                    sprite = new Sprite(obj, 3);
+                    if (!sprite.displayInfo) {
+                        if (!this.checkDisplay(sprite)) {
+                            ids.push(sprite.id);
+                        }
+                    }
+                    const ele = this._add(sprite);
+                    eles.push(ele);
+                }
+            }
+            this.fetchDisplay(ids);
+            this.mStateMgr.add(eles);
+            this.checkElementDataAction(eles);
+        }
+
+        if (this.mCacheSyncList && this.mCacheSyncList.length > 0 && this.mCacheAddList && this.mCacheAddList.length < 1) {
+            // tslint:disable-next-line:no-console
+            console.log("update cacheSynclength", this.mCacheSyncList.length);
+            let element: Element = null;
+
+            const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;
+            const tmpList = this.mCacheSyncList.splice(0, tmpLen);
+            const ele = [];
+            for (let i: number = 0; i < tmpLen; i++) {
+                const sprite = tmpList[i];
+                if (!sprite) continue;
+                element = this.get(sprite.id);
+                if (element) {
+                    const command = (<any>sprite).command;
+                    if (command === 2) {
+                        element.model = new Sprite(sprite, 3);
+                    } else if (command === 4) {
+                        element.updateModel(sprite);
+                    }
+                    ele.push(element);
+                }
+            }
+
+            this.mStateMgr.syncElement(ele);
+            this.checkElementDataAction(ele);
+        }
     }
 
     public onDisplayCreated(id: number) {
@@ -240,12 +316,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElementsDisplayReady.set(id, true);
         if (!this.hasAddComplete) return;
 
-        Logger.getInstance().log("onDisplayReady ", id);
+        // tslint:disable-next-line:no-console
+        console.log("onDisplayReady ", id);
         let allReady = true;
         this.mElementsDisplayReady.forEach((val, key) => {
             if (val === false) {
                 allReady = false;
-                Logger.getInstance().log("left not ready display: ", this.mElements.get(key));
+                // tslint:disable-next-line:no-console
+                console.log("left not ready display: ", this.mElements.get(key));
             }
         });
 
@@ -286,10 +364,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onAdd(packet: PBpacket) {
-        // if (!this.mRoom.layerManager) {
-        //     Logger.getInstance().error("layer manager does not exist");
-        //     return;
-        // }
         if (!this.mGameConfig) {
             Logger.getInstance().error("gameConfig does not exist");
             return;
@@ -301,26 +375,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.ElementNodeType) {
             return;
         }
-        let point: op_def.IPBPoint3f;
-        let sprite: ISprite = null;
-        const ids = [];
-        const eles = [];
         for (const obj of objs) {
-            point = obj.point3f;
-            if (point) {
-                sprite = new Sprite(obj, content.nodeType);
-                if (!sprite.displayInfo) {
-                    if (!this.checkDisplay(sprite)) {
-                        ids.push(sprite.id);
-                    }
-                }
-                const ele = this._add(sprite);
-                eles.push(ele);
-            }
+            this.mCacheAddList.push(obj);
         }
-        this.fetchDisplay(ids);
-        this.mStateMgr.add(eles);
-        this.checkElementDataAction(eles);
     }
 
     protected _add(sprite: ISprite, addMap?: boolean): Element {
@@ -405,23 +462,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== NodeType.ElementNodeType) {
             return;
         }
-        let element: Element = null;
-        const sprites = content.sprites;
         const command = content.command;
-        const ele = [];
+        const sprites = content.sprites;
         for (const sprite of sprites) {
-            element = this.get(sprite.id);
-            if (element) {
-                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
-                    element.model = new Sprite(sprite, content.nodeType);
-                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
-                    element.updateModel(sprite);
-                }
-                ele.push(element);
-            }
+            (<any>sprite).command = command;
+            this.mCacheSyncList.push(sprite);
         }
-        this.mStateMgr.syncElement(ele);
-        this.checkElementDataAction(ele);
     }
 
     protected onMove(packet: PBpacket) {

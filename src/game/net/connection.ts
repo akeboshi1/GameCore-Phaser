@@ -64,8 +64,12 @@ export class ConnListener implements IConnectListener {
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export class Connection implements ConnectionService {
+    // 数据缓存队列
+    protected mCache: any[] = [];
+    /**
+     * 客户端向服务端表明的socket session的唯一标识
+     */
     protected mUuid: number = 0;
-
     protected mPacketHandlers: PacketHandler[] = [];
     private mCachedServerAddress: ServerAddress | undefined;
     private mSocket: GameSocket;
@@ -75,6 +79,22 @@ export class Connection implements ConnectionService {
     private mPeer: MainPeer;
     constructor(peer: MainPeer) {
         this.mPeer = peer;
+    }
+
+    update() {
+        if (this.mCache && this.mCache.length > 0) {
+            const len = 10;
+            const tmpList = this.mCache.splice(0, len);
+            for (let i: number = 0; i < len; i++) {
+                const data = tmpList[i];
+                if (!data) continue;
+                const protobuf_packet = PBpacket.Create(data);
+                const handlers = this.mPacketHandlers;
+                handlers.forEach((handler: PacketHandler) => {
+                    handler.onPacketArrived(protobuf_packet);
+                });
+            }
+        }
     }
 
     get pause(): boolean {
@@ -151,15 +171,23 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        // const protobuf_packet: PBpacket = new PBpacket();
-        // protobuf_packet.Deserialization(new Buffer(data));
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
-        const handlers = this.mPacketHandlers;
-        handlers.forEach((handler: PacketHandler) => {
-            handler.onPacketArrived(protobuf_packet);
-        });
+
+        const code = protobuf_packet.header.opcode;
+        switch (code) {
+            case 0x00141028:
+            case 0x00142030:
+            case 0x00141030:
+                this.mCache.length = 0;
+                this.mCache = [];
+                this.mCache.unshift(data);
+                break;
+            default:
+                this.mCache.push(data);
+                break;
+        }
     }
 
     onFocus() {

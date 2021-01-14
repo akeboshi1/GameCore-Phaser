@@ -102,7 +102,8 @@ export class PlayScene extends RoomScene {
     }
     set loadState(val: PlaySceneLoadState) {
         if (val === this.mLoadState) return;
-
+        // tslint:disable-next-line:no-console
+        console.log("PlayScene change loadState: ", val);
         Logger.getInstance().log("PlayScene change loadState: ", val);
         this.mLoadState = val;
 
