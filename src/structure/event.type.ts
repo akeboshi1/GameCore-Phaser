@@ -21,6 +21,7 @@ export class EventType {
     public static SCENE_PLAYER_ACTION = "SCENE_PLAYER_ACTION";// 场景玩家执行行为动作
     public static SCENE_SHOW_MAIN_UI = "SCENE_SHOW_MAIN_UI"; // 显示场景主界面
     public static CHAT_PANEL_EXTPAND = "CHAT_PANEL_EXTPAND";// 聊天面板展开
+    public static SCENE_CHANGE = "SCENE_CHANGE";// 切换场景
     /**
      * 请求好友、关注、粉丝数据
      */
