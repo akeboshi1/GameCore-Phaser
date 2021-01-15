@@ -799,7 +799,7 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
-        this.setDepth(depth);
+        // this.setDepth(depth);
         // this.update();
         // this.mDisplay.showRefernceArea();
         // }
@@ -811,7 +811,7 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
-        this.setDepth(depth);
+        // this.setDepth(depth);
         return Promise.resolve();
     }
 
