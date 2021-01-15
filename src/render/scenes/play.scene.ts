@@ -222,7 +222,12 @@ class SurfaceLayer extends BasicLayer {
         for (const display of displays) {
             const dis = <any> display;
             const projection = dis.projectionSize;
-            sort.addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, dis.nickname, dis);
+
+            if (dis.nodeType === 5) {
+                sort.addDynamicDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, true, dis.nickname, dis);
+            } else {
+                sort.addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, false, dis.nickname, dis);
+            }
         }
         try {
             this.list = sort.sort();
