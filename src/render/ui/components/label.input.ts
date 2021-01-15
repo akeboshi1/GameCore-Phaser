@@ -9,7 +9,6 @@ export class LabelInput extends Phaser.GameObjects.Container {
     private mOriginX: number;
     private mOriginY: number;
     private mPlaceholder: string;
-    private mStyle: any;
     private mAutoBlur: boolean = true;
 
     constructor(scene: Phaser.Scene, config: any) {
@@ -87,7 +86,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
     private createInputText() {
         if (this.mInputText) {
-            this.mInputText.destroy();
+            return;
         }
         this.mInputText = new InputText(this.scene, Object.assign({}, this.mInputConfig)).setOrigin(this.mOriginX, this.mOriginY);
         this.mInputText.on("textchange", this.onTextChangeHandler, this);
@@ -139,29 +138,13 @@ export class LabelInput extends Phaser.GameObjects.Container {
     }
 
     private onTextBlurHandler() {
-        // window.scroll(0,window.scrollY);
-        // this.getFixiOS();
-        // const offset = parseInt(document.body.style.top, 10);
-        // document.body.classList.remove("fixiOS");
-        // document.body.scrollTop = (offset * -1);
         this.emit("blur");
     }
+
     private onTextFocusHandler(e) {
-        // e.preventDefault(); e.stopPropagation();
-        // window.scrollTo(0, 0);
-        // document.body.scrollTop = 0;
-        // if (node) {
-        //     node.scrollIntoView();
-        // }
-        // this.getFixiOS();
-        // const offset = document.body.scrollTop;
-        // document.body.style.top = (offset * -1) + "px";
-        // document.body.classList.add("fixiOS");
-        // setTimeout(() => {
-        //     window.scrollTo(0,0);
         this.emit("focus");
-        // }, 300);
     }
+
     get object(): Phaser.GameObjects.Text | InputText {
         return this.mInputText || this.mLabel;
     }
@@ -171,14 +154,5 @@ export class LabelInput extends Phaser.GameObjects.Container {
             return this.mInputText.text;
         }
         return this.mLabel.text;
-    }
-
-    private getFixiOS() {
-        if (!this.mStyle) {
-            this.mStyle = document.createElement("style");
-            this.mStyle.type = "text/css";
-            this.mStyle.innerHTML = ".fixiOS { position: 'fixed; left: 0; right: 0' }";
-        }
-        return this.mStyle;
     }
 }
