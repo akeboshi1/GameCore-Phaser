@@ -1,4 +1,4 @@
-import {Logger, ResUtils, Url} from "utils";
+import {Handler, Logger, ResUtils, Url} from "utils";
 import {DisplayField, IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin} from "structure";
 import {BaseDisplay} from "./base.display";
 
@@ -74,8 +74,9 @@ export enum AvatarPartType {
  * 龙骨显示对象
  */
 export class BaseDragonbonesDisplay extends BaseDisplay {
+    public replaceTexCompleteHandler: Handler = null;
     protected mAnimationName: string = "Armature";
-    protected mDragonbonesName: string = "";
+    protected mResourceName: string = "bones_human01";
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mInteractive: boolean = true;
@@ -87,6 +88,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private mBoardPoint: Phaser.Geom.Point;
     private readonly UNPACKSLOTS = [AvatarSlotType.FarmWeap, AvatarSlotType.BarmWeap];
     private readonly UNCHECKAVATARPROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
+    private mReplaceTexTimeOutID = null;
 
     /**
      * 龙骨显示对象包围框
@@ -131,14 +133,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     // 改变装扮接口
-    public load(display: IDragonbonesModel, field?: DisplayField) {
-        field = !field ? DisplayField.STAGE : field;
-        if (field === DisplayField.STAGE) {
-            this.displayInfo = <IDragonbonesModel> display;
-            if (!this.displayInfo) return;
-            this.dragonBonesName = "bones_human01"; // this.mDisplayInfo.avatar.id;
-        } else {
-        }
+    public load(display: IDragonbonesModel) {
+        this.displayInfo = <IDragonbonesModel> display;
+        if (!this.displayInfo) return;
+        this.buildDragbones();
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -155,7 +153,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
             this.mArmatureDisplay.animation.play(val.name, val.times);
-            this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
+            this.mArmatureDisplay.scaleX *= val.flip ? -1 : 1;
 
             if (this.mArmatureDisplay && this.mArmatureDisplay.armature) {
                 const bound = this.mArmatureDisplay.armature.getBone("board");
@@ -230,15 +228,23 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
     }
 
+    public set resourceName(val: string) {
+        this.mResourceName = val;
+    }
+
+    public get resourceName(): string {
+        return this.mResourceName;
+    }
+
     protected buildDragbones() {
         if (!this.scene.cache.custom.dragonbone) return;
-        if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
+        if (this.scene.cache.custom.dragonbone.get(this.resourceName)) {
             this.createArmatureDisplay();
         } else {
             const res = `${Url.RES_PATH}/dragonbones`;
-            const pngUrl = `${res}/${this.mDragonbonesName}_tex.png`;
-            const jsonUrl = `${res}/${this.mDragonbonesName}_tex.json`;
-            const dbbinUrl = `${res}/${this.mDragonbonesName}_ske.dbbin`;
+            const pngUrl = `${res}/${this.resourceName}_tex.png`;
+            const jsonUrl = `${res}/${this.resourceName}_tex.json`;
+            const dbbinUrl = `${res}/${this.resourceName}_ske.dbbin`;
             this.loadDragonBones(pngUrl, jsonUrl, dbbinUrl);
         }
     }
@@ -252,10 +258,14 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         if (!this.mArmatureDisplay) {
             this.mArmatureDisplay = this.scene.add.armature(
                 this.mAnimationName,
-                this.dragonBonesName,
+                this.resourceName,
             );
             this.mArmatureDisplay.visible = false;
             this.addAt(this.mArmatureDisplay, 0);
+
+            // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
+            //     Logger.getInstance().log(this.mBonesName + "'s slot: ", slot.name);
+            // }
         }
         this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
         this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
@@ -310,7 +320,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
         this.scene.load.dragonbone(
-            this.dragonBonesName,
+            this.resourceName,
             pngUrl,
             jsonUrl,
             dbbinUrl,
@@ -323,7 +333,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     protected refreshAvatar() {
         // replace unpacked slots
         this.clearArmatureSlot();
-        const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.mDragonbonesName);
+        const dragonBonesTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.resourceName);
         for (const rep of this.replaceArr) {
             const part: string = rep.slot.replace("$", rep.dir.toString());
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(part);
@@ -375,7 +385,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                         if (part === slotKey) {
                             const texture = this.scene.textures.get(partName);
                             if (dragonBonesTexture.frames[frameName]) {
-                                canvas.drawFrame(this.mDragonbonesName, frameName, dat.cutX, dat.cutY);
+                                canvas.drawFrame(this.resourceName, frameName, dat.cutX, dat.cutY);
                                 break;
                             } else {
                                 canvas.drawFrame(partName, texture.firstFrame, dat.cutX, dat.cutY);
@@ -912,8 +922,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         const tempskin = this.formattingSkin(skin);
         if (!tempskin.sn) return;
         const key = soltPart.replace("#", tempskin.sn).replace("$", soltDir.toString()) + tempskin.version;
-        const dragonBonesTexture = this.scene.game.textures.get(this.mDragonbonesName);
-        if (this.scene.cache.custom.dragonbone.get(this.mDragonbonesName)) {
+        const dragonBonesTexture = this.scene.game.textures.get(this.resourceName);
+        if (this.scene.cache.custom.dragonbone.get(this.resourceName)) {
             const partName: string = ResUtils.getPartName(key);
             const frameName: string = "test resources/" + key;
             if (this.mErrorLoadMap.get(partName)) return;
@@ -975,6 +985,18 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         if (key !== this.renderTextureKey) return;
         if (this.mLoadCompoleteCallback) this.mLoadCompoleteCallback();
         this.mArmatureDisplay.armature.replacedTexture = texture;
+
+        // 需等待下一帧 显示上才会真正替换texture
+        if (this.mReplaceTexTimeOutID) {
+            clearTimeout(this.mReplaceTexTimeOutID);
+            this.mReplaceTexTimeOutID = null;
+        }
+        this.mReplaceTexTimeOutID = setTimeout(() => {
+            if (this.replaceTexCompleteHandler) {
+                this.replaceTexCompleteHandler.runWith(texture);
+                this.replaceTexCompleteHandler = null;
+            }
+        }, 100);
     }
 
     private formattingSkin(skin: any) {
@@ -998,16 +1020,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private onSoundEventHandler(event: dragonBones.EventObject) {
         if (event.name) {
         }
-    }
-
-    set dragonBonesName(val: string) {
-        // TODO 暴露一个换装接口
-        this.mDragonbonesName = val;
-        this.buildDragbones();
-    }
-
-    get dragonBonesName(): string {
-        return this.mDragonbonesName;
     }
 
     private checkNeedReplaceTexture(preVal: IDragonbonesModel | undefined, newVal: IDragonbonesModel | undefined): boolean {

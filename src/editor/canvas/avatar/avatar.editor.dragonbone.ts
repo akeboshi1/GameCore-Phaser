@@ -1,35 +1,19 @@
-import {Logger} from "utils";
+import {Handler, Logger} from "utils";
 import version from "../../../../version";
-import * as url from "url";
+import {BaseDragonbonesDisplay} from "display";
+import {IAvatar, IDragonbonesModel, SlotSkin} from "structure";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
-    private readonly DRAGONBONENAME = "bones_human01";
-    private readonly DRAGONBONENAME_HEAD = "bones_model_head";
-    private readonly DRAGONBONEARMATURENAME = "Armature";
-    private readonly BACKMAP = {
-        ["head_hair"]: ["head_hair", "head_hair_back"],
-        ["body_cost"]: ["body_cost", "body_cost_dres"]
-    };
-    private readonly DEFAULTSETS = [
-        {id: "0001", parts: ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"]},
-        {id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
+    private static readonly DRAGONBONE_NAME_DEFAULT = "bones_human01";
+    private static readonly DRAGONBONE_NAME_HEAD = "bones_model_head";
+    private static readonly DRAGONBONE_ARMATURE_NAME = "Armature";
+
+    private static readonly BASE_PARTS = [
+        "body_base", "barm_base", "farm_base", "bleg_base", "fleg_base", "head_base"
     ];
-    private readonly SPECIALSETS = {
-        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_mask", "head_face", "head_base"],
-        ["body_spec"]: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
-        ["farm_spec"]: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
-        ["barm_spec"]: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
-        ["fleg_spec"]: ["fleg_cost", "fleg_base"],
-        ["bleg_spec"]: ["bleg_cost", "bleg_base"],
-    };
-    private readonly MODELSETS = [
-        {
-            id: "5fbf562e72c7db2dbdcdb4ea",
-            parts: ["body_base", "barm_base", "farm_base", "bleg_base", "fleg_base", "head_base"]
-        }
-    ];
-    private readonly ALLPARTS = [
+    // 除base以外的"着装"插槽
+    private static readonly ADD_PARTS = [
         "barm_cost",
         "barm_spec",
         "bleg_cost",
@@ -57,7 +41,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "farm_weap",
     ];
     // 下半身插槽名
-    private readonly BOTTOMBODYPARTS = [
+    private static readonly BOTTOM_BODY_PARTS = [
         "body_cost",
         "body_cost_dres",
         "farm_cost",
@@ -77,19 +61,42 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "bleg_spec"
     ];
 
-    private readonly DEFAULT_SCALE_GAME_HEIGHT = 72;// 默认展示龙骨时，游戏尺寸
-    private readonly DEFAULT_SCALE_BOTTOM_PIX = 4;// 默认展示龙骨时，龙骨所处位置下方的区域（/像素）
-    private readonly ARMATURE_HEIGHT = 61;// 龙骨设计高度
-    private readonly ARMATURE_LEG_PERCENT = 0.15;// 龙骨中，腿部占整个身高比重
-    private readonly HEAD_ICON_HIDE_PIX = 22;// 头像截图中，下方隐藏的龙骨高度
-    private readonly HEAD_ICON_WIDTH = 71;// 头像截图中，图片宽度
-    private readonly HEAD_ICON_HEIGHT = 57;// 头像截图中，图片高度
-    private readonly HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT = 79;// 头像截图中，含隐藏部分的整个高度
-    private readonly HEAD_ICON_DEFAULT_BOTTOM_PIX = 0;// 头像截图中，龙骨所处位置下方的区域（/像素）
+    private static readonly HAIR_BACK = {
+        ["head_hair"]: ["head_hair", "head_hair_back"],
+        ["body_cost"]: ["body_cost", "body_cost_dres"]
+    };
+    private static readonly DEFAULT_SETS = [
+        {id: "0001", parts: AvatarEditorDragonbone.BASE_PARTS},
+        {id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
+    ];
+    private static readonly SPECIAL_SETS = {
+        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_mask", "head_face", "head_base"],
+        ["body_spec"]: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
+        ["farm_spec"]: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
+        ["barm_spec"]: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
+        ["fleg_spec"]: ["fleg_cost", "fleg_base"],
+        ["bleg_spec"]: ["bleg_cost", "bleg_base"],
+    };
+    private static readonly MODEL_SETS = [
+        {
+            id: "5fbf562e72c7db2dbdcdb4ea",
+            parts: AvatarEditorDragonbone.BASE_PARTS
+        }
+    ];
+
+    private static readonly DEFAULT_SCALE_GAME_HEIGHT = 72;// 默认展示龙骨时，游戏尺寸
+    private static readonly DEFAULT_SCALE_BOTTOM_PIX = 4;// 默认展示龙骨时，龙骨所处位置下方的区域（/像素）
+    private static readonly ARMATURE_HEIGHT = 61;// 龙骨设计高度
+    private static readonly ARMATURE_LEG_PERCENT = 0.15;// 龙骨中，腿部占整个身高比重
+    private static readonly HEAD_ICON_HIDE_PIX = 22;// 头像截图中，下方隐藏的龙骨高度
+    private static readonly HEAD_ICON_WIDTH = 71;// 头像截图中，图片宽度
+    private static readonly HEAD_ICON_HEIGHT = 57;// 头像截图中，图片高度
+    private static readonly HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT = 79;// 头像截图中，含隐藏部分的整个高度
+    private static readonly HEAD_ICON_DEFAULT_BOTTOM_PIX = 0;// 头像截图中，龙骨所处位置下方的区域（/像素）
     // private readonly ARMATUREBOTTOMAREA = 0.36;
 
-    private mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay;
-    private mArmatureDisplay_head: dragonBones.phaser.display.ArmatureDisplay;
+    private mDisplay_default: EditorDragonbonesDisplay;
+    private mDisplay_head: EditorDragonbonesDisplay;
 
     private mEmitter: Phaser.Events.EventEmitter;
     private mAutoScale: boolean = true;// 截图时不能临时改变龙骨scale（除y*-1以外），只能在创建时就设置好scale
@@ -99,7 +106,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mBaseSets: any[] = [];
     private mSets: any[] = [];
     private mParts: { [key: string]: any } = {};
-    private mReplaceDisplayTimeOutID = null;
     private mArmatureBottomArea: number = 0;
     private mArmatureBottomArea_head: number = 0;
     private mOnReadyForSnapshot: (a: AvatarEditorDragonbone) => any;
@@ -120,23 +126,21 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         if (onReadyForSnapshot) {
             this.mOnReadyForSnapshot = onReadyForSnapshot;
         }
-        this.setBaseSets(this.DEFAULTSETS);
-        this.loadDragonbone();
+        this.setBaseSets(AvatarEditorDragonbone.DEFAULT_SETS);
+        this.createDisplays();
     }
 
     public destroy() {
         this.removeAll(true);
-        if (this.mArmatureDisplay) {
-            this.mArmatureDisplay.dbClear();
-            this.mArmatureDisplay.destroy();
-            this.remove(this.mArmatureDisplay);
-            this.mArmatureDisplay = null;
+        if (this.mDisplay_default) {
+            this.remove(this.mDisplay_default);
+            this.mDisplay_default.destroy();
+            this.mDisplay_default = null;
         }
-        if (this.mArmatureDisplay_head) {
-            this.mArmatureDisplay_head.dbClear();
-            this.mArmatureDisplay_head.destroy();
-            this.remove(this.mArmatureDisplay_head);
-            this.mArmatureDisplay_head = null;
+        if (this.mDisplay_head) {
+            this.remove(this.mDisplay_head);
+            this.mDisplay_head.destroy();
+            this.mDisplay_head = null;
         }
         this.mCurAnimationName = null;
         this.mCurDir = null;
@@ -164,41 +168,39 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     public setDir(dir: number) {
-        // const re = this.mCurDir === AvatarDirEnum.Front ? /3/gi : /1/gi;
-        // this.mCurAnimationName = this.mCurAnimationName.replace(re, `${dir}`);
         const re = this.mCurAnimationName.split("_");
         this.mCurAnimationName = dir === 3 ? re[0] : re[0] + "_back";
         // Logger.getInstance().log("ZW-- new animation name: ", this.mCurAnimationName);
         this.mCurDir = dir;
 
-        this.reloadParts();
+        this.reloadDisplay();
     }
 
     public play(animationName: string) {
         this.mCurAnimationName = animationName;
 
-        if (this.mArmatureDisplay) {
-            this.mArmatureDisplay.animation.play(this.mCurAnimationName);
+        if (this.mDisplay_default) {
+            this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
         }
         // if (this.mArmatureDisplay_head) {
-        //     this.mArmatureDisplay_head.animation.play(this.mCurAnimationName);
+        //     this.mArmatureDisplay_head.play({ name: this.mCurAnimationName, flip: false });
         // }
     }
 
     public clearParts() {
         if (this.mSets) this.mSets = [];
-        this.setBaseSets(this.DEFAULTSETS);
-        this.reloadParts();
+        this.setBaseSets(AvatarEditorDragonbone.DEFAULT_SETS);
+        this.reloadDisplay();
     }
 
     public mergeParts(sets: any[]) {
         this.addSets(sets);
-        this.reloadParts();
+        this.reloadDisplay();
     }
 
     public cancelParts(sets: any[]) {
         this.removeSets(sets);
-        this.reloadParts();
+        this.reloadDisplay();
     }
 
     // 截图规则：如果包含下半身装扮，使用正常龙骨；否则使用上半身龙骨
@@ -226,26 +228,26 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     public generateHeadIcon(): Promise<string> {
         return new Promise((resolve, reject) => {
-            if (!this.mArmatureDisplay) {
+            if (!this.mDisplay_default) {
                 reject("no armature");
                 return;
             }
-            if (this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT > this.scene.scale.height) {
-                reject("game size is not enough, must larger than " + this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT);
+            if (AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT > this.scene.scale.height) {
+                reject("game size is not enough, must larger than " + AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT);
                 return;
             }
 
             const modelData = {
-                armature: this.mArmatureDisplay,
-                x: this.HEAD_ICON_WIDTH / 2,
-                y: this.HEAD_ICON_DEFAULT_BOTTOM_PIX,
-                baseSets: this.DEFAULTSETS
+                armature: this.mDisplay_default,
+                x: AvatarEditorDragonbone.HEAD_ICON_WIDTH / 2,
+                y: AvatarEditorDragonbone.HEAD_ICON_DEFAULT_BOTTOM_PIX,
+                baseSets: AvatarEditorDragonbone.DEFAULT_SETS
             };
             this.snapshot({
                 x: 0,
-                y: this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - this.HEAD_ICON_HEIGHT,
-                width: this.HEAD_ICON_WIDTH,
-                height: this.HEAD_ICON_HEIGHT
+                y: AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - AvatarEditorDragonbone.HEAD_ICON_HEIGHT,
+                width: AvatarEditorDragonbone.HEAD_ICON_WIDTH,
+                height: AvatarEditorDragonbone.HEAD_ICON_HEIGHT
             }, modelData)
                 .then((result) => {
                     resolve(result);
@@ -258,70 +260,37 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     public onResourcesLoaded() {
         this.scene.textures.off("onload", this.onResourcesLoaded, this, false);
-        this.replaceDisplay();
+        this.reloadDisplay();
     }
 
     public get curSets() {
         return this.mSets;
     }
 
-    private loadDragonbone() {
-        const root = `./resources_v${version}/dragonbones`;
-        const dbName = this.DRAGONBONENAME;
-        this.scene.load.dragonbone(
-            dbName,
-            `${root}/${dbName}_tex.png`,
-            `${root}/${dbName}_tex.json`,
-            `${root}/${dbName}_ske.dbbin`,
-            null,
-            null,
-            {responseType: "arraybuffer"}
-        );
-        const dbName_head = this.DRAGONBONENAME_HEAD;
-        this.scene.load.dragonbone(
-            dbName_head,
-            `${root}/${dbName_head}_tex.png`,
-            `${root}/${dbName_head}_tex.json`,
-            `${root}/${dbName_head}_ske.dbbin`,
-            null,
-            null,
-            {responseType: "arraybuffer"}
-        );
-
-        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.buildBones, this);
-        this.scene.load.start();
-    }
-
-    private buildBones(): void {
-        if (this.mArmatureDisplay) {
-            this.mArmatureDisplay.destroy();
+    private createDisplays(): void {
+        if (this.mDisplay_default) {
+            this.mDisplay_default.destroy();
         }
-        if (this.mArmatureDisplay_head) {
-            this.mArmatureDisplay_head.destroy();
+        if (this.mDisplay_head) {
+            this.mDisplay_head.destroy();
         }
         const sceneHeight = this.scene.scale.height;
-        this.mArmatureBottomArea = this.DEFAULT_SCALE_BOTTOM_PIX * sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mArmatureDisplay = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME);
-        // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
-        // Logger.getInstance().log("ZW-- slot: ", slot.name);
-        // }
-        this.mArmatureDisplay.animation.play(this.mCurAnimationName);
-        if (this.mAutoScale) this.mArmatureDisplay.scale = sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mArmatureDisplay.x = this.scene.scale.width >> 1;
-        this.mArmatureDisplay.y = this.scene.scale.height - this.mArmatureBottomArea;
-        this.add(this.mArmatureDisplay);
-        this.mArmatureBottomArea_head = this.mArmatureBottomArea - this.ARMATURE_LEG_PERCENT * this.ARMATURE_HEIGHT * sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mArmatureDisplay_head = this.scene.add.armature(this.DRAGONBONEARMATURENAME, this.DRAGONBONENAME_HEAD);
-        // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
-        // Logger.getInstance().log("ZW-- half-length slot: ", slot.name);
-        // }
-        // this.mArmatureDisplay_head.animation.play("idle_3");
-        if (this.mAutoScale) this.mArmatureDisplay_head.scale = sceneHeight / this.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mArmatureDisplay_head.x = this.scene.scale.width >> 1;
-        this.mArmatureDisplay_head.y = this.scene.scale.height - this.mArmatureBottomArea_head + 1000;
-        this.add(this.mArmatureDisplay_head);
+        this.mArmatureBottomArea = AvatarEditorDragonbone.DEFAULT_SCALE_BOTTOM_PIX * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        this.mDisplay_default = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_DEFAULT);
+        this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
+        if (this.mAutoScale) this.mDisplay_default.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        this.mDisplay_default.x = this.scene.scale.width >> 1;
+        this.mDisplay_default.y = this.scene.scale.height - this.mArmatureBottomArea;
+        this.add(this.mDisplay_default);
+        this.mArmatureBottomArea_head = this.mArmatureBottomArea -
+            AvatarEditorDragonbone.ARMATURE_LEG_PERCENT * AvatarEditorDragonbone.ARMATURE_HEIGHT * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        this.mDisplay_head = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_HEAD);
+        if (this.mAutoScale) this.mDisplay_head.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        this.mDisplay_head.x = this.scene.scale.width >> 1;
+        this.mDisplay_head.y = this.scene.scale.height - this.mArmatureBottomArea_head + 1000;
+        this.add(this.mDisplay_head);
 
-        this.reloadParts();
+        this.reloadDisplay();
     }
 
     private setBaseSets(sets: any[]) {
@@ -346,14 +315,14 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
         // 解决替换发型，后发分层存在的问题
         for (const newSet of newSets) {
-            for (const key in this.BACKMAP) {
-                if (this.BACKMAP.hasOwnProperty(key)) {
+            for (const key in AvatarEditorDragonbone.HAIR_BACK) {
+                if (AvatarEditorDragonbone.HAIR_BACK.hasOwnProperty(key)) {
                     const parts = newSet.parts;
                     for (const part of parts) {
                         if (part === key) {
                             // 删除mSets和mParts中相应数据
-                            this.removePartsInSets(this.BACKMAP[part], this.mSets);
-                            this.removePartsInCurParts(this.BACKMAP[part]);
+                            this.removePartsInSets(AvatarEditorDragonbone.HAIR_BACK[part], this.mSets);
+                            this.removePartsInCurParts(AvatarEditorDragonbone.HAIR_BACK[part]);
                         }
                     }
                 }
@@ -371,7 +340,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         if (reset) {
             this.mParts = {};
 
-            for (const part of this.ALLPARTS) {
+            for (const part of AvatarEditorDragonbone.ADD_PARTS) {
                 this.mParts[part] = null;
             }
 
@@ -390,8 +359,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         for (const key in this.mParts) {
             const set = this.mParts[key];
             if (!set) continue;
-            if (this.SPECIALSETS.hasOwnProperty(key)) {
-                const specParts = this.SPECIALSETS[key];
+            if (AvatarEditorDragonbone.SPECIAL_SETS.hasOwnProperty(key)) {
+                const specParts = AvatarEditorDragonbone.SPECIAL_SETS[key];
                 for (const specP of specParts) {
                     this.mParts[specP] = null;
                 }
@@ -421,115 +390,34 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.applySets(true);
     }
 
-    private reloadParts() {
-        if (!this.scene.load) {
-            return;
-        }
-        if (!this.mArmatureDisplay || !this.mArmatureDisplay_head) {
-            return;
-        }
-        this.cleanUp();
-        const resources = this.getWebResourcesByDir(this.mCurDir);
-        for (const resource of resources) {
-            const path = url.resolve(this.mWebHomePath, resource);
-            this.loadPart(resource, path);
-            // Logger.getInstance().log("ZW-- loadPart: ", path);
-        }
-        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.replaceDisplay, this);
-        this.scene.load.start();
-    }
-
-    private replaceSlotDisplay(soltName: string, key: string) {
-        if (!this.mArmatureDisplay || !this.mArmatureDisplay_head) return;
-        // Logger.getInstance().log("ZW-- replaceSlotDisplay: ", soltName, " ; ", key);
-        const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(`${soltName}`);
-        if (slot) {
-            if (!this.scene.textures.exists(key)) {
-                const display = slot.display;
-                if (display) {
-                    display.setTexture(undefined);
+    private reloadDisplay(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            let defaultReplaceOver = false;
+            let headReplaceOver = false;
+            const allDisplayReplaceChecker = () => {
+                if (defaultReplaceOver && headReplaceOver) {
+                    resolve(null);
                 }
-            } else {
-                slot.display = new dragonBones.phaser.display.SlotImage(
-                    this.scene,
-                    slot.display.x,
-                    slot.display.y,
-                    key
-                );
-            }
-        } else {
-            if (this.scene.textures.exists(key)) {
-                Logger.getInstance().warn(`ZW-- slot <${soltName}> not found in base dragonBone`);
-            }
-        }
-        const slot_head: dragonBones.Slot = this.mArmatureDisplay_head.armature.getSlot(`${soltName}`);
-        if (slot_head) {
-            if (!this.scene.textures.exists(key)) {
-                const display = slot_head.display;
-                if (display) display.setTexture(undefined);
-            } else {
-                slot_head.display = new dragonBones.phaser.display.SlotImage(
-                    this.scene,
-                    slot_head.display.x,
-                    slot_head.display.y,
-                    key
-                );
-            }
-        } else {
-            if (soltName.includes("_3") && this.scene.textures.exists(key)) {
-                Logger.getInstance().warn(`ZW-- slot <${soltName}> not found in half-length dragonBone`);
-            }
-        }
-    }
+            };
 
-    private replaceDisplay(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            const parts = this.mParts;
-            Logger.getInstance().log("ZW-- replaceDisplay mParts: ", this.mParts);
-            let slotName = "";
-            let uri = "";
-            for (const partName in parts) {
-                if (!parts.hasOwnProperty(partName)) {
-                    continue;
-                }
-                slotName = this.slotName(partName, this.mCurDir + "");
-                const avatarSet = parts[partName];
-                if (avatarSet) {
-                    uri = this.relativeUri(partName, avatarSet.id, this.mCurDir + "", avatarSet.version);
-                } else {
-                    uri = "";
-                }
-                this.replaceSlotDisplay(`${slotName}`, uri);
-            }
+            const defaultReplaceListener = Handler.create(this, (tex) => {
+                defaultReplaceOver = true;
+                allDisplayReplaceChecker();
+            });
+            const headReplaceListener = Handler.create(this, () => {
+                headReplaceOver = true;
+                allDisplayReplaceChecker();
+            });
 
-            this.mArmatureDisplay.animation.play(this.mCurAnimationName);
-            // this.mArmatureDisplay_head.animation.play(this.mCurAnimationName);
+            const loadData = this.convertPartsToIDragonbonesModel(this.mParts);
+            Logger.getInstance().log("ZW-- reloadDisplay: ", loadData);
+            this.mDisplay_default.replaceTexCompleteHandler = defaultReplaceListener;
+            this.mDisplay_default.load(loadData);
+            this.mDisplay_head.replaceTexCompleteHandler = headReplaceListener;
+            this.mDisplay_head.load(loadData);
 
-            if (this.mReplaceDisplayTimeOutID) {
-                clearTimeout(this.mReplaceDisplayTimeOutID);
-                this.mReplaceDisplayTimeOutID = null;
-            }
-            this.mReplaceDisplayTimeOutID = setTimeout(() => {
-                if (this.mOnReadyForSnapshot) {
-                    this.mOnReadyForSnapshot(this);
-                    this.mOnReadyForSnapshot = null;
-                }
-                resolve(true);
-            }, 100);
+            this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
         });
-    }
-
-    private cleanUp() {
-        for (const p of this.ALLPARTS) {
-            this.replaceSlotDisplay(this.slotName(p, "1"), "");
-            this.replaceSlotDisplay(this.slotName(p, "3"), "");
-        }
-    }
-
-    private loadPart(key: string, path: string) {
-        if (!this.scene.cache.obj.has(key)) {// TODO: 检测是否在load队列中
-            this.scene.load.image(key, path);
-        }
     }
 
     // 获取整个avatar的部件标签对应的资源相对路径
@@ -558,7 +446,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
 
         // add model resources
-        for (const set of this.MODELSETS) {
+        for (const set of AvatarEditorDragonbone.MODEL_SETS) {
             for (const part of set.parts) {
                 res.push(this.relativeUri(part, set.id, dir + ""));
             }
@@ -613,44 +501,16 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
     }
 
-    private resizedataURL(datas: string, wantedWidth: number, wantedHeight: number): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            // We create an image to receive the Data URI
-            const img = document.createElement("img");
-
-            // When the event "onload" is triggered we can resize the image.
-            img.onload = () => {
-                // We create a canvas and get its context.
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-
-                // We set the dimensions at the wanted size.
-                canvas.width = wantedWidth;
-                canvas.height = wantedHeight;
-
-                // We resize the image with the canvas method drawImage();
-                ctx.drawImage(img, 0, 0, wantedWidth, wantedHeight);
-
-                const dataURI = canvas.toDataURL("image/png", 1);
-
-                resolve(dataURI);
-            };
-
-            // We put the Data URI in the image's src attribute
-            img.src = datas;
-        });
-    }
-
-    private getSnapshotModelData(): { armature: dragonBones.phaser.display.ArmatureDisplay, x: number, y: number, baseSets: any[] } {
+    private getSnapshotModelData(): { armature: EditorDragonbonesDisplay, x: number, y: number, baseSets: any[] } {
         for (const set of this.mSets) {
             for (const part of set.parts) {
-                if (this.BOTTOMBODYPARTS.indexOf(part) >= 0) {
+                if (AvatarEditorDragonbone.BOTTOM_BODY_PARTS.indexOf(part) >= 0) {
                     // Logger.getInstance().log("ZW-- snapshotArmature: body");
                     return {
-                        armature: this.mArmatureDisplay,
-                        x: this.mArmatureDisplay.x,
+                        armature: this.mDisplay_default,
+                        x: this.mDisplay_default.x,
                         y: this.mArmatureBottomArea,
-                        baseSets: this.MODELSETS
+                        baseSets: AvatarEditorDragonbone.MODEL_SETS
                     };
                 }
             }
@@ -658,18 +518,18 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
         // Logger.getInstance().log("ZW-- snapshotArmature: head");
         return {
-            armature: this.mArmatureDisplay_head,
-            x: this.mArmatureDisplay.x,
+            armature: this.mDisplay_head,
+            x: this.mDisplay_default.x,
             y: this.mArmatureBottomArea_head,
-            baseSets: this.MODELSETS
+            baseSets: AvatarEditorDragonbone.MODEL_SETS
         };
     }
 
     private snapshot(area: { x: number, y: number, width: number, height: number },
-                     modelData: { armature: dragonBones.phaser.display.ArmatureDisplay, x: number, y: number, baseSets: any[] }): Promise<string> {
+                     modelData: { armature: EditorDragonbonesDisplay, x: number, y: number, baseSets: any[] }): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.setBaseSets(modelData.baseSets);
-            this.replaceDisplay()
+            this.reloadDisplay()
                 .then(() => {
                     const gameWidth = this.scene.scale.width;
                     const gameHeight = this.scene.scale.height;
@@ -680,8 +540,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     rt.snapshotArea(area.x, area.y, area.width, area.height, (img: HTMLImageElement) => {
                         modelData.armature.scaleY *= -1;
                         // reverse parts
-                        this.setBaseSets(this.DEFAULTSETS);
-                        this.replaceDisplay()
+                        this.setBaseSets(AvatarEditorDragonbone.DEFAULT_SETS);
+                        this.reloadDisplay()
                             .then(() => {
                                 resolve(img.src);
                                 Logger.getInstance().log("ZW-- snapshot result: ", img.src);
@@ -692,5 +552,41 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     reject("replaceDisplay error");
                 });
         });
+    }
+
+    private convertPartsToIDragonbonesModel(parts: { [key: string]: any }): IDragonbonesModel {
+        const avatarModel: IAvatar = {id: "0"};
+        const dragonbonesModel: IDragonbonesModel = {id: 0, avatar: avatarModel};
+
+        const allPartsName = [].concat(AvatarEditorDragonbone.BASE_PARTS, AvatarEditorDragonbone.ADD_PARTS);
+        for (const partName in allPartsName) {
+            if (!parts.hasOwnProperty(partName)) continue;
+            const avatarKey = this.convertPartNameToIAvatarKey(partName);
+            const set = parts[partName];
+            avatarModel[avatarKey] = {sn: set.id, version: set.version};
+        }
+
+        return dragonbonesModel;
+    }
+
+    // ex: "head_base" => "headBaseId"
+    private convertPartNameToIAvatarKey(partName: string): string {
+        const nameArr = partName.split("_");
+        let result: string = nameArr[0];
+        for (let i = 1; i < nameArr.length; i++) {
+            const temp = nameArr[i];
+            result += temp.charAt(0).toUpperCase() + temp.slice(1);
+        }
+        result += "Id";
+        return result;
+    }
+}
+
+class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
+
+    constructor(scene: Phaser.Scene, resName: string) {
+        super(scene);
+
+        this.resourceName = resName;
     }
 }

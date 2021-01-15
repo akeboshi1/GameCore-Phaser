@@ -205,7 +205,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public onDisplayCreated(id: number) {
-
+    }
+    public onDisplayRemoved(id: number) {
     }
 
     private onSync(packet: PBpacket) {

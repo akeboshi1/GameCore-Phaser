@@ -1,7 +1,7 @@
 import {BaseDragonbonesDisplay} from "display";
 import {Render} from "../../render";
 import {IPos, Logger, ValueResolver, IProjection} from "utils";
-import {DisplayField, ElementStateType, RunningAnimation, TitleMask} from "structure";
+import {DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask} from "structure";
 import {IDisplayObject} from "../display.object";
 import {LoadQueue, LoadType} from "../../loadqueue";
 import {ReferenceArea} from "../../editor";
@@ -36,6 +36,15 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mLoadQueue.on("QueueError", this.fileError, this);
 
         this.mMovement = new DisplayMovement(scene, this, render);
+    }
+
+    public load(display: IDragonbonesModel, field?: DisplayField) {
+        field = !field ? DisplayField.STAGE : field;
+        if (field !== DisplayField.STAGE) {
+            return;
+        }
+
+        super.load(display);
     }
 
     public destroy() {
@@ -226,7 +235,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     }
 
     protected fileComplete(progress: number, key: string, type: string) {
-        if (key !== this.mDragonbonesName || type !== "image") {
+        if (key !== this.resourceName || type !== "image") {
             return;
         }
         if (this.mLoadPromise) this.mLoadPromise.resolve(true);
@@ -234,7 +243,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     }
 
     protected fileError(key: string) {
-        if (key !== this.mDragonbonesName) return;
+        if (key !== this.resourceName) return;
 
         if (this.mLoadPromise) this.mLoadPromise.resolve(false);
         // TODO: 根据请求错误类型，retry或catch
@@ -252,7 +261,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
         this.mLoadQueue.add([{
             type: LoadType.DRAGONBONES,
-            key: this.mDragonbonesName,
+            key: this.resourceName,
             textureUrl: pngUrl,
             jsonUrl,
             boneUrl: dbbinUrl
@@ -269,8 +278,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected updateSort() {
         const _projectionAngle = projectionAngle;
-        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
-        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
+        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
+        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
     }
 
     protected showPlaceholder() {

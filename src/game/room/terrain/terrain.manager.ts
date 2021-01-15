@@ -176,7 +176,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public onDisplayCreated(id: number) {
-
+    }
+    public onDisplayRemoved(id: number) {
     }
 
     protected onAdd(packet: PBpacket) {
