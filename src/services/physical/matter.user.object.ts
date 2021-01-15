@@ -44,11 +44,12 @@ export class MatterUserObject extends MatterPlayerObject {
         this.setBody();
     }
 
-    public moveMotion(x: number, y: number, targetId?: number) {
+    public async moveMotion(x: number, y: number, targetId?: number) {
+        const pos = new LogicPos(x, y);
         if (this.mRootMount) {
-            this.mRootMount.removeMount(this);
+            await this.mRootMount.removeMount(this, pos);
         }
-        this.mTargetPoint = { path: [new LogicPos(x, y)], targetId };
+        this.mTargetPoint = { path: [pos], targetId };
         this.mSyncDirty = true;
         this.matterWorld.setSensor(this.body, false);
         this.startMove();
