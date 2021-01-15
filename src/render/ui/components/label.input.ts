@@ -128,6 +128,9 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
     private destroyInput() {
         if (this.mInputText) {
+            this.mInputText.off("textchange", this.onTextChangeHandler, this);
+            this.mInputText.off("blur", this.onTextBlurHandler, this);
+            this.mInputText.off("focus", this.onTextFocusHandler, this);
             this.mInputText.destroy();
             this.mInputText = undefined;
         }
