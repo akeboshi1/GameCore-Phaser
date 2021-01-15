@@ -43,9 +43,9 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
 
     init() {
         this.bg = new CommonBackground(this.scene, 0, 0, this.width, this.height, UIAtlasName.roam, "roam_bg", 0x72e7fb);
-        const topbg = this.scene.make.image({ key: "roam_topic", frame: "roam_topic" });
+        const topbg = this.scene.make.image({ key: "roam_topic" });
         topbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        const topbg1 = this.scene.make.image({ key: "roam_stripe", frame: "roam_stripe" });
+        const topbg1 = this.scene.make.image({ key: "roam_stripe" });
         topbg1.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         topbg.y = -this.height * 0.5 + topbg.height * 0.5;
         topbg1.y = -this.height * 0.5 + topbg1.height * 0.5;
