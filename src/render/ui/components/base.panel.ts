@@ -35,7 +35,14 @@ export class BasePanel extends Panel {
     get initialized(): boolean {
         return this.mInitialized;
     }
-
+    startLoad() {
+        if (!this.scene) {
+            return;
+        }
+        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileKeyComplete, this);
+        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
+        this.scene.load.start();
+    }
     show(param?: any) {
         this.mSynchronize = false;
         super.show(param);
