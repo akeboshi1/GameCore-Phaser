@@ -2,6 +2,9 @@ import {IDisplayObject} from "./display.object";
 import {Render} from "../render";
 import {Logger} from "utils";
 
+/**
+ * Render层平滑移动
+ */
 export class DisplayMovement {
     private moveData: any;
 
