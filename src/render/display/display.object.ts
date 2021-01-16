@@ -7,6 +7,8 @@ export interface IDisplayObject extends IBaseDisplay {
     projectionSize: IProjection;
     nodeType: number | undefined;
 
+    startLoad(): Promise<any>;
+
     showRefernceArea(area: number[][], origin: IPos);
 
     hideRefernceArea();

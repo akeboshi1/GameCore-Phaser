@@ -14,16 +14,16 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mMainSprite: Phaser.GameObjects.Sprite;
     protected mCurAnimation: any;
     protected mMountList: Phaser.GameObjects.Container[];
-    protected isSetInteractive: boolean = false;
-    protected isInteracitve: boolean = false;
+    protected mIsSetInteractive: boolean = false;
+    protected mIsInteracitve: boolean = false;
 
-    public load(displayInfo: IFramesModel, field?: DisplayField) {
+    public load(displayInfo: IFramesModel, field?: DisplayField): Promise<any> {
         field = !field ? DisplayField.STAGE : field;
         this.displayInfo = displayInfo;
-        if (!this.framesInfo || !this.framesInfo.gene) return false;
+        if (!this.framesInfo || !this.framesInfo.gene) return Promise.reject("framesInfo error");
         const currentDisplay = this.mDisplayDatas.get(field);
         if (currentDisplay && currentDisplay.gene === displayInfo.gene) {
-            return false;
+            return Promise.reject("display gene error");
         }
         this.mDisplayDatas.set(field, this.framesInfo);
         if (this.scene.textures.exists(this.framesInfo.gene)) {
@@ -49,11 +49,11 @@ export class BaseFramesDisplay extends BaseDisplay {
                 };
                 this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                 this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
-                this.startLoad();
+                this.scene.load.start();
             }
 
         }
-        return true;
+        return Promise.resolve(null);
     }
 
     public play(animation: RunningAnimation, field?: DisplayField) {
@@ -112,8 +112,8 @@ export class BaseFramesDisplay extends BaseDisplay {
             // this.add(graphics);
         }
         // if (!this.isSetInteractive) {
-        this.isInteracitve ? this.setInteractive() : this.disableInteractive();
-        this.isSetInteractive = true;
+        this.mIsInteracitve ? this.setInteractive() : this.disableInteractive();
+        this.mIsSetInteractive = true;
         // }
         // if (this.mActionName && this.mActionName.animationName !== animation.animationName) {
         this.initBaseLoc(DisplayField.STAGE, animation);
@@ -193,7 +193,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     public setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this {
         // super.setInteractive(shape, callback, dropZone);
-        this.isInteracitve = true;
+        this.mIsInteracitve = true;
         this.mDisplays.forEach((display) => {
             display.setInteractive({pixelPerfect: true});
         });
@@ -202,7 +202,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     public disableInteractive(): this {
         // super.disableInteractive();
-        this.isInteracitve = false;
+        this.mIsInteracitve = false;
         this.mDisplays.forEach((display) => {
             display.disableInteractive();
         });

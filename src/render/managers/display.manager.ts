@@ -437,10 +437,12 @@ export class DisplayManager {
             this.loading = false;
             return;
         }
-        display.startLoad(() => {
-            this.loadProgress();
-        }).catch(() => {
-            this.loadProgress();
-        });
+        display.startLoad()
+            .then(() => {
+                this.loadProgress();
+            })
+            .catch(() => {
+                this.loadProgress();
+            });
     }
 }

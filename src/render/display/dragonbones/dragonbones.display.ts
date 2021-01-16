@@ -20,7 +20,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mSortY: number = 0;
 
     private mLoadQueue: LoadQueue;
-    private mLoadPromise: ValueResolver<boolean> = null;
     private mProjectionSize: IProjection;
     private mName: string = undefined;
     private mPlaceholder: Phaser.GameObjects.Image;
@@ -38,13 +37,26 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mMovement = new DisplayMovement(scene, this, render);
     }
 
-    public load(display: IDragonbonesModel, field?: DisplayField) {
+    public load(display: IDragonbonesModel, field?: DisplayField): Promise<any> {
         field = !field ? DisplayField.STAGE : field;
         if (field !== DisplayField.STAGE) {
-            return;
+            return Promise.reject("field is not STAGE");
         }
 
-        super.load(display);
+        return super.load(display);
+    }
+
+    public startLoad(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (!this.mLoadQueue || this.mCreated) {
+                resolve(null);
+                return;
+            }
+            this.mLoadQueue.once("QueueComplete", () => {
+                resolve(null);
+            }, this);
+            this.mLoadQueue.startLoad();
+        });
     }
 
     public destroy() {
@@ -143,19 +155,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mTopDisplay.clearBubble();
     }
 
-    public startLoad(callBack?: Function): Promise<any> {
-        if (callBack !== undefined) this.mLoadCompoleteCallback = callBack;
-
-        if (!this.mLoadQueue || this.mCreated) {
-            return Promise.resolve(null);
-        }
-
-        this.mLoadPromise = new ValueResolver<boolean>();
-        return this.mLoadPromise.promise(() => {
-            this.mLoadQueue.startLoad();
-        });
-    }
-
     public created() {
         super.created();
         this.render.mainPeer.elementDisplayReady(this.id);
@@ -238,14 +237,12 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         if (key !== this.resourceName || type !== "image") {
             return;
         }
-        if (this.mLoadPromise) this.mLoadPromise.resolve(true);
         this.createArmatureDisplay();
     }
 
     protected fileError(key: string) {
         if (key !== this.resourceName) return;
 
-        if (this.mLoadPromise) this.mLoadPromise.resolve(false);
         // TODO: 根据请求错误类型，retry或catch
         this.created();
     }
