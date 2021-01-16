@@ -36,6 +36,11 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mMovement = new DisplayMovement(scene, this, render);
     }
 
+    public startLoad(): Promise<any> {
+        this.scene.load.start();
+        return Promise.resolve(null);
+    }
+
     public destroy() {
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();

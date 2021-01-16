@@ -1,4 +1,4 @@
-import {Handler, Logger} from "utils";
+import {Handler, load, Logger} from "utils";
 import version from "../../../../version";
 import {BaseDragonbonesDisplay} from "display";
 import {IAvatar, IDragonbonesModel, SlotSkin} from "structure";
@@ -392,67 +392,25 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private reloadDisplay(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            let defaultReplaceOver = false;
-            let headReplaceOver = false;
-            const allDisplayReplaceChecker = () => {
-                if (defaultReplaceOver && headReplaceOver) {
-                    resolve(null);
-                }
-            };
-
-            const defaultReplaceListener = Handler.create(this, (tex) => {
-                defaultReplaceOver = true;
-                allDisplayReplaceChecker();
-            });
-            const headReplaceListener = Handler.create(this, () => {
-                headReplaceOver = true;
-                allDisplayReplaceChecker();
-            });
-
             const loadData = this.convertPartsToIDragonbonesModel(this.mParts);
-            Logger.getInstance().log("ZW-- reloadDisplay: ", loadData);
-            this.mDisplay_default.replaceTexCompleteHandler = defaultReplaceListener;
-            this.mDisplay_default.load(loadData);
-            this.mDisplay_head.replaceTexCompleteHandler = headReplaceListener;
-            this.mDisplay_head.load(loadData);
+
+            this.mDisplay_default.load(loadData)
+                .then(() => {
+                    return this.mDisplay_head.load(loadData);
+                })
+                .then(() => {
+                    resolve(null);
+                    if (this.mOnReadyForSnapshot) {
+                        this.mOnReadyForSnapshot(this);
+                        this.mOnReadyForSnapshot = null;
+                    }
+                })
+                .catch((err) => {
+                    if (err) Logger.getInstance().error("reload display error: ", err);
+                });
 
             this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
         });
-    }
-
-    // 获取整个avatar的部件标签对应的资源相对路径
-    private getWebResourcesByDir(dir: number): string[] {
-        const res: string[] = [];
-        const parts = this.mParts;
-
-        for (const key in parts) {
-            if (parts.hasOwnProperty(key)) {
-                const set = parts[key];
-                if (set) {
-                    if (set.id.length === 10) {
-                        // 临时资源 id为editor随机生成
-                        continue;
-                    }
-                    // eyes mous 没有背面素材
-                    if (dir === 1 && key === "head_eyes") {
-                        continue;
-                    }
-                    if (dir === 1 && key === "head_mous") {
-                        continue;
-                    }
-                    res.push(this.relativeUri(key, set.id, dir + "", set.version));
-                }
-            }
-        }
-
-        // add model resources
-        for (const set of AvatarEditorDragonbone.MODEL_SETS) {
-            for (const part of set.parts) {
-                res.push(this.relativeUri(part, set.id, dir + ""));
-            }
-        }
-
-        return res;
     }
 
     // 从部件ID转换为资源相对路径 同时也是TextureManager中的key
@@ -465,21 +423,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
         result = `${result}.png`;
         return result;
-    }
-
-    // 部件名转换为插槽名
-    private slotName(part: string, dir: string) {
-        return `${part}_${dir}`;
-    }
-
-    private findPartInSets(part: string, sets: any[]): any {
-        for (const set of sets) {
-            if (set.parts.includes(part)) {
-                return set;
-            }
-        }
-
-        return null;
     }
 
     private removePartsInSets(parts: string[], sets: any[]): any[] {
@@ -556,16 +499,17 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private convertPartsToIDragonbonesModel(parts: { [key: string]: any }): IDragonbonesModel {
         const avatarModel: IAvatar = {id: "0"};
-        const dragonbonesModel: IDragonbonesModel = {id: 0, avatar: avatarModel};
 
         const allPartsName = [].concat(AvatarEditorDragonbone.BASE_PARTS, AvatarEditorDragonbone.ADD_PARTS);
-        for (const partName in allPartsName) {
+        for (const partName of allPartsName) {
             if (!parts.hasOwnProperty(partName)) continue;
-            const avatarKey = this.convertPartNameToIAvatarKey(partName);
             const set = parts[partName];
+            if (!set) continue;
+            const avatarKey = this.convertPartNameToIAvatarKey(partName);
             avatarModel[avatarKey] = {sn: set.id, version: set.version};
         }
 
+        const dragonbonesModel: IDragonbonesModel = {id: 0, avatar: avatarModel};
         return dragonbonesModel;
     }
 
@@ -588,5 +532,9 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         super(scene);
 
         this.resourceName = resName;
+    }
+
+    protected generateReplaceTextureKey(): string {
+        return super.generateReplaceTextureKey() + "_editor_" + this.resourceName;
     }
 }

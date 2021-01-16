@@ -1,4 +1,4 @@
-import { Handler, Logger, LogicPos } from "utils";
+import { Handler, LogicPos, ValueResolver } from "utils";
 import { DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation } from "structure";
 
 export interface IBaseDisplay {
@@ -11,9 +11,7 @@ export interface IBaseDisplay {
     y: number;
     z: number;
 
-    load(data: IDragonbonesModel | IFramesModel, field?: DisplayField);
-
-    startLoad(callBack?: Function): Promise<any>;
+    load(data: IDragonbonesModel | IFramesModel, field?: DisplayField): Promise<any>;
 
     created();
 
@@ -56,7 +54,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     protected mCreated: boolean = false;
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<DisplayField,
         Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
-    protected mLoadCompoleteCallback: Function;
+    protected mLoadDisplayPromise: ValueResolver<any> = null;
 
     public destroy(fromScene?: boolean) {
         this.mSprites.forEach((sprite) => sprite.destroy());
@@ -68,9 +66,13 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         super.destroy(fromScene);
     }
 
-    public load(data: IDragonbonesModel | IFramesModel) {
+    public load(data: IDragonbonesModel | IFramesModel): Promise<any> {
         this.displayInfo = data;
-        this.startLoad();
+        if (!this.displayInfo) return Promise.reject("displayInfo error");
+        this.mLoadDisplayPromise = new ValueResolver<any>();
+        return this.mLoadDisplayPromise.promise(() => {
+            this.scene.load.start();
+        });
     }
 
     public created() {
@@ -98,13 +100,6 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
     public set displayInfo(data: IDragonbonesModel | IFramesModel) {
         this.mDisplayInfo = data;
-    }
-
-    public startLoad(callBack?: Function): Promise<any> {
-        if (callBack !== undefined) this.mLoadCompoleteCallback = callBack;
-        this.scene.load.start();
-        const self = this;
-        return Promise.resolve(undefined);
     }
 
     public play(animation: RunningAnimation) {
