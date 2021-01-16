@@ -1,4 +1,4 @@
-import { Handler, LogicPos } from "utils";
+import { Handler, Logger, LogicPos } from "utils";
 import { DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation } from "structure";
 
 export interface IBaseDisplay {
@@ -103,6 +103,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     public startLoad(callBack?: Function): Promise<any> {
         if (callBack !== undefined) this.mLoadCompoleteCallback = callBack;
         this.scene.load.start();
+        const self = this;
         return Promise.resolve(undefined);
     }
 

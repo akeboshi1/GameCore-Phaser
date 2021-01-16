@@ -1,11 +1,16 @@
 import { Render } from "gamecoreRender";
+import { Logger } from "utils";
 import { PlayScene } from "../../scenes/play.scene";
 
 export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
     constructor(private render: Render) {
         const scene = this.render.sceneManager.getSceneByName(PlayScene.name);
-        this.mGraphics =  scene.make.graphics(undefined, false);
+        if (!scene) {
+            Logger.getInstance().error("no matter scene");
+            return;
+        }
+        this.mGraphics = scene.make.graphics(undefined, false);
         (<PlayScene>scene).layerManager.addToLayer("middleLayer", this.mGraphics);
     }
 

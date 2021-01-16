@@ -2,30 +2,32 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos } from "utils";
-import { ISprite } from "structure";
+import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
 import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService, Room } from "../room/room";
-
-import { IElement, Element, InputEnable } from "./element";
-import NodeType = op_def.NodeType;
-import { EventType, IFramesModel } from "structure";
-import { IDragonbonesModel } from "structure";
+import { Element, IElement, InputEnable } from "./element";
 import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
 import { Sprite } from "../display/sprite/sprite";
+import NodeType = op_def.NodeType;
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
     readonly roomService: IRoomService;
     readonly map: number[][];
+
     add(sprite: ISprite[]);
+
     remove(id: number): IElement;
+
     getElements(): IElement[];
+
     addToMap(sprite: ISprite);
+
     removeFromMap(sprite: ISprite);
-    onDisplayCreated(id: number);
+
     destroy();
 }
 
@@ -47,11 +49,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
     protected mCacheSyncList: any[] = [];
     protected mMap: number[][];
     private mDealAddList: any[] = [];
-    private mDealSyncList: any[] = [];
+    private mDealSyncMap: Map<number, boolean> = new Map();
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
     private mActionMgr: ElementActionManager;
-    private mElementsDisplayReady: Map<number, boolean> = new Map();
+
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -94,6 +96,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public has(id: number) {
         return this.mElements.has(id);
     }
+
     public get(id: number): Element {
         const element: Element = this.mElements.get(id);
         if (!element) {
@@ -212,6 +215,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         element.setState(state.state);
     }
+
     public checkElementAction(id: number, userid?: number): boolean {
         const ele = this.get(id);
         if (!ele) return;
@@ -220,6 +224,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mActionMgr.executeElementActions(ele.model, userid);
         }
     }
+
     public destroy() {
         this.hasAddComplete = false;
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
@@ -231,10 +236,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mElements) {
             this.mElements.forEach((element) => this.remove(element.id));
             this.mElements.clear();
-            this.mElementsDisplayReady.clear();
             this.mStateMgr.destroy();
             this.mActionMgr.destroy();
         }
+        if (this.mDealAddList) this.mDealAddList.length = 0;
+        if (this.mDealSyncMap) this.mDealSyncMap.clear();
         if (this.mCacheAddList) {
             this.mCacheAddList.length = 0;
             this.mCacheAddList = [];
@@ -256,39 +262,35 @@ export class ElementManager extends PacketHandler implements IElementManager {
      * @param id
      */
     public elementLoadCallBack(id: number) {
-        let len = 0;
-        if (this.mDealAddList && this.mDealAddList.length > 0) {
-            const index = this.mDealAddList.indexOf(id);
-            if (index !== -1) {
-                const obj = this.mDealAddList[index];
-                (<any>obj).callBackBoo = true;
+        let loadAll: boolean = true;
+        for (let i: number = 0, len = this.mDealAddList.length; i < len; i++) {
+            const ele = this.mDealAddList[i];
+            if (ele.id === id) {
+                ele.state = true;
             }
-            len = this.mDealAddList.length;
-            if (!len) return;
-            for (let i: number = 0; i < len; i++) {
-                const obj = this.mDealAddList[i];
-                if (obj && !obj.callBackBoo) {
-                    return;
-                }
+            if (!ele.state) {
+                loadAll = false;
+                return;
             }
-            // 如果所有sprite都已经有反馈，则把处理
-            this.mDealAddList.length = 0;
-            this.mDealAddList = [];
-            this.dealAddList();
         }
+
+        if (!loadAll) return;
+        // 如果所有sprite都已经有反馈，则重新获取缓存队列进行处理
+        this.mDealAddList.length = 0;
+        this.mDealAddList = [];
+        this.dealAddList();
     }
 
-    public dealAddList() {
+    public dealAddList(spliceBoo: boolean = false) {
         const len = 5;
-        Logger.getInstance().log("update cacheAddlength", this.mCacheAddList.length);
         let point: op_def.IPBPoint3f;
         let sprite: ISprite = null;
         const ids = [];
         const eles = [];
-        const tmpLen = this.mCacheAddList.length > len ? len : this.mCacheAddList.length;
-        this.mDealAddList = this.mCacheAddList.splice(0, tmpLen);
+        const tmpLen = !spliceBoo ? (this.mCacheAddList.length > len ? len : this.mCacheAddList.length) : this.mDealAddList.length;
+        const tmpList = !spliceBoo ? this.mCacheAddList.splice(0, tmpLen) : this.mDealAddList;
         for (let i: number = 0; i < tmpLen; i++) {
-            const obj = this.mDealAddList[i];
+            const obj = tmpList[i];
             if (!obj) continue;
             point = obj.point3f;
             if (point) {
@@ -296,6 +298,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!sprite.displayInfo) {
                     if (!this.checkDisplay(sprite)) {
                         ids.push(sprite.id);
+                    } else {
+                        obj.state = true;
+                        this.mDealAddList.push(obj);
                     }
                 }
                 const ele = this._add(sprite);
@@ -312,95 +317,83 @@ export class ElementManager extends PacketHandler implements IElementManager {
      * @param id
      */
     public elementDisplaySyncReady(id: number) {
-        let len = 0;
-        if (this.mDealSyncList && this.mDealSyncList.length > 0) {
-            const index = this.mDealSyncList.indexOf(id);
-            if (index !== -1) {
-                const obj = this.mDealSyncList[index];
-                (<any>obj).syncCallBackBoo = true;
+        this.mDealSyncMap.set(id, true);
+        let syncAll: boolean = true;
+        this.mDealSyncMap.forEach((val, key) => {
+            if (!val) {
+                syncAll = false;
+                return;
             }
-            len = this.mDealSyncList.length;
-            if (!len) return;
-            for (let i: number = 0; i < len; i++) {
-                const obj = this.mDealSyncList[i];
-                if (obj && !obj.syncCallBackBoo) {
-                    return;
-                }
-            }
-            // 如果所有sprite都已经有反馈，则把处理
-            this.mDealSyncList.length = 0;
-            this.mDealSyncList = [];
-            this.dealSyncList();
-        }
+        });
+        if (!syncAll) return;
+        // 如果所有sprite都已经有反馈，则把缓存列表处理
+        this.mDealSyncMap.clear();
+        this.dealSyncList();
     }
 
     public dealSyncList() {
         const len = 5;
-        if (this.mCacheSyncList && this.mCacheSyncList.length > 0 && this.mCacheAddList && this.mCacheAddList.length < 1) {
-            Logger.getInstance().log("update cacheSynclength", this.mCacheSyncList.length);
+        if (this.mCacheSyncList && this.mCacheSyncList.length > 0) {
             let element: Element = null;
             const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;
-            this.mDealSyncList = this.mCacheSyncList.splice(0, tmpLen);
+            const tmpList = this.mCacheSyncList.splice(0, tmpLen);
             const ele = [];
             for (let i: number = 0; i < tmpLen; i++) {
-                const sprite = this.mDealSyncList[i];
+                const sprite = tmpList[i];
                 if (!sprite) continue;
                 element = this.get(sprite.id);
                 if (element) {
+                    this.mDealSyncMap.set(sprite.id, false);
                     const command = (<any>sprite).command;
-                    if (command === 2) {
+                    if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         element.model = new Sprite(sprite, 3);
-                    } else if (command === 4) {
+                    } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         element.updateModel(sprite);
+                    }
+                    // 更新elementstorage中显示对象的数据信息
+                    const displayInfo = element.model.displayInfo;
+                    if (displayInfo) {
+                        this.mRoom.game.elementStorage.add(<any>displayInfo);
                     }
                     ele.push(element);
                 }
             }
+            this.dealAddList(true);
             this.mStateMgr.syncElement(ele);
             this.checkElementDataAction(ele);
         }
     }
 
-    public onDisplayCreated(id: number) {
-        if (!this.mElements.has(id)) return;
-
-        this.mElementsDisplayReady.set(id, false);
-    }
-
     public onDisplayReady(id: number) {
-        if (!this.mElementsDisplayReady.has(id)) return;
-
-        this.mElementsDisplayReady.set(id, true);
-        if (!this.hasAddComplete) return;
+        const element = this.mElements.get(id);
+        if (!element) return;
+        element.state = true;
+        // 回馈给load缓存队列逻辑
         this.elementLoadCallBack(id);
-        // 当物件添加队列缓存存在，则不做创建状态检测
-        if (this.mCacheAddList && this.mCacheAddList.length > 0) return;
-
-        // tslint:disable-next-line:no-Logger.getInstance()
-        Logger.getInstance().log("onDisplayReady ", id);
-        let allReady = true;
-        this.mElementsDisplayReady.forEach((val, key) => {
-            if (val === false) {
-                allReady = false;
-                // tslint:disable-next-line:no-Logger.getInstance()
-                Logger.getInstance().log("left not ready display: ", this.mElements.get(key));
+        // 没有完成全部元素添加或者当物件添加队列缓存存在，则不做创建状态检测
+        if (!this.hasAddComplete || (this.mCacheAddList && this.mCacheAddList.length > 0)) return;
+        Logger.getInstance().debug("onDisplayReady ", id);
+        this.mElements.forEach((ele, key) => {
+            if (ele.state === false) {
+                // todo 遍历优化
+                Logger.getInstance().error("left not ready display: ", this.mElements.get(key));
+                return;
             }
         });
-
-        if (allReady) {
-            this.mRoom.onManagerReady(this.constructor.name);
-        }
+        this.mRoom.onManagerReady(this.constructor.name);
     }
 
-    protected addMap(sprite: ISprite) { }
+    protected addMap(sprite: ISprite) {
+    }
 
-    protected removeMap(sprite: ISprite) { }
+    protected removeMap(sprite: ISprite) {
+    }
 
     get connection(): ConnectionService {
         if (this.mRoom) {
             return this.mRoom.game.connection;
         }
-        Logger.getInstance().log("roomManager is undefined");
+        Logger.getInstance().error("roomManager is undefined");
         return;
     }
 
@@ -477,7 +470,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
+            Logger.getInstance().error("checkdisplay error====>", sprite);
         }
+        return;
     }
 
     protected fetchDisplay(ids: number[]) {
@@ -494,6 +489,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     get map(): number[][] {
         return this.mMap;
     }
+
     get eleDataMgr() {
         if (this.mRoom) {
             const game = this.mRoom.game;
@@ -501,6 +497,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         return undefined;
     }
+
     protected onSetPosition(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
         const type: number = content.nodeType;
@@ -537,7 +534,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             (<any>sprite).command = command;
             this.mCacheSyncList.push(sprite);
         }
-        if (!this.hasAddComplete || (this.mCacheSyncList && this.mCacheSyncList.length > 0) || (this.mCacheAddList && this.mCacheAddList.length < 1)) return;
         this.dealSyncList();
     }
 
@@ -572,6 +568,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             element.showBubble(content.context, content.chatsetting);
         }
     }
+
     private onClearBubbleHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN = packet.content;
         const element = this.get(content.receiverid);
@@ -594,6 +591,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
         }
     }
+
     private checkElementDataAction(eles: Element[]) {
         const eleDataMgr = this.eleDataMgr;
         if (!eleDataMgr) return;
@@ -608,6 +606,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const ele = this.get(id);
         this.eleDataMgr.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
     }
+
     private onActiveSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
         this.checkElementAction(content.targetId, content.spriteId);

@@ -103,6 +103,7 @@ export class DisplayManager {
         const display: IDisplayObject = this.displays.get(id);
         if (display) {
             display.load(data);
+            this.render.mainPeer.elementDisplaySyncReady(id);
         }
     }
 
@@ -184,6 +185,8 @@ export class DisplayManager {
         }
         let display: FramesDisplay;
         if (!this.displays.has(id)) {
+            if (id === 57255261)
+                Logger.getInstance().debug("no load obj render", data);
             display = new FramesDisplay(scene, this.render, id, NodeType.ElementNodeType);
             this.displays.set(id, display);
         } else {

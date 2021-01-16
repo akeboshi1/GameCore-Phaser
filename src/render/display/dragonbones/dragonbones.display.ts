@@ -244,10 +244,9 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected fileError(key: string) {
         if (key !== this.resourceName) return;
-
-        if (this.mLoadPromise) this.mLoadPromise.resolve(false);
         // TODO: 根据请求错误类型，retry或catch
         this.created();
+        if (this.mLoadPromise) this.mLoadPromise.resolve(false);
     }
 
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {

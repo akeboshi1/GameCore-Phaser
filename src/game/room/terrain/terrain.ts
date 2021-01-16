@@ -12,11 +12,21 @@ export class Terrain extends BlockObject implements IElement {
     protected mModel: ISprite;
     protected mCreatedDisplay: boolean = false;
     private mMoveData: MoveData;
+    private mState: boolean = false;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite.id, mElementManager.roomService);
         this.mId = sprite.id;
         this.model = sprite;
     }
+
+    get state(): boolean {
+        return this.mState;
+    }
+
+    set state(val: boolean) {
+        this.mState = val;
+    }
+
     get moveData(): MoveData {
         return this.mMoveData;
     }
