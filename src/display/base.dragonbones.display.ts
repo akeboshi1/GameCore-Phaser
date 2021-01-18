@@ -214,12 +214,12 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.mFadeTween = null;
         }
 
-        if (this.scene) {
-            if (this.scene.textures.exists(this.mReplaceTextureKey)) {
-                this.scene.textures.remove(this.mReplaceTextureKey);
-                this.scene.textures.removeKey(this.mReplaceTextureKey);
-            }
-        }
+        // if (this.scene) {
+        //     if (this.scene.textures.exists(this.mReplaceTextureKey)) {
+        //         this.scene.textures.remove(this.mReplaceTextureKey);
+        //         this.scene.textures.removeKey(this.mReplaceTextureKey);
+        //     }
+        // }
 
         super.destroy();
     }
