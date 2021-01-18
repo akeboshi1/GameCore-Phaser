@@ -213,6 +213,14 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.clearFadeTween();
             this.mFadeTween = null;
         }
+
+        if (this.scene) {
+            if (this.scene.textures.exists(this.mReplaceTextureKey)) {
+                this.scene.textures.remove(this.mReplaceTextureKey);
+                this.scene.textures.removeKey(this.mReplaceTextureKey);
+            }
+        }
+
         super.destroy();
     }
 
@@ -244,12 +252,24 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         if (this.scene.cache.custom.dragonbone.get(this.resourceName)) {
             this.createArmatureDisplay();
         } else {
-            const res = `${Url.RES_PATH}/dragonbones`;
+            const res = `${this.localResourceRoot}/dragonbones`;
             const pngUrl = `${res}/${this.resourceName}_tex.png`;
             const jsonUrl = `${res}/${this.resourceName}_tex.json`;
             const dbbinUrl = `${res}/${this.resourceName}_ske.dbbin`;
             this.loadDragonBones(pngUrl, jsonUrl, dbbinUrl);
         }
+    }
+
+    protected get localResourceRoot(): string {
+        return Url.RES_PATH;
+    }
+
+    protected getLoadPartUrl(val: string): string {
+        return ResUtils.getPartUrl(val);
+    }
+
+    protected getLoadPartName(val: string): string {
+        return ResUtils.getPartName(val);
     }
 
     protected generateReplaceTextureKey() {
@@ -985,8 +1005,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
         this.mLoadMap.forEach((data) => {
             const nextLoad: string[] = data;
-            const partUrl: string = ResUtils.getPartUrl(nextLoad[1]);
-            const partName: string = ResUtils.getPartName(nextLoad[1]);
+            const partUrl: string = this.getLoadPartUrl(nextLoad[1]);
+            const partName: string = this.getLoadPartName(nextLoad[1]);
             configList.push({key: partName, url: partUrl});
         });
         this.scene.load.image(configList);

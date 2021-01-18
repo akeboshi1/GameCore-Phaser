@@ -1,4 +1,4 @@
-import {Handler, load, Logger} from "utils";
+import {Handler, load, Logger, ResUtils, Url} from "utils";
 import version from "../../../../version";
 import {BaseDragonbonesDisplay} from "display";
 import {IAvatar, IDragonbonesModel, SlotSkin} from "structure";
@@ -276,7 +276,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
         const sceneHeight = this.scene.scale.height;
         this.mArmatureBottomArea = AvatarEditorDragonbone.DEFAULT_SCALE_BOTTOM_PIX * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mDisplay_default = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_DEFAULT);
+        this.mDisplay_default = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_DEFAULT, this.mWebHomePath);
         this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
         if (this.mAutoScale) this.mDisplay_default.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
         this.mDisplay_default.x = this.scene.scale.width >> 1;
@@ -284,7 +284,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.add(this.mDisplay_default);
         this.mArmatureBottomArea_head = this.mArmatureBottomArea -
             AvatarEditorDragonbone.ARMATURE_LEG_PERCENT * AvatarEditorDragonbone.ARMATURE_HEIGHT * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mDisplay_head = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_HEAD);
+        this.mDisplay_head = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_HEAD, this.mWebHomePath);
         if (this.mAutoScale) this.mDisplay_head.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
         this.mDisplay_head.x = this.scene.scale.width >> 1;
         this.mDisplay_head.y = this.scene.scale.height - this.mArmatureBottomArea_head + 1000;
@@ -528,7 +528,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
 class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
 
-    constructor(scene: Phaser.Scene, resName: string) {
+    constructor(scene: Phaser.Scene, resName: string, private mWebHomePath: string) {
         super(scene);
 
         this.resourceName = resName;
@@ -536,5 +536,13 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
 
     protected generateReplaceTextureKey(): string {
         return super.generateReplaceTextureKey() + "_editor_" + this.resourceName;
+    }
+
+    protected get localResourceRoot(): string {
+        return `./resources_v${version}`;
+    }
+
+    protected getLoadPartUrl(val: string): string {
+        return `${this.mWebHomePath}/avatar/part/${val}.png`;
     }
 }
