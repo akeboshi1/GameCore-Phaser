@@ -814,6 +814,13 @@ export class Render extends RPCPeer implements GameMain {
         this.mSceneManager.startScene(SceneName.LOADING_SCENE, data);
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public updateProgress(progress: number) {
+        if (progress > 1) progress = 1;
+        progress.toFixed(2);
+        if (this.mSceneManager) this.mSceneManager.showProgress(progress);
+    }
+
     @Export()
     public hideLoading() {
         if (!this.mSceneManager) {
