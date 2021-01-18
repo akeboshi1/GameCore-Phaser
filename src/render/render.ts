@@ -411,7 +411,9 @@ export class Render extends RPCPeer implements GameMain {
             this.gameConfig = {
                 type: Phaser.AUTO,
                 parent: this.mConfig.parent,
-                scene: null,
+                loader: {
+                    timeout: 300,
+                },
                 disableContextMenu: true,
                 transparent: false,
                 backgroundColor: 0x0,
@@ -1071,6 +1073,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public createFramesDisplay(id: number, displayInfo: IFramesModel) {
         if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo);
+        else Logger.getInstance().log("no displayManager ====>");
     }
 
     @Export([webworker_rpc.ParamType.num])

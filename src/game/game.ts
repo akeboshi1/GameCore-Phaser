@@ -757,6 +757,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // Logger.getInstance.log(`_run at ${current} + delta: ${delta}`);
 
         // TODO do something here.
+        if (this.connect) this.connect.update();
         if (this.mRoomManager) this.mRoomManager.update(current, delta);
     }
 

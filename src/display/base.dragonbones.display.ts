@@ -1,6 +1,6 @@
-import {Handler, Logger, ResUtils, Url, ValueResolver} from "utils";
-import {DisplayField, IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin} from "structure";
-import {BaseDisplay} from "./base.display";
+import { Logger, ResUtils, Url, ValueResolver } from "utils";
+import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
+import { BaseDisplay } from "./base.display";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_dres_$",
@@ -134,7 +134,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     // 改变装扮接口
     public load(display: IDragonbonesModel): Promise<any> {
-        this.displayInfo = <IDragonbonesModel> display;
+        this.displayInfo = <IDragonbonesModel>display;
         if (!this.displayInfo) return Promise.reject("displayInfo error");
         this.mLoadDisplayPromise = new ValueResolver<any>();
         return this.mLoadDisplayPromise.promise(() => {
@@ -264,6 +264,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return Url.RES_PATH;
     }
 
+    // TODO: 游戏中截图会出现404，待解决
     protected getLoadPartUrl(val: string): string {
         return ResUtils.getPartUrl(val);
     }
@@ -349,7 +350,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             dbbinUrl,
             null,
             null,
-            {responseType: "arraybuffer"}
+            { responseType: "arraybuffer" }
         );
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.createArmatureDisplay, this);
         this.scene.load.start();
@@ -466,6 +467,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
     }
 
+    // TODO: 待优化
     private getReplaceArr() {
         this.replaceArr.length = 0;
         const avater: IAvatar = this.displayInfo.avatar;
@@ -1043,7 +1045,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
         }
-        return {sn, version};
+        return { sn, version };
     }
 
     private clearFadeTween() {

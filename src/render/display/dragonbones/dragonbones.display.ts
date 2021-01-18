@@ -242,7 +242,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected fileError(key: string) {
         if (key !== this.resourceName) return;
-
         // TODO: 根据请求错误类型，retry或catch
         this.created();
     }

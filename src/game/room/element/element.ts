@@ -1,4 +1,4 @@
-import {op_client, op_def} from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import {
     AnimationQueue,
     AvatarSuitType,
@@ -8,10 +8,10 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import {IPos, IProjection, Logger, LogicPoint, LogicPos, Tool} from "utils";
-import {BlockObject} from "../block/block.object";
-import {IRoomService} from "../room/room";
-import {IElementManager} from "./element.manager";
+import { IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
+import { BlockObject } from "../block/block.object";
+import { IRoomService } from "../room/room";
+import { IElementManager } from "./element.manager";
 
 export interface IElement {
     readonly id: number;
@@ -20,6 +20,8 @@ export interface IElement {
     readonly created: boolean;
 
     readonly moveData: MoveData;
+
+    state: boolean;
 
     model: ISprite;
 
@@ -112,6 +114,14 @@ export enum InputEnable {
 }
 
 export class Element extends BlockObject implements IElement {
+    get state(): boolean {
+        return this.mState;
+    }
+
+    set state(val: boolean) {
+        this.mState = val;
+    }
+
     get dir(): number {
         return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
     }
@@ -164,6 +174,7 @@ export class Element extends BlockObject implements IElement {
     protected moveControll: MoveControll;
 
     private delayTime = 1000 / 45;
+    private mState: boolean = false;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite ? sprite.id : -1, mElementManager ? mElementManager.roomService : undefined);
@@ -743,15 +754,18 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async createDisplay(): Promise<any> {
-        if (this.mCreatedDisplay) return;
-        super.createDisplay();
-
-        this.mElementManager.onDisplayCreated(this.id);
-
-        if (!this.mDisplayInfo || !this.mElementManager) {
+        if (this.mCreatedDisplay) {
+            Logger.getInstance().debug("mCreatedDisplay", this.id);
             return;
         }
-        let createPromise = null;
+        super.createDisplay();
+
+        if (!this.mDisplayInfo || !this.mElementManager) {
+            Logger.getInstance().debug("no displayInfo", this);
+            return;
+        }
+        Logger.getInstance().debug("createDisplay displayInfo", this);
+        let createPromise: Promise<any> = null;
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
                 createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
@@ -765,12 +779,13 @@ export class Element extends BlockObject implements IElement {
         createPromise.then(() => {
             const pos = this.mModel.pos;
             this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-
+            Logger.getInstance().debug("createPromise ====>", this.id);
             if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        }).catch((error) => {
+            Logger.getInstance().error("promise error ====>", error);
         });
         const currentAnimation = this.mModel.currentAnimation;
         this.setInputEnable(this.mInputEnable);
-        this.mCreatedDisplay = true;
         this.mRoomService.game.physicalPeer.addBody(this.id);
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();
@@ -816,7 +831,6 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async removeDisplay(): Promise<any> {
-        this.mElementManager.onDisplayRemoved(this.id);
         super.removeDisplay();
         return Promise.resolve();
     }
@@ -927,9 +941,9 @@ export class Element extends BlockObject implements IElement {
                 const ele = this.roomService.getElement(id);
                 if (ele) {
                     if (type === 0) {
-                        (<Element> ele).removeTopDisplay();
+                        (<Element>ele).removeTopDisplay();
                     } else {
-                        (<Element> ele).showTopDisplay(ElementStateType.REPAIR);
+                        (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
                     }
                 }
                 break;

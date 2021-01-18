@@ -90,7 +90,7 @@ export class MatterSprite {
     setDirection(val: number) {
         if (!val) return;
         this.direction = val;
-        Logger.getInstance().log("setDirection:=====", val);
+        // Logger.getInstance().log("setDirection:=====", val);
         this.setAnimationData(this.currentAnimationName, this.direction);
     }
 

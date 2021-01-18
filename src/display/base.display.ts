@@ -1,5 +1,5 @@
-import {Handler, LogicPos, ValueResolver} from "utils";
-import {DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation} from "structure";
+import { Handler, LogicPos, ValueResolver } from "utils";
+import { DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation } from "structure";
 
 export interface IBaseDisplay {
     displayInfo: IDragonbonesModel | IFramesModel | undefined;

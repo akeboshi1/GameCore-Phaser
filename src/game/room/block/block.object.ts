@@ -1,4 +1,4 @@
-import { IPos, LogicPos, IProjection } from "utils";
+import { IPos, LogicPos, IProjection, Logger } from "utils";
 import { InputEnable } from "../element/element";
 import { MatterObject } from "../physical/matter.object";
 import { IRoomService } from "../room/room";
@@ -123,6 +123,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         const miniSize = this.mRoomService.miniSize;
         const collision = this.mModel.getCollisionArea();
         const origin = this.mModel.getOriginPoint();
+        if (!collision) return;
         const rows = collision.length;
         const cols = collision[0].length;
         const width = cols * miniSize.tileWidth / Math.sqrt(2);
@@ -131,7 +132,10 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         return { offset, width, height };
     }
 
-    protected addDisplay(): Promise<any> { return this.createDisplay(); }
+    protected addDisplay(): Promise<any> {
+        if (this.mCreatedDisplay) return;
+        return this.createDisplay();
+    }
 
     protected createDisplay(): Promise<any> {
         this.mCreatedDisplay = true;
@@ -139,6 +143,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     }
 
     protected removeDisplay(): Promise<any> {
+        Logger.getInstance().log("removeDisplay ====>", this);
         this.mCreatedDisplay = false;
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
