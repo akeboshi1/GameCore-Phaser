@@ -285,7 +285,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public dealAddList(spliceBoo: boolean = false) {
-        const len = 5;
+        const len = 3;
         let point: op_def.IPBPoint3f;
         let sprite: ISprite = null;
         const ids = [];
@@ -335,7 +335,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public dealSyncList() {
-        const len = 5;
+        const len = 3;
         if (this.mCacheSyncList && this.mCacheSyncList.length > 0) {
             let element: Element = null;
             const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;

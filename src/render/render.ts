@@ -72,11 +72,21 @@ export class Render extends RPCPeer implements GameMain {
     private mHeartPeer: any;
     private mPhysicalPeer: any;
     private isPause: boolean = false;
+    private mConnectFailFunc: Function;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
+        this.mConnectFailFunc = this.mConfig.connectFail;
+        this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
+        this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
+        this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
+        // rpc不传送方法
+        delete this.mConfig.connectFail;
+        delete this.mConfig.game_created;
+        delete this.mConfig.closeGame;
+        // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
@@ -718,6 +728,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public connectFail() {
         this.isConnect = false;
+        if (this.mConnectFailFunc) this.mConnectFailFunc();
         // this.mWorld.connectFail();
     }
 
