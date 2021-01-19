@@ -36,6 +36,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
 
     public initAstar(map: any) {
         this.mAstar.init(map);
+        this.peer.render.drawAstar_init(map, this.miniSize);
     }
 
     set size(size: IPosition45Obj) {
@@ -215,6 +216,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
         // } else {
         //     this.mAstar.setWalkableAt(y, x, val);
         // }
+        this.peer.render.drawAstar_update(x, y, val);
     }
 
     public v() {

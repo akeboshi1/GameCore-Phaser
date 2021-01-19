@@ -1,32 +1,52 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game } from "tooqinggamephaser";
-import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, Logger, Size, LogicPos, i18n, IPos } from "utils";
-import { ServerAddress } from "../../lib/net/address";
-import { PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
-import { Account } from "./account/account";
-import { SceneManager } from "./scenes/scene.manager";
-import { LoginScene } from "./scenes/login.scene";
-import { LocalStorageManager } from "./managers/local.storage.manager";
-import { BasicScene } from "./scenes/basic.scene";
-import { PlayScene } from "./scenes/play.scene";
-import { CamerasManager } from "./cameras/cameras.manager";
+import {Game} from "tooqinggamephaser";
+import {RPCPeer, Export, webworker_rpc} from "webworker-rpc";
+import {Url, initLocales, Logger, Size, LogicPos, i18n, IPos, IPosition45Obj} from "utils";
+import {ServerAddress} from "../../lib/net/address";
+import {PBpacket} from "net-socket-packet";
+import {op_client} from "pixelpai_proto";
+import {Account} from "./account/account";
+import {SceneManager} from "./scenes/scene.manager";
+import {LoginScene} from "./scenes/login.scene";
+import {LocalStorageManager} from "./managers/local.storage.manager";
+import {BasicScene} from "./scenes/basic.scene";
+import {PlayScene} from "./scenes/play.scene";
+import {CamerasManager} from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, ElementStateType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
-import { DisplayManager } from "./managers/display.manager";
-import { InputManager } from "./input/input.manager";
+import {
+    IFramesModel,
+    IDragonbonesModel,
+    ILauncherConfig,
+    IScenery,
+    EventType,
+    GameMain,
+    MAIN_WORKER,
+    MAIN_WORKER_URL,
+    RENDER_PEER,
+    MessageType,
+    ModuleName,
+    SceneName,
+    HEARTBEAT_WORKER,
+    HEARTBEAT_WORKER_URL,
+    ElementStateType,
+    PHYSICAL_WORKER,
+    PHYSICAL_WORKER_URL
+} from "structure";
+import {DisplayManager} from "./managers/display.manager";
+import {InputManager} from "./input/input.manager";
 import * as protos from "pixelpai_proto";
-import { PicaRenderUiManager } from "picaRender";
-import { GamePauseScene, MainUIScene } from "./scenes";
-import { EditorCanvasManager } from "./managers/editor.canvas.manager";
+import {PicaRenderUiManager} from "picaRender";
+import {GamePauseScene, MainUIScene} from "./scenes";
+import {EditorCanvasManager} from "./managers/editor.canvas.manager";
 import version from "../../version";
+import {AstarDebugger, GridsDebugger} from "./display";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
+
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
     FOLLOW_MOUSE_MOVE_STYLE = 2,
@@ -34,9 +54,14 @@ enum MoveStyle {
 }
 
 export const projectionAngle = [Math.cos(45 * Math.PI / 180), Math.sin(45 * Math.PI / 180)];
+
 export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
+    @Export()
+    public gridsDebugger: GridsDebugger;
+    @Export()
+    public astarDebugger: AstarDebugger;
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
@@ -72,11 +97,14 @@ export class Render extends RPCPeer implements GameMain {
     private mHeartPeer: any;
     private mPhysicalPeer: any;
     private isPause: boolean = false;
+
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
+        this.gridsDebugger = GridsDebugger.getInstance();
+        this.astarDebugger = AstarDebugger.getInstance();
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
@@ -120,6 +148,7 @@ export class Render extends RPCPeer implements GameMain {
     get physicalPeer(): any {
         return this.mPhysicalPeer;
     }
+
     setKeyBoardHeight(height: number) {
         throw new Error("Method not implemented.");
     }
@@ -356,6 +385,7 @@ export class Render extends RPCPeer implements GameMain {
     setGameConfig(config): void {
 
     }
+
     updatePalette(palette): void {
         this.mainPeer.updatePalette(palette);
     }
@@ -363,6 +393,7 @@ export class Render extends RPCPeer implements GameMain {
     updateMoss(moss): void {
         this.mainPeer.updateMoss(moss);
     }
+
     restart(config?: ILauncherConfig, callBack?: Function) {
 
     }
@@ -592,7 +623,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public showCreateRole(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, {render: this, params});
     }
 
     @Export()
@@ -602,7 +633,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public showPlay(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, {render: this, params});
     }
 
     @Export()
@@ -754,7 +785,7 @@ export class Render extends RPCPeer implements GameMain {
                 this.mAccount = new Account();
             }
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
-                this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+                this.mAccount.enterGame(gameID, worldID, sceneID, {locX, locY, locZ});
                 resolve(true);
             });
         });
@@ -784,8 +815,16 @@ export class Render extends RPCPeer implements GameMain {
             if (playScene) {
                 const camera = playScene.cameras.main;
                 const rect = camera.worldView;
-                const { x, y } = rect;
-                const obj = { x, y, width: camera.width, height: camera.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+                const {x, y} = rect;
+                const obj = {
+                    x,
+                    y,
+                    width: camera.width,
+                    height: camera.height,
+                    zoom: camera.zoom,
+                    scrollX: camera.scrollX,
+                    scrollY: camera.scrollY
+                };
                 resolve(obj);
             }
         });
@@ -852,18 +891,22 @@ export class Render extends RPCPeer implements GameMain {
     public roomResume(roomID: number) {
 
     }
+
     @Export()
     public removeScene(sceneName: string) {
         if (this.sceneManager) this.sceneManager.remove(sceneName);
     }
+
     @Export()
     public showCreatePanelError(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CREATE_ROLE_ERROR_MESSAGE) {
 
     }
+
     @Export([webworker_rpc.ParamType.str])
     public createSetNickName(name: string) {
 
     }
+
     @Export()
     public renderReconnect() {
 
@@ -874,7 +917,7 @@ export class Render extends RPCPeer implements GameMain {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
-        this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz });
+        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz});
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -912,6 +955,7 @@ export class Render extends RPCPeer implements GameMain {
     public fadeOut(id: number, type: number) {
 
     }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public fadeAlpha(id: number, type: number, alpha: number) {
 
@@ -1025,6 +1069,24 @@ export class Render extends RPCPeer implements GameMain {
             return;
         }
         this.mCameraManager.camera = scene.cameras.main;
+    }
+
+    @Export()
+    public drawGrids(posObj: IPosition45Obj | undefined) {
+        if (!this.displayManager) return;
+        this.displayManager.showGridsDebug(posObj);
+    }
+
+    @Export()
+    public drawAstar_init(map: number[][], posObj: IPosition45Obj) {
+        if (!this.displayManager) return;
+        this.displayManager.showAstarDebug_init(map, posObj);
+    }
+
+    @Export()
+    public drawAstar_update(x: number, y: number, val: boolean) {
+        if (!this.displayManager) return;
+        this.displayManager.showAstarDebug_update(x, y, val);
     }
 
     @Export()
@@ -1357,7 +1419,7 @@ export class Render extends RPCPeer implements GameMain {
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
-            this.mGame.scene.start(GamePauseScene.name, { render: this });
+            this.mGame.scene.start(GamePauseScene.name, {render: this});
         }
     }
 

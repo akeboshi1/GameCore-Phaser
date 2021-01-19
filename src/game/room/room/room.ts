@@ -353,6 +353,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const padding = 199 * this.mScaleRatio;
         const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
         this.mGame.peer.render.roomstartPlay();
+        this.mGame.peer.render.drawGrids(this.mSize);
         this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         //     // init block
         this.mBlocks.int(this.mSize);
