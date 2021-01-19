@@ -82,19 +82,6 @@ export class Connection implements ConnectionService {
     }
 
     update() {
-        if (this.mCache && this.mCache.length > 0) {
-            const len = 10;
-            const tmpList = this.mCache.splice(0, len);
-            for (let i: number = 0; i < len; i++) {
-                const data = tmpList[i];
-                if (!data) continue;
-                const protobuf_packet = PBpacket.Create(data);
-                const handlers = this.mPacketHandlers;
-                handlers.forEach((handler: PacketHandler) => {
-                    handler.onPacketArrived(protobuf_packet);
-                });
-            }
-        }
     }
 
     get pause(): boolean {
@@ -174,20 +161,10 @@ export class Connection implements ConnectionService {
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
-
-        const code = protobuf_packet.header.opcode;
-        switch (code) {
-            case 0x00141028:
-            case 0x00142030:
-            case 0x00141030:
-                this.mCache.length = 0;
-                this.mCache = [];
-                this.mCache.unshift(data);
-                break;
-            default:
-                this.mCache.push(data);
-                break;
-        }
+        const handlers = this.mPacketHandlers;
+        handlers.forEach((handler: PacketHandler) => {
+            handler.onPacketArrived(protobuf_packet);
+        });
     }
 
     onFocus() {

@@ -53,7 +53,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
     private mActionMgr: ElementActionManager;
-
+    private mLoadLen: number = 0;
+    private mCurIndex: number = 0;
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -250,6 +251,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mCacheSyncList.length = 0;
             this.mCacheSyncList = [];
         }
+        this.mCurIndex = 0;
+        this.mLoadLen = 0;
     }
 
     public update(time: number, delta: number) {
@@ -282,7 +285,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public dealAddList(spliceBoo: boolean = false) {
-        const len = 5;
+        const len = 3;
         let point: op_def.IPBPoint3f;
         let sprite: ISprite = null;
         const ids = [];
@@ -332,7 +335,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public dealSyncList() {
-        const len = 5;
+        const len = 3;
         if (this.mCacheSyncList && this.mCacheSyncList.length > 0) {
             let element: Element = null;
             const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;
@@ -380,6 +383,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 return;
             }
         });
+        if (this.mLoadLen > 0) {
+            this.mRoom.game.renderPeer.updateProgress(this.mCurIndex++ / this.mLoadLen);
+        }
         this.mRoom.onManagerReady(this.constructor.name);
     }
 
@@ -450,8 +456,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
+        this.mCurIndex = 0;
+        this.mLoadLen = 0;
         // 接收到addcomplete，则开始处理缓存列表内的数据
         if (this.mCacheAddList && this.mCacheAddList.length > 0) {
+            this.mLoadLen = this.mCacheAddList.length;
+            this.mRoom.game.renderPeer.updateProgress(this.mCurIndex / this.mLoadLen);
             this.dealAddList();
         } else {
             this.dealSyncList();

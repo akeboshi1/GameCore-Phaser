@@ -80,7 +80,6 @@ export class WSWrapper extends EventEmitter {
 
         this._connection.onmessage = (ev: any) => {
             // console.info(`_connection.onmessage`);
-            const now = new Date().getTime();
             this.onData(ev.data);
         };
 

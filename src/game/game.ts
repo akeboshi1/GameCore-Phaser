@@ -104,7 +104,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public onDisConnected() {
         Logger.getInstance().log("app connectFail=====");
         if (this.hasClear || this.connect.pause) return;
-        if (this.mConfig.connectFail) {
+        if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
             if (this.mReconnect > 2) {
@@ -122,7 +122,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public onRefreshConnect() {
         if (this.hasClear || this.isPause) return;
         Logger.getInstance().log("game onrefreshconnect");
-        if (this.mConfig.connectFail) {
+        if (this.mConfig.hasConnectFail) {
             Logger.getInstance().log("app connectfail");
             this.onError();
         } else {
@@ -140,9 +140,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             return;
         }
         if (!this.connect.connect) {
-            if (this.mConfig.connectFail) {
+            if (this.mConfig.hasConnectFail) {
                 Logger.getInstance().log("app connectFail");
-                return this.mConfig.connectFail();
+                return this.mainPeer.render.connectFail();
             } else {
                 Logger.getInstance().log("reconnect");
                 this.reconnect();
@@ -153,7 +153,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public async reconnect() {
         if (this.hasClear || this.isPause) return;
         Logger.getInstance().log("game reconnect");
-        if (this.mConfig.connectFail) return this.mConfig.connectFail();
+        if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
         let worldID: string = this.mConfig.virtual_world_id;
         const account = await this.mainPeer.render.getAccount();
@@ -348,8 +348,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.connect.onFocus();
         if (this.connection) {
             if (!this.connection.connect) {
-                if (this.mConfig.connectFail) {
-                    return this.mConfig.connectFail();
+                if (this.mConfig.hasConnectFail) {
+                    return this.mainPeer.render.connectFail();
                 } else {
                     return this.onDisConnected();
                 }
