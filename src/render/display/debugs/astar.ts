@@ -1,6 +1,6 @@
 import {Render} from "../../render";
 import {PlayScene} from "../../scenes/play.scene";
-import {ChatCommandInterface, IPosition45Obj, LogicPos, Position45} from "utils";
+import {ChatCommandInterface, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
 
 export class Astar {
     private mGraphics: Map<LogicPos, Phaser.GameObjects.Graphics> =
@@ -33,11 +33,11 @@ export class Astar {
     public updateData(x: number, y: number, val: boolean) {
         if (!this.mAstarMap) return;
         if (!this.mAstarSize) return;
-        if (this.mAstarMap.length <= y) return;
-        if (this.mAstarMap[y].length <= x) return;
+        if (this.mAstarMap.length <= x) return;
+        if (this.mAstarMap[x].length <= y) return;
         const newVal = val ? 1 : 0;
-        if (this.mAstarMap[y][x] === newVal) return;
-        this.mAstarMap[y][x] = newVal;
+        if (this.mAstarMap[x][y] === newVal) return;
+        this.mAstarMap[x][y] = newVal;
 
         if (AstarDebugger.getInstance().isDebug) {
             this.show();
@@ -55,9 +55,11 @@ export class Astar {
         }
         this.hide();
 
+        Logger.getInstance().debug("astar map: ", this.mAstarMap);
+
         for (let y = 0; y < this.mAstarMap.length; y++) {
             for (let x = 0; x < this.mAstarMap[y].length; x++) {
-                const newGraphics = this.drawCircle(scene, y, x, this.mAstarMap[y][x]);
+                const newGraphics = this.drawCircle(scene, x, y, this.mAstarMap[y][x]);
                 this.mGraphics.set(new LogicPos(x, y), newGraphics);
             }
         }
@@ -73,6 +75,7 @@ export class Astar {
     private drawCircle(scene: PlayScene, x: number, y: number, val: number): Phaser.GameObjects.Graphics {
         let pos = new LogicPos(x, y);
         pos = Position45.transformTo90(pos, this.mAstarSize);
+        pos.y += this.mAstarSize.tileHeight / 2;
         const graphics = scene.make.graphics(undefined, false);
         graphics.clear();
         graphics.fillStyle(this.getColorByValue(val), 1);
