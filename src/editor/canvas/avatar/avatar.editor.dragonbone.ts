@@ -539,7 +539,7 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
     }
 
     protected get localResourceRoot(): string {
-        return `./resources_v${version}`;
+        return `./resources_v${version}/`;
     }
 
     protected getLoadPartUrl(val: string): string {
