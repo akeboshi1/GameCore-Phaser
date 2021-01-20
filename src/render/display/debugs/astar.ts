@@ -5,7 +5,6 @@ import {ChatCommandInterface, IPosition45Obj, Logger, LogicPos, Position45} from
 export class Astar {
     private mGraphics: Map<LogicPos, Phaser.GameObjects.Graphics> =
         new Map<LogicPos, Phaser.GameObjects.Graphics>();
-    private mAstarMap: number[][];
     private mAstarSize: IPosition45Obj;
 
     constructor(private render: Render) {
@@ -14,14 +13,12 @@ export class Astar {
 
     public destroy() {
         this.hide();
-        if (this.mAstarMap) this.mAstarMap.length = 0;
         if (this.mAstarSize) this.mAstarSize = null;
         AstarDebugger.getInstance().setDebugger(null);
     }
 
     public initData(map: number[][], size: IPosition45Obj) {
         this.mAstarSize = size;
-        this.mAstarMap = map;
 
         if (AstarDebugger.getInstance().isDebug) {
             this.show();
@@ -31,13 +28,7 @@ export class Astar {
     }
 
     public updateData(x: number, y: number, val: boolean) {
-        if (!this.mAstarMap) return;
         if (!this.mAstarSize) return;
-        if (this.mAstarMap.length <= x) return;
-        if (this.mAstarMap[x].length <= y) return;
-        const newVal = val ? 1 : 0;
-        if (this.mAstarMap[x][y] === newVal) return;
-        this.mAstarMap[x][y] = newVal;
 
         if (AstarDebugger.getInstance().isDebug) {
             this.show();
@@ -47,7 +38,6 @@ export class Astar {
     }
 
     public show() {
-        if (!this.mAstarMap) return;
         if (!this.mAstarSize) return;
         const scene = this.render.sceneManager.getMainScene();
         if (!scene || !(scene instanceof PlayScene)) {
@@ -55,12 +45,13 @@ export class Astar {
         }
         this.hide();
 
-        Logger.getInstance().debug("astar map: ", this.mAstarMap);
-
-        for (let y = 0; y < this.mAstarMap.length; y++) {
-            for (let x = 0; x < this.mAstarMap[y].length; x++) {
-                const newGraphics = this.drawCircle(scene, x, y, this.mAstarMap[y][x]);
-                this.mGraphics.set(new LogicPos(x, y), newGraphics);
+        for (let y = 0; y < this.mAstarSize.rows; y++) {
+            for (let x = 0; x < this.mAstarSize.cols; x++) {
+                this.render.physicalPeer.isWalkableAt(x, y)
+                    .then((walkable: boolean) => {
+                        const newGraphics = this.drawCircle(scene, x, y, walkable);
+                        this.mGraphics.set(new LogicPos(x, y), newGraphics);
+                    });
             }
         }
     }
@@ -72,7 +63,7 @@ export class Astar {
         this.mGraphics.clear();
     }
 
-    private drawCircle(scene: PlayScene, x: number, y: number, val: number): Phaser.GameObjects.Graphics {
+    private drawCircle(scene: PlayScene, x: number, y: number, val: boolean): Phaser.GameObjects.Graphics {
         let pos = new LogicPos(x, y);
         pos = Position45.transformTo90(pos, this.mAstarSize);
         pos.y += this.mAstarSize.tileHeight / 2;
@@ -84,12 +75,8 @@ export class Astar {
         return graphics;
     }
 
-    private getColorByValue(val: number) {
-        if (val === 1) {
-            return 0x00FF00;
-        }
-
-        return 0xFF0000;
+    private getColorByValue(val: boolean) {
+        return val ? 0x00FF00 : 0xFF0000;
     }
 }
 
